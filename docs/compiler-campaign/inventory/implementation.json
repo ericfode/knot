@@ -124,10 +124,10 @@
   },
   "totals": {
     "compiler": {
-      "files": 33,
-      "declarations": 599,
-      "unique_declarations": 498,
-      "definitions": 358,
+      "files": 35,
+      "declarations": 641,
+      "unique_declarations": 538,
+      "definitions": 395,
       "classes": 41
     },
     "frontend_files": {
@@ -53930,8 +53930,3823 @@
       ]
     },
     {
+      "file": "src/lowering-LAWS.bend",
+      "sha256": "21faaa4cc6d9854e650251e6360e98b17f04a399d948d7c17b25bf25cb0a03d2",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./scope.bend",
+          "alias": "E",
+          "file": "src/scope.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./matrix.bend",
+          "alias": "M",
+          "file": "src/matrix.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "calls",
+        "constructors",
+        "dependent",
+        "equality",
+        "fields",
+        "generics",
+        "imports.base",
+        "imports.local",
+        "laws",
+        "matches",
+        "matches.multi",
+        "patterns.nested",
+        "patterns.variable",
+        "patterns.wildcard",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.reusable",
+        "recursion",
+        "types.base",
+        "types.data",
+        "types.type"
+      ],
+      "declarations": [
+        {
+          "id": "src/lowering-LAWS.bend::Irrefutable:definition",
+          "name": "Irrefutable",
+          "key": "src/lowering-LAWS.Irrefutable",
+          "kind": "definition",
+          "lines": [
+            14,
+            19
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "Con",
+            "Empty",
+            "List",
+            "Nil",
+            "Unit",
+            "src/lowering-LAWS.Irrefutable",
+            "src/syntax.Node",
+            "src/syntax.Promotion",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "List",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Empty",
+              "Unit",
+              "src/lowering-LAWS.Irrefutable"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "src/syntax.Promotion",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-LAWS.bend::Leaf:definition",
+          "name": "Leaf",
+          "key": "src/lowering-LAWS.Leaf",
+          "kind": "definition",
+          "lines": [
+            21,
+            26
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "types.data"
+          ],
+          "references": [
+            "Empty",
+            "Unit",
+            "src/syntax.Alias",
+            "src/syntax.Decision",
+            "src/syntax.Matrix",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Empty",
+              "Unit"
+            ],
+            "types": [
+              "src/syntax.Alias",
+              "src/syntax.Decision",
+              "src/syntax.Matrix"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-LAWS.bend::Leaves:definition",
+          "name": "Leaves",
+          "key": "src/lowering-LAWS.Leaves",
+          "kind": "definition",
+          "lines": [
+            29,
+            33
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "recursion",
+            "types.type"
+          ],
+          "references": [
+            "Pair",
+            "src/lowering-LAWS.Leaves",
+            "src/syntax.Alias",
+            "src/syntax.Decision",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Pair",
+              "src/lowering-LAWS.Leaves"
+            ],
+            "types": [
+              "src/syntax.Alias",
+              "src/syntax.Decision"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-LAWS.bend::irrefutable_first_row_selected:law",
+          "name": "irrefutable_first_row_selected",
+          "key": "src/lowering-LAWS.irrefutable_first_row_selected",
+          "kind": "law",
+          "lines": [
+            35,
+            53
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-LAWS.Leaf",
+            "src/lowering-LAWS.Leaves",
+            "src/matrix.Expansion",
+            "src/matrix.expand",
+            "src/scope.Scope",
+            "src/syntax.Arm",
+            "src/syntax.Error",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-LAWS.Leaf",
+            "src/lowering-LAWS.Leaves",
+            "src/matrix.Expansion",
+            "src/matrix.expand",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/lowering-PROOF.bend",
+      "sha256": "f98565a7160340b346da059232c08da7cf75eac0ed4c7c8f3ade6bb41ad50e6b",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./catalog.bend",
+          "alias": "G",
+          "file": "src/catalog.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./patterns.bend",
+          "alias": "P",
+          "file": "src/patterns.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./scope.bend",
+          "alias": "E",
+          "file": "src/scope.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./matrix.bend",
+          "alias": "M",
+          "file": "src/matrix.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./lowering-LAWS.bend",
+          "alias": "L",
+          "file": "src/lowering-LAWS.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "calls",
+        "calls.variable",
+        "captures",
+        "constructors",
+        "dependent",
+        "equality",
+        "fields",
+        "generics",
+        "higher-order",
+        "imports.base",
+        "imports.local",
+        "lambdas",
+        "literals.nat",
+        "literals.string",
+        "literals.tuple",
+        "literals.u32",
+        "matches",
+        "patterns.nested",
+        "patterns.variable",
+        "patterns.wildcard",
+        "proofs",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.erased",
+        "quantities.reusable",
+        "recursion",
+        "rewrites",
+        "types.base",
+        "types.data",
+        "types.type"
+      ],
+      "declarations": [
+        {
+          "id": "src/lowering-PROOF.bend::Led:datatype",
+          "name": "Led",
+          "key": "src/lowering-PROOF.Led",
+          "kind": "datatype",
+          "lines": [
+            13,
+            16
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Lowers",
+            "src/syntax.Arm",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Lowers",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::Lowers:definition",
+          "name": "Lowers",
+          "key": "src/lowering-PROOF.Lowers",
+          "kind": "definition",
+          "lines": [
+            18,
+            23
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "Sigma",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Lowers",
+            "src/syntax.Alias",
+            "src/syntax.Decision",
+            "src/syntax.Matrix",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "Sigma",
+            "src/lowering-PROOF.Led",
+            "src/syntax.Node"
+          ],
+          "captures": [
+            {
+              "offset": 1036,
+              "names": [
+                "body",
+                "no"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.Lowers"
+            ],
+            "types": [
+              "src/syntax.Alias",
+              "src/syntax.Decision",
+              "src/syntax.Matrix"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::Stepped:definition",
+          "name": "Stepped",
+          "key": "src/lowering-PROOF.Stepped",
+          "kind": "definition",
+          "lines": [
+            25,
+            28
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "Done",
+            "Fail",
+            "Result",
+            "Unit",
+            "src/lowering-PROOF.Lowers",
+            "src/syntax.Error",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "Result",
+            "src/syntax.Error",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Unit",
+              "src/lowering-PROOF.Lowers"
+            ],
+            "types": [
+              "Done",
+              "Fail"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::Selected:definition",
+          "name": "Selected",
+          "key": "src/lowering-PROOF.Selected",
+          "kind": "definition",
+          "lines": [
+            30,
+            33
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Done",
+            "Fail",
+            "Result",
+            "Unit",
+            "src/lowering-LAWS.Leaves",
+            "src/matrix.Expansion",
+            "src/syntax.Error",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "Result",
+            "src/matrix.Expansion",
+            "src/syntax.Error",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Unit",
+              "src/lowering-LAWS.Leaves"
+            ],
+            "types": [
+              "Done",
+              "Fail",
+              "src/matrix.Expansion"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::stepped_bind:definition",
+          "name": "stepped_bind",
+          "key": "src/lowering-PROOF.stepped_bind",
+          "kind": "definition",
+          "lines": [
+            35,
+            39
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "quantities.reusable",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "Done",
+            "Fail",
+            "Result",
+            "Unit",
+            "src/lowering-PROOF.Stepped",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "Result",
+            "src/lowering-PROOF.Stepped",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.bind"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Done",
+              "Fail",
+              "Unit"
+            ],
+            "dynamic_calls": [
+              "each"
+            ]
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::stepped_choice:definition",
+          "name": "stepped_choice",
+          "key": "src/lowering-PROOF.stepped_choice",
+          "kind": "definition",
+          "lines": [
+            41,
+            45
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "dependent",
+            "generics",
+            "higher-order",
+            "matches",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "False",
+            "Result",
+            "True",
+            "Unit",
+            "src/lowering-PROOF.Stepped",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "Result",
+            "Unit",
+            "src/lowering-PROOF.Stepped",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.choose"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "False",
+              "True"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::selected_bind:definition",
+          "name": "selected_bind",
+          "key": "src/lowering-PROOF.selected_bind",
+          "kind": "definition",
+          "lines": [
+            47,
+            51
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "quantities.reusable",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "Done",
+            "Fail",
+            "Result",
+            "Unit",
+            "src/lowering-PROOF.Selected",
+            "src/matrix.Expansion",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "Result",
+            "src/lowering-PROOF.Selected",
+            "src/matrix.Expansion",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.bind"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Done",
+              "Fail",
+              "Unit"
+            ],
+            "dynamic_calls": [
+              "each"
+            ]
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::selected_step:definition",
+          "name": "selected_step",
+          "key": "src/lowering-PROOF.selected_step",
+          "kind": "definition",
+          "lines": [
+            53,
+            57
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "Fail",
+            "Result",
+            "Unit",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Selected",
+            "src/lowering-PROOF.Stepped",
+            "src/matrix.Expansion",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "Result",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Selected",
+            "src/lowering-PROOF.Stepped",
+            "src/matrix.Expansion",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.bind"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Done",
+              "Fail",
+              "Unit"
+            ],
+            "dynamic_calls": [
+              "each"
+            ]
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::threaded:definition",
+          "name": "threaded",
+          "key": "src/lowering-PROOF.threaded",
+          "kind": "definition",
+          "lines": [
+            59,
+            64
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "Fail",
+            "Result",
+            "U32",
+            "Unit",
+            "src/lowering-LAWS.Leaves",
+            "src/lowering-PROOF.Selected",
+            "src/matrix.Expansion",
+            "src/matrix.thread",
+            "src/syntax.Error",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/lowering-LAWS.Leaves",
+            "src/lowering-PROOF.Selected",
+            "src/matrix.Expansion",
+            "src/matrix.thread",
+            "src/syntax.Error",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Done",
+              "Fail",
+              "Unit",
+              "src/matrix.Expansion"
+            ],
+            "dynamic_calls": [
+              "each"
+            ]
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::promoted_at:definition",
+          "name": "promoted_at",
+          "key": "src/lowering-PROOF.promoted_at",
+          "kind": "definition",
+          "lines": [
+            66,
+            70
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "False",
+            "True",
+            "U32",
+            "src/lowering-PROOF.Lowers",
+            "src/syntax.Alias",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "U32",
+            "src/lowering-PROOF.Lowers",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.choose"
+          ],
+          "captures": [
+            {
+              "offset": 3150,
+              "names": [
+                "level",
+                "node",
+                "token"
+              ]
+            },
+            {
+              "offset": 3183,
+              "names": [
+                "node"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [
+              "False",
+              "True"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::promoted:definition",
+          "name": "promoted",
+          "key": "src/lowering-PROOF.promoted",
+          "kind": "definition",
+          "lines": [
+            72,
+            73
+          ],
+          "features": [
+            "calls",
+            "dependent",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "U32.is_eq",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.promoted_at",
+            "src/matrix.promote",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "U32",
+            "src/lowering-PROOF.Lowers",
+            "src/matrix.promote",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "src/lowering-PROOF.promoted_at"
+            ],
+            "types": [
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::rebound:definition",
+          "name": "rebound",
+          "key": "src/lowering-PROOF.rebound",
+          "kind": "definition",
+          "lines": [
+            75,
+            91
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.rebound",
+            "src/matrix.bind_body",
+            "src/syntax.Alias",
+            "src/syntax.Arm",
+            "src/syntax.Binding",
+            "src/syntax.Call",
+            "src/syntax.Constructor",
+            "src/syntax.Datatype",
+            "src/syntax.Decision",
+            "src/syntax.Function",
+            "src/syntax.Match",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Parameter",
+            "src/syntax.Promotion",
+            "src/syntax.Remainder",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "U32",
+            "src/lowering-PROOF.Lowers",
+            "src/matrix.bind_body",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.rebound"
+            ],
+            "types": [
+              "src/syntax.Alias",
+              "src/syntax.Arm",
+              "src/syntax.Binding",
+              "src/syntax.Call",
+              "src/syntax.Constructor",
+              "src/syntax.Datatype",
+              "src/syntax.Decision",
+              "src/syntax.Function",
+              "src/syntax.Match",
+              "src/syntax.Matrix",
+              "src/syntax.Parameter",
+              "src/syntax.Promotion",
+              "src/syntax.Remainder",
+              "src/syntax.Sequence",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::fresh_irrefutable:definition",
+          "name": "fresh_irrefutable",
+          "key": "src/lowering-PROOF.fresh_irrefutable",
+          "kind": "definition",
+          "lines": [
+            93,
+            98
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.append",
+            "Nil",
+            "U32",
+            "U32.add",
+            "src/core.Parameter",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.fresh_irrefutable",
+            "src/matrix.fresh",
+            "src/syntax.At",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "List",
+            "List.append",
+            "U32",
+            "src/core.Parameter",
+            "src/lowering-LAWS.Irrefutable",
+            "src/matrix.fresh",
+            "src/syntax.At",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.add",
+              "src/lowering-PROOF.fresh_irrefutable"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::split_node:definition",
+          "name": "split_node",
+          "key": "src/lowering-PROOF.split_node",
+          "kind": "definition",
+          "lines": [
+            101,
+            105
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.append",
+            "U32",
+            "src/core.Parameter",
+            "src/matrix.fresh",
+            "src/matrix.specialize",
+            "src/matrix.without",
+            "src/syntax.Constructor",
+            "src/syntax.Decision",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Remainder",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "List.append",
+              "src/matrix.fresh",
+              "src/matrix.specialize",
+              "src/matrix.without",
+              "src/syntax.at"
+            ],
+            "types": [
+              "Con",
+              "src/syntax.Constructor",
+              "src/syntax.Decision",
+              "src/syntax.Matrix",
+              "src/syntax.Remainder"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::decision:definition",
+          "name": "decision",
+          "key": "src/lowering-PROOF.decision",
+          "kind": "definition",
+          "lines": [
+            107,
+            109
+          ],
+          "features": [
+            "calls",
+            "generics",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/lowering-PROOF.split_node",
+            "src/matrix.mark",
+            "src/matrix.promote",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.split_node",
+              "src/matrix.mark",
+              "src/matrix.promote"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::unmatched:definition",
+          "name": "unmatched",
+          "key": "src/lowering-PROOF.unmatched",
+          "kind": "definition",
+          "lines": [
+            111,
+            113
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "lambdas",
+            "literals.string",
+            "quantities.affine",
+            "quantities.reusable"
+          ],
+          "references": [
+            "Unit",
+            "src/core.Binding",
+            "src/core.internal",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.stepped_bind",
+            "src/scope.Scope",
+            "src/scope.scrutinee",
+            "src/syntax.Node",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "src/core.Binding",
+            "src/core.internal",
+            "src/lowering-PROOF.Stepped",
+            "src/scope.Scope",
+            "src/scope.scrutinee",
+            "src/syntax.Node",
+            "src/syntax.bind"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/core.internal",
+              "src/lowering-PROOF.stepped_bind",
+              "src/scope.scrutinee"
+            ],
+            "types": [
+              "String",
+              "Unit"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::defaulted:definition",
+          "name": "defaulted",
+          "key": "src/lowering-PROOF.defaulted",
+          "kind": "definition",
+          "lines": [
+            115,
+            137
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.stepped_bind",
+            "src/lowering-PROOF.unmatched",
+            "src/matrix.alias_column",
+            "src/matrix.column_binding",
+            "src/matrix.variable_column",
+            "src/matrix.variable_step",
+            "src/scope.Scope",
+            "src/scope.lookup",
+            "src/syntax.Alias",
+            "src/syntax.Arm",
+            "src/syntax.Binding",
+            "src/syntax.Call",
+            "src/syntax.Constructor",
+            "src/syntax.Datatype",
+            "src/syntax.Decision",
+            "src/syntax.Function",
+            "src/syntax.Match",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Parameter",
+            "src/syntax.Promotion",
+            "src/syntax.Remainder",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Variable",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Stepped",
+            "src/matrix.alias_column",
+            "src/matrix.variable_step",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 6332,
+              "names": [
+                "columns",
+                "rows",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 6495,
+              "names": [
+                "columns",
+                "name",
+                "rows",
+                "scope",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 6568,
+              "names": [
+                "columns",
+                "rows",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 6644,
+              "names": [
+                "body",
+                "columns",
+                "each",
+                "name",
+                "rows",
+                "scope",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 6716,
+              "names": [
+                "columns",
+                "rows",
+                "token",
+                "work"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.stepped_bind",
+              "src/lowering-PROOF.unmatched",
+              "src/matrix.alias_column",
+              "src/matrix.column_binding",
+              "src/matrix.variable_column",
+              "src/scope.lookup",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Done",
+              "src/syntax.Alias",
+              "src/syntax.Arm",
+              "src/syntax.Binding",
+              "src/syntax.Call",
+              "src/syntax.Constructor",
+              "src/syntax.Datatype",
+              "src/syntax.Decision",
+              "src/syntax.Function",
+              "src/syntax.Match",
+              "src/syntax.Matrix",
+              "src/syntax.Parameter",
+              "src/syntax.Promotion",
+              "src/syntax.Remainder",
+              "src/syntax.Sequence",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::splits:definition",
+          "name": "splits",
+          "key": "src/lowering-PROOF.splits",
+          "kind": "definition",
+          "lines": [
+            139,
+            160
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "U32",
+            "Unit",
+            "src/catalog.ConstructorRef",
+            "src/catalog.field_signature",
+            "src/catalog.find_constructor",
+            "src/catalog.type_at",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.decision",
+            "src/lowering-PROOF.stepped_bind",
+            "src/matrix.available",
+            "src/matrix.remaining",
+            "src/matrix.split",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.decision",
+            "src/matrix.split",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 8570,
+              "names": [
+                "column",
+                "columns",
+                "ctor",
+                "level",
+                "name",
+                "next",
+                "rows",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 8648,
+              "names": [
+                "column",
+                "columns",
+                "ctor",
+                "definition",
+                "level",
+                "name",
+                "next",
+                "rows",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 8749,
+              "names": [
+                "column",
+                "columns",
+                "ctor",
+                "definition",
+                "level",
+                "name",
+                "next",
+                "rows",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 8927,
+              "names": [
+                "body",
+                "column",
+                "columns",
+                "ctor",
+                "each",
+                "level",
+                "name",
+                "next",
+                "rows",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 9024,
+              "names": [
+                "column",
+                "columns",
+                "ctor",
+                "definition",
+                "level",
+                "name",
+                "next",
+                "rows",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 9107,
+              "names": [
+                "column",
+                "columns",
+                "ctor",
+                "definition",
+                "level",
+                "name",
+                "next",
+                "rows",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 9286,
+              "names": [
+                "body",
+                "column",
+                "columns",
+                "ctor",
+                "definition",
+                "each",
+                "level",
+                "name",
+                "next",
+                "rows",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 9390,
+              "names": [
+                "column",
+                "columns",
+                "ctor",
+                "definition",
+                "level",
+                "name",
+                "next",
+                "rows",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 9550,
+              "names": [
+                "column",
+                "ctor",
+                "definition",
+                "each",
+                "level",
+                "name",
+                "next"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/catalog.field_signature",
+              "src/catalog.find_constructor",
+              "src/catalog.type_at",
+              "src/lowering-PROOF.decision",
+              "src/lowering-PROOF.stepped_bind",
+              "src/matrix.available",
+              "src/matrix.remaining",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "U32",
+              "Unit",
+              "src/core.Binding",
+              "src/scope.Scope"
+            ],
+            "dynamic_calls": [
+              "each"
+            ]
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::headed_step:definition",
+          "name": "headed_step",
+          "key": "src/lowering-PROOF.headed_step",
+          "kind": "definition",
+          "lines": [
+            163,
+            176
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.is_empty",
+            "Nil",
+            "U32",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.decision",
+            "src/lowering-PROOF.defaulted",
+            "src/lowering-PROOF.splits",
+            "src/lowering-PROOF.stepped_bind",
+            "src/lowering-PROOF.stepped_choice",
+            "src/matrix.alias_column",
+            "src/matrix.column_binding",
+            "src/matrix.column_step",
+            "src/matrix.constructors",
+            "src/matrix.split",
+            "src/matrix.variable_step",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.decision",
+            "src/matrix.alias_column",
+            "src/matrix.column_step",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 10457,
+              "names": [
+                "column",
+                "columns",
+                "first",
+                "others",
+                "scope",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 10534,
+              "names": [
+                "column",
+                "columns",
+                "first",
+                "others",
+                "scope",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 10594,
+              "names": [
+                "column",
+                "columns",
+                "first",
+                "others",
+                "scope",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 10868,
+              "names": [
+                "column",
+                "columns",
+                "first",
+                "others",
+                "scope",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 11010,
+              "names": [
+                "body",
+                "column",
+                "columns",
+                "decisions",
+                "first",
+                "others",
+                "scope",
+                "token",
+                "types",
+                "work"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "List.is_empty",
+              "src/lowering-PROOF.defaulted",
+              "src/lowering-PROOF.splits",
+              "src/lowering-PROOF.stepped_bind",
+              "src/lowering-PROOF.stepped_choice",
+              "src/matrix.column_binding",
+              "src/matrix.constructors",
+              "src/matrix.split",
+              "src/matrix.variable_step",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Nil"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::aliased_variable:definition",
+          "name": "aliased_variable",
+          "key": "src/lowering-PROOF.aliased_variable",
+          "kind": "definition",
+          "lines": [
+            178,
+            184
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.promoted",
+            "src/lowering-PROOF.rebound",
+            "src/matrix.alias_column",
+            "src/matrix.bind_body",
+            "src/matrix.default_rows",
+            "src/matrix.mark",
+            "src/syntax.Arm",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Lowers",
+            "src/matrix.alias_column",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.promoted",
+              "src/lowering-PROOF.rebound",
+              "src/matrix.bind_body",
+              "src/matrix.default_rows",
+              "src/matrix.mark"
+            ],
+            "types": [
+              "Con",
+              "U32",
+              "src/core.Binding",
+              "src/lowering-PROOF.Led",
+              "src/syntax.Arm",
+              "src/syntax.Matrix",
+              "src/syntax.Sequence",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::aliased_promotion:definition",
+          "name": "aliased_promotion",
+          "key": "src/lowering-PROOF.aliased_promotion",
+          "kind": "definition",
+          "lines": [
+            186,
+            192
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.promoted",
+            "src/lowering-PROOF.rebound",
+            "src/matrix.alias_column",
+            "src/matrix.bind_body",
+            "src/matrix.default_rows",
+            "src/matrix.mark",
+            "src/syntax.Arm",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Promotion",
+            "src/syntax.Sequence",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Lowers",
+            "src/matrix.alias_column",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.promoted",
+              "src/lowering-PROOF.rebound",
+              "src/matrix.bind_body",
+              "src/matrix.default_rows",
+              "src/matrix.mark"
+            ],
+            "types": [
+              "Con",
+              "U32",
+              "src/core.Binding",
+              "src/lowering-PROOF.Led",
+              "src/syntax.Arm",
+              "src/syntax.Matrix",
+              "src/syntax.Promotion",
+              "src/syntax.Sequence"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::decided_variable:definition",
+          "name": "decided_variable",
+          "key": "src/lowering-PROOF.decided_variable",
+          "kind": "definition",
+          "lines": [
+            194,
+            201
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.tuple",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.append",
+            "Tuple",
+            "U32",
+            "src/core.Parameter",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.decision",
+            "src/lowering-PROOF.fresh_irrefutable",
+            "src/lowering-PROOF.promoted",
+            "src/lowering-PROOF.rebound",
+            "src/lowering-PROOF.split_node",
+            "src/matrix.bind_body",
+            "src/matrix.fresh",
+            "src/matrix.mark",
+            "src/matrix.specialize",
+            "src/matrix.without",
+            "src/syntax.Arm",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Variable",
+            "src/syntax.at"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.decision",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "List.append",
+              "src/lowering-PROOF.fresh_irrefutable",
+              "src/lowering-PROOF.promoted",
+              "src/lowering-PROOF.rebound",
+              "src/lowering-PROOF.split_node",
+              "src/matrix.bind_body",
+              "src/matrix.fresh",
+              "src/matrix.mark",
+              "src/matrix.specialize",
+              "src/matrix.without",
+              "src/syntax.at"
+            ],
+            "types": [
+              "Con",
+              "Tuple",
+              "U32",
+              "src/lowering-PROOF.Led",
+              "src/syntax.Arm",
+              "src/syntax.Sequence",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::decided_promotion:definition",
+          "name": "decided_promotion",
+          "key": "src/lowering-PROOF.decided_promotion",
+          "kind": "definition",
+          "lines": [
+            203,
+            210
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.tuple",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.append",
+            "Tuple",
+            "U32",
+            "src/core.Parameter",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.decision",
+            "src/lowering-PROOF.fresh_irrefutable",
+            "src/lowering-PROOF.promoted",
+            "src/lowering-PROOF.rebound",
+            "src/lowering-PROOF.split_node",
+            "src/matrix.bind_body",
+            "src/matrix.fresh",
+            "src/matrix.mark",
+            "src/matrix.specialize",
+            "src/matrix.without",
+            "src/syntax.Arm",
+            "src/syntax.Node",
+            "src/syntax.Promotion",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.decision",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "List.append",
+              "src/lowering-PROOF.fresh_irrefutable",
+              "src/lowering-PROOF.promoted",
+              "src/lowering-PROOF.rebound",
+              "src/lowering-PROOF.split_node",
+              "src/matrix.bind_body",
+              "src/matrix.fresh",
+              "src/matrix.mark",
+              "src/matrix.specialize",
+              "src/matrix.without",
+              "src/syntax.at"
+            ],
+            "types": [
+              "Con",
+              "Tuple",
+              "U32",
+              "src/lowering-PROOF.Led",
+              "src/syntax.Arm",
+              "src/syntax.Promotion",
+              "src/syntax.Sequence"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::led:definition",
+          "name": "led",
+          "key": "src/lowering-PROOF.led",
+          "kind": "definition",
+          "lines": [
+            212,
+            244
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.aliased_promotion",
+            "src/lowering-PROOF.aliased_variable",
+            "src/lowering-PROOF.decided_promotion",
+            "src/lowering-PROOF.decided_variable",
+            "src/lowering-PROOF.headed_step",
+            "src/matrix.column_step",
+            "src/scope.Scope",
+            "src/syntax.Alias",
+            "src/syntax.Arm",
+            "src/syntax.Binding",
+            "src/syntax.Call",
+            "src/syntax.Constructor",
+            "src/syntax.Datatype",
+            "src/syntax.Decision",
+            "src/syntax.Function",
+            "src/syntax.Match",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Parameter",
+            "src/syntax.Promotion",
+            "src/syntax.Remainder",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Stepped",
+            "src/matrix.column_step",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 15844,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "irr",
+                "lead",
+                "more",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 15951,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "irr",
+                "lead",
+                "more",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 15959,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "more",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 15967,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "more",
+                "name",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 15976,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "level",
+                "more",
+                "name",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 15984,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "level",
+                "more",
+                "name",
+                "next",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 15992,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "level",
+                "more",
+                "name",
+                "next",
+                "q",
+                "rest",
+                "tags",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 16317,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "irr",
+                "lead",
+                "more",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 16425,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "irr",
+                "lead",
+                "more",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 16433,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "more",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 16441,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "more",
+                "name",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 16450,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "level",
+                "more",
+                "name",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 16458,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "level",
+                "more",
+                "name",
+                "next",
+                "q",
+                "rest",
+                "tail",
+                "token",
+                "work"
+              ]
+            },
+            {
+              "offset": 16466,
+              "names": [
+                "arm",
+                "binder",
+                "body",
+                "column",
+                "ctor",
+                "irr",
+                "lead",
+                "level",
+                "more",
+                "name",
+                "next",
+                "q",
+                "rest",
+                "tags",
+                "tail",
+                "token",
+                "work"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.aliased_promotion",
+              "src/lowering-PROOF.aliased_variable",
+              "src/lowering-PROOF.decided_promotion",
+              "src/lowering-PROOF.decided_variable",
+              "src/lowering-PROOF.headed_step"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "src/syntax.Alias",
+              "src/syntax.Arm",
+              "src/syntax.Binding",
+              "src/syntax.Call",
+              "src/syntax.Constructor",
+              "src/syntax.Datatype",
+              "src/syntax.Decision",
+              "src/syntax.Function",
+              "src/syntax.Match",
+              "src/syntax.Matrix",
+              "src/syntax.Parameter",
+              "src/syntax.Promotion",
+              "src/syntax.Remainder",
+              "src/syntax.Sequence",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::columned:definition",
+          "name": "columned",
+          "key": "src/lowering-PROOF.columned",
+          "kind": "definition",
+          "lines": [
+            246,
+            252
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "rewrites",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Equal.sym",
+            "List",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.led",
+            "src/matrix.column_step",
+            "src/scope.Scope",
+            "src/syntax.Arm",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Stepped",
+            "src/matrix.column_step",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 17577,
+              "names": [
+                "body",
+                "columns",
+                "scope",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 17578,
+              "names": [
+                "_",
+                "body",
+                "columns",
+                "scope",
+                "token",
+                "types",
+                "work"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.led"
+            ],
+            "types": [
+              "src/lowering-PROOF.Led"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::stepped:definition",
+          "name": "stepped",
+          "key": "src/lowering-PROOF.stepped",
+          "kind": "definition",
+          "lines": [
+            254,
+            257
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "U32",
+            "U32.is_eq",
+            "U32.sub",
+            "Unit",
+            "src/core.Datatype",
+            "src/core.exhausted",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Stepped",
+            "src/lowering-PROOF.columned",
+            "src/lowering-PROOF.stepped_choice",
+            "src/matrix.column_step",
+            "src/matrix.step",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Stepped",
+            "src/matrix.step",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 18091,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 18122,
+              "names": [
+                "columns",
+                "rows",
+                "scope",
+                "token",
+                "types",
+                "work"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "U32.sub",
+              "src/core.exhausted",
+              "src/lowering-PROOF.columned",
+              "src/lowering-PROOF.stepped_choice",
+              "src/matrix.column_step"
+            ],
+            "types": [
+              "U32",
+              "Unit"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::after_no:definition",
+          "name": "after_no",
+          "key": "src/lowering-PROOF.after_no",
+          "kind": "definition",
+          "lines": [
+            259,
+            260
+          ],
+          "features": [
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "Result",
+            "U32",
+            "src/matrix.Expansion",
+            "src/syntax.Decision",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/matrix.Expansion",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 18407,
+              "names": [
+                "column",
+                "pattern",
+                "positive",
+                "token"
+              ]
+            },
+            {
+              "offset": 18419,
+              "names": [
+                "column",
+                "negative",
+                "pattern",
+                "positive",
+                "token"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [
+              "Done",
+              "src/matrix.Expansion",
+              "src/syntax.Decision"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::after_yes:definition",
+          "name": "after_yes",
+          "key": "src/lowering-PROOF.after_yes",
+          "kind": "definition",
+          "lines": [
+            262,
+            266
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "generics",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/lowering-PROOF.after_no",
+            "src/matrix.Expansion",
+            "src/matrix.expand",
+            "src/matrix.residual",
+            "src/matrix.thread",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/matrix.Expansion",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 18711,
+              "names": [
+                "binding",
+                "column",
+                "n",
+                "no",
+                "pattern",
+                "scope",
+                "token",
+                "types"
+              ]
+            },
+            {
+              "offset": 18723,
+              "names": [
+                "binding",
+                "column",
+                "n",
+                "no",
+                "pattern",
+                "positive",
+                "scope",
+                "token",
+                "types"
+              ]
+            },
+            {
+              "offset": 18809,
+              "names": [
+                "column",
+                "left",
+                "n",
+                "no",
+                "pattern",
+                "positive",
+                "token",
+                "types"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.after_no",
+              "src/matrix.expand",
+              "src/matrix.residual",
+              "src/matrix.thread",
+              "src/syntax.bind"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::opened_tree:definition",
+          "name": "opened_tree",
+          "key": "src/lowering-PROOF.opened_tree",
+          "kind": "definition",
+          "lines": [
+            268,
+            288
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "literals.tuple",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Nat",
+            "Tuple",
+            "U32",
+            "src/catalog.ConstructorRef",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Selected",
+            "src/lowering-PROOF.after_no",
+            "src/lowering-PROOF.after_yes",
+            "src/lowering-PROOF.selected_bind",
+            "src/lowering-PROOF.threaded",
+            "src/matrix.Expansion",
+            "src/matrix.at_level",
+            "src/matrix.expand",
+            "src/matrix.opened",
+            "src/matrix.reference",
+            "src/matrix.residual",
+            "src/matrix.thread",
+            "src/patterns.Fields",
+            "src/patterns.branch",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "U32",
+            "src/catalog.ConstructorRef",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Selected",
+            "src/lowering-PROOF.after_yes",
+            "src/matrix.Expansion",
+            "src/matrix.at_level",
+            "src/matrix.expand",
+            "src/matrix.opened",
+            "src/matrix.reference",
+            "src/matrix.thread",
+            "src/patterns.Fields",
+            "src/patterns.branch",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.bind"
+          ],
+          "captures": [
+            {
+              "offset": 19410,
+              "names": [
+                "binding",
+                "column",
+                "n",
+                "no",
+                "pattern",
+                "scope",
+                "token",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 19489,
+              "names": [
+                "binding",
+                "column",
+                "level",
+                "n",
+                "no",
+                "pattern",
+                "scope",
+                "token",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 19584,
+              "names": [
+                "binding",
+                "column",
+                "n",
+                "no",
+                "pattern",
+                "scope",
+                "token",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 19873,
+              "names": [
+                "column",
+                "known",
+                "level",
+                "n",
+                "name",
+                "no",
+                "param",
+                "pattern",
+                "quantity",
+                "scope",
+                "token",
+                "type_id",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 19970,
+              "names": [
+                "column",
+                "known",
+                "level",
+                "n",
+                "name",
+                "no",
+                "param",
+                "pattern",
+                "quantity",
+                "scope",
+                "token",
+                "type_id",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 20161,
+              "names": [
+                "body",
+                "column",
+                "known",
+                "level",
+                "n",
+                "name",
+                "no",
+                "no_ih",
+                "param",
+                "pattern",
+                "pn",
+                "py",
+                "quantity",
+                "scope",
+                "token",
+                "type_id",
+                "types",
+                "work",
+                "yes",
+                "yes_ih"
+              ]
+            },
+            {
+              "offset": 20244,
+              "names": [
+                "column",
+                "known",
+                "level",
+                "n",
+                "name",
+                "no",
+                "param",
+                "pattern",
+                "quantity",
+                "scope",
+                "token",
+                "type_id",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 20436,
+              "names": [
+                "body",
+                "column",
+                "known",
+                "level",
+                "n",
+                "name",
+                "no",
+                "no_ih",
+                "param",
+                "pattern",
+                "pn",
+                "py",
+                "quantity",
+                "scope",
+                "token",
+                "type_id",
+                "types",
+                "work",
+                "yes",
+                "yes_ih"
+              ]
+            },
+            {
+              "offset": 20618,
+              "names": [
+                "body",
+                "column",
+                "known",
+                "level",
+                "n",
+                "name",
+                "no",
+                "no_ih",
+                "param",
+                "pattern",
+                "pn",
+                "quantity",
+                "scope",
+                "token",
+                "type_id",
+                "types"
+              ]
+            },
+            {
+              "offset": 20631,
+              "names": [
+                "body",
+                "column",
+                "known",
+                "level",
+                "n",
+                "name",
+                "no",
+                "no_ih",
+                "param",
+                "pattern",
+                "pn",
+                "positive",
+                "quantity",
+                "scope",
+                "token",
+                "type_id",
+                "types"
+              ]
+            },
+            {
+              "offset": 20640,
+              "names": [
+                "body",
+                "column",
+                "known",
+                "left",
+                "level",
+                "n",
+                "name",
+                "no",
+                "no_ih",
+                "param",
+                "pattern",
+                "pn",
+                "positive",
+                "quantity",
+                "scope",
+                "token",
+                "type_id",
+                "types"
+              ]
+            },
+            {
+              "offset": 20775,
+              "names": [
+                "column",
+                "left",
+                "n",
+                "no",
+                "pattern",
+                "positive",
+                "token",
+                "types"
+              ]
+            },
+            {
+              "offset": 20894,
+              "names": [
+                "body",
+                "column",
+                "left",
+                "ly",
+                "n",
+                "no",
+                "no_ih",
+                "pattern",
+                "pn",
+                "positive",
+                "token",
+                "types"
+              ]
+            },
+            {
+              "offset": 21015,
+              "names": [
+                "ly"
+              ]
+            },
+            {
+              "offset": 21027,
+              "names": [
+                "ly"
+              ]
+            },
+            {
+              "offset": 21035,
+              "names": [
+                "ly"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.after_no",
+              "src/lowering-PROOF.after_yes",
+              "src/lowering-PROOF.selected_bind",
+              "src/lowering-PROOF.threaded",
+              "src/matrix.expand",
+              "src/matrix.opened",
+              "src/matrix.reference",
+              "src/matrix.residual",
+              "src/matrix.thread",
+              "src/patterns.branch",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Tuple",
+              "src/core.Binding"
+            ],
+            "dynamic_calls": [
+              "no_ih",
+              "yes_ih"
+            ]
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::decided_tree:definition",
+          "name": "decided_tree",
+          "key": "src/lowering-PROOF.decided_tree",
+          "kind": "definition",
+          "lines": [
+            290,
+            299
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Nat",
+            "Succ",
+            "U32",
+            "src/catalog.ConstructorRef",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Selected",
+            "src/lowering-PROOF.after_yes",
+            "src/lowering-PROOF.opened_tree",
+            "src/lowering-PROOF.selected_bind",
+            "src/matrix.Expansion",
+            "src/matrix.at_level",
+            "src/matrix.column_binding",
+            "src/matrix.expand",
+            "src/matrix.opened",
+            "src/matrix.reference",
+            "src/matrix.thread",
+            "src/patterns.Fields",
+            "src/patterns.branch",
+            "src/scope.Scope",
+            "src/syntax.Decision",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Selected",
+            "src/matrix.expand",
+            "src/scope.Scope",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 21718,
+              "names": [
+                "column",
+                "n",
+                "no",
+                "pattern",
+                "scope",
+                "token",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 21749,
+              "names": [
+                "binding",
+                "column",
+                "n",
+                "no",
+                "pattern",
+                "scope",
+                "token",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 21828,
+              "names": [
+                "binding",
+                "column",
+                "level",
+                "n",
+                "no",
+                "pattern",
+                "scope",
+                "token",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 21923,
+              "names": [
+                "binding",
+                "column",
+                "n",
+                "no",
+                "pattern",
+                "scope",
+                "token",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 22067,
+              "names": [
+                "body",
+                "column",
+                "n",
+                "no",
+                "no_ih",
+                "pattern",
+                "pn",
+                "py",
+                "scope",
+                "token",
+                "types",
+                "work",
+                "yes",
+                "yes_ih"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.after_yes",
+              "src/lowering-PROOF.opened_tree",
+              "src/lowering-PROOF.selected_bind",
+              "src/matrix.at_level",
+              "src/matrix.column_binding",
+              "src/matrix.expand",
+              "src/matrix.opened",
+              "src/matrix.reference",
+              "src/matrix.thread",
+              "src/patterns.branch",
+              "src/syntax.bind"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::expanded:definition",
+          "name": "expanded",
+          "key": "src/lowering-PROOF.expanded",
+          "kind": "definition",
+          "lines": [
+            302,
+            333
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.nat",
+            "literals.tuple",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "List",
+            "Nat",
+            "Succ",
+            "Tuple",
+            "U32",
+            "U32.sub",
+            "Unit",
+            "Zero",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Selected",
+            "src/lowering-PROOF.decided_tree",
+            "src/lowering-PROOF.expanded",
+            "src/lowering-PROOF.selected_bind",
+            "src/lowering-PROOF.selected_step",
+            "src/lowering-PROOF.stepped",
+            "src/lowering-PROOF.threaded",
+            "src/matrix.Expansion",
+            "src/matrix.alias",
+            "src/matrix.expand",
+            "src/matrix.step",
+            "src/matrix.thread",
+            "src/scope.Scope",
+            "src/syntax.Alias",
+            "src/syntax.Arm",
+            "src/syntax.Binding",
+            "src/syntax.Call",
+            "src/syntax.Constructor",
+            "src/syntax.Datatype",
+            "src/syntax.Decision",
+            "src/syntax.Function",
+            "src/syntax.Match",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Parameter",
+            "src/syntax.Promotion",
+            "src/syntax.Remainder",
+            "src/syntax.Sequence",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-PROOF.Lowers",
+            "src/lowering-PROOF.Selected",
+            "src/matrix.expand",
+            "src/scope.Scope",
+            "src/syntax.Node"
+          ],
+          "captures": [
+            {
+              "offset": 22634,
+              "names": [
+                "n",
+                "scope",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 22705,
+              "names": [
+                "body",
+                "n",
+                "scope",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 22714,
+              "names": [
+                "body",
+                "n",
+                "scope",
+                "tree",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 22956,
+              "names": [
+                "level",
+                "mark",
+                "n",
+                "rest",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 23008,
+              "names": [
+                "level",
+                "mark",
+                "token"
+              ]
+            },
+            {
+              "offset": 23016,
+              "names": [
+                "level",
+                "mark",
+                "token",
+                "tree"
+              ]
+            },
+            {
+              "offset": 23098,
+              "names": [
+                "body",
+                "level",
+                "mark",
+                "n",
+                "p",
+                "rest",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 23151,
+              "names": [
+                "level",
+                "mark",
+                "token"
+              ]
+            },
+            {
+              "offset": 23159,
+              "names": [
+                "level",
+                "mark",
+                "token",
+                "tree"
+              ]
+            },
+            {
+              "offset": 23514,
+              "names": [
+                "body",
+                "n",
+                "types",
+                "yes"
+              ]
+            },
+            {
+              "offset": 23524,
+              "names": [
+                "body",
+                "n",
+                "scope",
+                "types",
+                "yes"
+              ]
+            },
+            {
+              "offset": 23533,
+              "names": [
+                "body",
+                "n",
+                "scope",
+                "types",
+                "work",
+                "yes"
+              ]
+            },
+            {
+              "offset": 23595,
+              "names": [
+                "body",
+                "n",
+                "no",
+                "types"
+              ]
+            },
+            {
+              "offset": 23605,
+              "names": [
+                "body",
+                "n",
+                "no",
+                "scope",
+                "types"
+              ]
+            },
+            {
+              "offset": 23614,
+              "names": [
+                "body",
+                "n",
+                "no",
+                "scope",
+                "types",
+                "work"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.sub",
+              "src/lowering-PROOF.decided_tree",
+              "src/lowering-PROOF.expanded",
+              "src/lowering-PROOF.selected_bind",
+              "src/lowering-PROOF.selected_step",
+              "src/lowering-PROOF.stepped",
+              "src/lowering-PROOF.threaded",
+              "src/matrix.alias",
+              "src/matrix.expand",
+              "src/matrix.step",
+              "src/matrix.thread"
+            ],
+            "types": [
+              "Done",
+              "Succ",
+              "Tuple",
+              "U32",
+              "Unit",
+              "Zero",
+              "src/matrix.Expansion",
+              "src/syntax.Alias",
+              "src/syntax.Arm",
+              "src/syntax.Binding",
+              "src/syntax.Call",
+              "src/syntax.Constructor",
+              "src/syntax.Datatype",
+              "src/syntax.Decision",
+              "src/syntax.Function",
+              "src/syntax.Match",
+              "src/syntax.Matrix",
+              "src/syntax.Parameter",
+              "src/syntax.Promotion",
+              "src/syntax.Remainder",
+              "src/syntax.Sequence",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::settled:definition",
+          "name": "settled",
+          "key": "src/lowering-PROOF.settled",
+          "kind": "definition",
+          "lines": [
+            335,
+            351
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "proofs",
+            "quantities.affine"
+          ],
+          "references": [
+            "src/lowering-LAWS.Leaf",
+            "src/lowering-PROOF.Lowers",
+            "src/syntax.Alias",
+            "src/syntax.Arm",
+            "src/syntax.Binding",
+            "src/syntax.Call",
+            "src/syntax.Constructor",
+            "src/syntax.Datatype",
+            "src/syntax.Decision",
+            "src/syntax.Function",
+            "src/syntax.Match",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Parameter",
+            "src/syntax.Promotion",
+            "src/syntax.Remainder",
+            "src/syntax.Sequence",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "src/lowering-LAWS.Leaf",
+            "src/lowering-PROOF.Lowers",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/syntax.Alias",
+              "src/syntax.Arm",
+              "src/syntax.Binding",
+              "src/syntax.Call",
+              "src/syntax.Constructor",
+              "src/syntax.Datatype",
+              "src/syntax.Decision",
+              "src/syntax.Function",
+              "src/syntax.Match",
+              "src/syntax.Matrix",
+              "src/syntax.Parameter",
+              "src/syntax.Promotion",
+              "src/syntax.Remainder",
+              "src/syntax.Sequence",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/lowering-PROOF.bend::L.irrefutable_first_row_selected:law_fill",
+          "name": "L.irrefutable_first_row_selected",
+          "key": "src/lowering-LAWS.irrefutable_first_row_selected",
+          "kind": "law_fill",
+          "lines": [
+            353,
+            356
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "rewrites",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-LAWS.Leaf",
+            "src/lowering-LAWS.Leaves",
+            "src/lowering-PROOF.Led",
+            "src/lowering-PROOF.Selected",
+            "src/lowering-PROOF.expanded",
+            "src/lowering-PROOF.settled",
+            "src/matrix.Expansion",
+            "src/matrix.expand",
+            "src/scope.Scope",
+            "src/syntax.Arm",
+            "src/syntax.Error",
+            "src/syntax.Matrix",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/lowering-LAWS.Irrefutable",
+            "src/lowering-LAWS.Leaf",
+            "src/lowering-LAWS.Leaves",
+            "src/matrix.Expansion",
+            "src/matrix.expand",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 24852,
+              "names": [
+                "body"
+              ]
+            },
+            {
+              "offset": 24853,
+              "names": [
+                "_",
+                "body"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/lowering-PROOF.expanded",
+              "src/lowering-PROOF.settled"
+            ],
+            "types": [
+              "Con",
+              "src/lowering-PROOF.Led",
+              "src/syntax.Arm",
+              "src/syntax.Matrix",
+              "src/syntax.Sequence"
+            ],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
       "file": "src/matrix-LAWS.bend",
-      "sha256": "e3d19a4039fc88fccc062a934210231b284b486d0847b0d41f00da55d17d3d8b",
+      "sha256": "aef5cc3d9e48ee784a415cc9b905cfe477d1c87546dc657a00af54633d0477cb",
       "imports": [
         {
           "module": "Base",
@@ -54842,13 +58657,181 @@
           }
         },
         {
+          "id": "src/matrix-LAWS.bend::wild:definition",
+          "name": "wild",
+          "key": "src/matrix-LAWS.wild",
+          "kind": "definition",
+          "lines": [
+            110,
+            110
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.string"
+          ],
+          "references": [
+            "src/matrix-LAWS.token",
+            "src/syntax.Node",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/matrix-LAWS.token"
+            ],
+            "types": [
+              "String",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::bound:definition",
+          "name": "bound",
+          "key": "src/matrix-LAWS.bound",
+          "kind": "definition",
+          "lines": [
+            111,
+            111
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine"
+          ],
+          "references": [
+            "src/matrix-LAWS.token",
+            "src/syntax.Alias",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/matrix-LAWS.token"
+            ],
+            "types": [
+              "String",
+              "U32",
+              "src/syntax.Alias"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::off:definition",
+          "name": "off",
+          "key": "src/matrix-LAWS.off",
+          "kind": "definition",
+          "lines": [
+            112,
+            112
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.string",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "String",
+            "src/matrix-LAWS.ctor",
+            "src/matrix-LAWS.token",
+            "src/syntax.Decision",
+            "src/syntax.Node",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "String",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/matrix-LAWS.ctor",
+              "src/matrix-LAWS.token"
+            ],
+            "types": [
+              "String",
+              "src/syntax.Decision",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::irrefutable_first_row_witness:law",
+          "name": "irrefutable_first_row_witness",
+          "key": "src/matrix-LAWS.irrefutable_first_row_witness",
+          "kind": "law",
+          "lines": [
+            114,
+            117
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/matrix-LAWS.bound",
+            "src/matrix-LAWS.ctor",
+            "src/matrix-LAWS.flag",
+            "src/matrix-LAWS.off",
+            "src/matrix-LAWS.parameters",
+            "src/matrix-LAWS.row",
+            "src/matrix-LAWS.token",
+            "src/matrix-LAWS.wild",
+            "src/matrix.Expansion",
+            "src/matrix.expand",
+            "src/syntax.Error",
+            "src/syntax.Matrix",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/matrix-LAWS.bend::exhaustive_matrix_witness:law",
           "name": "exhaustive_matrix_witness",
           "key": "src/matrix-LAWS.exhaustive_matrix_witness",
           "kind": "law",
           "lines": [
-            108,
-            113
+            119,
+            124
           ],
           "features": [
             "calls",
@@ -54894,8 +58877,8 @@
           "key": "src/matrix-LAWS.erased_alias_stays_erased",
           "kind": "law",
           "lines": [
-            115,
-            120
+            126,
+            131
           ],
           "features": [
             "calls",
@@ -54949,8 +58932,8 @@
           "key": "src/matrix-LAWS.alias_preserves_descent_and_identity",
           "kind": "law",
           "lines": [
-            122,
-            126
+            133,
+            137
           ],
           "features": [
             "calls",
@@ -55001,8 +58984,8 @@
           "key": "src/matrix-LAWS.remainder_omits_split",
           "kind": "law",
           "lines": [
-            131,
-            136
+            142,
+            147
           ],
           "features": [
             "calls",
@@ -55048,8 +59031,8 @@
           "key": "src/matrix-LAWS.remainder_keeps_other",
           "kind": "law",
           "lines": [
-            138,
-            143
+            149,
+            154
           ],
           "features": [
             "calls",
@@ -55095,8 +59078,8 @@
           "key": "src/matrix-LAWS.remainder_drops_split_rows",
           "kind": "law",
           "lines": [
-            145,
-            154
+            156,
+            165
           ],
           "features": [
             "calls",
@@ -55147,8 +59130,8 @@
           "key": "src/matrix-LAWS.irrefutable_remainder",
           "kind": "law",
           "lines": [
-            156,
-            164
+            167,
+            175
           ],
           "features": [
             "calls",
@@ -55191,8 +59174,8 @@
           "key": "src/matrix-LAWS.anonymous_reference_is_free",
           "kind": "law",
           "lines": [
-            166,
-            169
+            177,
+            180
           ],
           "features": [
             "calls",
@@ -55240,8 +59223,8 @@
           "key": "src/matrix-LAWS.default_reference_stays_live",
           "kind": "law",
           "lines": [
-            171,
-            178
+            182,
+            189
           ],
           "features": [
             "calls",
@@ -55290,8 +59273,8 @@
           "key": "src/matrix-LAWS.empty_reference_stays_live",
           "kind": "law",
           "lines": [
-            180,
-            187
+            191,
+            198
           ],
           "features": [
             "calls",
@@ -55341,8 +59324,8 @@
           "key": "src/matrix-LAWS.pending_binder_witnesses_nothing",
           "kind": "law",
           "lines": [
-            191,
-            202
+            202,
+            213
           ],
           "features": [
             "calls",
@@ -55396,8 +59379,8 @@
           "key": "src/matrix-LAWS.void",
           "kind": "definition",
           "lines": [
-            204,
-            204
+            215,
+            215
           ],
           "features": [
             "calls",
@@ -55434,8 +59417,8 @@
           "key": "src/matrix-LAWS.erased_empty_is_not_dead",
           "kind": "law",
           "lines": [
-            206,
-            208
+            217,
+            219
           ],
           "features": [
             "calls",
@@ -55482,8 +59465,8 @@
           "key": "src/matrix-LAWS.live_empty_is_dead",
           "kind": "law",
           "lines": [
-            210,
-            212
+            221,
+            223
           ],
           "features": [
             "calls",
@@ -55529,8 +59512,8 @@
           "key": "src/matrix-LAWS.introduced_empty_witness",
           "kind": "law",
           "lines": [
-            215,
-            216
+            226,
+            227
           ],
           "features": [
             "calls",
@@ -55568,8 +59551,8 @@
           "key": "src/matrix-LAWS.pending_empty_witness",
           "kind": "law",
           "lines": [
-            218,
-            219
+            229,
+            230
           ],
           "features": [
             "calls",
@@ -55607,8 +59590,8 @@
           "key": "src/matrix-LAWS.let_alias_available",
           "kind": "law",
           "lines": [
-            222,
-            227
+            233,
+            238
           ],
           "features": [
             "calls",
@@ -55659,8 +59642,8 @@
           "key": "src/matrix-LAWS.terminal_expansion_preserves_budget",
           "kind": "law",
           "lines": [
-            229,
-            234
+            240,
+            245
           ],
           "features": [
             "calls",
@@ -55713,8 +59696,8 @@
           "key": "src/matrix-LAWS.leaf_expansion_spends_one",
           "kind": "law",
           "lines": [
-            236,
-            243
+            247,
+            254
           ],
           "features": [
             "calls",
@@ -55772,8 +59755,8 @@
           "key": "src/matrix-LAWS.reference_is_not_rebuilt",
           "kind": "law",
           "lines": [
-            247,
-            254
+            258,
+            265
           ],
           "features": [
             "calls",
@@ -55821,8 +59804,8 @@
           "key": "src/matrix-LAWS.ref",
           "kind": "definition",
           "lines": [
-            259,
-            259
+            270,
+            270
           ],
           "features": [
             "calls",
@@ -55860,8 +59843,8 @@
           "key": "src/matrix-LAWS.node",
           "kind": "definition",
           "lines": [
-            260,
-            261
+            271,
+            272
           ],
           "features": [
             "calls",
@@ -55910,8 +59893,8 @@
           "key": "src/matrix-LAWS.refined",
           "kind": "definition",
           "lines": [
-            262,
-            262
+            273,
+            273
           ],
           "features": [
             "calls",
@@ -55958,8 +59941,8 @@
           "key": "src/matrix-LAWS.descent",
           "kind": "definition",
           "lines": [
-            263,
-            265
+            274,
+            276
           ],
           "features": [
             "calls",
@@ -56015,8 +59998,8 @@
           "key": "src/matrix-LAWS.rebuilt_l",
           "kind": "definition",
           "lines": [
-            266,
-            266
+            277,
+            277
           ],
           "features": [
             "calls",
@@ -56061,8 +60044,8 @@
           "key": "src/matrix-LAWS.rebuilt_descendant_witness",
           "kind": "law",
           "lines": [
-            268,
-            269
+            279,
+            280
           ],
           "features": [
             "calls",
@@ -56096,8 +60079,8 @@
           "key": "src/matrix-LAWS.rebuilt_root_witness",
           "kind": "law",
           "lines": [
-            271,
-            272
+            282,
+            283
           ],
           "features": [
             "calls",
@@ -56135,8 +60118,8 @@
           "key": "src/matrix-LAWS.changed_field_witness",
           "kind": "law",
           "lines": [
-            274,
-            275
+            285,
+            286
           ],
           "features": [
             "calls",
@@ -56174,8 +60157,8 @@
           "key": "src/matrix-LAWS.retyped_constant_witness",
           "kind": "law",
           "lines": [
-            277,
-            278
+            288,
+            289
           ],
           "features": [
             "calls",
@@ -56211,8 +60194,8 @@
           "key": "src/matrix-LAWS.rebuilt_descendant_call_witness",
           "kind": "law",
           "lines": [
-            280,
-            284
+            291,
+            295
           ],
           "features": [
             "calls",
@@ -56268,7 +60251,7 @@
     },
     {
       "file": "src/matrix-PROOF.bend",
-      "sha256": "bcc300f9affa78ba35b292ef4b47cce6433183364de6376b351919538af1ddc6",
+      "sha256": "2c99878b52cc18d159f1752a7774d02d7da1cdc0362f33e0c26325087fd68050",
       "imports": [
         {
           "module": "Base",
@@ -56305,6 +60288,12 @@
           "alias": "Earlier",
           "file": "src/recursion-PROOF.bend",
           "feature": "imports.local"
+        },
+        {
+          "module": "./lowering-PROOF.bend",
+          "alias": "Lowering",
+          "file": "src/lowering-PROOF.bend",
+          "feature": "imports.local"
         }
       ],
       "features": [
@@ -56338,8 +60327,8 @@
           "key": "src/matrix-LAWS.selection_congruence",
           "kind": "law_fill",
           "lines": [
-            8,
-            12
+            9,
+            13
           ],
           "features": [
             "calls",
@@ -56408,7 +60397,7 @@
               ]
             },
             {
-              "offset": 337,
+              "offset": 378,
               "names": [
                 "arm"
               ]
@@ -56431,8 +60420,8 @@
           "key": "src/matrix-LAWS.specialization_preserves_first_match",
           "kind": "law_fill",
           "lines": [
-            14,
-            69
+            15,
+            70
           ],
           "features": [
             "calls",
@@ -56496,13 +60485,13 @@
           ],
           "captures": [
             {
-              "offset": 965,
+              "offset": 1006,
               "names": [
                 "arm"
               ]
             },
             {
-              "offset": 1266,
+              "offset": 1307,
               "names": [
                 "arm"
               ]
@@ -56547,8 +60536,8 @@
           "key": "src/matrix-LAWS.irrefutable_specialization",
           "kind": "law_fill",
           "lines": [
-            71,
-            71
+            72,
+            72
           ],
           "features": [
             "calls",
@@ -56598,8 +60587,8 @@
           "key": "src/matrix-LAWS.irrefutable_default",
           "kind": "law_fill",
           "lines": [
-            72,
-            72
+            73,
+            73
           ],
           "features": [
             "calls",
@@ -56647,8 +60636,8 @@
           "key": "src/matrix-LAWS.first_row_selected",
           "kind": "law_fill",
           "lines": [
-            73,
-            73
+            74,
+            74
           ],
           "features": [
             "calls",
@@ -56702,8 +60691,8 @@
           "key": "src/matrix-LAWS.lowering_work_exhaustion",
           "kind": "law_fill",
           "lines": [
-            74,
-            74
+            75,
+            75
           ],
           "features": [
             "calls",
@@ -56757,8 +60746,8 @@
           "key": "src/matrix-LAWS.irrefutable_lowering_witness",
           "kind": "law_fill",
           "lines": [
-            75,
-            75
+            76,
+            76
           ],
           "features": [
             "calls",
@@ -56810,8 +60799,8 @@
           "key": "src/matrix-LAWS.exhaustive_matrix_witness",
           "kind": "law_fill",
           "lines": [
-            76,
-            76
+            77,
+            77
           ],
           "features": [
             "calls",
@@ -56857,13 +60846,75 @@
           }
         },
         {
+          "id": "src/matrix-PROOF.bend::L.irrefutable_first_row_witness:law_fill",
+          "name": "L.irrefutable_first_row_witness",
+          "key": "src/matrix-LAWS.irrefutable_first_row_witness",
+          "kind": "law_fill",
+          "lines": [
+            78,
+            78
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/matrix-LAWS.bound",
+            "src/matrix-LAWS.ctor",
+            "src/matrix-LAWS.flag",
+            "src/matrix-LAWS.off",
+            "src/matrix-LAWS.parameters",
+            "src/matrix-LAWS.row",
+            "src/matrix-LAWS.token",
+            "src/matrix-LAWS.wild",
+            "src/matrix.Expansion",
+            "src/matrix.expand",
+            "src/syntax.Error",
+            "src/syntax.Matrix",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "Result",
+            "src/matrix-LAWS.bound",
+            "src/matrix-LAWS.ctor",
+            "src/matrix-LAWS.flag",
+            "src/matrix-LAWS.off",
+            "src/matrix-LAWS.parameters",
+            "src/matrix-LAWS.row",
+            "src/matrix-LAWS.token",
+            "src/matrix-LAWS.wild",
+            "src/matrix.Expansion",
+            "src/matrix.expand",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/matrix-PROOF.bend::L.erased_alias_stays_erased:law_fill",
           "name": "L.erased_alias_stays_erased",
           "key": "src/matrix-LAWS.erased_alias_stays_erased",
           "kind": "law_fill",
           "lines": [
-            77,
-            77
+            79,
+            79
           ],
           "features": [
             "calls",
@@ -56916,8 +60967,8 @@
           "key": "src/matrix-LAWS.alias_preserves_descent_and_identity",
           "kind": "law_fill",
           "lines": [
-            78,
-            78
+            80,
+            80
           ],
           "features": [
             "calls",
@@ -56967,8 +61018,8 @@
           "key": "src/matrix-LAWS.remainder_omits_split",
           "kind": "law_fill",
           "lines": [
-            80,
-            83
+            82,
+            85
           ],
           "features": [
             "calls",
@@ -57007,7 +61058,7 @@
           ],
           "captures": [
             {
-              "offset": 6939,
+              "offset": 7024,
               "names": [
                 "ctor",
                 "head",
@@ -57015,14 +61066,14 @@
               ]
             },
             {
-              "offset": 6984,
+              "offset": 7069,
               "names": [
                 "ctor",
                 "tail"
               ]
             },
             {
-              "offset": 7012,
+              "offset": 7097,
               "names": [
                 "ctor",
                 "head",
@@ -57044,8 +61095,8 @@
           "key": "src/matrix-LAWS.remainder_keeps_other",
           "kind": "law_fill",
           "lines": [
-            84,
-            87
+            86,
+            89
           ],
           "features": [
             "calls",
@@ -57084,7 +61135,7 @@
           ],
           "captures": [
             {
-              "offset": 7185,
+              "offset": 7270,
               "names": [
                 "ctor",
                 "head",
@@ -57092,14 +61143,14 @@
               ]
             },
             {
-              "offset": 7230,
+              "offset": 7315,
               "names": [
                 "ctor",
                 "tail"
               ]
             },
             {
-              "offset": 7258,
+              "offset": 7343,
               "names": [
                 "ctor",
                 "head",
@@ -57121,8 +61172,8 @@
           "key": "src/matrix-LAWS.remainder_drops_split_rows",
           "kind": "law_fill",
           "lines": [
-            88,
-            92
+            90,
+            94
           ],
           "features": [
             "calls",
@@ -57166,7 +61217,7 @@
           ],
           "captures": [
             {
-              "offset": 7456,
+              "offset": 7541,
               "names": [
                 "args",
                 "arm",
@@ -57178,14 +61229,14 @@
               ]
             },
             {
-              "offset": 7500,
+              "offset": 7585,
               "names": [
                 "ctor",
                 "rows"
               ]
             },
             {
-              "offset": 7526,
+              "offset": 7611,
               "names": [
                 "args",
                 "arm",
@@ -57211,8 +61262,8 @@
           "key": "src/matrix-LAWS.irrefutable_remainder",
           "kind": "law_fill",
           "lines": [
-            93,
-            93
+            95,
+            95
           ],
           "features": [
             "calls",
@@ -57255,8 +61306,8 @@
           "key": "src/matrix-LAWS.anonymous_reference_is_free",
           "kind": "law_fill",
           "lines": [
-            94,
-            96
+            96,
+            98
           ],
           "features": [
             "calls",
@@ -57308,8 +61359,8 @@
           "key": "src/matrix-LAWS.default_reference_stays_live",
           "kind": "law_fill",
           "lines": [
-            97,
-            97
+            99,
+            99
           ],
           "features": [
             "calls",
@@ -57358,8 +61409,8 @@
           "key": "src/matrix-LAWS.empty_reference_stays_live",
           "kind": "law_fill",
           "lines": [
-            98,
-            98
+            100,
+            100
           ],
           "features": [
             "calls",
@@ -57409,8 +61460,8 @@
           "key": "src/matrix-LAWS.pending_binder_witnesses_nothing",
           "kind": "law_fill",
           "lines": [
-            99,
-            102
+            101,
+            104
           ],
           "features": [
             "calls",
@@ -57462,7 +61513,7 @@
           ],
           "captures": [
             {
-              "offset": 8115,
+              "offset": 8200,
               "names": [
                 "known",
                 "pending",
@@ -57487,8 +61538,8 @@
           "key": "src/matrix-LAWS.erased_empty_is_not_dead",
           "kind": "law_fill",
           "lines": [
-            103,
-            103
+            105,
+            105
           ],
           "features": [
             "calls",
@@ -57534,8 +61585,8 @@
           "key": "src/matrix-LAWS.live_empty_is_dead",
           "kind": "law_fill",
           "lines": [
-            104,
-            104
+            106,
+            106
           ],
           "features": [
             "calls",
@@ -57580,8 +61631,8 @@
           "key": "src/matrix-LAWS.introduced_empty_witness",
           "kind": "law_fill",
           "lines": [
-            105,
-            105
+            107,
+            107
           ],
           "features": [
             "calls",
@@ -57626,8 +61677,8 @@
           "key": "src/matrix-LAWS.pending_empty_witness",
           "kind": "law_fill",
           "lines": [
-            106,
-            106
+            108,
+            108
           ],
           "features": [
             "calls",
@@ -57672,8 +61723,8 @@
           "key": "src/matrix-LAWS.let_alias_available",
           "kind": "law_fill",
           "lines": [
-            107,
-            107
+            109,
+            109
           ],
           "features": [
             "calls",
@@ -57723,8 +61774,8 @@
           "key": "src/matrix-LAWS.terminal_expansion_preserves_budget",
           "kind": "law_fill",
           "lines": [
-            108,
-            108
+            110,
+            110
           ],
           "features": [
             "calls",
@@ -57777,8 +61828,8 @@
           "key": "src/matrix-LAWS.leaf_expansion_spends_one",
           "kind": "law_fill",
           "lines": [
-            109,
-            109
+            111,
+            111
           ],
           "features": [
             "calls",
@@ -57835,8 +61886,8 @@
           "key": "src/matrix-LAWS.reference_is_not_rebuilt",
           "kind": "law_fill",
           "lines": [
-            110,
-            110
+            112,
+            112
           ],
           "features": [
             "calls",
@@ -57884,8 +61935,8 @@
           "key": "src/matrix-LAWS.rebuilt_descendant_witness",
           "kind": "law_fill",
           "lines": [
-            111,
-            111
+            113,
+            113
           ],
           "features": [
             "calls",
@@ -57924,8 +61975,8 @@
           "key": "src/matrix-LAWS.rebuilt_root_witness",
           "kind": "law_fill",
           "lines": [
-            112,
-            112
+            114,
+            114
           ],
           "features": [
             "calls",
@@ -57970,8 +62021,8 @@
           "key": "src/matrix-LAWS.changed_field_witness",
           "kind": "law_fill",
           "lines": [
-            113,
-            113
+            115,
+            115
           ],
           "features": [
             "calls",
@@ -58016,8 +62067,8 @@
           "key": "src/matrix-LAWS.retyped_constant_witness",
           "kind": "law_fill",
           "lines": [
-            114,
-            114
+            116,
+            116
           ],
           "features": [
             "calls",
@@ -58058,8 +62109,8 @@
           "key": "src/matrix-LAWS.rebuilt_descendant_call_witness",
           "kind": "law_fill",
           "lines": [
-            115,
-            115
+            117,
+            117
           ],
           "features": [
             "calls",

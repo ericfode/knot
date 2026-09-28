@@ -105,6 +105,17 @@ law irrefutable_lowering_witness:
       C.Branch{0,Nil{},C.Case{token("match"),1,0,[C.Branch{0,Nil{},C.Value{token("On"),0,1}},C.Branch{1,Nil{},C.Value{token("On"),0,1}}]}},
       C.Branch{1,Nil{},C.Value{token("On"),0,1}}]},0,[0,1]}} : Result<S.Error,C.Checked>}
 
+# Inhabits lowering-LAWS irrefutable_first_row_selected: the overlapping
+# Off/Off row is shadowed at every leaf of the two-level lowering.
+def wild() -> S.Node: S.Variable{token("_")}
+def bound(body: S.Node) -> S.Node: S.Alias{token("_"),0,1,S.Alias{token("_"),1,1,body}}
+def off(column: String, yes: S.Node, no: S.Node) -> S.Node: S.Decision{token("match"),S.Variable{token(column)},ctor("Off"),yes,no}
+
+law irrefutable_first_row_witness:
+  {M.expand(64n,S.Matrix{token("match"),[S.Variable{token("x")},S.Variable{token("y")}],
+      [row(wild(),wild(),"On"),row(ctor("Off"),ctor("Off"),"Off")],4096},[flag()],parameters(),4096) ==
+    Done{M.Expansion{off("x",off("y",bound(ctor("On")),bound(ctor("On"))),bound(ctor("On"))),4088}} : Result<S.Error,M.Expansion>}
+
 law exhaustive_matrix_witness:
   {lower([row(ctor("Off"),ctor("Off"),"Off"),row(ctor("Off"),ctor("On"),"On"),
           row(ctor("On"),ctor("Off"),"On"),row(ctor("On"),ctor("On"),"Off")]) ==

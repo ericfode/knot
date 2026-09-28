@@ -4,6 +4,7 @@ import ./matrix.bend as M
 import ./scope.bend as E
 import ./matrix-LAWS.bend as L
 import ./recursion-PROOF.bend as Earlier
+import ./lowering-PROOF.bend as Lowering
 
 def L.selection_congruence(keep,arm,pattern,body,tail,wanted,proof):
   match keep:
@@ -74,6 +75,7 @@ def L.first_row_selected(token,arm,body,rows,types,scope): {==}
 def L.lowering_work_exhaustion(token,columns,rows,types,scope): {==}
 def L.irrefutable_lowering_witness(): {==}
 def L.exhaustive_matrix_witness(): {==}
+def L.irrefutable_first_row_witness(): {==}
 def L.erased_alias_stays_erased(name,alias,known): {==}
 def L.alias_preserves_descent_and_identity(name,alias): {==}
 

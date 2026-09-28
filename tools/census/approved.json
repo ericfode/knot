@@ -7381,6 +7381,42 @@
           "quantities.arguments",
           "types.base"
         ],
+        "src/matrix-LAWS.bend::wild:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.string"
+        ],
+        "src/matrix-LAWS.bend::bound:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine"
+        ],
+        "src/matrix-LAWS.bend::off:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.string",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/matrix-LAWS.bend::irrefutable_first_row_witness:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
         "src/matrix-LAWS.bend::exhaustive_matrix_witness:law": [
           "calls",
           "constructors",
@@ -7761,6 +7797,10 @@
         {
           "module": "./recursion-PROOF.bend",
           "file": "src/recursion-PROOF.bend"
+        },
+        {
+          "module": "./lowering-PROOF.bend",
+          "file": "src/lowering-PROOF.bend"
         }
       ],
       "declarations": {
@@ -7872,6 +7912,19 @@
           "equality",
           "fields",
           "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/matrix-PROOF.bend::L.irrefutable_first_row_witness:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
           "literals.string",
           "literals.u32",
           "proofs",
@@ -8740,6 +8793,572 @@
           "quantities.arguments",
           "quantities.reusable",
           "recursion",
+          "types.base"
+        ]
+      }
+    },
+    "src/lowering-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./scope.bend",
+          "file": "src/scope.bend"
+        },
+        {
+          "module": "./matrix.bend",
+          "file": "src/matrix.bend"
+        }
+      ],
+      "declarations": {
+        "src/lowering-LAWS.bend::Irrefutable:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base",
+          "types.data"
+        ],
+        "src/lowering-LAWS.bend::Leaf:definition": [
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "types.data"
+        ],
+        "src/lowering-LAWS.bend::Leaves:definition": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "recursion",
+          "types.type"
+        ],
+        "src/lowering-LAWS.bend::irrefutable_first_row_selected:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/lowering-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./catalog.bend",
+          "file": "src/catalog.bend"
+        },
+        {
+          "module": "./patterns.bend",
+          "file": "src/patterns.bend"
+        },
+        {
+          "module": "./scope.bend",
+          "file": "src/scope.bend"
+        },
+        {
+          "module": "./matrix.bend",
+          "file": "src/matrix.bend"
+        },
+        {
+          "module": "./lowering-LAWS.bend",
+          "file": "src/lowering-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/lowering-PROOF.bend::Led:datatype": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.erased",
+          "types.base",
+          "types.data"
+        ],
+        "src/lowering-PROOF.bend::Lowers:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base",
+          "types.data"
+        ],
+        "src/lowering-PROOF.bend::Stepped:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/lowering-PROOF.bend::Selected:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.type"
+        ],
+        "src/lowering-PROOF.bend::stepped_bind:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.erased",
+          "quantities.reusable",
+          "types.base",
+          "types.data"
+        ],
+        "src/lowering-PROOF.bend::stepped_choice:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "dependent",
+          "generics",
+          "higher-order",
+          "matches",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::selected_bind:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.erased",
+          "quantities.reusable",
+          "types.base",
+          "types.data"
+        ],
+        "src/lowering-PROOF.bend::selected_step:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::threaded:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::promoted_at:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "quantities.affine",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::promoted:definition": [
+          "calls",
+          "dependent",
+          "literals.u32",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::rebound:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::fresh_irrefutable:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::split_node:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::decision:definition": [
+          "calls",
+          "generics",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::unmatched:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "lambdas",
+          "literals.string",
+          "quantities.affine",
+          "quantities.reusable"
+        ],
+        "src/lowering-PROOF.bend::defaulted:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::splits:definition": [
+          "calls",
+          "calls.variable",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::headed_step:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::aliased_variable:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::aliased_promotion:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::decided_variable:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "literals.tuple",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::decided_promotion:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "literals.tuple",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::led:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::columned:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "rewrites",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::stepped:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::after_no:definition": [
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::after_yes:definition": [
+          "calls",
+          "captures",
+          "generics",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::opened_tree:definition": [
+          "calls",
+          "calls.variable",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "literals.tuple",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::decided_tree:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::expanded:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.tuple",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/lowering-PROOF.bend::settled:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "proofs",
+          "quantities.affine"
+        ],
+        "src/lowering-PROOF.bend::L.irrefutable_first_row_selected:law_fill": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "rewrites",
           "types.base"
         ]
       }
