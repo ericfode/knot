@@ -481,19 +481,34 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
 PRINT = re.compile(r'import Base\n\ndef main\(\) -> IO\(Unit\):\n  IO\.print\((.*)\)\n')
 
 
-def named(node, types) -> list:
-    """A closed argument subtree with each type index replaced by its type's name."""
+def named(node, types, functions) -> list:
+    """A subtree with each type index replaced by its type's name and each function index by
+    its function's name, so two tables can be compared."""
     op, t = node[0], types[node[1]]['name']
-    if op in ('lit', 'value'):
+    if op in ('lit', 'value', 'ref'):
         return [op, t, *node[2:]]
-    require(op in ('con', 'prim'), f'print argument: no named view of {op}')
-    return [op, t, node[2], [named(k, types) for k in node[3]]]
+    require(op in ('con', 'prim', 'call'), f'print argument: no named view of {op}')
+    head = functions[node[2]]['name'] if op == 'call' else node[2]
+    return [op, t, head, [named(k, types, functions) for k in node[3]]]
+
+
+def called(node, functions) -> set:
+    """Names of the functions a subtree calls, transitively."""
+    names, work = set(), [node]
+    while work:
+        n = work.pop()
+        if n[0] == 'call' and functions[n[2]]['name'] not in names:
+            names.add(functions[n[2]]['name'])
+            work.append(functions[n[2]]['body'])
+        work += n[3] if n[0] in ('con', 'prim', 'call') else []
+    return names
 
 
 def print_argument(name: str, source: str, plan: dict, strings: dict, built: dict, registry: dict) -> str | None:
     """A Program `main = IO.print(e)` has no checked core in the pinned heads (Invalid parse
     function-result), so `e` is checked as the Book `main() -> String`, whose type table is
-    `strings` (result-string's), and its projection must equal the hand plan's argument."""
+    `strings` (result-string's). Its projection, and that of every Base function it calls,
+    must equal the hand plan's argument and functions."""
     m = PRINT.fullmatch(source)
     if not m:
         return None
@@ -503,11 +518,21 @@ def print_argument(name: str, source: str, plan: dict, strings: dict, built: dic
     shown = run([built['literals']['check'], '--bundle', '.', path.relative_to(ROOT)], 120)
     require(shown['exit'] == 0, (name, 'print argument not checked', shown))
     book = from_display(shown['stdout'], strings, '', registry)
-    require([f['name'] for f in book] == ['main'], f'{name}: print argument book {[f["name"] for f in book]}')
+    require(book[-1]['name'] == 'main', f'{name}: print argument book {[f["name"] for f in book]}')
     call = next(f for f in plan['functions'] if f['name'] == 'main')['body']
     require(call[0] == 'call' and plan['functions'][call[2]]['name'] == 'IO.print', f'{name}: main is not IO.print(e)')
-    require(named(call[3][0], plan['types']) == named(book[0]['body'], strings['types']),
-            (name, 'print argument differs from the checked core', book[0]['body']))
+    mine, theirs = (plan['types'], plan['functions']), (strings['types'], book)
+    require(named(call[3][0], *mine) == named(book[-1]['body'], *theirs),
+            (name, 'print argument differs from the checked core', book[-1]['body']))
+    callees = called(call[3][0], plan['functions'])
+    require(callees == {f['name'] for f in book[:-1]}, f'{name}: print argument calls {sorted(callees)}')
+
+    def signature(f, types, functions):
+        return ([types[p]['name'] for p in f['parameters']], types[f['result']]['name'], f['slots'],
+                named(f['body'], types, functions))
+    for f in book[:-1]:
+        mine_f = next(g for g in plan['functions'] if g['name'] == f['name'])
+        require(signature(mine_f, *mine) == signature(f, *theirs), (name, f['name'], 'differs from the checked core'))
     return 'IO.print argument: checked-core'
 
 

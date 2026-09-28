@@ -1,0 +1,21 @@
+{
+ "entry":"program",
+ "representation":{"Unit":0,"U32":1,"Char":2,"String":3,"IO.OP":4},
+ "types":[
+  {"kind":"data","name":"Unit","constructors":[{"name":"Unit","fields":[]}]},
+  {"kind":"opaque","name":"U32"},
+  {"kind":"data","name":"Char","constructors":[{"name":"Chr","fields":[1]}]},
+  {"kind":"data","name":"String","constructors":[{"name":"SNil","fields":[]},{"name":"SCon","fields":[2,3]}]},
+  {"kind":"data","name":"IO.OP","constructors":[{"name":"Emit","fields":[null]},{"name":"Halt","fields":[1,3]}]},
+  {"kind":"arrow","domain":0,"result":4},
+  {"kind":"arrow","domain":5,"result":4},
+  {"kind":"erased-arrow","domain":null,"result":6}
+ ],
+ "functions":[
+  {"name":"IO.print","parameters":[3],"result":7,"slots":1,"body":["foreign",7,1,[["ref",3,0]]]},
+  {"name":"Char.to_u32","parameters":[2],"result":1,"slots":1,"body":["prim",1,19,[["ref",2,0]]]},
+  {"name":"Char.from_u32","parameters":[1],"result":2,"slots":1,"body":["prim",2,18,[["ref",1,0]]]},
+  {"name":"U32.show","parameters":[1],"result":3,"slots":1,"body":["prim",3,32,[["ref",1,0]]]},
+  {"name":"main","parameters":[],"result":7,"slots":0,"body":["call",7,0,[["call",3,3,[["call",1,1,[["call",2,2,[["lit",1,"U32",55296]]]]]]]]]}
+ ]
+}
