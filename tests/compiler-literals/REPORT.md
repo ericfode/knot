@@ -19,11 +19,13 @@ earlier expectation changed.
 | `60a68c3` | Merge `main` `43a394a` |
 | `9263b15` | Freeze: offset-expression-width (5 seed calls) and three Invalid controls, before the fix |
 | `e88b915` | `literal-offset.bend::successors`; the Offset arm checks the tail once and wraps it; laws `offset_cells`, `offset_lowering`, `offset_bound`, `single_argument_keeps_uses`; mutants offset-one-short, offset-extra-successor, offset-unchecked-type and the re-anchored offset-nat-add; offset limit probes in the gate; README, SPEC, CONTRACT, LAW_REVIEW; census approved, inventories regenerated |
-| report commit | This section, the literals receipt from the gate run, the perch-review-log entry |
+| `d0296ce` | First report commit and literals receipt, on `e88b915` |
+| `30e104e` | `offset_cells` quantified over the book (a tail may call functions); `offset_cells_call`; SPEC, CONTRACT and LAW_REVIEW state the checker law as proved (every tail that checks, against the installed Nat); census approved |
+| report commit | This section as run on `30e104e`, and the literals receipt from that run |
 
 | Finding | Disposition | Evidence |
 | --- | --- | --- |
-| [major] The offset-construction law holds only at k = 2, and SPEC does not record the general law as an open obligation (D21) | Fixed in `e88b915`. The general law is proved, so no D21 obligation is recorded for it. `literal-core-LAWS.bend::offset_cells` is an induction on a Nat k: k successors around any tail with a known value return k cells around that value in 4k+c transitions. To let the checker's own lowering meet it, the Offset arm no longer reaches the successors through a U32 count that no proof can decrement: it checks the tail once and wraps k = `U32.to_nat(count)` Succ constructors with `literal-offset.bend::successors`. `check-LAWS.bend::offset_lowering` states, for every count up to 4096 and every tail that checks, that the checker returns that wrapper with the tail's uses, and `offset_bound` that above 4096 it is `Exhausted check`. The k = 2 laws stay as witnesses. The known depth limit is recorded in SPEC and CONTRACT and is lifted from 1364 to 2047 successors end to end (table below). | All 13 `src/*PROOF.bend` print `All terms check.`; 13 negative controls fail; the frozen width book now agrees seed, evaluator and Wasm in both lanes (before: `Exhausted check budget`); 1011 of 1012 tracked books check byte-identically old and new in both lanes, the one difference being that book |
+| [major] The offset-construction law holds only at k = 2, and SPEC does not record the general law as an open obligation (D21) | Fixed in `e88b915` and `30e104e`. The general law is proved, so no D21 obligation is recorded for it. `literal-core-LAWS.bend::offset_cells` is an induction on a Nat k: in any book, k successors around any tail with a known value return k cells around that value in 4k+c transitions; `offset_cells_call` applies it to a tail that calls a function. To let the checker's own lowering meet it, the Offset arm no longer reaches the successors through a U32 count that no proof can decrement: it checks the tail once and wraps k = `U32.to_nat(count)` Succ constructors with `literal-offset.bend::successors`. `check-LAWS.bend::offset_lowering` states, for every count up to 4096 and every tail that checks to a term and its uses, against the installed Nat, that the checker returns that wrapper with those uses, and `offset_bound` that above 4096 it is `Exhausted check`. The k = 2 laws stay as witnesses. The known depth limit is recorded in SPEC and CONTRACT and is lifted from 1364 to 2047 successors end to end (table below). | All 13 `src/*PROOF.bend` print `All terms check.`; 15 negative controls fail; the frozen width book now agrees seed, evaluator and Wasm in both lanes (before: `Exhausted check budget`); 1011 of 1012 tracked books check byte-identically old and new in both lanes, the one difference being that book |
 
 ### Coordinator ruling: the selfhost pin
 
@@ -42,7 +44,8 @@ The general law was tried first, over the existing lowering.
    Nat-indexed builder and value, an induction on k generalized over the
    frames and the leftover fuel, one rewrite by the induction hypothesis. The
    tail is any term whose evaluation is a hypothesis, so the law covers every
-   tail, not only a variable. The instance k = 2, c = 1 takes 9 transitions,
+   tail with a known value, not only a variable (in any book, after the
+   review noted under Laws). The instance k = 2, c = 1 takes 9 transitions,
    the count `natural_offset` fixes.
 2. **Checker law, existing lowering.** It does not go through. The offset
    reached its successors through `M.literal`, which decrements the U32 count
@@ -96,22 +99,30 @@ output preserved, 4097 is `Exhausted check`, in both lanes.
 
 ### Laws and mutants
 
-- `literal-core-LAWS.bend::offset_cells` (36 literals laws in all; three
-  proof entries): for every k and every tail term with a known value (a
-  hypothesis on its evaluation under any frames and fuel), k successors
-  return k cells around it in `steps(k,c,m)` = 4k+c+m transitions. `cells` and
-  `steps` are the specification, defined beside the law; the compiler uses
-  neither. The builder is the compiler's own `successors`.
+- `literal-core-LAWS.bend::offset_cells` and `offset_cells_call` (37 literals
+  laws in all; three proof entries): for every k, in any book, and every tail
+  term with a known value (a hypothesis on its evaluation under any frames
+  and fuel), k successors return k cells around it in `steps(k,c,m)` = 4k+c+m
+  transitions. `cells` and `steps` are the specification, defined beside the
+  law; the compiler uses neither. The builder is the compiler's own
+  `successors`. `offset_cells` was first stated in the empty book, which
+  excluded every tail with a call, the recursion that motivated rounds 7 and
+  9; review of `e88b915` caught it. `offset_cells_call` is proved by applying
+  the general law to a tail that calls a one-function book (3 transitions, so 2
+  successors take 11), the hypothesis discharged by reflexivity: the
+  hypothesis holds for a call, and the law is not vacuous there.
 - `check-LAWS.bend::offset_lowering`, `offset_bound` and
   `single_argument_keeps_uses` (18 checker laws in all): the lowering and bound
   laws state, for every count and every tail that checks to a term and its
-  uses, the checker's exact result against the installed Nat; the last shows a
+  uses (not every tail: one that fails to check has no law), the checker's
+  exact result against the installed Nat; the last shows a
   constructor of one argument keeps its uses, why `offset` needs no
   sequencing. The k = 2 laws `natural_offset` and `offset_spelling` are
   unchanged and still pass.
-- Negative controls (thirteen single mutations in a scratch tree, each failing
+- Negative controls (fifteen single mutations in a scratch tree, each failing
   its proof entry): `offset_cells` with three leading transitions per layer, an
-  extra cell or extra successor at the base, a shifted tag; `offset_lowering`
+  extra cell or extra successor at the base, a shifted tag; `offset_cells_call`
+  with 10 transitions or a changed value; `offset_lowering`
   and `offset_bound` one successor short, wrong tag, the bound at 4095 or 4097,
   the tail's uses dropped, the tail unspelled or against no type, the
   below-bound branch not Exhausted; `single_argument_keeps_uses` with
@@ -165,10 +176,12 @@ identical, the same book.
 
 ### Gates on the round-9 fix head
 
-`BEND_NO_TELEMETRY=1 npm run -s gates` on `e88b915` passed all 22 registered
-gates (exit 0) in 648.7 seconds with 4 workers (run directory
-`run-am8gue5z`). `npm run -s gates:verify` passed 19 tests. Counts are copied
-from the runner; categories overlap and are not summed.
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `30e104e` passed all 22 registered
+gates (exit 0) in 619.8 seconds with 4 workers (run directory
+`run-e4ke8dfe`). `npm run -s gates:verify` passed 19 tests. An earlier run on
+`e88b915` passed the same 22 (648.7 s, `run-am8gue5z`); `30e104e` changes
+only laws, proofs, prose, the census and the gate's law count. Counts are
+copied from the runner; categories overlap and are not summed.
 
 | Gate | Exact counts |
 | --- | --- |
@@ -185,7 +198,7 @@ from the runner; categories overlap and are not summed.
 | recursion | fixtures=19; mutants=3 |
 | fields-wasm | boundaries=30; fixtures=8; mutants=4 |
 | modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
-| census | classes=42; declarations=1173; files=66 |
+| census | classes=42; declarations=1175; files=66 |
 | perch-context | fixtures=33; mutants=8 |
 | lint:verify | law rules=8; tests=168 |
 | bootstrap | corpus=1025; mutants=54; reached=2; stages=8 |
@@ -193,7 +206,7 @@ from the runner; categories overlap and are not summed.
 | io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
 | io-abi-2 | case mode=insensitive; fixtures=43; host boundaries=25; mutants=5; mutants killed=5; parity=153; read observations=21; reference observations=64; seed exhausted=2; seed observations=61 |
 | selfhost | blocked=63; cases=65; d4 gaps=5; judge mutants=20; mutants=3; passed=2 |
-| literals | agree eval observations=922; agree fixtures=37; artifact preservation probes=188; boundary probes=16; byte identity pairs=37; check observations=262; compile observations=262; eval observations=1110; execution lanes=2; fixtures=131; invalid fixtures=50; mutant eval observations=9; mutant fault observations=1; mutant verdict observations=15; mutant wasm observations=8; no artifact probes=188; proof entries=3; proof laws=36; reference calls=499; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=28; trust audits=74; unsupported fixtures=44; wasm observations=922 |
+| literals | agree eval observations=922; agree fixtures=37; artifact preservation probes=188; boundary probes=16; byte identity pairs=37; check observations=262; compile observations=262; eval observations=1110; execution lanes=2; fixtures=131; invalid fixtures=50; mutant eval observations=9; mutant fault observations=1; mutant verdict observations=15; mutant wasm observations=8; no artifact probes=188; proof entries=3; proof laws=37; reference calls=499; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=28; trust audits=74; unsupported fixtures=44; wasm observations=922 |
 
 Receipt drift: identical=64; semantic=17; volatile-only=9. The 16 semantic
 drifts in shared receipts (source hashes and derived code) are left for the
@@ -208,7 +221,7 @@ selfhost pin ruling above was not acted on: `c51f480`'s assertion is unchanged.
   (checking, wasm-emission, driver-pipeline, checker-laws, runtime-laws,
   catalog-laws, fields-laws, recursion-laws, literal-source-machine).
   Composition bytes, before to after: checking 46597 to 47937/48000,
-  checker-laws 23556 to 28408, literal-source-machine 43216 to 45354,
+  checker-laws 23556 to 28408, literal-source-machine 43216 to 46085,
   wasm-emission 30680 to 30920, driver-pipeline 39397 to 39637, runtime-laws
   34881 to 35350, catalog-laws 28773 to 29242, fields-laws 24509 to 24978,
   recursion-laws 22014 to 22483. All are available.
@@ -216,13 +229,20 @@ selfhost pin ruling above was not acted on: `c51f480`'s assertion is unchanged.
   truncated contexts, before to after: check.bend 7 to 7 (context-file-limit
   1 to 5), check-LAWS.bend 2 to 4 (the new `offset_lowering` and
   `offset_bound`, context-helper and context-file limits),
-  literal-core-LAWS.bend 5 to 6 (`offset_cells`, context-helper limit),
-  literal-core-PROOF.bend 0 to 1 (`L.offset_cells`), check-PROOF.bend 0 to 0 and
-  literal-offset.bend 0 (composition available, 6366/48000). The single-file
+  literal-core-LAWS.bend 5 to 7 (`offset_cells` and `offset_cells_call`,
+  context-helper limit; single-file composition 42655 to 44897/48000),
+  literal-core-PROOF.bend 0 to 2 (their fills, context-helper limit),
+  check-PROOF.bend 0 to 0 and literal-offset.bend 0 (composition available,
+  6366/48000). The single-file
   compositions of check.bend (85201) and check-LAWS.bend (87615) were already
   over the limit (83903, 84146).
 - Zero provider requests were made. Live Perch review remains the
   coordinator's.
+
+Erratum: the merge commit `60a68c3` credits Claude Opus 5.5, the trailer the
+task text prescribed, while `9263b15`, `e88b915`, `d0296ce`, `30e104e` and the
+report commit credit Claude Sonnet 5.5, the model that ran. History is not
+rewritten.
 
 ## Review round 8
 
