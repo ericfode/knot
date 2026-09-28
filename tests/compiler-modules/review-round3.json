@@ -24,6 +24,7 @@
   "findings": [
     "truncation",
     "hash",
+    "header",
     "adapters"
   ],
   "sources": {
@@ -31,6 +32,12 @@
     "hash/glued-base.bend": "65408a469c8fd81a1c695606969e6892ac351ef45fd81a48b8721ef3f8b376c8",
     "hash/glued-empty.bend": "34c5f4fb5526a7ee594f5b76ccb1e582f531cb106aaf9b868a24e422c993559e",
     "hash/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "header/bom.bend": "9338f18889cca0d788c5a52c9ee2efb689083c3b2db19c49fa124dd81e1d555d",
+    "header/formfeed.bend": "8b4ac29d1ecaa502241f469c3fca50645664f6a4d123e8f697170dcb5349397a",
+    "header/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "header/lib/other.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "header/nbsp.bend": "e86050e5972353579ed7cda8927222024766a6b44716809bf146fb8d011a0a15",
+    "header/vtab.bend": "0fd41903563391bc815ecf6c0eeb3ba4fbdd3de59032edc9e7e5b0984b91c1b0",
     "trunc/base.bend": "df1f0eced058141cd072b1a7755ab6bd3371c95affd0088eb63faa3c732fc4b7",
     "trunc/entry.bend": "5cff46f038e9666f4cbd5518c6c194043c5b44e1f555e4c8f47cddc88f806984",
     "trunc/exact.bend": "44e4f1c6fff6b176ab78dcb0ab295f68feebacb0aa7523bed430bb67a7fa441a",
@@ -288,6 +295,130 @@
         "hash/alias-comment.bend",
         "hash/lib/flag.bend"
       ]
+    },
+    {
+      "name": "header-bom",
+      "finding": "header",
+      "file": "header/bom.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "header/bom.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/header/bom.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "header-character",
+        "diagnostic_prefix": "Unsupported\tload\theader-character\t"
+      }
+    },
+    {
+      "name": "header-formfeed",
+      "finding": "header",
+      "file": "header/formfeed.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "header/formfeed.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/header/formfeed.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "header-character",
+        "diagnostic_prefix": "Unsupported\tload\theader-character\t"
+      }
+    },
+    {
+      "name": "header-nbsp",
+      "finding": "header",
+      "file": "header/nbsp.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "header/nbsp.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/header/nbsp.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "header-character",
+        "diagnostic_prefix": "Unsupported\tload\theader-character\t"
+      }
+    },
+    {
+      "name": "header-vtab",
+      "finding": "header",
+      "file": "header/vtab.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "header/vtab.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/header/vtab.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "header-character",
+        "diagnostic_prefix": "Unsupported\tload\theader-character\t"
+      }
     }
   ],
   "adapter_pins": {
