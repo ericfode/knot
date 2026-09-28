@@ -80,6 +80,8 @@ GATES = (
          ('tests/compiler-selfhost/receipts/selfhost.json',)),
     Gate('nest-round3', ('python3', 'tests/compiler-nest/round3.py'),
          ('tests/compiler-nest/receipts/round3.json',)),
+    Gate('nest-round4', ('python3', 'tests/compiler-nest/round4.py'),
+         ('tests/compiler-nest/receipts/round4.json',)),
 )
 
 
@@ -250,7 +252,7 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
             result[lane] = {k: wasm[k] for k in ('observations', 'instances', 'installed_boundary_states', 'lifecycle_checks')}
-    if gate.name in ('nest', 'nest-review', 'nest-round3'):
+    if gate.name in ('nest', 'nest-review', 'nest-round3', 'nest-round4'):
         result.update(record['counts'])
     if gate.name == 'io-host':
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):

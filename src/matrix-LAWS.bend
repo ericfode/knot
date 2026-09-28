@@ -241,3 +241,44 @@ law leaf_expansion_spends_one:
   for scope: E.Scope
   {M.expand(2n,S.Matrix{token,Nil{},[S.Arm{arm,S.Sequence{Nil{}},S.Variable{name}}],1},types,scope,1) ==
     Done{M.Expansion{S.Variable{name},0}} : Result<S.Error,M.Expansion>}
+
+# Descent through rebuilt occurrences. References keep the reference rule;
+# only a rebuilt value is compared with the refinements in scope.
+law reference_is_not_rebuilt:
+  for token: S.Token
+  for level: U32
+  for type_id: U32
+  for tail: List<&2,C.Term>
+  for bindings: List<&2,C.Binding>
+  for smaller: List<&2,U32>
+  {E.rebuilt(Con{C.Reference{token,level,type_id},tail},bindings,smaller) == False{} : Bool}
+
+# len's third row after its second row nested into t's field l: t (level 0)
+# and l (1) are refined to Node, t's v (2) to Off and l's v (4) to On;
+# l's own field (3) is unrefined. Levels 1 to 4 are strict descendants.
+def ref(level: U32, type_id: U32) -> C.Term: C.Reference{token("r"),level,type_id}
+def node(args: List<&2,C.Term>) -> C.Term:
+  C.Construct{token("Node"),1,1,[C.Parameter{token("l"),1,1},C.Parameter{token("v"),1,0}],args}
+def refined(level: U32, type_id: U32, known: Maybe<&2,C.Term>) -> C.Binding: C.Binding{token("x"),level,1,type_id,True{},known}
+def descent() -> List<&2,C.Binding>:
+  [refined(4,0,Some{C.Value{token("On"),0,1}}),refined(3,1,None{}),refined(2,0,Some{C.Value{token("Off"),0,0}}),
+   refined(1,1,Some{node([ref(3,1),ref(4,0)])}),refined(0,1,Some{node([ref(1,1),ref(2,0)])})]
+def rebuilt_l() -> C.Term: node([ref(3,1),C.Value{token("On"),0,1}])
+
+law rebuilt_descendant_witness:
+  {E.rebuilt([rebuilt_l()],descent(),[3,4,1,2]) == True{} : Bool}
+
+law rebuilt_root_witness:
+  {E.rebuilt([node([rebuilt_l(),C.Value{token("Off"),0,0}])],descent(),[3,4,1,2]) == False{} : Bool}
+
+law changed_field_witness:
+  {E.rebuilt([node([ref(3,1),C.Value{token("Off"),0,0}])],descent(),[3,4,1,2]) == False{} : Bool}
+
+law retyped_constant_witness:
+  {E.rebuilt([C.Value{token("Leaf"),1,0}],descent(),[3,4,1,2]) == False{} : Bool}
+
+law rebuilt_descendant_call_witness:
+  for +token: S.Token
+  for +uses: List<&2,U32>
+  {K.call_result(C.Checked{C.Sequence{[rebuilt_l()]},0,uses},token,0,0,0,E.Scope{descent(),5,Nil{},True{},[3,4,1,2]}) ==
+    Done{C.Checked{C.Application{token,0,0,[rebuilt_l()]},0,uses}} : Result<S.Error,C.Checked>}

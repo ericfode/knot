@@ -6230,7 +6230,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 389,
+          "declarations": 395,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -7796,6 +7796,7 @@
               "src/core.unsupported",
               "src/scope.Scope",
               "src/scope.descends",
+              "src/scope.rebuilt",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
@@ -11047,6 +11048,45 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/scope.denotes",
+            "file": "src/scope.bend",
+            "via": "src/scope.descendant",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.unfolded"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descendant",
+            "file": "src/scope.bend",
+            "via": "src/scope.rebuilt",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "List",
+              "U32",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.contains",
+              "src/scope.denotes",
+              "src/scope.layer"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.descendants",
             "file": "src/scope.bend",
             "via": "src/patterns.finish",
@@ -11155,6 +11195,19 @@
               "src/core.internal",
               "src/syntax.Error",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.layer",
+            "file": "src/scope.bend",
+            "via": "src/scope.descendant",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "src/core.Term"
             ],
             "dynamic_calls": []
           },
@@ -11276,6 +11329,23 @@
               "src/core.Parameter",
               "src/scope.Scope",
               "src/scope.levels"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.rebuilt",
+            "file": "src/scope.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.descendant"
             ],
             "dynamic_calls": []
           },
@@ -11456,6 +11526,39 @@
             "dynamic_calls": [
               "value"
             ]
+          },
+          {
+            "key": "src/scope.unfold",
+            "file": "src/scope.bend",
+            "via": "src/scope.unfolded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.layer",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.unfolded",
+            "file": "src/scope.bend",
+            "via": "src/scope.denotes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.unfold"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/scope.uninhabited",
@@ -13508,7 +13611,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 389,
+          "declarations": 395,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -15074,6 +15177,7 @@
               "src/core.unsupported",
               "src/scope.Scope",
               "src/scope.descends",
+              "src/scope.rebuilt",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
@@ -18325,6 +18429,45 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/scope.denotes",
+            "file": "src/scope.bend",
+            "via": "src/scope.descendant",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.unfolded"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descendant",
+            "file": "src/scope.bend",
+            "via": "src/scope.rebuilt",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "List",
+              "U32",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.contains",
+              "src/scope.denotes",
+              "src/scope.layer"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.descendants",
             "file": "src/scope.bend",
             "via": "src/patterns.finish",
@@ -18433,6 +18576,19 @@
               "src/core.internal",
               "src/syntax.Error",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.layer",
+            "file": "src/scope.bend",
+            "via": "src/scope.descendant",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "src/core.Term"
             ],
             "dynamic_calls": []
           },
@@ -18554,6 +18710,23 @@
               "src/core.Parameter",
               "src/scope.Scope",
               "src/scope.levels"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.rebuilt",
+            "file": "src/scope.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.descendant"
             ],
             "dynamic_calls": []
           },
@@ -18734,6 +18907,39 @@
             "dynamic_calls": [
               "value"
             ]
+          },
+          {
+            "key": "src/scope.unfold",
+            "file": "src/scope.bend",
+            "via": "src/scope.unfolded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.layer",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.unfolded",
+            "file": "src/scope.bend",
+            "via": "src/scope.denotes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.unfold"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/scope.uninhabited",
@@ -20786,7 +20992,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 340,
+          "declarations": 346,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -21757,6 +21963,7 @@
               "src/core.internal",
               "src/core.unsupported",
               "src/scope.descends",
+              "src/scope.rebuilt",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -23820,6 +24027,36 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/scope.denotes",
+            "file": "src/scope.bend",
+            "via": "src/scope.descendant",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "U32.is_eq",
+              "src/scope.unfolded"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descendant",
+            "file": "src/scope.bend",
+            "via": "src/scope.rebuilt",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.or",
+              "src/scope.contains",
+              "src/scope.denotes",
+              "src/scope.layer"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.descendants",
             "file": "src/scope.bend",
             "via": "src/patterns.finish",
@@ -23901,6 +24138,16 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/scope.layer",
+            "file": "src/scope.bend",
+            "via": "src/scope.descendant",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.levels",
             "file": "src/scope.bend",
             "via": "src/scope.parameters",
@@ -23979,6 +24226,18 @@
               "List.reverse",
               "U32.add",
               "src/scope.levels"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.rebuilt",
+            "file": "src/scope.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/scope.descendant"
             ],
             "dynamic_calls": []
           },
@@ -24104,6 +24363,32 @@
             "dynamic_calls": [
               "value"
             ]
+          },
+          {
+            "key": "src/scope.unfold",
+            "file": "src/scope.bend",
+            "via": "src/scope.unfolded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/scope.layer",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.unfolded",
+            "file": "src/scope.bend",
+            "via": "src/scope.denotes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/scope.unfold"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/scope.uninhabited",
@@ -25551,7 +25836,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 427,
+          "declarations": 433,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -27200,6 +27485,7 @@
               "src/core.unsupported",
               "src/scope.Scope",
               "src/scope.descends",
+              "src/scope.rebuilt",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
@@ -30431,6 +30717,45 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/scope.denotes",
+            "file": "src/scope.bend",
+            "via": "src/scope.descendant",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.unfolded"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descendant",
+            "file": "src/scope.bend",
+            "via": "src/scope.rebuilt",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "List",
+              "U32",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.contains",
+              "src/scope.denotes",
+              "src/scope.layer"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.descendants",
             "file": "src/scope.bend",
             "via": "src/patterns.finish",
@@ -30537,6 +30862,19 @@
               "src/core.internal",
               "src/syntax.Error",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.layer",
+            "file": "src/scope.bend",
+            "via": "src/scope.descendant",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "src/core.Term"
             ],
             "dynamic_calls": []
           },
@@ -30654,6 +30992,23 @@
               "src/core.Parameter",
               "src/scope.Scope",
               "src/scope.levels"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.rebuilt",
+            "file": "src/scope.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.descendant"
             ],
             "dynamic_calls": []
           },
@@ -30832,6 +31187,39 @@
             "dynamic_calls": [
               "value"
             ]
+          },
+          {
+            "key": "src/scope.unfold",
+            "file": "src/scope.bend",
+            "via": "src/scope.unfolded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.layer",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.unfolded",
+            "file": "src/scope.bend",
+            "via": "src/scope.denotes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/scope.unfold"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/scope.uninhabited",

@@ -76,8 +76,8 @@ def callable(reference: G.FunctionRef, +token: S.Token, +current: U32, scope: E.
 
 def call_result(value: C.Checked, +token: S.Token, +index: U32, +result: U32, current: U32, scope: E.Scope) -> Result<S.Error,C.Checked>:
   match value scope:
-    case C.Checked{C.Sequence{+items},ignored,+uses} E.Scope{bindings,next,open,live,smaller}:
-      S.choose(Result<S.Error,C.Checked>,Bool.and(U32.is_eq(index,current),Bool.not(E.descends(items,smaller))),u =>
+    case C.Checked{C.Sequence{+items},ignored,+uses} E.Scope{+bindings,next,open,live,+smaller}:
+      S.choose(Result<S.Error,C.Checked>,Bool.and(Bool.and(U32.is_eq(index,current),Bool.not(E.descends(items,smaller))),Bool.not(E.rebuilt(items,bindings,smaller))),u =>
         C.unsupported(C.Checked,"recursive-call",token),u => Done{C.Checked{C.Application{token,index,result,items},result,uses}})
     case _ _: C.internal(C.Checked,"arguments-result")
 

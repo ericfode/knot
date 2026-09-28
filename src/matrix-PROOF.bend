@@ -107,3 +107,9 @@ def L.pending_empty_witness(): {==}
 def L.let_alias_available(name,token): {==}
 def L.terminal_expansion_preserves_budget(name,types,scope,work): {==}
 def L.leaf_expansion_spends_one(token,arm,name,types,scope): {==}
+def L.reference_is_not_rebuilt(token,level,type_id,tail,bindings,smaller): {==}
+def L.rebuilt_descendant_witness(): {==}
+def L.rebuilt_root_witness(): {==}
+def L.changed_field_witness(): {==}
+def L.retyped_constant_witness(): {==}
+def L.rebuilt_descendant_call_witness(token,uses): {==}

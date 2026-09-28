@@ -20,6 +20,55 @@ def descends(args: List<&2,C.Term>, smaller: List<&2,U32>) -> Bool:
     case Con{C.Reference{token,level,type_id},tail}: contains(smaller,level)
     case _: False{}
 
+# A match refines a level; a later occurrence rebuilds it from its fields.
+# A reference to a refined level unfolds to one layer of that refinement.
+def layer(known: Maybe<&2,C.Term>, +reference: C.Term) -> C.Term:
+  match known:
+    case Some{C.Value{token,type_id,tag}}: C.Value{token,type_id,tag}
+    case Some{C.Construct{token,type_id,tag,params,args}}: C.Construct{token,type_id,tag,params,args}
+    case _: reference
+
+def unfold(bindings: List<&2,C.Binding>, +level: U32, +reference: C.Term) -> C.Term:
+  match bindings:
+    case Nil{}: reference
+    case Con{C.Binding{token,id,q,type_id,param,known},tail}:
+      S.choose(C.Term,U32.is_eq(id,level),u => layer(known,reference),u => unfold(tail,level,reference))
+
+def unfolded(refs: List<&2,C.Term>, +bindings: List<&2,C.Binding>) -> List<&2,C.Term>:
+  match refs:
+    case Nil{}: Nil{}
+    case Con{C.Reference{token,+level,+type_id},tail}: Con{unfold(bindings,level,C.Reference{token,level,type_id}),unfolded(tail,bindings)}
+    case Con{other,tail}: Con{other,unfolded(tail,bindings)}
+
+# Rebuilt terms denote unfolded layers position-wise: a reference its own
+# level, a value or constructor the same type and tag, fields in order.
+def denotes(terms: List<&2,C.Term>, layers: List<&2,C.Term>, +bindings: List<&2,C.Binding>) -> Bool:
+  match terms layers:
+    case Nil{} Nil{}: True{}
+    case Con{C.Reference{a,id,x},tail} Con{C.Reference{b,level,y},rest}:
+      Bool.and(U32.is_eq(id,level),denotes(tail,rest,bindings))
+    case Con{C.Value{a,type_id,tag},tail} Con{C.Value{b,typ,t},rest}:
+      Bool.and(Bool.and(U32.is_eq(type_id,typ),U32.is_eq(tag,t)),denotes(tail,rest,bindings))
+    case Con{C.Construct{a,type_id,tag,ps,args},tail} Con{C.Construct{b,typ,t,qs,refs},rest}:
+      Bool.and(Bool.and(Bool.and(U32.is_eq(type_id,typ),U32.is_eq(tag,t)),denotes(args,unfolded(refs,bindings),bindings)),
+        denotes(tail,rest,bindings))
+    case _ _: False{}
+
+def descendant(candidates: List<&2,C.Binding>, +head: C.Term, +bindings: List<&2,C.Binding>, +smaller: List<&2,U32>) -> Bool:
+  match candidates:
+    case Nil{}: False{}
+    case Con{C.Binding{token,+level,q,+type_id,param,known},tail}:
+      Bool.or(Bool.and(contains(smaller,level),denotes([head],[layer(known,C.Reference{token,level,type_id})],bindings)),
+        descendant(tail,head,bindings,smaller))
+
+# A rebuilt first argument is the value of the level it denotes, so it
+# descends when that level is a strict descendant. References keep descends.
+def rebuilt(items: List<&2,C.Term>, +bindings: List<&2,C.Binding>, +smaller: List<&2,U32>) -> Bool:
+  match items:
+    case Con{C.Reference{token,level,type_id},tail}: False{}
+    case Con{head,tail}: descendant(bindings,head,bindings,smaller)
+    case Nil{}: False{}
+
 # Only live affine occurrences enter these sets. Sequential sets must be
 # disjoint; alternatives take their union. No machine counter can wrap.
 def sequential(xs: List<&2,U32>, +ys: List<&2,U32>, +token: S.Token) -> Result<S.Error,List<&2,U32>>:

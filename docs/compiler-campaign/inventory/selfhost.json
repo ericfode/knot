@@ -4647,8 +4647,8 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 389,
-        "compiler": 302,
+        "declarations": 395,
+        "compiler": 308,
         "packages": 14,
         "base": 73,
         "check": 0,
@@ -4662,31 +4662,31 @@
         "check": [
           {
             "feature": "types.base",
-            "declarations": 378
+            "declarations": 384
           },
           {
             "feature": "imports.base",
-            "declarations": 316
+            "declarations": 322
           },
           {
             "feature": "generics",
-            "declarations": 285
+            "declarations": 291
           },
           {
             "feature": "imports.local",
-            "declarations": 281
+            "declarations": 287
           },
           {
             "feature": "quantities.arguments",
-            "declarations": 271
+            "declarations": 277
           },
           {
             "feature": "lambdas",
-            "declarations": 153
+            "declarations": 154
           },
           {
             "feature": "captures",
-            "declarations": 151
+            "declarations": 152
           },
           {
             "feature": "literals.string",
@@ -4701,11 +4701,11 @@
             "declarations": 56
           },
           {
-            "feature": "higher-order",
-            "declarations": 30
+            "feature": "literals.list",
+            "declarations": 31
           },
           {
-            "feature": "literals.list",
+            "feature": "higher-order",
             "declarations": 30
           },
           {
@@ -4760,31 +4760,31 @@
         "wasm": [
           {
             "feature": "types.base",
-            "declarations": 378
+            "declarations": 384
           },
           {
             "feature": "imports.base",
-            "declarations": 316
+            "declarations": 322
           },
           {
             "feature": "generics",
-            "declarations": 285
+            "declarations": 291
           },
           {
             "feature": "imports.local",
-            "declarations": 281
+            "declarations": 287
           },
           {
             "feature": "quantities.arguments",
-            "declarations": 271
+            "declarations": 277
           },
           {
             "feature": "lambdas",
-            "declarations": 153
+            "declarations": 154
           },
           {
             "feature": "captures",
-            "declarations": 151
+            "declarations": 152
           },
           {
             "feature": "literals.string",
@@ -4799,11 +4799,11 @@
             "declarations": 56
           },
           {
-            "feature": "higher-order",
-            "declarations": 30
+            "feature": "literals.list",
+            "declarations": 31
           },
           {
-            "feature": "literals.list",
+            "feature": "higher-order",
             "declarations": 30
           },
           {
@@ -4860,7 +4860,7 @@
         "check": [
           {
             "feature": "imports.local",
-            "declarations": 281
+            "declarations": 287
           },
           {
             "feature": "imports.package",
@@ -4886,7 +4886,7 @@
         "wasm": [
           {
             "feature": "imports.local",
-            "declarations": 281
+            "declarations": 287
           },
           {
             "feature": "imports.package",
@@ -17637,6 +17637,103 @@
           }
         },
         {
+          "key": "src/scope.denotes",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/scope.descendant",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "literals.list",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "literals.list",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "literals.list",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/scope.descendants",
           "file": "src/scope.bend",
           "origin": "compiler",
@@ -17912,6 +18009,51 @@
               "imports.local",
               "lambdas",
               "literals.string",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/scope.layer",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
               "quantities.arguments",
               "types.base"
             ]
@@ -18206,6 +18348,51 @@
               "imports.base",
               "imports.local",
               "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/scope.rebuilt",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
               "quantities.arguments",
               "types.base"
             ]
@@ -18681,6 +18868,104 @@
             "wasm": [
               "imports.local",
               "templates"
+            ]
+          }
+        },
+        {
+          "key": "src/scope.unfold",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/scope.unfolded",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
             ]
           }
         },
@@ -26222,8 +26507,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "eba694d6bb555903b53f02c96f9ffe5cd669f8331c937a5acaa51c21ef80d87a",
-    "docs/compiler-campaign/inventory/base-closure.json": "0353bc4105e89a52984bd18a021aedca509751da79de3cb60e2b3f8f70603734",
-    "docs/compiler-campaign/inventory/accepted.json": "6528d003d5a13f57a130f0d3de546edd376bd064bdc909c9f9eefb62d8741dac"
+    "docs/compiler-campaign/inventory/implementation.json": "328155512179f2ff6ddd0c94b5fef11bac587df503a687c7dc4160d83f119551",
+    "docs/compiler-campaign/inventory/base-closure.json": "14ac6b6e92cf19122e61d141b534787d0eb34502612ec7bb4b36ded72bc7ff56",
+    "docs/compiler-campaign/inventory/accepted.json": "bd43f6a5ed45c705795baf7f550f3210ad4f6d05775c38018a7578d0712e77b6"
   }
 }

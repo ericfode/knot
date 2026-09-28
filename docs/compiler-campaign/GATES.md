@@ -29,11 +29,13 @@ Both check commands exit 0 only when all registered gates finish successfully
 and their required outputs are present and readable. The runner's self-test
 requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
-this branch retains the main gates and appends `nest`, `nest-review` and
-`nest-round3`. `nest-review` checks the round-2 reviewer repros, enum whitelist,
-semantic repair mutants and fixed-seed 3,000-program comparison; `nest-round3`
-checks the round-3 repros (binder grammar, ordered empty binders, line-broken
-headers) in both compiler lanes, with its own semantic mutants.
+this branch retains the main gates and appends `nest`, `nest-review`,
+`nest-round3` and `nest-round4`. `nest-review` checks the round-2 reviewer
+repros, enum whitelist, semantic repair mutants and fixed-seed 3,000-program
+comparison; `nest-round3` checks the round-3 repros (binder grammar, ordered
+empty binders, line-broken headers) and `nest-round4` the round-4 recursion
+through rebuilt strict descendants, each in both compiler lanes with its own
+semantic mutants.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,

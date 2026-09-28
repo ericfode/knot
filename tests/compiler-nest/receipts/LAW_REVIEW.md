@@ -140,3 +140,24 @@ arm (the match frontier as the seed's introduced context), and that
 binder rule. The round-3 fixtures fix both from the pinned seed, and the
 3,000-program corpus reproduces all three defect classes on the pre-fix
 compiler and none after the repair. This is bounded evidence, not a proof.
+
+## Round 4
+
+Round 4 retires the dead default-signature helpers and adds recursion through
+rebuilt strict descendants; see `REVIEW-4.md`. `src/matrix-PROOF.bend`,
+`src/recursion-PROOF.bend` and every other proof entry print
+`All terms check.` Falsifying each new law makes the matrix entry fail at
+that law.
+
+| Law | Quantification and evidence | Limit |
+|---|---|---|
+| `remainder_omits_split`, `remainder_keeps_other` | Every tag list and constructor, given the head comparison; replace `default_completes_missing_branch` and `default_does_not_repeat_explicit_branch`, which constrained a `defaults(ctors,seen)` whose `seen` was always empty | One step of `remaining` |
+| `remainder_drops_split_rows`, `irrefutable_remainder` | Every row list, given the head comparison; every variable-headed row | One step of `without`; with `irrefutable_specialization` and `irrefutable_default`, an irrefutable head survives every form of column elimination |
+| `reference_is_not_rebuilt` | Every reference head, tail, scope and descendant set | References keep the reference rule; this keeps the recursion laws and the self-call mutants of the recursion and selfhost gates unchanged |
+| `rebuilt_descendant_witness`, `rebuilt_root_witness`, `changed_field_witness`, `retyped_constant_witness` | Ground: len's third row after a nested second row. A rebuilt `l` descends. A rebuilt root, a rebuilt `l` with a changed field and a `T` constant against a `Flag` refined to the same tag do not | Ground normalizations of `E.rebuilt` |
+| `rebuilt_descendant_call_witness` | Every call token and use set, in the ground scope above | `K.call_result` admits the rebuilt `l`; the emitted argument is unchanged |
+
+`default_completion_witness` is deleted with `signature`. One obligation is
+**not proved** and rests only on the 14 round-4 fixtures: that `E.rebuilt`
+admits only arguments the seed's decreasing-call rule orders strictly below
+parameter 0. No new general lowering or termination theorem is claimed.

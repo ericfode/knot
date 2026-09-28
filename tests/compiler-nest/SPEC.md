@@ -63,8 +63,15 @@ emitter and evaluator limits still apply.
 
 The fields profile executes the three accepted recursive nest fixtures. Their
 recursive calls descend through nested field patterns using the existing
-first-parameter rule. The complete seed decreasing-call rule remains outside
-this increment. `rec-swapped-args` and `rec-alias` therefore remain explicitly
+first-parameter rule. A matched binder referenced again is rebuilt from its
+fields, so a variable row reached through an earlier row's nested pattern
+passes a constructor, not a reference. Such a rebuilt first argument descends
+when it denotes a strict descendant of parameter 0: the refinement of that
+level, unfolded layer by layer, has the same type and tag at every constructor
+and the same levels in the same field positions. The same holds for a value a
+source expression rebuilds. The emitted argument is unchanged. A reference
+first argument still takes only the reference rule. The complete seed
+decreasing-call rule remains outside this increment. `rec-swapped-args` and `rec-alias` therefore remain explicitly
 **unmet**, reporting `Unsupported check recursive-call`. Their frozen Invalid
 expectations are unchanged. They are monitored separately and never counted
 as conformance passes. The gate may complete its authorized bounded scope with
@@ -115,6 +122,13 @@ seven additional type-correct semantic mutants. `fuzz.py` generates exactly
 independently; accepted inputs also run through the Bend evaluator. Host/internal
 failures are gate failures, never language rejection. The gate rejects any false
 acceptance or seed-valid program classified Invalid.
+
+`round4-expectations.json` freezes 14 round-4 programs and 32 seed calls before
+the rebuilt-descent repair. `round4.py` checks both compiler lanes, evaluator
+and fields-profile Wasm agreement, rejection in every phase, and four
+type-correct semantic mutants. Each mutant disables the recognizer or drops
+one of its conditions: strict descent, the constant's type, or its fields. The
+six seed-rejected controls stay `Unsupported check recursive-call`.
 
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual

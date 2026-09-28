@@ -12,7 +12,9 @@ unmet; this increment does not qualify either runtime requirement.
 The [first-parameter descent contract](../tests/compiler-recursion/SPEC.md)
 adds structural self-calls to checking and evaluation: the first checked argument
 must be a reference to a field of parameter 0, directly or through further
-matches. Other self-calls report `Unsupported check recursive-call`; forward
+matches, or a rebuilt value denoting such a field: the level's refinement,
+unfolded, with the same types, tags and field levels in order. Other
+self-calls report `Unsupported check recursive-call`; forward
 and mutual calls retain their existing classification. The
 [pattern-matrix gate](../tests/compiler-nest/SPEC.md) executes nested-pattern
 structural recursion in `knot-fields-wasm-1`. Structured host arguments remain
@@ -102,7 +104,8 @@ Generic/dependent types, imports, literals, closures, destructuring local
 bindings, laws, templates, foreign code and effects remain explicitly
 unsupported. The default enum emitter rejects fielded books after checking;
 selecting the fields profile enables their checked runtime representation.
-Self-calls beyond the first-parameter field-descent rule remain Unsupported.
+Self-calls beyond the first-parameter field-descent rule, including its rebuilt
+descendants, remain Unsupported.
 A recognized unsupported form makes no claim about its remaining contents.
 
 The parser recognizes these out-of-profile prefixes before applying the narrower

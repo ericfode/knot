@@ -119,7 +119,7 @@
     "checker": true,
     "independent_evaluator": true,
     "wasm": true,
-    "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0; matches propagate descendant levels.",
+    "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0, or a rebuilt Value/Construct that denotes one (its refinement unfolded layer by layer: same types, tags and field levels in order); matches propagate descendant levels.",
     "other_self_calls": "Unsupported check recursive-call",
     "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call.",
     "wasm_evidence": "tests/compiler-nest/receipts/nest.json"
@@ -239,6 +239,8 @@
     "review_evidence": "tests/compiler-nest/receipts/review.json",
     "review_fixtures": "tests/compiler-nest/review-expectations.json",
     "round3_evidence": "tests/compiler-nest/receipts/round3.json",
-    "round3_fixtures": "tests/compiler-nest/round3-expectations.json"
+    "round3_fixtures": "tests/compiler-nest/round3-expectations.json",
+    "round4_evidence": "tests/compiler-nest/receipts/round4.json",
+    "round4_fixtures": "tests/compiler-nest/round4-expectations.json"
   }
 }
