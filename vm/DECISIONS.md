@@ -482,6 +482,50 @@ follows it (§5, §10, §11) without a new image header word.
    `True{}`. It parses as `Unsupported` on the main-line parser (a `declaration-form`),
    never `Invalid`.
 
+
+## What vm-model and vm-core must now follow (round 9)
+
+Each item names the SPEC text and the controls that freeze it; `check-spec.py`'s
+`run_controls`, `plan_controls` and goldens are the shared harness, so merging this
+branch brings all of them.
+
+1. **D22 (§7 step 2, §8, §10; entry 21).** Under a Book entry `Enter(Action, [k])`
+   stops `Unsupported vm effect` after its debit, before any operand is read,
+   inspected or checked for D20, before the foreign id is checked and before any host
+   call, for every foreign (`book-args`). Building an Action, dropping it and
+   applying it to its erased `R` stay free, and the Program entry is unchanged
+   (`program-print-in-value`, 11 calls, `x\nt\n`). Controls: `book-print`,
+   `book-print-continuation-call`, `book-print-twice`, `book-print-non-scalar` and
+   `book-args` (4 calls), `book-print-ill-typed` (5), `book-continuation-called` (3),
+   `book-action-dropped` (2) and `book-action-erased` (3). vm-model performs the print
+   under a Book today and names a foreign that is not IO.print `Unsupported vm foreign
+   N` at the Action's application; both change, D22 first for every foreign. vm-core
+   refuses every foreign id but IO.print at load (CORE.md choice 2), so `book-args` is
+   refused before any entry today: a Book image with another foreign must load and stop
+   at the effect step with D22's cause, and the load-time refusal stays for Program
+   images until vm-io. Its Action branch in `$enter` performs the effect through
+   `$perform`; the Book guard goes before it, after `$debit`.
+2. **The debit stands (§7; entry 22).** A step 2 or 3 stop keeps step 1's debit: compare
+   `calls` at every stop. The D20 rows of vm-expected.json now carry `calls` (4, 4, 4
+   and 13). vm-core records each golden's `calls` but compares none to a frozen value
+   (`expected_dump` carries none): it must now. vm-model compares the reference
+   evaluation's counts, which are the frozen ones.
+3. **A Halt's message is an outgoing String (§8 phase 3, §10; entry 24).** After the
+   code and the whole message are inspected, a message holding a non-scalar Char is
+   `HostFailure io abi` before `die`, with `w` still owned; otherwise it is converted,
+   `w` dropped and `die` called (vm-core's choice 9 order is now normative). vm-core
+   already refuses; vm-model's `Died` path does not. Controls: `halt-surrogate` (3
+   calls), `inspect-halt-after-surrogate` and `inspect-halt-code-first` (`ill-typed`
+   after 4).
+4. **A key may be 0xffffffff (§2, §3; entry 23).** `key-max` and `char-key-max` take the
+   key Branch, `key-max-miss` the Default, each after 2 calls (vm-model already has
+   its own controls).
+5. **Three new goldens (§11; entries 25 and 26).** `chr-pattern` (a tags-mode Case on
+   Char, immediate and Big), `list-head-match` and `nat-transitions`, each owing the
+   seed's `Evaluated 0 1 True{}`. Their vm-expected.json rows carry `eval_unavailable`
+   or `eval_bound` beside `basis` `seed`; harnesses that read rows by key are
+   unaffected. The counts are 96 goldens and 57 run controls.
+
 ## Findings that need an owner
 
 1. **A D4 classification defect in the literals head.** For
@@ -540,7 +584,13 @@ follows it (§5, §10, §11) without a new image header word.
    `5bd0f9b` against the same receipt: 884 files, `Parsed` 163 (`invoke-words`)
    and `Unsupported parse declaration-form` 283 (`nat-case-big`). Every other
    count, the six Invalid rows included, is unchanged, and both files agree across
-   the seed's native and Bun lanes.
+   the seed's native and Bun lanes. Round 9's three goldens change it again, as
+   measured by the gate runner (all 21 gates passed) after `ec961e9` against the
+   same receipt: 887 files, `Unsupported lex literal` 214 (`chr-pattern`, at its
+   `'a'`) and `Unsupported parse declaration-form` 285 (`list-head-match` and
+   `nat-transitions`). No row is `Invalid`, so the six stay six, every other count
+   is unchanged, and both files agree across the two lanes. The merge condition
+   stands, and no shared bootstrap receipt was refreshed.
 6. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged

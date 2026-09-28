@@ -648,14 +648,15 @@ inside a pure argument of `main`, in evaluation order: run control
 **A Book entry never performs an effect (D22).** Under a Book invocation the second
 application of any Action, `Enter(Action, [k])`, stops the run with `Unsupported vm
 effect` after its debit (§7) and before the step reads, inspects or converts an operand
-(§6, §10), checks the foreign id or calls the host. Nothing is written, and neither the whole-extent inspection nor D20's
-scalar check runs, so the print of an ill-typed or a non-scalar String is refused the
-same way, as `Unsupported`, never `HostFailure`. An Action built, dropped or applied to
-its erased `R` under a Book is no effect and runs as under a Program. The refusal is
-D4's: never `Invalid`, never an effect nobody requested. Run controls freeze it (§12):
-the print stops after 4 entries (main, IO.print, `R`, the Action), so does `IO.args`, and
-5 when an `id` call builds the String, the pure `got(k(Unit{}))` evaluates after 3, an Action built
-and dropped after 2, and one applied to its erased `R` after 3.
+(§6, §10), checks the foreign id or calls the host. Nothing is written, and neither the
+whole-extent inspection nor D20's scalar check runs, so the print of an ill-typed or a
+non-scalar String is refused the same way, as `Unsupported`, never `HostFailure`. An
+Action built, dropped or applied to its erased `R` under a Book is no effect and runs as
+under a Program. The refusal is D4's: never `Invalid`, never an effect nobody requested.
+Run controls freeze it (§12). A print stops after 4 entries (main, IO.print, `R`, the
+Action), and so does `IO.args`; a print whose String an `id` call builds stops after 5.
+The pure `got(k(Unit{}))` evaluates after 3 entries, an Action built and dropped after 2
+and one applied to its erased `R` after 3.
 
 ## 9. Primitives and numeric bounds (D15)
 
@@ -946,7 +947,8 @@ lane and requires:
   more refuse an unavailable eval lane that is undeclared, declared where eval-cli
   agrees, declared as another line or on a Program, or an Invalid lane of a Book, and
   three refuse the same at the display lane (`core:`); a Book's declared line is read
-  from both heads;- the reference evaluation reproducing every Book golden's expectation and every
+  from both heads;
+- the reference evaluation reproducing every Book golden's expectation and every
   run control's outcome and call count;
 - each of the 44 frozen Book invocations of `invoke-args`, `invoke-arrow` and
   `invoke-words` equal to its literal review and to §8: `serializer.invocation`'s
@@ -1018,16 +1020,16 @@ lane and requires:
   outgoing String too: a surrogate then `id(λ)`, and `id(λ)` for the code beside a
   surrogate message, each halt `ill-typed` after 4, the code and then the whole message
   being read before D20's scalar check. Eleven effect controls (`effect_controls`) freeze
-  D22 (§8) on a Book image applying `IO.print("x")` to its erased `R` and to a
-  continuation `k`, with `got` returning what an IO.OP carries, and Program-side D20 on a
-  Halt: `book-print`, `book-print-continuation-call` (`k` a function) and
+  D22 (§8) and D20 on a Halt's message. In a Book image, `got` returns what an IO.OP
+  carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`:
+  `book-print`, `book-print-continuation-call` (`k` a function) and
   `book-print-twice` (the reviewers' bookio-1, bk-print and bookio-2) stop
   `Unsupported vm effect` after 4 calls, writing nothing; `book-print-non-scalar` (a
   surrogate) too, so D22 precedes D20; `book-print-ill-typed` (`"a"` then `id(λ)`)
   stops the same way after 5, so it precedes the inspection, and `book-args`
   (`IO.args`, foreign 0, of type `IO(List)`) after 4, so it precedes the check of the
-  foreign id; the pure
-  `got(k(Unit{}))` (`book-continuation-called`) evaluates `Evaluated 8 1 On{}` after 3,
+  foreign id; the pure `got(k(Unit{}))` (`book-continuation-called`) evaluates
+  `Evaluated 8 1 On{}` after 3,
   an Action built and dropped (`book-action-dropped`) after 2 and one applied to its
   erased `R` (`book-action-erased`) after 3; the same Action prints under a Program
   entry from inside a pure argument of `main` (`program-print-in-value`), `x\nt\n`
@@ -1047,12 +1049,14 @@ lane and requires:
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
   record's length, and no limit on a Closure's `slots`; and a decoder that drops a keys
-  row at 0xffffffff, which only `key-max` refuses. Six rule mutants of
+  row at 0xffffffff, which only `key-max` refuses. Ten rule mutants of
   `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
   `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
   bound whose budget it does not pass; display steps counted as visits;
-  transitions that omit materialization; and a D20 golden whose `calls` are not
-  checked.
+  transitions that omit materialization; a D20 golden whose `calls` are not
+  checked; an unavailable Book lane whose declared line is not checked or whose cause
+  is not named; a declaration kept where check-cli prints a core; and a Book without a
+  core that declared none.
   Five survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, an Action's effect before its debit
   (which the print inspection control also counts, after 4 calls), the fuel test
@@ -1069,8 +1073,8 @@ lane and requires:
   Char as it reads it. Fourteen more, of D22, a Halt's message, keys and the debit, die
   by the controls above: a Book that performs the effect and one that drops it silently
   (by every `book-print*` control); one that names the foreign it refuses, as vm-model
-  answered `Unsupported vm foreign 0` (by `book-args` alone); one that refuses only after the whole-extent
-  inspection (by `book-print-ill-typed` alone), after D20's scalar check (by
+  answered `Unsupported vm foreign 0` (by `book-args` alone); one that refuses only
+  after the whole-extent inspection (by `book-print-ill-typed` alone), after D20's scalar check (by
   `book-print-non-scalar` and `-ill-typed`), when an Action is built (also
   `book-action-dropped`) or when it meets its erased `R` (also `book-action-erased`); a
   Program that refuses its effects (by the golden `foreign-print`); a Halt message
