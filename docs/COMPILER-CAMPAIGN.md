@@ -24,7 +24,7 @@ Later additions the same day:
 5. **Benchmark framework.** Compile time and emitted-code runtime per backend, with correctness guards and noise-aware comparison, for hill-climbing speed. Landed in `f324221` as `bench/`; it grows with each backend.
 6. **Passes Perch.** Two parts:
    - Semantic: targeted rules on every changed Bend file, with nonzero coverage and no unresolved confirmed findings.
-   - Style (rubric v8): each mechanism in the compiler manifest (`docs/compiler-campaign/manifest.json`, built during the campaign) meets its declaration and composition targets. Whether leading declarations keep the level-3 Anticipation/Payoff bar is the user's threshold decision (see the v8 calibration record); until then it is reported, not waived.
+   - Style (rubric v8): each mechanism in the [compiler manifest](compiler-campaign/manifest.json) meets its declaration and composition targets. `npm run lint:style -- --live --manifest=docs/compiler-campaign/manifest.json` reports each group and overall qualification; a filtered `--group=NAME` run qualifies only that selection. The [offline baseline](compiler-campaign/perch-baseline.md) records structural blockers, not ratings or a pass. Whether leading declarations keep the level-3 Anticipation/Payoff bar is the user's threshold decision (see the v8 calibration record); until then it is reported, not waived.
 7. **Unicode syntax extension (after self-hosting).** Unicode symbols in identifiers and operators, as a Knot dialect with a desugaring to plain Bend.
 
 ## Decision record (coordinator, 2026-09-27, under the user's explicit instructions above)

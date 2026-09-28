@@ -99,6 +99,11 @@ npm run lint:style -- --live --all --output=.local/style-project.json
 # Offline structural preflight: no credentials, .env, cache or provider request.
 npm run lint:style -- --preflight --task=src/SPEC.md src/driver.bend
 npm run lint:style -- --preflight --all --output=.local/style-preflight.json
+
+# Qualify the named compiler mechanisms, each with its own composition.
+npm run lint:style -- --live --manifest=docs/compiler-campaign/manifest.json
+npm run lint:style -- --live --manifest=docs/compiler-campaign/manifest.json --group=checking
+npm run lint:style -- --preflight --manifest=docs/compiler-campaign/manifest.json
 ```
 
 ### Structural preflight
@@ -117,6 +122,67 @@ provider requests, writes no usage receipt and exits 3 when a structural
 blocker exists. Run it before paying for a review, and after any context,
 parser or scope change, to measure what the change unblocks. Its counts are
 structure, not taste.
+
+### Named mechanisms
+
+`--manifest=FILE` reviews an ordered collection of explicit selected groups.
+`--group=NAME` restricts either live review or preflight to one named group.
+The manifest is JSON; all paths are relative to the workspace root, including
+when the manifest lives under `docs/`:
+
+```json
+{
+  "schema": 1,
+  "groups": [
+    {
+      "name": "frontend-lexing",
+      "files": ["src/syntax.bend", "src/lex.bend"],
+      "task": "src/SPEC.md",
+      "notes": "Character budgets, token spans and tokenization."
+    }
+  ]
+}
+```
+
+Names are unique; each group lists distinct whole Bend files in reading order.
+`task` is an optional fixed task/contract path. `notes` is optional receipt
+metadata and is never sent as a rating instruction. Empty groups, duplicate
+paths (including aliases), escaped workspace paths and unknown fields/options
+are rejected. `--all`, positional targets and run-wide task/cohort overrides
+cannot be combined with a manifest. The compiler manifest includes each
+mechanism's full local import closure; a test checks coverage of every current
+`src/*.bend` file and every local import, including earlier proof entries.
+
+Every selected group gets the same declaration review and composition targets
+as explicit file targets. Only composition source ordering changes: listed files
+come first in their stated order, followed by known collaborator files in lexical
+order. Context bounds, closure checks and all rubric targets remain unchanged.
+The tool does not infer additional transitive collaborators beyond the existing
+bounded context; include missing local files in the manifest. Nonlocal imports
+remain explicit context gaps. Shared declarations are obligations in each group,
+with that group's contract; the run's unit count includes those repetitions.
+
+All selected groups prepare against one source snapshot before the first
+provider request. Live groups run in manifest order, retaining `--jobs` concurrency
+within a group. Provider failure stops later groups and saves completed/partial
+evidence in one aggregate usage receipt. `--output`, compressed JSON, `--reuse`,
+`--incremental` and `--fresh` work as in explicit-target mode. Exact request
+identity governs reuse; changing reading order invalidates the composition
+request without invalidating unchanged declaration requests.
+
+The JSON report contains `groups`, an overall `summary`, input hashes and final
+source/task/manifest/rubric freshness. Live qualification requires every selected
+group's declarations and composition, one resolved model identity, and unchanged
+inputs. `qualification.fully_qualified` covers the selection;
+`qualification.manifest_fully_qualified` additionally requires an unfiltered run.
+A group filter cannot establish whole-manifest success. Preflight reports
+per-group truncation, role gaps and composition availability; exit 3 means
+structural blockers, never a rating. Exit 1 denotes a failed/incomplete live run
+or invalid invocation; live exit 3 denotes attention; live exit 0 means the
+selected style obligations met their targets, still advisory to semantic gates.
+
+The [compiler baseline](compiler-campaign/perch-baseline.md) records the current
+48 KB, datatype-context and published-import blockers. It is not a Perch pass.
 
 `lint:rank` remains an alias. `--task=SPEC.md` supplies a fixed task contract;
 `--cohort='purpose or contract'` is an inline alternative. Without either, ordinary
