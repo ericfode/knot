@@ -143,7 +143,19 @@ records C1's wall time on S (`elapsed_seconds`, which the gate runner normalizes
 and peak RSS from the child's own `wait4` rusage. It records the same for A2's
 host run once `e2e3.a3` runs. These values are volatile and outside the
 contract. Each reached step's `artifact` records its bytes, `output_bytes`, the
-headroom, and the declared Wasm memory limits.
+headroom, and every memory the module declares.
+
+**Artifact memory (D19, IO-ABI).** `wasm_memories` walks the whole import
+section and the whole memory section, not just the first memory it meets. It
+records each imported and each defined memory with its limits in pages and its
+`shared` and `memory64` flags. It skips a table or global import's reference type
+together with its heap type (`0x63`/`0x64`), so a GC-typed import cannot shift
+the cursor. Bytes that do not parse, unknown limits flags or import kinds, and a
+section whose contents disagree with its length all record `{"unreadable": true}`.
+The judge then requires exactly one defined, unshared 32-bit memory whose
+declared maximum is at most the manifest's 65,536 pages, and no imported memory.
+A module without a memory cannot run as a compiler under the IO ABI, so it fails
+too.
 
 ## Today (receipt `receipts/progress.json`)
 
@@ -249,8 +261,9 @@ The verdict fails when:
   `src/CONTRACT.json`; its closure or bundle digest differs from the staged
   sandbox; its host is not Darwin; or its memory maximum is not D19's;
 - a generation stage's `args` differ from its contract's argv;
-- a reached artifact exceeds `src/CONTRACT.json`'s `output_bytes` or declares
-  memory without a maximum within the manifest's;
+- a reached artifact exceeds `src/CONTRACT.json`'s `output_bytes`; or its
+  memory declarations are unreadable, import a memory, or are not exactly one
+  unshared 32-bit memory with a maximum within the manifest's pages;
 - the loader audit contradicts the contract (see above);
 - C1's per-case observations are missing, or a generation's observations differ
   from C1's (FX-18);
@@ -276,7 +289,9 @@ The unmutated real receipt must pass. It has these mutants:
 The generation rules only apply once generations are reached, and this tree does
 not have any yet. So the harness also builds a **reached chain**: the real receipt
 with a2, a3, fixpoint and conformance reached as a correct fixpoint records them,
-with generation observations equal to C1's. The chain must pass, and so must its
+with generation observations equal to C1's, and an artifact memory record
+read from Knot's own memory shape (one memory, 1 page, maximum 1). The chain must
+pass, and so must its
 module-loading variant (`reached-chain-bundled`). That variant is judged under a
 scratch copy of `src/CONTRACT.json` that advertises `[--bundle ROOT]` and
 `--audit-bundle` (`--contract`, with the receipt's `inputs` naming the copy), and
@@ -299,19 +314,23 @@ the chain must each be rejected:
 12. `a3-resource-forged`: a host stack trap is tagged `knot-budget`.
 13. `diagnostic-tail`: one character near the end of an A3 diagnostic changes.
 14. `artifact-over-budget`: an artifact is one byte over `output_bytes`.
-15. `audit-closure-differs`: a staged module is missing from the audit (module
+15. `artifact-memory-*`: A3's memory record is the reader's real output on one
+    probe module (see the `wasm-memory-reader` control): `no-maximum`,
+    `two-memories`, `memory64-second`, `shared`, `imported-and-defined`,
+    `gc-global-import` and `truncated`.
+16. `audit-closure-differs`: a staged module is missing from the audit (module
     loading advertised).
-16. `audit-missing`: no audit is recorded (module loading advertised).
-17. `modules-erased-both`: `--bundle` and the audit are removed from both steps
+17. `audit-missing`: no audit is recorded (module loading advertised).
+18. `modules-erased-both`: `--bundle` and the audit are removed from both steps
     and the parser compile, while the contract advertises module loading.
-18. `modules-forged-both`: both steps use `--bundle` while the contract does not
+19. `modules-forged-both`: both steps use `--bundle` while the contract does not
     advertise it.
 
 The runner's `counts()` rechecks the recorded verdict and blocker classes
 independently. It does not re-derive the contract anchor; that lives in the judge,
 and `scripts/gates/` belongs to the gates increment.
 
-Fourteen controls exercise paths that have no Knot-built module to run today.
+Fifteen controls exercise paths that have no Knot-built module to run today.
 They use test doubles, not Knot evidence:
 
 - A one-byte perturbation must produce exactly one disagreement.
@@ -332,6 +351,12 @@ They use test doubles, not Knot evidence:
 - A2's result on S must be routed correctly: a host timeout and a host stack trap
   become `divergent-exhausted`, a Knot `Unsupported` stays `blocked`, and exit 0
   proceeds to a reached row. The same pure function builds the live row.
+- The memory reader on eight hand-assembled modules (`wasm-memory-reader`):
+  Knot's shape, no maximum, two memories, a second memory64, a shared memory,
+  an imported plus a defined memory, a GC-typed global import before an imported
+  memory, and a truncated module. Each must give its literal record, and
+  `WebAssembly.validate` on the pinned Node must accept every one except the
+  truncated module.
 - The audit control: where `--audit-bundle` is advertised, a real audit of a
   two-module entry (`probe/side.bend` importing Base, `probe/main.bend`) must
   return exactly those modules and satisfy the comparator. Otherwise it records

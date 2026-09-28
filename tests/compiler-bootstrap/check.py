@@ -59,6 +59,7 @@ STAGES = (('e2e2.reference', 'E2E-2'), ('e2e2.compile', 'E2E-2'), ('e2e2.self-pa
 GENERATIONS = ('e2e3.a2', 'e2e3.a3')  # C1 -> A2 and A2 -> A3: one contract
 LIB = 'lib'                # the relative bundle ROOT inside every sandbox
 OUTPUT = 'generation.wasm'  # the one output operand of every generation step
+MAGIC = b'\0asm\x01\0\0\0'
 SANDBOX = {COMPILER: 'bundle', PARSER: 'parser-bundle', CHECKER: 'checker-bundle'}
 # Exhausted observations the host makes itself, by (phase, code).
 HOST_EXHAUSTION = {('wasm', 'call-stack'): 'host-stack', ('wasm', 'memory'): 'host-memory'}
@@ -289,8 +290,7 @@ def generation_problems(p, contract, manifest) -> list[str]:
         if a is not None:
             if a['bytes'] > a['output_bytes'] or a['output_bytes'] != cap:
                 problems.append(f"{sid}: artifact of {a['bytes']} bytes exceeds output_bytes {cap}")
-            if a['memory'] is not None and (a['memory'].get('maximum') is None or a['memory']['maximum'] > pages):
-                problems.append(f"{sid}: artifact memory {a['memory']} has no maximum within the declared {pages} pages")
+            problems += [f'{sid}: artifact {x}' for x in memory_problems(a.get('memory'), pages)]
     problems += audit_problems(p.get('audit', {}), contract, bundles[COMPILER], manifest)
     c1 = by_id['e2e3.c1']
     reference = c1.get('observations') or []
@@ -546,9 +546,10 @@ def generation_contract(contract, manifest, bundle, folder: Path, shared) -> dic
     }
 
 
-def wasm_memory(data: bytes):
-    """Declared memory limits of a Wasm module (defined or imported), in pages;
-    None when it has no memory."""
+def wasm_memories(data: bytes) -> dict:
+    """Every memory a Wasm module declares, imported and defined, with its limits
+    in pages and its shared and memory64 flags; {'unreadable': True} when the
+    bytes do not parse as a module's import and memory sections."""
     def leb(at):
         value = shift = 0
         while True:
@@ -559,38 +560,66 @@ def wasm_memory(data: bytes):
 
     def limits(at):
         flags, at = leb(at)
+        require(flags < 8, 'unknown limits flags')
         minimum, at = leb(at)
         maximum, at = leb(at) if flags & 1 else (None, at)
-        return {'minimum': minimum, 'maximum': maximum}, at
+        return {'minimum': minimum, 'maximum': maximum, 'shared': bool(flags & 2), 'memory64': bool(flags & 4)}, at
 
-    at = 8
+    def value_type(at):  # (ref ht) and (ref null ht) carry a heap type
+        return leb(at + 1)[1] if data[at] in (0x63, 0x64) else at + 1
+
+    skip = {0: lambda at: leb(at)[1],                    # function: type index
+            1: lambda at: limits(value_type(at))[1],     # table: reference type, limits
+            3: lambda at: value_type(at) + 1,            # global: value type, mutability
+            4: lambda at: leb(at + 1)[1]}                # tag: attribute, type index
+    found = {'defined': [], 'imported': []}
     try:
+        require(data[:8] == MAGIC, 'not a Wasm 1 module')
+        at = 8
         while at < len(data):
             sid, (size, body) = data[at], leb(at + 1)
-            if sid == 5 and leb(body)[0]:
-                return limits(leb(body)[1])[0]
-            if sid == 2:
+            end = body + size
+            require(end <= len(data), 'section overruns the module')
+            if sid in (2, 5):
                 count, cursor = leb(body)
                 for _ in range(count):
-                    for _ in range(2):  # module and field names
-                        length, cursor = leb(cursor)
-                        cursor += length
-                    kind, cursor = data[cursor], cursor + 1
-                    if kind == 2:
-                        return limits(cursor)[0]
-                    # function: type index; table: reftype, limits; global: type, mutability; tag: flag, type index
-                    cursor = (leb(cursor)[1] if kind == 0 else limits(cursor + 1)[1] if kind == 1
-                              else cursor + 2 if kind == 3 else leb(cursor + 1)[1])
-            at = body + size
-    except IndexError:
-        return {'unreadable': True, 'maximum': None}
-    return None
+                    if sid == 2:
+                        for _ in range(2):  # module and field names
+                            length, cursor = leb(cursor)
+                            cursor += length
+                        kind, cursor = data[cursor], cursor + 1
+                        if kind != 2:
+                            cursor = skip[kind](cursor)
+                            continue
+                    memory, cursor = limits(cursor)
+                    found['defined' if sid == 5 else 'imported'].append(memory)
+                require(cursor == end, 'section length disagrees with its contents')
+            at = end
+    except (AssertionError, IndexError, KeyError):
+        return {'unreadable': True}
+    return found
+
+
+def memory_problems(memory, pages: int) -> list[str]:
+    """IO-ABI and D19: exactly one defined, unshared 32-bit memory whose declared
+    maximum is within the manifest's pages, and no imported memory."""
+    if not memory or memory.get('unreadable'):
+        return ['memory declarations are unreadable']
+    problems = [f"imports {len(memory['imported'])} memory"] if memory['imported'] else []
+    if len(memory['defined']) != 1:
+        problems.append(f"defines {len(memory['defined'])} memories, not one")
+    for m in memory['defined']:
+        if m['shared'] or m['memory64']:
+            problems.append('declares a memory that is not an unshared memory32')
+        if m['maximum'] is None or m['maximum'] > pages:
+            problems.append(f"memory maximum {m['maximum']} is not within the declared {pages} pages")
+    return problems
 
 
 def artifact(path: Path, cap: int) -> dict:
     data = path.read_bytes()
     return {'sha256': digest(data), 'bytes': len(data), 'output_bytes': cap,
-            'headroom_bytes': cap - len(data), 'memory': wasm_memory(data)}
+            'headroom_bytes': cap - len(data), 'memory': wasm_memories(data)}
 
 
 # -------------------------------------------------------------- comparisons
@@ -804,11 +833,61 @@ def name(s: str) -> bytes:
 def bytes_module(input_at: bytes, run_body: bytes, data: bytes = b'') -> bytes:
     """A hand-assembled knot-bytes-0 module: knot_input returns a constant, knot_run is given."""
     code = lambda body: leb(len(body)) + body
-    return (b'\0asm\x01\0\0\0' + section(1, b'\x60\x01\x7f\x01\x7f') + section(3, b'\x00', b'\x00')
+    return (MAGIC + section(1, b'\x60\x01\x7f\x01\x7f') + section(3, b'\x00', b'\x00')
             + section(5, b'\x00\x01')
             + section(7, name('memory') + b'\x02\x00', name('knot_input') + b'\x00\x00', name('knot_run') + b'\x00\x01')
             + section(10, code(b'\x00\x41' + input_at + b'\x0b'), code(run_body))
             + (section(11, b'\x00\x41\x00\x0b' + leb(len(data)) + data) if data else b''))
+
+
+def memory_probes() -> dict[str, bytes]:
+    """Hand-assembled modules for the artifact memory reader: Knot's own shape
+    (src/wasm.bend heap_sections: one memory, 1 page, maximum 1) and the shapes
+    a first-memory reader misreads."""
+    memory = lambda flags, *pages: bytes([flags]) + b''.join(map(leb, pages))
+    imported = lambda field, kind: name('env') + name(field) + kind
+    return {
+        'knot-shape': MAGIC + section(5, memory(1, 1, 1)),
+        'no-maximum': MAGIC + section(5, memory(0, 1)),
+        'two-memories': MAGIC + section(5, memory(1, 0, 1), memory(0, 0)),
+        'memory64-second': MAGIC + section(5, memory(1, 0, 1), memory(4, 0)),
+        'shared': MAGIC + section(5, memory(3, 1, 1)),
+        'imported-and-defined': MAGIC + section(2, imported('memory', b'\x02' + memory(1, 0, 1))) + section(5, memory(0, 0)),
+        'gc-global-import': MAGIC + section(2, imported('g', b'\x03\x63\x70\x00'), imported('memory', b'\x02' + memory(0, 0))),
+        'truncated': (MAGIC + section(5, memory(1, 1, 1)))[:-1],
+    }
+
+
+def memory_control() -> dict:
+    """The artifact memory reader on the probes, against literal records; the
+    pinned Node validates each probe, so each is a real module (or, truncated,
+    is not)."""
+    one = lambda minimum, maximum, **flags: {'minimum': minimum, 'maximum': maximum,
+                                            'shared': False, 'memory64': False, **flags}
+    expected = {
+        'knot-shape': {'valid': True, 'memory': {'defined': [one(1, 1)], 'imported': []}},
+        'no-maximum': {'valid': True, 'memory': {'defined': [one(1, None)], 'imported': []}},
+        'two-memories': {'valid': True, 'memory': {'defined': [one(0, 1), one(0, None)], 'imported': []}},
+        'memory64-second': {'valid': True, 'memory': {'defined': [one(0, 1), one(0, None, memory64=True)], 'imported': []}},
+        'shared': {'valid': True, 'memory': {'defined': [one(1, 1, shared=True)], 'imported': []}},
+        'imported-and-defined': {'valid': True, 'memory': {'defined': [one(0, None)], 'imported': [one(0, 1)]}},
+        'gc-global-import': {'valid': True, 'memory': {'defined': [], 'imported': [one(0, None)]}},
+        'truncated': {'valid': False, 'memory': {'unreadable': True}},
+    }
+    folder = ROOT / BUILD / 'controls' / 'memory'
+    folder.mkdir(parents=True, exist_ok=True)
+    probes = memory_probes()
+    for label, data in probes.items():
+        (folder / f'{label}.wasm').write_bytes(data)
+    r = run(['node', '--input-type=module', '-e', "import fs from 'node:fs'; console.log(JSON.stringify("
+             "process.argv.slice(1).map(f => WebAssembly.validate(fs.readFileSync(f)))))",
+             *[(folder / f'{label}.wasm').relative_to(ROOT).as_posix() for label in probes]], SECONDS['tool'])
+    try:
+        valid = json.loads(r['stdout'])
+    except ValueError:
+        valid = [shown(r)] * len(probes)
+    return {'name': 'wasm-memory-reader', 'expected': {'probes': expected}, 'observed': {'probes': {
+        label: {'valid': v, 'memory': wasm_memories(data)} for (label, data), v in zip(probes.items(), valid)}}}
 
 
 def replay_module(obs) -> bytes:
@@ -825,7 +904,7 @@ def recursive_module() -> bytes:
 
 
 def importing_module() -> bytes:
-    return (b'\0asm\x01\0\0\0' + section(1, b'\x60\x00\x00')
+    return (MAGIC + section(1, b'\x60\x00\x00')
             + section(2, name('knot') + name('io') + b'\x00\x00'))
 
 
@@ -853,7 +932,7 @@ def controls(names, native, bun) -> list[dict]:
     for label, data, expected in (
             ('host-io-seam', importing_module(),
              {'abi': 'knot-io', 'outcome': 'Unsupported' if not (HERE / 'io-abi.mjs').exists() else None}),
-            ('host-invalid-module', b'\0asm\x01\0\0\0\xff', {'abi': None, 'outcome': 'HostFailure'})):
+            ('host-invalid-module', MAGIC + b'\xff', {'abi': None, 'outcome': 'HostFailure'})):
         module = folder / f'{label}.wasm'
         module.write_bytes(data)
         answer, got = host(module, [], label)
@@ -963,7 +1042,7 @@ def reached_chain(progress) -> dict:
     by = {s['id']: s for s in p['stages']}
     rows, size = by['e2e3.c1']['observations'], 4096
     made = {'sha256': digest(b'fixpoint'), 'bytes': size, 'output_bytes': c['target']['output_bytes'],
-            'headroom_bytes': c['target']['output_bytes'] - size, 'memory': None}
+            'headroom_bytes': c['target']['output_bytes'] - size, 'memory': wasm_memories(memory_probes()['knot-shape'])}
 
     def compiled(sid, program):
         return stage(sid, status='reached', corpus=1, agree=1, disagree=0, args=list(c['argv']),
@@ -1149,6 +1228,15 @@ def mutants(progress, contract, manifest) -> list[dict]:
         ('a3-resource-forged', 1, 'resource tag', lambda p: exhausted(p, tag='knot-budget')),
         ('diagnostic-tail', 1, 'diagnostics differ from C1', diagnostic_tail),
         ('artifact-over-budget', 1, 'exceeds output_bytes', oversize),
+        *((f'artifact-memory-{label}', 1, reason, lambda p, d=memory_probes()[label]:
+           step(p)['artifact'].update(memory=wasm_memories(d))) for label, reason in (
+            ('no-maximum', 'memory maximum None is not within the declared'),
+            ('two-memories', 'defines 2 memories, not one'),
+            ('memory64-second', 'not an unshared memory32'),
+            ('shared', 'not an unshared memory32'),
+            ('imported-and-defined', 'imports 1 memory'),
+            ('gc-global-import', 'imports 1 memory'),
+            ('truncated', 'memory declarations are unreadable'))),
         ('reached-chain-bundled', 0, None, bundled, 'modules'),
         ('audit-closure-differs', 1, 'loader closure', lambda p: bundled(p, drop=1), 'modules'),
         ('audit-missing', 1, 'requires a recorded or blocked audit',
@@ -1408,7 +1496,7 @@ def main() -> int:
                                                if 'resource' in first['blocker'] else {})}}
 
         progress['controls'] = (controls(names, native, bun) + sandbox_controls(bundle, manifest, contracts['e2e3.a2']['argv'])
-                                + [audit_control(contract, manifest, build / 'check-cli' if audited else None)])
+                                + [memory_control(), audit_control(contract, manifest, build / 'check-cli' if audited else None)])
         progress['mutants'] = mutants(progress, contract, manifest)
         violations = judge(progress)
         failed_controls = [c['name'] for c in progress['controls'] if c['expected'] != {
