@@ -18,7 +18,7 @@ SEED = ['bun', ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/main.ts']
 HOST = ROOT / 'scripts/run-wasm.mjs'
 FIELDS = '--profile=knot-fields-wasm-1'
 # Explicitly authorized conservative outcomes; these NEVER count as conformance.
-UNMET = {'rec-swapped-args', 'rec-alias'}
+UNMET = {'rec-alias'}
 
 
 def require(condition, detail):
@@ -49,8 +49,12 @@ def successful(argv):
 
 
 def diagnostic(result, expected):
+    prefix = expected['diagnostic']
+    if prefix is None:
+        # A frozen null code pins category and phase, allowing any check code.
+        prefix = f"{expected['outcome']}\t{expected['phase']}\t"
     require(result['exit'] == expected['exit'] and not result['stdout']
-            and result['stderr'].startswith(expected['diagnostic']), (expected, result))
+            and result['stderr'].startswith(prefix), (expected, result))
 
 
 def checked(result):

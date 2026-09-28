@@ -41,14 +41,10 @@ counter for the entire compiler. Existing source, parser/checker depth,
 lexical-level, emitter and evaluator limits still apply.
 
 The fields profile executes the three accepted recursive nest fixtures. Their
-recursive calls descend through nested field patterns using the existing
-first-parameter rule. The complete seed decreasing-call rule remains outside
-this increment. `rec-swapped-args` and `rec-alias` therefore remain explicitly
-**unmet**, reporting `Unsupported check recursive-call`. Their frozen Invalid
-expectations are unchanged. They are monitored separately and never counted
-as conformance passes. The gate may complete its authorized bounded scope with
-those two outcomes pending; its receipt must set `qualification.complete=false`.
-All other unexpected mismatches fail the gate.
+recursive calls are checked by the [seed decreasing-call rule](../compiler-descent/SPEC.md).
+`rec-swapped-args` now meets its frozen Invalid check expectation. `rec-alias`
+retains its historical Unsupported override until its separate migration
+checkpoint; it is not counted as a conformance pass. All other mismatches fail.
 
 The added controls have independent seed/literal expectations in
 `control-expectations.json`. A depth-12 complete binary tree requires 81,908
