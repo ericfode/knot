@@ -134,11 +134,14 @@ its separate `DEVICE-PROTOCOL.md` layout; those bytes are not version-1 records.
 
 Current evidence: 16 literal-controlled cases, 62 commands and 186 phase
 observations agree between the seed Bun/native models; seven Bend semantic mutants
-are killed. Ten shader variants (the implementation plus nine mutants) create
-30 pipelines with Dawn's null backend. **Real-device acceptance remains open:**
-Metal `requestAdapter` returned null in the executor environment, although the
-machine reports an Apple M5 Max. Null validation has zero device executions and
-zero WGSL semantic kills. See [runtime evidence](../research/adaptive-tasks/runtime/README.md).
+are killed. The executor sandbox had no adapter, so it validated ten shader
+variants (the implementation plus nine mutants) as 30 pipelines on Dawn's null
+backend. The coordinator then ran the same commands on the host's Metal adapter
+(Apple M5 Max, `metal-3`, not a fallback): all 16 device cases pass, all nine
+WGSL semantic mutants are killed, and the older 38-case probe agrees before and
+after the change. See [runtime evidence](../research/adaptive-tasks/runtime/README.md).
+This qualifies the bounded probe domain only; compiler emission of these records
+is not implemented.
 
 ### Words, bounds and identity
 
