@@ -3875,42 +3875,42 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 756,
-        "compiler": 640,
+        "declarations": 767,
+        "compiler": 651,
         "packages": 14,
         "base": 102,
         "check": 426,
         "wasm": 426,
         "covered_by_requirements": {
-          "check": 740,
-          "wasm": 740
+          "check": 750,
+          "wasm": 750
         }
       },
       "missing": {
         "check": [
           {
             "feature": "lambdas",
-            "declarations": 221
+            "declarations": 228
           },
           {
             "feature": "captures",
-            "declarations": 217
+            "declarations": 223
           },
           {
             "feature": "matches.multi",
-            "declarations": 72
+            "declarations": 73
           },
           {
             "feature": "higher-order",
-            "declarations": 51
+            "declarations": 57
           },
           {
             "feature": "calls.variable",
-            "declarations": 40
+            "declarations": 44
           },
           {
             "feature": "io",
-            "declarations": 37
+            "declarations": 44
           },
           {
             "feature": "dependent",
@@ -3918,19 +3918,19 @@
           },
           {
             "feature": "literals.tuple",
-            "declarations": 14
+            "declarations": 15
           },
           {
             "feature": "quantities.polymorphic",
             "declarations": 12
           },
           {
-            "feature": "laws",
+            "feature": "foreign",
             "declarations": 7
           },
           {
-            "feature": "foreign",
-            "declarations": 6
+            "feature": "laws",
+            "declarations": 7
           },
           {
             "feature": "proofs",
@@ -3948,27 +3948,27 @@
         "wasm": [
           {
             "feature": "lambdas",
-            "declarations": 221
+            "declarations": 228
           },
           {
             "feature": "captures",
-            "declarations": 217
+            "declarations": 223
           },
           {
             "feature": "matches.multi",
-            "declarations": 72
+            "declarations": 73
           },
           {
             "feature": "higher-order",
-            "declarations": 51
+            "declarations": 57
           },
           {
             "feature": "calls.variable",
-            "declarations": 40
+            "declarations": 44
           },
           {
             "feature": "io",
-            "declarations": 37
+            "declarations": 44
           },
           {
             "feature": "dependent",
@@ -3976,19 +3976,19 @@
           },
           {
             "feature": "literals.tuple",
-            "declarations": 14
+            "declarations": 15
           },
           {
             "feature": "quantities.polymorphic",
             "declarations": 12
           },
           {
-            "feature": "laws",
+            "feature": "foreign",
             "declarations": 7
           },
           {
-            "feature": "foreign",
-            "declarations": 6
+            "feature": "laws",
+            "declarations": 7
           },
           {
             "feature": "proofs",
@@ -4007,12 +4007,12 @@
       "missing_requirements": {
         "check": [
           {
-            "feature": "laws",
+            "feature": "foreign",
             "declarations": 7
           },
           {
-            "feature": "foreign",
-            "declarations": 6
+            "feature": "laws",
+            "declarations": 7
           },
           {
             "feature": "proofs",
@@ -4025,12 +4025,12 @@
         ],
         "wasm": [
           {
-            "feature": "laws",
+            "feature": "foreign",
             "declarations": 7
           },
           {
-            "feature": "foreign",
-            "declarations": 6
+            "feature": "laws",
+            "declarations": 7
           },
           {
             "feature": "proofs",
@@ -7350,35 +7350,6 @@
           }
         },
         {
-          "key": "src/base-load.constructors",
-          "file": "src/base-load.bend",
-          "origin": "compiler",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "generics",
-            "imports.base",
-            "imports.local",
-            "matches",
-            "patterns.nested",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "recursion",
-            "types.base"
-          ],
-          "missing": {
-            "check": [],
-            "wasm": []
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
           "key": "src/base-load.ctor",
           "file": "src/base-load.bend",
           "origin": "compiler",
@@ -7418,35 +7389,6 @@
         },
         {
           "key": "src/base-load.ctor_names",
-          "file": "src/base-load.bend",
-          "origin": "compiler",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "generics",
-            "imports.base",
-            "imports.local",
-            "matches",
-            "patterns.nested",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "recursion",
-            "types.base"
-          ],
-          "missing": {
-            "check": [],
-            "wasm": []
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
-          "key": "src/base-load.declarations",
           "file": "src/base-load.bend",
           "origin": "compiler",
           "boundary": "source",
@@ -13917,6 +13859,36 @@
           }
         },
         {
+          "key": "src/imports.foreign",
+          "file": "src/imports.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "literals.string",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [],
+            "wasm": []
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/imports.hash_head",
           "file": "src/imports.bend",
           "origin": "compiler",
@@ -18449,6 +18421,46 @@
           }
         },
         {
+          "key": "src/load.begin",
+          "file": "src/load.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "io",
+            "literals.nat",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "higher-order",
+              "io"
+            ],
+            "wasm": [
+              "calls.variable",
+              "higher-order",
+              "io"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/load.body",
           "file": "src/load.bend",
           "origin": "compiler",
@@ -18501,6 +18513,36 @@
           "missing": {
             "check": [],
             "wasm": []
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/load.collides",
+          "file": "src/load.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "matches.multi"
+            ],
+            "wasm": [
+              "matches.multi"
+            ]
           },
           "missing_requirements": {
             "check": [],
@@ -18580,6 +18622,51 @@
           }
         },
         {
+          "key": "src/load.entry_path",
+          "file": "src/load.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "io",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "captures",
+              "higher-order",
+              "io",
+              "lambdas"
+            ],
+            "wasm": [
+              "calls.variable",
+              "captures",
+              "higher-order",
+              "io",
+              "lambdas"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/load.finish",
           "file": "src/load.bend",
           "origin": "compiler",
@@ -18639,21 +18726,34 @@
           "origin": "compiler",
           "boundary": "source",
           "features": [
+            "annotations",
             "bindings",
             "calls",
+            "captures",
             "constructors",
             "fields",
+            "generics",
             "imports.base",
             "imports.local",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
             "matches",
             "patterns.variable",
             "quantities.affine",
+            "quantities.arguments",
             "quantities.reusable",
             "types.base"
           ],
           "missing": {
-            "check": [],
-            "wasm": []
+            "check": [
+              "captures",
+              "lambdas"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas"
+            ]
           },
           "missing_requirements": {
             "check": [],
@@ -18767,7 +18867,7 @@
             "imports.base",
             "imports.local",
             "io",
-            "literals.nat",
+            "literals.string",
             "quantities.affine",
             "quantities.arguments",
             "quantities.reusable",
@@ -18781,6 +18881,47 @@
             "wasm": [
               "higher-order",
               "io"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/load.load_roots",
+          "file": "src/load.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "io",
+            "lambdas",
+            "literals.nat",
+            "matches",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "higher-order",
+              "io",
+              "lambdas"
+            ],
+            "wasm": [
+              "captures",
+              "higher-order",
+              "io",
+              "lambdas"
             ]
           },
           "missing_requirements": {
@@ -18834,6 +18975,35 @@
               "lambdas",
               "literals.tuple"
             ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/load.overlaps",
+          "file": "src/load.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [],
+            "wasm": []
           },
           "missing_requirements": {
             "check": [],
@@ -18944,6 +19114,44 @@
           }
         },
         {
+          "key": "src/load.read_canonical",
+          "file": "src/load.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "io",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "higher-order",
+              "io"
+            ],
+            "wasm": [
+              "calls.variable",
+              "higher-order",
+              "io"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/load.read_pair",
           "file": "src/load.bend",
           "origin": "compiler",
@@ -19025,6 +19233,48 @@
               "higher-order",
               "io",
               "literals.tuple"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/load.read_source",
+          "file": "src/load.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "io",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "higher-order",
+              "io",
+              "lambdas"
+            ],
+            "wasm": [
+              "captures",
+              "higher-order",
+              "io",
+              "lambdas"
             ]
           },
           "missing_requirements": {
@@ -22063,6 +22313,119 @@
           }
         },
         {
+          "key": "src/path-host.check",
+          "file": "src/path-host.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "io",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "captures",
+              "higher-order",
+              "io",
+              "lambdas"
+            ],
+            "wasm": [
+              "calls.variable",
+              "captures",
+              "higher-order",
+              "io",
+              "lambdas"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/path-host.classified",
+          "file": "src/path-host.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.string",
+            "literals.tuple",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "lambdas",
+              "literals.tuple"
+            ],
+            "wasm": [
+              "lambdas",
+              "literals.tuple"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/path-host.inspect",
+          "file": "src/path-host.bend",
+          "origin": "compiler",
+          "boundary": "foreign",
+          "features": [
+            "calls",
+            "foreign",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "io",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "foreign",
+              "io"
+            ],
+            "wasm": [
+              "foreign",
+              "io"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "foreign"
+            ],
+            "wasm": [
+              "foreign"
+            ]
+          }
+        },
+        {
           "key": "src/patterns.Fields",
           "file": "src/patterns.bend",
           "origin": "compiler",
@@ -23624,6 +23987,42 @@
           }
         },
         {
+          "key": "src/qualify.pattern",
+          "file": "src/qualify.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/qualify.prefix",
           "file": "src/qualify.bend",
           "origin": "compiler",
@@ -23651,6 +24050,35 @@
               "captures",
               "lambdas"
             ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/qualify.prefixed",
+          "file": "src/qualify.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [],
+            "wasm": []
           },
           "missing_requirements": {
             "check": [],
@@ -24016,7 +24444,7 @@
           }
         },
         {
-          "key": "src/qualify.walk",
+          "key": "src/qualify.walk_in",
           "file": "src/qualify.bend",
           "origin": "compiler",
           "boundary": "source",
@@ -30759,8 +31187,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "4760afae2cd868e3021c3464c86af9d81e67e195ff85aad0be563c8d554485d2",
-    "docs/compiler-campaign/inventory/base-closure.json": "8c553a0ee0fa65a672220ac62b7d84587f49ab4e80f8b3476407dea64877f994",
-    "docs/compiler-campaign/inventory/accepted.json": "c59acc09ccd4e09a6f50801296bae9972e61f9e99909d6f39f8e47139089af37"
+    "docs/compiler-campaign/inventory/implementation.json": "21e194d7ae6a90ace84d33e230915824a61c4c4f6ea57c03fe61f3ba5aa3e45a",
+    "docs/compiler-campaign/inventory/base-closure.json": "63fdfb487b89b36b87032f0c4115d03d79d979ac430da0861a035e17e2160b78",
+    "docs/compiler-campaign/inventory/accepted.json": "c90e4cf3a3f9ce2b16abf47aa1c9b5eace7e7ac899953678c606278fd750e18b"
   }
 }

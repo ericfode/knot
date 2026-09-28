@@ -358,4 +358,4 @@ def visit(depth: Nat, +parser: Nat, pending: List<&2,String>, +book: List<&2,Dec
 
 def slice(+depth: Nat, +book: List<&2,Decl>, +roots: S.Node) -> Result<S.Error,Slice>:
   S.bind(List<&2,Use>,Slice,references(depth,roots,Nil{}),refs =>
-    visit(depth,depth,dependencies(refs,book,declarations(nodes(roots))),book,Nil{},Nil{}))
+    visit(depth,depth,dependencies(refs,book,Nil{}),book,Nil{},Nil{}))

@@ -140,7 +140,11 @@ An explicit machine suspends import headers while dependencies load. Active
 paths detect back edges; completed paths suppress repeated loads in diamonds.
 Paths are normalized lexically before assigning module identity. Local names
 are relative to the entry directory; bundle names are relative to `ROOT`.
-Aliases are file-local. Symlink and case aliases are outside this profile.
+Aliases are file-local. A minimal native/Bun host query verifies exact directory
+entry spelling and rejects symlink components before user-module reads. Entry
+and bundle roots are queried before lexical normalization. Symlink and case
+aliases report `Unsupported load path-identity`; canonical identity support
+remains a later IO ABI capability. Host query failures stay `HostFailure`.
 Absolute import spellings report `Unsupported load absolute-import`; mixed
 absolute/relative entry and bundle roots report `Unsupported load mixed-path-roots`.
 
@@ -148,6 +152,11 @@ Qualification produces one ordinary ordered book. Every user declaration is
 checked, including unused imported definitions. Base names become book-global
 at their import event, with independent type/function and constructor namespaces.
 Declaration order governs duplicates and live calls, as in the frozen seed.
+Fresh declarations check both bare and qualified names. Installing Base rejects
+same-category collisions with user names already loaded; Base selection never
+lets a user declaration shadow a Base dependency. Pattern binders, including
+reusable binders, are resolved against the full constructor inventory before
+qualification, independently of Base reachability.
 The downstream checker, evaluator and emitters have no module-specific bypass.
 
 Base is the unmodified 67,190-byte `base.bend` from the pinned seed, SHA-256
@@ -167,13 +176,14 @@ character/parser limits. The character cap applies before import-header removal.
 Base reads are capped at 131,072 ASCII bytes and constrained by the exact digest.
 Base dependency traversal has a finite work bound. User and traversal bound
 failures report `Exhausted`; Base identity/encoding failures report
-`HostFailure load base-pin`. Books without installed primitive types retain
-the enum profile. The loader adds no foreign effects; the separate literals
-profile below supplies its own fielded and recursive execution path.
+`HostFailure load base-pin`. The host identity query adds one trusted foreign
+effect; user foreign definitions remain Unsupported. Books without installed
+primitive types retain the default enum profile; the separate literals profile
+below supplies its own fielded and recursive execution path.
 
 The [module gate](../tests/compiler-modules/README.md) compares frozen seed
 expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
-entries check 68 path, scope, loader-transition, Base-selection and digest-boundary
+entries check 81 path, scope, loader-transition, Base-selection and digest-boundary
 laws. These are helper/transition laws; whole-graph order independence and
 compiler correctness are not proved.
 

@@ -10,8 +10,12 @@ import re
 import shutil
 import subprocess
 
+TIMEOUT_SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # harness hang guard only
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
+# The modules host query makes the seed name its five foreign-dependent CLI
+# definitions; builds and mutant checks must report exactly that set.
+HOST_CHECKS = json.loads((ROOT / 'tests/compiler-modules/host-check-expectations.json').read_text())['entries']
 BUILD = ROOT / '.local/compiler-literals/gate'
 RECEIPT = HERE / 'receipts/literals.json'
 SEED = ['bun', ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/main.ts']
@@ -51,7 +55,7 @@ def environment():
     return env
 
 
-def run(argv, timeout=180):
+def run(argv, timeout=180 * TIMEOUT_SCALE):
     command = [str(x) for x in argv]
     try:
         r = subprocess.run(command, cwd=ROOT, env=environment(), capture_output=True,
@@ -66,10 +70,14 @@ def run(argv, timeout=180):
                 'stdout': '', 'stderr': str(error)}
 
 
-def success(argv, timeout=180):
+def success(argv, timeout=180 * TIMEOUT_SCALE, stderr=''):
     r = run(argv, timeout)
-    require(r['exit'] == 0 and r['stderr'] == '', r)
+    require(r['exit'] == 0 and r['stderr'] == stderr, r)
     return r
+
+
+def built(entry, output):
+    return success([*SEED, entry, '-o', output], stderr=HOST_CHECKS[Path(entry).name]['stdout'])
 
 
 def reject(r, code, prefix=None):
@@ -135,7 +143,7 @@ def build_lanes(record):
         for phase in ('check', 'eval', 'compile'):
             path = BUILD / (phase + suffix)
             path.unlink(missing_ok=True)
-            r = success([*SEED, ROOT / f'src/{phase}-cli.bend', '-o', path])
+            r = built(ROOT / f'src/{phase}-cli.bend', path)
             record['builds'].append({'lane': lane, 'phase': phase, 'sha256': digest(path), 'result': r})
             lanes[lane][phase] = [*runtime, path, '--bundle', BUNDLE]
             if phase == 'check':
@@ -240,6 +248,7 @@ def mutants(fixtures):
         folder.mkdir(parents=True, exist_ok=True)
         for source in sorted((ROOT / 'src').glob('*.bend')):
             shutil.copy2(source, folder / source.name)
+        shutil.copytree(ROOT / 'src/host', folder / 'host', dirs_exist_ok=True)
         path = folder / m['file']
         code = path.read_text()
         require(code.count(m['old']) == 1, (m['name'], 'mutation anchor not unique'))
@@ -249,9 +258,9 @@ def mutants(fixtures):
         path.write_text(code)
         entry = folder / 'compile-cli.bend'
         typed = success([*SEED, entry, '--check-only'])
-        require(typed['stdout'] == 'All terms check.\n', typed)
+        require(typed['stdout'] == HOST_CHECKS[entry.name]['stdout'], typed)
         compiler = folder / 'compile.js'
-        built = success([*SEED, entry, '-o', compiler])
+        build = built(entry, compiler)
         f = by_name[m['fixture']]
         call = next(c for c in f['calls'] if c['export'] == m['export'] and c['arguments'] == m['arguments'])
         output = folder / 'witness.wasm'
@@ -264,10 +273,10 @@ def mutants(fixtures):
             require(m['wrong_tag'] != call['tag'], m)
             wasm_value(result, output, {**call, 'tag': m['wrong_tag']})
         record = {**m, 'expected_tag': call['tag'], 'sha256': digest(path), 'typecheck': typed,
-                  'build': built, 'compile': compiled, 'wasm': result, 'killed': True}
+                  'build': build, 'compile': compiled, 'wasm': result, 'killed': True}
         if m.get('eval'):
             evaluator = folder / 'eval.js'
-            record['eval_build'] = success([*SEED, folder / 'eval-cli.bend', '-o', evaluator])
+            record['eval_build'] = built(folder / 'eval-cli.bend', evaluator)
             evaluated = run(['bun', evaluator, '--bundle', BUNDLE, ROOT / f['file'],
                              call['export'], 1048576, *call['arguments']])
             wrong = re.fullmatch(r'Evaluated\t[0-9]+\t([0-9]+)\t[^\n]+\n', evaluated['stdout'])
@@ -306,7 +315,8 @@ def main():
     supplemental = json.loads((HERE / 'supplemental.json').read_text())
     inputs = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json', HOST,
               Path(__file__), HERE / 'expectations.json', HERE / 'regen.py', HERE / 'supplemental.json',
-              HERE / 'supplemental.py', HERE / 'FIXTURES.md']
+              HERE / 'supplemental.py', HERE / 'FIXTURES.md',
+              ROOT / 'tests/compiler-modules/host-check-expectations.json', *sorted((ROOT / 'src/host').glob('*'))]
     inputs += sorted((HERE / 'fixtures').glob('*.bend')) + sorted((HERE / 'supplemental').glob('*.bend'))
     record = {'status': 'incomplete', 'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'seed': manifest['seed'], 'inputs': {p.relative_to(ROOT).as_posix(): digest(p) for p in inputs}}

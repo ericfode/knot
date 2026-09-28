@@ -167,6 +167,45 @@ def probe_reference(manifest):
     return supplement['fixtures'], records
 
 
+def review_reference(manifest):
+    supplement = json.loads((HERE / 'review-round2.json').read_text())
+    require(supplement['seed'] == manifest['seed'], 'Review seed identity differs')
+    source = HERE / 'review-round2'
+    files = {p.relative_to(source).as_posix() for p in source.rglob('*') if p.is_file()}
+    require(files == set(supplement['sources']), 'Review source set differs from freeze')
+    require(all(digest(source / name) == identity for name, identity in supplement['sources'].items()),
+            'Review fixture changed after expectation freeze')
+    target = BUILD / 'review-round2'
+    shutil.copytree(source, target, dirs_exist_ok=True)
+    for name, relative in supplement['symlinks'].items():
+        link = target / name
+        if link.is_symlink():
+            link.unlink()
+        require(not link.exists(), ('Review link path is occupied', name))
+        link.symlink_to(relative, target_is_directory=True)
+    case = supplement['case_alias']
+    require((target / case['alias']).exists()
+            and os.path.samefile(target / case['canonical'], target / case['alias']),
+            'Review case-alias probe requires a case-insensitive filesystem')
+    records, fixtures = [], []
+    for frozen in supplement['fixtures']:
+        fixture = json.loads(json.dumps(frozen))
+        fixture['file'] = os.path.relpath(target / frozen['file'], HERE)
+        if 'loaded_files' in fixture:
+            fixture['loaded_files'] = [os.path.relpath(target / name, HERE)
+                                       for name in fixture['loaded_files']]
+        for call in fixture['calls']:
+            entry = target / call['run']
+            result = run([*SEED, entry])
+            normalized = {**result, **{key: result[key].replace(str(ROOT), '<ROOT>')
+                                      for key in ('stdout', 'stderr')}}
+            require(observation(normalized) == observation(call), (call, result))
+            records.append({'name': fixture['name'], 'run': call['run'], 'result': result})
+            call['run'] = os.path.relpath(entry, HERE)
+        fixtures.append(fixture)
+    return fixtures, records
+
+
 def pin_controls(record):
     expected = json.loads((HERE / 'pin-expectations.json').read_text())
     paths = []
@@ -403,14 +442,58 @@ def fallback(+qualified: String, +bare: String, +names: Names) -> String:
     case Names{ns,aliases,+globals,own}:
       S.choose(String,known(qualified,names),u => qualified,u => leaked(globals,last_member(bare,""),qualified))''',
      'witness': 'alias-not-reexported', 'actual': {'exit': 0}},
+    {'name': 'path-identity-ignored', 'file': 'path-host.bend',
+     'old': 'S.choose(Result<S.Error,Unit>,canonical,u => Done{Unit{}},u =>',
+     'new': 'S.choose(Result<S.Error,Unit>,True{},u => Done{Unit{}},u =>',
+     'witness': 'symlink-directory',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\ttype-mismatch\t'}},
+    {'name': 'qualified-freshness-ignored', 'file': 'qualify.bend',
+     'old': 'Bool.or(contains(globals,S.text(token)),contains(globals,prefix(ns,S.text(token))))',
+     'new': 'contains(globals,S.text(token))',
+     'witness': 'base-first-collision', 'actual': {'exit': 0}},
+    {'name': 'base-collision-ignored', 'file': 'load.bend',
+     'old': 'S.choose(Result<S.Error,State>,collides(globals,names),u =>',
+     'new': 'S.choose(Result<S.Error,State>,False{},u =>',
+     'witness': 'base-last-collision', 'actual': {'exit': 0}},
+    {'name': 'pattern-constructor-ignored', 'file': 'qualify.bend',
+     'old': 'Bool.and(known(S.text(resolved),names),contains(ctors,S.text(resolved)))',
+     'new': 'False{}',
+     'witness': 'local-ctor-binder', 'actual': {'exit': 0}},
+    {'name': 'foreign-body-uses-column', 'file': 'imports.bend',
+     'old': 'foreign(parts),u =>\n          Fail{S.Unsupported',
+     'new': 'Bool.not(String.starts_with(line,"import")),u =>\n          Fail{S.Unsupported',
+     'witness': 'foreign-column-zero',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-after-declaration\t'}},
+    {'name': 'host-symlink-ignored', 'file': 'host/path-identity.js',
+     'old': 'if (stat.isSymbolicLink()) return io_done(false);',
+     'new': 'if (false) return io_done(false);',
+     'witness': 'symlink-directory',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\ttype-mismatch\t'}},
+    {'name': 'host-case-ignored', 'file': 'host/path-identity.js',
+     'old': 'if (!exact) return io_done(false);',
+     'new': 'if (false) return io_done(false);',
+     'witness': 'case-alias',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\ttype-mismatch\t'}},
+    {'name': 'pattern-global-ctors-dropped', 'file': 'qualify.bend',
+     'old': 'List.append(&2,String,ctors,prefixed(namespace,ctors_in(items)))',
+     'new': 'prefixed(namespace,ctors_in(items))',
+     'witness': 'base-ctor-binder', 'actual': {'exit': 0}},
+    {'name': 'promoted-constructor-ignored', 'file': 'qualify.bend',
+     'old': 'pattern(token,S.Promotion{token},names,ctors)',
+     'new': 'Done{Qualified{S.Promotion{token},[S.text(token)]}}',
+     'witness': 'local-promoted-ctor-binder', 'actual': {'exit': 0}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
-                    'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored'}
+                    'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
+                    'path-identity-ignored', 'qualified-freshness-ignored', 'base-collision-ignored',
+                    'pattern-constructor-ignored', 'foreign-body-uses-column',
+                    'host-symlink-ignored', 'host-case-ignored',
+                    'pattern-global-ctors-dropped', 'promoted-constructor-ignored'}
 
 
 def mutants(fixtures):
     require({m['name'] for m in MUTANTS} >= REQUIRED_MUTANTS, 'Missing module semantic mutants')
-    by_name = {Path(fixture['file']).stem: fixture for fixture in fixtures}
+    by_name = {fixture.get('name', Path(fixture['file']).stem): fixture for fixture in fixtures}
     records = []
     for mutant in MUTANTS:
         name = mutant['name']
@@ -418,13 +501,16 @@ def mutants(fixtures):
         directory.mkdir(exist_ok=True)
         for source in (ROOT / 'src').glob('*.bend'):
             shutil.copy2(source, directory / source.name)
+        shutil.copytree(ROOT / 'src/host', directory / 'host', dirs_exist_ok=True)
         target = directory / mutant['file']
         source = target.read_text()
         require(source.count(mutant['old']) == 1, (name, 'mutation must be unique'))
         target.write_text(source.replace(mutant['old'], mutant['new']))
+        if target.suffix == '.js':
+            successful(['node', '--check', target])
         entry = directory / 'check-cli.bend'
         typecheck = successful([*SEED, entry, '--check-only'])
-        require(typecheck['stdout'].strip() == 'All terms check.', typecheck)
+        require(observation(typecheck) == json.loads((HERE / 'host-check-expectations.json').read_text())['observation'], typecheck)
         output = directory / 'mutant.js'
         built = successful([*SEED, entry, '-o', output])
         fixture = by_name[mutant['witness']]
@@ -453,8 +539,10 @@ def main():
     paths = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md',
              ROOT / 'src/CONTRACT.json', HOST, Path(__file__), HERE / 'expectations.json',
              HERE / 'FIXTURES.md', HERE / 'regen.py', HERE / 'regressions.json',
-             HERE / 'probes.json', HERE / 'pin.bend', HERE / 'pin-expectations.json']
-    paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes')
+             HERE / 'host-check-expectations.json',
+             HERE / 'probes.json', HERE / 'pin.bend', HERE / 'pin-expectations.json',
+             HERE / 'review-round2.json', *sorted((ROOT / 'src/host').glob('*'))]
+    paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes', 'review-round2')
               for p in sorted((HERE / folder).rglob('*')) if p.is_file()]
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'status': 'incomplete', 'seed': manifest['seed'],
@@ -463,6 +551,7 @@ def main():
         record['reference_verification'] = successful(['python3', HERE / 'regen.py'])
         supplemental, record['supplemental_reference'] = supplemental_reference(manifest)
         probes, record['probe_reference'] = probe_reference(manifest)
+        review, record['review_reference'] = review_reference(manifest)
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3')}
         require(record['tools']['node'] == 'v22.22.3', record['tools'])
@@ -476,9 +565,9 @@ def main():
         pin_controls(record)
         record['tampered_base'] = tampered_base(lanes, json.loads((HERE / 'pin-expectations.json').read_text()))
         record['fixtures'] = []
-        for fixture in [*manifest['fixtures'], *supplemental, *probes]:
+        for fixture in [*manifest['fixtures'], *supplemental, *probes, *review]:
             record['fixtures'].append(fixture_observations(fixture, lanes, record['base_reference']))
-        record['mutants'] = mutants(manifest['fixtures'])
+        record['mutants'] = mutants([*manifest['fixtures'], *review])
         require(all(digest(ROOT / path) == identity for path, identity in record['inputs'].items()),
                 'Inputs changed during modules gate')
         seed_dir = ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2'

@@ -5,6 +5,7 @@ import ./imports.bend as I
 import ./qualify.bend as Q
 import ./base-load.bend as B
 import ./load.bend as L
+import ./path-host.bend as F
 
 # Transition and path boundaries. These do not prove whole-book confluence.
 law completed_module_is_not_read_again:
@@ -97,3 +98,33 @@ law parent_import_is_recognized_without_loading:
   for +rest: List<&2,S.Token>
   {P.run(1n,P.Header{S.Token{"import",at},S.Token{"..",at}},Con{S.Token{"/",at},rest})
     == Fail{S.Unsupported{"parse","import",at}} : Result<S.Error,P.Parsed>}
+
+law base_term_collision_is_invalid:
+  {L.install_base("def Bool.not(b: Bool) -> Bool:\n  b\n",
+    L.State{Nil{},Nil{},Nil{},Q.Symbols{["Bool.not"],Nil{}},Nil{},False{}}) ==
+    Fail{S.Invalid{"load","duplicate-global",S.At{0,0,0,0}}} : Result<S.Error,L.State>}
+
+law base_constructor_collision_is_invalid:
+  {L.install_base("type Bool is Data:\n  False{}\n  True{}\n",
+    L.State{Nil{},Nil{},Nil{},Q.Symbols{Nil{},["True"]},Nil{},False{}}) ==
+    Fail{S.Invalid{"load","duplicate-global",S.At{0,0,0,0}}} : Result<S.Error,L.State>}
+
+law column_zero_foreign_body_is_unsupported:
+  {I.header("def tick() -> IO(Unit):\nimport \"tick.js\"\n") ==
+    Fail{S.Unsupported{"check","foreign-definition",S.At{0,0,2,0}}} : Result<S.Error,I.Header>}
+
+law module_import_after_declaration_is_invalid:
+  {I.header("type Flag is Type:\n  Off{}\nimport ./m.bend as M\n") ==
+    Fail{S.Invalid{"load","import-after-declaration",S.At{0,0,3,0}}} : Result<S.Error,I.Header>}
+
+law ambiguous_host_path_is_unsupported:
+  {F.classified(Done{False{}}) ==
+    Fail{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}} : Result<S.Error,Unit>}
+
+law canonical_host_path_can_load:
+  {F.classified(Done{True{}}) == Done{Unit{}} : Result<S.Error,Unit>}
+
+law path_query_failure_is_a_host_failure:
+  for +message: String
+  {F.classified(Fail{(13,message)}) ==
+    Fail{S.Host{"path-identity",String.append("13\t",message)}} : Result<S.Error,Unit>}

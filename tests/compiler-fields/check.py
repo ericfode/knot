@@ -11,6 +11,7 @@ TIMEOUT_SCALE = float(__import__('os').environ.get('KNOT_GATE_TIMEOUT_SCALE', '1
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
+HOST_CHECKS = json.loads((ROOT / 'tests/compiler-modules/host-check-expectations.json').read_text())['entries']
 BUILD = ROOT / '.local/compiler-fields/gate'
 SEED = ROOT / 'scripts/bend-reference'
 RECEIPT = HERE / 'receipts/fields.json'
@@ -156,6 +157,7 @@ def main():
         for name, file, old, new, witness, phase in MUTANTS:
             directory = BUILD / name; directory.mkdir(exist_ok=True)
             for source in (ROOT / 'src').glob('*.bend'): shutil.copy2(source, directory / source.name)
+            shutil.copytree(ROOT / 'src/host', directory / 'host', dirs_exist_ok=True)
             target = directory / file; source = target.read_text()
             require(source.count(old) == 1, (name, 'mutation must be unique'))
             target.write_text(source.replace(old, new))
@@ -169,7 +171,7 @@ def main():
                 if phase != 'check': args += ['main', 16 if phase == 'fuel' else 4096]
                 expected = case['check' if phase == 'check' else 'eval']
             typecheck = successful([SEED, entry, '--check-only'])
-            require(typecheck['stdout'].strip() == 'All terms check.', typecheck)
+            require(typecheck['stdout'].strip() == HOST_CHECKS.get(entry.name, {'stdout': 'All terms check.'})['stdout'].strip(), typecheck)
             output = directory / 'mutant.js'; compiled = successful([SEED, entry, '-o', output])
             actual = run(['bun', output, *args])
             require(actual['exit'] in (0, 2, 3, 4), ('not a semantic observation', actual))

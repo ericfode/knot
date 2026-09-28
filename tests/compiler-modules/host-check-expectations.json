@@ -1,0 +1,154 @@
+{
+  "schema": "knot-modules-host-check-1",
+  "reason": "Coordinator option b adds one foreign host identity query. The seed now reports its exact five dependent CLI definitions. This seed-derived amendment preserves complete checking and fixes the precise foreign dependency set instead of accepting any warning. Proof entry outputs stay All terms check.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "argv": [
+    "bun",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "src/check-cli.bend",
+    "--check-only"
+  ],
+  "observation": {
+    "exit": 0,
+    "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+    "stderr": ""
+  },
+  "host_query_sha256": {
+    "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
+    "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
+    "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2"
+  },
+  "entries": {
+    "check-cli.bend": {
+      "exit": 0,
+      "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+      "stderr": ""
+    },
+    "eval-cli.bend": {
+      "exit": 0,
+      "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+      "stderr": ""
+    },
+    "compile-cli.bend": {
+      "exit": 0,
+      "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+      "stderr": ""
+    }
+  },
+  "entry_commands": {
+    "check-cli.bend": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/check-cli.bend",
+      "--check-only"
+    ],
+    "eval-cli.bend": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/eval-cli.bend",
+      "--check-only"
+    ],
+    "compile-cli.bend": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/compile-cli.bend",
+      "--check-only"
+    ]
+  },
+  "compiled_foreign": {
+    "command": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/compile-cli.bend",
+      "-o",
+      ".local/compiler-modules/gate/compile.js"
+    ],
+    "artifact_sha256": "8c702c38138dd2c37fe29501766934f26b35fbd2870ba5462e3d3133772bc1fc",
+    "seed_foreign": [
+      "File.close",
+      "File.open",
+      "File.read",
+      "File.write_bytes",
+      "IO.args",
+      "IO.print",
+      "path-host.inspect"
+    ],
+    "census_foreign": [
+      "File.close",
+      "File.open",
+      "File.read",
+      "File.write_bytes",
+      "IO.args",
+      "IO.print",
+      "src/path-host.inspect"
+    ],
+    "namespace_note": "The census prefixes repository namespaces with src/; the seed CLI uses the entry directory as namespace root. The emitted effect requirement list is read from the pinned compiler output, not from census."
+  },
+  "emitted_foreign_by_entry": {
+    "check-cli.bend": {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/check-cli.bend",
+        "-o",
+        "<ROOT>/.local/modules/trust-check.js"
+      ],
+      "artifact_sha256": "33de8fde29000cd7382f9a9256450901f600ca9cc6568e5e8241fb0ee7799405",
+      "foreign_requirements_in_emitted_order": [
+        "IO.args",
+        "File.open",
+        "File.read",
+        "File.close",
+        "IO.print",
+        "path-host.inspect"
+      ]
+    },
+    "eval-cli.bend": {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/eval-cli.bend",
+        "-o",
+        "<ROOT>/.local/modules/trust-eval.js"
+      ],
+      "artifact_sha256": "ecac1f4491dd0f31fb70af89e7aaf24256bedebbd8b7992899606b759f8c1c57",
+      "foreign_requirements_in_emitted_order": [
+        "IO.args",
+        "File.open",
+        "File.read",
+        "File.close",
+        "IO.print",
+        "path-host.inspect"
+      ]
+    },
+    "compile-cli.bend": {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/compile-cli.bend",
+        "-o",
+        "<ROOT>/.local/modules/trust-compile.js"
+      ],
+      "artifact_sha256": "8c702c38138dd2c37fe29501766934f26b35fbd2870ba5462e3d3133772bc1fc",
+      "foreign_requirements_in_emitted_order": [
+        "IO.args",
+        "File.open",
+        "File.read",
+        "File.close",
+        "File.write_bytes",
+        "path-host.inspect",
+        "IO.print"
+      ]
+    }
+  }
+}

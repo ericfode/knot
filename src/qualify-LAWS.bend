@@ -128,3 +128,38 @@ law exhaustion_is_separate:
   for names: Q.Names
   for bound: List<&2,String>
   {Q.walk(0n,node,position,names,bound) == Fail{S.Exhausted{"load",S.At{0,0,0,0}}} : Result<S.Error,Q.Qualified>}
+
+law qualified_global_cannot_be_declared:
+  for +at: S.At
+  {Q.fresh(S.Token{"not",at},"Bool",Nil{},["Bool.not"]) ==
+    Fail{S.Invalid{"load","duplicate-global",at}} : Result<S.Error,String>}
+
+law qualified_constructor_cannot_be_declared:
+  for +at: S.At
+  {Q.qualify("m",Nil{},Q.Symbols{Nil{},["m.Off"]},S.Sequence{[
+    S.Datatype{S.Token{"Flag",at},False{},[S.Constructor{S.Token{"Off",at},Nil{}}]}]}) ==
+    Fail{S.Invalid{"load","duplicate-global",at}} : Result<S.Error,S.Node>}
+
+law local_constructor_is_not_a_pattern_binder:
+  for +at: S.At
+  {Q.walk_in(1n,S.Variable{S.Token{"Off",at}},Q.Pattern{},
+    Q.Names{"m",Nil{},Nil{},["m.Off"]},Nil{},["m.Off"]) ==
+    Fail{S.Invalid{"check","constructor-pattern-binder",at}} : Result<S.Error,Q.Qualified>}
+
+law global_constructor_is_not_a_pattern_binder:
+  for +at: S.At
+  {Q.walk_in(1n,S.Variable{S.Token{"True",at}},Q.Pattern{},
+    Q.Names{"m",Nil{},["True"],Nil{}},Nil{},["True"]) ==
+    Fail{S.Invalid{"check","constructor-pattern-binder",at}} : Result<S.Error,Q.Qualified>}
+
+law term_name_can_be_a_pattern_binder:
+  for +at: S.At
+  {Q.walk_in(1n,S.Variable{S.Token{"Bool",at}},Q.Pattern{},
+    Q.Names{"m",Nil{},["Bool"],Nil{}},Nil{},["False","True"]) ==
+    Done{Q.Qualified{S.Variable{S.Token{"Bool",at}},["Bool"]}} : Result<S.Error,Q.Qualified>}
+
+law promoted_constructor_is_not_a_pattern_binder:
+  for +at: S.At
+  {Q.walk_in(1n,S.Promotion{S.Token{"Off",at}},Q.Pattern{},
+    Q.Names{"m",Nil{},Nil{},["m.Off"]},Nil{},["m.Off"]) ==
+    Fail{S.Invalid{"check","constructor-pattern-binder",at}} : Result<S.Error,Q.Qualified>}

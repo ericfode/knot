@@ -6,6 +6,7 @@ import ./imports.bend as I
 import ./qualify.bend as Q
 import ./base-load.bend as B
 import ./base-pin.bend as H
+import ./path-host.bend as F
 
 type Receipt is Data:
   Receipt{tree: S.Node, files: List<&2,String>, checked_base: List<&2,String>, unchecked_base: List<&2,String>}
@@ -65,11 +66,23 @@ def symbols(left: Q.Symbols, right: Q.Symbols) -> Q.Symbols:
     case Q.Symbols{lt,lc} Q.Symbols{rt,rc}:
       Q.Symbols{List.append(&2,String,lt,rt),List.append(&2,String,lc,rc)}
 
-def install_base(+text: String, state: State) -> State:
+def overlaps(left: List<&2,String>, +right: List<&2,String>) -> Bool:
+  match left:
+    case Nil{}: False{}
+    case Con{head,tail}: Bool.or(Q.contains(right,head),overlaps(tail,right))
+
+def collides(left: Q.Symbols, right: Q.Symbols) -> Bool:
+  match left right:
+    case Q.Symbols{lt,lc} Q.Symbols{rt,rc}: Bool.or(overlaps(lt,rt),overlaps(lc,rc))
+
+def install_base(+text: String, state: State) -> Result<S.Error,State>:
   match state:
-    case State{done,active,reversed,globals,base,loaded}:
+    case State{+done,+active,+reversed,+globals,base,loaded}:
       +inventory = B.inventory(text)
-      State{done,active,reversed,symbols(globals,Q.Symbols{B.term_names(inventory),B.ctor_names(inventory)}),inventory,True{}}
+      +names : Q.Symbols = Q.Symbols{B.term_names(inventory),B.ctor_names(inventory)}
+      S.choose(Result<S.Error,State>,collides(globals,names),u =>
+        Fail{S.Invalid{"load","duplicate-global",S.At{0,0,0,0}}},u =>
+        Done{State{done,active,reversed,symbols(globals,names),inventory,True{}}})
 
 def leave(path: String, +tree: S.Node, state: State) -> Result<S.Error,State>:
   match tree state:
@@ -128,6 +141,19 @@ def opened(result: Result<&1,&1,U32 & String,File>, cap: U32, +missing: Bool,
 def read(path: String, +cap: U32, +missing: Bool, next: Result<S.Error,String> -> IO(Unit)) -> IO(Unit):
   IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(result,cap,missing,next))
 
+def read_canonical(result: Result<S.Error,Unit>, path: String, cap: U32, missing: Bool,
+  next: Result<S.Error,String> -> IO(Unit)) -> IO(Unit):
+  match result:
+    case Fail{error}: next(Fail{error})
+    case Done{unit}: read(path,cap,missing,next)
+
+def read_source(+path: String, +cap: U32, +missing: Bool, origin: Origin,
+  next: Result<S.Error,String> -> IO(Unit)) -> IO(Unit):
+  match origin:
+    case UserSource{file,namespace}:
+      F.check(path,result => read_canonical(result,path,cap,missing,next))
+    case PinnedBase{}: read(path,cap,missing,next)
+
 def received(result: Result<S.Error,String>) -> Input:
   match result:
     case Fail{error}: ReadError{error}
@@ -158,10 +184,15 @@ def step_source(result: Input, +path: String, +namespace: String, +characters: N
       S.choose(Action,within(characters,text),u => step_header(I.header(text),path,namespace,tail,state),u =>
         Stopped{S.Exhausted{"lex",S.At{0,0,0,0}}})
 
+def step_state(result: Result<S.Error,State>, tail: List<&2,Step>) -> Action:
+  match result:
+    case Fail{error}: Stopped{error}
+    case Done{after}: Advance{tail,after}
+
 def checked_base(result: Result<S.Error,String>, tail: List<&2,Step>, state: State) -> Action:
   match result:
     case Fail{error}: Stopped{error}
-    case Done{text}: Advance{tail,install_base(text,state)}
+    case Done{text}: step_state(install_base(text,state),tail)
 
 def step_base(result: Input, tail: List<&2,Step>, state: State) -> Action:
   match result:
@@ -175,11 +206,6 @@ def step_target(result: Result<S.Error,I.Target>, +alias: String, +path: String,
     case Fail{error}: Stopped{error}
     case Done{I.Target{target,+space}}:
       Advance{Con{Visit{target,space,False{}},Con{Imports{path,namespace,remaining,Con{Q.Alias{alias,space},aliases},text},tail}},state}
-
-def step_state(result: Result<S.Error,State>, tail: List<&2,Step>) -> Action:
-  match result:
-    case Fail{error}: Stopped{error}
-    case Done{after}: Advance{tail,after}
 
 def step_body(result: Result<S.Error,S.Node>, +path: String, +state: State,
   tail: List<&2,Step>) -> Action:
@@ -221,7 +247,7 @@ def run(fuel: Nat, action: Action, +bundle: String, +characters: Nat, +depth: Na
     case 1n+ +n Advance{tasks,state}:
       run(n,plan(tasks,state,bundle,characters,depth),bundle,characters,depth,next)
     case 1n+ +n Read{path,cap,missing,+origin,+tasks,+state}:
-      read(path,cap,missing,result =>
+      read_source(path,cap,missing,origin,result =>
         run(n,plan(Con{delivered(origin,received(result)),tasks},state,bundle,characters,depth),bundle,characters,depth,next))
 
 def start(+path: String, +bundle: String) -> Action:
@@ -229,10 +255,27 @@ def start(+path: String, +bundle: String) -> Action:
     Stopped{S.Unsupported{"load","mixed-path-roots",S.At{0,0,0,0}}},u =>
     Advance{[Visit{I.normalize(path),"",True{}}],State{Nil{},Nil{},Nil{},Q.Symbols{Nil{},Nil{}},Nil{},False{}}})
 
+def begin(result: Result<S.Error,Unit>, +path: String, +bundle: String, characters: Nat, depth: Nat,
+  next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):
+  match result:
+    case Fail{error}: next(Fail{error})
+    case Done{unit}: run(1024n,start(path,bundle),I.normalize(bundle),characters,depth,next)
+
+def entry_path(result: Result<S.Error,Unit>, +path: String, +bundle: String, +characters: Nat, +depth: Nat,
+  next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):
+  match result:
+    case Fail{error}: next(Fail{error})
+    case Done{unit}: F.check(path,checked => begin(checked,path,bundle,characters,depth,next))
+
+def load_roots(mixed: Bool, +path: String, +bundle: String, +characters: Nat, +depth: Nat,
+  next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):
+  match mixed:
+    case True{}: run(1024n,start(path,bundle),bundle,characters,depth,next)
+    case False{}: F.check(bundle,result => entry_path(result,path,bundle,characters,depth,next))
+
 def load(+path: String, +bundle: String, characters: Nat, depth: Nat,
   next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):
-  run(1024n,start(path,bundle),
-    I.normalize(bundle),characters,depth,next)
+  load_roots(Bool.xor(String.starts_with(path,"/"),String.starts_with(bundle,"/")),path,bundle,characters,depth,next)
 
 def tree(receipt: Receipt) -> S.Node:
   match receipt:

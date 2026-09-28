@@ -239,7 +239,7 @@ test('regeneration is byte-identical and matches every committed manifest', () =
   assert.equal(hosts.base_trust.foreign.length, 42);
   assert.deepEqual(hosts.base_trust.unsafe, ['Array.fork', 'Array.join']);
   assert.deepEqual(hosts.artifacts.compiler.js.foreign,
-    ['File.close', 'File.open', 'File.read', 'File.write_bytes', 'IO.args', 'IO.print']);
+    ['File.close', 'File.open', 'File.read', 'File.write_bytes', 'IO.args', 'IO.print', 'src/path-host.inspect']);
   assert.deepEqual(hosts.artifacts.frontend.js.foreign, []);
 });
 

@@ -224,7 +224,14 @@ export function policyViolations(files, policy) {
     const entry = byFile.get(file);
     if (!entry) { violations.push(`${file}: missing dependency inventory`); return; }
     entry.imports.forEach(i => visit(i.file));
-    for (const feature of entry.features) if (policy.forbidden_dependency_features.includes(feature)) violations.push(`${file}: forbidden dependency feature ${feature}`);
+    const exception = policy.dependency_feature_exceptions?.[file];
+    for (const feature of entry.features) {
+      const pinned = typeof exception?.sha256 === 'string' && exception.sha256 === entry.sha256
+        && exception.features.includes(feature);
+      if (policy.forbidden_dependency_features.includes(feature) && !pinned) {
+        violations.push(`${file}: forbidden dependency feature ${feature}`);
+      }
+    }
   };
   for (const f of files.filter(f => f.file.startsWith('src/'))) {
     visit(f.file);

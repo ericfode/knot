@@ -81,7 +81,7 @@ def local(+token: S.Token, +names: Names, +bound: List<&2,String>) -> Result<S.E
 def fresh(+token: S.Token, +ns: String, +aliases: List<&2,Alias>, +globals: List<&2,String>) -> Result<S.Error,String>:
   S.choose(Result<S.Error,String>,Maybe.is_some(&2,String,member(split(S.text(token)),aliases)),u =>
     invalid(String,"alias-member",token),u =>
-    S.choose(Result<S.Error,String>,contains(globals,S.text(token)),u => invalid(String,"duplicate-global",token),u =>
+    S.choose(Result<S.Error,String>,Bool.or(contains(globals,S.text(token)),contains(globals,prefix(ns,S.text(token)))),u => invalid(String,"duplicate-global",token),u =>
       Done{prefix(ns,S.text(token))}))
 
 def constructors(nodes: List<&2,S.Node>, +ns: String, +aliases: List<&2,Alias>, +globals: List<&2,String>) -> Result<S.Error,List<&2,String>>:
@@ -195,55 +195,71 @@ def sequence(node: S.Node, next: List<&2,S.Node> -> Result<S.Error,Qualified>) -
 def prepend(head: S.Node, binders: List<&2,String>, tail: S.Node, more: List<&2,String>) -> Result<S.Error,Qualified>:
   sequence(tail,items => Done{Qualified{S.Sequence{Con{head,items}},List.append(&2,String,binders,more)}})
 
+def pattern(+token: S.Token, +node: S.Node, +names: Names, +ctors: List<&2,String>) -> Result<S.Error,Qualified>:
+  S.bind(S.Token,Qualified,reference(token,names),+resolved =>
+    S.choose(Result<S.Error,Qualified>,Bool.and(known(S.text(resolved),names),contains(ctors,S.text(resolved))),u =>
+      Fail{S.Invalid{"check","constructor-pattern-binder",S.at(token)}},u =>
+      Done{Qualified{node,[S.text(token)]}}))
+
 # A pattern contributes binders; an expression only reads its current scope.
 # The same traversal therefore handles parameters, fields and match arms.
-def walk(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound: List<&2,String>) -> Result<S.Error,Qualified>:
+def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound: List<&2,String>, +ctors: List<&2,String>) -> Result<S.Error,Qualified>:
   match fuel node:
     case 0n _: Fail{S.Exhausted{"load",S.At{0,0,0,0}}}
     case 1n+ n S.Literal{token,kind,number,text}: done(S.Literal{token,kind,number,text})
     case 1n+ n S.Offset{token,count,tail}:
-      then(walk(n,tail,position,names,bound),value => binders => Done{Qualified{S.Offset{token,count,value},binders}})
+      then(walk_in(n,tail,position,names,bound,ctors),value => binders => Done{Qualified{S.Offset{token,count,value},binders}})
     case 1n+ n S.Intrinsic{token,op,args}: Fail{S.Internal{"load","user-intrinsic"}}
     case 1n+ n S.Variable{+token}:
-      S.choose(Result<S.Error,Qualified>,is_pattern(position),u => Done{Qualified{S.Variable{token},[S.text(token)]}},u =>
+      S.choose(Result<S.Error,Qualified>,is_pattern(position),u => pattern(token,S.Variable{token},names,ctors),u =>
         S.bind(S.Token,Qualified,local(token,names,bound),t => done(S.Variable{t})))
-    case 1n+ n S.Promotion{+token}: Done{Qualified{S.Promotion{token},[S.text(token)]}}
+    case 1n+ n S.Promotion{+token}:
+      S.choose(Result<S.Error,Qualified>,is_pattern(position),u => pattern(token,S.Promotion{token},names,ctors),u =>
+        Done{Qualified{S.Promotion{token},[S.text(token)]}})
     case 1n+ +n S.Constructor{token,args}:
       S.bind(S.Token,Qualified,constructor_token(token,names,position),t =>
-        then(walk(n,S.Sequence{args},position,names,bound),items => binders =>
+        then(walk_in(n,S.Sequence{args},position,names,bound,ctors),items => binders =>
           sequence(items,xs => Done{Qualified{S.Constructor{t,xs},binders}})))
     case 1n+ +n S.Call{token,args}:
       S.bind(S.Token,Qualified,reference(token,names),t =>
-        then(walk(n,S.Sequence{args},position,names,bound),items => binders =>
+        then(walk_in(n,S.Sequence{args},position,names,bound,ctors),items => binders =>
           sequence(items,xs => Done{Qualified{S.Call{t,xs},binders}})))
     case 1n+ +n S.Binding{+token,q,ann,value,+body}:
       S.bind(Maybe<&2,S.Token>,Qualified,annotation(ann,names),a =>
-        then(walk(n,value,Expression{},names,bound),v => ignored =>
-          then(walk(n,body,Expression{},names,Con{S.text(token),bound}),b => unused =>
+        then(walk_in(n,value,Expression{},names,bound,ctors),v => ignored =>
+          then(walk_in(n,body,Expression{},names,Con{S.text(token),bound},ctors),b => unused =>
             done(S.Binding{token,q,a,v,b}))))
     case 1n+ +n S.Match{token,value,+arms}:
-      then(walk(n,value,Expression{},names,bound),v => ignored =>
-        then(walk(n,S.Sequence{arms},Expression{},names,bound),items => unused =>
+      then(walk_in(n,value,Expression{},names,bound,ctors),v => ignored =>
+        then(walk_in(n,S.Sequence{arms},Expression{},names,bound,ctors),items => unused =>
           sequence(items,xs => done(S.Match{token,v,xs}))))
     case 1n+ +n S.Arm{token,pat,+body}:
-      then(walk(n,pat,Pattern{},names,bound),p => binders =>
-        then(walk(n,body,Expression{},names,List.append(&2,String,binders,bound)),b => ignored =>
+      then(walk_in(n,pat,Pattern{},names,bound,ctors),p => binders =>
+        then(walk_in(n,body,Expression{},names,List.append(&2,String,binders,bound),ctors),b => ignored =>
           done(S.Arm{token,p,b})))
     case 1n+ n S.Parameter{+token,q,typ}:
       S.bind(S.Token,Qualified,reference(typ,names),t => Done{Qualified{S.Parameter{token,q,t},[S.text(token)]}})
-    case 1n+ +n S.Datatype{+token,data,ctors}:
-      then(walk(n,S.Sequence{ctors},ConstructorHeaders{},introduced([S.text(token)],names),Nil{}),items => ignored =>
+    case 1n+ +n S.Datatype{+token,data,children}:
+      then(walk_in(n,S.Sequence{children},ConstructorHeaders{},introduced([S.text(token)],names),Nil{},ctors),items => ignored =>
         sequence(items,xs => done(S.Datatype{declared(token,names),data,xs})))
     case 1n+ +n S.Function{+token,params,+result,+body}:
-      then(walk(n,S.Sequence{params},Expression{},names,Nil{}),items => binders =>
+      then(walk_in(n,S.Sequence{params},Expression{},names,Nil{},ctors),items => binders =>
         sequence(items,xs =>
           S.bind(S.Token,Qualified,reference(result,names),t =>
-            then(walk(n,body,Expression{},introduced([S.text(token)],names),binders),b => ignored =>
+            then(walk_in(n,body,Expression{},introduced([S.text(token)],names),binders,ctors),b => ignored =>
               done(S.Function{declared(token,names),xs,t,b})))))
     case 1n+ n S.Sequence{Nil{}}: done(S.Sequence{Nil{}})
     case 1n+ +n S.Sequence{Con{+head,+tail}}:
-      then(walk(n,head,position,names,bound),h => binders =>
-        then(walk(n,S.Sequence{tail},position,following(position,head,names),bound),t => more => prepend(h,binders,t,more)))
+      then(walk_in(n,head,position,names,bound,ctors),h => binders =>
+        then(walk_in(n,S.Sequence{tail},position,following(position,head,names),bound,ctors),t => more => prepend(h,binders,t,more)))
+
+def walk(fuel: Nat, node: S.Node, position: Position, names: Names, bound: List<&2,String>) -> Result<S.Error,Qualified>:
+  walk_in(fuel,node,position,names,bound,Nil{})
+
+def prefixed(+namespace: String, names: List<&2,String>) -> List<&2,String>:
+  match names:
+    case Nil{}: Nil{}
+    case Con{head,tail}: Con{prefix(namespace,head),prefixed(namespace,tail)}
 
 def result(value: Qualified) -> Result<S.Error,S.Node>:
   match value:
@@ -255,5 +271,6 @@ def qualify(+namespace: String, +aliases: List<&2,Alias>, globals: Symbols, root
   match globals root:
     case Symbols{+terms,+ctors} S.Sequence{+items}:
       S.bind(List<&2,String>,S.Node,declarations(items,namespace,aliases,terms,ctors),checked =>
-        S.bind(Qualified,S.Node,walk(65536n,S.Sequence{items},Expression{},Names{namespace,aliases,List.append(&2,String,terms,ctors),Nil{}},Nil{}),result))
+        S.bind(Qualified,S.Node,walk_in(65536n,S.Sequence{items},Expression{},Names{namespace,aliases,List.append(&2,String,terms,ctors),Nil{}},Nil{},
+          List.append(&2,String,ctors,prefixed(namespace,ctors_in(items)))),result))
     case _ _: Fail{S.Internal{"load","book-node"}}
