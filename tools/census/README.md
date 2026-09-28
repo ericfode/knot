@@ -57,8 +57,10 @@ behind the runtime cut. The complete loaded Base trust inventory lists foreign,
 unsafe and bodiless declarations separately from reachable operations.
 
 The accepted inventory discovers the literal `GATES` registry without importing
-or executing it, plus all `tests/compiler-*` directories. It currently reads
-171 fixed cases from seven suites (140 distinct files). Positive evidence is scoped to parsing, catalog
+or executing it, all existing adapter directories and all `tests/compiler-*`
+directories. Only a suite's mapped gate, invoking a program in that suite's
+directory, admits its fixtures as evidence. A trust gate in the same directory
+does not qualify the suite. Positive evidence is scoped to parsing, catalog
 inspection, checking, evaluation and executed Wasm. A class absent from positives
 has **no positive fixture evidence**, which is not a claim that every use is
 unsupported. Exact negative diagnostics stay attached to their fixtures. Gate
@@ -68,25 +70,27 @@ listed in `accepted.json.reports` and on stderr, with zero contributed evidence.
 Registered commands without a fixture manifest remain in the discovery inventory.
 
 `evidence.mjs` owns the small adapter table. Adding a suite requires a reviewed
-path/format entry and literal controls; similar JSON field names never authorize
-an unknown suite. Additional manifests at a known path are reported too.
+path/format/gate entry and literal controls; similar JSON field names never
+authorize an unknown suite. Additional manifests at a known path are reported too.
 
-| Suite directory under `tests/` | Manifest(s) | Frozen stage source |
-|---|---|---|
-| `subsets` | `frontend-cases.json` | `tree` supplies parse evidence |
-| `compiler-checker` | `cases.json` | `knot.exit` supplies check |
-| `compiler-structural` | `cases.json` | `catalog` and `compiler`; compilation is retained separately |
-| `compiler-fields`, `compiler-recursion` | `cases.json` | Independent `check`, `eval`, `compile` outcomes |
-| `compiler-wasm` | `cases.json` | Gate's fixed successful `calls`: check/eval/Wasm |
-| `compiler-fields-wasm` | Both | `cases` joined to frozen `observations`; evaluator exhaustion and arena overflow stay failures |
-| `compiler-nest` | `expectations.json` | `knot.exit`, `observed.main` and `observed.calls` |
-| `compiler-modules` | `expectations.json` | `knot.obligation`, `knot_expected`, `calls`; local/hash bundle pins |
-| `compiler-literals` | `expectations.json` | `knot` or `knot_expected`, and `calls[].seed` |
-| `compiler-generics`, `compiler-closures`, `compiler-baseslice` | `expectations.json` | `knot.require`, joined to `observations.fixtures` |
+| Suite directory under `tests/` | Registered gate | Manifest(s) | Frozen stage source |
+|---|---|---|---|
+| `subsets` | `frontend` | `frontend-cases.json` | `tree` supplies parse evidence |
+| `compiler-checker` | `checker` | `cases.json` | `knot.exit` supplies check |
+| `compiler-structural` | `structural` | `cases.json` | `catalog` and `compiler`; compilation is retained separately |
+| `compiler-fields`, `compiler-recursion` | `fields`, `recursion` respectively | `cases.json` | Independent `check`, `eval`, `compile` outcomes |
+| `compiler-wasm` | `wasm` | `cases.json` | Gate's fixed successful `calls`: check/eval/Wasm |
+| `compiler-fields-wasm` | `fields-wasm` | Both | `cases` joined to frozen `observations`; evaluator exhaustion and arena overflow stay failures |
+| `compiler-nest` | `nest` | `expectations.json` | `knot.exit`, `observed.main` and `observed.calls` |
+| `compiler-modules` | `modules` | `expectations.json` | `knot.obligation`, `knot_expected`, `calls`; local/hash bundle pins |
+| `compiler-literals` | `literals` | `expectations.json` | `knot` or `knot_expected`, and `calls[].seed` |
+| `compiler-generics`, `compiler-closures`, `compiler-baseslice` | `generics`, `closures`, `baseslice` respectively | `expectations.json` | `knot.require`, joined to `observations.fixtures` |
 
 Future suite adapters are ready for their reviewed branch formats; only files
-present in this checkout contribute to its inventory. Unconditional agreement
-is positive evidence. `agree-or-unsupported` and unpinned rejection are `Unfixed`
+present in this checkout contribute to its inventory. Recognized suites without
+their mapped gate live in `accepted.json.requirements`, with separate suites,
+fixtures and class-to-fixture lists. Their unconditional agreement is a frozen
+requirement until the gate is registered. `agree-or-unsupported` and unpinned rejection are `Unfixed`
 with their allowed alternatives retained. Seed success cannot turn a frozen
 Knot Unsupported result into success. No success is inferred for earlier stages
 that the manifest does not separately establish. `compile` never supplies Wasm
@@ -97,7 +101,11 @@ local source and hash-package dependency against that suite's frozen manifest.
 It never falls back to the user's package cache for fixture bundle bytes.
 
 `meter.mjs` compares the JS runtime/type closures against check and Wasm fixture
-classes. `selfhost.json` records unique declarations from non-law/proof files, compiler/package/Base
+classes. It reports evidenced counts and inclusive coverage by evidence plus
+frozen ungated requirements. The second count is planned class coverage; it
+cannot establish implemented behavior. `selfhost.json.requirements` lists each
+ungated suite and every class's positive frozen fixtures at each stage.
+`selfhost.json` records unique declarations from non-law/proof files, compiler/package/Base
 counts, ranked missing classes, every declaration's gaps and excluded law/proof
 identities. File import classes apply to each declaration in that file. Each
 declaration is measured independently; a caller does not inherit its callee's
@@ -109,9 +117,11 @@ manifests are linked by SHA-256.
 the full manifest, and `census:check` rejects stale bytes. Coverage of coarse
 classes does not qualify their composition, a host ABI or a complete bootstrap.
 
-Tests use literal-reviewed fixtures, synthetic source additions and seven
+Tests use literal-reviewed fixtures, synthetic source additions and eight
 syntax-valid semantic JavaScript mutants: omitted lambda detection, ignored import
 approval, bypassed intrinsic cut, conflated Unsupported/Invalid, failed fixture
-admission, unknown-suite admission and counting law-file code in the meter. The three Bend
+admission, unknown-suite admission, counting law-file code in the meter and
+admitting an ungated requirement as evidence. `fixtures/requirements.json`
+fixes the evidence/requirement separation and inclusive meter counts. The three Bend
 fixtures pass the complete pinned seed checker, including the filled law in
 `features.bend`. They introduce no new Knot source capability.

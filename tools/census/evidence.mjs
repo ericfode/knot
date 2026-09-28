@@ -45,7 +45,7 @@ function pathFor(directory, file, prefix) {
     && !file.split('/').some(p => p === '..' || p.startsWith('.env')), 'Expected a local Bend fixture path');
   return prefix ? `${directory}/${file}` : file;
 }
-const phaseAdapter = (suite, names, prefix = true) => ({ suite, manifests: ['cases.json'], prefix,
+const phaseAdapter = (suite, gate, names, prefix = true) => ({ suite, gate, manifests: ['cases.json'], prefix,
   read: data => rows(data['cases.json'], 'cases').map(c => ({ ...c, stages: phases(c, names) })) });
 function successfulCalls(entry) {
   requireFormat(!['knot', 'check', 'eval', 'wasm', 'compile', 'exit'].some(k => Object.hasOwn(entry, k)), 'Wasm call manifest has unexpected stage outcomes');
@@ -82,19 +82,19 @@ function requirements(data) {
 
 // A path owns the interpretation. A lookalike shape in an unknown suite is not authority.
 export const ADAPTERS = {
-  'tests/subsets': { suite: 'frontend', manifests: ['frontend-cases.json'], prefix: true,
+  'tests/subsets': { suite: 'frontend', gate: 'frontend', manifests: ['frontend-cases.json'], prefix: true,
     read: data => rows(data['frontend-cases.json'], 'cases').map(c => {
       requireFormat(typeof c.tree === 'string', 'Expected frozen parser tree');
       return { ...c, stages: { parse: { outcome: 'Parsed', expectation: c.tree } } };
     }) },
-  'tests/compiler-checker': phaseAdapter('checker', [['check', 'knot']], false),
-  'tests/compiler-structural': phaseAdapter('catalog', [['catalog', 'catalog'], ['compile', 'compiler']]),
-  'tests/compiler-fields': phaseAdapter('fields', [['check', 'check'], ['eval', 'eval'], ['compile', 'compile']]),
-  'tests/compiler-recursion': phaseAdapter('recursion', [['check', 'check'], ['eval', 'eval'], ['compile', 'compile']]),
-  'tests/compiler-wasm': { suite: 'wasm', manifests: ['cases.json'], prefix: false,
+  'tests/compiler-checker': phaseAdapter('checker', 'checker', [['check', 'knot']], false),
+  'tests/compiler-structural': phaseAdapter('catalog', 'structural', [['catalog', 'catalog'], ['compile', 'compiler']]),
+  'tests/compiler-fields': phaseAdapter('fields', 'fields', [['check', 'check'], ['eval', 'eval'], ['compile', 'compile']]),
+  'tests/compiler-recursion': phaseAdapter('recursion', 'recursion', [['check', 'check'], ['eval', 'eval'], ['compile', 'compile']]),
+  'tests/compiler-wasm': { suite: 'wasm', gate: 'wasm', manifests: ['cases.json'], prefix: false,
     read: data => rows(data['cases.json'], 'cases').map(c => ({ ...c,
       stages: successfulCalls(c), reference: { observations: c.calls } })) },
-  'tests/compiler-fields-wasm': { suite: 'fields-wasm', manifests: ['cases.json', 'expectations.json'], prefix: true,
+  'tests/compiler-fields-wasm': { suite: 'fields-wasm', gate: 'fields-wasm', manifests: ['cases.json', 'expectations.json'], prefix: true,
     read: data => {
       const cases = rows(data['cases.json'], 'cases'), observations = rows(data['expectations.json'], 'observations');
       const calls = cases.flatMap(c => rows(c, 'calls').map(call => ({ case: c.name, call })));
@@ -115,11 +115,11 @@ export const ADAPTERS = {
         return { ...c, stages, reference, frozen_sha256: reference[0].source_sha256 };
       });
     } },
-  'tests/compiler-nest': { suite: 'nest', manifests: ['expectations.json'], prefix: false,
+  'tests/compiler-nest': { suite: 'nest', gate: 'nest', manifests: ['expectations.json'], prefix: false,
     read: data => rows(data['expectations.json'], 'fixtures').map(c => ({ ...c,
       stages: agreement(c.knot, c.observed && [...(c.observed.main ? [c.observed.main] : []), ...rows(c.observed, 'calls')]),
       reference: c.observed, frozen_sha256: c.sha256 })) },
-  'tests/compiler-modules': { suite: 'modules', manifests: ['expectations.json'], prefix: true,
+  'tests/compiler-modules': { suite: 'modules', gate: 'modules', manifests: ['expectations.json'], prefix: true,
     read: data => rows(data['expectations.json'], 'fixtures').map(c => {
       const obligation = c.knot?.obligation;
       requireFormat(['match-seed', 'reject', 'knot_expected'].includes(obligation), 'Unrecognized module obligation');
@@ -130,12 +130,12 @@ export const ADAPTERS = {
       return { ...c, stages: agreement(expected, c.calls), reference: { observations: c.calls },
         frozen_sha256: data['expectations.json'].sources?.[c.file] };
     }) },
-  'tests/compiler-literals': { suite: 'literals', manifests: ['expectations.json'], prefix: false,
+  'tests/compiler-literals': { suite: 'literals', gate: 'literals', manifests: ['expectations.json'], prefix: false,
     read: data => rows(data['expectations.json'], 'fixtures').map(c => ({ ...c,
       stages: agreement(c.knot_expected ?? c.knot, c.calls, undefined, c => c.seed?.exit),
       reference: { check: c.seed_check, run: c.seed_run, observations: c.calls }, frozen_sha256: c.sha256 })) },
   ...Object.fromEntries(['generics', 'closures', 'baseslice'].map(suite => [`tests/compiler-${suite}`, {
-    suite, manifests: ['expectations.json'], prefix: true, read: data => requirements(data['expectations.json']),
+    suite, gate: suite, manifests: ['expectations.json'], prefix: true, read: data => requirements(data['expectations.json']),
   }])),
 };
 
@@ -173,6 +173,7 @@ export function readRegistry(root) {
 export function discoverSuites(root) {
   const registry = readRegistry(root), directories = new Set();
   for (const gate of registry.gates) for (const p of gate.programs) directories.add(path.posix.dirname(p.file));
+  for (const directory of Object.keys(ADAPTERS)) if (fs.existsSync(path.join(root, directory))) directories.add(directory);
   for (const d of fs.readdirSync(path.join(root, 'tests'), { withFileTypes: true })) {
     if (d.isDirectory() && d.name.startsWith('compiler-')) directories.add('tests/' + d.name);
   }
@@ -194,7 +195,10 @@ export function discoverSuites(root) {
       adapted = { status: 'unrecognized-format', fixtures: [], detail: 'Malformed JSON fixture manifest' };
     }
     const { status, suite = directory, detail } = adapted;
-    const entry = { suite, directory, status, manifests: manifests.map(({ file, sha256 }) => ({ file, sha256 })), gates, fixtures: adapted.fixtures.length };
+    const gate = ADAPTERS[directory]?.gate ?? null;
+    const admission = status !== 'recognized' ? 'excluded' : gates.includes(gate) ? 'evidence' : 'requirement';
+    const entry = { suite, directory, status, gate, admission,
+      manifests: manifests.map(({ file, sha256 }) => ({ file, sha256 })), gates, fixtures: adapted.fixtures.length };
     if (detail) entry.detail = detail;
     suites.push(entry);
     if (status.startsWith('unrecognized')) reports.push({ directory, status, detail });
@@ -202,7 +206,7 @@ export function discoverSuites(root) {
       const extra = names.filter(n => !ADAPTERS[directory].manifests.includes(n));
       for (const name of extra) reports.push({ directory, manifest: directory + '/' + name, status: 'unrecognized-format', detail: 'No adapter for additional manifest' });
       const documents = Object.fromEntries(manifests.map(m => [m.name, JSON.parse(m.bytes)]));
-      fixtures.push(...adapted.fixtures.map(f => ({ ...f, suite, directory,
+      fixtures.push(...adapted.fixtures.map(f => ({ ...f, suite, directory, gate, admission,
         ...(directory === 'tests/compiler-modules' ? {
           bundle: documents['expectations.json'].bundle, source_hashes: documents['expectations.json'].sources,
         } : {}) })));

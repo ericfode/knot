@@ -244,7 +244,7 @@ export function policyViolations(files, policy) {
 export function acceptedInventory(root = ROOT) {
   const { registry, suites, fixtures, reports } = discoverSuites(root), records = [];
   for (const fixture of fixtures) {
-    const { suite, file, stages, reference, frozen_sha256, bundle, source_hashes, directory } = fixture;
+    const { suite, file, stages, reference, frozen_sha256, bundle, source_hashes, directory, gate, admission } = fixture;
     const source = sourceFile(root, file);
     if (frozen_sha256 !== undefined && frozen_sha256 !== sha256(source)) {
       throw failure('Unsupported', `Frozen fixture hash differs: ${file}`);
@@ -283,18 +283,25 @@ export function acceptedInventory(root = ROOT) {
       analysis = { outcome: errorOutcome(error), detail };
     }
     if (!features && Object.entries(stages).some(([stage, s]) => s.outcome === (STAGES[stage] ?? 'Built'))) {
-      throw failure('InternalFailure', `Cannot inventory accepted fixture ${file}: ${analysis.detail}`);
+      throw failure('InternalFailure', `Cannot inventory ${admission} fixture ${file}: ${analysis.detail}`);
     }
-    records.push({ suite, file, sha256: sha256(source), dependencies, features, analysis, stages, reference });
+    records.push({ suite, gate, admission, file, sha256: sha256(source), dependencies, features, analysis, stages, reference });
   }
-  const classes = classEvidence(records, Object.keys(CLASSES));
-  return { schema: 2, scope: 'Fixed fixture/gate expectations; census does not run the gates. Per-feature evidence is bounded by each fixture, not general support for the class.',
+  const evidence = records.filter(r => r.admission === 'evidence');
+  const requirements = records.filter(r => r.admission === 'requirement');
+  const classes = classEvidence(evidence, Object.keys(CLASSES));
+  const requiredClasses = classEvidence(requirements, Object.keys(CLASSES)).map(c => ({ feature: c.feature,
+    stages: Object.fromEntries(Object.entries(c.stages).map(([s, entry]) => [s, {
+      status: entry.evidence.length ? 'covered-by-frozen-requirements' : 'no-frozen-requirement', fixtures: entry.evidence,
+    }])) }));
+  return { schema: 3, scope: 'Only suites with their mapped registered gate contribute accepted evidence. Frozen ungated suites are requirements. Census does not execute gates; class evidence is bounded by each fixture.',
     limits: ['Rejected fixture features are not individually blamed for its diagnostic.',
       'Gate-generated boundary probes and semantic mutants are not counted as source acceptance.',
       'An expected result is not evidence of a fresh successful gate execution.',
       'Compilation alone does not evidence executed Wasm; ambiguous outcomes and unknown formats contribute no positive evidence.',
       'Fixture classes describe the entry file, not every declaration in imported Base/package implementations.'],
-    registry, suites, reports, classes, fixtures: records };
+    registry, suites, reports, classes, fixtures: evidence,
+    requirements: { suites: suites.filter(s => s.admission === 'requirement'), classes: requiredClasses, fixtures: requirements } };
 }
 
 export function build(root = ROOT) {

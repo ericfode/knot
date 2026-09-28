@@ -119,3 +119,34 @@ mutants admit a failed fixture, admit an unknown suite, and count a law file.
 `census --check` remains the registered gate; no new gate or source capability
 is introduced. `census:meter` computes a read-only, one-screen summary; normal
 census generation/checking owns the new manifest and verifies identical bytes.
+
+## census-2 review round 2 expectations (literal review, before repair)
+
+A recognized fixture format is not evidence of implemented Knot behavior. Each
+adapter names its gate in `scripts/gates/run.py::GATES`; that exact gate must
+invoke a program in the adapter's suite directory before its fixtures contribute
+accepted evidence. A trust gate or another gate in the same directory does not
+qualify the suite. A correctly named gate pointing elsewhere does not qualify it.
+
+Recognized suites without that registration are frozen **requirements**. Retain
+their fixtures, hashes and exact stage outcomes separately from accepted
+fixtures. `selfhost.json.requirements` lists the ungated suites and, for every
+feature class and stage, the successful frozen fixtures that would supply
+evidence once their gate lands. Invalid, Unsupported, Exhausted, host/internal
+failures and ambiguous alternatives supply neither positive evidence nor
+positive requirement coverage at the failed stage. Unknown formats supply neither.
+
+Keep the existing evidenced counts and missing-class rankings. Add a second
+count: declarations covered by gated evidence **or** frozen requirements at
+each stage. This inclusive count never falls merely because a gate lands; it
+is planned class coverage, not implemented behavior. Retain its per-declaration
+gaps and label both counts in the one-screen meter.
+
+Literal controls reuse the already checked `lambda.bend` as an ungated closures
+fixture. It provides no accepted lambda evidence until the mapped closures gate
+is registered, including when only a trust gate shares its directory. The meter
+control keeps 2/3 check and 1/3 Wasm evidenced; adding a frozen lambda requirement
+covers 3/3 check and 2/3 Wasm, leaving the field's Wasm obligation unfilled.
+Promoting that requirement to gated evidence preserves inclusive coverage. A
+syntax-valid semantic mutant admitting ungated fixtures must fail the same
+unchanged evidence assertions. Existing compiler assertions are unchanged.

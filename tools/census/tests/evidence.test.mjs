@@ -132,6 +132,8 @@ test('evidence discovery refuses symlink escapes without reading the target', ()
 
 test('module fixtures resolve bare-relative imports and verify frozen package bytes without cache fallback', () => scratch((root, write) => {
   const directory = 'tests/compiler-modules', hash = '0x1234', bit = read('fixtures/control.bend');
+  write('scripts/gates/run.py', "GATES = (Gate('modules', ('python3', 'tests/compiler-modules/check.py')),)\n");
+  write(directory + '/check.py', '# registered modules gate\n');
   const source = `import lib/bit.bend as L\nimport ${hash}/bit.bend as P\ndef main() -> L.Bit: L.identity(L.Low{})\n`;
   write(directory + '/fixtures/main.bend', source);
   write(directory + '/fixtures/lib/bit.bend', bit);
@@ -158,6 +160,8 @@ test('negative module analysis is byte-identical after moving the checkout', () 
   const results = [];
   for (let i = 0; i < 2; i++) scratch((root, write) => {
     const directory = 'tests/compiler-modules';
+    write('scripts/gates/run.py', "GATES = (Gate('modules', ('python3', 'tests/compiler-modules/check.py')),)\n");
+    write(directory + '/check.py', '# registered modules gate\n');
     const source = 'import ./absent.bend as M\ndef identity(x: M.Bit) -> M.Bit: x\n';
     write(directory + '/fixtures/missing.bend', source);
     write(directory + '/expectations.json', {

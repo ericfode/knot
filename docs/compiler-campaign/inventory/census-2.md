@@ -1,5 +1,9 @@
 # census-2: accepted evidence and self-hosting meter
 
+Historical first checkpoint. [Review round 2](census-2-round-2.md) fixes the
+admission rule after frozen suites arrived on main; integration of fixture files
+alone does not make their Knot outcomes evidence.
+
 Implemented on `campaign/census-2`, based on `d14418b`. The
 [execution receipt](../../../tools/census/receipts/census-2.json) records source
 hashes, normalized gate results and reviewed branch-format pins.
