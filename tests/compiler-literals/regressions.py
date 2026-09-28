@@ -143,6 +143,8 @@ PLAN = {
     'offset-expression-depth': ('offset expression depth', '`1n+`, `2n+` (Base Nat.double) and `3n+` '
                                 'expression offsets through recursion 3000-4000 deep, and a `0n+t` control',
                                 ['successor', 'successor_short', 'doubled', 'tripled', 'zero'], oracle.AGREE),
+    'module-width': ('module width', 'a 3000-Char String, a `case 450n` and a 100-Char String pattern '
+                     'in one module past 64 KiB', ['length', 'depth', 'spelled'], oracle.AGREE),
     'offset-zero': ('zero offset', '0n+t as an inferred let, a checked argument, a scrutinee, '
                     'and a Nat, U32 or String binder arm',
                     ['inferred', 'checked', 'scrutinee', 'nat_binder', 'u32_binder', 'string_binder'],
