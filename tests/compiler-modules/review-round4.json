@@ -1,0 +1,345 @@
+{
+  "schema": "knot-modules-review-round4-1",
+  "purpose": "Seed-derived and literal review-round-4 regressions frozen before repairs. No existing oracle is changed.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "implementation_at_freeze": {
+    "src/load.bend": "d4055f56a6ad7c7917cfcc254d03bad689f4180b6141b486d6ebeba8a3412728",
+    "src/imports.bend": "842f8208049e3a9a0e2a15210f5544cdd07bc6e0d9c32ce9a62a39f9bc3cc779",
+    "src/parse.bend": "a24453c8c3aba71a867dc0da7531edc8834a8d0f130d5ce5b7cf48435387bc37",
+    "src/driver.bend": "291888e99c1a3d869c983c9c8d9c040120e28fa68bdf38afa2e753d84c3b6dd6",
+    "src/compile-cli.bend": "7ed1cbab5ef7e7ddcc62e5e8452bf1aca1cb4deaa3e9d0cc5c786d00e6c57eed"
+  },
+  "findings": [
+    "containment",
+    "identity"
+  ],
+  "sources": {
+    "rel/w/app/back.bend": "3a5407812fb20ca075dbc2ae121bdda1996746adcd753799621b2a3b0b3a39e6",
+    "rel/w/app/climb.bend": "35dd2f0e3958ed33bd712448fa20d21f9ada5e6b6ae2a2c24b0096d9108d1a7a",
+    "rel/w/app/m/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "rel/w/app/ok.bend": "38c0f52c0b952faa9d941d85c186441fb9bf972ecd0d10f29f1bb624ac0bb517",
+    "rel/w/app/one.bend": "957e8c358144636f24a54f3e7a1856c00d73ce1b6e47deb9a839a6152ec94351",
+    "rel/w/app/plain.bend": "e5c1192d7a0076842fad5d55a83947bff942cf362140398d343f573887825582",
+    "rel/w/app/two.bend": "f1d8b8ec6004cc060e125b176c5f415eff9ee9a5c14422c6f1d355d541efc582",
+    "rel/w/lib/extra/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "rel/w/lib/main.bend": "432853bfff99010846bb81c45af42f1d687d0d6a635d8eb3da486af3c9ade887"
+  },
+  "fixtures": [
+    {
+      "name": "bundle-climbing-spelling",
+      "finding": "containment",
+      "file": "rel/w/app/plain.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/plain.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "app/plain.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : '../lib/extra/flag.bend'\nLocation:\n1>| import ../lib/extra/flag.bend as F\n  |        ^\n2 | \n"
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "app/plain.bend",
+      "bundle_arg": "../w/lib",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "path-identity",
+        "diagnostic_prefix": "Unsupported\tload\tpath-identity\t"
+      }
+    },
+    {
+      "name": "bundle-plain-spelling",
+      "finding": "containment",
+      "file": "rel/w/app/plain.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/plain.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "app/plain.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : '../lib/extra/flag.bend'\nLocation:\n1>| import ../lib/extra/flag.bend as F\n  |        ^\n2 | \n"
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "app/plain.bend",
+      "bundle_arg": "lib",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-path",
+        "diagnostic_prefix": "Invalid\tload\timport-path\t"
+      }
+    },
+    {
+      "name": "import-climbing-spelling",
+      "finding": "containment",
+      "file": "rel/w/app/climb.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/climb.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "app/climb.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : '../../w/lib/extra/flag.bend'\nLocation:\n1>| import ../../w/lib/extra/flag.bend as F\n  |        ^\n2 | \n"
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "app/climb.bend",
+      "bundle_arg": "lib",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "path-identity",
+        "diagnostic_prefix": "Unsupported\tload\tpath-identity\t"
+      }
+    },
+    {
+      "name": "bundle-dot",
+      "finding": "containment",
+      "file": "rel/w/lib/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/lib/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : './extra/flag.bend'\nLocation:\n1>| import ./extra/flag.bend as F\n  |        ^\n2 | \n"
+        }
+      ],
+      "cwd": "rel/w/lib",
+      "entry": "main.bend",
+      "bundle_arg": ".",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-path",
+        "diagnostic_prefix": "Invalid\tload\timport-path\t"
+      }
+    },
+    {
+      "name": "two-spellings",
+      "finding": "identity",
+      "file": "rel/w/app/two.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/two.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "app/two.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "app/two.bend",
+      "bundle_arg": "lib",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "path-identity",
+        "diagnostic_prefix": "Unsupported\tload\tpath-identity\t"
+      }
+    },
+    {
+      "name": "climbing-namespace",
+      "finding": "identity",
+      "file": "rel/w/app/one.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/one.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "app/one.bend"
+          ],
+          "exit": 0,
+          "stdout": "m/flag.On{}\n",
+          "stderr": ""
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "app/one.bend",
+      "bundle_arg": "lib",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "path-identity",
+        "diagnostic_prefix": "Unsupported\tload\tpath-identity\t"
+      }
+    },
+    {
+      "name": "climbing-back-edge",
+      "finding": "identity",
+      "file": "rel/w/app/back.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/back.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "app/back.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : an import cycle through <ROOT>/.local/compiler-modules/gate/review-round4/rel/w/app/back.bend\nLocation:\n1>| import ../../w/app/back.bend as M\n  |        ^\n2 | \n"
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "app/back.bend",
+      "bundle_arg": "lib",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "path-identity",
+        "diagnostic_prefix": "Unsupported\tload\tpath-identity\t"
+      }
+    },
+    {
+      "name": "entry-climbing",
+      "finding": "identity",
+      "file": "rel/w/app/ok.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/ok.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "../w/app/ok.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "../w/app/ok.bend",
+      "bundle_arg": "lib",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "path-identity",
+        "diagnostic_prefix": "Unsupported\tload\tpath-identity\t"
+      }
+    },
+    {
+      "name": "relative-control",
+      "finding": "identity",
+      "file": "rel/w/app/ok.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/ok.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "app/ok.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "app/ok.bend",
+      "bundle_arg": "lib",
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "rel/w/app/ok.bend",
+        "rel/w/app/m/flag.bend"
+      ]
+    }
+  ]
+}
