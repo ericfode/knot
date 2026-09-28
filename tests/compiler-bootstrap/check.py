@@ -145,7 +145,7 @@ def run(argv, timeout, cwd: Path = ROOT, env=None):
 def shown(obs) -> dict:
     """Receipt form of an observation: text, no host paths, no timings."""
     row = {'argv': obs['argv'], 'exit': obs['exit'], 'stdout': text(obs['stdout']), 'stderr': text(obs['stderr'])}
-    row.update({k: obs[k] for k in ('outcome', 'budget_seconds', 'host') if k in obs})
+    row.update({k: obs[k] for k in ('outcome', 'budget_seconds', 'host', 'host_argv') if k in obs})
     return row
 
 
@@ -332,6 +332,10 @@ def generation_problems(p, contract, manifest) -> list[str]:
     if by_id['e2e2.compile']['status'] != 'not-run' and by_id['e2e2.compile'].get('args') != generation_argv(
             contract, manifest, PARSER):
         problems.append('e2e2.compile: argv is not the one generation argv')
+    for sid, entry in (('e2e2.compile', PARSER), ('e2e3.a2', COMPILER), ('e2e3.a3', COMPILER)):
+        ran, want = executed(by_id[sid]).get('argv'), invocation(sid, generation_argv(contract, manifest, entry))
+        if by_id[sid]['status'] != 'not-run' and ran != want:
+            problems.append(f'{sid}: executed argv {ran} is not {want}')
     cap, pages = budgets(contract)[-1], manifest['memory_maximum']['pages']
     for sid in GENERATIONS:
         s, c = by_id[sid], contracts[sid]
@@ -348,11 +352,15 @@ def generation_problems(p, contract, manifest) -> list[str]:
     if len(reference) != c1['corpus']:
         problems.append('e2e3.c1: per-case observations are missing')
     conformance = by_id['e2e3.conformance']
-    for g, r in sorted(conformance.get('generations', {}).items()) if conformance['status'] == 'reached' else ():
-        rows = r.get('observations', [])
-        first = next((a['file'] for a, b in zip(reference, rows) if a != b), None)
-        if len(rows) != len(reference) or first:
-            problems.append(f"e2e3.conformance: {g} diagnostics differ from C1 at {first or 'the case count'}")
+    if conformance['status'] == 'reached':
+        generations = conformance.get('generations') or {}
+        if sorted(generations) != sorted(CONFORMING):
+            problems.append(f'e2e3.conformance: generations {sorted(generations)} are not a2 and a3')
+        for g in CONFORMING:
+            rows = generations.get(g, {}).get('observations', [])
+            first = next((a['file'] for a, b in zip(reference, rows) if a != b), None)
+            if len(rows) != len(reference) or first:
+                problems.append(f"e2e3.conformance: {g} diagnostics differ from C1 at {first or 'the case count'}")
     seed = p.get('seed_builds', {}).get('C1', {})
     if seed.get('sha256') is None or seed.get('sha256') != seed.get('repeat_sha256'):
         problems.append('C1 is not reproducible: two seed builds differ (FX-11)')
@@ -735,12 +743,13 @@ def built(obs, out: Path) -> bool:
             and text(obs['stdout']).strip() == f'Built\t{out.stat().st_size}')
 
 
-def compile_stage(sid, program: Path, folder: Path, bundle, manifest, argv, keep: Path, cap: int):
-    """C1 compiles one bundle entry inside its sandbox. No seed fallback runs here."""
+def compile_stage(sid, folder: Path, bundle, manifest, argv, keep: Path, cap: int):
+    """C1 compiles one bundle entry inside its sandbox, executing invocation(sid, argv).
+    No seed fallback runs here."""
     produced = folder / OUTPUT
     produced.unlink(missing_ok=True)
     keep.unlink(missing_ok=True)
-    obs = run([relative(program, folder), *argv], SECONDS['compile'], cwd=folder)
+    obs = run(invocation(sid, argv), SECONDS['compile'], cwd=folder)
     verify(folder, bundle, manifest, outputs=(OUTPUT,))
     if obs['exit'] != 0:
         return blocked(sid, 'knot', obs, 1, args=argv, artifact_created=produced.exists()), obs
@@ -765,18 +774,22 @@ def a3_stopped(answer, obs, argv) -> dict | None:
 
 def host(module: Path, runs, label, cwd: Path = ROOT):
     """One batched host request. Returns (answer, observations), or (answer or
-    None, blocker) when the module cannot run; a crashed host is never hidden."""
+    None, blocker) when the module cannot run; a crashed host is never hidden.
+    Every row's argv is the guest argv its request run carries (a blocker's, the
+    first run's), so a stop is judged against the argv the module was handed;
+    host_argv is the node command that ran the host."""
     request = ROOT / BUILD / f'host-{label}.json'
     request.write_text(json.dumps({'abi': 'auto', 'module': relative(module, cwd), 'runs': runs}))
     obs = run(['node', relative(ROOT / HOST, cwd), relative(request, cwd)], SECONDS['host'], cwd=cwd)
+    handed = {'argv': runs[0]['argv'] if runs else [], 'host_argv': obs['argv']}
     try:
         require(obs['exit'] == 0, 'host exit')
         answer = json.loads(obs['stdout'])
     except (AssertionError, ValueError):
-        return None, {**obs, 'source': 'harness'}
+        return None, {**obs, **handed, 'source': 'harness'}
     if answer['blocked']:
         b = answer['blocked']
-        return answer, {'argv': obs['argv'], 'exit': b['exit'], 'stdout': b['stdout'].encode(),
+        return answer, {**handed, 'exit': b['exit'], 'stdout': b['stdout'].encode(),
                         'stderr': b['stderr'].encode(), 'source': b['source']}
     decode = lambda run_, r: {'argv': run_['argv'], 'exit': r['exit'], 'host': r.get('host', False),
                               'stdout': base64.b64decode(r['stdout']), 'stderr': base64.b64decode(r['stderr']),
@@ -1093,6 +1106,15 @@ def sandbox_controls(bundle, manifest, argv) -> list[dict]:
         'excuses': [None, None, None, None, None, 'vm-fuel', 'vm-heap', 'harness-io-abi-pending']},
         'observed': {'statuses': [r['status'] if r else 'reached' for r in routed],
                      'excuses': [r.get('excuse') if r else None for r in routed]}})
+    # Live: a host that refuses its module before the guest runs still records the
+    # argv the guest was handed, which the judge checks, and the node command apart.
+    module = ROOT / BUILD / 'controls' / 'host-refused.wasm'
+    module.write_bytes(MAGIC + b'\xff')
+    handed = invocation('e2e3.a3', argv)
+    _, got = host(module, [{'argv': handed, 'inputs': [], 'outputs': [OUTPUT]}], 'host-refused')
+    row = shown(got)
+    result.append({'name': 'host-refused-argv', 'expected': {'argv': handed, 'executor': 'node'},
+                   'observed': {'argv': row['argv'], 'executor': (row.get('host_argv') or [None])[0]}})
     return result
 
 
@@ -1512,7 +1534,7 @@ def main() -> int:
         # E2E-2 Knot path: C1 compiles the parser; its module must reproduce the corpus.
         parser_module = build / 'parse-cli.wasm'
         cap = budgets(contract)[-1]
-        compiled, _ = compile_stage('e2e2.compile', c1, build / SANDBOX[PARSER], progress['bundles'][PARSER], manifest,
+        compiled, _ = compile_stage('e2e2.compile', build / SANDBOX[PARSER], progress['bundles'][PARSER], manifest,
                                     generation_argv(contract, manifest, PARSER), parser_module, cap)
         stages.append(compiled)
         if compiled['status'] != 'reached' or compiled['disagree']:
@@ -1542,7 +1564,7 @@ def main() -> int:
                             programs=base['programs'], calls=base['calls'], rejects=base['rejects'],
                             modules=base['modules'], observations=base['observations']))
         a2, a3 = build / 'a2.wasm', build / 'a3.wasm'
-        stage_a2, c1_on_s = compile_stage('e2e3.a2', c1, sandbox, bundle, manifest, contracts['e2e3.a2']['argv'], a2, cap)
+        stage_a2, c1_on_s = compile_stage('e2e3.a2', sandbox, bundle, manifest, contracts['e2e3.a2']['argv'], a2, cap)
         stages.append(stage_a2)
         # A2 runs in a fresh copy of the same sandbox, under a contract built the same way.
         sandbox_a2 = build / f"{SANDBOX[COMPILER]}-a2"
@@ -1557,7 +1579,8 @@ def main() -> int:
         else:
             measured['e2e3.a2'] = {k: c1_on_s[k] for k in ('elapsed_seconds', 'peak_rss_bytes')}
             argv = contracts['e2e3.a3']['argv']
-            answer, result = host(a2, [{'argv': argv, 'inputs': bundle['order'], 'outputs': [OUTPUT]}], 'a3', cwd=sandbox_a2)
+            answer, result = host(a2, [{'argv': invocation('e2e3.a3', argv), 'inputs': bundle['order'],
+                                        'outputs': [OUTPUT]}], 'a3', cwd=sandbox_a2)
             verify(sandbox_a2, bundle, manifest)
             a3.unlink(missing_ok=True)
             answered = answer is not None and not answer['blocked']
@@ -1578,7 +1601,7 @@ def main() -> int:
             else:
                 same = a2.read_bytes() == a3.read_bytes()
                 stages.append(stage('e2e3.fixpoint', status='reached', corpus=1, agree=int(same), disagree=int(not same)))
-                runs = {g: conformance(module_runner(m, g), base) for g, m in (('a2', a2), ('a3', a3))}
+                runs = {g: conformance(module_runner(m, g), base) for g, m in zip(CONFORMING, (a2, a3))}
                 stop = next((r['blocked'] for r in runs.values() if r['blocked']), None)
                 if stop:
                     stages.append(blocked('e2e3.conformance', stop.pop('source'), stop, 2 * cases))

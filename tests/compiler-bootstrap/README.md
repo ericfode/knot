@@ -202,7 +202,10 @@ fixtures, and they are recorded, not judged.
   corpus size, and the agree
   and disagree counts. A generation stage also holds its `args`. A blocked stage
   holds its raw blocker: source, argv, exit, stdout, stderr, the host flag, and
-  for `Exhausted` its `resource` tag. An excused `e2e3.a3` also holds its
+  for `Exhausted` its `resource` tag. A C1 row's argv is the process argv,
+  `../c1` then the generation argv. A row from `host.mjs` holds the guest argv
+  its request run carried, even when the host stopped before the guest ran; such
+  a stop also records the node command as `host_argv`. An excused `e2e3.a3` also holds its
   `excuse`. A not-run stage holds its `prerequisite`.
   The receipt also records:
   - `tiers`: each tier's first blocking classification;
@@ -283,12 +286,18 @@ The verdict fails when:
   `src/CONTRACT.json`; its closure or bundle digest differs from the staged
   sandbox; its host is not Darwin; or its memory maximum is not D19's;
 - a generation stage's `args` differ from its contract's argv;
+- a compile step's executed argv (its result when reached, else its blocker)
+  is not the one generation argv as that step runs it: `../c1 <argv>` for C1
+  (`e2e2.compile`, `e2e3.a2`), and the argv itself for A2 (`e2e3.a3`), which the
+  host hands to the guest. `args` alone is the harness's copy; this checks the
+  argv that ran;
 - a reached artifact exceeds `src/CONTRACT.json`'s `output_bytes`; or its
   memory declarations are unreadable, import a memory, or are not exactly one
   unshared 32-bit memory with a maximum within the manifest's pages;
 - the loader audit contradicts the contract (see above);
-- C1's per-case observations are missing, or a generation's observations differ
-  from C1's (FX-18);
+- C1's per-case observations are missing; or a reached conformance stage does not
+  record exactly the `a2` and `a3` generations, or either one's observations
+  differ from C1's in count or in bytes (FX-18);
 - the two C1 seed builds differ.
 
 Every run also checks that the judge is not vacuous. It writes scratch copies of
@@ -315,7 +324,8 @@ The unmutated real receipt must pass. It has these mutants:
 The generation rules only apply once generations are reached, and this tree does
 not have any yet. So the harness also builds a **reached chain**: the real receipt
 with a2, a3, fixpoint and conformance reached as a correct fixpoint records them,
-with generation observations equal to C1's, and an artifact memory record
+with each executed argv as the harness records it, generation observations equal
+to C1's, and an artifact memory record
 read from Knot's own memory shape (one memory, 1 page, maximum 1). The chain must
 pass, and so must two excused stops of A3 on it: `a3-vm-fuel` (`Exhausted io
 steps`) and `a3-io-abi-pending`. So must its module-loading variant
@@ -372,7 +382,7 @@ The runner's `counts()` rechecks the recorded verdict and blocker classes
 independently. It does not re-derive the contract anchor; that lives in the judge,
 and `scripts/gates/` belongs to the gates increment.
 
-Fifteen controls exercise paths that have no Knot-built module to run today.
+Sixteen controls exercise paths that have no Knot-built module to run today.
 They use test doubles, not Knot evidence:
 
 - A one-byte perturbation must produce exactly one disagreement.
@@ -397,6 +407,9 @@ They use test doubles, not Knot evidence:
   `io-abi-pending` stay `blocked` with the excuses `vm-fuel`, `vm-heap` and
   `harness-io-abi-pending`; and exit 0 proceeds to a reached row. The same pure
   function builds the live row.
+- A host that refuses its module before the guest runs (`host-refused-argv`, an
+  invalid module handed A2's generation argv) must record that guest argv as the
+  row's argv, which the judge checks, and the node command as `host_argv`.
 - The memory reader on eight hand-assembled modules (`wasm-memory-reader`):
   Knot's shape, no maximum, two memories, a second memory64, a shared memory,
   an imported plus a defined memory, a GC-typed global import before an imported
