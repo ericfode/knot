@@ -678,8 +678,11 @@ def output_expectation(case, plan, evaluator=None) -> dict:
         require(case['divergence'] == NON_SCALAR, f"{name}: divergence {case['divergence']!r} is not D20's")
         require(case.get('vm_stdout', '').encode() == vm['stdout'] and 'vm_stdout' in case,
                 f"{name}: VM output {case.get('vm_stdout')!r} is not {vm['stdout']!r}, what the earlier prints write")
+        # Section 7: the entry that applies the refused Action to k was debited, and the debit stands.
+        require(case.get('vm_calls') == vm['calls'],
+                f"{name}: literal review counts {case.get('vm_calls')} calls, the reference evaluation {vm['calls']}")
         return {'argv': argv, 'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': case['vm_stdout'],
-                'basis': f'divergent-by-contract ({NON_SCALAR})',
+                'calls': case['vm_calls'], 'basis': f'divergent-by-contract ({NON_SCALAR})',
                 'reason': f'D20: print {at} holds Char {code}; the native lane exits 0', 'eval_lane': classify(case['eval'])}
     require(vm.get('exit') == 0, f'{name}: the reference evaluation ends {vm}')
     require('divergence' not in case, f'{name}: a {NON_SCALAR} divergence, but every printed Char is a scalar')
@@ -935,6 +938,10 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, 
              {**cases['print-non-scalar'], 'seed': {**cases['print-non-scalar']['seed'], 'stdout_hex': 'efbfbd0a'}}, bounds, None),
             ('bun-beyond-vm', 'non-scalar-unprinted',
              {**unprinted, 'seed_bun': {**unprinted['seed_bun'], 'stdout': 'b\n'}}, bounds, None),
+            # Section 7: the debit of the entry that applies the refused Action to k stands, so the
+            # literal review counts it and must be frozen.
+            ('d20-calls-refunded', 'print-non-scalar', {**cases['print-non-scalar'], 'vm_calls': 3}, bounds, None),
+            ('d20-calls-unfrozen', 'print-non-scalar-second', without('print-non-scalar-second', 'vm_calls'), bounds, None),
             ('native-without-bun-record', 'print-non-scalar-wide', without('print-non-scalar-wide', 'seed_bun'), bounds, None)]:
         try:
             vm_expectation(case, plan or plans[name], table, sources[name], evaluator)
@@ -1405,7 +1412,98 @@ def run_controls(plans: dict) -> list:
          {'exit': 0, 'stdout': 'Evaluated\t1\t1\tOn{}\n', 'calls': 1}),
     ]
     return [*controls, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in controls}}),
-            *inspection_controls(plans)]
+            *inspection_controls(plans), *effect_controls(plans), *key_controls(plans)]
+
+
+def effect_controls(plans: dict) -> list:
+    """Effects, by literal review of sections 7, 8 and 10. An Action applied to its continuation
+    performs its effect only under a Program entry (D22). Under a Book entry that step stops
+    with `Unsupported vm effect` after its debit and before it reads an operand, so the refusal
+    precedes the whole-extent inspection and D20's scalar check. Building an Action, dropping
+    it and applying it to its erased R (the first application) perform nothing and stay free.
+    `got` returns what an IO.OP carries, and `printing(t)` is `IO.print(t)` applied to R and
+    then to a continuation: main, IO.print, R and the Action are 4 entries, where a Book stops,
+    5 when an `id` call builds the String first.
+    - Under a Program the same Action prints, from inside a pure argument, before the Program's
+      own print: main, IO.print, R, the Action (writes `x`), k, got, say, IO.print, R, the
+      Action (writes `t`) and the terminal continuation are 11 entries.
+    - A Halt's message is an outgoing String (D20): a lone surrogate in it stops the run as
+      `HostFailure io abi` before `die`, at the third entry (main, R, k's closure)."""
+    fp, flag = plans['foreign-print'], plans['value-on']['types'][0]
+    types = [*fp['types'], flag, {'kind': 'arrow', 'domain': 8, 'result': 8}]   # 8 Flag, 9 Flag -> Flag
+    print_, got, ident, resume, say = 0, 1, 2, 3, 4
+    functions = [
+        {'name': 'IO.print', 'parameters': [3], 'result': 7, 'slots': 1, 'body': ['foreign', 7, 1, [['ref', 3, 0]]]},
+        {'name': 'got', 'parameters': [4], 'result': 8, 'slots': 3, 'body': ['case', 8, 0, 4, 'tags', [
+            ['branch', 0, 1, 1, ['ref', None, 1]], ['branch', 1, 1, 2, ['value', 8, 0]]], None]},
+        {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]},
+        {'name': 'k', 'parameters': [0], 'result': 4, 'slots': 1, 'body': ['con', 4, 0, [['value', 8, 1]]]}]
+
+    def image(entry, body, slots=0, *more):
+        result = 7 if entry == 'program' else 8
+        return {'entry': entry, 'representation': fp['representation'], 'types': types,
+                'functions': [*functions, *more, {'name': 'main', 'parameters': [], 'result': result, 'slots': slots, 'body': body}]}
+
+    def text(s):
+        return ['lit', 3, 'String', [ord(c) for c in s]]
+    inline = ['closure', 5, 1, 1, [], ['con', 4, 0, [['value', 8, 1]]]]            # u => Emit{On{}}
+    calling = ['closure', 5, 1, 1, [], ['call', 4, resume, [['ref', 0, 0]]]]        # u => k(u)
+
+    def printing(string, k=inline):
+        return ['invoke', 4, ['invoke', 6, ['call', 7, print_, [string]], []], [k]]
+
+    def bound(*string_and_k):
+        return ['call', 8, got, [printing(*string_and_k)]]
+    laundered = ['con', 3, 1, [['lit', 2, 'Char', 97], ['call', 3, ident, [['closure', 9, 1, 1, [], ['ref', 8, 0]]]]]]
+    refused, on = {'outcome': 'Unsupported', 'cause': 'vm effect', 'calls': 4}, 'Evaluated\t8\t1\tOn{}\n'
+    saying = {'name': 'say', 'parameters': [8], 'result': 7, 'slots': 1, 'body': ['case', 7, 0, 8, 'tags', [
+        ['branch', 0, 1, 0, ['call', 7, print_, [text('f')]]], ['branch', 1, 1, 0, ['call', 7, print_, [text('t')]]]], None]}
+
+    def halting(message):
+        """main = λ@R. λk. Halt{1, message}"""
+        return ['closure', 7, 0, 0, [], ['closure', 6, 1, 1, [], ['con', 4, 1, [['lit', 1, 'U32', 1], message]]]]
+    return [
+        ('book-print', image('book', bound(text('x'))), refused),
+        ('book-print-continuation-call', image('book', bound(text('x'), calling)), refused),
+        ('book-print-twice', image('book', ['let', 8, 0, bound(text('y')), bound(text('x'))], 1), refused),
+        ('book-print-non-scalar', image('book', bound(['lit', 3, 'String', [0xD800]])), refused),
+        ('book-print-ill-typed', image('book', bound(laundered)), {**refused, 'calls': 5}),
+        ('book-continuation-called', image('book', ['call', 8, got, [['call', 4, resume, [['value', 0, 0]]]]]),
+         {'exit': 0, 'stdout': on, 'calls': 3}),
+        ('book-action-dropped', image('book', ['let', 8, 0, ['call', 7, print_, [text('x')]], ['value', 8, 1]], 1),
+         {'exit': 0, 'stdout': on, 'calls': 2}),
+        ('book-action-erased', image('book', ['let', 8, 0, ['invoke', 6, ['call', 7, print_, [text('x')]], []], ['value', 8, 1]], 1),
+         {'exit': 0, 'stdout': on, 'calls': 3}),
+        ('program-print-in-value', image('program', ['call', 7, say, [bound(text('x'))]], 0, saying),
+         {'exit': 0, 'stdout': 'x\nt\n', 'calls': 11}),
+        ('halt-surrogate', image('program', halting(['lit', 3, 'String', [0xD800]])),
+         {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'calls': 3}),
+    ]
+
+
+def key_controls(plans: dict) -> list:
+    """Section 2 and 3: in a Case record `none` marks only an absent tag row or an absent default,
+    and a key is any u32, 0xffffffff included. `pick(x)` answers On{} from a key Branch at
+    0xffffffff and Off{} from its Default, at U32 and at Char (pure Char admits every u32); each
+    run is main and pick, 2 entries. A key that matches is not absent, and one that misses is
+    not a wildcard."""
+    flag = plans['value-on']['types'][0]
+    u32, char = {'kind': 'opaque', 'name': 'U32'}, plans['char-code']['types'][2]
+
+    def book(scalar, argument):
+        """pick(x: <scalar>) with a key Branch at 0xffffffff, applied to `argument`."""
+        return {'entry': 'book', 'representation': {'U32': 1, 'Char': 2}, 'types': [flag, u32, char],
+                'functions': [{'name': 'pick', 'parameters': [scalar], 'result': 0, 'slots': 1,
+                               'body': ['case', 0, 0, scalar, 'keys', [['branch', 0xFFFFFFFF, 1, 0, ['value', 0, 1]]],
+                                        ['default', ['value', 0, 0]]]},
+                              {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0,
+                               'body': ['call', 0, 0, [['lit', scalar, 'U32' if scalar == 1 else 'Char', argument]]]}]}
+    hit, miss = ('Evaluated\t0\t1\tOn{}\n', 'Evaluated\t0\t0\tOff{}\n')
+    return [
+        ('key-max', book(1, 0xFFFFFFFF), {'exit': 0, 'stdout': hit, 'calls': 2}),
+        ('key-max-miss', book(1, 0xFFFFFFFE), {'exit': 0, 'stdout': miss, 'calls': 2}),
+        ('char-key-max', book(2, 0xFFFFFFFF), {'exit': 0, 'stdout': hit, 'calls': 2}),
+    ]
 
 
 def inspection_controls(plans: dict) -> list:
@@ -1422,7 +1520,9 @@ def inspection_controls(plans: dict) -> list:
     - A Program's Halt with a closure for its code or its message's tail halts after 4 (main,
       the erased R, k's closure, id). IO.print of a surrogate followed by a closure halts
       after 5 (main, id, IO.print, both applications of the Action), writing nothing: the
-      whole String is read before the scalar check, so the cause is not `io abi`."""
+      whole String is read before the scalar check, so the cause is not `io abi`. A Halt's
+      message is an outgoing String too: a surrogate then a closure halts `ill-typed` after 4,
+      and so does a closure code beside a surrogate message, the code being read first."""
     nat, u32, char, string, boolean, flag, pair, arrow = range(8)
     types = [*plans['string-codes']['types'][:4], plans['string-eq']['types'][0], plans['value-on']['types'][0],
              {'kind': 'data', 'name': 'Pair', 'constructors': [{'name': 'Pair', 'fields': [flag, flag]}]},
@@ -1494,6 +1594,9 @@ def inspection_controls(plans: dict) -> list:
         ('inspect-eq-b-ends', book(applied(34, text(97, tail=closure_tail), text()), boolean, 34), ill(3)),
         ('inspect-halt-code', halting(via_id(u32, unit_identity), text()), ill(4)),
         ('inspect-halt-message', halting(['lit', u32, 'U32', 1], text(97, tail=via_id(string, unit_identity))), ill(4)),
+        ('inspect-halt-after-surrogate',
+         halting(['lit', u32, 'U32', 1], text(0xD800, tail=via_id(string, unit_identity))), ill(4)),
+        ('inspect-halt-code-first', halting(via_id(u32, unit_identity), text(0xD800)), ill(4)),
         ('inspect-print-after-surrogate',
          program(['call', 7, 1, [text(0xD800, tail=via_id(string, unit_identity))]], fp['functions'][0]),
          ill(5, stdout='')),
@@ -1695,6 +1798,9 @@ CODEC_MUTANTS = [
                       "            types.append([kind, 0, opt(t['domain']), opt(t['result'])])")]),
     ('decoder-skips-digest', [("    if bytes(b for x in w[24:32] for b in x.to_bytes(4, 'little')) != digest:\n"
                                "        raise Malformed('registry digest')\n", "")]),
+    # Section 2 and 3: a key may be 0xffffffff (key_controls); `none` marks only absent tag rows and defaults.
+    ('key-none-row-dropped', [("                    rows.append(arm)\n",
+                               "                    if x[4 + 2 * i] != NONE:\n                        rows.append(arm)\n")]),
     ('size-guard-after-shape', [("    if len(data) > LIMITS['image_words'] * 4:\n        raise Exhausted('image-size')\n", ""),
                                 ("        raise Malformed('length')\n",
                                  "        raise Malformed('length')\n    if len(data) > LIMITS['image_words'] * 4:\n"
@@ -1931,6 +2037,17 @@ EVALUATOR_MUTANTS = [
     ('display-bytes-exclusive', [(' or cost[1] > DISPLAY_BYTES:', ' or cost[1] >= DISPLAY_BYTES:')]),
     ('display-nat-one-visit', [('                charge(v + 1, ', '                charge(1, ')]),
     ('display-separators-free', [('                charge(0, len(item))', '                charge(0, 0)')]),
+    # Section 2 and 3 (key_controls): a key of 0xffffffff is neither absent nor a wildcard.
+    ('case-key-max-absent', [('arm, fields = next((r for r in rows if r[1] == key), default), ()',
+                              'arm, fields = next((r for r in rows if r[1] == key != WORD), default), ()')]),
+    ('case-key-max-wildcard', [('arm, fields = next((r for r in rows if r[1] == key), default), ()',
+                                'arm, fields = next((r for r in rows if r[1] in (key, WORD)), default), ()')]),
+    # Section 7: the debit of an Action's entry stands when its effect stops the machine, which the D20
+    # goldens' `calls` and the Book effect controls count.
+    ('effect-refusal-refunds-debit', [('        return self.apply(operands[0], [self.effect(f)])',
+                                       '        try:\n            r = self.effect(f)\n        except Halt:\n'
+                                       '            self.fuel, self.calls = self.fuel + 1, self.calls - 1\n            raise\n'
+                                       '        return self.apply(operands[0], [r])')]),
     # Section 7's fuel boundary (fuel_controls): no golden runs out of fuel.
     ('fuel-never-exhausts', [('        if self.fuel == 0:\n            raise Halt', '        if False:\n            raise Halt')]),
     ('fuel-exhausts-early', [('        if self.fuel == 0:\n            raise Halt', '        if self.fuel <= 1:\n            raise Halt')]),
@@ -2065,6 +2182,9 @@ RULE_MUTANTS = [
                              "    if not bound:\n        return {'cause': ev['stderr'].strip()}\n")]),
     ('eval-budget-unreached', [("    require(any(reached[unit] > budget[unit] for unit in budget),\n",
                                 "    require(True or any(reached[unit] > budget[unit] for unit in budget),\n")]),
+    ('d20-calls-unchecked', [("        require(case.get('vm_calls') == vm['calls'],\n"
+                              "                f\"{name}: literal review counts {case.get('vm_calls')} calls, the reference evaluation {vm['calls']}\")\n",
+                              "")]),
     ('inspect-steps-as-visits', [("'steps': 4 * value.count('{') - 2,\n", "'steps': value.count('{'),\n")]),
     ('transitions-without-materialization', [("            self.transitions += 1 + (size if node[0] in ('lit', 'prim') else 0)\n",
                                               "            self.transitions += 1\n")]),
@@ -2235,7 +2355,7 @@ def main() -> int:
         if 'seed_bun_stderr' in c:
             require(c['seed_bun_stderr'] == c['seed_bun']['stderr'],
                     f"{c['name']}: literal review {c['seed_bun_stderr']!r}, Bun lane {c['seed_bun']['stderr']!r}")
-        for key in ('seed_stdout_hex', 'seed_bun_stderr', 'divergence', 'vm_stdout'):
+        for key in ('seed_stdout_hex', 'seed_bun_stderr', 'divergence', 'vm_stdout', 'vm_calls'):
             require(planned[c['name']].get(key) == c.get(key), f"{c['name']}: plan.json {key} differs from the frozen row")
         require(planned[c['name']].get('invocations') == ([reviewed(i) for i in c.get('invocations', [])] or None),
                 f"{c['name']}: plan.json invocations differ from the frozen row")
