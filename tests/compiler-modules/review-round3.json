@@ -22,7 +22,8 @@
     "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2"
   },
   "findings": [
-    "truncation"
+    "truncation",
+    "adapters"
   ],
   "sources": {
     "trunc/base.bend": "df1f0eced058141cd072b1a7755ab6bd3371c95affd0088eb63faa3c732fc4b7",
@@ -190,5 +191,79 @@
         "diagnostic_prefix": "Exhausted\tlex\tbudget\t"
       }
     }
-  ]
+  ],
+  "adapter_pins": {
+    "purpose": "Literal controls fixed before the adapter pin exists. The modules gate must compare the committed digests of every file the foreign path-host.inspect declaration runs with the live bytes, and fail on any changed, missing or extra host file.",
+    "pins_from": "tests/compiler-modules/host-check-expectations.json#host_query_sha256",
+    "pins": {
+      "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
+      "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
+      "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2"
+    },
+    "host_directory": "src/host",
+    "references": {
+      "src/host/path-identity.c": {
+        "file": "tests/compiler-io-abi-2/reference/path-identity.c",
+        "pinned_by": "tests/compiler-io-abi-2/expectations.json#reference_sha256/path-identity.c"
+      },
+      "src/host/path-identity.js": {
+        "file": "tests/compiler-io-abi-2/reference/path-identity.js",
+        "pinned_by": "tests/compiler-io-abi-2/expectations.json#reference_sha256/path-identity.js"
+      }
+    },
+    "controls": [
+      {
+        "name": "unchanged",
+        "drift": []
+      },
+      {
+        "name": "changed-c-byte",
+        "change": {
+          "file": "src/host/path-identity.c",
+          "offset": -2,
+          "xor": 1
+        },
+        "drift": [
+          "src/host/path-identity.c"
+        ]
+      },
+      {
+        "name": "changed-js-byte",
+        "change": {
+          "file": "src/host/path-identity.js",
+          "offset": -2,
+          "xor": 1
+        },
+        "drift": [
+          "src/host/path-identity.js"
+        ]
+      },
+      {
+        "name": "changed-wrapper-byte",
+        "change": {
+          "file": "src/path-host.bend",
+          "offset": -2,
+          "xor": 1
+        },
+        "drift": [
+          "src/path-host.bend"
+        ]
+      },
+      {
+        "name": "missing-adapter",
+        "remove": "src/host/path-identity.c",
+        "drift": [
+          "src/host/path-identity.c"
+        ]
+      },
+      {
+        "name": "extra-host-file",
+        "add": "src/host/extra.js",
+        "drift": [
+          "src/host/extra.js"
+        ]
+      }
+    ],
+    "reproduction": "At 0111f13 no gate reads host_query_sha256; the census exception pins only src/path-host.bend, and the modules gate input digest compares a run with itself."
+  }
 }
