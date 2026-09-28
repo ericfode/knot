@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "23ec8f0c81251cc7c073a4affea620540f536a742848172d1450fe2e1ba37826",
+    "sha256": "9bdcd35f2378a6fde978551aa8781c38af03d2e188b9bafbf76cef79efef17dc",
     "gates": [
       {
         "name": "frontend",
@@ -240,7 +240,20 @@
         "programs": [
           {
             "file": "vm/check-spec.py",
-            "sha256": "3e4e0060d26798c3804c524a113b6f5ce99991c0ba932f24902e03465c9c2db4"
+            "sha256": "c7d2bb239de4ebfe2c38d7beef7789e2c8f903e1e7cb8bc542e08934ba818048"
+          }
+        ]
+      },
+      {
+        "name": "vm-model",
+        "argv": [
+          "python3",
+          "vm/check-model.py"
+        ],
+        "programs": [
+          {
+            "file": "vm/check-model.py",
+            "sha256": "62c0cc0ec8906cd830114a6bf9b2964fa5c3ef419e3c5f6f53e814b9aeee4336"
           }
         ]
       }
@@ -551,7 +564,8 @@
       "admission": "excluded",
       "manifests": [],
       "gates": [
-        "vm-spec"
+        "vm-spec",
+        "vm-model"
       ],
       "fixtures": 0
     }
