@@ -75,6 +75,8 @@ def L.base_constructor_collision_is_invalid(): {==}
 def L.column_zero_foreign_body_is_unsupported(): {==}
 def L.module_import_after_declaration_is_invalid(): {==}
 def L.quoted_body_leaves_imports_to_the_lexer(): {==}
+def L.output_names_no_file_the_load_read(tree,checked,unchecked): {==}
+def L.uncanonical_output_is_refused(): {==}
 def L.ambiguous_host_path_is_unsupported(): {==}
 def L.canonical_host_path_can_load(): {==}
 def L.path_query_failure_is_a_host_failure(message): {==}

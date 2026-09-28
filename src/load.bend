@@ -287,6 +287,36 @@ def load(+path: String, +bundle: String, characters: Nat, depth: Nat,
   next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):
   load_roots(Bool.xor(String.starts_with(path,"/"),String.starts_with(bundle,"/")),path,bundle,characters,depth,next)
 
+def named(+path: String, files: List<&2,String>) -> Bool:
+  match files:
+    case Nil{}: False{}
+    case Con{file,rest}: Bool.or(I.same_file(path,file),named(path,rest))
+
+# An output may not name a file the load read: the entry, a module or the pinned
+# Base. Only canonical spellings are compared, so a climbing output is refused.
+def written(+output: String, receipt: Receipt) -> Result<S.Error,Unit>:
+  match receipt:
+    case Receipt{root,files,checked,unchecked}:
+      +path = I.normalize(output)
+      S.choose(Result<S.Error,Unit>,I.climbs(path),u => Fail{S.Host{"arguments","output-path"}},u =>
+      S.choose(Result<S.Error,Unit>,named(path,Con{base_path(),files}),u =>
+        Fail{S.Host{"arguments","source-is-output"}},u => Done{Unit{}}))
+
+# The path query rejects symlink components and inexact case in the output too.
+def canonical_output(result: Result<S.Error,Unit>) -> Result<S.Error,Unit>:
+  match result:
+    case Fail{S.Host{phase,code}}: Fail{S.Host{phase,code}}
+    case Fail{error}: Fail{S.Host{"arguments","output-path"}}
+    case Done{unit}: Done{unit}
+
+def guarded(+output: String, result: Result<S.Error,Receipt>,
+  next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):
+  match result:
+    case Fail{error}: next(Fail{error})
+    case Done{+receipt}:
+      F.check(output,query => next(S.bind(Unit,Receipt,canonical_output(query),u =>
+        S.bind(Unit,Receipt,written(output,receipt),v => Done{receipt}))))
+
 def tree(receipt: Receipt) -> S.Node:
   match receipt:
     case Receipt{root,files,checked,unchecked}: root

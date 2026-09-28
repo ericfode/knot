@@ -308,6 +308,64 @@ def build_lanes(record):
     return lanes
 
 
+def guard_spec():
+    return json.loads((HERE / 'review-round4.json').read_text())['output_guard']
+
+
+def guard_run(case, spec, compiler, scratch):
+    """One literal output-guard case in a private copy of the round's directory.
+    Returns the observation and the first violated expectation, if any. A broken
+    guard can only write inside this copy, including its private Base copy."""
+    home = scratch / case['name']
+    if home.exists():
+        shutil.rmtree(home)
+    cwd = home / spec['cwd']
+    shutil.copytree(HERE / 'review-round4' / spec['cwd'], cwd)
+    if case.get('base_copy'):
+        copy = cwd / spec['base_copy']
+        copy.parent.mkdir(parents=True, exist_ok=True)
+        copy.write_bytes((ROOT / spec['base_copy']).read_bytes())
+    if 'symlink' in case:
+        (cwd / case['output']).symlink_to(case['symlink'])
+    spelled = {key: str(cwd / case.get(key, spec.get(key))) if key in case.get('absolute', [])
+               else case.get(key, spec.get(key)) for key in ('entry', 'bundle', 'output')}
+    protected = cwd / case['protected'] if 'protected' in case else None
+    before = protected.read_bytes() if protected else None
+    result = run([*compiler, '--bundle', spelled['bundle'], spelled['entry'], spelled['output']], cwd=cwd)
+    expected, problem = case['expected'], None
+    if result['exit'] != expected['exit']:
+        problem = 'exit'
+    elif expected['exit'] == 0:
+        written = (cwd / case['output']).read_bytes()
+        if not (result['stdout'].strip() == f'Built\t{len(written)}' and result['stderr'] == ''
+                and written.startswith(b'\0asm\x01\0\0\0')):
+            problem = 'artifact'
+    elif not (result['stdout'] == '' and result['stderr'].startswith(expected['diagnostic_prefix'] + '\n')):
+        problem = 'diagnostic'
+    if problem is None and protected is not None and protected.read_bytes() != before:
+        problem = 'protected-file-changed'
+    if problem is None and case.get('base_copy') and digest(cwd / spec['base_copy']) != json.loads(
+            (HERE / 'pin-expectations.json').read_text())['base']['sha256']:
+        problem = 'base-copy-changed'
+    return {'name': case['name'], 'argv': result['argv'], 'result': observation(result),
+            'protected_preserved': protected is None or protected.read_bytes() == before}, problem
+
+
+def output_guard(lanes):
+    """compile --bundle never opens an output naming a file the load read."""
+    spec, records = guard_spec(), []
+    for lane, commands in lanes.items():
+        for case in spec['cases']:
+            record, problem = guard_run(case, spec, commands['plain-compile'], BUILD / 'output-guard' / lane)
+            require(problem is None, (lane, case, problem, record))
+            records.append({'lane': lane, **record})
+    for case in spec['cases']:
+        native, bun = (next(r for r in records if r['lane'] == lane and r['name'] == case['name'])
+                       for lane in ('native', 'bun'))
+        require(native['result'] == bun['result'], (case['name'], 'native/Bun output guard differs'))
+    return records
+
+
 def tampered_base(lanes, expected):
     # Exercise the real loader against a private corrupted Base. The pinned
     # seed, frozen bundle and compiler sources remain untouched.
@@ -656,6 +714,22 @@ MUTANTS += [
      'old': 'Bool.and(S.matches(colon,":"),adjacent(dash,arrow))',
      'new': 'S.matches(colon,":")',
      'witness': 'result-spaced-arrow', 'actual': {'exit': 0}},
+    {'name': 'output-guard-files-ignored', 'file': 'load.bend',
+     'old': 'named(path,Con{base_path(),files})', 'new': 'named(path,[base_path()])',
+     'guard': 'output-module-relative', 'problem': 'exit'},
+    {'name': 'output-guard-base-ignored', 'file': 'load.bend',
+     'old': 'named(path,Con{base_path(),files})', 'new': 'named(path,files)',
+     'guard': 'output-base-relative', 'problem': 'exit'},
+    {'name': 'output-guard-single-basis', 'file': 'imports.bend',
+     'old': '    Bool.or(String.ends_with(left,String.append("/",right)),String.ends_with(right,String.append("/",left))),u =>',
+     'new': '    String.eq(left,right),u =>',
+     'guard': 'output-module-mixed-basis', 'problem': 'exit'},
+    {'name': 'output-query-ignored', 'file': 'load.bend',
+     'old': 'S.bind(Unit,Receipt,canonical_output(query),u =>', 'new': 'S.bind(Unit,Receipt,Done{Unit{}},u =>',
+     'guard': 'output-symlink', 'problem': 'exit'},
+    {'name': 'output-climb-ignored', 'file': 'load.bend',
+     'old': 'S.choose(Result<S.Error,Unit>,I.climbs(path),u =>', 'new': 'S.choose(Result<S.Error,Unit>,False{},u =>',
+     'guard': 'output-climbing', 'problem': 'exit'},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -668,7 +742,9 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'constructor-order-ignored', 'let-binder-unchecked', 'file-let-binder-unchecked',
                     'file-constructor-order-ignored', 'file-arm-binders-unchecked', 'field-binder-book-wide',
                     'climbing-target-accepted', 'climbing-root-accepted', 'working-directory-bundle-empty',
-                    'quoted-import-classified', 'result-type-invalid', 'spaced-arrow-accepted'}
+                    'quoted-import-classified', 'result-type-invalid', 'spaced-arrow-accepted',
+                    'output-guard-files-ignored', 'output-guard-base-ignored', 'output-guard-single-basis',
+                    'output-query-ignored', 'output-climb-ignored'}
 
 
 def mutants(fixtures):
@@ -691,6 +767,16 @@ def mutants(fixtures):
         entry = directory / 'check-cli.bend'
         typecheck = successful([*SEED, entry, '--check-only'])
         require(observation(typecheck) == json.loads((HERE / 'host-check-expectations.json').read_text())['observation'], typecheck)
+        if 'guard' in mutant:
+            # The output guard lives in the compiler CLI; its witness is a literal case.
+            compiler = directory / 'mutant-compile.js'
+            built = successful([*SEED, directory / 'compile-cli.bend', '-o', compiler])
+            case = next(c for c in guard_spec()['cases'] if c['name'] == mutant['guard'])
+            record, problem = guard_run(case, guard_spec(), ['bun', compiler], directory / 'guard')
+            require(problem == mutant['problem'], (name, 'mutant survived its output-guard witness', problem, record))
+            records.append({**mutant, 'sha256': digest(target), 'typecheck': typecheck,
+                            'build': built, 'result': record, 'outcome': 'semantic-kill'})
+            continue
         output = directory / 'mutant.js'
         built = successful([*SEED, entry, '-o', output])
         fixture = by_name[mutant['witness']]
@@ -756,6 +842,7 @@ def main():
         lanes = build_lanes(record)
         pin_controls(record)
         record['tampered_base'] = tampered_base(lanes, json.loads((HERE / 'pin-expectations.json').read_text()))
+        record['output_guard'] = output_guard(lanes)
         record['fixtures'] = []
         for fixture in [*manifest['fixtures'], *supplemental, *probes, *review]:
             record['fixtures'].append(fixture_observations(fixture, lanes, record['base_reference']))
@@ -785,6 +872,7 @@ def main():
           f'{wasm} Wasm observations, {pairs} byte-identity pairs, '
           f'{preserved} preserved outputs, {audits} trust audits, '
           f'{len(record["pin"])} pin observations, {len(record["tampered_base"])} tampered-Base observations, '
+          f'{len(record["output_guard"])} output-guard observations, '
           f'{len(record["mutants"])} semantic mutants')
 
 

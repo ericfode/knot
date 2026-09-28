@@ -71,6 +71,12 @@ def bundle(path: String, root: String, limits: Limits, next: C.Book -> IO(Unit))
     case Limits{characters,parser,+checker}:
       M.load(path,root,characters,parser,result => loaded(checker,result,next))
 
+# The output is compared with every file the load read before it is opened.
+def bundle_to(path: String, root: String, output: String, limits: Limits, next: C.Book -> IO(Unit)) -> IO(Unit):
+  match limits:
+    case Limits{characters,parser,+checker}:
+      M.load(path,root,characters,parser,result => M.guarded(output,result,guarded => loaded(checker,guarded,next)))
+
 def select_load(root: Maybe<&2,String>, path: String, limits: Limits, next: C.Book -> IO(Unit)) -> IO(Unit):
   match root:
     case None{}: load(path,limits,next)

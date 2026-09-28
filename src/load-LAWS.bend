@@ -161,6 +161,24 @@ law quoted_body_leaves_imports_to_the_lexer:
   {I.header("def text() -> String:\n  \"a\nimport ./x.bend as X\"\n") ==
     Done{I.Header{Nil{},"def text() -> String:\n  \"a\nimport ./x.bend as X\"\n"}} : Result<S.Error,I.Header>}
 
+law output_names_no_file_the_load_read:
+  for +tree: S.Node
+  for +checked: List<&2,String>
+  for +unchecked: List<&2,String>
+  {(L.written("./lib/../lib/flag.bend",L.Receipt{tree,["main.bend","lib/flag.bend"],checked,unchecked}),
+    L.written("/w/main.bend",L.Receipt{tree,["main.bend"],checked,unchecked}),
+    L.written("/w/.toolchain/bend-2.0.29-574b6d3/bend2/base.bend",L.Receipt{tree,["/w/main.bend"],checked,unchecked}),
+    L.written("fresh.wasm",L.Receipt{tree,["main.bend","lib/flag.bend"],checked,unchecked})) ==
+    (Fail{S.Host{"arguments","source-is-output"}},Fail{S.Host{"arguments","source-is-output"}},
+     Fail{S.Host{"arguments","source-is-output"}},Done{Unit{}})
+    : Result<S.Error,Unit> & Result<S.Error,Unit> & Result<S.Error,Unit> & Result<S.Error,Unit>}
+
+law uncanonical_output_is_refused:
+  {(L.written("../w/lib/flag.bend",L.Receipt{S.Sequence{Nil{}},["main.bend"],Nil{},Nil{}}),
+    L.canonical_output(Fail{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}})) ==
+    (Fail{S.Host{"arguments","output-path"}},Fail{S.Host{"arguments","output-path"}})
+    : Result<S.Error,Unit> & Result<S.Error,Unit>}
+
 law ambiguous_host_path_is_unsupported:
   {F.classified(Done{False{}}) ==
     Fail{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}} : Result<S.Error,Unit>}

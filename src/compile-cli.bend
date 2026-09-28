@@ -51,7 +51,7 @@ def module_configured(+root: String, +source: String, +path: String, result: Res
       match options:
         case Options{input,depth,bytes}:
           S.choose(IO(Unit),String.eq(source,path),u => D.fail(S.Host{"arguments","source-is-output"}),u =>
-            D.bundle(source,root,input,book => compile(book,path,options)))
+            D.bundle_to(source,root,path,input,book => compile(book,path,options)))
 
 def budgets(chars: String, +parser: String, +checker: String, +depth: String, +bytes: String) -> Result<S.Error,Options>:
   S.bind(Nat,Options,D.natural(U32.read(chars),65536),c =>

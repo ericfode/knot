@@ -139,6 +139,13 @@ def bundle_prefix(+bundle: String) -> String:
 def climbs(+path: String) -> Bool:
   String.eq(first(split(path,'/')),"..")
 
+# Two canonical spellings on one basis name one file only when equal. Across
+# bases, the absolute spelling must end with the relative one.
+def same_file(+left: String, +right: String) -> Bool:
+  S.choose(Bool,Bool.xor(String.starts_with(left,"/"),String.starts_with(right,"/")),u =>
+    Bool.or(String.ends_with(left,String.append("/",right)),String.ends_with(right,String.append("/",left))),u =>
+    String.eq(left,right))
+
 def resolve(+importer: String, +namespace: String, +bundle: String, +path: String) -> Result<S.Error,Target>:
   +target = S.choose(String,hashed(path),u => join(bundle,path),u => join(directory(importer),path))
   +inside = String.starts_with(target,bundle_prefix(bundle))
