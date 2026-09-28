@@ -13,8 +13,9 @@ seed's native lane and requires:
   with check-spec's exact reason;
 - every admitted control run to its outcome and call count (SPEC sections 4 and
   7): check-spec's three admitted plan controls and seven code-list controls, as
-  the reference evaluation (vm/evaluate.py) runs them, and its seven run controls
-  as frozen;
+  the reference evaluation (vm/evaluate.py) runs them, its seven run controls as
+  frozen, and the model's own controls in vm/model-controls/, whose frozen values
+  the seed and the reference evaluation reproduce;
 - the RC audit before every transition of every golden and admitted control, no
   live mortal cell after each completed run, and the reference evaluation's call
   count at the end of each run;
@@ -276,11 +277,13 @@ def expected_run(got: dict) -> dict:
 def admitted_controls() -> list:
     """(label, plan, run, calls) for images the validator MUST admit and the VM MUST run to
     `run` after `calls` entries (SPEC sections 4 and 7): check-spec's admitted plan controls
-    and code-list controls under the reference evaluation, and its frozen run controls."""
+    and code-list controls under the reference evaluation, its frozen run controls and the
+    model's own frozen controls."""
     plans = golden_plans()
     listed = [(f'plan:{k}', p, None) for k, p, m in cs.plan_controls(plans) if m is None]
     listed += [(k, p, None) for k, p in cs.code_controls(plans)]
     listed += [(f'run:{k}', p, frozen) for k, p, frozen in cs.run_controls(plans)]
+    listed += [(f'model:{k}', p, {'exit': 0, 'stdout': line}) for k, p, line in MODEL_CONTROLS]
     require(sum(k.startswith('plan:') for k, _, _ in listed) == 3, 'SPEC section 4 admits three plan controls')
     require(sum(k.startswith('codes:') for k, _, _ in listed) == 7, 'SPEC section 12 freezes seven code-list controls')
     require(sum(k.startswith('run:') for k, _, _ in listed) == 7, 'SPEC section 4 freezes seven run controls')
@@ -388,6 +391,65 @@ def inspection_runs(model: Path) -> dict:
         out[name] = {'result': result, 'agrees': (result['exit'], result['stdout'], result['stderr'])
                      == (5, '', 'HostFailure\timage\till-typed\n')}
     return out
+
+
+# The model's own run controls, frozen by literal review of SPEC sections 3 and 6.1 before
+# the model ran them: each plan is its source's core by hand, and the seed prints the value
+# after the last tab. A tags-mode Case on Char dispatches on Chr (tag 0) for every code,
+# immediate or Big; a key-mode Case admits every u32 key, 0xffffffff included (section 2).
+U32 = {'kind': 'opaque', 'name': 'U32'}
+CHAR = {'kind': 'data', 'name': 'Char', 'constructors': [{'name': 'Chr', 'fields': [0]}]}
+BOOL = {'kind': 'data', 'name': 'Bool', 'constructors': [{'name': 'False', 'fields': []}, {'name': 'True', 'fields': []}]}
+
+
+def chr_book(name: str, body: list, result: int, slots: int, argument: int) -> dict:
+    """`name(c: Char)` over [U32, Char, Flag], applied by main to the Char `argument`."""
+    return {'entry': 'book', 'representation': {'U32': 0, 'Char': 1}, 'types': [U32, CHAR, FLAG],
+            'functions': [{'name': name, 'parameters': [1], 'result': result, 'slots': slots, 'body': body},
+                          {'name': 'main', 'parameters': [], 'result': 2, 'slots': 0,
+                           'body': ['call', 2, 0, [['lit', 1, 'Char', argument]]]}]}
+
+
+def top_u32(key: int, argument: int) -> dict:
+    return {'entry': 'book', 'representation': {'U32': 0}, 'types': [U32, FLAG],
+            'functions': [{'name': 'top', 'parameters': [0], 'result': 1, 'slots': 1,
+                           'body': ['case', 1, 0, 0, 'keys', [['branch', key, 1, 0, ['value', 1, 1]]], ['default', ['value', 1, 0]]]},
+                          {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0, 'body': ['call', 1, 0, [['lit', 0, 'U32', argument]]]}]}
+
+
+PICK = ['case', 2, 0, 1, 'tags', [['branch', 0, 1, 1, ['value', 2, 1]]], None]
+TOP = ['case', 2, 0, 1, 'keys', [['branch', 0xFFFFFFFF, 1, 0, ['value', 2, 1]]], ['default', ['value', 2, 0]]]
+CHAR_MATCH = {'entry': 'book', 'representation': {'Bool': 0, 'U32': 1, 'Char': 2},
+              'types': [BOOL, U32, {**CHAR, 'constructors': [{'name': 'Chr', 'fields': [1]}]}],
+              'functions': [{'name': 'U32.is_eq', 'parameters': [1, 1], 'result': 0, 'slots': 2,
+                             'body': ['prim', 0, 8, [['ref', 1, 0], ['ref', 1, 1]]]},
+                            {'name': 'code', 'parameters': [2], 'result': 1, 'slots': 2,
+                             'body': ['case', 1, 0, 2, 'tags', [['branch', 0, 1, 1, ['lit', 1, 'U32', 7]]], None]},
+                            {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0,
+                             'body': ['call', 0, 0, [['call', 1, 1, [['lit', 2, 'Char', 65]]], ['lit', 1, 'U32', 7]]]}]}
+MODEL_CONTROLS = [
+    ('char-pick', chr_book('pick', PICK, 2, 2, 65), 'Evaluated\t2\t1\tOn{}\n'),
+    ('char-pick-big', chr_book('pick', PICK, 2, 2, 2147483653), 'Evaluated\t2\t1\tOn{}\n'),
+    ('char-match', CHAR_MATCH, 'Evaluated\t0\t1\tTrue{}\n'),
+    ('key-max', top_u32(0xFFFFFFFF, 0xFFFFFFFF), 'Evaluated\t1\t1\tOn{}\n'),
+    ('key-max-miss', top_u32(0xFFFFFFFF, 0xFFFFFFFE), 'Evaluated\t1\t0\tOff{}\n'),
+    ('key-below-max', top_u32(0xFFFFFFFE, 0xFFFFFFFE), 'Evaluated\t1\t1\tOn{}\n'),
+    ('char-key-max', chr_book('top', TOP, 2, 1, 0xFFFFFFFF), 'Evaluated\t2\t1\tOn{}\n'),
+    ('char-key-max-miss', chr_book('top', TOP, 2, 1, 0xFFFFFFFE), 'Evaluated\t2\t0\tOff{}\n'),
+]
+MODEL_SOURCES = HERE / 'model-controls'
+
+
+def seed_controls() -> dict:
+    """The seed's Bun lane prints each model control's frozen value."""
+    names = [name for name, _, _ in MODEL_CONTROLS]
+    require(sorted(p.stem for p in MODEL_SOURCES.glob('*.bend')) == sorted(names), 'vm/model-controls/ differs from MODEL_CONTROLS')
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        got = dict(zip(names, pool.map(lambda n: run([SEED, MODEL_SOURCES / f'{n}.bend'], 300), names)))
+    for name, _, line in MODEL_CONTROLS:
+        seed = got[name]
+        require((seed['exit'], seed['stdout']) == (0, line.split('\t')[-1]), f'{name}: the seed gives {seed}')
+    return {name: got[name]['stdout'].strip() for name in names}
 
 
 def reference_verdicts(name: str) -> list:
@@ -546,6 +608,7 @@ def main() -> int:
               'status': 'failed', 'sources': {s: sha((HERE / s).read_bytes()) for s in SOURCES}}
     record['fixtures'] = check_inputs(expected)
     record['registry'] = check_registry()
+    record['seed'] = seed_controls()
 
     tree = build_tree('base')
     bins = built(tree, ('model', 'audit', 'sweep'))
