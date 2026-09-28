@@ -4,6 +4,174 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Review round 7
+
+The coordinator's review of `df0edb1` confirmed one major finding: an
+expression offset `kn+t` lowered to the intrinsic `Nat.add(kn,t)`, which
+counts both arguments and materializes a fresh Nat, so recursion that builds
+a Nat through an offset allocated about n²/2 cells and reached Exhausted where
+the seed succeeds. It is fixed in new commits after merging `main` (`c0bd08d`);
+no history was rewritten and no earlier expectation changed.
+
+| Commit | Content |
+| --- | --- |
+| `68787b7` | Merge `main` `c0bd08d` (CC/SDKROOT for every gate); registry and census conflicts resolved |
+| `068539e` | Freeze: offset-expression-depth, 6 seed calls, before the fix, with the measured cost |
+| `c22357e` | The Offset arm checks `M.literal(kn+t)`; laws `natural_offset` and `offset_spelling`; mutant offset-nat-add; README, SPEC, CONTRACT, LAW_REVIEW; census approved |
+| `c51f480` | Merge resolution: selfhost mutants typecheck against the modules host verdict |
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [major] `kn+t` lowers to an O(\|t\|) `Nat.add`, so offset recursion is quadratic and Exhausted where the seed succeeds | Fixed in `c22357e`. `check.bend`'s Offset arm checks `M.literal(S.Offset{token,count,tail})`, the pattern matrix's own expansion, instead of `S.Intrinsic{NAdd,[kn,t]}`: k `Succ` constructors around the tail, which is checked once and shared, as the seed builds it. `0n+t` never reaches it (the parser reads it as t), and inside the expansion `Offset{0,t}` spells t. `2n+n` now checks to exactly the core of `Succ{Succ{n}}` (`v0.1{v0.1{$0:0}}`). | The frozen book agrees seed ⇔ evaluator (both lanes) ⇔ Wasm (both lanes) at the gate's budgets; before the fix four of its six calls were Exhausted in both. Scaling table below. Laws `natural_offset` (literal-core) and `offset_spelling` (check). Mutant offset-nat-add. |
+
+### Freeze and measured cost
+
+`tests/compiler-literals/regressions/offset-expression-depth.bend` (seed:
+all six calls as frozen): `successor` is `Nat.is_eq(up(4000n),4000n)` with
+`up = 1n+up(p)`; `successor_short` compares with `3999n` (No, so the book is
+not constant); `doubled` is Base's `Nat.double(3000n)` (`2n+double(p)`,
+BaseChecked); `tripled` is `triple(3000n)` with `3n+triple(p)`; `zero` is
+`kept(4000n)` with `Succ{0n+kept(p)}`, the `0n+t` control. Bun lane,
+evaluator budget 1048576 transitions, Wasm heap 5505024 eight-byte cells
+(the heap pointer read through an exported copy of the global):
+
+| Call | Before: eval / Wasm | After: eval transitions / Wasm cells |
+| --- | --- | --- |
+| successor | Exhausted eval budget / Exhausted wasm resource-limit (heap full) | 56032 / 12000 |
+| successor_short | Exhausted / Exhausted | 56031 / 11999 |
+| doubled | Exhausted / Exhausted | 57032 / 15000 |
+| tripled | Exhausted / Exhausted | 72032 / 21000 |
+| zero | 56032 / 12000 | 56032 / 12000 |
+
+Scaling of the same functions (eval transitions / Wasm cells, each call
+including its argument and comparison literals):
+
+| n | up(n) before | up(n) after | Nat.double(n) before | after | triple(n) before | after |
+| --- | --- | --- | --- | --- | --- | --- |
+| 250 | 36407 / 32125 | 3532 / 750 | 68282 / 64000 | 4782 / 1250 | 100157 / 95875 | 6032 / 1750 |
+| 500 | 135282 / 126750 | 7032 / 1500 | 261532 / 253000 | 9532 / 2500 | 387782 / 379250 | 12032 / 3500 |
+| 1000 | 520532 / 503500 | 14032 / 3000 | 1023032 / 1006000 | 19032 / 5000 | Exhausted / 1508500 | 24032 / 7000 |
+| 2000 | Exhausted / 2007000 | 28032 / 6000 | Exhausted / 4012000 | 38032 / 10000 | Exhausted / trap at 5505024 | 48032 / 14000 |
+
+Before, doubling n quadrupled both; after, it doubles both, and `up(n)`
+allocates exactly the 3n cells of its argument, result and comparison
+literal, as the `Succ{...}` control does.
+
+### Laws and mutant
+
+- `literal-core-LAWS.bend::natural_offset`: the core of `2n+t` (two Succ
+  constructs around a reference to t) and a literal's `Natural` state with
+  two successors around t's value both run to
+  `Object{id,1,[Object{id,1,[value]}]}`, the former in exactly 9 transitions.
+  So `kn` (`Natural` around Zero, `natural_literal`) and `kn+t` build the
+  same cells.
+- `check-LAWS.bend::offset_spelling`: against an installed Nat, the checker
+  lowers `2n+Zero{}` to two Succ constructs around `Zero`'s value, with no
+  uses, for any scope and current function. It lives beside the checker, as
+  the round-5 and round-6 checker laws do; literal-core cannot import
+  `check.bend` without closing the checker into literal-source-machine.
+- Negative controls: `natural_offset` fails with three successors on the
+  right and at 8 transitions; `offset_spelling` fails with `3n+` on the left
+  and against the restored `Nat.add` lowering (expected
+  `Intrinsic{NAdd,[Literal 2n, Zero]}`). All 13 `src/*PROOF.bend` entries
+  print `All terms check.`
+- Mutant offset-nat-add restores the `Nat.add` lowering (and the
+  primitive-op import). It typechecks with the frozen host verdict; its
+  compiled `successor` is `Exhausted wasm resource-limit` and its evaluator
+  prints `Exhausted eval budget`, against the frozen Yes. The unmutated lanes
+  answer Yes.
+
+### Known limit
+
+Each successor takes three levels of the 4096-deep bundle checker budget
+(Offset, Succ constructor, its argument). `1364n+n` checks and agrees with
+the seed in the evaluator and Wasm (a 29984-byte module); `1365n+n`,
+`2000n+n` and `100000n+n` are `Exhausted check budget` in both lanes, where
+the `Nat.add` lowering checked them (seed: Yes). No frozen book and no Knot
+source uses an expression offset above 3; pattern offsets stop at 256 in
+both. The expansion also costs code proportional to k, as the seed's does.
+
+### Merge resolution: selfhost
+
+`main` added the `selfhost` gate before `modules` was merged anywhere; this
+branch already carries `modules`, whose host identity query makes the seed
+list five foreign-dependent definitions in each CLI. The gate's three `src/`
+mutants required `All terms check.` and copied only `src/*.bend`, so the first
+full run on `c22357e` failed selfhost at reject-every-self-call. `c51f480`
+applies the pattern the modules branch gave the other compiler gates in
+`f4c3224`: the mutant typecheck must equal the frozen verdict of
+`host-check-expectations.json` for its CLI, and each mutant copy carries
+`src/host`. No case, expectation or mutant changed; the coordinator should
+carry the same change when `modules` reaches `main`.
+
+### Differential evidence
+
+Checked-core verdicts, Bun `check.js` built from `068539e` against the fix,
+over all 1007 tracked `tests/`, `src/`, `packages/` and `research/` books:
+1002 identical byte for byte, 5 with the same exit and diagnostics whose
+printed core changed only on lines that contained `Nat.add(` (literal-views,
+nat-literals, let-annotated, offset-adjacent and offset-expression-depth),
+and 0 verdict changes.
+
+### Gates on the round-7 fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `c51f480` passed all 22 registered
+gates (exit 0) in 1306.5 seconds with 4 workers under heavy host load (run
+directory `run-5_vq0t2_`). `npm run -s gates:verify` passed 18 tests. The
+first full run, on `c22357e`, failed only selfhost, as described above; the
+direct literals gate had passed on the same sources (126 fixtures, 24
+mutants). Counts are copied from the runner; categories overlap and are not
+summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1153; files=65 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=1019; mutants=54; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| io-abi-2 | case mode=insensitive; fixtures=43; host boundaries=25; mutants=5; mutants killed=5; parity=153; read observations=21; reference observations=64; seed exhausted=2; seed observations=61 |
+| selfhost | blocked=63; cases=65; d4 gaps=5; judge mutants=20; mutants=3; passed=2 |
+| literals | agree eval observations=898; agree fixtures=35; artifact preservation probes=182; boundary probes=8; byte identity pairs=35; check observations=252; compile observations=252; eval observations=1080; execution lanes=2; fixtures=126; invalid fixtures=47; mutant eval observations=7; mutant verdict observations=14; mutant wasm observations=6; no artifact probes=182; proof entries=3; proof laws=33; reference calls=487; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=24; trust audits=70; unsupported fixtures=44; wasm observations=898 |
+
+Receipt drift: identical=64; semantic=17; volatile-only=9. The 16 semantic
+drifts in shared receipts (source hashes and derived code, plus the
+selfhost receipt's new inputs) are left for the coordinator. The literals
+receipt was copied from the run's normalized output after all 212 recorded
+input hashes were checked against the tree.
+
+### Offline preflight
+
+- The compiler-manifest preflight reports 32 groups and 0 structural
+  blockers. literal-patterns stays at 47995/48000 bytes (`literal-matrix.bend`
+  is unchanged); literal-source-machine is 43216/48000 (42591 before),
+  checker-laws 23556/48000 (22435), checking 46597/48000 (46580).
+- Per changed file (`--preflight FILE`), truncated contexts against
+  `068539e`: check.bend 7 (7), check-LAWS.bend 2 (1; the new
+  `offset_spelling`, context-helper and context-file limits),
+  literal-core-LAWS.bend 5 (4; the new `natural_offset`, context-helper
+  limit, as its neighbours), check-PROOF.bend and literal-core-PROOF.bend 0.
+  The single-file composition of literal-core-LAWS.bend is available
+  (42655/48000); check.bend (83903) and check-LAWS.bend (84146) were already
+  over the limit (83886 and 76879). The new regression book has 2
+  caller-or-byte-limit truncations and an available composition (901 bytes).
+- Zero provider requests were made. Live Perch review remains the
+  coordinator's.
+
 ## Review round 6
 
 The coordinator's review of `c7f3487` confirmed one major D4 finding: without

@@ -1226,3 +1226,24 @@ Base's absence and the spelled constructor), never on a type name, and check
 every position the form can occupy (arm, return, argument, let) against the
 seed with a name other than the primitive's. Locate a failing site with distinct per-site
 codes before following a reviewer's attribution.
+
+## 2026-09-28 — Literals review round 7: an offset lowered to a counting intrinsic
+
+Since the original literals implementation (`2ea222e`), `check.bend` rewrote
+the expression `kn+t` to `Nat.add(kn,t)`. Every gate agreed with the seed
+because no frozen book recursed through an offset expression deeply enough to
+reach a budget; `Nat.add` counts both arguments and builds a fresh Nat, so
+`up(n) = 1n+up(p)` allocated about n²/2 cells and was Exhausted at `up(2000n)`
+in the evaluator and `up(3400n)` in Wasm, while the seed answers. Six review
+rounds passed over it; the coordinator's verifier found it by scaling a
+recursion form Knot's own source uses 86 times.
+
+[The round-7 freeze](../tests/compiler-literals/regressions.json) pins depth
+3000-4000 books first. The fix checks the offset as the pattern matrix's own
+spelling (`M.literal`): k Succ constructors around the shared tail, as the
+seed builds it. See [the round-7 report](../tests/compiler-literals/REPORT.md).
+
+Prevention: a lowering that replaces a constructor form with a primitive
+changes cost, not only value. Freeze every such form at a depth near the
+gate's budgets, measure evaluator transitions and Wasm cells at two sizes,
+and require the ratio the seed's representation implies.
