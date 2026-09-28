@@ -1,0 +1,1669 @@
+{
+ "date": "2026-09-28T08:12:24.721122+00:00",
+ "status": "passed",
+ "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
+ "inputs": {
+  "scripts/run-wasm-io.mjs": "4ee7b16d5ae02614a47087dd8498352a487b7efffad6fca8ea629a60eae0b3ec",
+  "vm/SPEC.md": "62e8be5ac99176eeb33a59b31bed499df195a64d85810e1d25259b42b4e2224a",
+  "vm/build.json": "37a6d40c6151d4759c3f4151abc1eceae90b1420ec23d72c016a1211f31b2cc9",
+  "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
+  "vm/check-core.py": "a00f30eb545d00e7ebf1b31552e65dc23b5a6a9b0250cd2a1d46ff7b59e37c97",
+  "vm/core/deep-250k.kimg": "dd6cfde50089d4a1910de291be88512546bb0c22948c1f242952fb5eb57b57a6",
+  "vm/core/deep-250k.plan.json": "28f0b7b4f6d718030a8ce3796ac47f2ee09c39bc6d1fd35685a6152d5e8f3149",
+  "vm/core/display-text.kimg": "a05bfcfaae116c91916d2490c18045ae8ba14cbcb1d8c2a48dc3522122612c60",
+  "vm/core/display-text.plan.json": "c2b0fd6dbf15d7fbadb334edac815b0c2597b21f853994a1fd9678998bf4bcea",
+  "vm/core/display-visits.kimg": "bd9d4ad0f6fdec25eabadd30dc55d2c315dadfd19ba8aefbbe4d3fa39fa3cea9",
+  "vm/core/display-visits.plan.json": "7cece90ecaaf46453c533ea58e65d478863f02ebb0a245afeabd1181f5436c60",
+  "vm/core/fixtures.json": "b9ca07c958655e549337814cbbf541034a2406aa6be5ca4209bc10e030ee7904",
+  "vm/core/frames-400k.kimg": "6d6299ef33e368eb0e92c90b730b4b12406963e966ed68e438ac3af1e8e04dea",
+  "vm/core/frames-400k.plan.json": "e5c8beb4e39fc394e7f2b18bf7402875de5a1fdd5b72b130b61821902cb73e93",
+  "vm/core/ill-typed.kimg": "ab4119c7808fa5dde9d63194eeb639dee25aadff9ce5adb1c6df03ba0e145412",
+  "vm/core/ill-typed.plan.json": "099a9f3cfa8f97a902e68d5b172bb6114bc916f903c01163a0f4b7edbb4aa287",
+  "vm/core/quantum-action.kimg": "6656240607018a3543c2ca2af72ed7641155f7797a04d8bf913664bd6ef3a79d",
+  "vm/core/quantum-action.plan.json": "5808d799966d45b221762793b663bf2bfecb1f2c25559219e0bd9e00adddd4b2",
+  "vm/core/render-list.kimg": "f591ddb3f7204b72fadeafdcf674a9637f4f94d2aa89b4b68244c0a073b2b6f1",
+  "vm/core/render-list.plan.json": "bcba90d782e2e19df0a271701473c5af8b281df17714c5ef321a1553c1f62664",
+  "vm/core/render-nat.kimg": "2693a720c83a13d65e51b6bd953d1fa1f022730089b2f5300ea85c774d7c63f1",
+  "vm/core/render-nat.plan.json": "badeb34410d36b267ba0a5f722a9f27746dce2b8f70f697bf7b250f69215745b",
+  "vm/core/unsupported-foreign.kimg": "ab7e2eda7b5b2de10ff0e713d85489055352a894c8bbf7d8386e8b1cb9b36bab",
+  "vm/core/unsupported-foreign.plan.json": "48b7962552cfc0f7723ee3fbddf5a93acd79712c710f4e6516eba9ba5938d93b",
+  "vm/golden/vm-expected.json": "8fe0fbcdac09aea45a2def523e9e8549798666206fcdea8f63456ac543afdb96",
+  "vm/harness.mjs": "0a21e4436b19461012c665495993540d89b61e72f659e4d5577bf1bbd5b32223",
+  "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
+  "vm/serializer.py": "e8027445177303179fa7850fdc6c48dde2f0e7607cffe91a4798ac13828c65f0",
+  "vm/vm.wasm": "9419b3ced6d45f21beb88a4e96c6e86af8e82dc4d5a2c3e1fe2b4a95bb612747",
+  "vm/vm.wat": "8629ba482861a1b78ffc1bf753fdb535988796d4b6ae24d3cf05d9e475ed9ef7"
+ },
+ "pins": {
+  "tool": "wat2wasm",
+  "version": "1.0.41",
+  "flags": [],
+  "source": {
+   "path": "vm/vm.wat",
+   "sha256": "8629ba482861a1b78ffc1bf753fdb535988796d4b6ae24d3cf05d9e475ed9ef7"
+  },
+  "module": {
+   "path": "vm/vm.wasm",
+   "sha256": "9419b3ced6d45f21beb88a4e96c6e86af8e82dc4d5a2c3e1fe2b4a95bb612747",
+   "bytes": 19503
+  },
+  "test_build": {
+   "prefix": ";;TEST ",
+   "sha256": "fe8bffec3a22210f3e8134510af28f6b7f8380c3936e918c24e0ca68c13df8d4",
+   "bytes": 19832
+  }
+ },
+ "shape": {
+  "module": {
+   "imports": [
+    "knot_io.args",
+    "knot_io.close",
+    "knot_io.die",
+    "knot_io.exhausted",
+    "knot_io.open",
+    "knot_io.print",
+    "knot_io.read_bytes"
+   ],
+   "exports": [
+    "knot_alloc",
+    "knot_main",
+    "memory"
+   ],
+   "memory_pages": [
+    [
+     1,
+     65536
+    ]
+   ],
+   "start_section": false,
+   "call_indirect": false,
+   "functions": 82,
+   "reaches_itself": null
+  },
+  "test_build": {
+   "imports": [
+    "knot_io.args",
+    "knot_io.close",
+    "knot_io.die",
+    "knot_io.exhausted",
+    "knot_io.open",
+    "knot_io.print",
+    "knot_io.read_bytes"
+   ],
+   "exports": [
+    "knot_alloc",
+    "knot_main",
+    "memory",
+    "vm_boot",
+    "vm_dump",
+    "vm_limits",
+    "vm_step"
+   ],
+   "memory_pages": [
+    [
+     1,
+     65536
+    ]
+   ],
+   "start_section": false,
+   "call_indirect": false,
+   "functions": 86,
+   "reaches_itself": null
+  }
+ },
+ "goldens": [
+  {
+   "name": "case-char",
+   "exit": 0,
+   "stdout_sha256": "6f8679f5b5da6bf82ba70aee59e1e684048305816a8471ffd7e8714a0d261c27",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 8,
+   "audited": 8
+  },
+  {
+   "name": "case-off",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 8,
+   "audited": 8
+  },
+  {
+   "name": "case-on",
+   "exit": 0,
+   "stdout_sha256": "876c874fc120eacbe1c577eb85da382eb3bec96346622a602cb12dcbd5e32571",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 8,
+   "audited": 8
+  },
+  {
+   "name": "char-code",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "char-eq",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "char-ne",
+   "exit": 0,
+   "stdout_sha256": "71fa454c082be8993547e058eb94181e79f65416ca5a76f91ad0b4221653ccef",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "char-space",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 7,
+   "transitions": 44,
+   "audited": 44
+  },
+  {
+   "name": "closure-capture-off",
+   "exit": 0,
+   "stdout_sha256": "876c874fc120eacbe1c577eb85da382eb3bec96346622a602cb12dcbd5e32571",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 16,
+   "audited": 16
+  },
+  {
+   "name": "closure-capture-on",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 16,
+   "audited": 16
+  },
+  {
+   "name": "closure-captures",
+   "exit": 0,
+   "stdout_sha256": "79937e3540b4613b38e907993b3530d85611d96d96584c0bee2ec6708df8b93a",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 22,
+   "audited": 22
+  },
+  {
+   "name": "closure-id",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 15,
+   "audited": 15
+  },
+  {
+   "name": "closure-nested",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 4,
+   "transitions": 21,
+   "audited": 21
+  },
+  {
+   "name": "closure-return",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 14,
+   "audited": 14
+  },
+  {
+   "name": "closure-shadow",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 15,
+   "audited": 15
+  },
+  {
+   "name": "construct",
+   "exit": 0,
+   "stdout_sha256": "214b839e9db805c42aacdde42bdcc3e2e39cc693c45e1cfea1b205e478cd44a3",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1,
+   "transitions": 5,
+   "audited": 5
+  },
+  {
+   "name": "default-hit",
+   "exit": 0,
+   "stdout_sha256": "ecd2ae84e785a23cd839ce4b0be726c7b839ebe5362c6980a7090ed78a3ed5a6",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 8,
+   "audited": 8
+  },
+  {
+   "name": "default-miss",
+   "exit": 0,
+   "stdout_sha256": "b87d0751860db2e891f1cc319b86bf38f5fc538afed0ed2d46d76d623f5ad627",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 8,
+   "audited": 8
+  },
+  {
+   "name": "erased-argument",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 7,
+   "audited": 7
+  },
+  {
+   "name": "erased-construct",
+   "exit": 0,
+   "stdout_sha256": "06314491e27ffd59e1183bb3644b4e8b47e41732b64670f7d1af61fd203787a9",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1,
+   "transitions": 5,
+   "audited": 5
+  },
+  {
+   "name": "erased-field",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 11,
+   "audited": 11
+  },
+  {
+   "name": "erased-let",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1,
+   "transitions": 3,
+   "audited": 3
+  },
+  {
+   "name": "foreign-print",
+   "exit": 0,
+   "stdout_sha256": "427f93cafd9cc19be6eec03e590c9c6cdf9f688a5eaf21fa8d72351e2b15fd05",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 5,
+   "transitions": 14,
+   "audited": 14
+  },
+  {
+   "name": "io-bind",
+   "exit": 0,
+   "stdout_sha256": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 21,
+   "transitions": 100,
+   "audited": 100
+  },
+  {
+   "name": "let",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1,
+   "transitions": 7,
+   "audited": 7
+  },
+  {
+   "name": "nat-add",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "nat-big",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "nat-cmp",
+   "exit": 0,
+   "stdout_sha256": "f9aa19724ca11b6f0f7403407c0670cb06efa7536063b21b67dc68c2f131c4ab",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "nat-mul",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "nat-mul-range",
+   "exit": 4,
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "outcome": "Exhausted",
+   "cause": "NatRange",
+   "calls": 2,
+   "transitions": 12,
+   "audited": 13
+  },
+  {
+   "name": "nat-ne",
+   "exit": 0,
+   "stdout_sha256": "71fa454c082be8993547e058eb94181e79f65416ca5a76f91ad0b4221653ccef",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "nat-pred",
+   "exit": 0,
+   "stdout_sha256": "5a3e364161a97c6980f5ac1b12c958de81a5c5e340bc7431375d2f0054fb387e",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 9,
+   "audited": 9
+  },
+  {
+   "name": "nat-range",
+   "exit": 4,
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "outcome": "Exhausted",
+   "cause": "NatRange",
+   "calls": 2,
+   "transitions": 12,
+   "audited": 13
+  },
+  {
+   "name": "nat-show",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "nat-show-codes",
+   "exit": 0,
+   "stdout_sha256": "55b364032f2ac1a0590f635fe74141c7949688a81fe75b9db419edcbecd2d473",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 12,
+   "transitions": 90,
+   "audited": 90
+  },
+  {
+   "name": "nat-sub-floor",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "nat-succ",
+   "exit": 0,
+   "stdout_sha256": "735cf92fc598edc541e1281f4e5e3bcd316b141a364c2aca0f1f9f3bfa7ed8a2",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 9,
+   "audited": 9
+  },
+  {
+   "name": "nat-succ-range",
+   "exit": 4,
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "outcome": "Exhausted",
+   "cause": "NatRange",
+   "calls": 2,
+   "transitions": 8,
+   "audited": 9
+  },
+  {
+   "name": "nat-unpack",
+   "exit": 0,
+   "stdout_sha256": "ecd2ae84e785a23cd839ce4b0be726c7b839ebe5362c6980a7090ed78a3ed5a6",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 9,
+   "audited": 9
+  },
+  {
+   "name": "nested-call",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 12,
+   "audited": 12
+  },
+  {
+   "name": "pair",
+   "exit": 0,
+   "stdout_sha256": "993db63466600f28fac26758697b1af29fdadcc1d5dc59b04c2559095526dbf8",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1,
+   "transitions": 7,
+   "audited": 7
+  },
+  {
+   "name": "recursion-map",
+   "exit": 0,
+   "stdout_sha256": "1a19c7200bbdaa832bef217ed0c04dfabc0d70a004e8008d64d823f3495abb18",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 6,
+   "transitions": 50,
+   "audited": 50
+  },
+  {
+   "name": "recursion-tail",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 4,
+   "transitions": 32,
+   "audited": 32
+  },
+  {
+   "name": "reference",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 7,
+   "audited": 7
+  },
+  {
+   "name": "result-u32",
+   "exit": 3,
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "outcome": "Unsupported",
+   "cause": "result-type",
+   "calls": 0,
+   "transitions": 0,
+   "audited": 0
+  },
+  {
+   "name": "second",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "shadow",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1,
+   "transitions": 11,
+   "audited": 11
+  },
+  {
+   "name": "string-append",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "string-append-mortal",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 4,
+   "transitions": 31,
+   "audited": 31
+  },
+  {
+   "name": "string-codes",
+   "exit": 0,
+   "stdout_sha256": "4fdbc8ebfb6ae7e36cd51a83f284a13422d5d5975183ab2320bc3659962ed197",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 17,
+   "transitions": 133,
+   "audited": 133
+  },
+  {
+   "name": "string-empty",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 9,
+   "audited": 9
+  },
+  {
+   "name": "string-eq",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "string-length",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "string-ne-length",
+   "exit": 0,
+   "stdout_sha256": "71fa454c082be8993547e058eb94181e79f65416ca5a76f91ad0b4221653ccef",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "string-ne-order",
+   "exit": 0,
+   "stdout_sha256": "71fa454c082be8993547e058eb94181e79f65416ca5a76f91ad0b4221653ccef",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "string-reverse",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "u32-and",
+   "exit": 0,
+   "stdout_sha256": "b2a44b3e0f7e5b6de07f47df66b86400019c08c4170a73628ea03e836642fe15",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "u32-big",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "u32-cmp",
+   "exit": 0,
+   "stdout_sha256": "f40814070f8956daf558a2812f0c5272ebd069a0cf9deac6cf5bc5cdc14d2b49",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "u32-div-zero",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "u32-lt-unsigned",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "u32-mul-wrap",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "u32-ne",
+   "exit": 0,
+   "stdout_sha256": "71fa454c082be8993547e058eb94181e79f65416ca5a76f91ad0b4221653ccef",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "u32-not",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "u32-rem-zero",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "u32-shift",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "u32-shl-33",
+   "exit": 0,
+   "stdout_sha256": "c9e3806e4bf0c2947ff481293a48e49be2e246f3dbeae0e2bb4334ec051cccf7",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "u32-show",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "u32-shr",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "u32-shr-32",
+   "exit": 0,
+   "stdout_sha256": "c9e3806e4bf0c2947ff481293a48e49be2e246f3dbeae0e2bb4334ec051cccf7",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "u32-shr-33",
+   "exit": 0,
+   "stdout_sha256": "c9e3806e4bf0c2947ff481293a48e49be2e246f3dbeae0e2bb4334ec051cccf7",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "u32-sub-wrap",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "u32-to-nat-big",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 20,
+   "audited": 20
+  },
+  {
+   "name": "u32-unsigned",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "u32-wrap",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 24,
+   "audited": 24
+  },
+  {
+   "name": "u32-zero",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "unpack",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 11,
+   "audited": 11
+  },
+  {
+   "name": "value-off",
+   "exit": 0,
+   "stdout_sha256": "876c874fc120eacbe1c577eb85da382eb3bec96346622a602cb12dcbd5e32571",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1,
+   "transitions": 3,
+   "audited": 3
+  },
+  {
+   "name": "value-on",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1,
+   "transitions": 3,
+   "audited": 3
+  }
+ ],
+ "fixtures": {
+  "runs": [
+   {
+    "name": "deep-250k",
+    "exit": 0,
+    "stdout_sha256": "32c5f25e9b32f109420554fe4d90b6cc92d2a43c504072f8531d619b86e33e76"
+   },
+   {
+    "name": "deep-250k-fuel-exact",
+    "exit": 0,
+    "stdout_sha256": "32c5f25e9b32f109420554fe4d90b6cc92d2a43c504072f8531d619b86e33e76"
+   },
+   {
+    "name": "deep-250k-fuel-short",
+    "exit": 4,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "frames-400k",
+    "exit": 4,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "quantum-action",
+    "exit": 0,
+    "stdout_sha256": "4adc33bd9fe74303c344be46e5916d65182fb218e248fe80452ab3f025b06c64"
+   },
+   {
+    "name": "quantum-action-fuel-exact",
+    "exit": 0,
+    "stdout_sha256": "4adc33bd9fe74303c344be46e5916d65182fb218e248fe80452ab3f025b06c64"
+   },
+   {
+    "name": "quantum-action-fuel-short",
+    "exit": 4,
+    "stdout_sha256": "4adc33bd9fe74303c344be46e5916d65182fb218e248fe80452ab3f025b06c64"
+   },
+   {
+    "name": "ill-typed",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "unsupported-foreign",
+    "exit": 3,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "render-list",
+    "exit": 0,
+    "stdout_sha256": "779907616c36f322853257e4b9f4e4f829cec5ce6defe5cab400a9e36d2f211a"
+   },
+   {
+    "name": "display-visits",
+    "exit": 4,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "display-text",
+    "exit": 4,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "render-nat",
+    "exit": 0,
+    "stdout_sha256": "37063417084573a55a944a35dae75047222e3e421feecc1e2ad7ccf3b2500cc2"
+   },
+   {
+    "name": "pred-zero",
+    "exit": 0,
+    "stdout_sha256": "b87d0751860db2e891f1cc319b86bf38f5fc538afed0ed2d46d76d623f5ad627"
+   },
+   {
+    "name": "pred-structured",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "pred-range",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "pred-arity",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "main-arity",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "unknown-export",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "fuel-syntax",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "fuel-range",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "ordinal-syntax",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "book-usage",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "structured-pair",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "fuel-zero",
+    "exit": 4,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "program-usage",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "program-separator",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "program-args",
+    "exit": 0,
+    "stdout_sha256": "427f93cafd9cc19be6eec03e590c9c6cdf9f688a5eaf21fa8d72351e2b15fd05"
+   },
+   {
+    "name": "print-fuel-exact",
+    "exit": 0,
+    "stdout_sha256": "427f93cafd9cc19be6eec03e590c9c6cdf9f688a5eaf21fa8d72351e2b15fd05"
+   },
+   {
+    "name": "print-fuel-4",
+    "exit": 4,
+    "stdout_sha256": "427f93cafd9cc19be6eec03e590c9c6cdf9f688a5eaf21fa8d72351e2b15fd05"
+   },
+   {
+    "name": "print-fuel-3",
+    "exit": 4,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "name": "bind-fuel-exact",
+    "exit": 0,
+    "stdout_sha256": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2"
+   },
+   {
+    "name": "bind-fuel-20",
+    "exit": 4,
+    "stdout_sha256": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2"
+   },
+   {
+    "name": "bind-fuel-19",
+    "exit": 4,
+    "stdout_sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"
+   },
+   {
+    "name": "missing-image",
+    "exit": 5,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   }
+  ],
+  "dumps": [
+   {
+    "name": "deep-250k",
+    "outcome": "Completed",
+    "calls": 500003,
+    "yields": [
+     65536,
+     131072,
+     196608,
+     262144,
+     327680,
+     393216,
+     458752
+    ]
+   },
+   {
+    "name": "deep-250k-fuel-short",
+    "outcome": "Exhausted",
+    "kind": 1,
+    "cause": "fuel",
+    "calls": 500002
+   },
+   {
+    "name": "frames-400k",
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames"
+   },
+   {
+    "name": "quantum-action",
+    "outcome": "Completed",
+    "calls": 65537,
+    "yields": [
+     65536
+    ]
+   },
+   {
+    "name": "ill-typed",
+    "outcome": "HostFailure",
+    "cause": "ill-typed"
+   },
+   {
+    "name": "unsupported-foreign",
+    "outcome": "Unsupported",
+    "cause": "foreign",
+    "calls": 0
+   },
+   {
+    "name": "display-visits",
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "display"
+   },
+   {
+    "name": "display-text",
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "display"
+   },
+   {
+    "name": "fuel-zero",
+    "outcome": "Exhausted",
+    "kind": 1,
+    "cause": "fuel",
+    "calls": 0
+   },
+   {
+    "name": "print-fuel-exact",
+    "outcome": "Completed",
+    "calls": 5
+   },
+   {
+    "name": "bind-fuel-exact",
+    "outcome": "Completed",
+    "calls": 21
+   },
+   {
+    "name": "deep-frames-1mib",
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames"
+   },
+   {
+    "name": "deep-heap-1mib",
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "heap"
+   }
+  ]
+ },
+ "host_stack": {
+  "node_flag": "--stack-size=64",
+  "runs": {
+   "nested-200k": {
+    "exit": 0,
+    "stdout_sha256": "fca589888db9725d88a0756271ff56b0ee7d4bf0e9f4fee4074ed695bb8215a7",
+    "words": 2200162,
+    "sha256": "9d096ab3cd8cedddf6429707b6dd1e02fb415983c95feda45b7498bbae869a78",
+    "fuel": 200002
+   },
+   "deep-250k": {
+    "exit": 0,
+    "stdout_sha256": "32c5f25e9b32f109420554fe4d90b6cc92d2a43c504072f8531d619b86e33e76"
+   },
+   "render-list": {
+    "exit": 0,
+    "stdout_sha256": "779907616c36f322853257e4b9f4e4f829cec5ce6defe5cab400a9e36d2f211a"
+   }
+  }
+ },
+ "malformed": {
+  "controls": [
+   {
+    "control": "truncated",
+    "reference": "HostFailure image: total",
+    "vm": "total",
+    "exit": 5
+   },
+   {
+    "control": "bad-magic",
+    "reference": "HostFailure image: magic",
+    "vm": "magic",
+    "exit": 5
+   },
+   {
+    "control": "version-2",
+    "reference": "HostFailure image: magic",
+    "vm": "magic",
+    "exit": 5
+   },
+   {
+    "control": "total-words",
+    "reference": "HostFailure image: total",
+    "vm": "total",
+    "exit": 5
+   },
+   {
+    "control": "entry-kind",
+    "reference": "HostFailure image: header",
+    "vm": "header",
+    "exit": 5
+   },
+   {
+    "control": "reserved-word",
+    "reference": "HostFailure image: header",
+    "vm": "header",
+    "exit": 5
+   },
+   {
+    "control": "registry-digest",
+    "reference": "HostFailure image: registry digest",
+    "vm": "registry-digest",
+    "exit": 5
+   },
+   {
+    "control": "section-offset",
+    "reference": "HostFailure image: section 1 offset",
+    "vm": "section-offset",
+    "exit": 5
+   },
+   {
+    "control": "record-length",
+    "reference": "HostFailure image: section 4 record length",
+    "vm": "record-length",
+    "exit": 5
+   },
+   {
+    "control": "trailing-word",
+    "reference": "HostFailure image: trailing words",
+    "vm": "trailing-words",
+    "exit": 5
+   },
+   {
+    "control": "opcode",
+    "reference": "HostFailure image: node record",
+    "vm": "node-record",
+    "exit": 5
+   },
+   {
+    "control": "main-index",
+    "reference": "HostFailure image: main index",
+    "vm": "main-index",
+    "exit": 5
+   },
+   {
+    "control": "name-utf8",
+    "reference": "HostFailure image: name utf-8",
+    "vm": "name-utf8",
+    "exit": 5
+   },
+   {
+    "control": "function-root-shared",
+    "reference": "HostFailure image: function root",
+    "vm": "function-root",
+    "exit": 5
+   },
+   {
+    "control": "child-not-record",
+    "reference": "HostFailure image: child offset",
+    "vm": "child-offset",
+    "exit": 5
+   },
+   {
+    "control": "child-after-parent",
+    "reference": "HostFailure image: child after parent",
+    "vm": "child-after-parent",
+    "exit": 5
+   },
+   {
+    "control": "oversize",
+    "reference": "HostFailure image: exhausted image-size",
+    "vm": "image-size",
+    "exit": 4
+   },
+   {
+    "control": "oversize-and-bad-magic",
+    "reference": "HostFailure image: exhausted image-size",
+    "vm": "image-size",
+    "exit": 4
+   },
+   {
+    "control": "oversize-and-misaligned",
+    "reference": "HostFailure image: exhausted image-size",
+    "vm": "image-size",
+    "exit": 4
+   },
+   {
+    "control": "unused-constant",
+    "reference": "HostFailure image: noncanonical",
+    "vm": "noncanonical",
+    "exit": 5
+   },
+   {
+    "control": "plan:ref-beyond-depth",
+    "reference": "HostFailure image: validator: id: slot 1 beyond depth 1",
+    "vm": "slot-depth",
+    "exit": 5
+   },
+   {
+    "control": "plan:let-slot",
+    "reference": "HostFailure image: validator: main: let slot 1 at depth 0",
+    "vm": "let-slot",
+    "exit": 5
+   },
+   {
+    "control": "plan:branch-first-slot",
+    "reference": "HostFailure image: validator: second: branch binders",
+    "vm": "branch-binders",
+    "exit": 5
+   },
+   {
+    "control": "plan:branch-fields",
+    "reference": "HostFailure image: validator: second: branch binders",
+    "vm": "branch-binders",
+    "exit": 5
+   },
+   {
+    "control": "plan:missing-tag",
+    "reference": "HostFailure image: validator: flip: default must cover exactly the missing tags",
+    "vm": "default-coverage",
+    "exit": 5
+   },
+   {
+    "control": "plan:redundant-default",
+    "reference": "HostFailure image: validator: flip: default must cover exactly the missing tags",
+    "vm": "default-coverage",
+    "exit": 5
+   },
+   {
+    "control": "plan:keys-without-default",
+    "reference": "HostFailure image: validator: select: keys must increase strictly, with a default",
+    "vm": "key-order",
+    "exit": 5
+   },
+   {
+    "control": "plan:keys-descending",
+    "reference": "HostFailure image: validator: vowel: keys must increase strictly, with a default",
+    "vm": "key-order",
+    "exit": 5
+   },
+   {
+    "control": "plan:unused-capture",
+    "reference": "HostFailure image: validator: capture: captures are not exactly the free slots of the body",
+    "vm": "capture-use",
+    "exit": 5
+   },
+   {
+    "control": "plan:capture-order",
+    "reference": "HostFailure image: validator: swap: captures must increase strictly below depth",
+    "vm": "capture-order",
+    "exit": 5
+   },
+   {
+    "control": "plan:closure-slots",
+    "reference": "HostFailure image: validator: main: closure slots 2, reached 1",
+    "vm": "closure-slots",
+    "exit": 5
+   },
+   {
+    "control": "plan:function-slots",
+    "reference": "HostFailure image: validator: second: slots 2, reached 3",
+    "vm": "function-slots",
+    "exit": 5
+   },
+   {
+    "control": "plan:call-arity",
+    "reference": "HostFailure image: validator: main: call arity",
+    "vm": "call-arity",
+    "exit": 5
+   },
+   {
+    "control": "plan:call-result",
+    "reference": "HostFailure image: validator: main: call types",
+    "vm": "call-types",
+    "exit": 5
+   },
+   {
+    "control": "plan:construct-arity",
+    "reference": "HostFailure image: validator: main: construct arity",
+    "vm": "construct-arity",
+    "exit": 5
+   },
+   {
+    "control": "plan:value-with-fields",
+    "reference": "HostFailure image: validator: main: value is not a nullary constructor",
+    "vm": "value-nullary",
+    "exit": 5
+   },
+   {
+    "control": "plan:reference-type",
+    "reference": "HostFailure image: validator: get: reference type",
+    "vm": "reference-type",
+    "exit": 5
+   },
+   {
+    "control": "plan:prim-unknown",
+    "reference": "HostFailure image: validator: U32.is_eq: unknown prim id 41",
+    "vm": "unknown-prim",
+    "exit": 5
+   },
+   {
+    "control": "plan:prim-reserved",
+    "reference": "HostFailure image: validator: U32.add: unknown prim id 39",
+    "vm": "unknown-prim",
+    "exit": 5
+   },
+   {
+    "control": "plan:prim-arity",
+    "reference": "HostFailure image: validator: U32.not: prim arity",
+    "vm": "prim-arity",
+    "exit": 5
+   },
+   {
+    "control": "plan:prim-result",
+    "reference": "HostFailure image: validator: U32.is_eq: prim result is not the pinned Bool",
+    "vm": "prim-result",
+    "exit": 5
+   },
+   {
+    "control": "plan:foreign-unknown",
+    "reference": "HostFailure image: validator: IO.print: unknown foreign id 99",
+    "vm": "unknown-foreign",
+    "exit": 5
+   },
+   {
+    "control": "plan:invoke-non-arrow",
+    "reference": "HostFailure image: validator: apply: invoke arity",
+    "vm": "invoke-arity",
+    "exit": 5
+   },
+   {
+    "control": "plan:literal-kind",
+    "reference": "HostFailure image: validator: main: U32 literal at a non-U32 type",
+    "vm": "literal-kind",
+    "exit": 5
+   },
+   {
+    "control": "plan:program-main-arity",
+    "reference": "HostFailure image: validator: program: main must exist with no live parameters",
+    "vm": "program-main",
+    "exit": 5
+   },
+   {
+    "control": "plan:program-representation",
+    "reference": "HostFailure image: validator: program: missing representation ['IO.OP']",
+    "vm": "program-representation",
+    "exit": 5
+   },
+   {
+    "control": "plan:foreign-operand-type",
+    "reference": "HostFailure image: validator: IO.print: foreign operand is not the pinned String",
+    "vm": "foreign-operand",
+    "exit": 5
+   },
+   {
+    "control": "plan:representation-shape",
+    "reference": "HostFailure image: validator: representation: Bool shape",
+    "vm": "representation-shape",
+    "exit": 5
+   },
+   {
+    "control": "plan:key-body-type",
+    "reference": "HostFailure image: validator: vowel: key branch body type",
+    "vm": "key-branch-body-type",
+    "exit": 5
+   },
+   {
+    "control": "plan:default-body-type",
+    "reference": "HostFailure image: validator: vowel: default body type",
+    "vm": "default-body-type",
+    "exit": 5
+   },
+   {
+    "control": "plan:prim-on-flags",
+    "reference": "HostFailure image: validator: main: prim operand is not the pinned U32",
+    "vm": "prim-operand",
+    "exit": 5
+   },
+   {
+    "control": "plan:nat-add-of-flags",
+    "reference": "HostFailure image: validator: main: prim operand is not the pinned Nat",
+    "vm": "prim-operand",
+    "exit": 5
+   },
+   {
+    "control": "plan:prim-result-undeclared",
+    "reference": "HostFailure image: validator: U32.is_eq: prim result is not the pinned Bool",
+    "vm": "prim-result",
+    "exit": 5
+   },
+   {
+    "control": "plan:foreign-on-flag",
+    "reference": "HostFailure image: validator: main: foreign operand is not the pinned String",
+    "vm": "foreign-operand",
+    "exit": 5
+   },
+   {
+    "control": "plan:foreign-result",
+    "reference": "HostFailure image: validator: IO.print: foreign result is not IO(Unit)",
+    "vm": "foreign-result",
+    "exit": 5
+   },
+   {
+    "control": "plan:program-main-unit",
+    "reference": "HostFailure image: validator: program: main must return IO(Unit)",
+    "vm": "program-io",
+    "exit": 5
+   },
+   {
+    "control": "plan:inspect-none-parameter",
+    "reference": "HostFailure image: validator: pred: case scrutinee type",
+    "vm": "case-scrutinee-type",
+    "exit": 5
+   },
+   {
+    "control": "plan:inspect-none-let",
+    "reference": "HostFailure image: validator: pred: case scrutinee type",
+    "vm": "case-scrutinee-type",
+    "exit": 5
+   },
+   {
+    "control": "plan:nat-field-type",
+    "reference": "HostFailure image: validator: representation: Nat shape",
+    "vm": "representation-shape",
+    "exit": 5
+   },
+   {
+    "control": "plan:reference-none-view",
+    "reference": "HostFailure image: validator: id: reference type",
+    "vm": "reference-type",
+    "exit": 5
+   },
+   {
+    "control": "plan:arrow-cycle",
+    "reference": "HostFailure image: validator: types: arrow cycle",
+    "vm": "arrow-cycle",
+    "exit": 5
+   }
+  ],
+  "fuzz": {
+   "seed": 20260928,
+   "per_image": 40,
+   "images": 3120,
+   "corpus_sha256": "133d8659e27d037a3e68b276edd8f12b32e08e8b2915ac8de316331c2c86ce68",
+   "refused": 2868,
+   "accepted": 252,
+   "reference_crash": 0
+  }
+ },
+ "mutants": [
+  {
+   "mutant": "arm-selection",
+   "breaks": "a tag Case takes the mirrored row",
+   "group": "goldens",
+   "killed_by": [
+    "golden:case-off",
+    "golden:case-on",
+    "golden:char-space",
+    "golden:nat-pred",
+    "golden:nat-show-codes"
+   ],
+   "wrong_observations": 9,
+   "crashes": 0
+  },
+  {
+   "mutant": "slot-off-by-one",
+   "breaks": "Eval Reference reads the slot below",
+   "group": "goldens",
+   "killed_by": [
+    "golden:char-code",
+    "golden:char-eq",
+    "golden:char-ne",
+    "golden:char-space",
+    "golden:closure-capture-off"
+   ],
+   "wrong_observations": 62,
+   "crashes": 2
+  },
+  {
+   "mutant": "fuel",
+   "breaks": "entering a Closure is free",
+   "group": "fuel",
+   "killed_by": [
+    "fixture:bind-fuel-20",
+    "fixture:bind-fuel-19"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "validator-offset",
+   "breaks": "name bytes are read one word early",
+   "group": "controls",
+   "killed_by": [
+    "golden:case-char",
+    "golden:case-off",
+    "golden:case-on",
+    "golden:char-code",
+    "golden:char-eq"
+   ],
+   "wrong_observations": 126,
+   "crashes": 0
+  },
+  {
+   "mutant": "quantum-state-loss",
+   "breaks": "a yield after an effect commits the Action as still pending",
+   "group": "quantum",
+   "killed_by": [
+    "fixture:quantum-action",
+    "fixture:quantum-action-fuel-exact"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "nat-bound",
+   "breaks": "Succ of 2^32-1 wraps instead of NatRange",
+   "group": "goldens",
+   "killed_by": [
+    "golden:nat-succ-range"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "tail-release",
+   "breaks": "no entry is a tail entry",
+   "group": "fixtures",
+   "killed_by": [
+    "fixture:display-visits"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "rem-zero",
+   "breaks": "x % 0 is 0",
+   "group": "goldens",
+   "killed_by": [
+    "golden:u32-rem-zero"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "host-stack-recursion",
+   "breaks": "the pair memo rehashes by calling itself",
+   "group": "shape",
+   "killed_by": [
+    "function 32 reaches itself"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  }
+ ]
+}

@@ -1,0 +1,574 @@
+#!/usr/bin/env python3
+"""Gate vm-core: knot-vm-1 (vm/vm.wat) against the frozen contract of vm/SPEC.md.
+
+Checks, in order:
+- pins: the pinned wabt assembles vm/vm.wat into vm/vm.wasm byte for byte, and
+  the module's imports, exports, memory and call graph are as SPEC section 10
+  and section 6 require (no function reaches itself, no call_indirect);
+- every golden image runs through scripts/run-wasm-io.mjs with the output
+  vm/golden/vm-expected.json fixes, and through the test build with the
+  precise Exhausted or Unsupported cause and a structural audit after every
+  transition;
+- vm/core/fixtures.json: literal-review runs (250,000-deep non-tail recursion,
+  quantum re-entry after an Action, fuel boundaries, rendering and its bounds,
+  frame exhaustion, invocation errors), state-dump rows and lowered limits;
+- a 200,000-deep nested expression, generated iteratively, and the deep
+  fixtures again under a 64 KiB host stack;
+- the 61 malformed-image controls vm-spec froze, refused with the reference
+  codec's first defect, and a seeded fuzz corpus of mutated goldens, where
+  every refusal matches the reference and no run traps;
+- WAT mutants, each killed by a named fixture group through a wrong
+  observation (a trap, host stack failure or timeout never counts).
+
+It writes only vm/receipts/core.json.
+"""
+from __future__ import annotations
+
+import datetime
+import hashlib
+import importlib.util
+import json
+import os
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+import random
+import re
+import shutil
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+HERE = ROOT / 'vm'
+BUILD = ROOT / '.local/vm-core/gate'
+RECEIPT = HERE / 'receipts/core.json'
+HOST = ROOT / 'scripts/run-wasm-io.mjs'
+HARNESS = HERE / 'harness.mjs'
+SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # hang guard only
+NONE = 0xFFFFFFFF
+FUZZ_SEED, FUZZ_PER_IMAGE = 20260928, 40
+NEST = 200_000
+SMALL_STACK = '--stack-size=64'
+
+
+def load(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+build = load('vm_build', HERE / 'build.py')
+spec = load('check_spec', HERE / 'check-spec.py')
+codec = spec.codec
+
+
+def require(condition, detail):
+    if not condition:
+        raise AssertionError(detail)
+
+
+def sha(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+# ------------------------------------------------------------------ reasons
+# The VM names each refusal with a code; the reference codec's first message
+# maps to exactly one. Dynamic parts (indices, depths, names) are not compared.
+REASONS = [
+    (r'exhausted image-size', 'image-size'), (r'length', 'length'), (r'magic', 'magic'), (r'total', 'total'),
+    (r'header', 'header'), (r'registry digest', 'registry-digest'), (r'section \d offset', 'section-offset'),
+    (r'record count', 'record-count'), (r'section \d record length', 'record-length'),
+    (r'trailing words', 'trailing-words'), (r'name length', 'name-length'), (r'name padding', 'name-padding'),
+    (r'name utf-8', 'name-utf8'), (r'duplicate name', 'duplicate-name'), (r'name index', 'name-index'),
+    (r'type record', 'type-record'), (r'constructor grouping', 'constructor-grouping'),
+    (r'opaque type', 'opaque-type'), (r'arrow name', 'arrow-name'), (r'type index', 'type-index'),
+    (r'constructor count', 'constructor-count'), (r'constructor record', 'constructor-record'),
+    (r'constructor tag', 'constructor-tag'), (r'constructor order', 'constructor-order'),
+    (r'constant record', 'constant-record'), (r'scalar constant width', 'scalar-constant-width'),
+    (r'string code beyond plan text', 'string-code'), (r'node record', 'node-record'),
+    (r'(lit|prim|default|value|con|ref|call|let|case|branch|closure|invoke|foreign) length', 'node-length'),
+    (r'function record', 'function-record'), (r'function root', 'function-root'),
+    (r'child offset', 'child-offset'), (r'child after parent', 'child-after-parent'),
+    (r'shared node', 'shared-node'), (r'standalone arm', 'standalone-arm'),
+    (r'constant index', 'constant-index'), (r'case key', 'case-key'), (r'case arm kind', 'case-arm-kind'),
+    (r'unreachable node', 'unreachable-node'), (r'main index', 'main-index'), (r'noncanonical', 'noncanonical'),
+    (r'validator: representation: \S+ must be opaque', 'representation-opaque'),
+    (r'validator: representation: \S+ shape', 'representation-shape'),
+    (r'validator: functions: duplicate function name', 'duplicate-function'),
+    (r'validator: types: arrow cycle', 'arrow-cycle'),
+    (r'validator: program: main must exist with no live parameters', 'program-main'),
+    (r'validator: program: missing representation .*', 'program-representation'),
+    (r'validator: program: main must return IO\(Unit\)', 'program-io'),
+    (r'validator: [^:]+: limits', 'limits'),
+    (r'validator: [^:]+: (U32|Nat|Char|String) literal at a non-\1 type', 'literal-kind'),
+    (r'validator: [^:]+: value is not a nullary constructor', 'value-nullary'),
+    (r'validator: [^:]+: slot \d+ beyond depth \d+', 'slot-depth'),
+    (r'validator: [^:]+: reference type', 'reference-type'),
+    (r'validator: [^:]+: construct tag', 'construct-tag'), (r'validator: [^:]+: construct arity', 'construct-arity'),
+    (r'validator: [^:]+: construct field type', 'construct-field-type'),
+    (r'validator: [^:]+: function index', 'function-index'), (r'validator: [^:]+: call arity', 'call-arity'),
+    (r'validator: [^:]+: call types', 'call-types'), (r'validator: [^:]+: unknown prim id \d+', 'unknown-prim'),
+    (r'validator: [^:]+: unknown foreign id \d+', 'unknown-foreign'),
+    (r'validator: [^:]+: prim arity', 'prim-arity'), (r'validator: [^:]+: foreign arity', 'foreign-arity'),
+    (r'validator: [^:]+: prim operand is not the pinned \S+', 'prim-operand'),
+    (r'validator: [^:]+: foreign operand is not the pinned \S+', 'foreign-operand'),
+    (r'validator: [^:]+: prim result is not the pinned \S+', 'prim-result'),
+    (r'validator: [^:]+: foreign result is not IO\(\S+\)', 'foreign-result'),
+    (r'validator: [^:]+: let slot \d+ at depth \d+', 'let-slot'),
+    (r'validator: [^:]+: let body type', 'let-body-type'),
+    (r'validator: [^:]+: case slot beyond depth', 'case-slot'),
+    (r'validator: [^:]+: case scrutinee type', 'case-scrutinee-type'),
+    (r'validator: [^:]+: tag case on a non-data type', 'tag-case-type'),
+    (r'validator: [^:]+: tag table is not dense', 'tag-table'),
+    (r'validator: [^:]+: default must cover exactly the missing tags', 'default-coverage'),
+    (r'validator: [^:]+: branch key', 'branch-key'), (r'validator: [^:]+: branch binders', 'branch-binders'),
+    (r'validator: [^:]+: branch body type', 'branch-body-type'),
+    (r'validator: [^:]+: key case on a non-scalar type', 'key-case-type'),
+    (r'validator: [^:]+: keys must increase strictly, with a default', 'key-order'),
+    (r'validator: [^:]+: key branch binds nothing', 'key-branch-binders'),
+    (r'validator: [^:]+: key branch body type', 'key-branch-body-type'),
+    (r'validator: [^:]+: default body type', 'default-body-type'),
+    (r'validator: [^:]+: closure arrow', 'closure-arrow'),
+    (r'validator: [^:]+: captures must increase strictly below depth', 'capture-order'),
+    (r'validator: [^:]+: captures are not exactly the free slots of the body', 'capture-use'),
+    (r'validator: [^:]+: closure slots \d+, reached \d+', 'closure-slots'),
+    (r'validator: [^:]+: closure result type', 'closure-result-type'),
+    (r'validator: [^:]+: invoke arity', 'invoke-arity'), (r'validator: [^:]+: invoke types', 'invoke-types'),
+    (r'validator: [^:]+: slots \d+, reached \d+', 'function-slots'),
+    (r'validator: [^:]+: body type', 'body-type'),
+]
+
+
+def expected_reason(refusal: str) -> str:
+    """The VM code for a `HostFailure image: ...` refusal of the reference codec."""
+    message = refusal.removeprefix('HostFailure image: ')
+    codes = [code for pattern, code in REASONS if re.fullmatch(pattern, message)]
+    require(len(codes) == 1, f'reason map covers {message!r} exactly once: {codes}')
+    return codes[0]
+
+
+def observed_reason(result: dict) -> str | None:
+    """The VM's refusal code, from its stderr line or, for image size, its exhaustion."""
+    line = result['stderr'].strip()
+    if line.startswith('HostFailure\timage\t'):
+        return line.split('\t')[2]
+    if line == 'Exhausted\tio\tmemory' and result.get('state', {}) and result['state']['cause'] == 'image-size':
+        return 'image-size'
+    return None
+
+
+# ------------------------------------------------------------------ runners
+def host(module: Path, sandbox: Path, argv: list, node_flags=()) -> dict:
+    p = subprocess.run(['node', *node_flags, str(HOST), str(module), str(sandbox), '--', *argv],
+                       capture_output=True, timeout=120 * SCALE)
+    return {'exit': p.returncode, 'stdout': p.stdout.decode(), 'stderr': p.stderr.decode()}
+
+
+def harness(jobs: list, timeout=600) -> dict:
+    p = subprocess.run(['node', str(HARNESS)], input=json.dumps(jobs), capture_output=True, text=True,
+                       timeout=timeout * SCALE)
+    require(p.returncode == 0, f'harness failed: {p.stderr[-2000:]}')
+    return {r['id']: r for r in map(json.loads, p.stdout.splitlines())}
+
+
+def clean(result: dict) -> bool:
+    """A reported outcome, not an engine trap, host stack failure or host error."""
+    stderr = result['stderr']
+    return result.get('status') not in ('Trap', 'HostStack') and not any(
+        s in stderr for s in ('HostFailure\tio\ttrap', 'HostFailure\tio\thost', 'Exhausted\tio\tcall-stack'))
+
+
+def pool(fn, items, workers=8):
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        return list(ex.map(fn, items))
+
+
+# ------------------------------------------------------------------ static module checks
+def module_shape(module: Path) -> dict:
+    text = subprocess.run(['wasm2wat', str(module)], capture_output=True, text=True, check=True).stdout
+    imports = re.findall(r'\(import "([^"]+)" "([^"]+)" \(func', text)
+    exports = re.findall(r'\(export "([^"]+)" \((func|memory)', text)
+    memory = re.findall(r'\(memory \(;\d+;\) (\d+) (\d+)\)', text)
+    graph, current = {}, None
+    for line in text.splitlines():
+        m = re.match(r'\s*\(func \(;(\d+);\)', line)
+        if m:
+            current = int(m.group(1))
+            graph[current] = set()
+        elif current is not None:
+            c = re.match(r'\s*call (\d+)\s*$', line)
+            if c:
+                graph[current].add(int(c.group(1)))
+    cycle = None
+    for start in graph:  # does any function reach itself?
+        seen, stack = set(), list(graph[start])
+        while stack:
+            f = stack.pop()
+            if f == start:
+                cycle = start
+                break
+            if f not in seen:
+                seen.add(f)
+                stack += graph.get(f, ())
+        if cycle is not None:
+            break
+    return {'imports': sorted(f'{m}.{n}' for m, n in imports), 'exports': sorted(n for n, _ in exports),
+            'memory_pages': [list(map(int, x)) for x in memory], 'start_section': '(start' in text,
+            'call_indirect': 'call_indirect' in text, 'functions': len(graph), 'reaches_itself': cycle}
+
+
+def check_shape(shape: dict, test: bool):
+    require(set(shape['imports']) <= {f'knot_io.{n}' for n in ('args', 'print', 'die', 'open', 'read', 'read_bytes',
+                                                                'write_bytes', 'close', 'path_identity', 'exhausted')},
+            f'imports only knot_io: {shape["imports"]}')
+    base = {'memory', 'knot_alloc', 'knot_main'}
+    extra = {'vm_limits', 'vm_boot', 'vm_step', 'vm_dump'} if test else set()
+    require(set(shape['exports']) == base | extra, f'exports {shape["exports"]}')
+    require(shape['memory_pages'] == [[1, 65536]], f'one memory with maximum 65,536 pages (D19): {shape["memory_pages"]}')
+    require(not shape['start_section'], 'no start section')
+    require(not shape['call_indirect'], 'no call_indirect')
+    require(shape['reaches_itself'] is None, f'function {shape["reaches_itself"]} reaches itself')
+
+
+# ------------------------------------------------------------------ fixtures
+def nested_image(n: int, digest: bytes) -> bytes:
+    """U32.is_eq(add(...add(0, 1)..., 1), n) nested n deep, laid out iteratively in
+    the canonical order serializer.encode would produce (checked for small n)."""
+    types = [[3, 0, 0, 0], [0, 1, 0, 2]]                       # U32 opaque, Bool data
+    ctors = [[1, 0, 2, 0], [1, 1, 3, 0]]                       # False, True
+    names = [b'U32', b'Bool', b'False', b'True', b'U32.add', b'U32.is_eq', b'main']
+    consts = [[0, 1, 0], [0, 1, 1], [0, 1, n]]
+    section = lambda rs: [len(rs)] + [w for r in rs for w in [len(r) + 1, *r]]
+    named = [[len(b), *[int.from_bytes(b[i:i + 4].ljust(4, b'\0'), 'little') for i in range(0, len(b), 4)]]
+             for b in names]
+    head = [section(types), section(ctors), None, section(consts), None, section(named)]
+    offsets = [32, 32 + len(head[0]), 32 + len(head[0]) + len(head[1])]
+    functions_size = 1 + 8 + 8 + 6
+    offsets.append(offsets[2] + functions_size)
+    offsets.append(offsets[3] + len(head[3]))
+    at = offsets[4] + 1
+    nodes, place = [], {}
+
+    def node(key, record):
+        nonlocal at
+        place[key] = at
+        nodes.append(record)
+        at += len(record) + 1
+
+    node('a0', [5, 0, 0]); node('a1', [5, 0, 1]); node('add', [1, 0, 0, 2, place['a0'], place['a1']])
+    node('e0', [5, 0, 0]); node('e1', [5, 0, 1]); node('eq', [1, 1, 8, 2, place['e0'], place['e1']])
+    node(0, [0, 0, 0])
+    for k in range(1, n + 1):
+        node(('one', k), [0, 0, 1])
+        node(k, [6, 0, 0, 2, place[k - 1], place[('one', k)]])
+    node('n', [0, 0, 2])
+    node('main', [6, 1, 1, 2, place[n], place['n']])
+    head[4] = [len(nodes)] + [w for r in nodes for w in [len(r) + 1, *r]]
+    head[2] = section([[4, 0, 2, 2, place['add'], 0, 0], [5, 1, 2, 2, place['eq'], 0, 0], [6, 1, 0, 0, place['main']]])
+    offsets.append(at)
+    body = [w for s in head for w in s]
+    header = [codec.MAGIC, 1, 32 + len(body), 0, 2, *offsets, 0,
+              NONE, 0, NONE, NONE, 1, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+              *(int.from_bytes(digest[i:i + 4], 'little') for i in range(0, 32, 4))]
+    return b''.join(w.to_bytes(4, 'little') for w in header + body)
+
+
+def nested_plan(n: int) -> dict:
+    chain = ['lit', 0, 'U32', 0]
+    for _ in range(n):
+        chain = ['call', 0, 0, [chain, ['lit', 0, 'U32', 1]]]
+    return {'entry': 'book', 'representation': {'U32': 0, 'Bool': 1},
+            'types': [{'kind': 'opaque', 'name': 'U32'},
+                      {'kind': 'data', 'name': 'Bool', 'constructors': [{'name': 'False', 'fields': []},
+                                                                        {'name': 'True', 'fields': []}]}],
+            'functions': [{'name': 'U32.add', 'parameters': [0, 0], 'result': 0, 'slots': 2,
+                           'body': ['prim', 0, 0, [['ref', 0, 0], ['ref', 0, 1]]]},
+                          {'name': 'U32.is_eq', 'parameters': [0, 0], 'result': 1, 'slots': 2,
+                           'body': ['prim', 1, 8, [['ref', 0, 0], ['ref', 0, 1]]]},
+                          {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0,
+                           'body': ['call', 1, 1, [chain, ['lit', 0, 'U32', n]]]}]}
+
+
+def fuzz_corpus(images: dict, reg: dict, digest: bytes, out: Path) -> list:
+    """Seeded single mutations of the goldens: a header or body word replaced from a
+    pool of boundary values, two body words swapped, a truncation, or a small shift."""
+    rng = random.Random(FUZZ_SEED)
+    rows = []
+    for name in sorted(images):
+        base = images[name]
+        for k in range(FUZZ_PER_IMAGE):
+            w = [int.from_bytes(base[i:i + 4], 'little') for i in range(0, len(base), 4)]
+            op = rng.randrange(6)
+            if op <= 2:
+                i = rng.randrange(32) if op == 0 else rng.randrange(32, len(w))
+                w[i] = rng.choice([0, 1, 2, 3, NONE, (w[i] + 1) & NONE, (w[i] - 1) & NONE, rng.randrange(64),
+                                   rng.getrandbits(32), rng.choice(w)])
+                data = b''.join(x.to_bytes(4, 'little') for x in w)
+            elif op == 3:
+                i, j = rng.randrange(32, len(w)), rng.randrange(32, len(w))
+                w[i], w[j] = w[j], w[i]
+                data = b''.join(x.to_bytes(4, 'little') for x in w)
+            elif op == 4:
+                data = base[:rng.randrange(len(base))]
+            else:
+                i = rng.randrange(32, len(w))
+                w[i] = (w[i] + rng.choice([-4, -2, 2, 4])) & NONE
+                data = b''.join(x.to_bytes(4, 'little') for x in w)
+            try:
+                reference = spec.rejected(data, reg, digest)
+            except Exception as error:  # the Python reference itself fails: recorded, not compared
+                reference = f'reference-crash {type(error).__name__}'
+            label = f'{name}-{k}'
+            (out / f'{label}.kimg').write_bytes(data)
+            entry = int.from_bytes(data[12:16], 'little') if len(data) >= 16 else 0
+            rows.append({'label': label, 'sha256': sha(data), 'reference': reference,
+                         'argv': [f'{label}.kimg', '1000', '--'] if entry == 1 else [f'{label}.kimg', 'main', '1000']})
+    return rows
+
+
+# ------------------------------------------------------------------ mutants
+# (name, what it breaks, [(old, new)], kill group). Each edit must apply once.
+MUTANTS = [
+    ('arm-selection', 'a tag Case takes the mirrored row',
+     [('(local.set $arm (call $w (i32.add (i32.add (local.get $n) (i32.const 7)) (local.get $tag))))',
+       '(local.set $arm (call $w (i32.add (i32.add (local.get $n) (i32.const 7)) '
+       '(i32.sub (i32.sub (local.get $cnt) (i32.const 1)) (local.get $tag)))))')], 'goldens'),
+    ('slot-off-by-one', 'Eval Reference reads the slot below',
+     [('(global.set $val (i32.load offset=16 (i32.add (global.get $act) (i32.shl (i32.load offset=4108 (local.get $na)) (i32.const 2)))))',
+       '(global.set $val (i32.load offset=12 (i32.add (global.get $act) (i32.shl (i32.load offset=4108 (local.get $na)) (i32.const 2)))))')],
+     'goldens'),
+    ('fuel', 'entering a Closure is free',
+     [('(br_if $bad (i32.ne (global.get $nops) (local.get $live)))\n        (call $debit)',
+       '(br_if $bad (i32.ne (global.get $nops) (local.get $live)))')], 'fuel'),
+    ('validator-offset', 'name bytes are read one word early',
+     [('(local.set $p (i32.add (i32.const 4096) (i32.shl (i32.add (local.get $at) (i32.const 2)) (i32.const 2))))',
+       '(local.set $p (i32.add (i32.const 4096) (i32.shl (i32.add (local.get $at) (i32.const 1)) (i32.const 2))))')],
+     'controls'),
+    ('quantum-state-loss', 'a yield after an effect commits the Action as still pending',
+     [('(local.set $r (call $perform (local.get $x)))',
+       '(local.set $r (call $perform (local.get $x)))\n'
+       '      (if (i32.eq (global.get $quantum) (i32.const 65536)) (then (return)))')], 'quantum'),
+    ('nat-bound', 'Succ of 2^32-1 wraps instead of NatRange',
+     [('(if (i32.eq (local.get $v) (i32.const -1)) (then (call $exhaust (i32.const 2) (global.get $R_nat_range))))', '')],
+     'goldens'),
+    ('tail-release', 'no entry is a tail entry',
+     [('(if (i32.or (i32.eqz (local.get $k)) (i32.eq (local.get $k) (i32.const 4)))',
+       '(if (i32.const 0)')], 'fixtures'),
+    ('rem-zero', 'x % 0 is 0',
+     [('(then (i32.rem_u (local.get $x) (local.get $y))) (else (local.get $x))',
+       '(then (i32.rem_u (local.get $x) (local.get $y))) (else (i32.const 0))')], 'goldens'),
+    ('host-stack-recursion', 'the pair memo rehashes by calling itself',
+     [('(then (drop (call $pairslot (i32.sub', '(then (drop (call $entered (i32.sub')], 'shape'),
+]
+
+
+# ------------------------------------------------------------------ main
+def main() -> int:
+    started = datetime.datetime.now(datetime.timezone.utc)
+    if BUILD.exists():
+        shutil.rmtree(BUILD)
+    BUILD.mkdir(parents=True)
+    reg = codec.registry()
+    digest = codec.base_digest(reg)
+    record = {'date': started.isoformat(), 'status': 'incomplete',
+              'scope': 'knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10',
+              'inputs': {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in sorted(
+                  [HERE / 'vm.wat', HERE / 'vm.wasm', HERE / 'build.json', HERE / 'build.py', HERE / 'harness.mjs',
+                   HERE / 'check-core.py', HERE / 'SPEC.md', HERE / 'serializer.py', HERE / 'registry.json', HOST,
+                   HERE / 'golden/vm-expected.json', *(HERE / 'core').glob('*')])}}
+
+    # pins and module shape
+    pins, module_bytes, test_bytes = build.build()
+    frozen = json.loads((HERE / 'build.json').read_text())
+    require(frozen == pins, f'vm/build.json pins differ from a fresh build: {frozen} vs {pins}')
+    require((HERE / 'vm.wasm').read_bytes() == module_bytes, 'vm/vm.wasm reassembles byte-identically')
+    module, test = HERE / 'vm.wasm', BUILD / 'vm-test.wasm'
+    test.write_bytes(test_bytes)
+    shapes = {'module': module_shape(module), 'test_build': module_shape(test)}
+    check_shape(shapes['module'], False)
+    check_shape(shapes['test_build'], True)
+    record['pins'] = pins
+    record['shape'] = shapes
+
+    # goldens through the host, then the test build
+    expected = json.loads((HERE / 'golden/vm-expected.json').read_text())
+    golden = HERE / 'golden'
+
+    def golden_argv(name):
+        return [a if a != 'IMAGE' else f'{name}.kimg' for a in expected['cases'][name]['argv']]
+
+    names = sorted(expected['cases'])
+    results = dict(zip(names, pool(lambda n: host(module, golden, golden_argv(n)), names)))
+    traced = harness([{'id': n, 'wasm': str(test), 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')},
+                       'argv': golden_argv(n), 'trace': 'audit'} for n in names])
+    goldens = []
+    for name in names:
+        case, got, dump = expected['cases'][name], results[name], traced[name]
+        state = dump['state']
+        require(dump['broken'] is None, f'{name}: state audit {dump["broken"]}')
+        if 'exit' in case:
+            require((got['exit'], got['stdout'], got['stderr']) == (case['exit'], case['stdout'], case['stderr']),
+                    f'{name}: {got} differs from vm-expected')
+            require(state['outcome'] == 'Completed', f'{name}: dump outcome {state["outcome"]}')
+        elif case['outcome'] == 'Exhausted':
+            require(got['exit'] == 4 and got['stderr'] == 'Exhausted\tio\tmemory\n' and not got['stdout'],
+                    f'{name}: {got}')
+            require((state['outcome'], state['kind'], state['cause']) == ('Exhausted', case['kind'], case['cause']),
+                    f'{name}: dump {state}')
+        else:
+            require(case['outcome'] == 'Unsupported' and got['exit'] == 3 and not got['stdout'] and
+                    got['stderr'] == f"Unsupported\t{case['cause'].replace(' ', chr(9))}\n", f'{name}: {got}')
+            require(state['outcome'] == 'Unsupported', f'{name}: dump {state}')
+        require((dump['exit'], dump['stdout']) == (got['exit'], got['stdout']), f'{name}: harness and host differ')
+        goldens.append({'name': name, 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode()),
+                        'outcome': state['outcome'], 'cause': state['cause'], 'calls': state['calls'],
+                        'transitions': dump['steps'], 'audited': dump['audited']})
+    record['goldens'] = goldens
+
+    # vm/core fixtures: literal-review runs, dumps and lowered limits
+    fixtures = json.loads((HERE / 'core/fixtures.json').read_text())
+    sandbox = BUILD / 'sandbox'
+    sandbox.mkdir()
+
+    def staged(image):
+        if image is None:
+            return 'missing.kimg'
+        name = image.replace('/', '-') + '.kimg'
+        if not (sandbox / name).exists():
+            shutil.copy(HERE / f'{image}.kimg', sandbox / name)
+        return name
+
+    runs = fixtures['runs']
+    for r in runs:
+        staged(r['image'])
+    ran = pool(lambda r: host(module, sandbox, [staged(r['image']), *r['argv']]), runs)
+    core = []
+    for r, got in zip(runs, ran):
+        require(got == r['expect'], f"fixture {r['name']}: {got} vs {r['expect']}")
+        core.append({'name': r['name'], 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode())})
+    by_name = {r['name']: r for r in runs}
+    jobs = [{'id': n, 'wasm': str(test), 'files': {staged(by_name[n]['image']): str(sandbox / staged(by_name[n]['image']))},
+             'argv': [staged(by_name[n]['image']), *by_name[n]['argv']], 'trace': 'yields'} for n in fixtures['dumps']]
+    jobs += [{'id': l['name'], 'wasm': str(test), 'files': {staged(l['image']): str(sandbox / staged(l['image']))},
+              'argv': [staged(l['image']), *l['argv']], 'limits': l['limits']} for l in fixtures['limited']]
+    dumped = harness(jobs)
+    dumps = []
+    for name, want in [*fixtures['dumps'].items(), *((l['name'], l['dump']) for l in fixtures['limited'])]:
+        got, state = dumped[name], dumped[name]['state']
+        seen = {'outcome': state['outcome'], 'kind': state['kind'], 'cause': state['cause'],
+                'calls': state['calls'], 'yields': got['yields']}
+        require(all(seen[k] == v for k, v in want.items()), f'dump {name}: {seen} vs {want}')
+        dumps.append({'name': name, **{k: seen[k] for k in want}})
+    record['fixtures'] = {'runs': core, 'dumps': dumps}
+
+    # nothing recurses: a 200,000-deep nested expression, and the deep runs on a 64 KiB host stack
+    small = nested_plan(40)
+    require(nested_image(40, digest) == codec.encode(small, digest), 'the nested generator matches serializer.encode')
+    deep = nested_image(NEST, digest)
+    (sandbox / 'nested.kimg').write_bytes(deep)
+    stack = {}
+    for label, argv in [('nested-200k', ['nested.kimg', 'main', str(NEST + 2)]),
+                        ('deep-250k', [staged('core/deep-250k'), 'main', '500003']),
+                        ('render-list', [staged('core/render-list'), 'main', '1000000'])]:
+        got = host(module, sandbox, argv, (SMALL_STACK,))
+        want = by_name.get(label, {}).get('expect') or {'exit': 0, 'stdout': 'Evaluated\t1\t1\tTrue{}\n', 'stderr': ''}
+        require(got == want, f'{label} under {SMALL_STACK}: {got}')
+        stack[label] = {'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode())}
+    stack['nested-200k'].update(words=len(deep) // 4, sha256=sha(deep), fuel=NEST + 2)
+    record['host_stack'] = {'node_flag': SMALL_STACK, 'runs': stack}
+
+    # malformed images: the frozen controls, then a seeded fuzz corpus
+    plans = {p.name[:-len('.plan.json')]: json.loads(p.read_text()) for p in golden.glob('*.plan.json')}
+    images = {p.stem: p.read_bytes() for p in golden.glob('*.kimg')}
+    controls = spec.byte_controls(images, digest) + [
+        (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in spec.plan_controls(plans)]
+    require(len(controls) == 61, f'61 frozen controls, found {len(controls)}')
+    malformed = BUILD / 'malformed'
+    malformed.mkdir()
+    rows = []
+    for i, (label, data, _, _) in enumerate(controls):
+        (malformed / f'c{i}.kimg').write_bytes(data)
+        entry = int.from_bytes(data[12:16], 'little')
+        rows.append({'label': label, 'sha256': sha(data), 'reference': spec.rejected(data, reg, digest),
+                     'argv': [f'c{i}.kimg', '1000', '--'] if entry == 1 else [f'c{i}.kimg', 'main', '1000']})
+    got = pool(lambda r: host(module, malformed, r['argv']), rows)
+    dumped = harness([{'id': r['label'], 'wasm': str(test), 'files': {r['argv'][0]: str(malformed / r['argv'][0])},
+                       'argv': r['argv']} for r in rows])
+    refused = []
+    for r, g in zip(rows, got):
+        want = expected_reason(r['reference'])
+        g['state'] = dumped[r['label']]['state']
+        require(clean(g), f"control {r['label']}: {g}")
+        require(observed_reason(g) == want, f"control {r['label']}: VM {g['stderr']!r}, reference {r['reference']!r}")
+        refused.append({'control': r['label'], 'reference': r['reference'], 'vm': want, 'exit': g['exit']})
+    fuzz = BUILD / 'fuzz'
+    fuzz.mkdir()
+    corpus = fuzz_corpus(images, reg, digest, fuzz)
+    fuzzed = harness([{'id': r['label'], 'wasm': str(test), 'files': {r['argv'][0]: str(fuzz / r['argv'][0])},
+                       'argv': r['argv']} for r in corpus], timeout=1200)
+    tally = {'refused': 0, 'accepted': 0, 'reference_crash': 0}
+    for r in corpus:
+        g = fuzzed[r['label']]
+        require(clean(g), f"fuzz {r['label']} is not a clean outcome: {g['status']} {g['stderr']!r}")
+        ref = r['reference']
+        if ref is None:
+            require(observed_reason(g) is None, f"fuzz {r['label']}: reference admits it, VM refused {g['stderr']!r}")
+            tally['accepted'] += 1
+        elif ref.startswith('reference-crash'):
+            tally['reference_crash'] += 1
+        else:
+            require(observed_reason(g) == expected_reason(ref), f"fuzz {r['label']}: VM {g['stderr']!r}, reference {ref!r}")
+            tally['refused'] += 1
+    record['malformed'] = {'controls': refused, 'fuzz': {'seed': FUZZ_SEED, 'per_image': FUZZ_PER_IMAGE,
+                                                         'images': len(corpus), 'corpus_sha256': sha(json.dumps(
+                                                             [r['sha256'] for r in corpus]).encode()), **tally}}
+
+    # mutants: a changed observation in their group, never a crash
+    source = (HERE / 'vm.wat').read_text()
+    goldens_jobs = [{'id': f'golden:{n}', 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')}, 'argv': golden_argv(n),
+                     'want': {k: expected['cases'][n][k] for k in ('exit', 'stdout', 'stderr') if k in expected['cases'][n]}
+                     if 'exit' in expected['cases'][n] else {'exit': results[n]['exit'], 'stdout': '', 'stderr': results[n]['stderr']}}
+                    for n in names]
+    fixture_jobs = [{'id': f"fixture:{r['name']}", 'files': {staged(r['image']): str(sandbox / staged(r['image']))} if r['image'] else {},
+                     'argv': [staged(r['image']), *r['argv']], 'want': r['expect']} for r in runs]
+    control_jobs = [{'id': f"control:{r['label']}", 'files': {r['argv'][0]: str(malformed / r['argv'][0])},
+                     'argv': r['argv'], 'want': {'exit': g['exit'], 'stdout': g['stdout'], 'stderr': g['stderr']}}
+                    for r, g in zip(rows, got)]
+    groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs,
+              'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
+              'quantum': [j for j in fixture_jobs if 'quantum' in j['id']]}
+    killed = []
+    for name, breaks, edits, group in MUTANTS:
+        text = source
+        for old, new in edits:
+            require(text.count(old) == 1, f'mutant {name}: edit applies once')
+            text = text.replace(old, new)
+        wasm = BUILD / f'mutant-{name}.wasm'
+        wasm.write_bytes(build.assemble(text))
+        if group == 'shape':
+            reached = module_shape(wasm)['reaches_itself']
+            require(reached is not None, f'mutant {name} survives the call-graph check')
+            killed.append({'mutant': name, 'breaks': breaks, 'group': group,
+                           'killed_by': [f'function {reached} reaches itself'], 'wrong_observations': 1, 'crashes': 0})
+            continue
+        out = harness([{**{k: v for k, v in j.items() if k != 'want'}, 'wasm': str(wasm)} for j in groups[group]])
+        wrong = [j['id'] for j in groups[group]
+                 if clean(out[j['id']]) and {k: out[j['id']][k] for k in ('exit', 'stdout', 'stderr')} != j['want']]
+        crashed = [j['id'] for j in groups[group] if not clean(out[j['id']])]
+        require(wrong, f'mutant {name} survives group {group} (crashes: {crashed[:5]})')
+        killed.append({'mutant': name, 'breaks': breaks, 'group': group, 'killed_by': wrong[:5],
+                       'wrong_observations': len(wrong), 'crashes': len(crashed)})
+    record['mutants'] = killed
+
+    record['status'] = 'passed'
+    RECEIPT.parent.mkdir(parents=True, exist_ok=True)
+    RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
+    print(f"vm-core passed: {len(goldens)} golden images, {len(core)} fixture runs, {len(dumps)} dump rows, "
+          f"{len(stack)} small-stack runs, {len(refused)} refused controls, {len(corpus)} fuzz images "
+          f"({tally['refused']} refused, {tally['accepted']} admitted, {tally['reference_crash']} reference crashes), "
+          f"{len(killed)} killed mutants; {RECEIPT.relative_to(ROOT)}")
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

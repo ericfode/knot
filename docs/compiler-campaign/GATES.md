@@ -54,6 +54,24 @@ mutants and 3 source mutants, and the bench freeze: sources, guards,
 outputs and the seed-native measurements pinned by digest in
 `vm/bench/workloads.json`. It writes only `vm/receipts/spec.json`.
 
+The vm-core increment adds gate `vm-core` (`python3 vm/check-core.py`). It
+checks `vm/vm.wat`, the WAT `knot-vm-1`:
+- The pinned `wat2wasm` reassembles `vm/vm.wasm` byte for byte. The module's
+  imports, exports and 65,536-page memory are as the spec requires, and its call
+  graph has no cycle.
+- All 78 golden images run through `scripts/run-wasm-io.mjs` with their
+  `vm-expected.json` outputs. The test build confirms each exhaustion cause and
+  audits the state after every transition.
+- `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and
+  lowered limits, including the 250,000-deep non-tail recursion.
+- A 200,000-deep nested expression runs on a 64 KiB host stack.
+- The 61 malformed-image controls and a seeded fuzz corpus of 3,120 mutated
+  goldens are refused with the reference codec's first defect, and none traps.
+- Nine WAT mutants are each killed by a wrong observation.
+
+It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
+its conventions and open spec points.
+
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
 
