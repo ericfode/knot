@@ -103,9 +103,16 @@ follows it (§5, §10, §11) without a new image header word.
    `divergent-by-contract (non-scalar output)` and is never counted as agreement
    (§11). The seed's Bun lane refuses the same output and is recorded beside it.
    `print-non-scalar-mid` (`"a\u{D800}b"`) pins that no part of the String is
-   written. The expectation rule refuses undeclared non-scalar output, a
-   divergence on scalar output, another class and a VM output that does not
-   precede the first non-scalar (four controls).
+   written. The next review found the native bytes unfit to classify: the lane
+   truncates the lead byte of a code at or above 2^21, so `Chr{67237376}`
+   (0x401F600) prints `F0 9F 98 80`, the valid UTF-8 of U+1F600, and a rule that
+   decoded those bytes owed the emoji (`print-non-scalar-wide`). The witness is
+   now the Bun lane: it refuses the first non-scalar Char with its exact code
+   after writing the earlier output, which is what the VM writes; a native-lane
+   Program must carry it. The expectation rule refuses undeclared non-scalar
+   output (the wide code included), a divergence on output the Bun lane writes,
+   another class, a VM output other than the Bun lane's, and a native lane
+   without its Bun witness (six controls).
 11. **Plans spell a String as its code list.** Round 3 also found the reference
    codec lossy: plans spelled String constants as JSON text, so `json.loads`
    merged a surrogate pair into U+1F600 and decode refused codes above U+10FFFF

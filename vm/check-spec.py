@@ -556,25 +556,18 @@ def described(printed: str, quantities: dict) -> str:
 
 
 NON_SCALAR = 'non-scalar output'
+REFUSED = re.compile(r'bend: (\d+) is not a Unicode scalar value\n')
 
 
-def written(seed: dict) -> tuple[bytes, list]:
-    """The seed's stdout bytes and its (byte offset, code) pairs, read as generalized UTF-8:
-    the native lane encodes a non-scalar Char as if it were a scalar."""
-    data = bytes.fromhex(seed['stdout_hex']) if 'stdout_hex' in seed else seed['stdout'].encode()
-    codes, at = [], 0
-    while at < len(data):
-        lead = data[at]
-        width = 1 if lead < 0x80 else 2 if 0xC0 <= lead < 0xE0 else 3 if 0xE0 <= lead < 0xF0 else 4 if 0xF0 <= lead < 0xF8 else 0
-        tail = data[at + 1:at + width]
-        require(width and len(tail) == width - 1 and all(0x80 <= b < 0xC0 for b in tail),
-                f'seed stdout is not generalized UTF-8 at byte {at}')
-        code = lead & (0x7F, 0x1F, 0x0F, 0x07)[width - 1]
-        for b in tail:
-            code = code << 6 | b & 0x3F
-        codes.append((at, code))
-        at += width
-    return data, codes
+def scalar_witness(case) -> dict:
+    """The seed's Bun lane: it writes every scalar Char and refuses a non-scalar one (exit 1)
+    after the earlier output. A native-lane Program carries it as `seed_bun`. The native
+    lane's bytes never classify output: it writes a surrogate or a code below 2^21 as
+    generalized UTF-8, but truncates the lead byte of a wider code (Chr{67237376} prints
+    the valid UTF-8 of U+1F600)."""
+    witness = case.get('seed_bun') if case.get('seed_lane') == 'native' else case['seed']
+    require(witness is not None, f"{case['name']}: a native-lane Program needs the Bun lane as its scalar witness")
+    return witness
 
 
 def vm_expectation(case, plan, bounds, source) -> dict:
@@ -584,24 +577,31 @@ def vm_expectation(case, plan, bounds, source) -> dict:
     require('divergence' not in case or plan['entry'] == 'program', f"{case['name']}: only a Program's output diverges")
     if plan['entry'] == 'program':
         require(seed['exit'] == 0, 'program seed must succeed')
-        data, codes = written(seed)
-        beyond = next((at for at, c in codes if 0xD800 <= c <= 0xDFFF or c > 0x10FFFF), None)
-        if 'divergence' not in case:
-            require(beyond is None, f"{case['name']}: the seed writes a non-scalar Char at byte {beyond}; "
-                                    f"D20 refuses that output, so it is never seed agreement")
+        bun = scalar_witness(case)
+        if bun['exit'] == 0:
+            require('divergence' not in case,
+                    f"{case['name']}: a {NON_SCALAR} divergence, but the Bun lane writes every Char")
+            require(bun['stdout'] == seed['stdout'], f"{case['name']}: the Bun lane writes {bun['stdout']!r}")
             return {'argv': ['IMAGE', str(fuel), '--'], 'exit': 0, 'stdout': seed['stdout'], 'stderr': '',
                     'basis': 'seed', 'eval_lane': classify(ev)}
-        # Section 11 and D20: the seed's native lane writes a non-scalar Char as generalized
-        # UTF-8; the VM refuses the String before its host call. The VM's output is the literal
-        # review, seed output before the first non-scalar.
+        # Section 11 and D20: the Bun lane refuses a non-scalar Char where the native lane exits
+        # 0; the VM refuses the String before its host call. The VM writes the output before
+        # that String, which is what the Bun lane wrote before its refusal.
+        refused = REFUSED.fullmatch(bun['stderr'])
+        code = int(refused[1]) if refused and bun['exit'] == 1 else None
+        require(code is not None and code < 1 << 32 and (0xD800 <= code <= 0xDFFF or code > 0x10FFFF),
+                f"{case['name']}: Bun lane {bun} is neither success nor D20's refusal")
+        require('divergence' in case, f"{case['name']}: the Bun lane refuses Char {code}; D20 refuses "
+                                      f"that output, so it is never seed agreement")
         require(case['divergence'] == NON_SCALAR, f"{case['name']}: divergence {case['divergence']!r} is not D20's")
-        require(beyond is not None, f"{case['name']}: a {NON_SCALAR} divergence, but the seed writes only scalars")
-        out = case['vm_stdout'].encode()
-        require(data.startswith(out) and len(out) <= beyond,
-                f"{case['name']}: VM output {case['vm_stdout']!r} is not seed output before byte {beyond}")
+        require(case.get('vm_stdout') == bun['stdout'],
+                f"{case['name']}: VM output {case.get('vm_stdout')!r} is not the Bun lane's {bun['stdout']!r}")
+        native = bytes.fromhex(seed['stdout_hex']) if 'stdout_hex' in seed else seed['stdout'].encode()
+        require(native.startswith(bun['stdout'].encode()),
+                f"{case['name']}: the native lane's output before the refused String differs")
         return {'argv': ['IMAGE', str(fuel), '--'], 'outcome': 'HostFailure', 'cause': 'io abi',
                 'stdout': case['vm_stdout'], 'basis': f'divergent-by-contract ({NON_SCALAR})',
-                'reason': f'D20: the seed native lane writes a non-scalar Char as generalized UTF-8 at byte {beyond}',
+                'reason': f'D20: the seed Bun lane refuses Char {code}; the native lane exits 0',
                 'eval_lane': classify(ev)}
     main = next(f for f in plan['functions'] if f['name'] == 'main')
     why = codec.undescribable(plan, main['result'])
@@ -637,8 +637,9 @@ def vm_expectation(case, plan, bounds, source) -> dict:
 
 
 def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict) -> list:
-    """What the rule must refuse: an eval lane that disagrees with the seed, and a bound
-    that is not Exhausted or that stands in for an Unsupported result."""
+    """What the rule must refuse: an eval lane that disagrees with the seed, a bound that is
+    not Exhausted or that stands in for an Unsupported result, and a D20 classification that
+    is not the Bun lane's."""
     def row(label, seed, ev):
         return {'name': f'control:{label}', 'seed': {'exit': 0, 'stdout': seed, 'stderr': ''},
                 'eval': {'exit': 0, 'stdout': ev, 'stderr': ''}}
@@ -660,7 +661,12 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict) 
              {**cases['foreign-print'], 'divergence': NON_SCALAR, 'vm_stdout': ''}, bounds),
             ('divergence-other-class', 'print-non-scalar', {**cases['print-non-scalar'], 'divergence': 'other'}, bounds),
             ('vm-writes-non-scalar', 'print-non-scalar-mid',
-             {**cases['print-non-scalar-mid'], 'vm_stdout': cases['print-non-scalar-mid']['seed']['stdout']}, bounds)]:
+             {**cases['print-non-scalar-mid'], 'vm_stdout': cases['print-non-scalar-mid']['seed']['stdout']}, bounds),
+            # The native bytes of Chr{67237376} are valid UTF-8; only the Bun lane witnesses it.
+            ('wide-code-as-agreement', 'print-non-scalar-wide',
+             {k: v for k, v in cases['print-non-scalar-wide'].items() if k not in ('divergence', 'vm_stdout')}, bounds),
+            ('native-without-bun-witness', 'print-non-scalar-wide',
+             {k: v for k, v in cases['print-non-scalar-wide'].items() if k != 'seed_bun'}, bounds)]:
         try:
             vm_expectation(case, plans[name], table, sources[name])
         except AssertionError as refusal:
@@ -1299,8 +1305,9 @@ def main() -> int:
     expected = {'rule': 'SPEC section 11: the VM owes the seed value wherever the seed succeeds within the '
                         'declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. '
                         'A Book result outside section 8\'s describe domain is Unsupported, never a bound. '
-                        'A non-scalar Char the seed writes as generalized UTF-8 is D20\'s HostFailure io abi, '
-                        'divergent by contract, never agreement.',
+                        'Output that the seed Bun lane refuses as a non-scalar Char while the native lane exits 0 '
+                        'is D20\'s HostFailure io abi, divergent by contract, never agreement; the native bytes '
+                        'never classify it.',
                 'fuel': VM_FUEL, 'bounds': bounds, 'cases': table}
     if args.write_expected:
         EXPECTED.write_text(json.dumps(expected, indent=1) + '\n')
