@@ -80,7 +80,8 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
   const stdout = [], stderr = [], handles = new Map(), yields = [];
   let instance, next = 1, steps = 0, audited = 0, broken = null, booted = null;
   const mem = () => new Uint8Array(instance.exports.memory.buffer);
-  const text = (p, n) => strict.decode(mem().subarray(p, p + n));
+  // the VM passes u32 addresses and lengths, which arrive as signed numbers
+  const text = (p, n) => strict.decode(mem().subarray(p >>> 0, (p >>> 0) + (n >>> 0)));
   const alloc = bytes => {
     const p = instance.exports.knot_alloc(bytes.length) >>> 0;
     mem().set(bytes, p);
@@ -89,7 +90,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
   const result = (out, errno, value = 0, data = Buffer.alloc(0)) => {
     const p = data.length ? alloc(data) : 0;
     const v = new DataView(instance.exports.memory.buffer);
-    [errno, value, p, data.length].forEach((w, i) => v.setUint32(out + 4 * i, w >>> 0, true));
+    [errno, value, p, data.length].forEach((w, i) => v.setUint32((out >>> 0) + 4 * i, w >>> 0, true));
   };
   const io = {
     args(out) {
