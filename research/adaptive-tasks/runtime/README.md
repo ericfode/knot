@@ -1,10 +1,18 @@
 # GPU runtime increment: R4 and R6
 
-Status: implemented candidate; **device acceptance blocked**. Metal
-`requestAdapter` returns null in this executor environment. The host reports an
-Apple M5 Max with Metal support. No fallback execution is counted as device
-success. The old 38-case before/after comparison and nine new WGSL mutant kills
-remain unrun. This increment is not ready to claim the campaign's GPU gate.
+Status: **device-qualified on Metal** (coordinator run, 2026-09-27). The
+executor's sandbox had no adapter (`device-unavailable.json`, kept as the
+executor-time record). The coordinator then ran the same commands on the host
+adapter: Apple M5 Max, `metal-3`, `isFallbackAdapter: false`.
+
+| Hardware check | Result | Receipt |
+| --- | --- | --- |
+| `runtime/check.py` | pass: 16 cases, 186 dispatches, 10 shader variants, 30 pipelines, 9 of 9 WGSL semantic mutants killed; CPU side 8 laws, 62 commands, 186 phase observations, 7 CPU mutants | [device-metal.json](receipts/device-metal.json), [checks-metal.json](receipts/checks-metal.json) |
+| Old 38-case harness at parent `185b7d5` (baseline, scratch export) | pass: 38 cases, 1713 dispatches | [regression-before-185b7d5.json](receipts/regression-before-185b7d5.json) |
+| Same harness after this increment, `--compare-receipt` baseline | pass: 38 cases semantically equal; only `stateSha256` and `logicalWorkerMoves` (scheduling-dependent) are ignored | [regression-after.json](receipts/regression-after.json) |
+
+No performance claim is made. R5 still awaits owning captures, Data lifetime,
+and cancellation-attempt identity.
 
 The [versioned record contract](../../../docs/WASM-WEBGPU-BACKEND.md#device-record-contract-knot-device-records-1)
 specifies `knot-device-records-1`: checked slot locators and scalar continuation
@@ -19,8 +27,8 @@ records interpreted across prepare, execute and publish dispatches. The
 | Seed CPU comparison | 62 commands / 186 phase observations, identical Bun/native output |
 | New complete proof entry | 8 filled laws; `All terms check.` |
 | New CPU mutants | 7 type-correct mutants killed by named laws and literal observations |
-| WGSL validation | 10 variants / 30 pipelines; Dawn null backend, 0 device executions |
-| WGSL semantic mutants | 9 constructed and typechecked; 0 hardware kills established |
+| WGSL validation | 10 variants / 30 pipelines; Dawn null backend (executor), then Metal device execution (coordinator) |
+| WGSL semantic mutants | 9 constructed and typechecked; 9 killed on Metal |
 | Existing adaptive CPU gate | 12 laws, 10 fixtures, 11 observations, 2 quantity negatives, 5 mutants |
 | Replay comparison tests | 24 checks: 3 equivalence controls and 21 rejection controls |
 | Replay/output tests | 6 checks; retained artifacts unchanged |
