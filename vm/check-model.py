@@ -548,11 +548,14 @@ def fuel_ignored(binary: Path, path: Path, plan: dict, fuel: int) -> list:
 
 def harness_runs(model: Path, audit: Path, admitted: list, base: dict) -> list:
     """`fuel-ignored` runs every control at 1,000,000: exactly the fuel controls whose frozen
-    run differs from the reference evaluation's at 1,000,000 must kill it."""
+    run differs from the reference evaluation's at 1,000,000 must kill it, never a harness
+    fault."""
     runs = [a for a in admitted if a[0].startswith('run:')]
     killers = sorted(label for label, path, plan, fuel, want, calls in runs
                      if fuel != cs.VM_FUEL and cs.ran(plan, {**want, 'calls': calls}) != {**want, 'calls': calls})
     got = admitted_runs(model, audit, runs, fuel_ignored)
+    faults = harness_faults({'admitted': got})
+    require(not faults, f'harness mutant fuel-ignored: harness faults, not kills, at {faults[:8]}')
     killed = sorted(n for n, r in got.items() if not r['agrees'] and base[n]['agrees'])
     require(killers and killed == killers, f'harness mutant fuel-ignored: killed by {killed}, the fuel controls {killers}')
     return [{'mutant': 'fuel-ignored', 'breaks': 'each run control runs at 1,000,000, not its frozen fuel', 'by': killed}]
