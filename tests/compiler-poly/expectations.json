@@ -35,7 +35,7 @@
     "generics": "Generic datatypes, erased type parameters and quantity arguments (increment 6).",
     "closures": "Monomorphic lambdas, arrow-typed parameters and function values (increment 7).",
     "type-level-definition": "A def whose result is a type (Act(A), Both(A,B), Shade(f)). Base IO(A) and Pair are such defs; the generics suite lists them outside increment 6, and baseslice claims Pair. poly-closures needs it for Act(A); whichever increment lands first supplies it.",
-    "do-notation": "do-block desugaring (sugar-check owns the surface forms; closures pins do-block as agree-or-unsupported).",
+    "do-notation": "Statement-only do blocks, a statement then the tail action, the only do form in src/ (driver.bend:46, check-cli.bend:35, parse-cli.bend:27, compile-cli.bend:17). The io suite requires agree for them over IO (io-check, with vm-e2e3). No suite requires them over another monad, and io pins the <-/return form Unsupported (do-bind). rank2-do-block only.",
     "poly-closures": "A templates-increment fixture that also exercises lambdas or function values at generic arrows."
   },
   "cases": [
@@ -769,14 +769,16 @@
       "class": "boundary",
       "feature": "higher-rank",
       "increment": "poly-closures",
-      "summary": "The driver.bend read_pair do block over the rank-2 monad: do Act<Color> desugars to Act.bind and Act.pure.",
+      "summary": "The driver.bend read_pair do block, statement-only: do Act<Color> runs close(f), then paint(g), desugared to Act.bind.",
       "census": [
         "higher-order",
         "lambdas",
         "generics"
       ],
       "mirrors": [
-        "src/driver.bend:44 read_pair"
+        "src/driver.bend:44 read_pair",
+        "src/check-cli.bend:33 read_pair",
+        "src/compile-cli.bend:14 write_pair"
       ],
       "twin": null,
       "requires": [
@@ -803,7 +805,7 @@
       ],
       "knot": {
         "require": "agree-or-unsupported",
-        "justification": "Seed-valid; do over the rank-2 monad desugars to Act.bind and Act.pure. do-notation is not a poly-closures capability, so Unsupported is allowed, but never Invalid (D4)."
+        "justification": "Seed-valid; a statement-only do over the rank-2 Act desugars to Act.bind(Unit,Color,close(f),x => paint(g)), the form of every do block in src/. do desugaring is not a poly-closures capability, so Unsupported is allowed, but never Invalid (D4). The IO instance Knot writes is pinned agree by the io suite (io-check); the <-/return form is io's Unsupported do-bind pin."
       }
     },
     {
@@ -6002,7 +6004,7 @@
       },
       {
         "case": "rank2-do-block",
-        "source_sha256": "67861cd6de921c296342a5e5c1f511dd384b4c57e95e7f12fe0de199a3e85cb5",
+        "source_sha256": "af50e73ad5ead7042c32068d466554bb8fef80931009a2256401854ae8604299",
         "enums": {
           "Flag": [
             "Off",
@@ -6016,6 +6018,9 @@
           "Fault": [
             "Invalid",
             "Unsupported"
+          ],
+          "Unit": [
+            "Unit"
           ]
         },
         "check_only": {
@@ -6036,7 +6041,7 @@
             "tests/compiler-poly/fixtures/rank2-do-block.bend"
           ],
           "exit": 0,
-          "stdout": "Blue{}\n",
+          "stdout": "Red{}\n",
           "stderr": ""
         },
         "calls": [
@@ -6052,12 +6057,12 @@
               "tests/compiler-poly/fixtures/rank2-do-block.bend"
             ],
             "exit": 0,
-            "stdout": "Blue{}\n",
+            "stdout": "Red{}\n",
             "stderr": "",
             "result": {
               "type": "Color",
-              "constructor": "Blue",
-              "tag": 1
+              "constructor": "Red",
+              "tag": 0
             }
           },
           {
@@ -6130,12 +6135,12 @@
               ".local/compiler-poly/wrappers/rank2-do-block--run--On-Off.bend"
             ],
             "exit": 0,
-            "stdout": "../../../tests/compiler-poly/fixtures/rank2-do-block.Blue{}\n",
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-do-block.Red{}\n",
             "stderr": "",
             "result": {
               "type": "Color",
-              "constructor": "Blue",
-              "tag": 1
+              "constructor": "Red",
+              "tag": 0
             }
           },
           {
@@ -6156,12 +6161,12 @@
               ".local/compiler-poly/wrappers/rank2-do-block--run--On-On.bend"
             ],
             "exit": 0,
-            "stdout": "../../../tests/compiler-poly/fixtures/rank2-do-block.Red{}\n",
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-do-block.Blue{}\n",
             "stderr": "",
             "result": {
               "type": "Color",
-              "constructor": "Red",
-              "tag": 0
+              "constructor": "Blue",
+              "tag": 1
             }
           }
         ]

@@ -1,4 +1,4 @@
-# The driver.bend read_pair do block over the rank-2 monad: do Act<Color> desugars to Act.bind and Act.pure.
+# The driver.bend read_pair do block, statement-only: do Act<Color> runs close(f), then paint(g), desugared to Act.bind.
 type Flag is Data:
   Off{}
   On{}
@@ -11,6 +11,9 @@ type Color is Data:
 type Fault is Data:
   Invalid{}
   Unsupported{}
+
+type Unit is Data:
+  Unit{}
 
 type Op<-R: Type> is Type:
   Emit{value: R}
@@ -30,15 +33,15 @@ def Act.bind(-A: Type, -B: Type, m: Act(A), f: A -> Act(B)) -> Act(B):
 def Act.die(-A: Type, code: Fault) -> Act(A):
   R => k => Halt{code}
 
-def paint(f: Flag) -> Act(Color):
+def close(f: Flag) -> Act(Unit):
   match f:
-    case Off{}: Act.die(Color,Unsupported{})
-    case On{}: Act.pure(Color,Blue{})
+    case Off{}: Act.die(Unit,Invalid{})
+    case On{}: Act.pure(Unit,Unit{})
 
-def mix(c: Color, g: Flag) -> Color:
+def paint(g: Flag) -> Act(Color):
   match g:
-    case Off{}: c
-    case On{}: Red{}
+    case Off{}: Act.pure(Color,Red{})
+    case On{}: Act.pure(Color,Blue{})
 
 def settle(o: Op<Color>) -> Color:
   match o:
@@ -47,9 +50,8 @@ def settle(o: Op<Color>) -> Color:
 
 def steps(f: Flag, g: Flag) -> Act(Color):
   do Act<Color>:
-    x : Flag <- Act.pure(Flag,f)
-    c : Color <- paint(x)
-    return mix(c,g)
+    close(f)
+    paint(g)
 
 def run(f: Flag, g: Flag) -> Color:
   settle(steps(f,g,Color,c => Emit{c}))

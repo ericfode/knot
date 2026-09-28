@@ -48,7 +48,7 @@ reaches `IO`, `IO.bind`, `IO.die`, `Pair`, `Sigma`, `Result`, `List.length`,
 | `IO(A) = @-R: Type -> @k: (A -> IO.OP<R>) -> IO.OP<R>` with `bind` and `die` | `base.bend:147`, `:155`, `:184` | `rank2-pure-bind`, `rank2-two-answers`, `rank2-param` |
 | `next: C.Book -> IO(Unit)` threaded through `checked`, `read_result`, `opened` and `load`, and captured by a bind lambda | `src/driver.bend:15`, `:39`, `:50`, `:55` | `rank2-continuation`, `rank2-try` |
 | `IO.bind(..,opened(characters,depth))` (partial application) and `IO.bind(..,IO.args(),arguments)` (a named def) | `src/check-cli.bend:39`, `src/check-cli.bend:45`, `src/parse-cli.bend:56` | `rank2-partial-bind` |
-| `do IO<Unit>:` | `src/driver.bend:44` (read_pair) | `rank2-do-block` (boundary) |
+| statement-only `do IO<Unit>:`: a statement, then the tail action, with no `<-` and no `return` | `src/driver.bend:46` (read_pair), `src/check-cli.bend:35`, `src/parse-cli.bend:27`, `src/compile-cli.bend:17` (write_pair) | `rank2-do-block` (boundary) |
 | `List.length(&2,S.Node,args)`, `List.reverse(&2,S.Token,..)` into Base's `a, -A: Kind(a)` definitions; `List.reverse` forwards `a, A` to `List.reverse.go` | `src/check.bend:55`, `src/lex.bend:55` (finish), `src/eval.bend:133`, `base.bend:814`, `base.bend:835`, `base.bend:843` | `kind-closure-list`, `kind-forward` |
 | `Result<&1,&1,U32 & String,String>`, the two-quantity family `Result<a, b, -E: Kind(a), -A: Kind(b)> is Kind(a <&> b)` and its short form `Result<S.Error,A>` | `src/check-cli.bend:28`, `src/syntax.bend:81`, `base.bend:36` | `kind-two-quantities` |
 | `List<&1,Result<S.Error,String>>` folded through `S.bind` with a `Con{Done{+head},tail}` pattern | `src/diagnostic.bend:25`, `src/wasm-bytes.bend:18` | `kind-result-list` |
@@ -63,8 +63,7 @@ adversarial case that the owning increment must not reject:
 - `IO.pure`, `IO.pass` and `IO.try` (`base.bend:152`, `:187`, `:194`) are not
   in the reached slice. `src/driver.bend:39` (read_result) and `:50` (opened)
   write their bodies by hand: a match on a `Result`, then `IO.die` or the
-  continuation. They ground `rank2-pure-bind` and `rank2-try`. `Act.pure` is
-  also what a `do` block's `return` desugars to (`rank2-do-block`).
+  continuation. They ground `rank2-pure-bind` and `rank2-try`.
 - Base's templates are not reached: `List.map(~A: Type, ~B: Type, ~f, ..)`,
   `List.filter(~A: Data, ..)`, `List.foldl(~a: Quant, ~A: Kind(a), ~B: Type, ..)`
   and `List.any` (`base.bend:807`, `:952`, `:959`, `:977`). scope.bend's
@@ -262,10 +261,16 @@ Knot never reports `Invalid` (D4). When the seed rejects, Knot reports `Invalid`
   - `sigma-unrefined` (a stuck `Shade(f)`) and `sigma-family-live-binder` (a
     live binder where the family wants an erased one). No frozen fixture names
     either reason.
-- **Open boundary.** `rank2-do-block` is `do Act<Color>:`, the form of
-  `src/driver.bend:44`. `do` desugaring is not a `poly-closures` capability,
-  so that increment may report it `Unsupported`, but never `Invalid`. The
-  increment that implements `do` over IO must make it agree.
+- **Open boundary.** `rank2-do-block` is a statement-only `do Act<Color>:`,
+  the only `do` form in `src/` (`driver.bend:46`, `check-cli.bend:35`,
+  `parse-cli.bend:27`, `compile-cli.bend:17`). `do` desugaring is not a
+  `poly-closures` capability, so that increment may report it `Unsupported`,
+  but never `Invalid`. The fixture stays `agree-or-unsupported`. The IO
+  instance that Knot writes is pinned `agree` by the io suite (`mini-driver`,
+  `bind-deep`, `die-codes`; owner `io-check`, with `vm-e2e3`). The `<-` and
+  `return` form, which `src/` never writes, is io's
+  `Unsupported\tparse\tdo-bind\t` pin (`do-bind-arrow`), and this suite
+  defers to it.
 
 In the table, `\t` stands for a tab character, as in the other compiler
 suites; `expectations.json` holds the exact strings.
@@ -352,7 +357,9 @@ in `expectations.json`):
   outside increment 6, and baseslice claims `Pair`. `poly-closures` cannot
   deliver higher-rank `IO(A)` without it, so whichever of `poly-closures`,
   `templates` or baseslice lands first supplies it for the others.
-- `do-notation`: `do` desugaring (`rank2-do-block` only).
+- `do-notation`: statement-only `do` desugaring (`rank2-do-block` only). The
+  io suite requires it `agree` over IO for `io-check`. No suite requires it
+  over another monad. The sugar suite has no `do` fixture.
 - `poly-closures`: a `templates` fixture that also builds, stores or applies a
   closure at a generic or erased-type position:
   - `template-set-known-thunk` and `template-thunk-affine` run a choose thunk at
@@ -409,6 +416,22 @@ profile, when the owning increment lands:
   Many fixtures here write `Seq<&2,Flag>` or `Res<Fault,A>` in a parameter. If
   generics has not already superseded that pin when `poly-closures` lands,
   `poly-closures` must.
+
+## Open questions for the coordinator
+
+These findings came out of the suite's audit. They cross increment
+boundaries, so this suite records them and does not decide them:
+
+- **Statement-only `do` before `vm-e2e2`.** `vm-e2e2` compiles `parse-cli`,
+  which has a `do IO<Unit>:` block at `src/parse-cli.bend:27`. It depends on
+  `sugar-check`, `poly-closures`, `templates` and `baseslice-check`, but not on
+  `io-check`, the only increment whose suite requires that block `agree`.
+  Every suite gating the four prerequisites either pins `do` as
+  `agree-or-unsupported` (closures `do-block`, baseslice `io-do-sequence`,
+  `rank2-do-block` here) or has no `do` fixture (sugar). One of these is
+  needed: `io-check` (or a statement-only `do` desugaring) becomes a
+  prerequisite of `vm-e2e2`, or `sugar-check` takes statement-only `do` with a
+  frozen `agree` fixture.
 
 ## Overlaps with other suites
 
@@ -498,6 +521,9 @@ because an implementer could reasonably expect otherwise.
     and `lookup` take the matched value first.
   - Calling a def declared below from a live body is refused ("a filled
     definition"), so helpers precede their callers.
+  - A `do` statement desugars as `Unit <- statement`. Without a `Unit` type in
+    scope the seed refuses the block (`expected : a defined name`,
+    `observed : Unit`), so `rank2-do-block` declares its own `Unit`.
 - Tags come from a syntactic reading of each fixture's enum declarations, in
   declaration order. The seed only names the constructor.
 
