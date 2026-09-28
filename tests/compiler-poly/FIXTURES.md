@@ -210,9 +210,9 @@ Wrappers are written to the ignored `.local/compiler-poly/wrappers/` directory.
   - the reviewed sections (everything but `observations`) differ from the
     `REVIEWED_SHA256` constant in `regen.py`, or `NEEDS` and `INCREMENTS`
     there differ from the `needs` and `increments` sections;
-  - a pinned code has no precedent, or a precedent is not a reject case of its
-    frozen suite that pins the same code (or leaves it open where this case
-    does);
+  - a pinned code has no precedent, or a precedent is not a case of its frozen
+    suite with the same requirement that pins the same code (or leaves it open
+    where this case does);
   - a `seed_reason` entry is empty, or none of them anchors the error with a
     `Location:` or an `NN>|` line;
   - a negative differs from its twin by more than two hunks besides the

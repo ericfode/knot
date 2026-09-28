@@ -184,7 +184,7 @@ def reviewed_digest(document):
 
 
 def resolve_precedent(case):
-    """A precedent is a frozen reject fixture that pins the same code, or leaves it open too."""
+    """A precedent is a frozen fixture with the same requirement that pins the same code, or leaves it open too."""
     knot, name = case['knot'], case['name']
     if 'precedent' not in knot:
         return
@@ -193,8 +193,8 @@ def resolve_precedent(case):
             (name, 'a precedent is a frozen fixture file', knot['precedent']))
     suite = json.loads((ROOT / 'tests' / match.group(1) / 'expectations.json').read_text())
     found = [c for c in suite.get('cases', []) if c.get('name') == match.group(2)]
-    require(len(found) == 1 and found[0]['knot']['require'] == 'reject',
-            (name, 'a precedent is a reject case of its suite', knot['precedent']))
+    require(len(found) == 1 and found[0]['knot']['require'] == knot['require'],
+            (name, 'a precedent is a case of its suite with the same requirement', knot['precedent']))
     require(found[0]['knot'].get('diagnostic') == knot.get('diagnostic'),
             (name, 'a precedent pins the same code, or both leave it open', found[0]['knot'].get('diagnostic')))
 
