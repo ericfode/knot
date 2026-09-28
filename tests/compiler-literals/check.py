@@ -275,6 +275,9 @@ MUTANTS = [
      'old': 'S.bind(C.Checked,C.Checked,next(C.Construct{origin,typ,tag,params,args}),value => promoted(q,value))',
      'new': 'next(C.Construct{origin,typ,tag,params,args})',
      'fixture': 'promoted-split', 'verdict': (2, 'Invalid\tcheck\taffine-reuse\t')},
+    {'name': 'affine-promoted-column', 'file': 'literal-matrix.bend',
+     'old': 'promote(bindings,level,q)},next,open,live,smaller}}', 'new': 'bindings},next,open,live,smaller}}',
+     'fixture': 'promoted-scrutinee', 'verdict': (2, 'Invalid\tcheck\taffine-reuse\t')},
 ]
 
 
@@ -430,7 +433,7 @@ def main():
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
-            'proof_laws': 28, 'semantic_mutants': len(record['mutants']),
+            'proof_laws': 29, 'semantic_mutants': len(record['mutants']),
             'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
             'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
             'mutant_eval_observations': sum(m.get('eval') is not None for m in record['mutants']),

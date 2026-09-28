@@ -125,9 +125,9 @@
   "totals": {
     "compiler": {
       "files": 65,
-      "declarations": 1118,
-      "unique_declarations": 945,
-      "definitions": 698,
+      "declarations": 1121,
+      "unique_declarations": 947,
+      "definitions": 699,
       "classes": 42
     },
     "frontend_files": {
@@ -68657,7 +68657,7 @@
     },
     {
       "file": "src/literal-matrix-LAWS.bend",
-      "sha256": "30386f554a2102f39a100c7b0bb7f9c610f7bd67783f3c8aeb9f2031c9dcec8e",
+      "sha256": "09f76e41b3d8db463280aa4a272593f73bf277e33a77a60cab474f4a3f38c339",
       "imports": [
         {
           "module": "Base",
@@ -68669,6 +68669,12 @@
           "module": "./syntax.bend",
           "alias": "S",
           "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
           "feature": "imports.local"
         },
         {
@@ -68703,8 +68709,8 @@
           "key": "src/literal-matrix-LAWS.offset_zero",
           "kind": "law",
           "lines": [
-            5,
-            8
+            6,
+            9
           ],
           "features": [
             "calls",
@@ -68742,8 +68748,8 @@
           "key": "src/literal-matrix-LAWS.offset_successor",
           "kind": "law",
           "lines": [
-            10,
-            14
+            11,
+            15
           ],
           "features": [
             "calls",
@@ -68786,8 +68792,8 @@
           "key": "src/literal-matrix-LAWS.natural_successor",
           "kind": "law",
           "lines": [
-            16,
-            19
+            17,
+            20
           ],
           "features": [
             "calls",
@@ -68830,8 +68836,8 @@
           "key": "src/literal-matrix-LAWS.string_successor",
           "kind": "law",
           "lines": [
-            21,
-            24
+            22,
+            25
           ],
           "features": [
             "calls",
@@ -68874,8 +68880,8 @@
           "key": "src/literal-matrix-LAWS.word_order",
           "kind": "law",
           "lines": [
-            26,
-            30
+            27,
+            31
           ],
           "features": [
             "calls",
@@ -68915,12 +68921,58 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/literal-matrix-LAWS.bend::promoted_alias_promotes_its_column:law",
+          "name": "promoted_alias_promotes_its_column",
+          "key": "src/literal-matrix-LAWS.promoted_alias_promotes_its_column",
+          "kind": "law",
+          "lines": [
+            33,
+            36
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "None",
+            "True",
+            "src/core.Binding",
+            "src/literal-matrix.promote",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "src/core.Binding",
+            "src/literal-matrix.promote",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/literal-matrix-PROOF.bend",
-      "sha256": "a85e761553556127fd1f6c385076c9df7107f78fd81ffd5145ca42b3ce6df536",
+      "sha256": "2a62effe60c7e8aba7584c7facedf2db5820afafae463f62ae8c15aec98d5b94",
       "imports": [
         {
           "module": "Base",
@@ -69167,12 +69219,57 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/literal-matrix-PROOF.bend::L.promoted_alias_promotes_its_column:law_fill",
+          "name": "L.promoted_alias_promotes_its_column",
+          "key": "src/literal-matrix-LAWS.promoted_alias_promotes_its_column",
+          "kind": "law_fill",
+          "lines": [
+            9,
+            9
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "None",
+            "True",
+            "src/core.Binding",
+            "src/literal-matrix.promote",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "src/core.Binding",
+            "src/literal-matrix.promote",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/literal-matrix.bend",
-      "sha256": "981b94dcff03280cc71ef5734ec255a661c10b81064745555923ca49ed14cee7",
+      "sha256": "9de76436c6963ebe4fb05d801d52aa2f89f763a6336a66d7dc0eb51809f7d59c",
       "imports": [
         {
           "module": "Base",
@@ -70626,22 +70723,78 @@
           }
         },
         {
+          "id": "src/literal-matrix.bend::promote:definition",
+          "name": "promote",
+          "key": "src/literal-matrix.promote",
+          "kind": "definition",
+          "lines": [
+            145,
+            149
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.is_eq",
+            "src/core.Binding",
+            "src/literal-matrix.promote"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Binding"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "U32.is_eq",
+              "src/literal-matrix.promote"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "src/core.Binding"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-matrix.bend::alias_scope:definition",
           "name": "alias_scope",
           "key": "src/literal-matrix.alias_scope",
           "kind": "definition",
           "lines": [
-            144,
-            146
+            151,
+            154
           ],
           "features": [
+            "calls",
             "constructors",
             "fields",
             "generics",
             "matches",
+            "matches.multi",
             "patterns.variable",
             "quantities.affine",
             "quantities.arguments",
+            "quantities.reusable",
             "types.base"
           ],
           "references": [
@@ -70649,6 +70802,7 @@
             "Done",
             "Result",
             "src/core.Binding",
+            "src/literal-matrix.promote",
             "src/scope.Scope",
             "src/syntax.Error"
           ],
@@ -70660,10 +70814,13 @@
           ],
           "captures": [],
           "execution": {
-            "references": [],
+            "references": [
+              "src/literal-matrix.promote"
+            ],
             "types": [
               "Con",
               "Done",
+              "src/core.Binding",
               "src/scope.Scope"
             ],
             "dynamic_calls": []
@@ -70675,8 +70832,8 @@
           "key": "src/literal-matrix.aliases",
           "kind": "definition",
           "lines": [
-            148,
-            154
+            156,
+            162
           ],
           "features": [
             "calls",
@@ -70721,7 +70878,7 @@
           ],
           "captures": [
             {
-              "offset": 8468,
+              "offset": 8966,
               "names": [
                 "q",
                 "scope",
@@ -70730,7 +70887,7 @@
               ]
             },
             {
-              "offset": 8529,
+              "offset": 9027,
               "names": [
                 "q",
                 "token",
@@ -70762,8 +70919,8 @@
           "key": "src/literal-matrix.fields",
           "kind": "definition",
           "lines": [
-            157,
-            161
+            165,
+            169
           ],
           "features": [
             "calls",
@@ -70827,8 +70984,8 @@
           "key": "src/literal-matrix.opened",
           "kind": "definition",
           "lines": [
-            163,
-            165
+            171,
+            173
           ],
           "features": [
             "calls",
@@ -70878,8 +71035,8 @@
           "key": "src/literal-matrix.branch",
           "kind": "definition",
           "lines": [
-            167,
-            170
+            175,
+            178
           ],
           "features": [
             "calls",
@@ -70936,8 +71093,8 @@
           "key": "src/literal-matrix.default_branch",
           "kind": "definition",
           "lines": [
-            172,
-            173
+            180,
+            181
           ],
           "features": [
             "constructors",
@@ -70982,8 +71139,8 @@
           "key": "src/literal-matrix.case_term",
           "kind": "definition",
           "lines": [
-            175,
-            178
+            183,
+            186
           ],
           "features": [
             "calls",
@@ -71034,8 +71191,8 @@
           "key": "src/literal-matrix.leaves",
           "kind": "definition",
           "lines": [
-            180,
-            183
+            188,
+            191
           ],
           "features": [
             "calls",
@@ -71090,8 +71247,8 @@
           "key": "src/literal-matrix.datatype",
           "kind": "definition",
           "lines": [
-            185,
-            187
+            193,
+            195
           ],
           "features": [
             "calls",
@@ -71139,8 +71296,8 @@
           "key": "src/literal-matrix.level",
           "kind": "definition",
           "lines": [
-            189,
-            191
+            197,
+            199
           ],
           "features": [
             "constructors",
@@ -71173,8 +71330,8 @@
           "key": "src/literal-matrix.type_id",
           "kind": "definition",
           "lines": [
-            193,
-            195
+            201,
+            203
           ],
           "features": [
             "constructors",
@@ -71207,8 +71364,8 @@
           "key": "src/literal-matrix.run",
           "kind": "definition",
           "lines": [
-            197,
-            227
+            205,
+            235
           ],
           "features": [
             "calls",
@@ -71302,7 +71459,7 @@
           ],
           "captures": [
             {
-              "offset": 10631,
+              "offset": 11129,
               "names": [
                 "column",
                 "columns",
@@ -71312,7 +71469,7 @@
               ]
             },
             {
-              "offset": 10702,
+              "offset": 11200,
               "names": [
                 "column",
                 "columns",
@@ -71323,7 +71480,7 @@
               ]
             },
             {
-              "offset": 10777,
+              "offset": 11275,
               "names": [
                 "column",
                 "columns",
@@ -71334,7 +71491,7 @@
               ]
             },
             {
-              "offset": 10899,
+              "offset": 11397,
               "names": [
                 "column",
                 "columns",
@@ -71345,13 +71502,13 @@
               ]
             },
             {
-              "offset": 10999,
+              "offset": 11497,
               "names": [
                 "column"
               ]
             },
             {
-              "offset": 11025,
+              "offset": 11523,
               "names": [
                 "column",
                 "columns",
@@ -71362,7 +71519,7 @@
               ]
             },
             {
-              "offset": 11096,
+              "offset": 11594,
               "names": [
                 "column",
                 "columns",
@@ -71373,7 +71530,7 @@
               ]
             },
             {
-              "offset": 11142,
+              "offset": 11640,
               "names": [
                 "column",
                 "columns",
@@ -71384,13 +71541,13 @@
               ]
             },
             {
-              "offset": 11246,
+              "offset": 11744,
               "names": [
                 "column"
               ]
             },
             {
-              "offset": 11604,
+              "offset": 12102,
               "names": [
                 "column",
                 "columns",
@@ -71405,7 +71562,7 @@
               ]
             },
             {
-              "offset": 11634,
+              "offset": 12132,
               "names": [
                 "column",
                 "columns",
@@ -71420,7 +71577,7 @@
               ]
             },
             {
-              "offset": 11643,
+              "offset": 12141,
               "names": [
                 "bound",
                 "column",
@@ -71436,7 +71593,7 @@
               ]
             },
             {
-              "offset": 11791,
+              "offset": 12289,
               "names": [
                 "column",
                 "columns",
@@ -71450,7 +71607,7 @@
               ]
             },
             {
-              "offset": 11902,
+              "offset": 12400,
               "names": [
                 "head",
                 "introduced",
@@ -71458,7 +71615,7 @@
               ]
             },
             {
-              "offset": 12299,
+              "offset": 12797,
               "names": [
                 "column",
                 "columns",
@@ -71471,14 +71628,14 @@
               ]
             },
             {
-              "offset": 12384,
+              "offset": 12882,
               "names": [
                 "head",
                 "word"
               ]
             },
             {
-              "offset": 12582,
+              "offset": 13080,
               "names": [
                 "body",
                 "n",
@@ -71488,7 +71645,7 @@
               ]
             },
             {
-              "offset": 12648,
+              "offset": 13146,
               "names": [
                 "body",
                 "bound"
@@ -71558,8 +71715,8 @@
           "key": "src/literal-matrix.rows",
           "kind": "definition",
           "lines": [
-            229,
-            233
+            237,
+            241
           ],
           "features": [
             "calls",
@@ -71610,8 +71767,8 @@
           "key": "src/literal-matrix.consumed",
           "kind": "definition",
           "lines": [
-            235,
-            238
+            243,
+            246
           ],
           "features": [
             "calls",
@@ -71650,7 +71807,7 @@
           ],
           "captures": [
             {
-              "offset": 13221,
+              "offset": 13719,
               "names": [
                 "term",
                 "typ"
@@ -71676,8 +71833,8 @@
           "key": "src/literal-matrix.compile",
           "kind": "definition",
           "lines": [
-            240,
-            241
+            248,
+            249
           ],
           "features": [
             "calls",
@@ -71736,8 +71893,8 @@
           "key": "src/literal-matrix.enabled",
           "kind": "definition",
           "lines": [
-            243,
-            245
+            251,
+            253
           ],
           "features": [
             "bindings",

@@ -1,5 +1,6 @@
 import Base
 import ./syntax.bend as S
+import ./core.bend as C
 import ./literal-matrix.bend as M
 
 law offset_zero:
@@ -28,3 +29,8 @@ law word_order:
   for +body: S.Node
   {M.words([M.Row{[S.Literal{token,0,9,Nil{}}],body,Nil{}},
     M.Row{[S.Literal{token,0,9,Nil{}}],body,Nil{}},M.Row{[S.Literal{token,0,2,Nil{}}],body,Nil{}}],Nil{}) == [9,2] : List<&2,U32>}
+
+law promoted_alias_promotes_its_column:
+  for +token: S.Token
+  {M.promote([C.Binding{token,3,1,0,True{},None{}},C.Binding{token,4,1,0,True{},None{}}],3,2) ==
+    [C.Binding{token,3,2,0,True{},None{}},C.Binding{token,4,1,0,True{},None{}}] : List<&2,C.Binding>}

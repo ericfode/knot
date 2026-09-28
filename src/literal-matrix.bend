@@ -141,9 +141,17 @@ def renamed(value: C.Binding, token: S.Token, q: U32) -> C.Binding:
   match value:
     case C.Binding{name,level,old,typ,param,known}: C.Binding{token,level,q,typ,param,known}
 
+# A leaf's column takes its alias's quantity: the seed's `+x` promotes its scrutinee.
+def promote(bindings: List<&2,C.Binding>, +level: U32, +q: U32) -> List<&2,C.Binding>:
+  match bindings:
+    case Nil{}: Nil{}
+    case Con{C.Binding{token,+id,old,type_id,param,known},tail}:
+      Con{C.Binding{token,id,Bool.pick(U32,U32.is_eq(id,level),q,old),type_id,param,known},promote(tail,level,q)}
+
 def alias_scope(binding: C.Binding, scope: E.Scope) -> Result<S.Error,E.Scope>:
-  match scope:
-    case E.Scope{bindings,next,open,live,smaller}: Done{E.Scope{Con{binding,bindings},next,open,live,smaller}}
+  match binding scope:
+    case C.Binding{name,+level,+q,typ,param,known} E.Scope{bindings,next,open,live,smaller}:
+      Done{E.Scope{Con{C.Binding{name,level,q,typ,param,known},promote(bindings,level,q)},next,open,live,smaller}}
 
 def aliases(names: List<&2,Alias>, +scope: E.Scope) -> Result<S.Error,E.Scope>:
   match names scope:

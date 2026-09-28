@@ -3875,15 +3875,15 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 772,
-        "compiler": 656,
+        "declarations": 773,
+        "compiler": 657,
         "packages": 14,
         "base": 102,
         "check": 428,
         "wasm": 428,
         "covered_by_requirements": {
-          "check": 755,
-          "wasm": 755
+          "check": 756,
+          "wasm": 756
         }
       },
       "missing": {
@@ -3898,7 +3898,7 @@
           },
           {
             "feature": "matches.multi",
-            "declarations": 74
+            "declarations": 75
           },
           {
             "feature": "higher-order",
@@ -3956,7 +3956,7 @@
           },
           {
             "feature": "matches.multi",
-            "declarations": 74
+            "declarations": 75
           },
           {
             "feature": "higher-order",
@@ -15815,20 +15815,27 @@
           "origin": "compiler",
           "boundary": "source",
           "features": [
+            "calls",
             "constructors",
             "fields",
             "generics",
             "imports.base",
             "imports.local",
             "matches",
+            "matches.multi",
             "patterns.variable",
             "quantities.affine",
             "quantities.arguments",
+            "quantities.reusable",
             "types.base"
           ],
           "missing": {
-            "check": [],
-            "wasm": []
+            "check": [
+              "matches.multi"
+            ],
+            "wasm": [
+              "matches.multi"
+            ]
           },
           "missing_requirements": {
             "check": [],
@@ -16497,6 +16504,36 @@
               "calls.variable",
               "higher-order"
             ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/literal-matrix.promote",
+          "file": "src/literal-matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [],
+            "wasm": []
           },
           "missing_requirements": {
             "check": [],
@@ -31409,8 +31446,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "5837a6f7b841856fb851f6aa68a296d658f8406c3a56ba4885a80c8113bd8a6e",
-    "docs/compiler-campaign/inventory/base-closure.json": "9af60c932fbbde1a05cc3bb20f0f8b3b14f32753e52bb524e791c012b3399a2f",
-    "docs/compiler-campaign/inventory/accepted.json": "87c78e102558102dbfe121bae8548dd54fa0aaf093d60f7548ee6441aa9a551e"
+    "docs/compiler-campaign/inventory/implementation.json": "ec481c67ab19e046505820b7ff86979e2eb80c4b17eef73753dc5d56ca6ce16f",
+    "docs/compiler-campaign/inventory/base-closure.json": "5bbf32100036129a7765a9e21e7d8c0b8346640fdb16a52e9eacc59b9dbf4c5f",
+    "docs/compiler-campaign/inventory/accepted.json": "0dc458878a98eb3557d935a05517afaa463622a7b7a600651a7fc95106857d43"
   }
 }

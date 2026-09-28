@@ -417,9 +417,10 @@ a known type, as bare constructors do: an unannotated binding (`n = 3`,
 scrutinee is `Invalid check constructor-scrutinee`, and a literal or offset arm
 on a datatype scrutinee is `Invalid check pattern-type`. A literal field pattern
 is `Unsupported check nested-field-pattern`. A promoted binder (`+x`,
-`1n+ +p`, `SCon{c, +t}`) over a column that other rows split copies its value:
-rebuilding it from the split fields consumes none of them, so it may be used
-twice. Without `+` such a binder stays affine. `Chr{...}` patterns and broader
+`1n+ +p`, `SCon{c, +t}`) copies its value: rebuilding it from fields that
+other rows split consumes none of them, so it may be used twice. As in the
+seed, it also promotes its column in that arm, so a `+x` arm may use the
+scrutinee twice. Without `+` the binder and its column stay affine. `Chr{...}` patterns and broader
 nested pattern support are still Unsupported. The Base constructor `U32{data: Word(32n)}` has
 no representation in the unboxed U32 and is `Unsupported check u32-constructor`
 in patterns and expressions.
