@@ -6,13 +6,24 @@ import ./model.bend as M
 # Outcomes print as classification, phase and code on stderr with eval-cli's
 # exit statuses; the model's own transition bound exits 7.
 
-def stopped(stop: M.Stop) -> IO(Unit):
+def stop_line(stop: M.Stop) -> String:
   match stop:
-    case M.Exhausted{kind,cause}: IO.die(Unit,4,String.concat(["Exhausted\tvm\t",U32.show(kind),"\t",cause]))
-    case M.Refused{phase,code}: IO.die(Unit,5,String.concat(["HostFailure\t",phase,"\t",code]))
-    case M.Unsupported{phase,code}: IO.die(Unit,3,String.concat(["Unsupported\t",phase,"\t",code]))
-    case M.Internal{code}: IO.die(Unit,6,String.concat(["InternalFailure\tvm\t",code]))
-    case M.Bound{code}: IO.die(Unit,7,String.concat(["HarnessBound\tmodel\t",code]))
+    case M.Exhausted{kind,cause}: String.concat(["Exhausted\tvm\t",U32.show(kind),"\t",cause])
+    case M.Refused{phase,code}: String.concat(["HostFailure\t",phase,"\t",code])
+    case M.Unsupported{phase,code}: String.concat(["Unsupported\t",phase,"\t",code])
+    case M.Internal{code}: String.append("InternalFailure\tvm\t",code)
+    case M.Bound{code}: String.append("HarnessBound\tmodel\t",code)
+
+def stop_status(stop: M.Stop) -> U32:
+  match stop:
+    case M.Exhausted{kind,cause}: 4
+    case M.Refused{phase,code}: 5
+    case M.Unsupported{phase,code}: 3
+    case M.Internal{code}: 6
+    case M.Bound{code}: 7
+
+def stopped(+stop: M.Stop) -> IO(Unit):
+  IO.die(Unit,stop_status(stop),stop_line(stop))
 
 def utf8(codes: List<&2,U32>) -> List<&2,U32>:
   match codes:
@@ -33,7 +44,7 @@ def concluded(outcome: M.Outcome) -> IO(Unit):
     case M.Described{result,tag,tree}: IO.print(String.concat(["Evaluated\t",U32.show(result),"\t",U32.show(tag),"\t",M.codes_text(tree)]))
     case M.Emitted{}: IO.pure(Unit,Unit{})
     case M.Died{code,message}: IO.die(Unit,code,M.codes_text(message))
-    case M.Stopped{stop}: stopped(stop)
+    case M.Stopped{stop,pending}: stopped(stop)
     case M.Answered{w}: stopped(M.Internal{"undescribed answer"})
 
 def reported(m: M.Machine) -> IO(Unit):
@@ -80,11 +91,11 @@ def outcome_name(outcome: M.Outcome) -> String:
     case M.Emitted{}: "Emitted"
     case M.Died{code,message}: "Died"
     case M.Answered{w}: "Answered"
-    case M.Stopped{M.Exhausted{k,c}}: "Exhausted"
-    case M.Stopped{M.Refused{p,c}}: "HostFailure"
-    case M.Stopped{M.Unsupported{p,c}}: "Unsupported"
-    case M.Stopped{M.Internal{c}}: "InternalFailure"
-    case M.Stopped{M.Bound{c}}: "HarnessBound"
+    case M.Stopped{M.Exhausted{k,c},pending}: "Exhausted"
+    case M.Stopped{M.Refused{p,c},pending}: "HostFailure"
+    case M.Stopped{M.Unsupported{p,c},pending}: "Unsupported"
+    case M.Stopped{M.Internal{c},pending}: "InternalFailure"
+    case M.Stopped{M.Bound{c},pending}: "HarnessBound"
 
 def completes(outcome: M.Outcome) -> Bool:
   match outcome:
@@ -96,7 +107,7 @@ def completes(outcome: M.Outcome) -> Bool:
 def machine_outcome(m: M.Machine) -> M.Outcome:
   match m:
     case M.Machine{M.Finished{outcome},stack,heap,meter,out}: outcome
-    case _: M.Stopped{M.Internal{"unfinished machine"}}
+    case _: M.Stopped{M.Internal{"unfinished machine"},M.Eval{0}}
 
 # The audit line: whether every transition balanced and a completed run
 # released every mortal cell, the transitions audited, the outcome and the

@@ -184,7 +184,6 @@ def utf8(bytes: List<&2,U32>, state: Maybe<&2,Utf8>) -> Maybe<&2,List<&2,U32>>:
 def scalars(bytes: List<&2,U32>) -> Maybe<&2,List<&2,U32>>:
   utf8(bytes,Some{Utf8{0,128,191,0,Nil{}}})
 
-
 # ---------------------------------------------------------------- the plan
 
 # An image decodes to its plan: the tables and post-order node trees without
@@ -265,7 +264,6 @@ def sections(-B: Data, n: Nat, +image: Store, +total: U32, +section: U32, +curso
       unless(B,U32.is_gt(count,1048576),"record count",u =>
       records(B,U32.to_nat(count),image,total,section,U32.add(cursor,1),Nil{},list => end =>
         sections(B,m,image,total,U32.add(section,1),end,Con{list,found},next))))
-
 
 def zero_all(bytes: List<&2,U32>) -> Bool:
   match bytes:
@@ -521,13 +519,16 @@ def key_rows(n: Nat, +image: Store, +at: U32) -> List<&2,Job>:
 def fallback(+w: U32) -> List<&2,Job>:
   choose(List<&2,Job>,is_none(w),u => Nil{},u => [Job{w,Fallback{}}])
 
+def operand_jobs(+image: Store, +x: U32) -> List<&2,Job>:
+  operands(slice(U32.to_nat(read(image,U32.add(x,1))),image,U32.add(x,2)))
+
 # Children in SPEC §3 order; an absent row or default has no record.
-def children(op: Nat, +image: Store, +x: U32, +last: U32, +listed: List<&2,U32>) -> List<&2,Job>:
+def children(op: Nat, +image: Store, +x: U32, +last: U32) -> List<&2,Job>:
   match op:
-    case 1n: operands(listed)
+    case 1n: operand_jobs(image,x)
     case 2n: operands([read(image,x)])
-    case 4n: operands(listed)
-    case 6n: operands(listed)
+    case 4n: operand_jobs(image,x)
+    case 6n: operand_jobs(image,x)
     case 7n: operands([read(image,U32.add(x,1)),read(image,U32.add(x,2))])
     case 8n:
       +n = read(image,U32.add(x,3))
@@ -536,14 +537,12 @@ def children(op: Nat, +image: Store, +x: U32, +last: U32, +listed: List<&2,U32>)
         u => key_rows(U32.to_nat(n),image,U32.add(x,4))),fallback(last))
     case 9n: operands([read(image,U32.add(x,3))])
     case 10n: operands([last])
-    case 11n: Con{Job{read(image,x),Operand{}},operands(listed)}
-    case 12n: operands(listed)
+    case 11n: Con{Job{read(image,x),Operand{}},operand_jobs(image,x)}
+    case 12n: operand_jobs(image,x)
     case _: Nil{}
 
 def kids(+image: Store, +at: U32) -> List<&2,Job>:
-  +x = U32.add(at,3)
-  children(U32.to_nat(read(image,U32.add(at,1))),image,x,read(image,U32.sub(U32.add(at,read(image,at)),1)),
-    slice(U32.to_nat(read(image,U32.add(x,1))),image,U32.add(x,2)))
+  children(U32.to_nat(read(image,U32.add(at,1))),image,U32.add(at,3),read(image,U32.sub(U32.add(at,read(image,at)),1)))
 
 def blank() -> Node:
   Value{none(),none()}
@@ -740,16 +739,15 @@ def primitive_at(table: List<&2,Primitive>, +id: U32) -> Maybe<&2,Primitive>:
     case Nil{}: None{}
     case Con{+p,+rest}: choose(Maybe<&2,Primitive>,U32.is_eq(id,0),u => Some{p},u => primitive_at(rest,U32.sub(id,1)))
 
-# registry.json ids 0..38 in order; 39 and 40 are reserved and absent.
+# registry.json ids 0..38 in order, inputs and output as representation
+# positions; 39 and 40 are reserved and absent.
 def prims() -> List<&2,Primitive>:
-  +w2 : List<&2,U32> = [1,1]
-  +n2 : List<&2,U32> = [0,0]
-  [Primitive{w2,1},Primitive{w2,1},Primitive{w2,1},Primitive{w2,1},Primitive{w2,1},Primitive{[1],1},Primitive{w2,1},
-   Primitive{w2,5},Primitive{w2,4},Primitive{w2,4},Primitive{w2,4},Primitive{w2,4},Primitive{w2,4},Primitive{w2,4},
+  [Primitive{[1,1],1},Primitive{[1,1],1},Primitive{[1,1],1},Primitive{[1,1],1},Primitive{[1,1],1},Primitive{[1],1},Primitive{[1,1],1},
+   Primitive{[1,1],5},Primitive{[1,1],4},Primitive{[1,1],4},Primitive{[1,1],4},Primitive{[1,1],4},Primitive{[1,1],4},Primitive{[1,1],4},
    Primitive{[1,0],1},Primitive{[1,0],1},Primitive{[1],0},Primitive{[0],1},Primitive{[1],2},Primitive{[2],1},
    Primitive{[2,2],4},Primitive{[2],4},
-   Primitive{n2,0},Primitive{n2,0},Primitive{n2,0},Primitive{n2,5},
-   Primitive{n2,4},Primitive{n2,4},Primitive{n2,4},Primitive{n2,4},Primitive{n2,4},Primitive{n2,4},
+   Primitive{[0,0],0},Primitive{[0,0],0},Primitive{[0,0],0},Primitive{[0,0],5},
+   Primitive{[0,0],4},Primitive{[0,0],4},Primitive{[0,0],4},Primitive{[0,0],4},Primitive{[0,0],4},Primitive{[0,0],4},
    Primitive{[1],3},Primitive{[0],3},Primitive{[3,3],4},Primitive{[3,3],3},Primitive{[3],3},Primitive{[3],0},Primitive{[3],4}]
 
 def foreigns() -> List<&2,Primitive>:
@@ -886,9 +884,6 @@ def all_fit(+types: List<&2,Sort>, declared: List<&2,U32>, actual: List<&2,U32>)
     case Con{d,ds} Con{a,as}: Bool.and(fit(types,d,a),all_fit(types,ds,as))
     case _ _: True{}
 
-def representation_at(+reps: List<&2,U32>, +r: U32) -> U32:
-  nth(reps,r)
-
 # Operand r of a prim or foreign is the pinned representation `reps[r]`.
 def pinned_operands(+reps: List<&2,U32>, +op: String, +site: String, actual: List<&2,U32>, inputs: List<&2,U32>) -> List<&2,Task>:
   match actual inputs:
@@ -926,12 +921,6 @@ def row_nodes(rows: List<&2,Maybe<&2,Node>>) -> List<&2,Node>:
     case Nil{}: Nil{}
     case Con{None{},rest}: row_nodes(rest)
     case Con{Some{node},rest}: Con{node,row_nodes(rest)}
-
-def arm_body(node: Maybe<&2,Node>) -> List<&2,Node>:
-  match node:
-    case Some{Branch{key,first,fields,body}}: [body]
-    case Some{Default{body}}: [body]
-    case _: Nil{}
 
 def uses_of(node: Node) -> List<&2,U32>:
   match node:
@@ -1033,10 +1022,6 @@ def case_tasks(+cx: Context, +scope: List<&2,U32>, +depth: U32, +site: String, +
            Expect{Bool.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,Node,fallback)),at_where(site,"keys must increase strictly, with a default")}],
           key_tasks(rows,scope,depth,t,site))),
         default_tasks(fallback,scope,t,site))
-
-def functions_of(cx: Context) -> List<&2,Function>:
-  match cx:
-    case Context{types,functions,reps}: functions
 
 def callee(functions: List<&2,Function>, +f: U32) -> Maybe<&2,Function>:
   function_at(functions,f)
@@ -1339,9 +1324,6 @@ def interned(constants: List<&2,Constant>, +seen: List<&2,Constant>) -> List<&2,
     case Nil{}: List.reverse(&2,Constant,seen)
     case Con{+c,rest}: interned(rest,Bool.pick(List<&2,Constant>,is_none(constant_index(seen,c,0)),Con{c,seen},seen))
 
-def big(+n: Nat) -> Nat:
-  Nat.add(n,U32.to_nat(4294967295))
-
 def root_offsets(fuel: Nat, nodes: List<&2,Node>, +start: U32) -> List<&2,U32>:
   match fuel nodes:
     case 1n+ +f Con{+node,rest}:
@@ -1554,13 +1536,17 @@ def admitted(+words: List<&2,U32>, +plan: Plan) -> Result<String,Plan>:
   then(Unit,Plan,validated(validate(plan)),u =>
     unless(Plan,Bool.not(same(encode(plan),words)),"noncanonical",u => Done{plan}))
 
+# Words the loader admits: decoded, validated and canonical.
+def admit(+words: List<&2,U32>) -> Result<Stop,Plan>:
+  refused(Plan,then(Plan,Plan,decode(words),+plan => admitted(words,plan)))
+
 # SPEC §4: size first, then the bytes, the plan's rules and canonicality. The
 # loader never runs a body.
 def load(+bytes: List<&2,U32>) -> Result<Stop,Plan>:
   +size = count(U32,bytes)
   choose(Result<Stop,Plan>,U32.is_gt(size,image_limit()),u => Fail{Exhausted{2,"image-size"}},u =>
   choose(Result<Stop,Plan>,Bool.or(Bool.not(U32.is_eq(U32.mod(size,4),0)),U32.is_lt(size,128)),u => Fail{Refused{"image","length"}},u =>
-    refused(Plan,then(Plan,Plan,decode(pack(bytes)),+plan => admitted(pack(bytes),plan)))))
+    admit(pack(bytes))))
 
 # ---------------------------------------------------------------- words, cells and memory
 
@@ -1575,11 +1561,8 @@ def is_pointer(+w: U32) -> Bool:
 def boxed(+v: U32) -> Bool:
   U32.is_ge(v,2147483648)
 
-# Word indices: the image at byte 4096, the frame region at the next 64 KiB
+# In words: the image at byte 4096, the frame region at the next 64 KiB
 # boundary, 16 MiB of frames, then the heap up to 4 GiB.
-def image_base() -> U32:
-  1024
-
 def region_words() -> U32:
   4194304
 
@@ -1660,9 +1643,6 @@ def with_cell(-B: Data, result: Result<Stop,Cell>, next: Heap -> U32 -> Result<S
   match result:
     case Fail{stop}: Fail{stop}
     case Done{Cell{heap,word}}: next(heap,word)
-
-def stop(-A: Data, s: Stop) -> Result<Stop,A>:
-  Fail{s}
 
 # ---------------------------------------------------------------- reference counts
 
@@ -1848,11 +1828,6 @@ def pushed(+stack: Stack, +frame: Frame) -> Result<Stop,Stack>:
       choose(Result<Stop,Stack>,U32.is_gt(frame_words(frame),U32.sub(region_words(),top)),u => Fail{Exhausted{3,"frames"}},
         u => Done{Stack{act,Con{frame,frames},U32.add(top,frame_words(frame))}})
 
-def popped(stack: Stack) -> Stack:
-  match stack:
-    case Stack{act,Con{+frame,rest},top}: Stack{act,rest,U32.sub(top,frame_words(frame))}
-    case Stack{act,Nil{},top}: Stack{act,Nil{},top}
-
 def with_act(stack: Stack, act: U32) -> Stack:
   match stack:
     case Stack{old,frames,top}: Stack{act,frames,top}
@@ -1967,9 +1942,6 @@ def chain(last_first: List<&2,U32>, +code: Code, +heap: Heap, +tail: U32) -> Res
       bind(Heap,Cell,dup(heap,c),heap =>
         with_cell(Cell,alloc(heap,0,[rep(code,3),1,c,tail]),heap => w => chain(rest,code,heap,w)))
 
-def natural(+heap: Heap, +v: U32) -> Result<Stop,Cell>:
-  word_of(heap,v)
-
 # Nat results are checked before narrowing: above 2^32-1 is NatRange.
 def nat_sum(+heap: Heap, +a: U32, +b: U32) -> Result<Stop,Cell>:
   choose(Result<Stop,Cell>,U32.is_gt(b,U32.sub(none(),a)),u => Fail{Exhausted{2,"NatRange"}},u => word_of(heap,U32.add(a,b)))
@@ -2057,13 +2029,15 @@ type Target is Data:
   Callee{function: U32}
   Held{word: U32}
 
-# A Book halts Answered, then is Described; a Program Emits or Dies.
+# A Book halts Answered, then is Described; a Program Emits or Dies. A stop
+# keeps the control it could not advance, whose words stay owned (SPEC §7:
+# the pending Enter stays in the state).
 type Outcome is Data:
   Answered{word: U32}
   Described{result: U32, tag: U32, tree: List<&2,U32>}
   Emitted{}
   Died{code: U32, message: List<&2,U32>}
-  Stopped{stop: Stop}
+  Stopped{stop: Stop, pending: Control}
 
 type Control is Data:
   Eval{node: U32}
@@ -2087,9 +2061,6 @@ def to(control: Control, stack: Stack, heap: Heap) -> Result<Stop,Next>:
 
 def then_stack(-B: Data, result: Result<Stop,Stack>, next: Stack -> Result<Stop,B>) -> Result<Stop,B>:
   bind(Stack,B,result,next)
-
-def act_heap(+stack: Stack, +heap: Heap, next: U32 -> Result<Stop,Next>) -> Result<Stop,Next>:
-  next(act_of(stack))
 
 def operands_of(+code: Code, +node: U32, n: Nat, +i: U32) -> List<&2,U32>:
   match n:
@@ -2362,7 +2333,7 @@ def step(+code: Code, m: Machine) -> Result<Stop,Machine>:
 
 def halted(m: Machine, stop: Stop) -> Machine:
   match m:
-    case Machine{control,stack,heap,meter,out}: Machine{Finished{Stopped{stop}},stack,heap,meter,out}
+    case Machine{control,stack,heap,meter,out}: Machine{Finished{Stopped{stop,control}},stack,heap,meter,out}
 
 # A refused step leaves the machine as it was and records why.
 def settled(result: Result<Stop,Machine>, m: Machine) -> Machine:
@@ -2633,6 +2604,7 @@ def control_roots(control: Control) -> List<&2,U32>:
     case Enter{Held{w},ops}: Con{w,ops}
     case Enter{Callee{f},ops}: ops
     case Finished{Answered{w}}: [w]
+    case Finished{Stopped{stop,pending}}: control_roots(pending)
     case _: Nil{}
 
 # Every owner of a reference: the result register, pending operands, the
@@ -2694,3 +2666,105 @@ def audited(fuel: Nat, +code: Code, +m: Machine, +steps: U32) -> Audit:
       choose(Audit,Bool.not(balanced(code,m)),u => Audit{m,steps,False{}},u =>
       choose(Audit,is_finished(m),u => Audit{m,steps,True{}},u =>
         audited(f,code,settled(step(code,m),m),U32.add(steps,1))))
+
+# ---------------------------------------------------------------- law predicates
+
+# An admitted image's entry run to its end: a Book's `main` with no ordinals,
+# described and dropped, or a Program's `main`. `Bound` stops a run that
+# outlives the transition budget.
+type Run is Data:
+  Refusal{stop: Stop}
+  Ran{code: Code, machine: Machine, balanced: Bool}
+
+def plan_entry(plan: Plan) -> U32:
+  match plan:
+    case Plan{entry,types,functions,reps}: entry
+
+# The answer's description and drop are audited too.
+def concluded_run(+code: Code, result: Result<Stop,Machine>, ok: Bool) -> Run:
+  match result:
+    case Fail{stop}: Refusal{stop}
+    case Done{+m}: Ran{code,m,Bool.and(ok,balanced(code,m))}
+
+def run_concluded(+code: Code, +t: U32, a: Audit) -> Run:
+  match a:
+    case Audit{m,steps,ok}: concluded_run(code,concluded(code,t,m),ok)
+
+def started_run(+code: Code, +t: U32, +steps: Nat, result: Result<Stop,Machine>) -> Run:
+  match result:
+    case Fail{stop}: Refusal{stop}
+    case Done{m}: run_concluded(code,t,audited(steps,code,m,0))
+
+def ran(+plan: Plan, +steps: Nat, +fuel: U32, booted: Result<Stop,Booted>) -> Run:
+  match booted:
+    case Fail{stop}: Refusal{stop}
+    case Done{+b}:
+      +code = code_of(b)
+      choose(Run,U32.is_eq(plan_entry(plan),1),
+        u => run_concluded(code,none(),audited(steps,code,program(plan,b,fuel),0)),
+        u => started_run(code,result_type(plan,main_bytes()),steps,book(plan,b,main_bytes(),fuel,Nil{})))
+
+def admitted_run(result: Result<Stop,Plan>, +words: List<&2,U32>, +steps: Nat, +fuel: U32) -> Run:
+  match result:
+    case Fail{stop}: Refusal{stop}
+    case Done{+plan}: ran(plan,steps,fuel,boot(words))
+
+def run_words(+words: List<&2,U32>, +steps: Nat, +fuel: U32) -> Run:
+  admitted_run(admit(words),words,steps,fuel)
+
+def internal(outcome: Outcome) -> Bool:
+  match outcome:
+    case Stopped{Internal{c},p}: True{}
+    case Stopped{Bound{c},p}: True{}
+    case _: False{}
+
+def finished_outcome(m: Machine) -> Outcome:
+  match m:
+    case Machine{Finished{o},stack,heap,meter,out}: o
+    case _: Stopped{Internal{"unfinished"},Eval{0}}
+
+def completing(outcome: Outcome) -> Bool:
+  match outcome:
+    case Described{t,tag,tree}: True{}
+    case Emitted{}: True{}
+    case Died{c,msg}: True{}
+    case _: False{}
+
+# Validator soundness: an image is refused, or its run never meets a state the
+# machine's invariants exclude, keeps every count balanced and, when it
+# completes, leaves no mortal cell live.
+def sound(run: Run) -> Bool:
+  match run:
+    case Refusal{stop}: Bool.not(internal(Stopped{stop,Eval{0}}))
+    case Ran{+code,+m,balanced}:
+      Bool.and(Bool.and(Bool.not(internal(finished_outcome(m))),balanced),
+        Bool.or(Bool.not(completing(finished_outcome(m))),U32.is_eq(leaked(code,m),0)))
+
+def balanced_run(run: Run) -> Bool:
+  match run:
+    case Refusal{stop}: False{}
+    case Ran{code,m,balanced}: balanced
+
+def leak_of(run: Run) -> U32:
+  match run:
+    case Refusal{stop}: none()
+    case Ran{+code,+m,balanced}: leaked(code,m)
+
+def outcome_of(run: Run) -> Outcome:
+  match run:
+    case Refusal{stop}: Stopped{stop,Eval{0}}
+    case Ran{code,m,balanced}: finished_outcome(m)
+
+# Single-word mutations of an image: at each position, zero and the successor
+# and predecessor of the word there (so none where the word is zero).
+def mutations(n: Nat, +words: List<&2,U32>, +i: U32) -> List<&2,List<&2,U32>>:
+  match n:
+    case 0n: Nil{}
+    case 1n+m:
+      +w = nth(words,i)
+      Con{replaced(words,i,0),Con{replaced(words,i,U32.add(w,1)),Con{replaced(words,i,U32.sub(w,1)),mutations(m,words,U32.add(i,1))}}}
+
+def all_sound(images: List<&2,List<&2,U32>>, +steps: Nat, +fuel: U32) -> Bool:
+  match images:
+    case Nil{}: True{}
+    case Con{+w,rest}: Bool.and(sound(run_words(w,steps,fuel)),all_sound(rest,steps,fuel))
