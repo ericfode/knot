@@ -36,12 +36,20 @@ REJECTED = {
         'empty-after-multi', 'empty-after-control', 'empty-after-flat', 'empty-erased-control',
         'empty-field-after', 'empty-field-after-flat', 'empty-field-after-nested', 'empty-field-erased',
         'empty-param-after-field', 'empty-param-after-nested', 'empty-alias-erased')},
+    'line-broken-header': {
+        'line-missing-colon': invalid('parse', 'expected-:'),
+        'line-scrutinee-missing-colon': invalid('parse', 'expected-:'),
+        'line-trailing-comma': invalid('parse', 'expected-term'),
+    },
 }
 ACCEPTED = {
     'dotted-binder': ('dot-parameter', 'dot-erased-let', 'dot-field-declaration', 'dot-definition', 'name-comment'),
     'empty-binding': ('empty-multi', 'empty-multi-alias', 'empty-multi-first', 'empty-multi-middle', 'empty-multi-skip',
                       'empty-flat', 'empty-flat-zero-row', 'empty-field-nested', 'empty-field-flat', 'empty-field-binder',
                       'empty-param-before-field', 'empty-param-before-nested', 'empty-field-before-nested', 'empty-data'),
+    'line-broken-header': ('line-row', 'line-row-comma', 'line-scrutinee', 'line-pattern-braces', 'line-scrutinee-comma',
+                           'line-case', 'line-match', 'line-case-single', 'line-colon', 'line-row-last',
+                           'line-row-last-comma', 'line-promotion', 'line-comment'),
 }
 
 
