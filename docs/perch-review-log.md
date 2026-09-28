@@ -974,3 +974,24 @@ are correctly rejected. The explicit installed package store verifies; no
 network or package edit is needed. Interfaces do not establish unseen behavior
 or checked proofs. All five style axes remain unrated. Live review is the next
 trigger; the `checking` composition is within 97 bytes of the cap.
+
+## 2026-09-27 — Law rules skipped compiler test packets
+
+The compiler campaign's first increments put their law packets beside their
+gates, for example `tests/compiler-recursion/LAW_REVIEW.md`. The eight law
+rules selected only `{packages,research,tests/perch-laws}/**/LAW_REVIEW.md`,
+so `npm run lint -- tests/compiler-recursion/LAW_REVIEW.md` ended with
+`no-coverage` rather than a review. The selector is now
+`{packages,research,tests}/**/LAW_REVIEW.md`. `lint:verify` still passes,
+with 127 tests and the eight-rule wiring check, including its
+unrelated-path exclusion.
+
+The same run covered all 45 changed wave-1 declarations in check, parse,
+patterns, scope and wasm. It used the relevant source rules, made 107 checks,
+and every target was clean.
+
+Prevention: when a new packet location appears, run the law rules on it once
+and treat `no-coverage` as a finding.
+The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
+8 checks came back clean, with a maximum broken probability of 0.70 on
+`law-observable-essence`.
