@@ -150,8 +150,9 @@ def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
           invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
     case _: invalid(ts,"unexpected-end")
 
-# A match or case header runs to its colon; line breaks inside it separate
-# nothing, as in the seed. Tokens after the colon keep their layout.
+# A match or case header runs to its colon; its line breaks separate no
+# columns, as in the seed. Joined tokens keep their offsets, so a brace on the
+# next line never touches a name. Tokens after the colon keep their layout.
 def header(ts: List<&2,S.Token>) -> List<&2,S.Token>:
   match ts:
     case Nil{}: Nil{}
@@ -230,7 +231,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
             then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
-            then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
+            # Fields open at a brace touching the name, as in the seed.
+            S.choose(Result<S.Error,Parsed>,S.touches(name,open),u =>
+              then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
+              invalid(Con{open,tail},"detached-brace")),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(Bool.not(pattern),S.binder(name)),u =>
             Done{Parsed{S.Variable{name},Con{open,tail}}},u => invalid(tokens,"pattern-binder")))),u =>
             term_failure(tokens)))

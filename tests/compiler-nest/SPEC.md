@@ -136,6 +136,21 @@ type-correct semantic mutants. Each mutant disables the recognizer or drops
 one of its conditions: strict descent, the constant's type, or its fields. The
 six seed-rejected controls stay `Unsupported check recursive-call`.
 
+`round6-expectations.json` freezes 35 round-6 programs and 59 seed calls
+before the detached-brace repair. A constructor's `{` must touch its name in
+patterns and bodies: 23 seed-rejected gaps (a space, comment or line break,
+including through joined headers, nested fields and multi-scrutinee rows)
+report `Invalid parse detached-brace`, and a tab stays `Unsupported lex
+whitespace`. Eleven seed-accepted controls keep spaces inside braces, before a
+call's parenthesis, after a promotion's `+`, in a type declaration and between
+joined columns. `round6.py` checks both compiler lanes, evaluator and Wasm
+agreement, rejection in every phase, the frontend and matrix proof entries and
+five type-correct semantic mutants: ignoring the gap, comparing lines instead
+of offsets, shifting the offset by one, confining the rule to patterns and
+extending it to a call's parenthesis. `touches_witness`, `touching_brace`,
+`detached_brace` and `joined_brace_witness` in `src/LAWS.bend` state the rule;
+the fuzz draws the three gap forms as rare pattern, opener and body atoms.
+
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual
 constructor sets through such nested source matches is a subsequent increment;

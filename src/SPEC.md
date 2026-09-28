@@ -53,7 +53,12 @@ digits, underscores or dots. Keywords cannot be identifiers.
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
 - A body may end in a match on function parameters or bound fields.
   Scrutinees and row patterns may be separated by spaces or commas, and a
-  match or case header continues across lines up to its colon. Rows contain
+  match or case header continues across lines up to its colon. In patterns
+  and bodies a constructor's `{` touches its name, as in `On{}`. A space,
+  comment or line break between them reports `Invalid parse detached-brace`,
+  as the seed rejects it; a joined header keeps each token's offset, so its
+  line breaks never bridge that gap. Spaces inside the braces, before a
+  call's `(` and in a type declaration's `Off {}` remain accepted. Rows contain
   constructor, wildcard or variable patterns, with nested constructor fields in
   the structural profile. The first matching row wins, including duplicate rows;
   every constructor combination must be covered. Empty datatypes admit zero

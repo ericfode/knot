@@ -62,6 +62,40 @@ law header_joins_lines:
   {P.header(Con{S.Token{"\n",at},Con{S.Token{"a",at},Con{S.Token{"\n",at},Con{S.Token{":",at},rest}}}})
     == Con{S.Token{"a",at},Con{S.Token{":",at},rest}} : List<&2,S.Token>}
 
+# Touching compares offsets: `On{`, `On {` and `On` / `{` on the next line.
+law touches_witness:
+  {[S.touches(S.Token{"On",S.At{9,11,1,9}},S.Token{"{",S.At{11,12,1,11}}),
+    S.touches(S.Token{"On",S.At{9,11,1,9}},S.Token{"{",S.At{12,13,1,12}}),
+    S.touches(S.Token{"On",S.At{9,11,1,9}},S.Token{"{",S.At{18,19,2,6}})]
+    == [True{},False{},False{}] : List<&2,Bool>}
+
+# A brace opens fields only where it touches the name, in patterns and bodies
+# alike; a space, comment or line break between them detaches it.
+law touching_brace:
+  for pattern: Bool
+  for +x: S.At
+  for +y: S.At
+  for +z: S.At
+  for +rest: List<&2,S.Token>
+  for touch: {S.touches(S.Token{"On",x},S.Token{"{",y}) == True{} : Bool}
+  {P.run(2n,P.Term{pattern},Con{S.Token{"On",x},Con{S.Token{"{",y},Con{S.Token{"}",z},rest}}})
+    == Done{P.Parsed{S.Constructor{S.Token{"On",x},Nil{}},rest}} : Result<S.Error,P.Parsed>}
+
+law detached_brace:
+  for pattern: Bool
+  for +x: S.At
+  for +y: S.At
+  for +rest: List<&2,S.Token>
+  for gap: {S.touches(S.Token{"On",x},S.Token{"{",y}) == False{} : Bool}
+  {P.run(1n,P.Term{pattern},Con{S.Token{"On",x},Con{S.Token{"{",y},rest}})
+    == Fail{S.Invalid{"parse","detached-brace",y}} : Result<S.Error,P.Parsed>}
+
+# The joined case header `On` / `{}:` keeps its offsets, so its brace stays detached.
+law joined_brace_witness:
+  {P.run(1n,P.Term{True{}},P.header([S.Token{"On",S.At{9,11,1,9}},S.Token{"\n",S.At{11,12,1,11}},
+      S.Token{"{",S.At{18,19,2,6}},S.Token{"}",S.At{19,20,2,7}},S.Token{":",S.At{20,21,2,8}}]))
+    == Fail{S.Invalid{"parse","detached-brace",S.At{18,19,2,6}}} : Result<S.Error,P.Parsed>}
+
 def indented(text: String) -> S.Token: S.Token{text,S.At{0,0,1,2}}
 
 law line_broken_scrutinees_witness:

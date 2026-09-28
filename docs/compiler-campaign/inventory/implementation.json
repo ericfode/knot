@@ -125,16 +125,16 @@
   "totals": {
     "compiler": {
       "files": 35,
-      "declarations": 641,
-      "unique_declarations": 538,
-      "definitions": 395,
+      "declarations": 650,
+      "unique_declarations": 543,
+      "definitions": 396,
       "classes": 41
     },
     "frontend_files": {
       "files": 3,
-      "declarations": 55,
-      "unique_declarations": 55,
-      "definitions": 47,
+      "declarations": 56,
+      "unique_declarations": 56,
+      "definitions": 48,
       "classes": 31
     },
     "packages": {
@@ -51742,7 +51742,7 @@
     },
     {
       "file": "src/LAWS.bend",
-      "sha256": "6fdeb67295a0844f9f641db951a7f4997b1eaf2c5a234fc45897df1e2e2e978c",
+      "sha256": "023fdc9f0a2b3a0240f581ef20cd7998cd99c16ec2bc239fa9d3e1a7b56b2805",
       "imports": [
         {
           "module": "Base",
@@ -52288,13 +52288,221 @@
           }
         },
         {
+          "id": "src/LAWS.bend::touches_witness:law",
+          "name": "touches_witness",
+          "key": "src/LAWS.touches_witness",
+          "kind": "law",
+          "lines": [
+            66,
+            70
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "True",
+            "src/syntax.At",
+            "src/syntax.Token",
+            "src/syntax.touches"
+          ],
+          "type_references": [
+            "List"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/LAWS.bend::touching_brace:law",
+          "name": "touching_brace",
+          "key": "src/LAWS.touching_brace",
+          "kind": "law",
+          "lines": [
+            74,
+            82
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.nat",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "True",
+            "src/parse.Parsed",
+            "src/parse.Term",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.touches"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.touches"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/LAWS.bend::detached_brace:law",
+          "name": "detached_brace",
+          "key": "src/LAWS.detached_brace",
+          "kind": "law",
+          "lines": [
+            84,
+            91
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.nat",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Fail",
+            "False",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.Term",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Token",
+            "src/syntax.touches"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.touches"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/LAWS.bend::joined_brace_witness:law",
+          "name": "joined_brace_witness",
+          "key": "src/LAWS.joined_brace_witness",
+          "kind": "law",
+          "lines": [
+            94,
+            97
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "Nil",
+            "Result",
+            "True",
+            "src/parse.Parsed",
+            "src/parse.Term",
+            "src/parse.header",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/LAWS.bend::indented:definition",
           "name": "indented",
           "key": "src/LAWS.indented",
           "kind": "definition",
           "lines": [
-            65,
-            65
+            99,
+            99
           ],
           "features": [
             "constructors",
@@ -52329,8 +52537,8 @@
           "key": "src/LAWS.line_broken_scrutinees_witness",
           "kind": "law",
           "lines": [
-            67,
-            70
+            101,
+            104
           ],
           "features": [
             "calls",
@@ -52376,8 +52584,8 @@
           "key": "src/LAWS.dotted_pattern_binder",
           "kind": "law",
           "lines": [
-            73,
-            77
+            107,
+            111
           ],
           "features": [
             "calls",
@@ -52429,8 +52637,8 @@
           "key": "src/LAWS.dotted_let_binder",
           "kind": "law",
           "lines": [
-            79,
-            83
+            113,
+            117
           ],
           "features": [
             "calls",
@@ -52482,8 +52690,8 @@
           "key": "src/LAWS.template_binder",
           "kind": "law",
           "lines": [
-            85,
-            89
+            119,
+            123
           ],
           "features": [
             "calls",
@@ -52534,8 +52742,8 @@
           "key": "src/LAWS.nonleading_template_binder",
           "kind": "law",
           "lines": [
-            91,
-            96
+            125,
+            130
           ],
           "features": [
             "calls",
@@ -52590,8 +52798,8 @@
           "key": "src/LAWS.destructuring_binding",
           "kind": "law",
           "lines": [
-            98,
-            104
+            132,
+            138
           ],
           "features": [
             "calls",
@@ -52651,8 +52859,8 @@
           "key": "src/LAWS.equality_is_not_binding",
           "kind": "law",
           "lines": [
-            106,
-            111
+            140,
+            145
           ],
           "features": [
             "calls",
@@ -52704,8 +52912,8 @@
           "key": "src/LAWS.arrow_is_not_binding",
           "kind": "law",
           "lines": [
-            113,
-            118
+            147,
+            152
           ],
           "features": [
             "calls",
@@ -52757,8 +52965,8 @@
           "key": "src/LAWS.parameter_type_application",
           "kind": "law",
           "lines": [
-            120,
-            124
+            154,
+            158
           ],
           "features": [
             "calls",
@@ -52807,8 +53015,8 @@
           "key": "src/LAWS.return_type_application",
           "kind": "law",
           "lines": [
-            126,
-            131
+            160,
+            165
           ],
           "features": [
             "calls",
@@ -52861,8 +53069,8 @@
           "key": "src/LAWS.binding_type_application",
           "kind": "law",
           "lines": [
-            133,
-            137
+            167,
+            171
           ],
           "features": [
             "calls",
@@ -52914,8 +53122,8 @@
           "key": "src/LAWS.local_import",
           "kind": "law",
           "lines": [
-            139,
-            143
+            173,
+            177
           ],
           "features": [
             "calls",
@@ -52966,8 +53174,8 @@
           "key": "src/LAWS.hash_import",
           "kind": "law",
           "lines": [
-            145,
-            149
+            179,
+            183
           ],
           "features": [
             "calls",
@@ -65879,7 +66087,7 @@
     },
     {
       "file": "src/parse.bend",
-      "sha256": "e1f47f7d28cd19f157754605b68f45bd7ce2b8cf2faeb2729916deb6c4ccda70",
+      "sha256": "5b09c1b088cf2365ebd0261661857a36dc63480234a1e4d0b9ae1c9923a2bc1d",
       "imports": [
         {
           "module": "Base",
@@ -67320,8 +67528,8 @@
           "key": "src/parse.header",
           "kind": "definition",
           "lines": [
-            155,
-            160
+            156,
+            161
           ],
           "features": [
             "calls",
@@ -67354,27 +67562,27 @@
           ],
           "captures": [
             {
-              "offset": 6956,
+              "offset": 7039,
               "names": [
                 "h",
                 "t"
               ]
             },
             {
-              "offset": 6970,
+              "offset": 7053,
               "names": [
                 "h",
                 "t"
               ]
             },
             {
-              "offset": 7027,
+              "offset": 7110,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 7042,
+              "offset": 7125,
               "names": [
                 "h",
                 "t"
@@ -67401,8 +67609,8 @@
           "key": "src/parse.run",
           "kind": "definition",
           "lines": [
-            164,
-            355
+            165,
+            359
           ],
           "features": [
             "calls",
@@ -67506,7 +67714,8 @@
             "src/syntax.identifier",
             "src/syntax.matches",
             "src/syntax.skip_lines",
-            "src/syntax.text"
+            "src/syntax.text",
+            "src/syntax.touches"
           ],
           "type_references": [
             "List",
@@ -67519,13 +67728,13 @@
           ],
           "captures": [
             {
-              "offset": 7611,
+              "offset": 7694,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 7667,
+              "offset": 7750,
               "names": [
                 "head",
                 "n",
@@ -67535,7 +67744,7 @@
               ]
             },
             {
-              "offset": 7742,
+              "offset": 7825,
               "names": [
                 "head",
                 "n",
@@ -67544,57 +67753,57 @@
               ]
             },
             {
-              "offset": 7794,
+              "offset": 7877,
               "names": [
                 "n"
               ]
             },
             {
-              "offset": 7803,
+              "offset": 7886,
               "names": [
                 "n",
                 "value"
               ]
             },
             {
-              "offset": 7849,
+              "offset": 7932,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 7857,
+              "offset": 7940,
               "names": [
                 "more",
                 "value"
               ]
             },
             {
-              "offset": 7890,
+              "offset": 7973,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 8046,
+              "offset": 8129,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 8102,
+              "offset": 8185,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 8444,
+              "offset": 8527,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 8500,
+              "offset": 8583,
               "names": [
                 "column",
                 "n",
@@ -67605,7 +67814,7 @@
               ]
             },
             {
-              "offset": 8638,
+              "offset": 8721,
               "names": [
                 "n",
                 "name",
@@ -67614,7 +67823,7 @@
               ]
             },
             {
-              "offset": 8703,
+              "offset": 8786,
               "names": [
                 "n",
                 "name",
@@ -67622,7 +67831,7 @@
               ]
             },
             {
-              "offset": 8758,
+              "offset": 8841,
               "names": [
                 "n",
                 "name",
@@ -67630,7 +67839,7 @@
               ]
             },
             {
-              "offset": 8768,
+              "offset": 8851,
               "names": [
                 "fields",
                 "n",
@@ -67639,7 +67848,7 @@
               ]
             },
             {
-              "offset": 8836,
+              "offset": 8919,
               "names": [
                 "n",
                 "name",
@@ -67647,7 +67856,7 @@
               ]
             },
             {
-              "offset": 8845,
+              "offset": 8928,
               "names": [
                 "n",
                 "name",
@@ -67656,7 +67865,7 @@
               ]
             },
             {
-              "offset": 8895,
+              "offset": 8978,
               "names": [
                 "n",
                 "name",
@@ -67664,7 +67873,7 @@
               ]
             },
             {
-              "offset": 8903,
+              "offset": 8986,
               "names": [
                 "ctor",
                 "n",
@@ -67673,32 +67882,32 @@
               ]
             },
             {
-              "offset": 9000,
+              "offset": 9083,
               "names": [
                 "ctor"
               ]
             },
             {
-              "offset": 9008,
+              "offset": 9091,
               "names": [
                 "ctor",
                 "more"
               ]
             },
             {
-              "offset": 9043,
+              "offset": 9126,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 9309,
+              "offset": 9392,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 9360,
+              "offset": 9443,
               "names": [
                 "close",
                 "h",
@@ -67707,13 +67916,13 @@
               ]
             },
             {
-              "offset": 9455,
+              "offset": 9538,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 9499,
+              "offset": 9582,
               "names": [
                 "close",
                 "n",
@@ -67721,14 +67930,14 @@
               ]
             },
             {
-              "offset": 9539,
+              "offset": 9622,
               "names": [
                 "close",
                 "n"
               ]
             },
             {
-              "offset": 9544,
+              "offset": 9627,
               "names": [
                 "close",
                 "n",
@@ -67736,13 +67945,13 @@
               ]
             },
             {
-              "offset": 9799,
+              "offset": 9882,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 9850,
+              "offset": 9933,
               "names": [
                 "close",
                 "n",
@@ -67751,7 +67960,7 @@
               ]
             },
             {
-              "offset": 9900,
+              "offset": 9983,
               "names": [
                 "close",
                 "n",
@@ -67759,7 +67968,7 @@
               ]
             },
             {
-              "offset": 9907,
+              "offset": 9990,
               "names": [
                 "arg",
                 "close",
@@ -67768,14 +67977,14 @@
               ]
             },
             {
-              "offset": 10181,
+              "offset": 10264,
               "names": [
                 "head",
                 "t"
               ]
             },
             {
-              "offset": 10242,
+              "offset": 10325,
               "names": [
                 "close",
                 "h",
@@ -67788,7 +67997,7 @@
               ]
             },
             {
-              "offset": 10306,
+              "offset": 10389,
               "names": [
                 "close",
                 "head",
@@ -67799,13 +68008,13 @@
               ]
             },
             {
-              "offset": 10465,
+              "offset": 10548,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 10507,
+              "offset": 10590,
               "names": [
                 "close",
                 "head",
@@ -67816,26 +68025,26 @@
               ]
             },
             {
-              "offset": 10610,
+              "offset": 10693,
               "names": [
                 "head"
               ]
             },
             {
-              "offset": 10618,
+              "offset": 10701,
               "names": [
                 "head",
                 "more"
               ]
             },
             {
-              "offset": 10652,
+              "offset": 10735,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 10931,
+              "offset": 11014,
               "names": [
                 "open",
                 "tail",
@@ -67843,31 +68052,20 @@
               ]
             },
             {
-              "offset": 10995,
+              "offset": 11078,
               "names": [
                 "open",
                 "tail"
               ]
             },
             {
-              "offset": 11037,
+              "offset": 11120,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 11076,
-              "names": [
-                "n",
-                "name",
-                "open",
-                "pattern",
-                "tail",
-                "tokens"
-              ]
-            },
-            {
-              "offset": 11142,
+              "offset": 11159,
               "names": [
                 "n",
                 "name",
@@ -67878,7 +68076,18 @@
               ]
             },
             {
-              "offset": 11209,
+              "offset": 11225,
+              "names": [
+                "n",
+                "name",
+                "open",
+                "pattern",
+                "tail",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 11292,
               "names": [
                 "n",
                 "name",
@@ -67887,20 +68096,20 @@
               ]
             },
             {
-              "offset": 11266,
+              "offset": 11349,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 11274,
+              "offset": 11357,
               "names": [
                 "args",
                 "name"
               ]
             },
             {
-              "offset": 11317,
+              "offset": 11400,
               "names": [
                 "n",
                 "name",
@@ -67911,7 +68120,17 @@
               ]
             },
             {
-              "offset": 11384,
+              "offset": 11467,
+              "names": [
+                "n",
+                "name",
+                "open",
+                "pattern",
+                "tail"
+              ]
+            },
+            {
+              "offset": 11609,
               "names": [
                 "n",
                 "name",
@@ -67920,20 +68139,27 @@
               ]
             },
             {
-              "offset": 11441,
+              "offset": 11668,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 11449,
+              "offset": 11676,
               "names": [
                 "args",
                 "name"
               ]
             },
             {
-              "offset": 11491,
+              "offset": 11718,
+              "names": [
+                "open",
+                "tail"
+              ]
+            },
+            {
+              "offset": 11779,
               "names": [
                 "name",
                 "open",
@@ -67943,7 +68169,7 @@
               ]
             },
             {
-              "offset": 11580,
+              "offset": 11868,
               "names": [
                 "name",
                 "open",
@@ -67951,19 +68177,19 @@
               ]
             },
             {
-              "offset": 11643,
+              "offset": 11931,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 11684,
+              "offset": 11972,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 11998,
+              "offset": 12286,
               "names": [
                 "h",
                 "n",
@@ -67971,13 +68197,13 @@
               ]
             },
             {
-              "offset": 12049,
+              "offset": 12337,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 12295,
+              "offset": 12583,
               "names": [
                 "h",
                 "n",
@@ -67987,7 +68213,7 @@
               ]
             },
             {
-              "offset": 12363,
+              "offset": 12651,
               "names": [
                 "h",
                 "n",
@@ -67996,14 +68222,14 @@
               ]
             },
             {
-              "offset": 12431,
+              "offset": 12719,
               "names": [
                 "h",
                 "n"
               ]
             },
             {
-              "offset": 12440,
+              "offset": 12728,
               "names": [
                 "h",
                 "n",
@@ -68011,7 +68237,7 @@
               ]
             },
             {
-              "offset": 12492,
+              "offset": 12780,
               "names": [
                 "h",
                 "n",
@@ -68021,7 +68247,7 @@
               ]
             },
             {
-              "offset": 12582,
+              "offset": 12870,
               "names": [
                 "h",
                 "n",
@@ -68030,7 +68256,7 @@
               ]
             },
             {
-              "offset": 12685,
+              "offset": 12973,
               "names": [
                 "h",
                 "n",
@@ -68039,7 +68265,7 @@
               ]
             },
             {
-              "offset": 12785,
+              "offset": 13073,
               "names": [
                 "h",
                 "n",
@@ -68047,33 +68273,33 @@
               ]
             },
             {
-              "offset": 12844,
+              "offset": 13132,
               "names": [
                 "n",
                 "tokens"
               ]
             },
             {
-              "offset": 12903,
+              "offset": 13191,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 12933,
+              "offset": 13221,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 13246,
+              "offset": 13534,
               "names": [
                 "name",
                 "tokens"
               ]
             },
             {
-              "offset": 13298,
+              "offset": 13586,
               "names": [
                 "keyword",
                 "n",
@@ -68082,7 +68308,7 @@
               ]
             },
             {
-              "offset": 13360,
+              "offset": 13648,
               "names": [
                 "keyword",
                 "n",
@@ -68091,7 +68317,7 @@
               ]
             },
             {
-              "offset": 13429,
+              "offset": 13717,
               "names": [
                 "n",
                 "name",
@@ -68099,13 +68325,13 @@
               ]
             },
             {
-              "offset": 13491,
+              "offset": 13779,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 13543,
+              "offset": 13831,
               "names": [
                 "n",
                 "name",
@@ -68113,14 +68339,14 @@
               ]
             },
             {
-              "offset": 13607,
+              "offset": 13895,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 13654,
+              "offset": 13942,
               "names": [
                 "keyword",
                 "n",
@@ -68129,7 +68355,7 @@
               ]
             },
             {
-              "offset": 13722,
+              "offset": 14010,
               "names": [
                 "n",
                 "name",
@@ -68137,21 +68363,21 @@
               ]
             },
             {
-              "offset": 13785,
+              "offset": 14073,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 13836,
+              "offset": 14124,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 13846,
+              "offset": 14134,
               "names": [
                 "n",
                 "name",
@@ -68159,20 +68385,20 @@
               ]
             },
             {
-              "offset": 13894,
+              "offset": 14182,
               "names": [
                 "keyword",
                 "tokens"
               ]
             },
             {
-              "offset": 13961,
+              "offset": 14249,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 14184,
+              "offset": 14472,
               "names": [
                 "kind",
                 "n",
@@ -68181,7 +68407,7 @@
               ]
             },
             {
-              "offset": 14249,
+              "offset": 14537,
               "names": [
                 "kind",
                 "n",
@@ -68189,14 +68415,14 @@
               ]
             },
             {
-              "offset": 14320,
+              "offset": 14608,
               "names": [
                 "kind",
                 "name"
               ]
             },
             {
-              "offset": 14329,
+              "offset": 14617,
               "names": [
                 "ctors",
                 "kind",
@@ -68204,13 +68430,13 @@
               ]
             },
             {
-              "offset": 14389,
+              "offset": 14677,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 14736,
+              "offset": 15024,
               "names": [
                 "body",
                 "colon",
@@ -68222,14 +68448,14 @@
               ]
             },
             {
-              "offset": 14806,
+              "offset": 15094,
               "names": [
                 "body",
                 "colon"
               ]
             },
             {
-              "offset": 14873,
+              "offset": 15161,
               "names": [
                 "body",
                 "colon",
@@ -68241,7 +68467,7 @@
               ]
             },
             {
-              "offset": 14943,
+              "offset": 15231,
               "names": [
                 "body",
                 "n",
@@ -68251,7 +68477,7 @@
               ]
             },
             {
-              "offset": 14987,
+              "offset": 15275,
               "names": [
                 "name",
                 "params",
@@ -68259,7 +68485,7 @@
               ]
             },
             {
-              "offset": 14996,
+              "offset": 15284,
               "names": [
                 "name",
                 "params",
@@ -68268,19 +68494,19 @@
               ]
             },
             {
-              "offset": 15059,
+              "offset": 15347,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 15114,
+              "offset": 15402,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 15417,
+              "offset": 15705,
               "names": [
                 "column",
                 "n",
@@ -68290,7 +68516,7 @@
               ]
             },
             {
-              "offset": 15480,
+              "offset": 15768,
               "names": [
                 "column",
                 "n",
@@ -68299,7 +68525,7 @@
               ]
             },
             {
-              "offset": 15529,
+              "offset": 15817,
               "names": [
                 "column",
                 "n",
@@ -68308,7 +68534,7 @@
               ]
             },
             {
-              "offset": 15537,
+              "offset": 15825,
               "names": [
                 "column",
                 "item",
@@ -68318,7 +68544,7 @@
               ]
             },
             {
-              "offset": 15617,
+              "offset": 15905,
               "names": [
                 "column",
                 "n",
@@ -68328,7 +68554,7 @@
               ]
             },
             {
-              "offset": 15678,
+              "offset": 15966,
               "names": [
                 "column",
                 "n",
@@ -68338,7 +68564,7 @@
               ]
             },
             {
-              "offset": 15724,
+              "offset": 16012,
               "names": [
                 "column",
                 "n",
@@ -68347,7 +68573,7 @@
               ]
             },
             {
-              "offset": 15732,
+              "offset": 16020,
               "names": [
                 "column",
                 "more",
@@ -68357,7 +68583,7 @@
               ]
             },
             {
-              "offset": 15807,
+              "offset": 16095,
               "names": [
                 "column",
                 "n",
@@ -68367,7 +68593,7 @@
               ]
             },
             {
-              "offset": 15868,
+              "offset": 16156,
               "names": [
                 "column",
                 "n",
@@ -68376,14 +68602,14 @@
               ]
             },
             {
-              "offset": 15930,
+              "offset": 16218,
               "names": [
                 "token",
                 "value"
               ]
             },
             {
-              "offset": 15939,
+              "offset": 16227,
               "names": [
                 "items",
                 "token",
@@ -68391,7 +68617,7 @@
               ]
             },
             {
-              "offset": 16302,
+              "offset": 16590,
               "names": [
                 "column",
                 "n",
@@ -68402,7 +68628,7 @@
               ]
             },
             {
-              "offset": 16374,
+              "offset": 16662,
               "names": [
                 "column",
                 "n",
@@ -68412,7 +68638,7 @@
               ]
             },
             {
-              "offset": 16442,
+              "offset": 16730,
               "names": [
                 "column",
                 "n",
@@ -68423,7 +68649,7 @@
               ]
             },
             {
-              "offset": 16522,
+              "offset": 16810,
               "names": [
                 "column",
                 "n",
@@ -68432,7 +68658,7 @@
               ]
             },
             {
-              "offset": 16573,
+              "offset": 16861,
               "names": [
                 "column",
                 "n",
@@ -68441,7 +68667,7 @@
               ]
             },
             {
-              "offset": 16582,
+              "offset": 16870,
               "names": [
                 "column",
                 "n",
@@ -68451,13 +68677,13 @@
               ]
             },
             {
-              "offset": 16652,
+              "offset": 16940,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 16912,
+              "offset": 17200,
               "names": [
                 "column",
                 "n",
@@ -68468,13 +68694,13 @@
               ]
             },
             {
-              "offset": 16978,
+              "offset": 17266,
               "names": [
                 "tail"
               ]
             },
             {
-              "offset": 17034,
+              "offset": 17322,
               "names": [
                 "column",
                 "n",
@@ -68485,7 +68711,7 @@
               ]
             },
             {
-              "offset": 17099,
+              "offset": 17387,
               "names": [
                 "column",
                 "n",
@@ -68495,7 +68721,7 @@
               ]
             },
             {
-              "offset": 17150,
+              "offset": 17438,
               "names": [
                 "column",
                 "n",
@@ -68505,7 +68731,7 @@
               ]
             },
             {
-              "offset": 17159,
+              "offset": 17447,
               "names": [
                 "column",
                 "n",
@@ -68516,13 +68742,13 @@
               ]
             },
             {
-              "offset": 17232,
+              "offset": 17520,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 17463,
+              "offset": 17751,
               "names": [
                 "annotation",
                 "column",
@@ -68533,7 +68759,7 @@
               ]
             },
             {
-              "offset": 17525,
+              "offset": 17813,
               "names": [
                 "annotation",
                 "quantity",
@@ -68542,7 +68768,7 @@
               ]
             },
             {
-              "offset": 17533,
+              "offset": 17821,
               "names": [
                 "annotation",
                 "next",
@@ -68552,7 +68778,7 @@
               ]
             },
             {
-              "offset": 17737,
+              "offset": 18025,
               "names": [
                 "column",
                 "keyword",
@@ -68563,7 +68789,7 @@
               ]
             },
             {
-              "offset": 17800,
+              "offset": 18088,
               "names": [
                 "column",
                 "keyword",
@@ -68573,7 +68799,7 @@
               ]
             },
             {
-              "offset": 17848,
+              "offset": 18136,
               "names": [
                 "column",
                 "keyword",
@@ -68583,7 +68809,7 @@
               ]
             },
             {
-              "offset": 17856,
+              "offset": 18144,
               "names": [
                 "column",
                 "keyword",
@@ -68594,7 +68820,7 @@
               ]
             },
             {
-              "offset": 17943,
+              "offset": 18231,
               "names": [
                 "column",
                 "keyword",
@@ -68605,7 +68831,7 @@
               ]
             },
             {
-              "offset": 18032,
+              "offset": 18320,
               "names": [
                 "column",
                 "keyword",
@@ -68616,81 +68842,64 @@
               ]
             },
             {
-              "offset": 18077,
+              "offset": 18365,
               "names": [
                 "column",
                 "keyword",
                 "n",
                 "parent",
                 "pattern"
-              ]
-            },
-            {
-              "offset": 18085,
-              "names": [
-                "column",
-                "keyword",
-                "more",
-                "n",
-                "parent",
-                "pattern"
-              ]
-            },
-            {
-              "offset": 18169,
-              "names": [
-                "column",
-                "keyword",
-                "n",
-                "parent",
-                "pattern",
-                "tokens"
-              ]
-            },
-            {
-              "offset": 18232,
-              "names": [
-                "column",
-                "keyword",
-                "n",
-                "parent",
-                "pattern"
-              ]
-            },
-            {
-              "offset": 18291,
-              "names": [
-                "column",
-                "keyword",
-                "n",
-                "parent",
-                "pattern"
-              ]
-            },
-            {
-              "offset": 18300,
-              "names": [
-                "column",
-                "keyword",
-                "n",
-                "parent",
-                "pattern",
-                "value"
               ]
             },
             {
               "offset": 18373,
               "names": [
+                "column",
                 "keyword",
-                "pattern",
-                "value"
+                "more",
+                "n",
+                "parent",
+                "pattern"
               ]
             },
             {
-              "offset": 18381,
+              "offset": 18457,
               "names": [
+                "column",
                 "keyword",
-                "more",
+                "n",
+                "parent",
+                "pattern",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 18520,
+              "names": [
+                "column",
+                "keyword",
+                "n",
+                "parent",
+                "pattern"
+              ]
+            },
+            {
+              "offset": 18579,
+              "names": [
+                "column",
+                "keyword",
+                "n",
+                "parent",
+                "pattern"
+              ]
+            },
+            {
+              "offset": 18588,
+              "names": [
+                "column",
+                "keyword",
+                "n",
+                "parent",
                 "pattern",
                 "value"
               ]
@@ -68698,11 +68907,28 @@
             {
               "offset": 18661,
               "names": [
+                "keyword",
+                "pattern",
+                "value"
+              ]
+            },
+            {
+              "offset": 18669,
+              "names": [
+                "keyword",
+                "more",
+                "pattern",
+                "value"
+              ]
+            },
+            {
+              "offset": 18949,
+              "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 18717,
+              "offset": 19005,
               "names": [
                 "column",
                 "keyword",
@@ -68713,7 +68939,7 @@
               ]
             },
             {
-              "offset": 18865,
+              "offset": 19153,
               "names": [
                 "keyword",
                 "n",
@@ -68722,7 +68948,7 @@
               ]
             },
             {
-              "offset": 18920,
+              "offset": 19208,
               "names": [
                 "keyword",
                 "n",
@@ -68730,7 +68956,7 @@
               ]
             },
             {
-              "offset": 18932,
+              "offset": 19220,
               "names": [
                 "keyword",
                 "n",
@@ -68739,7 +68965,7 @@
               ]
             },
             {
-              "offset": 19055,
+              "offset": 19343,
               "names": [
                 "keyword",
                 "n",
@@ -68749,7 +68975,7 @@
               ]
             },
             {
-              "offset": 19138,
+              "offset": 19426,
               "names": [
                 "keyword",
                 "n",
@@ -68759,7 +68985,7 @@
               ]
             },
             {
-              "offset": 19205,
+              "offset": 19493,
               "names": [
                 "keyword",
                 "n",
@@ -68768,7 +68994,7 @@
               ]
             },
             {
-              "offset": 19270,
+              "offset": 19558,
               "names": [
                 "keyword",
                 "n",
@@ -68777,7 +69003,7 @@
               ]
             },
             {
-              "offset": 19279,
+              "offset": 19567,
               "names": [
                 "keyword",
                 "n",
@@ -68787,7 +69013,7 @@
               ]
             },
             {
-              "offset": 19369,
+              "offset": 19657,
               "names": [
                 "keyword",
                 "pattern",
@@ -68795,7 +69021,7 @@
               ]
             },
             {
-              "offset": 19377,
+              "offset": 19665,
               "names": [
                 "keyword",
                 "more",
@@ -68804,7 +69030,7 @@
               ]
             },
             {
-              "offset": 19456,
+              "offset": 19744,
               "names": [
                 "tokens"
               ]
@@ -68848,7 +69074,8 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/syntax.skip_lines",
-              "src/syntax.text"
+              "src/syntax.text",
+              "src/syntax.touches"
             ],
             "types": [
               "Con",
@@ -68900,8 +69127,8 @@
           "key": "src/parse.parse",
           "kind": "definition",
           "lines": [
-            357,
-            358
+            361,
+            362
           ],
           "features": [
             "calls",
@@ -69801,7 +70028,7 @@
     },
     {
       "file": "src/PROOF.bend",
-      "sha256": "b8dbd064c12a4ee23502f1ddb4b2e925d59db2a03268f87ab552d2e85ea008d6",
+      "sha256": "f69b288c688efc832d8d4743c43d81918daade4ac01ee5c769395f14ca0b1e3c",
       "imports": [
         {
           "module": "Base",
@@ -70370,13 +70597,403 @@
           }
         },
         {
+          "id": "src/PROOF.bend::L.touches_witness:law_fill",
+          "name": "L.touches_witness",
+          "key": "src/LAWS.touches_witness",
+          "kind": "law_fill",
+          "lines": [
+            39,
+            39
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "True",
+            "src/syntax.At",
+            "src/syntax.Token",
+            "src/syntax.touches"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/syntax.touches"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/PROOF.bend::L.touching_brace:law_fill",
+          "name": "L.touching_brace",
+          "key": "src/LAWS.touching_brace",
+          "kind": "law_fill",
+          "lines": [
+            41,
+            56
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.nat",
+            "literals.string",
+            "matches",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Done",
+            "Equal.cong",
+            "False",
+            "List",
+            "Nil",
+            "Result",
+            "True",
+            "src/parse.Arguments",
+            "src/parse.Parsed",
+            "src/parse.Term",
+            "src/parse.invalid",
+            "src/parse.run",
+            "src/parse.then",
+            "src/parse.wrap_call",
+            "src/syntax.At",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.choose",
+            "src/syntax.touches"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.touches"
+          ],
+          "captures": [
+            {
+              "offset": 767,
+              "names": [
+                "rest",
+                "x",
+                "y",
+                "z"
+              ]
+            },
+            {
+              "offset": 835,
+              "names": [
+                "rest",
+                "x",
+                "z"
+              ]
+            },
+            {
+              "offset": 919,
+              "names": [
+                "x"
+              ]
+            },
+            {
+              "offset": 927,
+              "names": [
+                "args",
+                "x"
+              ]
+            },
+            {
+              "offset": 995,
+              "names": [
+                "rest",
+                "y",
+                "z"
+              ]
+            },
+            {
+              "offset": 1204,
+              "names": [
+                "rest",
+                "x",
+                "y",
+                "z"
+              ]
+            },
+            {
+              "offset": 1272,
+              "names": [
+                "rest",
+                "x",
+                "z"
+              ]
+            },
+            {
+              "offset": 1357,
+              "names": [
+                "x"
+              ]
+            },
+            {
+              "offset": 1365,
+              "names": [
+                "args",
+                "x"
+              ]
+            },
+            {
+              "offset": 1433,
+              "names": [
+                "rest",
+                "y",
+                "z"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Equal.cong"
+            ],
+            "types": [
+              "False",
+              "True"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/PROOF.bend::L.detached_brace:law_fill",
+          "name": "L.detached_brace",
+          "key": "src/LAWS.detached_brace",
+          "kind": "law_fill",
+          "lines": [
+            58,
+            73
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.nat",
+            "literals.string",
+            "matches",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Equal.cong",
+            "Fail",
+            "False",
+            "List",
+            "Result",
+            "True",
+            "src/parse.Arguments",
+            "src/parse.Parsed",
+            "src/parse.Term",
+            "src/parse.invalid",
+            "src/parse.run",
+            "src/parse.then",
+            "src/parse.wrap_call",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Token",
+            "src/syntax.choose",
+            "src/syntax.touches"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.touches"
+          ],
+          "captures": [
+            {
+              "offset": 1703,
+              "names": [
+                "rest",
+                "x",
+                "y"
+              ]
+            },
+            {
+              "offset": 1771,
+              "names": [
+                "rest",
+                "x"
+              ]
+            },
+            {
+              "offset": 1835,
+              "names": [
+                "x"
+              ]
+            },
+            {
+              "offset": 1843,
+              "names": [
+                "args",
+                "x"
+              ]
+            },
+            {
+              "offset": 1911,
+              "names": [
+                "rest",
+                "y"
+              ]
+            },
+            {
+              "offset": 2099,
+              "names": [
+                "rest",
+                "x",
+                "y"
+              ]
+            },
+            {
+              "offset": 2167,
+              "names": [
+                "rest",
+                "x"
+              ]
+            },
+            {
+              "offset": 2232,
+              "names": [
+                "x"
+              ]
+            },
+            {
+              "offset": 2240,
+              "names": [
+                "args",
+                "x"
+              ]
+            },
+            {
+              "offset": 2308,
+              "names": [
+                "rest",
+                "y"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Equal.cong"
+            ],
+            "types": [
+              "False",
+              "True"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/PROOF.bend::L.joined_brace_witness:law_fill",
+          "name": "L.joined_brace_witness",
+          "key": "src/LAWS.joined_brace_witness",
+          "kind": "law_fill",
+          "lines": [
+            75,
+            75
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "Nil",
+            "Result",
+            "True",
+            "src/parse.Parsed",
+            "src/parse.Term",
+            "src/parse.header",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.header",
+            "src/parse.run",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/PROOF.bend::L.line_broken_scrutinees_witness:law_fill",
           "name": "L.line_broken_scrutinees_witness",
           "key": "src/LAWS.line_broken_scrutinees_witness",
           "kind": "law_fill",
           "lines": [
-            39,
-            39
+            77,
+            77
           ],
           "features": [
             "calls",
@@ -70425,8 +71042,8 @@
           "key": "src/LAWS.dotted_pattern_binder",
           "kind": "law_fill",
           "lines": [
-            41,
-            41
+            79,
+            79
           ],
           "features": [
             "calls",
@@ -70478,8 +71095,8 @@
           "key": "src/LAWS.dotted_let_binder",
           "kind": "law_fill",
           "lines": [
-            43,
-            43
+            81,
+            81
           ],
           "features": [
             "calls",
@@ -70531,8 +71148,8 @@
           "key": "src/LAWS.template_binder",
           "kind": "law_fill",
           "lines": [
-            45,
-            46
+            83,
+            84
           ],
           "features": [
             "calls",
@@ -70583,8 +71200,8 @@
           "key": "src/LAWS.nonleading_template_binder",
           "kind": "law_fill",
           "lines": [
-            48,
-            49
+            86,
+            87
           ],
           "features": [
             "calls",
@@ -70639,8 +71256,8 @@
           "key": "src/LAWS.destructuring_binding",
           "kind": "law_fill",
           "lines": [
-            51,
-            57
+            89,
+            95
           ],
           "features": [
             "calls",
@@ -70696,7 +71313,7 @@
           ],
           "captures": [
             {
-              "offset": 886,
+              "offset": 2747,
               "names": [
                 "at",
                 "fields",
@@ -70704,7 +71321,7 @@
               ]
             },
             {
-              "offset": 887,
+              "offset": 2748,
               "names": [
                 "_",
                 "at",
@@ -70713,7 +71330,7 @@
               ]
             },
             {
-              "offset": 1014,
+              "offset": 2875,
               "names": [
                 "at",
                 "fields",
@@ -70721,7 +71338,7 @@
               ]
             },
             {
-              "offset": 1105,
+              "offset": 2966,
               "names": [
                 "at",
                 "rest"
@@ -70740,8 +71357,8 @@
           "key": "src/LAWS.equality_is_not_binding",
           "kind": "law_fill",
           "lines": [
-            59,
-            60
+            97,
+            98
           ],
           "features": [
             "calls",
@@ -70793,8 +71410,8 @@
           "key": "src/LAWS.arrow_is_not_binding",
           "kind": "law_fill",
           "lines": [
-            62,
-            63
+            100,
+            101
           ],
           "features": [
             "calls",
@@ -70846,8 +71463,8 @@
           "key": "src/LAWS.parameter_type_application",
           "kind": "law_fill",
           "lines": [
-            65,
-            66
+            103,
+            104
           ],
           "features": [
             "calls",
@@ -70896,8 +71513,8 @@
           "key": "src/LAWS.return_type_application",
           "kind": "law_fill",
           "lines": [
-            68,
-            69
+            106,
+            107
           ],
           "features": [
             "calls",
@@ -70950,8 +71567,8 @@
           "key": "src/LAWS.binding_type_application",
           "kind": "law_fill",
           "lines": [
-            71,
-            72
+            109,
+            110
           ],
           "features": [
             "calls",
@@ -71003,8 +71620,8 @@
           "key": "src/LAWS.local_import",
           "kind": "law_fill",
           "lines": [
-            74,
-            75
+            112,
+            113
           ],
           "features": [
             "calls",
@@ -71055,8 +71672,8 @@
           "key": "src/LAWS.hash_import",
           "kind": "law_fill",
           "lines": [
-            77,
-            78
+            115,
+            116
           ],
           "features": [
             "calls",
@@ -76049,7 +76666,7 @@
     },
     {
       "file": "src/syntax.bend",
-      "sha256": "dfb9033fecf17778ea6051f6a6723346069f5de44e246cf465bb164ff93067aa",
+      "sha256": "7447bf7dbfb6a26bc04f956e9204697be6c60b829e7e6236f6fea15626350662",
       "imports": [
         {
           "module": "Base",
@@ -76073,6 +76690,7 @@
         "literals.string",
         "literals.u32",
         "matches",
+        "matches.multi",
         "patterns.nested",
         "patterns.variable",
         "quantities.affine",
@@ -76361,13 +76979,55 @@
           }
         },
         {
+          "id": "src/syntax.bend::touches:definition",
+          "name": "touches",
+          "key": "src/syntax.touches",
+          "kind": "definition",
+          "lines": [
+            53,
+            55
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "U32.is_eq",
+            "src/syntax.At",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Bool",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.is_eq"
+            ],
+            "types": [
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/syntax.bend::here:definition",
           "name": "here",
           "key": "src/syntax.here",
           "kind": "definition",
           "lines": [
-            52,
-            55
+            57,
+            60
           ],
           "features": [
             "calls",
@@ -76414,8 +77074,8 @@
           "key": "src/syntax.matches",
           "kind": "definition",
           "lines": [
-            57,
-            58
+            62,
+            63
           ],
           "features": [
             "calls",
@@ -76450,8 +77110,8 @@
           "key": "src/syntax.alpha",
           "kind": "definition",
           "lines": [
-            60,
-            63
+            65,
+            68
           ],
           "features": [
             "calls",
@@ -76493,8 +77153,8 @@
           "key": "src/syntax.digit",
           "kind": "definition",
           "lines": [
-            65,
-            66
+            70,
+            71
           ],
           "features": [
             "calls",
@@ -76532,8 +77192,8 @@
           "key": "src/syntax.word",
           "kind": "definition",
           "lines": [
-            68,
-            69
+            73,
+            74
           ],
           "features": [
             "calls",
@@ -76573,8 +77233,8 @@
           "key": "src/syntax.reserved",
           "kind": "definition",
           "lines": [
-            71,
-            79
+            76,
+            84
           ],
           "features": [
             "calls",
@@ -76610,8 +77270,8 @@
           "key": "src/syntax.choose",
           "kind": "definition",
           "lines": [
-            81,
-            84
+            86,
+            89
           ],
           "features": [
             "calls",
@@ -76656,8 +77316,8 @@
           "key": "src/syntax.bind",
           "kind": "definition",
           "lines": [
-            86,
-            89
+            91,
+            94
           ],
           "features": [
             "calls",
@@ -76703,8 +77363,8 @@
           "key": "src/syntax.words",
           "kind": "definition",
           "lines": [
-            93,
-            100
+            98,
+            105
           ],
           "features": [
             "bindings",
@@ -76747,7 +77407,7 @@
           ],
           "captures": [
             {
-              "offset": 3432,
+              "offset": 3624,
               "names": [
                 "count",
                 "open",
@@ -76755,7 +77415,7 @@
               ]
             },
             {
-              "offset": 3500,
+              "offset": 3692,
               "names": [
                 "code",
                 "count",
@@ -76764,7 +77424,7 @@
               ]
             },
             {
-              "offset": 3587,
+              "offset": 3779,
               "names": [
                 "code",
                 "count",
@@ -76801,8 +77461,8 @@
           "key": "src/syntax.malformed",
           "kind": "definition",
           "lines": [
-            103,
-            106
+            108,
+            111
           ],
           "features": [
             "calls",
@@ -76857,8 +77517,8 @@
           "key": "src/syntax.identifier_text",
           "kind": "definition",
           "lines": [
-            108,
-            111
+            113,
+            116
           ],
           "features": [
             "calls",
@@ -76909,8 +77569,8 @@
           "key": "src/syntax.identifier",
           "kind": "definition",
           "lines": [
-            113,
-            114
+            118,
+            119
           ],
           "features": [
             "calls",
@@ -76943,8 +77603,8 @@
           "key": "src/syntax.binder",
           "kind": "definition",
           "lines": [
-            117,
-            118
+            122,
+            123
           ],
           "features": [
             "calls",
@@ -76989,8 +77649,8 @@
           "key": "src/syntax.skip_lines",
           "kind": "definition",
           "lines": [
-            120,
-            124
+            125,
+            129
           ],
           "features": [
             "calls",
@@ -77023,13 +77683,13 @@
           ],
           "captures": [
             {
-              "offset": 4398,
+              "offset": 4590,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 4417,
+              "offset": 4609,
               "names": [
                 "h",
                 "t"

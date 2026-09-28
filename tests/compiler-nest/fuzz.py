@@ -14,12 +14,19 @@ COUNT = 3000
 
 
 DOTTED = ['a.b', '+a.b', '_.x', 'On.x', 'v.', 'a..b', 'a.1']
+# A space, comment or line break detaches a brace from its constructor name.
+GAPS = [' ', '\n      ', ' # gap\n      ']
 
 
 def programs(count=COUNT):
     rng = random.Random(SEED)
 
+    def opener(name):
+        return name + (rng.choice(GAPS) if rng.randrange(48) == 0 else '') + '{'
+
     def atom():
+        if rng.randrange(48) == 0:
+            return rng.choice(('On', 'Off')) + rng.choice(GAPS) + '{}'
         return rng.choice(DOTTED) if rng.randrange(12) == 0 else rng.choice(
             ['Off{}', 'On{}', '_', 'v', 'w', 'x', '+v', '_x'])
 
@@ -72,11 +79,12 @@ def programs(count=COUNT):
             elif shape == 'multi':
                 pattern = sep().join(atom() for _ in columns)
             else:
-                pattern = 'P{' + ', '.join(atom() for _ in slots) + '}'
+                pattern = opener('P') + ', '.join(atom() for _ in slots) + '}'
                 if shape == 'box':
-                    pattern = 'B{' + rng.choice((pattern, '_', 'v')) + '}'
+                    pattern = opener('B') + rng.choice((pattern, '_', 'v')) + '}'
                 pattern = rng.choice((pattern, pattern, '_', 'v', '+v'))
-            rows.append(f'    case {pattern}: {rng.choice(body_terms)}\n')
+            body = rng.choice(body_terms) if rng.randrange(48) else rng.choice(('On {}', 'both(Off {}, v)'))
+            rows.append(f'    case {pattern}: {body}\n')
         scrutinee = sep().join(columns)
         source = prefix + f'\ndef f({", ".join(params)}) -> Flag:\n  match {scrutinee}:\n' + ''.join(rows)
         call = rng.choice(('On{}', 'Off{}')) if empty else f'f({arguments})'

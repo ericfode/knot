@@ -49,6 +49,11 @@ def line(t: Token) -> U32:
   match t:
     case Token{s,At{lo,hi,line,col}}: line
 
+# Spans are half-open: [a,b) and [c,d) touch when b == c.
+def touches(name: Token, open: Token) -> Bool:
+  match name open:
+    case Token{s,At{a,b,i,j}} Token{t,At{c,d,k,l}}: U32.is_eq(b,c)
+
 def here(ts: List<&2,Token>) -> At:
   match ts:
     case Nil{}: At{0,0,0,0}
