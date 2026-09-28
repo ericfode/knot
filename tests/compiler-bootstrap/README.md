@@ -307,6 +307,10 @@ The unmutated real receipt must pass. It has these mutants:
 7. A reached stage with a disagreement.
 8. A stage that is not run after a reached prerequisite.
 9. `parser-argv-bare`: the parser compile's argv loses its maxima.
+10. `parser-blocker-argv-bare`: only the parser compile's executed argv is bare
+    (`../c1 src/parse-cli.bend generation.wasm`, default budgets); its `args`
+    still record the generation argv.
+11. `a2-blocker-argv-bare`: the same for C1's blocked run on S.
 
 The generation rules only apply once generations are reached, and this tree does
 not have any yet. So the harness also builds a **reached chain**: the real receipt
@@ -329,28 +333,39 @@ the chain must each be rejected:
 4. `node-forged-both`: both contracts record Node 20.0.0 as found and required.
 5. `contract-unrecorded`: the receipt names another `src/CONTRACT.json`.
 6. `argv-unrecorded`: a stage's args differ from its contract.
-7. `argv-seed-reserved`: `--threads 1` appears in both argvs.
-8. `sandbox-symlink`: a sandbox input is recorded as a symlink.
-9. `sandbox-unpinned`: an input differs from its pin.
-10. `a3-host-exhausted`: A3 is host-Exhausted after a reached A2.
-11. `a3-divergent-exhausted`: A3's status is `divergent-exhausted`.
-12. `a3-resource-forged`: a host stack trap is tagged `knot-budget`.
-13. `a3-knot-unsupported`: A3 is blocked by a Knot `Unsupported` after a reached A2.
-14. `a3-knot-budget`: A3 is blocked by `Exhausted parse budget` after a reached A2.
-15. `a3-divergent-unsupported`: A3's status is `divergent-unsupported`.
-16. `a3-excuse-forged`: a Knot `Unsupported` claims the `harness-io-abi-pending` excuse.
-17. `diagnostic-tail`: one character near the end of an A3 diagnostic changes.
-18. `artifact-over-budget`: an artifact is one byte over `output_bytes`.
-19. `artifact-memory-*`: A3's memory record is the reader's real output on one
+7. `a2-result-argv-bare`, `a3-result-argv-bare`: only a step's executed argv
+   is bare `[entry, output]`; its contract and `args` still record the
+   generation argv.
+8. `a2-result-executor-forged`: C1's executed argv names another program.
+9. `a3-result-argv-missing`: A2's run records no executed argv.
+10. `a3-io-abi-pending-argv-bare`: the excused harness stop of `a3-io-abi-pending`,
+    recorded with a bare argv.
+11. `argv-seed-reserved`: `--threads 1` appears in both argvs.
+12. `sandbox-symlink`: a sandbox input is recorded as a symlink.
+13. `sandbox-unpinned`: an input differs from its pin.
+14. `a3-host-exhausted`: A3 is host-Exhausted after a reached A2.
+15. `a3-divergent-exhausted`: A3's status is `divergent-exhausted`.
+16. `a3-resource-forged`: a host stack trap is tagged `knot-budget`.
+17. `a3-knot-unsupported`: A3 is blocked by a Knot `Unsupported` after a reached A2.
+18. `a3-knot-budget`: A3 is blocked by `Exhausted parse budget` after a reached A2.
+19. `a3-divergent-unsupported`: A3's status is `divergent-unsupported`.
+20. `a3-excuse-forged`: a Knot `Unsupported` claims the `harness-io-abi-pending` excuse.
+21. `diagnostic-tail`: one character near the end of an A3 diagnostic changes.
+22. `conformance-a3-missing`, `conformance-a2-missing`: one generation's
+    observations are absent from a reached conformance stage.
+23. `conformance-generations-empty`, `conformance-generations-absent`: a reached
+    conformance stage records no generation, as `{}` or not at all.
+24. `artifact-over-budget`: an artifact is one byte over `output_bytes`.
+25. `artifact-memory-*`: A3's memory record is the reader's real output on one
     probe module (see the `wasm-memory-reader` control): `no-maximum`,
     `two-memories`, `memory64-second`, `shared`, `imported-and-defined`,
     `gc-global-import` and `truncated`.
-20. `audit-closure-differs`: a staged module is missing from the audit (module
+26. `audit-closure-differs`: a staged module is missing from the audit (module
     loading advertised).
-21. `audit-missing`: no audit is recorded (module loading advertised).
-22. `modules-erased-both`: `--bundle` and the audit are removed from both steps
+27. `audit-missing`: no audit is recorded (module loading advertised).
+28. `modules-erased-both`: `--bundle` and the audit are removed from both steps
     and the parser compile, while the contract advertises module loading.
-23. `modules-forged-both`: both steps use `--bundle` while the contract does not
+29. `modules-forged-both`: both steps use `--bundle` while the contract does not
     advertise it.
 
 The runner's `counts()` rechecks the recorded verdict and blocker classes

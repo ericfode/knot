@@ -57,7 +57,11 @@ STAGES = (('e2e2.reference', 'E2E-2'), ('e2e2.compile', 'E2E-2'), ('e2e2.self-pa
           ('e2e3.c1', 'E2E-3'), ('e2e3.a2', 'E2E-3'), ('e2e3.a3', 'E2E-3'),
           ('e2e3.fixpoint', 'E2E-3'), ('e2e3.conformance', 'E2E-3'))
 GENERATIONS = ('e2e3.a2', 'e2e3.a3')  # C1 -> A2 and A2 -> A3: one contract
-LIB = 'lib'                # the relative bundle ROOT inside every sandbox
+# What each compile step executes before its argv: C1 is a process run from the
+# step's sandbox, a sibling of BUILD/c1; A2 is a host guest, handed the argv itself.
+RUNNER = {'e2e2.compile': ['../c1'], 'e2e3.a2': ['../c1'], 'e2e3.a3': []}
+CONFORMING = ('a2', 'a3')  # the generations that run the conformance corpus against C1
+LIB = 'lib'              # the relative bundle ROOT inside every sandbox
 OUTPUT = 'generation.wasm'  # the one output operand of every generation step
 MAGIC = b'\0asm\x01\0\0\0'
 SANDBOX = {COMPILER: 'bundle', PARSER: 'parser-bundle', CHECKER: 'checker-bundle'}
@@ -215,6 +219,16 @@ def after_c1(row) -> str:
 
 def reserved_in(argv, manifest) -> list[str]:
     return sorted(set(argv) & set(manifest['reserved_flags']['flags']))
+
+
+def invocation(sid, argv) -> list[str]:
+    """The argv a compile step executes under its generation argv (RUNNER)."""
+    return [*RUNNER[sid], *argv]
+
+
+def executed(s) -> dict:
+    """The observation of a step's own run: its result when reached, else its blocker."""
+    return (s.get('result') if s['status'] == 'reached' else s.get('blocker')) or {}
 
 
 def pin_of(place: str, manifest) -> str | None:
@@ -1095,24 +1109,23 @@ def reached_chain(progress) -> dict:
     made = {'sha256': digest(b'fixpoint'), 'bytes': size, 'output_bytes': c['target']['output_bytes'],
             'headroom_bytes': c['target']['output_bytes'] - size, 'memory': wasm_memories(memory_probes()['knot-shape'])}
 
-    def compiled(sid, program):
+    def compiled(sid):
         return stage(sid, status='reached', corpus=1, agree=1, disagree=0, args=list(c['argv']),
-                     result={'argv': [program, *c['argv']], 'exit': 0, 'stdout': f'Built\t{size}\n', 'stderr': ''},
+                     result={'argv': invocation(sid, c['argv']), 'exit': 0, 'stdout': f'Built\t{size}\n', 'stderr': ''},
                      artifact=dict(made))
-    by['e2e3.a2'] = compiled('e2e3.a2', '../c1')
-    by['e2e3.a3'] = compiled('e2e3.a3', '../a2.wasm')
+    by['e2e3.a2'], by['e2e3.a3'] = map(compiled, GENERATIONS)
     by['e2e3.fixpoint'] = stage('e2e3.fixpoint', status='reached', corpus=1, agree=1, disagree=0)
     by['e2e3.conformance'] = stage('e2e3.conformance', status='reached', corpus=2 * len(rows), agree=2 * len(rows),
                                    disagree=0, generations={g: {'agree': len(rows), 'disagree': 0, 'first_disagreement': None,
-                                                                'observations': copy.deepcopy(rows)} for g in ('a2', 'a3')})
+                                                                'observations': copy.deepcopy(rows)} for g in CONFORMING})
     p['stages'] = [by[sid] for sid, _ in STAGES]
     return p
 
 
 def mutants(progress, contract, manifest) -> list[dict]:
     """Scratch copies with substituted recorded fields; the judge must reject
-    each for its named reason. The first ten mutate the real receipt; the
-    rest mutate the reached chain, whose unmutated copies must pass. A case
+    each for its named reason. The `real` cases mutate the real receipt; the
+    `chain` cases mutate the reached chain, whose unmutated copies must pass. A case
     may be judged under src/CONTRACT.json with module loading advertised
     ('modules') or withdrawn ('single'); its receipt then names that file."""
     folder = ROOT / BUILD / 'judge'
@@ -1165,15 +1178,26 @@ def mutants(progress, contract, manifest) -> list[dict]:
     def contracts(p):
         return [p['generation_contract'][sid] for sid in GENERATIONS]
 
+    def argue(p, sid, argv):
+        """A step recorded as run under argv throughout: its args and its executed argv."""
+        s = step(p, sid)
+        s['args'] = list(argv)
+        executed(s)['argv'] = invocation(sid, argv)
+
+    def ran_bare(p, sid, entry=COMPILER):
+        """Only the executed argv is bare [entry, output]: default budgets, while
+        the contract and args still record the one generation argv."""
+        executed(step(p, sid))['argv'] = invocation(sid, [entry, OUTPUT])
+
     def bare_argv(p):  # The pre-harness-2 A2 -> A3 argv: [source, output], so default budgets.
         c = contracts(p)[1]
         c['argv'] = [c['entry'], c['target']['output']]
-        step(p)['args'] = list(c['argv'])
+        argue(p, 'e2e3.a3', c['argv'])
 
     def reserved(p):
         for c, sid in zip(contracts(p), GENERATIONS):
             c['argv'] = ['--threads', '1', *c['argv']]
-            step(p, sid)['args'] = list(c['argv'])
+            argue(p, sid, c['argv'])
 
     def symlinked(p):
         b = p['bundles'][COMPILER]
@@ -1200,6 +1224,9 @@ def mutants(progress, contract, manifest) -> list[dict]:
     vm_fuel = {'source': 'knot', 'exit': 4, 'stderr': 'Exhausted\tio\tsteps\n', 'host': False, 'resource': 'vm-fuel'}
     pending = {'source': 'harness', 'exit': 3, 'stderr': 'Unsupported\thost\tio-abi-pending\n'}
 
+    def generations(p):
+        return step(p, 'e2e3.conformance')['generations']
+
     def diagnostic_tail(p):
         row = next(r for r in step(p, 'e2e3.conformance')['generations']['a3']['observations'] if r['stderr'])
         tail = row['stderr'].rstrip('\n')
@@ -1215,11 +1242,11 @@ def mutants(progress, contract, manifest) -> list[dict]:
         for c, sid in zip(contracts(p), GENERATIONS):
             c.update(maxima=list(maxima), argv=[*c['argv'][:c['argv'].index(c['entry']) + 2], *map(str, maxima)])
             c['target']['output_bytes'] = cap
+            argue(p, sid, c['argv'])
             s = step(p, sid)
-            s['args'] = list(c['argv'])
             s['artifact'].update(output_bytes=cap, headroom_bytes=cap - s['artifact']['bytes'])
         parser = step(p, 'e2e2.compile')
-        parser['args'] = [*parser['args'][:parser['args'].index(PARSER) + 2], *map(str, maxima)]
+        argue(p, 'e2e2.compile', [*parser['args'][:parser['args'].index(PARSER) + 2], *map(str, maxima)])
 
     def defaults():
         limits = contract['compiler']['defaults']
@@ -1229,10 +1256,10 @@ def mutants(progress, contract, manifest) -> list[dict]:
         """Module loading withdrawn from both steps and the parser compile, and no audit."""
         for c, sid in zip(contracts(p), GENERATIONS):
             c.update(modules=False, argv=c['argv'][2:] if c['argv'][0] == '--bundle' else c['argv'])
-            step(p, sid)['args'] = list(c['argv'])
+            argue(p, sid, c['argv'])
         parser = step(p, 'e2e2.compile')
         if parser['args'][0] == '--bundle':
-            parser['args'] = parser['args'][2:]
+            argue(p, 'e2e2.compile', parser['args'][2:])
         p['audit'] = {'status': 'unavailable', 'reason': 'src/CONTRACT.json advertises no --audit-bundle'}
 
     def bundled(p, drop=0):
@@ -1240,10 +1267,10 @@ def mutants(progress, contract, manifest) -> list[dict]:
         for c, sid in zip(contracts(p), GENERATIONS):
             if not c['modules']:
                 c['modules'], c['argv'] = True, ['--bundle', c['root'], *c['argv']]
-            step(p, sid)['args'] = list(c['argv'])
+            argue(p, sid, c['argv'])
         parser = step(p, 'e2e2.compile')
         if parser.get('args', ['--bundle'])[0] != '--bundle':
-            parser['args'] = ['--bundle', LIB, *parser['args']]
+            argue(p, 'e2e2.compile', ['--bundle', LIB, *parser['args']])
         b, base = p['bundles'][COMPILER], manifest['base']
         loaded = [x for x in b['order'] if x.endswith('.bend') and x != base['path']]
         p['audit'] = {'status': 'recorded', 'args': ['--audit-bundle', LIB, b['entry']], 'modules': loaded[drop:],
@@ -1265,6 +1292,8 @@ def mutants(progress, contract, manifest) -> list[dict]:
         ('not-run-after-reached', 1, 'not run although prerequisite', silent_skip),
         ('parser-argv-bare', 1, 'e2e2.compile: argv is not the one generation argv',
          lambda p: step(p, 'e2e2.compile').update(args=step(p, 'e2e2.compile')['args'][:2])),
+        ('parser-blocker-argv-bare', 1, 'e2e2.compile: executed argv', lambda p: ran_bare(p, 'e2e2.compile', PARSER)),
+        ('a2-blocker-argv-bare', 1, 'e2e3.a2: executed argv', lambda p: ran_bare(p, 'e2e3.a2')),
     )
     chain = (
         ('reached-chain', 0, None, lambda p: None),
@@ -1279,6 +1308,11 @@ def mutants(progress, contract, manifest) -> list[dict]:
          lambda p: p['inputs'].update({CONTRACT: digest(b'')})),
         ('argv-unrecorded', 1, 'argv differs from its generation contract',
          lambda p: step(p).update(args=step(p)['args'][:-1])),
+        ('a2-result-argv-bare', 1, 'e2e3.a2: executed argv', lambda p: ran_bare(p, 'e2e3.a2')),
+        ('a2-result-executor-forged', 1, 'e2e3.a2: executed argv',
+         lambda p: executed(step(p, 'e2e3.a2'))['argv'].__setitem__(0, '../check-cli')),
+        ('a3-result-argv-bare', 1, 'e2e3.a3: executed argv', lambda p: ran_bare(p, 'e2e3.a3')),
+        ('a3-result-argv-missing', 1, 'e2e3.a3: executed argv', lambda p: executed(step(p)).pop('argv')),
         ('argv-seed-reserved', 1, 'seed-reserved', reserved),
         ('sandbox-symlink', 1, 'not a regular single-link file', symlinked),
         ('sandbox-unpinned', 1, 'differs from its pin', unpinned),
@@ -1293,7 +1327,14 @@ def mutants(progress, contract, manifest) -> list[dict]:
          lambda p: stop_a3(p, knot_unsupported, excuse='harness-io-abi-pending')),
         ('a3-vm-fuel', 0, None, lambda p: stop_a3(p, vm_fuel, excuse='vm-fuel')),
         ('a3-io-abi-pending', 0, None, lambda p: stop_a3(p, pending, excuse='harness-io-abi-pending')),
+        ('a3-io-abi-pending-argv-bare', 1, 'e2e3.a3: executed argv',
+         lambda p: stop_a3(p, {**pending, 'argv': [COMPILER, OUTPUT]}, excuse='harness-io-abi-pending')),
         ('diagnostic-tail', 1, 'diagnostics differ from C1', diagnostic_tail),
+        ('conformance-a3-missing', 1, 'are not a2 and a3', lambda p: generations(p).pop('a3')),
+        ('conformance-a2-missing', 1, 'are not a2 and a3', lambda p: generations(p).pop('a2')),
+        ('conformance-generations-empty', 1, 'are not a2 and a3', lambda p: generations(p).clear()),
+        ('conformance-generations-absent', 1, 'are not a2 and a3',
+         lambda p: step(p, 'e2e3.conformance').pop('generations')),
         ('artifact-over-budget', 1, 'exceeds output_bytes', oversize),
         *((f'artifact-memory-{label}', 1, reason, lambda p, d=memory_probes()[label]:
            step(p)['artifact'].update(memory=wasm_memories(d))) for label, reason in (
