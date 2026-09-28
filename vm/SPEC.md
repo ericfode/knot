@@ -228,6 +228,9 @@ stack. The validator checks every function, reachable or not:
 
 A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
 refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls.
+Validation establishes these rules, not type soundness: a `none`-typed value may
+be instantiated at any type (§3), so the run-time checks of §6.1, §7 and §8
+refuse the rest as `HostFailure image` (`ill-typed`).
 Other version-1 limits: at most 1,048,576 records per table, live arity at most
 4,096, `slots` at most 65,536. These are resource limits, not source rules.
 
@@ -364,13 +367,14 @@ to its post-state. No row runs user code or a second host effect.
 
 The scrutinee is borrowed from its slot. Its word is first checked against the
 scrutinee type, because a `none`-typed value may be instantiated at any type (§3):
-an algebraic type admits an immediate below its constructor count or an Object
-(class 0) whose `type` is that type; Nat, U32 and Char admit an immediate or a Big
-cell (class 2). Every word a prim reads is checked the same way against the pinned
-representation it expects, String cells included. A mismatch halts with
-`HostFailure image` (`ill-typed`) before the step changes any state; no read
-leaves a cell. For an Object, the tag and fields come from its payload; for an immediate of an algebraic type, the tag is `v` and there
-are no fields. A Nat word `n` is Zero when `n = 0`, otherwise Succ with the new
+an algebraic type admits an immediate naming one of its nullary constructors, or
+an Object (class 0) whose `type` is that type and whose tag names a constructor
+with fields; Nat, U32 and Char admit an immediate or a Big cell (class 2). Every
+word a prim reads is checked the same way against the pinned representation it
+expects, String cells included. A mismatch halts with `HostFailure image`
+(`ill-typed`) before the step changes any state; no read leaves a cell. For an
+Object, the tag and fields come from its payload; for an immediate of an
+algebraic type, the tag is `v` and there are no fields. A Nat word `n` is Zero when `n = 0`, otherwise Succ with the new
 word `n - 1` (a Big is allocated when `n - 1 >= 2^31`). A Char word is Chr with
 its own code word. In key mode, the scalar's value is compared with the keys;
 there is no field. The selected arm is `row[tag]`, or the matching key's arm, or
