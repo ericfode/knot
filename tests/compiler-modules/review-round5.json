@@ -17,9 +17,24 @@
     "src/parse.bend": "f4c66fc07bc74ad71508e68b278b8c65399ad49b66d41e154702551031cf9cca"
   },
   "findings": [
-    "shadow"
+    "shadow",
+    "operator"
   ],
   "sources": {
+    "operator/apply-let.bend": "db86d3eb6e33a2e0373338180b43c4397e57522e8990fe546575e5ba6c199a2a",
+    "operator/arrow-let.bend": "a1af8f48ffa514de04acf6b0d3b8517e26dded5c5e9d4a9ccf74a2a93697095f",
+    "operator/juxtaposed-let.bend": "e4dbfff5d007e1756648f55014406040fe55101ad7e96879b7b0af15e0e70541",
+    "operator/juxtaposed-param.bend": "a280978e96385c9757ee777b58962e83439c3da0bde912324d78211b7517009e",
+    "operator/local-pair.bend": "0656f4ae46fa6063a8e264417b503d89566b4c4eae0aab4ebfb6b25b2069ceba",
+    "operator/module/lib/m.bend": "5177eafcd9b6a36900dd9bc603d9d4367ffc9dc1d1bbc87abc1cfc278ee73603",
+    "operator/module/main.bend": "c1dded064b2300617b9b9c842f3688bd858f9ab17c72d0f412b0650f04754523",
+    "operator/or-let.bend": "eced1e66ec9b43e9d90749c727d1a9ac0c9f27cf0b9948b0d9fab5cb1fe68004",
+    "operator/or-param.bend": "e79317a845b1944b618bd99da96ee7bbb202515ecbfdd40c6efff92a44d36384",
+    "operator/pair-field.bend": "6f5e9f7f0138884ab83ebfd29cbf71bccd82f1c103e3cb9666db1d72aa60e39e",
+    "operator/pair-let.bend": "23294e33f1e480625a9d361ce00f698420784ce77257d0805e43e4edf11aeaf9",
+    "operator/pair-param.bend": "9030ec9883b9b6a85c17368aeab561f377c96aa31701a94cebf2cef47cb33456",
+    "operator/undeclared-pair-let.bend": "9120ccae16db5ad1782403d6c99f266dc5798b64c21af69c8f2735cd87f32c50",
+    "operator/undeclared-pair.bend": "3f9c33d01b257bfe168e4285099ee3b61dedaca17f4ff163be7568cecd1f8d43",
     "shadow/entry.bend": "9099064bd828555268f2c6c2b1665efbeb8fb48bd9166b174e30f52919c0bca3",
     "shadow/field/lib/m.bend": "36226ec95b8515ced206c42f2eda84d1d0a7892f9ba1c7b4623fa1ea91db10e1",
     "shadow/field/main.bend": "75a45422b9c5e103cab105783cfb7251cddb8ce8c72e549867bc2bf60a53ca28",
@@ -191,6 +206,451 @@
         "phase": "check",
         "code": "not-callable",
         "diagnostic_prefix": "Invalid\tcheck\tnot-callable\t"
+      }
+    },
+    {
+      "name": "pair-parameter",
+      "finding": "operator",
+      "file": "operator/pair-param.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/pair-param.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/pair-param.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "name": "or-parameter",
+      "finding": "operator",
+      "file": "operator/or-param.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/or-param.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/or-param.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "name": "pair-field",
+      "finding": "operator",
+      "file": "operator/pair-field.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/pair-field.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/pair-field.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "name": "pair-module-parameter",
+      "finding": "operator",
+      "file": "operator/module/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/module/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/module/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "name": "pair-let",
+      "finding": "operator",
+      "file": "operator/pair-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/pair-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/pair-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "binding-type",
+        "diagnostic_prefix": "Unsupported\tparse\tbinding-type\t"
+      }
+    },
+    {
+      "name": "or-let",
+      "finding": "operator",
+      "file": "operator/or-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/or-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/or-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "binding-type",
+        "diagnostic_prefix": "Unsupported\tparse\tbinding-type\t"
+      }
+    },
+    {
+      "name": "arrow-let",
+      "finding": "operator",
+      "file": "operator/arrow-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/arrow-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/arrow-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "binding-type",
+        "diagnostic_prefix": "Unsupported\tparse\tbinding-type\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "binding-type",
+        "diagnostic_prefix": "Unsupported\tparse\tbinding-type\t"
+      }
+    },
+    {
+      "name": "apply-let",
+      "finding": "operator",
+      "file": "operator/apply-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/apply-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/apply-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "binding-type",
+        "diagnostic_prefix": "Unsupported\tparse\tbinding-type\t"
+      }
+    },
+    {
+      "name": "local-pair-parameter",
+      "finding": "operator",
+      "file": "operator/local-pair.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/local-pair.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/local-pair.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "name": "undeclared-pair-parameter",
+      "finding": "operator",
+      "file": "operator/undeclared-pair.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/undeclared-pair.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Pair\nLocation: drop\n4 | \n5>| def drop(p: Light & Light) -> Light:\n  |             ^^^^^^^^^^^^^\n6 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "name": "undeclared-pair-let",
+      "finding": "operator",
+      "file": "operator/undeclared-pair-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/undeclared-pair-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Pair\nLocation: main\n5 | def main() -> Light:\n6>|   x : Light & Light = (Lit{}, Dark{})\n  |       ^^^^^^^^^^^^^^\n7 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "binding-type",
+        "diagnostic_prefix": "Unsupported\tparse\tbinding-type\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "binding-type",
+        "diagnostic_prefix": "Unsupported\tparse\tbinding-type\t"
+      }
+    },
+    {
+      "name": "juxtaposed-parameter",
+      "finding": "operator",
+      "file": "operator/juxtaposed-param.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/juxtaposed-param.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Quant\nContext:\n- p     : Light\n- Light : Quant\nLocation: drop\n4 | \n5>| def drop(p: Light Light) -> Light:\n  |                             ^^^^^\n6 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "argument-separator",
+        "diagnostic_prefix": "Invalid\tparse\targument-separator\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "argument-separator",
+        "diagnostic_prefix": "Invalid\tparse\targument-separator\t"
+      }
+    },
+    {
+      "name": "juxtaposed-let",
+      "finding": "operator",
+      "file": "operator/juxtaposed-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "operator/juxtaposed-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : ':'\nLocation:\n5 | def main() -> Light:\n6>|   x : Light Light = Lit{}\n  |     ^\n7 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "expected-=",
+        "diagnostic_prefix": "Invalid\tparse\texpected-=\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "expected-=",
+        "diagnostic_prefix": "Invalid\tparse\texpected-=\t"
       }
     }
   ]
