@@ -993,6 +993,56 @@
    "basis": "describe-domain",
    "reason": "section 8: opaque U32 as field 0 of Chr",
    "eval_lane": "InternalFailure"
+  },
+  "print-non-scalar": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "",
+   "basis": "divergent-by-contract (non-scalar output)",
+   "reason": "D20: the seed native lane writes a non-scalar Char as generalized UTF-8 at byte 0",
+   "eval_lane": "Invalid"
+  },
+  "print-non-scalar-mid": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "",
+   "basis": "divergent-by-contract (non-scalar output)",
+   "reason": "D20: the seed native lane writes a non-scalar Char as generalized UTF-8 at byte 1",
+   "eval_lane": "Invalid"
+  },
+  "string-surrogate-pair": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tFalse{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-beyond-unicode": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tSucc{Zero{}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
   }
  }
 }

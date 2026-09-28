@@ -94,6 +94,25 @@ follows it (§5, §10, §11) without a new image header word.
    `List<T>` parameter (literals: `Unsupported parse parameter-type`), so the
    shape is witnessed by the admitted control `list-head-match` until a golden can
    be frozen.
+10. **Non-scalar output is a divergence by contract (D20).** Review round 3 found
+   §11's reference lane and §10's IO contract in conflict: the seed's native lane
+   writes a non-scalar Char as generalized UTF-8 (`print-non-scalar`, ASCII source
+   `IO.print(SCon{Chr{55296}, SNil{}})`, bytes `ED A0 80 0A`), while `knot-io`
+   refuses it. Under D20 the VM refuses the whole String as `HostFailure io abi`
+   before the host call (§10); the golden keeps the native bytes as hex, is marked
+   `divergent-by-contract (non-scalar output)` and is never counted as agreement
+   (§11). The seed's Bun lane refuses the same output and is recorded beside it.
+   `print-non-scalar-mid` (`"a\u{D800}b"`) pins that no part of the String is
+   written. The expectation rule refuses undeclared non-scalar output, a
+   divergence on scalar output, another class and a VM output that does not
+   precede the first non-scalar (four controls).
+11. **Plans spell a String as its code list.** Round 3 also found the reference
+   codec lossy: plans spelled String constants as JSON text, so `json.loads`
+   merged a surrogate pair into U+1F600 and decode refused codes above U+10FFFF
+   that encode wrote. Plans and decode now use code lists, encode refuses a text
+   spelling, and seven admitted code-list controls and two goldens
+   (`string-surrogate-pair`, seed `False{}`; `string-beyond-unicode`, seed `1n`)
+   pin §2's "every u32 code, in order". No committed image changed.
 
 ## Findings that need an owner
 

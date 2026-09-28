@@ -339,7 +339,7 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
     lines = [l for l in text.splitlines() if l and l != 'Checked']
     plan_types, rep = plan['types'], plan.get('representation', {})
     scalar = {rep.get('U32'): 'U32', rep.get('Char'): 'Char'}
-    prim_ids = {p['name']: p['id'] for p in registry['prims']}
+    prims = {p['name']: p for p in registry['prims']}
     quantities = erased_fields(source)
     headers = []
     for line in lines:
@@ -390,7 +390,9 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
             for a in term[2]:
                 node, deepest = lower(a, scope, depth, deepest)
                 kids.append(node)
-            return ['prim', None, prim_ids[term[1]], kids], deepest
+            # Section 3: an Intrinsic's result type is the pinned representation its registry row names.
+            row = prims[term[1]]
+            return ['prim', rep.get(row['output']), row['id'], kids], deepest
         if kind == 'let':
             _, q, level, t, value, body = term
             if not q:
@@ -462,6 +464,39 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
     return functions
 
 
+PRINT = re.compile(r'import Base\n\ndef main\(\) -> IO\(Unit\):\n  IO\.print\((.*)\)\n')
+
+
+def named(node, types) -> list:
+    """A closed argument subtree with each type index replaced by its type's name."""
+    op, t = node[0], types[node[1]]['name']
+    if op in ('lit', 'value'):
+        return [op, t, *node[2:]]
+    require(op in ('con', 'prim'), f'print argument: no named view of {op}')
+    return [op, t, node[2], [named(k, types) for k in node[3]]]
+
+
+def print_argument(name: str, source: str, plan: dict, strings: dict, built: dict, registry: dict) -> str | None:
+    """A Program `main = IO.print(e)` has no checked core in the pinned heads (Invalid parse
+    function-result), so `e` is checked as the Book `main() -> String`, whose type table is
+    `strings` (result-string's), and its projection must equal the hand plan's argument."""
+    m = PRINT.fullmatch(source)
+    if not m:
+        return None
+    path = BUILD / 'print' / f'{name}.bend'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(f'import Base\n\ndef main() -> String:\n  {m[1]}\n')
+    shown = run([built['literals']['check'], '--bundle', '.', path.relative_to(ROOT)], 120)
+    require(shown['exit'] == 0, (name, 'print argument not checked', shown))
+    book = from_display(shown['stdout'], strings, '', registry)
+    require([f['name'] for f in book] == ['main'], f'{name}: print argument book {[f["name"] for f in book]}')
+    call = next(f for f in plan['functions'] if f['name'] == 'main')['body']
+    require(call[0] == 'call' and plan['functions'][call[2]]['name'] == 'IO.print', f'{name}: main is not IO.print(e)')
+    require(named(call[3][0], plan['types']) == named(book[0]['body'], strings['types']),
+            (name, 'print argument differs from the checked core', book[0]['body']))
+    return 'IO.print argument: checked-core'
+
+
 # ------------------------------------------------------------------ images
 
 def check_declarations(plan: dict, source: str):
@@ -520,14 +555,54 @@ def described(printed: str, quantities: dict) -> str:
     return tree
 
 
+NON_SCALAR = 'non-scalar output'
+
+
+def written(seed: dict) -> tuple[bytes, list]:
+    """The seed's stdout bytes and its (byte offset, code) pairs, read as generalized UTF-8:
+    the native lane encodes a non-scalar Char as if it were a scalar."""
+    data = bytes.fromhex(seed['stdout_hex']) if 'stdout_hex' in seed else seed['stdout'].encode()
+    codes, at = [], 0
+    while at < len(data):
+        lead = data[at]
+        width = 1 if lead < 0x80 else 2 if 0xC0 <= lead < 0xE0 else 3 if 0xE0 <= lead < 0xF0 else 4 if 0xF0 <= lead < 0xF8 else 0
+        tail = data[at + 1:at + width]
+        require(width and len(tail) == width - 1 and all(0x80 <= b < 0xC0 for b in tail),
+                f'seed stdout is not generalized UTF-8 at byte {at}')
+        code = lead & (0x7F, 0x1F, 0x0F, 0x07)[width - 1]
+        for b in tail:
+            code = code << 6 | b & 0x3F
+        codes.append((at, code))
+        at += width
+    return data, codes
+
+
 def vm_expectation(case, plan, bounds, source) -> dict:
     """The Exhausted-lane rule, applied to the frozen observations of one golden."""
     seed, ev = case['seed'], case['eval']
     fuel = VM_FUEL
+    require('divergence' not in case or plan['entry'] == 'program', f"{case['name']}: only a Program's output diverges")
     if plan['entry'] == 'program':
         require(seed['exit'] == 0, 'program seed must succeed')
-        return {'argv': ['IMAGE', str(fuel), '--'], 'exit': 0, 'stdout': seed['stdout'], 'stderr': '',
-                'basis': 'seed', 'eval_lane': classify(ev)}
+        data, codes = written(seed)
+        beyond = next((at for at, c in codes if 0xD800 <= c <= 0xDFFF or c > 0x10FFFF), None)
+        if 'divergence' not in case:
+            require(beyond is None, f"{case['name']}: the seed writes a non-scalar Char at byte {beyond}; "
+                                    f"D20 refuses that output, so it is never seed agreement")
+            return {'argv': ['IMAGE', str(fuel), '--'], 'exit': 0, 'stdout': seed['stdout'], 'stderr': '',
+                    'basis': 'seed', 'eval_lane': classify(ev)}
+        # Section 11 and D20: the seed's native lane writes a non-scalar Char as generalized
+        # UTF-8; the VM refuses the String before its host call. The VM's output is the literal
+        # review, seed output before the first non-scalar.
+        require(case['divergence'] == NON_SCALAR, f"{case['name']}: divergence {case['divergence']!r} is not D20's")
+        require(beyond is not None, f"{case['name']}: a {NON_SCALAR} divergence, but the seed writes only scalars")
+        out = case['vm_stdout'].encode()
+        require(data.startswith(out) and len(out) <= beyond,
+                f"{case['name']}: VM output {case['vm_stdout']!r} is not seed output before byte {beyond}")
+        return {'argv': ['IMAGE', str(fuel), '--'], 'outcome': 'HostFailure', 'cause': 'io abi',
+                'stdout': case['vm_stdout'], 'basis': f'divergent-by-contract ({NON_SCALAR})',
+                'reason': f'D20: the seed native lane writes a non-scalar Char as generalized UTF-8 at byte {beyond}',
+                'eval_lane': classify(ev)}
     main = next(f for f in plan['functions'] if f['name'] == 'main')
     why = codec.undescribable(plan, main['result'])
     if why:
@@ -577,7 +652,15 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict) 
             ('eval-nat-binds-n', 'nat-pred',
              row('eval-nat-binds-n', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n'), bounds),
             ('bound-not-exhausted', 'value-on', cases['value-on'], {**bounds, 'value-on': describe_bound}),
-            ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound})]:
+            ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound}),
+            # D20: a non-scalar seed output is a declared divergence, and only that is one.
+            ('non-scalar-as-agreement', 'print-non-scalar',
+             {k: v for k, v in cases['print-non-scalar'].items() if k not in ('divergence', 'vm_stdout')}, bounds),
+            ('divergence-on-scalar-output', 'foreign-print',
+             {**cases['foreign-print'], 'divergence': NON_SCALAR, 'vm_stdout': ''}, bounds),
+            ('divergence-other-class', 'print-non-scalar', {**cases['print-non-scalar'], 'divergence': 'other'}, bounds),
+            ('vm-writes-non-scalar', 'print-non-scalar-mid',
+             {**cases['print-non-scalar-mid'], 'vm_stdout': cases['print-non-scalar-mid']['seed']['stdout']}, bounds)]:
         try:
             vm_expectation(case, plans[name], table, sources[name])
         except AssertionError as refusal:
@@ -1023,6 +1106,7 @@ SOURCE_MUTANTS = [
     ('case-on', 'flip(On{})', 'flip(Off{})'),
     ('u32-wrap', 'U32.add(4294967295,1)', 'U32.add(4294967295,2)'),
     ('closure-capture-on', 'capture(On{})', 'capture(Off{})'),
+    ('string-surrogate-pair', '"\\u{1f600}"', '"\\u{d83d}\\u{de00}"'),
 ]
 
 
@@ -1205,6 +1289,12 @@ def main() -> int:
                          'features': case['features'], 'image_sha256': sha(data), 'words': len(data) // 4,
                          'plan_matches': view, 'seed': classify(case['seed']), 'eval': classify(case['eval']),
                          'vm': table[name]})
+
+    strings = plans['result-string']
+    for row in fixtures:
+        argument = print_argument(row['name'], sources[row['name']], plans[row['name']], strings, built, reg)
+        if argument:
+            row['plan_matches'] += f'; {argument}'
 
     expected = {'rule': 'SPEC section 11: the VM owes the seed value wherever the seed succeeds within the '
                         'declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. '
