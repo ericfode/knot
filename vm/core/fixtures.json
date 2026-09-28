@@ -646,7 +646,7 @@
   }
  ],
  "admitted": {
-  "rule": "vm-spec's admitted controls (check-spec.py plan_controls rows without a message, and code_controls) at 8ef906e: SPEC section 4 requires vm-core to load each one. Expected runs are literal review of each control's plan, written before the VM admitted them (D7). The gate also requires vm-spec's reference evaluation of each plan (vm/evaluate.py `book`) to give the same run and `calls`.",
+  "rule": "vm-spec's admitted controls (check-spec.py plan_controls rows without a message, limit_controls' admitted row, and code_controls) at cea554a: SPEC section 4 requires vm-core to load each one. Expected runs are literal review of each control's plan, written before the VM admitted them (D7). The gate also requires vm-spec's reference evaluation of each plan (vm/evaluate.py `book`) to give the same run and `calls`.",
   "rows": [
    {
     "control": "plan:case-none-parameter",
@@ -870,6 +870,23 @@
      "calls": 3
     },
     "basis": "U32.is_eq(pick(7, 0), 7): the key Case on k = 0 takes its key Branch, which answers the none-typed x = 7 (the Default would too). Entries main, U32.is_eq, pick: 3. True{} (Bool is type 0)"
+   },
+   {
+    "control": "limit:arity-at-limit",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "basis": "value-on beside an unused function `wide` of 4,096 parameters, all Flag: SPEC section 4 bounds a live arity by 4,096 inclusive, so this image loads. Its main is value-on's, so the run is value-on's: On{} (Flag is type 0, On tag 1) after the one entry of main; `wide` is never entered"
    }
   ]
  },

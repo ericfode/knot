@@ -24,9 +24,12 @@ Checks, in order:
 - a 200,000-deep nested expression, generated iteratively, and the deep
   fixtures again under a 64 KiB host stack;
 - the malformed-image controls vm-spec froze (as many as SPEC section 4
-  states), refused with the reference codec's first defect; the controls
-  vm-spec admits, loaded and run as vm/core/fixtures.json freezes them (and as
-  the reference evaluation runs them), and its
+  states), refused with the reference codec's first defect, and nine of them
+  at section 4's resource limits, each Exhausted kind 2 on one side and
+  malformed or invalid on the other; the controls vm-spec admits (among them
+  a function of exactly 4,096 parameters), loaded and run as
+  vm/core/fixtures.json freezes them (and as the reference evaluation runs
+  them), and its
   run controls, run to the outcome and call count check-spec.py freezes with
   them, at their frozen fuel (section 7's boundary) or also on exactly that
   much fuel (section 7's operand check); its argument controls, with their
@@ -91,8 +94,13 @@ def sha(data: bytes) -> str:
 # ------------------------------------------------------------------ reasons
 # The VM names each refusal with a code; the reference codec's first message
 # maps to exactly one. Dynamic parts (indices, depths, names) are not compared.
+# A resource limit of section 4 is not a refusal but Exhausted kind 2, which the
+# reference reports as `Exhausted 2 <limit>` and the VM as the same words, so that a
+# limit reported as malformed differs from it.
+LIMIT_CAUSES = ('image-size', 'records', 'arity', 'slots')
 REASONS = [
-    (r'exhausted image-size', 'image-size'), (r'length', 'length'), (r'magic', 'magic'), (r'total', 'total'),
+    *[(f'Exhausted 2 {cause}', f'Exhausted 2 {cause}') for cause in LIMIT_CAUSES],
+    (r'length', 'length'), (r'magic', 'magic'), (r'total', 'total'),
     (r'header', 'header'), (r'registry digest', 'registry-digest'), (r'section \d offset', 'section-offset'),
     (r'record count', 'record-count'), (r'section \d record length', 'record-length'),
     (r'trailing words', 'trailing-words'), (r'name length', 'name-length'), (r'name padding', 'name-padding'),
@@ -116,7 +124,6 @@ REASONS = [
     (r'validator: program: main must exist with no live parameters', 'program-main'),
     (r'validator: program: missing representation .*', 'program-representation'),
     (r'validator: program: main must return IO\(Unit\)', 'program-io'),
-    (r'validator: [^:]+: limits', 'limits'),
     (r'validator: [^:]+: (U32|Nat|Char|String) literal at a non-\1 type', 'literal-kind'),
     (r'validator: [^:]+: value is not a nullary constructor', 'value-nullary'),
     (r'validator: [^:]+: slot \d+ beyond depth \d+', 'slot-depth'),
@@ -157,7 +164,8 @@ REASONS = [
 
 
 def expected_reason(refusal: str) -> str:
-    """The VM code for a `HostFailure image: ...` refusal of the reference codec."""
+    """The VM code for a refusal of the reference codec: `HostFailure image: ...`, or a limit's
+    `Exhausted 2 <limit>`."""
     message = refusal.removeprefix('HostFailure image: ')
     codes = [code for pattern, code in REASONS if re.fullmatch(pattern, message)]
     require(len(codes) == 1, f'reason map covers {message!r} exactly once: {codes}')
@@ -165,17 +173,19 @@ def expected_reason(refusal: str) -> str:
 
 
 def observed_reason(result: dict) -> str | None:
-    """The VM's refusal of the image, from its stderr line or, for image size, its
-    exhaustion. A traced run that got past vm_boot failed at run time (an `ill-typed`
-    word, SPEC section 6), which is no refusal of the image."""
+    """The VM's refusal of the image, from its stderr line or, for a limit of section 4, its
+    exhaustion: the host shows only kind 2, so the limit is the cause its outcome registers
+    keep. A traced run that got past vm_boot failed at run time (an `ill-typed` word, SPEC
+    section 6), which is no refusal of the image."""
     require(result.get('booted') is not None, 'a refusal is read from a traced run')
     if result['booted']:
         return None
     line = result['stderr'].strip()
     if line.startswith('HostFailure\timage\t'):
         return line.split('\t')[2]
-    if line == 'Exhausted\tio\tmemory' and result.get('state', {}) and result['state']['cause'] == 'image-size':
-        return 'image-size'
+    cause = (result.get('state') or {}).get('cause')
+    if line == 'Exhausted\tio\tmemory' and cause in LIMIT_CAUSES:
+        return f'Exhausted 2 {cause}'
     return None
 
 
@@ -203,6 +213,15 @@ def expected_dump(case: dict) -> dict:
         return {'outcome': 'Completed'}
     row = {'outcome': case['outcome'], 'cause': case['cause'].split(' ')[-1]}
     return {**row, 'kind': case['kind']} if case['outcome'] == 'Exhausted' else row
+
+
+def refusal_dump(reason: str) -> dict:
+    """The VM's own outcome registers for a refused image, from its reason (`expected_reason`): a
+    limit of section 4 is Exhausted kind 2 with the limit as its cause, any other refusal a
+    HostFailure with its code."""
+    if reason.startswith('Exhausted 2 '):
+        return {'outcome': 'Exhausted', 'kind': 2, 'cause': reason.removeprefix('Exhausted 2 ')}
+    return {'outcome': 'HostFailure', 'cause': reason}
 
 
 def shown(result: dict, want: dict) -> dict:
@@ -394,10 +413,10 @@ def run_control_count() -> int:
     return int(m.group(1))
 
 
-def refusal_counts() -> tuple[int, int, int]:
-    """SPEC section 4's frozen refusals: (total, byte-level, plan-level)."""
+def refusal_counts() -> tuple[int, int, int, int]:
+    """SPEC section 4's frozen refusals: (total, byte-level, at the limits, plan-level)."""
     text = ' '.join((HERE / 'SPEC.md').read_text().split())
-    m = re.search(r'freezes (\d+) refusals \((\d+) byte-level, (\d+) plan-level\)', text)
+    m = re.search(r'freezes (\d+) refusals \((\d+) byte-level, (\d+) at the limits, (\d+) plan-level\)', text)
     require(m, 'SPEC section 4 states its frozen refusal counts')
     return tuple(map(int, m.groups()))
 
@@ -913,12 +932,15 @@ def main() -> int:
     images = {p.stem: p.read_bytes() for p in golden.glob('*.kimg')}
     planned = spec.plan_controls(plans)  # a row without a message is one the VM MUST admit
     byte_level = spec.byte_controls(images, digest)
+    at_limits = spec.limit_controls(plans, images, digest)  # a row without a verdict is one the VM MUST admit
+    limit_level = [(f'limit:{k}', data, verdict, '') for k, data, verdict in at_limits if verdict]
     plan_level = [(f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
-    total, bytes_frozen, plans_frozen = refusal_counts()
-    require((len(byte_level), len(plan_level), len(byte_level) + len(plan_level)) == (bytes_frozen, plans_frozen, total),
-            f'SPEC section 4 freezes {total} refusals ({bytes_frozen} byte-level, {plans_frozen} plan-level); '
-            f'check-spec.py yields {len(byte_level)} and {len(plan_level)}')
-    controls = byte_level + plan_level
+    total, bytes_frozen, limits_frozen, plans_frozen = refusal_counts()
+    require((len(byte_level), len(limit_level), len(plan_level), len(byte_level) + len(limit_level) + len(plan_level))
+            == (bytes_frozen, limits_frozen, plans_frozen, total),
+            f'SPEC section 4 freezes {total} refusals ({bytes_frozen} byte-level, {limits_frozen} at the limits, '
+            f'{plans_frozen} plan-level); check-spec.py yields {len(byte_level)}, {len(limit_level)} and {len(plan_level)}')
+    controls = byte_level + limit_level + plan_level
     malformed = BUILD / 'malformed'
     malformed.mkdir()
 
@@ -930,10 +952,12 @@ def main() -> int:
                          'argv': r['argv'], 'trace': 'yields'} for r in rows], timeout)
 
     rows = []
-    for i, (label, data, _, _) in enumerate(controls):
+    for i, (label, data, reason, message) in enumerate(controls):
+        reference = spec.rejected(data, reg, digest)  # the frozen refusal: the VM owes the reference's first defect
+        require(reference is not None and reference.startswith(reason) and message in reference,
+                f'control {label}: the reference codec gives {reference!r}, frozen {reason!r} {message!r}')
         (malformed / f'c{i}.kimg').write_bytes(data)
-        rows.append({'label': label, 'sha256': sha(data), 'reference': spec.rejected(data, reg, digest),
-                     'argv': argv_for(f'c{i}.kimg', data)})
+        rows.append({'label': label, 'sha256': sha(data), 'reference': reference, 'argv': argv_for(f'c{i}.kimg', data)})
     got = pool(lambda r: host(module, malformed, r['argv']), rows)
     dumped = traced(rows, malformed)
     refused = []
@@ -942,10 +966,14 @@ def main() -> int:
         g.update(state=dumped[r['label']]['state'], booted=dumped[r['label']]['booted'])
         require(clean(g), f"control {r['label']}: {g}")
         require(observed_reason(g) == code, f"control {r['label']}: VM {g['stderr']!r}, reference {r['reference']!r}")
+        require(all(g['state'][k] == v for k, v in refusal_dump(code).items()),
+                f"control {r['label']}: the VM's outcome registers {g['state']} differ from {refusal_dump(code)}")
         refused.append({'control': r['label'], 'reference': r['reference'], 'vm': code, 'exit': g['exit']})
 
     # the controls vm-spec admits (SPEC section 4): loaded, then run as literal review froze them
-    admitted = [(f'plan:{k}', p) for k, p, m in planned if m is None] + spec.code_controls(plans)
+    admitted = [(f'plan:{k}', p) for k, p, m in planned if m is None] + \
+        [(f'limit:{k}', codec.decode(data, digest)) for k, data, verdict in at_limits if verdict is None] + \
+        spec.code_controls(plans)
     frozen = {r['control']: r for r in fixtures['admitted']['rows']}
     require(sorted(label for label, _ in admitted) == sorted(frozen),
             f'admitted controls {sorted(label for label, _ in admitted)} vs frozen rows {sorted(frozen)}')
