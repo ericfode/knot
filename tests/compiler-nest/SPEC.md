@@ -42,9 +42,11 @@ lexical-level, emitter and evaluator limits still apply.
 
 The fields profile executes the three accepted recursive nest fixtures. Their
 recursive calls are checked by the [seed decreasing-call rule](../compiler-descent/SPEC.md).
-`rec-swapped-args` now meets its frozen Invalid check expectation. `rec-alias`
-retains its historical Unsupported override until its separate migration
-checkpoint; it is not counted as a conformance pass. All other mismatches fail.
+`rec-swapped-args` and `rec-alias` now meet their frozen Invalid check outcomes.
+Their frozen codes remain null, so the gate requires Invalid and the check
+phase without choosing a diagnostic code. No conservative override remains;
+all 40 outcomes must conform and the receipt must set `qualification.complete=true`.
+All unexpected mismatches fail the gate.
 
 The added controls have independent seed/literal expectations in
 `control-expectations.json`. A depth-12 complete binary tree requires 81,908

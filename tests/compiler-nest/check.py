@@ -17,8 +17,8 @@ RECEIPT = HERE / 'receipts/nest.json'
 SEED = ['bun', ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/main.ts']
 HOST = ROOT / 'scripts/run-wasm.mjs'
 FIELDS = '--profile=knot-fields-wasm-1'
-# Explicitly authorized conservative outcomes; these NEVER count as conformance.
-UNMET = {'rec-alias'}
+# Historical overrides are retired; all 40 frozen outcomes must now conform.
+UNMET = set()
 
 
 def require(condition, detail):
@@ -344,7 +344,7 @@ def main():
             'boundary_observations': len(record['boundaries']), 'enum_hash_checks': len(record['enum_preservation']),
             'mutants': len(record['mutants']), 'semantic_kills': sum(len(c['lanes']) for c in record['mutants'])}
         record['qualification'] = {'complete': not record['unmet'],
-            'limits': 'The gate monitors two authorized conservative recursion outcomes; neither is counted as frozen conformance.'}
+            'limits': 'All frozen outcomes are required; source/backend/resource limits remain as specified.'}
         record['status'] = 'passed'
     except Exception as error:
         record['failure'] = repr(error)
