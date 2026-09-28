@@ -1271,3 +1271,30 @@ both lanes (check, eval, compile, run) with the same inputs past the fault,
 and freeze a book at about twice the observed threshold. Treat any non-tail
 traversal over data proportional to the output, including one inside a
 pinned package, as a stack budget to bound at its call site.
+
+## 2026-09-28 — Literals review round 9: a general claim proved at k = 2
+
+Round 7 described an expression offset as "k Succ constructors around a shared
+tail" in the README, the SPEC and two law comments, and proved it with two laws
+at k = 2 (`natural_offset`, `offset_spelling`). The claim ranged over every k;
+the laws did not, and the frozen depth books measured cost, not construction.
+The coordinator's review found it. The natural proof was also blocked, and
+nobody had tried it: the checker reached the successors through a U32 count
+decremented with `U32.sub` and tested against the literal 0, which does not
+reduce for a symbolic count (`U32.sub(U32.inc(c),1) == c` is not provable by
+reflexivity and Base has no Word lemma that inverts its adder), so an induction
+over the count had nothing to stand on.
+
+[The round-9 freeze](../tests/compiler-literals/regressions.json) pins
+expressions of 1364, 1365 and 2000 successors first. The fix converts the
+count once (`U32.to_nat`) and wraps the tail with a builder structural in a
+Nat, so `offset_cells` (every k, by induction) and `offset_lowering` (every
+count up to 4096) are proved; it also lifts the depth limit from 1364 to 2047
+successors end to end. See [the round-9 report](../tests/compiler-literals/REPORT.md).
+
+Prevention: when prose quantifies over a family, the law must quantify over it
+or the prose must say ground instance. Try the induction the claim implies
+before writing the ground instance, and if the counter is a machine word,
+carry it as a Nat where a law must range over it. A draft rule could flag a
+`law` whose statement fixes a numeral that a neighbouring comment or SPEC
+sentence generalizes; none is added here.

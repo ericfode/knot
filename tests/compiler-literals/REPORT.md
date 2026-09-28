@@ -4,6 +4,226 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Review round 9
+
+The coordinator's review of `943104f` confirmed one major finding: the law that
+an expression offset spells `kn+t` as k Succ constructors around the shared
+tail was stated and proved at k = 2 only (`natural_offset`, `offset_spelling`),
+and SPEC recorded no open obligation for the general law (D21). It is fixed in
+new commits after merging `main` (`43a394a`: the gate runner's clang PATH
+wrapper, and D22); the merge had no conflicts. No history was rewritten and no
+earlier expectation changed.
+
+| Commit | Content |
+| --- | --- |
+| `60a68c3` | Merge `main` `43a394a` |
+| `9263b15` | Freeze: offset-expression-width (5 seed calls) and three Invalid controls, before the fix |
+| `e88b915` | `literal-offset.bend::successors`; the Offset arm checks the tail once and wraps it; laws `offset_cells`, `offset_lowering`, `offset_bound`, `single_argument_keeps_uses`; mutants offset-one-short, offset-extra-successor, offset-unchecked-type and the re-anchored offset-nat-add; offset limit probes in the gate; README, SPEC, CONTRACT, LAW_REVIEW; census approved, inventories regenerated |
+| report commit | This section, the literals receipt from the gate run, the perch-review-log entry |
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [major] The offset-construction law holds only at k = 2, and SPEC does not record the general law as an open obligation (D21) | Fixed in `e88b915`. The general law is proved, so no D21 obligation is recorded for it. `literal-core-LAWS.bend::offset_cells` is an induction on a Nat k: k successors around any tail with a known value return k cells around that value in 4k+c transitions. To let the checker's own lowering meet it, the Offset arm no longer reaches the successors through a U32 count that no proof can decrement: it checks the tail once and wraps k = `U32.to_nat(count)` Succ constructors with `literal-offset.bend::successors`. `check-LAWS.bend::offset_lowering` states, for every count up to 4096 and every tail that checks, that the checker returns that wrapper with the tail's uses, and `offset_bound` that above 4096 it is `Exhausted check`. The k = 2 laws stay as witnesses. The known depth limit is recorded in SPEC and CONTRACT and is lifted from 1364 to 2047 successors end to end (table below). | All 13 `src/*PROOF.bend` print `All terms check.`; 13 negative controls fail; the frozen width book now agrees seed, evaluator and Wasm in both lanes (before: `Exhausted check budget`); 1011 of 1012 tracked books check byte-identically old and new in both lanes, the one difference being that book |
+
+### Coordinator ruling: the selfhost pin
+
+Recorded as ruled; no action this round. `c51f480` (round 7) changed a shared
+selfhost gate assertion: the mutant typecheck must equal the modules host
+verdict. modules made the same fix in a stricter form and merges to `main`
+before literals, so modules' form is canonical. When literals re-merges `main`
+after modules lands, take modules' version of that assertion and drop
+`c51f480`'s variant.
+
+### The proof attempt
+
+The general law was tried first, over the existing lowering.
+
+1. **Core law, existing core.** `offset_cells` needed no compiler change: a
+   Nat-indexed builder and value, an induction on k generalized over the
+   frames and the leftover fuel, one rewrite by the induction hypothesis. The
+   tail is any term whose evaluation is a hypothesis, so the law covers every
+   tail, not only a variable. The instance k = 2, c = 1 takes 9 transitions,
+   the count `natural_offset` fixes.
+2. **Checker law, existing lowering.** It does not go through. The offset
+   reached its successors through `M.literal`, which decrements the U32 count
+   with `U32.sub` and tests it against the literal 0. A symbolic count does not
+   reduce there, and `U32.sub(U32.inc(c),1) == c` is not provable by
+   reflexivity (probed: the checker prints the expected and observed terms).
+   Base states no lemma that inverts its 32-bit adder (only `Word.add_comm`),
+   so an induction over the count has nothing to stand on; proving it would
+   mean a Word arithmetic library. This was the point at which the plan was
+   put to an independent review, which recommended the route below.
+3. **The change.** Convert the count once, `U32.to_nat`, and build the wrapper
+   with a builder that is structural in a Nat. The checker laws then quantify
+   over every count, the one trusted step being Base's `to_nat`. The change
+   also removes the reason for the depth limit, one checker level per
+   successor.
+
+### Freeze and measured limits
+
+`tests/compiler-literals/regressions/offset-expression-width.bend` (seed: all
+five calls as frozen) holds `1364n+t`, `1365n+t` and `2000n+t` as single
+expressions: `at_edge` and `past_edge` compare against 1366n and 1367n,
+`wide_sum` against 2005n (Yes) and `wide_short` against 2004n (No); `main` is
+`past_edge`. Three Invalid controls pin the diagnostics the fix must keep,
+with the classes Knot reports today: offset-expression-mismatch (`2n+t` where
+a U32 is expected: `Invalid check type-mismatch` at the offset),
+offset-expression-unbound (`2n+zz`: `Invalid check free-name`) and
+offset-expression-both (both errors, the tail first: `free-name`; the seed
+names the type first, and both are Invalid). The three controls hold before and
+after the fix; the width book fails before it and holds after. Before the fix
+both lanes report
+`Exhausted check budget` (exit 4) for check, eval and compile of the whole
+width book; after it the book builds 97889 bytes, byte-identical across lanes,
+and all five calls agree seed, evaluator and Wasm in both.
+
+One expression, `kn+t` with the seed answering Yes throughout; native and Bun
+lanes agree in every row (probe books `.local/literals/r9/p/k<k>.bend`:
+`answer(Nat.is_eq(f(0n), kn))` with `f(t) = kn+t`):
+
+| k | Before (`9263b15`) | After (`e88b915`) |
+| --- | --- | --- |
+| 1, 2, 3, 100, 1364 | Built (2718, 2738, 2758, 4700, 29982 bytes) | Built, identical bytes (sha256 equal) |
+| 1365 | `Exhausted check budget` | Built, 30002 bytes; evaluator and Wasm answer Yes |
+| 2000 | `Exhausted check budget` | Built, 42702 bytes; Yes |
+| 2047 | `Exhausted check budget` | Built, 43642 bytes; Yes |
+| 2048, 4096 | `Exhausted check budget` | checks and evaluates (Yes); compile `Exhausted emit budget`; the checker CLI's display is `Exhausted inspect budget` |
+| 4097, 100000 | `Exhausted check budget` | `Exhausted check budget` at the offset (152:157:13:2), for check, eval and compile |
+
+The gate now pins the four thresholds (16 budget/host probes, 8 new): 2047
+builds and runs, 2048 and 4096 evaluate but are `Exhausted emit` with the
+output preserved, 4097 is `Exhausted check`, in both lanes.
+
+### Laws and mutants
+
+- `literal-core-LAWS.bend::offset_cells` (36 literals laws in all; three
+  proof entries): for every k and every tail term with a known value (a
+  hypothesis on its evaluation under any frames and fuel), k successors
+  return k cells around it in `steps(k,c,m)` = 4k+c+m transitions. `cells` and
+  `steps` are the specification, defined beside the law; the compiler uses
+  neither. The builder is the compiler's own `successors`.
+- `check-LAWS.bend::offset_lowering`, `offset_bound` and
+  `single_argument_keeps_uses` (18 checker laws in all): the lowering and bound
+  laws state, for every count and every tail that checks to a term and its
+  uses, the checker's exact result against the installed Nat; the last shows a
+  constructor of one argument keeps its uses, why `offset` needs no
+  sequencing. The k = 2 laws `natural_offset` and `offset_spelling` are
+  unchanged and still pass.
+- Negative controls (thirteen single mutations in a scratch tree, each failing
+  its proof entry): `offset_cells` with three leading transitions per layer, an
+  extra cell or extra successor at the base, a shifted tag; `offset_lowering`
+  and `offset_bound` one successor short, wrong tag, the bound at 4095 or 4097,
+  the tail's uses dropped, the tail unspelled or against no type, the
+  below-bound branch not Exhausted; `single_argument_keeps_uses` with
+  `sequential` dropping the head.
+- Mutants (28 in the gate): offset-nat-add is re-anchored to the new arm and
+  still gives `Exhausted eval budget` and `Exhausted wasm resource-limit` on
+  `successor`; offset-one-short (`U32.sub(count,1)`) and offset-extra-successor
+  (one more around every tail) are killed by a wrong enum result from the
+  module (`wide_sum` and `successor`, both 0) and from the evaluator;
+  offset-unchecked-type drops the expected-type check of the outermost Succ, so
+  the seed-invalid mismatch book compiles.
+
+### Known limits
+
+- Compilation stops at 2047 successors: the emitter lowers a Construct in two
+  of its 4096 levels (`machine-lower.bend::lower`, Term and Arguments), and the
+  maximum override is 4096. The checker CLI's core display stops at the same
+  size. Lifting it is an emitter change (an iterative chain), out of scope here.
+- The count is bounded at 4096 (`Exhausted check`), where the seed answers Yes.
+  It is a D4-safe resource bound: the count sizes the core, and the wrapper
+  recurses to that depth in both lanes.
+- An offset above 4096 or in 1365..4096 with an Invalid tail now reports the
+  tail's Invalid (the tail is checked before the wrap), where the old descent
+  reported `Exhausted` first. Only previously exhausted inputs change.
+- The `checking` manifest group is at 47937/48000 composition bytes (46597
+  before), so the next change to check.bend, scope.bend, patterns.bend,
+  catalog.bend or a literal-* file in it needs a trim or a group split.
+- `check-PROOF.bend`'s single-file composition is unavailable for the byte
+  limit as well now (55602/48000; it was unavailable for unresolved context
+  already): its motives import the checker's modules. Its manifest group,
+  checker-laws, is available (28408/48000).
+- Trust that remains: `U32.to_nat` as Base's reading of the count, and the
+  linear allocation of recursion through an offset, which the frozen depth
+  books measure. The laws instantiate the installed Nat (`nat()`, one
+  datatype); real catalogs are covered by the differential runs below.
+- `check-LAWS.bend` and `literal-core-LAWS.bend` now define specification
+  helpers (`nat`, `cells`, `steps`), which no other LAWS file does; the
+  compiler uses none of them.
+
+### Differential evidence
+
+Old (`9263b15`'s sources, built native and Bun) against new (`e88b915`'s
+compiler sources), both lanes, `check` on every tracked `.bend` under `tests/`,
+`src/`, `packages/` and `research/` (1012 books, absolute bundle and entry
+paths): 1011 identical in exit, stdout and stderr, and one difference, the
+width book (`Exhausted check budget` to `Checked`). The five books whose core
+changed in round 7 are not among the differences. `compile` on the 408
+tracked books under `tests/compiler-literals`, `tests/compiler-modules`,
+`tests/compiler-selfhost` and `src` (module bytes, exit and stdout): 407
+identical, the same book.
+
+### Gates on the round-9 fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `e88b915` passed all 22 registered
+gates (exit 0) in 648.7 seconds with 4 workers (run directory
+`run-am8gue5z`). `npm run -s gates:verify` passed 19 tests. Counts are copied
+from the runner; categories overlap and are not summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1173; files=66 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=1025; mutants=54; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| io-abi-2 | case mode=insensitive; fixtures=43; host boundaries=25; mutants=5; mutants killed=5; parity=153; read observations=21; reference observations=64; seed exhausted=2; seed observations=61 |
+| selfhost | blocked=63; cases=65; d4 gaps=5; judge mutants=20; mutants=3; passed=2 |
+| literals | agree eval observations=922; agree fixtures=37; artifact preservation probes=188; boundary probes=16; byte identity pairs=37; check observations=262; compile observations=262; eval observations=1110; execution lanes=2; fixtures=131; invalid fixtures=50; mutant eval observations=9; mutant fault observations=1; mutant verdict observations=15; mutant wasm observations=8; no artifact probes=188; proof entries=3; proof laws=36; reference calls=499; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=28; trust audits=74; unsupported fixtures=44; wasm observations=922 |
+
+Receipt drift: identical=64; semantic=17; volatile-only=9. The 16 semantic
+drifts in shared receipts (source hashes and derived code) are left for the
+coordinator. The literals receipt was copied from the run's normalized output
+after all 218 recorded input hashes were checked against the tree. The
+selfhost pin ruling above was not acted on: `c51f480`'s assertion is unchanged.
+
+### Offline preflight
+
+- The compiler-manifest preflight reports 32 groups and 0 structural
+  blockers. `literal-offset.bend` joins the nine groups that import it
+  (checking, wasm-emission, driver-pipeline, checker-laws, runtime-laws,
+  catalog-laws, fields-laws, recursion-laws, literal-source-machine).
+  Composition bytes, before to after: checking 46597 to 47937/48000,
+  checker-laws 23556 to 28408, literal-source-machine 43216 to 45354,
+  wasm-emission 30680 to 30920, driver-pipeline 39397 to 39637, runtime-laws
+  34881 to 35350, catalog-laws 28773 to 29242, fields-laws 24509 to 24978,
+  recursion-laws 22014 to 22483. All are available.
+- Per changed file (`--preflight --task=tests/compiler-literals/README.md`),
+  truncated contexts, before to after: check.bend 7 to 7 (context-file-limit
+  1 to 5), check-LAWS.bend 2 to 4 (the new `offset_lowering` and
+  `offset_bound`, context-helper and context-file limits),
+  literal-core-LAWS.bend 5 to 6 (`offset_cells`, context-helper limit),
+  literal-core-PROOF.bend 0 to 1 (`L.offset_cells`), check-PROOF.bend 0 to 0 and
+  literal-offset.bend 0 (composition available, 6366/48000). The single-file
+  compositions of check.bend (85201) and check-LAWS.bend (87615) were already
+  over the limit (83903, 84146).
+- Zero provider requests were made. Live Perch review remains the
+  coordinator's.
+
 ## Review round 8
 
 The coordinator's review of `27c1aa2` confirmed one major finding: the Bun
