@@ -24,7 +24,8 @@
     "identity",
     "string",
     "result",
-    "output"
+    "output",
+    "root"
   ],
   "sources": {
     "output/base.bend": "5dacc63838ab6dbb0a43dd52875971dc17950e01208c461ebe6e068bcf0abab7",
@@ -831,6 +832,43 @@
         "phase": "parse",
         "code": "function-result",
         "diagnostic_prefix": "Invalid\tparse\tfunction-result\t"
+      }
+    },
+    {
+      "name": "bundle-root",
+      "finding": "root",
+      "file": "rel/w/app/ok.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "rel/w/app/ok.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/rel/w/app/ok.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "cwd": "rel/w",
+      "entry": "app/ok.bend",
+      "bundle_arg": "/",
+      "absolute": [
+        "entry"
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "root-bundle",
+        "diagnostic_prefix": "Unsupported\tload\troot-bundle\t"
       }
     }
   ],
