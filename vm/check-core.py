@@ -572,6 +572,34 @@ MUTANTS = [
      [('        (if (i32.lt_u (i32.sub (call $kind (local.get $p)) (i32.const 1)) (i32.const 2))\n'
        '          (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_function_argument))))\n',
        '')], 'invocations'),
+    # vm-spec 8ef906e: every arm fits its Case; section 8's display visit and inclusive bounds
+    ('arm-exact-type', "a Branch's body must have exactly its Case's type",
+     [('(if (i32.eqz (call $fits (call $nodetype (local.get $a)) (call $nodetype (call $w (i32.add (local.get $b) (i32.const 6))))))',
+       '(if (i32.ne (call $nodetype (call $w (i32.add (local.get $b) (i32.const 6)))) (call $nodetype (local.get $a)))')],
+     'controls'),
+    ('default-exact-type', "a Default's body must have exactly its Case's type",
+     [('(if (i32.eqz (call $fits (call $nodetype (local.get $a)) (call $nodetype (call $w (i32.add (local.get $b) (i32.const 3))))))',
+       '(if (i32.ne (call $nodetype (call $w (i32.add (local.get $b) (i32.const 3)))) (call $nodetype (local.get $a)))')],
+     'controls'),
+    ('nat-succ-named-zero', "a Nat's successor is spelled with its zero's name",
+     [('(local.set $succ (call $w (i32.add (call $ctor (local.get $t) (i32.const 1)) (i32.const 3))))',
+       '(local.set $succ (call $w (i32.add (call $ctor (local.get $t) (i32.const 0)) (i32.const 3))))')], 'runs'),
+    ('nat-text-sized-by-zero', "a Nat's text is sized by its zero's name, not its successor's",
+     [('(i64.extend_i32_u (i32.add (call $w (i32.add (local.get $succ) (i32.const 1))) (i32.const 2)))',
+       '(i64.extend_i32_u (i32.add (call $w (i32.add (local.get $zero) (i32.const 1))) (i32.const 2)))')], 'runs'),
+    ('nat-one-visit', 'a Nat word costs one visit',
+     [('(local.set $visits (i32.add (i32.add (local.get $visits) (local.get $v)) (i32.const 1)))',
+       '(local.set $visits (i32.add (local.get $visits) (i32.const 1)))'),
+      ('(i64.add (i64.add (i64.extend_i32_u (local.get $visits)) (i64.extend_i32_u (local.get $v))) (i64.const 1))',
+       '(i64.add (i64.extend_i32_u (local.get $visits)) (i64.const 1))')], 'runs'),
+    ('display-visits-exclusive', 'the visit bound is exclusive',
+     [('                            (i64.const 1048576))', '                            (i64.const 1048575))')], 'runs'),
+    ('display-bytes-exclusive', 'the text bound is exclusive',
+     [('(global.set $cap (i32.add (global.get $len) (i32.const 0x1000000)))',
+       '(global.set $cap (i32.add (global.get $len) (i32.const 0xffffff)))')], 'runs'),
+    # review round 3: Chr reads its operand as the reference evaluation's construct does
+    ('chr-operand-unchecked', "Chr yields its operand's word without reading it",
+     [('            (drop (call $num (i32.load (local.get $ops))))\n', '')], 'reference'),
 ]
 
 
@@ -836,7 +864,7 @@ def main() -> int:
         require(shown(g, r['want']) == r['want'], f"run control {r['label']}: {shown(g, r['want'])} vs {r['want']}")
         require(dump['booted'] and (dump['exit'], dump['stdout']) == (g['exit'], g['stdout']),
                 f"run control {r['label']}: not loaded, or harness and host differ: {dump}")
-        seen = {'outcome': state['outcome'], 'cause': state['cause'], 'calls': state['calls']}
+        seen = {'outcome': state['outcome'], 'kind': state['kind'], 'cause': state['cause'], 'calls': state['calls']}
         require(all(seen[k] == v for k, v in r['dump'].items()), f"run control {r['label']}: {seen} vs {r['dump']}")
     for label, _, _ in runs_frozen:
         rows_for = [r for r in run_rows if r['label'].startswith(f'run:{label}@')]

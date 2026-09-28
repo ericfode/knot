@@ -1,14 +1,14 @@
 {
- "date": "2026-09-28T11:18:24.240395+00:00",
+ "date": "2026-09-28T12:46:14.738589+00:00",
  "status": "passed",
  "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
  "inputs": {
   "scripts/run-wasm-io.mjs": "4ee7b16d5ae02614a47087dd8498352a487b7efffad6fca8ea629a60eae0b3ec",
-  "vm/SPEC.md": "d0666796ac67a26f36f9c01137822d14ab7ae847ed1462dc92d35b5b7a31ad11",
-  "vm/build.json": "23d4daf382c5d6d3fdb35fed6f92b248368851dac7db4aa8f027200e35447f4a",
+  "vm/SPEC.md": "92f82a8910419f3a5b095f8a603a2332f168aae03df8071a2c6cb7d9fbed3932",
+  "vm/build.json": "e676d43508e057bc1ca140ddf9eb86a522febd8f4707a0a56855eef7f8e071e0",
   "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
-  "vm/check-core.py": "1733f864d7665445439ebd280d07a74471d4f2c4a84bde2d691e4ce77991e518",
-  "vm/check-spec.py": "2cad8c30f3ac305c3c5301619e765f60fc6e955850cd8c4724f8c62248cfaca4",
+  "vm/check-core.py": "826941ac38fe625a5f0ab46f88c14c98bd99ffe29f8d7be35e92d6bbca2624a0",
+  "vm/check-spec.py": "5e7d771ff8b0a6097c1109185a1c57e84d42b2d29d6dbfd6df4908e0d2108117",
   "vm/core/ceiling-band.kimg": "26c6ebdcdcc807b4671d67deb34a87a0edf345f77e83e92a16f8fc270bd2e720",
   "vm/core/ceiling-band.plan.json": "7e96235edf058d09328155a367402004daf7c04149f3e11f86abcb8486116679",
   "vm/core/ceiling-over.kimg": "568b444d7ad13cd4ff824e3062166b0c774caf41d007a7d881c36d11cafbd3a2",
@@ -21,13 +21,19 @@
   "vm/core/ceiling-wrap-name.plan.json": "239cfe9aaf5c1910ab450c0318276b81219da55e8fa3b3d8eb256645466ee7e9",
   "vm/core/ceiling-wrap-type.kimg": "0a1a932627d0754bc4c735f70ed7d1553bb925176dfc465cb11a00ead7ec52cb",
   "vm/core/ceiling-wrap-type.plan.json": "7b9fa3fe41b59c885404cfde0dcfe9e0c1eae3dcf23de7d59c86be96a887b24d",
+  "vm/core/chr-big-code.kimg": "19f95db06ae0bd3e624961f9b8fe1ea789fa65166de5c349caacff862c48ad7e",
+  "vm/core/chr-big-code.plan.json": "87b7a9aac59907146466cba656a0a22320151dfd230d2027b71a9f3393492d21",
+  "vm/core/chr-closure.kimg": "2682f3090c77c352afc4b5c83f655085b11e9e2deee857798072e69c12d4241a",
+  "vm/core/chr-closure.plan.json": "9e351b06b1d14f7637101b303d3976f18becaf4f271f446dcacb648ad2232f5c",
+  "vm/core/chr-unchecked.kimg": "9e97aaeee3d1fd1dc0e8342b1973184a45539b67a55886017335f0eb1c9ca2e5",
+  "vm/core/chr-unchecked.plan.json": "fb65caad2d92eb2ab23d5dfb8511bd4401aef0dbc1e4ec566de5eabcb28c8d7b",
   "vm/core/deep-250k.kimg": "dd6cfde50089d4a1910de291be88512546bb0c22948c1f242952fb5eb57b57a6",
   "vm/core/deep-250k.plan.json": "28f0b7b4f6d718030a8ce3796ac47f2ee09c39bc6d1fd35685a6152d5e8f3149",
   "vm/core/display-text.kimg": "a05bfcfaae116c91916d2490c18045ae8ba14cbcb1d8c2a48dc3522122612c60",
   "vm/core/display-text.plan.json": "c2b0fd6dbf15d7fbadb334edac815b0c2597b21f853994a1fd9678998bf4bcea",
   "vm/core/display-visits.kimg": "bd9d4ad0f6fdec25eabadd30dc55d2c315dadfd19ba8aefbbe4d3fa39fa3cea9",
   "vm/core/display-visits.plan.json": "7cece90ecaaf46453c533ea58e65d478863f02ebb0a245afeabd1181f5436c60",
-  "vm/core/fixtures.json": "71cc62c6f6e52721c8e035f58bf37777d2d14aa1933e3e5892fdd82ab9bf4be1",
+  "vm/core/fixtures.json": "cc0d57551dd48cb0ca3a959878e89c58404f3806e48456bf12abe76a9bd146ae",
   "vm/core/frames-400k.kimg": "6d6299ef33e368eb0e92c90b730b4b12406963e966ed68e438ac3af1e8e04dea",
   "vm/core/frames-400k.plan.json": "e5c8beb4e39fc394e7f2b18bf7402875de5a1fdd5b72b130b61821902cb73e93",
   "vm/core/ill-typed.kimg": "ab4119c7808fa5dde9d63194eeb639dee25aadff9ce5adb1c6df03ba0e145412",
@@ -40,12 +46,13 @@
   "vm/core/render-nat.plan.json": "badeb34410d36b267ba0a5f722a9f27746dce2b8f70f697bf7b250f69215745b",
   "vm/core/unsupported-foreign.kimg": "ab7e2eda7b5b2de10ff0e713d85489055352a894c8bbf7d8386e8b1cb9b36bab",
   "vm/core/unsupported-foreign.plan.json": "48b7962552cfc0f7723ee3fbddf5a93acd79712c710f4e6516eba9ba5938d93b",
+  "vm/evaluate.py": "b4c5754ad7b09ad75a355c60aaa0869c0ca951f26735c96f342d36a6e2134c2c",
   "vm/golden/vm-expected.json": "d8905d9e9c17107b3e60d89d06d0db9ac1356ec9f8c0a823e3d8d5c9b6e4ae31",
   "vm/harness.mjs": "2b83412779206b8ed2cbdb7f5a8ad6c50f5fc8fab362d6d56bf990cb15d3ce57",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
-  "vm/serializer.py": "78af9dea829c433ec09a9d52f584b3eaa2c3df3c5f6130662a067afe62dc319d",
-  "vm/vm.wasm": "77a9a5c214038d6f1585b5eff27b56b6b89483bca25025a46f9c5bdf77d85a64",
-  "vm/vm.wat": "0f4c6e738ecffa513eeb41d2a807ab4c7c5beec3cb29e6cfcb5908227d00a222"
+  "vm/serializer.py": "3c6bc2b8d5379841aa4b169c15f9eebf955f04f6073eaa64776e87ddcfc78546",
+  "vm/vm.wasm": "8f6867fe9a3bce47a1a8974ba17af49161bc0979659d3ed504ece436756007d7",
+  "vm/vm.wat": "248a9a306ba1da9210578e02f79f2a5a5b1ff6ddf482524fff0f479dd085cd06"
  },
  "pins": {
   "tool": "wat2wasm",
@@ -53,17 +60,17 @@
   "flags": [],
   "source": {
    "path": "vm/vm.wat",
-   "sha256": "0f4c6e738ecffa513eeb41d2a807ab4c7c5beec3cb29e6cfcb5908227d00a222"
+   "sha256": "248a9a306ba1da9210578e02f79f2a5a5b1ff6ddf482524fff0f479dd085cd06"
   },
   "module": {
    "path": "vm/vm.wasm",
-   "sha256": "77a9a5c214038d6f1585b5eff27b56b6b89483bca25025a46f9c5bdf77d85a64",
-   "bytes": 19374
+   "sha256": "8f6867fe9a3bce47a1a8974ba17af49161bc0979659d3ed504ece436756007d7",
+   "bytes": 19464
   },
   "test_build": {
    "prefix": ";;TEST ",
-   "sha256": "ea118032d6c7bf32d7bfdfbcd4f2bb62e613197616202d5fa75ac12096093d16",
-   "bytes": 19703
+   "sha256": "e6579b102f6228477f329ee5373846e93bde85033a3037ad471c7659cee0ed0e",
+   "bytes": 19793
   }
  },
  "shape": {
@@ -90,7 +97,7 @@
    ],
    "start_section": false,
    "call_indirect": false,
-   "functions": 84,
+   "functions": 85,
    "reaches_itself": null
   },
   "test_build": {
@@ -120,7 +127,7 @@
    ],
    "start_section": false,
    "call_indirect": false,
-   "functions": 88,
+   "functions": 89,
    "reaches_itself": null
   }
  },
@@ -1502,6 +1509,28 @@
    }
   ]
  },
+ "reference": [
+  {
+   "name": "chr-unchecked",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "ill-typed",
+   "calls": 2
+  },
+  {
+   "name": "chr-closure",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "ill-typed",
+   "calls": 2
+  },
+  {
+   "name": "chr-big-code",
+   "exit": 0,
+   "outcome": "Completed",
+   "calls": 2
+  }
+ ],
  "ceiling": [
   {
    "name": "ceiling-wrap-name",
@@ -1919,6 +1948,12 @@
     "exit": 5
    },
    {
+    "control": "plan:branch-body-type",
+    "reference": "HostFailure image: validator: first_code: branch body type",
+    "vm": "branch-body-type",
+    "exit": 5
+   },
+   {
     "control": "plan:nat-field-type",
     "reference": "HostFailure image: validator: representation: Nat shape",
     "vm": "representation-shape",
@@ -1960,6 +1995,27 @@
     "exit": 0,
     "outcome": "Completed",
     "calls": 2
+   },
+   {
+    "control": "plan:first-code",
+    "sha256": "c69d7fc0e37eb0ab68456598980153b27a7b843796aec614d976bc41fd0a6681",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 3
+   },
+   {
+    "control": "plan:first-code-none-case",
+    "sha256": "7ca24542cf08b43af66bb3dd3f83bf053923511b33c52a9d0a039a7f09266bf2",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 3
+   },
+   {
+    "control": "plan:key-arms-none",
+    "sha256": "2eb441c5bb1f637853b74c60fe637eecb70a850a143d366df8c2c3d6683a5d57",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 3
    },
    {
     "control": "codes:surrogate-pair",
@@ -2091,6 +2147,54 @@
      "1000000",
      "1"
     ]
+   },
+   {
+    "control": "run:display-visits-at-bound",
+    "sha256": "55966b543097ab29ebcab7f1cd4398cf3bb4fd347c90915e46f2a97cea7a6c3f",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 1,
+    "fuel_runs": [
+     "1000000",
+     "1"
+    ]
+   },
+   {
+    "control": "run:display-visits-beyond-bound",
+    "sha256": "8cfa8e0082525f9e3fb055b032bc0b1f776f89ab9d19a8cfefa66949b2c630c2",
+    "exit": 4,
+    "outcome": "Exhausted",
+    "cause": "display",
+    "kind": 2,
+    "calls": 1,
+    "fuel_runs": [
+     "1000000",
+     "1"
+    ]
+   },
+   {
+    "control": "run:display-bytes-at-bound",
+    "sha256": "b428dec61169b5a32ec9b0fa2ea261a74532b34fadd6f8e604406519a528b5bd",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 1,
+    "fuel_runs": [
+     "1000000",
+     "1"
+    ]
+   },
+   {
+    "control": "run:display-bytes-beyond-bound",
+    "sha256": "12f0abce145a2e7e7233025c125b28823188ff056f8f7fff3e9e8654d7b53821",
+    "exit": 4,
+    "outcome": "Exhausted",
+    "cause": "display",
+    "kind": 2,
+    "calls": 1,
+    "fuel_runs": [
+     "1000000",
+     "1"
+    ]
    }
   ],
   "fuzz": {
@@ -2154,7 +2258,7 @@
     "golden:char-code",
     "golden:char-eq"
    ],
-   "wrong_observations": 149,
+   "wrong_observations": 153,
    "crashes": 0
   },
   {
@@ -2314,6 +2418,99 @@
    "killed_by": [
     "invocation:invoke-arrow feed 1000000 1 0",
     "invocation:invoke-arrow feed 1000000 1 0 0"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "arm-exact-type",
+   "breaks": "a Branch's body must have exactly its Case's type",
+   "group": "controls",
+   "killed_by": [
+    "admitted:plan:first-code",
+    "admitted:plan:first-code-none-case",
+    "admitted:plan:key-arms-none"
+   ],
+   "wrong_observations": 3,
+   "crashes": 0
+  },
+  {
+   "mutant": "default-exact-type",
+   "breaks": "a Default's body must have exactly its Case's type",
+   "group": "controls",
+   "killed_by": [
+    "admitted:plan:key-arms-none"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "nat-succ-named-zero",
+   "breaks": "a Nat's successor is spelled with its zero's name",
+   "group": "runs",
+   "killed_by": [
+    "run:display-visits-at-bound@1000000",
+    "run:display-visits-at-bound@1",
+    "run:display-bytes-at-bound@1000000",
+    "run:display-bytes-at-bound@1",
+    "run:display-bytes-beyond-bound@1000000"
+   ],
+   "wrong_observations": 6,
+   "crashes": 0
+  },
+  {
+   "mutant": "nat-text-sized-by-zero",
+   "breaks": "a Nat's text is sized by its zero's name, not its successor's",
+   "group": "runs",
+   "killed_by": [
+    "run:display-bytes-at-bound@1000000",
+    "run:display-bytes-at-bound@1",
+    "run:display-bytes-beyond-bound@1000000",
+    "run:display-bytes-beyond-bound@1"
+   ],
+   "wrong_observations": 4,
+   "crashes": 0
+  },
+  {
+   "mutant": "nat-one-visit",
+   "breaks": "a Nat word costs one visit",
+   "group": "runs",
+   "killed_by": [
+    "run:display-visits-beyond-bound@1000000",
+    "run:display-visits-beyond-bound@1"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "display-visits-exclusive",
+   "breaks": "the visit bound is exclusive",
+   "group": "runs",
+   "killed_by": [
+    "run:display-visits-at-bound@1000000",
+    "run:display-visits-at-bound@1"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "display-bytes-exclusive",
+   "breaks": "the text bound is exclusive",
+   "group": "runs",
+   "killed_by": [
+    "run:display-bytes-at-bound@1000000",
+    "run:display-bytes-at-bound@1"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "chr-operand-unchecked",
+   "breaks": "Chr yields its operand's word without reading it",
+   "group": "reference",
+   "killed_by": [
+    "reference:chr-unchecked",
+    "reference:chr-closure"
    ],
    "wrong_observations": 2,
    "crashes": 0

@@ -1590,8 +1590,8 @@
                     (call $push (i32.const 1) (call $w (i32.add (local.get $row) (i32.const 6)))
                                 (i32.add (local.get $c) (local.get $nf)) (i32.const 0))))))
             (br $task))
-            ;; ROWPOST(case=a, arm=b)
-            (if (i32.ne (call $nodetype (call $w (i32.add (local.get $b) (i32.const 6)))) (call $nodetype (local.get $a)))
+            ;; ROWPOST(case=a, arm=b): the arm body fits the Case's own type (§3)
+            (if (i32.eqz (call $fits (call $nodetype (local.get $a)) (call $nodetype (call $w (i32.add (local.get $b) (i32.const 6))))))
               (then (call $refuse (select (global.get $R_key_branch_body_type) (global.get $R_branch_body_type)
                                           (call $w (i32.add (local.get $a) (i32.const 5)))))))
             (br $task))
@@ -1601,7 +1601,7 @@
             (call $push (i32.const 1) (call $w (i32.add (local.get $x) (i32.const 3))) (local.get $b) (i32.const 0))
             (br $task))
             ;; DEFPOST(case=a, default=b)
-            (if (i32.ne (call $nodetype (call $w (i32.add (local.get $b) (i32.const 3)))) (call $nodetype (local.get $a)))
+            (if (i32.eqz (call $fits (call $nodetype (local.get $a)) (call $nodetype (call $w (i32.add (local.get $b) (i32.const 3))))))
               (then (call $refuse (global.get $R_default_body_type))))
             (br $task))
             ;; CLOSE(closure=a, base=b, deepest=c): every capture used, exact
@@ -2108,7 +2108,8 @@
     (local.set $t (call $nodetype (local.get $n)))
     (if (i32.eq (local.get $op) (i32.const 4))
       (then
-        ;; Nat's Succ and Char's Chr act on words
+        ;; Nat's Succ and Char's Chr read their operand as a scalar and act on words;
+        ;; Chr yields the word itself, a Big cell included (CORE.md choice 13)
         (if (i32.eq (local.get $t) (global.get $rNat))
           (then
             (local.set $v (call $num (i32.load (local.get $ops))))
@@ -2118,7 +2119,11 @@
             (global.set $mode (i32.const 1))
             (return)))
         (if (i32.eq (local.get $t) (global.get $rChar))
-          (then (global.set $val (i32.load (local.get $ops))) (global.set $mode (i32.const 1)) (return)))
+          (then
+            (drop (call $num (i32.load (local.get $ops))))
+            (global.set $val (i32.load (local.get $ops)))
+            (global.set $mode (i32.const 1))
+            (return)))
         (local.set $c (call $alloc (i32.add (local.get $cnt) (i32.const 2)) (i32.const 0)))
         (i32.store offset=8 (local.get $c) (local.get $t))
         (i32.store offset=12 (local.get $c) (call $w (i32.add (local.get $n) (i32.const 3))))
@@ -2575,9 +2580,18 @@
       (br_if $digit (local.get $v)))
     (call $emit (local.get $p) (i32.sub (i32.const 80) (local.get $p))))
 
+  ;; name record `name`'s bytes copied to `at`; the address after them
+  (func $spell (param $name i32) (param $at i32) (result i32)
+    (local $n i32)
+    (local.set $n (call $w (i32.add (local.get $name) (i32.const 1))))
+    (memory.copy (local.get $at) (i32.add (i32.const 4096) (i32.shl (i32.add (local.get $name) (i32.const 2)) (i32.const 2)))
+                 (local.get $n))
+    (i32.add (local.get $at) (local.get $n)))
+
   (func $describe (param $x i32)
     (local $base i32) (local $sp i32) (local $visits i32) (local $w i32) (local $t i32)
     (local $rec i32) (local $name i32) (local $j i32) (local $v i32) (local $at i32)
+    (local $zero i32) (local $succ i32)
     (global.set $out (call $align8 (global.get $bump)))
     (global.set $len (i32.const 0))
     (global.set $cap (i32.const -1))
@@ -2603,19 +2617,25 @@
                             (i64.const 1048576))
                 (then (call $exhaust (i32.const 2) (global.get $R_display))))
               (local.set $visits (i32.add (i32.add (local.get $visits) (local.get $v)) (i32.const 1)))
-              (local.set $at (call $room (i64.add (i64.mul (i64.extend_i32_u (local.get $v)) (i64.const 6)) (i64.const 6))))
+              ;; the Nat type's own names: Zero is tag 0, Succ tag 1. The text is
+              ;; v * (|Succ| + 2) + |Zero| + 2 bytes, reserved before it is written.
+              (local.set $zero (call $w (i32.add (call $ctor (local.get $t) (i32.const 0)) (i32.const 3))))
+              (local.set $succ (call $w (i32.add (call $ctor (local.get $t) (i32.const 1)) (i32.const 3))))
+              (local.set $at (call $room (i64.add
+                (i64.mul (i64.extend_i32_u (local.get $v)) (i64.extend_i32_u (i32.add (call $w (i32.add (local.get $succ) (i32.const 1))) (i32.const 2))))
+                (i64.extend_i32_u (i32.add (call $w (i32.add (local.get $zero) (i32.const 1))) (i32.const 2))))))
               (local.set $j (local.get $v))
               (block $opened
                 (loop $open
                   (br_if $opened (i32.eqz (local.get $j)))
-                  (i32.store (local.get $at) (i32.const 0x63637553))
-                  (i32.store8 offset=4 (local.get $at) (i32.const 123))
-                  (local.set $at (i32.add (local.get $at) (i32.const 5)))
+                  (local.set $at (call $spell (local.get $succ) (local.get $at)))
+                  (i32.store8 (local.get $at) (i32.const 123))
+                  (local.set $at (i32.add (local.get $at) (i32.const 1)))
                   (local.set $j (i32.sub (local.get $j) (i32.const 1)))
                   (br $open)))
-              (i32.store (local.get $at) (i32.const 0x6f72655a))
-              (i32.store16 offset=4 (local.get $at) (i32.const 0x7d7b))
-              (memory.fill (i32.add (local.get $at) (i32.const 6)) (i32.const 125) (local.get $v))
+              (local.set $at (call $spell (local.get $zero) (local.get $at)))
+              (i32.store16 (local.get $at) (i32.const 0x7d7b))
+              (memory.fill (i32.add (local.get $at) (i32.const 2)) (i32.const 125) (local.get $v))
               (br $rendered)))
           (local.set $visits (i32.add (local.get $visits) (i32.const 1)))
           (if (i32.gt_u (local.get $visits) (i32.const 1048576)) (then (call $exhaust (i32.const 2) (global.get $R_display))))
