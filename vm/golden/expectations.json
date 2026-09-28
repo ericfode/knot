@@ -1,0 +1,805 @@
+{
+  "basis": "Seed/literal observations fixed before reference serializer implementation. No VM implementation exists.",
+  "cases": [
+    {
+      "name": "value-off",
+      "source": "vm/golden/value-off.bend",
+      "lane": "literals",
+      "seed_stdout": "Off{}\n",
+      "features": [
+        "Value"
+      ],
+      "sha256": "0cea3f05e3d0583f12d91825f0f19a0abe450f888f08e663b09558cafd6fc8fa",
+      "seed": {
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tOff{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "value-on",
+      "source": "vm/golden/value-on.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Value"
+      ],
+      "sha256": "68f9c5675b153f1f72913e68254caa4779bb383a63e7b8b477e3f65500847ce3",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "reference",
+      "source": "vm/golden/reference.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Reference",
+        "Application"
+      ],
+      "sha256": "c5cc0031061ed0f58be5c9ed1c069181741fcc77650aa6da1596078bf5b9f06d",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "nested-call",
+      "source": "vm/golden/nested-call.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Application"
+      ],
+      "sha256": "c7b2cf22a65ca56f4e73d075a4e9b93e44af1cae4af26dccda3b8c405336a411",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "let",
+      "source": "vm/golden/let.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Let",
+        "Reference"
+      ],
+      "sha256": "9acfa26d80240137d6dd226ed4e8253ac4adb2539e9c38afb2ce8803fba7d694",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "shadow",
+      "source": "vm/golden/shadow.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Let"
+      ],
+      "sha256": "49e5e8e92b73770b3fbbc774371e776ff261ccbae03011b64b7f76911474c871",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "erased-let",
+      "source": "vm/golden/erased-let.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "erasure"
+      ],
+      "sha256": "d6612eae198742f4c24e3b28fb5627e98c104f1c3cff06c4a4614f9b884ca2b1",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "erased-argument",
+      "source": "vm/golden/erased-argument.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "erasure",
+        "Application"
+      ],
+      "sha256": "b3ee8e4367d78d9e9c26020233d3f3e6a490da25b7eec8915147e1f2e1fe750f",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "case-off",
+      "source": "vm/golden/case-off.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Case",
+        "Branch"
+      ],
+      "sha256": "5808d9983778bd0a9604c1665007e5be940698804a765cc8b9566888adcca998",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "case-on",
+      "source": "vm/golden/case-on.bend",
+      "lane": "literals",
+      "seed_stdout": "Off{}\n",
+      "features": [
+        "Case",
+        "Branch"
+      ],
+      "sha256": "84c402b267b2c98f040f3b66e4c810e81e82ddebd2b2d1f465c561a393b0a338",
+      "seed": {
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tOff{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "construct",
+      "source": "vm/golden/construct.bend",
+      "lane": "literals",
+      "seed_stdout": "Box{On{}}\n",
+      "features": [
+        "Construct"
+      ],
+      "sha256": "844619acfdc40758b7722eaaf3514d69872b66caff4e460400e9d70a67f9f801",
+      "seed": {
+        "exit": 0,
+        "stdout": "Box{On{}}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "unpack",
+      "source": "vm/golden/unpack.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Construct",
+        "Case",
+        "Branch",
+        "Reference"
+      ],
+      "sha256": "afb2e4f5acd7918dae20bfeff873c4fab0844570048ffede20b4222fefbc2007",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "pair",
+      "source": "vm/golden/pair.bend",
+      "lane": "literals",
+      "seed_stdout": "Pair{Off{}, On{}}\n",
+      "features": [
+        "Construct"
+      ],
+      "sha256": "e49c711270c64181a864ea821943ee760ead6ba96a603fa412addca4c73222cb",
+      "seed": {
+        "exit": 0,
+        "stdout": "Pair{Off{}, On{}}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tPair{Off{},On{}}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "second",
+      "source": "vm/golden/second.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Branch",
+        "Reference"
+      ],
+      "sha256": "5923178aed3fe1c3d31438152b6d4369e9e8cad7a78db2e98fad06d3c23c3f11",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "erased-field",
+      "source": "vm/golden/erased-field.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "erasure",
+        "Branch"
+      ],
+      "sha256": "a1430c284d46746fee43130432ad38de762e4532250bd26dd875d2cf13c001d6",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "closure-id",
+      "source": "vm/golden/closure-id.bend",
+      "lane": "closures",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Closure",
+        "Invoke"
+      ],
+      "sha256": "59c6180dbc3de22a3c3ae43ba7b62e4dc87bcd078460d7b06b89ab5b7f2dec95",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "closure-capture-off",
+      "source": "vm/golden/closure-capture-off.bend",
+      "lane": "closures",
+      "seed_stdout": "Off{}\n",
+      "features": [
+        "Closure",
+        "Invoke",
+        "capture"
+      ],
+      "sha256": "a2982f956e5d80d1f0a5948efedc3f259ea0cafb6e52ba6c6efda8d65950cfb4",
+      "seed": {
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tOff{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "closure-capture-on",
+      "source": "vm/golden/closure-capture-on.bend",
+      "lane": "closures",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Closure",
+        "Invoke",
+        "capture"
+      ],
+      "sha256": "e7de301bfaf92728ca87187f300d5bde3645af09d1fd2a53aeb99ddebcf814a0",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "closure-return",
+      "source": "vm/golden/closure-return.bend",
+      "lane": "closures",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Closure",
+        "Invoke"
+      ],
+      "sha256": "3009d6615092c4b964f28538a8b61e7624d9687d5b16a16bab9f48cee2f32f3d",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "closure-nested",
+      "source": "vm/golden/closure-nested.bend",
+      "lane": "closures",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Closure",
+        "Invoke",
+        "capture"
+      ],
+      "sha256": "cbddd799d892dd0a490eb3e29a8ca528f5ba91df07d37d810a059e759b5e8887",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "closure-shadow",
+      "source": "vm/golden/closure-shadow.bend",
+      "lane": "closures",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Closure",
+        "Invoke"
+      ],
+      "sha256": "133e4fe9da41e9d19e3939e51e0640e9c6bddb7ff948ffce97b5ced3258311ae",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "u32-zero",
+      "source": "vm/golden/u32-zero.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "9514905b2ada5e8a0bb0606d77303227b24a9d0d8f8303772d3df71db524c8c9",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "u32-big",
+      "source": "vm/golden/u32-big.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "d61f179a913793df59f601eaca4683553da7dbabce062b425b003c3b90a71aa2",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "u32-wrap",
+      "source": "vm/golden/u32-wrap.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "680946c5690e405a504b6e583defba73baecd71ec432f07a68a1edd78a4118e1",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "u32-unsigned",
+      "source": "vm/golden/u32-unsigned.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "818e4117b69c6b30931574968407406abccc5ba89569bf61c0920df4bdf4d270",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "u32-div-zero",
+      "source": "vm/golden/u32-div-zero.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "8c1ed70cd0d5879753aee8fdb6335dbfe8e117d039f0f4e2a05e5af7632a1c8a",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "u32-rem-zero",
+      "source": "vm/golden/u32-rem-zero.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "0dc335c931d8d1ffcf9635c172af2e588b93e345770d74d40d18816ec31a72e9",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "u32-shift",
+      "source": "vm/golden/u32-shift.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "c16582d2e188a739021db4e17c2837e0ddb802ee762bf032dc882acc9411b06e",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "nat-add",
+      "source": "vm/golden/nat-add.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "7007600ac06dfc27d6041be83ca1d1a3b000f478a34299dcd3d1fe0a7c4ed775",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "char-code",
+      "source": "vm/golden/char-code.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "2559b91db0af5dfe9be5452220f6b7e5a71e7fa1b5e40fc8ac481b7829503800",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "string-empty",
+      "source": "vm/golden/string-empty.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "aa4eee7eece080bc550db970316f7e1ba8eb3e586977271e168b08140bfdee89",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "string-eq",
+      "source": "vm/golden/string-eq.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "2f0270496b12fab28901a5ebb2de1afafcb254bf50a5902fb87c9c30b6d40dad",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "string-append",
+      "source": "vm/golden/string-append.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "069a97e754e4225c28b10a589bb471c342194582c15099773654ab8fca317ced",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "string-reverse",
+      "source": "vm/golden/string-reverse.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic"
+      ],
+      "sha256": "cffc0f330a804b52e9d385cda62e063f35aa750d5b33e782fcdf5d784d85fb4d",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tTrue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "default-hit",
+      "source": "vm/golden/default-hit.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Literal",
+        "Case",
+        "Branch",
+        "Default"
+      ],
+      "sha256": "8810a50ee5168885ca597aedb3cff79a4df7e2ba54ac73e06b105f2decb58675",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "default-miss",
+      "source": "vm/golden/default-miss.bend",
+      "lane": "literals",
+      "seed_stdout": "Off{}\n",
+      "features": [
+        "Literal",
+        "Case",
+        "Branch",
+        "Default"
+      ],
+      "sha256": "856a1767428bed2c304ba66a2acc35b1a93b1d0337d77f0b4a73e38fee0eddd1",
+      "seed": {
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tOff{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "nat-unpack",
+      "source": "vm/golden/nat-unpack.bend",
+      "lane": "literals",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Literal",
+        "Case",
+        "Branch"
+      ],
+      "sha256": "099577a5effd238fc08fb57781ceb5d32edb9579728a4ce1cd3f51ec72fbb1f8",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "foreign-print",
+      "source": "vm/golden/foreign-print.bend",
+      "lane": "literals",
+      "seed_stdout": "vm\n",
+      "features": [
+        "Foreign"
+      ],
+      "sha256": "84b4e5fbee2bfc11a969873e55960dc377e62c901031720df869086efb809f23",
+      "seed": {
+        "exit": 0,
+        "stdout": "vm\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+      }
+    }
+  ]
+}

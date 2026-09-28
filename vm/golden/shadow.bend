@@ -1,0 +1,8 @@
+type Flag is Data:
+  Off{}
+  On{}
+
+def main() -> Flag:
+  x : Flag = Off{}
+  x : Flag = On{}
+  x
