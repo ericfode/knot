@@ -1298,7 +1298,9 @@ def main() -> int:
 
     expected = {'rule': 'SPEC section 11: the VM owes the seed value wherever the seed succeeds within the '
                         'declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. '
-                        'A Book result outside section 8\'s describe domain is Unsupported, never a bound.',
+                        'A Book result outside section 8\'s describe domain is Unsupported, never a bound. '
+                        'A non-scalar Char the seed writes as generalized UTF-8 is D20\'s HostFailure io abi, '
+                        'divergent by contract, never agreement.',
                 'fuel': VM_FUEL, 'bounds': bounds, 'cases': table}
     if args.write_expected:
         EXPECTED.write_text(json.dumps(expected, indent=1) + '\n')
