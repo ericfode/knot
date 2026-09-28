@@ -111,9 +111,9 @@ gates at their proof step:
 
 | Run | Result |
 | --- | --- |
-| Committed tree, 4 jobs (161 s) | exit 1: 9 passed (census, lint:verify, owned-store, flat-store, perch-context, io-host, io-abi-2, bootstrap, selfhost); frontend, checker, structural, fields, wasm, recursion, fields-wasm, classification and generics failed at their proof entry; 3 trust gates blocked |
-| Proposed supersession applied, 4 jobs (271 s) | exit 0: 21 of 21 passed |
-| Proposed supersession applied, `--jobs 1` (854 s, load about 15) | exit 0: 21 of 21 passed |
+| Committed tree `2fa6e2c`, 4 jobs (232 s) | exit 1: 9 passed (census, lint:verify, owned-store, flat-store, perch-context, io-host, io-abi-2, bootstrap, selfhost); frontend, checker, structural, fields, wasm, recursion, fields-wasm, classification and generics failed at their proof entry; 3 trust gates blocked |
+| `2fa6e2c` plus the proposal, 4 jobs (328 s) | exit 0: 21 of 21 passed |
+| `52c9e8a` plus the proposal, `--jobs 1` (854 s, load about 15) | exit 0: 21 of 21 passed |
 
 Runner summaries: [committed tree](receipts/review-1/gates-tree.json),
 [proposal, 4 jobs](receipts/review-1/gates-proposal.json) and
@@ -151,10 +151,47 @@ duplicate code; no budget was changed.
 **Style preflight (offline, 0 provider requests).** Full manifest: 24 groups,
 1,196 units, 0 truncated units, 24 of 24 compositions available, 0 structural
 blockers (main: 17 groups, 957 units, 0 blockers). The seven generic groups use
-the 3,731-byte generics contract as their task. Targets mode over this round's
-seven changed sources reports 227 declarations, 58 truncated contexts and an
-unavailable 158,052-byte composition; the per-group manifest run is the
-qualifying form. No style rating is claimed.
+the 3,731-byte generics contract as their task. Per group, main `cc9f2fd` →
+branch (units / composition bytes / structural blockers):
+
+| Group | main units / composition bytes / blockers | branch units / composition bytes / blockers | branch composition |
+| --- | --- | --- | --- |
+| syntax-core | 33 / 5,156 / 0 | 33 / 5,698 / 0 | available |
+| frontend-lexing | 27 / 7,112 / 0 | 27 / 7,654 / 0 | available |
+| frontend-parsing | 41 / 20,432 / 0 | 68 / 33,502 / 0 | available |
+| diagnostics | 45 / 11,027 / 0 | 45 / 12,813 / 0 | available |
+| catalog | 65 / 17,844 / 0 | 65 / 18,698 / 0 | available |
+| scope-patterns | 99 / 29,152 / 0 | 101 / 30,639 / 0 | available |
+| checking | 134 / 47,903 / 0 | 71 / 36,665 / 0 | available |
+| evaluation | 63 / 18,063 / 0 | 63 / 18,605 / 0 | available |
+| wasm-codec | 30 / 6,317 / 0 | 30 / 6,859 / 0 | available |
+| wasm-emission | 89 / 27,367 / 0 | 89 / 27,909 / 0 | available |
+| driver-pipeline | 51 / 23,219 / 0 | 51 / 27,934 / 0 | available |
+| frontend-laws | 81 / 29,806 / 0 | 108 / 43,224 / 0 | available |
+| checker-laws | 38 / 15,598 / 0 | 40 / 17,455 / 0 | available |
+| runtime-laws | 55 / 25,090 / 0 | 55 / 26,210 / 0 | available |
+| catalog-laws | 42 / 24,051 / 0 | 42 / 25,587 / 0 | available |
+| fields-laws | 32 / 19,604 / 0 | 32 / 20,724 / 0 | available |
+| recursion-laws | 32 / 17,292 / 0 | 32 / 18,412 / 0 | available |
+| generic-type-algebra | new | 35 / 10,322 / 0 | available |
+| generic-type-parsing | new | 21 / 10,657 / 0 | available |
+| generic-catalog | new | 76 / 31,035 / 0 | available |
+| generic-checking | new | 65 / 39,301 / 0 | available |
+| generic-erasure | new | 12 / 7,521 / 0 | available |
+| generic-erasure-laws | new | 34 / 17,746 / 0 | available |
+| check-dispatch | new | 1 / 9,277 / 0 | available |
+
+Targets mode over this round's seven changed sources reports 227
+declarations, 58 truncated contexts and an unavailable 158,052-byte
+composition; `types.bend::Expr`, `syntax.bend::Token` and
+`type-parse.bend::invalid` still truncate in a 20-file targets run. The
+per-group manifest run is the qualifying form. No style rating is claimed.
+
+On the committed tree, `src/types-PROOF.bend` and
+`src/type-erasure-PROOF.bend` print `All terms check.` when run directly;
+only `src/PROOF.bend` fails, on the two classify-2 laws. The selfhost need
+`generics` is still `available: false`: all 30 cases that need it also need
+`base`, so the flip is behavior-neutral and is owed when this increment lands.
 
 ## Round 0 verification (`f39ba7e`)
 
