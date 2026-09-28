@@ -186,10 +186,12 @@ at a field's binding (the finding), and dropping the leaf, split and zero-row
 binding sites. `typekind.py` replays the reviewer's Type-kind generator over
 random seeds 0 to 2,999, requires seed and Knot agreement on acceptance, and
 evaluates one seeded probe call of every agreed acceptance that promotes a
-`Type`-kind binder. `destructured_promotion_is_unbound`,
-`later_match_binds_promotion`, `leaf_binds_promotion`, `leaf_closes_frontier`,
-`destructured_promotion_witness` and `bound_promotion_witness` in
-`src/matrix-LAWS.bend` state the rule.
+`Type`-kind binder. In `src/matrix-LAWS.bend`,
+`destructured_promotion_is_unbound`, `later_match_binds_promotion`,
+`leaf_binds_promotion` and `leaf_closes_frontier` state the rule on the
+frontier, and five whole-checker witnesses pin each site: a destructured
+promoted parameter and field check, and returning the binder, a later matrix
+split and a later zero-row match are each rejected.
 
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual

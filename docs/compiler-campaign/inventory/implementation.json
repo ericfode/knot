@@ -125,9 +125,9 @@
   "totals": {
     "compiler": {
       "files": 35,
-      "declarations": 676,
-      "unique_declarations": 561,
-      "definitions": 406,
+      "declarations": 688,
+      "unique_declarations": 570,
+      "definitions": 412,
       "classes": 41
     },
     "frontend_files": {
@@ -58025,7 +58025,7 @@
     },
     {
       "file": "src/matrix-LAWS.bend",
-      "sha256": "78a60a041b8b7a58b8b69c254467e489cb5f9cf81eabcd5beb6ecb47d43681a5",
+      "sha256": "e44558af5efe8d41a8e22ea8385ae605522d06a0637aeee382dd1b0e40d2b7cf",
       "imports": [
         {
           "module": "Base",
@@ -59708,12 +59708,12 @@
           }
         },
         {
-          "id": "src/matrix-LAWS.bend::by_mode:definition",
-          "name": "by_mode",
-          "key": "src/matrix-LAWS.by_mode",
+          "id": "src/matrix-LAWS.bend::modes:definition",
+          "name": "modes",
+          "key": "src/matrix-LAWS.modes",
           "kind": "definition",
           "lines": [
-            186,
+            187,
             188
           ],
           "features": [
@@ -59721,9 +59721,7 @@
             "constructors",
             "fields",
             "generics",
-            "literals.list",
             "literals.nat",
-            "literals.string",
             "literals.u32",
             "quantities.affine",
             "quantities.arguments",
@@ -59731,6 +59729,7 @@
           ],
           "references": [
             "Con",
+            "List",
             "Nil",
             "Result",
             "Some",
@@ -59738,20 +59737,19 @@
             "src/check.run",
             "src/core.Catalog",
             "src/core.Checked",
+            "src/core.Datatype",
             "src/core.Parameter",
             "src/matrix-LAWS.mode",
-            "src/matrix-LAWS.token",
             "src/scope.parameters",
-            "src/syntax.Arm",
             "src/syntax.Error",
-            "src/syntax.Match",
-            "src/syntax.Node",
-            "src/syntax.Promotion",
-            "src/syntax.Variable"
+            "src/syntax.Node"
           ],
           "type_references": [
+            "List",
             "Result",
             "src/core.Checked",
+            "src/core.Datatype",
+            "src/core.Parameter",
             "src/syntax.Error",
             "src/syntax.Node"
           ],
@@ -59760,7 +59758,6 @@
             "references": [
               "src/check.run",
               "src/matrix-LAWS.mode",
-              "src/matrix-LAWS.token",
               "src/scope.parameters"
             ],
             "types": [
@@ -59768,23 +59765,17 @@
               "Nat",
               "Nil",
               "Some",
-              "String",
               "U32",
               "src/check.Expression",
-              "src/core.Catalog",
-              "src/core.Parameter",
-              "src/syntax.Arm",
-              "src/syntax.Match",
-              "src/syntax.Promotion",
-              "src/syntax.Variable"
+              "src/core.Catalog"
             ],
             "dynamic_calls": []
           }
         },
         {
-          "id": "src/matrix-LAWS.bend::mode_arm:definition",
-          "name": "mode_arm",
-          "key": "src/matrix-LAWS.mode_arm",
+          "id": "src/matrix-LAWS.bend::parameter:definition",
+          "name": "parameter",
+          "key": "src/matrix-LAWS.parameter",
           "kind": "definition",
           "lines": [
             189,
@@ -59794,25 +59785,60 @@
             "calls",
             "constructors",
             "fields",
-            "literals.string",
-            "quantities.reusable",
+            "literals.u32",
+            "quantities.affine",
             "types.base"
           ],
           "references": [
             "String",
-            "src/matrix-LAWS.ctor",
+            "U32",
+            "src/core.Parameter",
+            "src/matrix-LAWS.token"
+          ],
+          "type_references": [
+            "String",
+            "U32",
+            "src/core.Parameter"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/matrix-LAWS.token"
+            ],
+            "types": [
+              "U32",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::arm:definition",
+          "name": "arm",
+          "key": "src/matrix-LAWS.arm",
+          "kind": "definition",
+          "lines": [
+            190,
+            190
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.string",
+            "quantities.affine"
+          ],
+          "references": [
             "src/matrix-LAWS.token",
             "src/syntax.Arm",
             "src/syntax.Node"
           ],
           "type_references": [
-            "String",
             "src/syntax.Node"
           ],
           "captures": [],
           "execution": {
             "references": [
-              "src/matrix-LAWS.ctor",
               "src/matrix-LAWS.token"
             ],
             "types": [
@@ -59823,13 +59849,241 @@
           }
         },
         {
+          "id": "src/matrix-LAWS.bend::on:definition",
+          "name": "on",
+          "key": "src/matrix-LAWS.on",
+          "kind": "definition",
+          "lines": [
+            191,
+            191
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "String",
+            "src/matrix-LAWS.token",
+            "src/syntax.Match",
+            "src/syntax.Node",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/matrix-LAWS.token"
+            ],
+            "types": [
+              "String",
+              "src/syntax.Match",
+              "src/syntax.Variable"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::promoting:definition",
+          "name": "promoting",
+          "key": "src/matrix-LAWS.promoting",
+          "kind": "definition",
+          "lines": [
+            192,
+            192
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.string",
+            "quantities.affine"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "src/matrix-LAWS.arm",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.token",
+            "src/syntax.Node",
+            "src/syntax.Promotion"
+          ],
+          "type_references": [
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/matrix-LAWS.arm",
+              "src/matrix-LAWS.on",
+              "src/matrix-LAWS.token"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "src/syntax.Promotion"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::mode_arms:definition",
+          "name": "mode_arms",
+          "key": "src/matrix-LAWS.mode_arms",
+          "kind": "definition",
+          "lines": [
+            193,
+            193
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "src/matrix-LAWS.arm",
+            "src/matrix-LAWS.ctor",
+            "src/syntax.Node"
+          ],
+          "type_references": [
+            "List",
+            "src/syntax.Node"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/matrix-LAWS.arm",
+              "src/matrix-LAWS.ctor"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::mode_branches:definition",
+          "name": "mode_branches",
+          "key": "src/matrix-LAWS.mode_branches",
+          "kind": "definition",
+          "lines": [
+            194,
+            195
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "src/core.Branch",
+            "src/core.Term",
+            "src/core.Value",
+            "src/matrix-LAWS.token"
+          ],
+          "type_references": [
+            "List",
+            "src/core.Term"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/matrix-LAWS.token"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Branch",
+              "src/core.Value"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::rejected:definition",
+          "name": "rejected",
+          "key": "src/matrix-LAWS.rejected",
+          "kind": "definition",
+          "lines": [
+            196,
+            196
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Fail",
+            "Result",
+            "src/core.Checked",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Invalid"
+          ],
+          "type_references": [
+            "Result",
+            "src/core.Checked",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Fail",
+              "String",
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Invalid"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/matrix-LAWS.bend::destructured_promotion_witness:law",
           "name": "destructured_promotion_witness",
           "key": "src/matrix-LAWS.destructured_promotion_witness",
           "kind": "law",
           "lines": [
-            191,
-            193
+            198,
+            200
           ],
           "features": [
             "calls",
@@ -59849,16 +60103,73 @@
             "Done",
             "Nil",
             "Result",
+            "src/core.Case",
+            "src/core.Checked",
+            "src/matrix-LAWS.mode_arms",
+            "src/matrix-LAWS.mode_branches",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
+            "src/matrix-LAWS.token",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::destructured_field_promotion_witness:law",
+          "name": "destructured_field_promotion_witness",
+          "key": "src/matrix-LAWS.destructured_field_promotion_witness",
+          "kind": "law",
+          "lines": [
+            202,
+            206
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "False",
+            "Nil",
+            "None",
+            "Result",
+            "True",
+            "src/core.Binding",
             "src/core.Branch",
             "src/core.Case",
             "src/core.Checked",
-            "src/core.Value",
-            "src/matrix-LAWS.by_mode",
-            "src/matrix-LAWS.mode_arm",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/matrix-LAWS.arm",
+            "src/matrix-LAWS.mode_arms",
+            "src/matrix-LAWS.mode_branches",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
             "src/matrix-LAWS.token",
+            "src/syntax.Constructor",
             "src/syntax.Error",
-            "src/syntax.Match",
-            "src/syntax.Variable"
+            "src/syntax.Promotion"
           ],
           "type_references": [
             "Result"
@@ -59876,8 +60187,8 @@
           "key": "src/matrix-LAWS.bound_promotion_witness",
           "kind": "law",
           "lines": [
-            195,
-            196
+            208,
+            209
           ],
           "features": [
             "calls",
@@ -59886,21 +60197,120 @@
             "fields",
             "generics",
             "laws",
+            "literals.list",
             "literals.string",
             "literals.u32",
             "quantities.arguments",
             "types.base"
           ],
           "references": [
-            "Fail",
+            "Con",
+            "Nil",
             "Result",
             "src/core.Checked",
-            "src/matrix-LAWS.by_mode",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
+            "src/matrix-LAWS.rejected",
             "src/matrix-LAWS.token",
-            "src/syntax.At",
             "src/syntax.Error",
-            "src/syntax.Invalid",
             "src/syntax.Variable"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::split_binds_promotion_witness:law",
+          "name": "split_binds_promotion_witness",
+          "key": "src/matrix-LAWS.split_binds_promotion_witness",
+          "kind": "law",
+          "lines": [
+            211,
+            214
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "Result",
+            "src/core.Checked",
+            "src/matrix-LAWS.arm",
+            "src/matrix-LAWS.ctor",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.rejected",
+            "src/matrix-LAWS.token",
+            "src/syntax.Error",
+            "src/syntax.Match",
+            "src/syntax.Promotion",
+            "src/syntax.Sequence",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::empty_match_binds_promotion_witness:law",
+          "name": "empty_match_binds_promotion_witness",
+          "key": "src/matrix-LAWS.empty_match_binds_promotion_witness",
+          "kind": "law",
+          "lines": [
+            216,
+            218
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "False",
+            "Nil",
+            "Result",
+            "src/core.Checked",
+            "src/core.Datatype",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
+            "src/matrix-LAWS.rejected",
+            "src/matrix-LAWS.token",
+            "src/syntax.Error"
           ],
           "type_references": [
             "Result"
@@ -59918,8 +60328,8 @@
           "key": "src/matrix-LAWS.remainder_omits_split",
           "kind": "law",
           "lines": [
-            201,
-            206
+            223,
+            228
           ],
           "features": [
             "calls",
@@ -59965,8 +60375,8 @@
           "key": "src/matrix-LAWS.remainder_keeps_other",
           "kind": "law",
           "lines": [
-            208,
-            213
+            230,
+            235
           ],
           "features": [
             "calls",
@@ -60012,8 +60422,8 @@
           "key": "src/matrix-LAWS.remainder_drops_split_rows",
           "kind": "law",
           "lines": [
-            215,
-            224
+            237,
+            246
           ],
           "features": [
             "calls",
@@ -60064,8 +60474,8 @@
           "key": "src/matrix-LAWS.irrefutable_remainder",
           "kind": "law",
           "lines": [
-            226,
-            234
+            248,
+            256
           ],
           "features": [
             "calls",
@@ -60108,8 +60518,8 @@
           "key": "src/matrix-LAWS.anonymous_reference_is_free",
           "kind": "law",
           "lines": [
-            236,
-            239
+            258,
+            261
           ],
           "features": [
             "calls",
@@ -60157,8 +60567,8 @@
           "key": "src/matrix-LAWS.default_reference_stays_live",
           "kind": "law",
           "lines": [
-            241,
-            248
+            263,
+            270
           ],
           "features": [
             "calls",
@@ -60207,8 +60617,8 @@
           "key": "src/matrix-LAWS.empty_reference_stays_live",
           "kind": "law",
           "lines": [
-            250,
-            257
+            272,
+            279
           ],
           "features": [
             "calls",
@@ -60258,8 +60668,8 @@
           "key": "src/matrix-LAWS.pending_binder_witnesses_nothing",
           "kind": "law",
           "lines": [
-            261,
-            272
+            283,
+            294
           ],
           "features": [
             "calls",
@@ -60313,8 +60723,8 @@
           "key": "src/matrix-LAWS.void",
           "kind": "definition",
           "lines": [
-            274,
-            274
+            296,
+            296
           ],
           "features": [
             "calls",
@@ -60351,8 +60761,8 @@
           "key": "src/matrix-LAWS.erased_empty_is_not_dead",
           "kind": "law",
           "lines": [
-            276,
-            278
+            298,
+            300
           ],
           "features": [
             "calls",
@@ -60399,8 +60809,8 @@
           "key": "src/matrix-LAWS.live_empty_is_dead",
           "kind": "law",
           "lines": [
-            280,
-            282
+            302,
+            304
           ],
           "features": [
             "calls",
@@ -60446,8 +60856,8 @@
           "key": "src/matrix-LAWS.introduced_empty_witness",
           "kind": "law",
           "lines": [
-            285,
-            286
+            307,
+            308
           ],
           "features": [
             "calls",
@@ -60485,8 +60895,8 @@
           "key": "src/matrix-LAWS.pending_empty_witness",
           "kind": "law",
           "lines": [
-            288,
-            289
+            310,
+            311
           ],
           "features": [
             "calls",
@@ -60524,8 +60934,8 @@
           "key": "src/matrix-LAWS.let_alias_available",
           "kind": "law",
           "lines": [
-            292,
-            297
+            314,
+            319
           ],
           "features": [
             "calls",
@@ -60576,8 +60986,8 @@
           "key": "src/matrix-LAWS.terminal_expansion_preserves_budget",
           "kind": "law",
           "lines": [
-            299,
-            304
+            321,
+            326
           ],
           "features": [
             "calls",
@@ -60630,8 +61040,8 @@
           "key": "src/matrix-LAWS.leaf_expansion_spends_one",
           "kind": "law",
           "lines": [
-            306,
-            313
+            328,
+            335
           ],
           "features": [
             "calls",
@@ -60689,8 +61099,8 @@
           "key": "src/matrix-LAWS.reference_is_not_rebuilt",
           "kind": "law",
           "lines": [
-            317,
-            324
+            339,
+            346
           ],
           "features": [
             "calls",
@@ -60738,8 +61148,8 @@
           "key": "src/matrix-LAWS.ref",
           "kind": "definition",
           "lines": [
-            329,
-            329
+            351,
+            351
           ],
           "features": [
             "calls",
@@ -60777,8 +61187,8 @@
           "key": "src/matrix-LAWS.node",
           "kind": "definition",
           "lines": [
-            330,
-            331
+            352,
+            353
           ],
           "features": [
             "calls",
@@ -60827,8 +61237,8 @@
           "key": "src/matrix-LAWS.refined",
           "kind": "definition",
           "lines": [
-            332,
-            332
+            354,
+            354
           ],
           "features": [
             "calls",
@@ -60875,8 +61285,8 @@
           "key": "src/matrix-LAWS.descent",
           "kind": "definition",
           "lines": [
-            333,
-            335
+            355,
+            357
           ],
           "features": [
             "calls",
@@ -60932,8 +61342,8 @@
           "key": "src/matrix-LAWS.rebuilt_l",
           "kind": "definition",
           "lines": [
-            336,
-            336
+            358,
+            358
           ],
           "features": [
             "calls",
@@ -60978,8 +61388,8 @@
           "key": "src/matrix-LAWS.rebuilt_descendant_witness",
           "kind": "law",
           "lines": [
-            338,
-            339
+            360,
+            361
           ],
           "features": [
             "calls",
@@ -61013,8 +61423,8 @@
           "key": "src/matrix-LAWS.rebuilt_root_witness",
           "kind": "law",
           "lines": [
-            341,
-            342
+            363,
+            364
           ],
           "features": [
             "calls",
@@ -61052,8 +61462,8 @@
           "key": "src/matrix-LAWS.changed_field_witness",
           "kind": "law",
           "lines": [
-            344,
-            345
+            366,
+            367
           ],
           "features": [
             "calls",
@@ -61091,8 +61501,8 @@
           "key": "src/matrix-LAWS.retyped_constant_witness",
           "kind": "law",
           "lines": [
-            347,
-            348
+            369,
+            370
           ],
           "features": [
             "calls",
@@ -61128,8 +61538,8 @@
           "key": "src/matrix-LAWS.rebuilt_descendant_call_witness",
           "kind": "law",
           "lines": [
-            350,
-            354
+            372,
+            376
           ],
           "features": [
             "calls",
@@ -61185,7 +61595,7 @@
     },
     {
       "file": "src/matrix-PROOF.bend",
-      "sha256": "7e38f8f98c2570893f76b0f3b181c74a440d1ba2e0d2e13232e41c3550f1e8d9",
+      "sha256": "3616190836c1164880611ab48d075ddb7f1941a1776526f190d057f8509cdce4",
       "imports": [
         {
           "module": "Base",
@@ -62282,22 +62692,26 @@
             "Done",
             "Nil",
             "Result",
-            "src/core.Branch",
             "src/core.Case",
             "src/core.Checked",
-            "src/core.Value",
-            "src/matrix-LAWS.by_mode",
-            "src/matrix-LAWS.mode_arm",
+            "src/matrix-LAWS.mode_arms",
+            "src/matrix-LAWS.mode_branches",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
             "src/matrix-LAWS.token",
-            "src/syntax.Error",
-            "src/syntax.Match",
-            "src/syntax.Variable"
+            "src/syntax.Error"
           ],
           "type_references": [
             "Result",
             "src/core.Checked",
-            "src/matrix-LAWS.by_mode",
-            "src/matrix-LAWS.mode_arm",
+            "src/matrix-LAWS.mode_arms",
+            "src/matrix-LAWS.mode_branches",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
             "src/matrix-LAWS.token",
             "src/syntax.Error"
           ],
@@ -62309,9 +62723,9 @@
           }
         },
         {
-          "id": "src/matrix-PROOF.bend::L.bound_promotion_witness:law_fill",
-          "name": "L.bound_promotion_witness",
-          "key": "src/matrix-LAWS.bound_promotion_witness",
+          "id": "src/matrix-PROOF.bend::L.destructured_field_promotion_witness:law_fill",
+          "name": "L.destructured_field_promotion_witness",
+          "key": "src/matrix-LAWS.destructured_field_promotion_witness",
           "kind": "law_fill",
           "lines": [
             88,
@@ -62330,20 +62744,200 @@
             "types.base"
           ],
           "references": [
-            "Fail",
+            "Con",
+            "Done",
+            "False",
+            "Nil",
+            "None",
+            "Result",
+            "True",
+            "src/core.Binding",
+            "src/core.Branch",
+            "src/core.Case",
+            "src/core.Checked",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/matrix-LAWS.arm",
+            "src/matrix-LAWS.mode_arms",
+            "src/matrix-LAWS.mode_branches",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.token",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Promotion"
+          ],
+          "type_references": [
             "Result",
             "src/core.Checked",
-            "src/matrix-LAWS.by_mode",
+            "src/matrix-LAWS.arm",
+            "src/matrix-LAWS.mode_arms",
+            "src/matrix-LAWS.mode_branches",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
             "src/matrix-LAWS.token",
-            "src/syntax.At",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-PROOF.bend::L.bound_promotion_witness:law_fill",
+          "name": "L.bound_promotion_witness",
+          "key": "src/matrix-LAWS.bound_promotion_witness",
+          "kind": "law_fill",
+          "lines": [
+            89,
+            89
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "Result",
+            "src/core.Checked",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
+            "src/matrix-LAWS.rejected",
+            "src/matrix-LAWS.token",
             "src/syntax.Error",
-            "src/syntax.Invalid",
             "src/syntax.Variable"
           ],
           "type_references": [
             "Result",
             "src/core.Checked",
-            "src/matrix-LAWS.by_mode",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
+            "src/matrix-LAWS.rejected",
+            "src/matrix-LAWS.token",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-PROOF.bend::L.split_binds_promotion_witness:law_fill",
+          "name": "L.split_binds_promotion_witness",
+          "key": "src/matrix-LAWS.split_binds_promotion_witness",
+          "kind": "law_fill",
+          "lines": [
+            90,
+            90
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "Result",
+            "src/core.Checked",
+            "src/matrix-LAWS.arm",
+            "src/matrix-LAWS.ctor",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.rejected",
+            "src/matrix-LAWS.token",
+            "src/syntax.Error",
+            "src/syntax.Match",
+            "src/syntax.Promotion",
+            "src/syntax.Sequence",
+            "src/syntax.Variable"
+          ],
+          "type_references": [
+            "Result",
+            "src/core.Checked",
+            "src/matrix-LAWS.arm",
+            "src/matrix-LAWS.ctor",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.rejected",
+            "src/matrix-LAWS.token",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-PROOF.bend::L.empty_match_binds_promotion_witness:law_fill",
+          "name": "L.empty_match_binds_promotion_witness",
+          "key": "src/matrix-LAWS.empty_match_binds_promotion_witness",
+          "kind": "law_fill",
+          "lines": [
+            91,
+            91
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "False",
+            "Nil",
+            "Result",
+            "src/core.Checked",
+            "src/core.Datatype",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
+            "src/matrix-LAWS.rejected",
+            "src/matrix-LAWS.token",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "src/core.Checked",
+            "src/matrix-LAWS.modes",
+            "src/matrix-LAWS.on",
+            "src/matrix-LAWS.parameter",
+            "src/matrix-LAWS.promoting",
+            "src/matrix-LAWS.rejected",
             "src/matrix-LAWS.token",
             "src/syntax.Error"
           ],
@@ -62360,8 +62954,8 @@
           "key": "src/matrix-LAWS.remainder_omits_split",
           "kind": "law_fill",
           "lines": [
-            90,
-            93
+            93,
+            96
           ],
           "features": [
             "calls",
@@ -62400,7 +62994,7 @@
           ],
           "captures": [
             {
-              "offset": 7404,
+              "offset": 7549,
               "names": [
                 "ctor",
                 "head",
@@ -62408,14 +63002,14 @@
               ]
             },
             {
-              "offset": 7449,
+              "offset": 7594,
               "names": [
                 "ctor",
                 "tail"
               ]
             },
             {
-              "offset": 7477,
+              "offset": 7622,
               "names": [
                 "ctor",
                 "head",
@@ -62437,8 +63031,8 @@
           "key": "src/matrix-LAWS.remainder_keeps_other",
           "kind": "law_fill",
           "lines": [
-            94,
-            97
+            97,
+            100
           ],
           "features": [
             "calls",
@@ -62477,7 +63071,7 @@
           ],
           "captures": [
             {
-              "offset": 7650,
+              "offset": 7795,
               "names": [
                 "ctor",
                 "head",
@@ -62485,14 +63079,14 @@
               ]
             },
             {
-              "offset": 7695,
+              "offset": 7840,
               "names": [
                 "ctor",
                 "tail"
               ]
             },
             {
-              "offset": 7723,
+              "offset": 7868,
               "names": [
                 "ctor",
                 "head",
@@ -62514,8 +63108,8 @@
           "key": "src/matrix-LAWS.remainder_drops_split_rows",
           "kind": "law_fill",
           "lines": [
-            98,
-            102
+            101,
+            105
           ],
           "features": [
             "calls",
@@ -62559,7 +63153,7 @@
           ],
           "captures": [
             {
-              "offset": 7921,
+              "offset": 8066,
               "names": [
                 "args",
                 "arm",
@@ -62571,14 +63165,14 @@
               ]
             },
             {
-              "offset": 7965,
+              "offset": 8110,
               "names": [
                 "ctor",
                 "rows"
               ]
             },
             {
-              "offset": 7991,
+              "offset": 8136,
               "names": [
                 "args",
                 "arm",
@@ -62604,8 +63198,8 @@
           "key": "src/matrix-LAWS.irrefutable_remainder",
           "kind": "law_fill",
           "lines": [
-            103,
-            103
+            106,
+            106
           ],
           "features": [
             "calls",
@@ -62648,8 +63242,8 @@
           "key": "src/matrix-LAWS.anonymous_reference_is_free",
           "kind": "law_fill",
           "lines": [
-            104,
-            106
+            107,
+            109
           ],
           "features": [
             "calls",
@@ -62701,8 +63295,8 @@
           "key": "src/matrix-LAWS.default_reference_stays_live",
           "kind": "law_fill",
           "lines": [
-            107,
-            107
+            110,
+            110
           ],
           "features": [
             "calls",
@@ -62751,8 +63345,8 @@
           "key": "src/matrix-LAWS.empty_reference_stays_live",
           "kind": "law_fill",
           "lines": [
-            108,
-            108
+            111,
+            111
           ],
           "features": [
             "calls",
@@ -62802,8 +63396,8 @@
           "key": "src/matrix-LAWS.pending_binder_witnesses_nothing",
           "kind": "law_fill",
           "lines": [
-            109,
-            112
+            112,
+            115
           ],
           "features": [
             "calls",
@@ -62855,7 +63449,7 @@
           ],
           "captures": [
             {
-              "offset": 8580,
+              "offset": 8725,
               "names": [
                 "known",
                 "pending",
@@ -62880,8 +63474,8 @@
           "key": "src/matrix-LAWS.erased_empty_is_not_dead",
           "kind": "law_fill",
           "lines": [
-            113,
-            113
+            116,
+            116
           ],
           "features": [
             "calls",
@@ -62927,8 +63521,8 @@
           "key": "src/matrix-LAWS.live_empty_is_dead",
           "kind": "law_fill",
           "lines": [
-            114,
-            114
+            117,
+            117
           ],
           "features": [
             "calls",
@@ -62973,8 +63567,8 @@
           "key": "src/matrix-LAWS.introduced_empty_witness",
           "kind": "law_fill",
           "lines": [
-            115,
-            115
+            118,
+            118
           ],
           "features": [
             "calls",
@@ -63019,8 +63613,8 @@
           "key": "src/matrix-LAWS.pending_empty_witness",
           "kind": "law_fill",
           "lines": [
-            116,
-            116
+            119,
+            119
           ],
           "features": [
             "calls",
@@ -63065,8 +63659,8 @@
           "key": "src/matrix-LAWS.let_alias_available",
           "kind": "law_fill",
           "lines": [
-            117,
-            117
+            120,
+            120
           ],
           "features": [
             "calls",
@@ -63116,8 +63710,8 @@
           "key": "src/matrix-LAWS.terminal_expansion_preserves_budget",
           "kind": "law_fill",
           "lines": [
-            118,
-            118
+            121,
+            121
           ],
           "features": [
             "calls",
@@ -63170,8 +63764,8 @@
           "key": "src/matrix-LAWS.leaf_expansion_spends_one",
           "kind": "law_fill",
           "lines": [
-            119,
-            119
+            122,
+            122
           ],
           "features": [
             "calls",
@@ -63228,8 +63822,8 @@
           "key": "src/matrix-LAWS.reference_is_not_rebuilt",
           "kind": "law_fill",
           "lines": [
-            120,
-            120
+            123,
+            123
           ],
           "features": [
             "calls",
@@ -63277,8 +63871,8 @@
           "key": "src/matrix-LAWS.rebuilt_descendant_witness",
           "kind": "law_fill",
           "lines": [
-            121,
-            121
+            124,
+            124
           ],
           "features": [
             "calls",
@@ -63317,8 +63911,8 @@
           "key": "src/matrix-LAWS.rebuilt_root_witness",
           "kind": "law_fill",
           "lines": [
-            122,
-            122
+            125,
+            125
           ],
           "features": [
             "calls",
@@ -63363,8 +63957,8 @@
           "key": "src/matrix-LAWS.changed_field_witness",
           "kind": "law_fill",
           "lines": [
-            123,
-            123
+            126,
+            126
           ],
           "features": [
             "calls",
@@ -63409,8 +64003,8 @@
           "key": "src/matrix-LAWS.retyped_constant_witness",
           "kind": "law_fill",
           "lines": [
-            124,
-            124
+            127,
+            127
           ],
           "features": [
             "calls",
@@ -63451,8 +64045,8 @@
           "key": "src/matrix-LAWS.rebuilt_descendant_call_witness",
           "kind": "law_fill",
           "lines": [
-            125,
-            125
+            128,
+            128
           ],
           "features": [
             "calls",
