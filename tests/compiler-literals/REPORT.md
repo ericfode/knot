@@ -21,7 +21,8 @@ earlier expectation changed.
 | `e88b915` | `literal-offset.bend::successors`; the Offset arm checks the tail once and wraps it; laws `offset_cells`, `offset_lowering`, `offset_bound`, `single_argument_keeps_uses`; mutants offset-one-short, offset-extra-successor, offset-unchecked-type and the re-anchored offset-nat-add; offset limit probes in the gate; README, SPEC, CONTRACT, LAW_REVIEW; census approved, inventories regenerated |
 | `d0296ce` | First report commit and literals receipt, on `e88b915` |
 | `30e104e` | `offset_cells` quantified over the book (a tail may call functions); `offset_cells_call`; SPEC, CONTRACT and LAW_REVIEW state the checker law as proved (every tail that checks, against the installed Nat); census approved |
-| report commit | This section as run on `30e104e`, and the literals receipt from that run |
+| `da78cca` | This section as run on `30e104e`, and the literals receipt from that run |
+| addendum | The census approval output, one more limit, the proof loop on the head |
 
 | Finding | Disposition | Evidence |
 | --- | --- | --- |
@@ -154,6 +155,11 @@ output preserved, 4097 is `Exhausted check`, in both lanes.
   limit as well now (55602/48000; it was unavailable for unresolved context
   already): its motives import the checker's modules. Its manifest group,
   checker-laws, is available (28408/48000).
+- SPEC calls the lowering the matrix's own spelling, but the checker now builds
+  the chain with `successors`, not `M.literal`. Their equality is measured, not
+  proved: identical `check` output on 1011 of 1012 books in both lanes and
+  identical module bytes for k up to 1364. `M.literal` does not reduce on a
+  symbolic U32 count, so no law can tie the two together.
 - Trust that remains: `U32.to_nat` as Base's reading of the count, and the
   linear allocation of recursion through an offset, which the frozen depth
   books measure. The laws instantiate the installed Nat (`nat()`, one
@@ -239,10 +245,55 @@ selfhost pin ruling above was not acted on: `c51f480`'s assertion is unchanged.
 - Zero provider requests were made. Live Perch review remains the
   coordinator's.
 
+### Census approval (addendum to `e88b915` and `30e104e`)
+
+The commit messages keep the `new` lines of `npm run census:approve`; this is
+its complete printed output, minus Node's experimental-feature warning.
+`e88b915` (two runs: the first before `offset_bound` was added):
+
+```
+new src/check-LAWS.bend::single_argument_keeps_uses:law: calls,constructors,dependent,equality,fields,generics,laws,quantities.affine,quantities.arguments,quantities.reusable,types.base
+new src/check-LAWS.bend::nat:definition: constructors,fields,literals.list,literals.string,literals.u32
+new src/check-LAWS.bend::offset_lowering:law: calls,constructors,dependent,equality,fields,generics,laws,literals.list,literals.string,literals.u32,quantities.affine,quantities.arguments,quantities.reusable,types.base
+import src/check-LAWS.bend: ./literal-offset.bend -> src/literal-offset.bend
+new src/check-PROOF.bend::L.single_argument_keeps_uses:law_fill: calls,captures,constructors,dependent,equality,fields,generics,lambdas,matches,patterns.variable,proofs,quantities.affine,quantities.arguments,quantities.reusable,recursion,rewrites,types.base
+new src/check-PROOF.bend::L.offset_lowering:law_fill: calls,captures,constructors,dependent,equality,fields,generics,lambdas,literals.list,literals.string,literals.u32,proofs,quantities.affine,quantities.arguments,quantities.reusable,rewrites,types.base
+import src/check-PROOF.bend: ./syntax.bend -> src/syntax.bend
+import src/check-PROOF.bend: ./core.bend -> src/core.bend
+import src/check-PROOF.bend: ./scope.bend -> src/scope.bend
+import src/check-PROOF.bend: ./check.bend -> src/check.bend
+import src/check-PROOF.bend: ./catalog.bend -> src/catalog.bend
+import src/check-PROOF.bend: ./literal-matrix.bend -> src/literal-matrix.bend
+import src/check-PROOF.bend: ./literal-offset.bend -> src/literal-offset.bend
+new src/check.bend::offset:definition: calls,captures,constructors,fields,generics,lambdas,literals.u32,matches,matches.multi,patterns.variable,quantities.affine,quantities.arguments,quantities.reusable,types.base
+import src/check.bend: ./literal-offset.bend -> src/literal-offset.bend
+new src/literal-core-LAWS.bend::cells:definition: calls,constructors,fields,literals.list,literals.nat,matches,patterns.variable,quantities.affine,quantities.reusable,recursion,types.base
+new src/literal-core-LAWS.bend::steps:definition: calls,constructors,fields,literals.nat,matches,patterns.variable,quantities.affine,recursion,types.base
+new src/literal-core-LAWS.bend::offset_cells:law: calls,constructors,dependent,equality,fields,generics,higher-order,laws,literals.list,literals.u32,quantities.affine,quantities.arguments,quantities.reusable,types.base
+import src/literal-core-LAWS.bend: ./literal-offset.bend -> src/literal-offset.bend
+new src/literal-core-PROOF.bend::L.offset_cells:law_fill: calls,calls.variable,captures,constructors,dependent,equality,fields,generics,higher-order,lambdas,literals.list,literals.nat,literals.u32,matches,patterns.variable,proofs,quantities.affine,quantities.arguments,quantities.reusable,recursion,rewrites,types.base
+import src/literal-core-PROOF.bend: ./syntax.bend -> src/syntax.bend
+import src/literal-core-PROOF.bend: ./core.bend -> src/core.bend
+NEW FILE src/literal-offset.bend: 1 declarations
+new src/check-LAWS.bend::offset_bound:law: calls,constructors,dependent,equality,fields,generics,laws,literals.string,literals.u32,quantities.affine,quantities.arguments,quantities.reusable,types.base
+new src/check-PROOF.bend::L.offset_bound:law_fill: calls,captures,constructors,dependent,equality,fields,generics,lambdas,literals.list,literals.string,literals.u32,proofs,quantities.affine,quantities.arguments,quantities.reusable,rewrites,types.base
+```
+
+`30e104e`:
+
+```
+new src/literal-core-LAWS.bend::offset_cells_call:law: calls,constructors,dependent,equality,fields,generics,laws,literals.list,literals.nat,literals.u32,quantities.arguments,quantities.reusable,types.base
+new src/literal-core-PROOF.bend::L.offset_cells_call:law_fill: calls,constructors,dependent,equality,fields,generics,lambdas,literals.list,literals.nat,literals.u32,proofs,quantities.affine,quantities.arguments,quantities.reusable,types.base
+```
+
+`census --check` exits 0 after each, and the inventories are regenerated.
+
 Erratum: the merge commit `60a68c3` credits Claude Opus 5.5, the trailer the
-task text prescribed, while `9263b15`, `e88b915`, `d0296ce`, `30e104e` and the
-report commit credit Claude Sonnet 5.5, the model that ran. History is not
-rewritten.
+task text prescribed, while `9263b15`, `e88b915`, `d0296ce`, `30e104e`,
+`da78cca` and the addendum commit credit Claude Sonnet 5.5, the model that ran.
+History is not rewritten. All 13 `src/*PROOF.bend` entries print
+`All terms check.` on `da78cca`, the head the addendum follows; it differs from
+the gated `30e104e` only in this file and the installed literals receipt.
 
 ## Review round 8
 
