@@ -74,9 +74,9 @@ storage remain outside this qualification. All six goal milestones remain open.
 | --- | --- | --- |
 | R1: layouts | Structural declaration/live-field semantics; fixed four-word cell addressing and a three-word locator utility. | Mixed-width compact field descriptors with edge roles, heterogeneous address arithmetic, and independent twelve-byte/adjacent-locator transport qualification. |
 | R2: owning storage | Generic Type ownership under the seed; actual Wasm word-payload transitions, preserved rejection and retirement against the Bend model. | General transition refinement, nested-object representation/ownership, actual GPU storage and compiler field lowering. |
-| R3: reusable Data | No shared heap lifetime qualification. | Holder/edge contract, surviving aliases, policy decision and suspended/partial-join roots. |
+| R3: reusable Data | [r3r7 policy models](../research/data-lifetime/README.md): copied Data and unique Type plus RC Data agree with independent graph observations, including surviving aliases and suspended/partial-join holders. | Policy adoption, actual owning payload/emitter refinement and device lifetime qualification. |
 | R4: freshness | Same-store generation rejection/retirement in seed CPU and bounded Wasm, max boundaries and three-U32 list round-trip. | Non-reused arena issuance, serialized ownership/restore and twelve-byte transport. Arena uniqueness is still a caller precondition; the word codec yields numbers, not extraction authority. |
-| R5–R7: tasks and reclamation | Earlier bounded adaptive-task/Slot probes remain separate evidence. | Generic owned captures, joins/frontiers, cleanup progress and reader-safe reclamation for this object store. |
+| R5–R7: tasks and reclamation | Earlier bounded adaptive-task/Slot probes remain separate evidence. r3r7 adds model traces for frames/partial joins, cancellation, bounded cleanup and a global reader-completion barrier. | Generic owned captures, joins/frontiers, bounded worklist allocation and actual reader-safe device reclamation for this object store. |
 
 The [remaining dependency contracts](RUNTIME-DEPENDENCY-CONTRACTS.md) specify
 arena issuance and single-owner restore, the proposed three-word transport with
@@ -283,6 +283,7 @@ obligations, not a recommendation or an implementation choice:
 
 | Candidate | Affine Type obligation | Reusable Data obligation | Additional acceptance condition |
 | --- | --- | --- | --- |
+| Copied Data | Every physical record has one owning path; consumption frees the parent and transfers fields. | Reuse creates a deep independent copy; releasing one copy cannot affect another. | Reserve the complete copy or retain/roll back unpublished staging; measure expanded trees, failed-copy work and reader-safe cleanup. |
 | Regions/epochs or bounded arenas | Moves/extractions still invalidate prior owners; logical drop releases owned edges even if bytes are retained. | Every alias must remain within a live region, or an explicit escape/promotion mechanism extends its lifetime. | A region cannot end while a suspended frame, join or GPU reader retains it. Measure retained memory and explicit exhaustion; never silently abandon owners to reset an arena. |
 | Unique Type objects plus reference-counted Data | Type payloads have one owning transfer path; dropping a Type object visits its owned children and releases its Data edges. | Every retained/shared Data reference has balanced acquire/release, checked count bounds and a defined last-release action. | Prove runtime cycles excluded or provide cycle handling; recursive datatype declarations alone settle neither. Establish GPU synchronization/publication and bounded resumable release cascades. |
 | Tracing collection | Tracing does not enforce affine ownership; the checker/runtime must still prohibit duplicate extraction and account for logical drops. | Trace every live Data alias through accurate field descriptors and all task/host roots. | Establish safe points across device readers and suspended continuations. Moving storage needs stable indirection or complete relocation; handle freshness survives reuse. |
@@ -292,6 +293,51 @@ for copy cost, capacity failure and ownership of the resulting independent value
 it cannot be assumed cheap for recursive structures. A hybrid must specify which
 representation each type/layout uses and how edges cross the boundary. Run R2,
 R3 and R7 on the candidate before adopting it. No choice is made in this plan.
+
+### r3r7 decision packet (2026-09-27)
+
+[research/data-lifetime](../research/data-lifetime/README.md) evaluates copied
+Data (A) and unique Type plus reference-counted immutable Data (B), without
+editing `src/`. Frozen host/literal expectations precede the Bend implementation.
+Both policies have alloc, take, share and release models, 20 filled laws checked
+through the complete proof entry, an independent host graph oracle, 105 common
+traces per candidate, 6,788 complete-state observations across seed native/Bun,
+20 literal checks, 1,691 cross-policy value/holder comparisons and 16 type-correct
+semantic mutant kills. The [gate](../research/data-lifetime/receipts/gate.json)
+retains hashes, actual state transcripts, exact counters and failure witnesses.
+
+The packet **recommends B for coordinator/user decision**. Eight successive
+shared-subterm constructions use 43 logical peak words and 9 allocations under
+B versus 1,532 words and 511 allocations under A. A unique wrapper rebuilt 64
+times instead uses 5 peak words under A and 6 under B, exposing RC metadata cost.
+These are committed policy/space counters, not process memory, timing or GPU
+measurements. `bench/` currently accepts enum source/nullary Wasm workloads; it
+needs a stateful trace/counter interface before this experiment can use its timers.
+
+Keep the `knot-fields-wasm-1` `[tag][live slots]` payload contract. B needs RC
+metadata outside those slots, checked retain/release helpers, explicit move/share/
+drop decisions, a unique/shared opening path, descriptor-driven last release,
+a resumable cleanup worklist and a reclaiming allocator. Both candidates require
+failure-owner preservation and reader completion before physical reuse. The
+campaign's bump arena remains **interim and non-closing** for owned storage.
+
+D5's GPU record interpreter can represent these same holder/edge obligations.
+The packet maps A to explicit copy frames and B to a proposed dispatch-separated
+RC-delta path with one owning writer per object. Neither is qualified device
+code. Do not use unique-parent task retirement to reclaim a shared Data DAG, or
+count a reserved frontier position as publication. Actual transport, stale task
+attempts, capture cleanup, bounded worklist allocation and GPU synchronization
+remain separate gates.
+
+The Bend store contains ownership metadata, not generic affine payloads; its
+Type wrapper does not make copyable metadata into extraction authority. Four
+source fixtures agree with the seed interpreter and independent Knot evaluator;
+this checkout reports fielded Wasm **Unsupported**. The packet therefore supplies
+a decision and integration gate, not general heap refinement or milestone closure.
+All 11 existing gates were freshly rerun unchanged. Offline Perch preflight has
+15 truncated declaration contexts; live review remains with the coordinator.
+No policy is adopted by this evidence. Next integrate the selected policy and
+replay the same observations in actual Knot Wasm and on GPU before accepting it.
 
 ## Increment order, law quality and efficiency
 
@@ -364,10 +410,11 @@ remaining dependency contracts. The flat-store follow-up records `7478516` and
 audits its bounded Wasm qualification without treating words as a general owning
 heap. Mixed fields, byte transport, GPU storage, arena restore and general
 lifetime/reclamation gates remain open.
-Perch is not applicable: no owned executable declaration or law packet changed,
-so no new model request or semantic-pass claim is made. Remaining runtime probes,
-policy selection, general compiled allocation and generated GPU validation remain
-future work.
+For those documentation-only audits, Perch was not applicable: no owned executable
+declaration or law packet changed, and no semantic-pass claim was made. The later
+r3r7 decision packet above adds model execution and offline preflight separately.
+Policy adoption, general compiled allocation and generated GPU lifetime validation
+remain future work.
 
 
 ## GPU runtime campaign checkpoint (2026-09-27)
@@ -391,12 +438,14 @@ scheduler and two task invocations are bounded feasibility code, not a productio
 allocator or throughput result. Source compilation and Knot evaluator/Wasm
 execution of these new runtime records are not implemented.
 
-The executor's Metal adapter request returned null despite the host reporting an
-Apple M5 Max. Dawn's null backend validated 10 variants / 30 pipelines and executed
-zero device cases. Consequently R4/R6 device qualification, before/after agreement
-of the old 38 cases, and WGSL mutant kills remain pending. This checkpoint does
-not close the R4/R6 end-to-end rows above. The next owner must run the retained
-commands with Metal access before promoting the candidate layout.
+The executor's Metal adapter request returned null inside its sandbox. The
+coordinator then ran the retained commands on the host adapter (Apple M5 Max,
+`metal-3`, not a fallback): all 16 R4/R6 device cases pass, all nine WGSL
+mutants are killed, and the old 38 cases agree semantically before (`185b7d5`)
+and after the change. See the
+[runtime receipts](../research/adaptive-tasks/runtime/README.md). The rows above
+are therefore device-qualified for the bounded probe domain; the Device mutations
+row's "unrun" note is superseded by that record.
 
 Plain `check.py`, `gpu/check.mjs` and `codegen/generate.py` replays now write under
 ignored `.local/adaptive-tasks/`; `--out-dir` selects another destination and
