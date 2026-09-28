@@ -40,17 +40,36 @@ the runner's frozen `BEND_LIB` by default. Package identities and request hashes
 are independent of that store's location. It writes only its own
 `tests/perch-context/receipts/context.json` in scratch. It makes no provider
 requests and retains the pinned rubric and composition-byte cap.
+The `io-abi-2` increment appends gate `io-abi-2` for the `knot-io-2` host
+delta ([IO-ABI.md](IO-ABI.md#knot-io-2-delta)). Its counts record the foreign
+reference, seed-witness, read, parity and mutant totals; it writes
+`tests/compiler-io-abi-2/receipts/{host,reference}.json`.
+
+The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
+
+- It first reproduces 65 frozen cases on the seed's interpreter and native lanes.
+- It then runs Knot's `check-cli` and `eval-cli` on each case.
+- A case is blocked while a reviewed need is unavailable. A blocked case never
+  counts as passing. It still fails the gate on a fault: crashing, timing out,
+  a host or internal failure, accepting a seed-rejected twin, or a positive
+  evaluating other than the seed. A seed-valid case reported Invalid must be
+  one of the reviewed D4 gaps in `check.py`.
+- The gate writes only `tests/compiler-selfhost/receipts/selfhost.json`.
+- An increment that lands a need flips it in `expectations.json`, and the gate
+  then holds that increment to its cases.
 
 The vm-spec increment adds gate `vm-spec` (`python3 vm/check-spec.py`), which
 freezes the `knot-image-1`/`knot-vm-1` contract of `vm/SPEC.md` before any VM
 exists. It builds the pinned literals and closures heads' `eval-cli` and
 `check-cli` from `vm/oracles/` with the seed's native lane, re-executes the seed
-and eval-cli on 78 golden sources, and requires the frozen observations byte for
+and eval-cli on 85 golden sources, and requires the frozen observations byte for
 byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display. It
 also checks the frozen VM expectation table, 61 refused malformed-image controls,
-seven expectation and bench controls, nine describe-domain controls, 34 codec
-mutants and 3 source mutants, and the bench freeze: sources, guards,
+three admitted plan controls, seven admitted code-list controls, eleven
+expectation and bench controls, nine describe-domain controls, 39 codec mutants
+and 4 source mutants, and the bench
+freeze: sources, guards,
 outputs and the seed-native measurements pinned by digest in
 `vm/bench/workloads.json`. It writes only `vm/receipts/spec.json`.
 

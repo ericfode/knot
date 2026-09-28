@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 78 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 85 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden, derived by the rule of §11 |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
 | [check-spec.py](check-spec.py) | gate `vm-spec` |
@@ -112,9 +112,10 @@ count), 1 live arrow (`a` domain, `b` result), 2 erased arrow (`a` domain or
 `none`, `b` result), 3 opaque (`a = b = 0`). Arrows have name `none`; every other
 type is named. Constructor rows are grouped by type in type order, tags dense
 `0..b-1` in declaration order. A field, signature or node result type may be
-`none`: a value of an erased abstract type (a generic parameter), which may be
-moved but never inspected or described (§3). Arrow types MUST NOT form a cycle
-through their domains and results.
+`none`: a position of an erased abstract type (a generic parameter), whose value
+may be moved, is inspected only by a Case that names a concrete scrutinee type
+(§3), and is never described (§8). Arrow types MUST NOT form a cycle through
+their domains and results.
 
 **Representations.** Header words 12–23 name the hash-pinned Base types; a
 familiar name is never authority. Their pinned constructors, by tag, with live field
@@ -130,6 +131,9 @@ reachable non-prim body that destructures it. A File is a host handle token.
 **Constants.** Kinds 0 U32, 1 Nat, 2 Char, 3 String. The first three have `n = 1`
 and hold the full value. A String holds its exact ordered Chr codes, not UTF-8;
 pure Char admits every u32 (scalar validation happens only at the IO boundary).
+The reference codec's plans spell a String constant as that code list, never as
+text, and `decode` returns every u32 code: a text step would merge a surrogate
+pair or refuse a code above U+10FFFF (§12).
 Literal pools hold source literals only, never computed results.
 
 **Names.** Nonempty UTF-8 without NUL, unused final bytes zero, unique by bytes.
@@ -146,9 +150,12 @@ reproduces it byte for byte**; `serializer.py` is that re-encoder.
 ## 3. Node records
 
 `child` is the offset of an earlier node record. Every node carries its result
-type; a Branch or Default carries its Case's. A node's type is `none` exactly when
-its value has an erased abstract type; such a value may be referenced, bound,
-passed, stored in a field or capture and returned, but never inspected.
+type; a Branch or Default carries its Case's. Types are positional: a node's type
+is `none` exactly when the checked core gives its position an erased abstract type
+(a generic parameter, including §2's pinned generic fields), whatever type the
+value is instantiated at. Such a value may be referenced, bound, passed, stored in
+a field or capture and returned; only a Case that names a concrete scrutinee type
+inspects it (§6.1).
 
 | Code | Form | Operands after the result type | Children, in order |
 |---:|---|---|---|
@@ -175,8 +182,10 @@ passed, stored in a field or capture and returned, but never inspected.
   which the image MUST declare. A Foreign's result type is `IO(X)` in §8's shape,
   with `X` the registry's `output` representation.
 - **Types agree.** Exactly, with `none` equal only to `none`: a Reference and its
-  slot, a Let and its body, a Case and every arm body, and a Case's scrutinee type
-  and its slot, which MUST be concrete. Where a value flows into a declared
+  slot, a Let and its body, and a Case and every arm body. A Case's scrutinee type
+  MUST be concrete, and its slot's type is either that type or `none`: S matches
+  the head bound from a List's `Con` (`case Con{+head,+tail}: match head: …` in
+  `catalog.bend`), whose field is pinned `none`. Where a value flows into a declared
   position (an Application's arguments and result, a Construct's fields, an
   Invoke's argument and result, a Closure's and a function's body) it **fits**:
   `none` on either side fits any type, arrows of one kind fit when their domains
@@ -229,7 +238,9 @@ stack. The validator checks every function, reachable or not:
 5. Canonicality as defined in §2.
 
 A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
-refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls.
+refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls,
+and MUST admit its three admitted plan controls (a Case on a `none` slot, among
+them `list-head-match`, S's shape) and its seven code-list controls (§12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
@@ -378,7 +389,8 @@ no read leaves a cell.
 
 ### 6.1 Case selection
 
-The scrutinee is borrowed from its slot and inspected (§6). For an Object, the
+The scrutinee is borrowed from its slot and inspected (§6) against the Case's
+scrutinee type, whether its slot is typed so or `none`. For an Object, the
 tag and fields come from its payload; for an immediate of an
 algebraic type, the tag is `v` and there are no fields. A Nat word `n` is Zero when `n = 0`, otherwise Succ with the new
 word `n - 1` (a Big is allocated when `n - 1 >= 2^31`). A Char word is Chr with
@@ -442,12 +454,14 @@ types, and checks that `FN`'s result type is **describable**: algebraic, with ev
 live field of every constructor describable in turn. A cycle through algebraic
 types stays describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque
 type are not, so neither are the pinned Char (its U32 field) and String. These
-checks read only the image, in that order, before anything else and at zero fuel.
+checks read only the image, in that order, before anything else and without
+debiting fuel.
 Failures are `HostFailure invoke unknown-export`, `argument-arity`,
 `argument-range` or `structured-argument`, as in eval-cli, and then `Unsupported
 invoke result-type`: Knot has no describe spelling for such a result, so the VM
-refuses the request instead of inventing one (§11; golden `result-u32`; the
-reference predicate is `serializer.undescribable`). The VM then pushes Top(phase 0)
+refuses the request instead of inventing one (§11; goldens `result-u32`,
+`result-u32-field`, `result-char` and `result-string`; the reference predicate is
+`serializer.undescribable`). The VM then pushes Top(phase 0)
 and starts with `Enter(FN, ordinals)`. Return to Top(0) halts with the result and
 prints
 
@@ -575,7 +589,10 @@ Foreign rows in `registry.json`: 0 `IO.args`, 1 `IO.print`, 2 `File.open`,
 comes from its pinned declaration). Applying an Action inspects (§6) and converts
 its operands, calls the host, builds the exact pinned Base Result, pair and handle
 view, and enters `k`. Outgoing Strings must be Unicode scalars and are encoded as
-canonical UTF-8, with no surrogate merging or replacement. Incoming text follows
+canonical UTF-8, with no surrogate merging or replacement. An outgoing String that
+holds a non-scalar Char (a surrogate, or a code above U+10FFFF) halts with
+`HostFailure io abi` before the host call: none of it is encoded or written (D20,
+§11). Incoming text follows
 the host's replacement decoding, BOM kept, one Chr per scalar. Raw input bytes
 become U32 elements 0..255.
 A byte-list write scans the **whole** list first, computes `invalid |= e >> 8`,
@@ -616,8 +633,19 @@ and a missing lane are neither Exhausted nor agreement. An Unsupported outcome i
 D4's refusal of a form Knot does not handle: a recorded capability gap, never a
 bound. Expected values are never regenerated from a candidate VM.
 
+**Non-scalar output (D20).** Where the seed's native lane writes a non-scalar Char
+as generalized UTF-8 and exits 0, the VM refuses the output as `HostFailure io
+abi` (§10). The golden records the native bytes, is marked
+`divergent-by-contract (non-scalar output)` and expects the refusal, with the
+output written before that String; it is neither seed agreement nor a bound. The
+seed's Bun lane refuses the same output (`bend: 55296 is not a Unicode scalar
+value`, exit 1) and is recorded as a cross-check. Goldens: `print-non-scalar`
+(`IO.print(SCon{Chr{55296}, SNil{}})`, ASCII source; native bytes `ED A0 80 0A`)
+and `print-non-scalar-mid` (`IO.print("a\u{D800}b")`; native `61 ED A0 80 62 0A`,
+of which the VM writes nothing).
+
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
-golden: the eval-cli line where eval agrees with the seed (70 goldens), agreement
+golden: the eval-cli line where eval agrees with the seed (72 goldens), agreement
 meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
 value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
@@ -625,10 +653,13 @@ value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
 (`nat-range`, `nat-mul-range`, `nat-succ-range`), each justified in
 [golden/bounds.json](golden/bounds.json), whose entries are all Exhausted;
 `Unsupported invoke result-type` where `main`'s result type is outside §8's
-describe domain (`result-u32`: the seed prints `5`, eval-cli reports the
-`InternalFailure eval result-tag` defect recorded in DECISIONS.md), derived from the
-image's type table and never listed as a bound; and the seed's stdout for the Programs
-`foreign-print` and `io-bind`. For those Programs the eval lane is not excused but
+describe domain (`result-u32`, `result-u32-field`, `result-char`,
+`result-string`: the seed prints `5`, `Box{5}`, `'a'` and `"ab"`, and eval-cli
+reports the `InternalFailure eval result-tag` defect recorded in DECISIONS.md
+each time), derived from the
+image's type table and never listed as a bound; the seed's stdout for the Programs
+`foreign-print` and `io-bind`; and D20's refusal, with no output, for
+`print-non-scalar` and `print-non-scalar-mid`. For those Programs the eval lane is not excused but
 unavailable: both literals `eval-cli` and `check-cli` report
 `Invalid parse function-result` for `def main() -> IO(Unit)`, a program the seed
 runs. Under D4 that should be Unsupported; it is recorded as observed, not
@@ -640,28 +671,37 @@ and `IO.pure` unspecialized, so its `A`-typed nodes are `none`.
 `check-spec.py` (gate `vm-spec`) builds both oracle heads with the seed's native
 lane and requires:
 - every golden source's hash, and a byte-identical re-execution of the seed and
-  eval-cli observations frozen in `golden/expectations.json`;
+  eval-cli observations frozen in `golden/expectations.json` (a stdout that is not
+  UTF-8 kept as hex; a D20 golden's Bun cross-check too);
 - the registry re-derived from the literals snapshot;
 - each committed `.kimg` equal to its plan's encoding, decoding back to the plan,
   and passing validation;
 - each Book plan equal to an independent erasure and slot projection of that
-  head's `check-cli` core display;
+  head's `check-cli` core display, and each Program `main = IO.print(e)`'s argument
+  equal to that projection of `e` checked as a `String` Book;
 - the eval result's type index and constructor matching the image, and its tree
   equal to the seed's value in §8's spelling; a disagreeing eval lane is refused
   (three frozen expectation controls);
 - every literal review (`seed_stdout`, written before observation) equal to the
-  seed's printed value;
+  seed's printed value, byte for byte where it is not UTF-8;
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations,
   with every bound Exhausted and no bound standing in for an Unsupported result
-  (two frozen expectation controls);
+  (two frozen expectation controls), and every non-scalar seed output a declared
+  D20 divergence whose VM output precedes it (four frozen expectation controls);
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
   `none`-typed node covered;
-- all 61 refusals of §4 with their frozen reasons;
-- 34 codec mutants and 3 source mutants killed through a changed image, a changed
-  refusal, a changed describe verdict or a changed observation, never a crash;
+- all 61 refusals of §4 with their frozen reasons, and its three admitted plan
+  controls;
+- seven admitted code-list controls, each decoding back to its plan through the
+  decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
+  merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
+  and `encode`'s refusal of a String constant spelled as text;
+- 39 codec mutants and 4 source mutants killed through a changed image, a decode
+  that differs from its plan, a changed refusal, a refused admitted control, a
+  changed describe verdict or a changed observation, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).
@@ -678,5 +718,8 @@ leaks. vm-core adds the iterative loader, validator, CEK machine, state dump and
 quantum re-entry, and completes the 250,000-deep workload. vm-lockstep compares
 every transition and the four value lanes, and derives each golden's exact call
 count; vm-rc, vm-io and vm-prims close reclamation, effects and the final registry.
+A golden of the `list-head-match` shape (a Case on a List element, seed `True{}`)
+is owed as soon as a pinned head checks a `List<T>` parameter; until then the
+admitted control witnesses validation only, not evaluation.
 The first speed gate is at most 4× seed-native on each frozen workload on a quiet
 host; above 10× requires design review.

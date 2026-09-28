@@ -1,5 +1,5 @@
 {
- "rule": "SPEC section 11: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. A Book result outside section 8's describe domain is Unsupported, never a bound.",
+ "rule": "SPEC section 11: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. A Book result outside section 8's describe domain is Unsupported, never a bound. A non-scalar Char the seed writes as generalized UTF-8 is D20's HostFailure io abi, divergent by contract, never agreement.",
  "fuel": 1000000,
  "bounds": {
   "nat-range": {
@@ -957,6 +957,92 @@
    "stderr": "",
    "basis": "seed",
    "eval_lane": "Invalid"
+  },
+  "result-u32-field": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "invoke result-type",
+   "basis": "describe-domain",
+   "reason": "section 8: opaque U32 as field 0 of Box",
+   "eval_lane": "InternalFailure"
+  },
+  "result-char": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "invoke result-type",
+   "basis": "describe-domain",
+   "reason": "section 8: opaque U32 as field 0 of Chr",
+   "eval_lane": "InternalFailure"
+  },
+  "result-string": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "invoke result-type",
+   "basis": "describe-domain",
+   "reason": "section 8: opaque U32 as field 0 of Chr",
+   "eval_lane": "InternalFailure"
+  },
+  "print-non-scalar": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "",
+   "basis": "divergent-by-contract (non-scalar output)",
+   "reason": "D20: the seed native lane writes a non-scalar Char as generalized UTF-8 at byte 0",
+   "eval_lane": "Invalid"
+  },
+  "print-non-scalar-mid": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "",
+   "basis": "divergent-by-contract (non-scalar output)",
+   "reason": "D20: the seed native lane writes a non-scalar Char as generalized UTF-8 at byte 1",
+   "eval_lane": "Invalid"
+  },
+  "string-surrogate-pair": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tFalse{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-beyond-unicode": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tSucc{Zero{}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
   }
  }
 }

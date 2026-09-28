@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "about": "Fixed, reviewed inputs of the bootstrap generation contract. The harness stages, pins and checks against these before the seed step; changing any value is a reviewed contract change.",
+  "base": {
+    "path": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+    "sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "packages": {
+    "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend": "b1c672949a72bcbc37509e31a1a20715eb73813904a50157328ded9ed0069ff1"
+  },
+  "qualified_host": {
+    "system": "Darwin",
+    "reason": "The knot_io host freezes Darwin's errno table, so IO error codes are comparable across generations only on Darwin (FX-27)."
+  },
+  "memory_maximum": {
+    "pages": 65536,
+    "bytes": 4294967296,
+    "decision": "D19",
+    "meaning": "The largest linear memory a Knot-built module or image may declare; exhausting it is Exhausted (heap), a Knot budget, on every host."
+  },
+  "reserved_flags": {
+    "flags": ["--", "--bend-help", "--gpu-build", "--threads", "--gpu"],
+    "source": ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts: the native main() and the JS cli() consume these before IO.args, so a seed-built C1 and a Knot-built A2 would see different argv."
+  },
+  "excluded_metadata": [
+    "dates and wall-clock times: measurements.elapsed_seconds is recorded outside the contract",
+    "peak RSS: measurements.peak_rss_bytes is recorded outside the contract",
+    "KNOT_GATE_TIMEOUT_SCALE and every timeout budget derived from it",
+    "absolute paths, including the sandbox location and BEND_LIB's location",
+    "hostname, user and environment variables other than the recorded runtime and build identity",
+    "clang's InstalledDir line",
+    "the executor of each step (seed-built C1 or Knot-built A2), which each stage records instead"
+  ]
+}
