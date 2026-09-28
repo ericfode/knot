@@ -2364,6 +2364,263 @@
         "stdout": "Evaluated\t0\t1\tOn{}\n",
         "stderr": ""
       }
+    },
+    {
+      "name": "nat-case-big",
+      "source": "vm/golden/nat-case-big.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Case",
+        "Branch",
+        "Literal",
+        "Intrinsic",
+        "bound",
+        "ownership"
+      ],
+      "seed_lane": "native",
+      "sha256": "4832e0ad9e4c93ba8aa5011b4247f60adde046af8c08aa7f494faabe2df85dbb",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tprimitive\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "name": "invoke-words",
+      "source": "vm/golden/invoke-words.bend",
+      "lane": "literals",
+      "seed_stdout": "Two{On{}, Off{}}\n",
+      "features": [
+        "Book invocation",
+        "argument words"
+      ],
+      "invocations": [
+        {
+          "argv": [
+            "absent",
+            "x"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "absent"
+          ],
+          "fuel": "x",
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "9",
+            "x"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "01",
+            "0"
+          ],
+          "vm": "Two{On{},Off{}}",
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "000000000001",
+            "0"
+          ],
+          "vm": "Two{On{},Off{}}",
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "4294967295",
+            "0"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "4294967296",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "4294967297",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "+1",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "-1",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            " 1",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            ""
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "\u0661",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "1_0",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            "0"
+          ],
+          "fuel": "4294967296",
+          "vm": "HostFailure arguments expected-u32",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\targuments\texpected-u32\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            "0"
+          ],
+          "fuel": "0001048576",
+          "vm": "Two{On{},Off{}}",
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "sha256": "48b6f6f92d48248f4b361eff1b3ba5a3c03779ceb9ec6e308ddebf4c2de22493",
+      "seed": {
+        "exit": 0,
+        "stdout": "Two{On{}, Off{}}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
+        "stderr": ""
+      }
     }
   ]
 }

@@ -206,6 +206,78 @@ follows it (§5, §10, §11) without a new image header word.
    pass it by one, two seed controls refuse one visit and one byte beyond, and four
    evaluator mutants (each bound exclusive, a Nat as one visit, separators free)
    are killed. No expectation changed.
+15. **Fuel runs out at a frozen boundary.** The targeted round-5 re-review found
+   D16 unwitnessed: no golden, run control or mutant reached fuel exhaustion, so
+   the evaluator mutants `if False:` and `if self.fuel <= 1:` of `debit` left the
+   gate's summary unchanged, and a vm-core whose fuel never ran out, or ran out one
+   entry early, passed every frozen check. §7 now states the boundary: a run
+   completes with fuel equal to its calls, and one unit less stops its last entry
+   after one call fewer; the operand check precedes the fuel test; an Action is
+   debited before its effect and `k` after it. Eleven run controls freeze it by
+   literal review of `recursion-map` (6 Applications), `closure-nested` (its last
+   entry an Invoke), `foreign-print` (5 entries: at 4 `vm\n` is written and `k`
+   stops, at 3 the Action's second application stops before its effect), a Book
+   and a Program at fuel 0, and two ill-typed Enters that meet fuel 0. Five
+   evaluator mutants (fuel that never runs out or runs out early, the effect
+   before the debit, the fuel test before the operand check, a free terminal
+   continuation) survive with those controls withheld and each dies by one. Run
+   controls now carry their fuel, and the receipt records each one's argv. No
+   golden or expectation changed.
+16. **Book arguments are decimal u32 words, read before FN.** The same re-review
+   found §8 silent on the syntax of FUEL and the ordinals, and its order against
+   eval-cli, which reads every word with Base's `U32.read` before it looks the
+   function up: `absent x` and `two F 9 x` answer `HostFailure arguments
+   expected-u32` there, where §8 said `unknown-export` and `argument-range`. No
+   frozen invocation had a malformed word, so vm-core, vm-model and eval-cli could
+   each read another grammar; a host parsing with `>>> 0` would admit `4294967297`
+   as 1. `U32.read` admits exactly the nonempty ASCII digit strings of value at
+   most 2^32-1, leading zeros included: its test `(10·acc + c - 48) mod 2^32`
+   divided by 10 equals `acc` only for a digit `c` that does not overflow. §8 now
+   defines that word, names its cause, and makes it step 1, before
+   `unknown-export`. It also fixes what surrounds it: the image is validated
+   first, because its entry kind selects the Book or Program form, and a missing
+   word is `HostFailure arguments usage`. eval-cli spells its usage refusal
+   differently and caps its budget at 1,048,576 transitions; neither is compared,
+   and every frozen budget stays within the cap. `serializer.invocation` takes the
+   words after IMAGE and reads them with `serializer.decimal`, which drops leading
+   zeros before converting because Python's `int` refuses a string above 4,300
+   digits; `serializer.arguments` selects the form by entry kind. An invocation row
+   may name its FUEL word, which eval-cli receives as its budget. Golden
+   `invoke-words` freezes 16 invocations, each agreeing with eval-cli (§12). Ten
+   codec mutants of the grammar and its order (words after the lookup or per
+   parameter, FUEL unchecked, reduction modulo 2^32, an exclusive maximum, no
+   leading zeros, a ten-digit cap, the empty word as 0, other scripts' digits,
+   Python's `int`) and two invocation controls are killed. What no eval-cli row
+   can show (usage, whose text eval-cli spells otherwise; the Program form; a
+   4,401-character word; the image before the words) is frozen in 13 argument
+   controls by literal review, and five more codec mutants (usage deleted, the
+   entry kind ignored, the Program's FUEL or its `--` unchecked, its FUEL read
+   before its shape) are killed. vm-expected.json only
+   gains rows; the earlier invocations' argv already carried `1000000` as FUEL.
+17. **A Nat Case's predecessor is moved, and made only when bound.** The same
+   re-review found §6.1 leaking. It made Succ's field `n - 1` at selection,
+   allocating a Big from 2^31, and then `dup`ed every field into its slot:
+   allocation writes rc 1, the dup made it 2, and the Scope pop left one
+   reference without an owner. That contradicted §12's zero-leak obligation and
+   left the allocation point, and with it §5's lockstep addresses, to each
+   implementer. Checked source reaches it: `nat-case-big` (seed `True{}`) binds
+   `p = 2^31` from `U32.to_nat(2147483649)` and passes it to `Nat.is_eq`. By
+   §5–§7 the Big is allocated with rc 1, `dup`ed by the Reference (2), dropped
+   when `check`'s Activation ends at its tail entry (1), `dup`ed and dropped by
+   the Intrinsic, and freed with `Nat.is_eq`'s Activation; under the old text one
+   reference remains. §6.1 now separates selection, which reads a tag and
+   allocates nothing, from binding after the Scope push. An Object's fields and
+   Chr's code word are `dup`ed, since the scrutinee keeps them. The predecessor
+   is made only for a selected Succ Branch, as an immediate below 2^31 or a Big
+   allocated then, and moved into its slot. A Default or Zero arm makes none: run
+   control `nat-default-big`, a tags-mode Nat Case on 2^31 + 1 whose Succ row is
+   `none`, would otherwise leak an eager Big. It is image-only, since the pinned
+   checker lowers `case _:` on Nat to a binding Branch. The allocation follows
+   the push, which orders frame-region (kind 3) before heap (kind 2) exhaustion.
+   The reference evaluation has no RC, so this gate checks only the two values;
+   the evaluator mutant `nat-predecessor-narrowed` (31 bits kept) survives every
+   other golden and dies by `nat-case-big`, and §12 binds vm-model's zero-leak
+   audit to both.
 
 ## Findings that need an owner
 
@@ -259,8 +331,12 @@ follows it (§5, §10, §11) without a new image header word.
    Review round 5 confirmed this as a **merge condition** on the coordinator's
    `npm run gates:refresh` for main, not executor rework: no gate stops a refresh
    from absorbing the rows, and `vm/golden/` stays in the bootstrap corpus, since
-   removing it would hide them. Round 5 added no `.bend` file, so the histogram
-   above stands.
+   removing it would hide them. Round 5 added no `.bend` file. The round-5
+   re-review's two goldens change it, as measured by the gate runner after
+   `5bd0f9b` against the same receipt: 884 files, `Parsed` 163 (`invoke-words`)
+   and `Unsupported parse declaration-form` 283 (`nat-case-big`). Every other
+   count, the six Invalid rows included, is unchanged, and both files agree across
+   the seed's native and Bun lanes.
 6. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged

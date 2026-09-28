@@ -23,6 +23,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import sys
 import types
@@ -139,9 +140,12 @@ def seed_observation(case, source=None):
     return run([SEED, source], 120)
 
 
-def invoke_argv(case, built, argv):
-    """eval-cli asked for `FN BUDGET ORDINALS...`, the Book invocation of SPEC section 8."""
-    return [built[case['lane']]['eval'], *lane_prefix(case), case['source'], argv[0], EVAL_BUDGET, *argv[1:]]
+def invoke_argv(case, built, invocation):
+    """eval-cli asked for `FN BUDGET ORDINALS...`, the Book invocation of SPEC section 8. A row
+    that names a `fuel` word passes it as the budget: the word the VM reads as FUEL."""
+    name, *ordinals = invocation['argv']
+    return [built[case['lane']]['eval'], *lane_prefix(case), case['source'], name,
+            invocation.get('fuel', EVAL_BUDGET), *ordinals]
 
 
 def lanes(case, built):
@@ -152,7 +156,7 @@ def lanes(case, built):
         got['seed_bun'] = observed(run([SEED, case['source']], 120))
     if 'invocations' in case:
         # The seed runs only `main`; eval-cli is the oracle for every other invocation.
-        got['invocations'] = [{**reviewed(i), 'eval': observed(run(invoke_argv(case, built, i['argv']), 120))}
+        got['invocations'] = [{**reviewed(i), 'eval': observed(run(invoke_argv(case, built, i), 120))}
                               for i in case['invocations']]
     return got
 
@@ -740,23 +744,36 @@ def image_loss(plan: dict, name: str, ordinals: list, source: str) -> str | None
     return None
 
 
+def invocation_words(invocation) -> list:
+    """The words after IMAGE for a frozen invocation row: `FN FUEL ORDINAL...`, with FUEL the
+    row's own word where it names one."""
+    name, *ordinals = invocation['argv']
+    return [name, invocation.get('fuel', str(VM_FUEL)), *ordinals]
+
+
+def invocation_label(case_name: str, invocation) -> str:
+    fuel = f" (FUEL {shlex.quote(invocation['fuel'])})" if 'fuel' in invocation else ''
+    return f"{case_name} {shlex.join(invocation['argv'])}{fuel}"
+
+
 def invocation_expectations(case, plan, source, evaluator=None) -> list:
     """Section 8 for each frozen Book invocation: the image-derived verdict, or the entered
     function's describe line from the reference evaluation. eval-cli is the oracle; a row
     that differs from it declares the image loss that explains the difference."""
     ev, rows = evaluator or reference, []
     for i in case.get('invocations', []):
-        name, ordinals = i['argv'][0], [int(o) for o in i['argv'][1:]]
-        label, observed_eval = f"{case['name']} {' '.join(i['argv'])}", i['eval']
-        row = {'argv': ['IMAGE', name, str(VM_FUEL), *i['argv'][1:]]}
-        verdict = codec.invocation(plan, name, ordinals)
+        words = invocation_words(i)
+        name, ordinals = words[0], [codec.decimal(o) for o in words[2:]]
+        label, observed_eval = invocation_label(case['name'], i), i['eval']
+        row = {'argv': ['IMAGE', *words]}
+        verdict = codec.invocation(plan, words)
         if verdict:
             outcome, cause = verdict.split(' ', 1)
             row.update(outcome=outcome, cause=cause)
             review = verdict
             agrees = observed_eval['exit'] == 5 and observed_eval['stderr'] == verdict.replace(' ', '\t') + '\n'
         else:
-            got = ev.book(plan, name, ordinals, VM_FUEL)
+            got = ev.book(plan, name, ordinals, codec.decimal(words[1]))
             require(got.get('exit') == 0, f'{label}: the reference evaluation gives {got}')
             row.update(exit=0, stdout=got['stdout'], stderr='')
             review = got['stdout'].split('\t')[3].removesuffix('\n')
@@ -770,7 +787,7 @@ def invocation_expectations(case, plan, source, evaluator=None) -> list:
             require('divergence' not in i, f'{label}: declared {i.get("divergence")!r}, but eval-cli agrees')
             row['basis'] = 'eval-cli'
         else:
-            loss = image_loss(plan, name, ordinals, source)
+            loss = image_loss(plan, name, ordinals, source) if None not in ordinals else None
             require(loss is not None and i.get('divergence') == loss,
                     f'{label}: eval-cli gives {observed_eval}, section 8 {review!r}; declared {i.get("divergence")!r}, '
                     f'image loss {loss!r}')
@@ -783,19 +800,21 @@ def invocation_expectations(case, plan, source, evaluator=None) -> list:
 def invocation_controls(cases: dict, plans: dict, sources: dict) -> list:
     """What the invocation rule must refuse: a review other than section 8's verdict, an
     undeclared or misnamed image loss, and a divergence where eval-cli agrees."""
-    args = cases['invoke-args']
-
-    def edit(argv, **change):
-        rows = [{**i, **change} if i['argv'] == argv.split() else i for i in args['invocations']]
-        return {**args, 'invocations': [{k: v for k, v in i.items() if v is not None} for i in rows]}
+    def edit(name, argv, **change):
+        rows = [{**i, **change} if i['argv'] == argv.split() and 'fuel' not in i else i for i in cases[name]['invocations']]
+        return name, {**cases[name], 'invocations': [{k: v for k, v in i.items() if v is not None} for i in rows]}
     out = []
-    for label, case in [('review-arity-first', edit('two 5', vm='HostFailure invoke argument-arity')),
-                        ('opaque-undeclared', edit('is_zero 0', divergence=None)),
-                        ('erased-field-undeclared', edit('real 0', divergence=None)),
-                        ('opaque-as-erased-field', edit('is_zero 0', divergence='erased-field')),
-                        ('divergence-where-eval-agrees', edit('two 1 0', divergence='opaque-parameter'))]:
+    for label, (name, case) in [
+            ('review-arity-first', edit('invoke-args', 'two 5', vm='HostFailure invoke argument-arity')),
+            ('opaque-undeclared', edit('invoke-args', 'is_zero 0', divergence=None)),
+            ('erased-field-undeclared', edit('invoke-args', 'real 0', divergence=None)),
+            ('opaque-as-erased-field', edit('invoke-args', 'is_zero 0', divergence='erased-field')),
+            ('divergence-where-eval-agrees', edit('invoke-args', 'two 1 0', divergence='opaque-parameter')),
+            # Section 8 reads the argument words before FN, and never reduces one modulo 2^32.
+            ('review-lookup-before-words', edit('invoke-words', 'absent x', vm='HostFailure invoke unknown-export')),
+            ('review-wrapped-word', edit('invoke-words', 'two 4294967296 0', vm='Two{Off{},Off{}}'))]:
         try:
-            invocation_expectations(case, plans['invoke-args'], sources['invoke-args'])
+            invocation_expectations(case, plans[name], sources[name])
         except AssertionError as refusal:
             out.append({'control': f'invocation:{label}', 'refused': str(refusal)})
             continue
@@ -879,13 +898,24 @@ def reproduced(name: str, plan: dict, expected: dict, evaluator=None):
 
 
 def ran(plan: dict, frozen: dict, evaluator=None) -> dict:
-    """A run control's outcome and call count under the reference evaluation."""
-    ev = evaluator or reference
-    got = ev.book(plan, 'main', [], VM_FUEL) if plan['entry'] == 'book' else ev.program(plan, VM_FUEL)
+    """A run control's outcome and call count under the reference evaluation, at its frozen
+    fuel (VM_FUEL unless it names one)."""
+    ev, fuel = evaluator or reference, frozen.get('fuel', VM_FUEL)
+    got = ev.book(plan, 'main', [], fuel) if plan['entry'] == 'book' else ev.program(plan, fuel)
+    got['fuel'] = fuel
+    if isinstance(got.get('stdout'), bytes):
+        # A Program's written bytes; every run control writes ASCII.
+        got['stdout'] = got['stdout'].decode('utf-8', 'replace')
     if 'stdout' in got:
         # A display control freezes its multi-megabyte line by digest.
-        got['stdout_sha256'] = sha(got['stdout'] if isinstance(got['stdout'], bytes) else got['stdout'].encode())
+        got['stdout_sha256'] = sha(got['stdout'].encode())
     return {k: got.get(k) for k in frozen}
+
+
+def run_argv(plan: dict, frozen: dict) -> list:
+    """How vm-core invokes a run control (section 8)."""
+    fuel = str(frozen.get('fuel', VM_FUEL))
+    return ['IMAGE', 'main', fuel] if plan['entry'] == 'book' else ['IMAGE', fuel, '--']
 
 
 # ------------------------------------------------------------------ controls and mutants
@@ -1196,7 +1226,7 @@ def run_controls(plans: dict) -> list:
                 'types': fp['types'] + [{'kind': 'erased-arrow', 'domain': None, 'result': 4}],
                 'functions': [ident, {'name': 'main', 'parameters': [], 'result': 7, 'slots': 0, 'body': body}]}
     halt = ['closure', 8, 0, 0, [], ['con', 4, 1, [['lit', 1, 'U32', 0], ['value', 3, 0]]]]
-    return [
+    controls = [
         ('arrow-through-identity',
          book(['invoke', 0, ['call', 1, 0, [['closure', 1, 1, 1, [], ['ref', 0, 0]]]], [['value', 0, 1]]]),
          {'exit': 0, 'stdout': 'Evaluated\t0\t1\tOn{}\n', 'calls': 3}),
@@ -1221,7 +1251,52 @@ def run_controls(plans: dict) -> list:
           'functions': [{'name': 'main', 'parameters': [], 'result': 0, 'slots': 1,
                          'body': ['let', 0, 0, ['lit', 1, 'U32', 7], ['value', 0, 0]]}]},
          {'exit': 0, 'stdout': 'Evaluated\t0\t0\tOff{}\n', 'calls': 1}),
-        *display_controls(),
+        # Section 6.1: a Nat Case makes the predecessor only for a selected Succ Branch. Its
+        # Default on 2^31 + 1 is On{}; a VM that made the Big predecessor 2^31 first would
+        # leak it, which vm-model's RC audit sees and this value does not.
+        ('nat-default-big',
+         {'entry': 'book', 'representation': {'Nat': 0},
+          'types': [plans['nat-pred']['types'][0], flag],
+          'functions': [{'name': 'main', 'parameters': [], 'result': 1, 'slots': 1,
+                         'body': ['let', 1, 0, ['lit', 0, 'Nat', 2147483649],
+                                  ['case', 1, 0, 0, 'tags', [['branch', 0, 1, 0, ['value', 1, 0]], None],
+                                   ['default', ['value', 1, 1]]]]}]},
+         {'exit': 0, 'stdout': 'Evaluated\t1\t1\tOn{}\n', 'calls': 1}),
+    ]
+    return [*controls, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in controls}})]
+
+
+def fuel_controls(plans: dict) -> list:
+    """Section 7's fuel boundary, by literal review of golden plans and two controls above:
+    `calls` counts successful debits, so a run completes with fuel equal to its calls, and
+    one unit less stops its last entry with Exhausted kind 1 after one call fewer.
+    - recursion-map enters main, flip_all(Push{On{},Push{Off{},Stop{}}}), flip(On{}),
+      flip_all(Push{Off{},Stop{}}), flip(Off{}) and flip_all(Stop{}): 6 Applications.
+    - closure-nested enters main, keep(On{}), the closure keep returns and the closure that
+      one returns: at 3 the last Invoke stops.
+    - foreign-print enters main, IO.print, the Action applied to the erased R (phase 1),
+      the Action applied to k (phase 2), which writes `vm\n`, and the terminal continuation
+      k: at 4 the output is written and k's entry stops; at 3 the Action's second
+      application stops before its effect, so nothing is written.
+    - At fuel 0 the first entry stops: nothing is entered, written or counted.
+    - The third Enter of erased-closure-invoked-live, and phase-one-live's phase 1, are
+      ill-typed. At fuel 2 each meets fuel 0, and the operand check still refuses it first."""
+    def at(fuel, outcome, calls, **more):
+        return {'fuel': fuel, **outcome, **more, 'calls': calls}
+    fuel = {'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel'}
+    flags, closed, printed = plans['recursion-map'], plans['closure-nested'], plans['foreign-print']
+    return [
+        ('fuel-book-exact', flags, at(6, {'exit': 0}, 6, stdout='Evaluated\t1\t1\tPush{Off{},Push{On{},Stop{}}}\n')),
+        ('fuel-book-short', flags, at(5, fuel, 5)),
+        ('fuel-invoke-exact', closed, at(4, {'exit': 0}, 4, stdout='Evaluated\t0\t1\tOn{}\n')),
+        ('fuel-invoke-short', closed, at(3, fuel, 3)),
+        ('fuel-program-exact', printed, at(5, {'exit': 0}, 5, stdout='vm\n')),
+        ('fuel-continuation-short', printed, at(4, fuel, 4, stdout='vm\n')),
+        ('fuel-action-short', printed, at(3, fuel, 3, stdout='')),
+        ('fuel-zero-book', flags, at(0, fuel, 0)),
+        ('fuel-zero-program', printed, at(0, fuel, 0, stdout='')),
+        ('fuel-zero-ill-typed-invoke', plans['erased-closure-invoked-live'], at(2, ILL_TYPED, 2)),
+        ('fuel-zero-ill-typed-phase', plans['phase-one-live'], at(2, ILL_TYPED, 2)),
     ]
 
 
@@ -1261,6 +1336,36 @@ def display_controls() -> list:
          shown(f"Evaluated\t1\t0\tDuo{{{unary(half, 'S' * 15)},{unary(half, 'S' * 15)}}}\n")),
         ('display-bytes-beyond-bound', pair('Pair', half, half), exhausted),
     ]
+
+
+def argument_controls(images: dict) -> list:
+    """(label, image, words after IMAGE, section 8's frozen verdict), by literal review, for
+    what the frozen invocations cannot show beside eval-cli: the usage refusal, which
+    eval-cli spells otherwise; the Program form; a word of any length; and the image read
+    before the words. None admits the words."""
+    book, program = images['invoke-words'], images['foreign-print']
+    usage, word = 'HostFailure arguments usage', 'HostFailure arguments expected-u32'
+    return [
+        ('book-without-fuel', book, ['two'], usage),
+        ('book-usage-before-lookup', book, ['absent'], usage),
+        ('book-long-zeros', book, ['two', '1000000', '0' * 4400 + '1', '0'], None),
+        ('book-program-form', book, ['5', '--'], word),
+        ('program-runs', program, ['5', '--'], None),
+        ('program-args', program, ['0005', '--', 'a', '--'], None),
+        ('program-fuel-word', program, ['x', '--'], word),
+        ('program-fuel-beyond', program, ['4294967296', '--'], word),
+        ('program-without-fuel', program, ['--'], usage),
+        ('program-without-separator', program, ['5', 'a'], usage),
+        ('program-shape-before-fuel', program, ['x', 'a'], usage),
+        ('program-book-form', program, ['main', '5'], usage),
+        ('image-before-words', word_patch(book, 0, 0x474D494C), ['absent', 'x'], 'HostFailure image: magic'),
+    ]
+
+
+def argument_verdict(data: bytes, argv: list, reg: dict, digest: bytes, c=None) -> str | None:
+    """Sections 4 and 8 before any entry: the image first, then its entry kind's words."""
+    c = c or codec
+    return rejected(data, reg, digest, c) or c.arguments(c.decode(data, digest), argv)
 
 
 def describe_controls(plans: dict) -> list:
@@ -1425,6 +1530,36 @@ CODEC_MUTANTS = [
                               "        return 'HostFailure invoke unknown-export'\n    if undescribable(plan, f['result']):\n"
                               "        return 'Unsupported invoke result-type'\n    for at, t")]),
     ('invoke-admits-structured', [("        if ctors[ordinals[at]]['fields']:\n            return 'HostFailure invoke structured-argument'\n", "")]),
+    # Round-5 re-review: section 8's argument words, Base's U32.read, checked before FN.
+    ('invoke-words-after-lookup', [("    if None in map(decimal, argv[1:]):\n        return 'HostFailure arguments expected-u32'\n", ""),
+                                   ("        return 'HostFailure invoke unknown-export'\n    for at, t",
+                                    "        return 'HostFailure invoke unknown-export'\n    if None in map(decimal, argv[1:]):\n"
+                                    "        return 'HostFailure arguments expected-u32'\n    for at, t")]),
+    ('invoke-words-per-parameter', [("    if None in map(decimal, argv[1:]):", "    if decimal(argv[1]) is None:"),
+                                    ("        if at == len(ordinals):\n            return 'HostFailure invoke argument-arity'\n",
+                                     "        if at == len(ordinals):\n            return 'HostFailure invoke argument-arity'\n"
+                                     "        if ordinals[at] is None:\n            return 'HostFailure arguments expected-u32'\n")]),
+    ('invoke-fuel-unchecked', [("    if None in map(decimal, argv[1:]):", "    if None in map(decimal, argv[2:]):")]),
+    ('invoke-words-wrap', [("    return int(digits) if re.fullmatch('[0-9]+', word) and len(digits) <= 10 and int(digits) <= 0xFFFFFFFF else None",
+                            "    return int(digits) & 0xFFFFFFFF if re.fullmatch('[0-9]+', word) else None")]),
+    ('invoke-words-maximum-exclusive', [("int(digits) <= 0xFFFFFFFF", "int(digits) < 0xFFFFFFFF")]),
+    ('invoke-words-no-leading-zeros', [("re.fullmatch('[0-9]+', word)", "re.fullmatch('0|[1-9][0-9]*', word)")]),
+    ('invoke-words-ten-digits', [("re.fullmatch('[0-9]+', word)", "re.fullmatch('[0-9]{1,10}', word)")]),
+    ('invoke-words-empty-zero', [("re.fullmatch('[0-9]+', word)", "re.fullmatch('[0-9]*', word)")]),
+    ('invoke-words-unicode-digits', [("re.fullmatch('[0-9]+', word)", "word.isdigit()")]),
+    ('invoke-words-host-int', [("    return int(digits) if re.fullmatch('[0-9]+', word) and len(digits) <= 10 and int(digits) <= 0xFFFFFFFF else None",
+                                "    try:\n        value = int(word)\n    except ValueError:\n        return None\n"
+                                "    return value if 0 <= value <= 0xFFFFFFFF else None")]),
+    # Section 8's forms (argument_controls): usage, the Program's shape before its FUEL word.
+    ('arguments-without-usage', [("    if len(argv) < 2:\n        return 'HostFailure arguments usage'\n", "")]),
+    ('arguments-ignore-entry', [("    if plan['entry'] == 'book':\n        return invocation(plan, argv)",
+                                 "    if True:\n        return invocation(plan, argv)")]),
+    ('program-fuel-unchecked', [("    return None if decimal(argv[0]) is not None else 'HostFailure arguments expected-u32'",
+                                 "    return None")]),
+    ('program-without-separator', [("    if len(argv) < 2 or argv[1] != '--':", "    if len(argv) < 2:")]),
+    ('program-fuel-before-shape', [("    if len(argv) < 2 or argv[1] != '--':\n        return 'HostFailure arguments usage'\n",
+                                    "    if not argv or decimal(argv[0]) is None:\n        return 'HostFailure arguments expected-u32'\n"
+                                    "    if len(argv) < 2 or argv[1] != '--':\n        return 'HostFailure arguments usage'\n")]),
     # Review round 3: a String constant is its code list at every step.
     ('encode-through-json-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
                                    "        data = [ord(c) for c in json.loads(json.dumps(''.join(map(chr, value))))] "
@@ -1443,10 +1578,10 @@ CODEC_MUTANTS = [
 def invocation_verdicts(invoking: list, c=None) -> dict:
     """Section 8's verdict on every frozen Book invocation, by label."""
     c = c or codec
-    return {label: c.invocation(plan, name, ordinals) for label, plan, name, ordinals in invoking}
+    return {label: c.invocation(plan, words) for label, plan, words in invoking}
 
 
-def codec_mutants(plans, images, controls, admitted, describing, reg, digest, invoking) -> list:
+def codec_mutants(plans, images, controls, admitted, describing, reg, digest, invoking, arguing) -> list:
     """`plans` and `images` include the code-list controls; a decode that differs from its
     plan kills as surely as an encode that differs from its image."""
     source = CODEC.read_text()
@@ -1507,6 +1642,14 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest, in
             changed = [label for label in frozen if verdicts[label] != frozen[label]]
             if changed:
                 killed_by = f'invocation {changed[0]}: {verdicts[changed[0]]}'
+        for label, data, argv, verdict in [] if killed_by else arguing:
+            try:
+                got = argument_verdict(data, argv, reg, digest, mutant)
+            except Exception:
+                continue
+            if got != verdict:
+                killed_by = f'argument control {label}: {got}'
+                break
         results.append({'mutant': name, 'killed': killed_by is not None, 'by': killed_by})
     return results
 
@@ -1525,6 +1668,9 @@ EVALUATOR_MUTANTS = [
                             '    code = min(code, 0x10FFFF)\n    return bytes([(0xF0 | code >> 18) & 0xFF,')]),
     ('nat-case-binds-n', [('            return (0, ()) if w == 0 else (1, (w - 1,))',
                            '            return (0, ()) if w == 0 else (1, (w,))')]),
+    # Section 6.1: a predecessor at or above 2^31 is a Big, never an immediate's 31 bits.
+    ('nat-predecessor-narrowed', [('            return (0, ()) if w == 0 else (1, (w - 1,))',
+                                   '            return (0, ()) if w == 0 else (1, ((w - 1) & 0x7FFFFFFF,))')]),
     ('string-literal-reversed', [('        for code in reversed(codes):', '        for code in codes:')]),
     ('captures-reversed', [("            return ('closure', node, tuple(env[s] for s in node[4]))",
                             "            return ('closure', node, tuple(env[s] for s in node[4][::-1]))")]),
@@ -1539,6 +1685,18 @@ EVALUATOR_MUTANTS = [
     ('display-bytes-exclusive', [(' or cost[1] > DISPLAY_BYTES:', ' or cost[1] >= DISPLAY_BYTES:')]),
     ('display-nat-one-visit', [('                charge(v + 1, ', '                charge(1, ')]),
     ('display-separators-free', [('                charge(0, len(item))', '                charge(0, 0)')]),
+    # Section 7's fuel boundary (fuel_controls): no golden runs out of fuel.
+    ('fuel-never-exhausts', [('        if self.fuel == 0:\n            raise Halt', '        if False:\n            raise Halt')]),
+    ('fuel-exhausts-early', [('        if self.fuel == 0:\n            raise Halt', '        if self.fuel <= 1:\n            raise Halt')]),
+    ('effect-before-debit', [("        self.debit()\n        if kind == 'closure':",
+                              "        if kind != 'action' or not operands:\n            self.debit()\n        if kind == 'closure':"),
+                             ('        return self.apply(operands[0], [self.effect(f)])',
+                              '        r = self.effect(f)\n        self.debit()\n        return self.apply(operands[0], [r])')]),
+    ('fuel-before-operand-check', [('        if kind not in takes or not takes[kind]():',
+                                    '        if self.fuel == 0:\n            self.debit()\n'
+                                    '        if kind not in takes or not takes[kind]():')]),
+    ('terminal-entry-free', [("        self.debit()\n        if kind == 'closure':",
+                              "        if kind != 'terminal':\n            self.debit()\n        if kind == 'closure':")]),
 ]
 
 
@@ -1819,7 +1977,7 @@ def main() -> int:
         require(codec.decode(data, digest) == plan, f'run control {label}: decodes to another plan')
         admitted.append((f'run:{label}', data))
         require(ran(plan, frozen) == frozen, f'run control {label}: the reference evaluation gives {ran(plan, frozen)}')
-        runs[label] = {**frozen, 'image_sha256': sha(data)}
+        runs[label] = {'argv': run_argv(plan, frozen), **frozen, 'image_sha256': sha(data)}
     describing = describe_controls(plans)
     verdicts = describe_verdicts(describing)
     for label, _, _, verdict in describing:
@@ -1832,10 +1990,14 @@ def main() -> int:
         admitted.append((label, data))
     require(text_spelling(plans, digest) is None, text_spelling(plans, digest))
 
-    invoking = [(f"{name} {' '.join(i['argv'])}", plans[name], i['argv'][0], [int(o) for o in i['argv'][1:]])
+    invoking = [(invocation_label(name, i), plans[name], invocation_words(i))
                 for name, case in cases.items() for i in case.get('invocations', [])]
+    arguing = argument_controls(images)
+    for label, data, argv, verdict in arguing:
+        got = argument_verdict(data, argv, reg, digest)
+        require(got == verdict, f'argument control {label}: {got!r}, frozen {verdict!r}')
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
-                            controls, admitted, describing, reg, digest, invoking) + source_mutants(cases, built) + \
+                            controls, admitted, describing, reg, digest, invoking, arguing) + source_mutants(cases, built) + \
         evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans))
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
@@ -1843,7 +2005,9 @@ def main() -> int:
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries,
-                  admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts, mutants=mutants,
+                  admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts,
+                  arguments={label: {'argv': ['IMAGE', *argv], 'verdict': verdict} for label, _, argv, verdict in arguing},
+                  mutants=mutants,
                   code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
@@ -1852,7 +2016,7 @@ def main() -> int:
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
           f"{len(admitted)} admitted controls ({len(coded)} code lists, {len(runs)} runs), "
-          f"{len(verdicts)} describe controls, "
+          f"{len(verdicts)} describe controls, {len(arguing)} argument controls, "
           f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 
