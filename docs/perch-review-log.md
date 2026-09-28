@@ -941,3 +941,24 @@ separate "version 7" rubric needs reconciling against these anchors.
 Prevention: calibrate a rubric against recorded human preferences before
 optimizing code against it. v6's memetic target would have steered a paydown
 campaign toward the styles the user rejected.
+
+## 2026-09-27 — Law rules skipped compiler test packets
+
+The compiler campaign's first increments put their law packets beside their
+gates, for example `tests/compiler-recursion/LAW_REVIEW.md`. The eight law
+rules selected only `{packages,research,tests/perch-laws}/**/LAW_REVIEW.md`,
+so `npm run lint -- tests/compiler-recursion/LAW_REVIEW.md` ended with
+`no-coverage` rather than a review. The selector is now
+`{packages,research,tests}/**/LAW_REVIEW.md`. `lint:verify` still passes,
+with 127 tests and the eight-rule wiring check, including its
+unrelated-path exclusion.
+
+The same run covered all 45 changed wave-1 declarations in check, parse,
+patterns, scope and wasm. It used the relevant source rules, made 107 checks,
+and every target was clean.
+
+Prevention: when a new packet location appears, run the law rules on it once
+and treat `no-coverage` as a finding.
+The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
+8 checks came back clean, with a maximum broken probability of 0.70 on
+`law-observable-essence`.
