@@ -50,3 +50,14 @@ law nearest_binding_wins:
 law no_checker_budget:
   for node: S.Node
   {K.check(0n,node) == Fail{S.Exhausted{"check",S.At{0,0,0,0}}} : Result<S.Error,C.Book>}
+
+law dead_arm_invalid:
+  for +phase: String
+  for code: String
+  for +at: S.At
+  {K.dead_arm(Fail{S.Invalid{phase,code,at}}) == Fail{S.Unsupported{phase,"dead-arm",at}} : Result<S.Error,C.Checked>}
+
+law dead_arm_exhausted:
+  for +phase: String
+  for +at: S.At
+  {K.dead_arm(Fail{S.Exhausted{phase,at}}) == Fail{S.Exhausted{phase,at}} : Result<S.Error,C.Checked>}

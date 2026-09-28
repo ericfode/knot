@@ -18,7 +18,13 @@ a binder row's view of a parent whose field alone is promoted), with nine
 seed-invalid controls. [The result freeze](results.json), committed as
 `60a4795` before its fix, adds five books and 61 calls whose results are
 U32, Char, String, Nat or records with primitive fields, each with the
-display Knot must print. All four freezes are verified against seed 2.0.29,
+display Knot must print. Round 5 (21 regression books, committed as
+`42a775b` before its fix): thirteen seed-valid books whose failing body sits
+in an arm that no value reaches first (duplicates, arms after a catch-all,
+`2n` and `3n+q` after `1n+p`, `SCon{'a', SNil{}}` after `"a"`), six
+seed-invalid controls (two reachable failing arms and four invalid patterns
+in unreachable arms), and a literal typed by a book's own Nat or U32 without
+Base. All four freezes are verified against seed 2.0.29,
 commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on every gate run.
 
 ## Mechanism
@@ -45,8 +51,18 @@ operator sugar. Unsupported is not evidence that a source book is invalid.
 The primitive pattern matrix specializes columns without changing row order.
 Numeric and Char tests require a default. Nat literals and offsets expand into
 Zero/Succ cases; String literals expand into SNil/SCon cases with Char tests.
-The first applicable leaf supplies the result; all leaves, including redundant
-ones, are checked. Offset fields preserve the existing quantity and strict
+Each path ends in the list of rows that apply to it. Its first leaf supplies
+the result and is live on that path; the rest are dead there. Every leaf is
+checked, in two walks of the plan: all live leaves first, then all dead ones.
+The seed checks a body only where a path selects its row, so a dead leaf's
+failure reports `Unsupported\tcheck\tdead-arm`, and only a book whose live
+leaves all check reaches it. Duplicates, rows subsumed by an offset
+(`2n` after `1n+p`) and rows repeated through nested String columns are all
+dead this way; patterns stay checked in every row, as in the seed. One
+imprecision remains: a catch-all after rows naming every constructor is dead
+in the plan, but the seed checks it in a default continuation, so a failure
+there is Unsupported where the seed reports an error.
+Offset fields preserve the existing quantity and strict
 structural-descent rules. Offsets above 256 are Invalid, matching the seed.
 Quantities follow the seed's `match_flatten`:
 - a row that binds a column with `+` promotes that column, and every field
@@ -56,7 +72,11 @@ Quantities follow the seed's `match_flatten`:
 General nested patterns and `Chr{...}` patterns remain outside this increment.
 Base spells U32 as `U32{data: Word(32n)}`, but an installed U32 is unboxed
 bits, so that constructor reports `Unsupported\tcheck\tu32-constructor` in
-patterns and expressions.
+patterns and expressions. A literal checks against the installed primitive
+of its kind. Without Base, a book's own datatype named Nat or U32 is not
+installed; a literal typed by it reports
+`Unsupported\tcheck\tliteral-base-type`. The seed accepts `2n` for an own
+Zero/Succ Nat and rejects `3` for an own `U32 is Data: Z{}`.
 
 Literals and Nat offsets are constructor values that check against a known
 type; like the seed, Knot infers none. An unannotated binding such as `n = 3`,
@@ -183,24 +203,26 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 87 fixture books, 454 fresh seed calls, 174 checks and 174 primary compilations.
+- 108 fixture books, 468 fresh seed calls, 216 checks and 216 primary compilations.
 - 886 agreeing evaluator observations and 886 matching Node/Wasm observations;
-  106 additional evaluator rejections, giving 992 evaluator observations total.
+  148 additional evaluator rejections, giving 1034 evaluator observations total.
 - 34 byte-identical native/Bun module pairs and 68 complete Base trust audits.
-- 106 rejected-compilation output-preservation probes and 106 additional
+- 148 rejected-compilation output-preservation probes and 148 additional
   compilations proving no artifact is created at an absent output path.
 - 5 result books and 61 frozen displays: 122 exact evaluator displays across
   both lanes, lane-equal, and 5 byte-identical native/Bun module pairs. The
   Node host observes enum results only, so these calls have no Wasm lane.
 - Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 32 filled laws; 18 type-correct semantic
-  mutants: five Wasm value kills, nine verdict kills and six evaluator kills.
+- Three complete proof entries, 32 filled laws; 21 type-correct semantic
+  mutants: five Wasm value kills, twelve verdict kills and six evaluator kills.
+  The two dead-arm laws live in `src/check-LAWS.bend`, beside the checker they
+  describe, and the checker gate proves them.
 
 The mutant witnesses are frozen calls: unsigned compare across the high bit,
 zero divisor, shift by 32, surrogate equality and the 255/256 Nat offset edge.
 Each mutant compiler must typecheck, build and emit a valid module. Four kills
 are explicit wrong enum results; the division mutant must reach the real Wasm
-`divide by zero` trap. Nine verdict mutants change a frozen book's
+`divide by zero` trap. Twelve verdict mutants change a frozen book's
 classification: dropping the offset adjacency test compiles `case 1n + p` to
 `Built`; restoring the catalog lookup reports the U32 constructor as
 `Invalid`; inferring a literal's type compiles `n = 3` to `Built`; keeping
@@ -209,8 +231,13 @@ classification: dropping the offset adjacency test compiles `case 1n + p` to
 `InternalFailure`; an Unsupported literal arm on a datatype replaces the
 seed's Invalid; the broad `\X{` arm rejects the escape-brace book as
 `Invalid lex escape`; disabling column promotion rejects promoted-column as
-`Invalid check affine-reuse`; and keeping the refinement for a binder row
-compiles the seed-invalid affine-default-scrutinee to `Built`. The evaluator-only `append-reversed` mutant changes no emitted byte;
+`Invalid check affine-reuse`; keeping the refinement for a binder row
+compiles the seed-invalid affine-default-scrutinee to `Built`; checking every
+leaf in the live walk rejects the seed-valid dead-arm-u32-duplicate as
+`Invalid check type-mismatch`; walking dead leaves before live ones reports
+the seed-invalid live-arm-u32-default as `Unsupported check dead-arm`; and
+restoring Invalid for a literal typed by a book's own datatype rejects the
+seed-valid own-nat-literal as `Invalid check literal-base-type`. The evaluator-only `append-reversed` mutant changes no emitted byte;
 its evaluator answers No for `"ab" ++ ""` = `"ab"`. Three display mutants
 are killed by an exact wrong display: skipping the primitive dispatch prints
 `'\0'` as `Chr{}` again, escaping both quotes everywhere prints `'"'` as

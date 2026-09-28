@@ -406,8 +406,12 @@ a code point, as the seed's `u{...}` match does; any other escape before `{`
 raw non-ASCII quoted text report the exact frozen Unsupported prefixes.
 
 The first-match matrix lowers Nat literals/offsets through Zero/Succ and String
-patterns through SNil/SCon. U32/Char literal patterns require a default; all
-leaves are checked. The 256-offset bound, quantities, first-parameter strict
+patterns through SNil/SCon. U32/Char literal patterns require a default. Each
+path's first leaf is live there and the others are dead. Every leaf is
+checked, all live leaves before any dead one; the seed checks a body only
+where a path selects its row, so a dead leaf's failure is
+`Unsupported check dead-arm`, never Invalid. Patterns stay checked in every
+row, reachable or not, as in the seed. The 256-offset bound, quantities, first-parameter strict
 field descent and forward-call restrictions remain enforced. An offset's `+`
 must touch its literal (`1n+p`); a separated `+` is operator sugar,
 `Unsupported parse operator`. As in the seed, `0n+t` reads as t itself, so a
@@ -426,7 +430,9 @@ continuation does: a `+` on a field (`Succ{+p}`) does not let a catch-all use
 the column twice. `Chr{...}` patterns and broader
 nested pattern support are still Unsupported. The Base constructor `U32{data: Word(32n)}` has
 no representation in the unboxed U32 and is `Unsupported check u32-constructor`
-in patterns and expressions.
+in patterns and expressions. A literal typed by a book's own datatype named
+U32, Nat, Char or String, rather than the installed primitive, is
+`Unsupported check literal-base-type`.
 
 Hash-verified Base supplies a closed lowering registry: four primitive types
 and 39 operations. Calls retain explicit typed quantities. Intrinsic nodes and

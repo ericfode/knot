@@ -16,3 +16,7 @@ def L.nearest_binding_wins(tail,level):
   {==}
 def L.no_checker_budget(node):
   {==}
+def L.dead_arm_invalid(phase,code,at):
+  {==}
+def L.dead_arm_exhausted(phase,at):
+  {==}

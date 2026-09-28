@@ -7,10 +7,12 @@ import ./primitive-op.bend as R
 import ./literal-types.bend as T
 import ./primitive.bend as O
 
+# A literal spells an installed primitive. A book's own datatype of that name
+# is outside this profile: the seed accepts it when its constructors fit.
 def type_id(reference: G.TypeRef) -> Result<S.Error,U32>:
   match reference:
     case G.TypeRef{index,C.Datatype{+token,data,ctors}}:
-      S.choose(Result<S.Error,U32>,B.installed(token),u => Done{index},u => C.invalid(U32,"literal-base-type",token))
+      S.choose(Result<S.Error,U32>,B.installed(token),u => Done{index},u => C.unsupported(U32,"literal-base-type",token))
 
 def primitive_type(types: List<&2,C.Datatype>, name: String) -> Result<S.Error,U32>:
   S.bind(G.TypeRef,U32,G.find_type(types,B.token(name),0),type_id)

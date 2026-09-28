@@ -322,6 +322,19 @@ MUTANTS = [
     {'name': 'refined-default-binder', 'file': 'literal-matrix.bend',
      'old': 'C.Binding{token,level,q,typ,param,None{}}', 'new': 'C.Binding{token,level,q,typ,param,known}',
      'fixture': 'affine-default-scrutinee', 'verdict': (0, 'Built\t')},
+    {'name': 'all-leaf-invalid', 'file': 'check.bend',
+     'old': 'run(n,Matrix{live,target,False{}},catalog,current,scope)',
+     'new': 'run(n,MatrixLeaves{Con{live,rest},target},catalog,current,scope)',
+     'fixture': 'dead-arm-u32-duplicate', 'verdict': (2, 'Invalid\tcheck\ttype-mismatch\t')},
+    {'name': 'dead-before-live', 'file': 'check.bend',
+     'old': '''run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>
+                S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>''',
+     'new': '''run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>
+                S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>''',
+     'fixture': 'live-arm-u32-default', 'verdict': (3, 'Unsupported\tcheck\tdead-arm\t')},
+    {'name': 'invalid-own-primitive', 'file': 'literal-check.bend',
+     'old': 'C.unsupported(U32,"literal-base-type",token)', 'new': 'C.invalid(U32,"literal-base-type",token)',
+     'fixture': 'own-nat-literal', 'verdict': (2, 'Invalid\tcheck\tliteral-base-type\t')},
     # Display mutants: the frozen wrong display is the kill; any other output is not.
     {'name': 'constructor-tag-display', 'file': 'eval.bend', 'lane': 'eval',
      'old': 'shape(L.kind(definition),definition,value)', 'new': 'shape(None{},definition,value)',

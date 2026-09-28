@@ -12,8 +12,8 @@ import ./literal-matrix.bend as M
 
 type Mode is Data:
   Rebuild{term: C.Term}
-  Matrix{plan: M.Plan, expected: U32}
-  MatrixArms{plans: List<&2,M.Plan>, expected: U32}
+  Matrix{plan: M.Plan, expected: U32, dead: Bool}
+  MatrixArms{plans: List<&2,M.Plan>, expected: U32, dead: Bool}
   MatrixLeaves{plans: List<&2,M.Plan>, expected: U32}
   RebuildArguments{terms: List<&2,C.Term>, parameters: List<&2,C.Parameter>, token: S.Token}
   Expression{node: S.Node, expected: Maybe<&2,U32>}
@@ -213,29 +213,40 @@ def matrix_default(value: C.Checked) -> Result<S.Error,C.Checked>:
   match value:
     case C.Checked{term,typ,uses}: Done{C.Checked{C.Sequence{[C.Default{term}]},0,uses}}
 
+# A path selects the first leaf of its list; the rest are dead there. The seed
+# checks a body only where a path selects it, so a match walks its plan twice,
+# live leaves first, and a dead leaf's failure is Unsupported, never Invalid.
+def dead_arm(result: Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+  match result:
+    case Fail{S.Invalid{phase,code,at}}: Fail{S.Unsupported{phase,"dead-arm",at}}
+    case Fail{error}: Fail{error}
+    case Done{value}: Done{value}
+
 def matrix_retained(first: C.Checked, rest: C.Checked) -> Result<S.Error,C.Checked>:
   Done{first}
 
 def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Scope) -> Result<S.Error,C.Checked>:
   match fuel mode catalog scope:
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
-    case 1n+ +n Matrix{M.MatrixLeaf{bound,body},target} _ _:
+    case 1n+ +n Matrix{M.MatrixLeaf{bound,body},target,dead} _ _:
       run(n,Expression{body,Some{target}},catalog,current,bound)
-    case 1n+ +n Matrix{M.MLeaves{plans},target} _ _:
-      run(n,MatrixLeaves{plans,target},catalog,current,scope)
-    case 1n+ +n Matrix{M.MCase{+column,arms},+target} _ _:
-      S.bind(C.Checked,C.Checked,run(n,MatrixArms{arms,target},catalog,current,scope),value => matrix_case(value,column,target))
-    case 1n+ +n Matrix{plan,target} _ _: C.internal(C.Checked,"matrix-plan")
-    case 1n+ +n MatrixArms{Nil{},target} _ _: Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
-    case 1n+ +n MatrixArms{Con{M.MBranch{+tag,+fields,body},+tail},+target} _ _:
-      S.bind(C.Checked,C.Checked,run(n,Matrix{body,target},catalog,current,scope),head =>
-        S.bind(C.Checked,C.Checked,run(n,MatrixArms{tail,target},catalog,current,scope),rest => prepend_arm(tag,fields,head,rest)))
-    case 1n+ +n MatrixArms{Con{M.MDefault{body},Nil{}},target} _ _:
-      S.bind(C.Checked,C.Checked,run(n,Matrix{body,target},catalog,current,scope),matrix_default)
-    case 1n+ +n MatrixArms{plans,target} _ _: C.internal(C.Checked,"matrix-arm")
+    case 1n+ +n Matrix{M.MLeaves{Con{live,rest}},target,False{}} _ _:
+      run(n,Matrix{live,target,False{}},catalog,current,scope)
+    case 1n+ +n Matrix{M.MLeaves{Con{live,rest}},target,True{}} _ _:
+      dead_arm(run(n,MatrixLeaves{rest,target},catalog,current,scope))
+    case 1n+ +n Matrix{M.MCase{+column,arms},+target,dead} _ _:
+      S.bind(C.Checked,C.Checked,run(n,MatrixArms{arms,target,dead},catalog,current,scope),value => matrix_case(value,column,target))
+    case 1n+ +n Matrix{plan,target,dead} _ _: C.internal(C.Checked,"matrix-plan")
+    case 1n+ +n MatrixArms{Nil{},target,dead} _ _: Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
+    case 1n+ +n MatrixArms{Con{M.MBranch{+tag,+fields,body},+tail},+target,+dead} _ _:
+      S.bind(C.Checked,C.Checked,run(n,Matrix{body,target,dead},catalog,current,scope),head =>
+        S.bind(C.Checked,C.Checked,run(n,MatrixArms{tail,target,dead},catalog,current,scope),rest => prepend_arm(tag,fields,head,rest)))
+    case 1n+ +n MatrixArms{Con{M.MDefault{body},Nil{}},target,dead} _ _:
+      S.bind(C.Checked,C.Checked,run(n,Matrix{body,target,dead},catalog,current,scope),matrix_default)
+    case 1n+ +n MatrixArms{plans,target,dead} _ _: C.internal(C.Checked,"matrix-arm")
     case 1n+ +n MatrixLeaves{Nil{},target} _ _: Done{C.Checked{C.Sequence{Nil{}},target,Nil{}}}
     case 1n+ +n MatrixLeaves{Con{head,+tail},+target} _ _:
-      S.bind(C.Checked,C.Checked,run(n,Matrix{head,target},catalog,current,scope),first =>
+      S.bind(C.Checked,C.Checked,run(n,Matrix{head,target,False{}},catalog,current,scope),first =>
         S.bind(C.Checked,C.Checked,run(n,MatrixLeaves{tail,target},catalog,current,scope),rest => matrix_retained(first,rest)))
     case 1n+ +n Expression{S.Literal{+token,kind,number,text},wanted} C.Catalog{types,sigs} _:
       S.bind(C.Checked,C.Checked,L.literal(token,kind,number,text,types),value => annotated(wanted,token,target => expected(token,Some{target},value)))
@@ -267,9 +278,11 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Expression{S.Match{+token,value,+arms},+wanted} C.Catalog{+types,sigs} _:
       S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),+binding =>
         S.choose(Result<S.Error,C.Checked>,M.enabled(types,binding),u =>
-          annotated(wanted,token,target =>
-            S.bind(M.Plan,C.Checked,M.compile(4096n,binding,arms,types,scope),plan =>
-              S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target},catalog,current,scope),body => matrix_consumed(body,binding,scope)))),u =>
+          annotated(wanted,token,+target =>
+            S.bind(M.Plan,C.Checked,M.compile(4096n,binding,arms,types,scope),+plan =>
+              S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>
+                S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>
+                  matrix_consumed(body,binding,scope))))),u =>
           match_body(binding,token,arms,types,scope,wanted,level =>
             run(n,Arms{arms,token,level,wanted},catalog,current,scope))))
     case 1n+ +n Expression{node,wanted} _ _: C.internal(C.Checked,"expression-node")
