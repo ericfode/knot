@@ -137,11 +137,14 @@ function knownBuiltins() {
 }
 
 /** One explicit selected group, not a repository-wide or transitive-closure claim. */
-export async function prepareStyleComposition(candidates, cohort, config, root = ROOT, snapshot = null) {
+export async function prepareStyleComposition(candidates, cohort, config, root = ROOT, snapshot = null, readingOrder = null) {
   validatePotential(config);
   snapshot ??= await createBendSourceSnapshot(root);
-  const selected = [...new Set(candidates.map(c => c.path ?? c.target.split('::')[0]))].sort();
-  const paths = [...new Set([...selected, ...candidates.flatMap(c => (c.context?.files ?? []).map(f => f.path))])].sort();
+  const selected = readingOrder ?? [...new Set(candidates.map(c => c.path ?? c.target.split('::')[0]))].sort();
+  const collaborators = candidates.flatMap(c => (c.context?.files ?? []).map(f => f.path));
+  const paths = readingOrder
+    ? [...selected, ...[...new Set(collaborators)].filter(path => !selected.includes(path)).sort()]
+    : [...new Set([...selected, ...collaborators])].sort();
   const loaded = new Map(), files = [], unresolved = [], reasons = [];
   let bytes = 0;
   for (const path of paths) {
@@ -464,6 +467,211 @@ function compositionPreflight(prepared) {
     unresolved_by_reason: tally(context.unresolved.map(ref => ref.reason)), unresolved: context.unresolved };
 }
 
+async function readStyleReport(path) {
+  const bytes = await readFile(path);
+  return JSON.parse((path.endsWith('.gz') ? gunzipSync(bytes) : bytes).toString('utf8'));
+}
+
+async function prepareStyleSelection({ all = false, targets, taskPath, cohort }, root, snapshot = null, policy = null) {
+  const text = policy?.text ?? await readFile(resolve(root, 'perch-style.json'), 'utf8');
+  const config = policy?.config ?? JSON.parse(text);
+  assessStyle([], config);
+  const taskText = taskPath !== undefined ? await readFile(resolve(root, taskPath), 'utf8') : cohort;
+  const taskAvailable = !!taskText?.trim() && (!config.potential_profundity || Buffer.byteLength(taskText) <= config.potential_profundity.max_task_bytes);
+  const task = { origin: taskPath !== undefined ? 'task-file' : cohort !== undefined ? 'explicit-cohort' : 'missing',
+    path: taskPath ?? null, sha256: taskText === undefined ? null : hash(taskText), bytes: Buffer.byteLength(taskText ?? ''),
+    available: taskAvailable, reason: !taskText?.trim() ? 'missing_task_context' : !taskAvailable ? 'task_byte_limit' : null };
+  const effectiveCohort = taskAvailable ? taskText : config.potential_profundity ? undefined : cohort;
+  snapshot ??= await createBendSourceSnapshot(root);
+  const { candidates, inventory } = all ? await prepareStyleInventory(effectiveCohort, config, root, snapshot)
+    : { candidates: await prepareStyleTargets(targets, effectiveCohort, config, root, snapshot), inventory: null };
+  return { text, config, taskText, taskAvailable, task, snapshot, candidates, inventory };
+}
+
+async function readStyleManifest(path, root) {
+  const realRoot = await realpath(root);
+  const workspacePath = async (value, label) => {
+    if (typeof value !== 'string' || !value.trim() || isAbsolute(value) || !inside(realRoot, resolve(realRoot, value))) {
+      throw new Error(`Manifest ${label} must be a workspace-relative path`);
+    }
+    const actual = await realpath(resolve(realRoot, value));
+    if (!inside(realRoot, actual)) throw new Error(`Manifest ${label} must stay inside this workspace`);
+    return relative(realRoot, actual).split(sep).join('/');
+  };
+  path = await workspacePath(path, 'path');
+  const text = await readFile(resolve(realRoot, path), 'utf8');
+  const manifest = JSON.parse(text);
+  const object = value => value && typeof value === 'object' && !Array.isArray(value);
+  if (!object(manifest) || manifest.schema !== 1 || !Array.isArray(manifest.groups) || !manifest.groups.length
+      || Object.keys(manifest).some(key => !['schema', 'groups'].includes(key))) throw new Error('Expected manifest schema 1 with nonempty groups');
+  const names = new Set(), groups = [];
+  for (const group of manifest.groups) {
+    if (!object(group) || typeof group.name !== 'string' || !group.name.trim() || names.has(group.name)
+        || !Array.isArray(group.files) || !group.files.length
+        || group.notes !== undefined && typeof group.notes !== 'string'
+        || Object.keys(group).some(key => !['name', 'files', 'task', 'notes'].includes(key))) {
+      throw new Error('Manifest groups need unique nonempty names, nonempty files, optional task and string notes');
+    }
+    names.add(group.name);
+    const files = [];
+    for (const file of group.files) {
+      if (typeof file !== 'string' || !file.endsWith('.bend') || file.includes('::')) throw new Error('Manifest files must be whole .bend files');
+      const canonical = await workspacePath(file, 'file');
+      if (files.includes(canonical)) throw new Error(`Duplicate manifest file in ${group.name}: ${file}`);
+      files.push(canonical);
+    }
+    groups.push({ name: group.name, files,
+      ...(group.task === undefined ? {} : { task: await workspacePath(group.task, 'task') }),
+      ...(group.notes === undefined ? {} : { notes: group.notes }) });
+  }
+  return { path, sha256: hash(text), groups };
+}
+
+/** Manifest groups reuse the explicit-target gate; only their composition order differs. */
+async function runStyleManifest(args, {
+  root = ROOT, env = process.env, fetchImpl = globalThis.fetch, loadEnv = false,
+  stdout = text => console.log(text), stderr = text => console.error(text),
+} = {}) {
+  const offline = args.includes('--preflight');
+  if (offline === args.includes('--live')) throw new Error('Choose --preflight (offline) or --live (provider review), not both');
+  const switches = offline ? ['--preflight', '--json'] : ['--live', '--json', '--incremental', '--fresh'];
+  const prefixes = ['--manifest=', '--group=', '--output=', ...(offline ? [] : ['--jobs=', '--reuse='])];
+  if (args.some(x => !switches.includes(x) && !prefixes.some(prefix => x.startsWith(prefix)))) {
+    throw new Error('Manifest mode accepts named groups, not --all, explicit targets or task/cohort overrides; unknown option');
+  }
+  const single = prefix => {
+    const values = args.filter(x => x.startsWith(prefix)).map(x => x.slice(prefix.length));
+    if (values.length > 1 || values.includes('')) throw new Error(`Supply at most one nonempty ${prefix.slice(0, -1)}`);
+    return values[0];
+  };
+  const manifestPath = single('--manifest='), groupName = single('--group='), output = single('--output='), reuse = single('--reuse=');
+  const jobs = single('--jobs=');
+  if (Number(args.includes('--incremental')) + Number(args.includes('--fresh')) + Number(reuse !== undefined) > 1) {
+    throw new Error('Choose only one of --incremental, --fresh, or --reuse');
+  }
+  if (!offline && (!Number.isInteger(Number(jobs ?? env.PERCH_JOBS ?? DEFAULT_CONCURRENCY))
+      || Number(jobs ?? env.PERCH_JOBS ?? DEFAULT_CONCURRENCY) < 1 || Number(jobs ?? env.PERCH_JOBS ?? DEFAULT_CONCURRENCY) > MAX_CONCURRENCY)) {
+    throw new Error(`Concurrency must be 1..${MAX_CONCURRENCY}`);
+  }
+  const outputPath = output ? resolve(root, output) : null;
+  if (outputPath && await lstat(outputPath).then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; })) {
+    throw new Error('Style output already exists; choose a new evidence path');
+  }
+  const manifest = await readStyleManifest(manifestPath, root);
+  const selected = manifest.groups.filter(group => groupName === undefined || group.name === groupName);
+  if (!selected.length) throw new Error(`Unknown manifest group: ${groupName}`);
+  const text = await readFile(resolve(root, 'perch-style.json'), 'utf8'), config = JSON.parse(text);
+  assessStyle([], config);
+  if (!config.style_role) throw new Error('Manifest qualification requires a rubric with composition targets');
+  const snapshot = await createBendSourceSnapshot(root), prepared = [];
+  let selectedUnits = 0;
+  for (const group of selected) {
+    const selection = await prepareStyleSelection({ targets: group.files, taskPath: group.task }, root, snapshot, { text, config });
+    selectedUnits += selection.candidates.length;
+    if (selectedUnits > config.max_units) throw new Error(`Style run limited to ${config.max_units} units; narrow groups or raise max_units`);
+    selection.composition = await prepareStyleComposition(selection.candidates, selection.taskAvailable ? selection.taskText : null,
+      config, root, snapshot, group.files);
+    prepared.push({ group, selection });
+  }
+  const fileIdentity = (path, source_sha256) => ({ path, source_sha256, context: { files: [] } });
+  const watched = [fileIdentity(manifest.path, manifest.sha256), fileIdentity('perch-style.json', hash(text)),
+    ...prepared.flatMap(({ selection }) => [...selection.candidates,
+      ...selection.composition.candidate.context.files.map(file => fileIdentity(file.path, file.source_sha256)),
+      ...(selection.task.path ? [fileIdentity(selection.task.path, selection.task.sha256)] : [])])];
+  const sourceFiles = new Map(watched.flatMap(candidate => [candidate, ...candidate.context.files])
+    .map(file => [file.path, file.source_sha256]));
+  const preflightChanged = await changedStyleSources(watched, root);
+  if (preflightChanged.length) throw new Error(`Source changed during style preflight: ${preflightChanged.join(', ')}`);
+  if (!offline && loadEnv) {
+    try { process.loadEnvFile(resolve(root, '.env')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
+  }
+  const prior = reuse ? await readStyleReport(resolve(root, reuse)) : null;
+  if (prior && (prior.schema !== 1 || prior.command !== 'style-manifest' || prior.mode !== 'manifest'
+      || prior.rubric_sha256 !== hash(text) || prior.parser !== BEND_PARSER_PROFILE
+      || prior.requested_model !== (env.PERCH_MODEL_ID || 'jev-latest')
+      || prior.endpoint_sha256 !== styleEndpoint(env.PERCH_BASE_URL || undefined).sha256 || !Array.isArray(prior.groups))) {
+    throw new Error('Manifest reuse requires the same rubric, parser, requested model and endpoint identity');
+  }
+  const groups = [];
+  let dispatchFailure = null;
+  for (const { group, selection } of prepared) {
+    const old = prior?.groups.find(item => item.name === group.name);
+    const childArgs = [offline ? '--preflight' : '--live', '--json', ...group.files,
+      ...(group.task ? [`--task=${group.task}`] : []),
+      ...args.filter(x => ['--incremental', '--fresh'].includes(x) || x.startsWith('--jobs=')),
+      ...(old ? [`--reuse=${reuse}`] : [])];
+    let report;
+    let code;
+    try {
+      code = await runStyleRanking(childArgs, { root, env, fetchImpl, selection, reuseReport: old,
+        stdout: value => { report = JSON.parse(value); }, stderr: value => stderr(`[${group.name}] ${value}`) });
+    } catch (error) {
+      if (offline) throw error;
+      dispatchFailure = { group: group.name, reason: error.message };
+      break;
+    }
+    groups.push({ name: group.name, files: group.files, notes: group.notes ?? null, ...report });
+    if (!offline && code === 1) break;
+  }
+  const changed_sources = await changedStyleSources(watched, root);
+  const models = [...new Set(groups.flatMap(group => group.model_resolution?.resolved_models ?? []))];
+  const failures = groups.filter(group => ['failed', 'incomplete'].includes(group.status));
+  const skipped = selected.slice(groups.length).map(group => group.name);
+  const failure = dispatchFailure ? 'group_dispatch_failed' : failures.length ? 'group_review_failed'
+    : models.length > 1 ? 'model_changed_between_groups' : null;
+  const sum = field => groups.reduce((total, group) => total + field(group), 0);
+  const qualified = !offline && !failure && !skipped.length && !changed_sources.length
+    && groups.every(group => group.qualification.fully_qualified);
+  const summary = { groups: selected.length, groups_completed: offline ? groups.length : groups.filter(group => group.status === 'completed').length,
+    units: selectedUnits, files: new Set(selected.flatMap(group => group.files)).size,
+    ...(offline ? {
+      truncated_units: sum(group => group.summary.truncated_units),
+      supporting_role_impossible: sum(group => group.summary.supporting_role_impossible),
+      compositions_available: sum(group => Number(group.composition.available)),
+    } : {
+      groups_qualified: sum(group => Number(group.qualification.fully_qualified)),
+      ranked: sum(group => group.coverage.ranked),
+      declarations_meeting_targets: sum(group => group.style_summary.meets_all),
+      compositions_meeting_targets: sum(group => Number(group.qualification.composition_requirement_met)),
+    }) };
+  const blockers = offline ? sum(group => group.structural_blockers) + changed_sources.length : null;
+  const report = { schema: 1, command: offline ? 'style-preflight' : 'style-manifest', mode: 'manifest',
+    manifest: { path: manifest.path, sha256: manifest.sha256, groups: manifest.groups.map(group => group.name),
+      selected_groups: selected.map(group => group.name), scope: groupName === undefined ? 'entire-manifest' : 'selected-group' },
+    rubric_sha256: hash(text), rubric_version: config.version, parser: BEND_PARSER_PROFILE,
+    preflight_snapshot: snapshot.stats,
+    source_snapshot: [...sourceFiles].sort(([a], [b]) => a.localeCompare(b)).map(([path, source_sha256]) => ({ path, source_sha256 })), summary,
+    ...(offline ? { structural_blockers: blockers } : { at: new Date().toISOString(), status: failure ? 'failed' : 'completed', advisory: true,
+      qualification: { status: qualified ? 'meets_target' : 'attention', fully_qualified: qualified,
+        manifest_fully_qualified: qualified && groupName === undefined },
+      requested_model: env.PERCH_MODEL_ID || 'jev-latest', endpoint_sha256: styleEndpoint(env.PERCH_BASE_URL || undefined).sha256,
+      model_resolution: { resolved_models: models }, failure, dispatch_failure: dispatchFailure, skipped_groups: skipped }),
+    provider_requests: sum(group => group.provider_requests), provider_responses: sum(group => group.provider_responses ?? 0),
+    source_freshness: { status: changed_sources.length ? 'changed-since-preflight' : 'current', changed_sources },
+    groups, note: 'Qualification covers exactly the selected manifest groups, each with its own declaration and composition obligations. Shared declarations count once per group. Local collaborators retain the existing bounded context and closure checks. Structural preflight is not a style rating or semantic acceptance.' };
+  const encoded = JSON.stringify(report, null, 2) + '\n';
+  if (!offline) {
+    const receipt = resolve(root, '.perch/usage', `${new Date().toISOString().replaceAll(':', '-')}-${randomUUID()}.json`);
+    await mkdir(dirname(receipt), { recursive: true, mode: 0o700 });
+    await writeFile(receipt, encoded, { mode: 0o600, flag: 'wx' });
+  }
+  if (outputPath) {
+    await mkdir(dirname(outputPath), { recursive: true });
+    await writeFile(outputPath, outputPath.endsWith('.gz') ? gzipSync(encoded) : encoded, { mode: 0o600, flag: 'wx' });
+  }
+  if (args.includes('--json')) stdout(encoded.slice(0, -1));
+  else {
+    for (const group of groups) stdout(offline
+      ? `${group.name}: ${group.summary.units} declarations; ${group.summary.truncated_units} truncated; ${group.summary.supporting_role_impossible} role-limited; composition ${group.composition.available ? 'available' : group.composition.reasons.join(',')} (${group.composition.source_bytes}/${group.composition.byte_limit} bytes).`
+      : `${group.name}: ${group.style_summary.meets_all}/${group.coverage.selected} declarations meet targets; composition ${group.composition.assessment.status}; qualification ${group.qualification.status}.`);
+    stdout(offline ? `Manifest preflight: ${summary.groups} groups; ${blockers} structural blockers; 0 provider requests.`
+      : `Manifest qualification (${report.manifest.scope}): ${report.qualification.status}; ${summary.groups_qualified}/${summary.groups} groups; ${report.provider_requests} provider requests.`);
+    if (failure) stderr(`Manifest review failed: ${failure}; skipped groups: ${skipped.join(', ') || 'none'}.`);
+    if (changed_sources.length) stderr(`Changed since preflight: ${changed_sources.join(', ')}.`);
+  }
+  return offline ? blockers ? 3 : 0 : failure ? 1 : qualified ? 0 : 3;
+}
+
 /**
  * Offline structural preflight. It prepares the same candidate states, contexts
  * and composition groups as a live run (request bodies are not built), then
@@ -472,7 +680,11 @@ function compositionPreflight(prepared) {
  * forbid the supporting role, unavailable compositions and unranked files.
  * No credentials, environment file, cache or provider are touched.
  */
-export async function runStylePreflight(args, { root = ROOT, stdout = text => console.log(text) } = {}) {
+export async function runStylePreflight(args, { root = ROOT, stdout = text => console.log(text), selection = null } = {}) {
+  if (args.some(x => x.startsWith('--manifest='))) {
+    if (args.includes('--live')) throw new Error('Preflight never contacts a provider; --live is not allowed');
+    return runStyleManifest(['--preflight', ...args], { root, stdout });
+  }
   const known = x => ['--preflight', '--json', '--all'].includes(x) || ['--cohort=', '--task=', '--output='].some(p => x.startsWith(p));
   if (args.some(x => x.startsWith('--') && !known(x))) throw new Error('Unknown preflight option; --preflight never contacts a provider');
   const all = args.includes('--all'), targets = args.filter(x => !x.startsWith('--'));
@@ -489,19 +701,8 @@ export async function runStylePreflight(args, { root = ROOT, stdout = text => co
   if (outputPath && await lstat(outputPath).then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; })) {
     throw new Error('Preflight output already exists; choose a new path');
   }
-  const text = await readFile(resolve(root, 'perch-style.json'), 'utf8');
-  const config = JSON.parse(text);
-  assessStyle([], config);
-  // Same effective cohort as a live run, so state sizes and hashes match.
-  const taskText = taskPath !== undefined ? await readFile(resolve(root, taskPath), 'utf8') : cohort;
-  const taskAvailable = !!taskText?.trim() && (!config.potential_profundity || Buffer.byteLength(taskText) <= config.potential_profundity.max_task_bytes);
-  const task = { origin: taskPath !== undefined ? 'task-file' : cohort !== undefined ? 'explicit-cohort' : 'missing',
-    path: taskPath ?? null, sha256: taskText === undefined ? null : hash(taskText), bytes: Buffer.byteLength(taskText ?? ''),
-    available: taskAvailable, reason: !taskText?.trim() ? 'missing_task_context' : !taskAvailable ? 'task_byte_limit' : null };
-  const effectiveCohort = taskAvailable ? taskText : config.potential_profundity ? undefined : cohort;
-  const snapshot = await createBendSourceSnapshot(root);
-  const { candidates, inventory } = all ? await prepareStyleInventory(effectiveCohort, config, root, snapshot)
-    : { candidates: await prepareStyleTargets(targets, effectiveCohort, config, root, snapshot), inventory: null };
+  const { text, config, taskText, taskAvailable, task, snapshot, candidates, inventory } = selection
+    ?? await prepareStyleSelection({ all, targets, taskPath, cohort }, root);
   if (!candidates.length) throw new Error('No rankable parsed declarations');
 
   const units = candidates.map(candidate => {
@@ -529,7 +730,8 @@ export async function runStylePreflight(args, { root = ROOT, stdout = text => co
   // additionally reported as its own candidate group.
   const composition = !compositionRequired ? null
     : all ? { required: compositionRequired, available: false, reasons: ['explicit_selected_group_required'] }
-    : { required: compositionRequired, ...compositionPreflight(await prepareStyleComposition(candidates, compositionTask, config, root, snapshot)) };
+    : { required: compositionRequired, ...compositionPreflight(selection?.composition
+      ?? await prepareStyleComposition(candidates, compositionTask, config, root, snapshot)) };
   const fileGroups = config.potential_profundity && all ? await mapConcurrent([...byFile], PREFLIGHT_CONCURRENCY, async ([path, group]) =>
     ({ path, units: group.length, ...compositionPreflight(await prepareStyleComposition(group, compositionTask, config, root, snapshot)) })) : null;
 
@@ -628,11 +830,13 @@ export async function evaluateStyle(candidates, config, {
 export async function runStyleRanking(args, {
   root = ROOT, env = process.env, fetchImpl = globalThis.fetch, loadEnv = false,
   stdout = text => console.log(text), stderr = text => console.error(text),
+  selection = null, reuseReport = null,
 } = {}) {
+  if (args.some(x => x.startsWith('--manifest='))) return runStyleManifest(args, { root, env, fetchImpl, loadEnv, stdout, stderr });
   // Structural preflight is offline: dispatch before any environment or provider setup.
   if (args.includes('--preflight')) {
     if (args.includes('--live')) throw new Error('Choose --preflight (offline) or --live (provider review), not both');
-    return runStylePreflight(args, { root, stdout });
+    return runStylePreflight(args, { root, stdout, selection });
   }
   const invoked = performance.now();
   const cohort = args.find(x => x.startsWith('--cohort='))?.slice(9);
@@ -662,21 +866,11 @@ export async function runStyleRanking(args, {
     if (exists) throw new Error('Style output already exists; choose a new evidence path');
     await mkdir(dirname(outputPath), { recursive: true });
   }
-  const text = await readFile(resolve(root, 'perch-style.json'), 'utf8');
-  const config = JSON.parse(text);
-  assessStyle([], config);
-  const taskText = taskPath !== undefined ? await readFile(resolve(root, taskPath), 'utf8') : cohort;
-  const taskAvailable = !!taskText?.trim() && (!config.potential_profundity || Buffer.byteLength(taskText) <= config.potential_profundity.max_task_bytes);
-  const task = { origin: taskPath !== undefined ? 'task-file' : cohort !== undefined ? 'explicit-cohort' : 'missing',
-    path: taskPath ?? null, sha256: taskText === undefined ? null : hash(taskText), bytes: Buffer.byteLength(taskText ?? ''),
-    available: taskAvailable, reason: !taskText?.trim() ? 'missing_task_context' : !taskAvailable ? 'task_byte_limit' : null };
-  const effectiveCohort = taskAvailable ? taskText : config.potential_profundity ? undefined : cohort;
-  const sourceSnapshot = await createBendSourceSnapshot(root);
-  const { candidates, inventory } = all ? await prepareStyleInventory(effectiveCohort, config, root, sourceSnapshot)
-    : { candidates: await prepareStyleTargets(targets, effectiveCohort, config, root, sourceSnapshot), inventory: null };
+  const { text, config, taskText, taskAvailable, task, snapshot: sourceSnapshot, candidates, inventory } = selection
+    ?? await prepareStyleSelection({ all, targets, taskPath, cohort }, root);
   if (!candidates.length) throw new Error('No rankable parsed declarations');
-  const composition = config.potential_profundity && !all ? await prepareStyleComposition(candidates, taskAvailable ? taskText : null, config, root, sourceSnapshot)
-    : { available: false, reasons: ['explicit_selected_group_required'], candidate: null };
+  const composition = selection?.composition ?? (config.potential_profundity && !all ? await prepareStyleComposition(candidates, taskAvailable ? taskText : null, config, root, sourceSnapshot)
+    : { available: false, reasons: ['explicit_selected_group_required'], candidate: null });
   const preflightChanged = await changedStyleSources(candidates, root);
   if (preflightChanged.length) throw new Error(`Source changed during style preflight: ${preflightChanged.join(', ')}`);
   if (loadEnv) {
@@ -702,8 +896,7 @@ export async function runStyleRanking(args, {
     for (const row of saved) if (row) reused.set(row.target, row);
   }
   if (reuse) {
-    const bytes = await readFile(resolve(root, reuse));
-    prior = JSON.parse((reuse.endsWith('.gz') ? gunzipSync(bytes) : bytes).toString('utf8'));
+    prior = reuseReport ?? await readStyleReport(resolve(root, reuse));
     if (prior.command !== 'style-rank' || prior.schema !== 2 || prior.rubric_sha256 !== hash(text)
         || prior.parser !== BEND_PARSER_PROFILE || prior.requested_model !== requestedModel || prior.endpoint_sha256 !== endpoint.sha256) {
       throw new Error('Style reuse requires the same rubric, parser, requested model and endpoint identity');
@@ -881,9 +1074,13 @@ export async function runStyleRanking(args, {
     scope: 'Invocation through report assembly; excludes serialization, receipt writes and output. elapsed_ms retains its post-preflight scope before rankings.',
   };
   const encoded = JSON.stringify(report, null, 2) + '\n';
-  const receipt = resolve(root, '.perch/usage', `${at.replaceAll(':', '-')}-${randomUUID()}.json`);
-  await mkdir(dirname(receipt), { recursive: true, mode: 0o700 });
-  await writeFile(receipt, encoded, { mode: 0o600, flag: 'wx' });
+  // Manifest orchestration writes one aggregate receipt containing every group.
+  const receipt = selection ? null : resolve(root, '.perch/usage', `${at.replaceAll(':', '-')}-${randomUUID()}.json`);
+  if (receipt) {
+    await mkdir(dirname(receipt), { recursive: true, mode: 0o700 });
+    await writeFile(receipt, encoded, { mode: 0o600, flag: 'wx' });
+  }
+  const receiptNote = receipt ? ` Receipt: ${relative(root, receipt)}` : '';
   if (outputPath) {
     await writeFile(outputPath, outputPath.endsWith('.gz') ? gzipSync(encoded) : encoded, { mode: 0o600, flag: 'wx' });
   }
@@ -919,9 +1116,9 @@ export async function runStyleRanking(args, {
           : `${row.score.toFixed(2)}/${diagnostic.levels.length - 1}${row.status === 'limited_context' ? ' [limited context]' : ''}`}${row.required ? ' [required]' : ' [advisory]'}`);
       }
     }
-    stdout(`\nAdvisory taste ranking; ${rows.length} parsed units; ${rows[0].model}. Receipt: ${relative(root, receipt)}`);
+    stdout(`\nAdvisory taste ranking; ${rows.length} parsed units; ${rows[0].model}.${receiptNote}`);
   }
-  if (failure) stderr(`Style ranking failed: ${failure}. Receipt: ${relative(root, receipt)}`);
+  if (failure) stderr(`Style ranking failed: ${failure}.${receiptNote}`);
   if (inventory?.unranked.length) stderr(`${inventory.unranked.length} file(s) could not be ranked; see inventory.unranked in the receipt`);
   if (changed_sources.length) stderr(`${changed_sources.length} source/context file(s) changed during review; rankings refer to the recorded snapshot`);
   if (cache?.stats.write_failures) stderr(`${cache.stats.write_failures} style answer(s) could not be saved to the incremental cache`);
