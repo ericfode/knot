@@ -223,3 +223,56 @@ law char_case_selects_chr:
 
 law key_max_selected:
   {ran(E.encode(char_book("top",W.Case{2,0,1,1,[Some{W.Branch{4294967295,1,0,W.Value{2,1}}}],Some{W.Default{W.Value{2,0}}}},1,4294967295))) == described(2,1,"On{}") : Summary}
+
+# ---------------------------------------------------------------- arm fit, display, Chr's inspection
+
+# pick(x: none, k: U32) -> U32 answers x from a key Branch and the Default, both
+# `none`-typed bodies that fit the U32 Case (§3); main = U32.is_eq(pick(7,0),7).
+def key_arms() -> W.Plan:
+  +o = W.none()
+  W.Plan{0,
+    [W.Algebraic{M.text("Bool"),[W.Constructor{M.text("False"),[]},W.Constructor{M.text("True"),[]}]},W.Opaque{M.text("U32")}],
+    [W.Function{M.text("U32.is_eq"),[1,1],0,2,W.Intrinsic{0,8,[W.Reference{1,0},W.Reference{1,1}]}},
+     W.Function{M.text("pick"),[o,1],1,2,W.Case{1,1,1,1,[Some{W.Branch{0,2,0,W.Reference{o,0}}}],Some{W.Default{W.Reference{o,0}}}}},
+     W.Function{M.text("main"),[],0,0,W.Application{0,0,[
+       W.Application{1,1,[W.Literal{1,W.Constant{0,[7]}},W.Literal{1,W.Constant{0,[0]}}]},W.Literal{1,W.Constant{0,[7]}}]}}],
+    [o,1,o,o,0,o,o,o,o,o,o,o]}
+
+law arms_fit_their_case:
+  {ran(E.encode(key_arms())) == described(0,1,"True{}") : Summary}
+
+# §8 bounds the tree's UTF-8 bytes: 'A', 'ü', '€' and U+1F600 are 1 + 2 + 3 + 4.
+law text_size_counts_bytes:
+  {M.text_size([65,252,8364,128512]) == 10 : U32}
+
+# main() -> Nat = 2n over Nat{Z, ü}: a Nat word spells its type's own names. A
+# plan's names are UTF-8 bytes (ü is C3 BC); the tree holds scalars.
+def named_nat() -> W.Plan:
+  +o = W.none()
+  W.Plan{0,[W.Algebraic{M.text("Nat"),[W.Constructor{M.text("Z"),[]},W.Constructor{[195,188],[0]}]}],
+    [W.Function{M.text("main"),[],0,0,W.Literal{0,W.Constant{1,[2]}}}],[0,o,o,o,o,o,o,o,o,o,o,o]}
+
+law nat_spells_its_names:
+  {ran(E.encode(named_nat())) == described(0,1,"ü{ü{Z{}}}") : Summary}
+
+# main() -> Flag = let c = Chr{id(Pair{Off,On})} in On{}, with id(x: none) -> none
+# (check-model's inspect-chr-unused): completing Chr inspects the word it yields.
+def laundered_chr() -> W.Plan:
+  +o = W.none()
+  W.Plan{0,
+    [W.Algebraic{M.text("Flag"),[W.Constructor{M.text("Off"),[]},W.Constructor{M.text("On"),[]}]},
+     W.Algebraic{M.text("Pair"),[W.Constructor{M.text("Pair"),[0,0]}]},
+     W.Opaque{M.text("U32")},
+     W.Algebraic{M.text("Char"),[W.Constructor{M.text("Chr"),[2]}]}],
+    [W.Function{M.text("id"),[o],o,1,W.Reference{o,0}},
+     W.Function{M.text("main"),[],0,1,W.Let{0,0,W.Construct{3,0,[W.Application{2,0,[W.Construct{1,0,[W.Value{0,0},W.Value{0,1}]}]}]},W.Value{0,1}}}],
+    [o,2,3,o,o,o,o,o,o,o,o,o]}
+
+# A stopped run's reason, when every count balanced before it stopped.
+def stop_of(+s: Summary) -> Maybe<&2,W.Stop>:
+  match s:
+    case Summary{M.Stopped{stop,pending},balanced,live,out}: Bool.pick(Maybe<&2,W.Stop>,balanced,Some{stop},None{})
+    case _: None{}
+
+law chr_inspects_its_operand:
+  {stop_of(ran(E.encode(laundered_chr()))) == Some{W.Refused{"image","ill-typed"}} : Maybe<&2,W.Stop>}

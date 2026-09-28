@@ -12,12 +12,17 @@ seed's native lane and requires:
   first entry, and value-on, which makes one entry, completes on fuel 1;
 - check-spec's frozen refusal controls, and a child at its parent's offset,
   refused with check-spec's exact reason;
+- the inspection controls (SPEC sections 3 and 6): a word laundered through a
+  `none`-typed identity is refused ill-typed where it is read (a Case scrutinee,
+  a prim operand, Chr's operand, a rendered word before its visit is charged),
+  as the reference evaluation refuses it;
 - every admitted control run to its outcome and call count (SPEC sections 4 and
   7): check-spec's admitted plan controls and code-list controls, as the
   reference evaluation (vm/evaluate.py) runs them, its run controls as frozen
   (a display line by its SHA-256), and the model's own controls in
   vm/model-controls/, whose frozen values the seed and the reference evaluation
-  reproduce; each count is check-spec's own, never a literal here;
+  reproduce, and its display controls, frozen by literal review; each count is
+  check-spec's own, never a literal here;
 - the RC audit before every transition of every golden and admitted control, no
   live mortal cell after each completed run, and the reference evaluation's call
   count at the end of each run;
@@ -26,7 +31,7 @@ seed's native lane and requires:
   and every admitted mutation runs soundly;
 - vm/PROOF.bend to print 'All terms check.';
 - every model mutant killed by a wrong observation of those checks, never by a
-  crash or a timeout, and seven of them also refuted by a law of PROOF.bend.
+  crash or a timeout, and those in LAW_MUTANTS also refuted by a law of PROOF.bend.
 It writes only vm/receipts/model.json.
 """
 from __future__ import annotations
@@ -303,12 +308,13 @@ def admitted_controls() -> list:
     """(label, plan, run, calls) for images the validator MUST admit and the VM MUST run to
     `run` after `calls` entries (SPEC sections 4 and 7): check-spec's admitted plan controls
     and code-list controls under the reference evaluation, its frozen run controls and the
-    model's own frozen controls."""
+    model's own frozen controls, seed-derived and display."""
     plans = golden_plans()
     listed = [(f'plan:{k}', p, None) for k, p, m in cs.plan_controls(plans) if m is None]
     listed += [(k, p, None) for k, p in cs.code_controls(plans)]
     listed += [(f'run:{k}', p, frozen) for k, p, frozen in cs.run_controls(plans)]
     listed += [(f'model:{k}', p, {'exit': 0, 'stdout': line}) for k, p, line in MODEL_CONTROLS]
+    listed += [(f'model:{k}', p, frozen) for k, p, frozen in DISPLAY_CONTROLS]
     require(all(any(k.startswith(f'{kind}:') for k, _, _ in listed) for kind in ('plan', 'codes', 'run')),
             'check-spec lists admitted plan, code-list and run controls')
     out = []
@@ -421,10 +427,17 @@ def chr_of(value: list, body: list, slots: int) -> dict:
 
 
 PAIRED = ['con', 1, 0, [['value', 0, 0], ['value', 0, 1]]]
+NAT = {'kind': 'data', 'name': 'Nat', 'constructors': [{'name': 'Zero', 'fields': []}, {'name': 'Succ', 'fields': [0]}]}
 INSPECTION.update({
     'inspect-chr-unused': chr_of(PAIRED, ['value', 0, 1], 1),
     'inspect-chr-closure': chr_of(['closure', 4, 1, 1, [], ['ref', 0, 0]], ['value', 0, 1], 1),
     'inspect-chr-used': chr_of(PAIRED, ['case', 0, 0, 3, 'tags', [['branch', 0, 1, 1, ['value', 0, 1]]], None], 2),
+    # Section 8 renders Pair{1048574n, b} to exactly 1,048,576 visits before it reaches b,
+    # a Pair laundered into a Nat field: the word is inspected before the visit is charged.
+    'inspect-before-charge': {'entry': 'book', 'representation': {'Nat': 0}, 'types': [NAT, PAIR],
+                              'functions': [IDENTITY, {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0,
+                                            'body': ['con', 1, 0, [['lit', 0, 'Nat', 1_048_574], ['call', 0, 0, [
+                                                ['con', 1, 0, [['lit', 0, 'Nat', 0], ['lit', 0, 'Nat', 0]]]]]]]}]},
 })
 
 
@@ -490,6 +503,25 @@ MODEL_CONTROLS = [
     ('char-key-max-miss', chr_book('top', TOP, 2, 1, 0xFFFFFFFE), 'Evaluated\t2\t0\tOff{}\n'),
 ]
 MODEL_SOURCES = HERE / 'model-controls'
+
+
+def utf8_nat(n: int) -> dict:
+    """main() -> Nat = n, over a Nat whose Zero is named `üüüü` (8 bytes) and Succ
+    `üüüüüüüü` (16 bytes): section 8 counts the tree's bytes, not its scalars."""
+    return {'entry': 'book', 'representation': {'Nat': 0},
+            'types': [{'kind': 'data', 'name': 'Nat', 'constructors': [{'name': 'ü' * 4, 'fields': []},
+                                                                       {'name': 'ü' * 8, 'fields': [0]}]}],
+            'functions': [{'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['lit', 0, 'Nat', n]}]}
+
+
+# Frozen by literal review of section 8, as check-spec freezes its display controls:
+# 932,067 levels of 18 bytes around a 10-byte Zero are exactly 16,777,216 bytes, and one
+# more level is Exhausted; counted as scalars (10 a level) both would print.
+AT_BOUND = 'Evaluated\t0\t1\t' + ('ü' * 8 + '{') * 932_067 + 'ü' * 4 + '{}' + '}' * 932_067 + '\n'
+DISPLAY_CONTROLS = [
+    ('display-utf8-at-bound', utf8_nat(932_067), {'exit': 0, 'stdout_sha256': sha(AT_BOUND.encode()), 'calls': 1}),
+    ('display-utf8-beyond-bound', utf8_nat(932_068), {'outcome': 'Exhausted', 'kind': 2, 'cause': 'display', 'calls': 1}),
+]
 
 
 def seed_controls() -> dict:
@@ -566,7 +598,7 @@ def proof() -> dict:
 # ------------------------------------------------------------------ mutants
 
 # Type-correct semantic mutants of the model: (name, section of vm/model/, [(old, new)],
-# what it breaks). The last eight are review fix round 1's, each killed by the control
+# what it breaks). The last twenty are review fix round 1's, each killed by the control
 # that witnessed its defect.
 MUTANTS = [
     ('rc-under-count', 'memory', [('    Done{stored_word(heap,w,0,U32.add(rc,1))})))',
@@ -641,12 +673,58 @@ MUTANTS = [
     ('arrow-argument', 'machine', [('W.choose(Result<W.Stop,List<&2,U32>>,V.is_arrow(V.kind(types,p)),u => Fail{W.Refused{"invoke","function-argument"}},u =>',
        'W.choose(Result<W.Stop,List<&2,U32>>,False{},u => Fail{W.Refused{"invoke","function-argument"}},u =>')],
      'an arrow parameter is refused as argument-range'),
+    # Review round 1, second batch: arm fit (SPEC section 3), section 8's display
+    # visits and bytes, and Chr's inspection.
+    ('exact-branch-type', 'validate', [('Expect{Bool.not(fit(types,t,type_of(body))),at_where(site,"branch body type")}',
+       'Expect{Bool.not(U32.is_eq(type_of(body),t)),at_where(site,"branch body type")}')],
+     "a Branch body must equal its Case's type"),
+    ('exact-key-and-default-type', 'validate', [
+        ('Expect{Bool.not(fit(types,t,type_of(body))),at_where(site,"key branch body type")}',
+         'Expect{Bool.not(U32.is_eq(type_of(body),t)),at_where(site,"key branch body type")}'),
+        ('Expect{Bool.not(fit(types,t,type_of(body))),at_where(site,"default body type")}',
+         'Expect{Bool.not(U32.is_eq(type_of(body),t)),at_where(site,"default body type")}')],
+     "key Branch and Default bodies must equal their Case's type"),
+    ('chr-uninspected', 'machine', [('u => H.inspected_at(Next,code,heap,t,a,u => to(Return{a},stack,heap)),u =>',
+       'u => to(Return{a},stack,heap),u =>')],
+     'Chr yields its operand without inspecting it'),
+    ('display-visits-exclusive', 'machine', [('W.choose(Result<W.Stop,List<&2,U32>>,U32.is_gt(n,U32.sub(visit_limit(),visits)),',
+       'W.choose(Result<W.Stop,List<&2,U32>>,U32.is_ge(n,U32.sub(visit_limit(),visits)),')],
+     'the visit bound is exclusive'),
+    ('display-bytes-exclusive', 'machine', [('U32.is_gt(text_size(t),U32.sub(display_limit(),size))',
+       'U32.is_ge(text_size(t),U32.sub(display_limit(),size))')],
+     'the byte bound is exclusive'),
+    ('display-unary-bytes-exclusive', 'machine', [('U32.is_gt(n,U32.div(U32.sub(room,base),level))',
+       'U32.is_gt(n,U32.div(U32.sub(U32.sub(room,1),base),level))')],
+     "the byte bound is exclusive for a Nat's spelling"),
+    ('display-nat-one-visit', 'machine', [
+        ('W.choose(Result<W.Stop,List<&2,U32>>,U32.is_gt(n,U32.sub(visit_limit(),visits)),', 'W.choose(Result<W.Stop,List<&2,U32>>,False{},'),
+        ('render(f,code,heap,rest,U32.add(visits,n),', 'render(f,code,heap,rest,visits,')],
+     'a Nat word is one visit'),
+    ('display-unary-unbounded', 'machine', [('W.choose(U32,U32.is_gt(n,U32.div(U32.sub(room,base),level)),u => W.none(),',
+       'W.choose(U32,False{},u => W.none(),')],
+     "a Nat's spelling is not charged against the byte bound"),
+    ('display-commas-free', 'machine', [('u => 1,u => W.choose(U32,U32.is_lt(c,2048)',
+       'u => Bool.pick(U32,U32.is_eq(c,44),0,1),u => W.choose(U32,U32.is_lt(c,2048)')],
+     'separators are not text'),
+    ('display-scalars', 'machine', [('u => 1,u => W.choose(U32,U32.is_lt(c,2048),u => 2,u => W.choose(U32,U32.is_lt(c,65536),u => 3,u => 4))',
+       'u => 1,u => 1')],
+     'the tree is counted in scalars, not bytes'),
+    ('display-succ-named', 'machine', [('repeated_text(U32.to_nat(n),List.append(&2,U32,constructor_name(code,t,1),text("{")))',
+       'repeated_text(U32.to_nat(n),text("Succ{"))')],
+     "a Nat spells Succ, not its type's successor"),
+    ('display-charge-first', 'machine', [(
+        '      H.inspected_at(List<&2,U32>,code,heap,t,w,u =>\n'
+        '      W.choose(Result<W.Stop,List<&2,U32>>,U32.is_ge(visits,visit_limit()),u => exhausted(List<&2,U32>),u =>\n',
+        '      W.choose(Result<W.Stop,List<&2,U32>>,U32.is_ge(visits,visit_limit()),u => exhausted(List<&2,U32>),u =>\n'
+        '      H.inspected_at(List<&2,U32>,code,heap,t,w,u =>\n')],
+     'a word is charged before it is inspected'),
 ]
 
 
 # Mutants whose PROOF.bend must also fail, at a law and not by a crash.
 LAW_MUTANTS = ('rc-under-count', 'tail-keeps-caller', 'arm-selection', 'nat-bound', 'remainder-by-zero',
-               'char-tag', 'key-bound')
+               'char-tag', 'key-bound', 'exact-key-and-default-type', 'chr-uninspected', 'display-scalars',
+               'display-succ-named')
 
 
 def law_kill(tree: Path) -> str | None:

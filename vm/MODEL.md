@@ -45,7 +45,7 @@ on transitions: a harness limit, never VM exhaustion.
 
 ## Laws
 
-[LAWS.bend](LAWS.bend) states 25 laws, proved by [PROOF.bend](PROOF.bend):
+[LAWS.bend](LAWS.bend) states 29 laws, proved by [PROOF.bend](PROOF.bend):
 - the codec round trip, on a hand-written plan and on five golden images;
 - four refusal reasons, and bounded validator soundness: every single-word
   mutation of `value-on`'s function, constant and node sections is refused or
@@ -55,9 +55,13 @@ on transitions: a harness limit, never VM exhaustion.
   `x%0` and shifts by 32 or more;
 - one audited run per fixture image (a Book per node family and a Program): its
   answer, the RC audit at every transition and zero live mortal cells after it;
-- two audited runs of plans encoded in the law: a tags-mode Case on Char selects
-  Chr for the code of 'A', and a key-mode Case on Char admits and selects the
-  key 0xffffffff.
+- audited runs of plans encoded in the law: a tags-mode Case on Char selects
+  Chr for the code of 'A'; a key-mode Case on Char admits and selects the key
+  0xffffffff; a key Branch and a Default answer a `none` parameter in a U32 Case
+  (arm fit, §3); a Nat word spells its type's own constructor names; and
+  completing Chr on a laundered Pair stops `HostFailure image ill-typed` with
+  every count balanced;
+- §8's byte measure: `text_size` counts UTF-8 bytes, not scalars.
 
 These are bounded computed equations, not a refinement proof. The gate
 evaluates the same predicates natively on more images: the audit on every
@@ -70,8 +74,15 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   `Unsupported vm foreign N`; vm-io adds the pure World.
 - Inspection reads every operand word of a prim at its pinned type, including
   `String.append`'s moved tail, whose cells it does not traverse.
-- A Nat renders as one visit; its unary text counts against the 16 MiB bound
-  before it is built.
+- §8's describe charges one visit per rendered constructor (a Nat word `n`
+  pays `n + 1`) and the tree's UTF-8 bytes with separators, both bounds
+  inclusive, inspecting each word before charging it, as `evaluate.describe`
+  does. A description that stops (a display bound or an ill-typed word) stops
+  the machine with the answer still owned, like any refused transition; §8
+  does not say whether it is dropped.
+- Completing Chr inspects its operand at Char, used or not, as the reference
+  evaluation's `construct` reads it; SPEC §6's list of inspection points does
+  not yet name Succ's or Chr's operand.
 - A Nat Case allocates the predecessor's Big cell only when a Branch binds it,
   so a default arm leaks nothing (§6.1 does not say when).
 - A refused transition leaves the machine as it was: the model's steps are
@@ -82,15 +93,23 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
   model's differential covers the 91 goldens, their 28 frozen Book invocations,
-  vm-spec's 17 admitted controls (three plan, seven code-list and seven run
-  controls) and the model's own eight controls in
-  [model-controls/](model-controls/) (a tags-mode Case on Char, immediate and
-  Big, and key-mode Cases on U32 and Char at the key 0xffffffff), each against
-  the reference evaluation's outcome and call count (`vm/evaluate.py`) and,
-  for the model's own, the seed.
+  vm-spec's admitted plan, code-list and run controls (counted from
+  `check-spec.py`: 6, 7 and 11 at vm-spec 8ef906e), the model's own eight
+  controls in [model-controls/](model-controls/) (a tags-mode Case on Char,
+  immediate and Big, and key-mode Cases on U32 and Char at the key 0xffffffff),
+  two display controls with multibyte constructor names at and beyond the byte
+  bound, and six inspection controls, each against the reference evaluation's
+  outcome and call count (`vm/evaluate.py`) and, for the seed-derived eight,
+  the seed.
+- The seed's native lane can evaluate `Bool.or` or `Bool.xor` of a U32
+  comparison against a call with constant arguments as True when both sides
+  are False: `Bool.or(U32.is_gt(3,limit()),False{})` with `limit() = 1048576`
+  prints 1 natively and 0 on the Bun lane. The describe walk therefore tests
+  each bound in its own choice; no other `Bool.or` or `Bool.xor` operand in the
+  model compares against a constant-argument call.
 - A Case arm that is absent or not a Branch or Default cannot be selected in
   an admitted image; if it were, the machine stops as `InternalFailure vm case
   arm` rather than reading a wrapped offset.
 - Deep lists recurse without a tail call (`pack`, `slice`); compiler-sized
   images are unmeasured. The checker's evaluator is slow: PROOF.bend takes
-  about 105 s, most of it in the seven audited runs.
+  about 95 s, most of it in the audited runs.

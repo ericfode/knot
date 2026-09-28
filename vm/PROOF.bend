@@ -26,3 +26,7 @@ def L.string_append_mortal_runs(): {==}
 def L.foreign_print_runs(): {==}
 def L.char_case_selects_chr(): {==}
 def L.key_max_selected(): {==}
+def L.arms_fit_their_case(): {==}
+def L.text_size_counts_bytes(): {==}
+def L.nat_spells_its_names(): {==}
+def L.chr_inspects_its_operand(): {==}

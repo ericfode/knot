@@ -54,9 +54,11 @@ def slots_of(+heap: H.Heap, +act: U32, words: List<&2,U32>) -> List<&2,U32>:
     case Nil{}: Nil{}
     case Con{i,rest}: Con{H.slot(heap,act,i),slots_of(heap,act,rest)}
 
-# Completing a gathered node (SPEC §6): Nat Succ and Char Chr act on words,
-# other constructors allocate an Object, prims compute then drop what they did
-# not move, a Foreign builds an inert Action, an Application enters its callee.
+# Completing a gathered node (SPEC §6): Nat Succ and Char Chr act on the word
+# they read, inspected at their own type whether or not the result is used (as
+# the reference evaluation reads it); other constructors allocate an Object,
+# prims compute then drop what they did not move, a Foreign builds an inert
+# Action, an Application enters its callee.
 def completed(+code: H.Code, +node: U32, +ops: List<&2,U32>, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
   +t = H.node_type(code,node)
   +id = H.operand(code,node,0)
@@ -72,7 +74,7 @@ def completed(+code: H.Code, +node: U32, +ops: List<&2,U32>, +stack: H.Stack, +h
            W.choose(Result<W.Stop,Next>,U32.is_eq(H.scalar(heap,a),W.none()),u => Fail{W.Exhausted{2,"NatRange"}},u =>
              H.with_cell(Next,H.word_of(heap,U32.add(H.scalar(heap,a),1)),heap => w =>
                H.bind(H.Heap,Next,H.drop(heap,H.room(stack),a),heap => to(Return{w},stack,heap))))),u =>
-  W.choose(Result<W.Stop,Next>,H.is_rep(code,t,2),u => to(Return{a},stack,heap),u =>
+  W.choose(Result<W.Stop,Next>,H.is_rep(code,t,2),u => H.inspected_at(Next,code,heap,t,a,u => to(Return{a},stack,heap)),u =>
     H.with_cell(Next,H.alloc(heap,0,Con{t,Con{id,ops}}),heap => w => to(Return{w},stack,heap)))))))
 
 def gathered(+code: H.Code, +node: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
@@ -352,9 +354,13 @@ def run(fuel: Nat, +code: H.Code, +m: Machine) -> Machine:
 
 # ---------------------------------------------------------------- describing a Book result
 
+# The describe walk's work: a word to inspect at a type, text charged by its
+# bytes, and an inspected Nat word n, whose unary spelling is charged before
+# it is built.
 type Piece is Data:
   Shown{word: U32, result: U32}
   Said{text: List<&2,U32>}
+  Unary{result: U32, n: U32}
 
 def text(s: String) -> List<&2,U32>:
   match s:
@@ -374,6 +380,16 @@ def name_codes(+code: H.Code, +n: U32) -> List<&2,U32>:
   +record = H.name_record(code,n)
   Maybe.default(&2,List<&2,U32>,W.scalars(List.take(&2,U32,W.unpack(W.slice(U32.to_nat(U32.sub(H.code_word(code,record),2)),image_of_code(code),U32.add(record,2))),U32.to_nat(H.code_word(code,U32.add(record,1))))),Nil{})
 
+def constructor_name(+code: H.Code, +t: U32, +tag: U32) -> List<&2,U32>:
+  name_codes(code,H.code_word(code,U32.add(H.constructor_record(code,t,tag),3)))
+
+# The UTF-8 bytes of rendered text: §8 bounds the tree's bytes, not its scalars.
+def text_size(t: List<&2,U32>) -> U32:
+  match t:
+    case Nil{}: 0
+    case Con{+c,rest}:
+      U32.add(W.choose(U32,U32.is_lt(c,128),u => 1,u => W.choose(U32,U32.is_lt(c,2048),u => 2,u => W.choose(U32,U32.is_lt(c,65536),u => 3,u => 4))),text_size(rest))
+
 def field_pieces(n: Nat, +code: H.Code, +heap: H.Heap, +t: U32, +tag: U32, +w: U32, +i: U32) -> List<&2,Piece>:
   match n:
     case 0n: [Said{text("}")}]
@@ -383,12 +399,25 @@ def field_pieces(n: Nat, +code: H.Code, +heap: H.Heap, +t: U32, +tag: U32, +w: U
 
 def pieces(+code: H.Code, +heap: H.Heap, +w: U32, +t: U32) -> List<&2,Piece>:
   +tag = H.tag_of(code,heap,t,w)
-  +name = name_codes(code,H.code_word(code,U32.add(H.constructor_record(code,t,tag),3)))
+  +name = constructor_name(code,t,tag)
   +fields = H.field_count(code,t,tag)
-  W.choose(List<&2,Piece>,H.is_rep(code,t,0),
-    u => [Said{List.append(&2,U32,repeated_text(U32.to_nat(H.scalar(heap,w)),text("Succ{")),List.append(&2,U32,text("Zero{}"),repeated_text(U32.to_nat(H.scalar(heap,w)),text("}"))))}],
-    u => W.choose(List<&2,Piece>,U32.is_eq(fields,0),u => [Said{List.append(&2,U32,name,text("{}"))}],
-      u => Con{Said{List.append(&2,U32,name,text("{"))},field_pieces(U32.to_nat(fields),code,heap,t,tag,w,0)}))
+  W.choose(List<&2,Piece>,H.is_rep(code,t,0),u => [Unary{t,H.scalar(heap,w)}],u =>
+  W.choose(List<&2,Piece>,U32.is_eq(fields,0),u => [Said{List.append(&2,U32,name,text("{}"))}],
+    u => Con{Said{List.append(&2,U32,name,text("{"))},field_pieces(U32.to_nat(fields),code,heap,t,tag,w,0)}))
+
+# A Nat word n spells its logical view, n Succ levels around Zero, in the
+# image's own constructor names.
+def unary(+code: H.Code, +t: U32, +n: U32) -> List<&2,U32>:
+  List.append(&2,U32,repeated_text(U32.to_nat(n),List.append(&2,U32,constructor_name(code,t,1),text("{"))),
+    List.append(&2,U32,constructor_name(code,t,0),List.append(&2,U32,text("{}"),repeated_text(U32.to_nat(n),text("}")))))
+
+# Its bytes, n (|Succ| + 2) + |Zero| + 2, or none when they exceed `room`;
+# compared by division, so nothing wraps.
+def unary_size(+code: H.Code, +t: U32, +n: U32, +room: U32) -> U32:
+  +level = U32.add(text_size(constructor_name(code,t,1)),2)
+  +base = U32.add(text_size(constructor_name(code,t,0)),2)
+  W.choose(U32,U32.is_gt(base,room),u => W.none(),u =>
+  W.choose(U32,U32.is_gt(n,U32.div(U32.sub(room,base),level)),u => W.none(),u => U32.add(U32.mul(n,level),base)))
 
 def display_limit() -> U32:
   16777216
@@ -396,20 +425,30 @@ def display_limit() -> U32:
 def visit_limit() -> U32:
   1048576
 
-# §8: an iterative walk bounded by 1,048,576 visits and 16 MiB of text; a
-# Nat's unary spelling is sized before it is spelled.
+def exhausted(-A: Data) -> Result<W.Stop,A>:
+  Fail{W.Exhausted{2,"display"}}
+
+# §8: an iterative walk. A visit is one rendered constructor: every shown word
+# pays one, and a Nat word n its n further levels. The tree's bytes include
+# its separators. Both bounds are inclusive; a word is inspected before it is
+# charged, and charged before it is spelled. Each bound is its own choice: the
+# seed's native lane can evaluate Bool.or(U32.is_gt(n,visit_limit()),False{})
+# as True, a comparison with a constant-argument call (MODEL.md).
 def render(fuel: Nat, +code: H.Code, +heap: H.Heap, work: List<&2,Piece>, +visits: U32, +size: U32, parts: List<&2,List<&2,U32>>) -> Result<W.Stop,List<&2,U32>>:
   match fuel work:
     case _ Nil{}: Done{List.concat(&2,U32,List.reverse(&2,List<&2,U32>,parts))}
     case 0n _: Fail{W.Internal{"render fuel"}}
     case 1n+ +f Con{Said{+t},rest}:
-      W.choose(Result<W.Stop,List<&2,U32>>,U32.is_gt(W.count(U32,t),U32.sub(display_limit(),size)),u => Fail{W.Exhausted{2,"display"}},u =>
-        render(f,code,heap,rest,visits,U32.add(size,W.count(U32,t)),Con{t,parts}))
+      W.choose(Result<W.Stop,List<&2,U32>>,U32.is_gt(text_size(t),U32.sub(display_limit(),size)),u => exhausted(List<&2,U32>),u =>
+        render(f,code,heap,rest,visits,U32.add(size,text_size(t)),Con{t,parts}))
+    case 1n+ +f Con{Unary{+t,+n},rest}:
+      W.choose(Result<W.Stop,List<&2,U32>>,U32.is_gt(n,U32.sub(visit_limit(),visits)),u => exhausted(List<&2,U32>),u =>
+      W.choose(Result<W.Stop,List<&2,U32>>,W.is_none(unary_size(code,t,n,U32.sub(display_limit(),size))),u => exhausted(List<&2,U32>),u =>
+        render(f,code,heap,rest,U32.add(visits,n),U32.add(size,unary_size(code,t,n,U32.sub(display_limit(),size))),Con{unary(code,t,n),parts})))
     case 1n+ +f Con{Shown{+w,+t},rest}:
-      W.choose(Result<W.Stop,List<&2,U32>>,U32.is_ge(visits,visit_limit()),u => Fail{W.Exhausted{2,"display"}},u =>
       H.inspected_at(List<&2,U32>,code,heap,t,w,u =>
-      W.choose(Result<W.Stop,List<&2,U32>>,Bool.and(H.is_rep(code,t,0),U32.is_gt(H.scalar(heap,w),U32.div(U32.sub(display_limit(),size),6))),u => Fail{W.Exhausted{2,"display"}},u =>
-        render(f,code,heap,List.append(&2,Piece,pieces(code,heap,w,t),rest),U32.add(visits,1),size,parts))))
+      W.choose(Result<W.Stop,List<&2,U32>>,U32.is_ge(visits,visit_limit()),u => exhausted(List<&2,U32>),u =>
+        render(f,code,heap,List.append(&2,Piece,pieces(code,heap,w,t),rest),U32.add(visits,1),size,parts)))
 
 def described(+code: H.Code, +heap: H.Heap, +w: U32, +t: U32) -> Result<W.Stop,List<&2,U32>>:
   render(U32.to_nat(W.none()),code,heap,[Shown{w,t}],0,0,Nil{})
@@ -534,11 +573,14 @@ def result_type(+plan: W.Plan, +name: List<&2,U32>) -> U32:
   match plan:
     case W.Plan{entry,types,functions,reps}: V.callee_result(D.function_at(functions,E.function_index(functions,name,0)))
 
-# A Book's answer is described, then dropped (SPEC §8).
+# A Book's answer is described, then dropped (SPEC §8). A description that
+# stops (a display bound, an ill-typed word) stops the machine like any other
+# transition, leaving the answer owned.
 def concluded(+code: H.Code, +t: U32, m: Machine) -> Result<W.Stop,Machine>:
   match m:
     case Machine{Finished{Answered{+w}},+stack,+heap,+meter,+out}:
-      H.bind(List<&2,U32>,Machine,described(code,heap,w,t),tree =>
+      Done{settled(H.bind(List<&2,U32>,Machine,described(code,heap,w,t),tree =>
         H.bind(H.Heap,Machine,H.drop(heap,H.room(stack),w),heap2 =>
-          Done{Machine{Finished{Described{t,H.tag_of(code,heap,t,w),tree}},stack,heap2,meter,out}}))
+          Done{Machine{Finished{Described{t,H.tag_of(code,heap,t,w),tree}},stack,heap2,meter,out}})),
+        Machine{Finished{Answered{w}},stack,heap,meter,out})}
     case _: Done{m}

@@ -1,20 +1,20 @@
 {
  "gate": "vm-model",
- "date": "2026-09-28T11:15:08+00:00",
+ "date": "2026-09-28T12:49:44+00:00",
  "status": "passed",
  "sources": {
   "model/word.bend": "db4630ef0eb09411c00565873c6eb4ef314215842cd1866fcceade011eacef84",
   "model/decode.bend": "5f2ebd0a1d58ff16191810b8bac4910c4e76cc4919b19725c6233572ef86b955",
-  "model/validate.bend": "fc5a660487af0640ceffb12c17fa62335f4821538ff0fdacf80c408b9c743ce1",
+  "model/validate.bend": "ec35d74933e2385b5a9359e1b52f54a1bcdac6a95d5a7d90bdb8d128860d3860",
   "model/encode.bend": "3f0096fc798e87031c7d2d4de477c7e0b4eba3534b03510e772c60ab5fc64c0e",
   "model/memory.bend": "546c321d9c7418e70bd27fa42b16cc74e4f4627867008b31f9c182319166e9ea",
-  "model/machine.bend": "64b5a190aa2596574af7e04928486b19bc1e2bb2b16242cd5e3162edf81b9ade",
+  "model/machine.bend": "979dd53dbb7d43c776325b9d667a8f195384ea1190913b50b15201ede75f6c92",
   "model/audit.bend": "4c4d9edbc4986460b17d87bc8ac1dd33b69fd8e46dbbe44c90ac4b5b53fc07e0",
   "model-cli.bend": "09a62fd3fb4a6c49501dc10a988ac2c9e17b6434e6dccf0a0a024b0a11ae85a1",
   "model-audit.bend": "3675cf28ae8fb11574c2f67d74bd8c5f3046c67a26a2ed26b13582835e1df5a2",
   "model-sweep.bend": "bef3f6c9166a51878eb5b05621f423c55cee50909f190a6d5a49441f2d9fa6b2",
-  "LAWS.bend": "fbf80f530cc857a480f274d233c14a22efbc3d9af2119b78eb5f9678efac9cee",
-  "PROOF.bend": "57d30de30042703ad162236e88a0b2e0db1743c287fbfaeeca5eddf0440a7973"
+  "LAWS.bend": "8bbc21f67c5c4bfe563e1b3f85e0b3341c227d59d6a3e3139a82451b3641df89",
+  "PROOF.bend": "d778cf46e3a3d29e09cacf85660d9f14522e02df0dbe6ee5b26e35ca0639331a"
  },
  "fixtures": {
   "value_on": 75,
@@ -440,7 +440,11 @@
  },
  "inspection": {
   "inspect-case": "HostFailure\timage\till-typed",
-  "inspect-prim": "HostFailure\timage\till-typed"
+  "inspect-prim": "HostFailure\timage\till-typed",
+  "inspect-chr-unused": "HostFailure\timage\till-typed",
+  "inspect-chr-closure": "HostFailure\timage\till-typed",
+  "inspect-chr-used": "HostFailure\timage\till-typed",
+  "inspect-before-charge": "HostFailure\timage\till-typed"
  },
  "controls": {
   "truncated": "HostFailure image: total",
@@ -501,10 +505,17 @@
   "plan:program-main-unit": "HostFailure image: validator: program: main must return IO(Unit)",
   "plan:inspect-none-parameter": "HostFailure image: validator: pred: case scrutinee type",
   "plan:inspect-none-let": "HostFailure image: validator: pred: case scrutinee type",
+  "plan:branch-body-type": "HostFailure image: validator: first_code: branch body type",
   "plan:nat-field-type": "HostFailure image: validator: representation: Nat shape",
   "plan:reference-none-view": "HostFailure image: validator: id: reference type",
   "plan:arrow-cycle": "HostFailure image: validator: types: arrow cycle",
   "model:child-is-parent": "HostFailure image: child after parent"
+ },
+ "admitted_kinds": {
+  "plan": 6,
+  "codes": 7,
+  "run": 11,
+  "model": 10
  },
  "admitted": {
   "plan:case-none-parameter": {
@@ -518,6 +529,18 @@
   "plan:list-head-match": {
    "outcome": "audit\tpassed\t14\tDescribed\t0\t2",
    "calls": 2
+  },
+  "plan:first-code": {
+   "outcome": "audit\tpassed\t24\tDescribed\t0\t3",
+   "calls": 3
+  },
+  "plan:first-code-none-case": {
+   "outcome": "audit\tpassed\t24\tDescribed\t0\t3",
+   "calls": 3
+  },
+  "plan:key-arms-none": {
+   "outcome": "audit\tpassed\t21\tDescribed\t0\t3",
+   "calls": 3
   },
   "codes:surrogate-pair": {
    "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
@@ -575,6 +598,22 @@
    "outcome": "audit\tpassed\t7\tDescribed\t0\t1",
    "calls": 1
   },
+  "run:display-visits-at-bound": {
+   "outcome": "audit\tpassed\t3\tDescribed\t0\t1",
+   "calls": 1
+  },
+  "run:display-visits-beyond-bound": {
+   "outcome": "audit\tpassed\t3\tExhausted\t0\t1",
+   "calls": 1
+  },
+  "run:display-bytes-at-bound": {
+   "outcome": "audit\tpassed\t7\tDescribed\t0\t1",
+   "calls": 1
+  },
+  "run:display-bytes-beyond-bound": {
+   "outcome": "audit\tpassed\t7\tExhausted\t1\t1",
+   "calls": 1
+  },
   "model:char-pick": {
    "outcome": "audit\tpassed\t9\tDescribed\t0\t2",
    "calls": 2
@@ -606,6 +645,14 @@
   "model:char-key-max-miss": {
    "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
    "calls": 2
+  },
+  "model:display-utf8-at-bound": {
+   "outcome": "audit\tpassed\t3\tDescribed\t0\t1",
+   "calls": 1
+  },
+  "model:display-utf8-beyond-bound": {
+   "outcome": "audit\tpassed\t3\tExhausted\t0\t1",
+   "calls": 1
   }
  },
  "audit": {
@@ -1391,8 +1438,8 @@
   },
   "recursion-tail": {
    "mutations": 567,
-   "admitted": 65,
-   "refused": 502,
+   "admitted": 66,
+   "refused": 501,
    "unsound": 0,
    "differ": 0
   },
@@ -1685,7 +1732,7 @@
   }
  },
  "proof": {
-  "laws": 25,
+  "laws": 29,
   "stdout": "All terms check."
  },
  "mutants": [
@@ -1748,12 +1795,12 @@
     "admitted:plan:case-none-parameter",
     "admitted:plan:case-none-let",
     "admitted:plan:list-head-match",
-    "admitted:codes:surrogate-pair",
-    "admitted:codes:u1f600",
-    "admitted:codes:lone-surrogate",
-    "admitted:codes:u10ffff"
+    "admitted:plan:first-code",
+    "admitted:plan:first-code-none-case",
+    "admitted:plan:key-arms-none",
+    "admitted:codes:surrogate-pair"
    ],
-   "kills": 98,
+   "kills": 101,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -1763,15 +1810,15 @@
    "killed": true,
    "by": [
     "admitted:plan:list-head-match",
+    "admitted:plan:first-code",
+    "admitted:plan:first-code-none-case",
     "admitted:run:u32-file-alias",
     "admitted:model:char-pick",
     "admitted:model:char-pick-big",
     "admitted:model:char-match",
-    "audit:let",
-    "audit:shadow",
-    "audit:unpack"
+    "audit:let"
    ],
-   "kills": 16,
+   "kills": 18,
    "law": null,
    "crashes": 0
   },
@@ -1789,7 +1836,7 @@
     "goldens:char-space",
     "goldens:recursion-map"
    ],
-   "kills": 26,
+   "kills": 28,
    "law": "recursion_map_runs",
    "crashes": 0
   },
@@ -1807,7 +1854,7 @@
     "goldens:case-on",
     "goldens:unpack"
    ],
-   "kills": 179,
+   "kills": 182,
    "law": null,
    "crashes": 0
   },
@@ -1921,10 +1968,14 @@
    "killed": true,
    "by": [
     "inspection:inspect-case",
+    "inspection:inspect-chr-unused",
+    "inspection:inspect-chr-closure",
+    "inspection:inspect-chr-used",
+    "inspection:inspect-before-charge",
     "admitted:plan:case-none-parameter",
     "admitted:plan:case-none-let"
    ],
-   "kills": 3,
+   "kills": 7,
    "law": null,
    "crashes": 0
   },
@@ -2026,7 +2077,7 @@
     "admitted:plan:case-none-let",
     "admitted:plan:list-head-match"
    ],
-   "kills": 117,
+   "kills": 126,
    "law": null,
    "crashes": 0
   },
@@ -2039,6 +2090,142 @@
     "invocations:invoke-arrow:feed 1000000 1 0 0"
    ],
    "kills": 2,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "exact-branch-type",
+   "breaks": "a Branch body must equal its Case's type",
+   "killed": true,
+   "by": [
+    "admitted:plan:first-code",
+    "admitted:plan:first-code-none-case"
+   ],
+   "kills": 2,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "exact-key-and-default-type",
+   "breaks": "key Branch and Default bodies must equal their Case's type",
+   "killed": true,
+   "by": [
+    "admitted:plan:key-arms-none"
+   ],
+   "kills": 1,
+   "law": "arms_fit_their_case",
+   "crashes": 0
+  },
+  {
+   "mutant": "chr-uninspected",
+   "breaks": "Chr yields its operand without inspecting it",
+   "killed": true,
+   "by": [
+    "inspection:inspect-chr-unused",
+    "inspection:inspect-chr-closure"
+   ],
+   "kills": 2,
+   "law": "chr_inspects_its_operand",
+   "crashes": 0
+  },
+  {
+   "mutant": "display-visits-exclusive",
+   "breaks": "the visit bound is exclusive",
+   "killed": true,
+   "by": [
+    "inspection:inspect-before-charge",
+    "admitted:run:display-visits-at-bound"
+   ],
+   "kills": 2,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "display-bytes-exclusive",
+   "breaks": "the byte bound is exclusive",
+   "killed": true,
+   "by": [
+    "admitted:run:display-bytes-at-bound"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "display-unary-bytes-exclusive",
+   "breaks": "the byte bound is exclusive for a Nat's spelling",
+   "killed": true,
+   "by": [
+    "admitted:model:display-utf8-at-bound"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "display-nat-one-visit",
+   "breaks": "a Nat word is one visit",
+   "killed": true,
+   "by": [
+    "admitted:run:display-visits-beyond-bound"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "display-unary-unbounded",
+   "breaks": "a Nat's spelling is not charged against the byte bound",
+   "killed": true,
+   "by": [
+    "admitted:model:display-utf8-beyond-bound"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "display-commas-free",
+   "breaks": "separators are not text",
+   "killed": true,
+   "by": [
+    "admitted:run:display-bytes-beyond-bound"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "display-scalars",
+   "breaks": "the tree is counted in scalars, not bytes",
+   "killed": true,
+   "by": [
+    "admitted:model:display-utf8-beyond-bound"
+   ],
+   "kills": 1,
+   "law": "text_size_counts_bytes",
+   "crashes": 0
+  },
+  {
+   "mutant": "display-succ-named",
+   "breaks": "a Nat spells Succ, not its type's successor",
+   "killed": true,
+   "by": [
+    "admitted:run:display-bytes-at-bound",
+    "admitted:model:display-utf8-at-bound"
+   ],
+   "kills": 2,
+   "law": "nat_spells_its_names",
+   "crashes": 0
+  },
+  {
+   "mutant": "display-charge-first",
+   "breaks": "a word is charged before it is inspected",
+   "killed": true,
+   "by": [
+    "inspection:inspect-before-charge"
+   ],
+   "kills": 1,
    "law": null,
    "crashes": 0
   }

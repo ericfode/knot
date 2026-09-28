@@ -249,7 +249,8 @@ def constant_rep(+kind: U32) -> U32:
 def const_name(+kind: U32) -> String:
   D.nth_text(["U32","Nat","Char","String"],kind)
 
-def tag_tasks(rows: List<&2,Maybe<&2,W.Node>>, +cx: Context, +constructors: List<&2,W.Constructor>, +scope: List<&2,U32>, +depth: U32, +t: U32, +site: String, +tag: U32) -> List<&2,Task>:
+# Every arm body fits its Case, which has the type of the position it fills (SPEC §3).
+def tag_tasks(rows: List<&2,Maybe<&2,W.Node>>, +types: List<&2,W.Sort>, +constructors: List<&2,W.Constructor>, +scope: List<&2,U32>, +depth: U32, +t: U32, +site: String, +tag: U32) -> List<&2,Task>:
   match rows:
     case Nil{}: Nil{}
     case Con{Some{W.Branch{+key,+first,+fields,+body}},rest}:
@@ -258,19 +259,19 @@ def tag_tasks(rows: List<&2,Maybe<&2,W.Node>>, +cx: Context, +constructors: List
         [Expect{Bool.or(Bool.not(U32.is_eq(key,tag)),U32.is_ge(tag,W.count(W.Constructor,constructors))),at_where(site,"branch key")},
          Expect{Bool.or(Bool.not(U32.is_eq(first,depth)),Bool.not(U32.is_eq(fields,W.count(U32,bound)))),at_where(site,"branch binders")},
          Check{body,List.append(&2,U32,scope,bound),site},
-         Expect{Bool.not(U32.is_eq(type_of(body),t)),at_where(site,"branch body type")}],
-        tag_tasks(rest,cx,constructors,scope,depth,t,site,U32.add(tag,1)))
-    case Con{row,rest}: tag_tasks(rest,cx,constructors,scope,depth,t,site,U32.add(tag,1))
+         Expect{Bool.not(fit(types,t,type_of(body))),at_where(site,"branch body type")}],
+        tag_tasks(rest,types,constructors,scope,depth,t,site,U32.add(tag,1)))
+    case Con{row,rest}: tag_tasks(rest,types,constructors,scope,depth,t,site,U32.add(tag,1))
 
-def key_tasks(rows: List<&2,Maybe<&2,W.Node>>, +scope: List<&2,U32>, +depth: U32, +t: U32, +site: String) -> List<&2,Task>:
+def key_tasks(rows: List<&2,Maybe<&2,W.Node>>, +types: List<&2,W.Sort>, +scope: List<&2,U32>, +depth: U32, +t: U32, +site: String) -> List<&2,Task>:
   match rows:
     case Con{Some{W.Branch{key,+first,+fields,+body}},rest}:
       List.append(&2,Task,
         [Expect{Bool.or(Bool.not(U32.is_eq(first,depth)),Bool.not(U32.is_eq(fields,0))),at_where(site,"key branch binds nothing")},
          Check{body,scope,site},
-         Expect{Bool.not(U32.is_eq(type_of(body),t)),at_where(site,"key branch body type")}],
-        key_tasks(rest,scope,depth,t,site))
-    case Con{row,rest}: key_tasks(rest,scope,depth,t,site)
+         Expect{Bool.not(fit(types,t,type_of(body))),at_where(site,"key branch body type")}],
+        key_tasks(rest,types,scope,depth,t,site))
+    case Con{row,rest}: key_tasks(rest,types,scope,depth,t,site)
     case Nil{}: Nil{}
 
 def keys_of(rows: List<&2,Maybe<&2,W.Node>>) -> List<&2,U32>:
@@ -285,9 +286,9 @@ def all_present(rows: List<&2,Maybe<&2,W.Node>>) -> Bool:
     case Con{None{},rest}: False{}
     case Con{Some{node},rest}: all_present(rest)
 
-def default_tasks(fallback: Maybe<&2,W.Node>, +scope: List<&2,U32>, +t: U32, +site: String) -> List<&2,Task>:
+def default_tasks(fallback: Maybe<&2,W.Node>, +types: List<&2,W.Sort>, +scope: List<&2,U32>, +t: U32, +site: String) -> List<&2,Task>:
   match fallback:
-    case Some{W.Default{+body}}: [Check{body,scope,site},Expect{Bool.not(U32.is_eq(type_of(body),t)),at_where(site,"default body type")}]
+    case Some{W.Default{+body}}: [Check{body,scope,site},Expect{Bool.not(fit(types,t,type_of(body))),at_where(site,"default body type")}]
     case _: Nil{}
 
 def case_tasks(+cx: Context, +scope: List<&2,U32>, +depth: U32, +site: String, +t: U32, +scrutinee: U32, +mode: U32, +rows: List<&2,Maybe<&2,W.Node>>, +fallback: Maybe<&2,W.Node>) -> List<&2,Task>:
@@ -299,12 +300,12 @@ def case_tasks(+cx: Context, +scope: List<&2,U32>, +depth: U32, +site: String, +
           [Expect{Bool.not(U32.is_eq(kind(types,scrutinee),0)),at_where(site,"tag case on a non-data type")},
            Expect{Bool.not(U32.is_eq(W.count(Maybe<&2,W.Node>,rows),W.count(W.Constructor,constructors))),at_where(site,"tag table is not dense")},
            Expect{Bool.xor(Maybe.is_none(&2,W.Node,fallback),all_present(rows)),at_where(site,"default must cover exactly the missing tags")}],
-          tag_tasks(rows,cx,constructors,scope,depth,t,site,0)),
+          tag_tasks(rows,types,constructors,scope,depth,t,site,0)),
         u => List.append(&2,Task,
           [Expect{Bool.not(Bool.and(Bool.not(W.is_none(scrutinee)),Bool.or(U32.is_eq(scrutinee,W.nth(reps,1)),U32.is_eq(scrutinee,W.nth(reps,2))))),at_where(site,"key case on a non-scalar type")},
            Expect{Bool.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,W.Node,fallback)),at_where(site,"keys must increase strictly, with a default")}],
-          key_tasks(rows,scope,depth,t,site))),
-        default_tasks(fallback,scope,t,site))
+          key_tasks(rows,types,scope,depth,t,site))),
+        default_tasks(fallback,types,scope,t,site))
 
 def callee(functions: List<&2,W.Function>, +f: U32) -> Maybe<&2,W.Function>:
   D.function_at(functions,f)
