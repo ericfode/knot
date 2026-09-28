@@ -66,6 +66,8 @@ GATES = (
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
     Gate('bootstrap', ('python3', 'tests/compiler-bootstrap/check.py'),
          ('tests/compiler-bootstrap/receipts/progress.json', 'tests/compiler-bootstrap/receipts/reference.json')),
+    Gate('classification', ('python3', 'tests/compiler-classification/check.py'),
+         ('tests/compiler-classification/receipts/precision.json',)),
 )
 
 

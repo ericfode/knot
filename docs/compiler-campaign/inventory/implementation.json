@@ -125,10 +125,10 @@
   "totals": {
     "compiler": {
       "files": 30,
-      "declarations": 425,
-      "unique_declarations": 369,
+      "declarations": 437,
+      "unique_declarations": 375,
       "definitions": 275,
-      "classes": 40
+      "classes": 41
     },
     "frontend_files": {
       "files": 3,
@@ -50425,7 +50425,7 @@
     },
     {
       "file": "src/LAWS.bend",
-      "sha256": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+      "sha256": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
       "imports": [
         {
           "module": "Base",
@@ -50837,13 +50837,130 @@
           }
         },
         {
+          "id": "src/LAWS.bend::nonleading_template_binder:law",
+          "name": "nonleading_template_binder",
+          "key": "src/LAWS.nonleading_template_binder",
+          "kind": "law",
+          "lines": [
+            43,
+            48
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.nat",
+            "literals.string",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "False",
+            "List",
+            "Result",
+            "True",
+            "src/parse.ListTail",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/LAWS.bend::destructuring_binding:law",
           "name": "destructuring_binding",
           "key": "src/LAWS.destructuring_binding",
           "kind": "law",
           "lines": [
-            43,
-            48
+            50,
+            56
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.or",
+            "Con",
+            "Fail",
+            "False",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.reply",
+            "src/parse.starts",
+            "src/syntax.At",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.Unsupported"
+          ],
+          "type_references": [
+            "Bool",
+            "Bool.or",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.reply",
+            "src/parse.starts",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/LAWS.bend::equality_is_not_binding:law",
+          "name": "equality_is_not_binding",
+          "key": "src/LAWS.equality_is_not_binding",
+          "kind": "law",
+          "lines": [
+            58,
+            63
           ],
           "features": [
             "calls",
@@ -50868,9 +50985,9 @@
             "src/syntax.At",
             "src/syntax.Constructor",
             "src/syntax.Error",
+            "src/syntax.Invalid",
             "src/syntax.Node",
-            "src/syntax.Token",
-            "src/syntax.Unsupported"
+            "src/syntax.Token"
           ],
           "type_references": [
             "List",
@@ -50890,13 +51007,223 @@
           }
         },
         {
+          "id": "src/LAWS.bend::arrow_is_not_binding:law",
+          "name": "arrow_is_not_binding",
+          "key": "src/LAWS.arrow_is_not_binding",
+          "kind": "law",
+          "lines": [
+            65,
+            70
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.string",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.reply",
+            "src/syntax.At",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.reply",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/LAWS.bend::parameter_type_application:law",
+          "name": "parameter_type_application",
+          "key": "src/LAWS.parameter_type_application",
+          "kind": "law",
+          "lines": [
+            72,
+            76
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.string",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.parameter",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.Unsupported"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.parameter",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/LAWS.bend::return_type_application:law",
+          "name": "return_type_application",
+          "key": "src/LAWS.return_type_application",
+          "kind": "law",
+          "lines": [
+            78,
+            83
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.nat",
+            "literals.string",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Nil",
+            "Result",
+            "src/parse.FunctionTail",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Unsupported"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/LAWS.bend::binding_type_application:law",
+          "name": "binding_type_application",
+          "key": "src/LAWS.binding_type_application",
+          "kind": "law",
+          "lines": [
+            85,
+            89
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Result",
+            "src/parse.AnnotatedBinding",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.Unsupported"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/LAWS.bend::local_import:law",
           "name": "local_import",
           "key": "src/LAWS.local_import",
           "kind": "law",
           "lines": [
-            50,
-            54
+            91,
+            95
           ],
           "features": [
             "calls",
@@ -50947,8 +51274,8 @@
           "key": "src/LAWS.hash_import",
           "kind": "law",
           "lines": [
-            56,
-            60
+            97,
+            101
           ],
           "features": [
             "calls",
@@ -52514,7 +52841,7 @@
     },
     {
       "file": "src/parse.bend",
-      "sha256": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+      "sha256": "bb7dfb98040323c05c4964d4f6d37306f2d0afd0635eb7215d6d9fb264c6e05e",
       "imports": [
         {
           "module": "Base",
@@ -53739,7 +54066,7 @@
           "kind": "definition",
           "lines": [
             127,
-            132
+            136
           ],
           "features": [
             "calls",
@@ -53758,7 +54085,10 @@
             "types.base"
           ],
           "references": [
+            "Bool.or",
+            "Con",
             "List",
+            "Nil",
             "Result",
             "src/parse.Parsed",
             "src/parse.body_end",
@@ -53768,7 +54098,8 @@
             "src/syntax.Error",
             "src/syntax.Node",
             "src/syntax.Token",
-            "src/syntax.choose"
+            "src/syntax.choose",
+            "src/syntax.matches"
           ],
           "type_references": [
             "List",
@@ -53780,13 +54111,28 @@
           ],
           "captures": [
             {
-              "offset": 5584,
+              "offset": 5640,
+              "names": [
+                "tail",
+                "ts",
+                "value"
+              ]
+            },
+            {
+              "offset": 5732,
+              "names": [
+                "ts",
+                "value"
+              ]
+            },
+            {
+              "offset": 5770,
               "names": [
                 "ts"
               ]
             },
             {
-              "offset": 5637,
+              "offset": 5816,
               "names": [
                 "ts",
                 "value"
@@ -53795,12 +54141,16 @@
           ],
           "execution": {
             "references": [
+              "Bool.or",
               "src/parse.body_end",
               "src/parse.starts",
               "src/parse.unsupported",
-              "src/syntax.choose"
+              "src/syntax.choose",
+              "src/syntax.matches"
             ],
             "types": [
+              "Con",
+              "Nil",
               "String",
               "src/syntax.Constructor"
             ],
@@ -53813,8 +54163,8 @@
           "key": "src/parse.term_failure",
           "kind": "definition",
           "lines": [
-            134,
-            140
+            138,
+            144
           ],
           "features": [
             "calls",
@@ -53854,13 +54204,13 @@
           ],
           "captures": [
             {
-              "offset": 5992,
+              "offset": 6210,
               "names": [
                 "ts"
               ]
             },
             {
-              "offset": 6035,
+              "offset": 6253,
               "names": [
                 "ts"
               ]
@@ -53887,8 +54237,8 @@
           "key": "src/parse.run",
           "kind": "definition",
           "lines": [
-            144,
-            305
+            148,
+            318
           ],
           "features": [
             "calls",
@@ -54000,13 +54350,13 @@
           ],
           "captures": [
             {
-              "offset": 6655,
+              "offset": 6873,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 6711,
+              "offset": 6929,
               "names": [
                 "head",
                 "n",
@@ -54016,7 +54366,7 @@
               ]
             },
             {
-              "offset": 6786,
+              "offset": 7004,
               "names": [
                 "head",
                 "n",
@@ -54025,57 +54375,57 @@
               ]
             },
             {
-              "offset": 6838,
+              "offset": 7056,
               "names": [
                 "n"
               ]
             },
             {
-              "offset": 6847,
+              "offset": 7065,
               "names": [
                 "n",
                 "value"
               ]
             },
             {
-              "offset": 6893,
+              "offset": 7111,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 6901,
+              "offset": 7119,
               "names": [
                 "more",
                 "value"
               ]
             },
             {
-              "offset": 6934,
+              "offset": 7152,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 7090,
+              "offset": 7308,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 7146,
+              "offset": 7364,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 7488,
+              "offset": 7706,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 7544,
+              "offset": 7762,
               "names": [
                 "column",
                 "n",
@@ -54086,7 +54436,7 @@
               ]
             },
             {
-              "offset": 7682,
+              "offset": 7900,
               "names": [
                 "n",
                 "name",
@@ -54095,7 +54445,7 @@
               ]
             },
             {
-              "offset": 7747,
+              "offset": 7965,
               "names": [
                 "n",
                 "name",
@@ -54103,7 +54453,7 @@
               ]
             },
             {
-              "offset": 7802,
+              "offset": 8020,
               "names": [
                 "n",
                 "name",
@@ -54111,7 +54461,7 @@
               ]
             },
             {
-              "offset": 7812,
+              "offset": 8030,
               "names": [
                 "fields",
                 "n",
@@ -54120,7 +54470,7 @@
               ]
             },
             {
-              "offset": 7880,
+              "offset": 8098,
               "names": [
                 "n",
                 "name",
@@ -54128,7 +54478,7 @@
               ]
             },
             {
-              "offset": 7889,
+              "offset": 8107,
               "names": [
                 "n",
                 "name",
@@ -54137,7 +54487,7 @@
               ]
             },
             {
-              "offset": 7939,
+              "offset": 8157,
               "names": [
                 "n",
                 "name",
@@ -54145,7 +54495,7 @@
               ]
             },
             {
-              "offset": 7947,
+              "offset": 8165,
               "names": [
                 "ctor",
                 "n",
@@ -54154,32 +54504,32 @@
               ]
             },
             {
-              "offset": 8044,
+              "offset": 8262,
               "names": [
                 "ctor"
               ]
             },
             {
-              "offset": 8052,
+              "offset": 8270,
               "names": [
                 "ctor",
                 "more"
               ]
             },
             {
-              "offset": 8087,
+              "offset": 8305,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 8353,
+              "offset": 8571,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 8404,
+              "offset": 8622,
               "names": [
                 "close",
                 "h",
@@ -54188,13 +54538,13 @@
               ]
             },
             {
-              "offset": 8499,
+              "offset": 8717,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 8543,
+              "offset": 8761,
               "names": [
                 "close",
                 "n",
@@ -54202,14 +54552,14 @@
               ]
             },
             {
-              "offset": 8583,
+              "offset": 8801,
               "names": [
                 "close",
                 "n"
               ]
             },
             {
-              "offset": 8588,
+              "offset": 8806,
               "names": [
                 "close",
                 "n",
@@ -54217,13 +54567,13 @@
               ]
             },
             {
-              "offset": 8843,
+              "offset": 9061,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 8894,
+              "offset": 9112,
               "names": [
                 "close",
                 "n",
@@ -54232,7 +54582,7 @@
               ]
             },
             {
-              "offset": 8944,
+              "offset": 9162,
               "names": [
                 "close",
                 "n",
@@ -54240,7 +54590,7 @@
               ]
             },
             {
-              "offset": 8951,
+              "offset": 9169,
               "names": [
                 "arg",
                 "close",
@@ -54249,14 +54599,14 @@
               ]
             },
             {
-              "offset": 9225,
+              "offset": 9443,
               "names": [
                 "head",
                 "t"
               ]
             },
             {
-              "offset": 9286,
+              "offset": 9504,
               "names": [
                 "close",
                 "h",
@@ -54269,7 +54619,7 @@
               ]
             },
             {
-              "offset": 9350,
+              "offset": 9568,
               "names": [
                 "close",
                 "head",
@@ -54280,26 +54630,43 @@
               ]
             },
             {
-              "offset": 9451,
+              "offset": 9727,
+              "names": [
+                "t"
+              ]
+            },
+            {
+              "offset": 9769,
+              "names": [
+                "close",
+                "head",
+                "n",
+                "parameters",
+                "pattern",
+                "t"
+              ]
+            },
+            {
+              "offset": 9872,
               "names": [
                 "head"
               ]
             },
             {
-              "offset": 9459,
+              "offset": 9880,
               "names": [
                 "head",
                 "more"
               ]
             },
             {
-              "offset": 9492,
+              "offset": 9914,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 9771,
+              "offset": 10193,
               "names": [
                 "open",
                 "tail",
@@ -54307,20 +54674,20 @@
               ]
             },
             {
-              "offset": 9839,
+              "offset": 10261,
               "names": [
                 "open",
                 "tail"
               ]
             },
             {
-              "offset": 9881,
+              "offset": 10303,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 9920,
+              "offset": 10342,
               "names": [
                 "n",
                 "name",
@@ -54331,7 +54698,7 @@
               ]
             },
             {
-              "offset": 9986,
+              "offset": 10408,
               "names": [
                 "n",
                 "name",
@@ -54341,7 +54708,7 @@
               ]
             },
             {
-              "offset": 10053,
+              "offset": 10475,
               "names": [
                 "n",
                 "name",
@@ -54350,20 +54717,20 @@
               ]
             },
             {
-              "offset": 10110,
+              "offset": 10532,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 10118,
+              "offset": 10540,
               "names": [
                 "args",
                 "name"
               ]
             },
             {
-              "offset": 10161,
+              "offset": 10583,
               "names": [
                 "n",
                 "name",
@@ -54373,7 +54740,7 @@
               ]
             },
             {
-              "offset": 10228,
+              "offset": 10650,
               "names": [
                 "n",
                 "name",
@@ -54382,20 +54749,20 @@
               ]
             },
             {
-              "offset": 10285,
+              "offset": 10707,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 10293,
+              "offset": 10715,
               "names": [
                 "args",
                 "name"
               ]
             },
             {
-              "offset": 10335,
+              "offset": 10757,
               "names": [
                 "name",
                 "open",
@@ -54403,13 +54770,13 @@
               ]
             },
             {
-              "offset": 10400,
+              "offset": 10822,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 10714,
+              "offset": 11136,
               "names": [
                 "h",
                 "n",
@@ -54417,13 +54784,13 @@
               ]
             },
             {
-              "offset": 10765,
+              "offset": 11187,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 11011,
+              "offset": 11433,
               "names": [
                 "h",
                 "n",
@@ -54433,7 +54800,7 @@
               ]
             },
             {
-              "offset": 11079,
+              "offset": 11501,
               "names": [
                 "h",
                 "n",
@@ -54442,14 +54809,14 @@
               ]
             },
             {
-              "offset": 11139,
+              "offset": 11561,
               "names": [
                 "h",
                 "n"
               ]
             },
             {
-              "offset": 11148,
+              "offset": 11570,
               "names": [
                 "h",
                 "n",
@@ -54457,7 +54824,7 @@
               ]
             },
             {
-              "offset": 11200,
+              "offset": 11622,
               "names": [
                 "h",
                 "n",
@@ -54467,7 +54834,7 @@
               ]
             },
             {
-              "offset": 11290,
+              "offset": 11712,
               "names": [
                 "h",
                 "n",
@@ -54476,7 +54843,7 @@
               ]
             },
             {
-              "offset": 11393,
+              "offset": 11815,
               "names": [
                 "h",
                 "n",
@@ -54485,7 +54852,7 @@
               ]
             },
             {
-              "offset": 11493,
+              "offset": 11915,
               "names": [
                 "h",
                 "n",
@@ -54493,33 +54860,33 @@
               ]
             },
             {
-              "offset": 11552,
+              "offset": 11974,
               "names": [
                 "n",
                 "tokens"
               ]
             },
             {
-              "offset": 11611,
+              "offset": 12033,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 11641,
+              "offset": 12063,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 11954,
+              "offset": 12376,
               "names": [
                 "name",
                 "tokens"
               ]
             },
             {
-              "offset": 12006,
+              "offset": 12428,
               "names": [
                 "keyword",
                 "n",
@@ -54528,7 +54895,7 @@
               ]
             },
             {
-              "offset": 12068,
+              "offset": 12490,
               "names": [
                 "keyword",
                 "n",
@@ -54537,7 +54904,7 @@
               ]
             },
             {
-              "offset": 12137,
+              "offset": 12559,
               "names": [
                 "n",
                 "name",
@@ -54545,13 +54912,13 @@
               ]
             },
             {
-              "offset": 12199,
+              "offset": 12621,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 12251,
+              "offset": 12673,
               "names": [
                 "n",
                 "name",
@@ -54559,14 +54926,14 @@
               ]
             },
             {
-              "offset": 12315,
+              "offset": 12737,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 12362,
+              "offset": 12784,
               "names": [
                 "keyword",
                 "n",
@@ -54575,7 +54942,7 @@
               ]
             },
             {
-              "offset": 12430,
+              "offset": 12852,
               "names": [
                 "n",
                 "name",
@@ -54583,21 +54950,21 @@
               ]
             },
             {
-              "offset": 12493,
+              "offset": 12915,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 12544,
+              "offset": 12966,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 12554,
+              "offset": 12976,
               "names": [
                 "n",
                 "name",
@@ -54605,20 +54972,20 @@
               ]
             },
             {
-              "offset": 12602,
+              "offset": 13024,
               "names": [
                 "keyword",
                 "tokens"
               ]
             },
             {
-              "offset": 12669,
+              "offset": 13091,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 12892,
+              "offset": 13314,
               "names": [
                 "kind",
                 "n",
@@ -54627,7 +54994,7 @@
               ]
             },
             {
-              "offset": 12957,
+              "offset": 13379,
               "names": [
                 "kind",
                 "n",
@@ -54635,14 +55002,14 @@
               ]
             },
             {
-              "offset": 13028,
+              "offset": 13450,
               "names": [
                 "kind",
                 "name"
               ]
             },
             {
-              "offset": 13037,
+              "offset": 13459,
               "names": [
                 "ctors",
                 "kind",
@@ -54650,13 +55017,44 @@
               ]
             },
             {
-              "offset": 13097,
+              "offset": 13519,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 13475,
+              "offset": 13866,
+              "names": [
+                "body",
+                "colon",
+                "n",
+                "name",
+                "params",
+                "tokens",
+                "typ"
+              ]
+            },
+            {
+              "offset": 13936,
+              "names": [
+                "body",
+                "colon"
+              ]
+            },
+            {
+              "offset": 14003,
+              "names": [
+                "body",
+                "colon",
+                "n",
+                "name",
+                "params",
+                "tokens",
+                "typ"
+              ]
+            },
+            {
+              "offset": 14073,
               "names": [
                 "body",
                 "n",
@@ -54666,7 +55064,7 @@
               ]
             },
             {
-              "offset": 13517,
+              "offset": 14117,
               "names": [
                 "name",
                 "params",
@@ -54674,7 +55072,7 @@
               ]
             },
             {
-              "offset": 13526,
+              "offset": 14126,
               "names": [
                 "name",
                 "params",
@@ -54683,19 +55081,25 @@
               ]
             },
             {
-              "offset": 13589,
+              "offset": 14189,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 13891,
+              "offset": 14244,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 13943,
+              "offset": 14546,
+              "names": [
+                "tokens"
+              ]
+            },
+            {
+              "offset": 14598,
               "names": [
                 "column",
                 "n",
@@ -54705,7 +55109,7 @@
               ]
             },
             {
-              "offset": 14004,
+              "offset": 14659,
               "names": [
                 "column",
                 "n",
@@ -54714,14 +55118,14 @@
               ]
             },
             {
-              "offset": 14066,
+              "offset": 14721,
               "names": [
                 "token",
                 "value"
               ]
             },
             {
-              "offset": 14075,
+              "offset": 14730,
               "names": [
                 "items",
                 "token",
@@ -54729,7 +55133,7 @@
               ]
             },
             {
-              "offset": 14298,
+              "offset": 14953,
               "names": [
                 "column",
                 "n",
@@ -54740,7 +55144,7 @@
               ]
             },
             {
-              "offset": 14370,
+              "offset": 15025,
               "names": [
                 "column",
                 "n",
@@ -54750,7 +55154,7 @@
               ]
             },
             {
-              "offset": 14438,
+              "offset": 15093,
               "names": [
                 "column",
                 "n",
@@ -54761,7 +55165,7 @@
               ]
             },
             {
-              "offset": 14518,
+              "offset": 15173,
               "names": [
                 "column",
                 "n",
@@ -54770,7 +55174,7 @@
               ]
             },
             {
-              "offset": 14569,
+              "offset": 15224,
               "names": [
                 "column",
                 "n",
@@ -54779,7 +55183,7 @@
               ]
             },
             {
-              "offset": 14578,
+              "offset": 15233,
               "names": [
                 "column",
                 "n",
@@ -54789,13 +55193,13 @@
               ]
             },
             {
-              "offset": 14648,
+              "offset": 15303,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 14908,
+              "offset": 15563,
               "names": [
                 "column",
                 "n",
@@ -54806,7 +55210,24 @@
               ]
             },
             {
-              "offset": 14973,
+              "offset": 15629,
+              "names": [
+                "tail"
+              ]
+            },
+            {
+              "offset": 15685,
+              "names": [
+                "column",
+                "n",
+                "name",
+                "quantity",
+                "tail",
+                "typ"
+              ]
+            },
+            {
+              "offset": 15750,
               "names": [
                 "column",
                 "n",
@@ -54816,7 +55237,7 @@
               ]
             },
             {
-              "offset": 15024,
+              "offset": 15801,
               "names": [
                 "column",
                 "n",
@@ -54826,7 +55247,7 @@
               ]
             },
             {
-              "offset": 15033,
+              "offset": 15810,
               "names": [
                 "column",
                 "n",
@@ -54837,13 +55258,13 @@
               ]
             },
             {
-              "offset": 15105,
+              "offset": 15883,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 15336,
+              "offset": 16114,
               "names": [
                 "annotation",
                 "column",
@@ -54854,7 +55275,7 @@
               ]
             },
             {
-              "offset": 15398,
+              "offset": 16176,
               "names": [
                 "annotation",
                 "quantity",
@@ -54863,7 +55284,7 @@
               ]
             },
             {
-              "offset": 15406,
+              "offset": 16184,
               "names": [
                 "annotation",
                 "next",
@@ -54873,13 +55294,13 @@
               ]
             },
             {
-              "offset": 15700,
+              "offset": 16478,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 15756,
+              "offset": 16534,
               "names": [
                 "column",
                 "keyword",
@@ -54890,7 +55311,7 @@
               ]
             },
             {
-              "offset": 15904,
+              "offset": 16682,
               "names": [
                 "keyword",
                 "n",
@@ -54899,7 +55320,7 @@
               ]
             },
             {
-              "offset": 15951,
+              "offset": 16729,
               "names": [
                 "keyword",
                 "n",
@@ -54907,7 +55328,7 @@
               ]
             },
             {
-              "offset": 15962,
+              "offset": 16740,
               "names": [
                 "keyword",
                 "n",
@@ -54916,7 +55337,7 @@
               ]
             },
             {
-              "offset": 16032,
+              "offset": 16810,
               "names": [
                 "keyword",
                 "n",
@@ -54925,7 +55346,7 @@
               ]
             },
             {
-              "offset": 16097,
+              "offset": 16875,
               "names": [
                 "keyword",
                 "n",
@@ -54934,7 +55355,7 @@
               ]
             },
             {
-              "offset": 16106,
+              "offset": 16884,
               "names": [
                 "keyword",
                 "n",
@@ -54944,7 +55365,7 @@
               ]
             },
             {
-              "offset": 16196,
+              "offset": 16974,
               "names": [
                 "keyword",
                 "pattern",
@@ -54952,7 +55373,7 @@
               ]
             },
             {
-              "offset": 16204,
+              "offset": 16982,
               "names": [
                 "keyword",
                 "more",
@@ -54961,7 +55382,7 @@
               ]
             },
             {
-              "offset": 16282,
+              "offset": 17060,
               "names": [
                 "tokens"
               ]
@@ -55052,8 +55473,8 @@
           "key": "src/parse.parse",
           "kind": "definition",
           "lines": [
-            307,
-            308
+            320,
+            321
           ],
           "features": [
             "calls",
@@ -55953,7 +56374,7 @@
     },
     {
       "file": "src/PROOF.bend",
-      "sha256": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
+      "sha256": "c4b03d3046b45054c6fd00db7f77387ab2cb8f829a090eaacd4e34e6788493e1",
       "imports": [
         {
           "module": "Base",
@@ -55966,10 +56387,23 @@
           "alias": "L",
           "file": "src/LAWS.bend",
           "feature": "imports.local"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./parse.bend",
+          "alias": "P",
+          "file": "src/parse.bend",
+          "feature": "imports.local"
         }
       ],
       "features": [
         "calls",
+        "captures",
         "constructors",
         "dependent",
         "equality",
@@ -55977,6 +56411,7 @@
         "generics",
         "imports.base",
         "imports.local",
+        "lambdas",
         "literals.nat",
         "literals.string",
         "literals.u32",
@@ -55986,6 +56421,7 @@
         "quantities.affine",
         "quantities.arguments",
         "quantities.reusable",
+        "rewrites",
         "types.base"
       ],
       "declarations": [
@@ -55995,8 +56431,8 @@
           "key": "src/LAWS.empty_source",
           "kind": "law_fill",
           "lines": [
-            4,
-            7
+            6,
+            9
           ],
           "features": [
             "calls",
@@ -56053,8 +56489,8 @@
           "key": "src/LAWS.word_source",
           "kind": "law_fill",
           "lines": [
-            9,
-            12
+            11,
+            14
           ],
           "features": [
             "calls",
@@ -56111,8 +56547,8 @@
           "key": "src/LAWS.no_character_budget",
           "kind": "law_fill",
           "lines": [
-            14,
-            15
+            16,
+            17
           ],
           "features": [
             "calls",
@@ -56164,8 +56600,8 @@
           "key": "src/LAWS.no_parser_budget",
           "kind": "law_fill",
           "lines": [
-            17,
-            18
+            19,
+            20
           ],
           "features": [
             "calls",
@@ -56214,8 +56650,8 @@
           "key": "src/LAWS.generic_header",
           "kind": "law_fill",
           "lines": [
-            20,
-            21
+            22,
+            23
           ],
           "features": [
             "calls",
@@ -56266,8 +56702,8 @@
           "key": "src/LAWS.multiple_scrutinees",
           "kind": "law_fill",
           "lines": [
-            23,
-            24
+            25,
+            26
           ],
           "features": [
             "calls",
@@ -56320,8 +56756,8 @@
           "key": "src/LAWS.template_binder",
           "kind": "law_fill",
           "lines": [
-            26,
-            27
+            28,
+            29
           ],
           "features": [
             "calls",
@@ -56367,13 +56803,170 @@
           }
         },
         {
+          "id": "src/PROOF.bend::L.nonleading_template_binder:law_fill",
+          "name": "L.nonleading_template_binder",
+          "key": "src/LAWS.nonleading_template_binder",
+          "kind": "law_fill",
+          "lines": [
+            31,
+            32
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "False",
+            "List",
+            "Result",
+            "True",
+            "src/parse.ListTail",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/PROOF.bend::L.destructuring_binding:law_fill",
           "name": "L.destructuring_binding",
           "key": "src/LAWS.destructuring_binding",
           "kind": "law_fill",
           "lines": [
-            29,
-            30
+            34,
+            40
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "rewrites",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.or",
+            "Con",
+            "Equal.sym",
+            "Fail",
+            "False",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.body_end",
+            "src/parse.reply",
+            "src/parse.starts",
+            "src/parse.unsupported",
+            "src/syntax.At",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.Unsupported",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "Bool.or",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.reply",
+            "src/parse.starts",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 562,
+              "names": [
+                "at",
+                "fields",
+                "rest"
+              ]
+            },
+            {
+              "offset": 563,
+              "names": [
+                "_",
+                "at",
+                "fields",
+                "rest"
+              ]
+            },
+            {
+              "offset": 690,
+              "names": [
+                "at",
+                "fields",
+                "rest"
+              ]
+            },
+            {
+              "offset": 781,
+              "names": [
+                "at",
+                "rest"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/PROOF.bend::L.equality_is_not_binding:law_fill",
+          "name": "L.equality_is_not_binding",
+          "key": "src/LAWS.equality_is_not_binding",
+          "kind": "law_fill",
+          "lines": [
+            42,
+            43
           ],
           "features": [
             "calls",
@@ -56398,9 +56991,9 @@
             "src/syntax.At",
             "src/syntax.Constructor",
             "src/syntax.Error",
+            "src/syntax.Invalid",
             "src/syntax.Node",
-            "src/syntax.Token",
-            "src/syntax.Unsupported"
+            "src/syntax.Token"
           ],
           "type_references": [
             "List",
@@ -56420,13 +57013,223 @@
           }
         },
         {
+          "id": "src/PROOF.bend::L.arrow_is_not_binding:law_fill",
+          "name": "L.arrow_is_not_binding",
+          "key": "src/LAWS.arrow_is_not_binding",
+          "kind": "law_fill",
+          "lines": [
+            45,
+            46
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.reply",
+            "src/syntax.At",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.reply",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/PROOF.bend::L.parameter_type_application:law_fill",
+          "name": "L.parameter_type_application",
+          "key": "src/LAWS.parameter_type_application",
+          "kind": "law_fill",
+          "lines": [
+            48,
+            49
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.parameter",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.Unsupported"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.parameter",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/PROOF.bend::L.return_type_application:law_fill",
+          "name": "L.return_type_application",
+          "key": "src/LAWS.return_type_application",
+          "kind": "law_fill",
+          "lines": [
+            51,
+            52
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Nil",
+            "Result",
+            "src/parse.FunctionTail",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Unsupported"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/PROOF.bend::L.binding_type_application:law_fill",
+          "name": "L.binding_type_application",
+          "key": "src/LAWS.binding_type_application",
+          "kind": "law_fill",
+          "lines": [
+            54,
+            55
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Result",
+            "src/parse.AnnotatedBinding",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.Unsupported"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/parse.Parsed",
+            "src/parse.run",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/PROOF.bend::L.local_import:law_fill",
           "name": "L.local_import",
           "key": "src/LAWS.local_import",
           "kind": "law_fill",
           "lines": [
-            32,
-            33
+            57,
+            58
           ],
           "features": [
             "calls",
@@ -56477,8 +57280,8 @@
           "key": "src/LAWS.hash_import",
           "kind": "law_fill",
           "lines": [
-            35,
-            36
+            60,
+            61
           ],
           "features": [
             "calls",
