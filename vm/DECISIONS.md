@@ -23,8 +23,8 @@ follows it (§5, §10, §11) without a new image header word.
   The debit happens after the operands are evaluated and before the entry. Prims,
   constructors, lets, cases, RC and rendering cost nothing. At fuel 0 the pending
   entry stays in the state and no effect happens. Exhausted kinds: 1 fuel,
-  2 heap and representation (NatRange, RCOverflow, image size, display), 3 frame
-  region. **Quantum:** when a debit makes the count reach 65,536, the entry step
+  2 heap and representation (NatRange, RCOverflow, the image limits of SPEC §4:
+  size, records per table, arity and `slots`; display), 3 frame region. **Quantum:** when a debit makes the count reach 65,536, the entry step
   completes and dispatch returns to `knot_main`, which resets the count and
   re-enters. For an Action applied to its continuation, that step performs the one
   effect and leaves the continuation's entry pending; there is no separate
@@ -310,6 +310,61 @@ follows it (§5, §10, §11) without a new image header word.
    (.local/vm-spec/f7-mutants.log). The text-following copy now fails at
    `run control inspect-chr` (.local/vm-spec/f7-text-after.log). No golden,
    expectation or evaluate.py line changed.
+19. **An image past a resource limit is Exhausted kind 2.** Review round 8 found
+   §4.1, §11 and D16 making an image above 16 MiB `Exhausted` kind 2, while §4 and
+   the gate made it `HostFailure image`: `decode` raised `Malformed('exhausted
+   image-size')`, `rejected()` mapped every Malformed to `HostFailure image`, and
+   three controls froze that. The coordinator decided for §4.1 and D16. `decode`
+   now raises a distinct `Exhausted`, which `rejected()` reports as `Exhausted 2
+   image-size`; the three controls were re-frozen first, in their own commit, by
+   literal review. §4 now says a refused image is `HostFailure image` except past a
+   resource limit, and states every limit in one table with its precedence: a count
+   its structure admits and that passes its limit is `Exhausted` kind 2 (`records`,
+   `arity`, `slots`), checked when the count is read and before what it governs;
+   a count its structure cannot hold is malformed (`record count`, at two words
+   per record, and `function record`); each limit is inclusive. Before, the record
+   limit was `Malformed('record count')` and the arity and `slots` limits a
+   validator failure (`limits`), none of them frozen by a control, and a Closure's
+   `slots` had no limit although it sizes an Activation as a function's does. Ten
+   limit controls freeze both sides (.local/vm-spec/f8-limit-mutants.log): each
+   limit passed by one; a count of 2^20 + 1 records without room for them, and an
+   arity of 4,097 in a record that holds two; an image of exactly 16 MiB, refused
+   as `total`; 2^20 records, whose first zero word is a malformed record; a `slots`
+   of 65,536 that its body does not reach, refused by step 4; and an admitted
+   unused function of 4,096 parameters. Five codec mutants (a limit reported as
+   malformed, an exclusive limit, the record limit before the count's fit, the
+   arity limit before its record's length, a Closure's `slots` unlimited) survive
+   every golden and every earlier control, and each dies only by a limit control.
+   The rule mutant `rejected-limit-as-host-failure` (check-spec.py's `rejected`
+   reporting the exhaustion as `HostFailure image` again) dies by `oversize`.
+   `decode` now reads its words with an explicit little-endian `struct` format, so
+   the 8 MiB and 16 MiB controls cost milliseconds per mutant. §8's image-first
+   refusal, "`HostFailure image` whatever the words", now names the limits too.
+20. **Only a documented eval bound, past its budget, excuses eval.** Review round 8
+   found §11's rule unenforced for eval and its documented display bound four
+   times too high. `vm_expectation` accepted any Exhausted eval lane at any
+   boundary, and the three excused rows recorded only `"eval_lane": "Exhausted"`.
+   §11 gave eval's display as "4,096 visits", but `describe` renders with 4,096
+   worklist steps, one per item: a constructor and its opening text, then a slot and
+   a separator or closing brace per field, so a tree of N constructors takes
+   4N − 2 and a Nat `n` 4n + 2. The pinned eval-cli renders 1023n and refuses 1024n
+   (`Exhausted inspect budget`); a 642-node tree of 100-character names renders in
+   65,487 characters and 643 nodes do not (.local/vm-spec/f8-evalbound.log). §11
+   now states that unit, keeping §8's visit for the VM. It also gives eval-cli's
+   transitions their unit: one per term evaluated and one per successor or
+   character materialized, so `Nat.is_gt(U32.to_nat(1048576),0n)` exhausts them
+   although its primitive budget is inclusive at 2^20 (2^20 + 1 is `Exhausted
+   primitive budget`). `check-spec.py` now matches the phase eval-cli names against
+   `EVAL_BOUNDS` (`primitive`, `eval`, `inspect`), measures without eval-cli
+   whether the program passes that budget (`reach`: the largest Nat or String
+   length in the reference evaluation; a lower bound on transitions; the seed
+   value's steps and characters), and refuses any other Exhausted. Each excused row
+   records the cause, bound, budget and boundary reached (2^31, 2^31 and 2^31 + 1
+   Nats past 2^20). Four expectation controls refuse an undocumented phase
+   (`check`) and each budget unpassed, the Nat 1,023 at 4,094 steps among them; two
+   excused controls admit the Nat 1,024 at 4,098 steps and a transitions exhaustion
+   past 2^20. Four rule mutants (any Exhausted accepted, the budget not measured,
+   steps counted as visits, transitions without materialization) are killed.
 
 ## Findings that need an owner
 

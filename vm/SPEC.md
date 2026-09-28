@@ -244,11 +244,12 @@ It never runs a body or an effect while validating. Validation, UTF-8 decoding,
 constant materialization and rendering use explicit worklists, never the host
 stack. The validator checks every function, reachable or not:
 
-1. Size first: an image above 16 MiB (4,194,304 words) is `Exhausted image-size`,
-   even when it is also malformed. Then length, magic, version, total, entry kind,
-   reserved word and registry digest.
-2. Section offsets, adjacency, counts, record lengths, name UTF-8, padding and
-   uniqueness; constructor grouping; known type, constant and node tags.
+1. Size first: an image above 16 MiB (4,194,304 words) is `Exhausted` kind 2
+   (`image-size`), even when it is also malformed. Then length, magic, version,
+   total, entry kind, reserved word and registry digest.
+2. Section offsets, adjacency, counts and the limits below, record lengths, name
+   UTF-8, padding and uniqueness; constructor grouping; known type, constant and
+   node tags.
 3. Every index and child offset is in range and names a record of the right
    table; every child precedes its parent; each node has exactly one parent or is
    exactly one function's root.
@@ -257,18 +258,35 @@ stack. The validator checks every function, reachable or not:
    run as a Base body), arrow kinds, captures and exact `slots`.
 5. Canonicality as defined in §2.
 
-A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 62
-refusals (20 byte-level, 42 plan-level); vm-core MUST refuse the same controls,
-and MUST admit its six admitted plan controls (three Cases on a `none` slot,
-among them `list-head-match`, and three whose arms fit their Case, among them
-`first-code`, S's shapes), its seven code-list controls and its 23 run
-controls; vm-model and vm-core MUST run each run control, at the fuel frozen with
-it, to the outcome frozen with it (§7, §12).
+A refused image is `HostFailure image` with a reason, except past a **resource
+limit** of version 1, which is `Exhausted` kind 2 with the limit as its cause (D16).
+These are limits of this VM, not source rules. Each bounds a count that the image's
+structure admits: a count the structure cannot hold is malformed, and a count equal
+to the limit is within it. A limit is checked when its count is read, after the
+count's own structure and before anything the count governs, so it precedes a
+malformed record, an inexact `slots` and every later rule:
+
+| Limit, inclusive | `Exhausted` kind 2 (cause) | Malformed: `HostFailure image` |
+|---|---|---|
+| 4,194,304 words (16 MiB) per image | more words (`image-size`), checked first, even when also malformed | none: a size is not a count |
+| 1,048,576 records per table | a larger count that the words after it can hold, at two words per record (`records`) | a count they cannot hold (`record count`) |
+| live arity 4,096 | a larger arity in a function record whose length holds it (`arity`) | a length that does not (`function record`) |
+| `slots` 65,536, a function's or a Closure's | a larger `slots` (`slots`), even when inexact | none: every word is a count; exactness is step 4 |
+
+`check-spec.py` freezes 71 refusals (20 byte-level, 9 at the limits, 42 plan-level).
+At the limits: the record, arity and `slots` limits passed by one (a function's
+`slots` and a Closure's), a record count beyond the image and an arity beyond its
+record, an image of exactly 16 MiB (`total`), 2^20 records whose first zero word is
+a malformed record, and a `slots` of 65,536 that its body does not reach. vm-core
+MUST refuse the same controls, and MUST admit its six admitted plan controls (three
+Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
+Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
+4,096 parameters), its seven code-list controls and its 41 run controls; vm-model and
+vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
+with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
-Other version-1 limits: at most 1,048,576 records per table, live arity at most
-4,096, `slots` at most 65,536. These are resource limits, not source rules.
 
 ## 5. Words, cells and memory
 
@@ -527,7 +545,8 @@ ordinals. FN and ARGS are any words, and FUEL any u32, 0 included (§7); eval-cl
 also refuses a budget above its 1,048,576 transitions as `budget-out-of-range`, a
 cap the VM does not share. eval-cli reads its words before its source; the VM
 reads the image first because the entry kind selects the form, so an image §4
-refuses is `HostFailure image` whatever the words.
+refuses is `HostFailure image`, or `Exhausted` kind 2 past a §4 limit, whatever the
+words.
 
 **Book** (`IMAGE FN FUEL [ORDINALS…]`). These checks run in this order, before any
 entry and without debiting fuel; steps 2–4 fail as `HostFailure invoke` with the
@@ -733,7 +752,7 @@ copies low bytes and passes the flag; a nonzero flag is errno 22 before any writ
 
 Accepted, Invalid, Unsupported, Exhausted, HostFailure and InternalFailure are
 recorded separately. Malformed images, unknown ids and malformed invocations are
-HostFailure; source forms Knot does not handle are Unsupported, and so is a Book
+HostFailure, and an image past a resource limit of §4 is Exhausted kind 2; source forms Knot does not handle are Unsupported, and so is a Book
 result that §8 cannot describe; a broken invariant is a defect. A timeout or
 crash never counts as a semantic mutant kill.
 
@@ -747,14 +766,28 @@ reached:
 |---|---|
 | seed native | Nat to about 2^48; its runtime resources |
 | seed Bun | about 32K stack frames (`List.length`); unary Nat materialization: `nat-big` passed 60 GB of RSS in about 6 minutes and was stopped, so word-Nat goldens use the native lane |
-| literals eval | unary Nat and String up to 2^20 (`nat-big`, `nat-range`: `Exhausted primitive budget`); at most 1,048,576 transitions; display 4,096 visits and 65,536 characters |
-| knot-vm-1 | Nat at most 2^32-1; call fuel; 16 MiB image; 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8 |
+| literals eval | unary Nat and String up to 2^20 (`Exhausted primitive budget`: `nat-big`, `nat-range`); 1,048,576 transitions (`Exhausted eval budget`), one per term evaluated and one per successor or character materialized, so `Nat.is_gt(U32.to_nat(1048576),0n)` exhausts them; display 4,096 worklist steps and 65,536 characters (`Exhausted inspect budget`), two steps per constructor and two per field, so a tree of N constructors takes 4N − 2 and a Nat `n` renders only for `n` ≤ 1,023 |
+| knot-vm-1 | Nat at most 2^32-1; call fuel; §4's image limits (16 MiB, records, arity, `slots`); 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8 |
 
-`NatRange`, `RCOverflow`, image size and display are representation-resource
+`NatRange`, `RCOverflow`, §4's image limits and display are representation-resource
 exhaustion, kind 2 at the host boundary; the VM's own outcome keeps the precise
 cause, request and limit, because `exhausted(2)` alone does not say which bound
 was hit. Frame capacity is kind 3. Model tracing memory is a harness bound and
 never excuses the VM.
+
+**An exhausted eval lane** where the VM owes the seed's value is excused only by
+one of the three literals eval bounds, named by the phase eval-cli prints
+(`Exhausted<TAB>phase<TAB>budget`), and only when the program passes that budget.
+(Where a VM bound of golden/bounds.json applies, the VM's own outcome is Exhausted
+and eval's lane is only recorded.) The gate measures it without eval-cli
+(`check-spec.py` `EVAL_BOUNDS` and `reach`): `primitive` by the largest Nat or String
+length a node yields in the reference evaluation; `eval` by a lower bound on
+eval-cli's transitions, the terms the reference evaluation evaluates plus the Nat
+and String sizes its Literals and Intrinsics yield; `inspect` by the steps and
+characters of the seed's value. Any other Exhausted, or a documented one whose
+budget the program does not pass, is refused. For each excused lane,
+vm-expected.json and the receipt record the cause, the bound, the budget and the
+boundary reached.
 
 **The rule.** Wherever the seed succeeds inside the VM's declared domain and
 budgets, the VM MUST return the seed's value and effect trace, except the output
@@ -793,7 +826,8 @@ golden: the eval-cli line where eval agrees with the seed (75 goldens), agreemen
 meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
 value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`,
-`nat-case-big`);
+`nat-case-big`, each by `Exhausted primitive budget`, their largest Nats 2^31, 2^31
+and 2^31 + 1 past 2^20);
 `Exhausted` kind 2 `NatRange` where the seed's value lies outside the VM's domain
 (`nat-range`, `nat-mul-range`, `nat-succ-range`), each justified in
 [golden/bounds.json](golden/bounds.json), whose entries are all Exhausted;
@@ -834,7 +868,12 @@ lane and requires:
   seed's printed value, byte for byte where it is not UTF-8;
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations,
   with every bound Exhausted and no bound standing in for an Unsupported result
-  (two frozen expectation controls), and every Program classified by the reference
+  (two frozen expectation controls), every excused eval lane matched to a documented
+  eval-cli bound past its budget (four frozen expectation controls refuse an
+  undocumented phase, `check`, and each budget unpassed, among them the Nat 1,023 at
+  4,094 steps; two excused controls admit the Nat 1,024 at 4,098 steps and 6,150
+  characters, and a transitions exhaustion of `u32-to-nat-big` at 4,294,967,304),
+  and every Program classified by the reference
   evaluation of its plan: a declared D20 divergence exactly where it prints a
   non-scalar Char, with the VM output of the earlier prints, the native bytes equal
   to the whole trace in that lane's encoding and the Bun lane's output a prefix of
@@ -867,8 +906,9 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
   `none`-typed node covered;
-- all 62 refusals of §4 with their frozen reasons, and its six admitted plan
-  controls; `first-code` also equals the independent lowering of its `check-cli`
+- all 71 refusals of §4 with their frozen reasons, each resource limit
+  `Exhausted` kind 2 on one side and malformed or invalid on the other, its six
+  admitted plan controls and `arity-at-limit`; `first-code` also equals the independent lowering of its `check-cli`
   display, written by hand in the literals head's grammar because no pinned head
   checks a `List<U32>` parameter;
 - 41 admitted **run controls** (`check-spec.py run_controls`), each frozen with
@@ -913,10 +953,17 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 64 codec mutants and 4 source mutants killed through a changed image, a decode
+- 69 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe, invocation or argument verdict or a changed observation, and 39 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
+  Five codec mutants move §4's limits: a limit reported as malformed, a limit
+  exclusive, the record limit before the count's fit, the arity limit before its
+  record's length, and no limit on a Closure's `slots`. Five rule mutants of
+  `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
+  `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
+  bound whose budget it does not pass; display steps counted as visits; and
+  transitions that omit materialization.
   Five survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, an Action's effect before its debit
   (which the print inspection control also counts, after 4 calls), the fuel test

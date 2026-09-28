@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import re
+import struct
 import sys
 from pathlib import Path
 
@@ -37,6 +38,17 @@ OPAQUE = ('U32', 'File')
 
 class Malformed(Exception):
     """The bytes are not a knot-image-1 image: HostFailure image."""
+
+
+class Exhausted(Exception):
+    """The image passes a version-1 resource limit (SPEC section 4): Exhausted kind 2."""
+
+
+def limit(count: int, name: str):
+    """Section 4's limit on a count its own structure admits, checked before anything the
+    count governs is read."""
+    if count > LIMITS[name]:
+        raise Exhausted(name)
 
 
 def opt(value):
@@ -169,10 +181,10 @@ def encode(plan: dict, digest: bytes) -> bytes:
 
 def decode(data: bytes, digest: bytes) -> dict:
     if len(data) > LIMITS['image_words'] * 4:
-        raise Malformed('exhausted image-size')
+        raise Exhausted('image-size')
     if len(data) % 4 or len(data) < HEADER * 4:
         raise Malformed('length')
-    w = [int.from_bytes(data[i:i + 4], 'little') for i in range(0, len(data), 4)]
+    w = list(struct.unpack(f'<{len(data) // 4}I', data))
     if w[0] != MAGIC or w[1] != VERSION:
         raise Malformed('magic')
     if w[2] != len(w):
@@ -187,8 +199,9 @@ def decode(data: bytes, digest: bytes) -> dict:
         if w[5 + s] != cursor:
             raise Malformed(f'section {s} offset')
         count, at, records = w[cursor], cursor + 1, []
-        if count > LIMITS['records']:
+        if count > (len(w) - at) // 2:                  # a record is at least two words
             raise Malformed('record count')
+        limit(count, 'records')
         for _ in range(count):
             if at >= len(w) or w[at] < 2 or at + w[at] > len(w):
                 raise Malformed(f'section {s} record length')
@@ -295,8 +308,10 @@ def decode(data: bytes, digest: bytes) -> dict:
         if op == 'case' and (len(x) < 4 or x[2] >= len(CASE_MODES) or
                              len(x) != 5 + x[3] * (1 if x[2] == 0 else 2)):
             raise Malformed('case length')
-        if op == 'closure' and (len(x) < 5 or len(x) != 5 + x[3]):
-            raise Malformed('closure length')
+        if op == 'closure':
+            if len(x) < 5 or len(x) != 5 + x[3]:
+                raise Malformed('closure length')
+            limit(x[2], 'slots')
         shapes[at] = (op, t, x)
 
     def tree(at, arm_of_case=False):
@@ -346,6 +361,8 @@ def decode(data: bytes, digest: bytes) -> dict:
     for _, r in funcs:
         if len(r) < 5 or len(r) != 5 + r[2]:
             raise Malformed('function record')
+        limit(r[2], 'arity')
+        limit(r[3], 'slots')
         if r[4] not in start or r[4] in roots or r[4] in owner:
             raise Malformed('function root')
         roots.add(r[4])
@@ -604,8 +621,6 @@ def validate(plan: dict, registry: dict) -> list[str]:
         return depth
 
     for f in functions:
-        if len(f['parameters']) > LIMITS['arity'] or f['slots'] > LIMITS['slots']:
-            fail(f['name'], 'limits')
         used: set[int] = set()
         deepest = check(f['body'], list(f['parameters']), f['name'], used)
         if deepest != f['slots']:

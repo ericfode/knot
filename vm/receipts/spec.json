@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T15:11:36.470080+00:00",
+ "date": "2026-09-28T17:20:37.927707+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "c4a1ba9ac4e9379d8f7cbbc4f54d578bf3799eac60f0ee7cea2a5a2433473662",
-  "vm/SPEC.md": "f52eca73e1ba4882f5180bc729ade834c5ff29a230b1843746d4821fc244b5df",
+  "vm/DECISIONS.md": "2818979bf64f16cfc7c781b3742ed06e376c35cabcd4cf0f3614177f5a5f8013",
+  "vm/SPEC.md": "66a6a69b70833beafc31ae0e8924e7f9394ab62e39ca9aa4bb5d7a78446711b5",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "2c2bf64534fb1cfa4e4a303ece215db7407b4237db5b788a9d2143053a3ddeee",
+  "vm/check-spec.py": "9eb0d4ae01df310d01c91b7b88410c18f149a22d6de2692d036ec5dee87d2e7c",
   "vm/evaluate.py": "b4c5754ad7b09ad75a355c60aaa0869c0ca951f26735c96f342d36a6e2134c2c",
   "vm/golden/bounds.json": "acaea7544a23ce7d1502dc42dfec108e799f0c909bbc29cabcc6c7ba4fc47500",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
@@ -304,13 +304,13 @@
   "vm/golden/value-on.bend": "68f9c5675b153f1f72913e68254caa4779bb383a63e7b8b477e3f65500847ce3",
   "vm/golden/value-on.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
   "vm/golden/value-on.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
-  "vm/golden/vm-expected.json": "b26c5fda956d1d77830710b351b93536bded307c7b9d303a30dbbf854f540e90",
+  "vm/golden/vm-expected.json": "6e5befe6a39b3922901633282002d5065a7e9829deb54cbd1fe76aec986083e1",
   "vm/golden/write-sources.py": "e2632c0f73731e6e3ef52cc6c319cea1c38c218c5c7c0042da3a8c2594cb7623",
   "vm/oracles/closures.json.gz": "de15465bd281b9bcb9cdd582581eb5c6755de58c8a92e133d4d04b8989b7fcab",
   "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
   "vm/oracles/manifest.json": "99d769399af7220e6fb6cc76b8bd15f8051716ded4694b371728bd4e096b15e8",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
-  "vm/serializer.py": "ef47e887c0233ca1716a5c7952f9e306646ab11b29db05f80c7347b973ca5da5"
+  "vm/serializer.py": "f28aef2493968d3729388c75909037dc4a3a56fc63a9b1bca885a1ff825279db"
  },
  "registry": {
   "prims": 41,
@@ -1737,7 +1737,17 @@
     "stdout": "Evaluated\t0\t1\tTrue{}\n",
     "stderr": "",
     "basis": "seed",
-    "eval_lane": "Exhausted"
+    "eval_lane": "Exhausted",
+    "eval_bound": {
+     "cause": "Exhausted primitive budget",
+     "bound": "unary Nat and String",
+     "budget": {
+      "units": 1048576
+     },
+     "reached": {
+      "units": 2147483648
+     }
+    }
    }
   },
   {
@@ -2130,7 +2140,17 @@
     "stdout": "Evaluated\t0\t1\tTrue{}\n",
     "stderr": "",
     "basis": "seed",
-    "eval_lane": "Exhausted"
+    "eval_lane": "Exhausted",
+    "eval_bound": {
+     "cause": "Exhausted primitive budget",
+     "bound": "unary Nat and String",
+     "budget": {
+      "units": 1048576
+     },
+     "reached": {
+      "units": 2147483648
+     }
+    }
    }
   },
   {
@@ -2771,7 +2791,17 @@
     "stdout": "Evaluated\t0\t1\tTrue{}\n",
     "stderr": "",
     "basis": "seed",
-    "eval_lane": "Exhausted"
+    "eval_lane": "Exhausted",
+    "eval_bound": {
+     "cause": "Exhausted primitive budget",
+     "bound": "unary Nat and String",
+     "budget": {
+      "units": 1048576
+     },
+     "reached": {
+      "units": 2147483649
+     }
+    }
    }
   },
   {
@@ -2817,6 +2847,22 @@
   {
    "control": "expectation:bound-not-exhausted",
    "refused": "value-on: a bound is Exhausted with a kind, a cause and a basis"
+  },
+  {
+   "control": "expectation:eval-undocumented-exhausted",
+   "refused": "nat-big: eval lane {'exit': 4, 'stdout': '', 'stderr': 'Exhausted\\tcheck\\tbudget\\t0:0:0:0\\n'} is not a documented bound"
+  },
+  {
+   "control": "expectation:eval-primitive-within-budget",
+   "refused": "control:eval-primitive-within-budget: eval-cli reports its unary Nat and String budget {'units': 1048576}, but the program reaches {'units': 3}"
+  },
+  {
+   "control": "expectation:eval-transitions-within-budget",
+   "refused": "control:eval-transitions-within-budget: eval-cli reports its transitions budget {'transitions': 1048576}, but the program reaches {'transitions': 7}"
+  },
+  {
+   "control": "expectation:eval-inspect-within-budget",
+   "refused": "control:eval-inspect-within-budget: eval-cli reports its display budget {'steps': 4096, 'characters': 65536}, but the program reaches {'steps': 4094, 'characters': 6144}"
   },
   {
    "control": "expectation:bound-for-unsupported",
@@ -2967,20 +3013,56 @@
    "refused": "HostFailure image: child after parent"
   },
   {
+   "control": "unused-constant",
+   "refused": "HostFailure image: noncanonical"
+  },
+  {
    "control": "oversize",
-   "refused": "HostFailure image: exhausted image-size"
+   "refused": "Exhausted 2 image-size"
   },
   {
    "control": "oversize-and-bad-magic",
-   "refused": "HostFailure image: exhausted image-size"
+   "refused": "Exhausted 2 image-size"
   },
   {
    "control": "oversize-and-misaligned",
-   "refused": "HostFailure image: exhausted image-size"
+   "refused": "Exhausted 2 image-size"
   },
   {
-   "control": "unused-constant",
-   "refused": "HostFailure image: noncanonical"
+   "control": "limit:size-at-limit",
+   "refused": "HostFailure image: total"
+  },
+  {
+   "control": "limit:records-over-limit",
+   "refused": "Exhausted 2 records"
+  },
+  {
+   "control": "limit:records-beyond-image",
+   "refused": "HostFailure image: record count"
+  },
+  {
+   "control": "limit:records-at-limit",
+   "refused": "HostFailure image: section 5 record length"
+  },
+  {
+   "control": "limit:arity-over-limit",
+   "refused": "Exhausted 2 arity"
+  },
+  {
+   "control": "limit:arity-beyond-record",
+   "refused": "HostFailure image: function record"
+  },
+  {
+   "control": "limit:slots-over-limit",
+   "refused": "Exhausted 2 slots"
+  },
+  {
+   "control": "limit:closure-slots-over-limit",
+   "refused": "Exhausted 2 slots"
+  },
+  {
+   "control": "limit:slots-at-limit",
+   "refused": "HostFailure image: validator: main: slots 65536, reached 0"
   },
   {
    "control": "plan:ref-beyond-depth",
@@ -3159,6 +3241,30 @@
    "refused": "bench measurement vm/bench/parse-cli.json differs from its pin"
   }
  ],
+ "excused": {
+  "expectation:eval-inspect-past-budget": {
+   "cause": "Exhausted inspect budget",
+   "bound": "display",
+   "budget": {
+    "steps": 4096,
+    "characters": 65536
+   },
+   "reached": {
+    "steps": 4098,
+    "characters": 6150
+   }
+  },
+  "expectation:eval-transitions-past-budget": {
+   "cause": "Exhausted eval budget",
+   "bound": "transitions",
+   "budget": {
+    "transitions": 1048576
+   },
+   "reached": {
+    "transitions": 4294967304
+   }
+  }
+ },
  "admitted": [
   "plan:case-none-parameter",
   "plan:case-none-let",
@@ -3166,6 +3272,7 @@
   "plan:first-code",
   "plan:first-code-none-case",
   "plan:key-arms-none",
+  "limit:arity-at-limit",
   "run:arrow-through-identity",
   "run:erased-closure-invoked-live",
   "run:live-closure-invoked-erased",
@@ -3869,6 +3976,31 @@
    "by": "control oversize-and-misaligned: HostFailure image: length"
   },
   {
+   "mutant": "limit-as-malformed",
+   "killed": true,
+   "by": "control limit:records-over-limit: HostFailure image: records"
+  },
+  {
+   "mutant": "limit-exclusive",
+   "killed": true,
+   "by": "control limit:records-at-limit: Exhausted 2 records"
+  },
+  {
+   "mutant": "record-limit-before-fit",
+   "killed": true,
+   "by": "control limit:records-beyond-image: Exhausted 2 records"
+  },
+  {
+   "mutant": "arity-limit-before-record",
+   "killed": true,
+   "by": "control limit:arity-beyond-record: Exhausted 2 arity"
+  },
+  {
+   "mutant": "closure-slots-unlimited",
+   "killed": true,
+   "by": "control limit:closure-slots-over-limit: HostFailure image: validator: main: closure slots 65537, reached 1"
+  },
+  {
    "mutant": "validator-ignores-let-slot",
    "killed": true,
    "by": "control plan:let-slot: None"
@@ -4383,6 +4515,31 @@
    "mutant": "evaluator:print-checks-while-reading",
    "killed": true,
    "by": "run control inspect-print-after-surrogate: {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'calls': 5}"
+  },
+  {
+   "mutant": "rule:rejected-limit-as-host-failure",
+   "killed": true,
+   "by": "control oversize: HostFailure image: exhausted image-size"
+  },
+  {
+   "mutant": "rule:eval-any-exhausted",
+   "killed": true,
+   "by": "expectation control eval-undocumented-exhausted was admitted"
+  },
+  {
+   "mutant": "rule:eval-budget-unreached",
+   "killed": true,
+   "by": "expectation control eval-primitive-within-budget was admitted"
+  },
+  {
+   "mutant": "rule:inspect-steps-as-visits",
+   "killed": true,
+   "by": "control:nat-pred-inspect: eval-cli reports its display budget {'steps': 4096, 'characters': 65536}, but the program reaches {'steps': 1025, 'characters': 6150}"
+  },
+  {
+   "mutant": "rule:transitions-without-materialization",
+   "killed": true,
+   "by": "control:u32-to-nat-big-eval: eval-cli reports its transitions budget {'transitions': 1048576}, but the program reaches {'transitions': 9}"
   }
  ],
  "code_lists": {
