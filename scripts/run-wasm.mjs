@@ -5,6 +5,8 @@ const argv = process.argv.slice(2);
 const profile = argv[0]?.startsWith('--profile=') ? argv.shift().slice(10) : 'knot-enum-1';
 const [path, name, ...raw] = argv;
 let invoking = false;
+// Fail closed: only a completed, reported result clears the host-failure code.
+process.exitCode = 5;
 try {
   if (!['knot-enum-1', 'knot-fields-wasm-1'].includes(profile)) throw new Error('unknown Wasm profile');
   if (!path || !name || raw.some(x => !/^(0|[1-9][0-9]*)$/.test(x))) throw new Error('expected module export [ordinal ...]');
@@ -22,6 +24,7 @@ try {
   invoking = false;
   if (!Number.isInteger(result) || result < 0 || result > 255) throw new Error('result outside enum-profile bounds');
   console.log(JSON.stringify({validated: true, export: name, arguments: args, result, bytes: bytes.length}));
+  process.exitCode = 0;
 } catch (error) {
   // The fields profile's only unreachable is the bounded arena guard. Profile
   // selection asserts compiler provenance; this is not an arbitrary-Wasm ABI.
