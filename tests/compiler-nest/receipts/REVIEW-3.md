@@ -17,7 +17,9 @@ establish self-hosting or a live Perch/style pass.
 | `ebf0b52` | Headers joined up to their colon; fuzzer line-broken separators |
 | `0b6cfc0`, `f0ffea4` | Register `nest-round3`; specs, contract and census inventory |
 | `d2d0b80` | Review-log entry and campaign state |
-| This commit | Nest-owned receipts, preflight record and these dispositions |
+| `cd6e23f` | Nest-owned receipts, preflight record and these dispositions |
+| `9979943` | Round-3 ground laws renamed `_witness`; round-3 law review; deviations recorded |
+| This commit | Receipts from the final run on `9979943` |
 
 The original fixtures and expectations, the round-2 review fixtures and
 expectations, and every existing gate assertion are unchanged. The round-3
@@ -116,10 +118,19 @@ lanes and Wasm. It is bounded evidence, not a proof.
 ## Gates
 
 Fresh run: `BEND_NO_TELEMETRY=1 npm run -s gates -- --keep-scratch` on
-`d2d0b80` (every code, fixture, spec and gate change of this round), scratch run
-`run-cqmhwjh8`, started `2026-09-28T08:07:53Z`, 398.4 seconds with 4 jobs,
-**exit 0, 23/23 gates passed**. The counts come from that run's summary and
-receipts; they count different observation kinds and must not be summed.
+`9979943` (every code, law, fixture, spec and gate change of this round),
+scratch run `run-ui0jz0sz`, started `2026-09-28T08:30:58Z`, 694.5 seconds with
+4 jobs under a host load average near 30, **exit 0, 23/23 gates passed**. The
+counts come from that run's summary and receipts. They count different
+observation kinds and must not be summed. An earlier run on `d2d0b80`
+(`run-cqmhwjh8`) also passed 23/23 with identical counts.
+
+One run on `9979943` (`run-5n_91lzr`) is retained as failed evidence.
+`fields-wasm` failed when the seed's `clang --version` probe returned no
+output while building a mutant ("bend needs clang 14 or newer ... found no
+clang"). That was a host failure under load, not an assertion: `/usr/bin/clang`
+(Apple clang 21) was present, and the same gate passed on the same head in the
+rerun above. All 22 other gates passed in that run.
 
 | Gate | Result and exact coverage |
 |---|---|
