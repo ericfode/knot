@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "e354cf10b2e12b42c180894a23984248cd6389fda5db517262547e6f940aac6f",
+    "sha256": "184fa6c31f6489518ad450949a1b18db47d195c077e5830c83d91e47cd140cc1",
     "gates": [
       {
         "name": "frontend",
@@ -244,6 +244,20 @@
             "sha256": "726763790cfb24bfe80123084f2d6765138e3497e22c5e2f48f9adce64e434f7"
           }
         ]
+      },
+      {
+        "name": "io-abi-2",
+        "argv": [
+          "python3",
+          "-B",
+          "tests/compiler-io-abi-2/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-io-abi-2/check.py",
+            "sha256": "3ab6fe4e87b2235c6ac75b79eee7f8fd42545a588e052774aa0dcef12aef7aaa"
+          }
+        ]
       }
     ]
   },
@@ -416,6 +430,24 @@
       "detail": "No reviewed adapter for this suite path"
     },
     {
+      "suite": "tests/compiler-io-abi-2",
+      "directory": "tests/compiler-io-abi-2",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/compiler-io-abi-2/expectations.json",
+          "sha256": "98a52e9ced3d2b377370a8eec492022c4e9835bbd619af61529591703366bb38"
+        }
+      ],
+      "gates": [
+        "io-abi-2"
+      ],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
       "suite": "literals",
       "directory": "tests/compiler-literals",
       "status": "recognized",
@@ -550,6 +582,11 @@
   "reports": [
     {
       "directory": "tests/compiler-io",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/compiler-io-abi-2",
       "status": "unrecognized-suite",
       "detail": "No reviewed adapter for this suite path"
     },

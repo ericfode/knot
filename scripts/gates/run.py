@@ -70,6 +70,8 @@ GATES = (
          ('tests/compiler-classification/receipts/precision.json',)),
     Gate('io-host', ('python3', '-B', 'tests/compiler-io/host-check.py'),
          ('tests/compiler-io/receipts/host.json',)),
+    Gate('io-abi-2', ('python3', '-B', 'tests/compiler-io-abi-2/check.py'),
+         ('tests/compiler-io-abi-2/receipts/host.json', 'tests/compiler-io-abi-2/receipts/reference.json')),
 )
 
 
@@ -238,6 +240,11 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
             result[key] = record[key]
         result['review'] = record['review_counts']
+    if gate.name == 'io-abi-2':
+        for key in ('read_observations', 'reference_observations', 'seed_observations', 'seed_exhausted',
+                    'mutants_killed', 'case_mode'):
+            result[key] = record[key]
+        result['parity'] = len(record['parity'])
     return result
 
 
