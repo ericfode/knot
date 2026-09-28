@@ -119,6 +119,12 @@ PLAN = {
     'affine-split-field': ('promoted split binder control', 'case 1n+p with p used twice', [], AFFINE),
     'affine-split-tail': ('promoted split binder control', 'case SCon{c, t} with t used twice after '
                           'case "ab"', [], AFFINE),
+    'promoted-scrutinee': ('promoted split binder', 'the scrutinee used twice, or beside the binder, in '
+                           'a `+x` or `SCon{c, +t}` arm over Nat, String and U32',
+                           ['nat_alone', 'nat_after_literal', 'nat_after_constructor', 'nat_beside',
+                            'string_doubled', 'string_tail', 'u32_twice'], oracle.AGREE),
+    'affine-scrutinee': ('promoted split binder control', 'the scrutinee used twice in a `case x` arm '
+                         'after case 0n', [], AFFINE),
 }
 
 

@@ -8,6 +8,47 @@
   },
   "fixtures": [
     {
+      "name": "affine-scrutinee",
+      "file": "tests/compiler-literals/regressions/affine-scrutinee.bend",
+      "sha256": "cd360ff1ba6444a5281ae30c2b6480efca77179d91979e87d4a712dfcf87b5ed",
+      "finding": "promoted split binder control",
+      "covers": "the scrutinee used twice in a `case x` arm after case 0n",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-scrutinee.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : n\n- observed : n (consumed more than once)\nLocation: default\n12 | \n13>| def default(n: Nat) -> Answer:\n   |             ^\n14 |   match n:\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-scrutinee.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : n\n- observed : n (consumed more than once)\nLocation: default\n12 | \n13>| def default(n: Nat) -> Answer:\n   |             ^\n14 |   match n:\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "Seed-invalid (\"consumed more than once\"): a binder or field without `+` over a split column is affine, so two uses are a reuse."
+      }
+    },
+    {
       "name": "affine-split-alias",
       "file": "tests/compiler-literals/regressions/affine-split-alias.bend",
       "sha256": "c2b10dc46b0c8324fb8a48ad46ee4fde5da0567e1c842ed3e787d6bde816352c",
@@ -2520,6 +2561,789 @@
         "artifact": false,
         "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
         "justification": "Seed-invalid (\"a constructor of\" the scrutinee type): a literal or a Nat offset pattern spells a constructor of its primitive type, never of the scrutinee type."
+      }
+    },
+    {
+      "name": "promoted-scrutinee",
+      "file": "tests/compiler-literals/regressions/promoted-scrutinee.bend",
+      "sha256": "01f3f56acef5a69627b62631fd620b5cdc5525982b43fc298f13c4cae8f1b573",
+      "finding": "promoted split binder",
+      "covers": "the scrutinee used twice, or beside the binder, in a `+x` or `SCon{c, +t}` arm over Nat, String and U32",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Size": [
+          "Empty",
+          "One",
+          "Two",
+          "Three"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/promoted-scrutinee.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/promoted-scrutinee.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_alone",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_alone-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_alone(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_alone-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_alone",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_alone-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_alone(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_alone-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_alone",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_alone-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_alone(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_alone-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_alone",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_alone-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_alone(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_alone-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_literal",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_literal-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_literal(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_literal-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_literal",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_literal-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_literal(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_literal-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_literal",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_literal-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_literal(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_literal-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_literal",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_literal-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_literal(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_literal-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_constructor",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_constructor-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_constructor(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_constructor-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_constructor",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_constructor-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_constructor(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_constructor-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_constructor",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_constructor-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_constructor(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_constructor-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_constructor",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_constructor-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_constructor(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_after_constructor-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_beside",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_beside-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_beside(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_beside-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_beside",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_beside-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_beside(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_beside-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_beside",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_beside-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_beside(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_beside-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_beside",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_beside-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.nat_beside(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-nat_beside-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_doubled",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-string_doubled-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.string_doubled(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-string_doubled-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_doubled",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-string_doubled-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.string_doubled(F.One{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-string_doubled-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_doubled",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-string_doubled-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.string_doubled(F.Two{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-string_doubled-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_doubled",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-string_doubled-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.string_doubled(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-string_doubled-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-string_tail-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-string_tail-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-string_tail-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-string_tail-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-string_tail-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-string_tail-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-string_tail-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-string_tail-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_twice",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-u32_twice-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.u32_twice(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-u32_twice-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_twice",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-u32_twice-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.u32_twice(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-u32_twice-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_twice",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-u32_twice-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.u32_twice(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-u32_twice-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_twice",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-scrutinee-u32_twice-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-scrutinee.bend as F\n\ndef main() -> F.Answer:\n  F.u32_twice(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-scrutinee-u32_twice-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-scrutinee.No{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
       }
     },
     {
