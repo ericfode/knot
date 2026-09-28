@@ -88,6 +88,23 @@ def bind(-A: Data, -B: Data, result: Result<Error,A>, next: A -> Result<Error,B>
     case Fail{e}: Fail{e}
     case Done{x}: next(x)
 
+# A name is words joined by dots, each word alpha (alpha | digit)*. words
+# counts them from a word start, and is 0 when s is not a name.
+def words(+s: String, +open: Bool, +count: U32) -> U32:
+  match s:
+    case SNil{}: Bool.pick(U32,open,0,count)
+    case SCon{c,tail}:
+      +code = Char.to_u32(c)
+      choose(U32,alpha(code),u => words(tail,False{},Bool.pick(U32,open,U32.add(count,1),count)),u =>
+      choose(U32,Bool.and(Bool.not(open),Bool.or(digit(code),U32.is_eq(code,46))),u =>
+        words(tail,U32.is_eq(code,46),count),u => 0))
+
+# The seed reads every word that opens with alpha as a name.
+def malformed(+s: String) -> Bool:
+  match s:
+    case SNil{}: False{}
+    case SCon{c,tail}: Bool.and(alpha(Char.to_u32(c)),U32.is_eq(words(s,True{},0),0))
+
 def identifier_text(+s: String) -> Bool:
   match s:
     case SNil{}: False{}
@@ -95,6 +112,10 @@ def identifier_text(+s: String) -> Bool:
 
 def identifier(t: Token) -> Bool:
   identifier_text(text(t))
+
+# A pattern binds one word; a dotted name refers to a declaration.
+def binder(+t: Token) -> Bool:
+  Bool.and(identifier(t),U32.is_eq(words(text(t),True{},0),1))
 
 def skip_lines(ts: List<&2,Token>) -> List<&2,Token>:
   match ts:

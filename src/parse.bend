@@ -216,13 +216,14 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+name,Con{+open,+tail}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(pattern,S.matches(name,"+")),u =>
-            S.choose(Result<S.Error,Parsed>,S.identifier(open),u => Done{Parsed{S.Promotion{open},tail}},u => invalid(tokens,"pattern-binder")),u =>
+            S.choose(Result<S.Error,Parsed>,S.binder(open),u => Done{Parsed{S.Promotion{open},tail}},u => invalid(tokens,"pattern-binder")),u =>
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
             then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
             then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
-            Done{Parsed{S.Variable{name},Con{open,tail}}})),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.or(Bool.not(pattern),S.binder(name)),u =>
+            Done{Parsed{S.Variable{name},Con{open,tail}}},u => invalid(tokens,"pattern-binder")))),u =>
             term_failure(tokens)))
         case _: invalid(tokens,"term")
     case 1n+ +n Body{+parent}:
@@ -294,7 +295,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n BindingStart{+quantity,+column}:
       match tokens:
         case Con{+name,Con{+separator,+tail}}:
-          S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
+          # The seed reads an erased let's name as a name, any other as a pattern.
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(name),Bool.or(U32.is_eq(quantity,0),S.binder(name))),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(separator,":"),u =>
             run(n,AnnotatedBinding{name,quantity,column},tail),u =>
             S.bind(List<&2,S.Token>,Parsed,expect(Con{separator,tail},"="),rhs =>

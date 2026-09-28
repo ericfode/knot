@@ -13,6 +13,13 @@ def L.word_source(extra):
     case 0n: {==}
     case 1n+n: {==}
 
+def L.name_words(): {==}
+
+def L.malformed_word_source(extra):
+  match extra:
+    case 0n: {==}
+    case 1n+n: {==}
+
 def L.no_character_budget(c,tail):
   {==}
 
@@ -26,6 +33,10 @@ def L.comma_scrutinees(at): {==}
 
 def L.multiple_scrutinees(at):
   {==}
+
+def L.dotted_pattern_binder(at,rest): {==}
+
+def L.dotted_let_binder(at,rest): {==}
 
 def L.template_binder(at,rest):
   {==}

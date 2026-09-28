@@ -12,6 +12,15 @@ law word_source:
   for extra: Nat
   {L.tokenize(1n+extra,"a") == Done{[S.Token{"a",S.At{0,1,1,0}},S.Token{"<eof>",S.At{1,1,1,1}}]} : Result<S.Error,List<&2,S.Token>>}
 
+# A name is words joined by dots; a malformed word is rejected where it ends.
+law name_words:
+  {[S.words("a.b_1.c",True{},0),S.words("x.",True{},0),S.words("a..b",True{},0),S.words("a.1",True{},0)]
+    == [3,0,0,0] : List<&2,U32>}
+
+law malformed_word_source:
+  for extra: Nat
+  {L.tokenize(2n+extra,"a.") == Fail{S.Invalid{"lex","name",S.At{0,2,1,0}}} : Result<S.Error,List<&2,S.Token>>}
+
 law no_character_budget:
   for c: Char
   for tail: String
@@ -44,6 +53,19 @@ law comma_scrutinees:
     == Done{P.Parsed{S.Match{S.Token{"match",at},
       S.Sequence{[S.Variable{S.Token{"a",at}},S.Variable{S.Token{"b",at}}]},Nil{}},
       [S.Token{"<eof>",at}]}} : Result<S.Error,P.Parsed>}
+
+# A pattern or live let binds one word; a dotted name refers to a declaration.
+law dotted_pattern_binder:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Term{True{}},Con{S.Token{"a.b",at},Con{S.Token{":",at},rest}})
+    == Fail{S.Invalid{"parse","pattern-binder",at}} : Result<S.Error,P.Parsed>}
+
+law dotted_let_binder:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.BindingStart{1,2},Con{S.Token{"a.b",at},Con{S.Token{"=",at},rest}})
+    == Fail{S.Invalid{"parse","binding-name",at}} : Result<S.Error,P.Parsed>}
 
 law template_binder:
   for +at: S.At

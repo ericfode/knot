@@ -399,7 +399,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 89,
+          "declarations": 93,
           "base": 40,
           "base_intrinsics": 9,
           "foreign": 0
@@ -430,7 +430,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -650,12 +650,34 @@
             "dependencies": [
               "List",
               "List.reverse",
+              "Result",
               "String",
               "String.reverse",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/syntax.At",
-              "src/syntax.Token"
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/lex.lexeme",
+            "file": "src/lex.bend",
+            "via": "src/lex.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.malformed"
             ],
             "dynamic_calls": []
           },
@@ -779,10 +801,11 @@
               "U32.is_gt",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/lex.normal",
               "src/syntax.At",
               "src/syntax.Error",
-              "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.word"
             ],
@@ -1058,6 +1081,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -1094,6 +1118,7 @@
               "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
+              "src/syntax.binder",
               "src/syntax.choose",
               "src/syntax.column",
               "src/syntax.here",
@@ -1295,7 +1320,7 @@
           {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier_text",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1351,6 +1376,25 @@
             ]
           },
           {
+            "key": "src/syntax.binder",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.text",
+              "src/syntax.words"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.choose",
             "file": "src/syntax.bend",
             "via": "src/parse.run",
@@ -1383,7 +1427,7 @@
           {
             "key": "src/syntax.digit",
             "file": "src/syntax.bend",
-            "via": "src/syntax.word",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1455,6 +1499,25 @@
               "String",
               "src/syntax.alpha",
               "src/syntax.reserved"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.malformed",
+            "file": "src/syntax.bend",
+            "via": "src/lex.lexeme",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.words"
             ],
             "dynamic_calls": []
           },
@@ -1560,6 +1623,30 @@
               "U32",
               "U32.is_eq",
               "src/syntax.alpha",
+              "src/syntax.digit"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.words",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.binder",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "Bool.pick",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.choose",
               "src/syntax.digit"
             ],
             "dynamic_calls": []
@@ -1845,7 +1932,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 89,
+          "declarations": 93,
           "base": 40,
           "base_intrinsics": 8,
           "foreign": 0
@@ -1876,7 +1963,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2096,12 +2183,34 @@
             "dependencies": [
               "List",
               "List.reverse",
+              "Result",
               "String",
               "String.reverse",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/syntax.At",
-              "src/syntax.Token"
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/lex.lexeme",
+            "file": "src/lex.bend",
+            "via": "src/lex.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.malformed"
             ],
             "dynamic_calls": []
           },
@@ -2225,10 +2334,11 @@
               "U32.is_gt",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/lex.normal",
               "src/syntax.At",
               "src/syntax.Error",
-              "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.word"
             ],
@@ -2504,6 +2614,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -2540,6 +2651,7 @@
               "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
+              "src/syntax.binder",
               "src/syntax.choose",
               "src/syntax.column",
               "src/syntax.here",
@@ -2741,7 +2853,7 @@
           {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier_text",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2797,6 +2909,25 @@
             ]
           },
           {
+            "key": "src/syntax.binder",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.text",
+              "src/syntax.words"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.choose",
             "file": "src/syntax.bend",
             "via": "src/parse.run",
@@ -2829,7 +2960,7 @@
           {
             "key": "src/syntax.digit",
             "file": "src/syntax.bend",
-            "via": "src/syntax.word",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2901,6 +3032,25 @@
               "String",
               "src/syntax.alpha",
               "src/syntax.reserved"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.malformed",
+            "file": "src/syntax.bend",
+            "via": "src/lex.lexeme",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.words"
             ],
             "dynamic_calls": []
           },
@@ -3006,6 +3156,30 @@
               "U32",
               "U32.is_eq",
               "src/syntax.alpha",
+              "src/syntax.digit"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.words",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.binder",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "Bool.pick",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.choose",
               "src/syntax.digit"
             ],
             "dynamic_calls": []
@@ -3291,7 +3465,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 69,
+          "declarations": 73,
           "base": 28,
           "base_intrinsics": 9,
           "foreign": 0
@@ -3310,7 +3484,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3422,7 +3596,22 @@
             "unsafe": false,
             "dependencies": [
               "List.reverse",
-              "String.reverse"
+              "String.reverse",
+              "src/lex.lexeme",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/lex.lexeme",
+            "file": "src/lex.bend",
+            "via": "src/lex.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.choose",
+              "src/syntax.malformed"
             ],
             "dynamic_calls": []
           },
@@ -3486,7 +3675,9 @@
               "String.reverse",
               "U32.add",
               "U32.is_gt",
+              "src/lex.lexeme",
               "src/lex.normal",
+              "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.word"
             ],
@@ -3657,6 +3848,7 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "String.eq",
@@ -3682,6 +3874,7 @@
               "src/parse.wrap_match",
               "src/parse.wrap_type",
               "src/syntax.bind",
+              "src/syntax.binder",
               "src/syntax.choose",
               "src/syntax.column",
               "src/syntax.here",
@@ -3818,7 +4011,7 @@
           {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier_text",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3854,6 +4047,22 @@
             ]
           },
           {
+            "key": "src/syntax.binder",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "U32.is_eq",
+              "src/syntax.identifier",
+              "src/syntax.text",
+              "src/syntax.words"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.choose",
             "file": "src/syntax.bend",
             "via": "src/parse.run",
@@ -3879,7 +4088,7 @@
           {
             "key": "src/syntax.digit",
             "file": "src/syntax.bend",
-            "via": "src/syntax.word",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3928,6 +4137,22 @@
               "Char.to_u32",
               "src/syntax.alpha",
               "src/syntax.reserved"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.malformed",
+            "file": "src/syntax.bend",
+            "via": "src/lex.lexeme",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Char.to_u32",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.words"
             ],
             "dynamic_calls": []
           },
@@ -3991,6 +4216,27 @@
               "Bool.or",
               "U32.is_eq",
               "src/syntax.alpha",
+              "src/syntax.digit"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.words",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.binder",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "Bool.pick",
+              "Char.to_u32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.choose",
               "src/syntax.digit"
             ],
             "dynamic_calls": []
@@ -4194,7 +4440,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 103,
+          "declarations": 107,
           "base": 54,
           "base_intrinsics": 9,
           "foreign": 0
@@ -4252,7 +4498,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4524,11 +4770,33 @@
             "dependencies": [
               "List",
               "List.reverse",
+              "Result",
               "String.reverse",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/syntax.At",
-              "src/syntax.Token"
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/lex.lexeme",
+            "file": "src/lex.bend",
+            "via": "src/lex.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.malformed"
             ],
             "dynamic_calls": []
           },
@@ -4649,10 +4917,12 @@
               "U32.is_gt",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/lex.normal",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.word"
             ],
@@ -4920,6 +5190,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -4955,6 +5226,7 @@
               "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
+              "src/syntax.binder",
               "src/syntax.choose",
               "src/syntax.column",
               "src/syntax.here",
@@ -5150,7 +5422,7 @@
           {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier_text",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5206,6 +5478,24 @@
             ]
           },
           {
+            "key": "src/syntax.binder",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.text",
+              "src/syntax.words"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.choose",
             "file": "src/syntax.bend",
             "via": "src/parse.run",
@@ -5238,7 +5528,7 @@
           {
             "key": "src/syntax.digit",
             "file": "src/syntax.bend",
-            "via": "src/syntax.word",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5309,6 +5599,24 @@
               "String",
               "src/syntax.alpha",
               "src/syntax.reserved"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.malformed",
+            "file": "src/syntax.bend",
+            "via": "src/lex.lexeme",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.words"
             ],
             "dynamic_calls": []
           },
@@ -5413,6 +5721,30 @@
               "U32",
               "U32.is_eq",
               "src/syntax.alpha",
+              "src/syntax.digit"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.words",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.binder",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "Bool.pick",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.choose",
               "src/syntax.digit"
             ],
             "dynamic_calls": []
@@ -5834,7 +6166,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 382,
+          "declarations": 386,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -6087,7 +6419,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -8914,12 +9246,34 @@
             "dependencies": [
               "List",
               "List.reverse",
+              "Result",
               "String",
               "String.reverse",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/syntax.At",
-              "src/syntax.Token"
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/lex.lexeme",
+            "file": "src/lex.bend",
+            "via": "src/lex.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.malformed"
             ],
             "dynamic_calls": []
           },
@@ -9043,10 +9397,11 @@
               "U32.is_gt",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/lex.normal",
               "src/syntax.At",
               "src/syntax.Error",
-              "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.word"
             ],
@@ -10079,6 +10434,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -10115,6 +10471,7 @@
               "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
+              "src/syntax.binder",
               "src/syntax.choose",
               "src/syntax.column",
               "src/syntax.here",
@@ -11045,7 +11402,7 @@
           {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier_text",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11101,6 +11458,25 @@
             ]
           },
           {
+            "key": "src/syntax.binder",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.text",
+              "src/syntax.words"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.choose",
             "file": "src/syntax.bend",
             "via": "src/compile-cli.configured",
@@ -11133,7 +11509,7 @@
           {
             "key": "src/syntax.digit",
             "file": "src/syntax.bend",
-            "via": "src/syntax.word",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11205,6 +11581,25 @@
               "String",
               "src/syntax.alpha",
               "src/syntax.reserved"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.malformed",
+            "file": "src/syntax.bend",
+            "via": "src/lex.lexeme",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.words"
             ],
             "dynamic_calls": []
           },
@@ -11310,6 +11705,30 @@
               "U32",
               "U32.is_eq",
               "src/syntax.alpha",
+              "src/syntax.digit"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.words",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.binder",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "Bool.pick",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.choose",
               "src/syntax.digit"
             ],
             "dynamic_calls": []
@@ -12966,7 +13385,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 382,
+          "declarations": 386,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -13219,7 +13638,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16046,12 +16465,34 @@
             "dependencies": [
               "List",
               "List.reverse",
+              "Result",
               "String",
               "String.reverse",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/syntax.At",
-              "src/syntax.Token"
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/lex.lexeme",
+            "file": "src/lex.bend",
+            "via": "src/lex.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.malformed"
             ],
             "dynamic_calls": []
           },
@@ -16175,10 +16616,11 @@
               "U32.is_gt",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/lex.normal",
               "src/syntax.At",
               "src/syntax.Error",
-              "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.word"
             ],
@@ -17211,6 +17653,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -17247,6 +17690,7 @@
               "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
+              "src/syntax.binder",
               "src/syntax.choose",
               "src/syntax.column",
               "src/syntax.here",
@@ -18177,7 +18621,7 @@
           {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier_text",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -18233,6 +18677,25 @@
             ]
           },
           {
+            "key": "src/syntax.binder",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.text",
+              "src/syntax.words"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.choose",
             "file": "src/syntax.bend",
             "via": "src/compile-cli.configured",
@@ -18265,7 +18728,7 @@
           {
             "key": "src/syntax.digit",
             "file": "src/syntax.bend",
-            "via": "src/syntax.word",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -18337,6 +18800,25 @@
               "String",
               "src/syntax.alpha",
               "src/syntax.reserved"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.malformed",
+            "file": "src/syntax.bend",
+            "via": "src/lex.lexeme",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.words"
             ],
             "dynamic_calls": []
           },
@@ -18442,6 +18924,30 @@
               "U32",
               "U32.is_eq",
               "src/syntax.alpha",
+              "src/syntax.digit"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.words",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.binder",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "Bool.pick",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.choose",
               "src/syntax.digit"
             ],
             "dynamic_calls": []
@@ -20098,7 +20604,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 333,
+          "declarations": 337,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -20253,7 +20759,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21973,7 +22479,22 @@
             "unsafe": false,
             "dependencies": [
               "List.reverse",
-              "String.reverse"
+              "String.reverse",
+              "src/lex.lexeme",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/lex.lexeme",
+            "file": "src/lex.bend",
+            "via": "src/lex.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.choose",
+              "src/syntax.malformed"
             ],
             "dynamic_calls": []
           },
@@ -22037,7 +22558,9 @@
               "String.reverse",
               "U32.add",
               "U32.is_gt",
+              "src/lex.lexeme",
               "src/lex.normal",
+              "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.word"
             ],
@@ -22743,6 +23266,7 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "String.eq",
@@ -22768,6 +23292,7 @@
               "src/parse.wrap_match",
               "src/parse.wrap_type",
               "src/syntax.bind",
+              "src/syntax.binder",
               "src/syntax.choose",
               "src/syntax.column",
               "src/syntax.here",
@@ -23405,7 +23930,7 @@
           {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier_text",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23441,6 +23966,22 @@
             ]
           },
           {
+            "key": "src/syntax.binder",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "U32.is_eq",
+              "src/syntax.identifier",
+              "src/syntax.text",
+              "src/syntax.words"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.choose",
             "file": "src/syntax.bend",
             "via": "src/compile-cli.configured",
@@ -23466,7 +24007,7 @@
           {
             "key": "src/syntax.digit",
             "file": "src/syntax.bend",
-            "via": "src/syntax.word",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23515,6 +24056,22 @@
               "Char.to_u32",
               "src/syntax.alpha",
               "src/syntax.reserved"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.malformed",
+            "file": "src/syntax.bend",
+            "via": "src/lex.lexeme",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Char.to_u32",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.words"
             ],
             "dynamic_calls": []
           },
@@ -23578,6 +24135,27 @@
               "Bool.or",
               "U32.is_eq",
               "src/syntax.alpha",
+              "src/syntax.digit"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.words",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.binder",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "Bool.pick",
+              "Char.to_u32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.choose",
               "src/syntax.digit"
             ],
             "dynamic_calls": []
@@ -24748,7 +25326,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 420,
+          "declarations": 424,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -27912,11 +28490,33 @@
             "dependencies": [
               "List",
               "List.reverse",
+              "Result",
               "String.reverse",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/syntax.At",
-              "src/syntax.Token"
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/lex.lexeme",
+            "file": "src/lex.bend",
+            "via": "src/lex.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.malformed"
             ],
             "dynamic_calls": []
           },
@@ -28037,10 +28637,12 @@
               "U32.is_gt",
               "src/lex.Mode",
               "src/lex.State",
+              "src/lex.lexeme",
               "src/lex.normal",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.word"
             ],
@@ -29063,6 +29665,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -29098,6 +29701,7 @@
               "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
+              "src/syntax.binder",
               "src/syntax.choose",
               "src/syntax.column",
               "src/syntax.here",
@@ -30012,7 +30616,7 @@
           {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier_text",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30068,6 +30672,24 @@
             ]
           },
           {
+            "key": "src/syntax.binder",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.text",
+              "src/syntax.words"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.choose",
             "file": "src/syntax.bend",
             "via": "src/compile-cli.configured",
@@ -30100,7 +30722,7 @@
           {
             "key": "src/syntax.digit",
             "file": "src/syntax.bend",
-            "via": "src/syntax.word",
+            "via": "src/syntax.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30171,6 +30793,24 @@
               "String",
               "src/syntax.alpha",
               "src/syntax.reserved"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.malformed",
+            "file": "src/syntax.bend",
+            "via": "src/lex.lexeme",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.words"
             ],
             "dynamic_calls": []
           },
@@ -30275,6 +30915,30 @@
               "U32",
               "U32.is_eq",
               "src/syntax.alpha",
+              "src/syntax.digit"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.words",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.binder",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "Bool.pick",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.alpha",
+              "src/syntax.choose",
               "src/syntax.digit"
             ],
             "dynamic_calls": []
