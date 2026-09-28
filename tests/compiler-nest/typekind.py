@@ -7,8 +7,8 @@ aliases, `+` rows and nested field binders over `Type`- and `Data`-kind
 boxes, with a `probe` entry over Sel. The seed and Knot must agree on
 acceptance: a seed rejection is never Checked, and a seed acceptance is never
 Invalid (Unsupported and Exhausted do not accept). Where both accept a program
-that promotes a `Type`-kind binder, one seeded probe call must agree between
-the seed and the Knot evaluator.
+with a `+` binder and a `Type`-kind box, one seeded probe call must agree
+between the seed and the Knot evaluator.
 """
 import argparse
 from collections import Counter
@@ -25,7 +25,7 @@ import fuzz
 import regen as oracle
 
 SEEDS = range(0, 3000)
-# A `+` row or field binder on a Type-kind box, the subject of round 8.
+# A `+` row or field binder in a program with a Type-kind Wrap (Box may be too).
 PROMOTED = re.compile(r'case .*\+v')
 
 
@@ -209,7 +209,7 @@ def gen(seed):
 
 
 def promotes_type(source):
-    return 'type Box is Type:' in source and PROMOTED.search(source) is not None
+    return 'type Wrap is Type:' in source and PROMOTED.search(source) is not None
 
 
 def compare(seed, path, check, evaluate):
@@ -242,7 +242,7 @@ def compare(seed, path, check, evaluate):
 
 
 def check(check, directory, evaluate=None):
-    """Classify every program with `check`; evaluate one agreed promoted acceptance call with `evaluate`."""
+    """Classify every program with `check`; evaluate one call of each agreed promoted acceptance."""
     directory.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(max_workers=6) as pool:
         records = list(pool.map(lambda s: compare(s, directory / f'a{s:05d}.bend', check, evaluate), SEEDS))
