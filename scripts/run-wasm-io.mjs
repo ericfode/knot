@@ -4,20 +4,30 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
+// knot-io-2: knot-io-1 plus read_bytes, path_identity and exhaustion kind 3.
 const signatures = Object.freeze({
-  args: [1, 0], print: [2, 0], die: [3, 0], open: [5, 0],
-  read: [3, 0], write_bytes: [5, 0], close: [1, 0], exhausted: [1, 0],
+  args: [1, 0], print: [2, 0], die: [3, 0], open: [5, 0], read: [3, 0],
+  read_bytes: [3, 0], write_bytes: [5, 0], close: [1, 0], path_identity: [3, 0],
+  exhausted: [1, 0],
 });
 const errors = Object.freeze({
   ENOENT: [2, 'No such file or directory'], EBADF: [9, 'Bad file descriptor'],
   ENOTDIR: [20, 'Not a directory'], EISDIR: [21, 'Is a directory'],
   EINVAL: [22, 'Invalid argument'], EILSEQ: [92, 'Illegal byte sequence'],
 });
+// Identity fails only on NUL and on the length error its foreign bodies witness.
+const identityErrors = Object.freeze({
+  EILSEQ: errors.EILSEQ, ENAMETOOLONG: [63, 'File name too long'],
+});
 const MAX_MEMORY = 128 * 1024 * 1024;
 const MAX_TRANSFER = 16 * 1024 * 1024;
 const decoder = new TextDecoder('utf-8', {ignoreBOM: true});
 const strictDecoder = new TextDecoder('utf-8', {fatal: true, ignoreBOM: true});
 const normalize = bytes => Buffer.from(decoder.decode(bytes), 'utf8');
+const secret = parts => parts.some(p => {
+  const q = p.toLowerCase();
+  return q === '.env' || q.startsWith('.env.');
+});
 
 class Fault extends Error {
   constructor(status, code, exit, message = code) {
@@ -145,8 +155,8 @@ export async function runIO({modulePath, sandbox, args = []}) {
     const words = range(out, 16);
     [errno, value, p, data.length].forEach((v, i) => words.writeUInt32LE(v >>> 0, i * 4));
   }
-  function fail(out, code, handle = 0) {
-    const pair = errors[code];
+  function fail(out, code, handle = 0, surface = errors) {
+    const pair = surface[code];
     if (!pair) bad('os', 'unmodeled OS failure');
     result(out, pair[0], handle, Buffer.from(pair[1]));
   }
@@ -157,11 +167,7 @@ export async function runIO({modulePath, sandbox, args = []}) {
   }
   function confined(name) {
     const parts = name.split('/');
-    if (path.isAbsolute(name) || parts.includes('..') ||
-        parts.some(p => {
-          const q = p.toLowerCase();
-          return q === '.env' || q.startsWith('.env.');
-        })) bad('sandbox', 'path refused');
+    if (path.isAbsolute(name) || parts.includes('..') || secret(parts)) bad('sandbox', 'path refused');
     let current = root;
     for (const part of parts.filter(p => p && p !== '.')) {
       current = path.join(current, part);
@@ -175,6 +181,57 @@ export async function runIO({modulePath, sandbox, args = []}) {
       }
     }
     return root + '/' + name;
+  }
+  // Identity may spell the canonical root absolutely and step back to it, never above it.
+  function rooted(name) {
+    const parts = name.split('/').filter(p => p && p !== '.');
+    const base = path.isAbsolute(name) ? root.split('/').filter(Boolean) : [];
+    const rest = parts.slice(base.length);
+    let depth = 0;
+    if (secret(parts) || base.some((b, i) => parts[i] !== b) ||
+        rest.some(p => (depth += p === '..' ? -1 : 1) < 0)) bad('sandbox', 'path refused');
+    return rest;
+  }
+  // The modules loader's foreign `inspect`: in spelling order, every existing
+  // component is an exact directory entry and no symlink; a missing one defers to open.
+  function canonical(parts) {
+    let current = root;
+    for (const part of parts) {
+      if (part === '..') { current = path.dirname(current); continue; }
+      const next = path.join(current, part);
+      let st;
+      try { st = fs.lstatSync(next); }
+      catch (error) {
+        if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return true;
+        throw error;
+      }
+      if (st.isSymbolicLink()) return false;
+      const exact = fs.readdirSync(current, {encoding: 'buffer'}).some(entry => entry.equals(Buffer.from(part)));
+      if (!exact) return false;
+      current = next;
+    }
+    return true;
+  }
+  // read decodes each result independently; read_bytes returns it raw. Both share the cursor.
+  function readFile(id, maximum, out, decode) {
+    resultRange(out);
+    const h = handle(id);
+    if (h.mode !== 'r') return fail(out, 'EBADF', id);
+    if (h.directory) return fail(out, 'EISDIR', id);
+    let bytes;
+    try {
+      const remaining = Math.max(0, fs.fstatSync(h.fd).size - h.position);
+      const size = Math.min(maximum >>> 0, remaining);
+      if (size > MAX_TRANSFER) exhausted('memory');
+      bytes = Buffer.alloc(size);
+      const count = fs.readSync(h.fd, bytes, 0, size, null);
+      h.position += count;
+      bytes = decode(bytes.subarray(0, count));
+    } catch (error) {
+      if (error instanceof Fault) throw error;
+      return fail(out, error.code, id);
+    }
+    result(out, 0, id, bytes);
   }
   const io = {
     args(out) {
@@ -224,26 +281,8 @@ export async function runIO({modulePath, sandbox, args = []}) {
         fail(out, error.code);
       }
     },
-    read(id, maximum, out) {
-      resultRange(out);
-      const h = handle(id);
-      if (h.mode !== 'r') return fail(out, 'EBADF', id);
-      if (h.directory) return fail(out, 'EISDIR', id);
-      let bytes;
-      try {
-        const remaining = Math.max(0, fs.fstatSync(h.fd).size - h.position);
-        const size = Math.min(maximum >>> 0, remaining);
-        if (size > MAX_TRANSFER) exhausted('memory');
-        bytes = Buffer.alloc(size);
-        const count = fs.readSync(h.fd, bytes, 0, size, null);
-        h.position += count;
-        bytes = normalize(bytes.subarray(0, count));
-      } catch (error) {
-        if (error instanceof Fault) throw error;
-        return fail(out, error.code, id);
-      }
-      result(out, 0, id, bytes);
-    },
+    read: (id, maximum, out) => readFile(id, maximum, out, normalize),
+    read_bytes: (id, maximum, out) => readFile(id, maximum, out, bytes => bytes),
     write_bytes(id, p, n, invalid, out) {
       resultRange(out);
       const h = handle(id);
@@ -265,14 +304,28 @@ export async function runIO({modulePath, sandbox, args = []}) {
       handles.delete(id >>> 0);
       try { fs.closeSync(h.fd); } catch { /* Base ignores close errors. */ }
     },
+    path_identity(p, n, out) {
+      resultRange(out);
+      const name = text(p, n);
+      if (name.includes('\0')) return fail(out, 'EILSEQ');
+      const parts = rooted(name);
+      let exact;
+      try { exact = canonical(parts); }
+      catch (error) { return fail(out, error.code, 0, identityErrors); }
+      result(out, 0, exact ? 1 : 0);
+    },
     exhausted(kind) {
+      // The allocator's sole permitted callback is exhausted(2).
+      if (allocating && kind !== 2) bad('abi', 'effect outside guest invocation');
       if (kind === 1) exhausted('steps');
       if (kind === 2) exhausted('memory');
+      if (kind === 3) exhausted('frames');
       bad('abi', 'unknown exhaustion reason');
     },
   };
   try {
-    root = fs.realpathSync(sandbox);
+    // The native call also restores on-disk case, so rooted identity queries see the canonical root.
+    root = fs.realpathSync.native(sandbox);
     if (!fs.statSync(root).isDirectory()) bad('sandbox', 'working directory required');
     let bytes;
     try { bytes = fs.readFileSync(modulePath); } catch { bad('module', 'module unreadable'); }

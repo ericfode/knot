@@ -2,6 +2,7 @@
 """Compare knot-io-2 with frozen literals and the modules foreign bodies."""
 import errno
 import hashlib
+import itertools
 import json
 import os
 from pathlib import Path
@@ -252,21 +253,61 @@ def references():
     before, mode = snapshot(box), case_mode(box)
     rows = []
     for case in PLAN['path_identity']:
-        encoded = case['path'].replace('$SANDBOX', str(box.resolve())).encode().hex()
-        for lane, argv in [('c', [str(native), encoded]),
-                           ('js', ['node', str(HERE / 'reference.mjs'),
-                                   str(HERE / 'reference/path-identity.js'), encoded])]:
-            r = command(argv, cwd=box)
-            assert r.returncode == 0 and r.stderr == b'', (case['name'], lane, r.stderr)
-            code, value = json.loads(r.stdout)
-            darwin = {errno.EILSEQ: 92, errno.ENAMETOOLONG: 63}.get(code, code)
-            actual = [darwin, value, os.strerror(code).encode().hex() if code else '']
+        for lane, actual in foreign(native, case['path'].replace('$SANDBOX', str(box.resolve())), box):
             assert actual == identity_expected(case, mode), (case['name'], lane, actual)
             rows.append({'name': case['name'], 'lane': lane, 'observed': actual})
     assert snapshot(box) == before
     return {'status': 'pass', 'reference_commit': PLAN['reference_commit'],
             'reference_sha256': PLAN['reference_sha256'], 'case_mode': mode,
-            'expectations_sha256': sha((HERE / 'expectations.json').read_bytes()), 'runs': rows}
+            'expectations_sha256': sha((HERE / 'expectations.json').read_bytes()), 'runs': rows}, native
+
+
+def foreign(native, target, box):
+    """Both unmodified modules bodies, as [lane, [Darwin errno, value, message hex]]."""
+    encoded, rows = target.encode().hex(), []
+    for lane, argv in [('c', [str(native), encoded]),
+                       ('js', ['node', str(HERE / 'reference.mjs'),
+                               str(HERE / 'reference/path-identity.js'), encoded])]:
+        r = command(argv, cwd=box)
+        assert r.returncode == 0 and r.stderr == b'', (target, lane, r.stderr)
+        code, value = json.loads(r.stdout)
+        darwin = {errno.EILSEQ: 92, errno.ENAMETOOLONG: 63}.get(code, code)
+        rows.append((lane, [darwin, value, os.strerror(code).encode().hex() if code else '']))
+    return rows
+
+
+# Generated spellings over the identity tree; the foreign bodies alone decide each result.
+SPELLINGS = ['file.bin', 'FILE.BIN', 'dir', 'DIR', 'leaf', 'link-file', 'link-dir',
+             'dangling', 'fifo', 'missing', '.', '..']
+
+
+def inside(parts):
+    depth = 0
+    for part in parts:
+        depth += {'.': 0, '..': -1}.get(part, 1)
+        if depth < 0:
+            return False
+    return True
+
+
+def parity(native):
+    """Every one- and two-component spelling inside the root, and each rooted single."""
+    box = identity_tree('parity')
+    root = str(box.resolve())
+    targets = ['/'.join(parts) for n in (1, 2) for parts in itertools.product(SPELLINGS, repeat=n)
+               if inside(parts)]
+    targets += [root + '/' + part for part in SPELLINGS if part != '..']
+    before, rows = snapshot(box), []
+    for target in targets:
+        lanes = foreign(native, target, box)
+        rooted = target.startswith('/')
+        r, outcome, _ = invoke(identity_program('$SANDBOX' if rooted else target), box,
+                               args=[target] if rooted else [])
+        host = observations(r, outcome)
+        assert all([observed] == host for _, observed in lanes), (target, lanes, host)
+        rows.append([target.replace(root, '$SANDBOX'), host[0][1]])
+    assert snapshot(box) == before
+    return rows
 
 
 def control(name, host=HOST, prefix='controls'):
@@ -377,7 +418,7 @@ def main():
     receipts.mkdir(exist_ok=True)
     receipt = receipts / 'host.json'
     receipt.unlink(missing_ok=True)
-    reference = references()
+    reference, native = references()
     (receipts / 'reference.json').write_text(json.dumps(reference, indent=2) + '\n')
     print(f'io-abi-2 references: {len(reference["runs"])} C/JS observations, {reference["case_mode"]} filesystem', flush=True)
     witnesses = seed()
@@ -397,6 +438,8 @@ def main():
         assert actual == expected, (name, actual, expected)
         assert record['stdout'] == '' and record['stderr'] == f'{expected[0]}\tio\t{expected[1]}\n', record
         bounds.append(record)
+    generated = parity(native)
+    print(f'io-abi-2 parity: {len(generated)} generated spellings, host = C = JS', flush=True)
     killed = mutants(reference['case_mode'])
     files = [HOST, ROOT / 'tests/compiler-io/host/invoke.mjs',
              *(p for p in HERE.rglob('*') if p.is_file() and 'receipts' not in p.parts)]
@@ -407,7 +450,7 @@ def main():
               'seed': {name: sha((SEED.parent / name).read_bytes()) for name in
                        ('main.ts', 'base.bend', 'effs/file_open.c', 'effs/file_open.js',
                         'effs/file_read.c', 'effs/file_read.js')},
-              'fixtures': fixtures, 'seed_runs': witnesses, 'host_boundaries': bounds, 'mutants': killed,
+              'fixtures': fixtures, 'parity': generated, 'seed_runs': witnesses, 'host_boundaries': bounds, 'mutants': killed,
               'read_observations': sum(len(c['reads']) for c in PLAN['read_bytes']),
               'reference_observations': len(reference['runs']), 'case_mode': reference['case_mode'],
               'seed_observations': sum(len(r.get('observations', [])) for r in witnesses),
