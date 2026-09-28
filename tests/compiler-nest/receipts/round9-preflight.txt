@@ -1,0 +1,79 @@
+# Round-9 offline style preflight (0 provider requests) on the tree at e7a9d7e.
+# The task for the matrix groups is tests/compiler-nest/SPEC.md (14,479 bytes; about 300 bytes of headroom
+# remain under the perch-context bound). A selection outside its manifest group cannot resolve every collaborator,
+# so exit 3 with `collaborator-not-in-group` says the composition needs the group, not that a context is
+# truncated; the last block is the whole compiler manifest, which tests/perch-context/check.py runs: 20 groups,
+# every composition available, 0 truncated, 0 role-limited, 0 structural blockers (exit 0). The whole-checker
+# witnesses in src/matrix-LAWS.bend are truncated by the helper limit, as the round-8 witnesses are: each
+# calls K.run.
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/check.bend::expected
+Style preflight (offline, 0 provider requests): 1 declarations in 1 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (14479 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 0 {}.
+Supporting role impossible (incomplete role context): 0 {}.
+Composition (required always): unavailable [unresolved_composition_context]; 32287/48000 bytes; unresolved {"collaborator-not-in-group":119}.
+(exit 3)
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/check-LAWS.bend::refined_value_needs_annotation src/check-LAWS.bend::refined_construct_needs_annotation src/check-LAWS.bend::unrefined_binder_is_inferable src/check-LAWS.bend::annotation_admits_constructor
+Style preflight (offline, 0 provider requests): 4 declarations in 1 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (14479 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 0 {}.
+Supporting role impossible (incomplete role context): 0 {}.
+Composition (required always): unavailable [unresolved_composition_context]; 35429/48000 bytes; unresolved {"collaborator-not-in-group":125}.
+(exit 3)
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/matrix-LAWS.bend::accepted src/matrix-LAWS.bend::unannotated src/matrix-LAWS.bend::mode_annotation src/matrix-LAWS.bend::let_v src/matrix-LAWS.bend::flat_let src/matrix-LAWS.bend::matrix_let src/matrix-LAWS.bend::residual_let src/matrix-LAWS.bend::refined_flat_let_witness src/matrix-LAWS.bend::refined_matrix_let_witness src/matrix-LAWS.bend::residual_let_witness src/matrix-LAWS.bend::annotated_let_witness
+Style preflight (offline, 0 provider requests): 11 declarations in 1 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (14479 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 7 {"context-helper-limit":7}.
+Supporting role impossible (incomplete role context): 7 {"context-helper-limit":7,"truncated-context":7}.
+Composition (required always): unavailable [composition_byte_limit]; 100463/48000 bytes; unresolved {}.
+truncated: src/matrix-LAWS.bend::flat_let context-helper-limit
+truncated: src/matrix-LAWS.bend::matrix_let context-helper-limit
+truncated: src/matrix-LAWS.bend::residual_let context-helper-limit
+truncated: src/matrix-LAWS.bend::refined_flat_let_witness context-helper-limit
+truncated: src/matrix-LAWS.bend::refined_matrix_let_witness context-helper-limit
+truncated: src/matrix-LAWS.bend::residual_let_witness context-helper-limit
+truncated: src/matrix-LAWS.bend::annotated_let_witness context-helper-limit
+(exit 3)
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/parse.bend::binder_failure src/parse.bend::body_end
+Style preflight (offline, 0 provider requests): 2 declarations in 1 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (14479 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 0 {}.
+Supporting role impossible (incomplete role context): 0 {}.
+Composition (required always): available; 25625/48000 bytes; unresolved {}.
+(exit 0)
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/LAWS.bend::dotted_pattern_binder src/LAWS.bend::dotted_promotion_binder src/LAWS.bend::dotted_let_binder src/LAWS.bend::dotted_typed_let_binder src/LAWS.bend::unnamed_binder_is_invalid src/LAWS.bend::line_break_in_arguments src/LAWS.bend::line_break_after_element src/LAWS.bend::same_line_arm src/LAWS.bend::body_ends_at_line_break
+Style preflight (offline, 0 provider requests): 9 declarations in 1 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (14479 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 0 {}.
+Supporting role impossible (incomplete role context): 0 {}.
+Composition (required always): unavailable [unresolved_composition_context]; 35732/48000 bytes; unresolved {"collaborator-not-in-group":4}.
+(exit 3)
+
+# node scripts/perch-style.mjs --preflight --manifest=docs/compiler-campaign/manifest.json (whole compiler manifest, as tests/perch-context/check.py runs it)
+syntax-core: 37 declarations; 0 truncated; 0 role-limited; composition available (6624/48000 bytes).
+frontend-lexing: 32 declarations; 0 truncated; 0 role-limited; composition available (8876/48000 bytes).
+frontend-parsing: 48 declarations; 0 truncated; 0 role-limited; composition available (25625/48000 bytes).
+diagnostics: 49 declarations; 0 truncated; 0 role-limited; composition available (13095/48000 bytes).
+catalog: 73 declarations; 0 truncated; 0 role-limited; composition available (20209/48000 bytes).
+scope-patterns: 124 declarations; 0 truncated; 0 role-limited; composition available (38449/48000 bytes).
+checking: 43 declarations; 0 truncated; 0 role-limited; composition available (34893/48000 bytes).
+evaluation: 67 declarations; 0 truncated; 0 role-limited; composition available (19531/48000 bytes).
+wasm-codec: 34 declarations; 0 truncated; 0 role-limited; composition available (7785/48000 bytes).
+wasm-emission: 93 declarations; 0 truncated; 0 role-limited; composition available (29281/48000 bytes).
+driver-pipeline: 51 declarations; 0 truncated; 0 role-limited; composition available (23937/48000 bytes).
+frontend-laws: 126 declarations; 0 truncated; 0 role-limited; composition available (43781/48000 bytes).
+checker-laws: 59 declarations; 0 truncated; 0 role-limited; composition available (24029/48000 bytes).
+runtime-laws: 55 declarations; 0 truncated; 0 role-limited; composition available (25808/48000 bytes).
+catalog-laws: 48 declarations; 0 truncated; 0 role-limited; composition available (25940/48000 bytes).
+fields-laws: 36 declarations; 0 truncated; 0 role-limited; composition available (21655/48000 bytes).
+recursion-laws: 32 declarations; 0 truncated; 0 role-limited; composition available (18010/48000 bytes).
+pattern-matrix: 89 declarations; 0 truncated; 0 role-limited; composition available (39442/48000 bytes).
+pattern-matrix-laws: 137 declarations; 0 truncated; 0 role-limited; composition available (45436/48000 bytes).
+lowering-laws: 37 declarations; 0 truncated; 0 role-limited; composition available (35765/48000 bytes).
+Manifest preflight: 20 groups; 0 structural blockers; 0 provider requests.
+(exit 0)

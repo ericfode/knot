@@ -1223,3 +1223,48 @@ Prevention:
   perch-context budget for `token` (one extra commit). Build ground programs
   from small named definitions, and run `tests/perch-context/check.py` before
   committing new laws.
+
+## 2026-09-28 — nest review round 9: a let of a refined binder was accepted
+
+Confirmed:
+- An unannotated let of a binder that a positive branch had refined to a
+  constructor (`match z: case A{}: v = z; v`) was Checked, flat and in a
+  matrix, while the seed rejects it ("an annotated term (cannot infer)"): an
+  unsound acceptance. The flat form was already on main. The seed substitutes a
+  matched binder by its constructor term and has no inference rule for one;
+  Knot rejected only a literal constructor. The reviewer's fuzz found eight
+  programs in 3,534.
+- Commit `2ae8dca3` over-corrected: it rejected every dotted binder as
+  Invalid, but the seed accepts one that rebinds a name in scope, so seven
+  programs were a D4 false Invalid. A stopgap now reports every dotted binder
+  as Unsupported until the modules round brings the scope-aware rule.
+- Seven main-era probes with a line break inside call or constructor arguments,
+  or a second arm on an arm's line, were Invalid parse; they are Unsupported now.
+
+See the [round-9 dispositions](../tests/compiler-nest/receipts/REVIEW-9.md).
+`expected` rejects a checked `Value` or `Construct` when no annotation gives
+the type, which covers the literal and the refined binder with one rule.
+
+Prevention:
+- The fuzz generator drew a binder only as a bare body term or a scrutinee,
+  so a let of a matched binder was outside its vocabulary in every round.
+  When a rule names a syntactic position (a let's value), give the generator
+  that position for each binder kind (scrutinee, parameter, pattern binder)
+  and each form, and run it against the parent commit to see it bite: the
+  extended generator reports 36 false acceptances against `93579bb`.
+- State the term a rule depends on, not the surface form. The refinement
+  elaborates to a constructor term, so the rule belongs where a checked term
+  meets a missing annotation, not at each binder use.
+- When a change turns a false accept into a rejection (`2ae8dca3`), freeze the
+  seed-accepted twin in the same commit, as round 3 froze seed-rejected
+  controls. The twin of a dotted binder is the rebound one.
+- A round's SPEC is the Perch task text of the pattern-matrix groups. A
+  2.6 KB paragraph pushed the context of `src/matrix-LAWS.bend::flag` past the
+  60,000-byte state bound, which the perch-context gate found. Keep the SPEC
+  addition to what a reader needs (about 700 bytes) and put the evidence in
+  the round's review record. About 300 bytes of headroom remain.
+- Measure a classification change against the neighbouring gates before
+  widening it. The first line-break repair also closed all five of the
+  selfhost suite's reviewed D4 gaps and left four of its twenty judge controls
+  with nothing to run on. Confining it to the requested body arguments
+  restored all twenty.

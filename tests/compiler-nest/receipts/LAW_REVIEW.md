@@ -338,3 +338,54 @@ after the repair.
 The D21 table above now names `matrix-work` as a counterexample to the total
 irrefutable-first-row law at the implemented quota. The law is unchanged and
 still required.
+
+## Round 9
+
+The round-9 review confirmed an unsound acceptance. An unannotated let of a
+binder that a positive branch has refined to a constructor was Checked, flat
+and in a matrix, while the seed rejects it: `match z: case A{}: v = z; v`
+reports "an annotated term (cannot infer)". The seed substitutes the matched
+binder by its constructor term, and its `term_infer` has no rule for a
+constructor. Knot already reported a literal constructor there
+(`annotation-required`), but a refined binder elaborated to a `Value` or a
+rebuilt `Construct` and reached `expected` as an ordinary checked term.
+
+No earlier law pinned inference of a let's value. `expected` now rejects a
+checked `Value` or `Construct` when no annotation gives the type. The round adds
+four laws on `expected` and four whole-checker witnesses. It also restates the
+two dotted-binder laws of round 3, and adds three laws for the parser's
+stopgap and four for the line-break classification (below).
+
+| Law | Quantification and evidence | Limit |
+|---|---|---|
+| `refined_value_needs_annotation` | Every token, use set, type and tag: a checked `Value` with no annotation is `Invalid check annotation-required` | The nullary form of a refined binder |
+| `refined_construct_needs_annotation` | Every token, field signature, argument list, use set, type and tag: the same for a checked `Construct` | The rebuilt form of a refined binder |
+| `unrefined_binder_is_inferable` | Every token, use set, level and type: a `Reference`, which is what a residual, a default-row binder and a binder never refined check to, is inferable | One term form |
+| `annotation_admits_constructor` | Every token and tag: an annotation (type 0) admits a checked constructor | One concrete type id (0) for the annotation and the term |
+| `refined_flat_let_witness`, `refined_matrix_let_witness` | Whole checker: a let of a binder refined by a flat match, and by a matrix, is rejected | Ground programs at a `Type` kind |
+| `residual_let_witness`, `annotated_let_witness` | Whole checker: a let of a residual binder, and an annotated let of a refined one (flat and matrix), are accepted | Ground programs |
+| `dotted_pattern_binder`, `dotted_promotion_binder`, `dotted_let_binder`, `dotted_typed_let_binder` (`src/LAWS.bend`) | Every source location and token suffix, for the fixed name `a.b`: every dotted binder is `Unsupported parse dotted-binder`. The first and third restate the round-3 laws, which said Invalid | One dotted spelling per site; the modules round's scope-aware rule must restate them |
+| `unnamed_binder_is_invalid` | Every location and suffix: a token that is no name at all stays `Invalid parse binding-name` | One non-name token, `(` |
+| `line_break_in_arguments`, `line_break_after_element` | Every location, suffix and head: a line break where call or constructor arguments expect an element, a separator or the closer is `Unsupported parse line-break` | Arguments only; a def header's parameters and a type's fields keep their Invalid outcomes (open) |
+| `same_line_arm` | Every location, value and suffix: `case` after a complete body on its line is `Unsupported parse same-line-arm` | One keyword |
+| `body_ends_at_line_break` | Every location, value and suffix: a line break after a complete body still ends it | The control that keeps the rule from swallowing bodies |
+
+Falsification (`round9-falsification.txt`): each of the 17 laws fails, as the
+first failing law, under its own mutation. The checker mutations drop the
+`Value` row, the `Construct` row; reject a `Reference`; reject an annotated
+value; refine nothing at a branch (`E.branch`); run a matrix branch in the
+unrefined scope; refine a residual as a `Value`; and ignore the annotation.
+The parser mutations report a dotted pattern, a dotted promotion and a dotted
+let as Invalid (the typed-let law, which shares the let site, fails the same
+way once the untyped law is removed), report every unbindable name as
+Unsupported, report a line break in arguments, after an element and a same-line
+arm as Invalid, and stop a body at no line break.
+
+`nest-round9` kills twelve type-correct mutants in both lanes:
+`ignore-refinement` (the reviewer's), `ignore-refined-value`,
+`ignore-refined-constructor`, `infer-annotated-let`, `refine-residual-binder`,
+`refine-unsplit-field`, `rebound-pattern-invalid`, `rebound-promotion-invalid`,
+`rebound-let-invalid`, `list-break-invalid-in-arguments`,
+`list-break-invalid-after-element` and `same-line-arm-invalid`. Its
+fixtures, the fuzz generator and the mutant characterization are in
+REVIEW-9.md.
