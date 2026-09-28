@@ -12,9 +12,10 @@ spaced Nat offsets and their adjacent controls, the Base U32 constructor, and
 40000- and 131072-Char String primitives. Round 2 (23 books): unannotated
 literal and Nat-offset bindings, literal and offset scrutinees, literal
 patterns on datatype scrutinees, literal field patterns, zero offsets and two
-agreeing controls. Round 3 (six books): escapes before `{` and promoted
-binders over split Nat and String columns, with four seed-invalid controls
-(`\q{` and three affine reuses). All three freezes are verified
+agreeing controls. Round 3 (13 books): escapes before `{`, and the seed's
+`+` promotion of a matrix column (every row and field of the column, but not
+a binder row's view of a parent whose field alone is promoted), with nine
+seed-invalid controls. All three freezes are verified
 against seed 2.0.29, commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on
 every gate run.
 
@@ -161,21 +162,21 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 80 fixture books, 388 fresh seed calls, 160 checks and 160 primary compilations.
-- 754 agreeing evaluator observations and 754 matching Node/Wasm observations;
-  96 additional evaluator rejections, giving 850 evaluator observations total.
-- 32 byte-identical native/Bun module pairs and 64 complete Base trust audits.
-- 96 rejected-compilation output-preservation probes and 96 additional
+- 87 fixture books, 454 fresh seed calls, 174 checks and 174 primary compilations.
+- 886 agreeing evaluator observations and 886 matching Node/Wasm observations;
+  106 additional evaluator rejections, giving 992 evaluator observations total.
+- 34 byte-identical native/Bun module pairs and 68 complete Base trust audits.
+- 106 rejected-compilation output-preservation probes and 106 additional
   compilations proving no artifact is created at an absent output path.
 - Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 28 filled laws; fourteen type-correct semantic
-  mutants: five Wasm value kills, eight verdict kills and three evaluator kills.
+- Three complete proof entries, 28 filled laws; 15 type-correct semantic
+  mutants: five Wasm value kills, nine verdict kills and three evaluator kills.
 
 The mutant witnesses are frozen calls: unsigned compare across the high bit,
 zero divisor, shift by 32, surrogate equality and the 255/256 Nat offset edge.
 Each mutant compiler must typecheck, build and emit a valid module. Four kills
 are explicit wrong enum results; the division mutant must reach the real Wasm
-`divide by zero` trap. Eight verdict mutants change a frozen book's
+`divide by zero` trap. Nine verdict mutants change a frozen book's
 classification: dropping the offset adjacency test compiles `case 1n + p` to
 `Built`; restoring the catalog lookup reports the U32 constructor as
 `Invalid`; inferring a literal's type compiles `n = 3` to `Built`; keeping
@@ -183,8 +184,9 @@ classification: dropping the offset adjacency test compiles `case 1n + p` to
 `Invalid pattern-type`; dropping the literal scrutinee arm fails with
 `InternalFailure`; an Unsupported literal arm on a datatype replaces the
 seed's Invalid; the broad `\X{` arm rejects the escape-brace book as
-`Invalid lex escape`; and the plain rebuild rejects the promoted-split book
-as `Invalid check affine-reuse`. The evaluator-only `append-reversed` mutant changes no emitted byte;
+`Invalid lex escape`; disabling column promotion rejects promoted-column as
+`Invalid check affine-reuse`; and keeping the refinement for a binder row
+compiles the seed-invalid affine-default-scrutinee to `Built`. The evaluator-only `append-reversed` mutant changes no emitted byte;
 its evaluator answers No for `"ab" ++ ""` = `"ab"`. A compiler failure,
 timeout, malformed Wasm or any other verdict is not a kill. Only the Bun lanes
 are mutated; both unmodified lanes are covered by all differential
