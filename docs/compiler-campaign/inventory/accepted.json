@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "0a54efaaefdae1c562b9e9bb3aab5147795381ffe106bec150121651e99d6346",
+    "sha256": "617b29fdf743c15f3da19288592eb589b55a215029b464427aa7ac7661a0c533",
     "gates": [
       {
         "name": "frontend",
@@ -183,6 +183,19 @@
         ]
       },
       {
+        "name": "perch-context",
+        "argv": [
+          "python3",
+          "tests/perch-context/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/perch-context/check.py",
+            "sha256": "9c2199dd7dbce69e792bb4ce52ebc6e19a34325cca4a0755e85b87ff9759ed2d"
+          }
+        ]
+      },
+      {
         "name": "lint:verify",
         "argv": [
           "npm",
@@ -191,6 +204,32 @@
           "lint:verify"
         ],
         "programs": []
+      },
+      {
+        "name": "bootstrap",
+        "argv": [
+          "python3",
+          "tests/compiler-bootstrap/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-bootstrap/check.py",
+            "sha256": "f46ffe6bfff4aa51321e3372549723fdcc5def6c9754a8ce233e66952bc47cd4"
+          }
+        ]
+      },
+      {
+        "name": "classification",
+        "argv": [
+          "python3",
+          "tests/compiler-classification/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-classification/check.py",
+            "sha256": "5c20ea02a6a3a075af56ee6df9a8830c3585692be140147084b9194b483030c8"
+          }
+        ]
       }
     ]
   },
@@ -235,6 +274,18 @@
       "fixtures": 40
     },
     {
+      "suite": "tests/compiler-bootstrap",
+      "directory": "tests/compiler-bootstrap",
+      "status": "no-fixture-manifest",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [],
+      "gates": [
+        "bootstrap"
+      ],
+      "fixtures": 0
+    },
+    {
       "suite": "checker",
       "directory": "tests/compiler-checker",
       "status": "recognized",
@@ -250,6 +301,18 @@
         "checker"
       ],
       "fixtures": 49
+    },
+    {
+      "suite": "tests/compiler-classification",
+      "directory": "tests/compiler-classification",
+      "status": "no-fixture-manifest",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [],
+      "gates": [
+        "classification"
+      ],
+      "fixtures": 0
     },
     {
       "suite": "closures",
@@ -421,6 +484,24 @@
       "fixtures": 25
     },
     {
+      "suite": "tests/perch-context",
+      "directory": "tests/perch-context",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/perch-context/expectations.json",
+          "sha256": "ac88fc763a3eb95929e72227cb68c191b068703c64864518acf75fc4a62ac51b"
+        }
+      ],
+      "gates": [
+        "perch-context"
+      ],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
       "suite": "frontend",
       "directory": "tests/subsets",
       "status": "recognized",
@@ -458,6 +539,11 @@
     },
     {
       "directory": "tests/compiler-sugar",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/perch-context",
       "status": "unrecognized-suite",
       "detail": "No reviewed adapter for this suite path"
     },
