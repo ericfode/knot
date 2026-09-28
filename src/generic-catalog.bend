@@ -241,6 +241,13 @@ def apply_start(reference: Named, +token: S.Token, nodes: List<&2,S.Node>, q: U3
       S.bind(List<&2,S.Node>,Typed,application_arguments(token,nodes,params,name,q),args =>
         next(Arguments{args,params,Nil{},0,T.Family{index},kind,token}))
 
+# Quantity defaults belong to an explicit Name<..>; a bare name has no arguments.
+def bare(reference: Named, token: S.Token, next: Mode -> Result<S.Error,Typed>) -> Result<S.Error,Typed>:
+  match reference:
+    case Named{index,Family{name,Nil{},kind,ctors,generic}}:
+      next(Arguments{Nil{},Nil{},Nil{},0,T.Family{index},kind,token})
+    case _: C.invalid(Typed,"type-arity",token)
+
 def apply_argument(value: Typed, tail: List<&2,S.Node>, rest: List<&2,Parameter>, substitutions: List<&2,T.Binding>, +index: U32, head: T.Expr, kind: T.Expr, token: S.Token, next: Mode -> Result<S.Error,Typed>) -> Result<S.Error,Typed>:
   match value:
     case Typed{+term,domain}:
@@ -251,7 +258,7 @@ def resolve(fuel: Nat, mode: Mode, +families: List<&2,Family>, +symbols: List<&2
     case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+ +n Expression{S.Variable{+token}}:
       named_type(named(symbols,token),token,u =>
-        S.bind(Named,Typed,family_named(families,token,0),reference => apply_start(reference,token,Nil{},1,mode => resolve(n,mode,families,symbols))))
+        S.bind(Named,Typed,family_named(families,token,0),reference => bare(reference,token,mode => resolve(n,mode,families,symbols))))
     case 1n+ +n Expression{S.TypeApply{+token,+args,+q}}:
       applied_name(named(symbols,token),token,u =>
         S.bind(Named,Typed,family_named(families,token,0),reference => apply_start(reference,token,args,q,mode => resolve(n,mode,families,symbols))))

@@ -42,7 +42,8 @@ try {
   process.exitCode = 5;
 }
 '''
-SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries')
+SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries',
+           HERE / 'bare-families')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
 ENV = {**os.environ, 'BEND_NO_TELEMETRY': '1',
@@ -71,9 +72,14 @@ MUTANTS = (
      'new': 'Done{List.take(&2,S.Node,nodes,U32.to_nat(arity))}',
      'witness': 'type-arity', 'phase': 'check',
      'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'bare-quantity-default', 'file': 'generic-catalog.bend',
+     'old': 'reference => bare(reference,token,',
+     'new': 'reference => apply_start(reference,token,Nil{},1,',
+     'witness': 'bare-family-parameter', 'phase': 'check',
+     'actual': {'exit': 0, 'contains': 'Checked\n'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
-                'wrong-quantity-meet', 'missing-arity-check'}
+                'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default'}
 
 
 def require(condition, detail):
@@ -419,7 +425,7 @@ def main():
         require(not failed, ('fixture failures', failed))
         record['abi'] = abi_observations(controls, lanes)
         require({spec['name'] for spec in MUTANTS} == MUTANT_NAMES and len(MUTANTS) == len(MUTANT_NAMES),
-                'The four required semantic mutants must be configured exactly once')
+                'The five required semantic mutants must be configured exactly once')
         indexed = {row['case']['name']: row for row in rows}
         for spec in MUTANTS:
             record['mutants'].append(mutation(spec, indexed, controls))
