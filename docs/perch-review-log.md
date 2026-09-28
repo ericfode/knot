@@ -942,6 +942,39 @@ Prevention: calibrate a rubric against recorded human preferences before
 optimizing code against it. v6's memetic target would have steered a paydown
 campaign toward the styles the user rejected.
 
+## 2026-09-27 — Compiler context closure and explicit interfaces
+
+Scope: `campaign/perch-context`, compiler base `3a162ab`; rubric v8
+`b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693` unchanged.
+Evidence: [before/after baseline](compiler-campaign/perch-baseline.md),
+[fixed controls and gate counts](compiler-campaign/perch-context-verification.md).
+
+Judgment: confirmed structural tooling blockers. The one-file datatype cap,
+raw helper/caller overflow, unavailable published imports and complete dependency
+bodies made style qualification structurally impossible. Current source had
+374 blockers; the earlier 317-blocker receipt remains historical. No provider
+was involved, so these are not adjudicated model findings. Implementation effort
+was not measured; gate execution time is recorded separately.
+
+Change: opt the compiler manifest into `interfaces-v1`. Follow transitive types,
+verify complete local package bytes against the seed publish identity, retain
+selected files in full, and supply explicit hash-pinned collaborator interfaces.
+Overflow helper/caller signatures retain their type closure and classification.
+Split full-source selections across existing mechanisms while retaining every
+source and each group's closed local inventory. Keep all rubric text, targets
+and the 48,000-byte source bound. Legacy request controls remain unchanged.
+
+Evidence: 23 clean/broken/held-out controls and four semantic mutants, including
+leaked bodies, unverified packages, lost truncation and silently oversized groups;
+all 15 registered gates and the 18 wrapper tests pass. Current preflight covers
+425 distinct declarations in 17 compositions with zero structural blockers.
+
+Boundary: repository OutputBuilder bytes differ from the published closure and
+are correctly rejected. The explicit installed package store verifies; no
+network or package edit is needed. Interfaces do not establish unseen behavior
+or checked proofs. All five style axes remain unrated. Live review is the next
+trigger; the `checking` composition is within 97 bytes of the cap.
+
 ## 2026-09-27 — Law rules skipped compiler test packets
 
 The compiler campaign's first increments put their law packets beside their
@@ -962,6 +995,68 @@ and treat `no-coverage` as a finding.
 The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
 8 checks came back clean, with a maximum broken probability of 0.70 on
 `law-observable-essence`.
+
+## 2026-09-27 — Perch context review round 2: portable identities and parser heads
+
+Coordinator/adversarial findings against `6796108` were confirmed. The package
+header used the store's absolute path; byte counts and hashes therefore varied
+under the gate runner. The committed receipt came from a direct run, so the
+first verification record understated semantic drift. The interface composition
+also omitted the legacy anti-anchoring sentence. The signature scanner confused
+the seed-valid apostrophe character and dependent/existential binder colons;
+current compiler sources did not exercise either defect. The default preflight
+omitted the seed's installed store. Bare local paths bypassed manifest closure.
+
+The [fixed review expectations](../tests/perch-context/review-expectations.json)
+and new signature fixture preceded the repairs. Eight targeted regressions
+failed before implementation; the fixture passed the pinned seed with
+`All terms check.`. Repairs use import identities everywhere, keep filesystem
+handles outside review data, preserve the entire legacy instruction, obtain
+body endpoints from the parser, and use the verified `BEND_LIB`/home default.
+Other hash lengths remain explicitly unsupported. Release metadata locates a
+candidate; only its verified package membership enters provenance.
+
+Prevention: use parser offsets instead of a second lexer; parse generated heads
+back with holes and compare declaration names; move identical packages between
+different stores/checkouts and compare complete candidates; compare consecutive
+runner receipts, including source byte counts and state hashes. Retain the
+anti-anchoring clause as a literal control. Assert the 475-to-zero role result.
+The standing oracle covers 32 files and 411 definition/law heads, including the
+adversarial fixture; it does not assert proof acceptance for generated holes.
+
+The first full review-round run found stale census parser/tool hashes and an
+existing mutation site's spelling changed by the freshness refactor. Regenerate
+the census metadata and preserve that original mutation site; no compiler-gate
+assertion or census approval policy changes. A direct lint attempt also hit the
+sandbox's unwritable global parser-cache lock; use the gate runner's private
+offline cache. See the [verification record](compiler-campaign/perch-context-verification.md)
+for final gate counts, receipt reproducibility and the corrected limits.
+
+Final evidence: 15/15 gates in both successful full runs, 168 lint controls,
+eight law-rule wiring checks and 18 runner controls. Their complete normalized
+objects and all 81 normalized receipt files match; the context receipt is
+identical to the direct run. Overall drift: 64 identical, 17 volatile-only,
+zero semantic. An intervening loaded-host run exhausted three native-build
+budgets; it remains a failed run. A one-worker retry passed without changing
+any limit. All 33 context controls and eight semantic mutants pass, and the
+literal manifest command has zero blockers and no provider requests.
+
+## 2026-09-27 — IO host review 2: sandbox aliases, empty effects and oracle faults
+
+The coordinator's three confirmed findings against `6051e37` are repaired;
+see the [verification record](../tests/compiler-io/REVIEW-2.md). The original
+controls missed case-folded secret paths on APFS and the empty-payload branch
+of writes on read-only handles. The seed's JS memory-fault stream could also
+reach expectation freezing despite representing lane exhaustion.
+
+Prevention: fix path-spelling by mode and empty/nonempty/invalid-payload
+controls before host implementation, and reject reference-lane fault markers
+before either expectation-writing pass. Keep native as the compiler-sized
+oracle under D14. Four literal empty-write cases were witnessed in all three
+seed lanes before repair; 21 dummy-only path controls and 14 oracle controls
+now supplement the original suite. The three restored-defect mutants are
+killed without infrastructure failures. Original expectations are unchanged;
+live Perch review remains with the coordinator.
 
 ## 2026-09-27 — Generic erasure needs boundary checks before projection
 

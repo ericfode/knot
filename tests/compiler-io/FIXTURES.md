@@ -79,7 +79,7 @@ every record conforms.
 | completion of `main` | Exit status 0. The final value of any `A` is discarded, and nothing more is written. |
 | `File.open(path, mode) -> IO(Result<..,File>)` | A path containing U+0000 fails with 92 before the mode is examined. The mode must be exactly `r` (read), `w` (write, create, truncate) or `a` (write, create, append), and anything else fails with 22. Then the OS opens the path relative to the working directory. An empty path fails with 2, a missing path or parent with 2, and a non-directory parent with 20. A directory opens under `r` and fails with 21 under `w` or `a`. |
 | `File.read(f, max) -> IO(File & Result<..,String>)` | One read of at most `max` bytes from the current position, decoded alone and returned with the handle. The rest waits for the next read, and end of file gives `""`. `max` 0 gives `""`. `max` 4294967295 simply returns what is there. A handle opened `w` or `a` fails with 9. A directory fails with 21, again on every retry. |
-| `File.write_bytes(f, xs) -> IO(File & Result<..,Unit>)` | If any element exceeds 255, the call fails with 22 and writes nothing. Otherwise it writes every byte, 0 to 1,048,576 of them, at the position, or at the end under `a`. A handle opened `r` (a directory included) fails with 9. |
+| `File.write_bytes(f, xs) -> IO(File & Result<..,Unit>)` | If any element exceeds 255, the call fails with 22 and writes nothing. Otherwise it writes every byte, 0 to 1,048,576 of them, at the position, or at the end under `a`. A nonempty write on a handle opened `r` (a directory included) fails with 9. An empty write returns `Done` without a syscall, in every mode, including a directory opened `r` (review-2 seed witnesses). |
 | `File.close(f) -> IO(Unit)` | Answers `Unit`; the seed ignores close errors. Dropping a handle without closing it loses no written bytes, including when `IO.die` follows. |
 
 **Error codes** (Darwin arm64 values; `regen.py` refuses any other platform):
@@ -87,7 +87,7 @@ every record conforms.
 | Code | Message | Raised by |
 |---|---|---|
 | 2 | `No such file or directory` | open: missing path, missing parent, empty path |
-| 9 | `Bad file descriptor` | read on a `w`/`a` handle; write on an `r` handle |
+| 9 | `Bad file descriptor` | read on a `w`/`a` handle; nonempty write on an `r` handle |
 | 20 | `Not a directory` | open through a file used as a directory |
 | 21 | `Is a directory` | open `w`/`a` on a directory; read on a directory |
 | 22 | `Invalid argument` | open with an unknown mode; write_bytes with an element above 255 |
@@ -218,7 +218,14 @@ need:
   reach the fault. A probe with compile-cli's write shape wrote 40,000 bytes
   in full and then faulted; 20,000 completed. `write-bytes` therefore reports
   the requested count instead. Whether compile-cli is affected on its build
-  lanes was not measured here.
+  lanes was not measured here. Review 2 confirmed the lane difference: native
+  handles larger inputs that overflow the JS lane. `regen.py` now refuses any
+  stdout, stderr or merged stream containing `bend: memory fault`, even with
+  exit 0, before either `--write` pass can change expectations. Keep JS oracle
+  inputs below this boundary; larger oracles must explicitly select native.
+  D14 selects native for compiler-sized C1 inputs. Before raising CLI budgets,
+  its owner must remove output-sized non-tail counting. See the
+  [review-2 contract](host/REVIEW-2.md); the original frozen records are unchanged.
 - **`IO.get_env` on an unset variable** answers `Fail{(2, "No such file or
   directory")}`.
 - **File creation mode.** The seed opens new files with mode 0644, before the
@@ -246,6 +253,8 @@ recorded as a result. Verification fails in any of these cases:
 - a `PLAN` entry changes;
 - a reviewed literal disagrees with the seed;
 - a negative is rejected for another reason;
+- any seed stream contains `bend: memory fault` (reported as lane exhaustion,
+  not a result to freeze);
 - any output leaks a local path;
 - a local name reuses a Base name.
 

@@ -86,22 +86,36 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | Recognized form | Phase | Code |
 | --- | --- | --- |
 | `match a b...` with a second named scrutinee | `parse` | `match-scrutinees` |
-| `~name:` in a function parameter list | `parse` | `template-binder` |
-| Parsed constructor pattern followed by `=` in a body | `parse` | `destructuring-binding` |
+| Leading `~name:` in a function parameter list | `parse` | `template-binder` |
+| Parsed constructor pattern followed by `=` (next token neither `=` nor `>`) in a body | `parse` | `destructuring-binding` |
+| `Name<...` in a parameter type | `parse` | `parameter-type` |
+| `Name<...` in a return type or local binding annotation | `parse` | `type-application` |
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
 
 Recognition stops at that prefix; it neither validates the suffix nor loads a
 module. Malformed supported syntax still reports `Invalid`. The reviewed
-[classification fixtures](../tests/subsets/classification-cases.json) pair six
-seed-accepted programs (local and hash imports separately) with six nearby
-syntax errors, fixing complete diagnostics including locations. The hash
+[classification fixtures](../tests/subsets/classification-cases.json) retain six
+seed-accepted programs (local and hash imports separately) and six nearby
+syntax errors, and add 17 precision controls with fixed seed commands and outputs,
+including malformed suffixes after recognized prefixes. All 29 cases fix complete
+Knot diagnostics including locations. The hash
 fixture uses a frozen local cache; it does not claim a published package.
-Five retained checked prefix laws quantify over source locations and unconsumed
-suffixes. `generic_header` now states parser acceptance of a complete generic
-header; its filled proof remains a parser equation, not a checker soundness
-theorem. The unchanged historical generic-rejection assertion still requires
-Unsupported, so that frontend gate conflicts with this accepted capability.
-The coordinator must reconcile that assertion before integration acceptance.
+Twelve checked classification laws quantify over source locations and unconsumed
+suffixes; they are classification laws, not a parser soundness theorem or feature
+support. The destructuring law excludes `==` and `=>`; both report
+`Invalid parse end-of-body`. A `~` after an ordinary binder reports
+`Invalid parse parameter`. An initial template binder stops recognition, so its
+later binders and body are not validated.
+
+The generic extension below parses `Name<...>` in parameter types, return types
+and binding annotations, so the two `Name<...` rows above describe the enum
+parser before `knot-generics-1`. `parameter-type` still reports a simple
+parameter type followed by `-`, `(`, `&`, `|` or `[`, and `Type`, `Kind(..)` or
+`Quant` as the type of a non-binder parameter. The classify-2 pins and laws for
+the `Name<...` rows conflict with this capability; they await the coordinator's
+reconciliation, like the retired `generic-datatype` pin. `generic_header` states
+parser acceptance of a complete generic header; its filled proof is a parser
+equation, not a checker soundness theorem.
 
 The parser and catalog now have a separate
 [structural declaration checkpoint](../research/compiler-structural/SPEC.md).

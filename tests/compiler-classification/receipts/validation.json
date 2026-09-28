@@ -1,0 +1,484 @@
+{
+  "scope": "Fresh full scratch gate execution; overlapping coverage categories are not summed. Shared receipts remain coordinator-owned.",
+  "command": "BEND_NO_TELEMETRY=1 npm run -s gates",
+  "exit": 0,
+  "status": "passed",
+  "source_snapshot_sha256": "2d85213838a30a6bf9a967053c69fda9f9c7406d62ad175915e9215fc5769367",
+  "dependencies_sha256": "35e14f3bd6e2f088dfce1cee7f9ea4f1a9f2dd2313ddc4448e3993c1d17fe6a3",
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "frontend",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "checker",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "structural",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "exit_code": 0,
+      "name": "fields",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 64
+      },
+      "exit_code": 0,
+      "name": "wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "wasm-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "fields-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "structural-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "owned-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "exit_code": 0,
+      "name": "flat-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "exit_code": 0,
+      "name": "recursion",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "fields-wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "counts": {
+        "classes": 41,
+        "declarations": 437,
+        "files": 30
+      },
+      "exit_code": 0,
+      "name": "census",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "counts": {
+        "law_rules": 8,
+        "tests": 127
+      },
+      "exit_code": 0,
+      "name": "lint:verify",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-classification/check.py"
+      ],
+      "counts": {
+        "fixtures": 17,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "classification",
+      "status": "passed"
+    }
+  ],
+  "additional_coverage": {
+    "frontend": {
+      "classification_fixtures": 29,
+      "classification_parser_observations": 58,
+      "classification_mutants": 7,
+      "downstream_observations": 174,
+      "preserved_compiler_outputs": 58
+    },
+    "recursion": {
+      "phase_observations": 114,
+      "fuel_probes": 4
+    },
+    "fields-wasm": {
+      "seed_calls": 32,
+      "evaluator_observations": 64,
+      "node_observations": 64,
+      "enum_byte_checks": 50,
+      "checked_laws": 5
+    }
+  },
+  "receipt_counts": {
+    "identical": 63,
+    "semantic": 11,
+    "volatile-only": 7
+  },
+  "semantic_receipts": [
+    {
+      "after_sha256": "e852cca9c33e245352c17856439548166b2b5ed87800995cb9181e8d3d01f1ae",
+      "before_sha256": "13f42c984e81f85e135dca9510cdaf01d354a953887593c48f44ad1e804a4b35",
+      "changed_fields": [
+        "/entries/0/loaded_files/5/sha256",
+        "/entries/0/loaded_files/6/sha256",
+        "/entries/0/loaded_files/9/sha256",
+        "/entries/1/generated_js_sha256",
+        "/entries/1/loaded_files/4/sha256",
+        "/entries/2/generated_js_sha256",
+        "/entries/2/loaded_files/6/sha256",
+        "/entries/3/generated_js_sha256",
+        "/entries/3/loaded_files/6/sha256"
+      ],
+      "classification": "semantic",
+      "path": "research/compiler-fields/receipts/trust.json"
+    },
+    {
+      "after_sha256": "d7b83f6c700c802c14cc1e6baa9d77ef076c7e07fb81b7361ea1639ff76adbf2",
+      "before_sha256": "f02e2530d251f933d811304125d745d99b30b1ec8351c0f20ba1e469795daa74",
+      "changed_fields": [
+        "/entries/0/loaded_files/4/sha256",
+        "/entries/0/loaded_files/5/sha256",
+        "/entries/0/loaded_files/8/sha256",
+        "/entries/1/loaded_files/4/sha256",
+        "/observer_generated_js_sha256"
+      ],
+      "classification": "semantic",
+      "path": "research/compiler-structural/receipts/trust.json"
+    },
+    {
+      "after_sha256": "338b317192e9fa6bc38522244cc3b7fc76d8d3dce3c3bc2baff126204358f0af",
+      "before_sha256": "ba47d15d9303c9b508ef615689ef331063770347cf95c23b6e5d664f2c00fcfd",
+      "changed_fields": [
+        "/entries/0/generated_js_sha256",
+        "/entries/0/loaded_files/6/sha256",
+        "/entries/1/generated_js_sha256",
+        "/entries/1/loaded_files/6/sha256",
+        "/entries/2/loaded_files/3/sha256",
+        "/entries/2/loaded_files/4/sha256",
+        "/entries/2/loaded_files/7/sha256"
+      ],
+      "classification": "semantic",
+      "path": "research/compiler-wasm/receipts/trust.json"
+    },
+    {
+      "after_sha256": "fbaa66ba97b167e2212e9d44ef5ebe36bc02eb45a4a52c342339a3702b0a1ba9",
+      "before_sha256": "f1287e8ef0e084f95e22c5ec7fb5aa4d796362f829e2afcd8422a1ab521ff0ce",
+      "changed_fields": [
+        "/generated/.local~1compiler-checker~1gate~1check-cli",
+        "/generated/.local~1compiler-checker~1gate~1check-cli.js",
+        "/inputs/src~1LAWS.bend",
+        "/inputs/src~1PROOF.bend",
+        "/inputs/src~1SPEC.md",
+        "/inputs/src~1parse.bend"
+      ],
+      "classification": "semantic",
+      "path": "tests/compiler-checker/receipts/checker.json"
+    },
+    {
+      "after_sha256": "b48b88789975562eda6fcd9df14b865c9683c6f300a9877078151129a88e0143",
+      "before_sha256": null,
+      "changed_fields": [
+        "/"
+      ],
+      "classification": "semantic",
+      "path": "tests/compiler-classification/receipts/precision.json"
+    },
+    {
+      "after_sha256": "d22bd935a4bc518b43dad34c6eb8b2d107dfcf8ea4e1660b1d80a21dc6eb88e1",
+      "before_sha256": "56c618bf2752b1e4a641db5dcf48acfb23d8ada3c3fa6533e3e3d677b89ad7f4",
+      "changed_fields": [
+        "/builds/0/sha256",
+        "/builds/1/sha256",
+        "/builds/2/sha256",
+        "/builds/3/sha256",
+        "/inputs/src~1LAWS.bend",
+        "/inputs/src~1PROOF.bend",
+        "/inputs/src~1SPEC.md",
+        "/inputs/src~1parse.bend"
+      ],
+      "classification": "semantic",
+      "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
+    },
+    {
+      "after_sha256": "1940c915027b9ec0bc9fb749e0552cf1b7c7feccfc2389ddd2c7f5f07e180b78",
+      "before_sha256": "d4b8ea5b69695eb23375c450f2a1ed9b90a969324b2d357aed4c5a1413859da7",
+      "changed_fields": [
+        "/builds/0/sha256",
+        "/builds/1/sha256",
+        "/builds/2/sha256",
+        "/builds/3/sha256",
+        "/builds/4/sha256",
+        "/builds/5/sha256",
+        "/inputs/src~1LAWS.bend",
+        "/inputs/src~1PROOF.bend",
+        "/inputs/src~1SPEC.md",
+        "/inputs/src~1parse.bend"
+      ],
+      "classification": "semantic",
+      "path": "tests/compiler-fields/receipts/fields.json"
+    },
+    {
+      "after_sha256": "839f5dffe93d1541a59a39d2a83ff88f1d4a1270759ab04d5ace7cef0b22fc31",
+      "before_sha256": "48b82451cff86fee0c843adf9c1688be7fb38d25f8c1aeefda175bf6f4e72fbf",
+      "changed_fields": [
+        "/builds/0/sha256",
+        "/builds/1/sha256",
+        "/builds/2/sha256",
+        "/builds/3/sha256",
+        "/builds/4/sha256",
+        "/builds/5/sha256",
+        "/inputs/src~1LAWS.bend",
+        "/inputs/src~1PROOF.bend",
+        "/inputs/src~1SPEC.md",
+        "/inputs/src~1parse.bend"
+      ],
+      "classification": "semantic",
+      "path": "tests/compiler-recursion/receipts/recursion.json"
+    },
+    {
+      "after_sha256": "3a3a55634263284cfc6115995d7d68653b32d0390675053ab76d5fbd58b0624b",
+      "before_sha256": "95b9cbee2e97f20eeef689f3b6802259482abace8b9a287b89259ff7f44057ab",
+      "changed_fields": [
+        "/builds/0/sha256",
+        "/builds/1/sha256",
+        "/builds/2/sha256",
+        "/builds/3/sha256",
+        "/inputs/src~1LAWS.bend",
+        "/inputs/src~1PROOF.bend",
+        "/inputs/src~1SPEC.md",
+        "/inputs/src~1parse.bend"
+      ],
+      "classification": "semantic",
+      "path": "tests/compiler-structural/receipts/catalog.json"
+    },
+    {
+      "after_sha256": "c3acd68c0a566712fb3abf1cacd65effd0a38bce3a90a8c723282a8287dfb71e",
+      "before_sha256": "5e509615699d7154f0dac4007f37716360172f1280b0ab916532b4858eacf2b6",
+      "changed_fields": [
+        "/builds/0/sha256",
+        "/builds/1/sha256",
+        "/builds/2/sha256",
+        "/builds/3/sha256",
+        "/inputs/src~1LAWS.bend",
+        "/inputs/src~1PROOF.bend",
+        "/inputs/src~1SPEC.md",
+        "/inputs/src~1parse.bend"
+      ],
+      "classification": "semantic",
+      "path": "tests/compiler-wasm/receipts/wasm.json"
+    },
+    {
+      "after_sha256": "00a776c94013f5e3f8cfa0eff51d82b31a22309a6e8f10dfe0758e09740a3918",
+      "before_sha256": "3d110d90f66eaf460054dbbe0144cf96602e8fd13625d8f69629401c56e63f10",
+      "changed_fields": [
+        "/classification/downstream",
+        "/classification/downstream_builds/0/sha256",
+        "/classification/downstream_builds/1/sha256",
+        "/classification/downstream_builds/2/sha256",
+        "/classification/downstream_builds/3/sha256",
+        "/classification/downstream_builds/4/sha256",
+        "/classification/downstream_builds/5/sha256",
+        "/classification/fixtures",
+        "/classification/mutants/0/mutated_sha256",
+        "/classification/mutants/1/mutated_sha256",
+        "/classification/mutants/2/mutated_sha256",
+        "/classification/mutants/3/mutated_sha256",
+        "/classification/mutants/4/mutated_sha256",
+        "/classification/mutants/5/mutated_sha256",
+        "/classification/mutants/6/mutated_sha256",
+        "/generated/.local~1compiler-frontend~1parse-cli",
+        "/generated/.local~1compiler-frontend~1parse-cli.js",
+        "/inputs/src~1LAWS.bend",
+        "/inputs/src~1PROOF.bend",
+        "/inputs/src~1parse.bend",
+        "/inputs/tests~1subsets~1classification-cases.json",
+        "/inputs/tests~1subsets~1classification~1application-binding-after-prefix.bend",
+        "/inputs/tests~1subsets~1classification~1application-binding.bend",
+        "/inputs/tests~1subsets~1classification~1application-parameter-after-prefix.bend",
+        "/inputs/tests~1subsets~1classification~1application-parameter.bend",
+        "/inputs/tests~1subsets~1classification~1application-return-after-prefix.bend",
+        "/inputs/tests~1subsets~1classification~1application-return.bend",
+        "/inputs/tests~1subsets~1classification~1destructure-after-prefix.bend",
+        "/inputs/tests~1subsets~1classification~1destructure-arrow-malformed.bend",
+        "/inputs/tests~1subsets~1classification~1destructure-arrow.bend",
+        "/inputs/tests~1subsets~1classification~1destructure-equality-malformed.bend",
+        "/inputs/tests~1subsets~1classification~1destructure-equality.bend",
+        "/inputs/tests~1subsets~1classification~1template-after-prefix.bend",
+        "/inputs/tests~1subsets~1classification~1template-leading-pair.bend",
+        "/inputs/tests~1subsets~1classification~1template-nonleading-erased.bend",
+        "/inputs/tests~1subsets~1classification~1template-nonleading-malformed.bend",
+        "/inputs/tests~1subsets~1classification~1template-nonleading-reusable.bend",
+        "/inputs/tests~1subsets~1classification~1template-nonleading.bend",
+        "/mutants/0/result/stderr",
+        "/mutants/1/mutated_sha256",
+        "/mutants/1/result/stderr",
+        "/mutants/2/mutated_sha256",
+        "/mutants/3/mutated_sha256"
+      ],
+      "classification": "semantic",
+      "path": "tests/subsets/receipts/frontend.json"
+    }
+  ],
+  "wrapper_verification": {
+    "command": "npm run -s gates:verify",
+    "exit": 0,
+    "tests": 18,
+    "semantic_mutants": 6
+  },
+  "proof": {
+    "command": "bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts src/PROOF.bend",
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "filled_laws": 16,
+    "new_laws": 6,
+    "narrowed_laws": 1
+  }
+}

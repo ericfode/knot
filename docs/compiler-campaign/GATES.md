@@ -18,13 +18,46 @@ npm run gates:verify                  # offline wrapper controls and mutants
 npm run gates -- --jobs 2 --keep-scratch
 ```
 
+Harness wall-clock guards inside the gate scripts (the seed-build and CLI
+`run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
+unless the caller sets it. These guards only catch hangs; no passing receipt
+records one firing. Under the campaign's parallel load (load average about 30
+to 50 on 18 cores) the unscaled 30-second and 45-second guards made the frontend
+and structural gates fail spuriously.
+
 Both check commands exit 0 only when all registered gates finish successfully
 and their required outputs are present and readable. The runner's self-test
-requires the fourteen gates registered by the recursion, fields-wasm and census
-merge and unique names, so a new increment only appends its own gate; `census` runs `tools/census/census.mjs
+requires the existing gates by name (including `perch-context` and `bootstrap`)
+and unique names, so a new increment appends its gate and required name;
+`bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,
 timeouts, blocked dependencies, and malformed/missing completion records exit 1.
+The Perch context increment adds gate 15, `perch-context`: 33 literal context
+controls, eight semantic mutants, one complete seed signature check, and two
+byte-identical offline compiler-manifest preflights. The literal command uses
+the runner's frozen `BEND_LIB` by default. Package identities and request hashes
+are independent of that store's location. It writes only its own
+`tests/perch-context/receipts/context.json` in scratch. It makes no provider
+requests and retains the pinned rubric and composition-byte cap.
+The `io-abi-2` increment appends gate `io-abi-2` for the `knot-io-2` host
+delta ([IO-ABI.md](IO-ABI.md#knot-io-2-delta)). Its counts record the foreign
+reference, seed-witness, read, parity and mutant totals; it writes
+`tests/compiler-io-abi-2/receipts/{host,reference}.json`.
+
+The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
+
+- It first reproduces 65 frozen cases on the seed's interpreter and native lanes.
+- It then runs Knot's `check-cli` and `eval-cli` on each case.
+- A case is blocked while a reviewed need is unavailable. A blocked case never
+  counts as passing. It still fails the gate on a fault: crashing, timing out,
+  a host or internal failure, accepting a seed-rejected twin, or a positive
+  evaluating other than the seed. A seed-valid case reported Invalid must be
+  one of the reviewed D4 gaps in `check.py`.
+- The gate writes only `tests/compiler-selfhost/receipts/selfhost.json`.
+- An increment that lands a need flips it in `expectations.json`, and the gate
+  then holds that increment to its cases.
+
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
 

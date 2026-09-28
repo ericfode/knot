@@ -171,8 +171,12 @@ def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
 def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match value:
     case S.Constructor{token,items}:
-      S.choose(Result<S.Error,Parsed>,starts(ts,"="),u =>
-        unsupported(ts,"destructuring-binding"),u => body_end(value,ts))
+      match ts:
+        case Con{+head,+tail}:
+          S.choose(Result<S.Error,Parsed>,S.matches(head,"="),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.or(starts(tail,"="),starts(tail,">")),u =>
+              body_end(value,ts),u => unsupported(ts,"destructuring-binding")),u => body_end(value,ts))
+        case Nil{}: body_end(value,ts)
     case _: body_end(value,ts)
 
 def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -239,7 +243,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
-            then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest)),u =>
+            # A parameter tail is reachable only after an ordinary binder.
+            S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(t,"~")),u =>
+              invalid(t,"parameter"),u =>
+              then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
             invalid(tokens,"argument-separator")))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{+pattern}:

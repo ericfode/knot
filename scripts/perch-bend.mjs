@@ -175,7 +175,7 @@ export async function analyzeBendSource(source) {
         const ref = lexicalReference(term, source);
         if (ref) calls.push(ref);
       },
-      declaration(kind, name, beg, end, term, tele = []) {
+      declaration(kind, name, beg, end, term, tele = [], bodyBeg = null) {
         if (kind === 'datatype') {
           const loc = location(beg, end);
           const datatype = book.tlds[name], refs = [];
@@ -192,7 +192,7 @@ export async function analyzeBendSource(source) {
         tele.forEach((node) => termReferences(node, source, values));
         typeContextReferences(term, source, types);
         tele.forEach(node => typeContextReferences(node, source, types));
-        declarations.push({ kind, name, beg, end, values, types });
+        declarations.push({ kind, name, beg, end, bodyBeg, values, types });
       },
     });
     const byName = new Map();
@@ -218,6 +218,7 @@ export async function analyzeBendSource(source) {
         location: loc,
         metrics: null,
       };
+      if (entry.bodyBeg !== null) decl.body_start = location(entry.bodyBeg).start;
       if (entry.law) decl.law_location = location(entry.law.beg, entry.law.end);
       analysis.declarations.push(decl);
       const fragments = entry.law ? [entry.law, entry] : [entry];
