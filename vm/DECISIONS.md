@@ -95,6 +95,31 @@ follows it (§5, §10, §11) without a new image header word.
    `List<T>` parameter (literals: `Unsupported parse parameter-type`), so the
    shape is witnessed by the admitted control `list-head-match` until a golden can
    be frozen.
+   Review round 5 found the arm rule refusing S the same way: "a Case and every
+   arm body" agreed exactly, and List pins `Con{none, List}`, so a Case whose Nil
+   arm is concrete and whose Con arm returns the head had no legal type. S has the
+   shape three times: `literal.bend`'s `first_code` (`0` or the head),
+   `imports.bend`'s `first` (`""` or the head) and `base-pin.bend`'s `nth` (`0` or
+   the word). §3 now lets every arm body, Branch, key Branch or Default, fit its
+   Case, with the `fits` of Application, Construct and Invoke, and keeps exact
+   agreement for a Reference and its slot and a Let and its body. A value fitting
+   into a Case is laundered no further than one passed to a call. A Case takes the
+   type of the position it fills, the positional rule §3 already states for
+   `none`; all 91 goldens already had that type. A Branch slot takes its
+   constructor's pinned field type, as `validate` did, never the core binder's
+   instantiated type, and `check-spec.from_display` now agrees: it types Branch
+   slots by the pinned field (cross-checked against a concrete binder), Let slots
+   by the value's node and Cases by position, while a nested Case still names the
+   core's type as its scrutinee. The admitted plan control `first-code` (seed
+   `True{}` for the same source) is also the lowering of its hand-written display,
+   which neither the old last-arm Case type nor a core-typed binder reproduces.
+   Positional typing makes plans canonical; validation checks only fit, so
+   `first-code-none-case` (the same Case typed `none`) is admitted too, and
+   `key-arms-none` answers a `none` parameter from a key Branch and a Default. A
+   refused control `branch-body-type` (a Bool arm in the U32 Case) and three codec
+   mutants (`validator-exact-arm-type`, killed by `first-code`,
+   `validator-exact-key-and-default-type`, killed by `key-arms-none`, and
+   `validator-ignores-branch-body-type`) pin both directions.
 10. **Non-scalar output is a divergence by contract (D20).** Review round 3 found
    §11's reference lane and §10's IO contract in conflict: the seed's native lane
    writes a non-scalar Char as generalized UTF-8 (`print-non-scalar`, ASCII source
@@ -166,6 +191,21 @@ follows it (§5, §10, §11) without a new image header word.
    `invoke-arrow` (5) freeze every cause beside eval-cli's answers, the reference
    predicate is `serializer.invocation`, and six codec mutants of its order are
    killed.
+14. **A display visit is one rendered constructor.** Review round 5 found §8's
+   "1,048,576 visits and 16 MiB of text" undefined for a Nat word and silent on
+   inclusivity, and the gate's two readings apart: `evaluate.describe` charged a
+   Nat word `n + 1` visits, while `check-spec.described` admitted any Nat up to
+   1,048,576 and counted neither Objects nor bytes, so a Book golden returning
+   `1048576n` was derived as a printed value that the reference evaluation
+   exhausts. For `1,048,576 <= n <= 2,796,201` the readings give different
+   frozen outcomes. §8 now charges one visit per rendered constructor (a Nat word
+   `n` is `n + 1`, its logical view), counts the `tree`'s bytes with separators,
+   and admits both bounds inclusively. `describe` counted no separator bytes and
+   built a Nat's text before its check; both are fixed. `described` applies the
+   same rule to the seed's value. Four run controls meet each bound exactly and
+   pass it by one, two seed controls refuse one visit and one byte beyond, and four
+   evaluator mutants (each bound exclusive, a Nat as one visit, separators free)
+   are killed. No expectation changed.
 
 ## Findings that need an owner
 
@@ -216,6 +256,11 @@ follows it (§5, §10, §11) without a new image header word.
    receipts, the six Invalid rows must not be accepted as a baseline.** Owner:
    merge-wave, whose closures merge should turn them into parses or Unsupported
    first; otherwise the refresh records them as known D4 debt with that owner.
+   Review round 5 confirmed this as a **merge condition** on the coordinator's
+   `npm run gates:refresh` for main, not executor rework: no gate stops a refresh
+   from absorbing the rows, and `vm/golden/` stays in the bootstrap corpus, since
+   removing it would hide them. Round 5 added no `.bend` file, so the histogram
+   above stands.
 6. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged

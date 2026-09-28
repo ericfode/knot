@@ -103,22 +103,28 @@ every record conforms.
 - 100,000 right-nested and 100,000 left-nested binds must complete.
 
 **Precondition, not a fixture.** Every Char that reaches `print` or `die` is a
-Unicode scalar value. The seed's two lanes disagree beyond that. In the JS lane,
-the lane these records come from, printing `"\u{d800}"` exits 1 with
-`bend: 55296 is not a Unicode scalar value` after the earlier output. The native
-lane's source instead encodes such Chars as generalized UTF-8, truncating the
-lead byte of a code at or above 2^21 (`Chr{67237376}` prints the UTF-8 of
-U+1F600). Knot no longer meets the precondition by construction: D15 keeps every
-u32 Char in pure code, so ASCII source builds a non-scalar (`Chr{55296}`,
-`Char.from_u32(55296)`, `"\u{d800}"`). D20 settles it for `knot-vm-1`: a
-non-scalar Char in an outgoing String is `HostFailure io abi` before the host
-call and is never encoded, and a golden whose native lane exits 0 where the JS
-lane refuses is recorded as `divergent-by-contract (non-scalar output)`
-(`vm/SPEC.md` sections 10 and 11, goldens `print-non-scalar`,
-`print-non-scalar-mid` and `print-non-scalar-wide`). `checked-display.bend`
-prints identifier lexemes and numeric ids, `File.read` produces only scalar
-values, and the literals head's `check-cli` displays an escaped literal by its
-escape text (`"\u{d83d}\u{de00}"`).
+Unicode scalar value. The seed's two lanes disagree beyond that. The JS lane,
+the lane these records come from, refuses a non-scalar Char where it is
+constructed, printed or not, and exits 1 with
+`bend: 55296 is not a Unicode scalar value`; a Char built before an earlier
+print runs suppresses that print as well. The native lane's source instead
+encodes such Chars as generalized UTF-8, truncating the lead byte of a code at
+or above 2^21 (`Chr{67237376}` prints the UTF-8 of U+1F600). Knot no longer
+meets the precondition by construction: D15 keeps every u32 Char in pure code,
+so ASCII source builds a non-scalar (`Chr{55296}`, `Char.from_u32(55296)`,
+`"\u{d800}"`). D20 settles it for `knot-vm-1`: a non-scalar Char in an outgoing
+String is `HostFailure io abi` before the host call and is never encoded. The
+program's own value classifies a golden, never a seed lane: it is
+`divergent-by-contract (non-scalar output)` exactly when the reference
+evaluation of its plan passes an output effect a String that holds a non-scalar
+Char (`vm/SPEC.md` sections 10 and 11). The D20 goldens are `print-non-scalar`,
+`print-non-scalar-mid`, `print-non-scalar-wide` and `print-non-scalar-second`;
+in the last, the JS lane writes nothing, while the VM writes `a` first.
+`non-scalar-code` and `non-scalar-unprinted` build a surrogate without printing
+it and agree with the native lane, although the JS lane refuses both.
+`checked-display.bend` prints identifier lexemes and numeric ids, `File.read`
+produces only scalar values, and the literals head's `check-cli` displays an
+escaped literal by its escape text (`"\u{d83d}\u{de00}"`).
 
 ## Coverage
 
