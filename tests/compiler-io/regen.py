@@ -521,7 +521,7 @@ def leaks(data, command):
 
 
 def execute(command, cwd, merged=False):
-    """Run the seed; a timeout aborts the script and is never recorded."""
+    """Run the seed; timeouts and lane memory faults are never frozen."""
     try:
         r = subprocess.run(command, cwd=cwd, env=environment(), stdin=subprocess.DEVNULL,
                            stdout=subprocess.PIPE,
@@ -529,6 +529,8 @@ def execute(command, cwd, merged=False):
                            timeout=TIMEOUT)
     except subprocess.TimeoutExpired:
         sys.exit(f'seed timed out after {TIMEOUT}s: {command}')
+    if b'bend: memory fault' in r.stdout + (r.stderr or b''):
+        sys.exit(f'Exhausted\tseed\tmemory-fault: {command}')
     leaks(r.stdout + (r.stderr or b''), command)
     return r
 
