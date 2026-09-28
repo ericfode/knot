@@ -1,0 +1,1253 @@
+{
+  "schema": "knot-modules-review-round7-1",
+  "purpose": "Seed-derived review-round-7 regressions frozen before repairs. No existing oracle is changed.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "implementation_at_freeze": {
+    "src/qualify.bend": "b61f6256f32fcbed416d09555d5bef1d0226eddf821fbd7b4efd02753929ceed",
+    "src/scope.bend": "e2285c557df9b92f1f075823762ad57afa66c3f773bf6eabcb633cf44805ba39",
+    "src/check.bend": "566f7110fb1666338949226d4ec59e436e97e54b7682a45c9a213eedc387a847",
+    "src/catalog.bend": "db9a1b5b9ff44cffc0bd7cb6957ee9e8aac57edc0ca20959f08b389c46ef7ac8",
+    "src/base-load.bend": "1be1d62fd627e77a59a930d401a1572988d60385cb4e60eb0d2d83181cef4941"
+  },
+  "findings": [
+    "typebind",
+    "globals"
+  ],
+  "sources": {
+    "globals/bare-constructor/lib/m.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "globals/bare-constructor/main.bend": "ad0f7935df9bf77d97786c66bd286105a6e91a7ab04304639076cf4262a69cd5",
+    "globals/base-constructor.bend": "ad058341a1f60eb952aacd2e9ece8f425db0dd520d65b8dcfaadfd34f30f7339",
+    "globals/base-empty.bend": "a738c28746572ea13a3936202780aa766089e7183f0f640204dcd32e22c2a293",
+    "globals/base-foreign.bend": "6892c50c570a5caeb5051c54e5b352286ddb46389a173ffa2602a168f5b040f6",
+    "globals/base-function.bend": "15d3e0be8b3e620d82f3aec62c413a98a3080ba16cb68003f6172bed5fdf1663",
+    "globals/base-type.bend": "fe08bfe50f3ea4e01698ddef053739bf6e60e3abf125cb8a87054fed62897ffa",
+    "globals/erased-type.bend": "b821153afc7cb065ef503087e8b6db279f44a933b756a82d0f0a1816351e5de7",
+    "globals/forward-function.bend": "f714ea0e56c179ccb2fd48e64faeb9dd75378a3b338de8670e447fe9bef8a3aa",
+    "globals/function.bend": "3d818ac167a4ccf17566762419db56dc3495a0844b67ee9f9afd0763d3a2b05e",
+    "globals/live-function.bend": "df279778c03dc8d04a89fccd2414db5e4431380312276a2e83c713e153f4b4ed",
+    "globals/local-constructor.bend": "1f802ef5c86b3e376c35c4373e247ea254c8aee014d0bf272c168c082f3b337e",
+    "globals/module-function/lib/m.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "globals/module-function/main.bend": "3bd583b58742e12ea0bd55816d01f19bb899fe500d5e8807c83e2270be196d08",
+    "globals/module-type/lib/m.bend": "ecc42e46188f2d9bbc568ef50c92f9f0c5412e108a053b3d408544ce06885f1e",
+    "globals/module-type/main.bend": "535be5e75bc1eb2070cf8824791b3f6b8efae7758f64299845548b8fe87f6614",
+    "globals/scrutinee.bend": "cda6bebd3849c12ca8aae39425c7eae5ac8a02607601567a35bea09a5f5d0a14",
+    "globals/type-let.bend": "8d55a18f952db0a522ceb7314862aa314148bacd01ded7d1a896064de0c6b024",
+    "globals/undeclared.bend": "abce87e925f1eb8ee46497462f044a5d7838a1896d75d2b8a21d28968ac8ab0a",
+    "typebind/arm.bend": "b8e059bad231e3dc657c119778ff1591b892952c180401fd9fa1ad4d5d2c9f34",
+    "typebind/base.bend": "cf65cbdbcec57fd86a8949b76d400de53a80eadeffd53e9c07d68691e9916211",
+    "typebind/dotted/lib/m.bend": "ecc42e46188f2d9bbc568ef50c92f9f0c5412e108a053b3d408544ce06885f1e",
+    "typebind/dotted/main.bend": "ff2e6d6ebe0c3e381076b9228ab491228154792fd1c6a5131de604ab396c0b85",
+    "typebind/erased-let.bend": "87d9346d275dd17625e4811fbb80d5883a3779cc574db42c2963df9c84225260",
+    "typebind/field.bend": "c5f7e5614d0d3aaedc1c77172b6b1f45308f29cbfb97142c551d478542491774",
+    "typebind/let.bend": "0093b18a55aade0d4c4d9952b56de67db9705fe75e6d2350c275e6cf7fd8e04b",
+    "typebind/module-constructor/lib/m.bend": "58b30ae67125e0badf8828e5ec105c992b43da3d716d70bd68dc180b15b860b8",
+    "typebind/module-constructor/main.bend": "734ffd16162c17dfc1b29592c909c9b1bb1a7430cd0273a88ca701c0648acab4",
+    "typebind/module-let/lib/m.bend": "a76a37b26b918ec88390951f06eea3b1103f37bfe27453b31e1ce37a57d7cf73",
+    "typebind/module-let/main.bend": "fde78c09821358f6a9c036e15e972f5e989ac8b1f757ebfe2a2bc4b400ec541d",
+    "typebind/module/lib/m.bend": "9ce699d87965c3ccd3adae246e9799438795e4adfacfb5934092421cdacac51c",
+    "typebind/module/main.bend": "fde78c09821358f6a9c036e15e972f5e989ac8b1f757ebfe2a2bc4b400ec541d",
+    "typebind/next-constructor.bend": "d5e0a4dff9d17500f075355224288eb8c23107f4ce31f4031024cd63d8badbdc",
+    "typebind/other-arm.bend": "085fb7b682209090635597ea3531183a4e30490e98dbdd5677027272a70d7716",
+    "typebind/own-type.bend": "54fbc1c5d295f8b4560350b571836fab0aa36a48567e4bc27d5602aa08a6e2ad",
+    "typebind/parameter.bend": "e0240c4cc527a51d2219424e3ff4b05bbe1d51d049b81040eea3fea5475b69db",
+    "typebind/result-only.bend": "f7b3f40482c92966849ea57e8f142ea8df0889f2c6259a9ab83eacf78a01f420",
+    "typebind/result.bend": "4edaa76ed626c2b774d7cdd39395223b2d65f83ee73c1de56a2da7f7c0c1582f",
+    "typebind/sibling.bend": "ea571fe9ccb65d17e5e282dd0108b98f15c8642297ef2719c7b63cc5fa879e8e",
+    "typebind/type-parameter.bend": "009c29460c4ad7312554ad4ea709352cbea804fcb5b7679755c027538d8a0693"
+  },
+  "fixtures": [
+    {
+      "name": "typebind-result",
+      "finding": "typebind",
+      "file": "typebind/result.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/result.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/result.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Light\nContext:\n- Light : Light\nLocation: f\n4 | \n5>| def f(Light: Light) -> Light:\n  |                        ^^^^^\n6 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-parameter",
+      "finding": "typebind",
+      "file": "typebind/parameter.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/parameter.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/parameter.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Light\nContext:\n- Light : Light\nLocation: f\n 8 | \n 9>| def f(Light: Light, x: Light) -> Flag:\n   |                        ^^^^^\n10 |   On{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-result-only",
+      "finding": "typebind",
+      "file": "typebind/result-only.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/result-only.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/result-only.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Light : Flag\nLocation: f\n 8 | \n 9>| def f(Light: Flag) -> Light:\n   |                       ^^^^^\n10 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-let",
+      "finding": "typebind",
+      "file": "typebind/let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/let.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Light\nContext:\n- x     : Light\n- Light : Light\nLocation: f\n6 |   Light = x\n7>|   y : Light = Lit{}\n  |       ^^^^^\n8 |   y\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-erased-let",
+      "finding": "typebind",
+      "file": "typebind/erased-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/erased-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/erased-let.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Light\nContext:\n- x     : Light\n- Light : Light\nLocation: f\n6 |   -Light = x\n7>|   y : Light = Lit{}\n  |       ^^^^^\n8 |   y\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-field",
+      "finding": "typebind",
+      "file": "typebind/field.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/field.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/field.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Light\nContext:\n- Light : Light\nLocation: Box\n5 | type Box is Data:\n6>|   Box{Light: Light, v: Light}\n  |                        ^^^^^\n7 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-arm",
+      "finding": "typebind",
+      "file": "typebind/arm.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/arm.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/arm.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Light\nContext:\n- Light : Light\nLocation: f\n10 |     case Box{Light}:\n11>|       y : Light = Dark{}\n   |           ^^^^^\n12 |       y\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-module",
+      "finding": "typebind",
+      "file": "typebind/module/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/module/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/module/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : lib/m.Flag\nContext:\n- Flag : lib/m.Flag\nLocation: lib/m.f\n4 | \n5>| def f(Flag: Flag) -> Flag:\n  |                      ^^^^\n6 |   On{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-module-let",
+      "finding": "typebind",
+      "file": "typebind/module-let/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/module-let/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/module-let/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : lib/m.Flag\nContext:\n- x    : lib/m.Flag\n- Flag : lib/m.Flag\nLocation: lib/m.f\n6 |   Flag = x\n7>|   y : Flag = On{}\n  |       ^^^^\n8 |   y\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-dotted",
+      "finding": "typebind",
+      "file": "typebind/dotted/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/dotted/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/dotted/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : lib/m.Flag\nContext:\n- M.Flag : lib/m.Flag\nLocation: g\n6 | \n7>| def g(M.Flag: M.Flag, x: M.Flag) -> Light:\n  |                          ^^^^^^\n8 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-base",
+      "finding": "typebind",
+      "file": "typebind/base.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/base.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/base.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Bool\nContext:\n- Bool : Bool\nLocation: g\n6 | \n7>| def g(Bool: Bool) -> Bool:\n  |                      ^^^^\n8 |   True{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "binder-as-type",
+        "diagnostic_prefix": "Invalid\tcheck\tbinder-as-type\t"
+      }
+    },
+    {
+      "name": "typebind-own-type",
+      "finding": "typebind",
+      "file": "typebind/own-type.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/own-type.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/own-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": "",
+          "constructor": "On",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "typebind/own-type.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "typebind-sibling",
+      "finding": "typebind",
+      "file": "typebind/sibling.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/sibling.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/sibling.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "typebind/sibling.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "typebind-other-arm",
+      "finding": "typebind",
+      "file": "typebind/other-arm.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/other-arm.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/other-arm.bend"
+          ],
+          "exit": 0,
+          "stdout": "Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "typebind/other-arm.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "typebind-next-constructor",
+      "finding": "typebind",
+      "file": "typebind/next-constructor.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/next-constructor.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/next-constructor.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "fields"
+        ]
+      },
+      "loaded_files": [
+        "typebind/next-constructor.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "typebind-module-constructor",
+      "finding": "typebind",
+      "file": "typebind/module-constructor/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/module-constructor/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/module-constructor/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "fields"
+        ]
+      },
+      "loaded_files": [
+        "typebind/module-constructor/main.bend",
+        "typebind/module-constructor/lib/m.bend"
+      ]
+    },
+    {
+      "name": "typebind-type-parameter",
+      "finding": "typebind",
+      "file": "typebind/type-parameter.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "typebind/type-parameter.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/typebind/type-parameter.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "parameter-type",
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "name": "global-erased-type",
+      "finding": "globals",
+      "file": "globals/erased-type.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/erased-type.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/erased-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "type-as-term",
+        "diagnostic_prefix": "Unsupported\tcheck\ttype-as-term\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "type-as-term",
+        "diagnostic_prefix": "Unsupported\tcheck\ttype-as-term\t"
+      }
+    },
+    {
+      "name": "global-type-let",
+      "finding": "globals",
+      "file": "globals/type-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/type-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/type-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "type-as-term",
+        "diagnostic_prefix": "Unsupported\tcheck\ttype-as-term\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "type-as-term",
+        "diagnostic_prefix": "Unsupported\tcheck\ttype-as-term\t"
+      }
+    },
+    {
+      "name": "global-function",
+      "finding": "globals",
+      "file": "globals/function.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/function.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/function.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      }
+    },
+    {
+      "name": "global-live-function",
+      "finding": "globals",
+      "file": "globals/live-function.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/live-function.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/live-function.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      }
+    },
+    {
+      "name": "global-forward-function",
+      "finding": "globals",
+      "file": "globals/forward-function.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/forward-function.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/forward-function.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      }
+    },
+    {
+      "name": "global-module-function",
+      "finding": "globals",
+      "file": "globals/module-function/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/module-function/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/module-function/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      }
+    },
+    {
+      "name": "global-module-type",
+      "finding": "globals",
+      "file": "globals/module-type/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/module-type/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/module-type/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "type-as-term",
+        "diagnostic_prefix": "Unsupported\tcheck\ttype-as-term\t"
+      }
+    },
+    {
+      "name": "global-base-function",
+      "finding": "globals",
+      "file": "globals/base-function.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/base-function.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/base-function.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      }
+    },
+    {
+      "name": "global-base-type",
+      "finding": "globals",
+      "file": "globals/base-type.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/base-type.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/base-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "type-as-term",
+        "diagnostic_prefix": "Unsupported\tcheck\ttype-as-term\t"
+      }
+    },
+    {
+      "name": "global-base-foreign",
+      "finding": "globals",
+      "file": "globals/base-foreign.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/base-foreign.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/base-foreign.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "function-reference",
+        "diagnostic_prefix": "Unsupported\tcheck\tfunction-reference\t"
+      }
+    },
+    {
+      "name": "global-base-empty",
+      "finding": "globals",
+      "file": "globals/base-empty.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/base-empty.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/base-empty.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "type-as-term",
+        "diagnostic_prefix": "Unsupported\tcheck\ttype-as-term\t"
+      }
+    },
+    {
+      "name": "global-bare-constructor",
+      "finding": "globals",
+      "file": "globals/bare-constructor/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/bare-constructor/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/bare-constructor/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : lib/m.On\nContext:\n- x : Light\nLocation: f\n12 | def f(x: Light) -> Light:\n13>|   -c = M.On\n   |        ^^^^\n14 |   x\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "free-name",
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t"
+      }
+    },
+    {
+      "name": "global-local-constructor",
+      "finding": "globals",
+      "file": "globals/local-constructor.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/local-constructor.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/local-constructor.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Lit\nContext:\n- x : Light\nLocation: f\n5 | def f(x: Light) -> Light:\n6>|   -g = Lit\n  |        ^^^\n7 |   x\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "free-name",
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "free-name",
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t"
+      }
+    },
+    {
+      "name": "global-base-constructor",
+      "finding": "globals",
+      "file": "globals/base-constructor.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/base-constructor.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/base-constructor.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : True\nContext:\n- x : Light\nLocation: f\n7 | def f(x: Light) -> Light:\n8>|   -c = True\n  |        ^^^^\n9 |   x\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "free-name",
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t"
+      }
+    },
+    {
+      "name": "global-undeclared",
+      "finding": "globals",
+      "file": "globals/undeclared.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/undeclared.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/undeclared.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : nothing\nContext:\n- x : Light\nLocation: f\n5 | def f(x: Light) -> Light:\n6>|   -g = nothing\n  |        ^^^^^^^\n7 |   x\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "free-name",
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "free-name",
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t"
+      }
+    },
+    {
+      "name": "global-scrutinee",
+      "finding": "globals",
+      "file": "globals/scrutinee.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "globals/scrutinee.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round7/globals/scrutinee.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n10 | def f(x: Light) -> Light:\n11>|   match flip:\n   |         ^^^^\n12 |     case Dark{}: Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "free-name",
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "free-name",
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t"
+      }
+    }
+  ]
+}
