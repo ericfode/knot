@@ -186,17 +186,32 @@ inspects it (§6.1).
   Intrinsic's result type, are the pinned representations the registry names,
   which the image MUST declare. A Foreign's result type is `IO(X)` in §8's shape,
   with `X` the registry's `output` representation.
+- **Slots are typed by their binders:** a parameter by its declared type, a Let
+  by its value's node type, a capture by its enclosing slot's type, a live closure
+  argument by its domain, and a Branch field by its constructor's pinned live field
+  type (`none` for a generic field), never by the checked core's instantiated
+  binder type.
 - **Types agree.** Exactly, with `none` equal only to `none`: a Reference and its
-  slot, a Let and its body, and a Case and every arm body. A Case's scrutinee type
-  MUST be concrete, and its slot's type is either that type or `none`: S matches
-  the head bound from a List's `Con` (`case Con{+head,+tail}: match head: …` in
-  `catalog.bend`), whose field is pinned `none`. Where a value flows into a declared
+  slot, and a Let and its body. A Case's scrutinee type MUST be concrete, and its
+  slot's type is either that type or `none`: S matches the head bound from a
+  List's `Con` (`case Con{+head,+tail}: match head: …` in `catalog.bend`), whose
+  field is pinned `none`. A Case has the type of the position it fills: a
+  function's or closure's result; its Let's or enclosing Case's type as a Let body
+  or an arm; a Let binder's type as its value; an operand's declared parameter,
+  field, registry input, arrow or domain type. That is how the encoder and the
+  gate's display cross-check type a Case, so plans are canonical; validation
+  checks only fit, and admits a `none`-typed Case in a concrete position
+  (`first-code-none-case`). Where a value flows into a declared
   position (an Application's arguments and result, a Construct's fields, an
-  Invoke's argument and result, a Closure's and a function's body) it **fits**:
-  `none` on either side fits any type, arrows of one kind fit when their domains
-  and results fit, and any other type fits only itself. Fit is instantiation of
-  an erased parameter, so validation does not establish type soundness under
-  generics; the VM inspects every word it reads (§6).
+  Invoke's argument and result, a Closure's and a function's body, and every arm
+  body of a Case) it **fits**: `none` on either side fits any type, arrows of one
+  kind fit when their domains and results fit, and any other type fits only
+  itself. S's `first_code(codes: List<U32>) -> U32` (`literal.bend`) answers `0`
+  for Nil and the `none`-typed head for Con in one U32 Case (admitted plan control
+  `first-code`); a key Branch and a Default answer a `none` parameter in another
+  (`key-arms-none`). Fit is instantiation of an erased parameter, so validation does
+  not establish type soundness under generics; the VM inspects every word it reads
+  (§6).
 - **Let** binds slot = current depth; its value runs at that depth, its body one
   deeper. **Reference** and **Case** read a slot below the current depth.
 - **Case mode 0 (tags)**: a dense table over the scrutinee type's constructors,
@@ -242,11 +257,12 @@ stack. The validator checks every function, reachable or not:
    run as a Base body), arrow kinds, captures and exact `slots`.
 5. Canonicality as defined in §2.
 
-A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
-refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls,
-and MUST admit its three admitted plan controls (a Case on a `none` slot, among
-them `list-head-match`, S's shape), its seven code-list controls and its seven
-run controls; vm-model and vm-core MUST run each run control to the outcome
+A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 62
+refusals (20 byte-level, 42 plan-level); vm-core MUST refuse the same controls,
+and MUST admit its six admitted plan controls (three Cases on a `none` slot,
+among them `list-head-match`, and three whose arms fit their Case, among them
+`first-code`, S's shapes), its seven code-list controls and its eleven run
+controls; vm-model and vm-core MUST run each run control to the outcome
 frozen with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
@@ -501,9 +517,12 @@ value and `Name{f1,f2}` for an Object's live fields, without spaces. A Nat word
 eval-cli prints `ProofBox{On{}}`, the seed `ProofBox{Off{}, On{}}`). Every
 rendered word sits at a concrete describable type, so the tree never meets a
 scalar, closure or `none`-typed word; each is still inspected against that type
-(§6). Rendering is iterative, bounded by 1,048,576 visits and 16 MiB
-of text; hitting either is `Exhausted` kind 2 (`display`), never a truncated
-value. The result is dropped after printing.
+(§6). Rendering is iterative. A **visit** is one rendered constructor: an Object
+or a nullary value costs one, and a Nat word `n` costs `n + 1`. The bounds are
+inclusive: at most 1,048,576 visits and 16 MiB (16,777,216 bytes) of `tree`,
+separators included. A result that needs more is `Exhausted` kind 2 (`display`),
+never a truncated value (§12's four display run controls). The result is dropped
+after printing.
 
 **Program** (`IMAGE FUEL -- [ARGS…]`; only `ARGS` reach `IO.args`). `main` takes no
 live argument and returns `IO(Unit)`, where
@@ -747,10 +766,12 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
   `none`-typed node covered;
-- all 61 refusals of §4 with their frozen reasons, and its three admitted plan
-  controls;
-- seven admitted **run controls** (`check-spec.py run_controls`), each frozen
-  with the run §7 requires, by literal review. Through a `none`-typed identity: a
+- all 62 refusals of §4 with their frozen reasons, and its six admitted plan
+  controls; `first-code` also equals the independent lowering of its `check-cli`
+  display, written by hand in the literals head's grammar because no pinned head
+  checks a `List<U32>` parameter;
+- eleven admitted **run controls** (`check-spec.py run_controls`), each frozen
+  with the run §7 and §8 require, by literal review. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
   closure invoked live, a live closure invoked erased, the terminal continuation
   invoked erased, a live closure as main's value at phase 1 and an erased closure
@@ -758,14 +779,20 @@ lane and requires:
   calls. And U32 and File named by one opaque type, `Evaluated 0 0 Off{}` after 1
   call. A validator mutant in which `none` never fits an arrow refuses the first,
   a generic function instantiated at an arrow type, so `fits` stays loose and §7
-  checks the count;
+  checks the count. Four display controls meet §8's bounds exactly and then pass
+  them by one, each after 1 call: the Nat 1,048,575 renders (1,048,576 visits)
+  and 1,048,576 is `Exhausted` kind 2 `display`; `Duo{a,b}` of two Nats whose
+  successor is named with 15 bytes renders in exactly 16,777,216 bytes, and
+  `Pair{a,b}`, one byte longer, is `Exhausted`. Their lines are frozen by SHA-256.
+  The seed's value obeys the same bounds (two frozen controls refuse one visit
+  and one byte beyond them);
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 46 codec mutants and 4 source mutants killed through a changed image, a decode
+- 49 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe or invocation verdict or a changed observation, and 11 evaluator mutants
+  changed describe or invocation verdict or a changed observation, and 15 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
@@ -783,8 +810,9 @@ leaks. vm-core adds the iterative loader, validator, CEK machine, state dump and
 quantum re-entry, and completes the 250,000-deep workload. vm-lockstep compares
 every transition and the four value lanes, and derives each golden's exact call
 count; vm-rc, vm-io and vm-prims close reclamation, effects and the final registry.
-A golden of the `list-head-match` shape (a Case on a List element, seed `True{}`)
-is owed as soon as a pinned head checks a `List<T>` parameter; until then the
-admitted control witnesses validation only, not evaluation.
+Goldens of the `list-head-match` shape (a Case on a List element) and the
+`first-code` shape (a concrete arm beside the `none` head), each seed `True{}`, are
+owed as soon as a pinned head checks a `List<T>` parameter; until then the admitted
+controls witness validation only, not evaluation.
 The first speed gate is at most 4× seed-native on each frozen workload on a quiet
 host; above 10× requires design review.
