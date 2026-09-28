@@ -1,0 +1,1665 @@
+{
+  "purpose": "D7 freeze of the review-round-4 result displays before their fix.",
+  "generator": "python3 tests/compiler-literals/results.py --write",
+  "display": "Knot prints Evaluated<TAB>type<TAB>word<TAB>display; each display below is compared byte for byte. The seed prints a primitive display itself.",
+  "seed_sha256": {
+    "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "fixtures": [
+    {
+      "name": "result-char",
+      "file": "tests/compiler-literals/results/result-char.bend",
+      "sha256": "6efe808c31dad1d1c151539d7f4778298212a8e21f0d8a458671cf4464842c7a",
+      "finding": "review round 4: U32 and Char results printed as constructor tags",
+      "covers": "quoted Char results: every named escape, the quote rule, the raw and escaped code ranges at each boundary, and computed Chars",
+      "enums": {
+        "Sample": [
+          "Nul",
+          "Start",
+          "Letter",
+          "Apostrophe",
+          "Quotation",
+          "Backslash",
+          "Newline",
+          "Tab",
+          "CarriageReturn",
+          "UnitSeparator",
+          "Space",
+          "Tilde",
+          "Delete",
+          "FirstC1",
+          "LastC1",
+          "Latin",
+          "BeforeSurrogates",
+          "HighSurrogate",
+          "LowSurrogate",
+          "AfterSurrogates",
+          "Noncharacter",
+          "Emoji",
+          "LastScalar",
+          "PastScalar",
+          "AllOnes",
+          "Sum",
+          "FromCode"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/results/result-char.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Char",
+          "display": "'\\u{1}'",
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/results/result-char.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\u{1}'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Nul"
+          ],
+          "type": "Char",
+          "display": "'\\0'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Nul.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Nul{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Nul.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\0'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Start"
+          ],
+          "type": "Char",
+          "display": "'\\u{1}'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Start.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Start{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Start.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\u{1}'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Letter"
+          ],
+          "type": "Char",
+          "display": "'a'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Letter.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Letter{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Letter.bend"
+            ],
+            "exit": 0,
+            "stdout": "'a'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Apostrophe"
+          ],
+          "type": "Char",
+          "display": "'\\''",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Apostrophe.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Apostrophe{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Apostrophe.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\''\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            4
+          ],
+          "argument_constructors": [
+            "Quotation"
+          ],
+          "type": "Char",
+          "display": "'\"'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Quotation.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Quotation{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Quotation.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\"'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            5
+          ],
+          "argument_constructors": [
+            "Backslash"
+          ],
+          "type": "Char",
+          "display": "'\\\\'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Backslash.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Backslash{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Backslash.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\\\'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            6
+          ],
+          "argument_constructors": [
+            "Newline"
+          ],
+          "type": "Char",
+          "display": "'\\n'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Newline.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Newline{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Newline.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\n'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            7
+          ],
+          "argument_constructors": [
+            "Tab"
+          ],
+          "type": "Char",
+          "display": "'\\t'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Tab.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Tab{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Tab.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\t'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            8
+          ],
+          "argument_constructors": [
+            "CarriageReturn"
+          ],
+          "type": "Char",
+          "display": "'\\r'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-CarriageReturn.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.CarriageReturn{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-CarriageReturn.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\r'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            9
+          ],
+          "argument_constructors": [
+            "UnitSeparator"
+          ],
+          "type": "Char",
+          "display": "'\\u{1f}'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-UnitSeparator.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.UnitSeparator{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-UnitSeparator.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\u{1f}'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            10
+          ],
+          "argument_constructors": [
+            "Space"
+          ],
+          "type": "Char",
+          "display": "' '",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Space.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Space{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Space.bend"
+            ],
+            "exit": 0,
+            "stdout": "' '\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            11
+          ],
+          "argument_constructors": [
+            "Tilde"
+          ],
+          "type": "Char",
+          "display": "'~'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Tilde.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Tilde{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Tilde.bend"
+            ],
+            "exit": 0,
+            "stdout": "'~'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            12
+          ],
+          "argument_constructors": [
+            "Delete"
+          ],
+          "type": "Char",
+          "display": "'\\u{7f}'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Delete.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Delete{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Delete.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\u{7f}'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            13
+          ],
+          "argument_constructors": [
+            "FirstC1"
+          ],
+          "type": "Char",
+          "display": "''",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-FirstC1.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.FirstC1{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-FirstC1.bend"
+            ],
+            "exit": 0,
+            "stdout": "''\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            14
+          ],
+          "argument_constructors": [
+            "LastC1"
+          ],
+          "type": "Char",
+          "display": "''",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-LastC1.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.LastC1{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-LastC1.bend"
+            ],
+            "exit": 0,
+            "stdout": "''\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            15
+          ],
+          "argument_constructors": [
+            "Latin"
+          ],
+          "type": "Char",
+          "display": "'é'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Latin.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Latin{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Latin.bend"
+            ],
+            "exit": 0,
+            "stdout": "'é'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            16
+          ],
+          "argument_constructors": [
+            "BeforeSurrogates"
+          ],
+          "type": "Char",
+          "display": "'퟿'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-BeforeSurrogates.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.BeforeSurrogates{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-BeforeSurrogates.bend"
+            ],
+            "exit": 0,
+            "stdout": "'퟿'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            17
+          ],
+          "argument_constructors": [
+            "HighSurrogate"
+          ],
+          "type": "Char",
+          "display": "'\\u{d83d}'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-HighSurrogate.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.HighSurrogate{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-HighSurrogate.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\u{d83d}'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            18
+          ],
+          "argument_constructors": [
+            "LowSurrogate"
+          ],
+          "type": "Char",
+          "display": "'\\u{dfff}'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-LowSurrogate.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.LowSurrogate{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-LowSurrogate.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\u{dfff}'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            19
+          ],
+          "argument_constructors": [
+            "AfterSurrogates"
+          ],
+          "type": "Char",
+          "display": "''",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-AfterSurrogates.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.AfterSurrogates{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-AfterSurrogates.bend"
+            ],
+            "exit": 0,
+            "stdout": "''\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            20
+          ],
+          "argument_constructors": [
+            "Noncharacter"
+          ],
+          "type": "Char",
+          "display": "'￾'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Noncharacter.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Noncharacter{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Noncharacter.bend"
+            ],
+            "exit": 0,
+            "stdout": "'￾'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            21
+          ],
+          "argument_constructors": [
+            "Emoji"
+          ],
+          "type": "Char",
+          "display": "'😀'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Emoji.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Emoji{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Emoji.bend"
+            ],
+            "exit": 0,
+            "stdout": "'😀'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            22
+          ],
+          "argument_constructors": [
+            "LastScalar"
+          ],
+          "type": "Char",
+          "display": "'􏿿'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-LastScalar.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.LastScalar{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-LastScalar.bend"
+            ],
+            "exit": 0,
+            "stdout": "'􏿿'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            23
+          ],
+          "argument_constructors": [
+            "PastScalar"
+          ],
+          "type": "Char",
+          "display": "'\\u{110000}'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-PastScalar.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.PastScalar{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-PastScalar.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\u{110000}'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            24
+          ],
+          "argument_constructors": [
+            "AllOnes"
+          ],
+          "type": "Char",
+          "display": "'\\u{ffffffff}'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-AllOnes.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.AllOnes{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-AllOnes.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\u{ffffffff}'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            25
+          ],
+          "argument_constructors": [
+            "Sum"
+          ],
+          "type": "Char",
+          "display": "'A'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-Sum.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.Sum{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-Sum.bend"
+            ],
+            "exit": 0,
+            "stdout": "'A'\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            26
+          ],
+          "argument_constructors": [
+            "FromCode"
+          ],
+          "type": "Char",
+          "display": "'\\n'",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-char-sample-FromCode.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-char.bend as F\n\ndef main() -> Char:\n  F.sample(F.FromCode{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-char-sample-FromCode.bend"
+            ],
+            "exit": 0,
+            "stdout": "'\\n'\n",
+            "stderr": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "result-nat",
+      "file": "tests/compiler-literals/results/result-nat.bend",
+      "sha256": "489f3226deb48b9c8589fc282ee1021942a1bccacf931c37be7aebc5c06fd06c",
+      "finding": "review round 4: U32 and Char results printed as constructor tags",
+      "covers": "Nat results as decimal n literals, from literals and operations",
+      "enums": {
+        "Sample": [
+          "Nothing",
+          "Three",
+          "Sum",
+          "Saturated",
+          "FromWord",
+          "Largest"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/results/result-nat.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Nat",
+          "display": "3n",
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/results/result-nat.bend"
+            ],
+            "exit": 0,
+            "stdout": "3n\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Nothing"
+          ],
+          "type": "Nat",
+          "display": "0n",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-nat-sample-Nothing.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-nat.bend as F\n\ndef main() -> Nat:\n  F.sample(F.Nothing{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-nat-sample-Nothing.bend"
+            ],
+            "exit": 0,
+            "stdout": "0n\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Nat",
+          "display": "3n",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-nat-sample-Three.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-nat.bend as F\n\ndef main() -> Nat:\n  F.sample(F.Three{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-nat-sample-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "3n\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Sum"
+          ],
+          "type": "Nat",
+          "display": "5n",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-nat-sample-Sum.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-nat.bend as F\n\ndef main() -> Nat:\n  F.sample(F.Sum{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-nat-sample-Sum.bend"
+            ],
+            "exit": 0,
+            "stdout": "5n\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Saturated"
+          ],
+          "type": "Nat",
+          "display": "0n",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-nat-sample-Saturated.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-nat.bend as F\n\ndef main() -> Nat:\n  F.sample(F.Saturated{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-nat-sample-Saturated.bend"
+            ],
+            "exit": 0,
+            "stdout": "0n\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            4
+          ],
+          "argument_constructors": [
+            "FromWord"
+          ],
+          "type": "Nat",
+          "display": "300n",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-nat-sample-FromWord.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-nat.bend as F\n\ndef main() -> Nat:\n  F.sample(F.FromWord{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-nat-sample-FromWord.bend"
+            ],
+            "exit": 0,
+            "stdout": "300n\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            5
+          ],
+          "argument_constructors": [
+            "Largest"
+          ],
+          "type": "Nat",
+          "display": "256n",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-nat-sample-Largest.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-nat.bend as F\n\ndef main() -> Nat:\n  F.sample(F.Largest{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-nat-sample-Largest.bend"
+            ],
+            "exit": 0,
+            "stdout": "256n\n",
+            "stderr": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "result-record",
+      "file": "tests/compiler-literals/results/result-record.bend",
+      "sha256": "c4b1a5fee109659e88ee91a000aa195624eda7e068cf8fdc2251300bddb732fb",
+      "finding": "review round 4: U32 and Char results printed as constructor tags",
+      "covers": "records with U32, Char, Nat, String, enum, Bool and nested record fields",
+      "enums": {
+        "Side": [
+          "Left",
+          "Right"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/results/result-record.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Box",
+          "display": "Box{1,'a'}",
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/results/result-record.bend"
+            ],
+            "exit": 0,
+            "stdout": "Box{1, 'a'}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "zeroes",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Box",
+          "display": "Box{0,'\\0'}",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-record-zeroes-0.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-record.bend as F\n\ndef main() -> F.Box:\n  F.zeroes()\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-record-zeroes-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/results/result-record.Box{0, '\\0'}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mix",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Mix",
+          "display": "Mix{3n,\"a, b{}\",Right{},True{},Box{4294967295,'\\''},Box{0,'\"'}}",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-record-mix-0.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-record.bend as F\n\ndef main() -> F.Mix:\n  F.mix()\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-record-mix-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/results/result-record.Mix{3n, \"a, b{}\", ../../../tests/compiler-literals/results/result-record.Right{}, True{}, ../../../tests/compiler-literals/results/result-record.Box{4294967295, '\\''}, ../../../tests/compiler-literals/results/result-record.Box{0, '\"'}}\n",
+            "stderr": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "result-string",
+      "file": "tests/compiler-literals/results/result-string.bend",
+      "sha256": "5c0dae544fa4b51b6e33872783369675fd855edcc0a8f8f2a01cd550910bf38d",
+      "finding": "review round 4: U32 and Char results printed as constructor tags",
+      "covers": "quoted String results: escapes, the quote rule, boundaries, separators and braces, surrogate pairs literal and computed, and computed Strings",
+      "enums": {
+        "Sample": [
+          "Blank",
+          "Nul",
+          "Greeting",
+          "Escapes",
+          "Quotes",
+          "Separators",
+          "Controls",
+          "Boundaries",
+          "Surrogates",
+          "JoinedSurrogates",
+          "ReversedSurrogates",
+          "PastScalar",
+          "Emoji",
+          "Shown",
+          "NatShown",
+          "Appended"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/results/result-string.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "String",
+          "display": "\"\\0\"",
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/results/result-string.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"\\0\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Blank"
+          ],
+          "type": "String",
+          "display": "\"\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Blank.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Blank{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Blank.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Nul"
+          ],
+          "type": "String",
+          "display": "\"\\0\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Nul.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Nul{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Nul.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"\\0\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Greeting"
+          ],
+          "type": "String",
+          "display": "\"hi\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Greeting.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Greeting{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Greeting.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"hi\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Escapes"
+          ],
+          "type": "String",
+          "display": "\"\\0\\t\\n\\r\\\\\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Escapes.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Escapes{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Escapes.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"\\0\\t\\n\\r\\\\\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            4
+          ],
+          "argument_constructors": [
+            "Quotes"
+          ],
+          "type": "String",
+          "display": "\"'\\\"\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Quotes.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Quotes{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Quotes.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"'\\\"\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            5
+          ],
+          "argument_constructors": [
+            "Separators"
+          ],
+          "type": "String",
+          "display": "\"a, b{}\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Separators.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Separators{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Separators.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"a, b{}\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            6
+          ],
+          "argument_constructors": [
+            "Controls"
+          ],
+          "type": "String",
+          "display": "\"\\u{1}\\u{1f}\\u{7f}\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Controls.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Controls{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Controls.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"\\u{1}\\u{1f}\\u{7f}\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            7
+          ],
+          "argument_constructors": [
+            "Boundaries"
+          ],
+          "type": "String",
+          "display": "\"￾􏿿\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Boundaries.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Boundaries{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Boundaries.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"￾􏿿\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            8
+          ],
+          "argument_constructors": [
+            "Surrogates"
+          ],
+          "type": "String",
+          "display": "\"\\u{d83d}\\u{de00}\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Surrogates.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Surrogates{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Surrogates.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"\\u{d83d}\\u{de00}\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            9
+          ],
+          "argument_constructors": [
+            "JoinedSurrogates"
+          ],
+          "type": "String",
+          "display": "\"\\u{d83d}\\u{de00}\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-JoinedSurrogates.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.JoinedSurrogates{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-JoinedSurrogates.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"\\u{d83d}\\u{de00}\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            10
+          ],
+          "argument_constructors": [
+            "ReversedSurrogates"
+          ],
+          "type": "String",
+          "display": "\"\\u{d83d}\\u{de00}\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-ReversedSurrogates.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.ReversedSurrogates{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-ReversedSurrogates.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"\\u{d83d}\\u{de00}\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            11
+          ],
+          "argument_constructors": [
+            "PastScalar"
+          ],
+          "type": "String",
+          "display": "\"a\\u{110000}\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-PastScalar.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.PastScalar{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-PastScalar.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"a\\u{110000}\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            12
+          ],
+          "argument_constructors": [
+            "Emoji"
+          ],
+          "type": "String",
+          "display": "\"😀\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Emoji.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Emoji{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Emoji.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"😀\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            13
+          ],
+          "argument_constructors": [
+            "Shown"
+          ],
+          "type": "String",
+          "display": "\"300\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Shown.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Shown{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Shown.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"300\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            14
+          ],
+          "argument_constructors": [
+            "NatShown"
+          ],
+          "type": "String",
+          "display": "\"12\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-NatShown.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.NatShown{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-NatShown.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"12\"\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            15
+          ],
+          "argument_constructors": [
+            "Appended"
+          ],
+          "type": "String",
+          "display": "\"a\\nb\"",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-string-sample-Appended.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-string.bend as F\n\ndef main() -> String:\n  F.sample(F.Appended{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-string-sample-Appended.bend"
+            ],
+            "exit": 0,
+            "stdout": "\"a\\nb\"\n",
+            "stderr": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "result-u32",
+      "file": "tests/compiler-literals/results/result-u32.bend",
+      "sha256": "ab1bc5dcc98cfcdf64eebb902c51e0b7b91f4d068d48b136c7acdf9a05d97b6a",
+      "finding": "review round 4: U32 and Char results printed as constructor tags",
+      "covers": "decimal U32 results, from literals and from wrapping and shifting operations",
+      "enums": {
+        "Sample": [
+          "Least",
+          "Hundreds",
+          "Most",
+          "Wrapped",
+          "Shifted"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/results/result-u32.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "U32",
+          "display": "300",
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/results/result-u32.bend"
+            ],
+            "exit": 0,
+            "stdout": "300\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Least"
+          ],
+          "type": "U32",
+          "display": "0",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-u32-sample-Least.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-u32.bend as F\n\ndef main() -> U32:\n  F.sample(F.Least{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-u32-sample-Least.bend"
+            ],
+            "exit": 0,
+            "stdout": "0\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Hundreds"
+          ],
+          "type": "U32",
+          "display": "300",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-u32-sample-Hundreds.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-u32.bend as F\n\ndef main() -> U32:\n  F.sample(F.Hundreds{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-u32-sample-Hundreds.bend"
+            ],
+            "exit": 0,
+            "stdout": "300\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Most"
+          ],
+          "type": "U32",
+          "display": "4294967295",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-u32-sample-Most.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-u32.bend as F\n\ndef main() -> U32:\n  F.sample(F.Most{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-u32-sample-Most.bend"
+            ],
+            "exit": 0,
+            "stdout": "4294967295\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Wrapped"
+          ],
+          "type": "U32",
+          "display": "4294967295",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-u32-sample-Wrapped.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-u32.bend as F\n\ndef main() -> U32:\n  F.sample(F.Wrapped{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-u32-sample-Wrapped.bend"
+            ],
+            "exit": 0,
+            "stdout": "4294967295\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sample",
+          "arguments": [
+            4
+          ],
+          "argument_constructors": [
+            "Shifted"
+          ],
+          "type": "U32",
+          "display": "2147483648",
+          "wrapper": {
+            "path": ".local/compiler-literals/result-calls/result-u32-sample-Shifted.bend",
+            "source": "import ../../../tests/compiler-literals/results/result-u32.bend as F\n\ndef main() -> U32:\n  F.sample(F.Shifted{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/result-calls/result-u32-sample-Shifted.bend"
+            ],
+            "exit": 0,
+            "stdout": "2147483648\n",
+            "stderr": ""
+          }
+        }
+      ]
+    }
+  ]
+}
