@@ -37,6 +37,11 @@ def starts(ts: List<&2,S.Token>, word: String) -> Bool:
     case Nil{}: False{}
     case Con{head,tail}: S.matches(head,word)
 
+# An offset's `+` touches its literal: `1n+p`, never `1n +p`.
+def touches(left: S.At, right: S.At) -> Bool:
+  match left right:
+    case S.At{start,end,line,column} S.At{next,stop,row,col}: U32.is_eq(end,next)
+
 def scrutinee(ts: List<&2,S.Token>) -> Bool:
   match ts:
     case Nil{}: False{}
@@ -231,9 +236,11 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case _: invalid(tokens,"term")
     case 1n+ +n LiteralTail{S.Literal{+token,1,+count,+text},+pattern}:
       S.choose(Result<S.Error,Parsed>,starts(tokens,"+"),u =>
+        S.choose(Result<S.Error,Parsed>,touches(S.at(token),S.here(tokens)),u =>
         S.choose(Result<S.Error,Parsed>,Bool.and(pattern,U32.is_gt(count,256)),u => invalid(tokens,"nat-offset-pattern"),u =>
           S.bind(List<&2,S.Token>,Parsed,expect(tokens,"+"),tail =>
             then(run(n,Term{pattern},tail),value => rest => Done{Parsed{S.Offset{token,count,value},rest}}))),u =>
+        unsupported(tokens,"operator")),u =>
         Done{Parsed{S.Literal{token,1,count,text},tokens}})
     case 1n+ +n LiteralTail{node,pattern}: Done{Parsed{node,tokens}}
     case 1n+ +n Body{+parent}:

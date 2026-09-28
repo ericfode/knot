@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "date": "2026-09-28T04:35:58.686108+00:00",
+  "date": "2026-09-28T04:41:42.719031+00:00",
   "seed": {
     "version": "2.0.29",
     "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
@@ -63,7 +63,7 @@
     "src/machine-runtime.bend": "321474b13cfdec40d70a50a87da4826b5b7674cf718a2d404511e8c81ae180dd",
     "src/machine-vm.bend": "3ee70d98d5ecb9ba66ec4af688648a03841f41a0e82cc7b0a9f2e8dffb74c9cb",
     "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
-    "src/parse.bend": "5e829324bc271e4063e705649c8b11c9685e0e6071c401caa15332eadeaf37e8",
+    "src/parse.bend": "e03d13639e041dc13eb8271fa3a659071569cd9a16d4d5caa474e1c2a5fafcc7",
     "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
     "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
     "src/primitive-eval.bend": "d77fba6779baf5f28b758dc634958ecc98458985736f00eae8904a6ffa1a9e73",
@@ -84,11 +84,13 @@
     "src/SPEC.md": "b2eb1e942a64b96972a443b5de31d6d93a6adb6f41a3467c802201d26cad781a",
     "src/CONTRACT.json": "509cbd8fa9fbbcfa3d75c1c30acf71ae86a70f7dc78aa727106be8b6594be4a6",
     "scripts/run-wasm.mjs": "e83f1bc5c97caed7106f794921fe073aabd824cb702d9cf6de2df1e234522117",
-    "tests/compiler-literals/check.py": "20350a26de67012893ec21934e547a2fb9bfc41f76efb54a1c799d42a0044238",
+    "tests/compiler-literals/check.py": "3ed727d00b2366d2b29eb5171ba345871279092ba1ecf9d9a3de2191e6f385b1",
     "tests/compiler-literals/expectations.json": "93f46e9f7abe944ccc8a1246410bdfabd0b2f4e8ae2243aa8bd12d6368ee1bd9",
     "tests/compiler-literals/regen.py": "327fad5b28666dc83c95d87b090a0967479d6cb621555345e453bf8b77c31b0a",
     "tests/compiler-literals/supplemental.json": "7ec8438b8194fdfc5055f190bcdb4da8a9d3d467e2df2b809652a500a27a5d8b",
     "tests/compiler-literals/supplemental.py": "8891cdbd151b5d40b0ed13df4ee2287800368698ee8c2e2f95e56b16d20db859",
+    "tests/compiler-literals/regressions.json": "a36176fc9fcb266257ba52c5c47bdd09b08ebf2a4687e28e90ec72bd257a1d70",
+    "tests/compiler-literals/regressions.py": "b053064108dc2ae50f56b418abbde50a08ea9886bebeb77b2783c6d3e71c122e",
     "tests/compiler-literals/FIXTURES.md": "6c2521b11817173339ca16ce7c4c82e2b47470cf5e24eb8a6f98e8bd17361274",
     "tests/compiler-modules/host-check-expectations.json": "72c9204257fc3c78729a6c0a68a9ea8e193fa4327671b84ab2494b7af16376e2",
     "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
@@ -133,7 +135,12 @@
     "tests/compiler-literals/fixtures/u32-shifts.bend": "9235ca3686d144514e1ee9412de90d0e88c92d130e9e3e0fe716323a16f123e0",
     "tests/compiler-literals/fixtures/u32-unsigned-order.bend": "63e9b4ef51191cac758689c031ff45df44bd23e5b7b069b6a9a76096c9c34d99",
     "tests/compiler-literals/fixtures/u32-wraparound.bend": "397a5554e58308d676030d0e953397a91aa3581f3e40fe602c7600c0a21a245c",
-    "tests/compiler-literals/supplemental/bootstrap-helpers.bend": "e7aa9faf08edb3538b46ff136f977dfe553c274c70f6d896adc21d8356c726dc"
+    "tests/compiler-literals/supplemental/bootstrap-helpers.bend": "e7aa9faf08edb3538b46ff136f977dfe553c274c70f6d896adc21d8356c726dc",
+    "tests/compiler-literals/regressions/offset-adjacent.bend": "0d74a77dc65f7372d6c823e6cb056c0f767632a7198b7ca81d50ad494dd81417",
+    "tests/compiler-literals/regressions/offset-spaced-expression.bend": "978bb5a5a4c5fea5af063d8f8584da5b91a5c30f43b500d5d6d1306c4e41840e",
+    "tests/compiler-literals/regressions/offset-spaced-pattern.bend": "d58bb8c4f133bf7c643262d9aad97e1661dea76cf82358aad5632a7f0283c8e1",
+    "tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend": "9600d1f6568c2f76d49a152cb02aa5fca560e5dbdc45378540243153f2fc8d62",
+    "tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend": "b747c1a1cbf57395ed528ed21d62781c760a01f6efa6582b0dfb43691f0d171d"
   },
   "reference_verification": {
     "argv": [
@@ -152,6 +159,16 @@
     ],
     "exit": 0,
     "stdout": "supplemental literals match the seed: 1 fixture, 12 calls\n",
+    "stderr": "",
+    "outcome": "success"
+  },
+  "regression_verification": {
+    "argv": [
+      "python3",
+      "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions.py"
+    ],
+    "exit": 0,
+    "stdout": "literals regressions match the seed: 5 fixtures, 9 calls\n",
     "stderr": "",
     "outcome": "success"
   },
@@ -688,7 +705,7 @@
     {
       "lane": "native",
       "phase": "check",
-      "sha256": "afe2a33274f3456b33d345cb3d0d80b68ea0c281226a387658761e9f9566d823",
+      "sha256": "560ec641021acbb6aceb08d6f409ecbfbd61da8a55aac49fe68254a763291a99",
       "result": {
         "argv": [
           "bun",
@@ -706,7 +723,7 @@
     {
       "lane": "native",
       "phase": "eval",
-      "sha256": "a28fb6ae5194cd7de35cd29f48631529073e385e239e7c90e342c076be33e31b",
+      "sha256": "5392cb3343f115cf08a24624d2234fa723d31ac1c8e743f2c4f4bad28f2d60cc",
       "result": {
         "argv": [
           "bun",
@@ -724,7 +741,7 @@
     {
       "lane": "native",
       "phase": "compile",
-      "sha256": "2065778e2fa0c97dd38cba3f1876a0e5efbf48c4f8aabf11f303c220e3ee7dcf",
+      "sha256": "8367f900f9c66f3452334f234ec3ed472db07aa668257e9d4169800f7956fdde",
       "result": {
         "argv": [
           "bun",
@@ -742,7 +759,7 @@
     {
       "lane": "bun",
       "phase": "check",
-      "sha256": "a15bb3da97ce6230a17f20696f633d0c7c8019f0f6f6359f829330a041876a14",
+      "sha256": "192849beb3b967e6e6c72c2dbf73a3e685ebb3eea68661eb4061fb24c95ef329",
       "result": {
         "argv": [
           "bun",
@@ -760,7 +777,7 @@
     {
       "lane": "bun",
       "phase": "eval",
-      "sha256": "e33f57e6881e17d62db659fbcd6dc7bae7ef9c292e524781bc6e78ba7c9b4830",
+      "sha256": "5f5bcf45971767ffc5c6e3317ce1f6d36174bed13b53c1da4c7b4bdb461b33c9",
       "result": {
         "argv": [
           "bun",
@@ -778,7 +795,7 @@
     {
       "lane": "bun",
       "phase": "compile",
-      "sha256": "e990208223c0802e91aff9b3041b71e3866620a18cf322a0626ec6daa7f9827f",
+      "sha256": "f6a07c3cac209e61a551a4b747b8926f7a0876ec317f9e9d699eb1e1ef7084c1",
       "result": {
         "argv": [
           "bun",
@@ -54040,6 +54057,2381 @@
       },
       "reference_calls": 12,
       "byte_identical": true
+    },
+    {
+      "name": "offset-adjacent",
+      "file": "tests/compiler-literals/regressions/offset-adjacent.bend",
+      "expected": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nNat.is_eq(1:1,1:1)->0=Nat.is_eq($0:1;$1:1)\nsize(1:3)->1=case $0 [0=>0n;1=>3n]\nanswer(1:0)->2=case $0 [0=>v2.0;1=>v2.1]\nspaced(1:1)->2=case $0 [0=>v2.0;1(1 $1:1;)=>v2.1]\npromoted(1:1)->2=case $0 [0=>v2.0;1(1 $1:1;)=>v2.1]\njoined(1:1)->2=case $0 [0=>v2.0;1(1 $1:1;)=>v2.1]\nafter_space(1:3)->2=call3(call1($0:3))\nafter_promotion(1:3)->2=call4(call1($0:3))\nafter_join(1:3)->2=call5(call1($0:3))\nsum(1:3)->2=call2(call0(Nat.add(3n;call1($0:3));6n))\nmain()->2=call6(v3.1)\n\n",
+            "stderr": "",
+            "outcome": "success"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm"
+            ],
+            "exit": 0,
+            "stdout": "Built\t3840\n",
+            "stderr": "",
+            "outcome": "success"
+          },
+          "evaluations": [
+            {
+              "export": "main",
+              "arguments": [],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_space",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_space",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tNo{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_space",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_space",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_promotion",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_promotion",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tNo{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_promotion",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_promotion",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_join",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_join",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tNo{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_join",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_join",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "sum",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "sum",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tNo{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "sum",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "sum",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            }
+          ],
+          "wasm": [
+            {
+              "export": "main",
+              "arguments": [],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_space",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "after_space",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_space\",\"arguments\":[0],\"result\":0,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_space",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "after_space",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_space\",\"arguments\":[1],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_promotion",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "after_promotion",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_promotion\",\"arguments\":[0],\"result\":0,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_promotion",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "after_promotion",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_promotion\",\"arguments\":[1],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_join",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "after_join",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_join\",\"arguments\":[0],\"result\":0,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_join",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "after_join",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_join\",\"arguments\":[1],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "sum",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "sum",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"sum\",\"arguments\":[0],\"result\":0,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "sum",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-native.wasm",
+                  "sum",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"sum\",\"arguments\":[1],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            }
+          ],
+          "sha256": "9adf06d003b7e2714121306c4b915f53a794c014ecccfac40e85253abeb05e11",
+          "audit": {
+            "result": {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check",
+                "--audit-bundle",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend"
+              ],
+              "exit": 0,
+              "stdout": "BasePin\t22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b\nModule\t/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend\nBaseChecked\tBool\nBaseIntrinsic\tNat\nBaseIntrinsic\tNat.is_eq\nBaseUnchecked\tEmpty\nBaseUnchecked\tUnit\nBaseUnchecked\tCmp\nBaseUnchecked\tEither\nBaseUnchecked\tSigma\nBaseUnchecked\tMaybe\nBaseUnchecked\tResult\nBaseUnchecked\tList\nBaseUnchecked\tWord.Nil\nBaseUnchecked\tWord.Con\nBaseUnchecked\tWord\nBaseUnchecked\tU32\nBaseUnchecked\tF32\nBaseUnchecked\tChar\nBaseUnchecked\tString\nBaseUnchecked\tArray\nBaseUnchecked\tImage\nBaseUnchecked\tEvent\nBaseUnchecked\tMap\nBaseUnchecked\tFile\nBaseUnchecked\tSocket\nBaseUnchecked\tListener\nBaseUnchecked\tWindow\nBaseUnchecked\tAudio\nBaseUnchecked\tChan\nBaseUnchecked\tIO.OP\nBaseUnchecked\tApp\nBaseUnchecked\tPair\nBaseUnchecked\tExists\nBaseUnchecked\tOr\nBaseUnchecked\tPair.fst\nBaseUnchecked\tPair.snd\nBaseUnchecked\tIO\nBaseUnchecked\tIO.pure\nBaseUnchecked\tIO.bind\nBaseUnchecked\tIO.print\nBaseUnchecked\tIO.write\nBaseUnchecked\tIO.print_err\nBaseUnchecked\tIO.get_env\nBaseUnchecked\tIO.args\nBaseUnchecked\tProcess.run\nBaseUnchecked\tIO.die\nBaseUnchecked\tIO.pass\nBaseUnchecked\tIO.try\nBaseUnchecked\tIO.random_u32\nBaseUnchecked\tIO.spawn\nBaseUnchecked\tIO.sleep\nBaseUnchecked\tIO.now\nBaseUnchecked\tIO.thread_count\nBaseUnchecked\tChan.new\nBaseUnchecked\tChan.send\nBaseUnchecked\tChan.recv\nBaseUnchecked\tChan.close\nBaseUnchecked\tIO.fork.go\nBaseUnchecked\tIO.fork\nBaseUnchecked\tIO.join.go\nBaseUnchecked\tIO.join\nBaseUnchecked\tFile.open\nBaseUnchecked\tFile.read\nBaseUnchecked\tFile.read_bytes\nBaseUnchecked\tFile.read_at\nBaseUnchecked\tFile.size\nBaseUnchecked\tFile.write\nBaseUnchecked\tFile.write_bytes\nBaseUnchecked\tFile.close\nBaseUnchecked\tTCP.listen\nBaseUnchecked\tTCP.accept\nBaseUnchecked\tTCP.connect\nBaseUnchecked\tTCP.send\nBaseUnchecked\tTCP.recv\nBaseUnchecked\tTCP.poll\nBaseUnchecked\tUDP.bind\nBaseUnchecked\tUDP.send_to\nBaseUnchecked\tUDP.recv_from\nBaseUnchecked\tUDP.poll\nBaseUnchecked\tSocket.close\nBaseUnchecked\tListener.close\nBaseUnchecked\tWindow.open\nBaseUnchecked\tWindow.frame\nBaseUnchecked\tWindow.set_title\nBaseUnchecked\tWindow.close\nBaseUnchecked\tAudio.open\nBaseUnchecked\tAudio.write\nBaseUnchecked\tAudio.close\nBaseUnchecked\tEqual.cong\nBaseUnchecked\tEqual.sym\nBaseUnchecked\tEqual.trans\nBaseUnchecked\tEmpty.absurd\nBaseUnchecked\tBool.not\nBaseUnchecked\tBool.and\nBaseUnchecked\tBool.or\nBaseUnchecked\tBool.xor\nBaseUnchecked\tBool.cmp\nBaseUnchecked\tBool.full_add\nBaseUnchecked\tBool.pick\nBaseUnchecked\tBool.to_u32\nBaseUnchecked\tCmp.is_lt\nBaseUnchecked\tCmp.is_eq\nBaseUnchecked\tCmp.is_gt\nBaseUnchecked\tCmp.is_le\nBaseUnchecked\tCmp.is_ge\nBaseUnchecked\tNat.double\nBaseUnchecked\tNat.add\nBaseUnchecked\tNat.sub\nBaseUnchecked\tNat.mul\nBaseUnchecked\tNat.divmod.go\nBaseUnchecked\tNat.divmod\nBaseUnchecked\tNat.cmp\nBaseUnchecked\tNat.is_lt\nBaseUnchecked\tNat.is_ne\nBaseUnchecked\tNat.is_le\nBaseUnchecked\tNat.is_gt\nBaseUnchecked\tNat.is_ge\nBaseUnchecked\tNat.min\nBaseUnchecked\tNat.max\nBaseUnchecked\tNat.ge_refl\nBaseUnchecked\tNat.max_ge_l\nBaseUnchecked\tNat.max_ge_r\nBaseUnchecked\tNat.div.fin\nBaseUnchecked\tNat.div\nBaseUnchecked\tNat.mod.fin\nBaseUnchecked\tNat.mod\nBaseUnchecked\tNat.pow\nBaseUnchecked\tMaybe.pure\nBaseUnchecked\tMaybe.bind\nBaseUnchecked\tMaybe.default\nBaseUnchecked\tMaybe.is_some\nBaseUnchecked\tMaybe.is_none\nBaseUnchecked\tMaybe.map\nBaseUnchecked\tMaybe.or\nBaseUnchecked\tResult.pure\nBaseUnchecked\tResult.bind\nBaseUnchecked\tResult.default\nBaseUnchecked\tResult.is_done\nBaseUnchecked\tResult.is_fail\nBaseUnchecked\tResult.map\nBaseUnchecked\tList.map\nBaseUnchecked\tList.length\nBaseUnchecked\tList.append\nBaseUnchecked\tList.concat\nBaseUnchecked\tList.reverse.go\nBaseUnchecked\tList.reverse\nBaseUnchecked\tList.is_empty\nBaseUnchecked\tList.head\nBaseUnchecked\tList.tail\nBaseUnchecked\tList.last.go\nBaseUnchecked\tList.last\nBaseUnchecked\tList.get\nBaseUnchecked\tList.set\nBaseUnchecked\tList.take\nBaseUnchecked\tList.drop\nBaseUnchecked\tList.zip\nBaseUnchecked\tList.range.go\nBaseUnchecked\tList.range\nBaseUnchecked\tList.replicate\nBaseUnchecked\tList.filter.put\nBaseUnchecked\tList.filter\nBaseUnchecked\tList.foldl\nBaseUnchecked\tList.foldr\nBaseUnchecked\tList.any\nBaseUnchecked\tList.all\nBaseUnchecked\tList.find.put\nBaseUnchecked\tList.find\nBaseUnchecked\tList.contains\nBaseUnchecked\tList.merge.step\nBaseUnchecked\tList.merge.go\nBaseUnchecked\tList.sort.runs\nBaseUnchecked\tList.sort.pass\nBaseUnchecked\tList.sort.go\nBaseUnchecked\tList.sort\nBaseUnchecked\tList.for_each\nBaseUnchecked\tWord.zero\nBaseUnchecked\tWord.not\nBaseUnchecked\tWord.and\nBaseUnchecked\tWord.or\nBaseUnchecked\tWord.xor\nBaseUnchecked\tWord.shl.put\nBaseUnchecked\tWord.shl\nBaseUnchecked\tWord.shl.out.con\nBaseUnchecked\tWord.shl.out\nBaseUnchecked\tWord.shr.pad\nBaseUnchecked\tWord.shr\nBaseUnchecked\tWord.cmp.fin\nBaseUnchecked\tWord.cmp\nBaseUnchecked\tWord.inc\nBaseUnchecked\tWord.adc\nBaseUnchecked\tWord.adc.con\nBaseUnchecked\tWord.add\nBaseUnchecked\tWord.sub\nBaseUnchecked\tWord.add_comm.arm\nBaseUnchecked\tWord.add_comm.go\nBaseUnchecked\tWord.add_comm\nBaseUnchecked\tWord.to_nat\nBaseUnchecked\tWord.mul.go\nBaseUnchecked\tWord.mul\nBaseUnchecked\tU32.inc\nBaseUnchecked\tU32.add\nBaseUnchecked\tU32.add_comm\nBaseUnchecked\tU32.sub\nBaseUnchecked\tU32.mul\nBaseUnchecked\tU32.not\nBaseUnchecked\tU32.and\nBaseUnchecked\tU32.or\nBaseUnchecked\tU32.xor\nBaseUnchecked\tU32.shl\nBaseUnchecked\tU32.shr\nBaseUnchecked\tU32.shln\nBaseUnchecked\tU32.shrn\nBaseUnchecked\tU32.cmp\nBaseUnchecked\tU32.is_eq\nBaseUnchecked\tU32.is_ne\nBaseUnchecked\tU32.is_lt\nBaseUnchecked\tU32.is_le\nBaseUnchecked\tU32.is_gt\nBaseUnchecked\tU32.is_ge\nBaseUnchecked\tU32.is_zero\nBaseUnchecked\tU32.to_nat\nBaseUnchecked\tU32.from_nat\nBaseUnchecked\tU32.log2.go\nBaseUnchecked\tU32.log2\nBaseUnchecked\tU32.divmod.go.fin\nBaseUnchecked\tU32.divmod.go.shl\nBaseUnchecked\tU32.divmod.go.rec\nBaseUnchecked\tU32.divmod.go\nBaseUnchecked\tU32.div.fin\nBaseUnchecked\tU32.div.if\nBaseUnchecked\tU32.div\nBaseUnchecked\tU32.mod.fin\nBaseUnchecked\tU32.mod.if\nBaseUnchecked\tU32.mod\nBaseUnchecked\tU32.min\nBaseUnchecked\tU32.max\nBaseUnchecked\tU32.clamp\nBaseUnchecked\tU32.pow\nBaseUnchecked\tU32.is_even\nBaseUnchecked\tU32.to_f32\nBaseUnchecked\tF32.to_u32\nBaseUnchecked\tF32.add\nBaseUnchecked\tF32.sub\nBaseUnchecked\tF32.mul\nBaseUnchecked\tF32.div\nBaseUnchecked\tF32.mod\nBaseUnchecked\tF32.pow\nBaseUnchecked\tF32.atan2\nBaseUnchecked\tF32.neg\nBaseUnchecked\tF32.abs\nBaseUnchecked\tF32.sqrt\nBaseUnchecked\tF32.exp\nBaseUnchecked\tF32.log\nBaseUnchecked\tF32.log2\nBaseUnchecked\tF32.log10\nBaseUnchecked\tF32.sin\nBaseUnchecked\tF32.cos\nBaseUnchecked\tF32.tan\nBaseUnchecked\tF32.asin\nBaseUnchecked\tF32.acos\nBaseUnchecked\tF32.atan\nBaseUnchecked\tF32.sinh\nBaseUnchecked\tF32.cosh\nBaseUnchecked\tF32.tanh\nBaseUnchecked\tF32.floor\nBaseUnchecked\tF32.ceil\nBaseUnchecked\tF32.trunc\nBaseUnchecked\tF32.is_eq\nBaseUnchecked\tF32.is_ne\nBaseUnchecked\tF32.is_lt\nBaseUnchecked\tF32.is_le\nBaseUnchecked\tF32.is_gt\nBaseUnchecked\tF32.is_ge\nBaseUnchecked\tF32.show\nBaseUnchecked\tF32.bits\nBaseUnchecked\tF32.read\nBaseUnchecked\tF32.min\nBaseUnchecked\tF32.max\nBaseUnchecked\tF32.clamp\nBaseUnchecked\tF32.lerp\nBaseUnchecked\tF32.square\nBaseUnchecked\tF32.hypot\nBaseUnchecked\tF32.round\nBaseUnchecked\tF32.pi\nBaseUnchecked\tF32.from_nat\nBaseUnchecked\tF32.to_nat\nBaseUnchecked\tChar.cmp\nBaseUnchecked\tChar.to_u32\nBaseUnchecked\tChar.from_u32\nBaseUnchecked\tChar.is_eq\nBaseUnchecked\tChar.is_digit\nBaseUnchecked\tChar.is_upper\nBaseUnchecked\tChar.is_lower\nBaseUnchecked\tChar.is_alpha\nBaseUnchecked\tChar.is_space\nBaseUnchecked\tChar.to_upper\nBaseUnchecked\tChar.to_lower\nBaseUnchecked\tString.append\nBaseUnchecked\tString.cmp.rec\nBaseUnchecked\tString.cmp\nBaseUnchecked\tString.cmp.fin\nBaseUnchecked\tString.eq.fin\nBaseUnchecked\tString.eq\nBaseUnchecked\tString.length\nBaseUnchecked\tString.is_empty\nBaseUnchecked\tString.reverse.go\nBaseUnchecked\tString.reverse\nBaseUnchecked\tString.order.fin\nBaseUnchecked\tString.order\nBaseUnchecked\tString.is_lt\nBaseUnchecked\tString.is_le\nBaseUnchecked\tString.is_gt\nBaseUnchecked\tString.is_ge\nBaseUnchecked\tString.starts_with\nBaseUnchecked\tString.starts_with.if\nBaseUnchecked\tString.ends_with\nBaseUnchecked\tString.contains\nBaseUnchecked\tString.contains.if\nBaseUnchecked\tString.take\nBaseUnchecked\tString.drop\nBaseUnchecked\tString.get\nBaseUnchecked\tString.to_list\nBaseUnchecked\tString.from_list\nBaseUnchecked\tString.concat\nBaseUnchecked\tString.join.go\nBaseUnchecked\tString.join\nBaseUnchecked\tString.split.push\nBaseUnchecked\tString.split.fin\nBaseUnchecked\tString.split\nBaseUnchecked\tString.lines\nBaseUnchecked\tString.repeat\nBaseUnchecked\tString.to_upper\nBaseUnchecked\tString.to_lower\nBaseUnchecked\tString.trim_start\nBaseUnchecked\tString.trim_start.if\nBaseUnchecked\tString.trim_end\nBaseUnchecked\tString.trim\nBaseUnchecked\tNat.show.put\nBaseUnchecked\tNat.show.go\nBaseUnchecked\tNat.show.fin\nBaseUnchecked\tNat.show\nBaseUnchecked\tNat.read.go\nBaseUnchecked\tNat.read.if\nBaseUnchecked\tNat.read.trim\nBaseUnchecked\tNat.read.fits\nBaseUnchecked\tNat.read.gate\nBaseUnchecked\tNat.read\nBaseUnchecked\tU32.show.go\nBaseUnchecked\tU32.show.fin\nBaseUnchecked\tU32.show.if\nBaseUnchecked\tU32.show\nBaseUnchecked\tU32.read.go\nBaseUnchecked\tU32.read.if\nBaseUnchecked\tU32.read\nBaseUnchecked\tBool.show\nBaseUnchecked\tChar.show\nBaseUnchecked\tMaybe.show\nBaseUnchecked\tList.show.go\nBaseUnchecked\tList.show\nBaseUnchecked\tArray.size.node\nBaseUnchecked\tArray.size\nBaseUnchecked\tArray.swap.lo\nBaseUnchecked\tArray.swap.hi\nBaseUnchecked\tArray.swap.go\nBaseUnchecked\tArray.swap.if\nBaseUnchecked\tArray.swap.at\nBaseUnchecked\tArray.swap\nBaseUnchecked\tArray.clone.node\nBaseUnchecked\tArray.clone\nBaseUnchecked\tArray.fork\nBaseUnchecked\tArray.join\nBaseUnchecked\tArray.atomic.add\nBaseUnchecked\tArray.atomic.min\nBaseUnchecked\tArray.atomic.max\nBaseUnchecked\tArray.atomic.and\nBaseUnchecked\tArray.atomic.or\nBaseUnchecked\tArray.atomic.xor\nBaseUnchecked\tArray.atomic.exch\nBaseUnchecked\tArray.atomic.cas\nBaseUnchecked\tArray.atomic.fadd\nBaseUnchecked\tArray.new\nBaseUnchecked\tArray.set.fin\nBaseUnchecked\tArray.set\nBaseUnchecked\tArray.get.go\nBaseUnchecked\tArray.get.if\nBaseUnchecked\tArray.get.at\nBaseUnchecked\tArray.get\nBaseUnchecked\tArray.to_list.go\nBaseUnchecked\tArray.to_list\nBaseUnchecked\tArray.map.go\nBaseUnchecked\tArray.map.at\nBaseUnchecked\tArray.map.seed\nBaseUnchecked\tArray.map\nBaseUnchecked\tMap.bit.u\nBaseUnchecked\tMap.bit.chr\nBaseUnchecked\tMap.bit.go.chr\nBaseUnchecked\tMap.bit.go.rec\nBaseUnchecked\tMap.bit.go\nBaseUnchecked\tMap.bit.at\nBaseUnchecked\tMap.bit\nBaseUnchecked\tMap.msb.u\nBaseUnchecked\tMap.msb.u.if\nBaseUnchecked\tMap.diff.chr\nBaseUnchecked\tMap.diff.step\nBaseUnchecked\tMap.diff\nBaseUnchecked\tMap.diff.fin\nBaseUnchecked\tMap.new\nBaseUnchecked\tMap.put\nBaseUnchecked\tMap.put.bit\nBaseUnchecked\tMap.ins.splice.bit\nBaseUnchecked\tMap.ins.splice\nBaseUnchecked\tMap.ins\nBaseUnchecked\tMap.ins.deep\nBaseUnchecked\tMap.ins.if\nBaseUnchecked\tMap.lo\nBaseUnchecked\tMap.hi\nBaseUnchecked\tMap.seek\nBaseUnchecked\tMap.seek.bit\nBaseUnchecked\tMap.set.fin.go\nBaseUnchecked\tMap.set.fin\nBaseUnchecked\tMap.set.go\nBaseUnchecked\tMap.set\nBaseUnchecked\tMap.has.leaf\nBaseUnchecked\tMap.has\nBaseUnchecked\tMap.has.bit\nBaseUnchecked\tMap.get.leaf\nBaseUnchecked\tMap.get\nBaseUnchecked\tMap.get.bit\nBaseUnchecked\tMap.pop.lo\nBaseUnchecked\tMap.pop.hi\nBaseUnchecked\tMap.pop.leaf\nBaseUnchecked\tMap.pop\nBaseUnchecked\tMap.pop.bit\nBaseUnchecked\tMap.del.fin\nBaseUnchecked\tMap.del\nBaseUnchecked\tMap.to_list.go\nBaseUnchecked\tMap.to_list\nBaseUnchecked\tMap.keys.go\nBaseUnchecked\tMap.keys\nBaseUnchecked\tMap.from_list.go\nBaseUnchecked\tMap.from_list\nBaseUnchecked\tMap.union\nBaseUnchecked\tMap.size\nBaseUnchecked\tMap.values.go\nBaseUnchecked\tMap.values\nBaseUnchecked\tSet\nBaseUnchecked\tSet.new\nBaseUnchecked\tSet.add\nBaseUnchecked\tSet.has\nBaseUnchecked\tSet.del\nBaseUnchecked\tSet.size\nBaseUnchecked\tSet.to_list\nBaseUnchecked\tSet.from_list.go\nBaseUnchecked\tSet.from_list\nBaseUnchecked\tImage.sink\nBaseUnchecked\tImage.drop.join\nBaseUnchecked\tImage.free\nBaseUnchecked\tImage.drop\nBaseUnchecked\tApp.next\nBaseUnchecked\tApp.turn\nBaseUnchecked\tApp.draw\nBaseUnchecked\tApp.step\nBaseUnchecked\tApp.loop\nBaseUnchecked\tApp.run\nBaseUnchecked\tApp.more\nBaseUnchecked\tApp.fold\nBaseUnchecked\tApp.play\n\n",
+              "stderr": "",
+              "outcome": "success"
+            },
+            "BaseChecked": [
+              "Bool"
+            ],
+            "BaseIntrinsic": [
+              "Nat",
+              "Nat.is_eq"
+            ],
+            "BaseUnchecked": [
+              "Empty",
+              "Unit",
+              "Cmp",
+              "Either",
+              "Sigma",
+              "Maybe",
+              "Result",
+              "List",
+              "Word.Nil",
+              "Word.Con",
+              "Word",
+              "U32",
+              "F32",
+              "Char",
+              "String",
+              "Array",
+              "Image",
+              "Event",
+              "Map",
+              "File",
+              "Socket",
+              "Listener",
+              "Window",
+              "Audio",
+              "Chan",
+              "IO.OP",
+              "App",
+              "Pair",
+              "Exists",
+              "Or",
+              "Pair.fst",
+              "Pair.snd",
+              "IO",
+              "IO.pure",
+              "IO.bind",
+              "IO.print",
+              "IO.write",
+              "IO.print_err",
+              "IO.get_env",
+              "IO.args",
+              "Process.run",
+              "IO.die",
+              "IO.pass",
+              "IO.try",
+              "IO.random_u32",
+              "IO.spawn",
+              "IO.sleep",
+              "IO.now",
+              "IO.thread_count",
+              "Chan.new",
+              "Chan.send",
+              "Chan.recv",
+              "Chan.close",
+              "IO.fork.go",
+              "IO.fork",
+              "IO.join.go",
+              "IO.join",
+              "File.open",
+              "File.read",
+              "File.read_bytes",
+              "File.read_at",
+              "File.size",
+              "File.write",
+              "File.write_bytes",
+              "File.close",
+              "TCP.listen",
+              "TCP.accept",
+              "TCP.connect",
+              "TCP.send",
+              "TCP.recv",
+              "TCP.poll",
+              "UDP.bind",
+              "UDP.send_to",
+              "UDP.recv_from",
+              "UDP.poll",
+              "Socket.close",
+              "Listener.close",
+              "Window.open",
+              "Window.frame",
+              "Window.set_title",
+              "Window.close",
+              "Audio.open",
+              "Audio.write",
+              "Audio.close",
+              "Equal.cong",
+              "Equal.sym",
+              "Equal.trans",
+              "Empty.absurd",
+              "Bool.not",
+              "Bool.and",
+              "Bool.or",
+              "Bool.xor",
+              "Bool.cmp",
+              "Bool.full_add",
+              "Bool.pick",
+              "Bool.to_u32",
+              "Cmp.is_lt",
+              "Cmp.is_eq",
+              "Cmp.is_gt",
+              "Cmp.is_le",
+              "Cmp.is_ge",
+              "Nat.double",
+              "Nat.add",
+              "Nat.sub",
+              "Nat.mul",
+              "Nat.divmod.go",
+              "Nat.divmod",
+              "Nat.cmp",
+              "Nat.is_lt",
+              "Nat.is_ne",
+              "Nat.is_le",
+              "Nat.is_gt",
+              "Nat.is_ge",
+              "Nat.min",
+              "Nat.max",
+              "Nat.ge_refl",
+              "Nat.max_ge_l",
+              "Nat.max_ge_r",
+              "Nat.div.fin",
+              "Nat.div",
+              "Nat.mod.fin",
+              "Nat.mod",
+              "Nat.pow",
+              "Maybe.pure",
+              "Maybe.bind",
+              "Maybe.default",
+              "Maybe.is_some",
+              "Maybe.is_none",
+              "Maybe.map",
+              "Maybe.or",
+              "Result.pure",
+              "Result.bind",
+              "Result.default",
+              "Result.is_done",
+              "Result.is_fail",
+              "Result.map",
+              "List.map",
+              "List.length",
+              "List.append",
+              "List.concat",
+              "List.reverse.go",
+              "List.reverse",
+              "List.is_empty",
+              "List.head",
+              "List.tail",
+              "List.last.go",
+              "List.last",
+              "List.get",
+              "List.set",
+              "List.take",
+              "List.drop",
+              "List.zip",
+              "List.range.go",
+              "List.range",
+              "List.replicate",
+              "List.filter.put",
+              "List.filter",
+              "List.foldl",
+              "List.foldr",
+              "List.any",
+              "List.all",
+              "List.find.put",
+              "List.find",
+              "List.contains",
+              "List.merge.step",
+              "List.merge.go",
+              "List.sort.runs",
+              "List.sort.pass",
+              "List.sort.go",
+              "List.sort",
+              "List.for_each",
+              "Word.zero",
+              "Word.not",
+              "Word.and",
+              "Word.or",
+              "Word.xor",
+              "Word.shl.put",
+              "Word.shl",
+              "Word.shl.out.con",
+              "Word.shl.out",
+              "Word.shr.pad",
+              "Word.shr",
+              "Word.cmp.fin",
+              "Word.cmp",
+              "Word.inc",
+              "Word.adc",
+              "Word.adc.con",
+              "Word.add",
+              "Word.sub",
+              "Word.add_comm.arm",
+              "Word.add_comm.go",
+              "Word.add_comm",
+              "Word.to_nat",
+              "Word.mul.go",
+              "Word.mul",
+              "U32.inc",
+              "U32.add",
+              "U32.add_comm",
+              "U32.sub",
+              "U32.mul",
+              "U32.not",
+              "U32.and",
+              "U32.or",
+              "U32.xor",
+              "U32.shl",
+              "U32.shr",
+              "U32.shln",
+              "U32.shrn",
+              "U32.cmp",
+              "U32.is_eq",
+              "U32.is_ne",
+              "U32.is_lt",
+              "U32.is_le",
+              "U32.is_gt",
+              "U32.is_ge",
+              "U32.is_zero",
+              "U32.to_nat",
+              "U32.from_nat",
+              "U32.log2.go",
+              "U32.log2",
+              "U32.divmod.go.fin",
+              "U32.divmod.go.shl",
+              "U32.divmod.go.rec",
+              "U32.divmod.go",
+              "U32.div.fin",
+              "U32.div.if",
+              "U32.div",
+              "U32.mod.fin",
+              "U32.mod.if",
+              "U32.mod",
+              "U32.min",
+              "U32.max",
+              "U32.clamp",
+              "U32.pow",
+              "U32.is_even",
+              "U32.to_f32",
+              "F32.to_u32",
+              "F32.add",
+              "F32.sub",
+              "F32.mul",
+              "F32.div",
+              "F32.mod",
+              "F32.pow",
+              "F32.atan2",
+              "F32.neg",
+              "F32.abs",
+              "F32.sqrt",
+              "F32.exp",
+              "F32.log",
+              "F32.log2",
+              "F32.log10",
+              "F32.sin",
+              "F32.cos",
+              "F32.tan",
+              "F32.asin",
+              "F32.acos",
+              "F32.atan",
+              "F32.sinh",
+              "F32.cosh",
+              "F32.tanh",
+              "F32.floor",
+              "F32.ceil",
+              "F32.trunc",
+              "F32.is_eq",
+              "F32.is_ne",
+              "F32.is_lt",
+              "F32.is_le",
+              "F32.is_gt",
+              "F32.is_ge",
+              "F32.show",
+              "F32.bits",
+              "F32.read",
+              "F32.min",
+              "F32.max",
+              "F32.clamp",
+              "F32.lerp",
+              "F32.square",
+              "F32.hypot",
+              "F32.round",
+              "F32.pi",
+              "F32.from_nat",
+              "F32.to_nat",
+              "Char.cmp",
+              "Char.to_u32",
+              "Char.from_u32",
+              "Char.is_eq",
+              "Char.is_digit",
+              "Char.is_upper",
+              "Char.is_lower",
+              "Char.is_alpha",
+              "Char.is_space",
+              "Char.to_upper",
+              "Char.to_lower",
+              "String.append",
+              "String.cmp.rec",
+              "String.cmp",
+              "String.cmp.fin",
+              "String.eq.fin",
+              "String.eq",
+              "String.length",
+              "String.is_empty",
+              "String.reverse.go",
+              "String.reverse",
+              "String.order.fin",
+              "String.order",
+              "String.is_lt",
+              "String.is_le",
+              "String.is_gt",
+              "String.is_ge",
+              "String.starts_with",
+              "String.starts_with.if",
+              "String.ends_with",
+              "String.contains",
+              "String.contains.if",
+              "String.take",
+              "String.drop",
+              "String.get",
+              "String.to_list",
+              "String.from_list",
+              "String.concat",
+              "String.join.go",
+              "String.join",
+              "String.split.push",
+              "String.split.fin",
+              "String.split",
+              "String.lines",
+              "String.repeat",
+              "String.to_upper",
+              "String.to_lower",
+              "String.trim_start",
+              "String.trim_start.if",
+              "String.trim_end",
+              "String.trim",
+              "Nat.show.put",
+              "Nat.show.go",
+              "Nat.show.fin",
+              "Nat.show",
+              "Nat.read.go",
+              "Nat.read.if",
+              "Nat.read.trim",
+              "Nat.read.fits",
+              "Nat.read.gate",
+              "Nat.read",
+              "U32.show.go",
+              "U32.show.fin",
+              "U32.show.if",
+              "U32.show",
+              "U32.read.go",
+              "U32.read.if",
+              "U32.read",
+              "Bool.show",
+              "Char.show",
+              "Maybe.show",
+              "List.show.go",
+              "List.show",
+              "Array.size.node",
+              "Array.size",
+              "Array.swap.lo",
+              "Array.swap.hi",
+              "Array.swap.go",
+              "Array.swap.if",
+              "Array.swap.at",
+              "Array.swap",
+              "Array.clone.node",
+              "Array.clone",
+              "Array.fork",
+              "Array.join",
+              "Array.atomic.add",
+              "Array.atomic.min",
+              "Array.atomic.max",
+              "Array.atomic.and",
+              "Array.atomic.or",
+              "Array.atomic.xor",
+              "Array.atomic.exch",
+              "Array.atomic.cas",
+              "Array.atomic.fadd",
+              "Array.new",
+              "Array.set.fin",
+              "Array.set",
+              "Array.get.go",
+              "Array.get.if",
+              "Array.get.at",
+              "Array.get",
+              "Array.to_list.go",
+              "Array.to_list",
+              "Array.map.go",
+              "Array.map.at",
+              "Array.map.seed",
+              "Array.map",
+              "Map.bit.u",
+              "Map.bit.chr",
+              "Map.bit.go.chr",
+              "Map.bit.go.rec",
+              "Map.bit.go",
+              "Map.bit.at",
+              "Map.bit",
+              "Map.msb.u",
+              "Map.msb.u.if",
+              "Map.diff.chr",
+              "Map.diff.step",
+              "Map.diff",
+              "Map.diff.fin",
+              "Map.new",
+              "Map.put",
+              "Map.put.bit",
+              "Map.ins.splice.bit",
+              "Map.ins.splice",
+              "Map.ins",
+              "Map.ins.deep",
+              "Map.ins.if",
+              "Map.lo",
+              "Map.hi",
+              "Map.seek",
+              "Map.seek.bit",
+              "Map.set.fin.go",
+              "Map.set.fin",
+              "Map.set.go",
+              "Map.set",
+              "Map.has.leaf",
+              "Map.has",
+              "Map.has.bit",
+              "Map.get.leaf",
+              "Map.get",
+              "Map.get.bit",
+              "Map.pop.lo",
+              "Map.pop.hi",
+              "Map.pop.leaf",
+              "Map.pop",
+              "Map.pop.bit",
+              "Map.del.fin",
+              "Map.del",
+              "Map.to_list.go",
+              "Map.to_list",
+              "Map.keys.go",
+              "Map.keys",
+              "Map.from_list.go",
+              "Map.from_list",
+              "Map.union",
+              "Map.size",
+              "Map.values.go",
+              "Map.values",
+              "Set",
+              "Set.new",
+              "Set.add",
+              "Set.has",
+              "Set.del",
+              "Set.size",
+              "Set.to_list",
+              "Set.from_list.go",
+              "Set.from_list",
+              "Image.sink",
+              "Image.drop.join",
+              "Image.free",
+              "Image.drop",
+              "App.next",
+              "App.turn",
+              "App.draw",
+              "App.step",
+              "App.loop",
+              "App.run",
+              "App.more",
+              "App.fold",
+              "App.play"
+            ]
+          }
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nNat.is_eq(1:1,1:1)->0=Nat.is_eq($0:1;$1:1)\nsize(1:3)->1=case $0 [0=>0n;1=>3n]\nanswer(1:0)->2=case $0 [0=>v2.0;1=>v2.1]\nspaced(1:1)->2=case $0 [0=>v2.0;1(1 $1:1;)=>v2.1]\npromoted(1:1)->2=case $0 [0=>v2.0;1(1 $1:1;)=>v2.1]\njoined(1:1)->2=case $0 [0=>v2.0;1(1 $1:1;)=>v2.1]\nafter_space(1:3)->2=call3(call1($0:3))\nafter_promotion(1:3)->2=call4(call1($0:3))\nafter_join(1:3)->2=call5(call1($0:3))\nsum(1:3)->2=call2(call0(Nat.add(3n;call1($0:3));6n))\nmain()->2=call6(v3.1)\n\n",
+            "stderr": "",
+            "outcome": "success"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm"
+            ],
+            "exit": 0,
+            "stdout": "Built\t3840\n",
+            "stderr": "",
+            "outcome": "success"
+          },
+          "evaluations": [
+            {
+              "export": "main",
+              "arguments": [],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_space",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_space",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tNo{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_space",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_space",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_promotion",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_promotion",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tNo{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_promotion",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_promotion",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_join",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_join",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tNo{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_join",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "after_join",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "sum",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "sum",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tNo{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "sum",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend",
+                  "sum",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tYes{}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            }
+          ],
+          "wasm": [
+            {
+              "export": "main",
+              "arguments": [],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_space",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "after_space",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_space\",\"arguments\":[0],\"result\":0,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_space",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "after_space",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_space\",\"arguments\":[1],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_promotion",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "after_promotion",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_promotion\",\"arguments\":[0],\"result\":0,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_promotion",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "after_promotion",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_promotion\",\"arguments\":[1],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_join",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "after_join",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_join\",\"arguments\":[0],\"result\":0,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "after_join",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "after_join",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"after_join\",\"arguments\":[1],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "sum",
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "sum",
+                  "0"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"sum\",\"arguments\":[0],\"result\":0,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            },
+            {
+              "export": "sum",
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "result": {
+                "argv": [
+                  "node",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-adjacent-bun.wasm",
+                  "sum",
+                  "1"
+                ],
+                "exit": 0,
+                "stdout": "{\"validated\":true,\"export\":\"sum\",\"arguments\":[1],\"result\":1,\"bytes\":3840}\n",
+                "stderr": "",
+                "outcome": "success"
+              }
+            }
+          ],
+          "sha256": "9adf06d003b7e2714121306c4b915f53a794c014ecccfac40e85253abeb05e11",
+          "audit": {
+            "result": {
+              "argv": [
+                "bun",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check.js",
+                "--audit-bundle",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend"
+              ],
+              "exit": 0,
+              "stdout": "BasePin\t22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b\nModule\t/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-adjacent.bend\nBaseChecked\tBool\nBaseIntrinsic\tNat\nBaseIntrinsic\tNat.is_eq\nBaseUnchecked\tEmpty\nBaseUnchecked\tUnit\nBaseUnchecked\tCmp\nBaseUnchecked\tEither\nBaseUnchecked\tSigma\nBaseUnchecked\tMaybe\nBaseUnchecked\tResult\nBaseUnchecked\tList\nBaseUnchecked\tWord.Nil\nBaseUnchecked\tWord.Con\nBaseUnchecked\tWord\nBaseUnchecked\tU32\nBaseUnchecked\tF32\nBaseUnchecked\tChar\nBaseUnchecked\tString\nBaseUnchecked\tArray\nBaseUnchecked\tImage\nBaseUnchecked\tEvent\nBaseUnchecked\tMap\nBaseUnchecked\tFile\nBaseUnchecked\tSocket\nBaseUnchecked\tListener\nBaseUnchecked\tWindow\nBaseUnchecked\tAudio\nBaseUnchecked\tChan\nBaseUnchecked\tIO.OP\nBaseUnchecked\tApp\nBaseUnchecked\tPair\nBaseUnchecked\tExists\nBaseUnchecked\tOr\nBaseUnchecked\tPair.fst\nBaseUnchecked\tPair.snd\nBaseUnchecked\tIO\nBaseUnchecked\tIO.pure\nBaseUnchecked\tIO.bind\nBaseUnchecked\tIO.print\nBaseUnchecked\tIO.write\nBaseUnchecked\tIO.print_err\nBaseUnchecked\tIO.get_env\nBaseUnchecked\tIO.args\nBaseUnchecked\tProcess.run\nBaseUnchecked\tIO.die\nBaseUnchecked\tIO.pass\nBaseUnchecked\tIO.try\nBaseUnchecked\tIO.random_u32\nBaseUnchecked\tIO.spawn\nBaseUnchecked\tIO.sleep\nBaseUnchecked\tIO.now\nBaseUnchecked\tIO.thread_count\nBaseUnchecked\tChan.new\nBaseUnchecked\tChan.send\nBaseUnchecked\tChan.recv\nBaseUnchecked\tChan.close\nBaseUnchecked\tIO.fork.go\nBaseUnchecked\tIO.fork\nBaseUnchecked\tIO.join.go\nBaseUnchecked\tIO.join\nBaseUnchecked\tFile.open\nBaseUnchecked\tFile.read\nBaseUnchecked\tFile.read_bytes\nBaseUnchecked\tFile.read_at\nBaseUnchecked\tFile.size\nBaseUnchecked\tFile.write\nBaseUnchecked\tFile.write_bytes\nBaseUnchecked\tFile.close\nBaseUnchecked\tTCP.listen\nBaseUnchecked\tTCP.accept\nBaseUnchecked\tTCP.connect\nBaseUnchecked\tTCP.send\nBaseUnchecked\tTCP.recv\nBaseUnchecked\tTCP.poll\nBaseUnchecked\tUDP.bind\nBaseUnchecked\tUDP.send_to\nBaseUnchecked\tUDP.recv_from\nBaseUnchecked\tUDP.poll\nBaseUnchecked\tSocket.close\nBaseUnchecked\tListener.close\nBaseUnchecked\tWindow.open\nBaseUnchecked\tWindow.frame\nBaseUnchecked\tWindow.set_title\nBaseUnchecked\tWindow.close\nBaseUnchecked\tAudio.open\nBaseUnchecked\tAudio.write\nBaseUnchecked\tAudio.close\nBaseUnchecked\tEqual.cong\nBaseUnchecked\tEqual.sym\nBaseUnchecked\tEqual.trans\nBaseUnchecked\tEmpty.absurd\nBaseUnchecked\tBool.not\nBaseUnchecked\tBool.and\nBaseUnchecked\tBool.or\nBaseUnchecked\tBool.xor\nBaseUnchecked\tBool.cmp\nBaseUnchecked\tBool.full_add\nBaseUnchecked\tBool.pick\nBaseUnchecked\tBool.to_u32\nBaseUnchecked\tCmp.is_lt\nBaseUnchecked\tCmp.is_eq\nBaseUnchecked\tCmp.is_gt\nBaseUnchecked\tCmp.is_le\nBaseUnchecked\tCmp.is_ge\nBaseUnchecked\tNat.double\nBaseUnchecked\tNat.add\nBaseUnchecked\tNat.sub\nBaseUnchecked\tNat.mul\nBaseUnchecked\tNat.divmod.go\nBaseUnchecked\tNat.divmod\nBaseUnchecked\tNat.cmp\nBaseUnchecked\tNat.is_lt\nBaseUnchecked\tNat.is_ne\nBaseUnchecked\tNat.is_le\nBaseUnchecked\tNat.is_gt\nBaseUnchecked\tNat.is_ge\nBaseUnchecked\tNat.min\nBaseUnchecked\tNat.max\nBaseUnchecked\tNat.ge_refl\nBaseUnchecked\tNat.max_ge_l\nBaseUnchecked\tNat.max_ge_r\nBaseUnchecked\tNat.div.fin\nBaseUnchecked\tNat.div\nBaseUnchecked\tNat.mod.fin\nBaseUnchecked\tNat.mod\nBaseUnchecked\tNat.pow\nBaseUnchecked\tMaybe.pure\nBaseUnchecked\tMaybe.bind\nBaseUnchecked\tMaybe.default\nBaseUnchecked\tMaybe.is_some\nBaseUnchecked\tMaybe.is_none\nBaseUnchecked\tMaybe.map\nBaseUnchecked\tMaybe.or\nBaseUnchecked\tResult.pure\nBaseUnchecked\tResult.bind\nBaseUnchecked\tResult.default\nBaseUnchecked\tResult.is_done\nBaseUnchecked\tResult.is_fail\nBaseUnchecked\tResult.map\nBaseUnchecked\tList.map\nBaseUnchecked\tList.length\nBaseUnchecked\tList.append\nBaseUnchecked\tList.concat\nBaseUnchecked\tList.reverse.go\nBaseUnchecked\tList.reverse\nBaseUnchecked\tList.is_empty\nBaseUnchecked\tList.head\nBaseUnchecked\tList.tail\nBaseUnchecked\tList.last.go\nBaseUnchecked\tList.last\nBaseUnchecked\tList.get\nBaseUnchecked\tList.set\nBaseUnchecked\tList.take\nBaseUnchecked\tList.drop\nBaseUnchecked\tList.zip\nBaseUnchecked\tList.range.go\nBaseUnchecked\tList.range\nBaseUnchecked\tList.replicate\nBaseUnchecked\tList.filter.put\nBaseUnchecked\tList.filter\nBaseUnchecked\tList.foldl\nBaseUnchecked\tList.foldr\nBaseUnchecked\tList.any\nBaseUnchecked\tList.all\nBaseUnchecked\tList.find.put\nBaseUnchecked\tList.find\nBaseUnchecked\tList.contains\nBaseUnchecked\tList.merge.step\nBaseUnchecked\tList.merge.go\nBaseUnchecked\tList.sort.runs\nBaseUnchecked\tList.sort.pass\nBaseUnchecked\tList.sort.go\nBaseUnchecked\tList.sort\nBaseUnchecked\tList.for_each\nBaseUnchecked\tWord.zero\nBaseUnchecked\tWord.not\nBaseUnchecked\tWord.and\nBaseUnchecked\tWord.or\nBaseUnchecked\tWord.xor\nBaseUnchecked\tWord.shl.put\nBaseUnchecked\tWord.shl\nBaseUnchecked\tWord.shl.out.con\nBaseUnchecked\tWord.shl.out\nBaseUnchecked\tWord.shr.pad\nBaseUnchecked\tWord.shr\nBaseUnchecked\tWord.cmp.fin\nBaseUnchecked\tWord.cmp\nBaseUnchecked\tWord.inc\nBaseUnchecked\tWord.adc\nBaseUnchecked\tWord.adc.con\nBaseUnchecked\tWord.add\nBaseUnchecked\tWord.sub\nBaseUnchecked\tWord.add_comm.arm\nBaseUnchecked\tWord.add_comm.go\nBaseUnchecked\tWord.add_comm\nBaseUnchecked\tWord.to_nat\nBaseUnchecked\tWord.mul.go\nBaseUnchecked\tWord.mul\nBaseUnchecked\tU32.inc\nBaseUnchecked\tU32.add\nBaseUnchecked\tU32.add_comm\nBaseUnchecked\tU32.sub\nBaseUnchecked\tU32.mul\nBaseUnchecked\tU32.not\nBaseUnchecked\tU32.and\nBaseUnchecked\tU32.or\nBaseUnchecked\tU32.xor\nBaseUnchecked\tU32.shl\nBaseUnchecked\tU32.shr\nBaseUnchecked\tU32.shln\nBaseUnchecked\tU32.shrn\nBaseUnchecked\tU32.cmp\nBaseUnchecked\tU32.is_eq\nBaseUnchecked\tU32.is_ne\nBaseUnchecked\tU32.is_lt\nBaseUnchecked\tU32.is_le\nBaseUnchecked\tU32.is_gt\nBaseUnchecked\tU32.is_ge\nBaseUnchecked\tU32.is_zero\nBaseUnchecked\tU32.to_nat\nBaseUnchecked\tU32.from_nat\nBaseUnchecked\tU32.log2.go\nBaseUnchecked\tU32.log2\nBaseUnchecked\tU32.divmod.go.fin\nBaseUnchecked\tU32.divmod.go.shl\nBaseUnchecked\tU32.divmod.go.rec\nBaseUnchecked\tU32.divmod.go\nBaseUnchecked\tU32.div.fin\nBaseUnchecked\tU32.div.if\nBaseUnchecked\tU32.div\nBaseUnchecked\tU32.mod.fin\nBaseUnchecked\tU32.mod.if\nBaseUnchecked\tU32.mod\nBaseUnchecked\tU32.min\nBaseUnchecked\tU32.max\nBaseUnchecked\tU32.clamp\nBaseUnchecked\tU32.pow\nBaseUnchecked\tU32.is_even\nBaseUnchecked\tU32.to_f32\nBaseUnchecked\tF32.to_u32\nBaseUnchecked\tF32.add\nBaseUnchecked\tF32.sub\nBaseUnchecked\tF32.mul\nBaseUnchecked\tF32.div\nBaseUnchecked\tF32.mod\nBaseUnchecked\tF32.pow\nBaseUnchecked\tF32.atan2\nBaseUnchecked\tF32.neg\nBaseUnchecked\tF32.abs\nBaseUnchecked\tF32.sqrt\nBaseUnchecked\tF32.exp\nBaseUnchecked\tF32.log\nBaseUnchecked\tF32.log2\nBaseUnchecked\tF32.log10\nBaseUnchecked\tF32.sin\nBaseUnchecked\tF32.cos\nBaseUnchecked\tF32.tan\nBaseUnchecked\tF32.asin\nBaseUnchecked\tF32.acos\nBaseUnchecked\tF32.atan\nBaseUnchecked\tF32.sinh\nBaseUnchecked\tF32.cosh\nBaseUnchecked\tF32.tanh\nBaseUnchecked\tF32.floor\nBaseUnchecked\tF32.ceil\nBaseUnchecked\tF32.trunc\nBaseUnchecked\tF32.is_eq\nBaseUnchecked\tF32.is_ne\nBaseUnchecked\tF32.is_lt\nBaseUnchecked\tF32.is_le\nBaseUnchecked\tF32.is_gt\nBaseUnchecked\tF32.is_ge\nBaseUnchecked\tF32.show\nBaseUnchecked\tF32.bits\nBaseUnchecked\tF32.read\nBaseUnchecked\tF32.min\nBaseUnchecked\tF32.max\nBaseUnchecked\tF32.clamp\nBaseUnchecked\tF32.lerp\nBaseUnchecked\tF32.square\nBaseUnchecked\tF32.hypot\nBaseUnchecked\tF32.round\nBaseUnchecked\tF32.pi\nBaseUnchecked\tF32.from_nat\nBaseUnchecked\tF32.to_nat\nBaseUnchecked\tChar.cmp\nBaseUnchecked\tChar.to_u32\nBaseUnchecked\tChar.from_u32\nBaseUnchecked\tChar.is_eq\nBaseUnchecked\tChar.is_digit\nBaseUnchecked\tChar.is_upper\nBaseUnchecked\tChar.is_lower\nBaseUnchecked\tChar.is_alpha\nBaseUnchecked\tChar.is_space\nBaseUnchecked\tChar.to_upper\nBaseUnchecked\tChar.to_lower\nBaseUnchecked\tString.append\nBaseUnchecked\tString.cmp.rec\nBaseUnchecked\tString.cmp\nBaseUnchecked\tString.cmp.fin\nBaseUnchecked\tString.eq.fin\nBaseUnchecked\tString.eq\nBaseUnchecked\tString.length\nBaseUnchecked\tString.is_empty\nBaseUnchecked\tString.reverse.go\nBaseUnchecked\tString.reverse\nBaseUnchecked\tString.order.fin\nBaseUnchecked\tString.order\nBaseUnchecked\tString.is_lt\nBaseUnchecked\tString.is_le\nBaseUnchecked\tString.is_gt\nBaseUnchecked\tString.is_ge\nBaseUnchecked\tString.starts_with\nBaseUnchecked\tString.starts_with.if\nBaseUnchecked\tString.ends_with\nBaseUnchecked\tString.contains\nBaseUnchecked\tString.contains.if\nBaseUnchecked\tString.take\nBaseUnchecked\tString.drop\nBaseUnchecked\tString.get\nBaseUnchecked\tString.to_list\nBaseUnchecked\tString.from_list\nBaseUnchecked\tString.concat\nBaseUnchecked\tString.join.go\nBaseUnchecked\tString.join\nBaseUnchecked\tString.split.push\nBaseUnchecked\tString.split.fin\nBaseUnchecked\tString.split\nBaseUnchecked\tString.lines\nBaseUnchecked\tString.repeat\nBaseUnchecked\tString.to_upper\nBaseUnchecked\tString.to_lower\nBaseUnchecked\tString.trim_start\nBaseUnchecked\tString.trim_start.if\nBaseUnchecked\tString.trim_end\nBaseUnchecked\tString.trim\nBaseUnchecked\tNat.show.put\nBaseUnchecked\tNat.show.go\nBaseUnchecked\tNat.show.fin\nBaseUnchecked\tNat.show\nBaseUnchecked\tNat.read.go\nBaseUnchecked\tNat.read.if\nBaseUnchecked\tNat.read.trim\nBaseUnchecked\tNat.read.fits\nBaseUnchecked\tNat.read.gate\nBaseUnchecked\tNat.read\nBaseUnchecked\tU32.show.go\nBaseUnchecked\tU32.show.fin\nBaseUnchecked\tU32.show.if\nBaseUnchecked\tU32.show\nBaseUnchecked\tU32.read.go\nBaseUnchecked\tU32.read.if\nBaseUnchecked\tU32.read\nBaseUnchecked\tBool.show\nBaseUnchecked\tChar.show\nBaseUnchecked\tMaybe.show\nBaseUnchecked\tList.show.go\nBaseUnchecked\tList.show\nBaseUnchecked\tArray.size.node\nBaseUnchecked\tArray.size\nBaseUnchecked\tArray.swap.lo\nBaseUnchecked\tArray.swap.hi\nBaseUnchecked\tArray.swap.go\nBaseUnchecked\tArray.swap.if\nBaseUnchecked\tArray.swap.at\nBaseUnchecked\tArray.swap\nBaseUnchecked\tArray.clone.node\nBaseUnchecked\tArray.clone\nBaseUnchecked\tArray.fork\nBaseUnchecked\tArray.join\nBaseUnchecked\tArray.atomic.add\nBaseUnchecked\tArray.atomic.min\nBaseUnchecked\tArray.atomic.max\nBaseUnchecked\tArray.atomic.and\nBaseUnchecked\tArray.atomic.or\nBaseUnchecked\tArray.atomic.xor\nBaseUnchecked\tArray.atomic.exch\nBaseUnchecked\tArray.atomic.cas\nBaseUnchecked\tArray.atomic.fadd\nBaseUnchecked\tArray.new\nBaseUnchecked\tArray.set.fin\nBaseUnchecked\tArray.set\nBaseUnchecked\tArray.get.go\nBaseUnchecked\tArray.get.if\nBaseUnchecked\tArray.get.at\nBaseUnchecked\tArray.get\nBaseUnchecked\tArray.to_list.go\nBaseUnchecked\tArray.to_list\nBaseUnchecked\tArray.map.go\nBaseUnchecked\tArray.map.at\nBaseUnchecked\tArray.map.seed\nBaseUnchecked\tArray.map\nBaseUnchecked\tMap.bit.u\nBaseUnchecked\tMap.bit.chr\nBaseUnchecked\tMap.bit.go.chr\nBaseUnchecked\tMap.bit.go.rec\nBaseUnchecked\tMap.bit.go\nBaseUnchecked\tMap.bit.at\nBaseUnchecked\tMap.bit\nBaseUnchecked\tMap.msb.u\nBaseUnchecked\tMap.msb.u.if\nBaseUnchecked\tMap.diff.chr\nBaseUnchecked\tMap.diff.step\nBaseUnchecked\tMap.diff\nBaseUnchecked\tMap.diff.fin\nBaseUnchecked\tMap.new\nBaseUnchecked\tMap.put\nBaseUnchecked\tMap.put.bit\nBaseUnchecked\tMap.ins.splice.bit\nBaseUnchecked\tMap.ins.splice\nBaseUnchecked\tMap.ins\nBaseUnchecked\tMap.ins.deep\nBaseUnchecked\tMap.ins.if\nBaseUnchecked\tMap.lo\nBaseUnchecked\tMap.hi\nBaseUnchecked\tMap.seek\nBaseUnchecked\tMap.seek.bit\nBaseUnchecked\tMap.set.fin.go\nBaseUnchecked\tMap.set.fin\nBaseUnchecked\tMap.set.go\nBaseUnchecked\tMap.set\nBaseUnchecked\tMap.has.leaf\nBaseUnchecked\tMap.has\nBaseUnchecked\tMap.has.bit\nBaseUnchecked\tMap.get.leaf\nBaseUnchecked\tMap.get\nBaseUnchecked\tMap.get.bit\nBaseUnchecked\tMap.pop.lo\nBaseUnchecked\tMap.pop.hi\nBaseUnchecked\tMap.pop.leaf\nBaseUnchecked\tMap.pop\nBaseUnchecked\tMap.pop.bit\nBaseUnchecked\tMap.del.fin\nBaseUnchecked\tMap.del\nBaseUnchecked\tMap.to_list.go\nBaseUnchecked\tMap.to_list\nBaseUnchecked\tMap.keys.go\nBaseUnchecked\tMap.keys\nBaseUnchecked\tMap.from_list.go\nBaseUnchecked\tMap.from_list\nBaseUnchecked\tMap.union\nBaseUnchecked\tMap.size\nBaseUnchecked\tMap.values.go\nBaseUnchecked\tMap.values\nBaseUnchecked\tSet\nBaseUnchecked\tSet.new\nBaseUnchecked\tSet.add\nBaseUnchecked\tSet.has\nBaseUnchecked\tSet.del\nBaseUnchecked\tSet.size\nBaseUnchecked\tSet.to_list\nBaseUnchecked\tSet.from_list.go\nBaseUnchecked\tSet.from_list\nBaseUnchecked\tImage.sink\nBaseUnchecked\tImage.drop.join\nBaseUnchecked\tImage.free\nBaseUnchecked\tImage.drop\nBaseUnchecked\tApp.next\nBaseUnchecked\tApp.turn\nBaseUnchecked\tApp.draw\nBaseUnchecked\tApp.step\nBaseUnchecked\tApp.loop\nBaseUnchecked\tApp.run\nBaseUnchecked\tApp.more\nBaseUnchecked\tApp.fold\nBaseUnchecked\tApp.play\n\n",
+              "stderr": "",
+              "outcome": "success"
+            },
+            "BaseChecked": [
+              "Bool"
+            ],
+            "BaseIntrinsic": [
+              "Nat",
+              "Nat.is_eq"
+            ],
+            "BaseUnchecked": [
+              "Empty",
+              "Unit",
+              "Cmp",
+              "Either",
+              "Sigma",
+              "Maybe",
+              "Result",
+              "List",
+              "Word.Nil",
+              "Word.Con",
+              "Word",
+              "U32",
+              "F32",
+              "Char",
+              "String",
+              "Array",
+              "Image",
+              "Event",
+              "Map",
+              "File",
+              "Socket",
+              "Listener",
+              "Window",
+              "Audio",
+              "Chan",
+              "IO.OP",
+              "App",
+              "Pair",
+              "Exists",
+              "Or",
+              "Pair.fst",
+              "Pair.snd",
+              "IO",
+              "IO.pure",
+              "IO.bind",
+              "IO.print",
+              "IO.write",
+              "IO.print_err",
+              "IO.get_env",
+              "IO.args",
+              "Process.run",
+              "IO.die",
+              "IO.pass",
+              "IO.try",
+              "IO.random_u32",
+              "IO.spawn",
+              "IO.sleep",
+              "IO.now",
+              "IO.thread_count",
+              "Chan.new",
+              "Chan.send",
+              "Chan.recv",
+              "Chan.close",
+              "IO.fork.go",
+              "IO.fork",
+              "IO.join.go",
+              "IO.join",
+              "File.open",
+              "File.read",
+              "File.read_bytes",
+              "File.read_at",
+              "File.size",
+              "File.write",
+              "File.write_bytes",
+              "File.close",
+              "TCP.listen",
+              "TCP.accept",
+              "TCP.connect",
+              "TCP.send",
+              "TCP.recv",
+              "TCP.poll",
+              "UDP.bind",
+              "UDP.send_to",
+              "UDP.recv_from",
+              "UDP.poll",
+              "Socket.close",
+              "Listener.close",
+              "Window.open",
+              "Window.frame",
+              "Window.set_title",
+              "Window.close",
+              "Audio.open",
+              "Audio.write",
+              "Audio.close",
+              "Equal.cong",
+              "Equal.sym",
+              "Equal.trans",
+              "Empty.absurd",
+              "Bool.not",
+              "Bool.and",
+              "Bool.or",
+              "Bool.xor",
+              "Bool.cmp",
+              "Bool.full_add",
+              "Bool.pick",
+              "Bool.to_u32",
+              "Cmp.is_lt",
+              "Cmp.is_eq",
+              "Cmp.is_gt",
+              "Cmp.is_le",
+              "Cmp.is_ge",
+              "Nat.double",
+              "Nat.add",
+              "Nat.sub",
+              "Nat.mul",
+              "Nat.divmod.go",
+              "Nat.divmod",
+              "Nat.cmp",
+              "Nat.is_lt",
+              "Nat.is_ne",
+              "Nat.is_le",
+              "Nat.is_gt",
+              "Nat.is_ge",
+              "Nat.min",
+              "Nat.max",
+              "Nat.ge_refl",
+              "Nat.max_ge_l",
+              "Nat.max_ge_r",
+              "Nat.div.fin",
+              "Nat.div",
+              "Nat.mod.fin",
+              "Nat.mod",
+              "Nat.pow",
+              "Maybe.pure",
+              "Maybe.bind",
+              "Maybe.default",
+              "Maybe.is_some",
+              "Maybe.is_none",
+              "Maybe.map",
+              "Maybe.or",
+              "Result.pure",
+              "Result.bind",
+              "Result.default",
+              "Result.is_done",
+              "Result.is_fail",
+              "Result.map",
+              "List.map",
+              "List.length",
+              "List.append",
+              "List.concat",
+              "List.reverse.go",
+              "List.reverse",
+              "List.is_empty",
+              "List.head",
+              "List.tail",
+              "List.last.go",
+              "List.last",
+              "List.get",
+              "List.set",
+              "List.take",
+              "List.drop",
+              "List.zip",
+              "List.range.go",
+              "List.range",
+              "List.replicate",
+              "List.filter.put",
+              "List.filter",
+              "List.foldl",
+              "List.foldr",
+              "List.any",
+              "List.all",
+              "List.find.put",
+              "List.find",
+              "List.contains",
+              "List.merge.step",
+              "List.merge.go",
+              "List.sort.runs",
+              "List.sort.pass",
+              "List.sort.go",
+              "List.sort",
+              "List.for_each",
+              "Word.zero",
+              "Word.not",
+              "Word.and",
+              "Word.or",
+              "Word.xor",
+              "Word.shl.put",
+              "Word.shl",
+              "Word.shl.out.con",
+              "Word.shl.out",
+              "Word.shr.pad",
+              "Word.shr",
+              "Word.cmp.fin",
+              "Word.cmp",
+              "Word.inc",
+              "Word.adc",
+              "Word.adc.con",
+              "Word.add",
+              "Word.sub",
+              "Word.add_comm.arm",
+              "Word.add_comm.go",
+              "Word.add_comm",
+              "Word.to_nat",
+              "Word.mul.go",
+              "Word.mul",
+              "U32.inc",
+              "U32.add",
+              "U32.add_comm",
+              "U32.sub",
+              "U32.mul",
+              "U32.not",
+              "U32.and",
+              "U32.or",
+              "U32.xor",
+              "U32.shl",
+              "U32.shr",
+              "U32.shln",
+              "U32.shrn",
+              "U32.cmp",
+              "U32.is_eq",
+              "U32.is_ne",
+              "U32.is_lt",
+              "U32.is_le",
+              "U32.is_gt",
+              "U32.is_ge",
+              "U32.is_zero",
+              "U32.to_nat",
+              "U32.from_nat",
+              "U32.log2.go",
+              "U32.log2",
+              "U32.divmod.go.fin",
+              "U32.divmod.go.shl",
+              "U32.divmod.go.rec",
+              "U32.divmod.go",
+              "U32.div.fin",
+              "U32.div.if",
+              "U32.div",
+              "U32.mod.fin",
+              "U32.mod.if",
+              "U32.mod",
+              "U32.min",
+              "U32.max",
+              "U32.clamp",
+              "U32.pow",
+              "U32.is_even",
+              "U32.to_f32",
+              "F32.to_u32",
+              "F32.add",
+              "F32.sub",
+              "F32.mul",
+              "F32.div",
+              "F32.mod",
+              "F32.pow",
+              "F32.atan2",
+              "F32.neg",
+              "F32.abs",
+              "F32.sqrt",
+              "F32.exp",
+              "F32.log",
+              "F32.log2",
+              "F32.log10",
+              "F32.sin",
+              "F32.cos",
+              "F32.tan",
+              "F32.asin",
+              "F32.acos",
+              "F32.atan",
+              "F32.sinh",
+              "F32.cosh",
+              "F32.tanh",
+              "F32.floor",
+              "F32.ceil",
+              "F32.trunc",
+              "F32.is_eq",
+              "F32.is_ne",
+              "F32.is_lt",
+              "F32.is_le",
+              "F32.is_gt",
+              "F32.is_ge",
+              "F32.show",
+              "F32.bits",
+              "F32.read",
+              "F32.min",
+              "F32.max",
+              "F32.clamp",
+              "F32.lerp",
+              "F32.square",
+              "F32.hypot",
+              "F32.round",
+              "F32.pi",
+              "F32.from_nat",
+              "F32.to_nat",
+              "Char.cmp",
+              "Char.to_u32",
+              "Char.from_u32",
+              "Char.is_eq",
+              "Char.is_digit",
+              "Char.is_upper",
+              "Char.is_lower",
+              "Char.is_alpha",
+              "Char.is_space",
+              "Char.to_upper",
+              "Char.to_lower",
+              "String.append",
+              "String.cmp.rec",
+              "String.cmp",
+              "String.cmp.fin",
+              "String.eq.fin",
+              "String.eq",
+              "String.length",
+              "String.is_empty",
+              "String.reverse.go",
+              "String.reverse",
+              "String.order.fin",
+              "String.order",
+              "String.is_lt",
+              "String.is_le",
+              "String.is_gt",
+              "String.is_ge",
+              "String.starts_with",
+              "String.starts_with.if",
+              "String.ends_with",
+              "String.contains",
+              "String.contains.if",
+              "String.take",
+              "String.drop",
+              "String.get",
+              "String.to_list",
+              "String.from_list",
+              "String.concat",
+              "String.join.go",
+              "String.join",
+              "String.split.push",
+              "String.split.fin",
+              "String.split",
+              "String.lines",
+              "String.repeat",
+              "String.to_upper",
+              "String.to_lower",
+              "String.trim_start",
+              "String.trim_start.if",
+              "String.trim_end",
+              "String.trim",
+              "Nat.show.put",
+              "Nat.show.go",
+              "Nat.show.fin",
+              "Nat.show",
+              "Nat.read.go",
+              "Nat.read.if",
+              "Nat.read.trim",
+              "Nat.read.fits",
+              "Nat.read.gate",
+              "Nat.read",
+              "U32.show.go",
+              "U32.show.fin",
+              "U32.show.if",
+              "U32.show",
+              "U32.read.go",
+              "U32.read.if",
+              "U32.read",
+              "Bool.show",
+              "Char.show",
+              "Maybe.show",
+              "List.show.go",
+              "List.show",
+              "Array.size.node",
+              "Array.size",
+              "Array.swap.lo",
+              "Array.swap.hi",
+              "Array.swap.go",
+              "Array.swap.if",
+              "Array.swap.at",
+              "Array.swap",
+              "Array.clone.node",
+              "Array.clone",
+              "Array.fork",
+              "Array.join",
+              "Array.atomic.add",
+              "Array.atomic.min",
+              "Array.atomic.max",
+              "Array.atomic.and",
+              "Array.atomic.or",
+              "Array.atomic.xor",
+              "Array.atomic.exch",
+              "Array.atomic.cas",
+              "Array.atomic.fadd",
+              "Array.new",
+              "Array.set.fin",
+              "Array.set",
+              "Array.get.go",
+              "Array.get.if",
+              "Array.get.at",
+              "Array.get",
+              "Array.to_list.go",
+              "Array.to_list",
+              "Array.map.go",
+              "Array.map.at",
+              "Array.map.seed",
+              "Array.map",
+              "Map.bit.u",
+              "Map.bit.chr",
+              "Map.bit.go.chr",
+              "Map.bit.go.rec",
+              "Map.bit.go",
+              "Map.bit.at",
+              "Map.bit",
+              "Map.msb.u",
+              "Map.msb.u.if",
+              "Map.diff.chr",
+              "Map.diff.step",
+              "Map.diff",
+              "Map.diff.fin",
+              "Map.new",
+              "Map.put",
+              "Map.put.bit",
+              "Map.ins.splice.bit",
+              "Map.ins.splice",
+              "Map.ins",
+              "Map.ins.deep",
+              "Map.ins.if",
+              "Map.lo",
+              "Map.hi",
+              "Map.seek",
+              "Map.seek.bit",
+              "Map.set.fin.go",
+              "Map.set.fin",
+              "Map.set.go",
+              "Map.set",
+              "Map.has.leaf",
+              "Map.has",
+              "Map.has.bit",
+              "Map.get.leaf",
+              "Map.get",
+              "Map.get.bit",
+              "Map.pop.lo",
+              "Map.pop.hi",
+              "Map.pop.leaf",
+              "Map.pop",
+              "Map.pop.bit",
+              "Map.del.fin",
+              "Map.del",
+              "Map.to_list.go",
+              "Map.to_list",
+              "Map.keys.go",
+              "Map.keys",
+              "Map.from_list.go",
+              "Map.from_list",
+              "Map.union",
+              "Map.size",
+              "Map.values.go",
+              "Map.values",
+              "Set",
+              "Set.new",
+              "Set.add",
+              "Set.has",
+              "Set.del",
+              "Set.size",
+              "Set.to_list",
+              "Set.from_list.go",
+              "Set.from_list",
+              "Image.sink",
+              "Image.drop.join",
+              "Image.free",
+              "Image.drop",
+              "App.next",
+              "App.turn",
+              "App.draw",
+              "App.step",
+              "App.loop",
+              "App.run",
+              "App.more",
+              "App.fold",
+              "App.play"
+            ]
+          }
+        }
+      },
+      "reference_calls": 9,
+      "byte_identical": true
+    },
+    {
+      "name": "offset-spaced-expression",
+      "file": "tests/compiler-literals/regressions/offset-spaced-expression.bend",
+      "expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-expression.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t234:235:14:22\n",
+            "outcome": "Unsupported"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-expression.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-expression-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t234:235:14:22\n",
+            "outcome": "Unsupported"
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-expression.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "stdout": "",
+                "stderr": "Unsupported\tparse\toperator\t234:235:14:22\n",
+                "outcome": "Unsupported"
+              }
+            }
+          ],
+          "wasm": [],
+          "artifact_preserved": true,
+          "no_artifact": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-expression.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-expression-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t234:235:14:22\n",
+            "outcome": "Unsupported"
+          }
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-expression.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t234:235:14:22\n",
+            "outcome": "Unsupported"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-expression.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-expression-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t234:235:14:22\n",
+            "outcome": "Unsupported"
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-expression.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "stdout": "",
+                "stderr": "Unsupported\tparse\toperator\t234:235:14:22\n",
+                "outcome": "Unsupported"
+              }
+            }
+          ],
+          "wasm": [],
+          "artifact_preserved": true,
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-expression.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-expression-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t234:235:14:22\n",
+            "outcome": "Unsupported"
+          }
+        }
+      },
+      "reference_calls": 0
+    },
+    {
+      "name": "offset-spaced-pattern",
+      "file": "tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+      "expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t187:188:11:12\n",
+            "outcome": "Unsupported"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-pattern-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t187:188:11:12\n",
+            "outcome": "Unsupported"
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "stdout": "",
+                "stderr": "Unsupported\tparse\toperator\t187:188:11:12\n",
+                "outcome": "Unsupported"
+              }
+            }
+          ],
+          "wasm": [],
+          "artifact_preserved": true,
+          "no_artifact": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-pattern-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t187:188:11:12\n",
+            "outcome": "Unsupported"
+          }
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t187:188:11:12\n",
+            "outcome": "Unsupported"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-pattern-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t187:188:11:12\n",
+            "outcome": "Unsupported"
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "stdout": "",
+                "stderr": "Unsupported\tparse\toperator\t187:188:11:12\n",
+                "outcome": "Unsupported"
+              }
+            }
+          ],
+          "wasm": [],
+          "artifact_preserved": true,
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-pattern-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t187:188:11:12\n",
+            "outcome": "Unsupported"
+          }
+        }
+      },
+      "reference_calls": 0
+    },
+    {
+      "name": "offset-spaced-promotion-expression",
+      "file": "tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+      "expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t220:221:14:22\n",
+            "outcome": "Unsupported"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-promotion-expression-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t220:221:14:22\n",
+            "outcome": "Unsupported"
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "stdout": "",
+                "stderr": "Unsupported\tparse\toperator\t220:221:14:22\n",
+                "outcome": "Unsupported"
+              }
+            }
+          ],
+          "wasm": [],
+          "artifact_preserved": true,
+          "no_artifact": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-promotion-expression-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t220:221:14:22\n",
+            "outcome": "Unsupported"
+          }
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t220:221:14:22\n",
+            "outcome": "Unsupported"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-promotion-expression-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t220:221:14:22\n",
+            "outcome": "Unsupported"
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "stdout": "",
+                "stderr": "Unsupported\tparse\toperator\t220:221:14:22\n",
+                "outcome": "Unsupported"
+              }
+            }
+          ],
+          "wasm": [],
+          "artifact_preserved": true,
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-promotion-expression-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t220:221:14:22\n",
+            "outcome": "Unsupported"
+          }
+        }
+      },
+      "reference_calls": 0
+    },
+    {
+      "name": "offset-spaced-promotion-pattern",
+      "file": "tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+      "expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t188:189:11:12\n",
+            "outcome": "Unsupported"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-promotion-pattern-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t188:189:11:12\n",
+            "outcome": "Unsupported"
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "stdout": "",
+                "stderr": "Unsupported\tparse\toperator\t188:189:11:12\n",
+                "outcome": "Unsupported"
+              }
+            }
+          ],
+          "wasm": [],
+          "artifact_preserved": true,
+          "no_artifact": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-promotion-pattern-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t188:189:11:12\n",
+            "outcome": "Unsupported"
+          }
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t188:189:11:12\n",
+            "outcome": "Unsupported"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-promotion-pattern-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t188:189:11:12\n",
+            "outcome": "Unsupported"
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+                  "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "stdout": "",
+                "stderr": "Unsupported\tparse\toperator\t188:189:11:12\n",
+                "outcome": "Unsupported"
+              }
+            }
+          ],
+          "wasm": [],
+          "artifact_preserved": true,
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/offset-spaced-promotion-pattern-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\toperator\t188:189:11:12\n",
+            "outcome": "Unsupported"
+          }
+        }
+      },
+      "reference_calls": 0
     }
   ],
   "boundaries": [
@@ -54225,7 +56617,6 @@
         0
       ],
       "wrong_tag": 0,
-      "expected_tag": 2,
       "sha256": "6523c967e80acc22afb18bde220036bca2eb5ebb39778f3207fe0ef49ea11bd6",
       "typecheck": {
         "argv": [
@@ -54252,6 +56643,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "outcome": "success"
       },
+      "expected_tag": 2,
       "compile": {
         "argv": [
           "bun",
@@ -54294,7 +56686,6 @@
         2
       ],
       "trap": "divide by zero",
-      "expected_tag": 1,
       "sha256": "c11dfacfe8cde537326920ba754d8317758cb8ab63bb4fccc527579e2c083c53",
       "typecheck": {
         "argv": [
@@ -54321,6 +56712,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "outcome": "success"
       },
+      "expected_tag": 1,
       "compile": {
         "argv": [
           "bun",
@@ -54362,7 +56754,6 @@
         1
       ],
       "wrong_tag": 0,
-      "expected_tag": 1,
       "sha256": "bc65983d2a7dd0c30141a38b83b20931f06ff488068147388c6fb156cc057dfe",
       "typecheck": {
         "argv": [
@@ -54389,6 +56780,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "outcome": "success"
       },
+      "expected_tag": 1,
       "compile": {
         "argv": [
           "bun",
@@ -54447,7 +56839,6 @@
         "stderr": "",
         "outcome": "success"
       },
-      "expected_tag": 0,
       "sha256": "bc924b6037bcacddf3385bd4778b22d767ffacd8e47fb0f0ca8bccbbb60beb42",
       "typecheck": {
         "argv": [
@@ -54474,6 +56865,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "outcome": "success"
       },
+      "expected_tag": 0,
       "compile": {
         "argv": [
           "bun",
@@ -54502,7 +56894,6 @@
         "stderr": "",
         "outcome": "success"
       },
-      "killed": true,
       "eval_build": {
         "argv": [
           "bun",
@@ -54515,7 +56906,8 @@
         "stdout": "",
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "outcome": "success"
-      }
+      },
+      "killed": true
     },
     {
       "name": "offset-off-by-one",
@@ -54544,7 +56936,6 @@
         "stderr": "",
         "outcome": "success"
       },
-      "expected_tag": 0,
       "sha256": "9793b0ade5ab0292f5cddb301bcdd2512e0c41df28d94f0b8c20be4960462f97",
       "typecheck": {
         "argv": [
@@ -54571,6 +56962,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "outcome": "success"
       },
+      "expected_tag": 0,
       "compile": {
         "argv": [
           "bun",
@@ -54599,7 +56991,6 @@
         "stderr": "",
         "outcome": "success"
       },
-      "killed": true,
       "eval_build": {
         "argv": [
           "bun",
@@ -54612,30 +57003,85 @@
         "stdout": "",
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "outcome": "success"
-      }
+      },
+      "killed": true
+    },
+    {
+      "name": "spaced-offset",
+      "file": "parse.bend",
+      "old": "touches(S.at(token),S.here(tokens))",
+      "new": "True{}",
+      "fixture": "offset-spaced-pattern",
+      "verdict": [
+        0,
+        "Built\t"
+      ],
+      "sha256": "095cd46a7d2224e3601aaddab438d4a66b55f24ba917580615be97e2958d90a3",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/mutants/spaced-offset/compile-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stderr": "",
+        "outcome": "success"
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/mutants/spaced-offset/compile-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/mutants/spaced-offset/compile.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "outcome": "success"
+      },
+      "compile": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/mutants/spaced-offset/compile.js",
+          "--bundle",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-modules/bundle/lib",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/compiler-literals/gate/mutants/spaced-offset/witness.wasm"
+        ],
+        "exit": 0,
+        "stdout": "Built\t2538\n",
+        "stderr": "",
+        "outcome": "success"
+      },
+      "expected_exit": 3,
+      "killed": true
     }
   ],
   "counts": {
-    "fixtures": 41,
-    "agree_fixtures": 25,
+    "fixtures": 46,
+    "agree_fixtures": 26,
     "invalid_fixtures": 11,
-    "unsupported_fixtures": 5,
-    "reference_calls": 287,
+    "unsupported_fixtures": 9,
+    "reference_calls": 296,
     "execution_lanes": 2,
-    "check_observations": 82,
-    "compile_observations": 82,
-    "eval_observations": 592,
-    "agree_eval_observations": 560,
-    "wasm_observations": 560,
-    "byte_identity_pairs": 25,
-    "artifact_preservation_probes": 32,
-    "no_artifact_probes": 32,
-    "trust_audits": 50,
+    "check_observations": 92,
+    "compile_observations": 92,
+    "eval_observations": 618,
+    "agree_eval_observations": 578,
+    "wasm_observations": 578,
+    "byte_identity_pairs": 26,
+    "artifact_preservation_probes": 40,
+    "no_artifact_probes": 40,
+    "trust_audits": 52,
     "boundary_probes": 8,
     "proof_entries": 3,
     "proof_laws": 24,
-    "semantic_mutants": 5,
+    "semantic_mutants": 6,
     "mutant_wasm_observations": 5,
+    "mutant_verdict_observations": 1,
     "mutant_eval_observations": 2
   }
 }

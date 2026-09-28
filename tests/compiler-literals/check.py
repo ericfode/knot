@@ -210,6 +210,7 @@ def fixture(f, lanes, base, pin):
 
 
 # Fixed before mutant execution. Compiler validation/build failure is never a kill.
+# A `verdict` mutant is killed when it changes a frozen book's classification.
 MUTANTS = [
     {'name': 'signed-compare', 'file': 'primitive-wasm.bend',
      'old': 'A.select(A.binary(73,a,b)', 'new': 'A.select(A.binary(72,a,b)',
@@ -237,7 +238,55 @@ MUTANTS = [
       S.Constructor{retoken("Succ",token),[S.Offset{token,254,tail}]}
     case S.Offset{token,0,tail}: literal(tail)''',
      'fixture': 'nat-pattern-offset', 'export': 'at_least_256', 'arguments': [3], 'wrong_tag': 1, 'eval': True},
+    {'name': 'spaced-offset', 'file': 'parse.bend',
+     'old': 'touches(S.at(token),S.here(tokens))', 'new': 'True{}',
+     'fixture': 'offset-spaced-pattern', 'verdict': (0, 'Built\t')},
 ]
+
+
+def killed_by_verdict(m, f, compiler, folder):
+    """A classification kill: the mutant compiler's verdict on a frozen book changes.
+
+    The mutant verdict is fixed in MUTANTS; a crash, timeout or any other
+    verdict is not a kill.
+    """
+    output = folder / 'witness.wasm'
+    compiled = run(['bun', compiler, '--bundle', BUNDLE, ROOT / f['file'], output])
+    status, prefix = m['verdict']
+    expected = f.get('knot', f.get('knot_expected'))
+    stream = compiled['stdout'] if status == 0 else compiled['stderr']
+    require(status != expected['exit'] and compiled['exit'] == status and stream.startswith(prefix), (m['name'], compiled))
+    if status == 0:
+        require(output.read_bytes().startswith(b'\0asm\x01\0\0\0') and
+                compiled['stdout'] == f'Built\t{output.stat().st_size}\n', compiled)
+    return {'compile': compiled, 'expected_exit': expected['exit']}
+
+
+def killed_by_value(m, f, compiler, folder):
+    call = next(c for c in f['calls'] if c['export'] == m['export'] and c['arguments'] == m['arguments'])
+    output = folder / 'witness.wasm'
+    compiled = success(['bun', compiler, '--bundle', BUNDLE, ROOT / f['file'], output])
+    require(compiled['stdout'] == f'Built\t{output.stat().st_size}\n', compiled)
+    result = wasm(output, call)
+    if 'trap' in m:
+        reject(result, 5, 'HostFailure\twasm\t' + m['trap'])
+    else:
+        require(m['wrong_tag'] != call['tag'], m)
+        wasm_value(result, output, {**call, 'tag': m['wrong_tag']})
+    return {'expected_tag': call['tag'], 'compile': compiled, 'wasm': result}
+
+
+def evaluated_wrong(m, f, folder):
+    call = next(c for c in f['calls'] if c['export'] == m['export'] and c['arguments'] == m['arguments'])
+    require(m['wrong_tag'] != call['tag'], m)
+    evaluator = folder / 'eval.js'
+    record = {'expected_tag': call['tag'], 'eval_build': built(folder / 'eval-cli.bend', evaluator)}
+    evaluated = run(['bun', evaluator, '--bundle', BUNDLE, ROOT / f['file'],
+                     call['export'], 1048576, *call['arguments']])
+    wrong = re.fullmatch(r'Evaluated\t[0-9]+\t([0-9]+)\t[^\n]+\n', evaluated['stdout'])
+    require(evaluated['exit'] == 0 and evaluated['stderr'] == '' and
+            wrong and int(wrong[1]) == m['wrong_tag'], evaluated)
+    return {**record, 'eval': evaluated}
 
 
 def mutants(fixtures):
@@ -256,33 +305,21 @@ def mutants(fixtures):
         if 'prepend' in m:
             code = code.replace('def decoded(', m['prepend'] + 'def decoded(')
         path.write_text(code)
-        entry = folder / 'compile-cli.bend'
+        f = by_name[m['fixture']]
+        record = {**m, 'sha256': digest(path)}
+        # Evaluator-only mutants change no emitted byte; their witness is the evaluator lane.
+        entry = folder / ('eval-cli.bend' if m.get('lane') == 'eval' else 'compile-cli.bend')
         typed = success([*SEED, entry, '--check-only'])
         require(typed['stdout'] == HOST_CHECKS[entry.name]['stdout'], typed)
-        compiler = folder / 'compile.js'
-        build = built(entry, compiler)
-        f = by_name[m['fixture']]
-        call = next(c for c in f['calls'] if c['export'] == m['export'] and c['arguments'] == m['arguments'])
-        output = folder / 'witness.wasm'
-        compiled = success(['bun', compiler, '--bundle', BUNDLE, ROOT / f['file'], output])
-        require(compiled['stdout'] == f'Built\t{output.stat().st_size}\n', compiled)
-        result = wasm(output, call)
-        if 'trap' in m:
-            reject(result, 5, 'HostFailure\twasm\t' + m['trap'])
-        else:
-            require(m['wrong_tag'] != call['tag'], m)
-            wasm_value(result, output, {**call, 'tag': m['wrong_tag']})
-        record = {**m, 'expected_tag': call['tag'], 'sha256': digest(path), 'typecheck': typed,
-                  'build': build, 'compile': compiled, 'wasm': result, 'killed': True}
-        if m.get('eval'):
-            evaluator = folder / 'eval.js'
-            record['eval_build'] = built(folder / 'eval-cli.bend', evaluator)
-            evaluated = run(['bun', evaluator, '--bundle', BUNDLE, ROOT / f['file'],
-                             call['export'], 1048576, *call['arguments']])
-            wrong = re.fullmatch(r'Evaluated\t[0-9]+\t([0-9]+)\t[^\n]+\n', evaluated['stdout'])
-            require(evaluated['exit'] == 0 and evaluated['stderr'] == '' and
-                    wrong and int(wrong[1]) == m['wrong_tag'], evaluated)
-            record['eval'] = evaluated
+        record['typecheck'] = typed
+        if m.get('lane') != 'eval':
+            compiler = folder / 'compile.js'
+            record['build'] = built(entry, compiler)
+            kill = killed_by_verdict if 'verdict' in m else killed_by_value
+            record.update(kill(m, f, compiler, folder))
+        if m.get('eval') or m.get('lane') == 'eval':
+            record.update(evaluated_wrong(m, f, folder))
+        record['killed'] = True
         records.append(record)
     return records
 
@@ -360,7 +397,8 @@ def main():
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
             'proof_laws': 24, 'semantic_mutants': len(record['mutants']),
-            'mutant_wasm_observations': len(record['mutants']),
+            'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
+            'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
             'mutant_eval_observations': sum(m.get('eval') is not None for m in record['mutants']),
         }
         record['status'] = 'passed'
