@@ -349,6 +349,18 @@ Data records used as an independent pure model; source quantities are checked
 before execution. This does not establish an owning heap for general affine
 resources, a parallel runtime, or source compilation to the existing GPU probe.
 
+## Trust inventory: open proof obligations
+
+Two general pattern-matrix lowering laws stay required and are never weakened
+or dropped (coordinator decision D21). Until they are proved, they are open
+obligations in this trust inventory; the pattern-matrix profile rests on the
+evidence named here, not on a proof.
+
+| Law | Status | Witnessed by |
+| --- | --- | --- |
+| Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds. Its partial-correctness part is proved: `src/lowering-LAWS.bend::irrefutable_first_row_selected` shows that every *successful* `M.expand` selects the body at every leaf | The ground-instance laws `irrefutable_lowering_witness` and `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz |
+| Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch | Unproved general law | The ground-instance law `exhaustive_matrix_witness`, the remainder helper laws (`remainder_omits_split`, `remainder_keeps_other`, `remainder_drops_split_rows`, `irrefutable_remainder`), the `multi-*`, `nested-*`, `rec-*-nested` and `empty-*` fixtures, and the 3,000-program seed fuzz |
+
 ## Required evidence
 
 Compare accepted fixtures with the pinned reference interpreter and compare

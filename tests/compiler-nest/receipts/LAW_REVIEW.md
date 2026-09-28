@@ -203,3 +203,39 @@ and `M.alias`, and inhabitants for unconstrained positions, which empty types
 deny (the dead-code rule). A type-free witness would be trivial: a vector of
 unknown constructors refutes every row that has any constructor. A catch-all
 corollary of the law above is not the general theorem and is not claimed.
+
+## Round 6
+
+The round-6 review confirmed an unsound acceptance: a space, comment or line
+break between a constructor name and its `{`. The seed rejects each gap in
+patterns and bodies; Knot accepted them, and the round-3 header join newly
+carried a line-broken gap into nested and multi-scrutinee rows.
+
+One predicate absorbs every position. Token spans are half-open, so a brace
+touches its name when the name's end offset is the brace's start offset
+(`S.touches`). The header join drops line-break tokens but keeps offsets, so
+it can no longer bridge the gap.
+
+| Law | Quantification and evidence | Limit |
+|---|---|---|
+| `touches_witness` | Ground: `On{`, `On {` and `On` / `{` on the next line give touching, detached, detached | Pins offsets, not lines or columns |
+| `touching_brace` | Both term modes (pattern and body), every position of the name `On`, its brace and its closing brace, and every unconsumed suffix, under the hypothesis that the brace touches: `On{}` parses as the constructor | A classification law for one parser step, not parser soundness |
+| `detached_brace` | The same quantification under the hypothesis that the brace does not touch: `Invalid parse detached-brace` at the brace | As above; lexing (a tab stays `Unsupported lex whitespace`) precedes it |
+| `joined_brace_witness` | Ground: `header` joins `case On` / `{}:` and the term step still reports the detached brace at its own offset | Witnesses the regression path, not every header |
+
+Each falsification fails at its law: ignoring the touch, comparing lines,
+shifting the offset by one, confining the rule to patterns, or reporting a
+touching brace Invalid. The `nest-round6` gate kills five type-correct mutants
+of the same rule on the 35 frozen fixtures.
+
+### Open proof obligations (coordinator decision D21)
+
+The two general lowering laws stay required and are never weakened or
+dropped. Merge proceeds with them recorded as open obligations in the trust
+inventory (`src/SPEC.md`, *Trust inventory: open proof obligations*, and
+`src/CONTRACT.json` `pattern_matrix.open_obligations`).
+
+| Law | Entry |
+|---|---|
+| Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds; witnessed by `irrefutable_lowering_witness`, `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz. Its partial-correctness part is proved in round 5 (`irrefutable_first_row_selected`: every successful lowering selects the body at every leaf); this entry does not restate that proof as the total law |
+| Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch | Unproved general law; witnessed by `exhaustive_matrix_witness`, the remainder helper laws (`remainder_omits_split`, `remainder_keeps_other`, `remainder_drops_split_rows`, `irrefutable_remainder`), the `multi-*`, `nested-*`, `rec-*-nested` and `empty-*` fixtures, and the 3,000-program seed fuzz. Round 5 records the typing obstacle to its proof |
