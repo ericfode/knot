@@ -7,9 +7,11 @@ RC, frame region or quantum, so nothing here witnesses an address, a leak or a y
 Entries are counted as section 7 debits them.
 
 The gate reads the program's own value from it: the code lists a Program passes to
-`IO.print`, in order, and a Book's result. Under the `vm` policy an outgoing String with a
-non-scalar Char halts with `HostFailure io abi` before it is written (section 10, D20);
-under the `native` policy every String is written as the seed's native lane writes it.
+`IO.print`, in order, and a Book's result. Under the `vm` policy an outgoing String (a print's
+operand or a Halt's message) with a non-scalar Char halts with `HostFailure io abi` before it
+is written (section 10, D20); under the `native` policy every String is written as the seed's
+native lane writes it. Only a Program entry performs an effect: under a Book entry an Action
+applied to its continuation stops with `Unsupported vm effect` (section 8, D22).
 A Python exception other than `Halt` is a harness failure, never an outcome.
 """
 from __future__ import annotations
@@ -53,7 +55,7 @@ def show(n: int) -> list:
 class Machine:
     def __init__(self, plan: dict, fuel: int, policy: str = 'vm'):
         self.types, self.functions = plan['types'], plan['functions']
-        self.rep = plan.get('representation', {})
+        self.rep, self.entry = plan.get('representation', {}), plan['entry']
         self.fuel, self.calls, self.policy = fuel, 0, policy
         self.stdout, self.prints = bytearray(), []
 
@@ -175,15 +177,22 @@ class Machine:
             return f
         return self.apply(operands[0], [self.effect(f)])
 
+    def outgoing(self, codes):
+        """Section 10, D20: an outgoing String holding a non-scalar Char is refused before the host call."""
+        if self.policy == 'vm' and not all(map(scalar, codes)):
+            raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})
+
     def effect(self, action):
-        """Section 10: one Action applied to its continuation performs exactly one effect."""
+        """Section 10: one Action applied to its continuation performs exactly one effect, under a
+        Program entry only. Under a Book entry the step stops before it reads an operand (D22)."""
+        if self.entry != 'program':
+            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})
         _, foreign, operands = action
         if foreign != 1:
             raise NotImplementedError(f'foreign {foreign} has no reference effect')
         codes = self.codes(operands[0])
         self.prints.append(codes)
-        if self.policy == 'vm' and not all(map(scalar, codes)):
-            raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})
+        self.outgoing(codes)
         self.stdout += b''.join(map(utf8, codes)) + b'\n'
         return 0
 
@@ -265,14 +274,20 @@ def book(plan: dict, name: str, ordinals: list, fuel: int) -> dict:
 
 def program(plan: dict, fuel: int, policy: str = 'vm') -> dict:
     """Section 8's Program phases; `stdout` holds the bytes written, `prints` every String
-    passed to IO.print (the refused one included)."""
+    passed to IO.print (the refused one included). A Halt's message is an outgoing String, so
+    one holding a non-scalar Char is refused like a print's, after both words are inspected."""
     m = Machine(plan, fuel, policy)
     try:
         w = m.call(next(i for i, f in enumerate(plan['functions']) if f['name'] == 'main'), [])
         w = m.apply(w, [])
         w = m.apply(w, [TERMINAL])
         tag, fields = m.view(w, m.rep['IO.OP'])
-        outcome = {'exit': 0} if tag == 0 else {'halt': m.word(fields[0]), 'message': m.codes(fields[1])}
+        if tag == 0:
+            outcome = {'exit': 0}
+        else:
+            code, message = m.word(fields[0]), m.codes(fields[1])
+            m.outgoing(message)
+            outcome = {'halt': code, 'message': message}
     except Halt as h:
         outcome = h.outcome
     return {**outcome, 'stdout': bytes(m.stdout), 'prints': m.prints, 'calls': m.calls}

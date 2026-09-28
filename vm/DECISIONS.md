@@ -366,6 +366,79 @@ follows it (§5, §10, §11) without a new image header word.
    past 2^20. Four rule mutants (any Exhausted accepted, the budget not measured,
    steps counted as visits, transitions without materialization) are killed.
 
+21. **A Book entry never performs an effect (D22).** The vm-model review found an
+   admitted Book image applying `IO.print` to a continuation (a main that is
+   `got(IO.print("x")(R, k))`) printing in the model, `evaluate.book` running the effect
+   and dropping its output, and the seed's native lane fail-stopping. The coordinator
+   recorded D22, and §7 step 2, §8 and §10 now state it: under a Book invocation the
+   second application of an Action, `Enter(Action, [k])`, stops with `Unsupported vm
+   effect` after its debit and before it reads, inspects or converts an operand or
+   calls the host. Neither the whole-extent inspection nor D20's scalar check runs
+   first, so the print of a non-scalar or an ill-typed String is refused the same way,
+   as `Unsupported`, never `HostFailure`. An Action built, dropped or applied to its
+   erased `R` is not an effect, and the Program entry, the only one that performs
+   effects, performs them wherever an Action meets its continuation, even inside a pure
+   argument of `main`. `evaluate.py` gains `Machine.entry`, and `effect` refuses before
+   it reads an operand; `evaluate.book` no longer runs the effect. Ten effect controls
+   (`effect_controls`, frozen before the change) rebuild the reviewers' probes on
+   foreign-print's types: `book-print`, `book-print-continuation-call` and
+   `book-print-twice` (bookio-1, bk-print and bookio-2) and `book-print-non-scalar`
+   (bookio-nonscalar) stop `Unsupported vm effect` after 4 calls (main, IO.print, `R`,
+   the Action), writing nothing; `book-print-ill-typed`, added to fix the order against
+   the inspection, stops the same way after 5; the pure `got(k(Unit{}))` of bk-direct
+   (`book-continuation-called`), an Action built and dropped and one applied to its
+   erased `R` still evaluate, after 3, 2 and 3; `program-print-in-value` (pg-print)
+   prints `x` from a pure argument and then its own `t` after 11 (§12). The refusal
+   precedes both D20 and the inspection because a Book performs no effect, so no
+   operand is converted for a host call that never happens. Seven evaluator mutants
+   (a Book that performs the effect, one that drops it silently, one that refuses
+   after the inspection or after D20's scalar check, one that refuses when an Action is
+   built or when it meets its erased `R`, and a Program that refuses) are killed, each by
+   a control of the group; the first two by every `book-print*` control.
+22. **A stop after the debit keeps it.** The same review asked whether an Enter whose
+   step 2 stops keeps step 1's debit. vm-model and evaluate.py kept it, but §7 was
+   silent and no check counted the refused entry: a VM that refunded it, or counted
+   it differently, agreed with every vm-spec check, since the goldens' `calls` were
+   not frozen and the fuel controls stop on fuel. §7 now says that the debit stands
+   whatever step 2 or 3 does (a D20 or D22 refusal, heap or frame exhaustion, a host
+   failure): `fuel` is not refunded and `calls` counts the entry. The four D20 goldens
+   freeze their `calls` by literal review, each in plan.json and expectations.json
+   (`vm_calls`) and in vm-expected.json: `print-non-scalar`, `-mid` and `-wide` make 4
+   entries (main, IO.print, the erased `R`, the Action applied to `k`, which D20
+   refuses), and `print-non-scalar-second` 13 (main, say, IO.print, IO.bind, `R` on
+   its closure, its live closure, `R` on the first Action, the Action applied to
+   its continuation, which writes `a`, that continuation, `u => IO.print(s)`, IO.print,
+   `R` on the second Action and the Action applied to `k`, refused). Two expectation
+   controls refuse a review that refunds the refused entry (3) and one left unfrozen;
+   the evaluator mutant `effect-refusal-refunds-debit` dies by the four goldens and by
+   the Book effect controls, and the rule mutant `d20-calls-unchecked` by the two
+   controls.
+23. **A key may be 0xffffffff.** `none` is `0xffffffff`, and neither §2 nor §3 said
+   whether a keys row may carry it: a decoder that read a key word as an optional index
+   would drop or misread the row. §2 and §3 now say that in a Case record `none` marks only an absent tag row (mode 0) and an absent
+   default, and that a key is a plain u32, so a keys table has no absent row: a
+   matching key at 0xffffffff is selected and a missing one falls to the Default.
+   Three run controls (`key_controls`) freeze it, `key-max` and `char-key-max` (a U32
+   and a Char at 4,294,967,295 take the key Branch) and `key-max-miss` (0xfffffffe
+   takes the Default), each after 2 calls. Two evaluator mutants (a key that is
+   absent, a key that is a wildcard) and a codec mutant that drops a keys row at
+   0xffffffff die by them.
+24. **A Halt's message is an outgoing String (D20).** vm-core refuses a Halt whose
+   message holds a non-scalar Char as `HostFailure io abi` before `die`, but
+   `evaluate.program` returned the Halt with its codes, and nothing in §8 or §10 said
+   which was right (CORE.md, findings for the spec owner). §8's phase 3 and §10 now
+   call the message an outgoing String: the code and then the whole message are
+   inspected (§6), a message holding a non-scalar Char is refused as `HostFailure io
+   abi` before `die`, with `w` still owned and nothing written, and otherwise the VM
+   converts it, drops `w` and calls `die`. `evaluate.program` shares `outgoing` with
+   `IO.print`. `halt-surrogate` freezes the refusal after 3 calls (main, the erased `R`,
+   `k`'s closure), and two inspection controls freeze its order, a surrogate then
+   `id(λ)` and `id(λ)` for the code beside a surrogate message, each `ill-typed` after
+   4. The three mutants that skip the check, make it while reading, or make it before
+   the code die by them, each by its own control. The success path, a Halt that dies
+   with its code and message, is still unwitnessed: it needs the host's `die`, so
+   vm-io owns it.
+
 ## Findings that need an owner
 
 1. **A D4 classification defect in the literals head.** For

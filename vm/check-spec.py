@@ -2006,6 +2006,9 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest, in
     return results
 
 
+# D22's guard in evaluate.py, which several mutants move or remove.
+BOOK_GUARD = "        if self.entry != 'program':\n            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
+
 # Semantic mutants of the reference evaluation: each must change a golden expectation, a Book
 # value or a run control, or be refused by the rule; a crash is never a kill.
 EVALUATOR_MUTANTS = [
@@ -2101,8 +2104,10 @@ EVALUATOR_MUTANTS = [
            f"                {b}, rest = {b} + [self.view(cell[1][0], self.rep['Char'])[1][0]], cell[1][1]\n"
            f'            return int({a} == {b})\n')
           for name, a, b, i in (('eq-reads-b-one-past-a', 'x', 'y', 0), ('eq-reads-a-one-past-b', 'y', 'x', 1))])],
-    ('halt-code-unread', [("{'halt': m.word(fields[0]),", "{'halt': fields[0],")]),
-    ('halt-message-unread', [("'message': m.codes(fields[1])}", "'message': fields[1]}")]),
+    ('halt-code-unread', [('            code, message = m.word(fields[0]), m.codes(fields[1])\n',
+                           '            code, message = fields[0], m.codes(fields[1])\n')]),
+    ('halt-message-unread', [('            code, message = m.word(fields[0]), m.codes(fields[1])\n            m.outgoing(message)\n',
+                              '            code, message = m.word(fields[0]), fields[1]\n')]),
     # A print that checks each Char as it reads refuses the surrogate before the ill-typed cell.
     ('print-checks-while-reading', [('        codes = self.codes(operands[0])\n',
                                      '        codes, s = [], operands[0]\n'
@@ -2111,6 +2116,35 @@ EVALUATOR_MUTANTS = [
                                      '            if tag == 0:\n                break\n'
                                      "            codes.append(self.view(fields[0], self.rep['Char'])[1][0])\n"
                                      '            s = fields[1]\n')]),
+    # Section 8 (D22, effect_controls): only a Program entry performs an effect, and the step stops
+    # before it reads an operand. Each survives every golden and dies by an effect control.
+    ('book-performs-effect', [(BOOK_GUARD, '')]),
+    ('book-drops-effect', [("            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n", '            return 0\n')]),
+    ('program-refuses-effect', [("        if self.entry != 'program':\n", '        if True:\n')]),
+    ('book-refuses-after-inspection', [(BOOK_GUARD, ''), ('        codes = self.codes(operands[0])\n',
+                                                          '        codes = self.codes(operands[0])\n' + BOOK_GUARD)]),
+    ('book-refuses-after-scalar-check', [(BOOK_GUARD, ''), ('        self.outgoing(codes)\n',
+                                                            '        self.outgoing(codes)\n' + BOOK_GUARD)]),
+    ('book-refuses-action-build', [("        if op == 'foreign':\n            return ('action', node[2], tuple(operands))\n",
+                                    "        if op == 'foreign':\n            if self.entry != 'program':\n"
+                                    "                raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
+                                    "            return ('action', node[2], tuple(operands))\n")]),
+    ('book-refuses-erased-application', [('        if not operands:\n            return f\n',
+                                          "        if not operands:\n            if self.entry != 'program':\n"
+                                          "                raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
+                                          '            return f\n')]),
+    # Sections 8 and 10 (D20 on a Halt's message): read after the code, whole, then checked.
+    ('halt-message-unchecked', [('            m.outgoing(message)\n', '')]),
+    ('halt-message-before-code', [('            code, message = m.word(fields[0]), m.codes(fields[1])\n            m.outgoing(message)\n',
+                                   '            message = m.codes(fields[1])\n            m.outgoing(message)\n'
+                                   '            code = m.word(fields[0])\n')]),
+    ('halt-checks-while-reading', [('            code, message = m.word(fields[0]), m.codes(fields[1])\n',
+                                    '            code, message, cells = m.word(fields[0]), [], fields[1]\n'
+                                    "            while not message or policy != 'vm' or scalar(message[-1]):\n"
+                                    "                tag, parts = m.view(cells, m.rep['String'])\n"
+                                    '                if tag == 0:\n                    break\n'
+                                    "                message.append(m.view(parts[0], m.rep['Char'])[1][0])\n"
+                                    '                cells = parts[1]\n')]),
 ]
 
 

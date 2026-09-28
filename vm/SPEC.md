@@ -108,6 +108,9 @@ be zero. An index is a record's zero-based position in its own table.
 | Node | `opcode, result_type, operands…` (§3) |
 | Name | `byte_length, utf8_packed[ceil(byte_length/4)]` |
 
+In a Case record (§3) `none` is a sentinel only for an absent tag row and an absent
+default; a key is a plain u32 and may be `0xffffffff`.
+
 **Types.** Kinds: 0 algebraic (`a` = first constructor index, `b` = constructor
 count), 1 live arrow (`a` domain, `b` result), 2 erased arrow (`a` domain or
 `none`, `b` result), 3 opaque (`a = b = 0`). Arrows have name `none`; every other
@@ -222,7 +225,10 @@ inspects it (§6.1).
   field `n-1`); Char on `Chr(code)`. Mode 0 on U32 is forbidden.
 - **Case mode 1 (keys)**: only for U32 and Char scrutinees; `rows = (key, arm)[n]`
   with strictly increasing keys, zero-field Branches, and a required Default. A
-  dense 2^32 table is forbidden. This keeps the literals core's Default form.
+  dense 2^32 table is forbidden. This keeps the literals core's Default form. A key
+  is any u32, `0xffffffff` included: `none` marks only an absent tag row (mode 0) and an
+  absent default, so no keys row is absent, a matching key is selected and a missing one
+  falls to the Default (run controls `key-max`, `key-max-miss` and `char-key-max`, §12).
 - **Branch** binds the constructor's live fields to `first_slot = depth` and the
   following slots, in field order; `fields` is that live field count. **Default**
   binds nothing. Neither occurs outside a Case.
@@ -281,7 +287,7 @@ a malformed record, and a `slots` of 65,536 that its body does not reach. vm-cor
 MUST refuse the same controls, and MUST admit its six admitted plan controls (three
 Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
 Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 41 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 56 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -493,13 +499,24 @@ the callee, so a tail loop reuses its cell. A non-tail entry pushes Call(`act`).
    - a Closure: enter its body with the captures `dup`ed into slots `0..n-1` and
      the argument (if live) moved into slot `n`; then drop the Closure;
    - an Action with no argument (the erased `R` of `IO(A)`): Return the Action;
-   - an Action with continuation `k`: perform its effect (§10), build the Base
-     result `r`, drop the Action, and continue with `Enter(k, [r])`;
+   - an Action with continuation `k`: under a Program entry, perform its effect
+     (§10), build the Base result `r`, drop the Action, and continue with
+     `Enter(k, [r])`; under a Book entry, stop with `Unsupported vm effect`
+     without reading an operand (§8, D22);
    - the terminal continuation with `x`: allocate `Emit{x}` of the pinned IO.OP
      type and Return it.
 3. "Enter a body" means: apply §6.2 (tail: pop Scopes, drop `act`; otherwise push
    Call), allocate an Activation of the owner's `slots` capacity with depth equal
    to the bound slot count, fill it as above, and Eval the body.
+
+**A stop keeps the debit.** Once step 1 has debited, the debit stands whatever
+step 2 or 3 does: when one stops the machine (a D20 or D22 refusal, `Exhausted` kind
+2 or 3, a `HostFailure`), `fuel` is not refunded and `calls` counts that entry. A
+refused print is therefore debited. `print-non-scalar` (and `-mid` and `-wide`)
+stops after 4 calls (main, IO.print, the erased `R` and the Action applied to
+`k`), `print-non-scalar-second` after 13, and a Book's refused Action after its fourth
+entry (§8). vm-expected.json freezes the four D20 counts, and §12's run controls the
+others.
 
 **Fuel** counts entries: the requested Book function or Program `main`, every
 Application, every Invoke (erased ones included), both applications of an Action,
@@ -581,7 +598,8 @@ ordinal 0 as the value 0, because its loader models U32 as one nullary construct
 `structured-argument`, while the image has no erased field (`erased-field`).
 Goldens `invoke-args` and `invoke-arrow` freeze each cause of steps 2–5, and
 `invoke-words` step 1's words (§12). The VM then
-pushes Top(phase 0) and starts with `Enter(FN, ordinals)`. Return to Top(0) halts
+pushes Top(phase 0) and starts with `Enter(FN, ordinals)`; no Action is performed under
+it (Actions, below). Return to Top(0) halts
 with the result and prints
 
 ```
@@ -614,7 +632,7 @@ The VM pushes Top(phase 1) and starts with `Enter(main, [])`. Returns to Top:
 |---|---|
 | 1 | set phase 2; `Enter(w, [])` applies the erased `R` |
 | 2 | set phase 3; `Enter(w, [terminal])` |
-| 3 | `w` must be an IO.OP Object, and a Halt's code a U32 and its message a String over its whole extent (§6); else `HostFailure image` (`ill-typed`). Emit ends with exit 0, its field unread; Halt calls the host's `die` with its code and message. Drop `w` first. |
+| 3 | `w` must be an IO.OP Object, and a Halt's code a U32 and its message a String over its whole extent (§6); else `HostFailure image` (`ill-typed`). Emit ends with exit 0, its field unread, after `w` is dropped. A Halt's message is an outgoing String (§10): the code and then the whole message are inspected, and a message holding a non-scalar Char is refused as `HostFailure io abi` before `die` (D20), with `w` still owned and nothing written. Otherwise the VM converts the message, drops `w` and calls the host's `die` with the code and the message. |
 
 `IO.pure`, `IO.bind` and `IO.die` are ordinary Base code; `IO.die` returns `Halt`
 directly. Emit is not an effect request. Program images require the Unit, String
@@ -622,7 +640,22 @@ and IO.OP representations.
 
 **Actions.** `Foreign` builds an Action and performs nothing; dropping it or leaving
 it in an unselected branch has no effect. Its first (erased) application returns
-the Action itself; its second, with `k`, performs exactly one effect.
+the Action itself; its second, with `k`, performs exactly one effect under a Program
+entry. That entry performs its effects wherever an Action meets its continuation, even
+inside a pure argument of `main`, in evaluation order: run control
+`program-print-in-value` writes `x` from a function argument and then its own `t`.
+
+**A Book entry never performs an effect (D22).** Under a Book invocation the second
+application, `Enter(Action, [k])`, stops the run with `Unsupported vm effect` after its
+debit (§7) and before the step reads, inspects or converts an operand (§6, §10) or
+calls the host. Nothing is written, and neither the whole-extent inspection nor D20's
+scalar check runs, so the print of an ill-typed or a non-scalar String is refused the
+same way, as `Unsupported`, never `HostFailure`. An Action built, dropped or applied to
+its erased `R` under a Book is no effect and runs as under a Program. The refusal is
+D4's: never `Invalid`, never an effect nobody requested. Run controls freeze it (§12):
+the print stops after 4 entries (main, IO.print, `R`, the Action), or 5 when an `id`
+call builds the String, the pure `got(k(Unit{}))` evaluates after 3, an Action built
+and dropped after 2, and one applied to its erased `R` after 3.
 
 ## 9. Primitives and numeric bounds (D15)
 
@@ -732,7 +765,10 @@ Foreign rows in `registry.json`: 0 `IO.args`, 1 `IO.print`, 2 `File.open`,
 3 `File.read`, 4 `File.write_bytes`, 5 `File.close`, 6 `File.read_bytes`,
 7 modules `inspect`. Each row's `output` names the representation `X` of its
 `IO(X)` result; the gate re-derives it from the Base declarations (`inspect`'s
-comes from its pinned declaration). Applying an Action inspects (§6) every
+comes from its pinned declaration). An Action is applied to its continuation, and so
+performs its effect, only under a Program entry: under a Book entry that step stops
+with `Unsupported vm effect` before anything below (§8, D22). Under a Program, applying
+an Action inspects (§6) every
 operand before it converts any, a String or a byte List over its whole extent,
 so an ill-typed cell anywhere in it halts as `ill-typed` even after a non-scalar
 Char or a byte above 255. Then it
@@ -741,7 +777,9 @@ and handle view, and enters `k`. Outgoing Strings must be Unicode scalars and ar
 canonical UTF-8, with no surrogate merging or replacement. An outgoing String that
 holds a non-scalar Char (a surrogate, or a code above U+10FFFF) halts with
 `HostFailure io abi` before the host call: none of it is encoded or written (D20,
-§11). Only output is checked: building, storing or measuring a non-scalar Char is
+§11). A Halt's message is an outgoing String too (§8): the code and then the whole
+message are inspected, and a non-scalar Char in it halts as `HostFailure io abi` before
+`die`. Only output is checked: building, storing or measuring a non-scalar Char is
 pure code (§2). Incoming text follows
 the host's replacement decoding, BOM kept, one Chr per scalar. Raw input bytes
 become U32 elements 0..255.
@@ -753,7 +791,7 @@ copies low bytes and passes the flag; a nonzero flag is errno 22 before any writ
 Accepted, Invalid, Unsupported, Exhausted, HostFailure and InternalFailure are
 recorded separately. Malformed images, unknown ids and malformed invocations are
 HostFailure, and an image past a resource limit of §4 is Exhausted kind 2; source forms Knot does not handle are Unsupported, and so is a Book
-result that §8 cannot describe; a broken invariant is a defect. A timeout or
+result that §8 cannot describe and an effect that a Book entry would perform (D22); a broken invariant is a defect. A timeout or
 crash never counts as a semantic mutant kill.
 
 The observation lanes are the seed, pinned Knot eval-cli, the Bend model on the
@@ -802,7 +840,8 @@ bound. Expected values are never regenerated from a candidate VM.
 lane. The reference evaluation of the plan ([evaluate.py](evaluate.py), §6–§10 on
 values) yields the Strings a Program passes to output effects, in order. It
 implements `IO.print`, the only effect the goldens use; any other foreign or a
-Halt fails the gate and counts as neither agreement nor D20. When one String holds
+Halt fails the gate and counts as neither agreement nor D20 (a Halt's message is
+refused like a print's, §8, but only a run control reaches it). When one String holds
 a non-scalar Char, the VM writes the earlier Strings and refuses that one as
 `HostFailure io abi` (§10); the golden is `divergent-by-contract (non-scalar
 output)`, neither seed agreement nor a bound. Otherwise the case is ordinary seed
@@ -820,6 +859,10 @@ ASCII source; native `ED A0 80 0A`), `print-non-scalar-mid` (`"a\u{D800}b"`; nat
 the lone surrogate; the VM writes `a\n`, the Bun lane nothing). `non-scalar-code`
 (`55296\n`) and `non-scalar-unprinted` (`a\nnonempty\n`, where the Bun lane writes
 `a\n` and refuses) build a surrogate without printing it and agree with the seed.
+The refused entry stays debited (§7), so each D20 row of vm-expected.json freezes its
+`calls`, by literal review of the entries: 4 for the first three goldens (main,
+IO.print, the erased `R` and the Action applied to `k`) and 13 for
+`print-non-scalar-second`.
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
 golden: the eval-cli line where eval agrees with the seed (75 goldens), agreement
@@ -879,7 +922,8 @@ lane and requires:
   to the whole trace in that lane's encoding and the Bun lane's output a prefix of
   the VM's (eleven frozen expectation controls, among them the wide code as
   agreement, its plan printing U+1F600, a surrogate built but never printed as a
-  divergence, and the Bun lane's empty output as `print-non-scalar-second`'s);
+  divergence, and the Bun lane's empty output as `print-non-scalar-second`'s; two more
+  refuse a `calls` review that refunds the refused entry, or that is missing);
 - the reference evaluation reproducing every Book golden's expectation and every
   run control's outcome and call count;
 - each of the 44 frozen Book invocations of `invoke-args`, `invoke-arrow` and
@@ -911,7 +955,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` also equals the independent lowering of its `check-cli`
   display, written by hand in the literals head's grammar because no pinned head
   checks a `List<U32>` parameter;
-- 41 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 56 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -935,7 +979,7 @@ lane and requires:
   stops at `k` at 4 after writing `vm\n`, and stops at the Action's second
   application at 3 having written nothing; a Book and a Program stop at fuel 0 after
   0 calls; and two ill-typed Enters (an erased closure invoked live, a live closure
-  at phase 1) meet fuel 0 after 2 calls and stay `HostFailure image`. Eighteen
+  at phase 1) meet fuel 0 after 2 calls and stay `HostFailure image`. Twenty
   inspection controls (`inspection_controls`) pass a closure `λ`, or a Pair Object,
   through the identity to one inspection point each (§6, §9's table); each halts
   with `HostFailure image` (`ill-typed`). After 2 calls (main, id): a discarded
@@ -948,22 +992,43 @@ lane and requires:
   and the reverse). After 4 (main, the erased `R`, `k`'s closure, id): a Program's
   Halt whose code is `id(λ)`, or whose message is `SCon{'a', id(λ)}`. After 5,
   having written nothing: `IO.print(SCon{Chr{55296}, id(λ)})`, whose whole String
-  is read before the scalar check, so the cause is not `io abi`;
+  is read before the scalar check, so the cause is not `io abi`. A Halt's message is an
+  outgoing String too: a surrogate then `id(λ)`, and `id(λ)` for the code beside a
+  surrogate message, each halt `ill-typed` after 4, the code and then the whole message
+  being read before D20's scalar check. Ten effect controls (`effect_controls`) freeze
+  D22 (§8) on a Book image applying `IO.print("x")` to its erased `R` and to a
+  continuation `k`, with `got` returning what an IO.OP carries, and Program-side D20 on a
+  Halt: `book-print`, `book-print-continuation-call` (`k` a function) and
+  `book-print-twice` (the reviewers' bookio-1, bk-print and bookio-2) stop
+  `Unsupported vm effect` after 4 calls, writing nothing; `book-print-non-scalar` (a
+  surrogate) too, so D22 precedes D20; `book-print-ill-typed` (`"a"` then `id(λ)`)
+  stops the same way after 5, so it precedes the inspection; the pure
+  `got(k(Unit{}))` (`book-continuation-called`) evaluates `Evaluated 8 1 On{}` after 3,
+  an Action built and dropped (`book-action-dropped`) after 2 and one applied to its
+  erased `R` (`book-action-erased`) after 3; the same Action prints under a Program
+  entry from inside a pure argument of `main` (`program-print-in-value`), `x\nt\n`
+  after 11; and a Halt whose message is a lone surrogate (`halt-surrogate`) stops
+  `HostFailure io abi` before `die` after 3. Three key controls (`key_controls`)
+  freeze §3's key: `pick` answers `On{}` from a key Branch at 0xffffffff for the U32
+  and the Char `4294967295` (`key-max`, `char-key-max`) and `Off{}` from its Default for
+  0xfffffffe (`key-max-miss`), each after 2 calls;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 69 codec mutants and 4 source mutants killed through a changed image, a decode
+- 70 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 39 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 52 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
-  record's length, and no limit on a Closure's `slots`. Five rule mutants of
+  record's length, and no limit on a Closure's `slots`; and a decoder that drops a keys
+  row at 0xffffffff, which only `key-max` refuses. Six rule mutants of
   `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
   `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
-  bound whose budget it does not pass; display steps counted as visits; and
-  transitions that omit materialization.
+  bound whose budget it does not pass; display steps counted as visits;
+  transitions that omit materialization; and a D20 golden whose `calls` are not
+  checked.
   Five survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, an Action's effect before its debit
   (which the print inspection control also counts, after 4 calls), the fuel test
@@ -977,7 +1042,18 @@ lane and requires:
   Char words unread; `is_empty` reading one cell; `eq` stopping at the first
   difference, or reading one list only one cell past the other's length (either
   way round); a Halt's code, or its message, unread; and a print that checks each
-  Char as it reads it;
+  Char as it reads it. Thirteen more, of D22, a Halt's message, keys and the debit, die
+  by the controls above: a Book that performs the effect and one that drops it silently
+  (by every `book-print*` control); one that refuses only after the whole-extent
+  inspection (by `book-print-ill-typed` alone), after D20's scalar check (by
+  `book-print-non-scalar` and `-ill-typed`), when an Action is built (also
+  `book-action-dropped`) or when it meets its erased `R` (also `book-action-erased`); a
+  Program that refuses its effects (by the golden `foreign-print`); a Halt message
+  never checked (by `halt-surrogate` alone), checked as it is read (by
+  `inspect-halt-after-surrogate` alone) or before the code
+  (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
+  and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused Action
+  whose debit is refunded (by the D20 goldens' `calls`);
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).
@@ -999,7 +1075,7 @@ every transition and the four value lanes, and derives each golden's exact call
 count; vm-rc, vm-io and vm-prims close reclamation, effects and the final registry.
 The reference evaluation performs only `IO.print`, so vm-io also owes the
 inspection controls and mutants for every other foreign's operands, the byte
-List's whole extent among them.
+List's whole extent among them, and a Halt that dies with its code and message.
 Goldens of the `list-head-match` shape (a Case on a List element) and the
 `first-code` shape (a concrete arm beside the `none` head), each seed `True{}`, are
 owed as soon as a pinned head checks a `List<T>` parameter; until then the admitted
