@@ -673,7 +673,8 @@ def children(w: list, at: int) -> list:
 
 
 def plan_controls(plans: dict) -> list:
-    """(label, plan, frozen validator message) for type-correct plan mutants."""
+    """(label, plan, frozen validator message) for type-correct plan mutants; a message of
+    None marks a plan the validator MUST admit."""
     def edit(name, path, value):
         plan = json.loads(json.dumps(plans[name]))
         target = plan
@@ -700,6 +701,37 @@ def plan_controls(plans: dict) -> list:
     def flag_rows(depth):
         """A tag table over a Flag at type index 1 answering its own value."""
         return [['branch', 0, depth, 0, ['value', 1, 0]], ['branch', 1, depth, 0, ['value', 1, 1]]]
+
+    def none_parameter(scrutinee):
+        """pred(x: none) cases on x at `scrutinee`; main passes it a Nat."""
+        return edits('nat-unpack', (['functions', 0, 'parameters'], [None]), (['functions', 0, 'slots'], 1),
+                     ([*body(0), 3], scrutinee), ([*body(0), 5], flag_rows(1)),
+                     (body(1), ['call', 1, 0, [['lit', 0, 'Nat', 7]]]))
+
+    def none_let(scrutinee):
+        """pred lets a none-typed call result and cases on it at `scrutinee`."""
+        return edits('nat-unpack', (['functions'], [
+            {'name': 'seven', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['lit', 0, 'Nat', 7]},
+            {'name': 'pred', 'parameters': [], 'result': 1, 'slots': 1,
+             'body': ['let', 1, 0, ['call', None, 0, []], ['case', 1, 0, scrutinee, 'tags', flag_rows(1), None]]},
+            {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0, 'body': ['call', 1, 1, []]}]))
+
+    def answer(tag, depth):
+        return ['branch', tag, depth, 0, ['value', 0, tag]]
+    # S's shape (catalog.bend's `case Con{+head,+tail}: match head: ...`): first_on(xs: List<Flag>)
+    # matches the head bound from List's pinned `none` field at Flag. The seed prints True{}.
+    list_head_match = {
+        'entry': 'book', 'representation': {'Bool': 0, 'List': 1},
+        'types': [plans['u32-zero']['types'][0],
+                  {'kind': 'data', 'name': 'List', 'constructors': [{'name': 'Nil', 'fields': []},
+                                                                    {'name': 'Con', 'fields': [None, 1]}]},
+                  flag],
+        'functions': [
+            {'name': 'first_on', 'parameters': [1], 'result': 0, 'slots': 3,
+             'body': ['case', 0, 0, 1, 'tags', [answer(0, 1), ['branch', 1, 1, 2, [
+                 'case', 0, 1, 2, 'tags', [answer(0, 3), answer(1, 3)], None]]], None]},
+            {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0,
+             'body': ['call', 0, 0, [['con', 1, 1, [['value', 2, 1], ['value', 1, 0]]]]]}]}
     return [
         ('ref-beyond-depth', edit('reference', [*body(0), 2], 1), 'slot 1 beyond depth 1'),
         ('let-slot', edit('let', [*body(0), 2], 1), 'let slot 1 at depth 0'),
@@ -751,16 +783,12 @@ def plan_controls(plans: dict) -> list:
         ('program-main-unit', edit('foreign-print', ['functions', 1],
                                    {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['value', 0, 0]}),
          'main must return IO(Unit)'),
-        ('inspect-none-parameter', edits('nat-unpack', (['functions', 0, 'parameters'], [None]),
-                                         ([*body(0), 3], 1), ([*body(0), 5], flag_rows(1)),
-                                         (body(1), ['call', 1, 0, [['lit', 0, 'Nat', 7]]])),
-         'case scrutinee type'),
-        ('inspect-none-let', edits('nat-unpack', (['functions'], [
-            {'name': 'seven', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['lit', 0, 'Nat', 7]},
-            {'name': 'pred', 'parameters': [], 'result': 1, 'slots': 1,
-             'body': ['let', 1, 0, ['call', None, 0, []], ['case', 1, 0, 1, 'tags', flag_rows(1), None]]},
-            {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0, 'body': ['call', 1, 1, []]}])),
-         'case scrutinee type'),
+        # A Case names a concrete scrutinee type, even when its slot is an erased position.
+        ('inspect-none-parameter', none_parameter(None), 'case scrutinee type'),
+        ('inspect-none-let', none_let(None), 'case scrutinee type'),
+        ('case-none-parameter', none_parameter(1), None),
+        ('case-none-let', none_let(1), None),
+        ('list-head-match', list_head_match, None),
         ('nat-field-type', edits('nat-unpack', (['types', 0, 'constructors', 1, 'fields'], [1]),
                                  ([*body(0), 5, 1], ['branch', 1, 1, 1, ['case', 1, 1, 1, 'tags', flag_rows(2), None]]),
                                  (['functions', 0, 'slots'], 2)),
@@ -795,7 +823,8 @@ def describe_verdicts(controls: list, c=None) -> dict:
 
 
 # Semantic mutants of the reference codec: (name, [(old, new), ...]). Each must change a
-# committed image, a frozen refusal or a frozen describe verdict; a crash is never a kill.
+# committed image, a frozen refusal, an admitted control or a frozen describe verdict; a crash
+# is never a kill.
 CODEC_MUTANTS = [
     ('big-endian', [("b''.join(w.to_bytes(4, 'little') for w in header + body)",
                      "b''.join(w.to_bytes(4, 'big') for w in header + body)")]),
@@ -848,8 +877,10 @@ CODEC_MUTANTS = [
                                         "            if op == 'prim' and rep.get(row['output'], t) != t:")]),
     ('validator-ignores-foreign-result', [("            if op == 'foreign' and not io(t, rep.get(row['output'])):", "            if False:")]),
     ('validator-program-any-result', [("        elif main and not io(main[0]['result'], rep['Unit']):", "        elif False:")]),
-    ('validator-inspects-none', [("            if scrutinee is None or scope[slot] != scrutinee:",
-                                  "            if not fits(scrutinee, scope[slot]):")]),
+    ('validator-inspects-none', [("            if scrutinee is None or scope[slot] not in (None, scrutinee):",
+                                  "            if scope[slot] not in (None, scrutinee):")]),
+    ('validator-strict-scrutinee', [("            if scrutinee is None or scope[slot] not in (None, scrutinee):",
+                                     "            if scrutinee is None or scope[slot] != scrutinee:")]),
     ('validator-reference-wildcard', [("                if scope[node[2]] != t:", "                if not fits(scope[node[2]], t):")]),
     ('validator-shape-counts-only', [("[c['fields'] for c in types[t]['constructors']] != [\n                [pinned(n) for n in fields]",
                                       "[len(c['fields']) for c in types[t]['constructors']] != [\n                len(fields)")]),
@@ -863,7 +894,7 @@ CODEC_MUTANTS = [
 ]
 
 
-def codec_mutants(plans, images, controls, describing, reg, digest) -> list:
+def codec_mutants(plans, images, controls, admitted, describing, reg, digest) -> list:
     source = CODEC.read_text()
     results = []
     for name, edits in CODEC_MUTANTS:
@@ -887,6 +918,14 @@ def codec_mutants(plans, images, controls, describing, reg, digest) -> list:
                 continue
             if got is None or not got.startswith(reason) or message not in got:
                 killed_by = f'control {label}: {got}'
+                break
+        for label, data in [] if killed_by else admitted:
+            try:
+                got = rejected(data, reg, digest, mutant)
+            except Exception:
+                continue
+            if got is not None:
+                killed_by = f'admitted control {label}: {got}'
                 break
         if not killed_by:
             try:
@@ -1093,32 +1132,38 @@ def main() -> int:
     abstract = [n for p in plans.values() for n in walk(p) if n[0] not in ('branch', 'default') and n[1] is None]
     require(abstract, 'a none-typed node')
 
+    planned = plan_controls(plans)
     controls = byte_controls(images, digest) + [
-        (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in plan_controls(plans)]
+        (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
+    admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None]
     boundaries = expectation_controls(cases, plans, bounds, sources)
     for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
         require(got is not None and got.startswith(reason) and message in got, f'control {label}: {got}')
         boundaries.append({'control': label, 'refused': got})
+    for label, data in admitted:
+        require(rejected(data, reg, digest) is None, f'admitted control {label}: {rejected(data, reg, digest)}')
     describing = describe_controls(plans)
     verdicts = describe_verdicts(describing)
     for label, _, _, verdict in describing:
         require(verdicts[label] == verdict, f'describe control {label}: {verdicts[label]!r}, frozen {verdict!r}')
 
-    mutants = codec_mutants(plans, images, controls, describing, reg, digest) + source_mutants(cases, built)
+    mutants = codec_mutants(plans, images, controls, admitted, describing, reg, digest) + source_mutants(cases, built)
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
 
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
-    record.update(status='passed', fixtures=fixtures, boundaries=boundaries, describe=verdicts, mutants=mutants,
+    record.update(status='passed', fixtures=fixtures, boundaries=boundaries,
+                  admitted=[label for label, _ in admitted], describe=verdicts, mutants=mutants,
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
                             'none_typed_nodes': len(abstract)})
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
-          f"{len(verdicts)} describe controls, {len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
+          f"{len(admitted)} admitted controls, {len(verdicts)} describe controls, "
+          f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 
 

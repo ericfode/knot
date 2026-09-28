@@ -79,6 +79,17 @@ follows it (§5, §10, §11) without a new image header word.
    A bound is a declared domain or budget limit and is always Exhausted; an
    Unsupported result is D4's refusal, never a bound. Of the 76 Book goldens only
    `result-u32` falls outside the domain, so no other expectation changed.
+9. **A Case may inspect an erased position.** Review round 2 relaxed §3's
+   scrutinee rule from "the slot's type equals the concrete scrutinee type" to
+   "the scrutinee type is concrete and the slot's type is it or `none`". Round 1's
+   rule refused S's own shape: 79 nested patterns on generic fields across 14 of
+   S's files, such as `catalog.bend`'s `case Con{+head,+tail}: match head: …` and
+   `check-cli.bend`'s `case Done{P.Parsed{value,rest}}`. The Case still inspects
+   the word against its scrutinee type (§6.1), so this admits no new unsoundness
+   beyond what `none` instantiation already allows. Neither pinned head checks a
+   `List<T>` parameter (literals: `Unsupported parse parameter-type`), so the
+   shape is witnessed by the admitted control `list-head-match` until a golden can
+   be frozen.
 
 ## Findings that need an owner
 

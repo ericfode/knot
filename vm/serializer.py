@@ -102,7 +102,7 @@ def encode(plan: dict, digest: bytes) -> bytes:
                 for r in rows:
                     table += [r[1], ('@', emit(r, t))]
             fallback = NONE if default is None else ('@', emit(default, t))
-            operands = [slot, scrutinee, CASE_MODES.index(mode), len(rows), *table, fallback]
+            operands = [slot, opt(scrutinee), CASE_MODES.index(mode), len(rows), *table, fallback]
         elif op == 'closure':
             _, _, live, slots, captures, body = node
             kid = emit(body)
@@ -522,7 +522,8 @@ def validate(plan: dict, registry: dict) -> list[str]:
                 fail(where, 'case slot beyond depth')
                 return depth
             used.add(slot)
-            if scrutinee is None or scope[slot] != scrutinee:
+            # The scrutinee type is concrete; its slot may be an erased position (SPEC section 3).
+            if scrutinee is None or scope[slot] not in (None, scrutinee):
                 fail(where, 'case scrutinee type')
             deepest = depth
             if mode == 'tags':

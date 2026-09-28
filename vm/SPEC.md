@@ -146,9 +146,12 @@ reproduces it byte for byte**; `serializer.py` is that re-encoder.
 ## 3. Node records
 
 `child` is the offset of an earlier node record. Every node carries its result
-type; a Branch or Default carries its Case's. A node's type is `none` exactly when
-its value has an erased abstract type; such a value may be referenced, bound,
-passed, stored in a field or capture and returned, but never inspected.
+type; a Branch or Default carries its Case's. Types are positional: a node's type
+is `none` exactly when the checked core gives its position an erased abstract type
+(a generic parameter, including §2's pinned generic fields), whatever type the
+value is instantiated at. Such a value may be referenced, bound, passed, stored in
+a field or capture and returned; only a Case that names a concrete scrutinee type
+inspects it (§6.1).
 
 | Code | Form | Operands after the result type | Children, in order |
 |---:|---|---|---|
@@ -175,8 +178,10 @@ passed, stored in a field or capture and returned, but never inspected.
   which the image MUST declare. A Foreign's result type is `IO(X)` in §8's shape,
   with `X` the registry's `output` representation.
 - **Types agree.** Exactly, with `none` equal only to `none`: a Reference and its
-  slot, a Let and its body, a Case and every arm body, and a Case's scrutinee type
-  and its slot, which MUST be concrete. Where a value flows into a declared
+  slot, a Let and its body, and a Case and every arm body. A Case's scrutinee type
+  MUST be concrete, and its slot's type is either that type or `none`: S matches
+  the head bound from a List's `Con` (`case Con{+head,+tail}: match head: …` in
+  `catalog.bend`), whose field is pinned `none`. Where a value flows into a declared
   position (an Application's arguments and result, a Construct's fields, an
   Invoke's argument and result, a Closure's and a function's body) it **fits**:
   `none` on either side fits any type, arrows of one kind fit when their domains
@@ -229,7 +234,9 @@ stack. The validator checks every function, reachable or not:
 5. Canonicality as defined in §2.
 
 A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
-refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls.
+refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls,
+and MUST admit its three admitted plan controls (a Case on a `none` slot, among
+them `list-head-match`, S's shape).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
@@ -378,7 +385,8 @@ no read leaves a cell.
 
 ### 6.1 Case selection
 
-The scrutinee is borrowed from its slot and inspected (§6). For an Object, the
+The scrutinee is borrowed from its slot and inspected (§6) against the Case's
+scrutinee type, whether its slot is typed so or `none`. For an Object, the
 tag and fields come from its payload; for an immediate of an
 algebraic type, the tag is `v` and there are no fields. A Nat word `n` is Zero when `n = 0`, otherwise Succ with the new
 word `n - 1` (a Big is allocated when `n - 1 >= 2^31`). A Char word is Chr with
@@ -659,9 +667,11 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
   `none`-typed node covered;
-- all 61 refusals of §4 with their frozen reasons;
-- 34 codec mutants and 3 source mutants killed through a changed image, a changed
-  refusal, a changed describe verdict or a changed observation, never a crash;
+- all 61 refusals of §4 with their frozen reasons, and its three admitted plan
+  controls;
+- 35 codec mutants and 3 source mutants killed through a changed image, a changed
+  refusal, a refused admitted control, a changed describe verdict or a changed
+  observation, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).
@@ -678,5 +688,8 @@ leaks. vm-core adds the iterative loader, validator, CEK machine, state dump and
 quantum re-entry, and completes the 250,000-deep workload. vm-lockstep compares
 every transition and the four value lanes, and derives each golden's exact call
 count; vm-rc, vm-io and vm-prims close reclamation, effects and the final registry.
+A golden of the `list-head-match` shape (a Case on a List element, seed `True{}`)
+is owed as soon as a pinned head checks a `List<T>` parameter; until then the
+admitted control witnesses validation only, not evaluation.
 The first speed gate is at most 4× seed-native on each frozen workload on a quiet
 host; above 10× requires design review.
