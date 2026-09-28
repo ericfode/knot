@@ -1217,3 +1217,9 @@ Prevention:
   by one step. `case +y: y` needs `case +y: match y: ...` beside it.
 - Draw kinds in the seeded generators: a `Data`-only generator (round 7's
   let/alias) cannot see a kind rule.
+- A law's style interface is its whole statement, so a law that calls a
+  shared helper such as `token` enters that helper's caller context in full.
+  The round's first witnesses spelled raw tokens and overflowed the
+  perch-context budget for `token` (one extra commit). Build ground programs
+  from small named definitions, and run `tests/perch-context/check.py` before
+  committing new laws.
