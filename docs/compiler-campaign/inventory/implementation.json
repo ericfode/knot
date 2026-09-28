@@ -125,9 +125,9 @@
   "totals": {
     "compiler": {
       "files": 65,
-      "declarations": 1153,
-      "unique_declarations": 969,
-      "definitions": 711,
+      "declarations": 1160,
+      "unique_declarations": 974,
+      "definitions": 714,
       "classes": 42
     },
     "frontend_files": {
@@ -68619,7 +68619,7 @@
     },
     {
       "file": "src/literal-LAWS.bend",
-      "sha256": "f025d9bdad664893236ca744b6ac548a0af0e715c6a434280fb2649b4e82f94b",
+      "sha256": "3861b00a16a579621b46639aaf890d24263ede7285daeb14399a06af5cad9dc7",
       "imports": [
         {
           "module": "Base",
@@ -69299,13 +69299,90 @@
           }
         },
         {
+          "id": "src/literal-LAWS.bend::runs_are_bounded:law",
+          "name": "runs_are_bounded",
+          "key": "src/literal-LAWS.runs_are_bounded",
+          "kind": "law",
+          "lines": [
+            67,
+            68
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "src/machine-code.runs"
+          ],
+          "type_references": [
+            "List"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-LAWS.bend::seq_undoes_runs:law",
+          "name": "seq_undoes_runs",
+          "key": "src/literal-LAWS.seq_undoes_runs",
+          "kind": "law",
+          "lines": [
+            70,
+            71
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "src/machine-code.runs",
+            "src/machine-code.seq"
+          ],
+          "type_references": [
+            "List"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-LAWS.bend::nul_is_a_character:law",
           "name": "nul_is_a_character",
           "key": "src/literal-LAWS.nul_is_a_character",
           "kind": "law",
           "lines": [
-            67,
-            69
+            73,
+            75
           ],
           "features": [
             "calls",
@@ -69352,8 +69429,8 @@
           "key": "src/literal-LAWS.legacy_literal_boundary",
           "kind": "law",
           "lines": [
-            71,
-            74
+            77,
+            80
           ],
           "features": [
             "calls",
@@ -69405,8 +69482,8 @@
           "key": "src/literal-LAWS.char_literal_reads_back",
           "kind": "law",
           "lines": [
-            76,
-            78
+            82,
+            84
           ],
           "features": [
             "calls",
@@ -69455,8 +69532,8 @@
           "key": "src/literal-LAWS.text_literal_reads_back",
           "kind": "law",
           "lines": [
-            80,
-            83
+            86,
+            89
           ],
           "features": [
             "calls",
@@ -69505,8 +69582,8 @@
           "key": "src/literal-LAWS.glyph_boundaries",
           "kind": "law",
           "lines": [
-            85,
-            87
+            91,
+            93
           ],
           "features": [
             "calls",
@@ -73364,7 +73441,7 @@
     },
     {
       "file": "src/literal-PROOF.bend",
-      "sha256": "4fa4ee46addd71b5b5b48a4959920fc2e93eaa3eef1c23085e6ebff49bc3fa38",
+      "sha256": "5742bf8c20ae438731b86a0c952e0561bc9f9fef89c316aaed40b9b62ffcc1c2",
       "imports": [
         {
           "module": "Base",
@@ -74082,13 +74159,93 @@
           }
         },
         {
+          "id": "src/literal-PROOF.bend::L.runs_are_bounded:law_fill",
+          "name": "L.runs_are_bounded",
+          "key": "src/literal-LAWS.runs_are_bounded",
+          "kind": "law_fill",
+          "lines": [
+            22,
+            22
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "src/machine-code.runs"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/machine-code.runs"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-PROOF.bend::L.seq_undoes_runs:law_fill",
+          "name": "L.seq_undoes_runs",
+          "key": "src/literal-LAWS.seq_undoes_runs",
+          "kind": "law_fill",
+          "lines": [
+            23,
+            23
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "src/machine-code.runs",
+            "src/machine-code.seq"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/machine-code.runs",
+            "src/machine-code.seq"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-PROOF.bend::L.nul_is_a_character:law_fill",
           "name": "L.nul_is_a_character",
           "key": "src/literal-LAWS.nul_is_a_character",
           "kind": "law_fill",
           "lines": [
-            22,
-            22
+            24,
+            24
           ],
           "features": [
             "calls",
@@ -74134,8 +74291,8 @@
           "key": "src/literal-LAWS.legacy_literal_boundary",
           "kind": "law_fill",
           "lines": [
-            23,
-            23
+            25,
+            25
           ],
           "features": [
             "calls",
@@ -74186,8 +74343,8 @@
           "key": "src/literal-LAWS.char_literal_reads_back",
           "kind": "law_fill",
           "lines": [
-            24,
-            24
+            26,
+            26
           ],
           "features": [
             "calls",
@@ -74235,8 +74392,8 @@
           "key": "src/literal-LAWS.text_literal_reads_back",
           "kind": "law_fill",
           "lines": [
-            25,
-            25
+            27,
+            27
           ],
           "features": [
             "calls",
@@ -74284,8 +74441,8 @@
           "key": "src/literal-LAWS.glyph_boundaries",
           "kind": "law_fill",
           "lines": [
-            26,
-            26
+            28,
+            28
           ],
           "features": [
             "calls",
@@ -74828,7 +74985,7 @@
     },
     {
       "file": "src/literal-wasm.bend",
-      "sha256": "590dc62c3cd86204692984be924c267e1611f4958f5b9c094f9e820ee3205896",
+      "sha256": "778692b61dbcc8a5d250458caf874efe5d830bff5023d8d9bdaaac5f01203a31",
       "imports": [
         {
           "module": "Base",
@@ -75702,19 +75859,87 @@
           }
         },
         {
+          "id": "src/literal-wasm.bend::appended:definition",
+          "name": "appended",
+          "key": "src/literal-wasm.appended",
+          "kind": "definition",
+          "lines": [
+            87,
+            90
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "src/literal-wasm.appended",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/wasm-bytes.checked"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "List",
+            "Result",
+            "U32",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 3668,
+              "names": [
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
+              "src/literal-wasm.appended",
+              "src/syntax.bind",
+              "src/wasm-bytes.checked"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-wasm.bend::section:definition",
           "name": "section",
           "key": "src/literal-wasm.section",
           "kind": "definition",
           "lines": [
-            84,
-            85
+            92,
+            93
           ],
           "features": [
             "calls",
             "captures",
             "generics",
             "lambdas",
+            "literals.u32",
             "quantities.affine",
             "quantities.arguments",
             "quantities.reusable",
@@ -75722,12 +75947,14 @@
           ],
           "references": [
             "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "List",
             "Result",
             "U32",
+            "src/literal-wasm.appended",
+            "src/machine-code.runs",
             "src/syntax.Error",
             "src/syntax.bind",
-            "src/wasm-bytes.bytes",
             "src/wasm-bytes.section"
           ],
           "type_references": [
@@ -75739,7 +75966,7 @@
           ],
           "captures": [
             {
-              "offset": 3361,
+              "offset": 3850,
               "names": [
                 "cap",
                 "id"
@@ -75748,11 +75975,15 @@
           ],
           "execution": {
             "references": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "src/literal-wasm.appended",
+              "src/machine-code.runs",
               "src/syntax.bind",
-              "src/wasm-bytes.bytes",
               "src/wasm-bytes.section"
             ],
-            "types": [],
+            "types": [
+              "U32"
+            ],
             "dynamic_calls": []
           }
         },
@@ -75762,8 +75993,8 @@
           "key": "src/literal-wasm.binary",
           "kind": "definition",
           "lines": [
-            87,
-            100
+            95,
+            108
           ],
           "features": [
             "bindings",
@@ -75834,7 +76065,7 @@
           ],
           "captures": [
             {
-              "offset": 3739,
+              "offset": 4228,
               "names": [
                 "cap",
                 "count",
@@ -75892,8 +76123,8 @@
           "key": "src/literal-wasm.module",
           "kind": "definition",
           "lines": [
-            102,
-            104
+            110,
+            112
           ],
           "features": [
             "calls",
@@ -75941,8 +76172,8 @@
           "key": "src/literal-wasm.emit",
           "kind": "definition",
           "lines": [
-            106,
-            107
+            114,
+            115
           ],
           "features": [
             "calls",
@@ -75976,7 +76207,7 @@
           ],
           "captures": [
             {
-              "offset": 4817,
+              "offset": 5306,
               "names": [
                 "cap"
               ]
@@ -82897,7 +83128,7 @@
     },
     {
       "file": "src/machine-code.bend",
-      "sha256": "a0b99637cd37248b69d26eb49016dc6d30b81966cc2b3ac854ec003fcaadc3e5",
+      "sha256": "ab94a7fc51d2a7cc0ac4fd8e7732db68ea316325dea5a25c6e3dd482c2482c99",
       "imports": [
         {
           "module": "Base",
@@ -83105,13 +83336,133 @@
           }
         },
         {
+          "id": "src/machine-code.bend::split:definition",
+          "name": "split",
+          "key": "src/machine-code.split",
+          "kind": "definition",
+          "lines": [
+            24,
+            30
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.reverse",
+            "Nil",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/machine-code.split",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "U32"
+          ],
+          "captures": [
+            {
+              "offset": 1165,
+              "names": [
+                "done",
+                "head",
+                "run",
+                "tail",
+                "width"
+              ]
+            },
+            {
+              "offset": 1240,
+              "names": [
+                "done",
+                "head",
+                "run",
+                "tail",
+                "taken",
+                "width"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "List.reverse",
+              "U32.add",
+              "U32.is_eq",
+              "src/machine-code.split",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/machine-code.bend::runs:definition",
+          "name": "runs",
+          "key": "src/machine-code.runs",
+          "kind": "definition",
+          "lines": [
+            32,
+            33
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "generics",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Nil",
+            "U32",
+            "src/machine-code.split"
+          ],
+          "type_references": [
+            "List",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/machine-code.split"
+            ],
+            "types": [
+              "Nil",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/machine-code.bend::groups:definition",
           "name": "groups",
           "key": "src/machine-code.groups",
           "kind": "definition",
           "lines": [
-            22,
-            27
+            35,
+            40
           ],
           "features": [
             "calls",
@@ -83153,13 +83504,13 @@
           ],
           "captures": [
             {
-              "offset": 861,
+              "offset": 1581,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 874,
+              "offset": 1594,
               "names": [
                 "limit",
                 "n",
@@ -83193,8 +83544,8 @@
           "key": "src/machine-code.unsigned",
           "kind": "definition",
           "lines": [
-            29,
-            30
+            42,
+            43
           ],
           "features": [
             "calls",
@@ -83232,8 +83583,8 @@
           "key": "src/machine-code.signed_positive",
           "kind": "definition",
           "lines": [
-            32,
-            33
+            45,
+            46
           ],
           "features": [
             "calls",
@@ -83271,8 +83622,8 @@
           "key": "src/machine-code.signed",
           "kind": "definition",
           "lines": [
-            35,
-            39
+            48,
+            52
           ],
           "features": [
             "calls",
@@ -83307,13 +83658,13 @@
           ],
           "captures": [
             {
-              "offset": 1192,
+              "offset": 1912,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 1220,
+              "offset": 1940,
               "names": [
                 "value"
               ]
@@ -83343,8 +83694,8 @@
           "key": "src/machine-code.i32",
           "kind": "definition",
           "lines": [
-            41,
-            42
+            54,
+            55
           ],
           "features": [
             "calls",
@@ -83384,8 +83735,8 @@
           "key": "src/machine-code.get",
           "kind": "definition",
           "lines": [
-            43,
-            44
+            56,
+            57
           ],
           "features": [
             "calls",
@@ -83425,8 +83776,8 @@
           "key": "src/machine-code.set",
           "kind": "definition",
           "lines": [
-            45,
-            46
+            58,
+            59
           ],
           "features": [
             "calls",
@@ -83466,8 +83817,8 @@
           "key": "src/machine-code.tee",
           "kind": "definition",
           "lines": [
-            47,
-            48
+            60,
+            61
           ],
           "features": [
             "calls",
@@ -83507,8 +83858,8 @@
           "key": "src/machine-code.call",
           "kind": "definition",
           "lines": [
-            49,
-            50
+            62,
+            63
           ],
           "features": [
             "calls",
@@ -83548,8 +83899,8 @@
           "key": "src/machine-code.load",
           "kind": "definition",
           "lines": [
-            51,
-            52
+            64,
+            65
           ],
           "features": [
             "calls",
@@ -83589,8 +83940,8 @@
           "key": "src/machine-code.store",
           "kind": "definition",
           "lines": [
-            53,
-            54
+            66,
+            67
           ],
           "features": [
             "calls",
@@ -83630,8 +83981,8 @@
           "key": "src/machine-code.jump",
           "kind": "definition",
           "lines": [
-            55,
-            56
+            68,
+            69
           ],
           "features": [
             "calls",
@@ -83671,8 +84022,8 @@
           "key": "src/machine-code.branch",
           "kind": "definition",
           "lines": [
-            57,
-            58
+            70,
+            71
           ],
           "features": [
             "calls",
@@ -83712,8 +84063,8 @@
           "key": "src/machine-code.select",
           "kind": "definition",
           "lines": [
-            59,
-            60
+            72,
+            73
           ],
           "features": [
             "calls",
@@ -83756,8 +84107,8 @@
           "key": "src/machine-code.when",
           "kind": "definition",
           "lines": [
-            61,
-            62
+            74,
+            75
           ],
           "features": [
             "calls",
@@ -83800,8 +84151,8 @@
           "key": "src/machine-code.eq",
           "kind": "definition",
           "lines": [
-            63,
-            64
+            76,
+            77
           ],
           "features": [
             "calls",
@@ -83844,8 +84195,8 @@
           "key": "src/machine-code.binary",
           "kind": "definition",
           "lines": [
-            65,
-            66
+            78,
+            79
           ],
           "features": [
             "calls",
@@ -83888,8 +84239,8 @@
           "key": "src/machine-code.invoke",
           "kind": "definition",
           "lines": [
-            67,
-            68
+            80,
+            81
           ],
           "features": [
             "calls",
@@ -83932,8 +84283,8 @@
           "key": "src/machine-code.guard",
           "kind": "definition",
           "lines": [
-            69,
-            70
+            82,
+            83
           ],
           "features": [
             "calls",
@@ -83976,8 +84327,8 @@
           "key": "src/machine-code.size",
           "kind": "definition",
           "lines": [
-            72,
-            73
+            85,
+            86
           ],
           "features": [
             "calls",
@@ -84022,8 +84373,8 @@
           "key": "src/machine-code.function",
           "kind": "definition",
           "lines": [
-            75,
-            76
+            88,
+            89
           ],
           "features": [
             "calls",
@@ -84056,7 +84407,7 @@
           ],
           "captures": [
             {
-              "offset": 2833,
+              "offset": 3553,
               "names": [
                 "locals"
               ]
@@ -84084,8 +84435,8 @@
           "key": "src/machine-code.word",
           "kind": "definition",
           "lines": [
-            78,
-            79
+            91,
+            92
           ],
           "features": [
             "calls",

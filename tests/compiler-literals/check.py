@@ -254,7 +254,9 @@ def result_fixture(f, lanes):
     return item
 
 
-# Fixed before mutant execution. Compiler validation/build failure is never a kill.
+# Fixed before mutant execution. Compiler validation/build failure is never a kill,
+# except a `fault` mutant's pinned Bun-lane fault on a book the native lane builds:
+# that lane disagreement is its defect, and its control book must keep its bytes.
 # A `verdict` mutant is killed when it changes a frozen book's classification.
 MUTANTS = [
     {'name': 'signed-compare', 'file': 'primitive-wasm.bend',
@@ -348,6 +350,13 @@ MUTANTS = [
      'new': 'run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},Some{target}},'
             'catalog,current,scope)',
      'fixture': 'offset-expression-depth', 'export': 'successor', 'arguments': [], 'exhausted': True, 'eval': True},
+    # Width mutant: one chunk per section is the same module wherever the stack
+    # suffices, but the builder copies a chunk with a non-tail List.append, so on
+    # the Bun lane a chunk's length is a stack depth.
+    {'name': 'unbounded-chunk', 'file': 'literal-wasm.bend',
+     'old': 'appended(A.runs(4096,data),B.empty(cap))', 'new': 'W.bytes(cap,data)',
+     'fixture': 'module-width', 'control': 'u32-literals',
+     'fault': 'bend: memory fault (machine stack overflow?)\n'},
     # Display mutants: the frozen wrong display is the kill; any other output is not.
     {'name': 'constructor-tag-display', 'file': 'eval.bend', 'lane': 'eval',
      'old': 'shape(L.kind(definition),definition,value)', 'new': 'shape(None{},definition,value)',
@@ -394,6 +403,21 @@ def killed_by_value(m, f, compiler, folder):
         require(m['wrong_tag'] != call['tag'], m)
         wasm_value(result, output, {**call, 'tag': m['wrong_tag']})
     return {'expected_tag': call['tag'], 'compile': compiled, 'wasm': result}
+
+
+def killed_by_fault(m, f, control, compiler, folder):
+    """A lane kill: the mutant's Bun lane builds the control book's gate bytes and
+    faults, leaving its output untouched, on the book both gate lanes built."""
+    narrow = folder / 'control.wasm'
+    same = success(['bun', compiler, '--bundle', BUNDLE, ROOT / control['file'], narrow])
+    require(narrow.read_bytes() == (BUILD / f'{control["name"]}-bun.wasm').read_bytes(), (m['name'], 'control bytes'))
+    output = folder / 'witness.wasm'
+    marker = b'a faulted build leaves this file\n'
+    output.write_bytes(marker)
+    faulted = run(['bun', compiler, '--bundle', BUNDLE, ROOT / f['file'], output])
+    require(faulted['exit'] == 1 and faulted['stdout'] == '' and faulted['stderr'] == m['fault'], (m['name'], faulted))
+    require(output.read_bytes() == marker, (m['name'], 'fault changed output'))
+    return {'control_build': same, 'faulted': faulted}
 
 
 def evaluated_wrong(m, f, folder):
@@ -447,8 +471,11 @@ def mutants(fixtures):
         if m.get('lane') != 'eval':
             compiler = folder / 'compile.js'
             record['build'] = built(entry, compiler)
-            kill = killed_by_verdict if 'verdict' in m else killed_by_value
-            record.update(kill(m, f, compiler, folder))
+            if 'fault' in m:
+                record.update(killed_by_fault(m, f, by_name[m['control']], compiler, folder))
+            else:
+                kill = killed_by_verdict if 'verdict' in m else killed_by_value
+                record.update(kill(m, f, compiler, folder))
         if m.get('eval') or m.get('lane') == 'eval':
             record.update(evaluated_wrong(m, f, folder))
         record['killed'] = True
@@ -533,9 +560,10 @@ def main():
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
-            'proof_laws': 33, 'semantic_mutants': len(record['mutants']),
+            'proof_laws': 35, 'semantic_mutants': len(record['mutants']),
             'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
             'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
+            'mutant_fault_observations': sum('faulted' in m for m in record['mutants']),
             'mutant_eval_observations': sum(m.get('eval') is not None for m in record['mutants']),
             'result_fixtures': len(record['results']),
             'result_calls': sum(r['reference_calls'] for r in record['results']),

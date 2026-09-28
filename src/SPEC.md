@@ -490,15 +490,20 @@ unchanged; primitive decoding/application also has separate fixed work bounds.
 Enum-signatured host observations remain the supported external boundary.
 Primitive Nat/String traversals in the evaluator are tail calls with
 accumulators, so both evaluator lanes reach the same bounds without host
-stack depth.
+stack depth. The compiler hands each section body to the published byte
+builder as runs of at most 4,096 bytes (`machine-code.bend::runs`, inverted by
+`seq`): the builder's `finish` copies a chunk with Base's non-tail
+`List.append`, so the run width, not the module size, bounds that stack depth,
+and both compiler lanes build identical modules up to the instruction bound.
 
-Three complete new proof entries check 33 helper laws. They cover the required
+Three complete new proof entries check 35 helper laws. They cover the required
 arithmetic guard equations, String traversal order and length, literal
-decoding and display round trips, core transitions and matrix expansion; they
+decoding and display round trips, section runs, core transitions and matrix
+expansion; they
 do not prove whole-compiler correctness or all-input intrinsic refinement. The
 registered literals gate compares the frozen accepted calls in both evaluator
 and compiler lanes, compares 61 frozen primitive and record result displays in
-both evaluator lanes, and kills 24 type-correct semantic mutants. The Wasm host
+both evaluator lanes, and kills 25 type-correct semantic mutants. The Wasm host
 observes enum results only, so result displays have no Wasm lane.
 Live Perch review remains a coordinator gate; offline preflight alone is not a
 style pass. Existing compiler gates and their frozen expectations are retained.

@@ -27,6 +27,9 @@ in unreachable arms), and a literal typed by a book's own Nat or U32 without
 Base. Round 7 (one book, committed as `068539e` before its fix):
 expression offsets `1n+`, `2n+` (Base's `Nat.double`) and `3n+` through
 recursion 3000 to 4000 deep, with a `0n+t` control and a mismatch control.
+Round 8 (one book, committed as `788be82` before its fix): a 3000-Char String
+literal, a `case 450n` and a 100-Char String pattern in one module of 156918
+bytes, past the size at which one section chunk faulted the Bun compiler.
 All four freezes are verified against seed 2.0.29,
 commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on every gate run.
 
@@ -207,6 +210,14 @@ different budgets; exhaustion is not an Invalid judgment or a claim of semantic
 disagreement. The profile has no arbitrary source loop or mutual-recursion
 support; checked self-recursion retains the first-parameter descent restriction.
 
+Each section body enters the published byte builder as runs of at most 4096
+bytes (`machine-code.bend::runs`, which `seq` inverts). The builder's `finish`
+copies each chunk with Base's `List.append`, which is not tail recursive, so a
+chunk's length is a host stack depth; on the Bun lane one chunk of about 60 KB
+faulted. With bounded runs the native and Bun compilers build byte-identical
+modules up to the instruction bound (644304 bytes observed), and both report
+`Exhausted\temit` beyond it. The module bytes are unchanged.
+
 The host adapter accepts only enum-signatured entry observations and results
 0–255, just as before. Structured and primitive-signatured functions are
 internal-call targets even though all source functions are exported. Valid
@@ -231,19 +242,20 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 126 fixture books, 487 fresh seed calls, 252 checks and 252 primary compilations.
-- 898 agreeing evaluator observations and 898 matching Node/Wasm observations;
-  182 additional evaluator rejections, giving 1080 evaluator observations total.
-- 35 byte-identical native/Bun module pairs and 70 complete Base trust audits.
+- 127 fixture books, 494 fresh seed calls, 254 checks and 254 primary compilations.
+- 912 agreeing evaluator observations and 912 matching Node/Wasm observations;
+  182 additional evaluator rejections, giving 1094 evaluator observations total.
+- 36 byte-identical native/Bun module pairs and 72 complete Base trust audits.
 - 182 rejected-compilation output-preservation probes and 182 additional
   compilations proving no artifact is created at an absent output path.
 - 5 result books and 61 frozen displays: 122 exact evaluator displays across
   both lanes, lane-equal, and 5 byte-identical native/Bun module pairs. The
   Node host observes enum results only, so these calls have no Wasm lane.
 - Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 33 filled laws; 24 type-correct semantic
+- Three complete proof entries, 35 filled laws; 25 type-correct semantic
   mutants: five Wasm value kills, one exhaustion kill in both Wasm and the
-  evaluator, fourteen verdict kills and six evaluator kills.
+  evaluator, one Bun-lane fault kill, fourteen verdict kills and six
+  evaluator kills.
   The two dead-arm laws, the five own-type literal laws and the offset
   spelling law live in
   `src/check-LAWS.bend`, beside the checker they describe, and the checker
@@ -275,11 +287,16 @@ seed-valid own-n-literal-expr as `Invalid check unknown-type`. The
 exhaustion mutant offset-nat-add restores the `Nat.add(kn,t)` lowering of an
 expression offset; `successor` in offset-expression-depth (frozen Yes) then
 reports `Exhausted wasm resource-limit` from its compiled module and
-`Exhausted eval budget` from its evaluator. The evaluator-only `append-reversed` mutant changes no emitted byte;
+`Exhausted eval budget` from its evaluator. The width mutant unbounded-chunk
+hands each section body to the builder as one chunk again; it builds the
+u32-literals module byte for byte, and its Bun compiler faults with exactly
+`bend: memory fault (machine stack overflow?)` (exit 1, output untouched) on
+the 156918-byte module-width book that both unmutated lanes build. The
+evaluator-only `append-reversed` mutant changes no emitted byte;
 its evaluator answers No for `"ab" ++ ""` = `"ab"`. Three display mutants
 are killed by an exact wrong display: skipping the primitive dispatch prints
 `'\0'` as `Chr{}` again, escaping both quotes everywhere prints `'"'` as
-`'\"'`, and dropping DEL from the escaped range prints `'\u{7f}'` raw. A compiler failure,
+`'\"'`, and dropping DEL from the escaped range prints `'\u{7f}'` raw. Apart from that pinned fault, a compiler failure,
 timeout, malformed Wasm or any other verdict is not a kill. Only the Bun lanes
 are mutated; both unmodified lanes are covered by all differential
 observations.

@@ -81,8 +81,16 @@ def instructions(code: List<&2,M.Instruction>) -> List<&2,U32>:
 def runtime(code_base: U32) -> List<&2,U32>:
   A.seq([R.allocator(),R.natural(),R.count(),R.reverse(),R.append(),R.equal(),R.length(),R.show(),P.function(),V.function(code_base)])
 
+# B.finish copies each chunk with Base's List.append, which is not tail
+# recursive, so a chunk's length is a stack depth on the Bun lane. A section
+# body therefore enters its builder as runs of at most 4096 bytes.
+def appended(runs: List<&2,List<&2,U32>>, builder: B.Builder) -> Result<S.Error,B.Builder>:
+  match runs:
+    case Nil{}: Done{builder}
+    case Con{run,tail}: S.bind(B.Builder,B.Builder,W.checked(B.append(builder,run)),next => appended(tail,next))
+
 def section(+cap: U32, id: U32, data: List<&2,U32>) -> Result<S.Error,B.Builder>:
-  S.bind(B.Builder,B.Builder,W.bytes(cap,data),body => W.section(cap,id,body))
+  S.bind(B.Builder,B.Builder,appended(A.runs(4096,data),B.empty(cap)),body => W.section(cap,id,body))
 
 def binary(+entries: List<&2,M.Entry>, code: List<&2,M.Instruction>, +cap: U32) -> Result<S.Error,List<&2,U32>>:
   +count = U32.from_nat(List.length(&2,M.Entry,entries))

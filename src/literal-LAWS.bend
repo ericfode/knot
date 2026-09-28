@@ -64,6 +64,12 @@ law decimal_overflow:
 law signed_bits:
   {A.i32(4294967295) == [65,255,255,255,255,127] : List<&2,U32>}
 
+law runs_are_bounded:
+  {A.runs(2,[1,2,3,4,5]) == [[1,2],[3,4],[5]] : List<&2,List<&2,U32>>}
+
+law seq_undoes_runs:
+  {A.seq(A.runs(3,[1,2,3,4,5,6,7])) == [1,2,3,4,5,6,7] : List<&2,U32>}
+
 law nul_is_a_character:
   for token: S.Token
   {L.quoted("\"\\0\"",token) == Done{L.Quoted{[0],"","\"\\0\""}} : Result<S.Error,L.Quoted>}

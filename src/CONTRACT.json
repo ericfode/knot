@@ -359,6 +359,7 @@
       "lifetime": "instance; immutable initialized cells; monotonic allocation; no reclamation",
       "instruction_words": 5,
       "max_instructions": 32768,
+      "section_runs": "Each section body enters the published builder as runs of at most 4096 bytes; the builder's finish copies a chunk with a non-tail List.append, so the run width bounds that host stack depth and both compiler lanes build identical modules up to max_instructions.",
       "host_command": "node scripts/run-wasm.mjs --profile=knot-literals-wasm-1 module export [live-ordinals...]",
       "host_boundary": "Enum-only live parameter/result signatures; valid declared ordinals and compiler provenance are caller preconditions.",
       "unreachable": "Exhausted wasm resource-limit, exit 4",
@@ -372,8 +373,8 @@
       "src/literal-core-PROOF.bend",
       "src/literal-matrix-PROOF.bend"
     ],
-    "proof_laws": 33,
-    "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, core transitions, offset construction and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
+    "proof_laws": 35,
+    "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, section runs, core transitions, offset construction and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
     "unmet": [
       "R3/R7 owned storage and reclamation",
       "broader recursion",

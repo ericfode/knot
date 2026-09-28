@@ -8061,7 +8061,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 776,
+          "declarations": 779,
           "base": 102,
           "base_intrinsics": 27,
           "foreign": 7
@@ -8070,7 +8070,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.fragment",
+            "via": "src/literal-wasm.appended",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -8170,7 +8170,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm-bytes.concat",
+            "via": "src/literal-wasm.section",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14845,6 +14845,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-wasm.appended",
+            "file": "src/literal-wasm.bend",
+            "via": "src/literal-wasm.section",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.checked"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-wasm.arguments",
             "file": "src/literal-wasm.bend",
             "via": "src/literal-wasm.wrappers",
@@ -15119,12 +15138,14 @@
             "unsafe": false,
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
               "List",
               "Result",
               "U32",
+              "src/literal-wasm.appended",
+              "src/machine-code.runs",
               "src/syntax.Error",
               "src/syntax.bind",
-              "src/wasm-bytes.bytes",
               "src/wasm-bytes.section"
             ],
             "dynamic_calls": []
@@ -16819,6 +16840,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/machine-code.runs",
+            "file": "src/machine-code.bend",
+            "via": "src/literal-wasm.section",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "src/machine-code.split"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/machine-code.select",
             "file": "src/machine-code.bend",
             "via": "src/machine-vm.function",
@@ -16908,6 +16943,23 @@
               "src/machine-code.length",
               "src/machine-code.seq",
               "src/machine-code.unsigned"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/machine-code.split",
+            "file": "src/machine-code.bend",
+            "via": "src/machine-code.runs",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.reverse",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -22231,7 +22283,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 776,
+          "declarations": 779,
           "base": 102,
           "base_intrinsics": 25,
           "foreign": 7
@@ -22240,7 +22292,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.fragment",
+            "via": "src/literal-wasm.appended",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -22340,7 +22392,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm-bytes.concat",
+            "via": "src/literal-wasm.section",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29015,6 +29067,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-wasm.appended",
+            "file": "src/literal-wasm.bend",
+            "via": "src/literal-wasm.section",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.checked"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-wasm.arguments",
             "file": "src/literal-wasm.bend",
             "via": "src/literal-wasm.wrappers",
@@ -29289,12 +29360,14 @@
             "unsafe": false,
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
               "List",
               "Result",
               "U32",
+              "src/literal-wasm.appended",
+              "src/machine-code.runs",
               "src/syntax.Error",
               "src/syntax.bind",
-              "src/wasm-bytes.bytes",
               "src/wasm-bytes.section"
             ],
             "dynamic_calls": []
@@ -30989,6 +31062,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/machine-code.runs",
+            "file": "src/machine-code.bend",
+            "via": "src/literal-wasm.section",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "src/machine-code.split"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/machine-code.select",
             "file": "src/machine-code.bend",
             "via": "src/machine-vm.function",
@@ -31078,6 +31165,23 @@
               "src/machine-code.length",
               "src/machine-code.seq",
               "src/machine-code.unsigned"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/machine-code.split",
+            "file": "src/machine-code.bend",
+            "via": "src/machine-code.runs",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.reverse",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -36401,7 +36505,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 691,
+          "declarations": 694,
           "base": 85,
           "base_intrinsics": 27,
           "foreign": 7
@@ -36410,7 +36514,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.fragment",
+            "via": "src/literal-wasm.appended",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -36474,7 +36578,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm-bytes.concat",
+            "via": "src/literal-wasm.section",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40896,6 +41000,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-wasm.appended",
+            "file": "src/literal-wasm.bend",
+            "via": "src/literal-wasm.section",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
+              "src/syntax.bind",
+              "src/wasm-bytes.checked"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-wasm.arguments",
             "file": "src/literal-wasm.bend",
             "via": "src/literal-wasm.wrappers",
@@ -41116,8 +41234,10 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "src/literal-wasm.appended",
+              "src/machine-code.runs",
               "src/syntax.bind",
-              "src/wasm-bytes.bytes",
               "src/wasm-bytes.section"
             ],
             "dynamic_calls": []
@@ -42256,6 +42376,18 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/machine-code.runs",
+            "file": "src/machine-code.bend",
+            "via": "src/literal-wasm.section",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/machine-code.split"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/machine-code.select",
             "file": "src/machine-code.bend",
             "via": "src/machine-vm.function",
@@ -42331,6 +42463,21 @@
               "src/machine-code.length",
               "src/machine-code.seq",
               "src/machine-code.unsigned"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/machine-code.split",
+            "file": "src/machine-code.bend",
+            "via": "src/machine-code.runs",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List.reverse",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -46078,7 +46225,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 814,
+          "declarations": 817,
           "base": 140,
           "base_intrinsics": 31,
           "foreign": 7
@@ -46087,7 +46234,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.fragment",
+            "via": "src/literal-wasm.appended",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -46187,7 +46334,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm-bytes.concat",
+            "via": "src/literal-wasm.section",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -52868,6 +53015,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-wasm.appended",
+            "file": "src/literal-wasm.bend",
+            "via": "src/literal-wasm.section",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.append",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.checked"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-wasm.arguments",
             "file": "src/literal-wasm.bend",
             "via": "src/literal-wasm.wrappers",
@@ -53143,12 +53309,14 @@
             "unsafe": false,
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
               "List",
               "Result",
               "U32",
+              "src/literal-wasm.appended",
+              "src/machine-code.runs",
               "src/syntax.Error",
               "src/syntax.bind",
-              "src/wasm-bytes.bytes",
               "src/wasm-bytes.section"
             ],
             "dynamic_calls": []
@@ -54818,6 +54986,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/machine-code.runs",
+            "file": "src/machine-code.bend",
+            "via": "src/literal-wasm.section",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "src/machine-code.split"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/machine-code.select",
             "file": "src/machine-code.bend",
             "via": "src/machine-vm.function",
@@ -54905,6 +55087,23 @@
               "src/machine-code.length",
               "src/machine-code.seq",
               "src/machine-code.unsigned"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/machine-code.split",
+            "file": "src/machine-code.bend",
+            "via": "src/machine-code.runs",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.reverse",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },

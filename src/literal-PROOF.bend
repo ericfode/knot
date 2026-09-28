@@ -19,6 +19,8 @@ def L.scalar_sequence(token): {==}
 def L.decimal_maximum(token): {==}
 def L.decimal_overflow(token): {==}
 def L.signed_bits(): {==}
+def L.runs_are_bounded(): {==}
+def L.seq_undoes_runs(): {==}
 def L.nul_is_a_character(token): {==}
 def L.legacy_literal_boundary(token): {==}
 def L.char_literal_reads_back(token): {==}

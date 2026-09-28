@@ -19,6 +19,19 @@ def join(parts: List<&2,List<&2,U32>>, reversed: List<&2,U32>) -> List<&2,U32>:
 def seq(parts: List<&2,List<&2,U32>>) -> List<&2,U32>:
   join(parts,Nil{})
 
+# `seq` undoes `runs`: consecutive runs of `width` values, the last possibly
+# shorter (width > 0). The open run and the closed runs are kept reversed.
+def split(values: List<&2,U32>, +run: List<&2,U32>, +taken: U32, +width: U32, +done: List<&2,List<&2,U32>>) -> List<&2,List<&2,U32>>:
+  match values:
+    case Nil{}: List.reverse(&2,List<&2,U32>,Con{List.reverse(&2,U32,run),done})
+    case Con{+head,+tail}:
+      S.choose(List<&2,List<&2,U32>>,U32.is_eq(taken,width),u =>
+        split(tail,[head],1,width,Con{List.reverse(&2,U32,run),done}),u =>
+        split(tail,Con{head,run},U32.add(taken,1),width,done))
+
+def runs(width: U32, values: List<&2,U32>) -> List<&2,List<&2,U32>>:
+  split(values,Nil{},0,width,Nil{})
+
 def groups(fuel: Nat, +limit: U32, +value: U32) -> List<&2,U32>:
   match fuel:
     case 0n: [value]
