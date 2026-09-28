@@ -143,6 +143,21 @@ PLAN = {
     'offset-expression-depth': ('offset expression depth', '`1n+`, `2n+` (Base Nat.double) and `3n+` '
                                 'expression offsets through recursion 3000-4000 deep, and a `0n+t` control',
                                 ['successor', 'successor_short', 'doubled', 'tripled', 'zero'], oracle.AGREE),
+    'offset-expression-width': ('offset expression width', '`1364n+t`, `1365n+t` and `2000n+t` as single '
+                                'expressions, and a No control', ['at_edge', 'past_edge', 'wide_sum', 'wide_short'],
+                                oracle.AGREE),
+    'offset-expression-mismatch': ('offset expression control', '`2n+t` where a U32 is expected', [],
+                                   invalid('check', 'type-mismatch',
+                                           'Seed-invalid ("expected U32"): an expression offset is a Nat.')),
+    'offset-expression-unbound': ('offset expression control', '`2n+zz` with zz unbound', [],
+                                  invalid('check', 'free-name',
+                                          'Seed-invalid ("a defined name"): the tail of an offset is an expression '
+                                          'like any other.')),
+    'offset-expression-both': ('offset expression control', '`2n+zz` where a U32 is expected', [],
+                               invalid('check', 'free-name',
+                                       'Seed-invalid: an unbound tail and a wrong result type at once. The seed names '
+                                       'the type first and Knot the tail; both are Invalid, and the frozen code is '
+                                       'the one Knot reports today.')),
     'module-width': ('module width', 'a 3000-Char String, a `case 450n` and a 100-Char String pattern '
                      'in one module past 64 KiB', ['length', 'depth', 'spelled'], oracle.AGREE),
     'offset-zero': ('zero offset', '0n+t as an inferred let, a checked argument, a scrutinee, '

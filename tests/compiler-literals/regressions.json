@@ -3102,6 +3102,42 @@
       }
     },
     {
+      "name": "offset-expression-both",
+      "file": "tests/compiler-literals/regressions/offset-expression-both.bend",
+      "sha256": "ceb83519d0d1751901d859a0680e322c5258acc617c4ff41234b1f5764b08bb0",
+      "finding": "offset expression control",
+      "covers": "`2n+zz` where a U32 is expected",
+      "enums": {},
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-expression-both.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : U32\n- observed : Nat\nLocation: both\n4 | def both() -> U32:\n5>|   2n+zz\n  |   ^^^^^\n6 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-expression-both.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : U32\n- observed : Nat\nLocation: both\n4 | def both() -> U32:\n5>|   2n+zz\n  |   ^^^^^\n6 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t",
+        "justification": "Seed-invalid: an unbound tail and a wrong result type at once. The seed names the type first and Knot the tail; both are Invalid, and the frozen code is the one Knot reports today."
+      }
+    },
+    {
       "name": "offset-expression-depth",
       "file": "tests/compiler-literals/regressions/offset-expression-depth.bend",
       "sha256": "cea8fa54aa1e1bc8aaf8ec50197856afb3955cbb266bb97e682b962356194c2d",
@@ -3250,6 +3286,215 @@
             ],
             "exit": 0,
             "stdout": "../../../tests/compiler-literals/regressions/offset-expression-depth.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "offset-expression-mismatch",
+      "file": "tests/compiler-literals/regressions/offset-expression-mismatch.bend",
+      "sha256": "09c6c529c91901feb8e0093c27436ebeb21274c6584c3d4aeee294bd445e367b",
+      "finding": "offset expression control",
+      "covers": "`2n+t` where a U32 is expected",
+      "enums": {},
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-expression-mismatch.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : U32\n- observed : Nat\nContext:\n- t : Nat\nLocation: mismatch\n4 | def mismatch(t: Nat) -> U32:\n5>|   2n+t\n  |   ^^^^\n6 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-expression-mismatch.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : U32\n- observed : Nat\nContext:\n- t : Nat\nLocation: mismatch\n4 | def mismatch(t: Nat) -> U32:\n5>|   2n+t\n  |   ^^^^\n6 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\ttype-mismatch\t",
+        "justification": "Seed-invalid (\"expected U32\"): an expression offset is a Nat."
+      }
+    },
+    {
+      "name": "offset-expression-unbound",
+      "file": "tests/compiler-literals/regressions/offset-expression-unbound.bend",
+      "sha256": "fddc59cceca1faa699c2ce8fbd9b1923da97bd60aa541553a41c63b671c20547",
+      "finding": "offset expression control",
+      "covers": "`2n+zz` with zz unbound",
+      "enums": {},
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-expression-unbound.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a defined name\n- observed : zz\nLocation: unbound\n4 | def unbound() -> Nat:\n5>|   2n+zz\n  |      ^^\n6 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-expression-unbound.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a defined name\n- observed : zz\nLocation: unbound\n4 | def unbound() -> Nat:\n5>|   2n+zz\n  |      ^^\n6 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tfree-name\t",
+        "justification": "Seed-invalid (\"a defined name\"): the tail of an offset is an expression like any other."
+      }
+    },
+    {
+      "name": "offset-expression-width",
+      "file": "tests/compiler-literals/regressions/offset-expression-width.bend",
+      "sha256": "7d8683aa0b1b476bead52036854eaedfc9327d3769269d69c1123e096c635b53",
+      "finding": "offset expression width",
+      "covers": "`1364n+t`, `1365n+t` and `2000n+t` as single expressions, and a No control",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-expression-width.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/offset-expression-width.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_edge",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-width-at_edge-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-width.bend as F\n\ndef main() -> F.Answer:\n  F.at_edge()\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-width-at_edge-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-width.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "past_edge",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-width-past_edge-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-width.bend as F\n\ndef main() -> F.Answer:\n  F.past_edge()\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-width-past_edge-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-width.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "wide_sum",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-width-wide_sum-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-width.bend as F\n\ndef main() -> F.Answer:\n  F.wide_sum()\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-width-wide_sum-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-width.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "wide_short",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-width-wide_short-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-width.bend as F\n\ndef main() -> F.Answer:\n  F.wide_short()\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-width-wide_short-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-width.No{}\n",
             "stderr": ""
           }
         }
