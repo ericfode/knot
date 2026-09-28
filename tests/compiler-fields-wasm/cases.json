@@ -1,0 +1,378 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "expectations": "Literal constructor review fixed before emitter implementation; seed observations in expectations.json. All calls are acyclic.",
+  "arena": {
+    "bytes": 65536,
+    "successful_calls": 8192,
+    "overflow_call": 8193,
+    "diagnostic": "Exhausted\twasm\tarena-overflow"
+  },
+  "stack": {
+    "node_flags": [
+      "--stack_size=80",
+      "--liftoff-only",
+      "--no-wasm-tier-up"
+    ],
+    "diagnostic": "Exhausted\twasm\tcall-stack"
+  },
+  "cases": [
+    {
+      "name": "pair",
+      "file": "fixtures/pair.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.direct(F.Off{},F.Off{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.direct(F.Off{},F.On{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.direct(F.On{},F.Off{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.direct(F.On{},F.On{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.swapped(F.Off{},F.Off{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.swapped(F.Off{},F.On{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.swapped(F.On{},F.Off{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.swapped(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "peano",
+      "file": "fixtures/peano.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "zero",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.zero()"
+        },
+        {
+          "export": "two",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.two()"
+        }
+      ]
+    },
+    {
+      "name": "nested",
+      "file": "fixtures/nested.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "aliasing",
+      "file": "fixtures/aliasing.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "erased",
+      "file": "fixtures/erased.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        },
+        {
+          "export": "empty",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.empty()"
+        },
+        {
+          "export": "ghost",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.ghost()"
+        }
+      ]
+    },
+    {
+      "name": "arena-overflow",
+      "file": "fixtures/arena-overflow.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ]
+    },
+    {
+      "name": "deep-call",
+      "file": "fixtures/deep-call.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ],
+      "compile_budgets": [
+        65536,
+        4096,
+        4096,
+        4096,
+        65536
+      ],
+      "eval_exhausted": "Exhausted\tparse\tbudget",
+      "purpose": "Original narrow call chain: parser-budget exhaustion control; runs on Node with its normal stack."
+    },
+    {
+      "name": "deep-stack",
+      "file": "fixtures/deep-stack.bend",
+      "type_id": 0,
+      "type": "F",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "purpose": "160 acyclic frames with 48 live parameters; normal reference and evaluator result On; constrained Node invocation Exhausted.",
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ]
+    }
+  ]
+}

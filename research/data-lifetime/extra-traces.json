@@ -1,0 +1,23 @@
+{
+  "provenance": "Additional literal-reviewed failure witnesses fixed before running them against either model. Existing expectation files remain byte-identical.",
+  "cases": [
+    {"name": "allocation-preserves-input", "capacity": 3,
+     "ops": [["alloc",0,1,9],["alloc",1,0,13,0]],
+     "last": {
+       "A": "3|2|0:1|1:1:9:1:|||1,0,0,0,0,0,0,2,2,0|",
+       "B": "3|2|0:1|1:1:9:1:|||1,0,0,0,0,0,0,3,3,0|"
+     }},
+    {"name": "partial-copy-rollback", "capacity": 14,
+     "ops": [["alloc",0,1,9],["alloc",1,1,11],["alloc",2,1,5,0,1],["share",2,3]],
+     "last": {
+       "A": "3|4|2:3|3:1:5:1:1,2;2:1:11:1:;1:1:9:1:|||3,0,0,0,0,0,0,8,8,0|",
+       "B": "0|4|3:3,2:3|3:1:5:2:1,2;2:1:11:1:;1:1:9:1:|||3,0,0,0,1,0,0,11,11,0|"
+     }},
+    {"name": "take-destination-preserves-owner",
+     "ops": [["alloc",0,1,9],["alloc",1,0,13,0],["alloc",2,0,7],["take",1,2]],
+     "last": {
+       "A": "1|4|2:3,1:2|3:0:7:1:;2:0:13:1:1;1:1:9:1:|||3,0,0,0,0,0,0,7,7,0|",
+       "B": "1|4|2:3,1:2|3:0:7:1:;2:0:13:1:1;1:1:9:1:|||3,0,0,0,0,0,0,8,8,0|"
+     }}
+  ]
+}

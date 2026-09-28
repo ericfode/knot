@@ -1,0 +1,687 @@
+{
+  "contract": "knot-device-records-1",
+  "expectations": "literal review before implementation; scalar owner serials, not host evaluator output",
+  "store": [
+    {
+      "name": "reuse-and-retire",
+      "arena": 17,
+      "capacity": 2,
+      "ceiling": 1,
+      "commands": [
+        [
+          1,
+          0,
+          7
+        ],
+        [
+          1,
+          1,
+          9
+        ],
+        [
+          2,
+          17,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          11
+        ],
+        [
+          2,
+          17,
+          0,
+          0
+        ],
+        [
+          2,
+          18,
+          0,
+          1
+        ],
+        [
+          2,
+          17,
+          2,
+          1
+        ],
+        [
+          2,
+          17,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          13
+        ],
+        [
+          2,
+          17,
+          0,
+          0
+        ],
+        [
+          2,
+          17,
+          1,
+          0
+        ]
+      ],
+      "expected": "[alloc:17,0,0,alloc:17,1,0,take:7,alloc:17,0,1,fail:stale:-,fail:arena:-,fail:bounds:-,take:11,fail:retired:13,fail:retired:-,take:9]/17;2;1;[1];[retired,free:1]"
+    },
+    {
+      "name": "full-and-double-take",
+      "arena": 17,
+      "capacity": 1,
+      "ceiling": 1,
+      "commands": [
+        [
+          1,
+          0,
+          7
+        ],
+        [
+          1,
+          0,
+          9
+        ],
+        [
+          4,
+          11
+        ],
+        [
+          2,
+          17,
+          0,
+          0
+        ],
+        [
+          2,
+          17,
+          0,
+          0
+        ]
+      ],
+      "expected": "[alloc:17,0,0,fail:occupied:9,fail:full:11,take:7,fail:stale:-]/17;1;1;[0];[free:1]"
+    },
+    {
+      "name": "zero-capacity",
+      "arena": 17,
+      "capacity": 0,
+      "ceiling": 1,
+      "commands": [
+        [
+          1,
+          0,
+          7
+        ],
+        [
+          4,
+          9
+        ],
+        [
+          2,
+          17,
+          0,
+          0
+        ]
+      ],
+      "expected": "[fail:bounds:7,fail:full:9,fail:bounds:-]/17;0;1;[];[]"
+    },
+    {
+      "name": "generation-zero",
+      "arena": 17,
+      "capacity": 1,
+      "ceiling": 0,
+      "commands": [
+        [
+          4,
+          7
+        ],
+        [
+          3,
+          17,
+          0,
+          0
+        ],
+        [
+          4,
+          9
+        ]
+      ],
+      "expected": "[alloc:17,0,0,drop:7,fail:full:9]/17;1;0;[];[retired]"
+    },
+    {
+      "name": "free-slot-and-unrelated-owner",
+      "arena": 29,
+      "capacity": 2,
+      "ceiling": 1,
+      "commands": [
+        [
+          2,
+          29,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          91
+        ],
+        [
+          2,
+          29,
+          0,
+          1
+        ],
+        [
+          2,
+          30,
+          1,
+          0
+        ],
+        [
+          2,
+          29,
+          4294967295,
+          0
+        ]
+      ],
+      "expected": "[fail:vacant:-,alloc:29,1,0,fail:stale:-,fail:arena:-,fail:bounds:-]/29;2;1;[0];[free:0,live:0:91]"
+    },
+    {
+      "name": "unsupported-slot-command",
+      "arena": 17,
+      "capacity": 1,
+      "ceiling": 1,
+      "commands": [
+        [
+          1,
+          0,
+          7
+        ],
+        [
+          99
+        ],
+        [
+          2,
+          17,
+          0,
+          0
+        ]
+      ],
+      "expected": "[alloc:17,0,0,unsupported,take:7]/17;1;1;[0];[free:1]"
+    }
+  ],
+  "frontier": [
+    {
+      "name": "capacity-zero",
+      "capacity": 0,
+      "commands": [
+        [
+          16,
+          0
+        ]
+      ],
+      "expected": [
+        3,
+        1,
+        0,
+        [],
+        [
+          [
+            0,
+            1,
+            0,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "capacity-one-preserves-owner",
+      "capacity": 1,
+      "commands": [
+        [
+          16,
+          0
+        ],
+        [
+          16,
+          1
+        ]
+      ],
+      "expected": [
+        3,
+        1,
+        1,
+        [
+          0
+        ],
+        [
+          [
+            0,
+            2,
+            0,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "zero-quantum-reverse",
+      "capacity": 2,
+      "commands": [
+        [
+          16,
+          0
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          17,
+          0,
+          1
+        ]
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        [],
+        [
+          [
+            0,
+            4,
+            0,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            4,
+            0,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "wait-before-wake",
+      "capacity": 2,
+      "commands": [
+        [
+          16,
+          0
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          17,
+          1,
+          1
+        ]
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        [],
+        [
+          [
+            0,
+            4,
+            1,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            5,
+            1,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "suspend-wait-wake-complete",
+      "capacity": 2,
+      "commands": [
+        [
+          16,
+          0
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          17,
+          1,
+          1
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          18,
+          1
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          16,
+          0
+        ],
+        [
+          17,
+          1,
+          1
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          16,
+          0
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          17,
+          1,
+          0
+        ],
+        [
+          16,
+          0
+        ]
+      ],
+      "expected": [
+        4,
+        2,
+        0,
+        [],
+        [
+          [
+            0,
+            6,
+            3,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            6,
+            3,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "duplicate-offer",
+      "capacity": 2,
+      "commands": [
+        [
+          16,
+          0
+        ],
+        [
+          16,
+          0
+        ]
+      ],
+      "expected": [
+        4,
+        2,
+        0,
+        [
+          0
+        ],
+        [
+          [
+            0,
+            2,
+            0,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "invalid-quantum",
+      "capacity": 2,
+      "commands": [
+        [
+          16,
+          0
+        ],
+        [
+          17,
+          2,
+          0
+        ]
+      ],
+      "expected": [
+        1,
+        3,
+        0,
+        [
+          0
+        ],
+        [
+          [
+            0,
+            2,
+            0,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "unsupported-command",
+      "capacity": 2,
+      "commands": [
+        [
+          16,
+          1
+        ],
+        [
+          99
+        ]
+      ],
+      "expected": [
+        2,
+        4,
+        0,
+        [
+          1
+        ],
+        [
+          [
+            0,
+            1,
+            0,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            2,
+            0,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "bounds-and-wake",
+      "capacity": 2,
+      "commands": [
+        [
+          16,
+          2
+        ],
+        [
+          18,
+          0
+        ]
+      ],
+      "expected": [
+        4,
+        2,
+        0,
+        [],
+        [
+          [
+            0,
+            1,
+            0,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "internal-program-end",
+      "capacity": 2,
+      "initialPc": [
+        3,
+        0
+      ],
+      "commands": [
+        [
+          16,
+          0
+        ],
+        [
+          17,
+          1,
+          0
+        ]
+      ],
+      "expected": [
+        5,
+        6,
+        0,
+        [
+          0
+        ],
+        [
+          [
+            0,
+            7,
+            3,
+            7,
+            73,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            9,
+            41,
+            1
+          ]
+        ]
+      ]
+    }
+  ],
+  "programs": [
+    [
+      0,
+      1,
+      2
+    ],
+    [
+      1,
+      0,
+      2
+    ]
+  ],
+  "program_opcodes": {
+    "yield": 0,
+    "wait": 1,
+    "return": 2
+  }
+}

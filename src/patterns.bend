@@ -13,10 +13,10 @@ def quantity(+field: U32, +parent: U32, +mark: U32) -> U32:
 
 def add(scope: E.Scope, +token: S.Token, +q: U32, +type_id: U32, next: E.Scope -> C.Binding -> C.Term -> Result<S.Error,Fields>) -> Result<S.Error,Fields>:
   match scope:
-    case E.Scope{+bindings,+level,+open,+live}:
+    case E.Scope{+bindings,+level,+open,+live,+smaller}:
       S.choose(Result<S.Error,Fields>,U32.is_ge(level,4096),u => C.exhausted(Fields,token),u =>
         +binding : C.Binding = C.Binding{token,level,q,type_id,True{},None{}}
-        next(E.Scope{Con{binding,bindings},U32.add(level,1),open,live},binding,C.Reference{token,level,type_id}))
+        next(E.Scope{Con{binding,bindings},U32.add(level,1),open,live,smaller},binding,C.Reference{token,level,type_id}))
 
 def binder(node: S.Node, next: S.Token -> U32 -> Result<S.Error,Fields>) -> Result<S.Error,Fields>:
   match node:
@@ -52,9 +52,10 @@ def value(+token: S.Token, +type_id: U32, +tag: U32, parameters: List<&2,C.Param
 def finish(fields: Fields, token: S.Token, +level: U32, type_id: U32, tag: U32, params: List<&2,C.Parameter>) -> Fields:
   match fields:
     case Fields{scope,Nil{},args}: Fields{scope,Nil{},args}
-    case Fields{E.Scope{bindings,next,open,live},Con{+head,+tail},+args}:
+    case Fields{E.Scope{bindings,next,open,live,smaller},Con{+head,+tail},+args}:
       +introduced : List<&2,C.Binding> = Con{head,tail}
-      Fields{E.Scope{E.replace(bindings,level,value(token,type_id,tag,params,args)),next,List.append(&2,U32,E.levels(introduced),open),live},introduced,args}
+      Fields{E.Scope{E.replace(bindings,level,value(token,type_id,tag,params,args)),next,
+        List.append(&2,U32,E.levels(introduced),open),live,E.descendants(level,E.levels(introduced),smaller)},introduced,args}
 
 def open_fields(binding: C.Binding, +scope: E.Scope, +tag: U32, +nodes: List<&2,S.Node>, +params: List<&2,C.Parameter>, +types: List<&2,C.Datatype>) -> Result<S.Error,Fields>:
   match binding:
@@ -63,7 +64,7 @@ def open_fields(binding: C.Binding, +scope: E.Scope, +tag: U32, +nodes: List<&2,
 
 def branch(+scope: E.Scope, +level: U32, reference: G.ConstructorRef, node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,Fields>:
   match scope reference node:
-    case E.Scope{bindings,next,open,live} G.ConstructorRef{+type_id,+tag} S.Constructor{token,+args}:
+    case E.Scope{bindings,next,open,live,smaller} G.ConstructorRef{+type_id,+tag} S.Constructor{token,+args}:
       S.bind(List<&2,C.Parameter>,Fields,G.field_signature(G.ConstructorRef{type_id,tag},types),+params =>
         S.bind(C.Binding,Fields,E.find_level(bindings,level),binding => open_fields(binding,scope,tag,args,params,types)))
     case _ _ _: C.internal(Fields,"branch-pattern")

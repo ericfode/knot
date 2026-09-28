@@ -1,0 +1,212 @@
+{
+  "base": "185b7d5ffad5a4e8d59ccc52b95a5b9c83c5330d",
+  "status": "pass",
+  "gates": [
+    {
+      "name": "frontend",
+      "argv": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "exit": 0,
+      "stdout": "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four laws and four semantic mutants\n",
+      "stderr": "",
+      "counts": {
+        "referenceFixtures": 14,
+        "parserLanes": 2,
+        "boundaryObservations": 24,
+        "laws": 4,
+        "semanticMutants": 4
+      }
+    },
+    {
+      "name": "checker",
+      "argv": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "exit": 0,
+      "stdout": "Checker gate passed: 49 reference fixtures, 98 checked observations, 10 depth and 16 catalog-bound observations, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-gpu-runtime/tests/compiler-checker/receipts/checker.json\n",
+      "stderr": "",
+      "counts": {
+        "referenceFixtures": 49,
+        "checkedObservations": 98,
+        "depthObservations": 10,
+        "catalogBounds": 16,
+        "semanticMutants": 7
+      }
+    },
+    {
+      "name": "structural",
+      "argv": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "exit": 0,
+      "stdout": "Structural catalog gate passed: 16 seed fixtures, 4 boundary pairs, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-gpu-runtime/tests/compiler-structural/receipts/catalog.json\n",
+      "stderr": "",
+      "counts": {
+        "referenceFixtures": 16,
+        "boundaryPairs": 4,
+        "semanticMutants": 7
+      }
+    },
+    {
+      "name": "wasm-trust",
+      "argv": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "exit": 0,
+      "stdout": "[\n  {\n    entry: \"src/compile-cli.bend\",\n    files: 15,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 13,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/runtime-PROOF.bend\",\n    files: 18,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }\n]\n",
+      "stderr": "",
+      "counts": {
+        "entries": 3,
+        "loadedFiles": [
+          15,
+          13,
+          18
+        ],
+        "holes": 0,
+        "foreignPerBook": 42
+      }
+    },
+    {
+      "name": "fields-trust",
+      "argv": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "exit": 0,
+      "stdout": "[\n  {\n    entry: \"src/fields-PROOF.bend\",\n    files: 22,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }, {\n    entry: \"src/check-cli.bend\",\n    files: 12,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 13,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/compile-cli.bend\",\n    files: 15,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }\n]\n",
+      "stderr": "",
+      "counts": {
+        "entries": 4,
+        "loadedFiles": [
+          22,
+          12,
+          13,
+          15
+        ],
+        "holes": 0,
+        "foreignPerBook": 42
+      }
+    },
+    {
+      "name": "structural-trust",
+      "argv": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "exit": 0,
+      "stdout": "[\n  {\n    entry: \"src/catalog-PROOF.bend\",\n    files: 20,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }, {\n    entry: \"tests/compiler-structural/observe.bend\",\n    files: 8,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }\n] [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ]\n",
+      "stderr": "",
+      "counts": {
+        "entries": 2,
+        "loadedFiles": [
+          20,
+          8
+        ],
+        "holes": 0,
+        "foreignPerBook": 42
+      }
+    },
+    {
+      "name": "owned-store",
+      "argv": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "exit": 0,
+      "stdout": "{\"status\": \"pass\", \"case_count\": 3532, \"literal_witnesses\": 15}\n",
+      "stderr": "",
+      "counts": {
+        "cases": 3532,
+        "literalWitnesses": 15,
+        "semanticMutants": 6,
+        "executionLanes": 2
+      }
+    },
+    {
+      "name": "flat-store",
+      "argv": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "exit": 0,
+      "stdout": "{\"status\": \"pass\", \"module_bytes\": 1050, \"module_sha256\": \"0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4\"}\n",
+      "stderr": "",
+      "counts": {
+        "instancesPerLane": 3534,
+        "observationsPerLane": 13621,
+        "installedBoundaryStatesPerLane": 2,
+        "lifecycleChecksPerLane": 7,
+        "semanticMutants": 9,
+        "executionLanes": 2,
+        "moduleBytes": 1050
+      }
+    },
+    {
+      "name": "fields",
+      "argv": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "exit": 0,
+      "stdout": "Fields gate passed: 40 seed fixtures, 240 native/Bun phase observations, 36 budget probes, 6 host probes, 12 level/inspection observations, 9 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-gpu-runtime/tests/compiler-fields/receipts/fields.json\n",
+      "stderr": "",
+      "counts": {
+        "referenceFixtures": 40,
+        "phaseObservations": 240,
+        "budgetProbes": 36,
+        "hostProbes": 6,
+        "levelInspectionObservations": 12,
+        "semanticMutants": 9
+      }
+    },
+    {
+      "name": "lint-verify",
+      "argv": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "exit": 0,
+      "stdout": "# tests 103\n# pass 103\n# fail 0\n# skipped 0\nPASS: eight law rules; package/family/control packet coverage; one request per packet; named filtering; advisory finding exit 3; unrelated path excluded; controls present.\nNo provider contacted. This verifies wiring, not model accuracy or law completeness.\n",
+      "stderr": "",
+      "counts": {
+        "tests": 103,
+        "passed": 103,
+        "failed": 0,
+        "lawRulesWired": 8
+      },
+      "environment": {
+        "TREE_SITTER_LANGUAGE_PACK_CACHE_DIR": "/Users/ericfode/src/knot/.claude/worktrees/campaign-gpu-runtime/.local/gpu-runtime/cache",
+        "BEND_NO_TELEMETRY": "1"
+      }
+    },
+    {
+      "name": "wasm",
+      "argv": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "exit": 0,
+      "stdout": "Wasm gate passed: 25 source programs, 90 independent reference calls in two lanes, 64 rejection pairs, 44 boundary observations, 7 semantic mutants. /Users/ericfode/src/knot/.claude/worktrees/campaign-gpu-runtime/tests/compiler-wasm/receipts/wasm.json\n",
+      "stderr": "",
+      "counts": {
+        "sourcePrograms": 25,
+        "referenceCalls": 90,
+        "lanes": 2,
+        "rejectionPairs": 64,
+        "boundaryObservations": 44,
+        "semanticMutants": 7
+      }
+    }
+  ],
+  "assertionsChanged": false,
+  "receiptPolicy": "15 unrelated generated receipts restored to HEAD; fresh logs summarized here",
+  "orderingCorrection": "Wasm/fields trust checks rerun after their required JS builds; initial missing-output failures retained in local logs.",
+  "cacheCorrection": "lint:verify initially could not lock its read-only global parser cache; copied existing cache to writable .local and reran with TREE_SITTER_LANGUAGE_PACK_CACHE_DIR. No network or test edits."
+}

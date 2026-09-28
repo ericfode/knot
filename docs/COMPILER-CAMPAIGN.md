@@ -24,7 +24,7 @@ Later additions the same day:
 5. **Benchmark framework.** Compile time and emitted-code runtime per backend, with correctness guards and noise-aware comparison, for hill-climbing speed. Landed in `f324221` as `bench/`; it grows with each backend.
 6. **Passes Perch.** Two parts:
    - Semantic: targeted rules on every changed Bend file, with nonzero coverage and no unresolved confirmed findings.
-   - Style (rubric v8): each mechanism in the compiler manifest (`docs/compiler-campaign/manifest.json`, built during the campaign) meets its declaration and composition targets. Whether leading declarations keep the level-3 Anticipation/Payoff bar is the user's threshold decision (see the v8 calibration record); until then it is reported, not waived.
+   - Style (rubric v8): each mechanism in the [compiler manifest](compiler-campaign/manifest.json) meets its declaration and composition targets. `npm run lint:style -- --live --manifest=docs/compiler-campaign/manifest.json` reports each group and overall qualification; a filtered `--group=NAME` run qualifies only that selection. The [offline baseline](compiler-campaign/perch-baseline.md) records structural blockers, not ratings or a pass. Whether leading declarations keep the level-3 Anticipation/Payoff bar is the user's threshold decision (see the v8 calibration record); until then it is reported, not waived.
 7. **Unicode syntax extension (after self-hosting).** Unicode symbols in identifiers and operators, as a Knot dialect with a desugaring to plain Bend.
 
 ## Decision record (coordinator, 2026-09-27, under the user's explicit instructions above)
@@ -40,6 +40,7 @@ Later additions the same day:
 | D7 | Every new capability gets fixed expectations from the pinned reference (seed) or literal review before implementation, and existing assertions stay unchanged. Differential conformance (seed ⇔ Knot evaluator ⇔ Knot Wasm) is the core gate. | Preserves the law-quality discipline. |
 | D8 | The user's instruction authorizes this campaign to edit `src/` through delegated worktrees. Compiler Planning's accepted work and all receipts are preserved; package directories are not edited unless an increment explicitly requires it; arrays (`vec`) stay out of the bootstrap profile. | Ownership continuity. |
 | D9 | New Bend code follows the user's calibrated register: one core idea, laws stated as `law` declarations with checked proofs (not unchecked law comments), and terse, exact names. It avoids costume vocabulary, narration and ornament. | `docs/perch-calibration/taste-duel-2026-09-27/`, rubric v8. |
+| D10 | Data lifetime for milestone 1: unique `Type` objects plus reference-counted immutable `Data` (candidate B of `research/data-lifetime/`). Copied Data (A) stays as the conformance control. Reclamation is part of owned-storage acceptance; the bump arena stays interim. | The r3r7 packet: both candidates pass 105 traces with 16 of 16 mutants killed, and B peaks at 43 words against 1,532 on the shared-subterm trace. The packet asked for a coordinator or user decision; the coordinator decided under the goal. The user can reverse it. |
 
 ## Milestone ladder
 

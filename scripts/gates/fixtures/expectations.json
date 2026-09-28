@@ -1,0 +1,21 @@
+{
+  "basis": "Literal review of the runner contract before implementation; no compiler expectations are changed.",
+  "receipt_cases": [
+    {"name": "same", "before": {"count": 2}, "after": {"count": 2}, "expected": "identical"},
+    {"name": "date", "before": {"date": "2026-09-26T01:02:03Z", "count": 2}, "after": {"date": "2026-09-27T04:05:06+00:00", "count": 2}, "expected": "volatile-only"},
+    {"name": "checkout", "before": {"argv": ["/old/checkout/scripts/bend-reference", "/old/checkout/src/a.bend"], "stderr": "at /old/checkout/src/a.bend:4"}, "after": {"argv": ["/new/checkout/scripts/bend-reference", "/new/checkout/src/a.bend"], "stderr": "at /new/checkout/src/a.bend:4"}, "expected": "volatile-only"},
+    {"name": "time", "before": {"commands": [{"elapsed_seconds": 1.2, "exit": 0}]}, "after": {"commands": [{"elapsed_seconds": 4.5, "exit": 0}]}, "expected": "volatile-only"},
+    {"name": "observation", "before": {"stdout": "Off{}", "exit": 0}, "after": {"stdout": "On{}", "exit": 0}, "expected": "semantic"},
+    {"name": "source-hash", "before": {"inputs": {"src/driver.bend": "aaaa"}}, "after": {"inputs": {"src/driver.bend": "bbbb"}}, "expected": "semantic"},
+    {"name": "count", "before": {"count": 2}, "after": {"count": 3}, "expected": "semantic"},
+    {"name": "outcome", "before": {"exit": 2, "stderr": "Invalid"}, "after": {"exit": 3, "stderr": "Unsupported"}, "expected": "semantic"},
+    {"name": "budget", "before": {"budget_seconds": 30}, "after": {"budget_seconds": 60}, "expected": "semantic"},
+    {"name": "array-order", "before": {"tags": [0, 1]}, "after": {"tags": [1, 0]}, "expected": "semantic"},
+    {"name": "key-missing", "before": {"count": 2, "observation": null}, "after": {"count": 2}, "expected": "semantic"},
+    {"name": "unrelated-path", "before": {"path": "/outside/a.bend"}, "after": {"path": "/outside/b.bend"}, "expected": "semantic"}
+  ],
+  "gzip": {"headers_only": "volatile-only", "payload_change": "semantic", "digest_without_matching_payload": "semantic"},
+  "export": {"tracked_edit": "included", "untracked": "included", "tracked_deletion": "absent", "ignored": "absent", "env_files": "absent", "outside_symlink": "rejected"},
+  "execution": {"nonzero": "failed", "missing_executable": "host-failure", "timeout": "exhausted", "failed_dependency": "blocked", "semantic_drift_exit": 0},
+  "refresh": {"failed_gate": "rejected", "changed_source": "rejected", "changed_receipt": "rejected", "passed_unchanged_snapshot": "allowed"}
+}

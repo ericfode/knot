@@ -1,0 +1,436 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "expectation_basis": "Literal reviewed trees, conservative descent rule, and pinned seed observations frozen before implementation. General recursion is checked only, never executed.",
+  "cases": [
+    {
+      "name": "even",
+      "file": "fixtures/even.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Results{On{}, Off{}, On{}, Off{}, On{}}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t2\t0\tResults{On{},Off{},On{},Off{},On{}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "add",
+      "file": "fixtures/add.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Results{0n, 3n, 3n, 5n}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tResults{Zero{},Succ{Succ{Succ{Zero{}}}},Succ{Succ{Succ{Zero{}}}},Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "mirror",
+      "file": "fixtures/mirror.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Fork{Fork{Leaf{Off{}}, Leaf{On{}}}, Leaf{Off{}}}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t1\tFork{Fork{Leaf{Off{}},Leaf{On{}}},Leaf{Off{}}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "length",
+      "file": "fixtures/length.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Results{0n, 3n}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t3\t0\tResults{Zero{},Succ{Succ{Succ{Zero{}}}}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "direct",
+      "file": "fixtures/direct.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tZero{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "first-parameter",
+      "file": "fixtures/first-parameter.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tZero{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "ordered-calls",
+      "file": "fixtures/ordered-calls.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "1n"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tSucc{Zero{}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "shadow-field",
+      "file": "fixtures/shadow-field.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tZero{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "after-let",
+      "file": "fixtures/after-let.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tZero{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "deep",
+      "file": "fixtures/deep.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tZero{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "deep-input",
+      "file": "fixtures/deep-input.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "64n"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tSucc{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "same-parameter",
+      "file": "fixtures/same-parameter.bend",
+      "control": "direct",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "other-parameter",
+      "file": "fixtures/other-parameter.bend",
+      "control": "first-parameter",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "rebuilt-parent",
+      "file": "fixtures/rebuilt-parent.bend",
+      "control": "direct",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "rebuilt-constructor",
+      "file": "fixtures/rebuilt-constructor.bend",
+      "control": "direct",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "computed",
+      "file": "fixtures/computed.bend",
+      "control": "direct",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "shadow-let",
+      "file": "fixtures/shadow-let.bend",
+      "control": "after-let",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "mutual",
+      "file": "fixtures/mutual.bend",
+      "control": "ordered-calls",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a filled definition"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      }
+    },
+    {
+      "name": "second-descent",
+      "file": "fixtures/second-descent.bend",
+      "control": "first-parameter",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "All terms check."
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    }
+  ],
+  "fuel": [
+    {
+      "case": "deep",
+      "budget": 600,
+      "expected": {
+        "exit": 4,
+        "diagnostic": "Exhausted\teval\tbudget\t"
+      }
+    },
+    {
+      "case": "deep-input",
+      "budget": 600,
+      "expected": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tSucc{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+      }
+    }
+  ]
+}
