@@ -55,7 +55,10 @@ All 13 `src/*PROOF.bend` entries print `All terms check.`.
 registered gates (exit 0) in 722.9 seconds with 4 workers. Load average was
 14.6 at the start and 23.9 at the end (run directory `run-iiu07bcz`).
 `npm run -s gates:verify` passed 18 tests. Counts are copied from the runner;
-categories overlap and are not summed.
+categories overlap and are not summed. This isolated run is the evidence for
+`16a35cd`. The direct literals run cited in that commit's message overlapped
+an interrupted earlier run in the same build directory and predates a
+comment-only edit, so it is not cited here.
 
 | Gate | Exact counts |
 | --- | --- |
@@ -107,8 +110,10 @@ input hash was checked against the tree.
 
 - Records keep Knot's `Name{a,b}` frame: the seed separates fields with
   `, `, qualifies an imported book's constructors and shows erased fields.
-  Lists, tuples and other seed sugar are shown structurally
-  (`Con{1,Nil{}}`, not `[1]`). Only primitive leaves are seed-exact.
+  Only primitive leaves are seed-exact. Generic data such as a
+  `List<&2,U32>` result is still `Unsupported parse type-application`; once
+  it is accepted, the seed's list and tuple sugar (`[1]`) will differ from
+  the frame as well.
 - The Node Wasm host observes enum results only. A Char-returning export
   would come back as an in-range ordinal (97 for `'a'`), so result books
   make no Wasm call.
