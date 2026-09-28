@@ -339,7 +339,7 @@ The critical path is: integrate-1 merges → products → core-io and baseslice 
     - Fixtures recurse deeper than 700,000 frames and run at least 100,000 continuation steps. They give the same result, or the same Exhausted bound, under Node and under Bun.
     - Covers D14-04, A2H-01, SCALE-06, SCALE-07, FX-15, FX-16 and the residual of BS-14.
   - **Heap.**
-    - One exported memory with a declared maximum of at most 2,048 pages, and `knot_alloc`.
+    - One exported memory with a declared maximum of at most 65,536 pages (D19; this analysis first said 2,048), and `knot_alloc`.
     - Growth before reporting Exhausted.
     - Reclamation of continuation cells.
     - Peak pages recorded on S.
