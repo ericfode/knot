@@ -339,6 +339,31 @@ follows it (§5, §10, §11) without a new image header word.
    reporting the exhaustion as `HostFailure image` again) dies by `oversize`.
    `decode` now reads its words with an explicit little-endian `struct` format, so
    the 8 MiB and 16 MiB controls cost milliseconds per mutant.
+20. **Only a documented eval bound, past its budget, excuses eval.** Review round 8
+   found §11's rule unenforced for eval and its documented display bound four
+   times too high. `vm_expectation` accepted any Exhausted eval lane at any
+   boundary, and the three excused rows recorded only `"eval_lane": "Exhausted"`.
+   §11 gave eval's display as "4,096 visits", but `describe` renders with 4,096
+   worklist steps, one per item: a constructor and its opening text, then a slot and
+   a separator or closing brace per field, so a tree of N constructors takes
+   4N − 2 and a Nat `n` 4n + 2. The pinned eval-cli renders 1023n and refuses 1024n
+   (`Exhausted inspect budget`); a 642-node tree of 100-character names renders in
+   65,487 characters and 643 nodes do not (.local/vm-spec/f8-evalbound.log). §11
+   now states that unit, keeping §8's visit for the VM. It also gives eval-cli's
+   transitions their unit: one per term evaluated and one per successor or
+   character materialized, so `Nat.is_gt(U32.to_nat(1048576),0n)` exhausts them
+   although its primitive budget is inclusive at 2^20 (2^20 + 1 is `Exhausted
+   primitive budget`). `check-spec.py` now matches the phase eval-cli names against
+   `EVAL_BOUNDS` (`primitive`, `eval`, `inspect`), measures without eval-cli
+   whether the program passes that budget (`reach`: the largest Nat or String
+   length in the reference evaluation; a lower bound on transitions; the seed
+   value's steps and characters), and refuses any other Exhausted. Each excused row
+   records the cause, bound, budget and boundary reached (2^31, 2^31 and 2^31 + 1
+   Nats past 2^20). Four expectation controls refuse an undocumented phase
+   (`check`) and each budget unpassed, the Nat 1,023 at 4,094 steps among them; two
+   excused controls admit the Nat 1,024 at 4,098 steps and a transitions exhaustion
+   past 2^20. Four rule mutants (any Exhausted accepted, the budget not measured,
+   steps counted as visits, transitions without materialization) are killed.
 
 ## Findings that need an owner
 

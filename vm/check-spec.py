@@ -718,13 +718,64 @@ def vm_expectation(case, plan, bounds, source, evaluator=None) -> dict:
         return {'argv': ['IMAGE', 'main', str(fuel)], 'exit': 0, 'stdout': ev['stdout'], 'stderr': '',
                 'basis': 'eval-cli', 'eval_lane': 'agree'}
     # The eval lane is excused only by a documented bound; the VM owes the seed's value.
-    require(classify(ev) == 'Exhausted', f"{case['name']}: eval lane {ev} is not a documented bound")
+    excuse = eval_excuse(case, plan, value, evaluator)
     root = re.match(r'[\w.]+', value)[0]
     ctors = [c['name'] for c in plan['types'][main['result']]['constructors']]
     require(root in ctors, f"{case['name']}: seed root {root} is not a constructor of main's result")
     return {'argv': ['IMAGE', 'main', str(fuel)], 'exit': 0,
             'stdout': f"Evaluated\t{main['result']}\t{ctors.index(root)}\t{value}\n", 'stderr': '',
-            'basis': 'seed', 'eval_lane': 'Exhausted'}
+            'basis': 'seed', 'eval_lane': 'Exhausted', 'eval_bound': excuse}
+
+
+# Section 11's eval-cli bounds, by the phase it names in `Exhausted<TAB>phase<TAB>budget`, each
+# budget in the units of `reach`. A lane is excused only past its budget.
+EVAL_BOUNDS = {
+    'primitive': ('unary Nat and String', {'units': 1 << 20}),
+    'eval': ('transitions', {'transitions': 1 << 20}),
+    'inspect': ('display', {'steps': 4096, 'characters': 65536}),
+}
+
+
+def reach(plan: dict, value: str, evaluator=None) -> dict:
+    """What a Book's main reaches in eval-cli's units, measured without eval-cli. From the
+    reference evaluation: `units`, the largest Nat or String length a node yields; and
+    `transitions`, a lower bound on eval-cli's, which takes one per term it evaluates and one per
+    successor or character it materializes for a Literal or an Intrinsic. From the seed's value in
+    section 8's spelling: `steps`, the items of eval-cli's display worklist, two per constructor
+    (it and its opening text) and two per field (its slot, then a separator or the closing
+    brace), so 4N - 2 for N constructors; and its `characters`."""
+    ev = evaluator or reference
+    nat, string = (plan.get('representation', {}).get(r, -1) for r in ('Nat', 'String'))
+
+    class Reach(ev.Machine):
+        units = transitions = 0
+
+        def eval(self, node, env):
+            w = super().eval(node, env)
+            size = w if node[1] == nat else len(self.codes(w)) if node[1] == string else 0
+            self.units = max(self.units, size)
+            self.transitions += 1 + (size if node[0] in ('lit', 'prim') else 0)
+            return w
+    m = Reach(plan, VM_FUEL)
+    try:
+        m.call(next(i for i, f in enumerate(plan['functions']) if f['name'] == 'main'), [])
+    except ev.Halt:
+        pass
+    return {'units': m.units, 'transitions': m.transitions, 'steps': 4 * value.count('{') - 2,
+            'characters': len(value)}
+
+
+def eval_excuse(case, plan, value, evaluator=None) -> dict:
+    """Section 11: the documented bound that excuses an exhausted eval lane, its budget, and the
+    boundary the program reaches past it. Any other failure, or a budget not passed, is refused."""
+    ev, name = case['eval'], case['name']
+    phase = re.fullmatch(r'Exhausted\t(\w+)\tbudget\t0:0:0:0\n', ev['stderr']) if ev['exit'] == 4 else None
+    bound, budget = EVAL_BOUNDS.get(phase and phase[1], (None, None))
+    require(bound, f'{name}: eval lane {ev} is not a documented bound')
+    reached = {unit: amount for unit, amount in reach(plan, value, evaluator).items() if unit in budget}
+    require(any(reached[unit] > budget[unit] for unit in budget),
+            f'{name}: eval-cli reports its {bound} budget {budget}, but the program reaches {reached}')
+    return {'cause': f'Exhausted {phase[1]} budget', 'bound': bound, 'budget': budget, 'reached': reached}
 
 
 IMAGE_LOSS = ('opaque-parameter', 'erased-field')
@@ -834,6 +885,9 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, 
     def without(name, *keys):
         return {k: v for k, v in cases[name].items() if k not in keys}
 
+    def exhausted(label, seed, phase):
+        return {**row(label, seed, ''), 'eval': {'exit': 4, 'stdout': '', 'stderr': f'Exhausted\t{phase}\tbudget\t0:0:0:0\n'}}
+
     def emoji(plan):
         """print-non-scalar-wide's plan printing U+1F600, which its native bytes cannot tell apart."""
         plan = json.loads(json.dumps(plan))
@@ -850,6 +904,15 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, 
             ('eval-nat-binds-n', 'nat-pred',
              row('eval-nat-binds-n', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n'), bounds, None),
             ('bound-not-exhausted', 'value-on', cases['value-on'], {**bounds, 'value-on': describe_bound}, None),
+            # Section 11: eval-cli's lane is excused only by a documented bound, past its budget.
+            ('eval-undocumented-exhausted', 'nat-big',
+             {**cases['nat-big'], 'eval': exhausted('', '', 'check')['eval']}, bounds, None),
+            ('eval-primitive-within-budget', 'nat-pred', exhausted('eval-primitive-within-budget', '2n\n', 'primitive'),
+             bounds, None),
+            ('eval-transitions-within-budget', 'nat-pred', exhausted('eval-transitions-within-budget', '2n\n', 'eval'),
+             bounds, None),
+            ('eval-inspect-within-budget', 'nat-pred', exhausted('eval-inspect-within-budget', '1023n\n', 'inspect'),
+             bounds, None),
             ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound}, None),
             # D20: a declared divergence exactly where the program prints a non-scalar Char.
             ('non-scalar-as-agreement', 'print-non-scalar', without('print-non-scalar', 'divergence', 'vm_stdout'), bounds, None),
@@ -879,6 +942,31 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, 
             out.append({'control': f'expectation:{label}', 'refused': str(refusal)})
             continue
         raise AssertionError(f'expectation control {label} was admitted')
+    return out
+
+
+def excused_controls(cases: dict, plans: dict, bounds: dict, sources: dict) -> dict:
+    """Rows that a documented bound excuses just past its budget, each frozen by literal review
+    with the boundary it reaches: the Nat 1,024 takes 4 * 1,025 - 2 display steps and
+    5 * 1,024 + 6 + 1,024 characters; u32-to-nat-big evaluates nine terms and materializes the
+    Nats 2^31 (U32.to_nat) and 2^31 - 1 (a Literal)."""
+    def exhausted(name, phase, seed=None):
+        case = {**cases[name], 'name': f'control:{name}-{phase}',
+                'eval': {'exit': 4, 'stdout': '', 'stderr': f'Exhausted\t{phase}\tbudget\t0:0:0:0\n'}}
+        if seed:
+            case['seed'] = {'exit': 0, 'stdout': seed, 'stderr': ''}
+        return case
+    out = {}
+    for label, name, case, frozen in [
+            ('eval-inspect-past-budget', 'nat-pred', exhausted('nat-pred', 'inspect', '1024n\n'),
+             {'cause': 'Exhausted inspect budget', 'bound': 'display', 'budget': {'steps': 4096, 'characters': 65536},
+              'reached': {'steps': 4098, 'characters': 6150}}),
+            ('eval-transitions-past-budget', 'u32-to-nat-big', exhausted('u32-to-nat-big', 'eval'),
+             {'cause': 'Exhausted eval budget', 'bound': 'transitions', 'budget': {'transitions': 1 << 20},
+              'reached': {'transitions': 9 + 2 ** 31 + 2 ** 31 - 1}})]:
+        got = vm_expectation(case, plans[name], bounds, sources[name]).get('eval_bound')
+        require(got == frozen, f'excused control {label}: {got}, frozen {frozen}')
+        out[f'expectation:{label}'] = got
     return out
 
 
@@ -1971,6 +2059,15 @@ def source_mutants(cases, built) -> list:
 # admit an expectation control; a crash is never a kill.
 RULE_MUTANTS = [
     ('rejected-limit-as-host-failure', [("        return f'Exhausted 2 {e}'\n", "        return f'HostFailure image: exhausted {e}'\n")]),
+    # Review round 8: an eval lane is excused only by a documented bound, past its budget.
+    ('eval-any-exhausted', [("    require(bound, f'{name}: eval lane {ev} is not a documented bound')\n",
+                             "    require(classify(ev) == 'Exhausted', f'{name}: eval lane {ev} is not Exhausted')\n"
+                             "    if not bound:\n        return {'cause': ev['stderr'].strip()}\n")]),
+    ('eval-budget-unreached', [("    require(any(reached[unit] > budget[unit] for unit in budget),\n",
+                                "    require(True or any(reached[unit] > budget[unit] for unit in budget),\n")]),
+    ('inspect-steps-as-visits', [("'steps': 4 * value.count('{') - 2,\n", "'steps': value.count('{'),\n")]),
+    ('transitions-without-materialization', [("            self.transitions += 1 + (size if node[0] in ('lit', 'prim') else 0)\n",
+                                              "            self.transitions += 1\n")]),
 ]
 
 
@@ -2004,13 +2101,14 @@ def rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest) ->
                 killed_by = None if got == table[case_name] else f'{case_name}: expectation {got}'
             if killed_by:
                 break
-        if not killed_by:
+        for controls_of in [] if killed_by else (mutant.expectation_controls, mutant.excused_controls):
             try:
-                mutant.expectation_controls(cases, plans, bounds, sources)
-            except AssertionError as admitted:
-                killed_by = str(admitted)
+                controls_of(cases, plans, bounds, sources)
+            except AssertionError as changed:
+                killed_by = str(changed)
+                break
             except Exception:
-                pass
+                continue
         results.append({'mutant': f'rule:{name}', 'killed': killed_by is not None, 'by': killed_by})
     return results
 
@@ -2223,6 +2321,7 @@ def main() -> int:
         [(f'limit:{k}', d) for k, d, r in limited if r is None]
     boundaries = expectation_controls(cases, plans, bounds, sources) + invocation_controls(cases, plans, sources) + \
         seed_display_controls()
+    excused = excused_controls(cases, plans, bounds, sources)
     for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
         require(got is not None and got.startswith(reason) and message in got, f'control {label}: {got}')
@@ -2264,7 +2363,7 @@ def main() -> int:
 
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
-    record.update(status='passed', fixtures=fixtures, boundaries=boundaries,
+    record.update(status='passed', fixtures=fixtures, boundaries=boundaries, excused=excused,
                   admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts,
                   arguments={label: {'argv': ['IMAGE', *argv], 'verdict': verdict} for label, _, argv, verdict in arguing},
                   mutants=mutants,
@@ -2276,7 +2375,7 @@ def main() -> int:
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
           f"{len(admitted)} admitted controls ({len(coded)} code lists, {len(runs)} runs), "
-          f"{len(verdicts)} describe controls, {len(arguing)} argument controls, "
+          f"{len(verdicts)} describe controls, {len(arguing)} argument controls, {len(excused)} excused controls, "
           f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 

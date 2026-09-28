@@ -764,7 +764,7 @@ reached:
 |---|---|
 | seed native | Nat to about 2^48; its runtime resources |
 | seed Bun | about 32K stack frames (`List.length`); unary Nat materialization: `nat-big` passed 60 GB of RSS in about 6 minutes and was stopped, so word-Nat goldens use the native lane |
-| literals eval | unary Nat and String up to 2^20 (`nat-big`, `nat-range`: `Exhausted primitive budget`); at most 1,048,576 transitions; display 4,096 visits and 65,536 characters |
+| literals eval | unary Nat and String up to 2^20 (`Exhausted primitive budget`: `nat-big`, `nat-range`); 1,048,576 transitions (`Exhausted eval budget`), one per term evaluated and one per successor or character materialized, so `Nat.is_gt(U32.to_nat(1048576),0n)` exhausts them; display 4,096 worklist steps and 65,536 characters (`Exhausted inspect budget`), two steps per constructor and two per field, so a tree of N constructors takes 4N − 2 and a Nat `n` renders only for `n` ≤ 1,023 |
 | knot-vm-1 | Nat at most 2^32-1; call fuel; §4's image limits (16 MiB, records, arity, `slots`); 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8 |
 
 `NatRange`, `RCOverflow`, §4's image limits and display are representation-resource
@@ -772,6 +772,18 @@ exhaustion, kind 2 at the host boundary; the VM's own outcome keeps the precise
 cause, request and limit, because `exhausted(2)` alone does not say which bound
 was hit. Frame capacity is kind 3. Model tracing memory is a harness bound and
 never excuses the VM.
+
+**An exhausted eval lane** is excused only by one of the three literals eval
+bounds, named by the phase eval-cli prints (`Exhausted<TAB>phase<TAB>budget`), and
+only when the program passes that budget. The gate measures it without eval-cli
+(`check-spec.py` `EVAL_BOUNDS` and `reach`): `primitive` by the largest Nat or String
+length a node yields in the reference evaluation; `eval` by a lower bound on
+eval-cli's transitions, the terms the reference evaluation evaluates plus the Nat
+and String sizes its Literals and Intrinsics yield; `inspect` by the steps and
+characters of the seed's value. Any other Exhausted, or a documented one whose
+budget the program does not pass, is refused. For each excused lane,
+vm-expected.json and the receipt record the cause, the bound, the budget and the
+boundary reached.
 
 **The rule.** Wherever the seed succeeds inside the VM's declared domain and
 budgets, the VM MUST return the seed's value and effect trace, except the output
@@ -810,7 +822,8 @@ golden: the eval-cli line where eval agrees with the seed (75 goldens), agreemen
 meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
 value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`,
-`nat-case-big`);
+`nat-case-big`, each by `Exhausted primitive budget`, their largest Nats 2^31, 2^31
+and 2^31 + 1 past 2^20);
 `Exhausted` kind 2 `NatRange` where the seed's value lies outside the VM's domain
 (`nat-range`, `nat-mul-range`, `nat-succ-range`), each justified in
 [golden/bounds.json](golden/bounds.json), whose entries are all Exhausted;
@@ -851,7 +864,12 @@ lane and requires:
   seed's printed value, byte for byte where it is not UTF-8;
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations,
   with every bound Exhausted and no bound standing in for an Unsupported result
-  (two frozen expectation controls), and every Program classified by the reference
+  (two frozen expectation controls), every excused eval lane matched to a documented
+  eval-cli bound past its budget (four frozen expectation controls refuse an
+  undocumented phase, `check`, and each budget unpassed, among them the Nat 1,023 at
+  4,094 steps; two excused controls admit the Nat 1,024 at 4,098 steps and 6,150
+  characters, and a transitions exhaustion of `u32-to-nat-big` at 4,294,967,304),
+  and every Program classified by the reference
   evaluation of its plan: a declared D20 divergence exactly where it prints a
   non-scalar Char, with the VM output of the earlier prints, the native bytes equal
   to the whole trace in that lane's encoding and the Bun lane's output a prefix of
@@ -937,9 +955,11 @@ lane and requires:
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
-  record's length, and no limit on a Closure's `slots`. Rule mutants of
+  record's length, and no limit on a Closure's `slots`. Five rule mutants of
   `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
-  `HostFailure image`.
+  `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
+  bound whose budget it does not pass; display steps counted as visits; and
+  transitions that omit materialization.
   Five survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, an Action's effect before its debit
   (which the print inspection control also counts, after 4 calls), the fuel test

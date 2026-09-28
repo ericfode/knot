@@ -72,12 +72,13 @@ and eval-cli on 93 golden sources, and requires the frozen observations byte for
 byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display. It
 also checks the frozen VM expectation table; 71 refused image controls, nine of
-them on either side of the resource limits that are `Exhausted` kind 2; 16
-expectation, seven invocation, two seed-display and two bench controls; six admitted
-plan controls, one admitted limit control, seven admitted code-list controls and
-41 run controls with their frozen fuel and outcomes; nine describe-domain controls;
-13 argument controls; the lowering of one hand-written display; 69 codec, 4 source,
-39 evaluator and one rule mutant of `check-spec.py` itself; and the bench freeze: sources, guards, outputs and the seed-native
+them on either side of the resource limits that are `Exhausted` kind 2; 20
+expectation, seven invocation, two seed-display and two bench controls; two excused
+eval-bound controls; six admitted plan controls, one admitted limit control, seven
+admitted code-list controls and 41 run controls with their frozen fuel and outcomes;
+nine describe-domain controls; 13 argument controls; the lowering of one hand-written
+display; 69 codec, 4 source, 39 evaluator and five rule mutants of `check-spec.py`
+itself; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.
 
