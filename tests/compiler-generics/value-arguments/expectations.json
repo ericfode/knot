@@ -1,0 +1,402 @@
+{
+  "suite": "compiler-generics/value-arguments",
+  "increment": "6: generics and quantity arguments (S2), review round 2",
+  "basis": "Frozen before the repair (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "value-argument-parameter",
+      "file": "fixtures/value-argument-parameter.bend",
+      "class": "boundary",
+      "feature": "value-indexed-application",
+      "intent": "Tag<On{}> as a parameter type of a live value-indexed family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator."
+      }
+    },
+    {
+      "name": "value-argument-binding",
+      "file": "fixtures/value-argument-binding.bend",
+      "class": "boundary",
+      "feature": "value-indexed-application",
+      "intent": "Tag<On{}> as a local binding annotation.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator."
+      }
+    },
+    {
+      "name": "value-argument-result",
+      "file": "fixtures/value-argument-result.bend",
+      "class": "boundary",
+      "feature": "value-indexed-application",
+      "intent": "Tag<On{}> as the result type of an erased value-indexed family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator."
+      }
+    },
+    {
+      "name": "value-argument-live-result",
+      "file": "fixtures/value-argument-live-result.bend",
+      "class": "boundary",
+      "feature": "value-indexed-application",
+      "intent": "Tag<On{}> as the result type of a live value-indexed family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator."
+      }
+    },
+    {
+      "name": "value-argument-second",
+      "file": "fixtures/value-argument-second.bend",
+      "class": "boundary",
+      "feature": "value-indexed-application",
+      "intent": "A constructor value as the second argument, Mark<Flag, Off{}>, after a type argument.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "value-argument-parameter",
+        "source_sha256": "9882fcb066740cf86bad341164d6f06d9618695e29a779913264a36cc3d48052",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "value-argument-binding",
+        "source_sha256": "74d5f0d54b15f037bd09d52117a383c9672c78681d2253d77788323dd63e7fef",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "value-argument-result",
+        "source_sha256": "8b530f595c9c32ade2b73905e6cb72c03e36995dffee5c549aa7733e95a594bf",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "value-argument-live-result",
+        "source_sha256": "6dd4e36a4475b9e33cda69335b1d560a788c4a922d9d816c362a26a36d98e906",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "value-argument-second",
+        "source_sha256": "6b93ab736f08b58a0050e40abf1d1d3bc0624ffd2fd62593e9aa15323755c2de",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
