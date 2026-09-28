@@ -1,0 +1,621 @@
+{
+  "basis": "Reviewer repros and seed-derived controls, frozen with the pinned seed before each repair.",
+  "seed": {
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "sha256": {
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b"
+    }
+  },
+  "fixtures": [
+    {
+      "name": "dot-anonymous",
+      "file": "tests/compiler-nest/round3-fixtures/dot-anonymous.bend",
+      "sha256": "8499fd260857daf81c8c2ebdc8d97c5597b240919d89d3ed9215d238a24cab4f",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-anonymous.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : _.x\nLocation:\n6 |   match x:\n7>|     case _.x: On{}\n  |          ^^^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tpattern-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-constructor-name",
+      "file": "tests/compiler-nest/round3-fixtures/dot-constructor-name.bend",
+      "sha256": "bd8564898b594d7b307b6ecd1964339a9f260d95784d512c148e40e4d1a75df3",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-constructor-name.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : On.x\nLocation:\n6 |   match x:\n7>|     case On.x: On{}\n  |          ^^^^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tpattern-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-definition",
+      "file": "tests/compiler-nest/round3-fixtures/dot-definition.bend",
+      "sha256": "a9f0eb765054877b19ebe809eb0d1cdc2663aa9752683e2626ee354de37c3926",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-definition.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-definition/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-definition.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-erased-let",
+      "file": "tests/compiler-nest/round3-fixtures/dot-erased-let.bend",
+      "sha256": "820b6b2716e25d795578599b0ccf9d4910eac8f07b16eccfd62bdd92efe941ba",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-erased-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-erased-let/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-erased-let.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-erased-let/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-erased-let.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-erased-let/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-erased-let.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-field-declaration",
+      "file": "tests/compiler-nest/round3-fixtures/dot-field-declaration.bend",
+      "sha256": "03ee135f093338e95151d0ac42384919f82a4e755754cf599ac5be658fbc83da",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-field-declaration.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-field-declaration/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-field-declaration.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-flat-field",
+      "file": "tests/compiler-nest/round3-fixtures/dot-flat-field.bend",
+      "sha256": "b48a174014ca9b5dc8417805ef5ff0ac33324168f6ce681570e37d8b892c477a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-flat-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n 9 |   match p:\n10>|     case P{a.b, c}: a.b\n   |            ^^^\n11 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tpattern-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-let-reusable",
+      "file": "tests/compiler-nest/round3-fixtures/dot-let-reusable.bend",
+      "sha256": "de31c4e0bc5574d132fd777ea1abe2fcfff37061f3a3719d3ab864c265f91378",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-let-reusable.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : '='\nLocation:\n5 | def f(+x: Flag) -> Flag:\n6>|   +a.b = x\n  |        ^\n7 |   a.b\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tbinding-name\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-let-typed",
+      "file": "tests/compiler-nest/round3-fixtures/dot-let-typed.bend",
+      "sha256": "83dd8be3039254a46264a6a5cc48aa0ea90d895e812489b863fd99c617069487",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-let-typed.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   a.b : Flag = x\n  |   ^^^\n7 |   a.b\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tbinding-name\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-let",
+      "file": "tests/compiler-nest/round3-fixtures/dot-let.bend",
+      "sha256": "e2b46449cf4e58457093c3c4a1aa71e52ad9d27b6f6b947f4a5b02d96ed25c00",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   a.b = x\n  |   ^^^\n7 |   a.b\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tbinding-name\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-multi-column",
+      "file": "tests/compiler-nest/round3-fixtures/dot-multi-column.bend",
+      "sha256": "8583b8be9bce45eb8cc71edfa9e1d1f0a12c1ca8a2949386ace911ff665a931b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-multi-column.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n6 |   match x y:\n7>|     case a.b On{}: a.b\n  |          ^^^\n8 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tpattern-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-nested-field",
+      "file": "tests/compiler-nest/round3-fixtures/dot-nested-field.bend",
+      "sha256": "6781b51bfe43588e7dfb21a4f7eb2a821f369fefd9465e05722b1f5d750663c8",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-nested-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n 9 |   match p:\n10>|     case P{a.b, On{}}: a.b\n   |            ^^^\n11 |     case _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tpattern-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-parameter",
+      "file": "tests/compiler-nest/round3-fixtures/dot-parameter.bend",
+      "sha256": "223014e057dcd89f37f10964033bdbea33ed569ee08f39480d2077de182101be",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-parameter.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-parameter/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-parameter.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-promotion",
+      "file": "tests/compiler-nest/round3-fixtures/dot-promotion.bend",
+      "sha256": "208259baa753a903cf33b4b867c5b75f41d45e775ff9cb768a2c62f91dc59770",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-promotion.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n6 |   match x:\n7>|     case +a.b: a.b\n  |              ^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tpattern-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-variable-row",
+      "file": "tests/compiler-nest/round3-fixtures/dot-variable-row.bend",
+      "sha256": "a01f1c3362845568747d2e60d9961aabc72df937373287de7f438eb16ad94f8b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-variable-row.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n6 |   match x:\n7>|     case a.b: a.b\n  |          ^^^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tpattern-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-comment",
+      "file": "tests/compiler-nest/round3-fixtures/name-comment.bend",
+      "sha256": "7e308aaeff722e070860d5015b8402369203ea52c6273a65af4aa0482cce130e",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/name-comment/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/name-comment.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/name-comment/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/name-comment.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/name-comment/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/name-comment.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-digit-segment",
+      "file": "tests/compiler-nest/round3-fixtures/name-digit-segment.bend",
+      "sha256": "fa0b35fc673a93142228958605795d1bfc39075bdf31bbe5d153ddac6da37245",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-digit-segment.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'a.1')\n- observed : 'a.1'\nLocation:\n6 |   match x:\n7>|     case a.1: On{}\n  |          ^^^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-double-dot",
+      "file": "tests/compiler-nest/round3-fixtures/name-double-dot.bend",
+      "sha256": "f5e8c0fe0082aa36a3231471d85d89f4e0f4e6d7bddadad2375d2cf56d02915b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-double-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'a..b')\n- observed : 'a..b'\nLocation:\n4 | \n5>| def f(a..b: Flag) -> Flag:\n  |       ^^^^\n6 |   On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-field-double-dot",
+      "file": "tests/compiler-nest/round3-fixtures/name-field-double-dot.bend",
+      "sha256": "36c7212a5496e21089589644dc77249c8410fb8f85af393744b14e7a36c3fc91",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-field-double-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'a..b')\n- observed : 'a..b'\nLocation:\n5 | type Pair is Type:\n6>|   P{a..b: Flag}\n  |     ^^^^\n7 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-trailing-dot",
+      "file": "tests/compiler-nest/round3-fixtures/name-trailing-dot.bend",
+      "sha256": "f69beb695aaf0080f78afe62fe2281326d051056eb0bca0153c57b7dec19ec2d",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-trailing-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'x.')\n- observed : 'x.'\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   x.\n  |   ^^\n7 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-type-double-dot",
+      "file": "tests/compiler-nest/round3-fixtures/name-type-double-dot.bend",
+      "sha256": "113f4ed3529764bbae32d4e299dfcfb928a811f3f677cf300db14517fe361700",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-type-double-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'P..Q')\n- observed : 'P..Q'\nLocation:\n4 | \n5>| type P..Q is Type:\n  |      ^^^^\n6 |   PQ{a: Flag}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    }
+  ]
+}
