@@ -68,23 +68,49 @@
   "in_flight": [
     {
       "id": "nest",
-      "branch": "campaign/nest",
-      "state": "fixtures frozen (1357be3); implementation next"
+      "executor": "codex",
+      "state": "implementing (relaunched after the coordinator reconciled generic-box-pattern, b42a6fd)"
     },
     {
       "id": "modules",
-      "branch": "campaign/modules",
-      "state": "fixtures frozen (074b549); implementation next"
+      "executor": "codex",
+      "state": "implementing"
+    },
+    {
+      "id": "opt-1",
+      "executor": "codex",
+      "state": "implementing: checked core-to-core passes and bench on/off"
+    },
+    {
+      "id": "perch-context",
+      "executor": "codex",
+      "state": "implementing: datatype closure, hash-import resolution, interface summaries"
+    },
+    {
+      "id": "gpu-2",
+      "executor": "codex",
+      "state": "implementing: knot-device-records-2 with RC Data, captures and attempt identity"
+    },
+    {
+      "id": "census-2",
+      "executor": "codex",
+      "state": "implementing: accepted evidence from all suites and a self-hosting meter"
     },
     {
       "id": "literals",
-      "branch": "campaign/literals",
       "state": "fixtures frozen (5a7bd5f); waits for modules"
     },
     {
       "id": "generics",
-      "branch": "campaign/generics",
       "state": "fixtures frozen (66e8337); waits for modules and literals"
+    },
+    {
+      "id": "closures, baseslice",
+      "state": "fixture suites being authored"
+    },
+    {
+      "id": "io, sugar",
+      "state": "fixture suites being authored"
     }
   ],
   "decisions": [
@@ -156,5 +182,25 @@
       "pre-existing: Bun-lane compiler 'memory fault' after writing large modules (fields-wasm semantics review) must be diagnosed before the whole compiler runs in the Bun lane",
       "pre-existing: structured Wasm results can come back from the host adapter as enum results; the adapter's enum-only ABI is a documented precondition"
     ]
+  },
+  "selfhost_meter_2026_09_27": {
+    "compiler_declarations": 313,
+    "check_evidenced": 7,
+    "wasm_evidenced": 1,
+    "top_missing_classes": [
+      "types.base",
+      "fields",
+      "generics",
+      "quantities.arguments",
+      "lambdas",
+      "captures",
+      "literals.string",
+      "literals.u32",
+      "patterns.nested",
+      "recursion",
+      "patterns.wildcard",
+      "io"
+    ],
+    "note": "coordinator computation from the census before census-2; recursion and fields-wasm evidence not yet read by the census"
   }
 }
