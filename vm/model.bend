@@ -1089,9 +1089,11 @@ def expand(+cx: Context, node: Node, +scope: List<&2,U32>, +depth: U32, +site: S
        Check{body,List.append(&2,U32,scope,[type_of(value)]),site},
        Expect{Bool.not(U32.is_eq(type_of(body),t)),at_where(site,"let body type")}]
     case Context{+types,+functions,+reps} Case{+t,+slot,+scrutinee,+mode,+rows,+fallback}:
+      # The scrutinee type is concrete; its slot may be an erased position (SPEC §3).
+      +held = nth(scope,slot)
       Con{type_index(types,t,site),
       Con{Expect{U32.is_ge(slot,depth),at_where(site,"case slot beyond depth")},
-      Con{Expect{Bool.or(is_none(scrutinee),Bool.not(U32.is_eq(nth(scope,slot),scrutinee))),at_where(site,"case scrutinee type")},
+      Con{Expect{Bool.or(is_none(scrutinee),Bool.not(Bool.or(is_none(held),U32.is_eq(held,scrutinee)))),at_where(site,"case scrutinee type")},
         case_tasks(Context{types,functions,reps},scope,depth,site,t,scrutinee,mode,rows,fallback)}}}
     case Context{+types,+functions,+reps} Closure{+t,+live,+slots,+caps,+body}:
       +arrow = kind(types,t)
@@ -2320,11 +2322,22 @@ def target_entered(+code: Code, target: Target, +ops: List<&2,U32>, +stack: Stac
       machine_of(body_entered(code,body,code_word(code,U32.add(record,4)),code_word(code,U32.add(record,3)),ops,body,Nil{},0,stack,heap),meter,out)
     case Held{+w}: held_entered(code,w,ops,stack,heap,meter,out)
 
+def halted(m: Machine, stop: Stop) -> Machine:
+  match m:
+    case Machine{control,stack,heap,meter,out}: Machine{Finished{Stopped{stop,control}},stack,heap,meter,out}
+
+# A target that stops the machine after its entry was paid for keeps the debit:
+# the pending Enter stays owned, but its fuel and call are spent (SPEC §7).
+def paid(result: Result<Stop,Machine>, m: Machine) -> Result<Stop,Machine>:
+  match result:
+    case Fail{stop}: Done{halted(m,stop)}
+    case Done{next}: Done{next}
+
 # Enter (SPEC §7): check the target, pay one fuel, then run the target.
-def entered(+code: Code, +target: Target, +ops: List<&2,U32>, +stack: Stack, +heap: Heap, +meter: Meter, out: List<&2,List<&2,U32>>) -> Result<Stop,Machine>:
+def entered(+code: Code, +target: Target, +ops: List<&2,U32>, +stack: Stack, +heap: Heap, +meter: Meter, +out: List<&2,List<&2,U32>>) -> Result<Stop,Machine>:
   choose(Result<Stop,Machine>,Bool.not(admissible(code,heap,target,ops)),u => ill_typed(Machine),u =>
   choose(Result<Stop,Machine>,U32.is_eq(fuel_of(meter),0),u => Fail{Exhausted{1,"fuel"}},u =>
-    target_entered(code,target,ops,stack,heap,charged(meter),out)))
+    paid(target_entered(code,target,ops,stack,heap,charged(meter),out),Machine{Enter{target,ops},stack,heap,charged(meter),out})))
 
 def step(+code: Code, m: Machine) -> Result<Stop,Machine>:
   match m:
@@ -2332,10 +2345,6 @@ def step(+code: Code, m: Machine) -> Result<Stop,Machine>:
     case Machine{Return{w},stack,heap,meter,out}: machine_of(returned(code,w,stack,heap),meter,out)
     case Machine{Enter{target,ops},stack,heap,meter,out}: entered(code,target,ops,stack,heap,meter,out)
     case Machine{Finished{outcome},stack,heap,meter,out}: Done{Machine{Finished{outcome},stack,heap,meter,out}}
-
-def halted(m: Machine, stop: Stop) -> Machine:
-  match m:
-    case Machine{control,stack,heap,meter,out}: Machine{Finished{Stopped{stop,control}},stack,heap,meter,out}
 
 # A refused step leaves the machine as it was and records why.
 def settled(result: Result<Stop,Machine>, m: Machine) -> Machine:

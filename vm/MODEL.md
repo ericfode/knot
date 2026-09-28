@@ -22,7 +22,7 @@ second, read-only store; frames are typed records whose word sizes match
 ```sh
 S=scripts/bend-reference
 $S vm/model-cli.bend -o .local/vm-model/model      # IMAGE FN FUEL [ORDINALS...] | IMAGE FUEL -- [ARGS...]
-$S vm/model-audit.bend -o .local/vm-model/audit    # same arguments; RC audit before every transition
+$S vm/model-audit.bend -o .local/vm-model/audit    # same arguments; RC audit before every transition, and calls
 $S vm/model-sweep.bend -o .local/vm-model/sweep    # IMAGE FUEL; soundness of every single-word mutation
 .local/vm-model/model -- vm/golden/closure-captures.kimg main 1000000
 $S vm/PROOF.bend                                   # All terms check.
@@ -65,14 +65,15 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
 - A Nat Case allocates the predecessor's Big cell only when a Branch binds it,
   so a default arm leaks nothing (§6.1 does not say when).
 - A refused transition leaves the machine as it was: the model's steps are
-  atomic, including one refused mid-way by an allocation.
-- `serializer.safe_chr` refuses String constant codes above U+10FFFF because a
-  plan spells them as text; §2 admits every u32, and so does the model. The
-  sweep meets this once (`string-eq`) and records it as the one delta.
+  atomic, including one refused mid-way by an allocation. An Enter's debit
+  stands once paid (§7): a target that then stops the machine, such as D20's
+  refused print, leaves its fuel and call spent.
 - A stopped machine keeps the control it could not advance, so the words of a
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
-  model's differential covers the 78 goldens.
+  model's differential covers the 91 goldens and vm-spec's 17 admitted controls
+  (three plan, seven code-list and seven run controls), each against the
+  reference evaluation's outcome and call count (`vm/evaluate.py`).
 - Deep lists recurse without a tail call (`pack`, `slice`); compiler-sized
   images are unmeasured. The checker's evaluator is slow: PROOF.bend takes
   about 100 s, most of it in the five audited runs.

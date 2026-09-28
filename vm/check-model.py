@@ -11,8 +11,13 @@ seed's native lane and requires:
   first entry, and value-on, which makes one entry, completes on fuel 1;
 - the 61 frozen refusal controls, and a child at its parent's offset, refused
   with check-spec's exact reason;
-- the RC audit before every transition of every golden, and no live mortal cell
-  after each completed run;
+- every admitted control run to its outcome and call count (SPEC sections 4 and
+  7): check-spec's three admitted plan controls and seven code-list controls, as
+  the reference evaluation (vm/evaluate.py) runs them, and its seven run controls
+  as frozen;
+- the RC audit before every transition of every golden and admitted control, no
+  live mortal cell after each completed run, and the reference evaluation's call
+  count at the end of each run;
 - the bounded soundness sweep: every single-word mutation of the swept goldens
   is refused exactly when the reference codec refuses it, for the same reason,
   and every admitted mutation runs soundly;
@@ -56,6 +61,7 @@ def load_check_spec():
 
 cs = load_check_spec()
 codec = cs.codec
+reference = cs.reference  # vm/evaluate.py
 REGISTRY = codec.registry()
 DIGEST = codec.base_digest(REGISTRY)
 
@@ -176,6 +182,8 @@ def agrees(case: dict, got: dict) -> bool:
         return got['exit'] == 4 and got['stdout'] == '' and fields == ['Exhausted', 'vm', str(case['kind']), case['cause']]
     if case['outcome'] == 'Unsupported':
         return got['exit'] == 3 and got['stdout'] == '' and fields == ['Unsupported', *case['cause'].split(' ')]
+    if case['outcome'] == 'HostFailure':
+        return got['exit'] == 5 and got['stdout'] == case.get('stdout', '') and fields == ['HostFailure', *case['cause'].split(' ')]
     return False
 
 
@@ -211,12 +219,19 @@ def fuel_runs(model: Path, expected: dict) -> dict:
     return out
 
 
+def golden_plans() -> dict:
+    return {p.stem.removesuffix('.plan'): json.loads(p.read_text()) for p in sorted(GOLDEN.glob('*.plan.json'))}
+
+
 def controls() -> list:
+    """SPEC section 4's refusal controls; the plan controls it must admit run with the
+    admitted ones (`admitted_controls`)."""
     names = sorted(p.stem for p in GOLDEN.glob('*.kimg'))
     images = {n: (GOLDEN / f'{n}.kimg').read_bytes() for n in names}
-    plans = {n: json.loads((GOLDEN / f'{n}.plan.json').read_text()) for n in names}
-    listed = cs.byte_controls(images, DIGEST) + [
-        (f'plan:{k}', codec.encode(p, DIGEST), 'HostFailure image: validator: ', m) for k, p, m in cs.plan_controls(plans)]
+    plans = golden_plans()
+    refusals = [(f'plan:{k}', codec.encode(p, DIGEST), 'HostFailure image: validator: ', m)
+                for k, p, m in cs.plan_controls(plans) if m is not None]
+    listed = cs.byte_controls(images, DIGEST) + refusals
     require(len(listed) == 61, f'{len(listed)} refusal controls, SPEC section 4 freezes 61')
     # One boundary the frozen controls leave open: a child at its own parent's
     # offset does not precede it. The reference supplies the expected reason.
@@ -251,24 +266,90 @@ def control_runs(model: Path, listed: list) -> dict:
         return dict(pool.map(one, listed))
 
 
-AUDIT = re.compile(r'^audit\t(passed|failed)\t(\d+)\t(\w+)\t(\d+)$')
+def expected_run(got: dict) -> dict:
+    """A reference run in vm-expected.json's shape: an exit and its stdout, or an outcome."""
+    if 'exit' in got:
+        return {'exit': got['exit'], 'stdout': got['stdout'], 'stderr': ''}
+    return {k: got[k] for k in ('outcome', 'kind', 'cause') if k in got}
+
+
+def admitted_controls() -> list:
+    """(label, plan, run, calls) for images the validator MUST admit and the VM MUST run to
+    `run` after `calls` entries (SPEC sections 4 and 7): check-spec's admitted plan controls
+    and code-list controls under the reference evaluation, and its frozen run controls."""
+    plans = golden_plans()
+    listed = [(f'plan:{k}', p, None) for k, p, m in cs.plan_controls(plans) if m is None]
+    listed += [(k, p, None) for k, p in cs.code_controls(plans)]
+    listed += [(f'run:{k}', p, frozen) for k, p, frozen in cs.run_controls(plans)]
+    require(sum(k.startswith('plan:') for k, _, _ in listed) == 3, 'SPEC section 4 admits three plan controls')
+    require(sum(k.startswith('codes:') for k, _, _ in listed) == 7, 'SPEC section 12 freezes seven code-list controls')
+    require(sum(k.startswith('run:') for k, _, _ in listed) == 7, 'SPEC section 4 freezes seven run controls')
+    out = []
+    for label, plan, frozen in listed:
+        require(cs.rejected(codec.encode(plan, DIGEST), REGISTRY, DIGEST) is None, f'{label}: the reference codec refuses it')
+        got = reference.book(plan, 'main', [], 1000000) if plan['entry'] == 'book' else reference.program(plan, 1000000)
+        if plan['entry'] == 'program':
+            got = {**got, 'stdout': got['stdout'].decode('utf-8')}
+        require(frozen is None or {k: got.get(k) for k in frozen} == frozen, f'{label}: the reference evaluation gives {got}')
+        out.append((label, plan, expected_run(got), got['calls']))
+    return out
+
+
+def control_argv(binary: Path, path: Path, plan: dict) -> list:
+    return [binary, '--', path, 'main', '1000000'] if plan['entry'] == 'book' else [binary, '--', path, '1000000', '--']
+
+
+def admitted_runs(model: Path, audit: Path, listed: list) -> dict:
+    """Each admitted control's run, its RC audit and its entries paid for."""
+    folder = BUILD / 'admitted'
+    folder.mkdir(parents=True, exist_ok=True)
+
+    def one(item):
+        label, plan, want, calls = item
+        path = folder / (label.replace(':', '_') + '.kimg')
+        data = codec.encode(plan, DIGEST)
+        if not path.exists() or path.read_bytes() != data:
+            path.write_bytes(data)
+        result = run(control_argv(model, path, plan), 120)
+        audited = run(control_argv(audit, path, plan), 300)
+        m = AUDIT.match(audited['stdout'].strip())
+        balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and (
+            'exit' not in want or m.group(4) == '0') and int(m.group(5)) == calls
+        # A kill is judged on the observation that went wrong.
+        return label, {'result': audited if agrees(want, result) else result,
+                       'agrees': agrees(want, result) and balanced, 'calls': int(m.group(5)) if m else None}
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        return dict(pool.map(one, listed))
+
+
+AUDIT = re.compile(r'^audit\t(passed|failed)\t(\d+)\t(\w+)\t(\d+)\t(\d+)$')
+
+
+def reference_calls(plan: dict, argv: list) -> int:
+    """Entries the reference evaluation pays for on a golden's command line (SPEC section 7)."""
+    if plan['entry'] == 'program':
+        return reference.program(plan, int(argv[1]))['calls']
+    return reference.book(plan, argv[1], [int(x) for x in argv[3:]], int(argv[2]))['calls']
 
 
 def audit_runs(audit: Path, expected: dict) -> dict:
     """The RC audit before every transition; a completed run ends with no live
-    mortal cell. result-u32 is refused before any transition."""
+    mortal cell, while a stopped one keeps its pending words. Every run pays for
+    the entries the reference evaluation pays for. An Unsupported result type is
+    refused before any transition."""
     cases = {n: c for n, c in expected['cases'].items() if c.get('outcome') != 'Unsupported'}
+    plans = golden_plans()
+    calls = {n: reference_calls(plans[n], cases[n]['argv']) for n in cases}
     with ThreadPoolExecutor(max_workers=8) as pool:
         got = dict(zip(cases, pool.map(lambda n: run(argv_of(audit, n, cases[n]['argv']), 300), cases)))
     out = {}
     for n, result in got.items():
         m = AUDIT.match(result['stdout'].strip() or result['stderr'].strip())
-        outcome = 'Exhausted' if cases[n].get('outcome') == 'Exhausted' else (
-            'Described' if cases[n]['argv'][1] == 'main' else 'Emitted')
+        outcome = cases[n].get('outcome') or ('Described' if cases[n]['argv'][1] == 'main' else 'Emitted')
         good = bool(m) and result['exit'] == 0 and m.group(1) == 'passed' and m.group(3) == outcome and (
-            outcome == 'Exhausted' or m.group(4) == '0')
-        out[n] = {'result': result, 'agrees': good,
-                  'transitions': int(m.group(2)) if m else None, 'live': int(m.group(4)) if m else None}
+            outcome in ('Exhausted', 'HostFailure') or m.group(4) == '0') and int(m.group(5)) == calls[n]
+        out[n] = {'result': result, 'agrees': good, 'transitions': int(m.group(2)) if m else None,
+                  'live': int(m.group(4)) if m else None, 'calls': int(m.group(5)) if m else None}
     return out
 
 
@@ -323,12 +404,6 @@ def reference_verdicts(name: str) -> list:
     return out
 
 
-# The one reference refusal the model does not share: SPEC section 2 admits
-# every u32 in a String constant, while serializer.safe_chr refuses a code it
-# cannot spell as plan text. The model admits such an image.
-PLAN_TEXT = 'HostFailure image: string code beyond plan text'
-
-
 def sweep_runs(sweep: Path, swept) -> dict:
     """Validator soundness on bounded images: every single-word mutation (zero,
     successor, predecessor) of each swept golden, against the reference codec.
@@ -342,7 +417,7 @@ def sweep_runs(sweep: Path, swept) -> dict:
     for name in swept:
         result, want = got[name], reference[name]
         lines = result['stdout'].strip().split('\n') if result['stdout'].strip() else []
-        stats = {'mutations': len(want), 'admitted': 0, 'refused': 0, 'unsound': 0, 'differ': 0, 'plan-text': 0}
+        stats = {'mutations': len(want), 'admitted': 0, 'refused': 0, 'unsound': 0, 'differ': 0}
         examples = []
         good = result['exit'] == 0 and len(lines) == len(want)
         for j, line in enumerate(lines[:len(want)]):
@@ -357,8 +432,7 @@ def sweep_runs(sweep: Path, swept) -> dict:
                 same = refusal == want[j]
             else:
                 stats['admitted'] += 1
-                same = want[j] is None or want[j] == PLAN_TEXT
-                stats['plan-text'] += want[j] == PLAN_TEXT
+                same = want[j] is None
             if not same:
                 stats['differ'] += 1
                 examples.append(f'{line} | reference {want[j]!r}')
@@ -436,7 +510,7 @@ def kills(base: dict, mutant: dict) -> list:
     return killed
 
 
-def mutant_runs(expected: dict, listed: list, base: dict) -> list:
+def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> list:
     def one(entry):
         name, mutation, meaning = entry
         tree = build_tree(f'mutants/{name}', mutation)
@@ -445,6 +519,7 @@ def mutant_runs(expected: dict, listed: list, base: dict) -> list:
                     'inspection': inspection_runs(bins['model']),
                     'fuel': fuel_runs(bins['model'], expected),
                     'controls': control_runs(bins['model'], listed),
+                    'admitted': admitted_runs(bins['model'], bins['audit'], admitted),
                     'audit': audit_runs(bins['audit'], expected)}
         killed = kills(base, observed)
         law = law_kill(tree) if name in LAW_MUTANTS else None
@@ -475,10 +550,12 @@ def main() -> int:
     tree = build_tree('base')
     bins = built(tree, ('model', 'audit', 'sweep'))
     listed = controls()
+    admitted = admitted_controls()
     base = {'goldens': golden_runs(bins['model'], expected),
             'inspection': inspection_runs(bins['model']),
             'fuel': fuel_runs(bins['model'], expected),
             'controls': control_runs(bins['model'], listed),
+            'admitted': admitted_runs(bins['model'], bins['audit'], admitted),
             'audit': audit_runs(bins['audit'], expected)}
     for check, rows in base.items():
         bad = {n: r['result'] for n, r in rows.items() if not r['agrees']}
@@ -488,7 +565,7 @@ def main() -> int:
     require(not bad, ('sweep', bad))
     with ThreadPoolExecutor(max_workers=2) as pool:
         proving = pool.submit(proof)
-        mutants = mutant_runs(expected, listed, {**base, 'sweep': swept})
+        mutants = mutant_runs(expected, listed, admitted, {**base, 'sweep': swept})
         proven = proving.result()
     require(proven['agrees'], ('proof', proven['result']))
     survivors = [m['mutant'] for m in mutants if not m['killed']]
@@ -501,7 +578,9 @@ def main() -> int:
         fuel=summary(base['fuel']),
         inspection={n: r['result']['stderr'].strip() for n, r in base['inspection'].items()},
         controls={n: r['reference'] for n, r in base['controls'].items()},
-        audit={n: {'transitions': r['transitions'], 'live': r['live']} for n, r in base['audit'].items()},
+        admitted={n: {'outcome': (r['result']['stdout'] or r['result']['stderr']).strip()[:120], 'calls': r['calls']}
+                  for n, r in base['admitted'].items()},
+        audit={n: {'transitions': r['transitions'], 'live': r['live'], 'calls': r['calls']} for n, r in base['audit'].items()},
         sweep={n: r['stats'] for n, r in swept.items()},
         proof={'laws': proven['laws'], 'stdout': proven['result']['stdout'].strip()},
         mutants=mutants)
@@ -509,7 +588,8 @@ def main() -> int:
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     swept_total = sum(r['stats']['mutations'] for r in swept.values())
     print(f"vm-model passed: {len(base['goldens'])} goldens, {len(base['fuel'])} fuel controls, "
-          f"{len(base['controls'])} refusal controls, {len(base['audit'])} audited runs, "
+          f"{len(base['controls'])} refusal controls, {len(base['admitted'])} admitted controls, "
+          f"{len(base['audit'])} audited runs, "
           f"{swept_total} swept mutations of {len(swept)} images, {proven['laws']} laws, "
           f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0

@@ -1,10 +1,10 @@
 {
  "gate": "vm-model",
- "date": "2026-09-28T09:35:09+00:00",
+ "date": "2026-09-28T10:49:00+00:00",
  "status": "passed",
  "sources": {
-  "model.bend": "ac4741b5e8c923b7a0dd78883ca4924fa2acc4f944a6000402d521571ae246bb",
-  "model-cli.bend": "618ac610240e679981a8458339308f3a99bb157a654d85938f4b0536401905d2",
+  "model.bend": "46ad2c17e7b27403c3d78c49f95a328dc98a06a21f23af89b154852274770e5d",
+  "model-cli.bend": "7cda62a2fa27fe44a05c30395f7bc2baacd2a82ea2249740d1c7a22deece9dbe",
   "model-audit.bend": "3675cf28ae8fb11574c2f67d74bd8c5f3046c67a26a2ed26b13582835e1df5a2",
   "model-sweep.bend": "318f1276ea395ae0403b5c5bb75d12938c14d3029f4128918dbe4bb12d163f00",
   "LAWS.bend": "37f956e04ef844fbb722fb7a5510a6039686c5cf13321f948daec72c7226c17b",
@@ -333,11 +333,63 @@
   "io-bind": {
    "exit": 0,
    "outcome": "a\nb"
+  },
+  "result-u32-field": {
+   "exit": 3,
+   "outcome": "Unsupported\tinvoke\tresult-type"
+  },
+  "result-char": {
+   "exit": 3,
+   "outcome": "Unsupported\tinvoke\tresult-type"
+  },
+  "result-string": {
+   "exit": 3,
+   "outcome": "Unsupported\tinvoke\tresult-type"
+  },
+  "print-non-scalar": {
+   "exit": 5,
+   "outcome": "HostFailure\tio\tabi"
+  },
+  "print-non-scalar-mid": {
+   "exit": 5,
+   "outcome": "HostFailure\tio\tabi"
+  },
+  "string-surrogate-pair": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tFalse{}"
+  },
+  "string-beyond-unicode": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tSucc{Zero{}}"
+  },
+  "print-non-scalar-wide": {
+   "exit": 5,
+   "outcome": "HostFailure\tio\tabi"
+  },
+  "non-scalar-code": {
+   "exit": 0,
+   "outcome": "55296"
+  },
+  "non-scalar-unprinted": {
+   "exit": 0,
+   "outcome": "a\nnonempty"
+  },
+  "print-non-scalar-second": {
+   "exit": 5,
+   "outcome": "a"
+  },
+  "invoke-args": {
+   "exit": 0,
+   "outcome": "Evaluated\t6\t0\tTwo{On{},Off{}}"
+  },
+  "invoke-arrow": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
   }
  },
  "fuel": {
-  "agree": 78,
-  "total": 78,
+  "agree": 88,
+  "total": 88,
   "differ": []
  },
  "inspection": {
@@ -408,314 +460,511 @@
   "plan:arrow-cycle": "HostFailure image: validator: types: arrow cycle",
   "model:child-is-parent": "HostFailure image: child after parent"
  },
+ "admitted": {
+  "plan:case-none-parameter": {
+   "outcome": "audit\tpassed\t6\tHostFailure\t1\t2",
+   "calls": 2
+  },
+  "plan:case-none-let": {
+   "outcome": "audit\tpassed\t10\tHostFailure\t1\t3",
+   "calls": 3
+  },
+  "plan:list-head-match": {
+   "outcome": "audit\tpassed\t14\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "codes:surrogate-pair": {
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "codes:u1f600": {
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "codes:lone-surrogate": {
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "codes:u10ffff": {
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "codes:u110000": {
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "codes:u32-max": {
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "codes:pair-beside-u1f600": {
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "run:arrow-through-identity": {
+   "outcome": "audit\tpassed\t14\tDescribed\t0\t3",
+   "calls": 3
+  },
+  "run:erased-closure-invoked-live": {
+   "outcome": "audit\tpassed\t12\tHostFailure\t2\t2",
+   "calls": 2
+  },
+  "run:live-closure-invoked-erased": {
+   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2",
+   "calls": 2
+  },
+  "run:terminal-invoked-erased": {
+   "outcome": "audit\tpassed\t16\tHostFailure\t1\t4",
+   "calls": 4
+  },
+  "run:phase-one-live": {
+   "outcome": "audit\tpassed\t8\tHostFailure\t1\t2",
+   "calls": 2
+  },
+  "run:phase-two-erased": {
+   "outcome": "audit\tpassed\t11\tHostFailure\t1\t3",
+   "calls": 3
+  },
+  "run:u32-file-alias": {
+   "outcome": "audit\tpassed\t7\tDescribed\t0\t1",
+   "calls": 1
+  }
+ },
  "audit": {
   "value-off": {
    "transitions": 3,
-   "live": 0
+   "live": 0,
+   "calls": 1
   },
   "value-on": {
    "transitions": 3,
-   "live": 0
+   "live": 0,
+   "calls": 1
   },
   "reference": {
    "transitions": 7,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "nested-call": {
    "transitions": 12,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "let": {
    "transitions": 7,
-   "live": 0
+   "live": 0,
+   "calls": 1
   },
   "shadow": {
    "transitions": 11,
-   "live": 0
+   "live": 0,
+   "calls": 1
   },
   "erased-let": {
    "transitions": 3,
-   "live": 0
+   "live": 0,
+   "calls": 1
   },
   "erased-argument": {
    "transitions": 7,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "case-off": {
    "transitions": 8,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "case-on": {
    "transitions": 8,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "construct": {
    "transitions": 5,
-   "live": 0
+   "live": 0,
+   "calls": 1
   },
   "unpack": {
    "transitions": 11,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "pair": {
    "transitions": 7,
-   "live": 0
+   "live": 0,
+   "calls": 1
   },
   "second": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "erased-field": {
    "transitions": 11,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "closure-id": {
    "transitions": 15,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "closure-capture-off": {
    "transitions": 16,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "closure-capture-on": {
    "transitions": 16,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "closure-return": {
    "transitions": 14,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "closure-nested": {
    "transitions": 21,
-   "live": 0
+   "live": 0,
+   "calls": 4
   },
   "closure-shadow": {
    "transitions": 15,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "u32-zero": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "u32-big": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "u32-wrap": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-unsigned": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "u32-div-zero": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-rem-zero": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-shift": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "nat-add": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "char-code": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "string-empty": {
    "transitions": 9,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "string-eq": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "string-append": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "string-reverse": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "default-hit": {
    "transitions": 8,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "default-miss": {
    "transitions": 8,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "nat-unpack": {
    "transitions": 9,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "foreign-print": {
    "transitions": 14,
-   "live": 0
+   "live": 0,
+   "calls": 5
   },
   "nat-sub-floor": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "char-space": {
    "transitions": 44,
-   "live": 0
+   "live": 0,
+   "calls": 7
   },
   "u32-show": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "string-length": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-not": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-shr": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "nat-mul": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "nat-show": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "char-eq": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "u32-cmp": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "case-char": {
    "transitions": 8,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "recursion-map": {
    "transitions": 50,
-   "live": 0
+   "live": 0,
+   "calls": 6
   },
   "recursion-tail": {
    "transitions": 32,
-   "live": 0
+   "live": 0,
+   "calls": 4
   },
   "erased-construct": {
    "transitions": 5,
-   "live": 0
+   "live": 0,
+   "calls": 1
   },
   "closure-captures": {
    "transitions": 22,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "nat-big": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "nat-range": {
    "transitions": 13,
-   "live": 2
+   "live": 2,
+   "calls": 2
   },
   "u32-ne": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "nat-ne": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "char-ne": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "string-ne-order": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "string-ne-length": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "u32-shr-32": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-shr-33": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-shl-33": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-sub-wrap": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-mul-wrap": {
    "transitions": 24,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-and": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "u32-lt-unsigned": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "nat-cmp": {
    "transitions": 13,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "u32-to-nat-big": {
    "transitions": 20,
-   "live": 0
+   "live": 0,
+   "calls": 3
   },
   "nat-pred": {
    "transitions": 9,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "nat-succ": {
    "transitions": 9,
-   "live": 0
+   "live": 0,
+   "calls": 2
   },
   "nat-succ-range": {
    "transitions": 9,
-   "live": 2
+   "live": 2,
+   "calls": 2
   },
   "nat-mul-range": {
    "transitions": 13,
-   "live": 2
+   "live": 2,
+   "calls": 2
   },
   "string-codes": {
    "transitions": 133,
-   "live": 0
+   "live": 0,
+   "calls": 17
   },
   "nat-show-codes": {
    "transitions": 90,
-   "live": 0
+   "live": 0,
+   "calls": 12
   },
   "string-append-mortal": {
    "transitions": 31,
-   "live": 0
+   "live": 0,
+   "calls": 4
   },
   "io-bind": {
    "transitions": 100,
-   "live": 0
+   "live": 0,
+   "calls": 21
+  },
+  "print-non-scalar": {
+   "transitions": 18,
+   "live": 2,
+   "calls": 4
+  },
+  "print-non-scalar-mid": {
+   "transitions": 12,
+   "live": 1,
+   "calls": 4
+  },
+  "string-surrogate-pair": {
+   "transitions": 13,
+   "live": 0,
+   "calls": 2
+  },
+  "string-beyond-unicode": {
+   "transitions": 9,
+   "live": 0,
+   "calls": 2
+  },
+  "print-non-scalar-wide": {
+   "transitions": 18,
+   "live": 2,
+   "calls": 4
+  },
+  "non-scalar-code": {
+   "transitions": 35,
+   "live": 0,
+   "calls": 8
+  },
+  "non-scalar-unprinted": {
+   "transitions": 67,
+   "live": 0,
+   "calls": 14
+  },
+  "print-non-scalar-second": {
+   "transitions": 62,
+   "live": 4,
+   "calls": 13
+  },
+  "invoke-args": {
+   "transitions": 13,
+   "live": 0,
+   "calls": 2
+  },
+  "invoke-arrow": {
+   "transitions": 15,
+   "live": 0,
+   "calls": 3
   }
  },
  "sweep": {
@@ -724,624 +973,637 @@
    "admitted": 49,
    "refused": 440,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "case-off": {
    "mutations": 369,
-   "admitted": 48,
-   "refused": 321,
+   "admitted": 49,
+   "refused": 320,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "case-on": {
    "mutations": 369,
-   "admitted": 48,
-   "refused": 321,
+   "admitted": 49,
+   "refused": 320,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "char-code": {
    "mutations": 528,
    "admitted": 67,
    "refused": 461,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "char-eq": {
    "mutations": 432,
    "admitted": 56,
    "refused": 376,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "char-ne": {
    "mutations": 444,
    "admitted": 56,
    "refused": 388,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "char-space": {
    "mutations": 849,
-   "admitted": 120,
-   "refused": 729,
+   "admitted": 122,
+   "refused": 727,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "closure-capture-off": {
    "mutations": 390,
    "admitted": 48,
    "refused": 342,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "closure-capture-on": {
    "mutations": 390,
    "admitted": 48,
    "refused": 342,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "closure-captures": {
    "mutations": 486,
    "admitted": 52,
    "refused": 434,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "closure-id": {
    "mutations": 375,
    "admitted": 46,
    "refused": 329,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "closure-nested": {
    "mutations": 429,
    "admitted": 48,
    "refused": 381,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "closure-return": {
    "mutations": 357,
    "admitted": 42,
    "refused": 315,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "closure-shadow": {
    "mutations": 354,
    "admitted": 39,
    "refused": 315,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "construct": {
    "mutations": 285,
    "admitted": 34,
    "refused": 251,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "default-hit": {
    "mutations": 399,
-   "admitted": 43,
-   "refused": 356,
+   "admitted": 44,
+   "refused": 355,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "default-miss": {
    "mutations": 399,
-   "admitted": 43,
-   "refused": 356,
+   "admitted": 44,
+   "refused": 355,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "erased-argument": {
    "mutations": 285,
    "admitted": 35,
    "refused": 250,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "erased-construct": {
    "mutations": 288,
    "admitted": 36,
    "refused": 252,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "erased-field": {
    "mutations": 396,
    "admitted": 49,
    "refused": 347,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "erased-let": {
    "mutations": 225,
    "admitted": 26,
    "refused": 199,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "foreign-print": {
    "mutations": 573,
    "admitted": 61,
    "refused": 512,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
+  },
+  "invoke-args": {
+   "mutations": 1425,
+   "admitted": 172,
+   "refused": 1253,
+   "unsound": 0,
+   "differ": 0
+  },
+  "invoke-arrow": {
+   "mutations": 372,
+   "admitted": 44,
+   "refused": 328,
+   "unsound": 0,
+   "differ": 0
   },
   "io-bind": {
    "mutations": 1194,
    "admitted": 95,
    "refused": 1099,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "let": {
    "mutations": 255,
    "admitted": 29,
    "refused": 226,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-add": {
    "mutations": 570,
    "admitted": 70,
    "refused": 500,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-big": {
    "mutations": 570,
    "admitted": 70,
    "refused": 500,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-cmp": {
    "mutations": 462,
    "admitted": 55,
    "refused": 407,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-mul": {
    "mutations": 570,
    "admitted": 70,
    "refused": 500,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-mul-range": {
    "mutations": 558,
    "admitted": 71,
    "refused": 487,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-ne": {
    "mutations": 444,
    "admitted": 56,
    "refused": 388,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-pred": {
    "mutations": 396,
-   "admitted": 50,
-   "refused": 346,
+   "admitted": 51,
+   "refused": 345,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-range": {
    "mutations": 558,
    "admitted": 72,
    "refused": 486,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-show": {
    "mutations": 684,
    "admitted": 86,
    "refused": 598,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-show-codes": {
    "mutations": 924,
    "admitted": 96,
    "refused": 828,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-sub-floor": {
    "mutations": 570,
    "admitted": 71,
    "refused": 499,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-succ": {
    "mutations": 318,
    "admitted": 38,
    "refused": 280,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-succ-range": {
    "mutations": 522,
    "admitted": 60,
    "refused": 462,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nat-unpack": {
    "mutations": 456,
-   "admitted": 48,
-   "refused": 408,
+   "admitted": 49,
+   "refused": 407,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "nested-call": {
    "mutations": 303,
    "admitted": 38,
    "refused": 265,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
+  },
+  "non-scalar-code": {
+   "mutations": 822,
+   "admitted": 81,
+   "refused": 741,
+   "unsound": 0,
+   "differ": 0
+  },
+  "non-scalar-unprinted": {
+   "mutations": 1245,
+   "admitted": 138,
+   "refused": 1107,
+   "unsound": 0,
+   "differ": 0
   },
   "pair": {
    "mutations": 303,
    "admitted": 38,
    "refused": 265,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
+  },
+  "print-non-scalar": {
+   "mutations": 621,
+   "admitted": 59,
+   "refused": 562,
+   "unsound": 0,
+   "differ": 0
+  },
+  "print-non-scalar-mid": {
+   "mutations": 576,
+   "admitted": 64,
+   "refused": 512,
+   "unsound": 0,
+   "differ": 0
+  },
+  "print-non-scalar-second": {
+   "mutations": 1104,
+   "admitted": 95,
+   "refused": 1009,
+   "unsound": 0,
+   "differ": 0
+  },
+  "print-non-scalar-wide": {
+   "mutations": 621,
+   "admitted": 59,
+   "refused": 562,
+   "unsound": 0,
+   "differ": 0
   },
   "recursion-map": {
    "mutations": 714,
-   "admitted": 74,
-   "refused": 640,
+   "admitted": 75,
+   "refused": 639,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "recursion-tail": {
    "mutations": 567,
    "admitted": 65,
    "refused": 502,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "reference": {
    "mutations": 285,
    "admitted": 35,
    "refused": 250,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
+  },
+  "result-char": {
+   "mutations": 240,
+   "admitted": 0,
+   "refused": 240,
+   "unsound": 0,
+   "differ": 0
+  },
+  "result-string": {
+   "mutations": 324,
+   "admitted": 0,
+   "refused": 324,
+   "unsound": 0,
+   "differ": 0
   },
   "result-u32": {
    "mutations": 315,
    "admitted": 0,
    "refused": 315,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
+  },
+  "result-u32-field": {
+   "mutations": 249,
+   "admitted": 0,
+   "refused": 249,
+   "unsound": 0,
+   "differ": 0
   },
   "second": {
    "mutations": 414,
    "admitted": 55,
    "refused": 359,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "shadow": {
    "mutations": 285,
    "admitted": 34,
    "refused": 251,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "string-append": {
    "mutations": 660,
    "admitted": 87,
    "refused": 573,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "string-append-mortal": {
    "mutations": 741,
    "admitted": 95,
    "refused": 646,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
+  },
+  "string-beyond-unicode": {
+   "mutations": 483,
+   "admitted": 62,
+   "refused": 421,
+   "unsound": 0,
+   "differ": 0
   },
   "string-codes": {
    "mutations": 1146,
    "admitted": 123,
    "refused": 1023,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "string-empty": {
    "mutations": 480,
    "admitted": 62,
    "refused": 418,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "string-eq": {
    "mutations": 519,
    "admitted": 73,
    "refused": 446,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 1
+   "differ": 0
   },
   "string-length": {
    "mutations": 693,
    "admitted": 94,
    "refused": 599,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "string-ne-length": {
    "mutations": 534,
    "admitted": 78,
    "refused": 456,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "string-ne-order": {
    "mutations": 531,
    "admitted": 75,
    "refused": 456,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "string-reverse": {
    "mutations": 618,
    "admitted": 85,
    "refused": 533,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
+  },
+  "string-surrogate-pair": {
+   "mutations": 528,
+   "admitted": 72,
+   "refused": 456,
+   "unsound": 0,
+   "differ": 0
   },
   "u32-and": {
    "mutations": 474,
    "admitted": 59,
    "refused": 415,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-big": {
    "mutations": 381,
    "admitted": 52,
    "refused": 329,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-cmp": {
    "mutations": 411,
    "admitted": 54,
    "refused": 357,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-div-zero": {
    "mutations": 507,
    "admitted": 71,
    "refused": 436,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-lt-unsigned": {
    "mutations": 393,
    "admitted": 56,
    "refused": 337,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-mul-wrap": {
    "mutations": 507,
    "admitted": 68,
    "refused": 439,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-ne": {
    "mutations": 393,
    "admitted": 53,
    "refused": 340,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-not": {
    "mutations": 474,
    "admitted": 58,
    "refused": 416,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-rem-zero": {
    "mutations": 507,
    "admitted": 68,
    "refused": 439,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-shift": {
    "mutations": 594,
    "admitted": 72,
    "refused": 522,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-shl-33": {
    "mutations": 474,
    "admitted": 58,
    "refused": 416,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-show": {
    "mutations": 633,
    "admitted": 102,
    "refused": 531,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-shr": {
    "mutations": 594,
    "admitted": 75,
    "refused": 519,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-shr-32": {
    "mutations": 474,
    "admitted": 58,
    "refused": 416,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-shr-33": {
    "mutations": 474,
    "admitted": 58,
    "refused": 416,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-sub-wrap": {
    "mutations": 519,
    "admitted": 70,
    "refused": 449,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-to-nat-big": {
    "mutations": 552,
    "admitted": 71,
    "refused": 481,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-unsigned": {
    "mutations": 393,
    "admitted": 53,
    "refused": 340,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-wrap": {
    "mutations": 519,
    "admitted": 65,
    "refused": 454,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "u32-zero": {
    "mutations": 381,
    "admitted": 52,
    "refused": 329,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "unpack": {
    "mutations": 393,
    "admitted": 47,
    "refused": 346,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "value-off": {
    "mutations": 225,
    "admitted": 26,
    "refused": 199,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   },
   "value-on": {
    "mutations": 225,
    "admitted": 26,
    "refused": 199,
    "unsound": 0,
-   "differ": 0,
-   "plan-text": 0
+   "differ": 0
   }
  },
  "proof": {
@@ -1363,7 +1625,7 @@
     "goldens:nat-show",
     "goldens:recursion-tail"
    ],
-   "kills": 29,
+   "kills": 42,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -1381,7 +1643,7 @@
     "audit:nat-big",
     "audit:u32-sub-wrap"
    ],
-   "kills": 12,
+   "kills": 14,
    "law": null,
    "crashes": 0
   },
@@ -1404,16 +1666,16 @@
    "breaks": "a tail entry does not release its caller",
    "killed": true,
    "by": [
-    "audit:reference",
-    "audit:nested-call",
-    "audit:erased-argument",
-    "audit:case-off",
-    "audit:case-on",
-    "audit:unpack",
-    "audit:second",
-    "audit:erased-field"
+    "admitted:plan:case-none-parameter",
+    "admitted:plan:case-none-let",
+    "admitted:plan:list-head-match",
+    "admitted:codes:surrogate-pair",
+    "admitted:codes:u1f600",
+    "admitted:codes:lone-surrogate",
+    "admitted:codes:u10ffff",
+    "admitted:codes:u110000"
    ],
-   "kills": 66,
+   "kills": 89,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -1422,16 +1684,16 @@
    "breaks": "leaving a scope keeps its slots",
    "killed": true,
    "by": [
+    "admitted:plan:list-head-match",
+    "admitted:run:u32-file-alias",
     "audit:let",
     "audit:shadow",
     "audit:unpack",
     "audit:second",
     "audit:erased-field",
-    "audit:nat-unpack",
-    "audit:recursion-map",
-    "audit:nat-pred"
+    "audit:nat-unpack"
    ],
-   "kills": 10,
+   "kills": 13,
    "law": null,
    "crashes": 0
   },
@@ -1449,7 +1711,7 @@
     "goldens:char-space",
     "goldens:recursion-map"
    ],
-   "kills": 15,
+   "kills": 21,
    "law": "recursion_map_runs",
    "crashes": 0
   },
@@ -1467,7 +1729,7 @@
     "goldens:case-on",
     "goldens:unpack"
    ],
-   "kills": 140,
+   "kills": 166,
    "law": null,
    "crashes": 0
   },
@@ -1485,7 +1747,7 @@
     "goldens:closure-captures",
     "goldens:io-bind"
    ],
-   "kills": 16,
+   "kills": 26,
    "law": null,
    "crashes": 0
   },
@@ -1549,7 +1811,7 @@
     "fuel:erased-let",
     "fuel:erased-argument"
    ],
-   "kills": 77,
+   "kills": 87,
    "law": null,
    "crashes": 0
   },
@@ -1580,9 +1842,11 @@
    "breaks": "words are read without inspection",
    "killed": true,
    "by": [
-    "inspection:inspect-case"
+    "inspection:inspect-case",
+    "admitted:plan:case-none-parameter",
+    "admitted:plan:case-none-let"
    ],
-   "kills": 1,
+   "kills": 3,
    "law": null,
    "crashes": 0
   }

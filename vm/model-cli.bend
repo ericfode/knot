@@ -109,14 +109,18 @@ def machine_outcome(m: M.Machine) -> M.Outcome:
     case M.Machine{M.Finished{outcome},stack,heap,meter,out}: outcome
     case _: M.Stopped{M.Internal{"unfinished machine"},M.Eval{0}}
 
+def calls_of(m: M.Machine) -> U32:
+  match m:
+    case M.Machine{control,stack,heap,M.Meter{fuel,calls,quantum},out}: calls
+
 # The audit line: whether every transition balanced and a completed run
-# released every mortal cell, the transitions audited, the outcome and the
-# mortal cells still live.
+# released every mortal cell, the transitions audited, the outcome, the
+# mortal cells still live and the entries paid for (SPEC §7's `calls`).
 def audit_report(+code: M.Code, +m: M.Machine, +steps: U32, balanced: Bool) -> IO(Unit):
   +outcome = machine_outcome(m)
   +live = M.leaked(code,m)
   +passed = Bool.and(Bool.and(balanced,M.balanced(code,m)),Bool.or(Bool.not(completes(outcome)),U32.is_eq(live,0)))
-  +line = String.concat(["audit\t",Bool.pick(String,passed,"passed","failed"),"\t",U32.show(steps),"\t",outcome_name(outcome),"\t",U32.show(live)])
+  +line = String.concat(["audit\t",Bool.pick(String,passed,"passed","failed"),"\t",U32.show(steps),"\t",outcome_name(outcome),"\t",U32.show(live),"\t",U32.show(calls_of(m))])
   M.choose(IO(Unit),passed,u => IO.print(line),u => IO.die(Unit,6,line))
 
 def audit_settled(+code: M.Code, result: Result<M.Stop,M.Machine>, +steps: U32, balanced: Bool) -> IO(Unit):
