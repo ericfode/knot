@@ -1003,7 +1003,7 @@
      "outcome": "Completed",
      "calls": 2
     },
-    "basis": "The control: let c = Chr{id(2^31)} in case c: Chr{w} -> U32.is_eq(w, 2^31). The Big code passes the inspection and Chr keeps the word itself, the pool's Big cell; the Case binds it and the prim compares values: True{} (Bool is type 0) after 2 entries"
+    "basis": "The control: let c = Chr{id(2^31)} in case c: Chr{w} -> U32.is_eq(w, 2^31). The Big code passes the inspection, and its value reaches the prim unchanged through Chr and the Case: True{} (Bool is type 0) after 2 entries. This pins the value, not the cell: a VM that re-boxed the code would also pass"
    }
   ]
  }
