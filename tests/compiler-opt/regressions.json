@@ -1,0 +1,527 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-09-28T02:16:56.453740+00:00",
+  "basis": "Literal regression expectations and pinned seed, unoptimized evaluator, and unoptimized fields Wasm observations fixed before review-round-2 optimizer repairs. Existing frozen expectations remain unchanged.",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "seed_hashes": {
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "off_compile_entry": "tests/compiler-fields-wasm/compile.bend",
+  "off_eval_entry": "src/eval-cli.bend",
+  "off_entry_hashes": {
+    "tests/compiler-fields-wasm/compile.bend": "48927236439b6e2d56532525be1a11ebba7b89aefdf4f83b8568cf38a53ab3c7",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee"
+  },
+  "cases": [
+    {
+      "name": "r_4_13",
+      "file": "tests/compiler-opt/regressions/r_4_13.bend",
+      "source_sha256": "ea2cb54274e4aa24c7ae6b53942b559659f6061338f7984cb807d82d41bd7c34",
+      "type": "T",
+      "type_id": 0,
+      "constructors": [
+        "A",
+        "B"
+      ],
+      "purpose": "A slow-converging sequence of known enum cases remains a successful program after the bounded optimizer rounds.",
+      "calls": [
+        {
+          "export": "g",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.g(F.A{})",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_4_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        },
+        {
+          "export": "g",
+          "arguments": [
+            1
+          ],
+          "tag": 0,
+          "seed": "F.g(F.B{})",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_4_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        },
+        {
+          "export": "f4",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f4(F.A{})",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_4_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        },
+        {
+          "export": "f4",
+          "arguments": [
+            1
+          ],
+          "tag": 0,
+          "seed": "F.f4(F.B{})",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_4_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        },
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_4_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        }
+      ],
+      "seed_main": {
+        "exit": 0,
+        "stdout": "A{}",
+        "stderr": ""
+      },
+      "baseline": {
+        "source": "tests/compiler-opt/regressions/r_4_13.bend",
+        "source_sha256": "ea2cb54274e4aa24c7ae6b53942b559659f6061338f7984cb807d82d41bd7c34",
+        "budgets": [],
+        "exit": 0,
+        "stdout": "Built\t215",
+        "stderr": "",
+        "wasm_sha256": "8b0dbf3b3c33bc6a43eeab036ea72d4e6035eeec15df5bf9c9460dcd3a766bf6",
+        "bytes": 215,
+        "abi": [
+          {
+            "name": "f0",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "g",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f1",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f2",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f3",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f4",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "main",
+            "signature": "(func (result i32))"
+          }
+        ]
+      }
+    },
+    {
+      "name": "r_20_13",
+      "file": "tests/compiler-opt/regressions/r_20_13.bend",
+      "source_sha256": "d5bd25abdf7602e584614023e8fdcbe931432282f75419215bc9f8fcffb563f8",
+      "type": "T",
+      "type_id": 0,
+      "constructors": [
+        "A",
+        "B"
+      ],
+      "purpose": "A slow-converging sequence of known enum cases remains a successful program after the bounded optimizer rounds.",
+      "calls": [
+        {
+          "export": "g",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.g(F.A{})",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_20_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        },
+        {
+          "export": "g",
+          "arguments": [
+            1
+          ],
+          "tag": 0,
+          "seed": "F.g(F.B{})",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_20_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        },
+        {
+          "export": "f20",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f20(F.A{})",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_20_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        },
+        {
+          "export": "f20",
+          "arguments": [
+            1
+          ],
+          "tag": 0,
+          "seed": "F.f20(F.B{})",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_20_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        },
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/r_20_13.A{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tA{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 0
+          }
+        }
+      ],
+      "seed_main": {
+        "exit": 0,
+        "stdout": "A{}",
+        "stderr": ""
+      },
+      "baseline": {
+        "source": "tests/compiler-opt/regressions/r_20_13.bend",
+        "source_sha256": "d5bd25abdf7602e584614023e8fdcbe931432282f75419215bc9f8fcffb563f8",
+        "budgets": [],
+        "exit": 0,
+        "stdout": "Built\t548",
+        "stderr": "",
+        "wasm_sha256": "35c7017fce542406eeb59815839fe4901055a30c13274a9ba48b1edce3fd6127",
+        "bytes": 548,
+        "abi": [
+          {
+            "name": "f0",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "g",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f1",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f2",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f3",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f4",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f5",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f6",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f7",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f8",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f9",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f10",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f11",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f12",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f13",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f14",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f15",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f16",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f17",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f18",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f19",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "f20",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "main",
+            "signature": "(func (result i32))"
+          }
+        ]
+      }
+    },
+    {
+      "name": "arena-sharing",
+      "file": "tests/compiler-opt/regressions/arena-sharing.bend",
+      "source_sha256": "fc64b65f3bce093f105734aadf7e7ca9a51a7b8b53cbc00676ba627a1d6777ba",
+      "type": "Flag",
+      "type_id": 1,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "purpose": "The unoptimized fields module succeeds below its 65536-byte arena bound; preserving one shared boxed Zero cell must not become eight allocations.",
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()",
+          "reference": {
+            "exit": 0,
+            "stdout": "../../../tests/compiler-opt/regressions/arena-sharing.On{}",
+            "stderr": ""
+          },
+          "off_evaluator": {
+            "exit": 0,
+            "stdout": "Evaluated\t1\t1\tOn{}",
+            "stderr": ""
+          },
+          "off_wasm": {
+            "exit": 0,
+            "validated": true,
+            "result": 1
+          }
+        }
+      ],
+      "seed_main": {
+        "exit": 0,
+        "stdout": "On{}",
+        "stderr": ""
+      },
+      "baseline": {
+        "source": "tests/compiler-opt/regressions/arena-sharing.bend",
+        "source_sha256": "fc64b65f3bce093f105734aadf7e7ca9a51a7b8b53cbc00676ba627a1d6777ba",
+        "budgets": [],
+        "exit": 0,
+        "stdout": "Built\t3891",
+        "stderr": "",
+        "wasm_sha256": "e6ddbdd9b0897cfb61663852f35a46d8243ffdea0cf74c3dfaf8d3e6086703e8",
+        "bytes": 3891,
+        "abi": [
+          {
+            "name": "double",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "build",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "last",
+            "signature": "(func (param i32) (result i32))"
+          },
+          {
+            "name": "main",
+            "signature": "(func (result i32))"
+          }
+        ]
+      }
+    }
+  ],
+  "abi_control": {
+    "name": "known",
+    "file": "tests/compiler-opt/fixtures/known.bend",
+    "source_sha256": "42753e3f25821ceba3e834fde1a731e3c50367e9181ce95335b6841e583506c6",
+    "wasm_sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+    "bytes": 70,
+    "abi": [
+      {
+        "name": "choose",
+        "signature": "(func (param i32) (result i32))"
+      },
+      {
+        "name": "main",
+        "signature": "(func (result i32))"
+      }
+    ],
+    "retained_export": "main",
+    "omitted_export": "choose",
+    "retained_call": {
+      "export": "main",
+      "arguments": [],
+      "tag": 1,
+      "seed": "F.main()"
+    },
+    "off_wasm": {
+      "exit": 0,
+      "validated": true,
+      "result": 1
+    },
+    "basis": "Existing frozen source and off-module hash; literal reviewed exports choose(i32)->i32 and main()->i32, decoded from the independently built unoptimized module. An ABI deletion mutant must retain main and its successful result while omitting choose."
+  }
+}
