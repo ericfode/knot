@@ -208,13 +208,17 @@ need:
 ## Seed behaviour worth knowing
 
 - **`List.length` overflows the JS lane.** `List.length(&2,U32,xs)` recurses
-  without a tail call. At 65,536 elements, and at every larger size tried, it
-  faults with `bend: memory fault (machine stack overflow?)` and exits 1.
-  `src/compile-cli.bend` reports its Built count with
-  `U32.from_nat(List.length(&2,U32,bytes))` after the write. `write-bytes`
-  therefore reports the requested count instead. The file had already been
-  written in full when the fault came. Whether compile-cli is affected on its
-  build lanes was not measured here.
+  without a tail call. It faults with `bend: memory fault (machine stack
+  overflow?)` and exits 1 well below 64 KiB: a minimal probe (an `IO.args`
+  count, a tail-recursive list builder, then `List.length`) printed 31,875 and
+  faulted at 31,933, stably over three runs. The exact bound shifts with the
+  stack depth at the call site. `src/compile-cli.bend` reports its Built count
+  with `U32.from_nat(List.length(&2,U32,bytes))` after the write, and its
+  default output budget is 65,536 bytes, so modules inside that budget can
+  reach the fault. A probe with compile-cli's write shape wrote 40,000 bytes
+  in full and then faulted; 20,000 completed. `write-bytes` therefore reports
+  the requested count instead. Whether compile-cli is affected on its build
+  lanes was not measured here.
 - **`IO.get_env` on an unset variable** answers `Fail{(2, "No such file or
   directory")}`.
 - **File creation mode.** The seed opens new files with mode 0644, before the
