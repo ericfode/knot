@@ -16,13 +16,16 @@ seed's native lane and requires:
   `none`-typed identity is refused ill-typed where it is read (a Case scrutinee,
   a prim operand, Chr's operand, a rendered word before its visit is charged),
   as the reference evaluation refuses it;
-- every admitted control run to its outcome and call count (SPEC sections 4 and
-  7): check-spec's admitted plan controls and code-list controls, as the
-  reference evaluation (vm/evaluate.py) runs them, its run controls as frozen
+- every admitted control run to its outcome, its written output and its call
+  count (SPEC sections 4 and 7): check-spec's admitted plan controls and
+  code-list controls, as the reference evaluation (vm/evaluate.py) runs them,
+  its run controls at the fuel frozen with each and to the run frozen with it
   (a display line by its SHA-256), and the model's own controls in
   vm/model-controls/, whose frozen values the seed and the reference evaluation
   reproduce, and its display controls, frozen by literal review; each count is
   check-spec's own, never a literal here;
+- the harness mutant `fuel-ignored`, which runs every run control at 1,000,000,
+  killed by exactly the fuel controls whose frozen run differs there;
 - the RC audit before every transition of every golden and admitted control, no
   live mortal cell after each completed run, and the reference evaluation's call
   count at the end of each run;
@@ -184,16 +187,24 @@ def argv_of(model: Path, name: str, argv: list) -> list:
     return [model, '--', GOLDEN / f'{name}.kimg', *argv[1:]]
 
 
+def written(case: dict, got: dict) -> bool:
+    """The output a run wrote before it halted: frozen as text, or a display line by its SHA-256."""
+    if 'stdout_sha256' in case:
+        return sha(got['stdout'].encode()) == case['stdout_sha256']
+    return got['stdout'] == case.get('stdout', '')
+
+
 def agrees(case: dict, got: dict) -> bool:
     if 'outcome' not in case:
-        return (got['exit'], got['stdout'], got['stderr']) == (case['exit'], case['stdout'], case['stderr'])
+        return (got['exit'], got['stderr']) == (case['exit'], case.get('stderr', '')) and written(case, got)
     fields = got['stderr'].rstrip('\n').split('\t')
     if case['outcome'] == 'Exhausted':
-        return got['exit'] == 4 and got['stdout'] == '' and fields == ['Exhausted', 'vm', str(case['kind']), case['cause']]
+        # A Program that runs out of fuel keeps what it wrote (SPEC section 7).
+        return got['exit'] == 4 and written(case, got) and fields == ['Exhausted', 'vm', str(case['kind']), case['cause']]
     if case['outcome'] == 'Unsupported':
         return got['exit'] == 3 and got['stdout'] == '' and fields == ['Unsupported', *case['cause'].split(' ')]
     if case['outcome'] == 'HostFailure':
-        return got['exit'] == 5 and got['stdout'] == case.get('stdout', '') and fields == ['HostFailure', *case['cause'].split(' ')]
+        return got['exit'] == 5 and written(case, got) and fields == ['HostFailure', *case['cause'].split(' ')]
     return False
 
 
@@ -298,56 +309,65 @@ def control_runs(model: Path, listed: list) -> dict:
 
 
 def expected_run(got: dict) -> dict:
-    """A reference run in vm-expected.json's shape: an exit and its stdout, or an outcome."""
+    """A reference run in vm-expected.json's shape: an exit and its stdout, or an outcome
+    with what a Program wrote before it."""
     if 'exit' in got:
         return {'exit': got['exit'], 'stdout': got['stdout'], 'stderr': ''}
-    return {k: got[k] for k in ('outcome', 'kind', 'cause') if k in got}
+    return {k: got[k] for k in ('outcome', 'kind', 'cause', 'stdout') if k in got}
+
+
+def reference_run(plan: dict, fuel: int) -> dict:
+    got = reference.book(plan, 'main', [], fuel) if plan['entry'] == 'book' else reference.program(plan, fuel)
+    return {**got, 'stdout': got['stdout'].decode('utf-8')} if isinstance(got.get('stdout'), bytes) else got
 
 
 def admitted_controls() -> list:
-    """(label, plan, run, calls) for images the validator MUST admit and the VM MUST run to
-    `run` after `calls` entries (SPEC sections 4 and 7): check-spec's admitted plan controls
-    and code-list controls under the reference evaluation, its frozen run controls and the
-    model's own frozen controls, seed-derived and display."""
+    """(label, plan, fuel, run, calls) for images the validator MUST admit and the VM MUST run
+    at `fuel` to `run` after `calls` entries (SPEC sections 4 and 7): check-spec's admitted
+    plan controls and code-list controls, its frozen run controls and the model's own frozen
+    controls, seed-derived and display. A run control runs at the fuel frozen with it, every
+    other control at SPEC section 7's 1,000,000; the reference evaluation runs each at that
+    fuel and reproduces what the control froze."""
     plans = golden_plans()
-    listed = [(f'plan:{k}', p, None) for k, p, m in cs.plan_controls(plans) if m is None]
-    listed += [(k, p, None) for k, p in cs.code_controls(plans)]
+    listed = [(f'plan:{k}', p, {}) for k, p, m in cs.plan_controls(plans) if m is None]
+    listed += [(k, p, {}) for k, p in cs.code_controls(plans)]
     listed += [(f'run:{k}', p, frozen) for k, p, frozen in cs.run_controls(plans)]
     listed += [(f'model:{k}', p, {'exit': 0, 'stdout': line}) for k, p, line in MODEL_CONTROLS]
     listed += [(f'model:{k}', p, frozen) for k, p, frozen in DISPLAY_CONTROLS]
     require(all(any(k.startswith(f'{kind}:') for k, _, _ in listed) for kind in ('plan', 'codes', 'run')),
             'check-spec lists admitted plan, code-list and run controls')
+    require(any('fuel' in frozen for k, _, frozen in listed if k.startswith('run:')), 'check-spec freezes fuel run controls')
     out = []
     for label, plan, frozen in listed:
         require(cs.rejected(codec.encode(plan, DIGEST), REGISTRY, DIGEST) is None, f'{label}: the reference codec refuses it')
-        # check-spec's own comparison: a display line is frozen by its SHA-256.
-        if frozen is not None:
-            observed = cs.ran(plan, frozen)
-            require(observed == frozen, f'{label}: the reference evaluation gives {observed}')
-        got = reference.book(plan, 'main', [], 1000000) if plan['entry'] == 'book' else reference.program(plan, 1000000)
-        if plan['entry'] == 'program':
-            got = {**got, 'stdout': got['stdout'].decode('utf-8')}
-        out.append((label, plan, expected_run(got), got['calls']))
+        fuel = frozen.get('fuel', cs.VM_FUEL)
+        # check-spec's own comparison, at the control's fuel: a display line is frozen by its SHA-256.
+        observed = cs.ran(plan, frozen)
+        require(observed == frozen, f'{label}: the reference evaluation gives {observed}')
+        got = reference_run(plan, fuel)
+        want = {k: v for k, v in frozen.items() if k not in ('fuel', 'calls')} or expected_run(got)
+        out.append((label, plan, fuel, want, frozen.get('calls', got['calls'])))
     return out
 
 
-def control_argv(binary: Path, path: Path, plan: dict) -> list:
-    return [binary, '--', path, 'main', '1000000'] if plan['entry'] == 'book' else [binary, '--', path, '1000000', '--']
+def control_argv(binary: Path, path: Path, plan: dict, fuel: int) -> list:
+    """SPEC section 8's command line for a control, as check-spec's receipt records it."""
+    return [binary, '--', path, *cs.run_argv(plan, {'fuel': fuel})[1:]]
 
 
-def admitted_runs(model: Path, audit: Path, listed: list) -> dict:
-    """Each admitted control's run, its RC audit and its entries paid for."""
+def admitted_runs(model: Path, audit: Path, listed: list, argv=control_argv) -> dict:
+    """Each admitted control's run at its fuel, its RC audit and its entries paid for."""
     folder = BUILD / 'admitted'
     folder.mkdir(parents=True, exist_ok=True)
 
     def one(item):
-        label, plan, want, calls = item
+        label, plan, fuel, want, calls = item
         path = folder / (label.replace(':', '_') + '.kimg')
         data = codec.encode(plan, DIGEST)
         if not path.exists() or path.read_bytes() != data:
             path.write_bytes(data)
-        result = run(control_argv(model, path, plan), 120)
-        audited = run(control_argv(audit, path, plan), 300)
+        result = run(argv(model, path, plan, fuel), 120)
+        audited = run(argv(audit, path, plan, fuel), 300)
         m = AUDIT.match(audited['stdout'].strip())
         balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and (
             'exit' not in want or m.group(4) == '0') and int(m.group(5)) == calls
@@ -358,14 +378,32 @@ def admitted_runs(model: Path, audit: Path, listed: list) -> dict:
         return dict(pool.map(one, listed))
 
 
+# Harness mutants: the gate's own reading of the run controls, weakened. Each runs the
+# run controls against the base model and must be killed by the controls named.
+def fuel_ignored(binary: Path, path: Path, plan: dict, fuel: int) -> list:
+    return control_argv(binary, path, plan, cs.VM_FUEL)
+
+
+def harness_runs(model: Path, audit: Path, admitted: list, base: dict) -> list:
+    """`fuel-ignored` runs every control at 1,000,000: exactly the fuel controls whose frozen
+    run differs from the reference evaluation's at 1,000,000 must kill it."""
+    runs = [a for a in admitted if a[0].startswith('run:')]
+    killers = sorted(label for label, plan, fuel, want, calls in runs
+                     if fuel != cs.VM_FUEL and cs.ran(plan, {**want, 'calls': calls}) != {**want, 'calls': calls})
+    got = admitted_runs(model, audit, runs, fuel_ignored)
+    killed = sorted(n for n, r in got.items() if not r['agrees'] and base[n]['agrees'])
+    require(killers and killed == killers, f'harness mutant fuel-ignored: killed by {killed}, the fuel controls {killers}')
+    return [{'mutant': 'fuel-ignored', 'breaks': 'each run control runs at 1,000,000, not its frozen fuel', 'by': killed}]
+
+
 AUDIT = re.compile(r'^audit\t(passed|failed)\t(\d+)\t(\w+)\t(\d+)\t(\d+)$')
 
 
 def reference_calls(plan: dict, argv: list) -> int:
     """Entries the reference evaluation pays for on a golden's command line (SPEC section 7)."""
     if plan['entry'] == 'program':
-        return reference.program(plan, int(argv[1]))['calls']
-    return reference.book(plan, argv[1], [int(x) for x in argv[3:]], int(argv[2]))['calls']
+        return reference.program(plan, codec.decimal(argv[1]))['calls']
+    return reference.book(plan, argv[1], [codec.decimal(x) for x in argv[3:]], codec.decimal(argv[2]))['calls']
 
 
 def audit_runs(audit: Path, expected: dict) -> dict:
@@ -815,6 +853,7 @@ def main() -> int:
     require(proven['agrees'], ('proof', proven['result']))
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
+    harness = harness_runs(bins['model'], bins['audit'], admitted, base['admitted'])
 
     record.update(
         status='passed',
@@ -830,7 +869,8 @@ def main() -> int:
         audit={n: {'transitions': r['transitions'], 'live': r['live'], 'calls': r['calls']} for n, r in base['audit'].items()},
         sweep={n: r['stats'] for n, r in swept.items()},
         proof={'laws': proven['laws'], 'stdout': proven['result']['stdout'].strip()},
-        mutants=mutants)
+        mutants=mutants,
+        harness_mutants=harness)
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     swept_total = sum(r['stats']['mutations'] for r in swept.values())
@@ -840,7 +880,7 @@ def main() -> int:
           f"({', '.join(f'{n} {k}' for k, n in kinds(base['admitted']).items())}), "
           f"{len(base['audit'])} audited runs, "
           f"{swept_total} swept mutations of {len(swept)} images, {proven['laws']} laws, "
-          f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
+          f"{len(mutants)} killed mutants, {len(harness)} killed harness mutant; {RECEIPT.relative_to(ROOT)}")
     return 0
 
 
