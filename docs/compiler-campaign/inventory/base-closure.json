@@ -5947,7 +5947,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 585,
+          "declarations": 588,
           "base": 93,
           "base_intrinsics": 27,
           "foreign": 7
@@ -8139,6 +8139,7 @@
               "src/catalog.find_type",
               "src/catalog.parameters",
               "src/catalog.signature",
+              "src/catalog.signature_scope",
               "src/core.Datatype",
               "src/core.Signature",
               "src/core.exhausted",
@@ -8371,8 +8372,8 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.field_type",
-              "src/catalog.find_type",
               "src/catalog.named",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
@@ -8666,6 +8667,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.scoped_type",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.fields",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "U32",
+              "src/catalog.TypeRef",
+              "src/catalog.find_type",
+              "src/catalog.unshadowed",
+              "src/core.Datatype",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.signature",
             "file": "src/catalog.bend",
             "via": "src/catalog.collect_signatures",
@@ -8678,6 +8701,26 @@
               "src/core.Parameter",
               "src/core.Signature",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/catalog.signature_scope",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "Unit",
+              "src/catalog.named",
+              "src/catalog.unshadowed",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -8735,6 +8778,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.unshadowed",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.signature_scope",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "String",
+              "Unit",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -8746,9 +8808,11 @@
               "Maybe",
               "Result",
               "U32",
-              "src/catalog.find_type",
+              "src/catalog.scoped_type",
               "src/check.annotation_id",
+              "src/core.Binding",
               "src/core.Datatype",
+              "src/scope.bound",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -13172,10 +13236,12 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "List",
               "Maybe",
               "Result",
+              "String",
               "src/qualify.Names",
-              "src/qualify.reference",
+              "src/qualify.local",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -13733,7 +13799,7 @@
           {
             "key": "src/qualify.reference",
             "file": "src/qualify.bend",
-            "via": "src/qualify.walk_in",
+            "via": "src/qualify.constructor_token",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13949,6 +14015,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.pick",
               "List",
               "List.append",
               "Maybe",
@@ -13969,7 +14036,6 @@
               "src/qualify.local",
               "src/qualify.pattern",
               "src/qualify.prepend",
-              "src/qualify.reference",
               "src/qualify.sequence",
               "src/qualify.then",
               "src/qualify.visible",
@@ -14040,7 +14106,7 @@
           {
             "key": "src/scope.bound",
             "file": "src/scope.bend",
-            "via": "src/check.callable",
+            "via": "src/check.annotation",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16540,7 +16606,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 585,
+          "declarations": 588,
           "base": 93,
           "base_intrinsics": 25,
           "foreign": 7
@@ -18732,6 +18798,7 @@
               "src/catalog.find_type",
               "src/catalog.parameters",
               "src/catalog.signature",
+              "src/catalog.signature_scope",
               "src/core.Datatype",
               "src/core.Signature",
               "src/core.exhausted",
@@ -18964,8 +19031,8 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.field_type",
-              "src/catalog.find_type",
               "src/catalog.named",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
@@ -19259,6 +19326,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.scoped_type",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.fields",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "U32",
+              "src/catalog.TypeRef",
+              "src/catalog.find_type",
+              "src/catalog.unshadowed",
+              "src/core.Datatype",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.signature",
             "file": "src/catalog.bend",
             "via": "src/catalog.collect_signatures",
@@ -19271,6 +19360,26 @@
               "src/core.Parameter",
               "src/core.Signature",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/catalog.signature_scope",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "Unit",
+              "src/catalog.named",
+              "src/catalog.unshadowed",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -19328,6 +19437,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.unshadowed",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.signature_scope",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "String",
+              "Unit",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -19339,9 +19467,11 @@
               "Maybe",
               "Result",
               "U32",
-              "src/catalog.find_type",
+              "src/catalog.scoped_type",
               "src/check.annotation_id",
+              "src/core.Binding",
               "src/core.Datatype",
+              "src/scope.bound",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -23765,10 +23895,12 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "List",
               "Maybe",
               "Result",
+              "String",
               "src/qualify.Names",
-              "src/qualify.reference",
+              "src/qualify.local",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -24326,7 +24458,7 @@
           {
             "key": "src/qualify.reference",
             "file": "src/qualify.bend",
-            "via": "src/qualify.walk_in",
+            "via": "src/qualify.constructor_token",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24542,6 +24674,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.pick",
               "List",
               "List.append",
               "Maybe",
@@ -24562,7 +24695,6 @@
               "src/qualify.local",
               "src/qualify.pattern",
               "src/qualify.prepend",
-              "src/qualify.reference",
               "src/qualify.sequence",
               "src/qualify.then",
               "src/qualify.visible",
@@ -24633,7 +24765,7 @@
           {
             "key": "src/scope.bound",
             "file": "src/scope.bend",
-            "via": "src/check.callable",
+            "via": "src/check.annotation",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -27133,7 +27265,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 515,
+          "declarations": 518,
           "base": 79,
           "base_intrinsics": 27,
           "foreign": 7
@@ -28625,6 +28757,7 @@
               "src/catalog.find_type",
               "src/catalog.parameters",
               "src/catalog.signature",
+              "src/catalog.signature_scope",
               "src/core.exhausted",
               "src/core.internal",
               "src/syntax.bind",
@@ -28780,8 +28913,8 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.field_type",
-              "src/catalog.find_type",
               "src/catalog.named",
+              "src/catalog.scoped_type",
               "src/core.exhausted",
               "src/core.internal",
               "src/core.invalid",
@@ -28972,6 +29105,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.scoped_type",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.fields",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/catalog.find_type",
+              "src/catalog.unshadowed",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.signature",
             "file": "src/catalog.bend",
             "via": "src/catalog.collect_signatures",
@@ -28979,6 +29126,20 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/catalog.signature_scope",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/catalog.named",
+              "src/catalog.unshadowed",
+              "src/syntax.bind"
+            ],
             "dynamic_calls": []
           },
           {
@@ -29010,6 +29171,19 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.unshadowed",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.signature_scope",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.invalid",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -29017,8 +29191,9 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/catalog.find_type",
+              "src/catalog.scoped_type",
               "src/check.annotation_id",
+              "src/scope.bound",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
@@ -31864,7 +32039,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/qualify.reference",
+              "src/qualify.local",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
@@ -32246,7 +32421,7 @@
           {
             "key": "src/qualify.reference",
             "file": "src/qualify.bend",
-            "via": "src/qualify.walk_in",
+            "via": "src/qualify.constructor_token",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -32398,6 +32573,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.pick",
               "List.append",
               "src/qualify.annotation",
               "src/qualify.constructor_token",
@@ -32409,7 +32585,6 @@
               "src/qualify.local",
               "src/qualify.pattern",
               "src/qualify.prepend",
-              "src/qualify.reference",
               "src/qualify.sequence",
               "src/qualify.then",
               "src/qualify.visible",
@@ -32466,7 +32641,7 @@
           {
             "key": "src/scope.bound",
             "file": "src/scope.bend",
-            "via": "src/check.callable",
+            "via": "src/check.annotation",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -34240,7 +34415,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 626,
+          "declarations": 629,
           "base": 134,
           "base_intrinsics": 31,
           "foreign": 7
@@ -36493,10 +36668,12 @@
               "U32",
               "U32.add",
               "U32.is_eq",
+              "Unit",
               "src/catalog.TypeRef",
               "src/catalog.find_type",
               "src/catalog.parameters",
               "src/catalog.signature",
+              "src/catalog.signature_scope",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.Signature",
@@ -36728,8 +36905,8 @@
               "U32.is_eq",
               "src/catalog.TypeRef",
               "src/catalog.field_type",
-              "src/catalog.find_type",
               "src/catalog.named",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
@@ -37016,6 +37193,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.scoped_type",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.fields",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "Unit",
+              "src/catalog.TypeRef",
+              "src/catalog.find_type",
+              "src/catalog.unshadowed",
+              "src/core.Datatype",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.signature",
             "file": "src/catalog.bend",
             "via": "src/catalog.collect_signatures",
@@ -37028,6 +37227,26 @@
               "src/core.Parameter",
               "src/core.Signature",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/catalog.signature_scope",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "Unit",
+              "src/catalog.named",
+              "src/catalog.unshadowed",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -37084,6 +37303,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.unshadowed",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.signature_scope",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "Unit",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -37096,9 +37333,11 @@
               "Result",
               "U32",
               "src/catalog.TypeRef",
-              "src/catalog.find_type",
+              "src/catalog.scoped_type",
               "src/check.annotation_id",
+              "src/core.Binding",
               "src/core.Datatype",
+              "src/scope.bound",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -41476,10 +41715,12 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "List",
               "Maybe",
               "Result",
+              "String",
               "src/qualify.Names",
-              "src/qualify.reference",
+              "src/qualify.local",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -42035,7 +42276,7 @@
           {
             "key": "src/qualify.reference",
             "file": "src/qualify.bend",
-            "via": "src/qualify.walk_in",
+            "via": "src/qualify.constructor_token",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -42250,6 +42491,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.pick",
               "List",
               "List.append",
               "Maybe",
@@ -42269,7 +42511,6 @@
               "src/qualify.local",
               "src/qualify.pattern",
               "src/qualify.prepend",
-              "src/qualify.reference",
               "src/qualify.sequence",
               "src/qualify.then",
               "src/qualify.visible",
@@ -42340,7 +42581,7 @@
           {
             "key": "src/scope.bound",
             "file": "src/scope.bend",
-            "via": "src/check.callable",
+            "via": "src/check.annotation",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,

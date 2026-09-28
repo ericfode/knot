@@ -176,10 +176,10 @@ def constructor_token(token: S.Token, names: Names, position: Position) -> Resul
     case ConstructorHeaders{}: Done{declared(token,names)}
     case _: reference(token,names)
 
-def annotation(value: Maybe<&2,S.Token>, names: Names) -> Result<S.Error,Maybe<&2,S.Token>>:
+def annotation(value: Maybe<&2,S.Token>, names: Names, bound: List<&2,String>) -> Result<S.Error,Maybe<&2,S.Token>>:
   match value:
     case None{}: Done{None{}}
-    case Some{token}: S.bind(S.Token,Maybe<&2,S.Token>,reference(token,names),t => Done{Some{t}})
+    case Some{token}: S.bind(S.Token,Maybe<&2,S.Token>,local(token,names,bound),t => Done{Some{t}})
 
 def done(value: S.Node) -> Result<S.Error,Qualified>:
   Done{Qualified{value,Nil{}}}
@@ -218,7 +218,9 @@ def visible(node: S.Node, names: Names, ctors: List<&2,String>) -> List<&2,Strin
 
 # A pattern contributes binders; an expression only reads its current scope,
 # a call head exactly as a variable. The same traversal therefore handles
-# parameters, fields and match arms.
+# parameters, fields and match arms. The seed reads a type as a term, so a type
+# position reads the scope too: each item of a sequence sees the binders before
+# it, and a declared constructor's fields bind only within it.
 def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound: List<&2,String>, +ctors: List<&2,String>) -> Result<S.Error,Qualified>:
   match fuel node:
     case 0n _: Fail{S.Exhausted{"load",S.At{0,0,0,0}}}
@@ -231,14 +233,14 @@ def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound:
     case 1n+ +n S.Constructor{token,args}:
       S.bind(S.Token,Qualified,constructor_token(token,names,position),t =>
         then(walk_in(n,S.Sequence{args},position,names,bound,ctors),items => binders =>
-          sequence(items,xs => Done{Qualified{S.Constructor{t,xs},binders}})))
+          sequence(items,xs => Done{Qualified{S.Constructor{t,xs},Bool.pick(List<&2,String>,is_pattern(position),binders,Nil{})}})))
     case 1n+ +n S.Call{token,args}:
       S.bind(S.Token,Qualified,local(token,names,bound),t =>
         then(walk_in(n,S.Sequence{args},position,names,bound,ctors),items => binders =>
           sequence(items,xs => Done{Qualified{S.Call{t,xs},binders}})))
     case 1n+ +n S.Binding{+token,q,ann,value,+body}:
       then(pattern(token,S.Variable{token},names,ctors),binder => binders =>
-      S.bind(Maybe<&2,S.Token>,Qualified,annotation(ann,names),a =>
+      S.bind(Maybe<&2,S.Token>,Qualified,annotation(ann,names,bound),a =>
         then(walk_in(n,value,Expression{},names,bound,ctors),v => ignored =>
           then(walk_in(n,body,Expression{},names,Con{S.text(token),bound},ctors),b => unused =>
             done(S.Binding{token,q,a,v,b})))))
@@ -251,20 +253,21 @@ def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound:
         then(walk_in(n,body,Expression{},names,List.append(&2,String,binders,bound),ctors),b => ignored =>
           done(S.Arm{token,p,b})))
     case 1n+ n S.Parameter{+token,q,typ}:
-      S.bind(S.Token,Qualified,reference(typ,names),t => Done{Qualified{S.Parameter{token,q,t},[S.text(token)]}})
+      S.bind(S.Token,Qualified,local(typ,names,bound),t => Done{Qualified{S.Parameter{token,q,t},[S.text(token)]}})
     case 1n+ +n S.Datatype{+token,data,children}:
       then(walk_in(n,S.Sequence{children},ConstructorHeaders{},introduced([S.text(token)],names),Nil{},ctors),items => ignored =>
         sequence(items,xs => done(S.Datatype{declared(token,names),data,xs})))
     case 1n+ +n S.Function{+token,params,+result,+body}:
-      then(walk_in(n,S.Sequence{params},Expression{},names,Nil{},ctors),items => binders =>
+      then(walk_in(n,S.Sequence{params},Expression{},names,Nil{},ctors),items => +binders =>
         sequence(items,xs =>
-          S.bind(S.Token,Qualified,reference(result,names),t =>
+          S.bind(S.Token,Qualified,local(result,names,binders),t =>
             then(walk_in(n,body,Expression{},introduced([S.text(token)],names),binders,ctors),b => ignored =>
               done(S.Function{declared(token,names),xs,t,b})))))
     case 1n+ n S.Sequence{Nil{}}: done(S.Sequence{Nil{}})
     case 1n+ +n S.Sequence{Con{+head,+tail}}:
-      then(walk_in(n,head,position,names,bound,ctors),h => binders =>
-        then(walk_in(n,S.Sequence{tail},position,following(position,head,names),bound,visible(head,names,ctors)),t => more => prepend(h,binders,t,more)))
+      then(walk_in(n,head,position,names,bound,ctors),h => +binders =>
+        then(walk_in(n,S.Sequence{tail},position,following(position,head,names),List.append(&2,String,binders,bound),
+          visible(head,names,ctors)),t => more => prepend(h,binders,t,more)))
 
 def field_binders(args: List<&2,S.Node>) -> List<&2,S.Token>:
   match args:

@@ -24,3 +24,6 @@ def L.data_field_preserves_metadata(token,index,data,name,ctors):
 
 def L.field_capability_is_not_acceptance(token,head,tail,rest):
   {==}
+
+def L.type_positions_read_their_scope(at,here,ctors,body):
+  {==}

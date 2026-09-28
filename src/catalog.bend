@@ -32,6 +32,14 @@ def find_type(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) -> Result
           S.choose(Result<S.Error,TypeRef>,String.eq(S.text(token),S.text(name)),u =>
             Done{TypeRef{index,head}},u => find_type(tail,name,U32.add(index,1)))
 
+# The seed reads a type as a term, so a binder in scope shadows each type of its
+# name. Every Knot binder holds a value; a Type binder is Unsupported at parse.
+def unshadowed(+shadowed: Bool, +name: S.Token) -> Result<S.Error,Unit>:
+  S.choose(Result<S.Error,Unit>,shadowed,u => C.invalid(Unit,"binder-as-type",name),u => Done{Unit{}})
+
+def scoped_type(+shadowed: Bool, +types: List<&2,C.Datatype>, +name: S.Token) -> Result<S.Error,TypeRef>:
+  S.bind(Unit,TypeRef,unshadowed(shadowed,name),u => find_type(types,name,0))
+
 def find_function(sigs: List<&2,C.Signature>, +name: S.Token, +index: U32) -> Result<S.Error,FunctionRef>:
   match sigs:
     case Nil{}: C.invalid(FunctionRef,"unknown-function",name)
@@ -116,6 +124,14 @@ def parameters(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +count: U32)
             S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,parameters(tail,types,U32.add(count,1)),rest => Done{Con{head,rest}}))))
     case _: C.internal(List<&2,C.Parameter>,"parameter-node")
 
+# A signature reads its types left to right: each parameter's type sees the
+# binders before it, and the result type sees them all.
+def signature_scope(nodes: List<&2,S.Node>, +result: S.Token, +seen: List<&2,S.Token>) -> Result<S.Error,Unit>:
+  match nodes:
+    case Con{S.Parameter{+name,q,+type_name},tail}:
+      S.bind(Unit,Unit,unshadowed(named(seen,type_name),type_name),u => signature_scope(tail,result,Con{name,seen}))
+    case _: unshadowed(named(seen,result),result)
+
 def signature(token: S.Token, params: List<&2,C.Parameter>, reference: TypeRef) -> C.Signature:
   match reference:
     case TypeRef{index,definition}: C.Signature{token,params,index}
@@ -125,10 +141,11 @@ def collect_signatures(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +cou
     case Nil{}: Done{Nil{}}
     case Con{S.Function{+name,+params,+result,body},+tail}:
       S.choose(Result<S.Error,List<&2,C.Signature>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Signature>,name),u =>
+        S.bind(Unit,List<&2,C.Signature>,signature_scope(params,result,Nil{}),u =>
         S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),ps =>
           S.bind(TypeRef,List<&2,C.Signature>,find_type(types,result,0),reference =>
             S.bind(List<&2,C.Signature>,List<&2,C.Signature>,collect_signatures(tail,types,U32.add(count,1)),rest =>
-              Done{Con{signature(name,ps,reference),rest}}))))
+              Done{Con{signature(name,ps,reference),rest}})))))
     case Con{S.Datatype{name,data,ctors},tail}: collect_signatures(tail,types,count)
     case _: C.internal(List<&2,C.Signature>,"function-declaration-node")
 
@@ -154,7 +171,7 @@ def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
         S.choose(Result<S.Error,List<&2,C.Parameter>>,named(seen,name),u => C.invalid(List<&2,C.Parameter>,"duplicate-field",name),u =>
-          S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
+          S.bind(TypeRef,List<&2,C.Parameter>,scoped_type(named(seen,type_name),types,type_name),reference =>
             S.bind(C.Parameter,List<&2,C.Parameter>,field_type(name,q,data,reference),head =>
               S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,fields(tail,types,data,Con{name,seen},U32.add(count,1)),rest =>
                 Done{Con{head,rest}})))))

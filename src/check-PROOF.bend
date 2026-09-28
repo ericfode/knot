@@ -18,3 +18,5 @@ def L.no_checker_budget(node):
   {==}
 def L.dotted_binder_rebinds_only_a_bound_name(at):
   {==}
+def L.annotation_reads_the_scope(at,here,ctors):
+  {==}

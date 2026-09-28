@@ -59,3 +59,14 @@ law dotted_binder_rebinds_only_a_bound_name:
     E.binder(Nil{},S.Token{"ab",at}))
    == (Fail{S.Invalid{"check","dotted-binder",at}},Done{Unit{}},Done{Unit{}})
    : Result<S.Error,Unit> & Result<S.Error,Unit> & Result<S.Error,Unit>}
+
+# A let annotation reads the scope: a binder shadows the type of its name.
+law annotation_reads_the_scope:
+  for +at: S.At
+  for +here: S.At
+  for +ctors: List<&2,C.Constructor>
+  {(K.annotation([C.Datatype{S.Token{"Light",at},False{},ctors}],Nil{},Some{S.Token{"Light",at}}),
+    K.annotation([C.Datatype{S.Token{"Light",at},False{},ctors}],[C.Binding{S.Token{"Light",at},0,1,0,True{},None{}}],
+      Some{S.Token{"Light",here}}))
+   == (Done{Some{0}},Fail{S.Invalid{"check","binder-as-type",here}})
+   : Result<S.Error,Maybe<&2,U32>> & Result<S.Error,Maybe<&2,U32>>}

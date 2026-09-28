@@ -28,11 +28,11 @@ def annotation_id(reference: G.TypeRef) -> Result<S.Error,Maybe<&2,U32>>:
   match reference:
     case G.TypeRef{index,definition}: Done{Some{index}}
 
-def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>) -> Result<S.Error,Maybe<&2,U32>>:
+def annotation(types: List<&2,C.Datatype>, bindings: List<&2,C.Binding>, token: Maybe<&2,S.Token>) -> Result<S.Error,Maybe<&2,U32>>:
   match token:
     case None{}: Done{None{}}
-    case Some{name}:
-      S.bind(G.TypeRef,Maybe<&2,U32>,G.find_type(types,name,0),reference => annotation_id(reference))
+    case Some{+name}:
+      S.bind(G.TypeRef,Maybe<&2,U32>,G.scoped_type(E.bound(bindings,name),types,name),reference => annotation_id(reference))
 
 def constant(reference: G.ConstructorRef, +token: S.Token, wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
   match reference wanted:
@@ -179,11 +179,11 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
       S.bind(G.FunctionRef,C.Checked,G.find_function(sigs,token,0),reference =>
         S.bind(G.FunctionRef,C.Checked,callable(reference,token,current,scope),call =>
           call_body(call,token,wanted,current,scope,params => run(n,Arguments{args,params,token},catalog,current,scope))))
-    case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{bindings,+next,from,live,smaller}:
+    case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{+bindings,+next,from,live,smaller}:
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => C.exhausted(C.Checked,token),u =>
       # The seed reads an erased let's binder as a name, unresolved.
       S.bind(Unit,C.Checked,S.choose(Result<S.Error,Unit>,U32.is_eq(q,0),u => Done{Unit{}},u => E.binder(bindings,token)),v =>
-        S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann),target =>
+        S.bind(Maybe<&2,U32>,C.Checked,annotation(types,bindings,ann),target =>
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
               S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q)))))))

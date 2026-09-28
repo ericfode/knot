@@ -30,3 +30,4 @@ def L.later_constructor_leaves_a_binder(at): {==}
 def L.let_binder_cannot_rebind_a_constructor(at,value,body): {==}
 def L.file_binders_meet_only_earlier_constructors(at,value,body): {==}
 def L.own_names_are_registered_in_order(at): {==}
+def L.type_positions_read_the_scope(at): {==}

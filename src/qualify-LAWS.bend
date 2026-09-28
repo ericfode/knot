@@ -218,3 +218,21 @@ law own_names_are_registered_in_order:
    == (Fail{S.Invalid{"load","duplicate-global",at}},Done{["m.m.f","m.f"]},
        Fail{S.Invalid{"load","duplicate-global",at}})
    : Result<S.Error,List<&2,String>> & Result<S.Error,List<&2,String>> & Result<S.Error,List<&2,String>>}
+
+# A type position reads the scope, so a bound name stays bare in a later
+# parameter, result or let type. A declared constructor's fields bind within it.
+law type_positions_read_the_scope:
+  for +at: S.At
+  {Q.qualify("lib/m",Nil{},Q.Symbols{Nil{},Nil{}},S.Sequence{[
+    S.Datatype{S.Token{"Flag",at},False{},[
+      S.Constructor{S.Token{"Box",at},[S.Parameter{S.Token{"Flag",at},1,S.Token{"Flag",at}}]},
+      S.Constructor{S.Token{"Other",at},[S.Parameter{S.Token{"v",at},1,S.Token{"Flag",at}}]}]},
+    S.Function{S.Token{"f",at},[S.Parameter{S.Token{"Flag",at},1,S.Token{"Flag",at}},S.Parameter{S.Token{"x",at},1,S.Token{"Flag",at}}],
+      S.Token{"Flag",at},S.Binding{S.Token{"y",at},1,Some{S.Token{"Flag",at}},S.Variable{S.Token{"Flag",at}},S.Variable{S.Token{"y",at}}}}]}) ==
+    Done{S.Sequence{[
+      S.Datatype{S.Token{"lib/m.Flag",at},False{},[
+        S.Constructor{S.Token{"lib/m.Box",at},[S.Parameter{S.Token{"Flag",at},1,S.Token{"lib/m.Flag",at}}]},
+        S.Constructor{S.Token{"lib/m.Other",at},[S.Parameter{S.Token{"v",at},1,S.Token{"lib/m.Flag",at}}]}]},
+      S.Function{S.Token{"lib/m.f",at},[S.Parameter{S.Token{"Flag",at},1,S.Token{"lib/m.Flag",at}},S.Parameter{S.Token{"x",at},1,S.Token{"Flag",at}}],
+        S.Token{"Flag",at},S.Binding{S.Token{"y",at},1,Some{S.Token{"Flag",at}},S.Variable{S.Token{"Flag",at}},S.Variable{S.Token{"y",at}}}}]}}
+    : Result<S.Error,S.Node>}
