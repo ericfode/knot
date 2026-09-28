@@ -638,6 +638,35 @@ def undescribable(plan: dict, t) -> str | None:
     return None
 
 
+def invocation(plan: dict, name: str, ordinals: list) -> str | None:
+    """Why SPEC section 8 refuses the Book invocation `name ordinals...`, or None to enter it.
+
+    eval-cli's order: an unknown name; then the live parameters left to right, where a
+    missing ordinal is argument-arity, an arrow is function-argument, a tag at or beyond
+    the type's constructor count is argument-range (an opaque or `none` type has none) and
+    a constructor with a live field is structured-argument; then leftover ordinals; last,
+    an undescribable result. Erased parameters are not in the image, so take no ordinal."""
+    f = next((f for f in plan['functions'] if f['name'] == name), None)
+    if f is None:
+        return 'HostFailure invoke unknown-export'
+    for at, t in enumerate(f['parameters']):
+        if at == len(ordinals):
+            return 'HostFailure invoke argument-arity'
+        kind = plan['types'][t]['kind'] if t is not None else None
+        if kind in ('arrow', 'erased-arrow'):
+            return 'HostFailure invoke function-argument'
+        ctors = plan['types'][t]['constructors'] if kind == 'data' else []
+        if ordinals[at] >= len(ctors):
+            return 'HostFailure invoke argument-range'
+        if ctors[ordinals[at]]['fields']:
+            return 'HostFailure invoke structured-argument'
+    if len(ordinals) > len(f['parameters']):
+        return 'HostFailure invoke argument-arity'
+    if undescribable(plan, f['result']):
+        return 'Unsupported invoke result-type'
+    return None
+
+
 # ---------------------------------------------------------------- command line
 
 def registry(path=Path(__file__).with_name('registry.json')) -> dict:

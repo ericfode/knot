@@ -686,6 +686,87 @@ def vm_expectation(case, plan, bounds, source, evaluator=None) -> dict:
             'basis': 'seed', 'eval_lane': 'Exhausted'}
 
 
+IMAGE_LOSS = ('opaque-parameter', 'erased-field')
+
+
+def image_loss(plan: dict, name: str, ordinals: list, source: str) -> str | None:
+    """What the image drops that eval-cli's core keeps, at the first live parameter it
+    affects: eval-cli models U32 as one nullary constructor, and counts erased fields."""
+    declared = erased_fields(source)
+    f = next(f for f in plan['functions'] if f['name'] == name)
+    for t, tag in zip(f['parameters'], ordinals):
+        u = plan['types'][t] if t is not None else {}
+        if u.get('kind') == 'opaque':
+            return IMAGE_LOSS[0]
+        ctors = u.get('constructors', [])
+        if tag < len(ctors) and not ctors[tag]['fields'] and declared.get(ctors[tag]['name']):
+            return IMAGE_LOSS[1]
+    return None
+
+
+def invocation_expectations(case, plan, source, evaluator=None) -> list:
+    """Section 8 for each frozen Book invocation: the image-derived verdict, or the entered
+    function's describe line from the reference evaluation. eval-cli is the oracle; a row
+    that differs from it declares the image loss that explains the difference."""
+    ev, rows = evaluator or reference, []
+    for i in case.get('invocations', []):
+        name, ordinals = i['argv'][0], [int(o) for o in i['argv'][1:]]
+        label, observed_eval = f"{case['name']} {' '.join(i['argv'])}", i['eval']
+        row = {'argv': ['IMAGE', name, str(VM_FUEL), *i['argv'][1:]]}
+        verdict = codec.invocation(plan, name, ordinals)
+        if verdict:
+            outcome, cause = verdict.split(' ', 1)
+            row.update(outcome=outcome, cause=cause)
+            review = verdict
+            agrees = observed_eval['exit'] == 5 and observed_eval['stderr'] == verdict.replace(' ', '\t') + '\n'
+        else:
+            got = ev.book(plan, name, ordinals, VM_FUEL)
+            require(got.get('exit') == 0, f'{label}: the reference evaluation gives {got}')
+            row.update(exit=0, stdout=got['stdout'], stderr='')
+            review = got['stdout'].split('\t')[3].removesuffix('\n')
+            agrees = observed_eval['exit'] == 0 and observed_eval['stdout'] == got['stdout']
+        require(i['vm'] == review, f"{label}: literal review {i['vm']!r}, section 8 gives {review!r}")
+        if verdict == 'Unsupported invoke result-type':
+            # eval-cli enters it and reports InternalFailure eval result-tag (DECISIONS finding 7).
+            require('divergence' not in i, f'{label}: an Unsupported result is D4\'s refusal, not a divergence')
+            row['basis'] = 'describe-domain'
+        elif agrees:
+            require('divergence' not in i, f'{label}: declared {i.get("divergence")!r}, but eval-cli agrees')
+            row['basis'] = 'eval-cli'
+        else:
+            loss = image_loss(plan, name, ordinals, source)
+            require(loss is not None and i.get('divergence') == loss,
+                    f'{label}: eval-cli gives {observed_eval}, section 8 {review!r}; declared {i.get("divergence")!r}, '
+                    f'image loss {loss!r}')
+            row['basis'] = f'divergent-by-contract ({loss})'
+        row['eval_lane'] = classify(observed_eval)
+        rows.append(row)
+    return rows
+
+
+def invocation_controls(cases: dict, plans: dict, sources: dict) -> list:
+    """What the invocation rule must refuse: a review other than section 8's verdict, an
+    undeclared or misnamed image loss, and a divergence where eval-cli agrees."""
+    args = cases['invoke-args']
+
+    def edit(argv, **change):
+        rows = [{**i, **change} if i['argv'] == argv.split() else i for i in args['invocations']]
+        return {**args, 'invocations': [{k: v for k, v in i.items() if v is not None} for i in rows]}
+    out = []
+    for label, case in [('review-arity-first', edit('two 5', vm='HostFailure invoke argument-arity')),
+                        ('opaque-undeclared', edit('is_zero 0', divergence=None)),
+                        ('erased-field-undeclared', edit('real 0', divergence=None)),
+                        ('opaque-as-erased-field', edit('is_zero 0', divergence='erased-field')),
+                        ('divergence-where-eval-agrees', edit('two 1 0', divergence='opaque-parameter'))]:
+        try:
+            invocation_expectations(case, plans['invoke-args'], sources['invoke-args'])
+        except AssertionError as refusal:
+            out.append({'control': f'invocation:{label}', 'refused': str(refusal)})
+            continue
+        raise AssertionError(f'invocation control {label} was admitted')
+    return out
+
+
 def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, evaluator=None) -> list:
     """What the rule must refuse: an eval lane that disagrees with the seed, a bound that is
     not Exhausted or that stands in for an Unsupported result, and a D20 classification that
@@ -1184,6 +1265,19 @@ CODEC_MUTANTS = [
                                      "        if declared == actual:\n            return True\n"
                                      "        if declared is None or actual is None:\n"
                                      "            return kind(declared) not in arrows and kind(actual) not in arrows\n")]),
+    # Review round 4: section 8's invocation walk, in eval-cli's order.
+    ('invoke-arity-first', [("    for at, t in enumerate(f['parameters']):\n        if at == len(ordinals):",
+                             "    if len(ordinals) != len(f['parameters']):\n        return 'HostFailure invoke argument-arity'\n"
+                             "    for at, t in enumerate(f['parameters']):\n        if at == len(ordinals):")]),
+    ('invoke-ignores-leftovers', [("    if len(ordinals) > len(f['parameters']):\n        return 'HostFailure invoke argument-arity'\n", "")]),
+    ('invoke-arrow-as-range', [("        if kind in ('arrow', 'erased-arrow'):\n            return 'HostFailure invoke function-argument'\n", "")]),
+    ('invoke-opaque-admits-zero', [("        ctors = plan['types'][t]['constructors'] if kind == 'data' else []",
+                                    "        ctors = plan['types'][t]['constructors'] if kind == 'data' else "
+                                    "[{'fields': []}] if kind == 'opaque' else []")]),
+    ('invoke-result-first', [("        return 'HostFailure invoke unknown-export'\n    for at, t",
+                              "        return 'HostFailure invoke unknown-export'\n    if undescribable(plan, f['result']):\n"
+                              "        return 'Unsupported invoke result-type'\n    for at, t")]),
+    ('invoke-admits-structured', [("        if ctors[ordinals[at]]['fields']:\n            return 'HostFailure invoke structured-argument'\n", "")]),
     # Review round 3: a String constant is its code list at every step.
     ('encode-through-json-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
                                    "        data = [ord(c) for c in json.loads(json.dumps(''.join(map(chr, value))))] "
@@ -1199,7 +1293,13 @@ CODEC_MUTANTS = [
 ]
 
 
-def codec_mutants(plans, images, controls, admitted, describing, reg, digest) -> list:
+def invocation_verdicts(invoking: list, c=None) -> dict:
+    """Section 8's verdict on every frozen Book invocation, by label."""
+    c = c or codec
+    return {label: c.invocation(plan, name, ordinals) for label, plan, name, ordinals in invoking}
+
+
+def codec_mutants(plans, images, controls, admitted, describing, reg, digest, invoking) -> list:
     """`plans` and `images` include the code-list controls; a decode that differs from its
     plan kills as surely as an encode that differs from its image."""
     source = CODEC.read_text()
@@ -1251,6 +1351,15 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest) ->
             changed = [label for label, _, _, verdict in describing if verdicts and verdicts[label] != verdict]
             if changed:
                 killed_by = f'describe control {changed[0]}: {verdicts[changed[0]]}'
+        if not killed_by:
+            frozen = invocation_verdicts(invoking)
+            try:
+                verdicts = invocation_verdicts(invoking, mutant)
+            except Exception:
+                verdicts = frozen
+            changed = [label for label in frozen if verdicts[label] != frozen[label]]
+            if changed:
+                killed_by = f'invocation {changed[0]}: {verdicts[changed[0]]}'
         results.append({'mutant': name, 'killed': killed_by is not None, 'by': killed_by})
     return results
 
@@ -1477,7 +1586,7 @@ def main() -> int:
         displays = dict(zip(cases, pool.map(display, cases.values())))
 
     bounds = json.loads((GOLDEN / 'bounds.json').read_text())['cases']
-    plans, images, fixtures, table = {}, {}, [], {}
+    plans, images, fixtures, table, invoked = {}, {}, [], {}, {}
     for name, case in cases.items():
         require(fresh[name]['seed'] == case['seed'], (name, 'seed drift', fresh[name]['seed'], case['seed']))
         require(fresh[name]['eval'] == case['eval'], (name, 'eval drift', fresh[name]['eval'], case['eval']))
@@ -1500,6 +1609,8 @@ def main() -> int:
             view = f"unavailable: {shown['stderr'].strip()}"
         table[name] = vm_expectation(case, plan, bounds, sources[name])
         reproduced(name, plan, table[name])
+        if 'invocations' in case:
+            invoked[name] = invocation_expectations(case, plan, sources[name])
         plans[name], images[name] = plan, data
         fixtures.append({'name': name, 'lane': case['lane'], 'seed_lane': case.get('seed_lane', 'bun'),
                          'features': case['features'], 'image_sha256': sha(data), 'words': len(data) // 4,
@@ -1519,8 +1630,9 @@ def main() -> int:
                         'passes IO.print a String holding a non-scalar Char, the VM writes the earlier prints and '
                         'refuses that one as D20\'s HostFailure io abi, divergent by contract, never agreement; '
                         'otherwise the VM owes the seed\'s output. The seed lanes are observations and never '
-                        'classify it.',
-                'fuel': VM_FUEL, 'bounds': bounds, 'cases': table}
+                        'classify it. A Book invocation owes section 8\'s verdict, or the describe line of the '
+                        'entered function; eval-cli agrees except where the image drops what its core reads.',
+                'fuel': VM_FUEL, 'bounds': bounds, 'cases': table, 'invocations': invoked}
     if args.write_expected:
         EXPECTED.write_text(json.dumps(expected, indent=1) + '\n')
     require(json.loads(EXPECTED.read_text()) == expected, 'vm-expected.json differs from the rule')
@@ -1538,7 +1650,7 @@ def main() -> int:
     controls = byte_controls(images, digest) + [
         (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
     admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None]
-    boundaries = expectation_controls(cases, plans, bounds, sources)
+    boundaries = expectation_controls(cases, plans, bounds, sources) + invocation_controls(cases, plans, sources)
     for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
         require(got is not None and got.startswith(reason) and message in got, f'control {label}: {got}')
@@ -1565,8 +1677,10 @@ def main() -> int:
         admitted.append((label, data))
     require(text_spelling(plans, digest) is None, text_spelling(plans, digest))
 
+    invoking = [(f"{name} {' '.join(i['argv'])}", plans[name], i['argv'][0], [int(o) for o in i['argv'][1:]])
+                for name, case in cases.items() for i in case.get('invocations', [])]
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
-                            controls, admitted, describing, reg, digest) + source_mutants(cases, built) + \
+                            controls, admitted, describing, reg, digest, invoking) + source_mutants(cases, built) + \
         evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans))
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')

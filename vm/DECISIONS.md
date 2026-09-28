@@ -147,6 +147,24 @@ follows it (§5, §10, §11) without a new image header word.
    shape and a `none` value already delivers a U32 word to a File position,
    where the host refuses an unknown token as `HostFailure io handle`. Seven run
    controls freeze these runs for vm-model and vm-core.
+13. **Book invocations follow eval-cli's walk.** Review round 4 found §8's "as in
+   eval-cli" unwitnessed and out of order: no golden passed an ordinal, and
+   eval-cli walks the live parameters left to right, so `f 5` with a missing
+   second ordinal is `argument-range`, and `h 1 0` with a leftover is
+   `structured-argument`. §8 now states that walk: `unknown-export`; per live
+   parameter, a missing ordinal (`argument-arity`), an arrow (`function-argument`,
+   the closures head's cause), a tag at or beyond the constructor count
+   (`argument-range`) and a constructor with a live field (`structured-argument`);
+   then leftover ordinals (`argument-arity`); last the describe domain. An opaque
+   type has no constructor, so U32 and File refuse every ordinal: admitting a U32
+   ordinal as a scalar would also forge File tokens, since the two may name one
+   opaque type (run control `u32-file-alias`). A `none` parameter refuses for the
+   same reason. The pinned heads check neither File nor generic Book parameters
+   (`Unsupported parse declaration-form` and `parameter-type`), so those two
+   verdicts rest on this rule alone. Goldens `invoke-args` (23 invocations) and
+   `invoke-arrow` (5) freeze every cause beside eval-cli's answers, the reference
+   predicate is `serializer.invocation`, and six codec mutants of its order are
+   killed.
 
 ## Findings that need an owner
 
@@ -225,3 +243,14 @@ follows it (§5, §10, §11) without a new image header word.
    `Digest` explicitly in the live style pass or record it as unresolved in the
    style state. The task context is unavailable (`missing_task_context`), which is
    advisory; the composition is available (18,837 of 48,000 bytes).
+10. **eval-cli reads what the image drops at invocation.** Both answers are
+   recorded as declared divergences on `invoke-args`, and knot-vm-1 follows the
+   image (§8). (a) The literals `eval-cli` admits `is_zero 0` for an
+   `x: U32` parameter as the value 0, because its loader models U32 as one
+   nullary constructor `#U32`, while refusing every other U32 ordinal as
+   `argument-range` (`opaque-parameter`). (b) It refuses `real 0`, where
+   constructor 0 of `Ghost{-proof: Flag}` has only an erased field, as
+   `structured-argument`, since it counts erased fields; the image has none and
+   admits the value (`erased-field`). Under D4 neither is a source error. The
+   owner is literals, or merge-wave when the invocation walk is shared; the fix
+   is to walk live fields and treat U32 as having no ordinal.

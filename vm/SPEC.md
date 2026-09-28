@@ -18,7 +18,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
 | [golden/](golden/) | 91 sources, frozen observations, hand-written plans and their `.kimg` images |
-| [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden, derived by the rule of §11 |
+| [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden and frozen Book invocation, derived by the rules of §8 and §11 |
 | [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
 | [check-spec.py](check-spec.py) | gate `vm-spec` |
@@ -460,22 +460,34 @@ is a Wasm-to-Wasm return and call. Test dumps show a Yield event here.
 
 ## 8. Books, Programs and Actions
 
-**Book** (`IMAGE FN FUEL [ORDINALS…]`). The VM finds `FN` by name, checks that the
-ordinals match its live arity and are nullary constructor tags of the parameter
-types, and checks that `FN`'s result type is **describable**: algebraic, with every
-live field of every constructor describable in turn. A cycle through algebraic
-types stays describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque
-type are not, so neither are the pinned Char (its U32 field) and String. These
-checks read only the image, in that order, before anything else and without
-debiting fuel.
-Failures are `HostFailure invoke unknown-export`, `argument-arity`,
-`argument-range` or `structured-argument`, as in eval-cli, and then `Unsupported
-invoke result-type`: Knot has no describe spelling for such a result, so the VM
-refuses the request instead of inventing one (§11; goldens `result-u32`,
-`result-u32-field`, `result-char` and `result-string`; the reference predicate is
-`serializer.undescribable`). The VM then pushes Top(phase 0)
-and starts with `Enter(FN, ordinals)`. Return to Top(0) halts with the result and
-prints
+**Book** (`IMAGE FN FUEL [ORDINALS…]`). These checks read only the image, in this
+order, before anything else and without debiting fuel; steps 1–3 fail as
+`HostFailure invoke` with the cause named:
+1. `FN` is found by name, else `unknown-export`.
+2. `FN`'s live parameters are walked left to right, as eval-cli walks them; an
+   erased parameter takes no ordinal. With no ordinal left, `argument-arity`. An
+   arrow parameter is `function-argument`. Otherwise the ordinal is a constructor
+   tag of the parameter's type: at or beyond its constructor count it is
+   `argument-range`, so an opaque type (U32, File) or a `none` parameter refuses
+   every ordinal; naming a constructor with a live field, `structured-argument`.
+   An admitted ordinal is that nullary constructor's immediate.
+3. Ordinals left over are `argument-arity`.
+4. `FN`'s result type must be **describable**: algebraic, with every live field of
+   every constructor describable in turn. A cycle through algebraic types stays
+   describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque type are
+   not, so neither are the pinned Char (its U32 field) and String. Otherwise
+   `Unsupported invoke result-type`: Knot has no describe spelling for such a
+   result, so the VM refuses the request instead of inventing one (§11; goldens
+   `result-u32`, `result-u32-field`, `result-char` and `result-string`).
+
+The reference predicate is `serializer.invocation`. The image keeps less than
+eval-cli's core, so two eval-cli answers differ by contract: eval-cli admits a U32
+ordinal 0 as the value 0, because its loader models U32 as one nullary constructor
+(`opaque-parameter`), and refuses a constructor whose fields are all erased as
+`structured-argument`, while the image has no erased field (`erased-field`).
+Goldens `invoke-args` and `invoke-arrow` freeze each cause (§12). The VM then
+pushes Top(phase 0) and starts with `Enter(FN, ordinals)`. Return to Top(0) halts
+with the result and prints
 
 ```
 Evaluated<TAB>type<TAB>tag<TAB>tree<LF>
@@ -721,6 +733,12 @@ lane and requires:
   divergence, and the Bun lane's empty output as `print-non-scalar-second`'s);
 - the reference evaluation reproducing every Book golden's expectation and every
   run control's outcome and call count;
+- each of the 28 frozen Book invocations of `invoke-args` and `invoke-arrow`
+  equal to its literal review and to §8: `serializer.invocation`'s verdict, or the
+  reference evaluation's describe line for the entered function; eval-cli's frozen
+  answer agrees except where a declared `opaque-parameter` or `erased-field`
+  divergence names the image loss the gate derives (five frozen invocation
+  controls);
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
@@ -742,9 +760,9 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 40 codec mutants and 4 source mutants killed through a changed image, a decode
+- 46 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe verdict or a changed observation, and 11 evaluator mutants
+  changed describe or invocation verdict or a changed observation, and 11 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
