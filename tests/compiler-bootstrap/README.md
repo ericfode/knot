@@ -193,8 +193,15 @@ comparator runs on a real audit there.
 The reference outcome histogram measures how much of the repository Knot's own
 parser accepts today: 142 of 623 files parse. Most of the rest stop at
 `Unsupported` literal, declaration-form or generic classifications. No
-`src/*.bend` file reports `Invalid` or worse. The `Invalid` results are test
-fixtures, and they are recorded, not judged.
+`src/*.bend` file reports `Invalid` or worse. The reference parser reports 28
+test fixtures `Invalid`. The pinned seed rejects 22 of them, and those are
+recorded, not judged. The seed accepts the other six, so Knot's `Invalid` is a
+D4 gap that the owning increment must close. They are the closures fixtures
+`closure-drop`, `closure-in-arm`, `curried-arities`, `defunc-sites` and
+`return-closure` (positive or edge, `knot.require` `agree`), and the sugar
+fixture `parallel-let` (pinned `Unsupported parse parallel-binding`). The
+harness records these results without judging them, so the gaps show up here
+only as counts.
 
 ## Receipts
 
@@ -465,6 +472,16 @@ the sandbox. The adapter's hash joins the receipt's `inputs`.
 
 - The harness does not prove checker soundness or compiler correctness.
   Agreement is byte identity on the stated corpora.
+- The generation contract's `target` records `src/CONTRACT.json`'s top-level
+  profile (`knot-enum-1`). The artifact judge applies the IO-ABI memory rule of
+  a `knot_io` program: exactly one defined memory32, within the D19 pages. No
+  `knot-enum-1` module satisfies that rule, and A2, being a whole compiler
+  doing IO, can never be one. Under the VM-first route (D14) the generations are
+  `knot-image-1` images run by `knot-vm-1`. The `vm-e2e3` increment rewires
+  `target` to that profile and judges image artifacts with the VM's validator.
+  Until then e2e3.a2 is unreachable: C1 stops at `Unsupported lex literal`.
+  The coordinator deferred this confirmed review finding to that increment
+  (2026-09-27).
 - The conformance corpus uses the enum profile (`knot-enum-1`). It is fixed
   at 57 cases, and it runs from the repository root, not from a sandbox.
 - C1 is built only in the native lane. The Bun lane's memory fault on large
