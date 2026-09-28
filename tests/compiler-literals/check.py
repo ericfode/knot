@@ -247,6 +247,21 @@ MUTANTS = [
     {'name': 'append-reversed', 'file': 'primitive-eval.bend', 'lane': 'eval',
      'old': 'onto(onto(a,Nil{}),b)', 'new': 'onto(a,b)',
      'fixture': 'string-append', 'export': 'spells_ab', 'arguments': [2, 0], 'wrong_tag': 0},
+    {'name': 'inferred-let-literal', 'file': 'check.bend',
+     'old': 'annotated(wanted,token,target => expected(token,Some{target},value))',
+     'new': 'expected(token,wanted,value)',
+     'fixture': 'let-u32', 'verdict': (0, 'Built\t')},
+    {'name': 'kept-zero-offset', 'file': 'parse.bend',
+     'old': 'Parsed{offset(token,count,value),rest}', 'new': 'Parsed{S.Offset{token,count,value},rest}',
+     'fixture': 'offset-zero', 'verdict': (2, 'Invalid\tcheck\tpattern-type\t')},
+    {'name': 'internal-literal-scrutinee', 'file': 'scope.bend',
+     'old': 'case S.Literal{token,kind,number,text}: C.invalid(C.Binding,"constructor-scrutinee",token)',
+     'new': 'case S.Literal{token,kind,number,text}: C.internal(C.Binding,"scrutinee-node")',
+     'fixture': 'scrutinee-u32', 'verdict': (6, 'InternalFailure\tcheck\tscrutinee-node')},
+    {'name': 'unsupported-literal-pattern', 'file': 'check.bend',
+     'old': 'case S.Literal{token,kind,number,text}: C.invalid(G.ConstructorRef,"pattern-type",token)',
+     'new': 'case S.Literal{token,kind,number,text}: C.unsupported(G.ConstructorRef,"pattern-type",token)',
+     'fixture': 'pattern-u32-on-enum', 'verdict': (3, 'Unsupported\tcheck\tpattern-type\t')},
 ]
 
 

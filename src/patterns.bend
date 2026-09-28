@@ -23,6 +23,8 @@ def binder(node: S.Node, next: S.Token -> U32 -> Result<S.Error,Fields>) -> Resu
     case S.Variable{token}: next(token,1)
     case S.Promotion{token}: next(token,2)
     case S.Constructor{token,args}: C.unsupported(Fields,"nested-field-pattern",token)
+    case S.Literal{token,kind,number,text}: C.unsupported(Fields,"nested-field-pattern",token)
+    case S.Offset{token,count,tail}: C.unsupported(Fields,"nested-field-pattern",token)
     case S.Call{token,args}: C.invalid(Fields,"pattern-form",token)
     case _: C.internal(Fields,"pattern-field-node")
 

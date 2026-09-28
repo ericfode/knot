@@ -1171,3 +1171,34 @@ exceeded the 48000-byte composition bound, and a later catalog import pushed
 three literal groups over it. The perch-context gate caught both only in the
 first full run. Prevention: run the full gate runner once after every merge,
 before fixture work begins.
+
+## 2026-09-27 — Literals review round 2: new syntax nodes outside the matrix
+
+The adversarial review of `3cf9705` confirmed three more defects the literals
+gate could not see; reproducing them exposed a fourth. All are missed
+deterministic coverage of the new `Literal` and `Offset` nodes outside the
+primitive matrix, not Perch findings.
+
+- An unannotated `n = 3`, `s = "ab"` or `n = 2n+m` checked and ran; the seed
+  cannot infer a literal. The only frozen let-literal lacked `import Base`.
+- `match 3:` or `match 1n+m:`, and a literal arm on a datatype scrutinee,
+  fell through to `InternalFailure` (`scrutinee-node`, `pattern-node`); a
+  literal field pattern did the same (`pattern-field-node`).
+- Found while reproducing: the seed reads `0n+t` as t. Knot rewrote it to
+  `Nat.add(0n,t)`, so a seed-valid `U32.is_eq(0n+x,3)` and `case 0n+p` on a
+  U32 or String column were Invalid, a D4 violation. The review's own fix
+  (gate every offset on an annotation) would have made the seed-valid
+  `n = 0n+m` Invalid as well.
+
+[The regression freeze](../tests/compiler-literals/regressions.json) pins 23
+round-2 books before the fixes, with agreeing controls; four verdict mutants
+cover the new gate, the zero-offset reading, the scrutinee arm and the pattern
+arm. A 406-book differential sweep of the reviewers' probes found no
+seed-valid Invalid, no seed-invalid acceptance and no InternalFailure after
+the fix.
+
+Prevention: when a change adds a syntax node, enumerate every dispatch over
+that type (`case _:` fallbacks included) and freeze a seed book for each, in
+both synthesis and checking positions. Probe the degenerate count of every
+counted form (here `0n+t`) against the seed before accepting a reviewer's
+proposed fix.

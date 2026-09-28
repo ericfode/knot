@@ -408,8 +408,14 @@ patterns through SNil/SCon. U32/Char literal patterns require a default; all
 leaves are checked. The 256-offset bound, quantities, first-parameter strict
 field descent and forward-call restrictions remain enforced. An offset's `+`
 must touch its literal (`1n+p`); a separated `+` is operator sugar,
-`Unsupported parse operator`. `Chr{...}` patterns and broader nested pattern
-support are still Unsupported. The Base constructor `U32{data: Word(32n)}` has
+`Unsupported parse operator`. As in the seed, `0n+t` reads as t itself, so a
+parsed offset always spells a successor. Literals and Nat offsets check against
+a known type, as bare constructors do: an unannotated binding (`n = 3`,
+`n = 2n+m`) is `Invalid check annotation-required`, a literal or offset
+scrutinee is `Invalid check constructor-scrutinee`, and a literal or offset arm
+on a datatype scrutinee is `Invalid check pattern-type`. A literal field pattern
+is `Unsupported check nested-field-pattern`. `Chr{...}` patterns and broader
+nested pattern support are still Unsupported. The Base constructor `U32{data: Word(32n)}` has
 no representation in the unboxed U32 and is `Unsupported check u32-constructor`
 in patterns and expressions.
 
@@ -450,7 +456,7 @@ Three complete new proof entries check 27 helper laws. They cover the required
 arithmetic guard equations, String traversal order and length, literal
 decoding, core transitions and matrix expansion; they do not prove
 whole-compiler correctness or all-input intrinsic refinement. The registered
-literals gate compares 303 accepted calls in both evaluator and compiler lanes,
-and kills eight type-correct semantic mutants.
+literals gate compares 325 accepted calls in both evaluator and compiler lanes,
+and kills twelve type-correct semantic mutants.
 Live Perch review remains a coordinator gate; offline preflight alone is not a
 style pass. Existing compiler gates and their frozen expectations are retained.

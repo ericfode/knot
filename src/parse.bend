@@ -42,6 +42,10 @@ def touches(left: S.At, right: S.At) -> Bool:
   match left right:
     case S.At{start,end,line,column} S.At{next,stop,row,col}: U32.is_eq(end,next)
 
+# `kn+t` is k successors around t, so `0n+t` is t itself, as the seed reads it.
+def offset(+token: S.Token, +count: U32, +tail: S.Node) -> S.Node:
+  S.choose(S.Node,U32.is_eq(count,0),u => tail,u => S.Offset{token,count,tail})
+
 def scrutinee(ts: List<&2,S.Token>) -> Bool:
   match ts:
     case Nil{}: False{}
@@ -239,7 +243,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         S.choose(Result<S.Error,Parsed>,touches(S.at(token),S.here(tokens)),u =>
         S.choose(Result<S.Error,Parsed>,Bool.and(pattern,U32.is_gt(count,256)),u => invalid(tokens,"nat-offset-pattern"),u =>
           S.bind(List<&2,S.Token>,Parsed,expect(tokens,"+"),tail =>
-            then(run(n,Term{pattern},tail),value => rest => Done{Parsed{S.Offset{token,count,value},rest}}))),u =>
+            then(run(n,Term{pattern},tail),value => rest => Done{Parsed{offset(token,count,value),rest}}))),u =>
         unsupported(tokens,"operator")),u =>
         Done{Parsed{S.Literal{token,1,count,text},tokens}})
     case 1n+ +n LiteralTail{node,pattern}: Done{Parsed{node,tokens}}

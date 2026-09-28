@@ -103,6 +103,8 @@ def let_result(value: C.Checked, body: C.Checked, +token: S.Token, +level: U32, 
 def pattern_arity(+reference: G.ConstructorRef, args: List<&2,S.Node>, +token: S.Token, params: List<&2,C.Parameter>) -> Result<S.Error,G.ConstructorRef>:
   S.choose(Result<S.Error,G.ConstructorRef>,Nat.is_eq(List.length(&2,S.Node,args),List.length(&2,C.Parameter,params)),u => Done{reference},u => C.invalid(G.ConstructorRef,"pattern-arity",token))
 
+# A datatype arm. Primitive scrutinees take the literal matrix, so a literal or
+# Nat offset here spells no constructor of the scrutinee type.
 def pattern(node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,G.ConstructorRef>:
   match node:
     case S.Constructor{+token,+args}:
@@ -111,6 +113,8 @@ def pattern(node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,G.Const
     case S.Variable{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
     case S.Promotion{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
     case S.Call{token,args}: C.invalid(G.ConstructorRef,"pattern-form",token)
+    case S.Literal{token,kind,number,text}: C.invalid(G.ConstructorRef,"pattern-type",token)
+    case S.Offset{token,count,tail}: C.invalid(G.ConstructorRef,"pattern-type",token)
     case _: C.internal(G.ConstructorRef,"pattern-node")
 
 def pattern_id(reference: G.ConstructorRef, +type_id: U32, +seen: List<&2,U32>, +token: S.Token) -> Result<S.Error,U32>:
@@ -187,7 +191,9 @@ def intrinsic_type(reference: G.TypeRef, next: U32 -> Result<S.Error,C.Checked>)
   match reference:
     case G.TypeRef{id,definition}: next(id)
 
-def matrix_wanted(wanted: Maybe<&2,U32>, token: S.Token, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+# Literals, Nat offsets and literal matches check against a known type; the
+# seed infers none of them. A parsed offset has at least one successor.
+def annotated(wanted: Maybe<&2,U32>, token: S.Token, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match wanted:
     case None{}: C.invalid(C.Checked,"annotation-required",token)
     case Some{target}: next(target)
@@ -231,10 +237,10 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n MatrixLeaves{Con{head,+tail},+target} _ _:
       S.bind(C.Checked,C.Checked,run(n,Matrix{head,target},catalog,current,scope),first =>
         S.bind(C.Checked,C.Checked,run(n,MatrixLeaves{tail,target},catalog,current,scope),rest => matrix_retained(first,rest)))
-    case 1n+ +n Expression{S.Literal{+token,kind,number,text},+wanted} C.Catalog{types,sigs} _:
-      S.bind(C.Checked,C.Checked,L.literal(token,kind,number,text,types),value => expected(token,wanted,value))
+    case 1n+ +n Expression{S.Literal{+token,kind,number,text},wanted} C.Catalog{types,sigs} _:
+      S.bind(C.Checked,C.Checked,L.literal(token,kind,number,text,types),value => annotated(wanted,token,target => expected(token,Some{target},value)))
     case 1n+ +n Expression{S.Offset{+token,count,tail},wanted} _ _:
-      run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},wanted},catalog,current,scope)
+      annotated(wanted,token,target => run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},Some{target}},catalog,current,scope))
     case 1n+ +n Expression{S.Intrinsic{+token,+op,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.TypeRef,C.Checked,G.find_type(types,LB.token(O.output(op)),0),reference =>
         intrinsic_type(reference,+id =>
@@ -261,7 +267,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Expression{S.Match{+token,value,+arms},+wanted} C.Catalog{+types,sigs} _:
       S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),+binding =>
         S.choose(Result<S.Error,C.Checked>,M.enabled(types,binding),u =>
-          matrix_wanted(wanted,token,target =>
+          annotated(wanted,token,target =>
             S.bind(M.Plan,C.Checked,M.compile(4096n,binding,arms,types,scope),plan =>
               S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target},catalog,current,scope),body => matrix_consumed(body,binding,scope)))),u =>
           match_body(binding,token,arms,types,scope,wanted,level =>

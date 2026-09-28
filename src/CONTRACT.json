@@ -292,7 +292,8 @@
       "tests/compiler-literals/regressions.json"
     ],
     "reader": "ASCII source; decimal U32/Nat; quoted code lists; 1-8 digit Unicode escapes preserve arbitrary U32 codes including surrogates and NUL.",
-    "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; all leaves checked; Nat offsets 0..256, with `+` adjacent to the literal.",
+    "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; all leaves checked; Nat offsets 0..256, with `+` adjacent to the literal; `0n+t` reads as t, as in the seed. A literal or Nat offset arm on a datatype scrutinee is Invalid pattern-type.",
+    "checking": "Literals and Nat offsets check against a known type, as in the seed: an unannotated binding is Invalid annotation-required, and a literal or Nat offset scrutinee is Invalid constructor-scrutinee.",
     "intrinsic_registry": {
       "types": 4,
       "operations": 39,
@@ -306,6 +307,7 @@
       "raw non-ASCII quoted text",
       "Chr constructor patterns",
       "the Base U32 constructor U32{data: Word(32n)}, in patterns and expressions",
+      "a literal or Nat offset inside a constructor field pattern",
       "general nested patterns beyond the bounded primitive matrix"
     ],
     "core": [

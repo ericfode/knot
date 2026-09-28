@@ -2,7 +2,7 @@
 
 Contract: [README.md](README.md), unchanged [expectations.json](expectations.json),
 the separately committed [supplemental.json](supplemental.json) and the
-review-round-1 [regressions.json](regressions.json). No law
+review-round-1 and round-2 [regressions.json](regressions.json). No law
 changes the seed oracle or weakens an existing compiler gate.
 
 | Family | Laws | Proof entry | Obligation |
@@ -32,11 +32,12 @@ The intrinsic ABI is trusted implementation, explicitly inventoried as
 `BaseIntrinsic`. Runtime resource bounds are separate from source validity.
 
 Independent counterexamples are fixed before implementation in the seed
-freezes; each review-round-1 regression book was committed before its fix.
+freezes; each review regression book was committed before its fix.
 The gate compares seed results to the source evaluator and to emitted Wasm in
 both compiler lanes, then kills signed-compare, trapping-divide, masked-shift,
-merged-surrogates, offset-off-by-one, spaced-offset, invalid-u32-constructor
-and append-reversed mutants. Mutants retain types and must produce the
+merged-surrogates, offset-off-by-one, spaced-offset, invalid-u32-constructor,
+append-reversed, inferred-let-literal, kept-zero-offset,
+internal-literal-scrutinee and unsupported-literal-pattern mutants. Mutants retain types and must produce the
 designated runtime disagreement or classification change; a broken compiler or
 incomplete observation is not a successful mutation test. A deliberately false
 `append_order` (expecting `[97,99,98]`) is rejected by the proof entry.

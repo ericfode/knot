@@ -399,7 +399,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 121,
+          "declarations": 122,
           "base": 50,
           "base_intrinsics": 14,
           "foreign": 0
@@ -1314,6 +1314,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.offset",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.operator_tail",
             "file": "src/parse.bend",
             "via": "src/parse.term_failure",
@@ -1510,6 +1526,7 @@
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
+              "src/parse.offset",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
@@ -2437,7 +2454,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 121,
+          "declarations": 122,
           "base": 50,
           "base_intrinsics": 12,
           "foreign": 0
@@ -3352,6 +3369,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.offset",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.operator_tail",
             "file": "src/parse.bend",
             "via": "src/parse.term_failure",
@@ -3548,6 +3581,7 @@
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
+              "src/parse.offset",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
@@ -4475,7 +4509,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 95,
+          "declarations": 96,
           "base": 35,
           "base_intrinsics": 14,
           "foreign": 0
@@ -5014,6 +5048,19 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.offset",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.operator_tail",
             "file": "src/parse.bend",
             "via": "src/parse.term_failure",
@@ -5137,6 +5184,7 @@
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
+              "src/parse.offset",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
@@ -5754,7 +5802,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 137,
+          "declarations": 138,
           "base": 66,
           "base_intrinsics": 13,
           "foreign": 0
@@ -6721,6 +6769,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.offset",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.operator_tail",
             "file": "src/parse.bend",
             "via": "src/parse.term_failure",
@@ -6909,6 +6973,7 @@
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
+              "src/parse.offset",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
@@ -8011,7 +8076,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 770,
+          "declarations": 771,
           "base": 102,
           "base_intrinsics": 27,
           "foreign": 7
@@ -10873,6 +10938,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.annotated",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Checked",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -11517,27 +11603,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.matrix_wanted",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Maybe",
-              "Result",
-              "String",
-              "U32",
-              "src/core.Checked",
-              "src/core.invalid",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": [
-              "next"
-            ]
-          },
-          {
             "key": "src/check.Mode",
             "file": "src/check.bend",
             "via": "src/check.function_body",
@@ -11760,6 +11825,7 @@
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
+              "src/check.annotated",
               "src/check.annotation",
               "src/check.arm_body",
               "src/check.arm_scope",
@@ -11776,7 +11842,6 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
-              "src/check.matrix_wanted",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -17687,6 +17752,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.offset",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.operator_tail",
             "file": "src/parse.bend",
             "via": "src/parse.term_failure",
@@ -17883,6 +17964,7 @@
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
+              "src/parse.offset",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
@@ -22058,7 +22140,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 770,
+          "declarations": 771,
           "base": 102,
           "base_intrinsics": 25,
           "foreign": 7
@@ -24920,6 +25002,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.annotated",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Checked",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -25564,27 +25667,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.matrix_wanted",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Maybe",
-              "Result",
-              "String",
-              "U32",
-              "src/core.Checked",
-              "src/core.invalid",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": [
-              "next"
-            ]
-          },
-          {
             "key": "src/check.Mode",
             "file": "src/check.bend",
             "via": "src/check.function_body",
@@ -25807,6 +25889,7 @@
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
+              "src/check.annotated",
               "src/check.annotation",
               "src/check.arm_body",
               "src/check.arm_scope",
@@ -25823,7 +25906,6 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
-              "src/check.matrix_wanted",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -31734,6 +31816,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.offset",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.operator_tail",
             "file": "src/parse.bend",
             "via": "src/parse.term_failure",
@@ -31930,6 +32028,7 @@
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
+              "src/parse.offset",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
@@ -36105,7 +36204,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 685,
+          "declarations": 686,
           "base": 85,
           "base_intrinsics": 27,
           "foreign": 7
@@ -38037,6 +38136,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.annotated",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.invalid"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -38456,20 +38569,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.matrix_wanted",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.invalid"
-            ],
-            "dynamic_calls": [
-              "next"
-            ]
-          },
-          {
             "key": "src/check.pattern",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -38602,6 +38701,7 @@
               "src/catalog.field_signature",
               "src/catalog.find_function",
               "src/catalog.find_type",
+              "src/check.annotated",
               "src/check.annotation",
               "src/check.arm_body",
               "src/check.arm_scope",
@@ -38618,7 +38718,6 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
-              "src/check.matrix_wanted",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -42650,6 +42749,19 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.offset",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.operator_tail",
             "file": "src/parse.bend",
             "via": "src/parse.term_failure",
@@ -42773,6 +42885,7 @@
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
+              "src/parse.offset",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
@@ -45698,7 +45811,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 808,
+          "declarations": 809,
           "base": 140,
           "base_intrinsics": 31,
           "foreign": 7
@@ -48614,6 +48727,26 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.annotated",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "Result",
+              "U32",
+              "src/core.Checked",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -49248,26 +49381,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.matrix_wanted",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Maybe",
-              "Result",
-              "U32",
-              "src/core.Checked",
-              "src/core.invalid",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": [
-              "next"
-            ]
-          },
-          {
             "key": "src/check.Mode",
             "file": "src/check.bend",
             "via": "src/check.function_body",
@@ -49486,6 +49599,7 @@
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
+              "src/check.annotated",
               "src/check.annotation",
               "src/check.arm_body",
               "src/check.arm_scope",
@@ -49502,7 +49616,6 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
-              "src/check.matrix_wanted",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -55349,6 +55462,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.offset",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "U32.is_eq",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.operator_tail",
             "file": "src/parse.bend",
             "via": "src/parse.term_failure",
@@ -55537,6 +55666,7 @@
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
+              "src/parse.offset",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",

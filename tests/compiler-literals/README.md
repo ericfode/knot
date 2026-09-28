@@ -6,10 +6,13 @@ The contract is the unchanged [40-fixture freeze](FIXTURES.md) and
 books and 5 Unsupported books. The agreeing books contribute 268 calls.
 [The supplemental freeze](supplemental.json), committed as `d3c1e7b` before
 implementation, adds 12 calls for `1n+ +n`, `Nat.is_le`, `U32.and` and
-`String.reverse`. [The regression freeze](regressions.json) adds ten books
-for the confirmed review-round-1 findings, each committed before its fix:
+`String.reverse`. [The regression freeze](regressions.json) adds books for
+confirmed review findings, each committed before its fix. Round 1 (ten books):
 spaced Nat offsets and their adjacent controls, the Base U32 constructor, and
-40000- and 131072-Char String primitives. All three freezes are verified
+40000- and 131072-Char String primitives. Round 2 (23 books): unannotated
+literal and Nat-offset bindings, literal and offset scrutinees, literal
+patterns on datatype scrutinees, literal field patterns, zero offsets and two
+agreeing controls. All three freezes are verified
 against seed 2.0.29, commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on
 every gate run.
 
@@ -28,7 +31,9 @@ adds literal nodes and offsets, and reports the five frozen unsupported cases
 with their exact phase/code prefixes. An offset needs its `+` to touch the
 literal token (`1n+p`, `1n+ p`, `1n++p`); a separated `+` (`1n +p`, `3n + x`)
 is operator sugar and reports `Unsupported\tparse\toperator`, as bare
-operators do. Arithmetic operator sugar, F32 and raw
+operators do. The seed reads `kn+t` as k successors around t, so the parser
+reads `0n+t` as t itself, whatever t's type; every parsed offset therefore
+spells at least one `Succ`. Arithmetic operator sugar, F32 and raw
 non-ASCII quoted text remain Unsupported, including seed-invalid unannotated
 operator sugar. Unsupported is not evidence that a source book is invalid.
 
@@ -42,6 +47,16 @@ General nested patterns and `Chr{...}` patterns remain outside this increment.
 Base spells U32 as `U32{data: Word(32n)}`, but an installed U32 is unboxed
 bits, so that constructor reports `Unsupported\tcheck\tu32-constructor` in
 patterns and expressions.
+
+Literals and Nat offsets are constructor values that check against a known
+type; like the seed, Knot infers none. An unannotated binding such as `n = 3`,
+`+s = "ab"` or `n = 2n+m` reports `Invalid\tcheck\tannotation-required`, as a
+bare constructor does; `n : U32 = 3` checks. A literal or offset scrutinee
+(`match 3:`, `match 1n+m:`) reports `Invalid\tcheck\tconstructor-scrutinee`.
+A datatype scrutinee never enters the primitive matrix, so a literal or offset
+arm there reports `Invalid\tcheck\tpattern-type`, and a literal inside a
+constructor field pattern reports `Unsupported\tcheck\tnested-field-pattern`,
+as a nested constructor does.
 
 The checked core gains Literal, Intrinsic and Default. U32/Char expressions use
 the existing scalar Value term. The independent evaluator interprets this core
@@ -70,7 +85,7 @@ Base declarations:
   its four datatype representations.
 - `BaseUnchecked`: the exact unselected complement.
 
-The literal gate checks this partition in both lanes for all 28 accepted books.
+The literal gate checks this partition in both lanes for all 30 accepted books.
 The modules gate's audit accepts `BaseIntrinsic` rows under the same
 three-way partition and requires each modules book to declare any intrinsic
 rows it reaches (none do); see the literals amendment in
@@ -144,24 +159,28 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 51 fixture books, 313 fresh seed calls, 102 checks and 102 primary compilations.
-- 606 agreeing evaluator observations and 606 matching Node/Wasm observations;
-  46 additional evaluator rejections, giving 652 evaluator observations total.
-- 28 byte-identical native/Bun module pairs and 56 complete Base trust audits.
-- 46 rejected-compilation output-preservation probes and 46 additional
+- 74 fixture books, 336 fresh seed calls, 148 checks and 148 primary compilations.
+- 650 agreeing evaluator observations and 650 matching Node/Wasm observations;
+  88 additional evaluator rejections, giving 738 evaluator observations total.
+- 30 byte-identical native/Bun module pairs and 60 complete Base trust audits.
+- 88 rejected-compilation output-preservation probes and 88 additional
   compilations proving no artifact is created at an absent output path.
 - Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 27 filled laws; eight type-correct semantic
-  mutants: five Wasm value kills, two verdict kills and three evaluator kills.
+- Three complete proof entries, 27 filled laws; twelve type-correct semantic
+  mutants: five Wasm value kills, six verdict kills and three evaluator kills.
 
 The mutant witnesses are frozen calls: unsigned compare across the high bit,
 zero divisor, shift by 32, surrogate equality and the 255/256 Nat offset edge.
 Each mutant compiler must typecheck, build and emit a valid module. Four kills
 are explicit wrong enum results; the division mutant must reach the real Wasm
-`divide by zero` trap. Two verdict mutants change a frozen book's
+`divide by zero` trap. Six verdict mutants change a frozen book's
 classification: dropping the offset adjacency test compiles `case 1n + p` to
-`Built`, and restoring the catalog lookup reports the U32 constructor as
-`Invalid`. The evaluator-only `append-reversed` mutant changes no emitted byte;
+`Built`; restoring the catalog lookup reports the U32 constructor as
+`Invalid`; inferring a literal's type compiles `n = 3` to `Built`; keeping
+`0n+t` as `Nat.add(0n,t)` rejects the seed-valid offset-zero book as
+`Invalid pattern-type`; dropping the literal scrutinee arm fails with
+`InternalFailure`; and an Unsupported literal arm on a datatype replaces the
+seed's Invalid. The evaluator-only `append-reversed` mutant changes no emitted byte;
 its evaluator answers No for `"ab" ++ ""` = `"ab"`. A compiler failure,
 timeout, malformed Wasm or any other verdict is not a kill. Only the Bun lanes
 are mutated; both unmodified lanes are covered by all differential
