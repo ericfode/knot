@@ -136,9 +136,25 @@ it: the row binder path still passes mark 2 (see *Mutants*).
     One more generated program (l00354) stays `Invalid affine-reuse`; only its
     reported span moves, to the let's second use, which is also the seed's
     complaint.
-  - Two slow `blow8` probes changed from a 60-second harness timeout to
-    `Checked`; that is timing, not a checker change.
-  - After the repair: 0 seed-rejected programs are `Checked`.
+  - Two slow `blow8` probes in `sweep/` changed from a 60-second harness
+    timeout to `Checked`. Re-timed alone, both checkers report `Checked` on
+    both files in 42 to 47 s, so under the eight-way sweep they straddle the
+    timeout; the checker did not change.
+  - The post-repair tally, keyed by seed exit and HEAD outcome, and each
+    class's disposition:
+
+    | Seed | HEAD | Files | Disposition |
+    |---|---|---|---|
+    | rejects | Invalid | 4,886 | agree |
+    | rejects | Unsupported | 315 | non-accepting, allowed (D4) |
+    | rejects | Exhausted | 4 | non-accepting, allowed (D4) |
+    | rejects | timeout | 3 | harness timeout under load; a rerun of every probe with only HEAD's checker times out on 9 blow-up probes (`bl/L2W10`, `bl/L3W7`, and seven `sweep/*blow*`), all of which the seed accepts, so these 3 were seed runs that hit the 60-second limit |
+    | accepts | Checked | 4,998 | agree |
+    | accepts | Unsupported | 72 | allowed (D4) |
+    | accepts | Exhausted | 41 | allowed resource limit (D4) |
+    | accepts | timeout | 4 | the same blow-up probes: resource-bound, never a classification |
+    | accepts | Invalid | 7 | the main-era `hd/` parse forms below |
+    | rejects | Checked | 0 | no unsound acceptance |
 - **No other expectation moved.** The `384acc6` and HEAD checkers ran over all
   1,007 tracked `.bend` files. Their first output lines differ on exactly 13
   files, all round-7 fixtures: the 12 let-promotion fixtures go from `Checked`
