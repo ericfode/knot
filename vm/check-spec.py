@@ -23,6 +23,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import sys
 import types
@@ -743,23 +744,36 @@ def image_loss(plan: dict, name: str, ordinals: list, source: str) -> str | None
     return None
 
 
+def invocation_words(invocation) -> list:
+    """The words after IMAGE for a frozen invocation row: `FN FUEL ORDINAL...`, with FUEL the
+    row's own word where it names one."""
+    name, *ordinals = invocation['argv']
+    return [name, invocation.get('fuel', str(VM_FUEL)), *ordinals]
+
+
+def invocation_label(case_name: str, invocation) -> str:
+    fuel = f" (FUEL {shlex.quote(invocation['fuel'])})" if 'fuel' in invocation else ''
+    return f"{case_name} {shlex.join(invocation['argv'])}{fuel}"
+
+
 def invocation_expectations(case, plan, source, evaluator=None) -> list:
     """Section 8 for each frozen Book invocation: the image-derived verdict, or the entered
     function's describe line from the reference evaluation. eval-cli is the oracle; a row
     that differs from it declares the image loss that explains the difference."""
     ev, rows = evaluator or reference, []
     for i in case.get('invocations', []):
-        name, ordinals = i['argv'][0], [int(o) for o in i['argv'][1:]]
-        label, observed_eval = f"{case['name']} {' '.join(i['argv'])}", i['eval']
-        row = {'argv': ['IMAGE', name, str(VM_FUEL), *i['argv'][1:]]}
-        verdict = codec.invocation(plan, name, ordinals)
+        words = invocation_words(i)
+        name, ordinals = words[0], [codec.decimal(o) for o in words[2:]]
+        label, observed_eval = invocation_label(case['name'], i), i['eval']
+        row = {'argv': ['IMAGE', *words]}
+        verdict = codec.invocation(plan, words)
         if verdict:
             outcome, cause = verdict.split(' ', 1)
             row.update(outcome=outcome, cause=cause)
             review = verdict
             agrees = observed_eval['exit'] == 5 and observed_eval['stderr'] == verdict.replace(' ', '\t') + '\n'
         else:
-            got = ev.book(plan, name, ordinals, VM_FUEL)
+            got = ev.book(plan, name, ordinals, codec.decimal(words[1]))
             require(got.get('exit') == 0, f'{label}: the reference evaluation gives {got}')
             row.update(exit=0, stdout=got['stdout'], stderr='')
             review = got['stdout'].split('\t')[3].removesuffix('\n')
@@ -773,7 +787,7 @@ def invocation_expectations(case, plan, source, evaluator=None) -> list:
             require('divergence' not in i, f'{label}: declared {i.get("divergence")!r}, but eval-cli agrees')
             row['basis'] = 'eval-cli'
         else:
-            loss = image_loss(plan, name, ordinals, source)
+            loss = image_loss(plan, name, ordinals, source) if None not in ordinals else None
             require(loss is not None and i.get('divergence') == loss,
                     f'{label}: eval-cli gives {observed_eval}, section 8 {review!r}; declared {i.get("divergence")!r}, '
                     f'image loss {loss!r}')
@@ -786,19 +800,21 @@ def invocation_expectations(case, plan, source, evaluator=None) -> list:
 def invocation_controls(cases: dict, plans: dict, sources: dict) -> list:
     """What the invocation rule must refuse: a review other than section 8's verdict, an
     undeclared or misnamed image loss, and a divergence where eval-cli agrees."""
-    args = cases['invoke-args']
-
-    def edit(argv, **change):
-        rows = [{**i, **change} if i['argv'] == argv.split() else i for i in args['invocations']]
-        return {**args, 'invocations': [{k: v for k, v in i.items() if v is not None} for i in rows]}
+    def edit(name, argv, **change):
+        rows = [{**i, **change} if i['argv'] == argv.split() and 'fuel' not in i else i for i in cases[name]['invocations']]
+        return name, {**cases[name], 'invocations': [{k: v for k, v in i.items() if v is not None} for i in rows]}
     out = []
-    for label, case in [('review-arity-first', edit('two 5', vm='HostFailure invoke argument-arity')),
-                        ('opaque-undeclared', edit('is_zero 0', divergence=None)),
-                        ('erased-field-undeclared', edit('real 0', divergence=None)),
-                        ('opaque-as-erased-field', edit('is_zero 0', divergence='erased-field')),
-                        ('divergence-where-eval-agrees', edit('two 1 0', divergence='opaque-parameter'))]:
+    for label, (name, case) in [
+            ('review-arity-first', edit('invoke-args', 'two 5', vm='HostFailure invoke argument-arity')),
+            ('opaque-undeclared', edit('invoke-args', 'is_zero 0', divergence=None)),
+            ('erased-field-undeclared', edit('invoke-args', 'real 0', divergence=None)),
+            ('opaque-as-erased-field', edit('invoke-args', 'is_zero 0', divergence='erased-field')),
+            ('divergence-where-eval-agrees', edit('invoke-args', 'two 1 0', divergence='opaque-parameter')),
+            # Section 8 reads the argument words before FN, and never reduces one modulo 2^32.
+            ('review-lookup-before-words', edit('invoke-words', 'absent x', vm='HostFailure invoke unknown-export')),
+            ('review-wrapped-word', edit('invoke-words', 'two 4294967296 0', vm='Two{Off{},Off{}}'))]:
         try:
-            invocation_expectations(case, plans['invoke-args'], sources['invoke-args'])
+            invocation_expectations(case, plans[name], sources[name])
         except AssertionError as refusal:
             out.append({'control': f'invocation:{label}', 'refused': str(refusal)})
             continue
@@ -1473,6 +1489,27 @@ CODEC_MUTANTS = [
                               "        return 'HostFailure invoke unknown-export'\n    if undescribable(plan, f['result']):\n"
                               "        return 'Unsupported invoke result-type'\n    for at, t")]),
     ('invoke-admits-structured', [("        if ctors[ordinals[at]]['fields']:\n            return 'HostFailure invoke structured-argument'\n", "")]),
+    # Round-5 re-review: section 8's argument words, Base's U32.read, checked before FN.
+    ('invoke-words-after-lookup', [("    if None in map(decimal, argv[1:]):\n        return 'HostFailure arguments expected-u32'\n", ""),
+                                   ("        return 'HostFailure invoke unknown-export'\n    for at, t",
+                                    "        return 'HostFailure invoke unknown-export'\n    if None in map(decimal, argv[1:]):\n"
+                                    "        return 'HostFailure arguments expected-u32'\n    for at, t")]),
+    ('invoke-words-per-parameter', [("    if None in map(decimal, argv[1:]):", "    if decimal(argv[1]) is None:"),
+                                    ("        if at == len(ordinals):\n            return 'HostFailure invoke argument-arity'\n",
+                                     "        if at == len(ordinals):\n            return 'HostFailure invoke argument-arity'\n"
+                                     "        if ordinals[at] is None:\n            return 'HostFailure arguments expected-u32'\n")]),
+    ('invoke-fuel-unchecked', [("    if None in map(decimal, argv[1:]):", "    if None in map(decimal, argv[2:]):")]),
+    ('invoke-words-wrap', [("    return int(word) if re.fullmatch('[0-9]+', word) and int(word) <= 0xFFFFFFFF else None",
+                            "    return int(word) & 0xFFFFFFFF if re.fullmatch('[0-9]+', word) else None")]),
+    ('invoke-words-maximum-exclusive', [("int(word) <= 0xFFFFFFFF", "int(word) < 0xFFFFFFFF")]),
+    ('invoke-words-no-leading-zeros', [("re.fullmatch('[0-9]+', word)", "re.fullmatch('0|[1-9][0-9]*', word)")]),
+    ('invoke-words-ten-digits', [("re.fullmatch('[0-9]+', word)", "re.fullmatch('[0-9]{1,10}', word)")]),
+    ('invoke-words-empty-zero', [("    return int(word) if re.fullmatch('[0-9]+', word) and int(word) <= 0xFFFFFFFF else None",
+                                  "    return int(word or 0) if re.fullmatch('[0-9]*', word) and int(word or 0) <= 0xFFFFFFFF else None")]),
+    ('invoke-words-unicode-digits', [("re.fullmatch('[0-9]+', word)", "word.isdigit()")]),
+    ('invoke-words-host-int', [("    return int(word) if re.fullmatch('[0-9]+', word) and int(word) <= 0xFFFFFFFF else None",
+                                "    try:\n        value = int(word)\n    except ValueError:\n        return None\n"
+                                "    return value if 0 <= value <= 0xFFFFFFFF else None")]),
     # Review round 3: a String constant is its code list at every step.
     ('encode-through-json-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
                                    "        data = [ord(c) for c in json.loads(json.dumps(''.join(map(chr, value))))] "
@@ -1491,7 +1528,7 @@ CODEC_MUTANTS = [
 def invocation_verdicts(invoking: list, c=None) -> dict:
     """Section 8's verdict on every frozen Book invocation, by label."""
     c = c or codec
-    return {label: c.invocation(plan, name, ordinals) for label, plan, name, ordinals in invoking}
+    return {label: c.invocation(plan, words) for label, plan, words in invoking}
 
 
 def codec_mutants(plans, images, controls, admitted, describing, reg, digest, invoking) -> list:
@@ -1892,7 +1929,7 @@ def main() -> int:
         admitted.append((label, data))
     require(text_spelling(plans, digest) is None, text_spelling(plans, digest))
 
-    invoking = [(f"{name} {' '.join(i['argv'])}", plans[name], i['argv'][0], [int(o) for o in i['argv'][1:]])
+    invoking = [(invocation_label(name, i), plans[name], invocation_words(i))
                 for name, case in cases.items() for i in case.get('invocations', [])]
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
                             controls, admitted, describing, reg, digest, invoking) + source_mutants(cases, built) + \

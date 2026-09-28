@@ -223,6 +223,30 @@ follows it (§5, §10, §11) without a new image header word.
    continuation) survive with those controls withheld and each dies by one. Run
    controls now carry their fuel, and the receipt records each one's argv. No
    golden or expectation changed.
+16. **Book arguments are decimal u32 words, read before FN.** The same re-review
+   found §8 silent on the syntax of FUEL and the ordinals, and its order against
+   eval-cli, which reads every word with Base's `U32.read` before it looks the
+   function up: `absent x` and `two F 9 x` answer `HostFailure arguments
+   expected-u32` there, where §8 said `unknown-export` and `argument-range`. No
+   frozen invocation had a malformed word, so vm-core, vm-model and eval-cli could
+   each read another grammar; a host parsing with `>>> 0` would admit `4294967297`
+   as 1. `U32.read` admits exactly the nonempty ASCII digit strings of value at
+   most 2^32-1, leading zeros included: its test `(10·acc + c - 48) mod 2^32`
+   divided by 10 equals `acc` only for a digit `c` that does not overflow. §8 now
+   defines that word, names its cause, and makes it step 1, before
+   `unknown-export`. It also fixes what surrounds it: the image is validated
+   first, because its entry kind selects the Book or Program form, and a missing
+   word is `HostFailure arguments usage`. eval-cli spells its usage refusal
+   differently and caps its budget at 1,048,576 transitions; neither is compared,
+   and every frozen budget stays within the cap. `serializer.invocation` takes the
+   words after IMAGE and reads them with `serializer.decimal`; an invocation row
+   may name its FUEL word, which eval-cli receives as its budget. Golden
+   `invoke-words` freezes 16 invocations, each agreeing with eval-cli (§12). Ten
+   codec mutants of the grammar and its order (words after the lookup or per
+   parameter, FUEL unchecked, reduction modulo 2^32, an exclusive maximum, no
+   leading zeros, a ten-digit cap, the empty word as 0, other scripts' digits,
+   Python's `int`) and two invocation controls are killed. vm-expected.json only
+   gains rows; the earlier invocations' argv already carried `1000000` as FUEL.
 
 ## Findings that need an owner
 

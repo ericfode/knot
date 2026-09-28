@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 91 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 93 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden and frozen Book invocation, derived by the rules of §8 and §11 |
 | [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
@@ -485,19 +485,40 @@ is a Wasm-to-Wasm return and call. Test dumps show a Yield event here.
 
 ## 8. Books, Programs and Actions
 
-**Book** (`IMAGE FN FUEL [ORDINALS…]`). These checks read only the image, in this
-order, before anything else and without debiting fuel; steps 1–3 fail as
-`HostFailure invoke` with the cause named:
-1. `FN` is found by name, else `unknown-export`.
-2. `FN`'s live parameters are walked left to right, as eval-cli walks them; an
+**Arguments.** The VM loads and validates the image first (§4); its entry kind
+selects the form of the words after `IMAGE`: a Book takes `FN FUEL [ORDINALS…]`
+and a Program `FUEL -- [ARGS…]`. Fewer words, or a Program's second word other
+than `--`, is `HostFailure arguments usage`. FUEL and every ORDINAL are **decimal
+u32 words**: one or more ASCII digits `0`–`9` and nothing else (no sign, space,
+separator, radix prefix or other script's digit), with a value at most
+4,294,967,295. Leading zeros are allowed: `01` and `000000000001` are 1. Every
+other word, the empty word included, is `HostFailure arguments expected-u32`; a
+value above the maximum is refused, never reduced modulo 2^32 (`4294967296` is
+not 0). This is Base's `U32.read`, which eval-cli applies to its budget and
+ordinals. FN and ARGS are any words, and FUEL any u32, 0 included (§7); eval-cli
+also refuses a budget above its 1,048,576 transitions as `budget-out-of-range`, a
+cap the VM does not share. eval-cli reads its words before its source; the VM
+reads the image first because the entry kind selects the form, so an image §4
+refuses is `HostFailure image` whatever the words.
+
+**Book** (`IMAGE FN FUEL [ORDINALS…]`). These checks run in this order, before any
+entry and without debiting fuel; steps 2–4 fail as `HostFailure invoke` with the
+cause named:
+1. FUEL, then each ORDINAL left to right, is a decimal u32 word, else
+   `HostFailure arguments expected-u32`. eval-cli reads every word before it looks
+   `FN` up, so a malformed word refuses the invocation whatever `FN` names
+   (`absent x`) and whatever an earlier ordinal would be refused for
+   (`two F 9 x`).
+2. `FN` is found by name, else `unknown-export`.
+3. `FN`'s live parameters are walked left to right, as eval-cli walks them; an
    erased parameter takes no ordinal. With no ordinal left, `argument-arity`. An
    arrow parameter is `function-argument`. Otherwise the ordinal is a constructor
    tag of the parameter's type: at or beyond its constructor count it is
    `argument-range`, so an opaque type (U32, File) or a `none` parameter refuses
    every ordinal; naming a constructor with a live field, `structured-argument`.
    An admitted ordinal is that nullary constructor's immediate.
-3. Ordinals left over are `argument-arity`.
-4. `FN`'s result type must be **describable**: algebraic, with every live field of
+4. Ordinals left over are `argument-arity`.
+5. `FN`'s result type must be **describable**: algebraic, with every live field of
    every constructor describable in turn. A cycle through algebraic types stays
    describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque type are
    not, so neither are the pinned Char (its U32 field) and String. Otherwise
@@ -505,12 +526,14 @@ order, before anything else and without debiting fuel; steps 1–3 fail as
    result, so the VM refuses the request instead of inventing one (§11; goldens
    `result-u32`, `result-u32-field`, `result-char` and `result-string`).
 
-The reference predicate is `serializer.invocation`. The image keeps less than
+The reference predicate is `serializer.invocation`, with `serializer.decimal` for
+step 1's words. The image keeps less than
 eval-cli's core, so two eval-cli answers differ by contract: eval-cli admits a U32
 ordinal 0 as the value 0, because its loader models U32 as one nullary constructor
 (`opaque-parameter`), and refuses a constructor whose fields are all erased as
 `structured-argument`, while the image has no erased field (`erased-field`).
-Goldens `invoke-args` and `invoke-arrow` freeze each cause (§12). The VM then
+Goldens `invoke-args` and `invoke-arrow` freeze each cause of steps 2–5, and
+`invoke-words` step 1's words (§12). The VM then
 pushes Top(phase 0) and starts with `Enter(FN, ordinals)`. Return to Top(0) halts
 with the result and prints
 
@@ -711,10 +734,11 @@ the lone surrogate; the VM writes `a\n`, the Bun lane nothing). `non-scalar-code
 `a\n` and refuses) build a surrogate without printing it and agree with the seed.
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
-golden: the eval-cli line where eval agrees with the seed (74 goldens), agreement
+golden: the eval-cli line where eval agrees with the seed (75 goldens), agreement
 meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
-value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
+value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`,
+`nat-case-big`);
 `Exhausted` kind 2 `NatRange` where the seed's value lies outside the VM's domain
 (`nat-range`, `nat-mul-range`, `nat-succ-range`), each justified in
 [golden/bounds.json](golden/bounds.json), whose entries are all Exhausted;
@@ -764,12 +788,17 @@ lane and requires:
   divergence, and the Bun lane's empty output as `print-non-scalar-second`'s);
 - the reference evaluation reproducing every Book golden's expectation and every
   run control's outcome and call count;
-- each of the 28 frozen Book invocations of `invoke-args` and `invoke-arrow`
-  equal to its literal review and to §8: `serializer.invocation`'s verdict, or the
-  reference evaluation's describe line for the entered function; eval-cli's frozen
-  answer agrees except where a declared `opaque-parameter` or `erased-field`
-  divergence names the image loss the gate derives (five frozen invocation
-  controls);
+- each of the 44 frozen Book invocations of `invoke-args`, `invoke-arrow` and
+  `invoke-words` equal to its literal review and to §8: `serializer.invocation`'s
+  verdict, or the reference evaluation's describe line for the entered function;
+  eval-cli's frozen answer agrees except where a declared `opaque-parameter` or
+  `erased-field` divergence names the image loss the gate derives (seven frozen
+  invocation controls, among them reviews that look `FN` up before the words and
+  that reduce `4294967296` to 0). `invoke-words`' 16 rows pass step 1's
+  words, a row's own FUEL word going to eval-cli as its budget: `absent x`, `absent`
+  with FUEL `x`, `two 9 x`, `4294967296`, `4294967297`, `+1`, `-1`, ` 1`, the empty
+  word, U+0661, `1_0` and FUEL `4294967296` are `expected-u32`; `01`,
+  `000000000001` and FUEL `0001048576` enter; `4294967295` is `argument-range`;
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
@@ -806,7 +835,7 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 49 codec mutants and 4 source mutants killed through a changed image, a decode
+- 59 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe or invocation verdict or a changed observation, and 20 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
