@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "33b1636b1cff80812517f49b83e92aae9bda03cebbb2990b8c425e232d5b1f5b",
+    "sha256": "055bb6b4f188232d32f6257b52b57e27e56c7d116a5bcd97ccdbd4e1f7408b42",
     "gates": [
       {
         "name": "frontend",
@@ -191,6 +191,19 @@
           "lint:verify"
         ],
         "programs": []
+      },
+      {
+        "name": "owned-wasm",
+        "argv": [
+          "python3",
+          "tests/compiler-owned-wasm/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-owned-wasm/check.py",
+            "sha256": "f2675554d0df192b414d7de43a4b7ba6d5fb3d4047eae154b8ab5078f1442449"
+          }
+        ]
       }
     ]
   },
@@ -352,6 +365,28 @@
       "fixtures": 40
     },
     {
+      "suite": "tests/compiler-owned-wasm",
+      "directory": "tests/compiler-owned-wasm",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/compiler-owned-wasm/cases.json",
+          "sha256": "0a59afb211f164be60d522c899a1b6a655d91dfbbef63eaaba9610160d9c486b"
+        },
+        {
+          "file": "tests/compiler-owned-wasm/expectations.json",
+          "sha256": "21cd7b26fb02ec04e578845baff0024d5eee6371c08ceb003374b67c02d83bc8"
+        }
+      ],
+      "gates": [
+        "owned-wasm"
+      ],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
       "suite": "recursion",
       "directory": "tests/compiler-recursion",
       "status": "recognized",
@@ -453,6 +488,11 @@
   "reports": [
     {
       "directory": "tests/compiler-io",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/compiler-owned-wasm",
       "status": "unrecognized-suite",
       "detail": "No reviewed adapter for this suite path"
     },

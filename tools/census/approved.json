@@ -5262,6 +5262,10 @@
         {
           "module": "./wasm-bytes.bend",
           "file": "src/wasm-bytes.bend"
+        },
+        {
+          "module": "./owned.bend",
+          "file": "src/owned.bend"
         }
       ],
       "declarations": {
@@ -5834,7 +5838,7 @@
           "quantities.reusable",
           "types.base"
         ],
-        "src/wasm.bend::emit_profile:definition": [
+        "src/wasm.bend::emit_arena:definition": [
           "calls",
           "captures",
           "constructors",
@@ -5844,6 +5848,16 @@
           "literals.u32",
           "matches",
           "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/wasm.bend::emit_profile:definition": [
+          "calls",
+          "constructors",
+          "generics",
+          "matches",
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
@@ -6340,6 +6354,2179 @@
           "literals.string",
           "literals.u32",
           "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/heap-code.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+          "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./wasm-bytes.bend",
+          "file": "src/wasm-bytes.bend"
+        }
+      ],
+      "declarations": {
+        "src/heap-code.bend::Instruction:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/heap-code.bend::Chunk:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/heap-code.bend::Function:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/heap-code.bend::encode:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/heap-code.bend::concat:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/heap-code.bend::get:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::set:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::tee:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::call:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::op:definition": [
+          "constructors",
+          "fields",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::word:definition": [
+          "constructors",
+          "fields",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::load:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::save:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::global_get:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::global_set:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::branch:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::branch_if:definition": [
+          "constructors",
+          "fields",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap-code.bend::guard:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-code.bend::field:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-code.bend::write_field:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-code.bend::signature:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-code.bend::locals:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-code.bend::body:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/heap-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+          "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./heap-code.bend",
+          "file": "src/heap-code.bend"
+        },
+        {
+          "module": "./heap.bend",
+          "file": "src/heap.bend"
+        }
+      ],
+      "declarations": {
+        "src/heap-LAWS.bend::size_class_counts_live_slots:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::scalar_slots_occupy_words:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "laws",
+          "literals.list",
+          "literals.u32"
+        ],
+        "src/heap-LAWS.bend::nullary_cell_includes_prefix_and_tag:law": [
+          "calls",
+          "equality",
+          "laws",
+          "literals.u32"
+        ],
+        "src/heap-LAWS.bend::payload_follows_ownership_prefix:law": [
+          "calls",
+          "equality",
+          "laws",
+          "literals.u32"
+        ],
+        "src/heap-LAWS.bend::last_class_precedes_release_stack:law": [
+          "calls",
+          "equality",
+          "laws",
+          "literals.u32"
+        ],
+        "src/heap-LAWS.bend::first_release_frame_follows_classes:law": [
+          "calls",
+          "equality",
+          "laws",
+          "literals.u32"
+        ],
+        "src/heap-LAWS.bend::last_release_frame_fits_reservation:law": [
+          "calls",
+          "equality",
+          "laws",
+          "literals.u32"
+        ],
+        "src/heap-LAWS.bend::count_word_is_outside_payload:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::retain_adds_one_before_return:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::consumed_parent_uses_free_without_child_release:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::last_release_keeps_parent_until_field_scan:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::free_cell_keeps_previous_class_head:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::exhausted_cleanup_retains_memory_and_pending:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::stack_bounds_precede_frame_publication:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::scalar_descriptor_never_traces_a_pointer:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::pointer_descriptor_traces_its_exact_slot:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-LAWS.bend::instruction_budget_is_explicit:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/heap-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./heap-LAWS.bend",
+          "file": "src/heap-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/heap-PROOF.bend::L.size_class_counts_live_slots:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "literals.u32",
+          "proofs",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.scalar_slots_occupy_words:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "literals.u32",
+          "proofs",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.nullary_cell_includes_prefix_and_tag:law_fill": [
+          "calls",
+          "equality",
+          "literals.u32",
+          "proofs",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.payload_follows_ownership_prefix:law_fill": [
+          "calls",
+          "equality",
+          "literals.u32",
+          "proofs",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.last_class_precedes_release_stack:law_fill": [
+          "calls",
+          "equality",
+          "literals.u32",
+          "proofs",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.first_release_frame_follows_classes:law_fill": [
+          "calls",
+          "equality",
+          "literals.u32",
+          "proofs",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.last_release_frame_fits_reservation:law_fill": [
+          "calls",
+          "equality",
+          "literals.u32",
+          "proofs",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.count_word_is_outside_payload:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.retain_adds_one_before_return:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.consumed_parent_uses_free_without_child_release:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.last_release_keeps_parent_until_field_scan:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.free_cell_keeps_previous_class_head:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.exhausted_cleanup_retains_memory_and_pending:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.stack_bounds_precede_frame_publication:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.scalar_descriptor_never_traces_a_pointer:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.pointer_descriptor_traces_its_exact_slot:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap-PROOF.bend::L.instruction_budget_is_explicit:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/heap.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+          "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./wasm-bytes.bend",
+          "file": "src/wasm-bytes.bend"
+        },
+        {
+          "module": "./heap-code.bend",
+          "file": "src/heap-code.bend"
+        }
+      ],
+      "declarations": {
+        "src/heap.bend::Layout:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/heap.bend::slots:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::bytes:definition": [
+          "calls",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap.bend::class_address:definition": [
+          "calls",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap.bend::frame_address:definition": [
+          "calls",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap.bend::payload_address:definition": [
+          "calls",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap.bend::fail:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::outcome:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::prefix:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::write_prefix:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::retain_count:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::begin_drop:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::stack_room:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::recycle:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::unique_open:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::bump_global:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::maximum_global:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::slot_address:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::loop:definition": [
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/heap.bend::edge_cases:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/heap.bend::layout_cases:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/heap.bend::query:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::range:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::validate:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.string",
+          "literals.u32"
+        ],
+        "src/heap.bend::allocate:definition": [
+          "annotations",
+          "bindings",
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::share:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::free:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::occurrences:definition": [
+          "annotations",
+          "bindings",
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::open:definition": [
+          "annotations",
+          "bindings",
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::enqueue:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::clean:definition": [
+          "annotations",
+          "bindings",
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::release:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::counter:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/heap.bend::limit:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::functions:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::global:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::sections:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/heap.bend::memory_export:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/owned.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+          "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./scope.bend",
+          "file": "src/scope.bend"
+        },
+        {
+          "module": "./ownership.bend",
+          "file": "src/ownership.bend"
+        },
+        {
+          "module": "./heap-code.bend",
+          "file": "src/heap-code.bend"
+        },
+        {
+          "module": "./heap.bend",
+          "file": "src/heap.bend"
+        },
+        {
+          "module": "./wasm-bytes.bend",
+          "file": "src/wasm-bytes.bend"
+        }
+      ],
+      "declarations": {
+        "src/owned.bend::Context:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/owned.bend::Scope:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/owned.bend::Code:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/owned.bend::Finish:datatype": [
+          "fields",
+          "quantities.affine",
+          "types.base",
+          "types.data"
+        ],
+        "src/owned.bend::Mode:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/owned.bend::prepend:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/owned.bend::saved:definition": [
+          "calls",
+          "calls.variable",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::omit:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::drops:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::reference:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::opening:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::loads:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::stores:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::finish:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::branch:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::inspected:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/owned.bend::argument:definition": [
+          "calls",
+          "calls.variable",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::lower:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::tail_calls:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::function_body:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::entry:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::entries:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::shapes:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::Sections:datatype": [
+          "fields",
+          "quantities.affine",
+          "types.data"
+        ],
+        "src/owned.bend::section_entry:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::sections:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::export_count:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::module_bytes:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::module:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/owned.bend::exports:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/owned.bend::emit:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/ownership-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./ownership.bend",
+          "file": "src/ownership.bend"
+        },
+        {
+          "module": "./owned.bend",
+          "file": "src/owned.bend"
+        },
+        {
+          "module": "./heap-code.bend",
+          "file": "src/heap-code.bend"
+        }
+      ],
+      "declarations": {
+        "src/ownership-LAWS.bend::affine_occurrence_moves:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "generics",
+          "laws",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::reusable_last_occurrence_moves:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "laws",
+          "literals.u32",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::reusable_surviving_occurrence_shares:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "laws",
+          "literals.list",
+          "literals.u32"
+        ],
+        "src/ownership-LAWS.bend::erased_field_has_no_edge:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::erased_parameter_has_no_local:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::live_local_preserves_level:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::empty_continuation_has_no_holders:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::surviving_continuation_keeps_holder:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::erased_initializer_has_no_use:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::branch_field_is_not_an_incoming_holder:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::wide_tail_uses_ordinary_call:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::narrow_tail_keeps_return_call:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-LAWS.bend::ordinary_call_keeps_its_target:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/ownership-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./ownership-LAWS.bend",
+          "file": "src/ownership-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/ownership-PROOF.bend::L.affine_occurrence_moves:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.reusable_last_occurrence_moves:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "literals.u32",
+          "proofs",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.reusable_surviving_occurrence_shares:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "literals.u32",
+          "proofs",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.erased_field_has_no_edge:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.erased_parameter_has_no_local:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.live_local_preserves_level:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.empty_continuation_has_no_holders:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.surviving_continuation_keeps_holder:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.erased_initializer_has_no_use:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.branch_field_is_not_an_incoming_holder:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.wide_tail_uses_ordinary_call:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.narrow_tail_keeps_return_call:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/ownership-PROOF.bend::L.ordinary_call_keeps_its_target:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/ownership.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./scope.bend",
+          "file": "src/scope.bend"
+        }
+      ],
+      "declarations": {
+        "src/ownership.bend::Local:datatype": [
+          "fields",
+          "quantities.affine",
+          "types.base",
+          "types.data"
+        ],
+        "src/ownership.bend::Layout:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/ownership.bend::Use:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/ownership.bend::fielded:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::boxed:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::edges:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::constructors:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::layouts:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::layout:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::signature:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::needs:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::keep:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::lookup:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::parameters:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/ownership.bend::share:definition": [
+          "calls",
+          "generics",
+          "literals.u32",
           "quantities.affine",
           "quantities.arguments",
           "types.base"

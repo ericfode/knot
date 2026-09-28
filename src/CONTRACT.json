@@ -106,8 +106,7 @@
   "execution_evidence": "tests/compiler-wasm/receipts/wasm.json",
   "trust_inventory": "research/compiler-wasm/TRUST.md",
   "later_milestones": [
-    "owned field storage and reclamation (R3/R7)",
-    "recursive Wasm lowering",
+    "GPU reader-safe ownership, task suspension and reclamation (remaining R3/R7)",
     "broader recursion beyond first-parameter field descent",
     "GPU source lowering",
     "full self-hosting"
@@ -118,10 +117,13 @@
     "evidence": "tests/compiler-recursion/receipts/recursion.json",
     "checker": true,
     "independent_evaluator": true,
-    "wasm": false,
+    "wasm": true,
     "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0; matches propagate descendant levels.",
     "other_self_calls": "Unsupported check recursive-call",
-    "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call."
+    "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call.",
+    "wasm_profiles": [
+      "knot-owned-wasm-1"
+    ]
   },
   "structural_terms": {
     "profile": "knot-structural-terms-1",
@@ -129,12 +131,16 @@
     "evidence": "tests/compiler-fields/receipts/fields.json",
     "checker": true,
     "independent_evaluator": true,
-    "wasm": false,
-    "owned_heap": false,
+    "wasm": true,
+    "owned_heap": "knot-owned-wasm-1 only",
     "patterns": "flat constructors with plain or + field binders",
     "observation": "Live-field projection, declaration order; erased fields omitted",
     "inspection_work": 4096,
-    "inspection_characters": 65536
+    "inspection_characters": 65536,
+    "wasm_profiles": [
+      "knot-fields-wasm-1",
+      "knot-owned-wasm-1"
+    ]
   },
   "fields_wasm": {
     "profile": "knot-fields-wasm-1",
@@ -214,5 +220,143 @@
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+  },
+  "owned_wasm": {
+    "profile": "knot-owned-wasm-1",
+    "decision": "D10: unique Type plus reference-counted immutable Data",
+    "source_profiles": [
+      "knot-structural-terms-1",
+      "knot-structural-recursion-1"
+    ],
+    "entry": "tests/compiler-owned-wasm/compile.bend",
+    "emitter": "src/wasm.bend::emit_profile(Owned{}, checked_book, depth, bytes)",
+    "modules": [
+      "src/ownership.bend",
+      "src/owned.bend",
+      "src/heap-code.bend",
+      "src/heap.bend"
+    ],
+    "arguments": "source output [characters parser-depth checker-depth emitter-depth output-bytes]",
+    "budgets": "Same defaults and maximum overrides as compiler; profile selection is explicit.",
+    "legacy_profiles": "knot-enum-1 and knot-fields-wasm-1 retain byte-identical output and unchanged gates.",
+    "representation": {
+      "payload": "[tag][live slots], unchanged offsets; one 4-byte word each",
+      "prefix": "Three words at payload-12: state, count/free-next, layout ID",
+      "type": "Unique owning holder; never shared",
+      "data": "Immutable reference counted incoming roots and edges; repeated edges count separately",
+      "erasure": "No slot, evaluation or retain/drop",
+      "pointer_roles": "Compile-time descriptors trace only boxed live fields; enums are scalars"
+    },
+    "allocator": {
+      "size_class": "live-slot count",
+      "cell_bytes": "16 + 4 * live_slots including prefix",
+      "memory_pages": 2,
+      "maximum_pages": 2,
+      "memory_bytes": 131072,
+      "free_heads": [
+        0,
+        16384
+      ],
+      "release_frames": [
+        16384,
+        49152
+      ],
+      "reserved": [
+        49152,
+        65536
+      ],
+      "cell_region": [
+        65536,
+        131072
+      ],
+      "first_payload": 65548,
+      "free_first": true,
+      "growth": false,
+      "allocation_counter_ceiling": 2147483647,
+      "count_ceiling": 2147483647
+    },
+    "ownership": {
+      "occurrences": "Reusable bindings share only while a later use needs the holder; last use moves",
+      "unused": "Release unused parameter, let and field holders separately on each branch",
+      "arguments": "Each live argument transfers one owner to the callee",
+      "consume": "Load live fields; free Type/count-one parent after transfer",
+      "shared_open": "Preflight every acquire including duplicate child edges; acquire fields then decrement parent",
+      "reconstruction": "Checked field recipe constructs a new parent; metadata recipe is not another root"
+    },
+    "cleanup": {
+      "representation": "Explicit bounded stack of pointer/cursor frames",
+      "frames": 4096,
+      "budget": "clean processes at most the supplied frame steps; zero budget preserves all pending work",
+      "full": "Preserve parent and unvisited cursor; raising limit and calling clean resumes",
+      "last_release": "Scan owned child edges before publishing cell on free list",
+      "wasm_stack_recursion": false
+    },
+    "sections": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      10
+    ],
+    "imports": [],
+    "tail_calls": "return_call only when target live arity and complete source local frame are each <=16 slots; wider calls use call due to a pinned Node arm64 baseline-compiler failure.",
+    "recursion": true,
+    "debug": {
+      "memory": "__heap_memory",
+      "counters": [
+        "__heap_live",
+        "__heap_allocations",
+        "__heap_peak",
+        "__heap_pending",
+        "__heap_status",
+        "__heap_peak_pending",
+        "__heap_bump"
+      ],
+      "operations": [
+        "__heap_alloc",
+        "__heap_share",
+        "__heap_open",
+        "__heap_release",
+        "__heap_enqueue",
+        "__heap_clean"
+      ],
+      "limits": [
+        "__heap_stack_limit",
+        "__heap_rc_limit"
+      ],
+      "privileged": true,
+      "reserved_source_names": "__heap_* => Unsupported emit owned-export-name"
+    },
+    "host_precondition": "Enum-only live argument/result signatures with valid per-type ordinals. Debug memory and structured result holders are privileged, not a public locator ABI.",
+    "host_command": "node scripts/run-wasm.mjs --profile=knot-owned-wasm-1 module export [live-ordinals...]",
+    "host_outcomes": {
+      "heap_status_3": "Exhausted wasm owned-heap, exit 4",
+      "heap_status_5": "InternalFailure wasm owned-heap, exit 6",
+      "call_stack": "Exhausted wasm call-stack, exit 4",
+      "other_errors": "HostFailure, exit 5"
+    },
+    "failure_scope": "Share/shared-open preserve memory on overflow; bounded cleanup preserves unfinished obligations. Whole source invocations do not roll back: discard instance after a trap.",
+    "runtime_requirements": {
+      "R3": "Qualified for sequential immutable Data in the current monomorphic Wasm core; GPU shared lifetime remains open",
+      "R7": "Qualified for bounded resumable sequential cleanup and reusable cells; tasks, cancellation, suspended device roots and reader quiescence remain open"
+    },
+    "evidence": "tests/compiler-owned-wasm/receipts/owned-wasm.json",
+    "frozen_expectations": "tests/compiler-owned-wasm/expectations.json",
+    "proof_entries": [
+      "src/heap-PROOF.bend",
+      "src/ownership-PROOF.bend",
+      "tests/compiler-owned-wasm/model-PROOF.bend"
+    ],
+    "proof_boundary": "Semantic model laws, concrete allocator/layout laws and emitted kernel equations; execution differential supplies bounded refinement evidence, not a universal heap/compiler/Wasm theorem.",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-owned-wasm/check.py",
+    "limits": [
+      "monomorphic structural core only",
+      "no cyclic or mutable object edges",
+      "no source exception recovery",
+      "no closure or effect captures",
+      "no GPU execution or readers",
+      "no external stale-pointer or restore ABI"
+    ]
   }
 }

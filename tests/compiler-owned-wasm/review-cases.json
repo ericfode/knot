@@ -1,0 +1,84 @@
+{
+  "basis": "Independent literal review before isolated compiler probe; source result and physical incoming edges confirmed by seed/evaluator/Wasm review. Additive coverage, original D7 fixture freeze unchanged.",
+  "frozen_at": "2026-09-28T02:01:55.492775+00:00",
+  "cases": [
+    {
+      "name": "shared-boxed",
+      "source": "tests/compiler-owned-wasm/fixtures/shared-boxed.bend",
+      "source_sha256": "4d1fbf0e47a80d646d72040f784a5c1b8bcb1954bf190f6fe466f89437651ccc",
+      "types": [
+        {
+          "name": "Atom",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Nine",
+              "fields": []
+            },
+            {
+              "name": "Eleven",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Leaf",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Leaf",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Pair",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Pair",
+              "fields": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Result",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Result",
+              "fields": [
+                1,
+                2
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Result{Leaf{Nine{}}, Pair{Leaf{Nine{}}, Leaf{Nine{}}}}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 3,
+          "tag": 0,
+          "tree": "Result{Leaf{Nine{}},Pair{Leaf{Nine{}},Leaf{Nine{}}}}",
+          "live_cells": 3
+        }
+      ]
+    }
+  ]
+}

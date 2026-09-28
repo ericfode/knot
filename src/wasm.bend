@@ -4,6 +4,7 @@ import ./syntax.bend as S
 import ./core.bend as C
 import ./check.bend as K
 import ./wasm-bytes.bend as W
+import ./owned.bend as O
 
 type Local is Data:
   Local{level: U32, index: U32}
@@ -14,6 +15,7 @@ type Code is Data:
 type Profile is Data:
   Enum{}
   Fields{}
+  Owned{}
 type Mode is Data:
   Expression{term: C.Term}
   Arguments{terms: List<&2,C.Term>, parameters: List<&2,C.Parameter>}
@@ -51,6 +53,7 @@ def capability(profile: Profile, types: List<&2,C.Datatype>) -> Result<S.Error,U
   match profile:
     case Enum{}: K.enum_profile(types)
     case Fields{}: Done{Unit{}}
+    case Owned{}: Done{Unit{}}
 
 def internal(-A: Type, code: String) -> Result<S.Error,A>:
   Fail{S.Internal{"emit",code}}
@@ -275,10 +278,16 @@ def profiled(+heap: List<&2,U32>, +functions: List<&2,C.Function>, +depth: Nat, 
     S.bind(B.Builder,List<&2,U32>,W.unsigned(cap,size),exports =>
       S.bind(Sections,List<&2,U32>,entries(functions,0,heap,functions,depth,cap,Sections{count,count,exports,count}),parts => finish(parts,present(heap),size,cap))))
 
-def emit_profile(+profile: Profile, book: C.Book, +depth: Nat, +cap: U32) -> Result<S.Error,List<&2,U32>>:
+def emit_arena(+profile: Profile, book: C.Book, +depth: Nat, +cap: U32) -> Result<S.Error,List<&2,U32>>:
   match book:
     case C.Book{+types,+functions}:
       S.bind(Unit,List<&2,U32>,capability(profile,types),u => profiled(heap_types(types,0),functions,depth,cap))
+
+def emit_profile(profile: Profile, +book: C.Book, +depth: Nat, +cap: U32) -> Result<S.Error,List<&2,U32>>:
+  match profile:
+    case Owned{}: O.emit(book,depth,cap)
+    case Enum{}: emit_arena(Enum{},book,depth,cap)
+    case Fields{}: emit_arena(Fields{},book,depth,cap)
 
 # The original entry retains its enum-only capability and byte contract.
 def emit(book: C.Book, depth: Nat, cap: U32) -> Result<S.Error,List<&2,U32>>:

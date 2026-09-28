@@ -1,0 +1,1806 @@
+{
+  "schema": 1,
+  "profile": "knot-owned-wasm-1",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "expectation_basis": "Literal constructor results, physical DAG sharing and descriptor review fixed before owned implementation; prior fields/recursion/data-lifetime observations retained unchanged. Source language is never interpreted by the host.",
+  "cases": [
+    {
+      "name": "fields-pair",
+      "source": "tests/compiler-fields-wasm/fixtures/pair.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.direct(F.Off{},F.Off{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.direct(F.Off{},F.On{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.direct(F.On{},F.Off{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.direct(F.On{},F.On{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.swapped(F.Off{},F.Off{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.swapped(F.Off{},F.On{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.swapped(F.On{},F.Off{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.swapped(F.On{},F.On{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "fields-peano",
+      "source": "tests/compiler-fields-wasm/fixtures/peano.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "zero",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.zero()",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "two",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.two()",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "fields-nested",
+      "source": "tests/compiler-fields-wasm/fixtures/nested.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "fields-aliasing",
+      "source": "tests/compiler-fields-wasm/fixtures/aliasing.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.On{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.Off{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "fields-erased",
+      "source": "tests/compiler-fields-wasm/fixtures/erased.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "empty",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.empty()",
+          "result_type": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "ghost",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.ghost()",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "fields-arena-overflow",
+      "source": "tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "fields-deep-call",
+      "source": "tests/compiler-fields-wasm/fixtures/deep-call.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ],
+      "compile_budgets": [
+        65536,
+        4096,
+        4096,
+        4096,
+        65536
+      ],
+      "eval_exhausted": "Exhausted\tparse\tbudget"
+    },
+    {
+      "name": "fields-deep-stack",
+      "source": "tests/compiler-fields-wasm/fixtures/deep-stack.bend",
+      "types": [
+        {
+          "name": "F",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()",
+          "result_type": 0,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "recursion-even",
+      "source": "tests/compiler-recursion/fixtures/even.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Results",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Results",
+              "fields": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Results{On{}, Off{}, On{}, Off{}, On{}}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 2,
+          "tag": 0,
+          "tree": "Results{On{},Off{},On{},Off{},On{}}",
+          "live_cells": 1
+        }
+      ]
+    },
+    {
+      "name": "recursion-add",
+      "source": "tests/compiler-recursion/fixtures/add.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Results",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Results",
+              "fields": [
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Results{0n, 3n, 3n, 5n}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 1,
+          "tag": 0,
+          "tree": "Results{Zero{},Succ{Succ{Succ{Zero{}}}},Succ{Succ{Succ{Zero{}}}},Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}",
+          "live_cells": 16
+        }
+      ]
+    },
+    {
+      "name": "recursion-mirror",
+      "source": "tests/compiler-recursion/fixtures/mirror.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Tree",
+          "kind": "Type",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Leaf",
+              "fields": [
+                0
+              ]
+            },
+            {
+              "name": "Fork",
+              "fields": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Fork{Fork{Leaf{Off{}}, Leaf{On{}}}, Leaf{Off{}}}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 1,
+          "tag": 1,
+          "tree": "Fork{Fork{Leaf{Off{}},Leaf{On{}}},Leaf{Off{}}}",
+          "live_cells": 5
+        }
+      ]
+    },
+    {
+      "name": "recursion-length",
+      "source": "tests/compiler-recursion/fixtures/length.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Chain",
+          "kind": "Type",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "End",
+              "fields": []
+            },
+            {
+              "name": "Link",
+              "fields": [
+                1,
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Results",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Results",
+              "fields": [
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Results{0n, 3n}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 3,
+          "tag": 0,
+          "tree": "Results{Zero{},Succ{Succ{Succ{Zero{}}}}}",
+          "live_cells": 6
+        }
+      ]
+    },
+    {
+      "name": "recursion-direct",
+      "source": "tests/compiler-recursion/fixtures/direct.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 0,
+          "tree": "Zero{}",
+          "live_cells": 1
+        }
+      ]
+    },
+    {
+      "name": "recursion-first-parameter",
+      "source": "tests/compiler-recursion/fixtures/first-parameter.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 0,
+          "tree": "Zero{}",
+          "live_cells": 1
+        }
+      ]
+    },
+    {
+      "name": "recursion-ordered-calls",
+      "source": "tests/compiler-recursion/fixtures/ordered-calls.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "1n"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 1,
+          "tree": "Succ{Zero{}}",
+          "live_cells": 2
+        }
+      ]
+    },
+    {
+      "name": "recursion-shadow-field",
+      "source": "tests/compiler-recursion/fixtures/shadow-field.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 0,
+          "tree": "Zero{}",
+          "live_cells": 1
+        }
+      ]
+    },
+    {
+      "name": "recursion-after-let",
+      "source": "tests/compiler-recursion/fixtures/after-let.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 0,
+          "tree": "Zero{}",
+          "live_cells": 1
+        }
+      ]
+    },
+    {
+      "name": "recursion-deep",
+      "source": "tests/compiler-recursion/fixtures/deep.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "0n"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 0,
+          "tree": "Zero{}",
+          "live_cells": 1
+        }
+      ]
+    },
+    {
+      "name": "recursion-deep-input",
+      "source": "tests/compiler-recursion/fixtures/deep-input.bend",
+      "types": [
+        {
+          "name": "Peano",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "64n"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 1,
+          "tree": "Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}",
+          "live_cells": 65
+        }
+      ]
+    },
+    {
+      "name": "lifetime-tree-share",
+      "source": "research/data-lifetime/fixtures/tree-share.bend",
+      "types": [
+        {
+          "name": "Atom",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Nine",
+              "fields": []
+            },
+            {
+              "name": "Eleven",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Tree",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Tip",
+              "fields": [
+                0
+              ]
+            },
+            {
+              "name": "Fork",
+              "fields": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Fork{Fork{Tip{Nine{}}, Tip{Eleven{}}}, Fork{Tip{Nine{}}, Tip{Eleven{}}}}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 1,
+          "tag": 1,
+          "tree": "Fork{Fork{Tip{Nine{}},Tip{Eleven{}}},Fork{Tip{Nine{}},Tip{Eleven{}}}}",
+          "live_cells": 4
+        }
+      ]
+    },
+    {
+      "name": "lifetime-list-tail",
+      "source": "research/data-lifetime/fixtures/list-tail.bend",
+      "types": [
+        {
+          "name": "Atom",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Nine",
+              "fields": []
+            },
+            {
+              "name": "Eleven",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Chain",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "End",
+              "fields": []
+            },
+            {
+              "name": "Link",
+              "fields": [
+                0,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Tails",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Tails",
+              "fields": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Tails{Link{Eleven{}, End{}}, Link{Eleven{}, End{}}}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 2,
+          "tag": 0,
+          "tree": "Tails{Link{Eleven{},End{}},Link{Eleven{},End{}}}",
+          "live_cells": 3
+        }
+      ]
+    },
+    {
+      "name": "lifetime-owned-rebuild",
+      "source": "research/data-lifetime/fixtures/owned-rebuild.bend",
+      "types": [
+        {
+          "name": "Atom",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Nine",
+              "fields": []
+            },
+            {
+              "name": "Eleven",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Owned",
+          "kind": "Type",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Seven",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "DataPair",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "DataPair",
+              "fields": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Frame",
+          "kind": "Type",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Frame",
+              "fields": [
+                1,
+                2
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Frame{Seven{}, DataPair{Nine{}, Eleven{}}}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 3,
+          "tag": 0,
+          "tree": "Frame{Seven{},DataPair{Nine{},Eleven{}}}",
+          "live_cells": 2
+        }
+      ]
+    },
+    {
+      "name": "lifetime-shared-open",
+      "source": "research/data-lifetime/fixtures/shared-open.bend",
+      "types": [
+        {
+          "name": "Atom",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Nine",
+              "fields": []
+            },
+            {
+              "name": "Eleven",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "DataPair",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "DataPair",
+              "fields": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Pairs",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Pairs",
+              "fields": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "Pairs{DataPair{Nine{}, Eleven{}}, DataPair{Eleven{}, Nine{}}}"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 2,
+          "tag": 0,
+          "tree": "Pairs{DataPair{Nine{},Eleven{}},DataPair{Eleven{},Nine{}}}",
+          "live_cells": 3
+        }
+      ]
+    },
+    {
+      "name": "unused-owned",
+      "source": "tests/compiler-owned-wasm/fixtures/unused-owned.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Value",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Value",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Tree",
+          "kind": "Type",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Leaf",
+              "fields": [
+                1
+              ]
+            },
+            {
+              "name": "Fork",
+              "fields": [
+                2,
+                2
+              ]
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 1,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "branch-cleanup",
+      "source": "tests/compiler-owned-wasm/fixtures/branch-cleanup.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Value",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Value",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 1,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0
+          ],
+          "seed": "F.observe(F.Off{})",
+          "result_type": 0,
+          "tag": 0,
+          "tree": "Off{}",
+          "live_cells": 0
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1
+          ],
+          "seed": "F.observe(F.On{})",
+          "result_type": 0,
+          "tag": 1,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ]
+    },
+    {
+      "name": "share-live",
+      "source": "tests/compiler-owned-wasm/fixtures/share-live.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Value",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Value",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Pair",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Pair",
+              "fields": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 2,
+          "tag": 0,
+          "tree": "Pair{Value{On{}},Value{Off{}}}",
+          "live_cells": 3
+        }
+      ]
+    },
+    {
+      "name": "recursive-reuse",
+      "source": "tests/compiler-owned-wasm/fixtures/recursive-reuse.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Count",
+          "kind": "Data",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Zero",
+              "fields": []
+            },
+            {
+              "name": "Succ",
+              "fields": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Box",
+          "kind": "Type",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "Box",
+              "fields": [
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 0,
+          "tag": 1,
+          "tree": "On{}",
+          "live_cells": 0
+        },
+        {
+          "export": "f0",
+          "arguments": [],
+          "seed": "F.f0()",
+          "result_type": 0,
+          "tag": 1,
+          "tree": "On{}",
+          "live_cells": 0
+        }
+      ],
+      "lifetime_allocations": 32768,
+      "arena_expected": {
+        "exit": 4,
+        "diagnostic": "Exhausted\twasm\tarena-overflow"
+      }
+    },
+    {
+      "name": "release-chain",
+      "source": "tests/compiler-owned-wasm/fixtures/release-chain.bend",
+      "types": [
+        {
+          "name": "Flag",
+          "kind": "Data",
+          "cell": false,
+          "constructors": [
+            {
+              "name": "Off",
+              "fields": []
+            },
+            {
+              "name": "On",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "name": "Chain",
+          "kind": "Type",
+          "cell": true,
+          "constructors": [
+            {
+              "name": "End",
+              "fields": []
+            },
+            {
+              "name": "Link",
+              "fields": [
+                0,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "seed": "F.main()",
+          "result_type": 1,
+          "tag": 1,
+          "tree": "Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},Link{On{},End{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}",
+          "live_cells": 65
+        }
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "name": "recursion-same-parameter",
+      "source": "tests/compiler-recursion/fixtures/same-parameter.bend",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "reference_args": [
+        "--check-only"
+      ]
+    },
+    {
+      "name": "recursion-other-parameter",
+      "source": "tests/compiler-recursion/fixtures/other-parameter.bend",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "reference_args": [
+        "--check-only"
+      ]
+    },
+    {
+      "name": "recursion-rebuilt-parent",
+      "source": "tests/compiler-recursion/fixtures/rebuilt-parent.bend",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "reference_args": [
+        "--check-only"
+      ]
+    },
+    {
+      "name": "recursion-rebuilt-constructor",
+      "source": "tests/compiler-recursion/fixtures/rebuilt-constructor.bend",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "reference_args": [
+        "--check-only"
+      ]
+    },
+    {
+      "name": "recursion-computed",
+      "source": "tests/compiler-recursion/fixtures/computed.bend",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "reference_args": [
+        "--check-only"
+      ]
+    },
+    {
+      "name": "recursion-shadow-let",
+      "source": "tests/compiler-recursion/fixtures/shadow-let.bend",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "reference_args": [
+        "--check-only"
+      ]
+    },
+    {
+      "name": "recursion-mutual",
+      "source": "tests/compiler-recursion/fixtures/mutual.bend",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a filled definition"
+      },
+      "reference_args": [
+        "--check-only"
+      ]
+    },
+    {
+      "name": "recursion-second-descent",
+      "source": "tests/compiler-recursion/fixtures/second-descent.bend",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "All terms check."
+      },
+      "reference_args": [
+        "--check-only"
+      ]
+    }
+  ],
+  "reuse": {
+    "case": "recursive-reuse",
+    "export": "main",
+    "minimum_lifetime_allocations": 32768,
+    "maximum_memory_bytes": 131072,
+    "persistent_calls": 4
+  },
+  "release": {
+    "case": "release-chain",
+    "cells": 65,
+    "zero_budget": 0,
+    "single_budget": 1,
+    "small_stack_limit": 1,
+    "full_stack_limit": 4096
+  },
+  "persistent": {
+    "case": "fields-pair",
+    "export": "direct",
+    "arguments": [
+      0,
+      1
+    ],
+    "tag": 0,
+    "calls": 20000
+  }
+}

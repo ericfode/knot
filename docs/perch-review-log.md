@@ -962,3 +962,55 @@ and treat `no-coverage` as a finding.
 The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
 8 checks came back clean, with a maximum broken probability of 0.70 on
 `law-observable-essence`.
+
+## 2026-09-27 — Owned Wasm needs early width and failure controls
+
+The unchanged wide recursion fixture exposed a pinned Node arm64 Liftoff
+compiler abort on a wide `return_call`. Retaining every call argument in a
+fresh local also inflated the emitted module enough to overflow a recursive
+list traversal in the Bun seed compiler. The final lowering keeps call
+arguments on the operand stack and permits `return_call` only when both the
+target arity and complete source frame have at most 16 slots. Wider calls use
+`call`. The fixed fixture builds in both seed lanes and returns its original
+result under default Node. The [historical failure](../tests/compiler-owned-wasm/receipts/attempt-wide-tail.json)
+remains HostFailure evidence, never a mutant kill.
+
+An independent reread also found a reserved debug-export collision and showed
+that resuming explicit cleanup does not recover owners abandoned by source
+stack unwinding. The collision now reports `Unsupported emit owned-export-name`
+against an additive frozen control. The source-call contract requires retiring
+the instance after a trap; the narrower enqueue/clean protocol retains its
+resumption guarantee. [Review and witnesses](../tests/compiler-owned-wasm/REVIEW.md).
+
+Prevention: exercise both narrow and wide source frames in the actual host
+before expanding an emitter, preserve held arguments in the cheapest valid
+Wasm location, and review successful ownership separately from failure recovery.
+Freeze new collision and recovery observations before making their fixes.
+Offline [preflight](../tests/compiler-owned-wasm/receipts/preflight.json) reports
+context limits; no live Perch score or semantic review is claimed here.
+
+The full regression also caught an incomplete manifest closure. The source
+heap law file imported test/research models, which cannot belong to the
+manifest's source-only closed groups. The 13 semantic model laws and proofs
+were moved unchanged into the test packet; 17 concrete heap laws remain in
+`src/`. The gate checks all three complete entries, retaining 43 total laws.
+Prevention: check the manifest's transitive local-import closure when adding
+a profile hook, and keep independent oracle/model proofs in their test packet.
+
+A later four-worker regression hit the seed's intermittent `found no clang`
+error and the frontend's unchanged 30-second native-build process budget.
+`clang --version` immediately found Apple clang 21. The owned gate itself
+passed, including all 43 laws and both additive evaluator values. The
+[host attempt](../tests/compiler-owned-wasm/receipts/attempt-host.json) retains
+the failure; a two-worker replay uses the same assertions and timeouts.
+Prevention: use the runner's documented lower-concurrency mode when native
+build discovery or process budgets fail under concurrent compilation; keep
+host failures separate from source rejections and semantic mutant kills.
+
+The two-worker run passed all 14 existing gates but reproduced `found no clang`
+while building the first owned mutant compiler. Isolated Bun `spawnSync` probes
+succeeded 32/32 for both PATH discovery and the exact Apple clang executable.
+The [second host attempt](../tests/compiler-owned-wasm/receipts/attempt-host-two-workers.json)
+records this unreproduced host fault; a sequential replay retains every budget
+and assertion. Lower concurrency is a diagnostic choice, not an established
+causal fix. No toolchain source or compiler-discovery code was changed.

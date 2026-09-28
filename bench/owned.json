@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "name": "owned-allocation",
+  "expectation_basis": "Literal On results checked against the pinned seed and existing independent evaluator before runtime timing.",
+  "repeat": 7,
+  "cases": [
+    {
+      "name": "recursive-consume",
+      "fixture": "recursive-reuse",
+      "source": "tests/compiler-owned-wasm/fixtures/recursive-reuse.bend",
+      "export": "f0",
+      "arguments": [],
+      "tag": 1,
+      "type": "Flag",
+      "type_id": 0,
+      "tree": "On{}",
+      "warmup": 8,
+      "iterations": 64
+    },
+    {
+      "name": "allocation-calls",
+      "fixture": "fields-arena-overflow",
+      "source": "tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+      "export": "f8",
+      "arguments": [],
+      "tag": 1,
+      "type": "Flag",
+      "type_id": 0,
+      "tree": "On{}",
+      "warmup": 8,
+      "iterations": 16
+    }
+  ]
+}

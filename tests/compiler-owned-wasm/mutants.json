@@ -1,0 +1,38 @@
+[
+  {
+    "name": "missing-release",
+    "file": "owned.bend",
+    "old": "[A.get(index),A.call(U32.add(base,3)),A.op(26)]",
+    "new": "[A.word(0),A.op(26)]",
+    "case": "unused-owned"
+  },
+  {
+    "name": "double-release",
+    "file": "owned.bend",
+    "old": "[A.get(index),A.call(U32.add(base,3)),A.op(26)]",
+    "new": "[A.get(index),A.call(U32.add(base,3)),A.op(26),A.get(index),A.call(U32.add(base,3)),A.op(26)]",
+    "case": "unused-owned"
+  },
+  {
+    "name": "share-omitted",
+    "file": "ownership.bend",
+    "old": "Bool.and(U32.is_eq(quantity,2),E.contains(future,level))",
+    "new": "False{}",
+    "case": "share-live"
+  },
+  {
+    "name": "reuse-while-live",
+    "file": "heap.bend",
+    "old": "A.guard(A.concat([prefix(0,4),[A.word(1),A.op(70)]]),unique_open(base))",
+    "new": "A.guard(A.concat([prefix(0,4),[A.word(2),A.op(77)]]),unique_open(base))",
+    "case": "share-live"
+  },
+  {
+    "name": "release-stack-bound",
+    "file": "heap.bend",
+    "old": "A.guard([A.global_get(5),A.global_get(7),A.op(79)],outcome(3))",
+    "new": "A.guard([A.global_get(5),A.global_get(7),A.op(75)],outcome(3))",
+    "case": "release-chain",
+    "mode": "release-boundary"
+  }
+]

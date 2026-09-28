@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "status": "failed-historical-attempt",
+  "command": "BEND_NO_TELEMETRY=1 npm run -s gates",
+  "started_at": "2026-09-28T02:14:55.236643+00:00",
+  "measured_total_seconds": 170.716392,
+  "snapshot": {
+    "dependencies_sha256": "35e14f3bd6e2f088dfce1cee7f9ea4f1a9f2dd2313ddc4448e3993c1d17fe6a3",
+    "snapshot_sha256": "a026f36a1ca7c362b8096089e7479c939801e0a38d0c4b5c0eb9125950adf419"
+  },
+  "failed_gate": {
+    "command": [
+      "npm",
+      "run",
+      "-s",
+      "lint:verify"
+    ],
+    "counts": {},
+    "exit_code": 1,
+    "name": "lint:verify",
+    "status": "failed"
+  },
+  "failure": "compiler manifest covers all source files and closes every local import: wasm-emission: src/wasm.bend needs src/owned.bend",
+  "resolution": "Close every source group over local imports. Move the 13 unchanged independent semantic model laws/proofs to the test packet, retaining 17 source heap laws and 13 ownership laws. Keep the existing manifest assertions unchanged.",
+  "rerun": "receipts/regression.json records the final complete regression; this attempt is not acceptance evidence."
+}

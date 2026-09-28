@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "status": "failed-historical-attempt",
+  "command": "BEND_NO_TELEMETRY=1 npm run -s gates -- --jobs 2",
+  "started_at": "2026-09-28T02:48:35.014488+00:00",
+  "measured_total_seconds": 318.71088,
+  "workers": 2,
+  "failed_gates": [
+    {
+      "command": [
+        "python3",
+        "tests/compiler-owned-wasm/check.py"
+      ],
+      "counts": {},
+      "exit_code": 1,
+      "name": "owned-wasm",
+      "status": "failed"
+    }
+  ],
+  "diagnostic": "Pinned seed reported found no clang while building the missing-release mutant compiler. All 14 existing gates, all 29 owned positive fixtures, extended evaluator values and runtime boundary observations had passed.",
+  "clang_probe": {
+    "runtime": "Bun 1.3.14 spawnSync, --no-env-file",
+    "commands": [
+      "clang",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+    ],
+    "attempts_each": 32,
+    "failed_probes": 0
+  },
+  "disposition": "Intermittent host compiler discovery remains unreproduced in isolation. Retry the unchanged suite sequentially, preserving all assertion and process budgets. No mutant kill is claimed for the failed compiler build."
+}

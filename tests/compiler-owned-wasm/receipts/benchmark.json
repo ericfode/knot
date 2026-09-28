@@ -1,0 +1,1225 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "date": "2026-09-28T02:22:55.803Z",
+  "suite": {
+    "schema": 1,
+    "name": "owned-allocation",
+    "expectation_basis": "Literal On results checked against the pinned seed and existing independent evaluator before runtime timing.",
+    "repeat": 7,
+    "cases": [
+      {
+        "name": "recursive-consume",
+        "fixture": "recursive-reuse",
+        "source": "tests/compiler-owned-wasm/fixtures/recursive-reuse.bend",
+        "export": "f0",
+        "arguments": [],
+        "tag": 1,
+        "type": "Flag",
+        "type_id": 0,
+        "tree": "On{}",
+        "warmup": 8,
+        "iterations": 64
+      },
+      {
+        "name": "allocation-calls",
+        "fixture": "fields-arena-overflow",
+        "source": "tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+        "export": "f8",
+        "arguments": [],
+        "tag": 1,
+        "type": "Flag",
+        "type_id": 0,
+        "tree": "On{}",
+        "warmup": 8,
+        "iterations": 16
+      }
+    ]
+  },
+  "repeat": 7,
+  "gate_sha256": "6e6afa0b5eec62377992c3ff56d14a4aa8f53c345b1ea185036a7978f26199d6",
+  "environment": {
+    "node": "v22.22.3",
+    "bun": "1.3.14",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "release": "25.5.0",
+    "cpu": "Apple M5 Max",
+    "logical_cpus": 18,
+    "memory_bytes": 137438953472
+  },
+  "inputs": {
+    "bench/owned.json": "e6c9e85f39d88988c8ecc70d1dc489441177eea428c952b51b0ed035c7e79d4b",
+    "bench/owned.mjs": "e2301dc9d8dc469a8416fdf0a69a059a67cf35616b79fa3b6a38c010c3418958",
+    "bench/lib/stats.mjs": "aac7db4532b7f6c8493534a21bf7bbe6c2d00653b896e614268be6bdde3ef6e9",
+    "tests/compiler-owned-wasm/host.mjs": "44f7d2ef676f968773d311d572a7cbb5fdb0238005d4bc29234b7e81b5b774d0"
+  },
+  "workloads": [
+    {
+      "name": "recursive-consume",
+      "source": "tests/compiler-owned-wasm/fixtures/recursive-reuse.bend",
+      "source_sha256": "b31a70aa0e49358fc677de689cd72a1573c0e86b7a560bb718d3de04de564504",
+      "reference": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/.local/bench/owned/recursive-consume-reference.bend"
+        ],
+        "stdout": "../../../tests/compiler-owned-wasm/fixtures/recursive-reuse.On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "evaluator": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/.local/compiler-owned-wasm/gate/eval",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/tests/compiler-owned-wasm/fixtures/recursive-reuse.bend",
+              "f0",
+              1048576
+            ],
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "fields": {
+            "runtime": {
+              "unit": "ns/call",
+              "samples": [
+                639.328125000116,
+                384.76562500000534,
+                397.78125000000665,
+                369.7968750000502,
+                399.73437499996044,
+                851.5624999998472,
+                343.749999999865
+              ],
+              "n": 7,
+              "median": 397.78125000000665,
+              "mad": 27.984374999956458,
+              "min": 343.749999999865
+            },
+            "observations": [
+              {
+                "ns_per_call": 639.328125000116,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 384.76562500000534,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 397.78125000000665,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 369.7968750000502,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 399.73437499996044,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 851.5624999998472,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 343.749999999865,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              }
+            ],
+            "module": {
+              "sha256": "0e33ec6b228849503ac859f81ef7d2f6d0c296d73003054d050fe825e26dfd6c",
+              "bytes": 1211
+            },
+            "reserved_memory_bytes": 65536
+          },
+          "owned": {
+            "runtime": {
+              "unit": "ns/call",
+              "samples": [
+                1108.0781249999116,
+                1073.5625000000136,
+                1136.06250000009,
+                1073.5781249999743,
+                1200.5156250001203,
+                962.8906249998793,
+                927.078125000147
+              ],
+              "n": 7,
+              "median": 1073.5781249999743,
+              "mad": 62.48437500011573,
+              "min": 927.078125000147
+            },
+            "observations": [
+              {
+                "ns_per_call": 1108.0781249999116,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 1073.5625000000136,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 1136.06250000009,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 1073.5781249999743,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 1200.5156250001203,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 962.8906249998793,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 927.078125000147,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              }
+            ],
+            "module": {
+              "sha256": "1a82c12169d912ac7120aff607a2b4a454e0dd6aa53c525f2182017f8763fdf1",
+              "bytes": 3296
+            },
+            "reserved_memory_bytes": 131072
+          },
+          "comparison": {
+            "baseline": {
+              "n": 7,
+              "median": 397.78125000000665,
+              "mad": 27.984374999956458,
+              "min": 343.749999999865
+            },
+            "candidate": {
+              "n": 7,
+              "median": 1073.5781249999743,
+              "mad": 62.48437500011573,
+              "min": 927.078125000147
+            },
+            "ratio": 2.6989158614186977,
+            "ci": [
+              1.6792042427350102,
+              3.0180296959700845
+            ],
+            "verdict": "slower",
+            "margin": 0.02,
+            "confidence": 0.95,
+            "resamples": 10000,
+            "seed": 1263423316
+          }
+        },
+        "bun": {
+          "evaluator": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/.local/compiler-owned-wasm/gate/eval.js",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/tests/compiler-owned-wasm/fixtures/recursive-reuse.bend",
+              "f0",
+              1048576
+            ],
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "fields": {
+            "runtime": {
+              "unit": "ns/call",
+              "samples": [
+                382.81249999982947,
+                380.8593749998756,
+                367.84375000031844,
+                369.1406250001528,
+                362.6249999997277,
+                350.26562499984595,
+                339.8437500004014
+              ],
+              "n": 7,
+              "median": 367.84375000031844,
+              "mad": 13.01562499955719,
+              "min": 339.8437500004014
+            },
+            "observations": [
+              {
+                "ns_per_call": 382.81249999982947,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 380.8593749998756,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 367.84375000031844,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 369.1406250001528,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 362.6249999997277,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 350.26562499984595,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 339.8437500004014,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              }
+            ],
+            "module": {
+              "sha256": "0e33ec6b228849503ac859f81ef7d2f6d0c296d73003054d050fe825e26dfd6c",
+              "bytes": 1211
+            },
+            "reserved_memory_bytes": 65536
+          },
+          "owned": {
+            "runtime": {
+              "unit": "ns/call",
+              "samples": [
+                964.843749999833,
+                992.8281250002335,
+                882.156249999877,
+                873.0468750002274,
+                908.8593749999596,
+                877.6093749998104,
+                900.3906250000249
+              ],
+              "n": 7,
+              "median": 900.3906250000249,
+              "mad": 22.781250000214527,
+              "min": 873.0468750002274
+            },
+            "observations": [
+              {
+                "ns_per_call": 964.843749999833,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 992.8281250002335,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 882.156249999877,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 873.0468750002274,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 908.8593749999596,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 877.6093749998104,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 900.3906250000249,
+                "before": {
+                  "live": 0,
+                  "allocations": 512,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 4608,
+                  "peak": 32,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 66172,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              }
+            ],
+            "module": {
+              "sha256": "1a82c12169d912ac7120aff607a2b4a454e0dd6aa53c525f2182017f8763fdf1",
+              "bytes": 3296
+            },
+            "reserved_memory_bytes": 131072
+          },
+          "comparison": {
+            "baseline": {
+              "n": 7,
+              "median": 367.84375000031844,
+              "mad": 13.01562499955719,
+              "min": 339.8437500004014
+            },
+            "candidate": {
+              "n": 7,
+              "median": 900.3906250000249,
+              "mad": 22.781250000214527,
+              "min": 873.0468750002274
+            },
+            "ratio": 2.4477529521685373,
+            "ci": [
+              2.3162256410260746,
+              2.6607204412287
+            ],
+            "verdict": "slower",
+            "margin": 0.02,
+            "confidence": 0.95,
+            "resamples": 10000,
+            "seed": 1263423316
+          }
+        }
+      }
+    },
+    {
+      "name": "allocation-calls",
+      "source": "tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+      "source_sha256": "894223d307a63359f40dbd052f43c5c40b6810215b14fccc9056ca88bd71e569",
+      "reference": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/.local/bench/owned/allocation-calls-reference.bend"
+        ],
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/arena-overflow.On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "evaluator": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/.local/compiler-owned-wasm/gate/eval",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+              "f8",
+              1048576
+            ],
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "fields": {
+            "runtime": {
+              "unit": "ns/call",
+              "samples": [
+                2398.4374999983515,
+                1911.5000000002879,
+                1887.9999999992237,
+                3252.625000000009,
+                1864.5624999997779,
+                1895.8750000006576,
+                1838.5624999996962
+              ],
+              "n": 7,
+              "median": 1895.8750000006576,
+              "mad": 31.31250000087971,
+              "min": 1838.5624999996962
+            },
+            "observations": [
+              {
+                "ns_per_call": 2398.4374999983515,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1911.5000000002879,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1887.9999999992237,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 3252.625000000009,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1864.5624999997779,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1895.8750000006576,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1838.5624999996962,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              }
+            ],
+            "module": {
+              "sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716",
+              "bytes": 466
+            },
+            "reserved_memory_bytes": 65536
+          },
+          "owned": {
+            "runtime": {
+              "unit": "ns/call",
+              "samples": [
+                5554.687500000099,
+                4697.874999999741,
+                4427.062500001355,
+                5239.624999999748,
+                4049.499999998929,
+                4494.812499999057,
+                4726.562500000142
+              ],
+              "n": 7,
+              "median": 4697.874999999741,
+              "mad": 270.81249999838565,
+              "min": 4049.499999998929
+            },
+            "observations": [
+              {
+                "ns_per_call": 5554.687500000099,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4697.874999999741,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4427.062500001355,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 5239.624999999748,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4049.499999998929,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4494.812499999057,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4726.562500000142,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              }
+            ],
+            "module": {
+              "sha256": "e374ad68b7148011856c959668c34548dd933894a37c330b559384f147916268",
+              "bytes": 2457
+            },
+            "reserved_memory_bytes": 131072
+          },
+          "comparison": {
+            "baseline": {
+              "n": 7,
+              "median": 1895.8750000006576,
+              "mad": 31.31250000087971,
+              "min": 1838.5624999996962
+            },
+            "candidate": {
+              "n": 7,
+              "median": 4697.874999999741,
+              "mad": 270.81249999838565,
+              "min": 4049.499999998929
+            },
+            "ratio": 2.477945539657473,
+            "ci": [
+              1.8740586319227188,
+              2.775225105933211
+            ],
+            "verdict": "slower",
+            "margin": 0.02,
+            "confidence": 0.95,
+            "resamples": 10000,
+            "seed": 1263423316
+          }
+        },
+        "bun": {
+          "evaluator": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/.local/compiler-owned-wasm/gate/eval.js",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-wasm-owned/tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+              "f8",
+              1048576
+            ],
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "fields": {
+            "runtime": {
+              "unit": "ns/call",
+              "samples": [
+                1874.9999999982947,
+                1872.4375000012117,
+                1841.1249999985557,
+                3104.1874999999663,
+                1763.0624999966926,
+                1830.749999999881,
+                1802.1249999975453
+              ],
+              "n": 7,
+              "median": 1841.1249999985557,
+              "mad": 33.874999999738975,
+              "min": 1763.0624999966926
+            },
+            "observations": [
+              {
+                "ns_per_call": 1874.9999999982947,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1872.4375000012117,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1841.1249999985557,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 3104.1874999999663,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1763.0624999966926,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1830.749999999881,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              },
+              {
+                "ns_per_call": 1802.1249999975453,
+                "before": null,
+                "after": null,
+                "measured_allocations": null
+              }
+            ],
+            "module": {
+              "sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716",
+              "bytes": 466
+            },
+            "reserved_memory_bytes": 65536
+          },
+          "owned": {
+            "runtime": {
+              "unit": "ns/call",
+              "samples": [
+                4690.124999999767,
+                4315.124999997977,
+                4234.374999999346,
+                5627.624999998915,
+                4130.187499999493,
+                4132.812499999972,
+                5763.062500001581
+              ],
+              "n": 7,
+              "median": 4315.124999997977,
+              "mad": 184.93749999848387,
+              "min": 4130.187499999493
+            },
+            "observations": [
+              {
+                "ns_per_call": 4690.124999999767,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4315.124999997977,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4234.374999999346,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 5627.624999998915,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4130.187499999493,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 4132.812499999972,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              },
+              {
+                "ns_per_call": 5763.062500001581,
+                "before": {
+                  "live": 0,
+                  "allocations": 2048,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "after": {
+                  "live": 0,
+                  "allocations": 6144,
+                  "peak": 1,
+                  "pending": 0,
+                  "status": 0,
+                  "bump": 65556,
+                  "memory_bytes": 131072
+                },
+                "measured_allocations": 4096
+              }
+            ],
+            "module": {
+              "sha256": "e374ad68b7148011856c959668c34548dd933894a37c330b559384f147916268",
+              "bytes": 2457
+            },
+            "reserved_memory_bytes": 131072
+          },
+          "comparison": {
+            "baseline": {
+              "n": 7,
+              "median": 1841.1249999985557,
+              "mad": 33.874999999738975,
+              "min": 1763.0624999966926
+            },
+            "candidate": {
+              "n": 7,
+              "median": 4315.124999997977,
+              "mad": 184.93749999848387,
+              "min": 4130.187499999493
+            },
+            "ratio": 2.343743635006511,
+            "ci": [
+              2.2071831503039743,
+              3.07394510446499
+            ],
+            "verdict": "slower",
+            "margin": 0.02,
+            "confidence": 0.95,
+            "resamples": 10000,
+            "seed": 1263423316
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,999 @@
+{
+  "date": "2026-09-28T02:37:06.249700+00:00",
+  "status": "passed",
+  "basis": "Original timing receipt and matching gate retained unchanged. Additive evaluator-limit test changes no production source, compiler executable or measured Wasm artifact. No retiming performed.",
+  "benchmark_sha256": "836e5c83b0b92757404758b0a2280f43ca07579413b066f52d9c7df5fddf338c",
+  "benchmark_gate_sha256": "6e6afa0b5eec62377992c3ff56d14a4aa8f53c345b1ea185036a7978f26199d6",
+  "final_gate_sha256": "6e048a8137b0a35a14aae7c6d32b68c110daf7fa43718f0b4dd56a7ecdd97a3d",
+  "counts": {
+    "compiler_artifacts": 8,
+    "owned_modules": 58,
+    "runtime_components": 2,
+    "legacy_artifacts": 116,
+    "measured_module_comparisons": 8,
+    "benchmark_harness_inputs": 4,
+    "production_source_inputs": 38
+  },
+  "artifacts": [
+    {
+      "kind": "compiler",
+      "name": "owned/native",
+      "sha256": "67a40e10ebff8fe620cc514ae8e2642f0897632051cf491215e25c10e388b853"
+    },
+    {
+      "kind": "compiler",
+      "name": "eval/native",
+      "sha256": "b4cc8c67cb39edce3ed7757731d21e0bc2c6fb68a0fb0783a0a6c57173d3fcf2"
+    },
+    {
+      "kind": "compiler",
+      "name": "fields/native",
+      "sha256": "3bf748762501713242ffdb60912f7200ad15ff77efdfd6b8f2c34e96ea375c8b"
+    },
+    {
+      "kind": "compiler",
+      "name": "enum/native",
+      "sha256": "213f59fbd6fad2fc23f5cba4cbc1f3817c05352b22285b8fd46897ef0bde5898"
+    },
+    {
+      "kind": "compiler",
+      "name": "owned/bun",
+      "sha256": "0763b81664cea30e75adffb393c966234807a15808b2a348966b0310718d2b7b"
+    },
+    {
+      "kind": "compiler",
+      "name": "eval/bun",
+      "sha256": "249d958daff4c1e4ff0e2e1417a4776cab7b72c8a4899a3db4a25db467104a54"
+    },
+    {
+      "kind": "compiler",
+      "name": "fields/bun",
+      "sha256": "2c0829d5bb3533b8fedc3aa6a81783f88b54d9ed7173d7c917e248427bec1b73"
+    },
+    {
+      "kind": "compiler",
+      "name": "enum/bun",
+      "sha256": "195b3aa2c710f5d6596264d3bb22ad94b9a599c7f5e9c7343d792d1c8417101b"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-pair/native",
+      "sha256": "5efde9a467bbe1780961c64b8df3dc1cc388ac8bc78a22cff229d4afa6bfe598"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-pair/bun",
+      "sha256": "5efde9a467bbe1780961c64b8df3dc1cc388ac8bc78a22cff229d4afa6bfe598"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-peano/native",
+      "sha256": "2b2034555b442a3e684fed5b7d06cabc3e59d66f808a229ec885b06512a444a6"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-peano/bun",
+      "sha256": "2b2034555b442a3e684fed5b7d06cabc3e59d66f808a229ec885b06512a444a6"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-nested/native",
+      "sha256": "42c9759704f458c353bbbf802a02cf3fac129593b7f196a086cbe22787bf9415"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-nested/bun",
+      "sha256": "42c9759704f458c353bbbf802a02cf3fac129593b7f196a086cbe22787bf9415"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-aliasing/native",
+      "sha256": "a408b2280712ff0bd43eea2131e8b6933aa2bf4491330a6cf665a0935efa8779"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-aliasing/bun",
+      "sha256": "a408b2280712ff0bd43eea2131e8b6933aa2bf4491330a6cf665a0935efa8779"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-erased/native",
+      "sha256": "f97eb18747427f63ae944793f182d13d36ffa4af4b557d03505ac60084689cf9"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-erased/bun",
+      "sha256": "f97eb18747427f63ae944793f182d13d36ffa4af4b557d03505ac60084689cf9"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-arena-overflow/native",
+      "sha256": "e374ad68b7148011856c959668c34548dd933894a37c330b559384f147916268"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-arena-overflow/bun",
+      "sha256": "e374ad68b7148011856c959668c34548dd933894a37c330b559384f147916268"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-deep-call/native",
+      "sha256": "ceb534a837e7f98bfcf69d9fd47db0cd6ea0ae20c2554b13a1aa2dea2a89e56e"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-deep-call/bun",
+      "sha256": "ceb534a837e7f98bfcf69d9fd47db0cd6ea0ae20c2554b13a1aa2dea2a89e56e"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-deep-stack/native",
+      "sha256": "668e69a302a7b0d63c05cd51aa5423c86cd5c4e26c44729b6084702c593e06c7"
+    },
+    {
+      "kind": "owned-module",
+      "name": "fields-deep-stack/bun",
+      "sha256": "668e69a302a7b0d63c05cd51aa5423c86cd5c4e26c44729b6084702c593e06c7"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-even/native",
+      "sha256": "03c71c092b52b416417bb05ef43190a10d2d21c953eecc1596a56c3b0c40d51c"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-even/bun",
+      "sha256": "03c71c092b52b416417bb05ef43190a10d2d21c953eecc1596a56c3b0c40d51c"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-add/native",
+      "sha256": "2f221b9928bd411db17e19de8067f9d04d1dbfb2fef4b136b25d90462932cbb0"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-add/bun",
+      "sha256": "2f221b9928bd411db17e19de8067f9d04d1dbfb2fef4b136b25d90462932cbb0"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-mirror/native",
+      "sha256": "8ed51793f17388ba4331ac37575ee2cc4c88487ee105fc9a5a5046a7e96a8dbe"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-mirror/bun",
+      "sha256": "8ed51793f17388ba4331ac37575ee2cc4c88487ee105fc9a5a5046a7e96a8dbe"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-length/native",
+      "sha256": "b0b958bff685154c3aed3e5cede3fbc7625e02c2f3c4525622a23161ad968e85"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-length/bun",
+      "sha256": "b0b958bff685154c3aed3e5cede3fbc7625e02c2f3c4525622a23161ad968e85"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-direct/native",
+      "sha256": "2ea738d976b7e3769644bfd3f6212834842b092b72eb764d162e660c39cc3209"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-direct/bun",
+      "sha256": "2ea738d976b7e3769644bfd3f6212834842b092b72eb764d162e660c39cc3209"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-first-parameter/native",
+      "sha256": "d0a1b6710c69c2b149135f9886f837d790e8c361659140bb7709b21a6ce3883c"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-first-parameter/bun",
+      "sha256": "d0a1b6710c69c2b149135f9886f837d790e8c361659140bb7709b21a6ce3883c"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-ordered-calls/native",
+      "sha256": "df7d8d32d1297117e6b911f75e0c227500781189149702b2f1f5e843cfe1a08d"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-ordered-calls/bun",
+      "sha256": "df7d8d32d1297117e6b911f75e0c227500781189149702b2f1f5e843cfe1a08d"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-shadow-field/native",
+      "sha256": "2ea738d976b7e3769644bfd3f6212834842b092b72eb764d162e660c39cc3209"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-shadow-field/bun",
+      "sha256": "2ea738d976b7e3769644bfd3f6212834842b092b72eb764d162e660c39cc3209"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-after-let/native",
+      "sha256": "5029b4f8dd785807d95476b3180fd000e3baa2201d64a0543a1a563f1ad6623b"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-after-let/bun",
+      "sha256": "5029b4f8dd785807d95476b3180fd000e3baa2201d64a0543a1a563f1ad6623b"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-deep/native",
+      "sha256": "b74f875c27bbbb76a95c04e3304e642de1f40ceb2e22ea8ed658de63bbbd3f74"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-deep/bun",
+      "sha256": "b74f875c27bbbb76a95c04e3304e642de1f40ceb2e22ea8ed658de63bbbd3f74"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-deep-input/native",
+      "sha256": "0b23d5b10a6be57218798b4c4126420873aa9d4c9c9f2ad2f60ebfeabe056b9d"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursion-deep-input/bun",
+      "sha256": "0b23d5b10a6be57218798b4c4126420873aa9d4c9c9f2ad2f60ebfeabe056b9d"
+    },
+    {
+      "kind": "owned-module",
+      "name": "lifetime-tree-share/native",
+      "sha256": "109476158d61b99904fb6b554e2f78ad00148f192e82e97dedb6372c9f488630"
+    },
+    {
+      "kind": "owned-module",
+      "name": "lifetime-tree-share/bun",
+      "sha256": "109476158d61b99904fb6b554e2f78ad00148f192e82e97dedb6372c9f488630"
+    },
+    {
+      "kind": "owned-module",
+      "name": "lifetime-list-tail/native",
+      "sha256": "4813aca975a175359c18b83cf9f981fe851a0a6e5a4e7dd60e1ebd881ed8a11a"
+    },
+    {
+      "kind": "owned-module",
+      "name": "lifetime-list-tail/bun",
+      "sha256": "4813aca975a175359c18b83cf9f981fe851a0a6e5a4e7dd60e1ebd881ed8a11a"
+    },
+    {
+      "kind": "owned-module",
+      "name": "lifetime-owned-rebuild/native",
+      "sha256": "381d4cec94fa988878f27df5dc41b67b2c25d5a3b041ed9d03371ab940e6e487"
+    },
+    {
+      "kind": "owned-module",
+      "name": "lifetime-owned-rebuild/bun",
+      "sha256": "381d4cec94fa988878f27df5dc41b67b2c25d5a3b041ed9d03371ab940e6e487"
+    },
+    {
+      "kind": "owned-module",
+      "name": "lifetime-shared-open/native",
+      "sha256": "2c0c3eec81da05d23be422e7a127e971e9c647f50d9ff31070cea2324e8e05e9"
+    },
+    {
+      "kind": "owned-module",
+      "name": "lifetime-shared-open/bun",
+      "sha256": "2c0c3eec81da05d23be422e7a127e971e9c647f50d9ff31070cea2324e8e05e9"
+    },
+    {
+      "kind": "owned-module",
+      "name": "unused-owned/native",
+      "sha256": "a0b36c776c4f088b952940a39b9e788d730fddad74415c16f42a9f6bdbdf5d19"
+    },
+    {
+      "kind": "owned-module",
+      "name": "unused-owned/bun",
+      "sha256": "a0b36c776c4f088b952940a39b9e788d730fddad74415c16f42a9f6bdbdf5d19"
+    },
+    {
+      "kind": "owned-module",
+      "name": "branch-cleanup/native",
+      "sha256": "61c949153e7f47ed40570fcce256bdf998cea39fb730119c0b8dc3ab0795a47c"
+    },
+    {
+      "kind": "owned-module",
+      "name": "branch-cleanup/bun",
+      "sha256": "61c949153e7f47ed40570fcce256bdf998cea39fb730119c0b8dc3ab0795a47c"
+    },
+    {
+      "kind": "owned-module",
+      "name": "share-live/native",
+      "sha256": "8e6d2c282f61322ddedf53c90a82cacad8436ebe1ff3fb8e508441676efffc84"
+    },
+    {
+      "kind": "owned-module",
+      "name": "share-live/bun",
+      "sha256": "8e6d2c282f61322ddedf53c90a82cacad8436ebe1ff3fb8e508441676efffc84"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursive-reuse/native",
+      "sha256": "1a82c12169d912ac7120aff607a2b4a454e0dd6aa53c525f2182017f8763fdf1"
+    },
+    {
+      "kind": "owned-module",
+      "name": "recursive-reuse/bun",
+      "sha256": "1a82c12169d912ac7120aff607a2b4a454e0dd6aa53c525f2182017f8763fdf1"
+    },
+    {
+      "kind": "owned-module",
+      "name": "release-chain/native",
+      "sha256": "742c01fe17e2fff79b2fdd3e254110f95cb7a28ebeab4efc17c47d323aaacb83"
+    },
+    {
+      "kind": "owned-module",
+      "name": "release-chain/bun",
+      "sha256": "742c01fe17e2fff79b2fdd3e254110f95cb7a28ebeab4efc17c47d323aaacb83"
+    },
+    {
+      "kind": "owned-module",
+      "name": "shared-boxed/native",
+      "sha256": "a6c522d515f9eb5947c0779adb0909bd7e7217685de10e5213a90e1cf42fae37"
+    },
+    {
+      "kind": "owned-module",
+      "name": "shared-boxed/bun",
+      "sha256": "a6c522d515f9eb5947c0779adb0909bd7e7217685de10e5213a90e1cf42fae37"
+    },
+    {
+      "kind": "runtime-component",
+      "name": "native",
+      "sha256": "33b12ef86d09aa939609ea37c45cd94ac93a40cafd573065a1180e95069b7803"
+    },
+    {
+      "kind": "runtime-component",
+      "name": "bun",
+      "sha256": "33b12ef86d09aa939609ea37c45cd94ac93a40cafd573065a1180e95069b7803"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-aliasing/native",
+      "sha256": "f994a945630d5fd2becf9a49fe0bdb4ecf9942b6f170bd58c563599f6e24a012"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-aliasing/bun",
+      "sha256": "f994a945630d5fd2becf9a49fe0bdb4ecf9942b6f170bd58c563599f6e24a012"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-arena-overflow/native",
+      "sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-arena-overflow/bun",
+      "sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-deep-call/native",
+      "sha256": "d20f882fad72a3f7836c38697a278ebc1b0b395d80cc5190073805e5bf73fee8"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-deep-call/bun",
+      "sha256": "d20f882fad72a3f7836c38697a278ebc1b0b395d80cc5190073805e5bf73fee8"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-deep-stack/native",
+      "sha256": "a9a8a34ddd8a948f6426bd71b761c055fc8634b6206f7838cdb229ba8f5aed48"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-deep-stack/bun",
+      "sha256": "a9a8a34ddd8a948f6426bd71b761c055fc8634b6206f7838cdb229ba8f5aed48"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-erased/native",
+      "sha256": "e91122cabe02c28d32df25ade4367aef8bafa3ae302a717c2af383fdd28218b2"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-erased/bun",
+      "sha256": "e91122cabe02c28d32df25ade4367aef8bafa3ae302a717c2af383fdd28218b2"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-nested/native",
+      "sha256": "d2d1166a77db072558d3c62095a4ff2130bac5cf6d8ee1c4f7a2e7056e3ecda0"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-nested/bun",
+      "sha256": "d2d1166a77db072558d3c62095a4ff2130bac5cf6d8ee1c4f7a2e7056e3ecda0"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-pair/native",
+      "sha256": "893b5cd119ede8085ffe1f031ca44c8557cfc387b6ce18c27e6caaf3759591bf"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-pair/bun",
+      "sha256": "893b5cd119ede8085ffe1f031ca44c8557cfc387b6ce18c27e6caaf3759591bf"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-peano/native",
+      "sha256": "c3c424ac0fa7f241de27137666fb0009bf9d046e95878aef430c60b475ec33f4"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/fields-peano/bun",
+      "sha256": "c3c424ac0fa7f241de27137666fb0009bf9d046e95878aef430c60b475ec33f4"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/data-reuse.bend/native",
+      "sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/data-reuse.bend/native",
+      "sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/data-reuse.bend/bun",
+      "sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/data-reuse.bend/bun",
+      "sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/erased-forward.bend/native",
+      "sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/erased-forward.bend/native",
+      "sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/erased-forward.bend/bun",
+      "sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/erased-forward.bend/bun",
+      "sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/flag.bend/native",
+      "sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/flag.bend/native",
+      "sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/flag.bend/bun",
+      "sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/flag.bend/bun",
+      "sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/forward-type.bend/native",
+      "sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/forward-type.bend/native",
+      "sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/forward-type.bend/bun",
+      "sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/forward-type.bend/bun",
+      "sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/nested-match.bend/native",
+      "sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/nested-match.bend/native",
+      "sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/nested-match.bend/bun",
+      "sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/nested-match.bend/bun",
+      "sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/shadowing.bend/native",
+      "sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/shadowing.bend/native",
+      "sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/subsets/s1/shadowing.bend/bun",
+      "sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/subsets/s1/shadowing.bend/bun",
+      "sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/branch-maximum.bend/native",
+      "sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/branch-maximum.bend/native",
+      "sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/branch-maximum.bend/bun",
+      "sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/branch-maximum.bend/bun",
+      "sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/data-argument.bend/native",
+      "sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/data-argument.bend/native",
+      "sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/data-argument.bend/bun",
+      "sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/data-argument.bend/bun",
+      "sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/data-promote.bend/native",
+      "sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/data-promote.bend/native",
+      "sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/data-promote.bend/bun",
+      "sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/data-promote.bend/bun",
+      "sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/duplicate-parameters.bend/native",
+      "sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/duplicate-parameters.bend/native",
+      "sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/duplicate-parameters.bend/bun",
+      "sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/duplicate-parameters.bend/bun",
+      "sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/erased-affine-copy.bend/native",
+      "sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/erased-affine-copy.bend/native",
+      "sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/erased-affine-copy.bend/bun",
+      "sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/erased-affine-copy.bend/bun",
+      "sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/erased-binding.bend/native",
+      "sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/erased-binding.bend/native",
+      "sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/erased-binding.bend/bun",
+      "sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/erased-binding.bend/bun",
+      "sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/erased-forward-call.bend/native",
+      "sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/erased-forward-call.bend/native",
+      "sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/erased-forward-call.bend/bun",
+      "sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/erased-forward-call.bend/bun",
+      "sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/matched-duplicate.bend/native",
+      "sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/matched-duplicate.bend/native",
+      "sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/matched-duplicate.bend/bun",
+      "sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/matched-duplicate.bend/bun",
+      "sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/matched-return.bend/native",
+      "sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/matched-return.bend/native",
+      "sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/matched-return.bend/bun",
+      "sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/matched-return.bend/bun",
+      "sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/renamed.bend/native",
+      "sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/renamed.bend/native",
+      "sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/renamed.bend/bun",
+      "sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/renamed.bend/bun",
+      "sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/reordered-arms.bend/native",
+      "sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/reordered-arms.bend/native",
+      "sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-checker/fixtures/reordered-arms.bend/bun",
+      "sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-checker/fixtures/reordered-arms.bend/bun",
+      "sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/three-colors.bend/native",
+      "sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/three-colors.bend/native",
+      "sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/three-colors.bend/bun",
+      "sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/three-colors.bend/bun",
+      "sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/mixed-types.bend/native",
+      "sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/mixed-types.bend/native",
+      "sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/mixed-types.bend/bun",
+      "sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/mixed-types.bend/bun",
+      "sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/branch-locals.bend/native",
+      "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/branch-locals.bend/native",
+      "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/branch-locals.bend/bun",
+      "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/branch-locals.bend/bun",
+      "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/erased-cost.bend/native",
+      "sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/erased-cost.bend/native",
+      "sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/erased-cost.bend/bun",
+      "sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/erased-cost.bend/bun",
+      "sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/argument-order.bend/native",
+      "sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/argument-order.bend/native",
+      "sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/argument-order.bend/bun",
+      "sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/argument-order.bend/bun",
+      "sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/high-tags.bend/native",
+      "sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/high-tags.bend/native",
+      "sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/high-tags.bend/bun",
+      "sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/high-tags.bend/bun",
+      "sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/high-function-index.bend/native",
+      "sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/high-function-index.bend/native",
+      "sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/high-function-index.bend/bun",
+      "sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/high-function-index.bend/bun",
+      "sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/high-local-index.bend/native",
+      "sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/high-local-index.bend/native",
+      "sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169"
+    },
+    {
+      "kind": "legacy",
+      "name": "fields/tests/compiler-wasm/fixtures/high-local-index.bend/bun",
+      "sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169"
+    },
+    {
+      "kind": "legacy",
+      "name": "enum/tests/compiler-wasm/fixtures/high-local-index.bend/bun",
+      "sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169"
+    }
+  ],
+  "measured_modules": [
+    {
+      "workload": "recursive-consume",
+      "lane": "native",
+      "profile": "owned",
+      "sha256": "1a82c12169d912ac7120aff607a2b4a454e0dd6aa53c525f2182017f8763fdf1"
+    },
+    {
+      "workload": "recursive-consume",
+      "lane": "native",
+      "profile": "fields",
+      "sha256": "0e33ec6b228849503ac859f81ef7d2f6d0c296d73003054d050fe825e26dfd6c"
+    },
+    {
+      "workload": "recursive-consume",
+      "lane": "bun",
+      "profile": "owned",
+      "sha256": "1a82c12169d912ac7120aff607a2b4a454e0dd6aa53c525f2182017f8763fdf1"
+    },
+    {
+      "workload": "recursive-consume",
+      "lane": "bun",
+      "profile": "fields",
+      "sha256": "0e33ec6b228849503ac859f81ef7d2f6d0c296d73003054d050fe825e26dfd6c"
+    },
+    {
+      "workload": "allocation-calls",
+      "lane": "native",
+      "profile": "owned",
+      "sha256": "e374ad68b7148011856c959668c34548dd933894a37c330b559384f147916268"
+    },
+    {
+      "workload": "allocation-calls",
+      "lane": "native",
+      "profile": "fields",
+      "sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716"
+    },
+    {
+      "workload": "allocation-calls",
+      "lane": "bun",
+      "profile": "owned",
+      "sha256": "e374ad68b7148011856c959668c34548dd933894a37c330b559384f147916268"
+    },
+    {
+      "workload": "allocation-calls",
+      "lane": "bun",
+      "profile": "fields",
+      "sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716"
+    }
+  ],
+  "extended_evaluator_values": [
+    {
+      "lane": "native",
+      "stdout": "Evaluated\t0\t1\tOn{}\n"
+    },
+    {
+      "lane": "bun",
+      "stdout": "Evaluated\t0\t1\tOn{}\n"
+    }
+  ]
+}

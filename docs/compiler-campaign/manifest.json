@@ -103,10 +103,14 @@
         "src/catalog.bend",
         "src/check.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/owned.bend",
+        "src/ownership.bend",
+        "src/heap-code.bend",
+        "src/heap.bend"
       ],
       "task": "src/SPEC.md",
-      "notes": "Enum terms to binary Wasm; full local closure exceeds the composition bound and ByteOutput remains external."
+      "notes": "Enum, arena and owned profile dispatch to binary Wasm; full local closure exceeds the composition bound and ByteOutput remains external."
     },
     {
       "name": "driver-pipeline",
@@ -128,7 +132,11 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/wasm.bend"
+        "src/wasm.bend",
+        "src/owned.bend",
+        "src/ownership.bend",
+        "src/heap-code.bend",
+        "src/heap.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through frontend/checker to independent evaluation or Wasm emission, including all CLI entry points. Full local closure exceeds the composition bound."
@@ -267,6 +275,36 @@
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "First-parameter descent laws for structural self-calls, proved over the fields and runtime proof chain. The family exceeds the composition bound."
+    },
+    {
+      "name": "owned-wasm-heap",
+      "files": [
+        "src/heap-code.bend",
+        "src/heap.bend",
+        "src/heap-LAWS.bend",
+        "src/heap-PROOF.bend",
+        "src/syntax.bend",
+        "src/wasm-bytes.bend"
+      ],
+      "task": "tests/compiler-owned-wasm/SPEC.md",
+      "notes": "Size-class allocation, unique Type cells, counted immutable Data and bounded resumable release frames. Includes its full local source closure; independent semantic model laws remain in the test packet."
+    },
+    {
+      "name": "owned-wasm-lowering",
+      "files": [
+        "src/ownership.bend",
+        "src/ownership-LAWS.bend",
+        "src/ownership-PROOF.bend",
+        "src/owned.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/scope.bend",
+        "src/heap-code.bend",
+        "src/heap.bend",
+        "src/wasm-bytes.bend"
+      ],
+      "task": "tests/compiler-owned-wasm/SPEC.md",
+      "notes": "Continuation liveness uses checker quantities to insert move/share/release and keep branch ownership balanced. Includes its full local source closure; independent semantic model laws remain in the test packet."
     }
   ]
 }

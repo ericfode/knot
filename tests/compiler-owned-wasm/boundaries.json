@@ -1,0 +1,23 @@
+{
+  "basis": "Additive literal review before the owned debug-name guard: seed and evaluator return On, while Owned emission reports Unsupported and preserves the output.",
+  "frozen_at": "2026-09-28T01:57:56.381823+00:00",
+  "cases": [
+    {
+      "name": "reserved-export",
+      "source": "tests/compiler-owned-wasm/fixtures/reserved-export.bend",
+      "source_sha256": "f0e74c257241e0d8f18db2df78a364deebd4234442bbe4fe8d0efea3194ea2ba",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "evaluator": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\temit\towned-export-name"
+      }
+    }
+  ]
+}

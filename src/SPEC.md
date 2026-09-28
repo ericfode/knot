@@ -1,4 +1,4 @@
-# Knot compiler contracts — enum and fielded Wasm
+# Knot compiler contracts — enum, fielded and owned Wasm
 
 The default Wasm contract remains `knot-enum-1`. The checker and independent
 evaluator additionally implement `knot-structural-terms-1`, specified in
@@ -7,8 +7,11 @@ constructor arguments and flat field binders, validates quantities and ordered
 matching, and evaluates finite live-field trees. It does not provide owned
 runtime storage. The default emitter rejects every fielded book after body
 checking. The separately selected `knot-fields-wasm-1` profile below lowers those
-checked books to a bounded bump arena. Owned-storage reclamation (R3/R7) remains
-unmet; this increment does not qualify either runtime requirement.
+checked books to a bounded bump arena. The separately selected
+`knot-owned-wasm-1` profile adds reusable storage and counted immutable Data
+under D10. Its R3 evidence covers sequential Wasm values; its R7 evidence covers
+bounded, resumable cleanup. GPU readers, task cancellation and suspended device
+holders remain separate runtime requirements.
 The [first-parameter descent contract](../tests/compiler-recursion/SPEC.md)
 adds structural self-calls to checking and evaluation: the first checked argument
 must be a reference to a field of parameter 0, directly or through further
@@ -216,6 +219,95 @@ Its frozen seed observations, enum hashes, five checked helper/erasure laws,
 instruction whitelist, persistent-instance arena boundaries and four
 type-correct semantic mutants are independent evidence, not a general compiler
 correctness or memory-refinement theorem. See its [report and limits](../tests/compiler-fields-wasm/README.md).
+
+## Owned Wasm profile: `knot-owned-wasm-1`
+
+`wasm.emit_profile(Owned{},checked_book,depth,bytes)` lowers the checked
+structural terms and first-parameter recursion profiles. The explicit entry is
+`tests/compiler-owned-wasm/compile.bend`; its argument and compilation-budget
+contract matches the fields entry. Checking still precedes emission. The enum
+and arena entries retain their previous byte contracts, including their
+rejections. The ownership mechanism lives in `ownership.bend`, `owned.bend`,
+`heap-code.bend` and `heap.bend`; the shared emitter adds only profile dispatch.
+
+Each fielded datatype remains boxed and keeps the payload `[tag][live slots]`.
+Erased fields have no word or ownership action; scalar enum slots are never
+traced. Three words before the payload store state, reference count and layout
+identity. Type cells have one owner. Immutable Data counts incoming holders and
+live object edges, including repeated edges. A free cell reuses its count word
+as a free-list link. Free lists are indexed by **live-slot count**, so layouts
+with the same size can reuse cells. Allocation resets the metadata before the
+new payload is stored; construction transfers input holders without retaining.
+
+The module reserves exactly two 65,536-byte pages, with no growth or imports.
+Bytes 0..16,383 hold free heads; 16,384..49,151 hold 4,096 two-word release
+frames; 49,152..65,535 are reserved; 65,536..131,071 hold cells. A cell occupies
+`16 + 4 * live_slots` bytes including its three-word prefix. Pointers address
+the payload, start at 65,548, and are never null. Allocation uses a matching
+free cell before advancing the high-water pointer, and checks remaining bytes
+before addition. The allocation counter and Data counts stop at 2,147,483,647
+rather than wrapping. Logical freeing enables reuse; it does not shrink memory.
+
+Continuation liveness retains the checker's lexical identities, type identities
+and quantities. A reusable occurrence shares only when its binding is needed
+later; a last occurrence moves. Unused parameter, let and pattern holders are
+released, including holders unused on only one branch. A callee owns each live
+argument it receives. Constructor arguments are evaluated left to right and
+stored before cell allocation. Matching loads live fields before opening the
+parent: Type or count-one Data frees its parent cell and transfers the fields;
+a shared Data parent acquires each pointer field before decrementing the parent.
+Shared opening preflights all child increments, including duplicate edges, so
+count exhaustion leaves ownership unchanged. Parent reconstruction allocates
+from the checked field recipe; that recipe is not another runtime root.
+
+Release uses iterative Wasm loops over an explicit stack of `(pointer,cursor)`
+frames. A frame first owns a release, then the unvisited child edges of a
+zero-count cell. The dropping parent cannot reenter its free list until every
+edge has been processed. Zero work budget or a full stack preserves the pending
+cursor and all remaining obligations; a later cleanup call can resume it. The
+production bound exceeds every possible chain in the fixed heap. Tail source
+calls use `return_call` when both the target live arity and the complete source
+local frame have at most 16 slots. Wider calls use ordinary `call`: the pinned
+Node arm64 baseline compiler crashes on wide `return_call` frames. Ordinary
+source calls can still exhaust the host stack.
+Reclamation itself never recurses through the Wasm call stack.
+
+The debug build exports `__heap_memory`, allocation/live/peak/pending/status
+counters, heap operations and setters for the cleanup-stack and RC limits.
+These exports support literal layout inspection, surviving-alias checks,
+exhaustion/resumption and full allocation accounting. They are privileged:
+structured pointers, memory mutation, snapshots and stale external pointers are
+not a public ownership ABI. The profile reserves source function names starting
+with `__heap_`, reporting `Unsupported emit owned-export-name`. Ordinary host
+calls still require enum-only live argument/result signatures. Starting without outstanding host-held results, a successful
+entry owns only its result after returning; for enum results its live count is
+zero. A host observing a structured result must retain its one result holder
+until explicitly releasing it through the debug protocol.
+
+`node scripts/run-wasm.mjs --profile=knot-owned-wasm-1 module export [ordinals]`
+classifies heap status 3 as `Exhausted wasm owned-heap` (exit 4), status 5 as
+`InternalFailure wasm owned-heap` (exit 6), call-stack exhaustion separately,
+and other traps or host errors as HostFailure. Invalid and Unsupported remain
+compiler outcomes. A failed **source invocation** is not a transaction: earlier
+allocations and transfers may already have happened, and the host must retire
+that instance after a trap. Share/shared-open preflight and explicit resumable
+cleanup have their narrower preservation guarantees. Source-level exception
+recovery, host ownership transfer and task/device recovery are not provided.
+
+The [owned gate](../tests/compiler-owned-wasm/README.md) freezes seed/literal
+expectations independently, compares seed/evaluator/actual Wasm, checks old
+profile bytes, accounts for all live cells, tests reuse beyond arena capacity,
+and kills type-correct lifetime mutants. The complete `heap-PROOF.bend`,
+`ownership-PROOF.bend` and test packet's `model-PROOF.bend` entries check the
+stated laws. Semantic model equations,
+emitted-kernel equations and execution conformance are distinct evidence;
+there is no general compiler, arbitrary-graph or Wasm refinement theorem.
+
+This profile qualifies sequential source ownership and reusable storage for the
+current monomorphic core. It does not implement closures, generics, literal
+boxing, cyclic values, mutable heap edges, effects, GPU publication/readers,
+external locator generations or serialized restore. Later core extensions must
+supply their layouts and ownership actions before this profile can emit them.
 
 ## Outcomes and budgets
 

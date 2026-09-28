@@ -1,0 +1,23 @@
+{
+  "basis": "Additive literal resource-boundary expectation. Pure source returns On; immutable full tree has8191cells and cannot fit the stated65536-byte owned cell region, so source Wasm execution is Exhausted, never Invalid. No prior expectation changed.",
+  "frozen_at": "2026-09-28T02:06:09.449481+00:00",
+  "cases": [
+    {
+      "name": "source-heap-exhaustion",
+      "source": "tests/compiler-owned-wasm/fixtures/heap-overflow.bend",
+      "source_sha256": "19304909624256ac18413edb4f871aa93e904e28c3c6a2a29a125a88562da572",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "evaluator": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "runtime": {
+        "exit": 4,
+        "diagnostic": "Exhausted\twasm\towned-heap"
+      }
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "failed-historical-attempt",
+  "command": "BEND_NO_TELEMETRY=1 npm run -s gates",
+  "started_at": "2026-09-28T02:37:46.362242+00:00",
+  "measured_total_seconds": 581.144248,
+  "workers": 4,
+  "failed_or_blocked_gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {},
+      "exit_code": 1,
+      "name": "frontend",
+      "status": "failed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {},
+      "exit_code": 1,
+      "name": "structural",
+      "status": "failed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {},
+      "dependencies": [
+        "structural"
+      ],
+      "exit_code": null,
+      "name": "structural-trust",
+      "status": "blocked"
+    }
+  ],
+  "owned_gate": {
+    "command": [
+      "python3",
+      "tests/compiler-owned-wasm/check.py"
+    ],
+    "counts": {
+      "allocator_state_comparisons": 24,
+      "boundary_probes": 24,
+      "checked_laws": 43,
+      "compiler_lane_byte_agreements": 29,
+      "evaluator_observations": 112,
+      "extended_evaluator_values": 2,
+      "legacy_byte_checks": 116,
+      "mutant_lane_kills": 10,
+      "negative_pairs": 16,
+      "positive_fixtures": 29,
+      "runtime_component_witnesses": 20,
+      "seed_observations": 64,
+      "semantic_mutants": 5,
+      "wasm_observations": 112
+    },
+    "exit_code": 0,
+    "name": "owned-wasm",
+    "status": "passed"
+  },
+  "diagnostics": {
+    "structural": "Pinned seed native compiler discovery reported found no clang while building src/compile-cli.bend.",
+    "frontend": "The unchanged 30-second host-process budget expired while building src/compile-cli.bend for downstream classification.",
+    "verification": "A subsequent clang --version exited 0: Apple clang version 21.0.0 (clang-2100.1.1.101), arm64-apple-darwin25.5.0."
+  },
+  "disposition": "Host build failures, not accepted source rejections or semantic mutant kills. Retry with two workers; assertions and timeouts unchanged. The gate-runner documentation records an earlier occurrence of the same clang discovery failure."
+}
