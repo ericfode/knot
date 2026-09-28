@@ -98,8 +98,8 @@ def L.pending_binder_witnesses_nothing(token,level,q,type_id,param,known,tail,ty
     E.contains(pending,level),True{},inside)
 def L.erased_empty_is_not_dead(name): {==}
 def L.live_empty_is_dead(name): {==}
-def L.introduced_empty_type_is_dead(): {==}
-def L.pending_empty_type_is_not_dead(): {==}
+def L.introduced_empty_witness(): {==}
+def L.pending_empty_witness(): {==}
 def L.let_alias_available(name,token): {==}
 def L.terminal_expansion_preserves_budget(name,types,scope,work): {==}
 def L.leaf_expansion_spends_one(token,arm,name,types,scope): {==}

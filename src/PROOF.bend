@@ -13,7 +13,7 @@ def L.word_source(extra):
     case 0n: {==}
     case 1n+n: {==}
 
-def L.name_words(): {==}
+def L.name_words_witness(): {==}
 
 def L.malformed_word_source(extra):
   match extra:
@@ -36,7 +36,7 @@ def L.multiple_scrutinees(at):
 
 def L.header_joins_lines(at,rest): {==}
 
-def L.line_broken_scrutinees(): {==}
+def L.line_broken_scrutinees_witness(): {==}
 
 def L.dotted_pattern_binder(at,rest): {==}
 

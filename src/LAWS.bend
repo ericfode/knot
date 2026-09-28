@@ -13,7 +13,7 @@ law word_source:
   {L.tokenize(1n+extra,"a") == Done{[S.Token{"a",S.At{0,1,1,0}},S.Token{"<eof>",S.At{1,1,1,1}}]} : Result<S.Error,List<&2,S.Token>>}
 
 # A name is words joined by dots; a malformed word is rejected where it ends.
-law name_words:
+law name_words_witness:
   {[S.words("a.b_1.c",True{},0),S.words("x.",True{},0),S.words("a..b",True{},0),S.words("a.1",True{},0)]
     == [3,0,0,0] : List<&2,U32>}
 
@@ -64,7 +64,7 @@ law header_joins_lines:
 
 def indented(text: String) -> S.Token: S.Token{text,S.At{0,0,1,2}}
 
-law line_broken_scrutinees:
+law line_broken_scrutinees_witness:
   {P.run(8n,P.BodyAt{2},[indented("match"),indented("\n"),indented("a"),indented("\n"),indented("b"),indented(":"),indented("<eof>")])
     == Done{P.Parsed{S.Match{indented("match"),S.Sequence{[S.Variable{indented("a")},S.Variable{indented("b")}]},Nil{}},
       [indented("<eof>")]}} : Result<S.Error,P.Parsed>}

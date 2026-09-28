@@ -113,3 +113,29 @@ remain unqualified. Existing Base/native trust gates retain their separate scope
 Current source hashes and execution evidence are in `nest.json`, `review.json`
 and `review-verification.json`; old first-round receipts retain their historical
 meaning. Offline preflight is not a live style assessment.
+
+## Round 3
+
+Round 3 adds binder grammar, the ordered dead-code rule and header layout; see
+`REVIEW-3.md`. Every new law has a filled proof; `src/PROOF.bend` and
+`src/matrix-PROOF.bend` print `All terms check.`, and falsifying each new law
+makes its entry fail at that law.
+
+| Law | Quantification and evidence | Limit |
+|---|---|---|
+| `pending_binder_witnesses_nothing` | Every binding, tail, catalog and pending suffix, given membership of the binding's level; proved by congruence | A binder still pending never witnesses dead code; says nothing of binders in context |
+| `dotted_pattern_binder`, `dotted_let_binder` | Every source location and token suffix, for the fixed name `a.b` | One dotted spelling per position |
+| `malformed_word_source` | Every fuel budget of at least two, for the fixed source `a.` | One malformed spelling at end of input |
+| `header_joins_lines` | Every location and every token suffix after the colon | Line breaks before the colon of one fixed header |
+| `erased_empty_is_not_dead`, `live_empty_is_dead` | Arbitrary names; the round-2 residual witnesses restated at a scrutinee level | Inhabited context witnesses |
+| `name_words_witness` | Ground: `a.b_1.c` counts 3 words; `x.`, `a..b`, `a.1` count 0 | Ground normalization |
+| `line_broken_scrutinees_witness` | Ground: `match` / `a` / `b:` across lines parses as two scrutinees | Ground parser normalization |
+| `introduced_empty_witness`, `pending_empty_witness` | Ground: `f(x: V, y: Flag)` matching `y` is dead; `f(y: Flag, x: V)` is not | Ground scope normalization |
+
+Two obligations are **not proved** and rest only on the frozen seed fixtures
+and the fuzzer: that `E.dead` decides the seed's `ctx_dead` at every missing
+arm (the match frontier as the seed's introduced context), and that
+`S.malformed` and `S.binder` decide the seed's lexeme regex and `parse_patt`
+binder rule. The round-3 fixtures fix both from the pinned seed, and the
+3,000-program corpus reproduces all three defect classes on the pre-fix
+compiler and none after the repair. This is bounded evidence, not a proof.

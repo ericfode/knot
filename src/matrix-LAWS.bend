@@ -195,10 +195,10 @@ law live_empty_is_dead:
   {E.dead(E.Scope{[C.Binding{name,0,1,0,True{},Some{C.Case{name,0,0,Nil{}}}}],2,[0,1],True{},Nil{}},[flag()],1) == True{} : Bool}
 
 # f(x: V, y: Flag) matching y is dead; f(y: Flag, x: V) matching y is not.
-law introduced_empty_type_is_dead:
+law introduced_empty_witness:
   {E.dead(E.parameters([C.Parameter{token("x"),1,1},C.Parameter{token("y"),1,0}],0,Nil{}),[flag(),void()],1) == True{} : Bool}
 
-law pending_empty_type_is_not_dead:
+law pending_empty_witness:
   {E.dead(E.parameters([C.Parameter{token("y"),1,0},C.Parameter{token("x"),1,1}],0,Nil{}),[flag(),void()],0) == False{} : Bool}
 
 # The most recent let supplies a variable-only column without constructor inspection.

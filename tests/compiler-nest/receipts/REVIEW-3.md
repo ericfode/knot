@@ -42,16 +42,40 @@ between the seed, the evaluator and Wasm in both compiler lanes.
 
 ## New checked laws
 
-In `src/LAWS.bend`: `name_words`, `malformed_word_source`,
-`dotted_pattern_binder`, `dotted_let_binder`, `header_joins_lines`,
-`line_broken_scrutinees`. In `src/matrix-LAWS.bend`:
+In `src/LAWS.bend`: `malformed_word_source`, `dotted_pattern_binder`,
+`dotted_let_binder` and `header_joins_lines`, each quantified over location
+or token suffix, plus the ground `name_words_witness` and
+`line_broken_scrutinees_witness`. In `src/matrix-LAWS.bend`:
 `pending_binder_witnesses_nothing`, a general law: a binder in the pending
 suffix never witnesses dead code, proved by congruence on the membership
-hypothesis. Also `introduced_empty_type_is_dead` and
-`pending_empty_type_is_not_dead` (the e11 and e15 shapes), and the two
-residual laws restated at a scrutinee. `src/PROOF.bend` and every
-`src/*-PROOF.bend` entry print `All terms check.` Falsifying each new law makes
-its proof entry fail at that law.
+hypothesis. Also the ground `introduced_empty_witness` and
+`pending_empty_witness` (the e11 and e15 shapes), and the two residual laws
+restated at a scrutinee. Following round 2's naming finding, every fully
+ground new law carries the `_witness` suffix. `src/PROOF.bend` and every
+`src/*-PROOF.bend` entry print `All terms check.` Falsifying each new law
+makes its proof entry fail at that law. [LAW_REVIEW.md](LAW_REVIEW.md)
+classifies them and names the two obligations that rest only on fixtures and
+fuzzing: `E.dead` equals the seed's `ctx_dead`, and the name and binder
+predicates equal the seed's lexeme and pattern rules.
+
+## Deviations from the requested repairs
+
+- **Finding 1 site.** The reviewer asked for validation in
+  `M.binder`/`M.validate` and in `P.fields`. The check is in the parser
+  instead, because the parser is the only producer of pattern `Variable` and
+  `Promotion` nodes. Both matrix paths and both field paths receive their
+  binders from it, so a dotted binder never reaches `M.binder`, `M.validate` or
+  `P.fields`. The seven pattern fixtures cover each position, and the
+  `dotted-pattern-binder` mutant is killed at that single site. The seed also
+  rejects the form while parsing.
+- **Findings 2 and 3** share one freeze (`6637ef0`) and one repair
+  (`8eb7914`). The reviewer's finding-3 fix reads "apply the same repair as in
+  the multi-column finding", and the ordered rule is a single definition used
+  by both the flat and the matrix path.
+- **The exact rule, not the fallback.** Both findings allowed Unsupported as a
+  fallback. The repair implements the seed's order-sensitive rule instead. The
+  rejecting controls therefore stay `Invalid check missing-arm`, matching the
+  seed, rather than becoming Unsupported.
 
 ## Gate `nest-round3`
 
@@ -137,11 +161,11 @@ coordinator owns the shared ones.
 
 - The 19 changed or added declarations, with `--task=tests/compiler-nest/SPEC.md`:
   0 truncated contexts, 0 supporting-role limits. Composition is unavailable:
-  56,499 bytes against 48,000, with 24 collaborators outside the selection.
+  56,501 bytes against 48,000, with 24 collaborators outside the selection.
   Exit 3.
 - The nine changed files: 233 declarations, 26 truncated contexts (6
   caller/byte, 5 file-limit, 15 helper-limit), 26 supporting-role limits.
-  Composition is unavailable at 126,092 bytes. Exit 3.
+  Composition is unavailable at 126,096 bytes. Exit 3.
 
 Compression, Delight, Memetic identity, Anticipation and Payoff are
 **unrated**. Live review belongs to the coordinator.
