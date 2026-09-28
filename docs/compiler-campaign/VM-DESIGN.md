@@ -1,5 +1,7 @@
 # VM-first self-hosting design (D14)
 
+> **Amended by D19 (2026-09-27):** the VM memory maximum is 65,536 pages (4 GiB), not 2,048 pages (128 MiB). Every 128 MiB / 2,048-page figure below is superseded; budgets and the Exhausted-heap classification are unchanged in kind.
+
 The coordinator's design panel synthesized this on 2026-09-27, after the user chose the VM-first route ("yep this is how i want to do it! make it happen"). Four independent designs (minimal, bytecode, Bend-hosted and skeptic) were critiqued adversarially and then synthesized; the critique scores were minimal 5, bytecode 5.5, bend-hosted 4, skeptic 3. Estimates are in agent-days and are uncertain.
 
 ## Recommendation
