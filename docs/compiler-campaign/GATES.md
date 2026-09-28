@@ -46,8 +46,10 @@ The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/
 - It first reproduces 65 frozen cases on the seed's interpreter and native lanes.
 - It then runs Knot's `check-cli` and `eval-cli` on each case.
 - A case is blocked while a reviewed need is unavailable. A blocked case never
-  counts as passing. It fails the gate only by crashing, timing out, or reporting
-  a host or internal failure.
+  counts as passing. It still fails the gate on a fault: crashing, timing out,
+  a host or internal failure, accepting a seed-rejected twin, or a positive
+  evaluating other than the seed. A seed-valid case reported Invalid must be
+  one of the reviewed D4 gaps in `check.py`.
 - The gate writes only `tests/compiler-selfhost/receipts/selfhost.json`.
 - An increment that lands a need flips it in `expectations.json`, and the gate
   then holds that increment to its cases.

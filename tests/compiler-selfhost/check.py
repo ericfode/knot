@@ -13,16 +13,24 @@ checker or evaluator.
 2. The seed builds Knot's `check-cli` and `eval-cli` on the native lane (C1's lane).
 3. Each case is `blocked` while a need it names is unavailable in the reviewed
    `needs` table. Knot still runs on it, and the receipt records the outcome as
-   first-blocker evidence, but a blocked case never counts as passing. Invalid,
-   Unsupported and Exhausted may block; a host or internal failure, a signal,
-   an unclassified exit or a timeout fails the gate even while blocked.
-4. An unblocked case must meet its requirement: `agree` checks the book and
+   first-blocker evidence, but a blocked case never counts as passing.
+4. A missing need excuses an unfinished result, never a wrong one. Even while
+   blocked, a case fails on a fault: a host or internal failure, a signal, an
+   unclassified exit or a timeout; any phase accepting a seed-rejected twin; or
+   a seed-valid call that succeeds with other than the seed's constructor and
+   tag, or a call list other than the frozen one. Invalid, Unsupported and
+   Exhausted may block.
+5. A seed-valid case that Knot reports Invalid is a D4 gap. Only the reviewed
+   gaps in `D4_GAPS` may occur, each with its pinned diagnostic; the set may
+   shrink, and the receipt lists the closed ones.
+6. An unblocked case must meet its requirement: `agree` checks the book and
    evaluates every frozen call to the seed's constructor and tag; `reject` and
    `unsupported` report the pinned exit, phase and code (and position, where
    pinned) from every phase that runs.
-5. The judge is applied to the recorded receipt, then to mutated copies, each
-   of which it must reject. Type-correct mutants of `src/` must be killed by
-   an unblocked case with a classified, non-crashing observation.
+7. The judge rederives every recorded verdict, then is applied to mutated
+   copies, each of which it must reject for the named reason. Type-correct
+   mutants of `src/` must be killed by an unblocked case with a classified,
+   non-crashing observation.
 """
 from __future__ import annotations
 
@@ -50,7 +58,7 @@ EXPECTATIONS = HERE / 'expectations.json'
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))
 SECONDS = {'build': 600 * SCALE, 'call': 120 * SCALE}
 OUTCOMES = {0: 'Success', 2: 'Invalid', 3: 'Unsupported', 4: 'Exhausted', 5: 'HostFailure', 6: 'InternalFailure'}
-MAY_BLOCK = ('Success', 'Invalid', 'Unsupported', 'Exhausted')
+CLASSIFIED = ('Success', 'Invalid', 'Unsupported', 'Exhausted')
 JOBS = int(os.environ.get('KNOT_SELFHOST_JOBS', '6'))
 
 # Knot's lanes for this suite. Route-independent: the evaluator is the reference
@@ -58,6 +66,22 @@ JOBS = int(os.environ.get('KNOT_SELFHOST_JOBS', '6'))
 # CLIs' single-file mode until `modules` lands; that increment adds its
 # bundle argument here when it flips the need.
 KNOT_PHASES = ('check', 'eval')
+
+# Reviewed D4 gaps: seed-valid cases that Knot reports Invalid, not Unsupported,
+# while blocked. They predate this suite (SELF-HOSTING-PATH.md, SF-01 and SF-02):
+# Knot's parser reads a continuation newline inside a delimiter or a def header
+# as the end of the term or parameter list. The table is literal review of
+# Knot's output, so it lives here, not in the seed-derived expectations. Any
+# other Invalid on a seed-valid case fails the gate. A gap may close without an
+# edit here; the receipt lists it under `d4_gaps_closed` until the owner
+# deletes its row.
+D4_GAPS = {  # case: (owner, requirement, diagnostic prefix)
+    'layout-braces': ('selfsource', 'SF-01', 'Invalid\tparse\texpected-term\t'),
+    'layout-call-args': ('selfsource', 'SF-01', 'Invalid\tparse\texpected-term\t'),
+    'layout-comments': ('selfsource', 'SF-01', 'Invalid\tparse\texpected-term\t'),
+    'layout-dedent-close': ('selfsource', 'SF-01', 'Invalid\tparse\texpected-term\t'),
+    'layout-def-header': ('selfsource', 'SF-02', 'Invalid\tparse\tparameter\t'),
+}
 
 
 def require(condition, detail):
@@ -114,6 +138,24 @@ def evaluated(obs):
     return (int(match.group(2)), match.group(3)) if match and classify(obs) == 'Success' else None
 
 
+def labelled(knot) -> list[tuple[str, dict]]:
+    """Every observation of one case: the phases, then each call by entry and arguments."""
+    return ([(p, knot[p]) for p in KNOT_PHASES if knot.get(p)]
+            + [(f"{c['entry']}{c['arguments']}", c) for c in knot.get('calls', [])])
+
+
+def paired(knot, seed):
+    """Knot's calls beside the frozen ones, or None when the two call lists differ."""
+    calls, frozen = knot.get('calls', []), seed['calls']
+    same = [(c['entry'], c['arguments']) for c in calls] == [(c['entry'], c['arguments']) for c in frozen]
+    return list(zip(calls, frozen)) if same else None
+
+
+def answer(call, want) -> str:
+    return (f"{call['entry']}{call['arguments']}: {diagnostic(call) or call['stdout'].strip()} "
+            f"!= {want['constructor']} (tag {want['tag']})")
+
+
 # ------------------------------------------------------------------ requirements
 
 def meets(case, seed, knot) -> list[str]:
@@ -127,18 +169,15 @@ def meets(case, seed, knot) -> list[str]:
             return ['no Knot lane runs io programs yet']
         if classify(check) != 'Success' or not check['stdout'].startswith('Checked\n'):
             return [f'check: {diagnostic(check) or classify(check)}']
-        calls = knot.get('calls', [])
-        frozen = seed['calls']
-        if [(c['entry'], c['arguments']) for c in calls] != [(c['entry'], c['arguments']) for c in frozen]:
+        pairs = paired(knot, seed)
+        if pairs is None:
             return ['the evaluated calls differ from the frozen calls']
-        for call, want in zip(calls, frozen):
-            got = evaluated(call)
+        for call, want in pairs:
             result = want['result']
             if result is None:
                 problems.append(f"{call['entry']}{call['arguments']}: the seed lanes disagree without an oracle")
-            elif got != (result['tag'], result['constructor']):
-                problems.append(f"{call['entry']}{call['arguments']}: {diagnostic(call) or call['stdout'].strip()} "
-                                f"!= {result['constructor']} (tag {result['tag']})")
+            elif evaluated(call) != (result['tag'], result['constructor']):
+                problems.append(answer(call, result))
         return problems
     for phase in KNOT_PHASES:
         obs = knot.get(phase)
@@ -152,16 +191,42 @@ def meets(case, seed, knot) -> list[str]:
     return problems
 
 
-def status_of(case, seed, knot, available) -> dict:
+def faults(case, seed, knot) -> list[str]:
+    """What no missing need excuses: an unclassified outcome, a seed-rejected twin
+    accepted by any phase, or a seed-valid call answered other than the seed does."""
+    found = [f'{label}: Knot reported {classify(o)}' for label, o in labelled(knot) if classify(o) not in CLASSIFIED]
+    check = knot.get('check')
+    if case['knot']['require'] == 'reject':
+        found += [f'{p}: accepted a seed-rejected twin' for p in KNOT_PHASES
+                  if knot.get(p) and classify(knot[p]) == 'Success']
+    elif case['knot']['require'] == 'agree' and case['kind'] == 'value' and check and classify(check) == 'Success':
+        pairs = paired(knot, seed)
+        if pairs is None:
+            found.append('the evaluated calls differ from the frozen calls')
+        else:
+            found += [answer(call, want['result']) for call, want in pairs
+                      if want['result'] is not None and classify(call) == 'Success'
+                      and evaluated(call) != (want['result']['tag'], want['result']['constructor'])]
+    return found
+
+
+def d4_gap(case, knot) -> list[str]:
+    """Knot's Invalid diagnostics on a seed-valid case, where D4 requires Unsupported."""
+    if case['knot']['require'] == 'reject':
+        return []
+    return [diagnostic(o) for _, o in labelled(knot) if classify(o) == 'Invalid']
+
+
+def derive(case, seed, knot, available) -> dict:
+    """Every recorded verdict field of one case, from its observations alone."""
     blocked_by = [n for n in case['needs'] if n not in available]
-    missing = meets(case, seed, knot)
-    outcomes = [classify(o) for o in [knot.get('check'), knot.get('eval'), *knot.get('calls', [])] if o]
-    if blocked_by:
-        status = 'blocked'
-    else:
-        status = 'fail' if missing else 'pass'
+    missing, wrong = meets(case, seed, knot), faults(case, seed, knot)
+    status = 'fail' if wrong or (missing and not blocked_by) else 'blocked' if blocked_by else 'pass'
+    check = knot.get('check')
     return {'status': status, 'blocked_by': blocked_by, 'meets_requirement': not missing,
-            'problems': missing, 'outcomes': sorted(set(outcomes))}
+            'problems': missing, 'faults': wrong, 'outcomes': sorted({classify(o) for _, o in labelled(knot)}),
+            'first_blocker': (diagnostic(check) or classify(check)) if check else None,
+            'd4_gap': bool(d4_gap(case, knot))}
 
 
 # ------------------------------------------------------------------ judge
@@ -183,27 +248,39 @@ def judge(document, receipt) -> list[str]:
     available = {n for n, v in document['needs'].items() if v['available']}
     if sorted(available) != receipt.get('available'):
         violations.append('the receipt was taken under other needs')
+    by = {c['name']: c for c in document['cases']}
+    for name, (owner, requirement, prefix) in D4_GAPS.items():
+        case = by.get(name, {})
+        if (case.get('knot', {}).get('require') in (None, 'reject') or case['owner'] != owner
+                or requirement not in case['requirements'] or not re.fullmatch(r'Invalid\t[a-z]+\t[a-z-]+\t', prefix)):
+            violations.append(f'{name}: the D4 gap table must name a seed-valid case, its owner and an Invalid code')
     rows = {r['case']: r for r in receipt.get('cases', [])}
-    if sorted(rows) != sorted(c['name'] for c in document['cases']):
+    if sorted(rows) != sorted(by):
         violations.append('the receipt does not cover exactly the frozen cases')
-    counts = {'pass': 0, 'fail': 0, 'blocked': 0}
+    again_rows = []
     for case in document['cases']:
-        row = rows.get(case['name'])
+        name, row = case['name'], rows.get(case['name'])
         if row is None:
             continue
-        again = status_of(case, frozen.get(case['name'], {}), row['knot'], available)
-        counts[again['status']] += 1
-        if row['status'] != again['status']:
-            violations.append(f"{case['name']}: recorded {row['status']}, recomputed {again['status']}")
-        if again['status'] == 'fail':
-            violations.append(f"{case['name']}: {'; '.join(again['problems'])}")
-        if again['status'] == 'blocked':
-            bad = [k for k in again['outcomes'] if k not in MAY_BLOCK]
-            if bad:
-                violations.append(f"{case['name']}: blocked by {again['blocked_by']} but Knot reported {bad}")
-    if receipt.get('counts', {}).get('status') != counts:
-        violations.append(f"recorded counts {receipt.get('counts', {}).get('status')} != {counts}")
-    if counts['pass'] == 0:
+        again = derive(case, frozen.get(name, {}), row['knot'], available)
+        again_rows.append({'case': name, 'owner': case['owner'], **again})
+        if again['faults']:
+            blocked = f" while blocked by {again['blocked_by']}" if again['blocked_by'] else ''
+            violations.append(f"{name}: {'; '.join(again['faults'])}{blocked}")
+        elif again['status'] == 'fail':
+            violations.append(f"{name}: {'; '.join(again['problems'])}")
+        for key, value in again.items():
+            if row.get(key) != value:
+                violations.append(f'{name}: recorded {key} {row.get(key)!r}, recomputed {value!r}')
+        prefix = D4_GAPS.get(name, (None, None, '\0'))[2]
+        stray = [d for d in d4_gap(case, row['knot']) if not (d + '\t').startswith(prefix)]
+        if stray:
+            violations.append(f'{name}: an unreviewed D4 gap: seed-valid, but Knot reported {stray}')
+    recorded = receipt.get('counts', {})
+    for key, value in counts(again_rows).items():
+        if recorded.get(key) != value:
+            violations.append(f'recorded counts.{key} {recorded.get(key)!r} != {value!r}')
+    if not any(r['status'] == 'pass' for r in again_rows):
         violations.append('no case passes: the gate would be vacuous')
     return violations
 
@@ -253,16 +330,9 @@ def cases_run(document, bins, only=None) -> list[dict]:
     chosen = [c for c in document['cases'] if only is None or c['name'] in only]
     with ThreadPoolExecutor(JOBS) as pool:
         knots = list(pool.map(lambda c: observe(c, frozen[c['name']], bins), chosen))
-    rows = []
-    for case, knot in zip(chosen, knots):
-        verdict = status_of(case, frozen[case['name']], knot, available)
-        seed_valid = case['knot']['require'] != 'reject'
-        rows.append({'case': case['name'], 'owner': case['owner'], 'requirements': case['requirements'],
-                     'require': case['knot']['require'], **verdict,
-                     'first_blocker': diagnostic(knot['check']) or classify(knot['check']),
-                     'd4_gap': seed_valid and classify(knot['check']) == 'Invalid',
-                     'knot': knot})
-    return rows
+    return [{'case': case['name'], 'owner': case['owner'], 'requirements': case['requirements'],
+             'require': case['knot']['require'], **derive(case, frozen[case['name']], knot, available), 'knot': knot}
+            for case, knot in zip(chosen, knots)]
 
 
 # ------------------------------------------------------------------ mutants
@@ -309,7 +379,7 @@ def mutants(document) -> list[dict]:
             else:
                 bins[phase] = f'./{BUILD}/{phase}'
         row = cases_run(document, bins, only={witness})[0]
-        crashes = [k for k in row['outcomes'] if k not in MAY_BLOCK + ('HostFailure', 'InternalFailure')]
+        crashes = [k for k in row['outcomes'] if k not in CLASSIFIED + ('HostFailure', 'InternalFailure')]
         results.append({'name': name, 'file': f'src/{file}', 'old': old, 'new': new,
                         'mutated_sha256': digest(target.read_bytes()), 'typecheck': typecheck['stdout'],
                         'builds': [{k: b[k] for k in ('entry', 'exit', 'sha256')} for b in builds],
@@ -320,23 +390,47 @@ def mutants(document) -> list[dict]:
     return results
 
 
+def restate(document, receipt):
+    """Rederive every recorded verdict and count, as an honest runner records them."""
+    frozen = {o['case']: o for o in document['observations']['fixtures']}
+    by = {c['name']: c for c in document['cases']}
+    for row in receipt['cases']:
+        row.update(derive(by[row['case']], frozen[row['case']], row['knot'], set(receipt['available'])))
+    receipt['counts'] = counts(receipt['cases'])
+
+
 def judge_mutants(document, receipt) -> list[dict]:
-    """Mutated receipts and expectations the judge must reject."""
-    rows = {r['case']: r for r in receipt['cases']}
+    """Mutated receipts and expectations the judge must reject, each for its named reason.
+
+    A `restated` mutant rederives every verdict from its edited observations, so
+    only the rule under test can reject it."""
+    by = {c['name']: c for c in document['cases']}
+    frozen = {o['case']: o for o in document['observations']['fixtures']}
     passing = next(r['case'] for r in receipt['cases'] if r['status'] == 'pass' and r['require'] == 'agree')
     rejecting = next(r['case'] for r in receipt['cases'] if r['status'] == 'pass' and r['require'] == 'reject')
     blocked = next(r['case'] for r in receipt['cases'] if r['status'] == 'blocked')
+    twin = next(r['case'] for r in receipt['cases'] if r['status'] == 'blocked' and r['require'] == 'reject')
+    positive = next(r['case'] for r in receipt['cases'] if r['status'] == 'blocked' and r['require'] == 'agree'
+                    and by[r['case']]['kind'] == 'value')
+    valid = next(r['case'] for r in receipt['cases'] if r['status'] == 'blocked' and r['require'] != 'reject'
+                 and r['case'] not in D4_GAPS)
+    gap = next(r['case'] for r in receipt['cases'] if r['case'] in D4_GAPS and r['d4_gap'])
     seeded = next(o['case'] for o in document['observations']['fixtures'] if o.get('calls'))
 
-    def with_receipt(edit):
+    def with_receipt(edit, restated=False):
         r = copy.deepcopy(receipt)
         edit({x['case']: x for x in r['cases']}, r)
+        if restated:
+            restate(document, r)
         return document, r
 
     def with_document(edit):
         d = copy.deepcopy(document)
         edit({o['case']: o for o in d['observations']['fixtures']}, d)
         return d, receipt
+
+    def checked(obs):
+        return {**obs, 'exit': 0, 'stdout': f"Checked\n<sha256 {'0' * 64}>\n", 'stderr': ''}
 
     def flip_tag(rs, r):
         call = rs[passing]['knot']['calls'][0]
@@ -357,27 +451,67 @@ def judge_mutants(document, receipt) -> list[dict]:
         start, end, line, col = fields[3].split('\n')[0].split(':')
         obs['stderr'] = '\t'.join(fields[:3] + [f'{start}:{end}:{line}:{int(col) + 1}\n'])
 
+    def accept_twin(rs, r):
+        knot = rs[twin]['knot']
+        knot['check'] = checked(knot['check'])
+        knot['eval'] = {**knot['eval'], 'exit': 0, 'stdout': 'Evaluated\t0\t0\tLeaf{}\n', 'stderr': ''}
+
+    def answer_calls(rs, mistake):
+        knot = rs[positive]['knot']
+        knot['check'] = checked(knot['check'])
+        knot['calls'] = [{'entry': c['entry'], 'arguments': c['arguments'], 'argv': [], 'exit': 0,
+                          'stdout': f"Evaluated\t0\t{c['result']['tag']}\t{c['result']['constructor']}{{}}\n",
+                          'stderr': ''} for c in frozen[positive]['calls']]
+        mistake(knot['calls'])
+
+    def wrong_value(calls):
+        calls[0]['stdout'] = f"Evaluated\t0\t{evaluated(calls[0])[0] + 1}\tWrong{{}}\n"
+
+    def report_invalid(rs, r):
+        rs[valid]['knot']['check'] = {**rs[valid]['knot']['check'], 'exit': 2, 'stdout': '',
+                                       'stderr': 'Invalid\tparse\texpected-term\t0:1:1:0\n'}
+
+    def recode_gap(rs, r):
+        obs = rs[gap]['knot']['check']
+        fields = obs['stderr'].split('\t')
+        obs['stderr'] = '\t'.join(fields[:2] + ['end-of-body'] + fields[3:])
+
     cases = [
-        ('blocked-counted-as-pass', with_receipt(lambda rs, r: rs[blocked].update(status='pass'))),
+        ('blocked-counted-as-pass', with_receipt(lambda rs, r: rs[blocked].update(status='pass')),
+         'recorded status'),
         ('failure-relabelled-blocked', with_receipt(lambda rs, r: (rs[passing].update(status='blocked'),
-                                                                   rs[passing]['knot']['calls'].pop()))),
-        ('dropped-knot-call', with_receipt(lambda rs, r: rs[passing]['knot']['calls'].pop())),
-        ('flipped-evaluated-tag', with_receipt(flip_tag)),
-        ('crash-while-blocked', with_receipt(crash)),
-        ('reworded-diagnostic', with_receipt(reword)),
-        ('shifted-position', with_receipt(shift)),
-        ('stale-needs', with_receipt(lambda rs, r: r.update(available=sorted(r['available'] + ['layout'])))),
-        ('seed-not-reproduced', with_receipt(lambda rs, r: r['seed'].update(reproduced=False))),
+                                                                   rs[passing]['knot']['calls'].pop())),
+         "recorded status 'blocked', recomputed 'fail'"),
+        ('dropped-knot-call', with_receipt(lambda rs, r: rs[passing]['knot']['calls'].pop()),
+         'the evaluated calls differ from the frozen calls'),
+        ('flipped-evaluated-tag', with_receipt(flip_tag), '(tag '),
+        ('crash-while-blocked', with_receipt(crash), 'check: Knot reported Crash while blocked'),
+        ('reworded-diagnostic', with_receipt(reword), 'check: Invalid\tparse'),
+        ('shifted-position', with_receipt(shift), 'eval: at '),
+        ('stale-needs', with_receipt(lambda rs, r: r.update(available=sorted(r['available'] + ['layout']))),
+         'other needs'),
+        ('seed-not-reproduced', with_receipt(lambda rs, r: r['seed'].update(reproduced=False)), 'not reproduced'),
         ('unreviewed-lane-disagreement', with_document(
-            lambda os_, d: os_[seeded]['calls'][0].update(lanes='disagree'))),
+            lambda os_, d: os_[seeded]['calls'][0].update(lanes='disagree')), 'unreviewed seed lane disagreement'),
         ('dropped-native-lane', with_document(
-            lambda os_, d: os_[seeded]['calls'][0]['native'].update(run=None))),
+            lambda os_, d: os_[seeded]['calls'][0]['native'].update(run=None)), 'lacks a lane'),
+        ('accepted-blocked-twin', with_receipt(accept_twin, restated=True),
+         'check: accepted a seed-rejected twin'),
+        ('wrong-value-while-blocked', with_receipt(lambda rs, r: answer_calls(rs, wrong_value), restated=True),
+         'Wrong{} != '),
+        ('dropped-call-while-blocked', with_receipt(lambda rs, r: answer_calls(rs, list.pop), restated=True),
+         'the evaluated calls differ from the frozen calls while blocked'),
+        ('unreviewed-d4-gap', with_receipt(report_invalid, restated=True), f'{valid}: an unreviewed D4 gap'),
+        ('recoded-d4-gap', with_receipt(recode_gap, restated=True), f'{gap}: an unreviewed D4 gap'),
+        ('erased-d4-gaps', with_receipt(lambda rs, r: r['counts'].update(d4_gaps=[])), 'recorded counts.d4_gaps'),
     ]
     results = []
-    for name, (d, r) in cases:
+    for name, (d, r), reason in cases:
         found = judge(d, r)
-        results.append({'name': name, 'rejected': bool(found), 'first_violation': found[0] if found else None})
-        require(found, (name, 'the judge accepted a mutated receipt'))
+        matched = next((v for v in found if reason in v), None)
+        results.append({'name': name, 'rejected': matched is not None, 'reason': reason, 'violation': matched,
+                        'violations': len(found)})
+        require(matched is not None, (name, 'the judge did not reject it for its reason', reason, found))
     return results
 
 
@@ -392,6 +526,7 @@ def counts(rows) -> dict:
         owner[row['status']] += 1
     return {'status': status, 'by_owner': dict(sorted(owners.items())),
             'd4_gaps': sorted(r['case'] for r in rows if r['d4_gap']),
+            'd4_gaps_closed': sorted(r['case'] for r in rows if r['case'] in D4_GAPS and not r['d4_gap']),
             'blocked_meeting_requirement': sorted(r['case'] for r in rows
                                                   if r['status'] == 'blocked' and r['meets_requirement'])}
 

@@ -9,15 +9,17 @@ the [self-hosting path](../../docs/compiler-campaign/SELF-HOSTING-PATH.md#joint)
 - Knot's codes for the rejected twins come from literal review of Knot's existing
   diagnostic vocabulary.
 
-Nothing here was derived from Knot's output. Every case names the increment that
-owns it, and the gate never passes a case whose needs have not landed.
+Nothing in the fixtures or `expectations.json` was derived from Knot's output.
+Every case names the increment that owns it, and the gate never passes a case
+whose needs have not landed. The one record of Knot's own output is the
+reviewed D4 gap table in `check.py` (see [Blocked cases](#blocked-cases)).
 
 | File | Role |
 |---|---|
 | `fixtures/<case>/main.bend` | The entry of each of 65 cases. Sibling `.bend` files are its local modules, and `inputs/` holds its IO inputs. |
 | `expectations.json` | Reviewed: `needs`, `cases` and `lane_decisions`. Generated: `observations`, every seed record on both lanes. |
 | `regen.py` | The seed lane. `verify` (the default) recomputes everything and fails on any difference; `--write` refreezes. |
-| `check.py` | The gate (`selfhost`). It runs the seed lane, then Knot, with blocked cases reported separately. `--judge` re-verifies a receipt. |
+| `check.py` | The gate (`selfhost`). It runs the seed lane, then Knot, with blocked cases reported separately. It holds the reviewed D4 gap table `D4_GAPS`. `--judge` re-verifies a receipt. |
 | `receipts/selfhost.json` | The gate receipt: per-case status, Knot's observations, counts, mutants. No dates, timings or absolute paths. |
 
 ## Commands
@@ -97,10 +99,25 @@ Knot's output.
 - Knot still runs on a blocked case. The receipt records its first blocker as
   evidence, but the case never counts as passing.
 - `blocked_meeting_requirement` lists a blocked case that Knot already meets. That flags a need that may be ready to flip.
-- A blocked case may report Invalid, Unsupported or Exhausted. A host or
-  internal failure, a signal, an unclassified exit or a timeout fails the gate.
-- A seed-valid blocked case that Knot calls `Invalid` is a D4 gap. It is listed
-  in `counts.d4_gaps`, so it stays visible, not silent.
+- A missing need excuses an unfinished result, never a wrong one. A blocked
+  case may report Invalid, Unsupported or Exhausted, and a positive's check may
+  succeed. It fails the gate on a **fault**, recorded in the row's `faults`:
+  - a host or internal failure, a signal, an unclassified exit or a timeout;
+  - any phase accepting a seed-rejected twin (check or eval succeeds);
+  - a positive whose check succeeds but whose evaluated calls are not exactly
+    the frozen calls, or a call that succeeds with another constructor or tag.
+    A call may still stop at Unsupported or Exhausted.
+
+  This holds in the window the suite exists for: an increment that lands part
+  of a case's needs cannot admit the defect a twin pins, or answer a positive
+  wrongly, before it flips the last need.
+- A seed-valid case that Knot calls `Invalid` in any phase is a **D4 gap**.
+  It is listed in `counts.d4_gaps`. Only the reviewed gaps in `check.py`'s
+  `D4_GAPS` table may occur, each with its pinned Invalid code; any other gap,
+  or another code on a listed case, fails the gate. The table records Knot's
+  output, not the seed's, so it is kept out of `expectations.json`. The set may
+  shrink without an edit: `counts.d4_gaps_closed` lists a table row whose gap
+  has closed, for its owner to delete.
 
 Available on this tree: `fields`, `recursion`.
 
@@ -112,10 +129,11 @@ Available on this tree: `fields`, `recursion`.
 | Blocked | 63 |
 | Fail | 0 |
 
-The five D4 gaps are all owned by selfsource:
+The five reviewed D4 gaps predate this suite (SELF-HOSTING-PATH.md, SF-01 and
+SF-02). All are owned by selfsource:
 
-- `layout-call-args`, `layout-braces`, `layout-dedent-close` and `layout-comments`: `Invalid parse expected-term` at the first continuation newline;
-- `layout-def-header`: `Invalid parse parameter` (SF-01, SF-02).
+- `layout-call-args`, `layout-braces`, `layout-dedent-close` and `layout-comments`: `Invalid parse expected-term` at the first continuation newline (SF-01);
+- `layout-def-header`: `Invalid parse parameter` (SF-02).
 
 The other blocked cases stop at `Unsupported`:
 
@@ -186,13 +204,15 @@ requires. The generated scale fixtures are:
 1. `regen.py`'s seed lane reproduces `observations` exactly. That covers the seed and package hashes, the fixture hashes, both lanes of every call, and the reviewed IO literals and twin positions.
 2. The seed builds Knot's `check-cli` and `eval-cli` on the native lane.
 3. Every case runs through Knot and is classified. An unblocked case must pass.
-4. The judge recomputes every status from recorded fields only. It fails in these cases:
-   - a recorded status differs;
-   - a blocked case crashed;
+4. The judge rederives every recorded verdict field and count from Knot's recorded observations. It fails in these cases:
+   - a recorded field or count differs;
+   - an unblocked case misses its requirement;
+   - any case has a fault, blocked or not;
+   - a D4 gap is outside the reviewed table, or reports another code;
    - the needs differ;
    - a seed call lacks a lane or disagrees without review;
    - no case passes.
-5. Eleven mutated receipts or expectations must each be rejected by the judge:
+5. Seventeen mutated receipts or expectations must each be rejected by the judge, for a named reason. The mutants marked *restated* rederive every recorded field from their edited observations, so only the rule under test can reject them.
    - a blocked case counted as a pass;
    - a failure relabelled as blocked;
    - a dropped call;
@@ -203,7 +223,13 @@ requires. The generated scale fixtures are:
    - stale needs;
    - an unreproduced seed;
    - an unreviewed lane disagreement;
-   - a dropped native lane.
+   - a dropped native lane;
+   - a blocked twin that checks and evaluates (restated);
+   - a blocked positive that checks and evaluates a wrong constructor and tag (restated);
+   - a blocked positive that checks and drops a call (restated);
+   - an unreviewed D4 gap on a seed-valid case (restated);
+   - a reviewed D4 gap reporting another Invalid code (restated);
+   - an erased `counts.d4_gaps`.
 6. Three type-correct mutants of `src/` must be killed by an unblocked case, with a classified, non-crashing observation:
    - `reject-every-self-call` (check.bend): `nested-self-call` becomes `Unsupported check recursive-call`.
    - `admit-mistyped-constant` (check.bend): `nested-self-call-mistyped` checks.
