@@ -9,6 +9,9 @@ def L.shl_wide(x,n,wide):
 def L.shr_wide(x,n,wide):
   Equal.cong(Bool,U32,b => S.choose(U32,b,u => 0,u => U32.shrn(x,U32.to_nat(n))),U32.is_ge(n,32),True{},wide)
 def L.wide_boundary(): {==}
+def L.append_order(): {==}
+def L.length_count(): {==}
+def L.equal_length(): {==}
 def L.surrogate_code(token): {==}
 def L.surrogate_sequence(token): {==}
 def L.scalar_sequence(token): {==}

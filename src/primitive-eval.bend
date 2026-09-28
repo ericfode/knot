@@ -33,15 +33,29 @@ def shl(+a: U32, +n: U32) -> U32:
 def shr(+a: U32, +n: U32) -> U32:
   S.choose(U32,U32.is_ge(n,32),u => 0,u => U32.shrn(a,U32.to_nat(n)))
 
+# Shown U32 text has at most ten codes; host recursion is safe here.
 def code_list(text: String) -> List<&2,U32>:
   match text:
     case SNil{}: Nil{}
     case SCon{head,tail}: Con{Char.to_u32(head),code_list(tail)}
 
-def equal(a: List<&2,U32>, b: List<&2,U32>) -> Bool:
+# Code lists reach 1048576 elements, so every traversal below is a tail call
+# with an accumulator: the evaluator's lanes must not need host stack depth.
+def count(codes: List<&2,U32>, +n: U32) -> U32:
+  match codes:
+    case Nil{}: n
+    case Con{head,tail}: count(tail,U32.add(n,1))
+
+# onto(a,b) is reverse(a) ++ b; reverse and append are its two uses.
+def onto(codes: List<&2,U32>, acc: List<&2,U32>) -> List<&2,U32>:
+  match codes:
+    case Nil{}: acc
+    case Con{head,tail}: onto(tail,Con{head,acc})
+
+def equal(a: List<&2,U32>, b: List<&2,U32>, +same: Bool) -> Bool:
   match a b:
-    case Nil{} Nil{}: True{}
-    case Con{x,xs} Con{y,ys}: Bool.and(U32.is_eq(x,y),equal(xs,ys))
+    case Con{x,xs} Con{y,ys}: equal(xs,ys,Bool.and(same,U32.is_eq(x,y)))
+    case Nil{} Nil{}: same
     case _ _: False{}
 
 def apply(op: R.Op, args: List<&2,Datum>) -> Result<S.Error,Datum>:
@@ -81,11 +95,11 @@ def apply(op: R.Op, args: List<&2,Datum>) -> Result<S.Error,Datum>:
     case R.NGe{} Con{Count{a},Con{Count{b},Nil{}}}: boolean(U32.is_ge(a,b))
     case R.WShow{} Con{Bits{a},Nil{}}: Done{Codes{code_list(U32.show(a))}}
     case R.NShow{} Con{Count{a},Nil{}}: Done{Codes{code_list(U32.show(a))}}
-    case R.SEq{} Con{Codes{a},Con{Codes{b},Nil{}}}: boolean(equal(a,b))
+    case R.SEq{} Con{Codes{a},Con{Codes{b},Nil{}}}: boolean(equal(a,b,True{}))
     case R.SAppend{} Con{Codes{+a},Con{Codes{+b},Nil{}}}:
-      S.choose(Result<S.Error,Datum>,Nat.is_le(Nat.add(List.length(&2,U32,a),List.length(&2,U32,b)),1048576n),u => Done{Codes{List.append(&2,U32,a,b)}},u => exhausted(Datum))
-    case R.SReverse{} Con{Codes{a},Nil{}}: Done{Codes{List.reverse(&2,U32,a)}}
-    case R.SLength{} Con{Codes{a},Nil{}}: bounded(U32.from_nat(List.length(&2,U32,a)))
+      S.choose(Result<S.Error,Datum>,U32.is_le(U32.add(count(a,0),count(b,0)),1048576),u => Done{Codes{onto(onto(a,Nil{}),b)}},u => exhausted(Datum))
+    case R.SReverse{} Con{Codes{a},Nil{}}: Done{Codes{onto(a,Nil{})}}
+    case R.SLength{} Con{Codes{a},Nil{}}: bounded(count(a,0))
     case R.SEmpty{} Con{Codes{Nil{}},Nil{}}: boolean(True{})
     case R.SEmpty{} Con{Codes{Con{head,tail}},Nil{}}: boolean(False{})
     case _ _: Fail{S.Internal{"eval","primitive-arguments"}}

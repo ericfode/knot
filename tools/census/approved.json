@@ -12437,6 +12437,10 @@
           "file": "src/primitive-eval.bend"
         },
         {
+          "module": "./primitive-op.bend",
+          "file": "src/primitive-op.bend"
+        },
+        {
           "module": "./machine-code.bend",
           "file": "src/machine-code.bend"
         }
@@ -12488,6 +12492,42 @@
           "equality",
           "laws",
           "literals.u32"
+        ],
+        "src/literal-LAWS.bend::append_order:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/literal-LAWS.bend::length_count:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/literal-LAWS.bend::equal_length:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
         ],
         "src/literal-LAWS.bend::surrogate_code:law": [
           "calls",
@@ -13416,6 +13456,39 @@
           "equality",
           "literals.u32",
           "proofs",
+          "types.base"
+        ],
+        "src/literal-PROOF.bend::L.append_order:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/literal-PROOF.bend::L.length_count:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/literal-PROOF.bend::L.equal_length:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
           "types.base"
         ],
         "src/literal-PROOF.bend::L.surrogate_code:law_fill": [
@@ -15201,6 +15274,32 @@
           "recursion",
           "types.base"
         ],
+        "src/primitive-eval.bend::count:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/primitive-eval.bend::onto:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
         "src/primitive-eval.bend::equal:definition": [
           "calls",
           "constructors",
@@ -15212,6 +15311,7 @@
           "patterns.wildcard",
           "quantities.affine",
           "quantities.arguments",
+          "quantities.reusable",
           "recursion",
           "types.base"
         ],
@@ -15222,7 +15322,6 @@
           "fields",
           "generics",
           "lambdas",
-          "literals.nat",
           "literals.string",
           "literals.u32",
           "matches",

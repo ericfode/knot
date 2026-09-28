@@ -2,6 +2,7 @@ import Base
 import ./syntax.bend as S
 import ./literal.bend as L
 import ./primitive-eval.bend as P
+import ./primitive-op.bend as R
 import ./machine-code.bend as A
 
 law div_zero:
@@ -26,6 +27,15 @@ law shr_wide:
 
 law wide_boundary:
   {U32.is_ge(32,32) == True{} : Bool}
+
+law append_order:
+  {P.apply(R.SAppend{},[P.Codes{[97,98]},P.Codes{[99]}]) == Done{P.Codes{[97,98,99]}} : Result<S.Error,P.Datum>}
+
+law length_count:
+  {P.apply(R.SLength{},[P.Codes{[97,98,99]}]) == Done{P.Count{3}} : Result<S.Error,P.Datum>}
+
+law equal_length:
+  {P.apply(R.SEq{},[P.Codes{[97]},P.Codes{[97,98]}]) == Done{P.Bits{0}} : Result<S.Error,P.Datum>}
 
 law surrogate_code:
   for +token: S.Token

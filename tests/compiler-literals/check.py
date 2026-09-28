@@ -244,6 +244,9 @@ MUTANTS = [
     {'name': 'invalid-u32-constructor', 'file': 'literal-types.bend',
      'old': 'C.unsupported(G.ConstructorRef,"u32-constructor",token)', 'new': 'G.find_constructor(types,token,0)',
      'fixture': 'u32-constructor-pattern', 'verdict': (2, 'Invalid\tcheck\tunknown-constructor\t')},
+    {'name': 'append-reversed', 'file': 'primitive-eval.bend', 'lane': 'eval',
+     'old': 'onto(onto(a,Nil{}),b)', 'new': 'onto(a,b)',
+     'fixture': 'string-append', 'export': 'spells_ab', 'arguments': [2, 0], 'wrong_tag': 0},
 ]
 
 
@@ -399,7 +402,7 @@ def main():
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
-            'proof_laws': 24, 'semantic_mutants': len(record['mutants']),
+            'proof_laws': 27, 'semantic_mutants': len(record['mutants']),
             'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
             'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
             'mutant_eval_observations': sum(m.get('eval') is not None for m in record['mutants']),

@@ -125,9 +125,9 @@
   "totals": {
     "compiler": {
       "files": 65,
-      "declarations": 1102,
-      "unique_declarations": 935,
-      "definitions": 694,
+      "declarations": 1110,
+      "unique_declarations": 940,
+      "definitions": 696,
       "classes": 42
     },
     "frontend_files": {
@@ -66991,7 +66991,7 @@
     },
     {
       "file": "src/literal-LAWS.bend",
-      "sha256": "c80497a83fc9fa95272ac3c5603cfb92478dfe0590fd354ecc34eb0966dad82c",
+      "sha256": "ef16b9e3f9452cca037d84bb3051cf6b4b01398ef69826ba127b777d7969df8c",
       "imports": [
         {
           "module": "Base",
@@ -67015,6 +67015,12 @@
           "module": "./primitive-eval.bend",
           "alias": "P",
           "file": "src/primitive-eval.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./primitive-op.bend",
+          "alias": "R",
+          "file": "src/primitive-op.bend",
           "feature": "imports.local"
         },
         {
@@ -67050,8 +67056,8 @@
           "key": "src/literal-LAWS.div_zero",
           "kind": "law",
           "lines": [
-            7,
-            9
+            8,
+            10
           ],
           "features": [
             "calls",
@@ -67083,8 +67089,8 @@
           "key": "src/literal-LAWS.rem_zero",
           "kind": "law",
           "lines": [
-            11,
-            13
+            12,
+            14
           ],
           "features": [
             "calls",
@@ -67116,8 +67122,8 @@
           "key": "src/literal-LAWS.shl_wide",
           "kind": "law",
           "lines": [
-            15,
-            19
+            16,
+            20
           ],
           "features": [
             "calls",
@@ -67156,8 +67162,8 @@
           "key": "src/literal-LAWS.shr_wide",
           "kind": "law",
           "lines": [
-            21,
-            25
+            22,
+            26
           ],
           "features": [
             "calls",
@@ -67196,8 +67202,8 @@
           "key": "src/literal-LAWS.wide_boundary",
           "kind": "law",
           "lines": [
-            27,
-            28
+            28,
+            29
           ],
           "features": [
             "calls",
@@ -67220,13 +67226,141 @@
           }
         },
         {
+          "id": "src/literal-LAWS.bend::append_order:law",
+          "name": "append_order",
+          "key": "src/literal-LAWS.append_order",
+          "kind": "law",
+          "lines": [
+            31,
+            32
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/primitive-eval.Codes",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/primitive-op.SAppend",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-LAWS.bend::length_count:law",
+          "name": "length_count",
+          "key": "src/literal-LAWS.length_count",
+          "kind": "law",
+          "lines": [
+            34,
+            35
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/primitive-eval.Codes",
+            "src/primitive-eval.Count",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/primitive-op.SLength",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-LAWS.bend::equal_length:law",
+          "name": "equal_length",
+          "key": "src/literal-LAWS.equal_length",
+          "kind": "law",
+          "lines": [
+            37,
+            38
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/primitive-eval.Bits",
+            "src/primitive-eval.Codes",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/primitive-op.SEq",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-LAWS.bend::surrogate_code:law",
           "name": "surrogate_code",
           "key": "src/literal-LAWS.surrogate_code",
           "kind": "law",
           "lines": [
-            30,
-            32
+            40,
+            42
           ],
           "features": [
             "calls",
@@ -67270,8 +67404,8 @@
           "key": "src/literal-LAWS.surrogate_sequence",
           "kind": "law",
           "lines": [
-            34,
-            36
+            44,
+            46
           ],
           "features": [
             "calls",
@@ -67318,8 +67452,8 @@
           "key": "src/literal-LAWS.scalar_sequence",
           "kind": "law",
           "lines": [
-            38,
-            40
+            48,
+            50
           ],
           "features": [
             "calls",
@@ -67366,8 +67500,8 @@
           "key": "src/literal-LAWS.decimal_maximum",
           "kind": "law",
           "lines": [
-            42,
-            44
+            52,
+            54
           ],
           "features": [
             "calls",
@@ -67411,8 +67545,8 @@
           "key": "src/literal-LAWS.decimal_overflow",
           "kind": "law",
           "lines": [
-            46,
-            48
+            56,
+            58
           ],
           "features": [
             "calls",
@@ -67459,8 +67593,8 @@
           "key": "src/literal-LAWS.signed_bits",
           "kind": "law",
           "lines": [
-            50,
-            51
+            60,
+            61
           ],
           "features": [
             "calls",
@@ -67497,8 +67631,8 @@
           "key": "src/literal-LAWS.nul_is_a_character",
           "kind": "law",
           "lines": [
-            53,
-            55
+            63,
+            65
           ],
           "features": [
             "calls",
@@ -67545,8 +67679,8 @@
           "key": "src/literal-LAWS.legacy_literal_boundary",
           "kind": "law",
           "lines": [
-            57,
-            60
+            67,
+            70
           ],
           "features": [
             "calls",
@@ -71250,7 +71384,7 @@
     },
     {
       "file": "src/literal-PROOF.bend",
-      "sha256": "5d64a1e399c7b528ffe984e49df516f683ca51de9ff8f7105768071848a4e6a9",
+      "sha256": "382979a1f0169b464684ee7cc4bd932918e91d3f38220b5abcffde7c408e3b54",
       "imports": [
         {
           "module": "Base",
@@ -71518,13 +71652,147 @@
           }
         },
         {
+          "id": "src/literal-PROOF.bend::L.append_order:law_fill",
+          "name": "L.append_order",
+          "key": "src/literal-LAWS.append_order",
+          "kind": "law_fill",
+          "lines": [
+            12,
+            12
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/primitive-eval.Codes",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/primitive-op.SAppend",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-PROOF.bend::L.length_count:law_fill",
+          "name": "L.length_count",
+          "key": "src/literal-LAWS.length_count",
+          "kind": "law_fill",
+          "lines": [
+            13,
+            13
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/primitive-eval.Codes",
+            "src/primitive-eval.Count",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/primitive-op.SLength",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-PROOF.bend::L.equal_length:law_fill",
+          "name": "L.equal_length",
+          "key": "src/literal-LAWS.equal_length",
+          "kind": "law_fill",
+          "lines": [
+            14,
+            14
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/primitive-eval.Bits",
+            "src/primitive-eval.Codes",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/primitive-op.SEq",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.apply",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-PROOF.bend::L.surrogate_code:law_fill",
           "name": "L.surrogate_code",
           "key": "src/literal-LAWS.surrogate_code",
           "kind": "law_fill",
           "lines": [
-            12,
-            12
+            15,
+            15
           ],
           "features": [
             "calls",
@@ -71568,8 +71836,8 @@
           "key": "src/literal-LAWS.surrogate_sequence",
           "kind": "law_fill",
           "lines": [
-            13,
-            13
+            16,
+            16
           ],
           "features": [
             "calls",
@@ -71615,8 +71883,8 @@
           "key": "src/literal-LAWS.scalar_sequence",
           "kind": "law_fill",
           "lines": [
-            14,
-            14
+            17,
+            17
           ],
           "features": [
             "calls",
@@ -71662,8 +71930,8 @@
           "key": "src/literal-LAWS.decimal_maximum",
           "kind": "law_fill",
           "lines": [
-            15,
-            15
+            18,
+            18
           ],
           "features": [
             "calls",
@@ -71707,8 +71975,8 @@
           "key": "src/literal-LAWS.decimal_overflow",
           "kind": "law_fill",
           "lines": [
-            16,
-            16
+            19,
+            19
           ],
           "features": [
             "calls",
@@ -71755,8 +72023,8 @@
           "key": "src/literal-LAWS.signed_bits",
           "kind": "law_fill",
           "lines": [
-            17,
-            17
+            20,
+            20
           ],
           "features": [
             "calls",
@@ -71794,8 +72062,8 @@
           "key": "src/literal-LAWS.nul_is_a_character",
           "kind": "law_fill",
           "lines": [
-            18,
-            18
+            21,
+            21
           ],
           "features": [
             "calls",
@@ -71841,8 +72109,8 @@
           "key": "src/literal-LAWS.legacy_literal_boundary",
           "kind": "law_fill",
           "lines": [
-            19,
-            19
+            22,
+            22
           ],
           "features": [
             "calls",
@@ -89394,7 +89662,7 @@
     },
     {
       "file": "src/primitive-eval.bend",
-      "sha256": "d77fba6779baf5f28b758dc634958ecc98458985736f00eae8904a6ffa1a9e73",
+      "sha256": "9ca441339c3c15aacece90cf41f1e57882ad8187d388f991486aa51ea5568d63",
       "imports": [
         {
           "module": "Base",
@@ -89425,7 +89693,6 @@
         "imports.base",
         "imports.local",
         "lambdas",
-        "literals.nat",
         "literals.string",
         "literals.u32",
         "matches",
@@ -89890,8 +90157,8 @@
           "key": "src/primitive-eval.code_list",
           "kind": "definition",
           "lines": [
-            36,
-            39
+            37,
+            40
           ],
           "features": [
             "calls",
@@ -89937,13 +90204,106 @@
           }
         },
         {
+          "id": "src/primitive-eval.bend::count:definition",
+          "name": "count",
+          "key": "src/primitive-eval.count",
+          "kind": "definition",
+          "lines": [
+            44,
+            47
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.add",
+            "src/primitive-eval.count"
+          ],
+          "type_references": [
+            "List",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.add",
+              "src/primitive-eval.count"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/primitive-eval.bend::onto:definition",
+          "name": "onto",
+          "key": "src/primitive-eval.onto",
+          "kind": "definition",
+          "lines": [
+            50,
+            53
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "src/primitive-eval.onto"
+          ],
+          "type_references": [
+            "List",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/primitive-eval.onto"
+            ],
+            "types": [
+              "Con",
+              "Nil"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/primitive-eval.bend::equal:definition",
           "name": "equal",
           "key": "src/primitive-eval.equal",
           "kind": "definition",
           "lines": [
-            41,
-            45
+            55,
+            59
           ],
           "features": [
             "calls",
@@ -89956,6 +90316,7 @@
             "patterns.wildcard",
             "quantities.affine",
             "quantities.arguments",
+            "quantities.reusable",
             "recursion",
             "types.base"
           ],
@@ -89966,7 +90327,6 @@
             "False",
             "List",
             "Nil",
-            "True",
             "U32",
             "U32.is_eq",
             "src/primitive-eval.equal"
@@ -89986,8 +90346,7 @@
             "types": [
               "Con",
               "False",
-              "Nil",
-              "True"
+              "Nil"
             ],
             "dynamic_calls": []
           }
@@ -89998,8 +90357,8 @@
           "key": "src/primitive-eval.apply",
           "kind": "definition",
           "lines": [
-            47,
-            91
+            61,
+            105
           ],
           "features": [
             "calls",
@@ -90008,7 +90367,6 @@
             "fields",
             "generics",
             "lambdas",
-            "literals.nat",
             "literals.string",
             "literals.u32",
             "matches",
@@ -90030,18 +90388,12 @@
             "Fail",
             "False",
             "List",
-            "List.append",
-            "List.length",
-            "List.reverse",
-            "Nat.add",
-            "Nat.is_le",
             "Nil",
             "Result",
             "True",
             "U32",
             "U32.add",
             "U32.and",
-            "U32.from_nat",
             "U32.is_eq",
             "U32.is_ge",
             "U32.is_gt",
@@ -90060,9 +90412,11 @@
             "src/primitive-eval.bounded",
             "src/primitive-eval.code_list",
             "src/primitive-eval.compare",
+            "src/primitive-eval.count",
             "src/primitive-eval.div",
             "src/primitive-eval.equal",
             "src/primitive-eval.exhausted",
+            "src/primitive-eval.onto",
             "src/primitive-eval.rem",
             "src/primitive-eval.shl",
             "src/primitive-eval.shr",
@@ -90119,14 +90473,14 @@
           ],
           "captures": [
             {
-              "offset": 3466,
+              "offset": 4058,
               "names": [
                 "a",
                 "b"
               ]
             },
             {
-              "offset": 4429,
+              "offset": 5005,
               "names": [
                 "a",
                 "b"
@@ -90138,14 +90492,8 @@
               "Bool.and",
               "Bool.or",
               "Bool.pick",
-              "List.append",
-              "List.length",
-              "List.reverse",
-              "Nat.add",
-              "Nat.is_le",
               "U32.add",
               "U32.and",
-              "U32.from_nat",
               "U32.is_eq",
               "U32.is_ge",
               "U32.is_gt",
@@ -90156,14 +90504,15 @@
               "U32.not",
               "U32.show",
               "U32.sub",
-              "U32.to_nat",
               "src/primitive-eval.boolean",
               "src/primitive-eval.bounded",
               "src/primitive-eval.code_list",
               "src/primitive-eval.compare",
+              "src/primitive-eval.count",
               "src/primitive-eval.div",
               "src/primitive-eval.equal",
               "src/primitive-eval.exhausted",
+              "src/primitive-eval.onto",
               "src/primitive-eval.rem",
               "src/primitive-eval.shl",
               "src/primitive-eval.shr",
@@ -90174,7 +90523,6 @@
               "Done",
               "Fail",
               "False",
-              "Nat",
               "Nil",
               "String",
               "True",
