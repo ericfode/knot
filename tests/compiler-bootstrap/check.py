@@ -635,6 +635,21 @@ def compile_stage(sid, program: Path, folder: Path, bundle, manifest, argv, keep
                  artifact=artifact(produced, cap) if produced.is_file() else None), obs
 
 
+def a3_stopped(answer, obs, argv) -> dict | None:
+    """The e2e3.a3 row when A2 did not build A3 from the S that C1 built. Host
+    exhaustion, whether the host process timed out or the module trapped, is
+    divergent-exhausted; any other failure is a blocker for the judge. None
+    when A2 exited 0."""
+    answered = answer is not None and not answer['blocked']
+    if answered and obs['exit'] == 0:
+        return None
+    tag = exhaustion(shown(obs))
+    if tag and tag.startswith('host-'):
+        return stage('e2e3.a3', status='divergent-exhausted', corpus=1, agree=0, disagree=0, args=argv,
+                     blocker=stopped(obs, 'host'))
+    return blocked('e2e3.a3', 'knot' if answered else obs.get('source', 'harness'), obs, 1, args=argv)
+
+
 def host(module: Path, runs, label, cwd: Path = ROOT):
     """One batched host request. Returns (answer, observations), or (answer or
     None, blocker) when the module cannot run; a crashed host is never hidden."""
@@ -893,6 +908,17 @@ def sandbox_controls(bundle, manifest, argv) -> list[dict]:
         result.append({'name': label, 'expected': {'refused': True, 'reason': reason}, 'observed': seen})
     result.append({'name': 'argv-reserved-refused', 'expected': {'reserved': ['--threads']},
                    'observed': {'reserved': reserved_in([*argv, '--threads', '2'], manifest)}})
+    # Live routing of A2's result on S: a host timeout, a host stack trap, a Knot rejection, success.
+    answered = {'abi': 'knot-io', 'blocked': None}
+    record = lambda exit, stderr, **more: {'argv': argv, 'exit': exit, 'stdout': b'', 'stderr': stderr, **more}
+    routed = [a3_stopped(a, o, argv) for a, o in (
+        (None, record(None, b'', outcome='Exhausted', budget_seconds=1, source='harness')),
+        (answered, record(4, b'Exhausted\twasm\tcall-stack\n', host=True, files={})),
+        (answered, record(3, b'Unsupported\tlex\tliteral\t0:1:1:1\n', host=False, files={})),
+        (answered, record(0, b'', host=False, files={})))]
+    result.append({'name': 'a3-routing', 'expected': {'statuses': ['divergent-exhausted', 'divergent-exhausted',
+                                                                    'blocked', 'reached']},
+                   'observed': {'statuses': [r['status'] if r else 'reached' for r in routed]}})
     return result
 
 
@@ -1248,24 +1274,19 @@ def main() -> int:
             answer, result = host(a2, [{'argv': argv, 'inputs': bundle['order'], 'outputs': [OUTPUT]}], 'a3', cwd=sandbox_a2)
             verify(sandbox_a2, bundle, manifest)
             a3.unlink(missing_ok=True)
-            if answer is None or answer['blocked']:
-                stages.append(blocked('e2e3.a3', result.pop('source'), result, 1, args=argv))
-            else:
-                got = result[0]
+            answered = answer is not None and not answer['blocked']
+            got = result[0] if answered else result
+            if answered:
                 measured['e2e3.a3'] = {k: got[k] for k in ('elapsed_seconds', 'peak_rss_bytes')}
                 if OUTPUT in got['files']:
                     a3.write_bytes(got['files'][OUTPUT])
-                tag = exhaustion(shown(got))
-                if got['exit'] != 0 and tag and tag.startswith('host-'):
-                    stages.append(stage('e2e3.a3', status='divergent-exhausted', corpus=1, agree=0, disagree=0,
-                                        args=argv, blocker=stopped(got, 'host')))
-                elif got['exit'] != 0:
-                    stages.append(blocked('e2e3.a3', 'knot', got, 1, args=argv))
-                else:
-                    ok = built(got, a3)
-                    stages.append(stage('e2e3.a3', status='reached', corpus=1, agree=int(ok), disagree=int(not ok),
-                                        args=argv, result=shown(got),
-                                        artifact=artifact(a3, cap) if a3.is_file() else None))
+            failed = a3_stopped(answer, got, argv)
+            if failed:
+                stages.append(failed)
+            else:
+                ok = built(got, a3)
+                stages.append(stage('e2e3.a3', status='reached', corpus=1, agree=int(ok), disagree=int(not ok),
+                                    args=argv, result=shown(got), artifact=artifact(a3, cap) if a3.is_file() else None))
             if stages[-1]['status'] != 'reached' or stages[-1]['disagree']:
                 stages += [not_run('e2e3.fixpoint', 'e2e3.a3', 1), not_run('e2e3.conformance', 'e2e3.a3', 2 * cases)]
             else:

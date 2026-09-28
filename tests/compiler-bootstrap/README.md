@@ -280,7 +280,7 @@ variant must both pass. These mutants of the chain must each be rejected:
 
 The runner's `counts()` rechecks the recorded verdict independently.
 
-Thirteen controls exercise paths that have no Knot-built module to run today.
+Fourteen controls exercise paths that have no Knot-built module to run today.
 They use test doubles, not Knot evidence:
 
 - A one-byte perturbation must produce exactly one disagreement.
@@ -298,6 +298,9 @@ They use test doubles, not Knot evidence:
 - Damaged copies of the S sandbox must fail re-verification: a symlink, a second
   hard link, a changed package, and an extra file.
 - The argv check must find `--threads`.
+- A2's result on S must be routed correctly: a host timeout and a host stack trap
+  become `divergent-exhausted`, a Knot `Unsupported` stays `blocked`, and exit 0
+  proceeds to a reached row. The same pure function builds the live row.
 - The audit control: where `--audit-bundle` is advertised, a real audit of a
   two-module entry (`probe/side.bend` importing Base, `probe/main.bend`) must
   return exactly those modules and satisfy the comparator. Otherwise it records
@@ -368,9 +371,10 @@ the sandbox. The adapter's hash joins the receipt's `inputs`.
   gate runner's 900-second per-gate timeout. Once self-compiles become slow, raise
   `--timeout`, so that a stage's `Exhausted` is recorded rather than the runner
   killing the whole gate.
-- A timeout is recorded as `exit: null, outcome: "Exhausted"`, tagged `host-time`.
-  The judge and the runner's recheck both accept that as a blocker, except at
-  `e2e3.a3` after a reached `e2e3.a2`.
+- A timeout is recorded as `exit: null, outcome: "Exhausted"`, tagged `host-time`,
+  with its scaled `budget_seconds`. The judge and the runner's recheck both accept
+  that as a blocker, except at `e2e3.a3` after a reached `e2e3.a2`, where the
+  harness records it as `divergent-exhausted`.
 - The receipts change whenever any `.bend` file changes, because the corpus is
   the repository. `npm run gates` reports this as drift. It does not fail on
   drift.
