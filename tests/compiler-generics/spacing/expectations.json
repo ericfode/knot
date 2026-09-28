@@ -1,0 +1,1313 @@
+{
+  "suite": "compiler-generics/spacing",
+  "increment": "6: generics and quantity arguments (S2), review round 3",
+  "basis": "Frozen before the repair (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "quantity-gap-argument",
+      "file": "fixtures/quantity-gap-argument.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A type argument `& 2` with a gap inside the quantity literal.",
+      "twin": "gaps-around-arguments",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a name\n",
+        "- observed : '2'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed lexes a quantity literal `&2` as one token and rejects `& 2` where it expects a name after `&`. Knot's lexer splits symbols, so a gap inside a glued token is Unsupported parse spacing; before the repair Knot read `& 2` as `&2` and checked, evaluated and compiled the book."
+      }
+    },
+    {
+      "name": "quantity-gap-kind",
+      "file": "fixtures/quantity-gap-kind.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A kind `Kind(& 2)` with a gap inside the quantity literal.",
+      "twin": "gaps-around-quantities",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a name\n",
+        "- observed : '2'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed lexes a quantity literal `&2` as one token and rejects `& 2` where it expects a name after `&`. Knot's lexer splits symbols, so a gap inside a glued token is Unsupported parse spacing; before the repair Knot read `& 2` as `&2` and checked, evaluated and compiled the book."
+      }
+    },
+    {
+      "name": "quantity-gap-term",
+      "file": "fixtures/quantity-gap-term.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A quantity argument `pick(& 2, On{})` with a gap inside the literal.",
+      "twin": "gaps-around-quantities",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a name\n",
+        "- observed : '2'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed lexes a quantity literal `&2` as one token and rejects `& 2` where it expects a name after `&`. Knot's lexer splits symbols, so a gap inside a glued token is Unsupported parse spacing; before the repair Knot read `& 2` as `&2` and checked, evaluated and compiled the book."
+      }
+    },
+    {
+      "name": "meet-gap",
+      "file": "fixtures/meet-gap.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A family kind `Kind(a < & > b)`: gaps on both sides of `&`.",
+      "twin": "glued-meets",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a name\n",
+        "- observed : '>'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed lexes the meet `<&>` as one operator and rejects a gap inside it. A gap inside a glued token is Unsupported parse spacing; before the repair Knot read the three symbols as the meet and checked the book."
+      }
+    },
+    {
+      "name": "meet-gap-close",
+      "file": "fixtures/meet-gap-close.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A family kind `Kind(a <& > b)`: a gap before the meet's `>`.",
+      "twin": "glued-meets",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a name\n",
+        "- observed : '>'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed lexes the meet `<&>` as one operator and rejects a gap inside it. A gap inside a glued token is Unsupported parse spacing; before the repair Knot read the three symbols as the meet and checked the book."
+      }
+    },
+    {
+      "name": "meet-gap-open",
+      "file": "fixtures/meet-gap-open.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A family kind `Kind(a < &> b)`: a gap after the meet's `<`.",
+      "twin": "glued-meets",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a name\n",
+        "- observed : '>'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed lexes the meet `<&>` as one operator and rejects a gap inside it. A gap inside a glued token is Unsupported parse spacing; before the repair Knot read the three symbols as the meet and checked the book."
+      }
+    },
+    {
+      "name": "close-gap-parameter",
+      "file": "fixtures/close-gap-parameter.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A parameter type `Seq<&2,Flag >`: a gap before the closing `>` after the second argument.",
+      "twin": "gaps-around-arguments",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a term\n",
+        "- observed : ')'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed reads ` >` after a type in a multi-argument list or a family header as a comparison and rejects the book. Knot reports any gap before a `>` that closes a type-argument or header list as Unsupported parse spacing; before the repair it closed the list and checked the book."
+      }
+    },
+    {
+      "name": "close-gap-result",
+      "file": "fixtures/close-gap-result.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A result type `Seq<&2,Flag >`.",
+      "twin": "single-close-result",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a term\n",
+        "- observed : ':'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed reads ` >` after a type in a multi-argument list or a family header as a comparison and rejects the book. Knot reports any gap before a `>` that closes a type-argument or header list as Unsupported parse spacing; before the repair it closed the list and checked the book."
+      }
+    },
+    {
+      "name": "close-gap-nested",
+      "file": "fixtures/close-gap-nested.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A parameter type `Seq<&2,Seq<&2,Flag> >`: the gap closes the outer list.",
+      "twin": "single-close-nested",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a term\n",
+        "- observed : ')'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed reads ` >` after a type in a multi-argument list or a family header as a comparison and rejects the book. Knot reports any gap before a `>` that closes a type-argument or header list as Unsupported parse spacing; before the repair it closed the list and checked the book."
+      }
+    },
+    {
+      "name": "close-gap-header",
+      "file": "fixtures/close-gap-header.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A family header `type Box<-A: Type >`: a gap before the header's closing `>`.",
+      "twin": "gaps-around-binders",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a term (the keyword 'is' cannot head one)\n",
+        "- observed : 'is'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed reads ` >` after a type in a multi-argument list or a family header as a comparison and rejects the book. Knot reports any gap before a `>` that closes a type-argument or header list as Unsupported parse spacing; before the repair it closed the list and checked the book."
+      }
+    },
+    {
+      "name": "single-close-parameter",
+      "file": "fixtures/single-close-parameter.bend",
+      "class": "boundary",
+      "feature": "token-spacing",
+      "intent": "A single-argument parameter type `Box<Flag >`.",
+      "twin": "close-gap-parameter",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a gap before the `>` that closes a single-argument list, while it rejects the same gap after a later argument or a header type. Knot does not reproduce that position-dependent rule: any gap before a closing `>` is Unsupported parse spacing (D4), never Invalid; before the repair Knot checked this book."
+      }
+    },
+    {
+      "name": "single-close-result",
+      "file": "fixtures/single-close-result.bend",
+      "class": "boundary",
+      "feature": "token-spacing",
+      "intent": "A single-argument result type `Box<Flag >`.",
+      "twin": "close-gap-result",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a gap before the `>` that closes a single-argument list, while it rejects the same gap after a later argument or a header type. Knot does not reproduce that position-dependent rule: any gap before a closing `>` is Unsupported parse spacing (D4), never Invalid; before the repair Knot checked this book."
+      }
+    },
+    {
+      "name": "single-close-binding",
+      "file": "fixtures/single-close-binding.bend",
+      "class": "boundary",
+      "feature": "token-spacing",
+      "intent": "A single-argument binding annotation `b: Box<Flag >`.",
+      "twin": "close-gap-parameter",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a gap before the `>` that closes a single-argument list, while it rejects the same gap after a later argument or a header type. Knot does not reproduce that position-dependent rule: any gap before a closing `>` is Unsupported parse spacing (D4), never Invalid; before the repair Knot checked this book."
+      }
+    },
+    {
+      "name": "single-close-nested",
+      "file": "fixtures/single-close-nested.bend",
+      "class": "boundary",
+      "feature": "token-spacing",
+      "intent": "An outer single-argument list closed with a gap: `Box<Box<Flag> >`.",
+      "twin": "close-gap-nested",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a gap before the `>` that closes a single-argument list, while it rejects the same gap after a later argument or a header type. Knot does not reproduce that position-dependent rule: any gap before a closing `>` is Unsupported parse spacing (D4), never Invalid; before the repair Knot checked this book."
+      }
+    },
+    {
+      "name": "gaps-around-arguments",
+      "file": "fixtures/gaps-around-arguments.bend",
+      "class": "positive",
+      "feature": "token-spacing",
+      "intent": "Gaps before and after a type application's `<` and around its `,`: `Seq <&2,Flag>`, `Seq< &2, Flag>`.",
+      "twin": "close-gap-parameter",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "both",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Gaps outside the glued tokens are layout; the seed's results fix the evaluator and Wasm results."
+      }
+    },
+    {
+      "name": "gaps-around-quantities",
+      "file": "fixtures/gaps-around-quantities.bend",
+      "class": "positive",
+      "feature": "token-spacing",
+      "intent": "Gaps around, not inside, glued quantity literals: `Kind( &2 )`, `pick( &2 , x)`.",
+      "twin": "quantity-gap-term",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "swap",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Gaps outside the glued tokens are layout; the seed's results fix the evaluator and Wasm results."
+      }
+    },
+    {
+      "name": "gaps-around-binders",
+      "file": "fixtures/gaps-around-binders.bend",
+      "class": "positive",
+      "feature": "token-spacing",
+      "intent": "A bare header binder before a spaced `>` (`type Seq<a >`) and gaps after `<` and `-` in binders.",
+      "twin": "close-gap-header",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "The seed closes a list after a bare binder with or without a gap, and a binder mark may be spaced; its results fix Knot's."
+      }
+    },
+    {
+      "name": "glued-meets",
+      "file": "fixtures/glued-meets.bend",
+      "class": "positive",
+      "feature": "token-spacing",
+      "intent": "Glued meets with gaps only outside them: `Kind(a <&>b)` and `Kind(a<&>b)`.",
+      "twin": "meet-gap",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "keep",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "A glued `<&>` is the meet whatever surrounds it; the seed's results fix the evaluator and Wasm results."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "quantity-gap-argument",
+        "source_sha256": "1760ecda6118fe48e4fc61f60b02279ee4427277b9e50cbfaa1a6491d30ec1c6",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/quantity-gap-argument.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '2'\nLocation:\n 8 | \n 9>| def head(xs: Seq<& 2,Flag>) -> Flag:\n   |                    ^\n10 |   match xs:\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/quantity-gap-argument.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '2'\nLocation:\n 8 | \n 9>| def head(xs: Seq<& 2,Flag>) -> Flag:\n   |                    ^\n10 |   match xs:\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "quantity-gap-kind",
+        "source_sha256": "7bd9fcda287954d031ca446c38c912a74e56cfbae6f377a814d855b91c04ddb6",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/quantity-gap-kind.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '2'\nLocation:\n4 | \n5>| type Both is Kind(& 2):\n  |                     ^\n6 |   Both{fst: Flag, snd: Flag}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/quantity-gap-kind.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '2'\nLocation:\n4 | \n5>| type Both is Kind(& 2):\n  |                     ^\n6 |   Both{fst: Flag, snd: Flag}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "quantity-gap-term",
+        "source_sha256": "72e151123239e8a140dcc586df1a6ef060b198b2b610a7233cfe8bbf716c4f0a",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/quantity-gap-term.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '2'\nLocation:\n 8 | def main() -> Flag:\n 9>|   pick(& 2, On{})\n   |          ^\n10 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/quantity-gap-term.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '2'\nLocation:\n 8 | def main() -> Flag:\n 9>|   pick(& 2, On{})\n   |          ^\n10 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "meet-gap",
+        "source_sha256": "09152f869ebd2bc4817309ca0dc7486b811225338dae5c04f9d8ef20706d2226",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/meet-gap.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '>'\nLocation:\n4 | \n5>| type Pair<a, b, -A: Kind(a), -B: Kind(b)> is Kind(a < & > b):\n  |                                                         ^\n6 |   Pair{fst: A, snd: B}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/meet-gap.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '>'\nLocation:\n4 | \n5>| type Pair<a, b, -A: Kind(a), -B: Kind(b)> is Kind(a < & > b):\n  |                                                         ^\n6 |   Pair{fst: A, snd: B}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "meet-gap-close",
+        "source_sha256": "60e12d7639833926609acffdd3a49ff6eaebd81c78f00f93667dc6ae2a37f91b",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/meet-gap-close.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '>'\nLocation:\n4 | \n5>| type Pair<a, b, -A: Kind(a), -B: Kind(b)> is Kind(a <& > b):\n  |                                                        ^\n6 |   Pair{fst: A, snd: B}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/meet-gap-close.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '>'\nLocation:\n4 | \n5>| type Pair<a, b, -A: Kind(a), -B: Kind(b)> is Kind(a <& > b):\n  |                                                        ^\n6 |   Pair{fst: A, snd: B}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "meet-gap-open",
+        "source_sha256": "701e146ba9c2a696ee2c226b04a039a642a2fafd24c0204404c3b7290026e2b3",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/meet-gap-open.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '>'\nLocation:\n4 | \n5>| type Pair<a, b, -A: Kind(a), -B: Kind(b)> is Kind(a < &> b):\n  |                                                        ^\n6 |   Pair{fst: A, snd: B}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/meet-gap-open.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name\n- observed : '>'\nLocation:\n4 | \n5>| type Pair<a, b, -A: Kind(a), -B: Kind(b)> is Kind(a < &> b):\n  |                                                        ^\n6 |   Pair{fst: A, snd: B}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "close-gap-parameter",
+        "source_sha256": "c402dd4f13be7176ae4b8f14eaf4ca943e5b2d8d71456e5490cbcd6264b2b0a4",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/close-gap-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n 8 | \n 9>| def head(xs: Seq<&2,Flag >) -> Flag:\n   |                           ^\n10 |   match xs:\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/close-gap-parameter.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n 8 | \n 9>| def head(xs: Seq<&2,Flag >) -> Flag:\n   |                           ^\n10 |   match xs:\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "close-gap-result",
+        "source_sha256": "d045efd26654464c3b706f1395b3dfb2e1977d39ac3e6d6a850d9f09a3871ecf",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/close-gap-result.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n 8 | \n 9>| def one(x: Flag) -> Seq<&2,Flag >:\n   |                                  ^\n10 |   Link{x,End{}}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/close-gap-result.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n 8 | \n 9>| def one(x: Flag) -> Seq<&2,Flag >:\n   |                                  ^\n10 |   Link{x,End{}}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "close-gap-nested",
+        "source_sha256": "a1b38cb86c7bfad1405e2bf2d066222aa284e7b844a800eb267efa3097091802",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/close-gap-nested.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n 8 | \n 9>| def outer(xs: Seq<&2,Seq<&2,Flag> >) -> Flag:\n   |                                    ^\n10 |   On{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/close-gap-nested.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n 8 | \n 9>| def outer(xs: Seq<&2,Seq<&2,Flag> >) -> Flag:\n   |                                    ^\n10 |   On{}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "close-gap-header",
+        "source_sha256": "aa64fbd62a250e770e3a5b88a760e464fa867324932aa71d4aa4ae0f1fb639fe",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/close-gap-header.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term (the keyword 'is' cannot head one)\n- observed : 'is'\nLocation:\n4 | \n5>| type Box<-A: Type > is Type:\n  |                     ^^\n6 |   Box{value: A}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/close-gap-header.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term (the keyword 'is' cannot head one)\n- observed : 'is'\nLocation:\n4 | \n5>| type Box<-A: Type > is Type:\n  |                     ^^\n6 |   Box{value: A}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "single-close-parameter",
+        "source_sha256": "8170177b8144a085ac95a8b3b70f3db47a7a34b7596142a02394f2eca7fe5996",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/single-close-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/single-close-parameter.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/spacing/fixtures/single-close-parameter.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "single-close-result",
+        "source_sha256": "e7adde1cc9be5afad30f2836430692f26073c138cb83ead302131633b1127813",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/single-close-result.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/single-close-result.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/spacing/fixtures/single-close-result.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "single-close-binding",
+        "source_sha256": "da6049c94d567c7e99c1516944a92d32996ed77a865a929b0ba8dc6b954ff828",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/single-close-binding.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/single-close-binding.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/spacing/fixtures/single-close-binding.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "single-close-nested",
+        "source_sha256": "2af9ee439ac304c10568ad57dbc8a9dddf259dfb85d9548e1c75369041d86b16",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/single-close-nested.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/single-close-nested.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/spacing/fixtures/single-close-nested.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "gaps-around-arguments",
+        "source_sha256": "9c77b74d365fb1caa9ca2e8b749ff683618f2bb2d6bc3a47dd1622b23229f994",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/gaps-around-arguments.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/gaps-around-arguments.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/spacing/fixtures/gaps-around-arguments.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "both",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/spacing-wrappers/gaps-around-arguments--both--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/spacing/fixtures/gaps-around-arguments.bend as F\n\ndef main() -> F.Flag:\n  F.both(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/spacing-wrappers/gaps-around-arguments--both--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/spacing/fixtures/gaps-around-arguments.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "both",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/spacing-wrappers/gaps-around-arguments--both--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/spacing/fixtures/gaps-around-arguments.bend as F\n\ndef main() -> F.Flag:\n  F.both(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/spacing-wrappers/gaps-around-arguments--both--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/spacing/fixtures/gaps-around-arguments.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "gaps-around-quantities",
+        "source_sha256": "7a96b13f181d8e3f2e35a7f29e30b14c4f3f579c7c783bd87f5b55c1f663b259",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/gaps-around-quantities.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/gaps-around-quantities.bend"
+          ],
+          "exit": 0,
+          "stdout": "Off{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/spacing/fixtures/gaps-around-quantities.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "swap",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/spacing-wrappers/gaps-around-quantities--swap--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/spacing/fixtures/gaps-around-quantities.bend as F\n\ndef main() -> F.Flag:\n  F.swap(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/spacing-wrappers/gaps-around-quantities--swap--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/spacing/fixtures/gaps-around-quantities.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "swap",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/spacing-wrappers/gaps-around-quantities--swap--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/spacing/fixtures/gaps-around-quantities.bend as F\n\ndef main() -> F.Flag:\n  F.swap(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/spacing-wrappers/gaps-around-quantities--swap--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/spacing/fixtures/gaps-around-quantities.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "gaps-around-binders",
+        "source_sha256": "7043056cc429f244e997636fb189c9f8a3d5f1ff82b274a95a5322ae94238d03",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/gaps-around-binders.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/gaps-around-binders.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/spacing/fixtures/gaps-around-binders.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "glued-meets",
+        "source_sha256": "ce2089af6b162f78e50c132df68adcdf74e7af55e4ed3c6fb70aae6b38c8d35e",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/glued-meets.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/spacing/fixtures/glued-meets.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/spacing/fixtures/glued-meets.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "keep",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/spacing-wrappers/glued-meets--keep--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/spacing/fixtures/glued-meets.bend as F\n\ndef main() -> F.Flag:\n  F.keep(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/spacing-wrappers/glued-meets--keep--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/spacing/fixtures/glued-meets.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "keep",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/spacing-wrappers/glued-meets--keep--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/spacing/fixtures/glued-meets.bend as F\n\ndef main() -> F.Flag:\n  F.keep(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/spacing-wrappers/glued-meets--keep--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/spacing/fixtures/glued-meets.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
