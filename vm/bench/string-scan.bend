@@ -16,4 +16,4 @@ def rounds(k: Nat, +fixed: String, hits: U32) -> U32:
     case 1n+p: rounds(p,fixed,U32.add(hits,Bool.pick(U32,String.eq(build(10000n,0,""),fixed),1,0)))
 
 def main() -> Bool:
-  U32.is_eq(rounds(300n,build(10000n,0,""),0),300)
+  U32.is_eq(rounds(900n,build(10000n,0,""),0),900)

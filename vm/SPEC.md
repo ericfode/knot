@@ -208,8 +208,8 @@ stack. The validator checks every function, reachable or not:
    run as a Base body), arrow kinds, captures and exact `slots`.
 5. Canonicality as defined in §2.
 
-A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 46
-refusals (20 byte-level, 26 plan-level); vm-core MUST refuse the same controls.
+A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 48
+refusals (20 byte-level, 28 plan-level); vm-core MUST refuse the same controls.
 Other version-1 limits: at most 1,048,576 records per table, live arity at most
 4,096, `slots` at most 65,536. These are resource limits, not source rules.
 
@@ -324,7 +324,7 @@ to its post-state. No row runs user code or a second host effect.
 | Eval Invoke | Push InvokeFunction; Eval the function. |
 | Return, top InvokeFunction | Pop. Live: push InvokeArgument holding the function; Eval the argument. Erased: `Enter(function, [])`. |
 | Return, top InvokeArgument | Pop; `Enter(function, [argument])`. |
-| Return, top Top | §8. |
+| Return, top Top | Drop `act` and set it to 0; then §8. |
 | Enter | §7. |
 
 **Completing a gathered node.**
@@ -381,7 +381,8 @@ and every continuation application, the terminal one included. Nothing else pays
 operand evaluation, constructors, lets, cases, RC, prims, validation and rendering
 cost zero. Operands are evaluated before their call is debited. Fuel is a u32
 independent of eval-cli's transition budget, so no claim compares equal numbers
-across the two. Goldens run with 1,000,000; benchmarks with 1,000,000,000.
+across the two. Goldens run with 1,000,000; benchmarks with the u32 maximum,
+4,294,967,295 (`deep-recursion` alone makes about 2 × 10^9 entries).
 `calls` is the total of successful debits, so the initial fuel is `fuel + calls`.
 
 **Quantum.** When a debit makes `quantum` reach 65,536, the Enter step completes
@@ -565,8 +566,8 @@ lane and requires:
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations;
 - all 13 node forms, both Case modes, a Program and a boxed scalar constant
   covered;
-- all 46 refusals of §4 with their frozen reasons;
-- 19 codec mutants and 3 source mutants killed through a changed image, a changed
+- all 48 refusals of §4 with their frozen reasons;
+- 21 codec mutants and 3 source mutants killed through a changed image, a changed
   refusal or a changed observation, never a crash;
 - the bench sources and baselines unchanged.
 

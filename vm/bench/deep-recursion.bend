@@ -12,4 +12,4 @@ def rounds(k: Nat, total: U32) -> U32:
     case 1n+p: rounds(p,U32.add(total,depth(250000n)))
 
 def main() -> Bool:
-  U32.is_eq(rounds(400n,0),100000000)
+  U32.is_eq(rounds(4000n,0),1000000000)

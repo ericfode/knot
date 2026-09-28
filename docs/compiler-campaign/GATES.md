@@ -41,6 +41,17 @@ are independent of that store's location. It writes only its own
 `tests/perch-context/receipts/context.json` in scratch. It makes no provider
 requests and retains the pinned rubric and composition-byte cap.
 
+The vm-spec increment adds gate `vm-spec` (`python3 vm/check-spec.py`), which
+freezes the `knot-image-1`/`knot-vm-1` contract of `vm/SPEC.md` before any VM
+exists. It builds the pinned literals and closures heads' `eval-cli` and
+`check-cli` from `vm/oracles/` with the seed's native lane, re-executes the seed
+and eval-cli on 55 golden sources, and requires the frozen observations byte for
+byte. It checks each committed image against its hand-written plan, the
+reference codec and an independent reading of Knot's checked core display. It
+also checks the frozen VM expectation table, 48 refused malformed-image controls,
+21 codec mutants and 3 source mutants, and the bench freeze. It writes only
+`vm/receipts/spec.json`.
+
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
 

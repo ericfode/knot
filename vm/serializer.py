@@ -393,6 +393,9 @@ def validate(plan: dict, registry: dict) -> list[str]:
         main = [f for f in functions if f['name'] == 'main']
         if not main or main[0]['parameters']:
             fail('program', 'main must exist with no live parameters')
+        missing = [r for r in ('Unit', 'String', 'IO.OP') if r not in rep]
+        if missing:
+            fail('program', f'missing representation {missing}')
 
     def kind_of_rep(t):
         return next((r for r, i in rep.items() if i == t), None)
@@ -452,13 +455,12 @@ def validate(plan: dict, registry: dict) -> list[str]:
                     fail(where, f'unknown {op} id {node[2]}')
                     return deepest
                 arity, result, inputs = len(table[node[2]]['inputs']), None, [None] * len(node[3])
-                if op == 'prim':
-                    expected = table[node[2]]['output']
-                    if rep.get(expected, t) != t:
-                        fail(where, f'prim result is not the pinned {expected}')
-                    for k, name in zip(node[3], table[node[2]]['inputs']):
-                        if rep.get(name, k[1]) != k[1]:
-                            fail(where, f'prim operand is not the pinned {name}')
+                for k, name in zip(node[3], table[node[2]]['inputs']):
+                    if rep.get(name, k[1]) != k[1]:
+                        fail(where, f'{op} operand is not the pinned {name}')
+                expected = table[node[2]].get('output')
+                if op == 'prim' and rep.get(expected, t) != t:
+                    fail(where, f'prim result is not the pinned {expected}')
             if len(node[3]) != arity:
                 fail(where, f'{op} arity')
             elif not same(result, t) or not all(same(p, k[1]) for p, k in zip(inputs, node[3])):

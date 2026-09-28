@@ -434,6 +434,18 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
 
 # ------------------------------------------------------------------ images
 
+def check_declarations(plan: dict, source: str):
+    """The source's own datatypes: names, constructor order and live field counts."""
+    pinned = set(plan.get('representation', {}).values())
+    declared = re.findall(r'^type (\w+) is Data:\n((?:  \w+\{[^}]*\}\n)+)', source, re.M)
+    fields = erased_fields(source)
+    for t in (t for i, t in enumerate(plan['types']) if t['kind'] == 'data' and i not in pinned):
+        ctors = next((re.findall(r'^  (\w+)\{', block, re.M) for n, block in declared if n == t['name']), None)
+        require(ctors == [c['name'] for c in t['constructors']], f"type {t['name']} constructors")
+        for c in t['constructors']:
+            require(sum(fields[c['name']]) == len(c['fields']), f"constructor {c['name']} live fields")
+
+
 def result_view(plan: dict, stdout: str):
     """(type, tag, constructor name) of a Book result line printed by eval-cli."""
     m = re.fullmatch(r'Evaluated\t(\d+)\t(\d+)\t(.*)\n', stdout)
@@ -534,7 +546,7 @@ def byte_controls(images: dict, digest: bytes) -> list:
         ('oversize-and-misaligned', second + oversize + b'\0', 'exhausted image-size'),
         ('unused-constant', unused_constant(hit), 'noncanonical'),
     ]
-    return [(label, data, 'HostFailure image: ' + reason) for label, data, reason in out]
+    return [(label, data, 'HostFailure image: ' + reason, '') for label, data, reason in out]
 
 
 def unused_constant(image: bytes) -> bytes:
@@ -589,6 +601,15 @@ def plan_controls(plans: dict) -> list:
     def body(i):
         return ['functions', i, 'body']
 
+    def edits(name, *changes):
+        plan = json.loads(json.dumps(plans[name]))
+        for path, value in changes:
+            target = plan
+            for step in path[:-1]:
+                target = target[step]
+            target[path[-1]] = value
+        return plan
+
     char_rows = plans['case-char']['functions'][0]['body'][5]
     return [
         ('ref-beyond-depth', edit('reference', [*body(0), 2], 1), 'slot 1 beyond depth 1'),
@@ -618,6 +639,10 @@ def plan_controls(plans: dict) -> list:
         ('literal-kind', edit('nat-add', [*body(2), 3, 1, 2], 'U32'), 'U32 literal at a non-U32 type'),
         ('program-main-arity', edit('foreign-print', ['functions', 1, 'parameters'], [3]),
          'main must exist with no live parameters'),
+        ('program-representation', edit('foreign-print', ['representation'], {'Unit': 0, 'U32': 1, 'Char': 2, 'String': 3}),
+         "missing representation ['IO.OP']"),
+        ('foreign-operand-type', edits('foreign-print', (['functions', 0, 'parameters'], [0]),
+                                       ([*body(0), 3, 0, 1], 0)), 'foreign operand is not the pinned String'),
         ('representation-shape', edit('u32-zero', ['types', 0, 'constructors'], [{'name': 'False', 'fields': []}]),
          'Bool shape'),
     ]
@@ -665,6 +690,10 @@ CODEC_MUTANTS = [
                                        "            if False:\n                pass\n            elif")]),
     ('validator-any-literal-kind', [("            if kind_of_rep(t) != node[2]:", "            if False:")]),
     ('validator-ignores-representation', [("            fail('representation', f'{r} shape')", "            pass")]),
+    ('validator-program-without-io-op', [("        missing = [r for r in ('Unit', 'String', 'IO.OP') if r not in rep]",
+                                          "        missing = []")]),
+    ('validator-ignores-foreign-operands', [("                for k, name in zip(node[3], table[node[2]]['inputs']):\n",
+                                             "                for k, name in zip(node[3], table[node[2]]['inputs']) if op == 'prim' else []:\n")]),
 ]
 
 
@@ -685,12 +714,12 @@ def codec_mutants(plans, images, controls, reg, digest) -> list:
                     break
             except Exception:
                 continue
-        for label, data, reason in [] if killed_by else controls:
+        for label, data, reason, message in [] if killed_by else controls:
             try:
                 got = rejected(data, reg, digest, mutant)
             except Exception:
                 continue
-            if got is None or not got.startswith(reason):
+            if got is None or not got.startswith(reason) or message not in got:
                 killed_by = f'control {label}: {got}'
                 break
         results.append({'mutant': name, 'killed': killed_by is not None, 'by': killed_by})
@@ -823,6 +852,7 @@ def main() -> int:
         require(codec.decode(data, digest) == plan, f'{name}: image does not decode to its plan')
         problems = codec.validate(plan, reg)
         require(not problems, (name, problems))
+        check_declarations(plan, (ROOT / case['source']).read_text())
         shown = displays[name]
         if shown['exit'] == 0:
             derived = from_display(shown['stdout'], plan, (ROOT / case['source']).read_text(), reg)
@@ -853,14 +883,11 @@ def main() -> int:
     require(big, 'a boxed scalar constant')
 
     controls = byte_controls(images, digest) + [
-        (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ') for k, p, _ in plan_controls(plans)]
-    messages = {f'plan:{k}': m for k, _, m in plan_controls(plans)}
+        (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in plan_controls(plans)]
     boundaries = []
-    for label, data, reason in controls:
+    for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
-        require(got is not None and got.startswith(reason), f'control {label}: {got}')
-        if label in messages:
-            require(messages[label] in got, f'control {label}: {got}')
+        require(got is not None and got.startswith(reason) and message in got, f'control {label}: {got}')
         boundaries.append({'control': label, 'refused': got})
 
     mutants = codec_mutants(plans, images, controls, reg, digest) + source_mutants(cases, built)

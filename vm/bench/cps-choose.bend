@@ -66,5 +66,11 @@ def verdict(result: Result<U32,Tally>) -> Bool:
     case Done{Tally{mode,words,lines}}: Bool.and(U32.is_eq(words,200000),U32.is_eq(lines,50000))
     case Fail{code}: False{}
 
+# Every pass rescans the same 1.1M characters.
+def passes(k: Nat, +text: String, hits: U32) -> U32:
+  match k:
+    case 0n: hits
+    case 1n+p: passes(p,text,U32.add(hits,Bool.pick(U32,verdict(run(text,Done{Tally{Blank{},0,0}})),1,0)))
+
 def main() -> Bool:
-  verdict(run(text(50000n,""),Done{Tally{Blank{},0,0}}))
+  U32.is_eq(passes(8n,text(50000n,""),0),8)

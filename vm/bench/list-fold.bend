@@ -15,6 +15,6 @@ def rounds(k: Nat, total: U32) -> U32:
     case 0n: total
     case 1n+p: rounds(p,U32.add(total,fold(build(1000000n,1,Nil{}),0)))
 
-# Each round sums 1..1000000 modulo 2^32 (1784293664); 40 rounds give 2652269824.
+# Each round sums 1..1000000 modulo 2^32 (1784293664); 240 rounds give 3028717056.
 def main() -> Bool:
-  U32.is_eq(rounds(40n,0),2652269824)
+  U32.is_eq(rounds(240n,0),3028717056)

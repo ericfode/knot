@@ -32,4 +32,4 @@ def rounds(k: Nat, total: U32) -> U32:
     case 1n+p: rounds(p,U32.add(total,count(mul(peano(1000n),peano(1000n)),0)))
 
 def main() -> Bool:
-  U32.is_eq(rounds(40n,0),40000000)
+  U32.is_eq(rounds(200n,0),200000000)

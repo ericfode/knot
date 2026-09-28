@@ -68,6 +68,7 @@ GATES = (
          ('tests/compiler-bootstrap/receipts/progress.json', 'tests/compiler-bootstrap/receipts/reference.json')),
     Gate('classification', ('python3', 'tests/compiler-classification/check.py'),
          ('tests/compiler-classification/receipts/precision.json',)),
+    Gate('vm-spec', ('python3', 'vm/check-spec.py'), ('vm/receipts/spec.json',)),
 )
 
 
