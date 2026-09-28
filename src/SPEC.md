@@ -50,15 +50,19 @@ digits, underscores or dots. Keywords cannot be identifiers.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
 - A body may end in a match on function parameters or bound fields.
-  Scrutinees and row patterns may be separated by spaces or commas. Rows contain
+  Scrutinees and row patterns may be separated by spaces or commas, and a
+  match or case header continues across lines up to its colon. Rows contain
   constructor, wildcard or variable patterns, with nested constructor fields in
   the structural profile. The first matching row wins, including duplicate rows;
   every constructor combination must be covered. Empty datatypes admit zero
   rows. Bodies shadowed at the same leaf are discarded, but source patterns
   still constrain their columns and undergo name/arity validation. Variable
   defaults remain checked even past the last constructor, with a live binding
-  at the emptied type. A live emptied type permits a later empty match; it
-  never bypasses the checking of a selected body. `_` is anonymous in row and
+  at the emptied type. A missing arm is accepted only as dead code: some live
+  binder already in context, before the scrutinee in match order, has an empty
+  constructor set (an emptied residual or a zero-constructor datatype). This
+  never bypasses the checking of a selected body. Pattern binders and live let
+  binders are single words; dotted names there are invalid. `_` is anonymous in row and
   field positions; referring to it reports `Invalid check free-name`. Names
   such as `_x` remain ordinary binders.
   All-variable columns on the latest local binder are aliases without

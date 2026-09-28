@@ -7,20 +7,32 @@ reproducing all 174 seed entry calls with `regen.py`.
 The checker accepts ordered multi-scrutinee matches, wildcard and variable rows,
 nested constructor patterns, overlapping rows, and empty datatypes. Constructor
 patterns resolve at their source declaration event. Bare pattern names are
-binders only when no constructor with that name has been declared yet.
+binders only when no constructor with that name has been declared yet. A name
+is words joined by dots, each word a letter or `_` followed by letters, digits
+or `_`; the lexer rejects any other word that opens like a name (`Invalid lex
+name`). A pattern binder, like a live let binder, is one word: a dotted name is
+a reference, so `case a.b:` is `Invalid parse pattern-binder`. Dotted
+parameters, fields, definitions and erased let names remain names, as in the
+seed.
 
 A matrix is a list of columns and an ordered list of rows. A variable-only
 column aliases its lexical identity without inspecting it or closing earlier
 parameters. This also applies to the latest let binder. `_` is anonymous in
 both row and field positions; `_x` is an ordinary name. Commas and spaces are
-accepted between scrutinees and between patterns.
+accepted between scrutinees and between patterns. A match or case header runs
+to its colon; line breaks and comments inside it separate nothing.
 
 A constructor column splits on its first constructor. The positive matrix
 specializes matching and variable rows, retaining order. The negative matrix
 removes that constructor's rows and narrows its available constructor set;
 the scrutinee remains a live unrefined binding. Variable rows are checked even
-when that set is empty. A live emptied type permits a later empty match, as in
-the seed's `ctx_dead`; erased empty bindings do not establish this fact. Every
+when that set is empty. A missing arm is dead code, as in the seed's
+`ctx_dead`, when a live binder in context has an empty constructor set: an
+emptied residual or a binder of a zero-constructor datatype. The context is
+every binder outside the pending suffix of the match frontier that starts at
+the scrutinee: parameters before it, and fields, which join the frontier ahead
+of the remaining parameters. An empty binder still pending after the
+scrutinee, or an erased one, does not establish this fact. Every
 selected body still undergoes scope, type and quantity checking. When no columns
 remain, the first row supplies the body. Only bodies shadowed at that leaf are
 discarded. Pattern names and arities are validated before body selection.
