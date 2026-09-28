@@ -37,6 +37,39 @@
         "require": "agree",
         "justification": "S2 resolves the two omitted quantities before substituting the nested type arguments."
       }
+    },
+    {
+      "name": "compact-reusable",
+      "file": "fixtures/compact-reusable.bend",
+      "class": "positive",
+      "feature": "compact-reusable-quantity",
+      "intent": "A + binder copies a sequence with an explicit compact &2 argument.",
+      "needs": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "empty",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Kind(&2) is Data, including in a compact angle application."
+      }
     }
   ],
   "observations": {
@@ -159,6 +192,127 @@
               "bun",
               ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
               "tests/compiler-generics/supplemental/fixtures/meet-short-form.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "compact-reusable",
+        "source_sha256": "ad87e9febb1509eace93ad99d4903aba7202452650bc9a119815152548093226",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/supplemental/fixtures/compact-reusable.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/supplemental/fixtures/compact-reusable.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/supplemental-wrappers/compact-reusable--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/supplemental/fixtures/compact-reusable.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/supplemental-wrappers/compact-reusable--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/supplemental/fixtures/compact-reusable.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/supplemental-wrappers/compact-reusable--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/supplemental/fixtures/compact-reusable.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/supplemental-wrappers/compact-reusable--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/supplemental/fixtures/compact-reusable.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "empty",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": ".local/compiler-generics/supplemental-wrappers/compact-reusable--empty--.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/supplemental/fixtures/compact-reusable.bend as F\n\ndef main() -> F.Flag:\n  F.empty()\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/supplemental-wrappers/compact-reusable--empty--.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/supplemental/fixtures/compact-reusable.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/supplemental/fixtures/compact-reusable.bend"
             ],
             "exit": 0,
             "stdout": "On{}\n",
