@@ -184,3 +184,19 @@ law let_binder_cannot_rebind_a_constructor:
   {Q.walk_in(1n,S.Binding{S.Token{"True",at},1,None{},value,body},Q.Expression{},
     Q.Names{"m",Nil{},["True"],Nil{}},Nil{},["True"]) ==
     Fail{S.Invalid{"check","constructor-pattern-binder",at}} : Result<S.Error,Q.Qualified>}
+
+law file_binders_meet_only_earlier_constructors:
+  for +at: S.At
+  for value: S.Node
+  for body: S.Node
+  {(Q.rebinds(8n,[S.Datatype{S.Token{"Flag",at},False{},[S.Constructor{S.Token{"Off",at},Nil{}}]},
+      S.Function{S.Token{"f",at},Nil{},S.Token{"Flag",at},S.Binding{S.Token{"Off",at},1,None{},value,body}}],Nil{}),
+    Q.rebinds(8n,[S.Function{S.Token{"f",at},Nil{},S.Token{"Flag",at},
+        S.Binding{S.Token{"Off",at},1,None{},S.Variable{S.Token{"x",at}},S.Variable{S.Token{"Off",at}}}},
+      S.Datatype{S.Token{"Flag",at},False{},[S.Constructor{S.Token{"Off",at},Nil{}}]}],Nil{}),
+    Q.rebinds(8n,[S.Datatype{S.Token{"Flag",at},False{},[S.Constructor{S.Token{"Off",at},Nil{}}]},
+      S.Function{S.Token{"f",at},Nil{},S.Token{"Flag",at},S.Match{S.Token{"match",at},S.Variable{S.Token{"x",at}},
+        [S.Arm{S.Token{"case",at},S.Constructor{S.Token{"Box",at},[S.Variable{S.Token{"Off",at}}]},body}]}}],Nil{}))
+   == (Fail{S.Invalid{"check","constructor-pattern-binder",at}},Done{Unit{}},
+       Fail{S.Invalid{"check","constructor-pattern-binder",at}})
+   : Result<S.Error,Unit> & Result<S.Error,Unit> & Result<S.Error,Unit>}

@@ -263,6 +263,47 @@ def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound:
       then(walk_in(n,head,position,names,bound,ctors),h => binders =>
         then(walk_in(n,S.Sequence{tail},position,following(position,head,names),bound,visible(head,names,ctors)),t => more => prepend(h,binders,t,more)))
 
+def field_binders(args: List<&2,S.Node>) -> List<&2,S.Token>:
+  match args:
+    case Nil{}: Nil{}
+    case Con{S.Variable{token},tail}: Con{token,field_binders(tail)}
+    case Con{S.Promotion{token},tail}: Con{token,field_binders(tail)}
+    case Con{other,tail}: field_binders(tail)
+
+def binders(node: S.Node) -> List<&2,S.Token>:
+  match node:
+    case S.Variable{token}: [token]
+    case S.Promotion{token}: [token]
+    case S.Constructor{token,args}: field_binders(args)
+    case _: Nil{}
+
+def variables(tokens: List<&2,S.Token>, +ctors: List<&2,String>) -> Result<S.Error,Unit>:
+  match tokens:
+    case Nil{}: Done{Unit{}}
+    case Con{+binder,tail}:
+      S.choose(Result<S.Error,Unit>,contains(ctors,S.text(binder)),u =>
+        Fail{S.Invalid{"check","constructor-pattern-binder",S.at(binder)}},u => variables(tail,ctors))
+
+# A single file is not qualified, but its binders meet the same rule: resolution
+# is the identity and load order is declaration order. One work list keeps that
+# order: let, arm and flat field binders, then each later declaration.
+def rebinds(fuel: Nat, nodes: List<&2,S.Node>, +ctors: List<&2,String>) -> Result<S.Error,Unit>:
+  match fuel nodes:
+    case _ Nil{}: Done{Unit{}}
+    case 0n Con{node,rest}: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
+    case 1n+n Con{S.Sequence{items},rest}: rebinds(n,List.append(&2,S.Node,items,rest),ctors)
+    case 1n+n Con{S.Datatype{token,data,children},rest}:
+      rebinds(n,rest,List.append(&2,String,constructors_in(children),ctors))
+    case 1n+n Con{S.Function{token,params,result,body},rest}: rebinds(n,Con{body,rest},ctors)
+    case 1n+n Con{S.Binding{token,q,ann,value,body},rest}:
+      S.bind(Unit,Unit,variables([token],ctors),u => rebinds(n,Con{value,Con{body,rest}},ctors))
+    case 1n+n Con{S.Match{token,value,arms},rest}: rebinds(n,Con{value,List.append(&2,S.Node,arms,rest)},ctors)
+    case 1n+n Con{S.Arm{token,pat,body},rest}:
+      S.bind(Unit,Unit,variables(binders(pat),ctors),u => rebinds(n,Con{body,rest},ctors))
+    case 1n+n Con{S.Call{token,args},rest}: rebinds(n,List.append(&2,S.Node,args,rest),ctors)
+    case 1n+n Con{S.Constructor{token,args},rest}: rebinds(n,List.append(&2,S.Node,args,rest),ctors)
+    case 1n+n Con{other,rest}: rebinds(n,rest,ctors)
+
 def walk(fuel: Nat, node: S.Node, position: Position, names: Names, bound: List<&2,String>) -> Result<S.Error,Qualified>:
   walk_in(fuel,node,position,names,bound,Nil{})
 

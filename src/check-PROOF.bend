@@ -16,5 +16,3 @@ def L.nearest_binding_wins(tail,level):
   {==}
 def L.no_checker_budget(node):
   {==}
-def L.file_binders_meet_only_earlier_constructors(at,value,body):
-  {==}

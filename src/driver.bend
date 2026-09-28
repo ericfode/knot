@@ -6,12 +6,17 @@ import ./parse.bend as P
 import ./check.bend as K
 import ./diagnostic.bend as D
 import ./load.bend as M
+import ./qualify.bend as Q
 
 type Limits is Data:
   Limits{characters: Nat, parser: Nat, checker: Nat}
 
 def fail(+error: S.Error) -> IO(Unit):
   IO.die(Unit,D.status(error),D.error(error))
+
+# A single file has no qualification pass; its binders meet the module rule here.
+def check_file(depth: Nat, +root: S.Node) -> Result<S.Error,C.Book>:
+  S.bind(Unit,C.Book,Q.rebinds(65536n,[root],Nil{}),u => K.check(depth,root))
 
 def checked(result: Result<S.Error,C.Book>, next: C.Book -> IO(Unit)) -> IO(Unit):
   match result:
@@ -26,7 +31,7 @@ def parsed_root(value: P.Parsed) -> S.Node:
 def parsed(limits: Limits, result: Result<S.Error,P.Parsed>, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
     case Limits{chars,parser,+checker}:
-      checked(S.bind(P.Parsed,C.Book,result,tree => K.file(checker,parsed_root(tree))),next)
+      checked(S.bind(P.Parsed,C.Book,result,tree => check_file(checker,parsed_root(tree))),next)
 
 def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
@@ -34,7 +39,7 @@ def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):
       checked(
         S.bind(List<&2,S.Token>,C.Book,L.tokenize(chars,text),tokens =>
           S.bind(P.Parsed,C.Book,P.parse(parser,tokens),tree =>
-            K.file(checker,parsed_root(tree)))),
+            check_file(checker,parsed_root(tree)))),
         next)
 
 def read_result(limits: Limits, result: Result<&1,&1,U32 & String,String>, next: C.Book -> IO(Unit)) -> IO(Unit):

@@ -363,13 +363,18 @@ def audit(result, fixture, base):
             'checked_base': checked, 'unchecked_base': unchecked}
 
 
+def plain_obligation(fixture):
+    """The frozen single-file obligation, in the shape observe() reads."""
+    if 'exit' in fixture['plain']:
+        return {'file': fixture['file'], 'knot': {'obligation': 'knot_expected'},
+                'knot_expected': fixture['plain']}
+    return {'file': fixture['file'], 'knot': {'obligation': 'match-seed',
+                                              'requires': fixture['knot'].get('requires', [])}}
+
+
 def single_file(fixture, commands, source, name, lane):
     """The same source through the single-file CLIs, which have no qualification pass."""
-    judged = {'file': fixture['file'], 'knot': {'obligation': 'match-seed',
-                                                'requires': fixture['knot'].get('requires', [])}}
-    if 'exit' in fixture['plain']:
-        judged = {'file': fixture['file'], 'knot': {'obligation': 'knot_expected'},
-                  'knot_expected': fixture['plain']}
+    judged = plain_obligation(fixture)
     output = BUILD / f'{name}-{lane}-plain.wasm'
     output.unlink(missing_ok=True)
     results = {'check': run([*commands['check'], source])}
@@ -586,17 +591,17 @@ def fallback(+qualified: String, +bare: String, +names: Names) -> String:
      'old': 'then(pattern(token,S.Variable{token},names,ctors),binder => binders =>',
      'new': 'then(done(S.Variable{token}),binder => binders =>',
      'witness': 'let-base-ctor', 'actual': {'exit': 0}},
-    {'name': 'file-let-binder-unchecked', 'file': 'check.bend',
-     'old': 'named(ctors,S.text(token))',
-     'new': 'False{}',
+    {'name': 'file-let-binder-unchecked', 'file': 'qualify.bend',
+     'old': 'S.bind(Unit,Unit,variables([token],ctors),u =>',
+     'new': 'S.bind(Unit,Unit,variables(Nil{},ctors),u =>',
      'witness': 'let-single-ctor', 'plain': True, 'actual': {'exit': 0}},
-    {'name': 'file-constructor-order-ignored', 'file': 'check.bend',
-     'old': 'def file(depth: Nat, +root: S.Node) -> Result<S.Error,C.Book>:\n  S.bind(Unit,C.Book,rebinds(65536n,[root],Nil{}),u => check(depth,root))',
-     'new': 'def declared(nodes: List<&2,S.Node>) -> List<&2,String>:\n  match nodes:\n    case Nil{}: Nil{}\n    case Con{S.Datatype{token,data,children},tail}: List.append(&2,String,constructor_names(children),declared(tail))\n    case Con{S.Sequence{items},tail}: List.append(&2,String,declared(items),declared(tail))\n    case Con{other,tail}: declared(tail)\n\ndef file(depth: Nat, +root: S.Node) -> Result<S.Error,C.Book>:\n  S.bind(Unit,C.Book,rebinds(65536n,[root],declared([root])),u => check(depth,root))',
+    {'name': 'file-constructor-order-ignored', 'file': 'driver.bend',
+     'old': 'Q.rebinds(65536n,[root],Nil{})',
+     'new': 'Q.rebinds(65536n,[root],Q.ctor_names(root))',
      'witness': 'field-later-ctor', 'plain': True,
      'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tconstructor-pattern-binder\t'}},
-    {'name': 'file-arm-binders-unchecked', 'file': 'check.bend',
-     'old': 'S.bind(Unit,Unit,fresh(binders(pat),ctors),u => rebinds(n,Con{body,rest},ctors))',
+    {'name': 'file-arm-binders-unchecked', 'file': 'qualify.bend',
+     'old': 'S.bind(Unit,Unit,variables(binders(pat),ctors),u => rebinds(n,Con{body,rest},ctors))',
      'new': 'rebinds(n,Con{body,rest},ctors)',
      'witness': 'arm-earlier-ctor', 'plain': True,
      'actual': {'exit': 3, 'diagnostic_prefix': 'Unsupported\tcheck\tvariable-pattern\t'}},
@@ -644,8 +649,7 @@ def mutants(fixtures):
         mode = [] if mutant.get('plain') else ['--bundle', BUNDLE]
         result = run(['bun', output, *mode, HERE / fixture['file']])
         if mutant.get('plain'):
-            fixture = {'file': fixture['file'], 'knot': {'obligation': 'knot_expected'},
-                       'knot_expected': fixture['plain']}
+            fixture = plain_obligation(fixture)
         expected = mutant['actual']
         require(result['exit'] == expected['exit'], (mutant, result))
         if expected['exit'] == 0:
