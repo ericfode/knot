@@ -160,3 +160,17 @@ Six classify-2 cases (`application-parameter`, `-return`, `-binding` and their
 `return_type_application` and `binding_type_application` also conflict with
 generic type applications. They are unchanged here and await the
 coordinator's decision.
+
+### Proposed classify-2 supersession (awaiting authorization)
+
+The same reconciliation for the six application cases, as a proposal: the
+three seed-accepted cases get phase expectations (parse and check accept;
+eval `Evaluated<TAB>0<TAB>1<TAB>On{}`, `Evaluated<TAB>1<TAB>0<TAB>Nil{}` and
+`Evaluated<TAB>0<TAB>1<TAB>On{}` from the seed values, CONTRACT.json and
+declaration order; enum compile `Unsupported check constructor-fields` at the
+generic `List`'s first constructor `Nil`, which carries the boxed family's
+synthetic erased field). The three after-prefix twins pin
+`Unsupported parse type-expression` at the first token after `<`. The
+classification gate retires its three application mutants with their anchors;
+`return_type_application` is restated as the typed-result transition and
+`binding_type_application` is retired.

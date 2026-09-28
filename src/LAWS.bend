@@ -79,18 +79,17 @@ law parameter_type_application:
   {P.parameter(Con{S.Token{"xs",at},Con{S.Token{":",at},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
     == Fail{S.Unsupported{"parse","parameter-type",at}} : Result<S.Error,P.Parsed>}
 
+# A result type application is no longer a classified prefix; it enters the
+# typed-result grammar, which parses the whole type expression.
 law return_type_application:
+  for +n: Nat
   for +at: S.At
   for +rest: List<&2,S.Token>
-  {P.run(1n,P.FunctionTail{S.Token{"main",at},S.Sequence{Nil{}}},
+  {P.run(1n+n,P.FunctionTail{S.Token{"main",at},S.Sequence{Nil{}}},
     Con{S.Token{"-",at},Con{S.Token{">",at},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
-    == Fail{S.Unsupported{"parse","type-application",at}} : Result<S.Error,P.Parsed>}
-
-law binding_type_application:
-  for +at: S.At
-  for +rest: List<&2,S.Token>
-  {P.run(1n,P.AnnotatedBinding{S.Token{"xs",at},1,2},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}})
-    == Fail{S.Unsupported{"parse","type-application",at}} : Result<S.Error,P.Parsed>}
+    == P.run(n,P.TypedResult{S.Token{"main",at},S.Sequence{Nil{}}},
+    Con{S.Token{"-",at},Con{S.Token{">",at},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
+    : Result<S.Error,P.Parsed>}
 
 law local_import:
   for +at: S.At

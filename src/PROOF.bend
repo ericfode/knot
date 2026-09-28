@@ -48,10 +48,7 @@ def L.arrow_is_not_binding(at,fields,rest):
 def L.parameter_type_application(at,rest):
   {==}
 
-def L.return_type_application(at,rest):
-  {==}
-
-def L.binding_type_application(at,rest):
+def L.return_type_application(n,at,rest):
   {==}
 
 def L.local_import(at,rest):

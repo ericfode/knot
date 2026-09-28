@@ -15,7 +15,7 @@ RECEIPT = HERE / 'receipts/precision.json'
 MANIFEST = ROOT / 'tests/subsets/classification-cases.json'
 
 sys.path.insert(0, str(ROOT / 'tests/subsets'))
-from check_frontend import classified, digest, require, run, successful  # noqa: E402
+from check_frontend import classified, digest, expectation, observed, require, run, successful  # noqa: E402
 
 
 def main():
@@ -52,11 +52,14 @@ def main():
             for stream in ('stdout', 'stderr'):
                 require(reference[stream].replace(str(ROOT), '$ROOT') == expected[stream], reference)
             actual = run(['bun', output, path])
-            classified(actual, case['knot'])
+            expected = expectation(case, 'parse')
+            observed(actual, expected)
             record['fixtures'].append({'file': case['file'], 'reference': reference,
-                                       'expected': case['knot'], 'lanes': {'bun': actual}})
+                                       'expected': expected, 'lanes': {'bun': actual}})
 
         # Each mutant changes an outcome, not syntax, typing, budgets, or tests.
+        # The three type-application mutants were retired with their anchors:
+        # generics parses Name<...> in parameter, return and binding types.
         mutations = [
             ('nonleading-template', 'Bool.and(parameters,starts(t,"~"))', 'False{}',
              'template-nonleading', 'Unsupported\tparse\ttemplate-binder'),
@@ -64,12 +67,6 @@ def main():
              'starts(tail,">")', 'destructure-equality', 'Unsupported\tparse\tdestructuring-binding'),
             ('arrow-as-binding', 'Bool.or(starts(tail,"="),starts(tail,">"))',
              'starts(tail,"=")', 'destructure-arrow', 'Unsupported\tparse\tdestructuring-binding'),
-            ('parameter-application-invalid', 'unsupported(rest,"parameter-type")',
-             'invalid(rest,"parameter-type")', 'application-parameter', 'Invalid\tparse\tparameter-type'),
-            ('return-application-invalid', 'unsupported(Con{colon,body},"type-application")',
-             'invalid(Con{colon,body},"type-application")', 'application-return', 'Invalid\tparse\ttype-application'),
-            ('binding-application-invalid', 'unsupported(tail,"type-application")',
-             'invalid(tail,"type-application")', 'application-binding', 'Invalid\tparse\ttype-application'),
         ]
         for name, before, after, witness, wrong in mutations:
             directory = BUILD / name
@@ -100,7 +97,7 @@ def main():
         record['status'] = 'passed'
         print(f"PASS: {len(cases)} frozen seed outputs; {len(record['fixtures'])} parser observations; "
               f"{len(record['mutants'])} type-correct semantic mutants killed; "
-              '16 filled frontend laws (6 added, 1 narrowed).')
+              '15 filled frontend laws (classify-2: 5 added, 1 narrowed; 1 restated and 1 retired by generics).')
     except Exception as error:
         record.update(status='failed', failure=str(error))
         raise
