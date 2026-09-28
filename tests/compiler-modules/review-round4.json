@@ -21,7 +21,8 @@
   },
   "findings": [
     "containment",
-    "identity"
+    "identity",
+    "string"
   ],
   "sources": {
     "rel/w/app/back.bend": "3a5407812fb20ca075dbc2ae121bdda1996746adcd753799621b2a3b0b3a39e6",
@@ -32,7 +33,12 @@
     "rel/w/app/plain.bend": "e5c1192d7a0076842fad5d55a83947bff942cf362140398d343f573887825582",
     "rel/w/app/two.bend": "f1d8b8ec6004cc060e125b176c5f415eff9ee9a5c14422c6f1d355d541efc582",
     "rel/w/lib/extra/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
-    "rel/w/lib/main.bend": "432853bfff99010846bb81c45af42f1d687d0d6a635d8eb3da486af3c9ade887"
+    "rel/w/lib/main.bend": "432853bfff99010846bb81c45af42f1d687d0d6a635d8eb3da486af3c9ade887",
+    "string/base-import.bend": "52bdeebfbb64519d7bc2a21d9d002507c68ed7d663b6e3e68ca1ecad651b3e03",
+    "string/comment-quote.bend": "4724864797c876e55a2f65e57c3eba89d17be816d38c1ce1d850940eff38f2c3",
+    "string/foreign-import.bend": "df685405906776f8cd205ba7ef973dfc37c69c999d8d25cef2cb082d81212e44",
+    "string/module-import.bend": "792711e4c23168a56ca5f763b3cf09b227ad3b8c523de8b78f47558be6260024",
+    "string/single-line.bend": "23cd5f55bca18d7e92686f30b4982a1096e58bf13a784ec9ea9b5c13d417503f"
   },
   "fixtures": [
     {
@@ -340,6 +346,189 @@
         "rel/w/app/ok.bend",
         "rel/w/app/m/flag.bend"
       ]
+    },
+    {
+      "name": "string-module-import",
+      "finding": "string",
+      "file": "string/module-import.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "string/module-import.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/string/module-import.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "lex",
+        "code": "literal",
+        "diagnostic_prefix": "Unsupported\tlex\tliteral\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "lex",
+        "code": "literal",
+        "diagnostic_prefix": "Unsupported\tlex\tliteral\t"
+      }
+    },
+    {
+      "name": "string-base-import",
+      "finding": "string",
+      "file": "string/base-import.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "string/base-import.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/string/base-import.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "lex",
+        "code": "literal",
+        "diagnostic_prefix": "Unsupported\tlex\tliteral\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "lex",
+        "code": "literal",
+        "diagnostic_prefix": "Unsupported\tlex\tliteral\t"
+      }
+    },
+    {
+      "name": "string-foreign-import",
+      "finding": "string",
+      "file": "string/foreign-import.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "string/foreign-import.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/string/foreign-import.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "lex",
+        "code": "literal",
+        "diagnostic_prefix": "Unsupported\tlex\tliteral\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "lex",
+        "code": "literal",
+        "diagnostic_prefix": "Unsupported\tlex\tliteral\t"
+      }
+    },
+    {
+      "name": "string-single-line",
+      "finding": "string",
+      "file": "string/single-line.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "string/single-line.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/string/single-line.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "lex",
+        "code": "literal",
+        "diagnostic_prefix": "Unsupported\tlex\tliteral\t"
+      }
+    },
+    {
+      "name": "comment-quote-import",
+      "finding": "string",
+      "file": "string/comment-quote.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "string/comment-quote.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/string/comment-quote.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : 'i'\nLocation:\n 8 | # say \"hi\"\n 9>| import ./x.bend as X\n   | ^\n10 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "import",
+        "diagnostic_prefix": "Unsupported\tparse\timport\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "import",
+        "diagnostic_prefix": "Unsupported\tparse\timport\t"
+      }
     }
   ]
 }
