@@ -590,6 +590,68 @@ def fuzz_corpus(images: dict, reg: dict, digest: bytes, out: Path) -> list:
     return rows
 
 
+def limit_corpus(images: dict, reg: dict, digest: bytes, out: Path) -> list:
+    """Every golden with one word of section 4's limits set to values around its limit: a section's
+    record count (around 2^20 and around the fit of two words per record), a function's arity and
+    `slots`, a Closure's `slots`. The frozen controls hold one image for each side of a limit; this
+    varies each such word of each golden, in every section and function."""
+    around = lambda n: [0, n - 1, n, n + 1, NONE]
+    rows = []
+    for name in sorted(images):
+        w = [int.from_bytes(images[name][i:i + 4], 'little') for i in range(0, len(images[name]), 4)]
+        words = []  # (what, index of the word, its values)
+        cursor = 32
+        for s in range(6):
+            fit = (len(w) - (cursor + 1)) // 2
+            words.append((f'count {s}', cursor, [*around(fit), *around(1 << 20), w[cursor] + 1]))
+            count, cursor = w[cursor], cursor + 1
+            for _ in range(count):
+                cursor += w[cursor]
+        at = w[7] + 1
+        for f in range(w[w[7]]):
+            words.append((f'arity {f}', at + 3, [*around(4096), w[at + 3] + 1]))
+            words.append((f'slots {f}', at + 4, [*around(65536), w[at + 4] + 1]))
+            at += w[at]
+        at = w[9] + 1
+        for n in range(w[w[9]]):
+            if w[at + 1] == 10:  # a Closure node
+                words.append((f'closure {n}', at + 5, [*around(65536), w[at + 5] + 1]))
+            at += w[at]
+        for what, index, values in words:
+            for v in sorted({v for v in values if 0 <= v <= NONE and v != w[index]}):
+                data = b''.join(x.to_bytes(4, 'little') for x in [*w[:index], v, *w[index + 1:]])
+                try:
+                    reference = spec.rejected(data, reg, digest)
+                except Exception as error:  # the Python reference itself fails: recorded, not compared
+                    reference = f'reference-crash {type(error).__name__}'
+                file = f'l{len(rows)}.kimg'
+                (out / file).write_bytes(data)
+                rows.append({'label': f'{name}: {what} = {v}', 'sha256': sha(data), 'reference': reference,
+                             'argv': [file, '1000', '--'] if w[3] == 1 else [file, 'main', '1000']})
+    return rows
+
+
+def compare(kind: str, corpus: list, outcomes: dict) -> dict:
+    """The VM refuses each image of a corpus with the reference codec's first defect, a limit of
+    section 4 as Exhausted kind 2 among them, admits what the reference admits, and never traps.
+    An image the reference cannot decode is counted, not compared."""
+    tally = {'refused': 0, 'limits': 0, 'accepted': 0, 'reference_crash': 0}
+    for r in corpus:
+        g = outcomes[r['label']]
+        require(clean(g), f"{kind} {r['label']} is not a clean outcome: {g['status']} {g['stderr']!r}")
+        ref = r['reference']
+        if ref is None:
+            require(observed_reason(g) is None, f"{kind} {r['label']}: reference admits it, VM refused {g['stderr']!r}")
+            tally['accepted'] += 1
+        elif ref.startswith('reference-crash'):
+            tally['reference_crash'] += 1
+        else:
+            require(observed_reason(g) == expected_reason(ref), f"{kind} {r['label']}: VM {g['stderr']!r}, reference {ref!r}")
+            tally['refused'] += 1
+            tally['limits'] += ref.startswith('Exhausted')
+    return tally
+
+
 # ------------------------------------------------------------------ mutants
 # (name, what it breaks, [(old, new)], kill group). Each edit must apply once.
 MUTANTS = [
@@ -744,6 +806,76 @@ MUTANTS = [
        '(i64.extend_i32_u (local.get $bytes))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))'),
       ('(i64.const 5))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))',
        '(i64.const 5))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))')], 'trap'),
+    # vm-spec cea554a, section 4's limit table: each limit is Exhausted kind 2 with its own cause, inclusive,
+    # checked in the order the table gives. Each survives every golden and run control, and dies by a limit
+    # control (group `image-limits`) or, where no frozen control holds the boundary, by the limit-word corpus
+    ('size-checked-after-length', 'an image above 16 MiB is refused for its length before its size',
+     [('        (if (i32.gt_u (local.get $total) (i32.const 0x1000000))\n'
+       '          (then (call $io_close (local.get $h))\n'
+       '                (call $exhaust (i32.const 2) (global.get $R_image_size))))\n', ''),
+      ('      (then (call $refuse (global.get $R_length))))\n',
+       '      (then (call $refuse (global.get $R_length))))\n'
+       '    (if (i32.gt_u (local.get $total) (i32.const 0x1000000))\n'
+       '      (then (call $exhaust (i32.const 2) (global.get $R_image_size))))\n')], 'image-limits'),
+    ('record-limit-before-fit', 'the record limit is checked before the count is fitted to the words that remain',
+     [('      (if (i32.gt_u (local.get $count) (i32.shr_u (i32.sub (global.get $W) (local.get $at)) (i32.const 1)))\n'
+       '        (then (call $refuse (global.get $R_record_count))))\n'
+       '      (call $limit (local.get $count) (i32.const 0x100000) (global.get $R_records))\n',
+       '      (call $limit (local.get $count) (i32.const 0x100000) (global.get $R_records))\n'
+       '      (if (i32.gt_u (local.get $count) (i32.shr_u (i32.sub (global.get $W) (local.get $at)) (i32.const 1)))\n'
+       '        (then (call $refuse (global.get $R_record_count))))\n')], 'image-limits'),
+    ('arity-limit-before-record', "the arity limit is checked before the function record's length",
+     [('        (call $limit (call $w (i32.add (local.get $at) (i32.const 3))) (i32.const 4096) (global.get $R_arity))\n', ''),
+      ('        (call $tabset (global.get $tF) (local.get $i) (local.get $at))\n'
+       '        (local.set $len (i32.sub (call $w (local.get $at)) (i32.const 1)))\n',
+       '        (call $tabset (global.get $tF) (local.get $i) (local.get $at))\n'
+       '        (local.set $len (i32.sub (call $w (local.get $at)) (i32.const 1)))\n'
+       '        (call $limit (call $w (i32.add (local.get $at) (i32.const 3))) (i32.const 4096) (global.get $R_arity))\n')],
+     'image-limits'),
+    ('slots-limit-after-exactness', 'the slots limits are checked after the validator\'s exact-slots rule',
+     [('        (call $limit (call $w (i32.add (local.get $at) (i32.const 4))) (i32.const 65536) (global.get $R_slots))\n', ''),
+      ('        (if (i32.eq (local.get $op) (i32.const 10))\n'
+       '          (then (call $limit (call $w (i32.add (local.get $at) (i32.const 5))) (i32.const 65536) (global.get $R_slots))))\n', ''),
+      ('            (then (call $refuse (global.get $R_function_slots))))\n',
+       '            (then (call $refuse (global.get $R_function_slots))))\n'
+       '          (call $limit (call $w (i32.add (local.get $a) (i32.const 4))) (i32.const 65536) (global.get $R_slots))\n'),
+      ('              (then (call $refuse (global.get $R_closure_slots))))\n',
+       '              (then (call $refuse (global.get $R_closure_slots))))\n'
+       '            (call $limit (call $w (i32.add (local.get $a) (i32.const 5))) (i32.const 65536) (global.get $R_slots))\n')],
+     'image-limits'),
+    ('closure-slots-unlimited', "a Closure's slots have no limit",
+     [('        (if (i32.eq (local.get $op) (i32.const 10))\n'
+       '          (then (call $limit (call $w (i32.add (local.get $at) (i32.const 5))) (i32.const 65536) (global.get $R_slots))))\n', '')],
+     'image-limits'),
+    ('function-slots-unlimited', "a function's slots have no limit",
+     [('        (call $limit (call $w (i32.add (local.get $at) (i32.const 4))) (i32.const 65536) (global.get $R_slots))\n', '')],
+     'image-limits'),
+    ('arity-unlimited', 'a function record has no arity limit',
+     [('        (call $limit (call $w (i32.add (local.get $at) (i32.const 3))) (i32.const 4096) (global.get $R_arity))\n', '')],
+     'image-limits'),
+    ('records-unlimited', 'a table has no record limit',
+     [('      (call $limit (local.get $count) (i32.const 0x100000) (global.get $R_records))\n', '')], 'image-limits'),
+    ('limit-as-malformed', 'a count past its limit is refused as a malformed image',
+     [('      (then (call $exhaust (i32.const 2) (local.get $cause)))))\n',
+       '      (then (call $refuse (local.get $cause)))))\n')], 'image-limits'),
+    ('size-as-malformed', 'an image above 16 MiB is refused as a malformed image',
+     [('                (call $exhaust (i32.const 2) (global.get $R_image_size))))\n',
+       '                (call $refuse (global.get $R_image_size))))\n')], 'image-limits'),
+    ('limit-exclusive', 'a count equal to its limit is past it',
+     [('    (if (i32.gt_u (local.get $count) (local.get $max))\n', '    (if (i32.ge_u (local.get $count) (local.get $max))\n')],
+     'image-limits'),
+    ('size-exclusive', 'an image of exactly 16 MiB is past the size limit',
+     [('        (if (i32.gt_u (local.get $total) (i32.const 0x1000000))\n', '        (if (i32.ge_u (local.get $total) (i32.const 0x1000000))\n')],
+     'image-limits'),
+    ('arity-cause-slots', 'an arity past its limit names slots as its cause',
+     [('(i32.const 4096) (global.get $R_arity))', '(i32.const 4096) (global.get $R_slots))')], 'image-limits'),
+    ('record-fit-exclusive', 'a count that exactly fills the words that remain is one they cannot hold',
+     [('      (if (i32.gt_u (local.get $count) (i32.shr_u (i32.sub (global.get $W) (local.get $at)) (i32.const 1)))\n',
+       '      (if (i32.ge_u (local.get $count) (i32.shr_u (i32.sub (global.get $W) (local.get $at)) (i32.const 1)))\n')],
+     'limit-words'),
+    ('record-fit-one-word', 'a record takes one word of the words that remain, not two',
+     [('(i32.shr_u (i32.sub (global.get $W) (local.get $at)) (i32.const 1)))', '(i32.sub (global.get $W) (local.get $at)))')],
+     'limit-words'),
 ]
 
 
@@ -1065,22 +1197,18 @@ def main() -> int:
     fuzz.mkdir()
     corpus = fuzz_corpus(images, reg, digest, fuzz)
     fuzzed = traced(corpus, fuzz, timeout=1200)
-    tally = {'refused': 0, 'accepted': 0, 'reference_crash': 0}
-    for r in corpus:
-        g = fuzzed[r['label']]
-        require(clean(g), f"fuzz {r['label']} is not a clean outcome: {g['status']} {g['stderr']!r}")
-        ref = r['reference']
-        if ref is None:
-            require(observed_reason(g) is None, f"fuzz {r['label']}: reference admits it, VM refused {g['stderr']!r}")
-            tally['accepted'] += 1
-        elif ref.startswith('reference-crash'):
-            tally['reference_crash'] += 1
-        else:
-            require(observed_reason(g) == expected_reason(ref), f"fuzz {r['label']}: VM {g['stderr']!r}, reference {ref!r}")
-            tally['refused'] += 1
+    tally = compare('fuzz', corpus, fuzzed)
+    limit_words = BUILD / 'limit-words'
+    limit_words.mkdir()
+    words_corpus = limit_corpus(images, reg, digest, limit_words)
+    words_seen = traced(words_corpus, limit_words, timeout=1200)
+    words_tally = compare('limit word', words_corpus, words_seen)
     record['malformed'] = {'controls': refused, 'admitted': admissions,
                            'fuzz': {'seed': FUZZ_SEED, 'per_image': FUZZ_PER_IMAGE, 'images': len(corpus),
-                                    'corpus_sha256': sha(json.dumps([r['sha256'] for r in corpus]).encode()), **tally}}
+                                    'corpus_sha256': sha(json.dumps([r['sha256'] for r in corpus]).encode()), **tally},
+                           'limit_words': {'images': len(words_corpus),
+                                           'corpus_sha256': sha(json.dumps([r['sha256'] for r in words_corpus]).encode()),
+                                           **words_tally}}
 
     # mutants: a changed observation in their group, never a crash, except group `trap`, whose
     # defect is a trap where section 5 gives an outcome. Runs use the test build, so a golden
@@ -1108,11 +1236,20 @@ def main() -> int:
                            for j, r in zip(ceiling_jobs, ceiling)]
     full_heap = [j for j in ceiling_mutant_jobs if j['dump']['bump'] == 1 << 32]
     require(len(full_heap) == 3, f'three ceiling rows fill the heap to exactly 4 GiB: {[j["id"] for j in full_heap]}')
+    # section 4's limits: the controls at them, and the three oversize images, with the VM's outcome registers
+    image_limits = [{**j, 'dump': refusal_dump(expected_reason(r['reference']))}
+                    for j, r in zip(control_jobs, rows) if r['label'].startswith(('limit:', 'oversize'))] + \
+        [j for j in admitted_jobs if j['id'].startswith('admitted:limit:')]
+    word_jobs = [{'id': f"limit-word:{r['label']}", 'files': {r['argv'][0]: str(limit_words / r['argv'][0])},
+                  'argv': r['argv'], 'want': {k: words_seen[r['label']][k] for k in ('exit', 'stdout', 'stderr')},
+                  'dump': {k: words_seen[r['label']]['state'][k] for k in ('outcome', 'cause')}} for r in words_corpus]
+    require(len(image_limits) == 13, f'nine limit refusals, three oversize images and arity-at-limit: {[j["id"] for j in image_limits]}')
     groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs + admitted_jobs,
               'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
               'quantum': [j for j in fixture_jobs if 'quantum' in j['id']], 'ceiling': ceiling_mutant_jobs,
               'full-heap': full_heap, 'trap': ceiling_mutant_jobs,
-              'invocations': invocation_jobs, 'runs': run_jobs, 'reference': reference_jobs, 'limited': limited_jobs}
+              'invocations': invocation_jobs, 'runs': run_jobs, 'reference': reference_jobs, 'limited': limited_jobs,
+              'image-limits': image_limits, 'limit-words': word_jobs}
 
     def observed_wrong(job, out):
         return shown(out, job['want']) != job['want'] or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
@@ -1160,6 +1297,9 @@ def main() -> int:
           f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted, {tally['reference_crash']} reference crashes), "
+          f"{len(words_corpus)} limit-word images "
+          f"({words_tally['refused']} refused, {words_tally['limits']} of them at a limit, {words_tally['accepted']} admitted, "
+          f"{words_tally['reference_crash']} reference crashes), "
           f"{len(killed)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 

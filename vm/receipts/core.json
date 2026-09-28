@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T21:05:59.735151+00:00",
+ "date": "2026-09-28T21:16:02.203221+00:00",
  "status": "passed",
  "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
  "inputs": {
@@ -7,7 +7,7 @@
   "vm/SPEC.md": "66a6a69b70833beafc31ae0e8924e7f9394ab62e39ca9aa4bb5d7a78446711b5",
   "vm/build.json": "708baa152485fae81adb695474fa90bd0dcb57a88d86990fbc973b66e53fa2a7",
   "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
-  "vm/check-core.py": "3f5b03f498554c9abc3b54bc2c4fa4c8f2474eea4f926630006b4e251d8f43ad",
+  "vm/check-core.py": "d4a614b6dc4f747d0a4843a7bac53f42e29ffe9e0059677dbc8a50b7a06a850a",
   "vm/check-spec.py": "9eb0d4ae01df310d01c91b7b88410c18f149a22d6de2692d036ec5dee87d2e7c",
   "vm/core/ceiling-append-top.kimg": "6218878b405984ad47e4664ae542743fd168e40eee11ab7e090740e8e38b6b47",
   "vm/core/ceiling-append-top.plan.json": "b7e0b093d587dad40cc8595af23b09a063c142fc3ced688e483936caeab56009",
@@ -2882,7 +2882,16 @@
    "images": 3720,
    "corpus_sha256": "61c14eee6f43ae2848c9eab770d8e70c286144335b8746a50b85289bbb782cae",
    "refused": 3431,
+   "limits": 10,
    "accepted": 289,
+   "reference_crash": 0
+  },
+  "limit_words": {
+   "images": 7741,
+   "corpus_sha256": "4254b0b2a9725ce0b678a5378f158cd0700e3cedc209ef7ff7e0895163db675f",
+   "refused": 7741,
+   "limits": 516,
+   "accepted": 0,
    "reference_crash": 0
   }
  },
@@ -3299,6 +3308,172 @@
    ],
    "wrong_observations": 3,
    "crashes": 3
+  },
+  {
+   "mutant": "size-checked-after-length",
+   "breaks": "an image above 16 MiB is refused for its length before its size",
+   "group": "image-limits",
+   "killed_by": [
+    "control:oversize-and-misaligned"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "record-limit-before-fit",
+   "breaks": "the record limit is checked before the count is fitted to the words that remain",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:records-beyond-image"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "arity-limit-before-record",
+   "breaks": "the arity limit is checked before the function record's length",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:arity-beyond-record"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "slots-limit-after-exactness",
+   "breaks": "the slots limits are checked after the validator's exact-slots rule",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:slots-over-limit",
+    "control:limit:closure-slots-over-limit"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "closure-slots-unlimited",
+   "breaks": "a Closure's slots have no limit",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:closure-slots-over-limit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "function-slots-unlimited",
+   "breaks": "a function's slots have no limit",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:slots-over-limit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "arity-unlimited",
+   "breaks": "a function record has no arity limit",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:arity-over-limit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "records-unlimited",
+   "breaks": "a table has no record limit",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:records-over-limit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "limit-as-malformed",
+   "breaks": "a count past its limit is refused as a malformed image",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:records-over-limit",
+    "control:limit:arity-over-limit",
+    "control:limit:slots-over-limit",
+    "control:limit:closure-slots-over-limit"
+   ],
+   "wrong_observations": 4,
+   "crashes": 0
+  },
+  {
+   "mutant": "size-as-malformed",
+   "breaks": "an image above 16 MiB is refused as a malformed image",
+   "group": "image-limits",
+   "killed_by": [
+    "control:oversize",
+    "control:oversize-and-bad-magic",
+    "control:oversize-and-misaligned"
+   ],
+   "wrong_observations": 3,
+   "crashes": 0
+  },
+  {
+   "mutant": "limit-exclusive",
+   "breaks": "a count equal to its limit is past it",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:records-at-limit",
+    "control:limit:slots-at-limit",
+    "admitted:limit:arity-at-limit"
+   ],
+   "wrong_observations": 3,
+   "crashes": 0
+  },
+  {
+   "mutant": "size-exclusive",
+   "breaks": "an image of exactly 16 MiB is past the size limit",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:size-at-limit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "arity-cause-slots",
+   "breaks": "an arity past its limit names slots as its cause",
+   "group": "image-limits",
+   "killed_by": [
+    "control:limit:arity-over-limit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "record-fit-exclusive",
+   "breaks": "a count that exactly fills the words that remain is one they cannot hold",
+   "group": "limit-words",
+   "killed_by": [
+    "limit-word:case-char: count 0 = 65",
+    "limit-word:case-char: count 1 = 57",
+    "limit-word:case-char: count 2 = 48",
+    "limit-word:case-char: count 3 = 41",
+    "limit-word:case-char: count 4 = 39"
+   ],
+   "wrong_observations": 558,
+   "crashes": 0
+  },
+  {
+   "mutant": "record-fit-one-word",
+   "breaks": "a record takes one word of the words that remain, not two",
+   "group": "limit-words",
+   "killed_by": [
+    "limit-word:case-char: count 0 = 66",
+    "limit-word:case-char: count 1 = 58",
+    "limit-word:case-char: count 2 = 49",
+    "limit-word:case-char: count 3 = 42",
+    "limit-word:case-char: count 4 = 40"
+   ],
+   "wrong_observations": 558,
+   "crashes": 0
   }
  ]
 }
