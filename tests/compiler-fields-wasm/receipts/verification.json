@@ -1,0 +1,320 @@
+{
+  "recorded_at": "2026-09-27T23:58:24.756698+00:00",
+  "deterministic_status": "passed",
+  "base_commit": "185b7d5ffad5a4e8d59ccc52b95a5b9c83c5330d",
+  "environment": {
+    "BEND_NO_TELEMETRY": "1",
+    "network": "not used",
+    "env_files": "not read or copied"
+  },
+  "commands": [
+    {
+      "command": "python3 tests/subsets/check_frontend.py",
+      "exit": 0,
+      "counts": {
+        "seed_fixtures": 14,
+        "parser_lanes": 2,
+        "boundary_observations": 24,
+        "laws": 4,
+        "mutants": 4
+      },
+      "stdout_summary": "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four laws and four semantic mutants",
+      "log_sha256": "d2185e3a322737bcd3c50a08a1f42f058f3208c71edb6b28df49f6b718792e9e"
+    },
+    {
+      "command": "python3 tests/compiler-checker/check.py",
+      "exit": 0,
+      "counts": {
+        "seed_fixtures": 49,
+        "checked_observations": 98,
+        "depth_probes": 10,
+        "catalog_bounds": 16,
+        "mutants": 7
+      },
+      "stdout_summary": "Checker gate passed: 49 reference fixtures, 98 checked observations, 10 depth and 16 catalog-bound observations, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-fields-wasm/tests/compiler-checker/receipts/checker.json",
+      "log_sha256": "320c35e4ef63ba1dd36bcdd948cc8fa783e7687be5869283f9fd82c5d517bff2"
+    },
+    {
+      "command": "python3 tests/compiler-structural/check.py",
+      "exit": 0,
+      "counts": {
+        "seed_fixtures": 16,
+        "boundary_pairs": 4,
+        "mutants": 7
+      },
+      "stdout_summary": "Structural catalog gate passed: 16 seed fixtures, 4 boundary pairs, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-fields-wasm/tests/compiler-structural/receipts/catalog.json",
+      "log_sha256": "c59ed7bf893ad4278e09b66574be5cbbe39b3d4e585b005d1564df3449ea5bba"
+    },
+    {
+      "command": "python3 tests/compiler-fields/check.py",
+      "exit": 0,
+      "counts": {
+        "seed_fixtures": 40,
+        "phase_observations": 240,
+        "budget_probes": 36,
+        "host_probes": 6,
+        "level_inspection_observations": 12,
+        "mutants": 9
+      },
+      "stdout_summary": "Fields gate passed: 40 seed fixtures, 240 native/Bun phase observations, 36 budget probes, 6 host probes, 12 level/inspection observations, 9 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-fields-wasm/tests/compiler-fields/receipts/fields.json",
+      "log_sha256": "e829754818afb0d3727c0f2c07bd9b73c3d9c3ca5086fbdf5662409c010ed19d"
+    },
+    {
+      "command": "python3 tests/compiler-wasm/check.py",
+      "exit": 0,
+      "counts": {
+        "programs": 25,
+        "seed_calls": 90,
+        "compiler_lanes": 2,
+        "rejection_pairs": 64,
+        "boundary_observations": 44,
+        "mutants": 7
+      },
+      "stdout_summary": "Wasm gate passed: 25 source programs, 90 independent reference calls in two lanes, 64 rejection pairs, 44 boundary observations, 7 semantic mutants. /Users/ericfode/src/knot/.claude/worktrees/campaign-fields-wasm/tests/compiler-wasm/receipts/wasm.json",
+      "log_sha256": "ed220a934210f9ad8b806c75f80c7b7bf608b3076bf697932bb393983c4fbb63"
+    },
+    {
+      "command": "bun tests/compiler-wasm/trust.ts",
+      "exit": 0,
+      "counts": {
+        "entries": 3,
+        "holes": 0,
+        "loaded_files": [
+          15,
+          13,
+          18
+        ],
+        "foreign_declarations_per_entry": 42,
+        "unsafe_base_declarations": [
+          "Array.fork",
+          "Array.join"
+        ]
+      },
+      "stdout_summary": "[\n  {\n    entry: \"src/compile-cli.bend\",\n    files: 15,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 13,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/runtime-PROOF.bend\",\n    files: 18,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }\n]\n",
+      "log_sha256": "e393862b7caffc4fa0a85fd64de9516d67ea8626a31d99e8196fab4c2b6b4d6b"
+    },
+    {
+      "command": "bun tests/compiler-fields/trust.ts",
+      "exit": 0,
+      "counts": {
+        "entries": 4,
+        "holes": 0,
+        "loaded_files": [
+          22,
+          12,
+          13,
+          15
+        ],
+        "foreign_declarations_per_entry": 42,
+        "unsafe_base_declarations": [
+          "Array.fork",
+          "Array.join"
+        ]
+      },
+      "stdout_summary": "[\n  {\n    entry: \"src/fields-PROOF.bend\",\n    files: 22,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }, {\n    entry: \"src/check-cli.bend\",\n    files: 12,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 13,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/compile-cli.bend\",\n    files: 15,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }\n]\n",
+      "log_sha256": "5fe4d646089ed4919d34b97dd6d2e913430db175f90e4ac73dc63ddc7321e7bd"
+    },
+    {
+      "command": "bun tests/compiler-structural/trust.ts",
+      "exit": 0,
+      "counts": {
+        "entries": 2,
+        "holes": 0,
+        "loaded_files": [
+          20,
+          8
+        ],
+        "foreign_declarations_per_entry": 42,
+        "unsafe_base_declarations": [
+          "Array.fork",
+          "Array.join"
+        ]
+      },
+      "stdout_summary": "[\n  {\n    entry: \"src/catalog-PROOF.bend\",\n    files: 20,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }, {\n    entry: \"tests/compiler-structural/observe.bend\",\n    files: 8,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }\n] [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ]\n",
+      "log_sha256": "37e3ff049dcbfb1d32528dbbcde7fbbfe2d9907872993dcb6fe714e4cddaa91b"
+    },
+    {
+      "command": "python3 research/owned-store/check.py",
+      "exit": 0,
+      "counts": {
+        "cases_per_lane": 3532,
+        "lanes": 2,
+        "literal_witnesses": 15,
+        "quantity_controls": 5,
+        "mutants": 6
+      },
+      "stdout_summary": "{\"status\": \"pass\", \"case_count\": 3532, \"literal_witnesses\": 15}",
+      "log_sha256": "63867712b416f598aabfa79ebb7d43e4e0322caf88ae9d3053b6f68ed69955f9"
+    },
+    {
+      "command": "python3 research/flat-store/check.py",
+      "exit": 0,
+      "counts": {
+        "observations_per_lane": 13621,
+        "instances_per_lane": 3534,
+        "lanes": 2,
+        "lifecycle_checks_per_lane": 7,
+        "mutants": 9,
+        "module_bytes": 1050
+      },
+      "stdout_summary": "{\"status\": \"pass\", \"module_bytes\": 1050, \"module_sha256\": \"0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4\"}",
+      "log_sha256": "250fb0c47c1f0dc6e9b90ef158b57729808551437fc46c6af8cfada4171d37b1"
+    },
+    {
+      "command": "NODE_OPTIONS='--import=./.local/compiler-fields-wasm/perch-cache.mjs' npm run -s lint:verify",
+      "exit": 0,
+      "counts": {
+        "tests": 103,
+        "pass": 103,
+        "fail": 0,
+        "law_rules_validated": 8,
+        "provider_requests": 0
+      },
+      "stdout_summary": "ok 103 - scan checkpoint accounts only for serialized rows when workers finish during append\n  ---\n  duration_ms: 6.663709\n  type: 'test'\n  ...\n1..103\n# tests 103\n# suites 0\n# pass 103\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 5573.488875\nPASS: eight law rules; package/family/control packet coverage; one request per packet; named filtering; advisory finding exit 3; unrelated path excluded; controls present.\nNo provider contacted. This verifies wiring, not model accuracy or law completeness.",
+      "log_sha256": "2176451af5fd23aeddbcd4f9ef0334e3b19b65e3324ee4d92304bc1e6378fae3"
+    },
+    {
+      "command": "python3 tests/compiler-fields-wasm/check.py",
+      "exit": 0,
+      "counts": {
+        "fixtures": 8,
+        "seed_calls": 32,
+        "evaluator_observations": 64,
+        "evaluator_values": 62,
+        "evaluator_parser_exhaustions": 2,
+        "node_observations": 64,
+        "node_values": 62,
+        "node_arena_exhaustions": 2,
+        "frozen_enum_byte_checks": 50,
+        "boundary_probes": 30,
+        "mutants": 4,
+        "semantic_kills": 8,
+        "new_checked_laws": 5
+      },
+      "stdout_summary": "Fields Wasm gate passed: 8 fixtures, 32 seed calls, 64 evaluator and 64 Node observations, 50 frozen enum-byte checks, 30 boundary probes, 4 type-correct mutants killed in both lanes; 5 new checked laws. /Users/ericfode/src/knot/.claude/worktrees/campaign-fields-wasm/tests/compiler-fields-wasm/receipts/fields-wasm.json",
+      "log_sha256": "de6af76e5f8a30df32e71c289bd330056cca9e1ce7976add92a07fcb476807f0"
+    }
+  ],
+  "proofs": [
+    {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/PROOF.bend"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/catalog-PROOF.bend"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/check-PROOF.bend"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/fields-PROOF.bend"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/runtime-PROOF.bend"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-fields-wasm/PROOF.bend"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    }
+  ],
+  "source_hashes": {
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "src/SPEC.md": "dc1aa573600fbeba81ffc57908b5fa24932b9bd951ee8a48be0753496cc7497d",
+    "src/CONTRACT.json": "dcf30a4b0ef7e600ce2753b84155b98c9135b087aee6f214676b8e1617edeb3f",
+    "scripts/run-wasm.mjs": "1b4d183c2de37d1b1b5c756db0be94412b9aa85b6dbe70f416993aee18222737",
+    "src/check.bend": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+    "tests/compiler-fields-wasm/LAWS.bend": "f5ef175cc720ec4e8d2da95ae42f876fae92f295ed1b0d6dab3c53e10fe26aa9",
+    "tests/compiler-fields-wasm/PROOF.bend": "df0f23b2fd1f921362ab52f06eb5c5d28d235867c90aab7a43fd575000c1cd0c",
+    "tests/compiler-fields-wasm/compile.bend": "48927236439b6e2d56532525be1a11ebba7b89aefdf4f83b8568cf38a53ab3c7",
+    "tests/compiler-fields-wasm/check.py": "544de0f4486cc62c8ec3fe1150bf29561f0e9e3cf1570fecd07e314fe3066d74",
+    "tests/compiler-fields-wasm/arena.mjs": "58ad1dc68e8b763e15eaaf22936596b90782eeee1a7275ddae5862278519088a",
+    "tests/compiler-fields-wasm/cases.json": "d4accfb0d29337a0324af58f8bd8b2db979dadc4ff6ff08fd58cf539d024acc9",
+    "tests/compiler-fields-wasm/expectations.json": "da8031ac5930995368c7171ba5c8a1b3f1cb1eedffc5dbe6515858362c17bcc9",
+    "tests/compiler-fields-wasm/enum-baseline.json": "73468f8804864370a5430e8a8a5ca73be09df6581d06751905c78697bf0ccb03"
+  },
+  "style_preflight": {
+    "command": "node scripts/perch-style.mjs --preflight --task=src/SPEC.md --output=tests/compiler-fields-wasm/receipts/style-preflight.json src/wasm.bend tests/compiler-fields-wasm/*.bend tests/compiler-fields-wasm/fixtures/*.bend",
+    "exit": 3,
+    "receipt": "tests/compiler-fields-wasm/receipts/style-preflight.json",
+    "summary": {
+      "units": 526,
+      "files": 12,
+      "unranked_files": 0,
+      "empty_files": 0,
+      "truncated_units": 330,
+      "truncated_by_limit": {
+        "caller-or-byte-limit": 6,
+        "context-file-limit": 3,
+        "context-helper-limit": 321
+      },
+      "supporting_role_impossible": 355,
+      "role_gap_units_by_reason": {
+        "context-file-limit": 3,
+        "context-helper-limit": 321,
+        "nonlocal-import": 34,
+        "truncated-context": 330
+      },
+      "max_state_bytes": 29282,
+      "composition_available": false,
+      "composition_reasons": [
+        "unresolved_composition_context",
+        "composition_byte_limit"
+      ]
+    },
+    "scores": "Unavailable; no provider requests; no style pass claimed."
+  },
+  "cache_workaround": {
+    "reason": "Global parser-cache lock is outside writable roots.",
+    "preload": "import pack from '@xberg-io/tree-sitter-language-pack';\npack.configure({cacheDir: '/Users/ericfode/src/knot/.claude/worktrees/campaign-fields-wasm/.local/compiler-fields-wasm/parser-cache'});\n",
+    "source": "Existing tree-sitter-language-pack v1.20.0 manifest.json and libs only; copied into ignored .local parser-cache; no downloads.",
+    "initial_lint_result": "88 passed, 11 blocked by global-cache lock; final result above covers 103 passing tests."
+  },
+  "receipt_policy": "Unrelated owned-store/flat-store receipts restored to exact HEAD; decompressed content and module bytes unchanged. Compiler receipts retain changed emitter/contract and generated-compiler hashes. Existing assertions unchanged. Structural trust was also restored: its proof/source closure is unchanged by this increment; the fresh run is recorded here.",
+  "git_handoff": {
+    "status": "shared metadata read-only; review commit/bundle prepared in ignored local output",
+    "unchanged_worktree_branch": "campaign/fields-wasm",
+    "reason": "Unable to create shared .git/worktrees/campaign-fields-wasm/index.lock: Operation not permitted",
+    "artifact_directory": ".local/compiler-fields-wasm/",
+    "coordinator_action": "Import the review bundle and update the executor branch under normal Git permissions before review/merge."
+  }
+}
