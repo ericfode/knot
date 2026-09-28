@@ -57,7 +57,7 @@ of `serializer.validate`'s recursion and stops at the first defect, and the
 canonical check comes last. A refusal therefore names the reference codec's
 first defect. The gate requires this on:
 - the 61 frozen controls, counted against SPEC §4's own figure;
-- 3,400 seeded single mutations of the goldens: 3,116 refused, and 284 admitted
+- 3,440 seeded single mutations of the goldens: 3,143 refused, and 297 admitted
   and run to a clean outcome.
 
 A refusal is read only from a run that stopped before `vm_boot` returned. A run
@@ -170,12 +170,13 @@ adopt them or record its own, so that lockstep compares like with like.
 
 ## Evidence (gate `vm-core`)
 
-- **Goldens.** All 85 through the real host, equal to `vm-expected.json`. The
+- **Goldens.** All 86 through the real host, equal to `vm-expected.json`. The
   test build confirms every Exhausted, Unsupported and HostFailure cause in the
-  VM's own outcome registers, and audits the state at all 1,553 transitions.
-  For D20's `print-non-scalar` and `print-non-scalar-mid` the registers show
-  that the VM refused before its host call: the real host would refuse the
-  same bytes with the same `HostFailure io abi` line.
+  VM's own outcome registers, and audits the state at all 1,570 transitions.
+  For D20's `print-non-scalar`, `print-non-scalar-mid` and
+  `print-non-scalar-wide`, the registers show that the VM refused before its
+  host call. The real host would refuse the same bytes with the same
+  `HostFailure io abi` line.
 - **Admitted controls.** vm-spec's three admitted plan controls (a Case on a
   `none` slot) and seven code-list controls load. They run as `fixtures.json`
   froze them by literal review: `list-head-match` prints `True{}`, the two
@@ -193,7 +194,7 @@ adopt them or record its own, so that lockstep compares like with like.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
-- **Malformed images.** As above: 61 frozen controls and 3,400 fuzz images,
+- **Malformed images.** As above: 61 frozen controls and 3,440 fuzz images,
   with no trap.
 - **Mutants.** Twelve, each killed by a wrong observation in a named group:
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);

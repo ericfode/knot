@@ -1,10 +1,10 @@
 {
- "date": "2026-09-28T09:11:40.581901+00:00",
+ "date": "2026-09-28T09:20:18.298894+00:00",
  "status": "passed",
  "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
  "inputs": {
   "scripts/run-wasm-io.mjs": "4ee7b16d5ae02614a47087dd8498352a487b7efffad6fca8ea629a60eae0b3ec",
-  "vm/SPEC.md": "794ee01a31e7af5e748d23f7cc1c4cedc39abb5e922f812e836bd86f0f3294ab",
+  "vm/SPEC.md": "c68df99fdd9836d12dc0bd2e42c41e33a85380be78cfdf7de0a2e3383465d9cb",
   "vm/build.json": "91a44a39a698d17c2f1eb201325b4ba3b84e727fdd10cf219bab3cfc51642f77",
   "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
   "vm/check-core.py": "f37f03b1005507ca15600c855472fdc948a6ec6ed5f23d7a966139e1a5755b36",
@@ -27,7 +27,7 @@
   "vm/core/render-nat.plan.json": "badeb34410d36b267ba0a5f722a9f27746dce2b8f70f697bf7b250f69215745b",
   "vm/core/unsupported-foreign.kimg": "ab7e2eda7b5b2de10ff0e713d85489055352a894c8bbf7d8386e8b1cb9b36bab",
   "vm/core/unsupported-foreign.plan.json": "48b7962552cfc0f7723ee3fbddf5a93acd79712c710f4e6516eba9ba5938d93b",
-  "vm/golden/vm-expected.json": "61a9de72a3faca04bb20f22e8bbb4891121c13cb3607231094dcf3df6e70e5e8",
+  "vm/golden/vm-expected.json": "429deb28858b1859a2c702660c52728e0f2151bee36b2abce53d01c3649c38db",
   "vm/harness.mjs": "c82677931a46cf069f31edf0a81b08d07a0c413019b95cd0778ec7714ddcf4ee",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
   "vm/serializer.py": "cde04014f675f71c5cd8638d3c793c5dba9703ecf64809bc3e3371bf47856e3d",
@@ -531,6 +531,16 @@
    "calls": 4,
    "transitions": 11,
    "audited": 12
+  },
+  {
+   "name": "print-non-scalar-wide",
+   "exit": 5,
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "outcome": "HostFailure",
+   "cause": "abi",
+   "calls": 4,
+   "transitions": 17,
+   "audited": 18
   },
   {
    "name": "recursion-map",
@@ -1697,10 +1707,10 @@
   "fuzz": {
    "seed": 20260928,
    "per_image": 40,
-   "images": 3400,
-   "corpus_sha256": "7f7283ff7fed36db9cc5b98cca63f91a1f77fb695b212b96d4772a2bbf9d64c8",
-   "refused": 3116,
-   "accepted": 284,
+   "images": 3440,
+   "corpus_sha256": "4818a2d1a5bfc0abf0d4564e97e05a8602cbba1e174b0e7ea4dca37a5af403cc",
+   "refused": 3143,
+   "accepted": 297,
    "reference_crash": 0
   }
  },
@@ -1730,7 +1740,7 @@
     "golden:char-space",
     "golden:closure-capture-off"
    ],
-   "wrong_observations": 66,
+   "wrong_observations": 67,
    "crashes": 2
   },
   {
@@ -1755,7 +1765,7 @@
     "golden:char-code",
     "golden:char-eq"
    ],
-   "wrong_observations": 143,
+   "wrong_observations": 144,
    "crashes": 0
   },
   {
