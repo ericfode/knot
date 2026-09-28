@@ -9,6 +9,9 @@ import { book_nil, parse_book, term_lower } from '../../vendor/bend-parser/bend.
 import baseSource from '../../vendor/bend-parser/base-source.mjs';
 import { parseImports, BEND_PARSER_PROFILE } from '../../scripts/perch-bend.mjs';
 import { CLASSES, classify, executionReferences, sorted } from './features.mjs';
+import { discoverSuites, classEvidence, STAGES } from './evidence.mjs';
+import { selfhostInventory, meterSummary } from './meter.mjs';
+export { outcome } from './evidence.mjs';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const OUT = 'docs/compiler-campaign/inventory';
@@ -238,52 +241,67 @@ export function policyViolations(files, policy) {
   return sorted(violations);
 }
 
-export function outcome(expected, success) {
-  if (expected.exit === 0) return success;
-  const value = ({ 2: 'Invalid', 3: 'Unsupported', 4: 'Exhausted', 5: 'HostFailure', 6: 'InternalFailure' })[expected.exit];
-  if (!value) throw failure('InternalFailure', `Unknown expected outcome ${expected.exit}`);
-  return value;
-}
-
-const SUITES = [
-  ['frontend', 'tests/subsets/frontend-cases.json', 'tests/subsets/', 'tests/subsets/check_frontend.py'],
-  ['checker', 'tests/compiler-checker/cases.json', '', 'tests/compiler-checker/check.py'],
-  ['catalog', 'tests/compiler-structural/cases.json', 'tests/compiler-structural/', 'tests/compiler-structural/check.py'],
-  ['fields', 'tests/compiler-fields/cases.json', 'tests/compiler-fields/', 'tests/compiler-fields/check.py'],
-  ['wasm', 'tests/compiler-wasm/cases.json', '', 'tests/compiler-wasm/check.py'],
-];
 export function acceptedInventory(root = ROOT) {
-  const records = [], suites = [];
-  for (const [suite, manifest, prefix, gate] of SUITES) {
-    const data = readJSON(root, manifest);
-    suites.push({ suite, manifest, manifest_sha256: sha256(read(root, manifest)), gate, gate_sha256: sha256(read(root, gate)), fixtures: data.cases.length });
-    for (const c of data.cases) {
-      const file = prefix + c.file, source = sourceFile(root, file);
-      const stages = suite === 'frontend' ? { parse: { outcome: 'Parsed', expectation: c.tree } }
-        : suite === 'wasm' ? Object.fromEntries(['check', 'eval', 'wasm'].map(s => [s, { outcome: { check: 'Checked', eval: 'Evaluated', wasm: 'Built' }[s], reference_calls: c.calls.length }]))
-        : Object.fromEntries((suite === 'checker' ? [['check', c.knot]]
-          : suite === 'catalog' ? [['catalog', c.catalog], ['compile', c.compiler]]
-          : [['check', c.check], ['eval', c.eval], ['compile', c.compile]])
-          .map(([stage, e]) => [stage, { outcome: outcome(e, { catalog: 'Catalogued', check: 'Checked', eval: 'Evaluated', compile: 'Built' }[stage]), expectation: e }]));
-      let features = null, analysis;
-      try {
-        const inv = new Inventory({ root }); inv.load(file);
-        features = inv.manifest().find(f => f.file === file).features;
-        analysis = { outcome: 'Parsed' };
-      } catch (error) { analysis = { outcome: errorOutcome(error), detail: error.message }; }
-      if (!features && Object.values(stages).some(s => ['Checked', 'Evaluated', 'Built', 'Catalogued'].includes(s.outcome))) {
-        throw failure('InternalFailure', `Cannot inventory accepted fixture ${file}: ${analysis.detail}`);
-      }
-      records.push({ suite, file, sha256: sha256(source), features, analysis, stages, reference: c.reference ?? { observations: c.calls } });
+  const { registry, suites, fixtures, reports } = discoverSuites(root), records = [];
+  for (const fixture of fixtures) {
+    const { suite, file, stages, reference, frozen_sha256, bundle, source_hashes, directory, gate, admission } = fixture;
+    const source = sourceFile(root, file);
+    if (frozen_sha256 !== undefined && frozen_sha256 !== sha256(source)) {
+      throw failure('Unsupported', `Frozen fixture hash differs: ${file}`);
     }
+    let features = null, analysis, dependencies = [];
+    try {
+      // Module fixtures own an explicit frozen package bundle. Never consult its hub.
+      const packages = Object.entries(bundle?.packages ?? {}).map(([hash, p]) => ({
+        hash, directory: `${directory}/bundle/lib/${hash}`, hashes: p.files,
+      }));
+      const inv = new Inventory({ root, packages });
+      if (directory === 'tests/compiler-modules') {
+        const resolve = inv.resolve.bind(inv), source = inv.source.bind(inv);
+        inv.resolve = (from, spec) => resolve(from, spec !== 'Base' && !spec.startsWith('0x') && !spec.includes('@') && !spec.startsWith('/') ? './' + spec : spec);
+        inv.source = file => {
+          const pkg = packages.find(p => file.startsWith(p.hash + '/'));
+          if (!pkg) {
+            const bytes = source(file);
+            if (file !== 'Base' && sha256(bytes) !== source_hashes?.[path.posix.relative(directory, file)]) {
+              throw failure('ResolutionFailure', `Fixture module pin differs or is missing: ${file}`);
+            }
+            return bytes;
+          }
+          const suffix = file.slice(pkg.hash.length + 1), bytes = sourceFile(root, pkg.directory + '/' + suffix);
+          if (sha256(bytes) !== pkg.hashes[suffix]) throw failure('ResolutionFailure', `Fixture package pin differs: ${file}`);
+          return bytes;
+        };
+      }
+      inv.load(file);
+      const files = inv.manifest();
+      features = files.find(f => f.file === file).features;
+      dependencies = files.filter(f => f.file !== file).map(({ file, sha256 }) => ({ file, sha256 }));
+      analysis = { outcome: 'Parsed' };
+    } catch (error) {
+      const detail = error.message.replaceAll(fs.realpathSync(root), '$ROOT').replaceAll(path.resolve(root), '$ROOT');
+      analysis = { outcome: errorOutcome(error), detail };
+    }
+    if (!features && Object.entries(stages).some(([stage, s]) => s.outcome === (STAGES[stage] ?? 'Built'))) {
+      throw failure('InternalFailure', `Cannot inventory ${admission} fixture ${file}: ${analysis.detail}`);
+    }
+    records.push({ suite, gate, admission, file, sha256: sha256(source), dependencies, features, analysis, stages, reference });
   }
-  const classes = Object.keys(CLASSES).sort().map(feature => ({ feature, stages: Object.fromEntries(['parse', 'catalog', 'check', 'eval', 'wasm'].map(stage => {
-    const evidence = records.filter(r => r.features?.includes(feature) && ['Parsed', 'Catalogued', 'Checked', 'Evaluated', 'Built'].includes(r.stages[stage]?.outcome))
-      .map(r => `${r.suite}:${r.file}`);
-    return [stage, { status: evidence.length ? 'observed-in-successful-fixtures' : 'no-positive-fixture-evidence', evidence }];
-  })) }));
-  return { schema: 1, scope: 'Fixed fixture/gate expectations; census does not run the gates. Per-feature evidence is bounded by each fixture, not general support for the class.',
-    limits: ['Rejected fixture features are not individually blamed for its diagnostic.', 'Gate-generated boundary probes and semantic mutants are not counted as source acceptance.', 'An expected result is not evidence of a fresh successful gate execution.'], suites, classes, fixtures: records };
+  const evidence = records.filter(r => r.admission === 'evidence');
+  const requirements = records.filter(r => r.admission === 'requirement');
+  const classes = classEvidence(evidence, Object.keys(CLASSES));
+  const requiredClasses = classEvidence(requirements, Object.keys(CLASSES)).map(c => ({ feature: c.feature,
+    stages: Object.fromEntries(Object.entries(c.stages).map(([s, entry]) => [s, {
+      status: entry.evidence.length ? 'covered-by-frozen-requirements' : 'no-frozen-requirement', fixtures: entry.evidence,
+    }])) }));
+  return { schema: 3, scope: 'Only suites with their mapped registered gate contribute accepted evidence. Frozen ungated suites are requirements. Census does not execute gates; class evidence is bounded by each fixture.',
+    limits: ['Rejected fixture features are not individually blamed for its diagnostic.',
+      'Gate-generated boundary probes and semantic mutants are not counted as source acceptance.',
+      'An expected result is not evidence of a fresh successful gate execution.',
+      'Compilation alone does not evidence executed Wasm; ambiguous outcomes and unknown formats contribute no positive evidence.',
+      'Fixture classes describe the entry file, not every declaration in imported Base/package implementations.'],
+    registry, suites, reports, classes, fixtures: evidence,
+    requirements: { suites: suites.filter(s => s.admission === 'requirement'), classes: requiredClasses, fixtures: requirements } };
 }
 
 export function build(root = ROOT) {
@@ -303,7 +321,7 @@ export function build(root = ROOT) {
     classes: sorted(selected.flatMap(f => f.features)).length });
   const metadata = { schema: 1, seed: { version: pin.version, commit: pin.commit, base_sha256: sha256(baseSource), comp_sha256: sha256(comp) },
     parser: { profile: BEND_PARSER_PROFILE, sha256: sha256(read(root, 'vendor/bend-parser/bend.mts')), typechecked: false },
-    census_sources: Object.fromEntries(['tools/census/census.mjs', 'tools/census/features.mjs', 'scripts/perch-bend.mjs'].map(file => [file, sha256(read(root, file))])) };
+    census_sources: Object.fromEntries(['tools/census/census.mjs', 'tools/census/features.mjs', 'tools/census/evidence.mjs', 'tools/census/gates.py', 'tools/census/meter.mjs', 'scripts/perch-bend.mjs'].map(file => [file, sha256(read(root, file))])) };
   const implementation = { ...metadata, scope: { compiler: 'Every src/*.bend file, including laws/proofs.', packages: 'Runtime entry import closures of six published packages; package proof/test harnesses excluded.', package_roots: packageRoots.sort() },
     package_pins: packages.map(({ name, hash, release_record, release_record_sha256 }) => ({ name, hash, release_record, release_record_sha256 })),
     classes: CLASSES, totals: { compiler: counts(files.filter(f => f.file.startsWith('src/'))),
@@ -348,14 +366,23 @@ export function build(root = ROOT) {
       host: contract.host, capabilities: contract.wasm, gate: 'tests/compiler-wasm/check.py',
       boundary: 'Native Wasm engine executes enum ordinals; no imports, linear memory, IO or GPU. This is separate from the seed-built compiler host.' },
     limits: ['Foreign declarations are inventoried, not executed by census.', 'The compiler driver and underlying VM/runtime remain trusted; source analysis does not qualify an ABI.'] };
-  return { 'implementation.json': implementation, 'base-closure.json': closures, 'accepted.json': acceptedInventory(root), 'hosts.json': hosts };
+  const accepted = acceptedInventory(root);
+  const selfhost = { ...selfhostInventory(implementation, closures, accepted),
+    inputs: Object.fromEntries(Object.entries({ 'implementation.json': implementation, 'base-closure.json': closures, 'accepted.json': accepted })
+      .map(([file, data]) => [`${OUT}/${file}`, sha256(json(data))])) };
+  return { 'implementation.json': implementation, 'base-closure.json': closures, 'accepted.json': accepted, 'hosts.json': hosts,
+    'selfhost.json': selfhost };
 }
 
 export function main(args = process.argv.slice(2)) {
-  if (args.some(a => a !== '--check')) throw failure('HostFailure', 'Usage: node tools/census/census.mjs [--check]');
+  if (args.some(a => !['--check', '--meter'].includes(a)) || args.length > 1) throw failure('HostFailure', 'Usage: node tools/census/census.mjs [--check | --meter]');
   const manifests = build(), policy = readJSON(ROOT, 'tools/census/approved.json');
   const violations = policyViolations(manifests['implementation.json'].files, policy);
   if (violations.length) throw failure('Unsupported', violations.join('\n'));
+  for (const report of manifests['accepted.json'].reports.filter(r => r.status.startsWith('unrecognized'))) {
+    console.error(`${report.status}: ${report.manifest ?? report.directory}: ${report.detail}`);
+  }
+  if (args.includes('--meter')) { console.log(meterSummary(manifests['selfhost.json'])); return; }
   for (const [file, data] of Object.entries(manifests)) {
     const output = path.join(ROOT, OUT, file), bytes = json(data);
     if (args.includes('--check')) {

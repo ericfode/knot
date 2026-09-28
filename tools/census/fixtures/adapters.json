@@ -1,0 +1,694 @@
+{
+  "basis": "Literal-reviewed census-2 stage expectations, fixed before implementation. SHA controls are placeholders used only by pure adapter tests.",
+  "controls": [
+    {
+      "directory": "tests/subsets",
+      "manifests": {
+        "frontend-cases.json": {
+          "cases": [
+            {
+              "file": "s1/a.bend",
+              "tree": "(tree)",
+              "reference": {
+                "exit": 0
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/subsets/s1/a.bend",
+          "stages": {
+            "parse": "Parsed"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-checker",
+      "manifests": {
+        "cases.json": {
+          "cases": [
+            {
+              "file": "tests/subsets/a.bend",
+              "knot": {
+                "exit": 0
+              }
+            },
+            {
+              "file": "tests/subsets/b.bend",
+              "knot": {
+                "exit": 2,
+                "diagnostic": "Invalid\tcheck\ttype-mismatch"
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/subsets/a.bend",
+          "stages": {
+            "check": "Checked"
+          }
+        },
+        {
+          "file": "tests/subsets/b.bend",
+          "stages": {
+            "check": "Invalid"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-structural",
+      "manifests": {
+        "cases.json": {
+          "cases": [
+            {
+              "file": "fixtures/a.bend",
+              "catalog": {
+                "exit": 0
+              },
+              "compiler": {
+                "exit": 3
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-structural/fixtures/a.bend",
+          "stages": {
+            "catalog": "Catalogued",
+            "compile": "Unsupported"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-fields",
+      "manifests": {
+        "cases.json": {
+          "cases": [
+            {
+              "file": "fixtures/a.bend",
+              "check": {
+                "exit": 0
+              },
+              "eval": {
+                "exit": 4
+              },
+              "compile": {
+                "exit": 5
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-fields/fixtures/a.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Exhausted",
+            "compile": "HostFailure"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-recursion",
+      "manifests": {
+        "cases.json": {
+          "cases": [
+            {
+              "file": "fixtures/a.bend",
+              "check": {
+                "exit": 0
+              },
+              "eval": {
+                "exit": 0
+              },
+              "compile": {
+                "exit": 3
+              }
+            },
+            {
+              "file": "fixtures/b.bend",
+              "check": {
+                "exit": 6
+              },
+              "eval": {
+                "exit": 6
+              },
+              "compile": {
+                "exit": 6
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-recursion/fixtures/a.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "compile": "Unsupported"
+          }
+        },
+        {
+          "file": "tests/compiler-recursion/fixtures/b.bend",
+          "stages": {
+            "check": "InternalFailure",
+            "eval": "InternalFailure",
+            "compile": "InternalFailure"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-wasm",
+      "manifests": {
+        "cases.json": {
+          "cases": [
+            {
+              "file": "tests/subsets/a.bend",
+              "calls": [
+                {
+                  "export": "main",
+                  "arguments": [],
+                  "tag": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/subsets/a.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Built"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-fields-wasm",
+      "manifests": {
+        "cases.json": {
+          "arena": {
+            "diagnostic": "Exhausted\twasm\tarena-overflow"
+          },
+          "cases": [
+            {
+              "name": "pair",
+              "file": "fixtures/a.bend",
+              "calls": [
+                {
+                  "export": "main",
+                  "arguments": [],
+                  "tag": 1
+                }
+              ]
+            },
+            {
+              "name": "deep-call",
+              "file": "fixtures/b.bend",
+              "eval_exhausted": "Exhausted\tparse\tbudget",
+              "calls": [
+                {
+                  "export": "main",
+                  "arguments": [],
+                  "tag": 1
+                }
+              ]
+            },
+            {
+              "name": "arena-overflow",
+              "file": "fixtures/c.bend",
+              "calls": [
+                {
+                  "export": "main",
+                  "arguments": [],
+                  "tag": 1
+                }
+              ]
+            }
+          ]
+        },
+        "expectations.json": {
+          "observations": [
+            {
+              "case": "pair",
+              "call": {
+                "export": "main",
+                "arguments": [],
+                "tag": 1
+              },
+              "source_sha256": "a",
+              "seed_stdout": "On{}"
+            },
+            {
+              "case": "deep-call",
+              "call": {
+                "export": "main",
+                "arguments": [],
+                "tag": 1
+              },
+              "source_sha256": "b",
+              "seed_stdout": "On{}"
+            },
+            {
+              "case": "arena-overflow",
+              "call": {
+                "export": "main",
+                "arguments": [],
+                "tag": 1
+              },
+              "source_sha256": "c",
+              "seed_stdout": "On{}"
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-fields-wasm/fixtures/a.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Built"
+          }
+        },
+        {
+          "file": "tests/compiler-fields-wasm/fixtures/b.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Exhausted",
+            "wasm": "Built"
+          }
+        },
+        {
+          "file": "tests/compiler-fields-wasm/fixtures/c.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Exhausted"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-nest",
+      "manifests": {
+        "expectations.json": {
+          "fixtures": [
+            {
+              "file": "tests/compiler-nest/fixtures/a.bend",
+              "knot": {
+                "exit": 0,
+                "outcome": "Accepted"
+              },
+              "observed": {
+                "calls": [
+                  {
+                    "exit": 0,
+                    "tag": 1
+                  }
+                ]
+              }
+            },
+            {
+              "file": "tests/compiler-nest/fixtures/b.bend",
+              "knot": {
+                "exit": 3,
+                "outcome": "Unsupported"
+              }
+            },
+            {
+              "file": "tests/compiler-nest/fixtures/empty.bend",
+              "knot": {
+                "exit": 0,
+                "outcome": "Accepted"
+              },
+              "observed": {
+                "main": {
+                  "exit": 0,
+                  "tag": 1
+                },
+                "calls": []
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-nest/fixtures/a.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Built"
+          }
+        },
+        {
+          "file": "tests/compiler-nest/fixtures/b.bend",
+          "stages": {
+            "check": "Unsupported",
+            "eval": "Unsupported",
+            "wasm": "Unsupported"
+          }
+        },
+        {
+          "file": "tests/compiler-nest/fixtures/empty.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Built"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-modules",
+      "manifests": {
+        "expectations.json": {
+          "fixtures": [
+            {
+              "file": "fixtures/a.bend",
+              "knot": {
+                "obligation": "match-seed"
+              },
+              "calls": [
+                {
+                  "exit": 0,
+                  "tag": 1
+                }
+              ]
+            },
+            {
+              "file": "fixtures/b.bend",
+              "knot": {
+                "obligation": "knot_expected"
+              },
+              "knot_expected": {
+                "exit": 3,
+                "outcome": "Unsupported"
+              },
+              "calls": [
+                {
+                  "exit": 0,
+                  "tag": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-modules/fixtures/a.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Built"
+          }
+        },
+        {
+          "file": "tests/compiler-modules/fixtures/b.bend",
+          "stages": {
+            "check": "Unsupported",
+            "eval": "Unsupported",
+            "wasm": "Unsupported"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-literals",
+      "manifests": {
+        "expectations.json": {
+          "fixtures": [
+            {
+              "file": "tests/compiler-literals/fixtures/a.bend",
+              "knot": {
+                "exit": 0,
+                "outcome": "agree"
+              },
+              "calls": [
+                {
+                  "tag": 1,
+                  "seed": {
+                    "exit": 0
+                  }
+                }
+              ]
+            },
+            {
+              "file": "tests/compiler-literals/fixtures/b.bend",
+              "knot_expected": {
+                "exit": 3,
+                "outcome": "Unsupported"
+              },
+              "seed_check": {
+                "exit": 0
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-literals/fixtures/a.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Built"
+          }
+        },
+        {
+          "file": "tests/compiler-literals/fixtures/b.bend",
+          "stages": {
+            "check": "Unsupported",
+            "eval": "Unsupported",
+            "wasm": "Unsupported"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-generics",
+      "manifests": {
+        "expectations.json": {
+          "cases": [
+            {
+              "name": "yes",
+              "file": "fixtures/a.bend",
+              "knot": {
+                "require": "agree"
+              }
+            },
+            {
+              "name": "maybe",
+              "file": "fixtures/b.bend",
+              "knot": {
+                "require": "agree-or-unsupported"
+              }
+            },
+            {
+              "name": "no",
+              "file": "fixtures/c.bend",
+              "knot": {
+                "require": "reject"
+              }
+            }
+          ],
+          "observations": {
+            "fixtures": [
+              {
+                "case": "yes",
+                "source_sha256": "a",
+                "check_only": {
+                  "exit": 0
+                },
+                "calls": [
+                  {
+                    "exit": 0,
+                    "result": {
+                      "tag": 1
+                    }
+                  }
+                ]
+              },
+              {
+                "case": "maybe",
+                "source_sha256": "b",
+                "check_only": {
+                  "exit": 0
+                },
+                "calls": [
+                  {
+                    "exit": 0,
+                    "result": {
+                      "tag": 1
+                    }
+                  }
+                ]
+              },
+              {
+                "case": "no",
+                "source_sha256": "c",
+                "check_only": {
+                  "exit": 1
+                },
+                "calls": []
+              }
+            ]
+          }
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-generics/fixtures/a.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Built"
+          }
+        },
+        {
+          "file": "tests/compiler-generics/fixtures/b.bend",
+          "stages": {
+            "check": "Unfixed",
+            "eval": "Unfixed",
+            "wasm": "Unfixed"
+          }
+        },
+        {
+          "file": "tests/compiler-generics/fixtures/c.bend",
+          "stages": {
+            "check": "Unfixed",
+            "eval": "Unfixed",
+            "wasm": "Unfixed"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-closures",
+      "manifests": {
+        "expectations.json": {
+          "cases": [
+            {
+              "name": "no",
+              "file": "fixtures/a.bend",
+              "knot": {
+                "require": "unsupported",
+                "exit": 3
+              }
+            }
+          ],
+          "observations": {
+            "fixtures": [
+              {
+                "case": "no",
+                "source_sha256": "a",
+                "check_only": {
+                  "exit": 0
+                },
+                "calls": []
+              }
+            ]
+          }
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-closures/fixtures/a.bend",
+          "stages": {
+            "check": "Unsupported",
+            "eval": "Unsupported",
+            "wasm": "Unsupported"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "tests/compiler-baseslice",
+      "manifests": {
+        "expectations.json": {
+          "cases": [
+            {
+              "name": "base",
+              "file": "fixtures/base.bend",
+              "knot": {
+                "require": "agree"
+              }
+            },
+            {
+              "name": "host",
+              "file": "fixtures/host.bend",
+              "knot": {
+                "require": "unsupported",
+                "exit": 3,
+                "diagnostic": "Unsupported\tcheck\thost-effect"
+              }
+            }
+          ],
+          "observations": {
+            "fixtures": [
+              {
+                "case": "base",
+                "source_sha256": "a",
+                "check_only": {
+                  "exit": 0
+                },
+                "calls": [
+                  {
+                    "exit": 0,
+                    "result": {
+                      "tag": 1
+                    }
+                  }
+                ]
+              },
+              {
+                "case": "host",
+                "source_sha256": "b",
+                "check_only": {
+                  "exit": 0
+                },
+                "calls": []
+              }
+            ]
+          }
+        }
+      },
+      "expected": [
+        {
+          "file": "tests/compiler-baseslice/fixtures/base.bend",
+          "stages": {
+            "check": "Checked",
+            "eval": "Evaluated",
+            "wasm": "Built"
+          }
+        },
+        {
+          "file": "tests/compiler-baseslice/fixtures/host.bend",
+          "stages": {
+            "check": "Unsupported",
+            "eval": "Unsupported",
+            "wasm": "Unsupported"
+          }
+        }
+      ]
+    }
+  ]
+}
