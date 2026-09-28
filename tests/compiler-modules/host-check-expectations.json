@@ -93,5 +93,62 @@
       "src/path-host.inspect"
     ],
     "namespace_note": "The census prefixes repository namespaces with src/; the seed CLI uses the entry directory as namespace root. The emitted effect requirement list is read from the pinned compiler output, not from census."
+  },
+  "emitted_foreign_by_entry": {
+    "check-cli.bend": {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/check-cli.bend",
+        "-o",
+        "<ROOT>/.local/modules/trust-check.js"
+      ],
+      "artifact_sha256": "33de8fde29000cd7382f9a9256450901f600ca9cc6568e5e8241fb0ee7799405",
+      "foreign_requirements_in_emitted_order": [
+        "IO.args",
+        "File.open",
+        "File.read",
+        "File.close",
+        "IO.print",
+        "path-host.inspect"
+      ]
+    },
+    "eval-cli.bend": {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/eval-cli.bend",
+        "-o",
+        "<ROOT>/.local/modules/trust-eval.js"
+      ],
+      "artifact_sha256": "ecac1f4491dd0f31fb70af89e7aaf24256bedebbd8b7992899606b759f8c1c57",
+      "foreign_requirements_in_emitted_order": [
+        "IO.args",
+        "File.open",
+        "File.read",
+        "File.close",
+        "IO.print",
+        "path-host.inspect"
+      ]
+    },
+    "compile-cli.bend": {
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "src/compile-cli.bend",
+        "-o",
+        "<ROOT>/.local/modules/trust-compile.js"
+      ],
+      "artifact_sha256": "8c702c38138dd2c37fe29501766934f26b35fbd2870ba5462e3d3133772bc1fc",
+      "foreign_requirements_in_emitted_order": [
+        "IO.args",
+        "File.open",
+        "File.read",
+        "File.close",
+        "File.write_bytes",
+        "path-host.inspect",
+        "IO.print"
+      ]
+    }
   }
 }

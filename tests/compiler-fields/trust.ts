@@ -23,7 +23,8 @@ for (const [source, output] of [
   const js = output ? path.join(root, '.local/compiler-fields/gate', output) : null;
   const runtime = js ? JSON.parse(fs.readFileSync(js, 'utf8').match(/for \(const k of (\[[^\n]*\])\) \{/)![1]) : [];
   const expected = output ? ['IO.args', 'File.open', 'File.read', 'File.close',
-    ...(output === 'compile.js' ? ['File.write_bytes'] : []), 'IO.print'] : [];
+    ...(output === 'compile.js' ? ['File.write_bytes', 'path-host.inspect', 'IO.print']
+      : ['IO.print', 'path-host.inspect'])] : [];
   if (JSON.stringify(runtime) !== JSON.stringify(expected)) throw new Error('Host capability inventory changed');
   entries.push({entry: source, holes: book.hols,
     loaded_files: [...seen.keys()].map(p => ({path: relative(p), sha256: hash(p)})),
