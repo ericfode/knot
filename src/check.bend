@@ -61,16 +61,10 @@ def variable(+binding: C.Binding, +token: S.Token, +scope: E.Scope, next: C.Term
       next(C.Construct{origin,typ,tag,params,args})
     case _: E.reference(binding,token,scope)
 
-def bound(bindings: List<&2,C.Binding>, +token: S.Token) -> Bool:
-  match bindings:
-    case Nil{}: False{}
-    case Con{C.Binding{name,level,q,type_id,param,known},tail}:
-      Bool.or(String.eq(S.text(name),S.text(token)),bound(tail,token))
-
 def callable(reference: G.FunctionRef, +token: S.Token, +current: U32, scope: E.Scope) -> Result<S.Error,G.FunctionRef>:
   match reference scope:
     case G.FunctionRef{+index,+sig} E.Scope{bindings,next,from,live,smaller}:
-      S.choose(Result<S.Error,G.FunctionRef>,bound(bindings,token),u => C.invalid(G.FunctionRef,"not-callable",token),u =>
+      S.choose(Result<S.Error,G.FunctionRef>,E.bound(bindings,token),u => C.invalid(G.FunctionRef,"not-callable",token),u =>
         S.choose(Result<S.Error,G.FunctionRef>,Bool.and(live,U32.is_gt(index,current)),u => C.invalid(G.FunctionRef,"forward-live-call",token),u => Done{G.FunctionRef{index,sig}}))
 
 def call_result(value: C.Checked, +token: S.Token, +index: U32, +result: U32, current: U32, scope: E.Scope) -> Result<S.Error,C.Checked>:
@@ -147,8 +141,10 @@ def call_body(reference: G.FunctionRef, +token: S.Token, +wanted: Maybe<&2,U32>,
 def binding_body(initial: C.Checked, +token: S.Token, +q: U32, types: List<&2,C.Datatype>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match initial:
     case C.Checked{term,+type_id,uses}:
+      # An erased let reads its name as a name; any other let binder is resolved.
+      S.bind(Unit,C.Checked,S.choose(Result<S.Error,Unit>,U32.is_eq(q,0),u => Done{Unit{}},u => E.binder(scope,token)),v =>
       S.bind(C.Datatype,C.Checked,enum_at(types,type_id),definition =>
-        S.bind(Unit,C.Checked,G.quantity(token,q,definition),u => next(E.extend(scope,token,q,type_id))))
+        S.bind(Unit,C.Checked,G.quantity(token,q,definition),u => next(E.extend(scope,token,q,type_id)))))
 
 def match_body(binding: C.Binding, +token: S.Token, +arms: List<&2,S.Node>, types: List<&2,C.Datatype>, +scope: E.Scope, +wanted: Maybe<&2,U32>, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match binding wanted:

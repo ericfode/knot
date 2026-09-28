@@ -56,10 +56,19 @@ def finish(fields: Fields, token: S.Token, +level: U32, type_id: U32, tag: U32, 
       Fields{E.Scope{E.replace(bindings,level,value(token,type_id,tag,params,args)),next,
         List.append(&2,U32,E.levels(introduced),open),live,E.descendants(level,E.levels(introduced),smaller)},introduced,args}
 
+# The seed resolves every field binder in the arm's scope before binding any.
+def resolved(nodes: List<&2,S.Node>, +scope: E.Scope) -> Result<S.Error,Unit>:
+  match nodes:
+    case Nil{}: Done{Unit{}}
+    case Con{S.Variable{token},tail}: S.bind(Unit,Unit,E.binder(scope,token),u => resolved(tail,scope))
+    case Con{S.Promotion{token},tail}: S.bind(Unit,Unit,E.binder(scope,token),u => resolved(tail,scope))
+    case Con{other,tail}: resolved(tail,scope)
+
 def open_fields(binding: C.Binding, +scope: E.Scope, +tag: U32, +nodes: List<&2,S.Node>, +params: List<&2,C.Parameter>, +types: List<&2,C.Datatype>) -> Result<S.Error,Fields>:
   match binding:
     case C.Binding{+token,+level,q,+type_id,param,known}:
-      S.bind(Fields,Fields,fields(nodes,params,q,types,E.branch(scope,level,tag),token),result => Done{finish(result,token,level,type_id,tag,params)})
+      S.bind(Unit,Fields,resolved(nodes,scope),u =>
+        S.bind(Fields,Fields,fields(nodes,params,q,types,E.branch(scope,level,tag),token),result => Done{finish(result,token,level,type_id,tag,params)}))
 
 def branch(+scope: E.Scope, +level: U32, reference: G.ConstructorRef, node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,Fields>:
   match scope reference node:

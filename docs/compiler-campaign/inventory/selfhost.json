@@ -4661,34 +4661,34 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 584,
-        "compiler": 477,
+        "declarations": 586,
+        "compiler": 479,
         "packages": 14,
         "base": 93,
         "check": 200,
         "wasm": 181,
         "covered_by_requirements": {
-          "check": 568,
-          "wasm": 568
+          "check": 570,
+          "wasm": 570
         }
       },
       "missing": {
         "check": [
           {
             "feature": "lambdas",
-            "declarations": 196
+            "declarations": 198
           },
           {
             "feature": "captures",
-            "declarations": 191
+            "declarations": 193
           },
           {
             "feature": "literals.string",
-            "declarations": 172
+            "declarations": 173
           },
           {
             "feature": "patterns.nested",
-            "declarations": 103
+            "declarations": 104
           },
           {
             "feature": "patterns.wildcard",
@@ -4754,23 +4754,23 @@
         "wasm": [
           {
             "feature": "lambdas",
-            "declarations": 196
+            "declarations": 198
           },
           {
             "feature": "captures",
-            "declarations": 191
+            "declarations": 193
           },
           {
             "feature": "literals.string",
-            "declarations": 172
+            "declarations": 173
           },
           {
             "feature": "recursion",
-            "declarations": 128
+            "declarations": 129
           },
           {
             "feature": "patterns.nested",
-            "declarations": 103
+            "declarations": 104
           },
           {
             "feature": "patterns.wildcard",
@@ -11727,6 +11727,7 @@
             "imports.base",
             "imports.local",
             "lambdas",
+            "literals.u32",
             "matches",
             "patterns.variable",
             "quantities.affine",
@@ -11746,41 +11747,6 @@
               "captures",
               "higher-order",
               "lambdas"
-            ]
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
-          "key": "src/check.bound",
-          "file": "src/check.bend",
-          "origin": "compiler",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "generics",
-            "imports.base",
-            "imports.local",
-            "matches",
-            "patterns.nested",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "quantities.reusable",
-            "recursion",
-            "types.base"
-          ],
-          "missing": {
-            "check": [
-              "patterns.nested"
-            ],
-            "wasm": [
-              "patterns.nested",
-              "recursion"
             ]
           },
           "missing_requirements": {
@@ -19316,6 +19282,47 @@
           }
         },
         {
+          "key": "src/patterns.resolved",
+          "file": "src/patterns.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas",
+              "patterns.nested"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas",
+              "patterns.nested",
+              "recursion"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/patterns.value",
           "file": "src/patterns.bend",
           "origin": "compiler",
@@ -21031,6 +21038,80 @@
             "wasm": [
               "captures",
               "lambdas",
+              "recursion"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/scope.binder",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas",
+              "literals.string"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas",
+              "literals.string"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/scope.bound",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "patterns.nested"
+            ],
+            "wasm": [
+              "patterns.nested",
               "recursion"
             ]
           },
@@ -27012,8 +27093,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "68f36d8cae22c3b8f366301ab2f2f2e6b86ca45ef0d293ad53182a7d353d0e68",
-    "docs/compiler-campaign/inventory/base-closure.json": "01249d5753b54700b19062707b1326be17a916bd653db44ba1339ba856365fba",
+    "docs/compiler-campaign/inventory/implementation.json": "3c300e1e0444341bbcdd10d097c75ad00fab56df82e93140f045382a6323d317",
+    "docs/compiler-campaign/inventory/base-closure.json": "fe332c70f72c38f3e30d6859d5922a34f5c7ac2a12c35a8d5a97f7bd997cebd2",
     "docs/compiler-campaign/inventory/accepted.json": "f35df96c1e63d1ecc71f866766fc52ac087068f3d1c0c93eb2a6a530876e13dc"
   }
 }

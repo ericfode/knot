@@ -16,3 +16,5 @@ def L.nearest_binding_wins(tail,level):
   {==}
 def L.no_checker_budget(node):
   {==}
+def L.dotted_binder_rebinds_only_a_bound_name(at):
+  {==}
