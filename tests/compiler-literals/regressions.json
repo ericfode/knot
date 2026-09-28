@@ -3422,6 +3422,297 @@
       }
     },
     {
+      "name": "own-dotted-literal-pattern",
+      "file": "tests/compiler-literals/regressions/own-dotted-literal-pattern.bend",
+      "sha256": "f424a51ad31438ff1dd9dac56651d3dffc567b35dc72e7f59cf4981ecd4baf11",
+      "finding": "own primitive pattern",
+      "covers": "case 2n on an own Zero/Succ type named A.T",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-dotted-literal-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-dotted-literal-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-n-expr-module",
+      "file": "tests/compiler-literals/regressions/own-n-expr-module.bend",
+      "sha256": "87ac4997d8a12ba973913460b26376478c0084e373c940d3cd78ceed95ddc55a",
+      "finding": "own primitive expression control",
+      "covers": "own-n-literal-expr imported as a module",
+      "enums": {},
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-n-expr-module.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a declared constructor (own-n-literal-expr.N declares own-n-literal-expr.Zero, own-n-literal-expr.Succ)\n- observed : 2n\nLocation: own-n-literal-expr.two\n10 | def two() -> N:\n11>|   2n\n   |   ^^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-n-expr-module.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a declared constructor (own-n-literal-expr.N declares own-n-literal-expr.Zero, own-n-literal-expr.Succ)\n- observed : 2n\nLocation: own-n-literal-expr.two\n10 | def two() -> N:\n11>|   2n\n   |   ^^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tunknown-type\t",
+        "justification": "Seed-invalid (\"a declared constructor\"): without Base, the literal takes no installed primitive, and the target declares no constructor it spells: N declares Z and S, and an imported datatype declares only qualified names."
+      }
+    },
+    {
+      "name": "own-n-literal-expr",
+      "file": "tests/compiler-literals/regressions/own-n-literal-expr.bend",
+      "sha256": "7c4d49f58face2f9bdcff5482d24c4fd84b8015b778b74f58ae3743b10a0d546",
+      "finding": "own primitive expression",
+      "covers": "2n against an own Zero/Succ type named N",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-n-literal-expr.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-n-literal-expr.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-n-literal-pattern",
+      "file": "tests/compiler-literals/regressions/own-n-literal-pattern.bend",
+      "sha256": "83345129ee918d27a3998d013d3b8e588eda6a49e3cc14a4524d2196a8c58445",
+      "finding": "own primitive pattern",
+      "covers": "case 2n on an own Zero/Succ type named N",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-n-literal-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-n-literal-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-n-offset-expr",
+      "file": "tests/compiler-literals/regressions/own-n-offset-expr.bend",
+      "sha256": "7653598108aa10b10bdeb12d67fe9c6ef94435a0cb3987bdbc76fb1ddaf12c19",
+      "finding": "own primitive expression",
+      "covers": "2n+n against an own Zero/Succ type named N",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-n-offset-expr.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-n-offset-expr.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-n-offset-pattern",
+      "file": "tests/compiler-literals/regressions/own-n-offset-pattern.bend",
+      "sha256": "acae8bfb6f52a3f127855ef98693f38c8ae9f4fe6914e298be99e04be25101be",
+      "finding": "own primitive pattern",
+      "covers": "case 1n+p on an own Zero/Succ type named N",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-n-offset-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-n-offset-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
       "name": "own-nat-literal",
       "file": "tests/compiler-literals/regressions/own-nat-literal.bend",
       "sha256": "913c59e6d1e09378cd53b8efa5075c3f78818006d4ce811ac42069ba9a17334b",
@@ -3473,6 +3764,462 @@
       }
     },
     {
+      "name": "own-nat-literal-pattern",
+      "file": "tests/compiler-literals/regressions/own-nat-literal-pattern.bend",
+      "sha256": "a0e06654c6b09871cdf6d3c58516509151f3f4a78eef0c315a5620ad1b28e6dd",
+      "finding": "own primitive pattern",
+      "covers": "case 2n on the book's own Nat",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-nat-literal-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-nat-literal-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-nat-offset-expr",
+      "file": "tests/compiler-literals/regressions/own-nat-offset-expr.bend",
+      "sha256": "c3d654777c87a85e5332bed56a90b345c4e7ba05caff2e0ec15d3d86645b5a86",
+      "finding": "own primitive expression",
+      "covers": "1n+n against the book's own Nat",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-nat-offset-expr.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-nat-offset-expr.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-nat-offset-pattern",
+      "file": "tests/compiler-literals/regressions/own-nat-offset-pattern.bend",
+      "sha256": "e45007b8bfa6425a8731b40082c15b6766c666e8035f604305eec054f4311e40",
+      "finding": "own primitive pattern",
+      "covers": "case 1n+p on the book's own Nat",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-nat-offset-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-nat-offset-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-nat-pattern-module",
+      "file": "tests/compiler-literals/regressions/own-nat-pattern-module.bend",
+      "sha256": "307cbce04afba489046452520ec1242aeb15e33af4367b98249d552c161a275e",
+      "finding": "own primitive pattern control",
+      "covers": "own-nat-literal-pattern imported as a module",
+      "enums": {},
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-nat-pattern-module.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: Succ)\nLocation:\n11 |   match n:\n12>|     case 2n: Yes{}\n   |          ^^\n13 |     case _: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-nat-pattern-module.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: Succ)\nLocation:\n11 |   match n:\n12>|     case 2n: Yes{}\n   |          ^^\n13 |     case _: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tunknown-type\t",
+        "justification": "Seed-invalid (\"a declared constructor\"): without Base, the literal takes no installed primitive, and the target declares no constructor it spells: N declares Z and S, and an imported datatype declares only qualified names."
+      }
+    },
+    {
+      "name": "own-nat-zero-pattern",
+      "file": "tests/compiler-literals/regressions/own-nat-zero-pattern.bend",
+      "sha256": "e073e1ebbfdb416e2c0db95e00f66b5dc356f1f38a3037dcad6fa6d7912eaaf5",
+      "finding": "own primitive pattern",
+      "covers": "case 0n on the book's own Nat, without Base",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-nat-zero-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-nat-zero-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-string-empty-expr",
+      "file": "tests/compiler-literals/regressions/own-string-empty-expr.bend",
+      "sha256": "6a94513c182aa6831f66210837e8593e9ef554ddf2a69c769a2acdc467928037",
+      "finding": "own primitive expression",
+      "covers": "\"\" against the book's own String",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Char": [
+          "Chr"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-string-empty-expr.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-string-empty-expr.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-string-empty-pattern",
+      "file": "tests/compiler-literals/regressions/own-string-empty-pattern.bend",
+      "sha256": "2380b660d4066bf2dac361dbb368e38564de7eec2feca835610e3e5ebbfc1743",
+      "finding": "own primitive pattern",
+      "covers": "case \"\" on the book's own String",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Char": [
+          "Chr"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-string-empty-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-string-empty-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-t-empty-expr",
+      "file": "tests/compiler-literals/regressions/own-t-empty-expr.bend",
+      "sha256": "b8f0eb6246542daf598cd0d95b3e9e24a887207d0ed2fc5658d9ad6f2593b06f",
+      "finding": "own primitive expression",
+      "covers": "\"\" against an own SNil/SCon type named T",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Ch": [
+          "C"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-t-empty-expr.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-t-empty-expr.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
+      "name": "own-t-empty-pattern",
+      "file": "tests/compiler-literals/regressions/own-t-empty-pattern.bend",
+      "sha256": "5eb4ae14b3ab325ad2c41c3d9ffd863b747b7372dac54027d1816a6125c1f52e",
+      "finding": "own primitive pattern",
+      "covers": "case \"\" on an own SNil/SCon type named T",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Ch": [
+          "C"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-t-empty-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-t-empty-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent installed primitive, not on the type name, and does not interpret the spelling (D4)."
+      }
+    },
+    {
       "name": "own-u32-literal",
       "file": "tests/compiler-literals/regressions/own-u32-literal.bend",
       "sha256": "60fb88c21647d4d51c1494de4a11580510903dc9cb72d03670a83b387560bd74",
@@ -3514,6 +4261,91 @@
         "artifact": false,
         "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
         "justification": "A literal spells an installed primitive; the book's own datatype of that name is none. The seed accepts the Nat book and rejects the U32 book, so Knot claims neither (D4)."
+      }
+    },
+    {
+      "name": "own-u32-pattern",
+      "file": "tests/compiler-literals/regressions/own-u32-pattern.bend",
+      "sha256": "5d6bd455497b2f787d91bf5b4e1f96b97f721ae6c144a09c0474f5fb69e84809",
+      "finding": "own primitive pattern",
+      "covers": "case 3 on the book's own U32, which declares only Z",
+      "enums": {
+        "U32": [
+          "Z"
+        ],
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-u32-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: U32)\nLocation:\n10 |   match n:\n11>|     case 3: Yes{}\n   |          ^\n12 |     case _: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-u32-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: U32)\nLocation:\n10 |   match n:\n11>|     case 3: Yes{}\n   |          ^\n12 |     case _: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "Seed-invalid (\"unknown: U32\"): without Base, a U32 literal spells Base's Word, which Knot does not model, so it claims no verdict for any target, as for own-u32-literal (D4)."
+      }
+    },
+    {
+      "name": "own-unspelled-pattern",
+      "file": "tests/compiler-literals/regressions/own-unspelled-pattern.bend",
+      "sha256": "3fd49ba1f8c56c269a230ec48a917d647a5364ca5bf827ce1f4f708a437dcd23",
+      "finding": "own primitive pattern control",
+      "covers": "case 0n on an own type N{Z, S}",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-unspelled-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: Zero)\nLocation:\n11 |   match n:\n12>|     case 0n: Yes{}\n   |          ^^\n13 |     case _: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-unspelled-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: Zero)\nLocation:\n11 |   match n:\n12>|     case 0n: Yes{}\n   |          ^^\n13 |     case _: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tunknown-type\t",
+        "justification": "Seed-invalid (\"a declared constructor\"): without Base, the literal takes no installed primitive, and the target declares no constructor it spells: N declares Z and S, and an imported datatype declares only qualified names."
       }
     },
     {

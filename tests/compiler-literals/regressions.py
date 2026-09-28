@@ -91,6 +91,20 @@ BASE_TYPE = oracle.unsupported(
     'check', 'literal-base-type',
     "A literal spells an installed primitive; the book's own datatype of that name is none. "
     'The seed accepts the Nat book and rejects the U32 book, so Knot claims neither (D4).')
+SPELLED = oracle.unsupported(
+    'check', 'literal-base-type',
+    "Seed-valid: without Base, the seed spells the literal by bare constructor names (Zero and "
+    'Succ, SNil and SCon) that the target datatype declares. Knot keys the case on the absent '
+    'installed primitive, not on the type name, and does not interpret the spelling (D4).')
+WORD_SPELLED = oracle.unsupported(
+    'check', 'literal-base-type',
+    'Seed-invalid ("unknown: U32"): without Base, a U32 literal spells Base\'s Word, which Knot '
+    'does not model, so it claims no verdict for any target, as for own-u32-literal (D4).')
+UNSPELLED = invalid(
+    'check', 'unknown-type',
+    'Seed-invalid ("a declared constructor"): without Base, the literal takes no installed '
+    'primitive, and the target declares no constructor it spells: N declares Z and S, and an '
+    'imported datatype declares only qualified names.')
 
 # name -> (finding, covers, entries, Knot)
 PLAN = {
@@ -187,6 +201,27 @@ PLAN = {
     'dead-pattern-type': ('dead arm control', "case 'a' on U32 after case _", [], DEAD_PATTERN['type']),
     'own-nat-literal': ('own primitive type', "2n against the book's own Nat, without Base", [], BASE_TYPE),
     'own-u32-literal': ('own primitive type', "3 against the book's own U32, without Base", [], BASE_TYPE),
+    'own-nat-zero-pattern': ('own primitive pattern', "case 0n on the book's own Nat, without Base", [], SPELLED),
+    'own-nat-literal-pattern': ('own primitive pattern', "case 2n on the book's own Nat", [], SPELLED),
+    'own-nat-offset-pattern': ('own primitive pattern', "case 1n+p on the book's own Nat", [], SPELLED),
+    'own-n-literal-pattern': ('own primitive pattern', 'case 2n on an own Zero/Succ type named N', [], SPELLED),
+    'own-n-offset-pattern': ('own primitive pattern', 'case 1n+p on an own Zero/Succ type named N', [], SPELLED),
+    'own-dotted-literal-pattern': ('own primitive pattern', 'case 2n on an own Zero/Succ type named A.T',
+                                   [], SPELLED),
+    'own-string-empty-pattern': ('own primitive pattern', "case \"\" on the book's own String", [], SPELLED),
+    'own-t-empty-pattern': ('own primitive pattern', 'case "" on an own SNil/SCon type named T', [], SPELLED),
+    'own-u32-pattern': ('own primitive pattern', "case 3 on the book's own U32, which declares only Z",
+                        [], WORD_SPELLED),
+    'own-unspelled-pattern': ('own primitive pattern control', 'case 0n on an own type N{Z, S}', [], UNSPELLED),
+    'own-nat-pattern-module': ('own primitive pattern control', 'own-nat-literal-pattern imported as a module',
+                               [], UNSPELLED),
+    'own-nat-offset-expr': ('own primitive expression', "1n+n against the book's own Nat", [], SPELLED),
+    'own-string-empty-expr': ('own primitive expression', "\"\" against the book's own String", [], SPELLED),
+    'own-n-literal-expr': ('own primitive expression', '2n against an own Zero/Succ type named N', [], SPELLED),
+    'own-n-offset-expr': ('own primitive expression', '2n+n against an own Zero/Succ type named N', [], SPELLED),
+    'own-t-empty-expr': ('own primitive expression', '"" against an own SNil/SCon type named T', [], SPELLED),
+    'own-n-expr-module': ('own primitive expression control', 'own-n-literal-expr imported as a module',
+                          [], UNSPELLED),
 }
 
 
