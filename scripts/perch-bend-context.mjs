@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { readFile, realpath } from 'node:fs/promises';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { analyzeBendSource } from './perch-bend.mjs';
+import { INTERFACE_CONTEXT, createPackageStore, createInterfaceReview } from './perch-context-interfaces.mjs';
 
 const hash = source => createHash('sha256').update(source).digest('hex');
 const identifier = (path, declaration) => `${path}::${declaration.qualified_name}`;
@@ -14,17 +15,51 @@ const within = (root, path) => {
 };
 
 /** Explicit files only; each real source is read and parsed once for this command. */
-export async function createBendSourceSnapshot(root) {
+export async function createBendSourceSnapshot(root, { contextPolicy = null, packageStore = null } = {}) {
+  if (contextPolicy !== null && contextPolicy !== INTERFACE_CONTEXT) throw new Error('Unknown Bend context policy');
   const realRoot = await realpath(root), paths = new Map(), sources = new Map();
+  const store = contextPolicy === INTERFACE_CONTEXT ? await createPackageStore(realRoot, packageStore) : null;
+  const packages = new Map();
   let parseCalls = 0;
   const outside = () => Object.assign(new Error('Bend source is outside this workspace'), {
     code: 'BEND_OUTSIDE_WORKSPACE', bend_snapshot_io: true,
   });
   return {
     root: realRoot,
+    contextPolicy,
     get stats() { return { requested_paths: paths.size, parse_calls: parseCalls }; },
+    async resolveImport(from, module) {
+      if (module.startsWith('0x') && store) {
+        const found = await store.resolve(module);
+        if (found.reason) return found;
+        for (const member of found.members.values()) packages.set(resolve(realRoot, member.path), { ...member,
+          package_hash: found.package_hash, package_provenance: found.provenance, members: found.members });
+        return { path: found.path };
+      }
+      if (!module.startsWith('./') && !module.startsWith('../')) return { reason: 'nonlocal-import' };
+      const absolute = resolve(realRoot, dirname(from), module), owner = packages.get(resolve(realRoot, from));
+      if (owner) {
+        const member = [...owner.members.values()].find(m => resolve(realRoot, m.path) === absolute);
+        return member && absolute.endsWith('.bend') ? { path: member.path } : { reason: 'package-member-not-found' };
+      }
+      if (!within(realRoot, absolute) || !absolute.endsWith('.bend')) return { reason: 'outside-workspace' };
+      try {
+        const actual = await realpath(absolute);
+        return within(realRoot, actual) ? { path: relative(realRoot, actual).split(sep).join('/') } : { reason: 'outside-workspace' };
+      } catch (e) { return { reason: `unavailable-local-import:${e.code ?? 'read-error'}` }; }
+    },
     async load(path) {
       const absolute = resolve(realRoot, path);
+      if (packages.has(absolute)) {
+        if (!paths.has(absolute)) paths.set(absolute, (async () => {
+          const member = packages.get(absolute);
+          parseCalls++;
+          const analysis = await analyzeBendSource(member.source);
+          return Object.freeze({ source: member.source, source_sha256: member.source_sha256, analysis,
+            package_hash: member.package_hash, package_provenance: member.package_provenance });
+        })());
+        return paths.get(absolute);
+      }
       if (!within(realRoot, absolute)) throw outside();
       if (!paths.has(absolute)) paths.set(absolute, (async () => {
         let actual;
@@ -59,6 +94,7 @@ export function bendDeclarationSource(source, declaration, location = declaratio
 
 /** One immutable working-tree source snapshot per file-check invocation. */
 export async function createBendReview({ root, path, source, analysis, limits = {}, snapshot = null }) {
+  if (snapshot?.contextPolicy === INTERFACE_CONTEXT) return createInterfaceReview({ root, path, source, analysis, limits, snapshot });
   const bounds = { helpers: 48, files: 12, bytes: 48_000, callers: 4, ...limits };
   const realRoot = await realpath(root);
   if (snapshot && snapshot.root !== realRoot) throw new Error('Bend source snapshot belongs to another workspace');

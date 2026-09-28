@@ -941,3 +941,36 @@ separate "version 7" rubric needs reconciling against these anchors.
 Prevention: calibrate a rubric against recorded human preferences before
 optimizing code against it. v6's memetic target would have steered a paydown
 campaign toward the styles the user rejected.
+
+## 2026-09-27 — Compiler context closure and explicit interfaces
+
+Scope: `campaign/perch-context`, compiler base `3a162ab`; rubric v8
+`b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693` unchanged.
+Evidence: [before/after baseline](compiler-campaign/perch-baseline.md),
+[fixed controls and gate counts](compiler-campaign/perch-context-verification.md).
+
+Judgment: confirmed structural tooling blockers. The one-file datatype cap,
+raw helper/caller overflow, unavailable published imports and complete dependency
+bodies made style qualification structurally impossible. Current source had
+374 blockers; the earlier 317-blocker receipt remains historical. No provider
+was involved, so these are not adjudicated model findings. Implementation effort
+was not measured; gate execution time is recorded separately.
+
+Change: opt the compiler manifest into `interfaces-v1`. Follow transitive types,
+verify complete local package bytes against the seed publish identity, retain
+selected files in full, and supply explicit hash-pinned collaborator interfaces.
+Overflow helper/caller signatures retain their type closure and classification.
+Split full-source selections across existing mechanisms while retaining every
+source and each group's closed local inventory. Keep all rubric text, targets
+and the 48,000-byte source bound. Legacy request controls remain unchanged.
+
+Evidence: 23 clean/broken/held-out controls and four semantic mutants, including
+leaked bodies, unverified packages, lost truncation and silently oversized groups;
+all 15 registered gates and the 18 wrapper tests pass. Current preflight covers
+425 distinct declarations in 17 compositions with zero structural blockers.
+
+Boundary: repository OutputBuilder bytes differ from the published closure and
+are correctly rejected. The explicit installed package store verifies; no
+network or package edit is needed. Interfaces do not establish unseen behavior
+or checked proofs. All five style axes remain unrated. Live review is the next
+trigger; the `checking` composition is within 97 bytes of the cap.

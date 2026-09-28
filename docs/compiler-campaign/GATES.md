@@ -24,6 +24,12 @@ recursion, fields-wasm and census merge; `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,
 timeouts, blocked dependencies, and malformed/missing completion records exit 1.
+The Perch context increment adds gate 15, `perch-context`: 23 literal context
+controls, four semantic mutants, and the full offline compiler-manifest
+preflight with the runner's frozen local package store. It writes only its own
+`tests/perch-context/receipts/context.json` in scratch. It makes no provider
+requests and retains the pinned rubric and composition-byte cap.
+
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
 

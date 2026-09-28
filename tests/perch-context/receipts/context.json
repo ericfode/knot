@@ -1,0 +1,1584 @@
+{
+  "status": "pass",
+  "context_policy": "interfaces-v1",
+  "fixtures": [
+    "versioned compiler manifest selects every source and declaration in full somewhere",
+    "manifest interface policy preserves complete selected text and remains wholly offline",
+    "interface manifests cannot hide unselected files or open local import closures",
+    "versioned datatype CLI follows the type closure instead of legacy one-file scope",
+    "explicit package store works outside workspace and pins all members for freshness",
+    "published relative imports cannot leave the verified package membership",
+    "signature closure omits unused bodies and includes types from overflow caller signatures",
+    "encoded-state budget demotes bodies while keeping task and selected source intact",
+    "local symlink cycles canonicalize and external symlinks remain unresolved",
+    "missing published packages and missing law contracts stay explicit",
+    "datatype closure follows imports beyond one file and terminates cycles",
+    "datatype byte exhaustion retains an explicit truncation marker",
+    "published hash uses actual sorted closure bytes in explicit and repository stores",
+    "tampered unused package member cannot be accepted by its directory name",
+    "release hash and member digests are evidence, not authority",
+    "package traversal, symlinks and environment members fail closed",
+    "definition interfaces keep nested and multiline signatures without leaking bodies",
+    "law statements remain signatures while checked proof bodies are omitted",
+    "interface file pins full source, preserves types and marks omitted implementation",
+    "helper and caller overflow is explicitly summarized with signature closure",
+    "composition preserves full selection and supplies external collaborators as interfaces",
+    "composition exact UTF-8 bound fits; one byte over is unavailable and marked",
+    "unused proof-entry chains stay interfaces with no proof body"
+  ],
+  "mutants": [
+    "summary-leaks-body",
+    "unverified-package-accepted",
+    "truncation-marker-dropped",
+    "group-silently-over-bound"
+  ],
+  "tests": 27,
+  "compiler_preflight": {
+    "unavailable_compositions": 0,
+    "over_bound_groups": 0,
+    "unresolved_composition_references": 0,
+    "truncated_declarations": 0,
+    "uncovered_declarations": 0,
+    "provider_requests": 0
+  },
+  "summary": {
+    "groups": 17,
+    "groups_completed": 17,
+    "units": 945,
+    "files": 30,
+    "truncated_units": 0,
+    "supporting_role_impossible": 0,
+    "compositions_available": 17
+  },
+  "distinct_declarations": 425,
+  "groups": [
+    {
+      "name": "syntax-core",
+      "summary": {
+        "units": 33,
+        "files": 2,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 4701,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/core.bend"
+        ],
+        "context_files": 2,
+        "source_bytes": 5156,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "full",
+            "bytes": 2000,
+            "context_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+          }
+        ]
+      }
+    },
+    {
+      "name": "frontend-lexing",
+      "summary": {
+        "units": 27,
+        "files": 2,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 8979,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/lex.bend"
+        ],
+        "context_files": 2,
+        "source_bytes": 7112,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/lex.bend",
+            "representation": "full",
+            "bytes": 3956,
+            "context_sha256": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3"
+          }
+        ]
+      }
+    },
+    {
+      "name": "frontend-parsing",
+      "summary": {
+        "units": 41,
+        "files": 2,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 26742,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/parse.bend"
+        ],
+        "context_files": 2,
+        "source_bytes": 19654,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/parse.bend",
+            "representation": "full",
+            "bytes": 16498,
+            "context_sha256": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df"
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "summary": {
+        "units": 45,
+        "files": 4,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 9030,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/core.bend",
+          "src/diagnostic.bend",
+          "src/checked-display.bend"
+        ],
+        "context_files": 4,
+        "source_bytes": 11027,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "full",
+            "bytes": 2000,
+            "context_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "representation": "full",
+            "bytes": 3109,
+            "context_sha256": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "representation": "full",
+            "bytes": 2762,
+            "context_sha256": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a"
+          }
+        ]
+      }
+    },
+    {
+      "name": "catalog",
+      "summary": {
+        "units": 65,
+        "files": 3,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 21283,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/core.bend",
+          "src/catalog.bend"
+        ],
+        "context_files": 3,
+        "source_bytes": 17844,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "full",
+            "bytes": 2000,
+            "context_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "full",
+            "bytes": 12688,
+            "context_sha256": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0"
+          }
+        ]
+      }
+    },
+    {
+      "name": "scope-patterns",
+      "summary": {
+        "units": 99,
+        "files": 5,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 25243,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/core.bend",
+          "src/scope.bend",
+          "src/catalog.bend",
+          "src/patterns.bend"
+        ],
+        "context_files": 5,
+        "source_bytes": 29152,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "full",
+            "bytes": 2000,
+            "context_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "full",
+            "bytes": 7002,
+            "context_sha256": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "full",
+            "bytes": 12688,
+            "context_sha256": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "full",
+            "bytes": 4306,
+            "context_sha256": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f"
+          }
+        ]
+      }
+    },
+    {
+      "name": "checking",
+      "summary": {
+        "units": 134,
+        "files": 6,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 53375,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/core.bend",
+          "src/catalog.bend",
+          "src/scope.bend",
+          "src/patterns.bend",
+          "src/check.bend"
+        ],
+        "context_files": 6,
+        "source_bytes": 47903,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "full",
+            "bytes": 2000,
+            "context_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "full",
+            "bytes": 12688,
+            "context_sha256": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "full",
+            "bytes": 7002,
+            "context_sha256": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "full",
+            "bytes": 4306,
+            "context_sha256": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f"
+          },
+          {
+            "path": "src/check.bend",
+            "representation": "full",
+            "bytes": 18751,
+            "context_sha256": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "evaluation",
+      "summary": {
+        "units": 63,
+        "files": 3,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 22661,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/core.bend",
+          "src/eval.bend"
+        ],
+        "context_files": 3,
+        "source_bytes": 18063,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "full",
+            "bytes": 2000,
+            "context_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+          },
+          {
+            "path": "src/eval.bend",
+            "representation": "full",
+            "bytes": 12907,
+            "context_sha256": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091"
+          }
+        ]
+      }
+    },
+    {
+      "name": "wasm-codec",
+      "summary": {
+        "units": 30,
+        "files": 2,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 11579,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/wasm-bytes.bend"
+        ],
+        "context_files": 14,
+        "source_bytes": 6343,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "representation": "full",
+            "bytes": 2453,
+            "context_sha256": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac"
+          },
+          {
+            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "representation": "interface",
+            "bytes": 734,
+            "context_sha256": "0b7137534f4c646d95986bbdc8997670d3f19ae55bef40c4c1cd4727667b6690"
+          }
+        ]
+      }
+    },
+    {
+      "name": "wasm-emission",
+      "summary": {
+        "units": 89,
+        "files": 4,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 39013,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/core.bend",
+          "src/wasm-bytes.bend",
+          "src/wasm.bend"
+        ],
+        "context_files": 20,
+        "source_bytes": 27393,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "full",
+            "bytes": 2000,
+            "context_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "representation": "full",
+            "bytes": 2453,
+            "context_sha256": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac"
+          },
+          {
+            "path": "src/wasm.bend",
+            "representation": "full",
+            "bytes": 17151,
+            "context_sha256": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3"
+          },
+          {
+            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "representation": "interface",
+            "bytes": 806,
+            "context_sha256": "f131cf8dfc70660f6dcf96d3256fc34a635f95afab6e102b5ab64a2fa0ae375c"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "interface",
+            "bytes": 413,
+            "context_sha256": "0c953d162715ff09f16bef6a848c226a890432e8c2bfef01382fac75e900fd58"
+          },
+          {
+            "path": "src/check.bend",
+            "representation": "interface",
+            "bytes": 731,
+            "context_sha256": "7c700e81b5b826e8b3fa05f5d588022c6eaf40906409876d646f10f85863aa0b"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "interface",
+            "bytes": 356,
+            "context_sha256": "564bec7e7c50e7a282f8b19efd72c63a59333b395ede1664fd93268cdff73b8f"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "interface",
+            "bytes": 327,
+            "context_sha256": "c5f29bc6909b25eb25281c18b4350803be91c306db14f4b401b822dec21376a6"
+          }
+        ]
+      }
+    },
+    {
+      "name": "driver-pipeline",
+      "summary": {
+        "units": 51,
+        "files": 5,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 58063,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/driver.bend",
+          "src/parse-cli.bend",
+          "src/check-cli.bend",
+          "src/eval-cli.bend",
+          "src/compile-cli.bend"
+        ],
+        "context_files": 30,
+        "source_bytes": 23245,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/driver.bend",
+            "representation": "full",
+            "bytes": 3055,
+            "context_sha256": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15"
+          },
+          {
+            "path": "src/parse-cli.bend",
+            "representation": "full",
+            "bytes": 2507,
+            "context_sha256": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90"
+          },
+          {
+            "path": "src/check-cli.bend",
+            "representation": "full",
+            "bytes": 2788,
+            "context_sha256": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705"
+          },
+          {
+            "path": "src/eval-cli.bend",
+            "representation": "full",
+            "bytes": 1357,
+            "context_sha256": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "representation": "full",
+            "bytes": 2987,
+            "context_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          },
+          {
+            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "representation": "interface",
+            "bytes": 419,
+            "context_sha256": "2143ec18853e0eafc292ae545197d7aceb521353effa00ad1deb31b06bfda95f"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "interface",
+            "bytes": 413,
+            "context_sha256": "0c953d162715ff09f16bef6a848c226a890432e8c2bfef01382fac75e900fd58"
+          },
+          {
+            "path": "src/check.bend",
+            "representation": "interface",
+            "bytes": 724,
+            "context_sha256": "46ca3dfdbcaeb33932bed00765f883cd49ba0f1d8c7027644a6f1a44b5655549"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "representation": "interface",
+            "bytes": 314,
+            "context_sha256": "4423e4b0de27d3010749ad696efd7ed04596b7e75d894af05a2b9556169ca257"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "interface",
+            "bytes": 1540,
+            "context_sha256": "398e7ba5a95257e32347e609268cf44007b2710dcb2e37ab8fe2af0727a38f49"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "representation": "interface",
+            "bytes": 381,
+            "context_sha256": "8456a47d43d41c8ce52dff5c7acf94eded152561c3ab40c97775babe8cc9a77c"
+          },
+          {
+            "path": "src/eval.bend",
+            "representation": "interface",
+            "bytes": 1800,
+            "context_sha256": "415d6ee82f53d62a632c5d325c6ad78b69bb0171ad631581491cc19571c0533e"
+          },
+          {
+            "path": "src/lex.bend",
+            "representation": "interface",
+            "bytes": 478,
+            "context_sha256": "415f72c15b27076b2da118b4bb428ce22139b730fb662a4d7d2fed81e101e0b2"
+          },
+          {
+            "path": "src/parse.bend",
+            "representation": "interface",
+            "bytes": 1078,
+            "context_sha256": "68c5f20afb432f74245bbdd41b0c4dabeb6bbc1348bef11797a14430b78dd3c0"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "interface",
+            "bytes": 356,
+            "context_sha256": "564bec7e7c50e7a282f8b19efd72c63a59333b395ede1664fd93268cdff73b8f"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "interface",
+            "bytes": 327,
+            "context_sha256": "c5f29bc6909b25eb25281c18b4350803be91c306db14f4b401b822dec21376a6"
+          },
+          {
+            "path": "src/syntax.bend",
+            "representation": "interface",
+            "bytes": 1332,
+            "context_sha256": "ba807a1a345ff26240aecc0d70e4211d61ba92a6287dd9c1a1c335e39a489a1f"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "representation": "interface",
+            "bytes": 236,
+            "context_sha256": "7b1cf5fd2324a33fca49660b95b54d334fc1e41eb05278301f914b9eb4a3f02a"
+          },
+          {
+            "path": "src/wasm.bend",
+            "representation": "interface",
+            "bytes": 1153,
+            "context_sha256": "9b8dec499e790fe042d1ace1d309c6b144cec32185936a2a2389525d3248e549"
+          }
+        ]
+      }
+    },
+    {
+      "name": "frontend-laws",
+      "summary": {
+        "units": 69,
+        "files": 5,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 27301,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/LAWS.bend",
+          "src/lex.bend",
+          "src/parse.bend",
+          "src/PROOF.bend"
+        ],
+        "context_files": 5,
+        "source_bytes": 26496,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/syntax.bend",
+            "representation": "full",
+            "bytes": 3156,
+            "context_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/LAWS.bend",
+            "representation": "full",
+            "bytes": 2359,
+            "context_sha256": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8"
+          },
+          {
+            "path": "src/lex.bend",
+            "representation": "full",
+            "bytes": 3956,
+            "context_sha256": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3"
+          },
+          {
+            "path": "src/parse.bend",
+            "representation": "full",
+            "bytes": 16498,
+            "context_sha256": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df"
+          },
+          {
+            "path": "src/PROOF.bend",
+            "representation": "full",
+            "bytes": 527,
+            "context_sha256": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638"
+          }
+        ]
+      }
+    },
+    {
+      "name": "checker-laws",
+      "summary": {
+        "units": 38,
+        "files": 3,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 47941,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/check-LAWS.bend",
+          "src/scope.bend",
+          "src/check-PROOF.bend"
+        ],
+        "context_files": 12,
+        "source_bytes": 15547,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/check-LAWS.bend",
+            "representation": "full",
+            "bytes": 1697,
+            "context_sha256": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "full",
+            "bytes": 7002,
+            "context_sha256": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0"
+          },
+          {
+            "path": "src/check-PROOF.bend",
+            "representation": "full",
+            "bytes": 448,
+            "context_sha256": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d"
+          },
+          {
+            "path": "src/LAWS.bend",
+            "representation": "interface",
+            "bytes": 220,
+            "context_sha256": "208c960be7d1da9c2d5de078962d0aee4dcb41a615292fb9fc014413a9e1dca7"
+          },
+          {
+            "path": "src/PROOF.bend",
+            "representation": "interface",
+            "bytes": 171,
+            "context_sha256": "a3a8b31d894ea96c40f5876a1e7c7ae2f6d764b1ce4d7e5ba96aa7054e27a638"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "interface",
+            "bytes": 413,
+            "context_sha256": "0c953d162715ff09f16bef6a848c226a890432e8c2bfef01382fac75e900fd58"
+          },
+          {
+            "path": "src/check.bend",
+            "representation": "interface",
+            "bytes": 724,
+            "context_sha256": "46ca3dfdbcaeb33932bed00765f883cd49ba0f1d8c7027644a6f1a44b5655549"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "interface",
+            "bytes": 1725,
+            "context_sha256": "1f43ea840c918b19d8aa4b748771381382f21cdd72f6a062d39614f495e0ebb3"
+          },
+          {
+            "path": "src/lex.bend",
+            "representation": "interface",
+            "bytes": 376,
+            "context_sha256": "93c2aa4dc1af011f53249a7fe565fcae47d23e2071228a26aa7f4f6e09f156f2"
+          },
+          {
+            "path": "src/parse.bend",
+            "representation": "interface",
+            "bytes": 977,
+            "context_sha256": "73ba9f30ecad0f7ac84b5eb5d86fcb8d66e110fc2b622276acc7f8cc043fffb5"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "interface",
+            "bytes": 356,
+            "context_sha256": "564bec7e7c50e7a282f8b19efd72c63a59333b395ede1664fd93268cdff73b8f"
+          },
+          {
+            "path": "src/syntax.bend",
+            "representation": "interface",
+            "bytes": 1438,
+            "context_sha256": "3b5c586a1cd0db15dc635f9bbb9a5f9eba4762dd57baf1ab96e053561bfdda63"
+          }
+        ]
+      }
+    },
+    {
+      "name": "runtime-laws",
+      "summary": {
+        "units": 55,
+        "files": 4,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 18259,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/runtime-LAWS.bend",
+          "src/eval.bend",
+          "src/wasm-bytes.bend",
+          "src/runtime-PROOF.bend"
+        ],
+        "context_files": 28,
+        "source_bytes": 25065,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/runtime-LAWS.bend",
+            "representation": "full",
+            "bytes": 1610,
+            "context_sha256": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a"
+          },
+          {
+            "path": "src/eval.bend",
+            "representation": "full",
+            "bytes": 12907,
+            "context_sha256": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "representation": "full",
+            "bytes": 2453,
+            "context_sha256": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac"
+          },
+          {
+            "path": "src/runtime-PROOF.bend",
+            "representation": "full",
+            "bytes": 494,
+            "context_sha256": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874"
+          },
+          {
+            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "representation": "interface",
+            "bytes": 734,
+            "context_sha256": "0b7137534f4c646d95986bbdc8997670d3f19ae55bef40c4c1cd4727667b6690"
+          },
+          {
+            "path": "src/LAWS.bend",
+            "representation": "interface",
+            "bytes": 220,
+            "context_sha256": "208c960be7d1da9c2d5de078962d0aee4dcb41a615292fb9fc014413a9e1dca7"
+          },
+          {
+            "path": "src/PROOF.bend",
+            "representation": "interface",
+            "bytes": 171,
+            "context_sha256": "a3a8b31d894ea96c40f5876a1e7c7ae2f6d764b1ce4d7e5ba96aa7054e27a638"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "interface",
+            "bytes": 413,
+            "context_sha256": "0c953d162715ff09f16bef6a848c226a890432e8c2bfef01382fac75e900fd58"
+          },
+          {
+            "path": "src/check-LAWS.bend",
+            "representation": "interface",
+            "bytes": 252,
+            "context_sha256": "3ffc9cb94024284263cf29634143144ea57321142579ea2e50149b3849d47aa5"
+          },
+          {
+            "path": "src/check-PROOF.bend",
+            "representation": "interface",
+            "bytes": 212,
+            "context_sha256": "78a2c3640c908b1e64e970c2428f96d7a1b66234fe663516d89dbde42533b76d"
+          },
+          {
+            "path": "src/check.bend",
+            "representation": "interface",
+            "bytes": 635,
+            "context_sha256": "79e93572a8536640a6cd213aac0da250c18ea6f8e9a8db98f89642a9b15b0711"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "interface",
+            "bytes": 1540,
+            "context_sha256": "398e7ba5a95257e32347e609268cf44007b2710dcb2e37ab8fe2af0727a38f49"
+          },
+          {
+            "path": "src/lex.bend",
+            "representation": "interface",
+            "bytes": 376,
+            "context_sha256": "93c2aa4dc1af011f53249a7fe565fcae47d23e2071228a26aa7f4f6e09f156f2"
+          },
+          {
+            "path": "src/parse.bend",
+            "representation": "interface",
+            "bytes": 977,
+            "context_sha256": "73ba9f30ecad0f7ac84b5eb5d86fcb8d66e110fc2b622276acc7f8cc043fffb5"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "interface",
+            "bytes": 356,
+            "context_sha256": "564bec7e7c50e7a282f8b19efd72c63a59333b395ede1664fd93268cdff73b8f"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "interface",
+            "bytes": 327,
+            "context_sha256": "c5f29bc6909b25eb25281c18b4350803be91c306db14f4b401b822dec21376a6"
+          },
+          {
+            "path": "src/syntax.bend",
+            "representation": "interface",
+            "bytes": 1388,
+            "context_sha256": "d8df774ab22f2438bf7ba92e8eb5cb54239aea56d8cf5d7179f9b456e307954c"
+          }
+        ]
+      }
+    },
+    {
+      "name": "catalog-laws",
+      "summary": {
+        "units": 42,
+        "files": 3,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 21283,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/catalog-LAWS.bend",
+          "src/catalog.bend",
+          "src/catalog-PROOF.bend"
+        ],
+        "context_files": 30,
+        "source_bytes": 24026,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/catalog-LAWS.bend",
+            "representation": "full",
+            "bytes": 1116,
+            "context_sha256": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "full",
+            "bytes": 12688,
+            "context_sha256": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0"
+          },
+          {
+            "path": "src/catalog-PROOF.bend",
+            "representation": "full",
+            "bytes": 626,
+            "context_sha256": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9"
+          },
+          {
+            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "representation": "interface",
+            "bytes": 419,
+            "context_sha256": "2143ec18853e0eafc292ae545197d7aceb521353effa00ad1deb31b06bfda95f"
+          },
+          {
+            "path": "src/LAWS.bend",
+            "representation": "interface",
+            "bytes": 220,
+            "context_sha256": "208c960be7d1da9c2d5de078962d0aee4dcb41a615292fb9fc014413a9e1dca7"
+          },
+          {
+            "path": "src/PROOF.bend",
+            "representation": "interface",
+            "bytes": 171,
+            "context_sha256": "a3a8b31d894ea96c40f5876a1e7c7ae2f6d764b1ce4d7e5ba96aa7054e27a638"
+          },
+          {
+            "path": "src/check-LAWS.bend",
+            "representation": "interface",
+            "bytes": 252,
+            "context_sha256": "3ffc9cb94024284263cf29634143144ea57321142579ea2e50149b3849d47aa5"
+          },
+          {
+            "path": "src/check-PROOF.bend",
+            "representation": "interface",
+            "bytes": 212,
+            "context_sha256": "78a2c3640c908b1e64e970c2428f96d7a1b66234fe663516d89dbde42533b76d"
+          },
+          {
+            "path": "src/check.bend",
+            "representation": "interface",
+            "bytes": 739,
+            "context_sha256": "519ee51e69d8b0d85fd62dc159c1bb9c8c91f77e3096566988923370cfa74f93"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "interface",
+            "bytes": 1813,
+            "context_sha256": "818d8799109649f5ed2e9c205f53d6a517d34e5079416fb41c4667d22e4f9157"
+          },
+          {
+            "path": "src/eval.bend",
+            "representation": "interface",
+            "bytes": 1580,
+            "context_sha256": "ca4a6e92c94001ce1c06000837925b24cd23fdbd270be5cc8f27abc9aba27297"
+          },
+          {
+            "path": "src/lex.bend",
+            "representation": "interface",
+            "bytes": 376,
+            "context_sha256": "93c2aa4dc1af011f53249a7fe565fcae47d23e2071228a26aa7f4f6e09f156f2"
+          },
+          {
+            "path": "src/parse.bend",
+            "representation": "interface",
+            "bytes": 977,
+            "context_sha256": "73ba9f30ecad0f7ac84b5eb5d86fcb8d66e110fc2b622276acc7f8cc043fffb5"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "interface",
+            "bytes": 356,
+            "context_sha256": "564bec7e7c50e7a282f8b19efd72c63a59333b395ede1664fd93268cdff73b8f"
+          },
+          {
+            "path": "src/runtime-LAWS.bend",
+            "representation": "interface",
+            "bytes": 258,
+            "context_sha256": "bfff23c61069f9168a1fa21508da637d7143c80aa5d623270d9b202e14ab2054"
+          },
+          {
+            "path": "src/runtime-PROOF.bend",
+            "representation": "interface",
+            "bytes": 222,
+            "context_sha256": "dc4c6e32d83ffd59251f980a748dad0a63333e8a7b8da71a7eb3bc7ba91cba22"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "interface",
+            "bytes": 327,
+            "context_sha256": "c5f29bc6909b25eb25281c18b4350803be91c306db14f4b401b822dec21376a6"
+          },
+          {
+            "path": "src/syntax.bend",
+            "representation": "interface",
+            "bytes": 1438,
+            "context_sha256": "3b5c586a1cd0db15dc635f9bbb9a5f9eba4762dd57baf1ab96e053561bfdda63"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "representation": "interface",
+            "bytes": 236,
+            "context_sha256": "7b1cf5fd2324a33fca49660b95b54d334fc1e41eb05278301f914b9eb4a3f02a"
+          }
+        ]
+      }
+    },
+    {
+      "name": "fields-laws",
+      "summary": {
+        "units": 32,
+        "files": 3,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 25243,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/fields-LAWS.bend",
+          "src/patterns.bend",
+          "src/fields-PROOF.bend"
+        ],
+        "context_files": 32,
+        "source_bytes": 19579,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/fields-LAWS.bend",
+            "representation": "full",
+            "bytes": 2765,
+            "context_sha256": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "full",
+            "bytes": 4306,
+            "context_sha256": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f"
+          },
+          {
+            "path": "src/fields-PROOF.bend",
+            "representation": "full",
+            "bytes": 835,
+            "context_sha256": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6"
+          },
+          {
+            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "representation": "interface",
+            "bytes": 419,
+            "context_sha256": "2143ec18853e0eafc292ae545197d7aceb521353effa00ad1deb31b06bfda95f"
+          },
+          {
+            "path": "src/LAWS.bend",
+            "representation": "interface",
+            "bytes": 220,
+            "context_sha256": "208c960be7d1da9c2d5de078962d0aee4dcb41a615292fb9fc014413a9e1dca7"
+          },
+          {
+            "path": "src/PROOF.bend",
+            "representation": "interface",
+            "bytes": 171,
+            "context_sha256": "a3a8b31d894ea96c40f5876a1e7c7ae2f6d764b1ce4d7e5ba96aa7054e27a638"
+          },
+          {
+            "path": "src/catalog-LAWS.bend",
+            "representation": "interface",
+            "bytes": 256,
+            "context_sha256": "f25b355cb190112e47d201d382f7b03351e5d3efeaa76dda74323c90985cde91"
+          },
+          {
+            "path": "src/catalog-PROOF.bend",
+            "representation": "interface",
+            "bytes": 226,
+            "context_sha256": "79747103cdd4d181c694cb37c6d74aba49a8b0f4876fc3ad9924a982adfce6c3"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "interface",
+            "bytes": 880,
+            "context_sha256": "c2426a440989515baf2b674745ba31169adfb1b7996098eeaec06bc06b4768b1"
+          },
+          {
+            "path": "src/check-LAWS.bend",
+            "representation": "interface",
+            "bytes": 252,
+            "context_sha256": "3ffc9cb94024284263cf29634143144ea57321142579ea2e50149b3849d47aa5"
+          },
+          {
+            "path": "src/check-PROOF.bend",
+            "representation": "interface",
+            "bytes": 212,
+            "context_sha256": "78a2c3640c908b1e64e970c2428f96d7a1b66234fe663516d89dbde42533b76d"
+          },
+          {
+            "path": "src/check.bend",
+            "representation": "interface",
+            "bytes": 635,
+            "context_sha256": "79e93572a8536640a6cd213aac0da250c18ea6f8e9a8db98f89642a9b15b0711"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "interface",
+            "bytes": 1917,
+            "context_sha256": "8ce8bda18395ed719d50a4679b374003502650c90fcfc6aebb7bf5ef2ada1554"
+          },
+          {
+            "path": "src/eval.bend",
+            "representation": "interface",
+            "bytes": 2152,
+            "context_sha256": "3d9d6d71c830b397f0f36f86ffa08a874d0440d9bae896be4a7ee7850bb6a7f2"
+          },
+          {
+            "path": "src/lex.bend",
+            "representation": "interface",
+            "bytes": 376,
+            "context_sha256": "93c2aa4dc1af011f53249a7fe565fcae47d23e2071228a26aa7f4f6e09f156f2"
+          },
+          {
+            "path": "src/parse.bend",
+            "representation": "interface",
+            "bytes": 977,
+            "context_sha256": "73ba9f30ecad0f7ac84b5eb5d86fcb8d66e110fc2b622276acc7f8cc043fffb5"
+          },
+          {
+            "path": "src/runtime-LAWS.bend",
+            "representation": "interface",
+            "bytes": 258,
+            "context_sha256": "bfff23c61069f9168a1fa21508da637d7143c80aa5d623270d9b202e14ab2054"
+          },
+          {
+            "path": "src/runtime-PROOF.bend",
+            "representation": "interface",
+            "bytes": 222,
+            "context_sha256": "dc4c6e32d83ffd59251f980a748dad0a63333e8a7b8da71a7eb3bc7ba91cba22"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "interface",
+            "bytes": 932,
+            "context_sha256": "4e35c8a87a9a20f9b1b3b6a26e3398c0cda684f8f57b13c3d2aabff8865c6a3d"
+          },
+          {
+            "path": "src/syntax.bend",
+            "representation": "interface",
+            "bytes": 1332,
+            "context_sha256": "ba807a1a345ff26240aecc0d70e4211d61ba92a6287dd9c1a1c335e39a489a1f"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "representation": "interface",
+            "bytes": 236,
+            "context_sha256": "7b1cf5fd2324a33fca49660b95b54d334fc1e41eb05278301f914b9eb4a3f02a"
+          }
+        ]
+      }
+    },
+    {
+      "name": "recursion-laws",
+      "summary": {
+        "units": 32,
+        "files": 2,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 0,
+        "truncated_by_limit": {},
+        "supporting_role_impossible": 0,
+        "role_gap_units_by_reason": {},
+        "max_state_bytes": 21009,
+        "composition_available": true,
+        "composition_reasons": []
+      },
+      "composition": {
+        "required": "always",
+        "available": true,
+        "reasons": [],
+        "selected_files": [
+          "src/recursion-LAWS.bend",
+          "src/recursion-PROOF.bend"
+        ],
+        "context_files": 34,
+        "source_bytes": 17267,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": [],
+        "context_policy": "interfaces-v1",
+        "representations": [
+          {
+            "path": "src/recursion-LAWS.bend",
+            "representation": "full",
+            "bytes": 4620,
+            "context_sha256": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47"
+          },
+          {
+            "path": "src/recursion-PROOF.bend",
+            "representation": "full",
+            "bytes": 1325,
+            "context_sha256": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae"
+          },
+          {
+            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "representation": "interface",
+            "bytes": 419,
+            "context_sha256": "2143ec18853e0eafc292ae545197d7aceb521353effa00ad1deb31b06bfda95f"
+          },
+          {
+            "path": "src/LAWS.bend",
+            "representation": "interface",
+            "bytes": 220,
+            "context_sha256": "208c960be7d1da9c2d5de078962d0aee4dcb41a615292fb9fc014413a9e1dca7"
+          },
+          {
+            "path": "src/PROOF.bend",
+            "representation": "interface",
+            "bytes": 171,
+            "context_sha256": "a3a8b31d894ea96c40f5876a1e7c7ae2f6d764b1ce4d7e5ba96aa7054e27a638"
+          },
+          {
+            "path": "src/catalog-LAWS.bend",
+            "representation": "interface",
+            "bytes": 256,
+            "context_sha256": "f25b355cb190112e47d201d382f7b03351e5d3efeaa76dda74323c90985cde91"
+          },
+          {
+            "path": "src/catalog-PROOF.bend",
+            "representation": "interface",
+            "bytes": 226,
+            "context_sha256": "79747103cdd4d181c694cb37c6d74aba49a8b0f4876fc3ad9924a982adfce6c3"
+          },
+          {
+            "path": "src/catalog.bend",
+            "representation": "interface",
+            "bytes": 413,
+            "context_sha256": "0c953d162715ff09f16bef6a848c226a890432e8c2bfef01382fac75e900fd58"
+          },
+          {
+            "path": "src/check-LAWS.bend",
+            "representation": "interface",
+            "bytes": 252,
+            "context_sha256": "3ffc9cb94024284263cf29634143144ea57321142579ea2e50149b3849d47aa5"
+          },
+          {
+            "path": "src/check-PROOF.bend",
+            "representation": "interface",
+            "bytes": 212,
+            "context_sha256": "78a2c3640c908b1e64e970c2428f96d7a1b66234fe663516d89dbde42533b76d"
+          },
+          {
+            "path": "src/check.bend",
+            "representation": "interface",
+            "bytes": 799,
+            "context_sha256": "cdabaeb210093fe3a22fd84a0bc71f33d08e90de239573eb3ebcbeb8b95567a1"
+          },
+          {
+            "path": "src/core.bend",
+            "representation": "interface",
+            "bytes": 1540,
+            "context_sha256": "398e7ba5a95257e32347e609268cf44007b2710dcb2e37ab8fe2af0727a38f49"
+          },
+          {
+            "path": "src/eval.bend",
+            "representation": "interface",
+            "bytes": 1680,
+            "context_sha256": "7e5e60a2a8518cc80128dda5b9cd3e4550e2c2028a326b652a110c3e3f26c87a"
+          },
+          {
+            "path": "src/fields-LAWS.bend",
+            "representation": "interface",
+            "bytes": 280,
+            "context_sha256": "ad9e1f0132b7b14c4b3fdd7206bb17cfa19b62df29f30efe9ccdc9d1d5b84994"
+          },
+          {
+            "path": "src/fields-PROOF.bend",
+            "representation": "interface",
+            "bytes": 224,
+            "context_sha256": "0a0dcda14a48310300172d4374e4a83a80494196c8bc6314f25bb3191af1a708"
+          },
+          {
+            "path": "src/lex.bend",
+            "representation": "interface",
+            "bytes": 376,
+            "context_sha256": "93c2aa4dc1af011f53249a7fe565fcae47d23e2071228a26aa7f4f6e09f156f2"
+          },
+          {
+            "path": "src/parse.bend",
+            "representation": "interface",
+            "bytes": 977,
+            "context_sha256": "73ba9f30ecad0f7ac84b5eb5d86fcb8d66e110fc2b622276acc7f8cc043fffb5"
+          },
+          {
+            "path": "src/patterns.bend",
+            "representation": "interface",
+            "bytes": 650,
+            "context_sha256": "6f10cbc0bec3a92e339c96178fad6fdbee1dd72dadf2fcbe403dee7a0db5f619"
+          },
+          {
+            "path": "src/runtime-LAWS.bend",
+            "representation": "interface",
+            "bytes": 258,
+            "context_sha256": "bfff23c61069f9168a1fa21508da637d7143c80aa5d623270d9b202e14ab2054"
+          },
+          {
+            "path": "src/runtime-PROOF.bend",
+            "representation": "interface",
+            "bytes": 222,
+            "context_sha256": "dc4c6e32d83ffd59251f980a748dad0a63333e8a7b8da71a7eb3bc7ba91cba22"
+          },
+          {
+            "path": "src/scope.bend",
+            "representation": "interface",
+            "bytes": 758,
+            "context_sha256": "f55d4f28bd3e2f40ce6077c93203868331ae9de8d5635f298d8272aa20ca938a"
+          },
+          {
+            "path": "src/syntax.bend",
+            "representation": "interface",
+            "bytes": 1153,
+            "context_sha256": "d4626229110eddaf54508e6cf1d1af876ffdeeb8a9d050d5a2f5dd364268acd9"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "representation": "interface",
+            "bytes": 236,
+            "context_sha256": "7b1cf5fd2324a33fca49660b95b54d334fc1e41eb05278301f914b9eb4a3f02a"
+          }
+        ]
+      }
+    }
+  ],
+  "inputs": {
+    "tests/perch-context.test.mjs": "5f5ab5908ca35dccf2f07ce2f0930216eec9bfb1b5373094230b2cef7de22230",
+    "tests/perch-context-integration.test.mjs": "cfbc126d6f851d86c29cccd17b1111e9973b39316cf598dcb8dacf6c778ed5f8",
+    "tests/perch-context-mutants.test.mjs": "76de1303327de1979baf5bd5aef5246c158357280d7841c7e9c3935f3d64a7c5",
+    "tests/perch-context/CONTRACT.md": "3d49787a93b668a570304037c4984f89915aabd172b2183a72363295bc7ed651",
+    "tests/perch-context/expectations.json": "5388d9bc1d6ed183042ade3f49aa4e58395f598dea45e05aa1a60862e032b099",
+    "tests/perch-context/check.py": "851a0248dcfe01811f3f7f3cee99ba7bef44f0e8750a57ccd5df875332297aec",
+    "scripts/perch-style.mjs": "de9559f86e80bae8844cf8fc81f62fa9e656fa1697dd1951a7a08894345ec61f",
+    "scripts/perch-bend-context.mjs": "d1968e24a167e2f818d7e28fe1eee296054dddeb19db98cb0c89e4fab8c9c935",
+    "scripts/perch-context-interfaces.mjs": "0b26b1cf178f78fd6cb5af96529f8d22fe91696de7cb32c2cd0e4332bd1de18e",
+    "docs/compiler-campaign/manifest.json": "cc311239670ce84e7111df80ff590a1aa6d74493d826021495479080ccb212db",
+    "perch-style.json": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693"
+  }
+}
