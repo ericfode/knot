@@ -13,13 +13,20 @@ Later additions the same day:
 - "you can delegate to codex too"
 - "add a metaprogramming library to the end of the milestones. I want to be able to dynamically generate and run code in bend from bend"
 - "You can let claude do actual work too. i just want you to use up my codex tokens as well"
+- "Please keep the focus on self hosting first"
+- "would it it make sense to make a virtualized bend first?" … "yep this is how i want to do it! make it happen"
 
 ## Definition of done
 
-1. **Self-hosting.** Knot compiles its own complete source bundle, including the Base slice it reaches. The seed builds C1; C1 emits the Wasm compiler A2; A2 compiles the same frozen bundle to A3.
-   - A2 and A3 are byte-identical.
+1. **Self-hosting (VM-first route, D14).** Knot compiles its complete source bundle, including the reachable Base slice, to a serialized Knot image: checked core, lowered as the VM design fixes. One small virtual machine, a Wasm module with its own Bend model and laws, runs images. Every step uses the same frozen bundle.
+   - The seed builds C1, and C1 emits the compiler image I2.
+   - The VM runs I2 as A2. A2 emits image I3 of the same bundle.
+   - I2 and I3 are byte-identical.
    - Both generations pass the conformance corpus against the pinned reference Bend (2.0.29, `574b6d3`).
-   - The upstream fallback is used only by the seed step.
+   - The upstream fallback is used only by the seed step. The VM and the `knot_io` host are the whole trusted runtime; each has an independent model and differential tests.
+   - **Names.** C1 means "compiler, generation 1": the upstream seed builds Knot's own Bend source into a runnable compiler. It is not the C language, and not the `knot-c-1` backend.
+   - **C1 lane.** C1 is built with the seed's native lane (the seed compiles through clang). The seed's Bun lane is only a cross-check. Its known fault (`List.length` overflows the stack at about 32,000 elements) makes it inconclusive on compiler-sized inputs, so it is recorded as Exhausted there, not as a disagreement.
+   - **Native Wasm codegen.** Direct emission of Wasm from core (`knot-enum-1`, `knot-fields-wasm-1`, closures' defunctionalization, owned storage) is now the speed track. It is no longer the self-hosting route.
 2. **CPU backends.** Wasm is primary: the compiler itself runs as Wasm, and programs run under Node and Bun. A native C backend follows self-hosting and is the speed reference against upstream Bend's native output.
 3. **GPU backend.** Compiler-generated WebGPU/WGSL execution of Bend programs on the real device, using the adaptive continuation-task model. Results agree with the independent evaluator and the CPU backends.
 4. **Optimization passes.** A core IR with semantics-preserving passes, each checked by differential conformance: inlining, case-of-known-constructor, constant folding, dead-code elimination, tail calls to loops, and more.
@@ -50,6 +57,8 @@ Later additions the same day:
 | D10 | Data lifetime for milestone 1: unique `Type` objects plus reference-counted immutable `Data` (candidate B of `research/data-lifetime/`). Copied Data (A) stays as the conformance control. Reclamation is part of owned-storage acceptance; the bump arena stays interim. | The r3r7 packet: both candidates pass 105 traces with 16 of 16 mutants killed, and B peaks at 43 words against 1,532 on the shared-subterm trace. The packet asked for a coordinator or user decision; the coordinator decided under the goal. The user can reverse it. |
 | D11 | D6 revised. The native C backend starts now, in parallel on the current core IR, and grows with each accepted profile. It no longer waits for self-hosting. | The user asked for maximal parallel use of Codex and of Claude implementers. The C emitter shares only core terms, so its conflicts are small. |
 | D12 | Host effects before the IO ABI lands. A reachable IO or host-effect declaration checks successfully. Evaluation of a pure entry agrees with the seed. Compilation reports `Unsupported compile host-effect` (exit 3) and emits no artifact. | This follows `docs/BEND-SUBSET-STAGES.md` (build rejects a missing capability before emission) over the baseslice suite's check-phase pin. The coordinator reconciles that pin when baseslice is implemented. |
+| D13 | Self-hosting has priority over every other track, at the user's direction. New increments, reviews and merge work go first to the self-hosting path: literals, generics, closures, the descent rule, modules, the Base slice, surface sugar, the IO host and its lowering, owned Wasm storage, the frontend as Wasm (E2E-2) and the fixpoint (E2E-3). The C backend, GPU emission and optimizer branches wait for review and merge until the self-hosting queue is clear. Their finished work is preserved on their branches. | User, 2026-09-27: "Please keep the focus on self hosting first". |
+| D14 | The self-hosting route is VM-first ("virtualized Bend"). Knot compiles to a serialized image that one small Wasm VM executes; the fixpoint is image I2 = image I3. Every language feature then needs only frontend, checker and core support, and the VM, written once, supplies the heap, closures, primitives, stack discipline and IO. Native Wasm codegen continues as the speed track under D13's priority. The VM gets a Bend model with laws, differential tests against `src/eval.bend` and the seed, and mutants. | User, 2026-09-27: "would it it make sense to make a virtualized bend first?" then "yep this is how i want to do it! make it happen". |
 
 ## Milestone ladder
 

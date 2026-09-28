@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "d7e22c89866f0daafe44050a43a2b64b500fa1085e48f96203618401ad8c282b",
+    "sha256": "33f6510081936ade3b796af5bfb4326353851a37de046d954ab1135cc566a0fb",
     "gates": [
       {
         "name": "frontend",
@@ -21,7 +21,7 @@
         "programs": [
           {
             "file": "tests/subsets/check_frontend.py",
-            "sha256": "b8953fcc58c8d58b67eac795754435140fab763f1be62bd61e137a7b1f46c2a9"
+            "sha256": "1c9241b2d8e4001ce4beeb170ce3e0d1e6b704d1a98feca0d627851b15651d7d"
           }
         ]
       },
@@ -34,7 +34,7 @@
         "programs": [
           {
             "file": "tests/compiler-checker/check.py",
-            "sha256": "27ede49b2e14b5dcc8e9d1c18fd00852a80660db1b4851b6dc475695b5fcafda"
+            "sha256": "1ab59fa30f7208d0883cc29e4ac338c3b372a72c7f84cf04d1c4c81a40850d0b"
           }
         ]
       },
@@ -47,7 +47,7 @@
         "programs": [
           {
             "file": "tests/compiler-structural/check.py",
-            "sha256": "3d0d052ed2c79f8a60b7546f707c0403f6e9b621f26104d81da73318b5f18d28"
+            "sha256": "e365ec005ae054b6faedbf341e8c3ef9ffd896cedab1b6238dd0ab95f1c29a6a"
           }
         ]
       },
@@ -60,7 +60,7 @@
         "programs": [
           {
             "file": "tests/compiler-fields/check.py",
-            "sha256": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393"
+            "sha256": "0584565c4ebe1aa03cde34e16c4a05c474b0dc7c4e496fadfa7fa2843bd8b613"
           }
         ]
       },
@@ -73,7 +73,7 @@
         "programs": [
           {
             "file": "tests/compiler-wasm/check.py",
-            "sha256": "77c2197f98e827b97758138cc934ffab665b908f608dfefd32ef7d2ee138b28d"
+            "sha256": "e3c7786b0c16c9f7c6abc79c4b85ba7126b9e60dfe86329147ee6e0733b47f09"
           }
         ]
       },
@@ -151,7 +151,7 @@
         "programs": [
           {
             "file": "tests/compiler-recursion/check.py",
-            "sha256": "0c5a3355ed138e9c14bb6043777e19542e8beef9ca03becd137e3b0bd6438f30"
+            "sha256": "a7f4e73bc14ce2e5569df4aeeeffa7fdf7650efad63ee870755436af0dbe8033"
           }
         ]
       },
@@ -164,7 +164,7 @@
         "programs": [
           {
             "file": "tests/compiler-fields-wasm/check.py",
-            "sha256": "544de0f4486cc62c8ec3fe1150bf29561f0e9e3cf1570fecd07e314fe3066d74"
+            "sha256": "6cd38850803a7116ce38f14b914d17c346191d25cf13077e05e07a9e59dbc7a2"
           }
         ]
       },
@@ -183,6 +183,19 @@
         ]
       },
       {
+        "name": "perch-context",
+        "argv": [
+          "python3",
+          "tests/perch-context/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/perch-context/check.py",
+            "sha256": "9c2199dd7dbce69e792bb4ce52ebc6e19a34325cca4a0755e85b87ff9759ed2d"
+          }
+        ]
+      },
+      {
         "name": "lint:verify",
         "argv": [
           "npm",
@@ -191,6 +204,32 @@
           "lint:verify"
         ],
         "programs": []
+      },
+      {
+        "name": "bootstrap",
+        "argv": [
+          "python3",
+          "tests/compiler-bootstrap/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-bootstrap/check.py",
+            "sha256": "f46ffe6bfff4aa51321e3372549723fdcc5def6c9754a8ce233e66952bc47cd4"
+          }
+        ]
+      },
+      {
+        "name": "classification",
+        "argv": [
+          "python3",
+          "tests/compiler-classification/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-classification/check.py",
+            "sha256": "5c20ea02a6a3a075af56ee6df9a8830c3585692be140147084b9194b483030c8"
+          }
+        ]
       },
       {
         "name": "io-host",
@@ -249,6 +288,18 @@
       "fixtures": 40
     },
     {
+      "suite": "tests/compiler-bootstrap",
+      "directory": "tests/compiler-bootstrap",
+      "status": "no-fixture-manifest",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [],
+      "gates": [
+        "bootstrap"
+      ],
+      "fixtures": 0
+    },
+    {
       "suite": "checker",
       "directory": "tests/compiler-checker",
       "status": "recognized",
@@ -264,6 +315,18 @@
         "checker"
       ],
       "fixtures": 49
+    },
+    {
+      "suite": "tests/compiler-classification",
+      "directory": "tests/compiler-classification",
+      "status": "no-fixture-manifest",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [],
+      "gates": [
+        "classification"
+      ],
+      "fixtures": 0
     },
     {
       "suite": "closures",
@@ -437,6 +500,24 @@
       "fixtures": 25
     },
     {
+      "suite": "tests/perch-context",
+      "directory": "tests/perch-context",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/perch-context/expectations.json",
+          "sha256": "ac88fc763a3eb95929e72227cb68c191b068703c64864518acf75fc4a62ac51b"
+        }
+      ],
+      "gates": [
+        "perch-context"
+      ],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
       "suite": "frontend",
       "directory": "tests/subsets",
       "status": "recognized",
@@ -474,6 +555,11 @@
     },
     {
       "directory": "tests/compiler-sugar",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/perch-context",
       "status": "unrecognized-suite",
       "detail": "No reviewed adapter for this suite path"
     },
