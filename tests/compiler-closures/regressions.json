@@ -383,6 +383,41 @@
           }
         }
       ]
+    },
+    {
+      "name": "lambda-scrutinee",
+      "file": "regressions/lambda-scrutinee.bend",
+      "source_sha256": "42a592a63dea3fb268a4eed72cdc9c7e276506fc0016828565d7a722d81dcc8f",
+      "intent": "A lambda syntax node cannot be a match scrutinee; source rejection must not escape as an internal failure.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/lambda-scrutinee.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a match heading this case (this case is orphaned)\n- observed : 'case'\nLocation:\n6 |   match x => On{}:\n7>|     case On{}: On{}\n  |     ^^^^\n8 |     case Off{}: Off{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/lambda-scrutinee.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a match heading this case (this case is orphaned)\n- observed : 'case'\nLocation:\n6 |   match x => On{}:\n7>|     case On{}: On{}\n  |     ^^^^\n8 |     case Off{}: Off{}\n"
+        }
+      },
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tcomputed-scrutinee\t"
+      },
+      "calls": []
     }
   ]
 }
