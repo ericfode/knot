@@ -33,7 +33,8 @@ the frontier. This preserves the pinned Bend surface restriction.
 
 Checked structural terms and independent tree evaluation do not establish a
 heap implementation. The emitter must reject fielded books until owned storage
-and lowering exist. Resource exhaustion is distinct from Invalid or Unsupported.
+and lowering exist. A zero-constructor datatype admits a zero-row match. It has no value or host
+argument ordinal. Resource exhaustion is distinct from Invalid or Unsupported.
 The enum corpus remains the regression oracle. Field runtime storage, transfer,
 drop, structural recursion and GPU qualification remain milestone-1 obligations.
 

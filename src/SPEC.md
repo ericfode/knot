@@ -29,7 +29,7 @@ The retained enum profile accepts ASCII Bend source with LF line endings, spaces
 and indentation. Identifiers use letters/underscore followed by letters,
 digits, underscores or dots. Keywords cannot be identifiers.
 
-- Named, nonempty, monomorphic `type T is Type:` and `type T is Data:`
+- Named, possibly empty, monomorphic `type T is Type:` and `type T is Data:`
   declarations containing nullary constructors such as `Off{}` and `On{}`.
 - Top-level functions with explicit parameter and result types. A parameter
   has quantity erased (`-x`), affine (`x`), or reusable (`+x`). A reusable
@@ -61,7 +61,8 @@ digits, underscores or dots. Keywords cannot be identifiers.
   definitions. No executable artifact is emitted until the entire book passes.
 
 Constructor names must be unique across the book in this first profile.
-Repeated constructor declarations, including across datatypes, are invalid. Top-level type/function names share a namespace.
+A zero-constructor datatype permits an exhaustive zero-row match and has no
+valid host ordinal. Repeated constructor declarations, including across datatypes, are invalid. Top-level type/function names share a namespace.
 Free names, type/arity mismatches, missing arms,
 affine reuse and live inspection of erased values are invalid.
 
