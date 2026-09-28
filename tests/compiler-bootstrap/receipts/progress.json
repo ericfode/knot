@@ -299,21 +299,306 @@
     },
     {
       "expected": {
+        "excuses": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          "vm-fuel",
+          "vm-heap",
+          "harness-io-abi-pending"
+        ],
         "statuses": [
           "divergent-exhausted",
           "divergent-exhausted",
+          "divergent-unsupported",
+          "reached",
+          "divergent-exhausted",
           "blocked",
-          "reached"
+          "blocked",
+          "blocked"
         ]
       },
       "name": "a3-routing",
       "observed": {
+        "excuses": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          "vm-fuel",
+          "vm-heap",
+          "harness-io-abi-pending"
+        ],
         "statuses": [
           "divergent-exhausted",
           "divergent-exhausted",
+          "divergent-unsupported",
+          "reached",
+          "divergent-exhausted",
           "blocked",
-          "reached"
+          "blocked",
+          "blocked"
         ]
+      }
+    },
+    {
+      "expected": {
+        "probes": {
+          "gc-global-import": {
+            "memory": {
+              "defined": [],
+              "imported": [
+                {
+                  "maximum": null,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ]
+            },
+            "valid": true
+          },
+          "imported-and-defined": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": null,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ],
+              "imported": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ]
+            },
+            "valid": true
+          },
+          "knot-shape": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 1,
+                  "shared": false
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          },
+          "memory64-second": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                },
+                {
+                  "maximum": null,
+                  "memory64": true,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          },
+          "no-maximum": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": null,
+                  "memory64": false,
+                  "minimum": 1,
+                  "shared": false
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          },
+          "shared": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 1,
+                  "shared": true
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          },
+          "truncated": {
+            "memory": {
+              "unreadable": true
+            },
+            "valid": false
+          },
+          "two-memories": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                },
+                {
+                  "maximum": null,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          }
+        }
+      },
+      "name": "wasm-memory-reader",
+      "observed": {
+        "probes": {
+          "gc-global-import": {
+            "memory": {
+              "defined": [],
+              "imported": [
+                {
+                  "maximum": null,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ]
+            },
+            "valid": true
+          },
+          "imported-and-defined": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": null,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ],
+              "imported": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ]
+            },
+            "valid": true
+          },
+          "knot-shape": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 1,
+                  "shared": false
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          },
+          "memory64-second": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                },
+                {
+                  "maximum": null,
+                  "memory64": true,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          },
+          "no-maximum": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": null,
+                  "memory64": false,
+                  "minimum": 1,
+                  "shared": false
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          },
+          "shared": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 1,
+                  "shared": true
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          },
+          "truncated": {
+            "memory": {
+              "unreadable": true
+            },
+            "valid": false
+          },
+          "two-memories": {
+            "memory": {
+              "defined": [
+                {
+                  "maximum": 1,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                },
+                {
+                  "maximum": null,
+                  "memory64": false,
+                  "minimum": 0,
+                  "shared": false
+                }
+              ],
+              "imported": []
+            },
+            "valid": true
+          }
+        }
       }
     },
     {
@@ -539,7 +824,7 @@
     "scripts/bend-reference": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3",
     "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
     "src/CONTRACT.json": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
-    "tests/compiler-bootstrap/check.py": "65becc9ccec5082f207a5ba1b49ee30853b0b7db24201607ed1b6a87cb112732",
+    "tests/compiler-bootstrap/check.py": "400786d135f75839386e0596fb17348583cc346d61287fb0d9128311920092f4",
     "tests/compiler-bootstrap/host.mjs": "3fbafc58fc3bf0a03869083efcbbc49a4f4e0bc735e2797bd61429bce1ac6982",
     "tests/compiler-bootstrap/manifest.json": "85b003e4da5d47d9de34db134f6b1024226a9b2628a3f5354ebeba61a7c0ecdb",
     "tests/compiler-checker/cases.json": "bc7b249e2cb2a12e35dc52e08d2a94c025d6cb2bf7c7edefa665b325870e0456",
@@ -682,6 +967,67 @@
     {
       "exit": 1,
       "expected_exit": 1,
+      "expected_violation": "is not the one generation argv",
+      "killed_for_reason": true,
+      "name": "both-steps-bare",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a2: argv ['src/compile-cli.bend', 'generation.wasm'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a2: maxima [] are not src/CONTRACT.json maximum_overrides [65536, 4096, 4096, 4096, 1048576]",
+        "e2e3.a2: entry, bundle root or target differs from src/CONTRACT.json",
+        "e2e3.a3: argv ['src/compile-cli.bend', 'generation.wasm'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: maxima [] are not src/CONTRACT.json maximum_overrides [65536, 4096, 4096, 4096, 1048576]",
+        "e2e3.a3: entry, bundle root or target differs from src/CONTRACT.json",
+        "e2e2.compile: argv is not the one generation argv",
+        "e2e3.a2: artifact of 4096 bytes exceeds output_bytes 1048576",
+        "e2e3.a3: artifact of 4096 bytes exceeds output_bytes 1048576"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "are not src/CONTRACT.json maximum_overrides",
+      "killed_for_reason": true,
+      "name": "both-steps-default-budgets",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a2: argv ['src/compile-cli.bend', 'generation.wasm', '65536', '512', '512', '4096', '65536'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a2: maxima [65536, 512, 512, 4096, 65536] are not src/CONTRACT.json maximum_overrides [65536, 4096, 4096, 4096, 1048576]",
+        "e2e3.a2: entry, bundle root or target differs from src/CONTRACT.json",
+        "e2e3.a3: argv ['src/compile-cli.bend', 'generation.wasm', '65536', '512', '512', '4096', '65536'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: maxima [65536, 512, 512, 4096, 65536] are not src/CONTRACT.json maximum_overrides [65536, 4096, 4096, 4096, 1048576]",
+        "e2e3.a3: entry, bundle root or target differs from src/CONTRACT.json",
+        "e2e2.compile: argv is not the one generation argv",
+        "e2e3.a2: artifact of 4096 bytes exceeds output_bytes 1048576",
+        "e2e3.a3: artifact of 4096 bytes exceeds output_bytes 1048576"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "is not src/CONTRACT.json's pinned",
+      "killed_for_reason": true,
+      "name": "node-forged-both",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a2: Node 20.0.0 is not src/CONTRACT.json's pinned 22.22.3",
+        "e2e3.a3: Node 20.0.0 is not src/CONTRACT.json's pinned 22.22.3"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "was not recorded under this src/CONTRACT.json",
+      "killed_for_reason": true,
+      "name": "contract-unrecorded",
+      "outcome": "rejected",
+      "violations": [
+        "receipt was not recorded under this src/CONTRACT.json"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
       "expected_violation": "argv differs from its generation contract",
       "killed_for_reason": true,
       "name": "argv-unrecorded",
@@ -749,7 +1095,7 @@
       "name": "a3-divergent-exhausted",
       "outcome": "rejected",
       "violations": [
-        "e2e3.a3: divergent-exhausted (host-stack) is non-passing: A2 ran out of a host resource on the S that C1 built"
+        "e2e3.a3: divergent-exhausted (host-stack) is non-passing: A2 stopped where C1 did not, on the S that C1 built"
       ]
     },
     {
@@ -762,6 +1108,73 @@
       "violations": [
         "e2e3.a3: blocker resource tag knot-budget differs from its recorded fields (host-stack)",
         "e2e3.a3: blocked by host-stack after C1 built S; must be divergent-exhausted"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "must be divergent-unsupported",
+      "killed_for_reason": true,
+      "name": "a3-knot-unsupported",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: blocked by Unsupported after C1 built S; must be divergent-unsupported"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "must be divergent-exhausted",
+      "killed_for_reason": true,
+      "name": "a3-knot-budget",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: blocked by knot-budget after C1 built S; must be divergent-exhausted"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "is non-passing",
+      "killed_for_reason": true,
+      "name": "a3-divergent-unsupported",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: divergent-unsupported (Unsupported) is non-passing: A2 stopped where C1 did not, on the S that C1 built"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "excuse tag",
+      "killed_for_reason": true,
+      "name": "a3-excuse-forged",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: blocked by Unsupported after C1 built S; must be divergent-unsupported",
+        "e2e3.a3: excuse tag harness-io-abi-pending differs from its recorded fields (None)"
+      ]
+    },
+    {
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_violation": null,
+      "killed_for_reason": true,
+      "name": "a3-vm-fuel",
+      "outcome": "accepted",
+      "violations": [
+        "Judge passed"
+      ]
+    },
+    {
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_violation": null,
+      "killed_for_reason": true,
+      "name": "a3-io-abi-pending",
+      "outcome": "accepted",
+      "violations": [
+        "Judge passed"
       ]
     },
     {
@@ -787,6 +1200,89 @@
       ]
     },
     {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "memory maximum None is not within the declared",
+      "killed_for_reason": true,
+      "name": "artifact-memory-no-maximum",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: artifact memory maximum None is not within the declared 65536 pages"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "defines 2 memories, not one",
+      "killed_for_reason": true,
+      "name": "artifact-memory-two-memories",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: artifact defines 2 memories, not one",
+        "e2e3.a3: artifact memory maximum None is not within the declared 65536 pages"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "not an unshared memory32",
+      "killed_for_reason": true,
+      "name": "artifact-memory-memory64-second",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: artifact defines 2 memories, not one",
+        "e2e3.a3: artifact declares a memory that is not an unshared memory32",
+        "e2e3.a3: artifact memory maximum None is not within the declared 65536 pages"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "not an unshared memory32",
+      "killed_for_reason": true,
+      "name": "artifact-memory-shared",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: artifact declares a memory that is not an unshared memory32"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "imports 1 memory",
+      "killed_for_reason": true,
+      "name": "artifact-memory-imported-and-defined",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: artifact imports 1 memory",
+        "e2e3.a3: artifact memory maximum None is not within the declared 65536 pages"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "imports 1 memory",
+      "killed_for_reason": true,
+      "name": "artifact-memory-gc-global-import",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: artifact imports 1 memory",
+        "e2e3.a3: artifact defines 0 memories, not one"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "memory declarations are unreadable",
+      "killed_for_reason": true,
+      "name": "artifact-memory-truncated",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: artifact memory declarations are unreadable"
+      ]
+    },
+    {
+      "contract": "modules",
       "exit": 0,
       "expected_exit": 0,
       "expected_violation": null,
@@ -798,6 +1294,7 @@
       ]
     },
     {
+      "contract": "modules",
       "exit": 1,
       "expected_exit": 1,
       "expected_violation": "loader closure",
@@ -809,6 +1306,7 @@
       ]
     },
     {
+      "contract": "modules",
       "exit": 1,
       "expected_exit": 1,
       "expected_violation": "requires a recorded or blocked audit",
@@ -817,6 +1315,40 @@
       "outcome": "rejected",
       "violations": [
         "loader audit is unavailable; module loading requires a recorded or blocked audit"
+      ]
+    },
+    {
+      "contract": "modules",
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "module loading False differs from src/CONTRACT.json",
+      "killed_for_reason": true,
+      "name": "modules-erased-both",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a2: argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not the one generation argv ['--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a2: module loading False differs from src/CONTRACT.json (True)",
+        "e2e3.a3: argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not the one generation argv ['--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: module loading False differs from src/CONTRACT.json (True)",
+        "e2e2.compile: argv is not the one generation argv",
+        "loader audit is unavailable; module loading requires a recorded or blocked audit"
+      ]
+    },
+    {
+      "contract": "single",
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "module loading True differs from src/CONTRACT.json",
+      "killed_for_reason": true,
+      "name": "modules-forged-both",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a2: argv ['--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a2: module loading True differs from src/CONTRACT.json (False)",
+        "e2e3.a3: argv ['--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: module loading True differs from src/CONTRACT.json (False)",
+        "e2e2.compile: argv is not the one generation argv",
+        "audit recorded although src/CONTRACT.json advertises no --audit-bundle"
       ]
     }
   ],
