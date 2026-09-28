@@ -278,7 +278,8 @@
     "proof_laws": 81,
     "proof_boundary": "Path, scope, transition, selection and digest helper laws; not whole-graph confluence, SHA-256 refinement or compiler correctness.",
     "foreign_effects": "Existing IO/file effects plus src/path-host.bend::inspect, a minimal native/Bun filesystem identity query. It observes component spelling and symlinks only; classification stays in Bend. No environment lookup or network is added.",
-      "wasm_profile": "Default enum emitter; importing a book adds no fielded or recursive capability to it. Loader-installed primitive types select knot-literals-wasm-1, documented below."
+      "wasm_profile": "Default enum emitter; importing a book adds no fielded or recursive capability to it. Loader-installed primitive types select knot-literals-wasm-1, documented below.",
+      "literals_amendment": "tests/compiler-modules/SPEC.md#literals-amendment: registry lowering in base-load, BaseIntrinsic audit rows, literal-aware module lexing, raised --bundle defaults; pending coordinator and modules-owner sign-off."
   },
   "literals": {
     "profile": "knot-literals-wasm-1",
@@ -287,10 +288,11 @@
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-literals/check.py",
     "frozen_expectations": [
       "tests/compiler-literals/expectations.json",
-      "tests/compiler-literals/supplemental.json"
+      "tests/compiler-literals/supplemental.json",
+      "tests/compiler-literals/regressions.json"
     ],
     "reader": "ASCII source; decimal U32/Nat; quoted code lists; 1-8 digit Unicode escapes preserve arbitrary U32 codes including surrogates and NUL.",
-    "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; all leaves checked; Nat offsets 0..256.",
+    "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; all leaves checked; Nat offsets 0..256, with `+` adjacent to the literal.",
     "intrinsic_registry": {
       "types": 4,
       "operations": 39,
@@ -299,10 +301,11 @@
       "trust": "Pinned semantics, independent finite differential checks and helper laws; no all-input Base refinement proof."
     },
     "unsupported": [
-      "operator sugar",
+      "operator sugar, including a `+` separated from a Nat literal",
       "F32",
       "raw non-ASCII quoted text",
       "Chr constructor patterns",
+      "the Base U32 constructor U32{data: Word(32n)}, in patterns and expressions",
       "general nested patterns beyond the bounded primitive matrix"
     ],
     "core": [
@@ -363,7 +366,7 @@
       "src/literal-core-PROOF.bend",
       "src/literal-matrix-PROOF.bend"
     ],
-    "proof_laws": 24,
+    "proof_laws": 27,
     "proof_boundary": "Arithmetic guards, reader cases, core transitions and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
     "unmet": [
       "R3/R7 owned storage and reclamation",

@@ -1139,3 +1139,28 @@ scan; it now accumulates tokens. The latter caught a profile-boundary leak;
 legacy checking now rejects literal nodes explicitly, with a checked boundary
 law. Prevention: run the shared profile and large-input regressions before
 calling the new fixture surface complete. Their assertions were not changed.
+
+## 2026-09-27 — Literals review round 1: three missed deterministic defects
+
+The coordinator's adversarial review of `2ea222e` confirmed three defects that
+the literals gate could not see. They were missed deterministic coverage, not
+Perch findings.
+
+- The parser read `1n + p` and `3n +x` as offsets, although the seed rejects
+  them. No frozen book separated `+` from its literal.
+- A seed-valid `case U32{w}` was reported Invalid rather than Unsupported.
+- The Bun evaluator overflowed the host stack on String.length and
+  String.append above about 35,000 Chars. The frozen books never exceeded a
+  few hundred Chars, and the native lane hid the fault.
+
+[The regression freeze](../tests/compiler-literals/regressions.json) now pins
+each finding before its fix, with seed-accepted controls. The adjacency and
+U32 mutants are classification kills, and an evaluator-only mutant covers the
+new append traversal.
+
+Prevention: sweep token spacing around every new operator-like form against
+the seed. Run each seed-valid form of a newly installed Base type (its
+constructors as well as its literals) through D4. Exercise every new
+traversal near its declared element bound in both evaluator lanes, not only
+at the sizes the fixtures happen to use. Live Perch review remains the
+coordinator's.

@@ -406,8 +406,12 @@ raw non-ASCII quoted text report the exact frozen Unsupported prefixes.
 The first-match matrix lowers Nat literals/offsets through Zero/Succ and String
 patterns through SNil/SCon. U32/Char literal patterns require a default; all
 leaves are checked. The 256-offset bound, quantities, first-parameter strict
-field descent and forward-call restrictions remain enforced. `Chr{...}`
-patterns and broader nested pattern support are still Unsupported.
+field descent and forward-call restrictions remain enforced. An offset's `+`
+must touch its literal (`1n+p`); a separated `+` is operator sugar,
+`Unsupported parse operator`. `Chr{...}` patterns and broader nested pattern
+support are still Unsupported. The Base constructor `U32{data: Word(32n)}` has
+no representation in the unboxed U32 and is `Unsupported check u32-constructor`
+in patterns and expressions.
 
 Hash-verified Base supplies a closed lowering registry: four primitive types
 and 39 operations. Calls retain explicit typed quantities. Intrinsic nodes and
@@ -438,11 +442,15 @@ output budget, sufficient for the frozen offset matrix. Legacy single-file
 defaults and explicit maximum limits remain. Evaluator transition budgeting is
 unchanged; primitive decoding/application also has separate fixed work bounds.
 Enum-signatured host observations remain the supported external boundary.
+Primitive Nat/String traversals in the evaluator are tail calls with
+accumulators, so both evaluator lanes reach the same bounds without host
+stack depth.
 
-Three complete new proof entries check 24 helper laws. They cover the required
-arithmetic guard equations, literal decoding, core transitions and matrix
-expansion; they do not prove whole-compiler correctness or all-input intrinsic
-refinement. The registered literals gate compares 280 accepted calls in both
-evaluator and compiler lanes, and kills five type-correct semantic mutants.
+Three complete new proof entries check 27 helper laws. They cover the required
+arithmetic guard equations, String traversal order and length, literal
+decoding, core transitions and matrix expansion; they do not prove
+whole-compiler correctness or all-input intrinsic refinement. The registered
+literals gate compares 303 accepted calls in both evaluator and compiler lanes,
+and kills eight type-correct semantic mutants.
 Live Perch review remains a coordinator gate; offline preflight alone is not a
 style pass. Existing compiler gates and their frozen expectations are retained.

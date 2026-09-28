@@ -6,8 +6,12 @@ The contract is the unchanged [40-fixture freeze](FIXTURES.md) and
 books and 5 Unsupported books. The agreeing books contribute 268 calls.
 [The supplemental freeze](supplemental.json), committed as `d3c1e7b` before
 implementation, adds 12 calls for `1n+ +n`, `Nat.is_le`, `U32.and` and
-`String.reverse`. Both freezes are verified against seed 2.0.29, commit
-`574b6d39a235b539eb19a5c532993a0abb3d11ad`, on every gate run.
+`String.reverse`. [The regression freeze](regressions.json) adds ten books
+for the confirmed review-round-1 findings, each committed before its fix:
+spaced Nat offsets and their adjacent controls, the Base U32 constructor, and
+40000- and 131072-Char String primitives. All three freezes are verified
+against seed 2.0.29, commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on
+every gate run.
 
 ## Mechanism
 
@@ -21,7 +25,10 @@ U32; the `n` suffix selects Nat. There is no implicit numeric coercion.
 The legacy lexer retains the previously gated single-file surface. The bundle
 lexer composes its transitions with quoted-token reading. The shared parser
 adds literal nodes and offsets, and reports the five frozen unsupported cases
-with their exact phase/code prefixes. Arithmetic operator sugar, F32 and raw
+with their exact phase/code prefixes. An offset needs its `+` to touch the
+literal token (`1n+p`, `1n+ p`, `1n++p`); a separated `+` (`1n +p`, `3n + x`)
+is operator sugar and reports `Unsupported\tparse\toperator`, as bare
+operators do. Arithmetic operator sugar, F32 and raw
 non-ASCII quoted text remain Unsupported, including seed-invalid unannotated
 operator sugar. Unsupported is not evidence that a source book is invalid.
 
@@ -32,12 +39,17 @@ The first applicable leaf supplies the result; all leaves, including redundant
 ones, are checked. Offset fields preserve the existing quantity and strict
 structural-descent rules. Offsets above 256 are Invalid, matching the seed.
 General nested patterns and `Chr{...}` patterns remain outside this increment.
+Base spells U32 as `U32{data: Word(32n)}`, but an installed U32 is unboxed
+bits, so that constructor reports `Unsupported\tcheck\tu32-constructor` in
+patterns and expressions.
 
 The checked core gains Literal, Intrinsic and Default. U32/Char expressions use
 the existing scalar Value term. The independent evaluator interprets this core
 and materializes Nat and String as ordinary immutable Value/Object trees.
 Its primitive algebra uses temporary bounded counts for arithmetic and code
-lists for text, then reconstructs source values. It never interprets Wasm or
+lists for text, then reconstructs source values. Code-list traversals are
+tail calls with accumulators (`count`, `onto` = reverse-append, and `equal`),
+so the Bun and native evaluator lanes reach the same bounds. It never interprets Wasm or
 the emitted instruction graph.
 
 ## Base trust boundary
@@ -58,8 +70,11 @@ Base declarations:
   its four datatype representations.
 - `BaseUnchecked`: the exact unselected complement.
 
-The literal gate checks this partition in both lanes for all 25 accepted books.
-The existing modules gate retains its Bool-only trust assertions. Pinning
+The literal gate checks this partition in both lanes for all 28 accepted books.
+The modules gate's audit accepts `BaseIntrinsic` rows under the same
+three-way partition and requires each modules book to declare any intrinsic
+rows it reaches (none do); see the literals amendment in
+[its contract](../compiler-modules/SPEC.md). Pinning
 identifies the source defining the semantics; differential observations and
 helper laws do not prove equivalence for every possible intrinsic input.
 
@@ -121,6 +136,7 @@ Run with network disabled and `BEND_NO_TELEMETRY=1`:
 ```sh
 python3 tests/compiler-literals/regen.py
 python3 tests/compiler-literals/supplemental.py
+python3 tests/compiler-literals/regressions.py
 python3 tests/compiler-literals/check.py
 npm run -s gates
 npm run -s gates:verify
@@ -128,28 +144,37 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 41 fixture books, 287 fresh seed calls, 82 checks and 82 primary compilations.
-- 560 agreeing evaluator observations and 560 matching Node/Wasm observations;
-  32 additional evaluator rejections, giving 592 evaluator observations total.
-- 25 byte-identical native/Bun module pairs and 50 complete Base trust audits.
-- 32 rejected-compilation output-preservation probes and 32 additional
+- 51 fixture books, 313 fresh seed calls, 102 checks and 102 primary compilations.
+- 606 agreeing evaluator observations and 606 matching Node/Wasm observations;
+  46 additional evaluator rejections, giving 652 evaluator observations total.
+- 28 byte-identical native/Bun module pairs and 56 complete Base trust audits.
+- 46 rejected-compilation output-preservation probes and 46 additional
   compilations proving no artifact is created at an absent output path.
 - Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 24 filled laws; five type-correct semantic
-  mutants, five Wasm kills and two additional evaluator kills.
+- Three complete proof entries, 27 filled laws; eight type-correct semantic
+  mutants: five Wasm value kills, two verdict kills and three evaluator kills.
 
 The mutant witnesses are frozen calls: unsigned compare across the high bit,
 zero divisor, shift by 32, surrogate equality and the 255/256 Nat offset edge.
 Each mutant compiler must typecheck, build and emit a valid module. Four kills
 are explicit wrong enum results; the division mutant must reach the real Wasm
-`divide by zero` trap. A compiler failure, timeout or malformed Wasm is not a
-kill. Only the Bun compiler lane is mutated; both unmodified compiler lanes are
-covered by all differential observations.
+`divide by zero` trap. Two verdict mutants change a frozen book's
+classification: dropping the offset adjacency test compiles `case 1n + p` to
+`Built`, and restoring the catalog lookup reports the U32 constructor as
+`Invalid`. The evaluator-only `append-reversed` mutant changes no emitted byte;
+its evaluator answers No for `"ab" ++ ""` = `"ab"`. A compiler failure,
+timeout, malformed Wasm or any other verdict is not a kill. Only the Bun lanes
+are mutated; both unmodified lanes are covered by all differential
+observations.
 
 The [receipt](receipts/literals.json) records source/seed/tool identities,
 separate exit categories and complete observations. It is regenerated; it is
 not a substitute for running the gate. [LAW_REVIEW.md](LAW_REVIEW.md) states the
-proof boundary. The gate is registered after the existing fifteen gates.
+proof boundary. The gate is registered in `scripts/gates/run.py` after the
+existing gates. CLI builds must report exactly the seed's frozen
+foreign-dependency verdict for the modules host query
+(`tests/compiler-modules/host-check-expectations.json`), and harness timeouts
+scale with `KNOT_GATE_TIMEOUT_SCALE`.
 Existing gate assertions and shared receipts belong to their owners.
 
 Nine new style families close local imports and each stays below 48000 source
