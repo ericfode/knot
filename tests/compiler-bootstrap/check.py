@@ -5,10 +5,12 @@ seed, invokes compilers and modules, and compares bytes. No compiler semantics.
 Every compiler generation is produced from one frozen bundle and one argv:
 each step runs inside a staged sandbox of copied regular files, under a
 recorded generation contract that the judge requires to be identical for
-C1 -> A2 and A2 -> A3. See README.md.
+C1 -> A2 and A2 -> A3 and equal to what src/CONTRACT.json fixes. See README.md.
 
-    python3 tests/compiler-bootstrap/check.py            run every stage, write receipts
-    python3 tests/compiler-bootstrap/check.py --judge P  apply the gate verdict to receipt P
+    python3 tests/compiler-bootstrap/check.py                   run every stage, write receipts
+    python3 tests/compiler-bootstrap/check.py --judge P         apply the gate verdict to receipt P
+    python3 tests/compiler-bootstrap/check.py --judge P --contract C
+                                        ... under contract C instead of src/CONTRACT.json
 """
 from __future__ import annotations
 
@@ -41,6 +43,7 @@ HOST = f'{REL}/host.mjs'
 RUN_WASM = 'scripts/run-wasm.mjs'
 MANIFEST = HERE / 'manifest.json'
 PROGRESS = HERE / 'receipts/progress.json'
+CONTRACT = 'src/CONTRACT.json'
 REFERENCE = HERE / 'receipts/reference.json'
 PARSER = 'src/parse-cli.bend'      # E2E-2 subject
 COMPILER = 'src/compile-cli.bend'  # the one compiler entry for C1, A2 and A3
@@ -204,33 +207,46 @@ def bundle_problems(bundle, manifest) -> list[str]:
     return problems
 
 
-def contract_problems(c, bundle, manifest) -> list[str]:
-    """One step's contract: the one argv over the staged closure, on the
+def contract_problems(c, bundle, contract, manifest) -> list[str]:
+    """One step's contract against src/CONTRACT.json and the manifest, never
+    against its own recorded copy: the one argv over the staged closure, on the
     qualified host and the pinned runtime."""
     problems = []
-    argv = [*(['--bundle', c['root']] if c['modules'] else []), c['entry'], c['target']['output'], *map(str, c['maxima'])]
+    argv, maxima, modules = generation_argv(contract, manifest, COMPILER), budgets(contract), modules_advertised(contract)
     if c['argv'] != argv:
         problems.append(f"argv {c['argv']} is not the one generation argv {argv}")
+    if c['maxima'] != maxima:
+        problems.append(f"maxima {c['maxima']} are not src/CONTRACT.json maximum_overrides {maxima}")
+    if c['modules'] != modules:
+        problems.append(f"module loading {c['modules']} differs from src/CONTRACT.json ({modules})")
+    if (c['entry'], c['root'], c['target']) != (COMPILER, LIB, target(contract)):
+        problems.append('entry, bundle root or target differs from src/CONTRACT.json')
     if reserved_in(c['argv'], manifest):
         problems.append(f"argv uses seed-reserved flags {reserved_in(c['argv'], manifest)}")
     if bundle is None or c['closure'] != bundle['order'] or c['bundle_sha256'] != digest(canonical(bundle['files'])):
         problems.append('contract closure or bundle digest differs from the staged sandbox')
     if c['host']['system'] != manifest['qualified_host']['system']:
         problems.append(f"host {c['host']['system']} is not the qualified host")
-    if c['runtime']['node'] != c['runtime']['required_node']:
-        problems.append(f"Node {c['runtime']['node']} is not the pinned {c['runtime']['required_node']}")
+    node, pinned = c['runtime']['node'], contract['host']['version']
+    if node != pinned or c['runtime']['required_node'] != pinned:
+        problems.append(f"Node {node} is not src/CONTRACT.json's pinned {pinned}")
+    if c['build']['seed'] != contract['seed']:
+        problems.append("build seed differs from src/CONTRACT.json's seed")
     if c['runtime']['memory_maximum'] != manifest['memory_maximum']:
         problems.append('memory maximum differs from the manifest (D19)')
     return problems
 
 
-def audit_problems(audit, modules, bundle, manifest) -> list[str]:
+def audit_problems(audit, contract, bundle, manifest) -> list[str]:
     """FX-21: under module loading, C1's loader closure (--audit-bundle Module
     lines) is exactly the staged sandbox, minus Base, which the audit pins
-    instead; or the audit is blocked by an allowed classification."""
+    instead; or the audit is blocked by an allowed classification. Whether an
+    audit is due comes from src/CONTRACT.json, never from the receipt."""
     status = audit.get('status')
-    if not modules:
-        return [] if status == 'unavailable' else ['audit recorded although the compiler advertises no module loading']
+    if modules_advertised(contract) and not auditing(contract):
+        return ['src/CONTRACT.json advertises module loading without --audit-bundle']
+    if not auditing(contract):
+        return [] if status == 'unavailable' else ['audit recorded although src/CONTRACT.json advertises no --audit-bundle']
     if status == 'blocked':
         kind = outcome(audit['blocker'])
         return [] if kind in ALLOWED else [f'loader audit blocker is {kind}; only Unsupported or Exhausted may block']
@@ -244,9 +260,10 @@ def audit_problems(audit, modules, bundle, manifest) -> list[str]:
     return problems
 
 
-def generation_problems(p, manifest) -> list[str]:
+def generation_problems(p, contract, manifest) -> list[str]:
     """The generation contract, the staged sandboxes, the loader audit, the
-    artifacts and C1's per-case observations, from recorded fields."""
+    artifacts and C1's per-case observations, from recorded fields held to
+    src/CONTRACT.json and the manifest."""
     problems = []
     bundles = p.get('bundles', {})
     for entry, bundle in sorted(bundles.items()):
@@ -258,24 +275,23 @@ def generation_problems(p, manifest) -> list[str]:
         problems.append('generation contracts differ between e2e3.a2 and e2e3.a3')
     for sid in GENERATIONS:
         c = contracts[sid]
-        problems += [f'{sid}: {x}' for x in contract_problems(c, bundles.get(c['entry']), manifest)]
+        problems += [f'{sid}: {x}' for x in contract_problems(c, bundles.get(c['entry']), contract, manifest)]
     by_id = {s['id']: s for s in p['stages']}
-    c = contracts[GENERATIONS[0]]
-    parser = [*(['--bundle', c['root']] if c['modules'] else []), PARSER, c['target']['output'], *map(str, c['maxima'])]
-    if by_id['e2e2.compile']['status'] != 'not-run' and by_id['e2e2.compile'].get('args') != parser:
+    if by_id['e2e2.compile']['status'] != 'not-run' and by_id['e2e2.compile'].get('args') != generation_argv(
+            contract, manifest, PARSER):
         problems.append('e2e2.compile: argv is not the one generation argv')
+    cap, pages = budgets(contract)[-1], manifest['memory_maximum']['pages']
     for sid in GENERATIONS:
         s, c = by_id[sid], contracts[sid]
         if s['status'] != 'not-run' and s.get('args') != c['argv']:
             problems.append(f'{sid}: argv differs from its generation contract')
         a = s.get('artifact') if s['status'] == 'reached' else None
         if a is not None:
-            if a['bytes'] > a['output_bytes'] or a['output_bytes'] != c['target']['output_bytes']:
-                problems.append(f"{sid}: artifact of {a['bytes']} bytes exceeds output_bytes {c['target']['output_bytes']}")
-            pages = c['runtime']['memory_maximum']['pages']
+            if a['bytes'] > a['output_bytes'] or a['output_bytes'] != cap:
+                problems.append(f"{sid}: artifact of {a['bytes']} bytes exceeds output_bytes {cap}")
             if a['memory'] is not None and (a['memory'].get('maximum') is None or a['memory']['maximum'] > pages):
                 problems.append(f"{sid}: artifact memory {a['memory']} has no maximum within the declared {pages} pages")
-    problems += audit_problems(p.get('audit', {}), contracts[GENERATIONS[0]]['modules'], bundles[COMPILER], manifest)
+    problems += audit_problems(p.get('audit', {}), contract, bundles[COMPILER], manifest)
     c1 = by_id['e2e3.c1']
     reference = c1.get('observations') or []
     if len(reference) != c1['corpus']:
@@ -292,13 +308,16 @@ def generation_problems(p, manifest) -> list[str]:
     return problems
 
 
-def judge(progress, manifest=None) -> list[str]:
-    """Gate verdict over recorded fields and the fixed manifest: reached stages
-    agree exactly; blocked stages report Unsupported or Exhausted; host
-    exhaustion after C1 built S is divergent; every generation step shares one
-    contract; Knot never calls its own source Invalid."""
-    manifest = manifest or json.loads(MANIFEST.read_bytes())
-    violations = []
+def judge(progress, contract: Path = ROOT / CONTRACT, manifest: Path = MANIFEST) -> list[str]:
+    """Gate verdict over recorded fields, src/CONTRACT.json and the fixed
+    manifest: reached stages agree exactly; blocked stages report Unsupported or
+    Exhausted; host exhaustion after C1 built S is divergent; every generation
+    step shares the one contract that src/CONTRACT.json fixes; Knot never calls
+    its own source Invalid. The receipt must name both files by hash."""
+    fixed = {CONTRACT: contract.read_bytes(), f'{REL}/manifest.json': manifest.read_bytes()}
+    violations = [f'receipt was not recorded under this {name}' for name, data in fixed.items()
+                  if progress.get('inputs', {}).get(name) != digest(data)]
+    contract, manifest = (json.loads(fixed[k]) for k in fixed)
     stages = progress.get('stages', [])
     if [(s.get('id'), s.get('tier')) for s in stages] != list(STAGES):
         return ['stage list differs from the fixed pipeline']
@@ -336,7 +355,7 @@ def judge(progress, manifest=None) -> list[str]:
         kind = outcome(row)
         if kind not in ('Success', *ALLOWED):
             violations.append(f"{row['path']}: Knot's parser reports its own source {kind} (D4)")
-    return violations + generation_problems(progress, manifest)
+    return violations + generation_problems(progress, contract, manifest)
 
 
 # ------------------------------------------------------------------- inputs
@@ -457,13 +476,24 @@ def replica(source: Path, folder: Path, bundle) -> None:
 
 # ---------------------------------------------------------------- contract
 
+BUDGETS = ('characters', 'parser_depth', 'checker_depth', 'emitter_depth', 'output_bytes')  # compile-cli's argv order
+
+
 def budgets(contract) -> list[int]:
     limits = contract['compiler']['maximum_overrides']
-    return [limits[k] for k in ('characters', 'parser_depth', 'checker_depth', 'emitter_depth', 'output_bytes')]
+    return [limits[k] for k in BUDGETS]
 
 
 def modules_advertised(contract) -> bool:
     return contract['compiler']['arguments'].startswith('[--bundle ROOT] ')
+
+
+def auditing(contract) -> bool:
+    return bool(contract.get('module_loading', {}).get('audit_arguments'))
+
+
+def target(contract) -> dict:
+    return {'route': 'wasm', 'profile': contract['profile'], 'output': OUTPUT, 'output_bytes': budgets(contract)[-1]}
 
 
 def generation_argv(contract, manifest, entry: str) -> list[str]:
@@ -508,7 +538,7 @@ def generation_contract(contract, manifest, bundle, folder: Path, shared) -> dic
         'bundle_sha256': digest(canonical(inspect(folder))),
         'modules': modules_advertised(contract), 'maxima': maxima,
         'argv': generation_argv(contract, manifest, bundle['entry']),
-        'target': {'route': 'wasm', 'profile': contract['profile'], 'output': OUTPUT, 'output_bytes': maxima[-1]},
+        'target': target(contract),
         'conformance_argv': ['<case>', '<output>'],
         **copy.deepcopy(shared),
         'reserved_flags': manifest['reserved_flags']['flags'],
@@ -949,12 +979,28 @@ def reached_chain(progress) -> dict:
     return p
 
 
-def mutants(progress, manifest) -> list[dict]:
+def mutants(progress, contract, manifest) -> list[dict]:
     """Scratch copies with substituted recorded fields; the judge must reject
     each for its named reason. The first ten mutate the real receipt; the
-    rest mutate the reached chain, whose unmutated copies must pass."""
+    rest mutate the reached chain, whose unmutated copies must pass. A case
+    may be judged under src/CONTRACT.json with module loading advertised
+    ('modules') or withdrawn ('single'); its receipt then names that file."""
     folder = ROOT / BUILD / 'judge'
     folder.mkdir(parents=True, exist_ok=True)
+
+    def variant(modules: bool) -> Path:
+        c = copy.deepcopy(contract)
+        arguments = c['compiler']['arguments'].removeprefix('[--bundle ROOT] ')
+        c['compiler']['arguments'] = '[--bundle ROOT] ' * modules + arguments
+        loading = c.setdefault('module_loading', {})
+        if modules:
+            loading.setdefault('audit_arguments', '--audit-bundle ROOT source')
+        else:
+            loading.pop('audit_arguments', None)
+        path = folder / f"contract-{'modules' if modules else 'single'}.json"
+        path.write_text(json.dumps(c, indent=2) + '\n')
+        return path
+    variants = {'modules': variant(True), 'single': variant(False)}
 
     def knot_blocker(p):
         s = next((s for s in p['stages'] if s['status'] == 'blocked' and s['blocker']['source'] == 'knot'), None)
@@ -1025,6 +1071,32 @@ def mutants(progress, manifest) -> list[dict]:
         a = step(p)['artifact']
         a['bytes'] = a['output_bytes'] + 1
 
+    def budgeted(p, maxima, cap):
+        """Both steps and the parser compile on budgets src/CONTRACT.json does
+        not name, consistently: FX-02 returning symmetrically."""
+        for c, sid in zip(contracts(p), GENERATIONS):
+            c.update(maxima=list(maxima), argv=[*c['argv'][:c['argv'].index(c['entry']) + 2], *map(str, maxima)])
+            c['target']['output_bytes'] = cap
+            s = step(p, sid)
+            s['args'] = list(c['argv'])
+            s['artifact'].update(output_bytes=cap, headroom_bytes=cap - s['artifact']['bytes'])
+        parser = step(p, 'e2e2.compile')
+        parser['args'] = [*parser['args'][:parser['args'].index(PARSER) + 2], *map(str, maxima)]
+
+    def defaults():
+        limits = contract['compiler']['defaults']
+        return [limits[k] for k in BUDGETS]
+
+    def erased(p):
+        """Module loading withdrawn from both steps and the parser compile, and no audit."""
+        for c, sid in zip(contracts(p), GENERATIONS):
+            c.update(modules=False, argv=c['argv'][2:] if c['argv'][0] == '--bundle' else c['argv'])
+            step(p, sid)['args'] = list(c['argv'])
+        parser = step(p, 'e2e2.compile')
+        if parser['args'][0] == '--bundle':
+            parser['args'] = parser['args'][2:]
+        p['audit'] = {'status': 'unavailable', 'reason': 'src/CONTRACT.json advertises no --audit-bundle'}
+
     def bundled(p, drop=0):
         """The chain as module loading records it: --bundle in both steps, and a recorded audit."""
         for c, sid in zip(contracts(p), GENERATIONS):
@@ -1059,6 +1131,14 @@ def mutants(progress, manifest) -> list[dict]:
     chain = (
         ('reached-chain', 0, None, lambda p: None),
         ('argv-mismatch', 1, 'generation contracts differ', bare_argv),
+        ('both-steps-bare', 1, 'is not the one generation argv',
+         lambda p: budgeted(p, [], contract['compiler']['defaults']['output_bytes'])),
+        ('both-steps-default-budgets', 1, 'are not src/CONTRACT.json maximum_overrides',
+         lambda p: budgeted(p, defaults(), defaults()[-1])),
+        ('node-forged-both', 1, "is not src/CONTRACT.json's pinned",
+         lambda p: [c['runtime'].update(node='20.0.0', required_node='20.0.0') for c in contracts(p)]),
+        ('contract-unrecorded', 1, 'was not recorded under this src/CONTRACT.json',
+         lambda p: p['inputs'].update({CONTRACT: digest(b'')})),
         ('argv-unrecorded', 1, 'argv differs from its generation contract',
          lambda p: step(p).update(args=step(p)['args'][:-1])),
         ('argv-seed-reserved', 1, 'seed-reserved', reserved),
@@ -1069,27 +1149,35 @@ def mutants(progress, manifest) -> list[dict]:
         ('a3-resource-forged', 1, 'resource tag', lambda p: exhausted(p, tag='knot-budget')),
         ('diagnostic-tail', 1, 'diagnostics differ from C1', diagnostic_tail),
         ('artifact-over-budget', 1, 'exceeds output_bytes', oversize),
-        ('reached-chain-bundled', 0, None, bundled),
-        ('audit-closure-differs', 1, 'loader closure', lambda p: bundled(p, drop=1)),
+        ('reached-chain-bundled', 0, None, bundled, 'modules'),
+        ('audit-closure-differs', 1, 'loader closure', lambda p: bundled(p, drop=1), 'modules'),
         ('audit-missing', 1, 'requires a recorded or blocked audit',
-         lambda p: bundled(p) or p.update(audit={'status': 'unavailable'})),
+         lambda p: bundled(p) or p.update(audit={'status': 'unavailable'}), 'modules'),
+        ('modules-erased-both', 1, 'module loading False differs from src/CONTRACT.json',
+         lambda p: bundled(p) or erased(p), 'modules'),
+        ('modules-forged-both', 1, 'module loading True differs from src/CONTRACT.json', bundled, 'single'),
     )
     result = []
     for base, cases in ((progress, real), (reached_chain(progress), chain)):
-        for label, expected, reason, mutate in cases:
+        for label, expected, reason, mutate, *under in cases:
             scratch = copy.deepcopy(base)
             if mutate(scratch) is False:
                 result.append({'name': label, 'applicable': False})
                 continue
+            flags = []
+            if under:
+                scratch['inputs'][CONTRACT] = digest(variants[under[0]].read_bytes())
+                flags = ['--contract', variants[under[0]].relative_to(ROOT).as_posix()]
             path = folder / f'{label}.json'
             path.write_text(json.dumps(scratch, indent=2) + '\n')
-            r = run([sys.executable, '-B', f'{REL}/check.py', '--judge', path.relative_to(ROOT).as_posix()],
+            r = run([sys.executable, '-B', f'{REL}/check.py', '--judge', path.relative_to(ROOT).as_posix(), *flags],
                     SECONDS['tool'])
             violations = text(r['stdout']).splitlines()
             killed = r['exit'] == 1 and any(reason in v for v in violations) if reason else r['exit'] == 0
             result.append({'name': label, 'expected_exit': expected, 'expected_violation': reason, 'exit': r['exit'],
                            'violations': violations, 'killed_for_reason': killed,
-                           'outcome': 'rejected' if r['exit'] == 1 else 'accepted' if r['exit'] == 0 else 'error'})
+                           'outcome': 'rejected' if r['exit'] == 1 else 'accepted' if r['exit'] == 0 else 'error',
+                           **({'contract': under[0]} if under else {})})
     return result
 
 
@@ -1155,23 +1243,25 @@ def audit_control(contract, manifest, checker: Path | None) -> dict:
     record = audit(contract, manifest, folder, bundle, checker)
     return {'name': 'audit-closure',
             'expected': {'status': 'recorded', 'problems': [], 'modules': list(PROBE)},
-            'observed': {'status': record['status'], 'problems': audit_problems(record, True, bundle, manifest),
+            'observed': {'status': record['status'], 'problems': audit_problems(record, contract, bundle, manifest),
                          'modules': record.get('modules')}}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--judge', metavar='RECEIPT', help='apply the gate verdict to a recorded progress receipt')
+    parser.add_argument('--contract', metavar='CONTRACT', type=Path, default=ROOT / CONTRACT,
+                        help='the src/CONTRACT.json the receipt names by hash (default: this tree\'s)')
     args = parser.parse_args()
     if args.judge:
-        violations = judge(json.loads(Path(args.judge).read_bytes()))
+        violations = judge(json.loads(Path(args.judge).read_bytes()), args.contract)
         print('\n'.join(violations) if violations else 'Judge passed')
         return 1 if violations else 0
 
     shutil.rmtree(ROOT / BUILD, ignore_errors=True)  # A stale artifact can never count.
     (ROOT / BUILD).mkdir(parents=True)
     build = ROOT / BUILD
-    contract = json.loads((ROOT / 'src/CONTRACT.json').read_bytes())
+    contract = json.loads((ROOT / CONTRACT).read_bytes())
     manifest = json.loads(MANIFEST.read_bytes())
     progress = {'schema': 2, 'status': 'incomplete', 'harness': f'{REL}/check.py',
                 'seed': contract['seed'], 'compiler_entry': COMPILER, 'parser_entry': PARSER}
@@ -1180,13 +1270,13 @@ def main() -> int:
     try:
         progress['tools'] = {t: text(successful([t, '--version'], SECONDS['tool'])['stdout']).strip() for t in ('bun', 'node')}
         progress['inputs'] = {p: digest((ROOT / p).read_bytes()) for p in sorted(
-            [f'{REL}/check.py', HOST, f'{REL}/manifest.json', RUN_WASM, SEED, 'src/CONTRACT.json', PROGRAMS, REJECTS,
+            [f'{REL}/check.py', HOST, f'{REL}/manifest.json', RUN_WASM, SEED, CONTRACT, PROGRAMS, REJECTS,
              *[f'{REL}/io-abi.mjs'] * (HERE / 'io-abi.mjs').exists()])}
         shared = environment(contract, manifest)
 
         # Staging: copied regular files, pins checked, all before the seed step.
-        auditing = bool(contract.get('module_loading', {}).get('audit_arguments'))
-        entries = [PARSER, COMPILER, *[CHECKER] * auditing]
+        audited = auditing(contract)
+        entries = [PARSER, COMPILER, *[CHECKER] * audited]
         progress['bundles'] = {e: stage_sandbox(e, build / SANDBOX[e], manifest) for e in entries}
         sandbox, bundle = build / SANDBOX[COMPILER], progress['bundles'][COMPILER]
         contracts = {'e2e3.a2': generation_contract(contract, manifest, bundle, sandbox, shared)}
@@ -1196,11 +1286,11 @@ def main() -> int:
         builds = {'parse-cli': (PARSER, build / SANDBOX[PARSER], build / 'parse-cli'),
                   'parse-cli.js': (PARSER, build / SANDBOX[PARSER], build / 'parse-cli.js'),
                   'C1': (COMPILER, sandbox, c1), 'C1-repeat': (COMPILER, sandbox, build / 'repeat/c1'),
-                  **({'check-cli': (CHECKER, build / SANDBOX[CHECKER], build / 'check-cli')} if auditing else {})}
+                  **({'check-cli': (CHECKER, build / SANDBOX[CHECKER], build / 'check-cli')} if audited else {})}
         progress['seed_builds'] = seed_step(builds)
         for e in entries:
             verify(build / SANDBOX[e], progress['bundles'][e], manifest)
-        progress['audit'] = audit(contract, manifest, sandbox, bundle, build / 'check-cli' if auditing else None)
+        progress['audit'] = audit(contract, manifest, sandbox, bundle, build / 'check-cli' if audited else None)
 
         # E2E-2 reference corpus: the seed is the oracle.
         names = corpus()
@@ -1318,9 +1408,9 @@ def main() -> int:
                                                if 'resource' in first['blocker'] else {})}}
 
         progress['controls'] = (controls(names, native, bun) + sandbox_controls(bundle, manifest, contracts['e2e3.a2']['argv'])
-                                + [audit_control(contract, manifest, build / 'check-cli' if auditing else None)])
-        progress['mutants'] = mutants(progress, manifest)
-        violations = judge(progress, manifest)
+                                + [audit_control(contract, manifest, build / 'check-cli' if audited else None)])
+        progress['mutants'] = mutants(progress, contract, manifest)
+        violations = judge(progress)
         failed_controls = [c['name'] for c in progress['controls'] if c['expected'] != {
             k: c['observed'].get(k) for k in c['expected']}]
         surviving = [m['name'] for m in progress['mutants']

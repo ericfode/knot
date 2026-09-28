@@ -10,7 +10,8 @@ Every compiler generation is produced from **one frozen bundle and one argv**
 (increment harness-2, [gap analysis](../../docs/compiler-campaign/SELF-HOSTING-PATH.md#harness-2)).
 Each generation step runs inside a staged sandbox of copied regular files. It runs
 under a recorded generation contract, and the judge requires that contract to be
-identical for C1 → A2 and A2 → A3. The contract does not depend on the route: the
+identical for C1 → A2 and A2 → A3, and equal to what `src/CONTRACT.json` fixes.
+The contract does not depend on the route: the
 Wasm path exists now, and the `knot-image-1` / `knot-vm-1` path plugs in later.
 
 ## Commands
@@ -18,6 +19,7 @@ Wasm path exists now, and the `knot-image-1` / `knot-vm-1` path plugs in later.
 ```sh
 BEND_NO_TELEMETRY=1 python3 tests/compiler-bootstrap/check.py        # run all stages, write receipts
 python3 tests/compiler-bootstrap/check.py --judge RECEIPT            # apply the gate verdict to a receipt
+python3 tests/compiler-bootstrap/check.py --judge RECEIPT --contract C   # ... under contract C, not src/CONTRACT.json
 npm run -s gates                                                     # includes the registered `bootstrap` gate
 ```
 
@@ -207,9 +209,17 @@ byte-identical receipts.
 
 ## Gate verdict (`bootstrap`)
 
-`judge()` reads only recorded fields and the fixed `manifest.json`. It derives each
-classification from the exit status and the first stderr field, and the two must
-agree. It also derives each exhaustion's source:
+`judge()` reads recorded fields, `src/CONTRACT.json` and the fixed `manifest.json`.
+The receipt's `inputs` must name both files by sha256, so a receipt is judged only
+under the contract and manifest it was recorded with. Every generation-contract
+field those files fix is held to the files, never to the receipt's own copy: the
+argv (from the same builder the harness runs), the maxima, `output_bytes`, whether
+module loading is in use, the entry, root and target, Node and the seed. Whether a
+loader audit is due comes from `module_loading.audit_arguments`, not from the
+receipt. A symmetric forgery, one that changes both steps the same way, therefore
+fails like an asymmetric one. It derives each classification from the exit status
+and the first stderr field, and the two must agree. It also derives each
+exhaustion's source:
 
 | Tag | Meaning |
 | --- | --- |
@@ -232,13 +242,15 @@ The verdict fails when:
   worse (D4);
 - a sandbox file is not a regular single-link file, escapes the sandbox, or
   differs from its pin; or a package file is unpinned;
-- the two generation contracts differ, a contract's argv is not the one
-  generation argv or uses a seed-reserved flag, its closure or bundle digest
-  differs from the staged sandbox, its host is not Darwin, its Node is not the
-  pinned version, or its memory maximum is not D19's;
+- the receipt's `inputs` do not name this `src/CONTRACT.json` or `manifest.json`;
+- the two generation contracts differ; a contract's argv is not the one
+  generation argv of `src/CONTRACT.json` or uses a seed-reserved flag; its maxima,
+  module loading, entry, root, target, Node or seed differ from
+  `src/CONTRACT.json`; its closure or bundle digest differs from the staged
+  sandbox; its host is not Darwin; or its memory maximum is not D19's;
 - a generation stage's `args` differ from its contract's argv;
-- a reached artifact exceeds `output_bytes` or declares memory without a maximum
-  within the contract's;
+- a reached artifact exceeds `src/CONTRACT.json`'s `output_bytes` or declares
+  memory without a maximum within the manifest's;
 - the loader audit contradicts the contract (see above);
 - C1's per-case observations are missing, or a generation's observations differ
   from C1's (FX-18);
@@ -264,23 +276,40 @@ The unmutated real receipt must pass. It has these mutants:
 The generation rules only apply once generations are reached, and this tree does
 not have any yet. So the harness also builds a **reached chain**: the real receipt
 with a2, a3, fixpoint and conformance reached as a correct fixpoint records them,
-with generation observations equal to C1's. The chain and its module-loading
-variant must both pass. These mutants of the chain must each be rejected:
+with generation observations equal to C1's. The chain must pass, and so must its
+module-loading variant (`reached-chain-bundled`). That variant is judged under a
+scratch copy of `src/CONTRACT.json` that advertises `[--bundle ROOT]` and
+`--audit-bundle` (`--contract`, with the receipt's `inputs` naming the copy), and
+the harness also writes a copy with module loading withdrawn. These mutants of
+the chain must each be rejected:
 
 1. `argv-mismatch`: A2 → A3 gets the pre-harness-2 bare argv.
-2. `argv-unrecorded`: a stage's args differ from its contract.
-3. `argv-seed-reserved`: `--threads 1` appears in both argvs.
-4. `sandbox-symlink`: a sandbox input is recorded as a symlink.
-5. `sandbox-unpinned`: an input differs from its pin.
-6. `a3-host-exhausted`: A3 is host-Exhausted after a reached A2.
-7. `a3-divergent-exhausted`: A3's status is `divergent-exhausted`.
-8. `a3-resource-forged`: a host stack trap is tagged `knot-budget`.
-9. `diagnostic-tail`: one character near the end of an A3 diagnostic changes.
-10. `artifact-over-budget`: an artifact is one byte over `output_bytes`.
-11. `audit-closure-differs`: a staged module is missing from the audit.
-12. `audit-missing`: no audit is recorded under module loading.
+2. `both-steps-bare`: both steps and the parser compile get the bare argv
+   `[entry, output]`, consistently (FX-02 returning symmetrically).
+3. `both-steps-default-budgets`: both steps run on `compiler.defaults` (parser
+   depth 512, 65,536 output bytes), consistently.
+4. `node-forged-both`: both contracts record Node 20.0.0 as found and required.
+5. `contract-unrecorded`: the receipt names another `src/CONTRACT.json`.
+6. `argv-unrecorded`: a stage's args differ from its contract.
+7. `argv-seed-reserved`: `--threads 1` appears in both argvs.
+8. `sandbox-symlink`: a sandbox input is recorded as a symlink.
+9. `sandbox-unpinned`: an input differs from its pin.
+10. `a3-host-exhausted`: A3 is host-Exhausted after a reached A2.
+11. `a3-divergent-exhausted`: A3's status is `divergent-exhausted`.
+12. `a3-resource-forged`: a host stack trap is tagged `knot-budget`.
+13. `diagnostic-tail`: one character near the end of an A3 diagnostic changes.
+14. `artifact-over-budget`: an artifact is one byte over `output_bytes`.
+15. `audit-closure-differs`: a staged module is missing from the audit (module
+    loading advertised).
+16. `audit-missing`: no audit is recorded (module loading advertised).
+17. `modules-erased-both`: `--bundle` and the audit are removed from both steps
+    and the parser compile, while the contract advertises module loading.
+18. `modules-forged-both`: both steps use `--bundle` while the contract does not
+    advertise it.
 
-The runner's `counts()` rechecks the recorded verdict independently.
+The runner's `counts()` rechecks the recorded verdict and blocker classes
+independently. It does not re-derive the contract anchor; that lives in the judge,
+and `scripts/gates/` belongs to the gates increment.
 
 Fourteen controls exercise paths that have no Knot-built module to run today.
 They use test doubles, not Knot evidence:
