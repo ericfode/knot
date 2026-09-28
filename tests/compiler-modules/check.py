@@ -167,25 +167,25 @@ def probe_reference(manifest):
     return supplement['fixtures'], records
 
 
-def review_reference(manifest):
-    supplement = json.loads((HERE / 'review-round2.json').read_text())
+def review_reference(manifest, round):
+    supplement = json.loads((HERE / f'{round}.json').read_text())
     require(supplement['seed'] == manifest['seed'], 'Review seed identity differs')
-    source = HERE / 'review-round2'
+    source = HERE / round
     files = {p.relative_to(source).as_posix() for p in source.rglob('*') if p.is_file()}
     require(files == set(supplement['sources']), 'Review source set differs from freeze')
     require(all(digest(source / name) == identity for name, identity in supplement['sources'].items()),
             'Review fixture changed after expectation freeze')
-    target = BUILD / 'review-round2'
+    target = BUILD / round
     shutil.copytree(source, target, dirs_exist_ok=True)
-    for name, relative in supplement['symlinks'].items():
+    for name, relative in supplement.get('symlinks', {}).items():
         link = target / name
         if link.is_symlink():
             link.unlink()
         require(not link.exists(), ('Review link path is occupied', name))
         link.symlink_to(relative, target_is_directory=True)
-    case = supplement['case_alias']
-    require((target / case['alias']).exists()
-            and os.path.samefile(target / case['canonical'], target / case['alias']),
+    case = supplement.get('case_alias')
+    require(case is None or ((target / case['alias']).exists()
+            and os.path.samefile(target / case['canonical'], target / case['alias'])),
             'Review case-alias probe requires a case-insensitive filesystem')
     records, fixtures = [], []
     for frozen in supplement['fixtures']:
@@ -204,6 +204,49 @@ def review_reference(manifest):
             call['run'] = os.path.relpath(entry, HERE)
         fixtures.append(fixture)
     return fixtures, records
+
+
+def adapter_drift(root, pins, host):
+    """Files of the foreign path query whose bytes differ from the pins, are missing or unpinned."""
+    drift = {path for path, identity in pins.items()
+             if not (root / path).is_file() or digest(root / path) != identity}
+    present = {p.relative_to(root).as_posix() for p in (root / host).rglob('*') if p.is_file()}
+    return sorted(drift | (present - set(pins)))
+
+
+def adapter_pins():
+    """The seed-built CLIs run these bytes; census pins only the Bend wrapper."""
+    frozen = json.loads((HERE / 'review-round3.json').read_text())['adapter_pins']
+    pins, host = frozen['pins'], frozen['host_directory']
+    require(pins == json.loads((HERE / 'host-check-expectations.json').read_text())['host_query_sha256'],
+            'Adapter pins differ from the host-check expectations')
+    reference = json.loads((ROOT / 'tests/compiler-io-abi-2/expectations.json').read_text())['reference_sha256']
+    for path, copy in frozen['references'].items():
+        require(pins[path] == reference[Path(copy['file']).name] == digest(ROOT / copy['file']),
+                ('Loader adapter differs from the knot-io-2 reference body', path))
+    drift = adapter_drift(ROOT, pins, host)
+    require(drift == [], ('Host adapter bytes differ from their pins', drift))
+    controls = []
+    for control in frozen['controls']:
+        scratch = BUILD / 'adapter-controls' / control['name']
+        if scratch.exists():
+            shutil.rmtree(scratch)
+        for path in pins:
+            (scratch / path).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(ROOT / path, scratch / path)
+        if 'change' in control:
+            target = scratch / control['change']['file']
+            data = bytearray(target.read_bytes())
+            data[control['change']['offset']] ^= control['change']['xor']
+            target.write_bytes(bytes(data))
+        if 'remove' in control:
+            (scratch / control['remove']).unlink()
+        if 'add' in control:
+            (scratch / control['add']).write_text('// unpinned host file\n')
+        observed = adapter_drift(scratch, pins, host)
+        require(observed == control['drift'], (control, observed))
+        controls.append({'name': control['name'], 'drift': observed})
+    return {'pins': pins, 'controls': controls}
 
 
 def pin_controls(record):
@@ -253,6 +296,7 @@ def build_lanes(record):
             record['builds'].append({'lane': lane, 'phase': phase, 'result': built,
                                      'sha256': digest(output)})
             lanes[lane][phase] = [*runtime, output, '--bundle', BUNDLE]
+            lanes[lane]['plain-' + phase] = [*runtime, output]
             if phase == 'check':
                 lanes[lane]['audit'] = [*runtime, output, '--audit-bundle', BUNDLE]
     return lanes
@@ -319,6 +363,30 @@ def audit(result, fixture, base):
             'checked_base': checked, 'unchecked_base': unchecked}
 
 
+def single_file(fixture, commands, source, name, lane):
+    """The same source through the single-file CLIs, which have no qualification pass."""
+    judged = {'file': fixture['file'], 'knot': {'obligation': 'match-seed', 'requires': []}}
+    if 'exit' in fixture['plain']:
+        judged = {'file': fixture['file'], 'knot': {'obligation': 'knot_expected'},
+                  'knot_expected': fixture['plain']}
+    output = BUILD / f'{name}-{lane}-plain.wasm'
+    output.unlink(missing_ok=True)
+    results = {'check': run([*commands['check'], source])}
+    for index, call in enumerate(fixture['calls']):
+        args = [arg['tag'] for arg in call['arguments']]
+        results[f'eval-{index}'] = run([*commands['eval'], source, call['export'], 65536, *args])
+        if observe(results[f'eval-{index}'], judged):
+            value(results[f'eval-{index}'], call)
+    results['compile'] = run([*commands['compile'], source, output])
+    if observe(results['check'], judged):
+        require(results['check']['stdout'].startswith('Checked\n'), results['check'])
+    if observe(results['compile'], judged):
+        for call in fixture['calls']:
+            answer = json.loads(successful(['node', HOST, output, call['export']])['stdout'])
+            require(answer['validated'] and answer['result'] == call['tag'], (call, answer))
+    return results
+
+
 def fixture_observations(fixture, lanes, base):
     name = fixture.get('name', Path(fixture['file']).stem)
     source = HERE / fixture['file']
@@ -331,7 +399,8 @@ def fixture_observations(fixture, lanes, base):
             'reference': fixture['calls'], 'lanes': {}}
     outputs = {}
     for lane, commands in lanes.items():
-        commands = {phase: [*argv[:-1], bundle] for phase, argv in commands.items()}
+        plain = {phase: commands['plain-' + phase] for phase in ('check', 'eval', 'compile')}
+        commands = {phase: [*argv[:-1], bundle] for phase, argv in commands.items() if '-' not in phase}
         checked = run([*commands['check'], source])
         if observe(checked, fixture):
             require(checked['stdout'].startswith('Checked\n'), checked)
@@ -369,6 +438,8 @@ def fixture_observations(fixture, lanes, base):
                                          'expected_tag': call['tag'], 'result': result})
         else:
             require(output.read_bytes() == marker, ('rejection changed output', compiled))
+        if 'plain' in fixture:
+            evidence['plain'] = single_file(fixture, plain, source, name, lane)
         item['lanes'][lane] = evidence
     native, bun = item['lanes']['native'], item['lanes']['bun']
     for phase in ('check', 'compile'):
@@ -377,6 +448,10 @@ def fixture_observations(fixture, lanes, base):
     require([observation(row['result']) for row in native['evaluations']] ==
             [observation(row['result']) for row in bun['evaluations']],
             (fixture['file'], 'native/Bun evaluation differs'))
+    if 'plain' in fixture:
+        require([observation(r) for r in native['plain'].values()] ==
+                [observation(r) for r in bun['plain'].values()],
+                (fixture['file'], 'native/Bun single-file observations differ'))
     if 'audit' in native:
         require('audit' in bun and
                 observation(native['audit']['result']) == observation(bun['audit']['result']),
@@ -541,8 +616,10 @@ def main():
              HERE / 'FIXTURES.md', HERE / 'regen.py', HERE / 'regressions.json',
              HERE / 'host-check-expectations.json',
              HERE / 'probes.json', HERE / 'pin.bend', HERE / 'pin-expectations.json',
-             HERE / 'review-round2.json', *sorted((ROOT / 'src/host').glob('*'))]
-    paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes', 'review-round2')
+             HERE / 'review-round2.json', HERE / 'review-round3.json', *sorted((ROOT / 'src/host').glob('*')),
+             ROOT / 'tests/compiler-io-abi-2/expectations.json',
+             *sorted((ROOT / 'tests/compiler-io-abi-2/reference').glob('*'))]
+    paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes', 'review-round2', 'review-round3')
               for p in sorted((HERE / folder).rglob('*')) if p.is_file()]
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'status': 'incomplete', 'seed': manifest['seed'],
@@ -551,7 +628,10 @@ def main():
         record['reference_verification'] = successful(['python3', HERE / 'regen.py'])
         supplemental, record['supplemental_reference'] = supplemental_reference(manifest)
         probes, record['probe_reference'] = probe_reference(manifest)
-        review, record['review_reference'] = review_reference(manifest)
+        review, record['review_reference'] = review_reference(manifest, 'review-round2')
+        round3, record['round3_reference'] = review_reference(manifest, 'review-round3')
+        review += round3
+        record['adapters'] = adapter_pins()
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3')}
         require(record['tools']['node'] == 'v22.22.3', record['tools'])
