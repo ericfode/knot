@@ -107,10 +107,21 @@
   "trust_inventory": "research/compiler-wasm/TRUST.md",
   "later_milestones": [
     "owned field storage and Wasm lowering",
-    "sound structural recursion",
+    "broader recursion beyond first-parameter field descent",
     "GPU source lowering",
     "full self-hosting"
   ],
+  "structural_recursion": {
+    "profile": "knot-structural-recursion-1",
+    "contract": "tests/compiler-recursion/SPEC.md",
+    "evidence": "tests/compiler-recursion/receipts/recursion.json",
+    "checker": true,
+    "independent_evaluator": true,
+    "wasm": false,
+    "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0; matches propagate descendant levels.",
+    "other_self_calls": "Unsupported check recursive-call",
+    "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call."
+  },
   "structural_terms": {
     "profile": "knot-structural-terms-1",
     "contract": "research/compiler-fields/SPEC.md",

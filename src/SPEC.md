@@ -6,7 +6,13 @@ evaluator additionally implement `knot-structural-terms-1`, specified in
 constructor arguments and flat field binders, validates quantities and ordered
 matching, and evaluates finite live-field trees. It does not provide owned
 runtime storage. The emitter rejects every fielded book after body checking.
-Nested patterns, recursion and structured host arguments remain unsupported.
+The [first-parameter descent contract](../tests/compiler-recursion/SPEC.md)
+adds structural self-calls to checking and evaluation: the first checked argument
+must be a reference to a field of parameter 0, directly or through further
+matches. Other self-calls report `Unsupported check recursive-call`; forward
+and mutual calls retain their existing classification. Nested patterns and
+structured host arguments remain unsupported. Recursive programs are unemitted
+until field lowering is integrated; the Wasm emitter is unchanged.
 References to nullary-only checking below describe the retained enum subprofile.
 
 This is the first executable path toward S1, not the complete S1 stage or a
@@ -47,8 +53,9 @@ digits, underscores or dots. Keywords cannot be identifiers.
   matching. Already matched parameters cannot be matched again. Inside an arm,
   uses of its matched parameter become the known nullary constructor; this may
   construct several fresh values without reusing the consumed affine value.
-- Live calls form an acyclic graph. Erased arguments may contain forward calls;
-  self-calls remain unsupported in any context. Every function is checked, including unused
+- In the enum subprofile, live calls form an acyclic graph. Erased arguments may
+  contain forward calls; no enum self-call can meet the field-descent rule.
+  Every function is checked, including unused
   definitions. No executable artifact is emitted until the entire book passes.
 
 Constructor names must be unique across the book in this first profile.
