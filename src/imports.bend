@@ -222,7 +222,10 @@ def foreign(parts: List<&2,String>) -> Bool:
     case Con{word,Con{path,rest}}: String.starts_with(path,"\"")
     case _: False{}
 
-def header_lines(lines: List<&2,String>, +open: Bool, +row: U32,
+# Once body text has held a quote, a later line may lie inside a multi-line
+# string literal. Such an import line stays body text: the lexer, which reports
+# string literals, or the parser, which reports imports, classifies it.
+def header_lines(lines: List<&2,String>, +open: Bool, +quoted: Bool, +row: U32,
   +imports: List<&2,Import>, +seen: List<&2,String>, +body: List<&2,String>) -> Result<S.Error,Header>:
   match lines:
     case Nil{}: Done{Header{List.reverse(&2,Import,imports),body_lines(body)}}
@@ -233,12 +236,13 @@ def header_lines(lines: List<&2,String>, +open: Bool, +row: U32,
         Fail{S.Unsupported{"load","header-character",S.At{0,0,row,0}}},u =>
       S.choose(Result<S.Error,Header>,Bool.and(open,is_import),u =>
         push_import(import_words(parts,S.At{0,0,row,0}),seen,+item =>
-          header_lines(tail,True{},U32.add(row,1),Con{item,imports},Con{alias(item),seen},Con{"",body})),u =>
-      S.choose(Result<S.Error,Header>,Bool.and(Bool.not(open),is_import),u =>
+          header_lines(tail,True{},quoted,U32.add(row,1),Con{item,imports},Con{alias(item),seen},Con{"",body})),u =>
+      S.choose(Result<S.Error,Header>,Bool.and(Bool.not(open),Bool.and(is_import,Bool.not(quoted))),u =>
         S.choose(Result<S.Error,Header>,foreign(parts),u =>
           Fail{S.Unsupported{"check","foreign-definition",S.At{0,0,row,0}}},u =>
           Fail{S.Invalid{"load","import-after-declaration",S.At{0,0,row,0}}}),u =>
-        header_lines(tail,Bool.and(open,List.is_empty(&2,String,parts)),U32.add(row,1),imports,seen,Con{line,body}))))
+        header_lines(tail,Bool.and(open,List.is_empty(&2,String,parts)),Bool.or(quoted,String.contains(line,"\"")),
+          U32.add(row,1),imports,seen,Con{line,body}))))
 
 def header(text: String) -> Result<S.Error,Header>:
-  header_lines(split(text,'\n'),True{},1,Nil{},Nil{},Nil{})
+  header_lines(split(text,'\n'),True{},False{},1,Nil{},Nil{},Nil{})

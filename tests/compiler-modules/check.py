@@ -642,6 +642,11 @@ MUTANTS += [
      'old': 'Bool.or(String.is_empty(bundle),String.ends_with(bundle,"/"))',
      'new': 'String.ends_with(bundle,"/")',
      'witness': 'bundle-dot', 'actual': {'exit': 0}},
+    {'name': 'quoted-import-classified', 'file': 'imports.bend',
+     'old': 'Bool.and(Bool.not(open),Bool.and(is_import,Bool.not(quoted)))',
+     'new': 'Bool.and(Bool.not(open),is_import)',
+     'witness': 'string-module-import',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-after-declaration\t'}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -653,7 +658,8 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'alias-keeps-glued-comment', 'header-character-ignored',
                     'constructor-order-ignored', 'let-binder-unchecked', 'file-let-binder-unchecked',
                     'file-constructor-order-ignored', 'file-arm-binders-unchecked', 'field-binder-book-wide',
-                    'climbing-target-accepted', 'climbing-root-accepted', 'working-directory-bundle-empty'}
+                    'climbing-target-accepted', 'climbing-root-accepted', 'working-directory-bundle-empty',
+                    'quoted-import-classified'}
 
 
 def mutants(fixtures):

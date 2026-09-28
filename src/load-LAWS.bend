@@ -157,6 +157,10 @@ law module_import_after_declaration_is_invalid:
   {I.header("type Flag is Type:\n  Off{}\nimport ./m.bend as M\n") ==
     Fail{S.Invalid{"load","import-after-declaration",S.At{0,0,3,0}}} : Result<S.Error,I.Header>}
 
+law quoted_body_leaves_imports_to_the_lexer:
+  {I.header("def text() -> String:\n  \"a\nimport ./x.bend as X\"\n") ==
+    Done{I.Header{Nil{},"def text() -> String:\n  \"a\nimport ./x.bend as X\"\n"}} : Result<S.Error,I.Header>}
+
 law ambiguous_host_path_is_unsupported:
   {F.classified(Done{False{}}) ==
     Fail{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}} : Result<S.Error,Unit>}
