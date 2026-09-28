@@ -1075,3 +1075,21 @@ seed lanes before repair; 21 dummy-only path controls and 14 oracle controls
 now supplement the original suite. The three restored-defect mutants are
 killed without infrastructure failures. Original expectations are unchanged;
 live Perch review remains with the coordinator.
+
+## 2026-09-28 — nest review round 3: binder grammar, ordered empty binders, header layout
+
+Confirmed: the round-2 matrix paths accepted dotted pattern binders the seed
+rejects, and the lexer accepted malformed names (`x.`, `a..b`, `a.1`) that the
+seed rejects everywhere. Missing arms under a live empty-typed binder became
+Invalid where the seed's check-efq accepts them, in multi-column, flat and field
+positions. Line-broken match and case headers became Invalid. See the
+[round-3 dispositions](../tests/compiler-nest/receipts/REVIEW-3.md).
+
+Prevention: derive name and binder rules from the seed's lexeme and pattern
+grammar, including the positions where it keeps dotted names (parameters,
+fields, erased lets). Model dead code by the seed's context order, which is the
+match frontier, not lexical level: a level-order rule accepts
+`f(p: P2, v: V)` with a missing arm on a field of `p`, which the seed rejects.
+Give the fuzzer atoms for every lexical and typing edge the change touches;
+the round-3 corpus reproduces all three defects on the pre-fix compiler
+(76 false acceptances, 32 false Invalid) and none after the repair.
