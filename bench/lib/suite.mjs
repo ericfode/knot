@@ -9,6 +9,16 @@ export function positiveInteger(value, name, max = 100000000) {
   return number;
 }
 
+export function expectedResult(name, literal, independent) {
+  if (literal !== undefined && (!Number.isInteger(literal) || literal < 0 || literal > 255)) {
+    throw new Error(`${name}: expected must be an enum ordinal in 0..255`);
+  }
+  if (literal !== undefined && independent !== undefined && literal !== independent) {
+    throw new Error(`${name}: literal expectation disagrees with the recorded oracle`);
+  }
+  return independent ?? literal ?? null;
+}
+
 export function loadSuite(name, overrides = {}) {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(name)) throw new Error('invalid suite name');
   const filename = `bench/suites/${name}.json`;
@@ -38,10 +48,11 @@ export function loadSuite(name, overrides = {}) {
     return { name: c.name, program: c.program, entry: c.entry, args: c.args,
       repeat: positiveInteger(overrides.repeat ?? c.repeat, 'repeat', 1000),
       sourceSha256: fileHash(path.join(ROOT, c.program)),
-      expected: call?.tag ?? generatedCase?.expected ?? null,
+      expected: expectedResult(c.name, c.expected, call?.tag ?? generatedCase?.expected),
       oracle: call ? { kind: 'literal', manifest: manifestPath, manifestSha256: fileHash(path.join(ROOT, manifestPath)),
         typeId: reference.type_id, constructor: reference.constructors[call.tag] }
-        : { kind: 'evaluator', fuel: 65536, formulaCrossCheck: generatedCase?.expected ?? null },
+        : { kind: 'evaluator', fuel: 65536, formulaCrossCheck: generatedCase?.expected ?? null,
+          literalCrossCheck: c.expected ?? null },
     };
   });
   return { name, path: filename, sha256: fileHash(path.join(ROOT, filename)), cases,

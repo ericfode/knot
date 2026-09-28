@@ -1,0 +1,2050 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "id": "2026-09-28T00-53-27.991Z-12b80267",
+  "name": "opt-2026-09-28T00-53-27.991Z-12b80267",
+  "startedAt": "2026-09-28T00:53:27.992Z",
+  "suite": {
+    "name": "opt",
+    "path": "bench/suites/opt.json",
+    "sha256": "0aa06acd23c07052aab85c695954cdc2a690bea4ce9d7140090294feafc39856",
+    "caseCount": 4
+  },
+  "compiler": {
+    "pipeline": "off",
+    "entry": "tests/compiler-fields-wasm/compile.bend",
+    "profile": "knot-fields-wasm-1"
+  },
+  "protocol": {
+    "version": 1,
+    "lanes": [
+      "native",
+      "bun"
+    ],
+    "compileWarmup": 1,
+    "runtime": {
+      "warmup": 100000,
+      "iterations": 1000000
+    },
+    "buildRepeat": 1,
+    "compile": "wall time including process startup and file IO",
+    "runtimeMetric": "checked warm calls in one Node process per case/lane"
+  },
+  "builds": {
+    "native": {
+      "metric": {
+        "unit": "ms",
+        "samples": [
+          6480.575333
+        ],
+        "n": 1,
+        "median": 6480.575333,
+        "mad": 0,
+        "min": 6480.575333
+      },
+      "artifacts": [
+        {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-fields-wasm/compile.bend",
+            "-o",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0"
+          ],
+          "ms": 6480.575333,
+          "stdout": "",
+          "stderr": "",
+          "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+          "sha256": "632755be3b284504b1e281d2defd2ae16973f81eb8aab64151af00615c24439b",
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "observation": {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/subsets/s1/flag.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0.guard.wasm"
+              ],
+              "ms": 204.337792,
+              "stdout": "Built\t68",
+              "stderr": ""
+            },
+            "module": {
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0.guard.wasm",
+              "sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+              "bytes": 68,
+              "result": 1,
+              "valid": true
+            }
+          }
+        }
+      ],
+      "command": [
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0"
+      ]
+    },
+    "bun": {
+      "metric": {
+        "unit": "ms",
+        "samples": [
+          201.498166
+        ],
+        "n": 1,
+        "median": 201.498166,
+        "mad": 0,
+        "min": 201.498166
+      },
+      "artifacts": [
+        {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-fields-wasm/compile.bend",
+            "-o",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js"
+          ],
+          "ms": 201.498166,
+          "stdout": "",
+          "stderr": "",
+          "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+          "sha256": "afde30f8baee7e14f7d57ccf0e4265c3d5e04268caa767090160d5313c00bd3c",
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "observation": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/subsets/s1/flag.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js.guard.wasm"
+              ],
+              "ms": 26.1945,
+              "stdout": "Built\t68",
+              "stderr": ""
+            },
+            "module": {
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js.guard.wasm",
+              "sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+              "bytes": 68,
+              "result": 1,
+              "valid": true
+            }
+          }
+        }
+      ],
+      "command": [
+        "bun",
+        "--no-env-file",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js"
+      ]
+    }
+  },
+  "evaluatorBuilds": {
+    "native": {
+      "metric": {
+        "unit": "ms",
+        "samples": [
+          5044.998584
+        ],
+        "n": 1,
+        "median": 5044.998584,
+        "mad": 0,
+        "min": 5044.998584
+      },
+      "artifacts": [
+        {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/src/eval-cli.bend",
+            "-o",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-native-0"
+          ],
+          "ms": 5044.998584,
+          "stdout": "",
+          "stderr": "",
+          "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-native-0",
+          "sha256": "b9eeab3541e675911ede92bd41222cdc9c06439976d9c0dd2cbb41db537b18fc",
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "observation": {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/subsets/s1/flag.bend",
+                "flip",
+                "65536",
+                "0"
+              ],
+              "ms": 189.646417,
+              "stdout": "Evaluated\t0\t1\tOn{}",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "command": [
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-native-0"
+      ]
+    },
+    "bun": {
+      "metric": {
+        "unit": "ms",
+        "samples": [
+          182.655542
+        ],
+        "n": 1,
+        "median": 182.655542,
+        "mad": 0,
+        "min": 182.655542
+      },
+      "artifacts": [
+        {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/src/eval-cli.bend",
+            "-o",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-bun-0.js"
+          ],
+          "ms": 182.655542,
+          "stdout": "",
+          "stderr": "",
+          "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-bun-0.js",
+          "sha256": "249d958daff4c1e4ff0e2e1417a4776cab7b72c8a4899a3db4a25db467104a54",
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "observation": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/subsets/s1/flag.bend",
+                "flip",
+                "65536",
+                "0"
+              ],
+              "ms": 24.239667,
+              "stdout": "Evaluated\t0\t1\tOn{}",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "command": [
+        "bun",
+        "--no-env-file",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-bun-0.js"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "name": "calls-16",
+      "program": ".local/bench/generated/calls-16.bend",
+      "entry": "step16",
+      "args": [
+        1
+      ],
+      "repeat": 7,
+      "sourceSha256": "99ecfe0f2a0e57e066df5a8c69d0c67fd5077a56720b5312714d30dfa2e40314",
+      "expected": 1,
+      "oracle": {
+        "kind": "evaluator",
+        "fuel": 65536,
+        "formulaCrossCheck": 1,
+        "literalCrossCheck": null,
+        "observations": [
+          {
+            "lane": "native",
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-native-0",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+              "step16",
+              "65536",
+              "1"
+            ],
+            "ms": 2.799709,
+            "stdout": "Evaluated\t0\t1\tOn{}",
+            "stderr": "",
+            "result": 1
+          },
+          {
+            "lane": "bun",
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-bun-0.js",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+              "step16",
+              "65536",
+              "1"
+            ],
+            "ms": 27.443125,
+            "stdout": "Evaluated\t0\t1\tOn{}",
+            "stderr": "",
+            "result": 1
+          }
+        ]
+      },
+      "lanes": {
+        "native": {
+          "compile": {
+            "unit": "ms",
+            "samples": [
+              2.685958,
+              2.618542,
+              2.881792,
+              2.6055,
+              2.41575,
+              2.621916,
+              2.615625
+            ],
+            "n": 7,
+            "median": 2.618542,
+            "mad": 0.013041999999999998,
+            "min": 2.41575
+          },
+          "runtime": {
+            "unit": "ns/call",
+            "samples": [
+              40.40875,
+              39.498541,
+              40.024125,
+              39.59975,
+              39.232084,
+              39.545167,
+              39.140792
+            ],
+            "n": 7,
+            "median": 39.545167,
+            "mad": 0.3130829999999989,
+            "min": 39.140792
+          },
+          "size": {
+            "unit": "bytes",
+            "samples": [
+              445,
+              445,
+              445,
+              445,
+              445,
+              445,
+              445
+            ],
+            "n": 7,
+            "median": 445,
+            "mad": 0,
+            "min": 445
+          },
+          "compilations": [
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-0.wasm"
+              ],
+              "ms": 3.641709,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-0.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": true
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-1.wasm"
+              ],
+              "ms": 2.685958,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-1.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-2.wasm"
+              ],
+              "ms": 2.618542,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-2.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-3.wasm"
+              ],
+              "ms": 2.881792,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-3.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-4.wasm"
+              ],
+              "ms": 2.6055,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-4.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-5.wasm"
+              ],
+              "ms": 2.41575,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-5.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-6.wasm"
+              ],
+              "ms": 2.621916,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-6.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-7.wasm"
+              ],
+              "ms": 2.615625,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-native-7.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            }
+          ],
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "checkedCalls": 7100008
+          }
+        },
+        "bun": {
+          "compile": {
+            "unit": "ms",
+            "samples": [
+              29.104584,
+              29.424042,
+              29.745958,
+              31.041959,
+              34.476167,
+              29.91425,
+              29.810667
+            ],
+            "n": 7,
+            "median": 29.810667,
+            "mad": 0.38662499999999866,
+            "min": 29.104584
+          },
+          "runtime": {
+            "unit": "ns/call",
+            "samples": [
+              40.439167,
+              40.285417,
+              39.831375,
+              39.849125,
+              40.19675,
+              39.602125,
+              39.756375
+            ],
+            "n": 7,
+            "median": 39.849125,
+            "mad": 0.2469999999999999,
+            "min": 39.602125
+          },
+          "size": {
+            "unit": "bytes",
+            "samples": [
+              445,
+              445,
+              445,
+              445,
+              445,
+              445,
+              445
+            ],
+            "n": 7,
+            "median": 445,
+            "mad": 0,
+            "min": 445
+          },
+          "compilations": [
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-0.wasm"
+              ],
+              "ms": 30.454708,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-0.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": true
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-1.wasm"
+              ],
+              "ms": 29.104584,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-1.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-2.wasm"
+              ],
+              "ms": 29.424042,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-2.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-3.wasm"
+              ],
+              "ms": 29.745958,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-3.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-4.wasm"
+              ],
+              "ms": 31.041959,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-4.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-5.wasm"
+              ],
+              "ms": 34.476167,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-5.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-6.wasm"
+              ],
+              "ms": 29.91425,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-6.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-16.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-7.wasm"
+              ],
+              "ms": 29.810667,
+              "stdout": "Built\t445",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-16-bun-7.wasm",
+              "bytes": 445,
+              "sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            }
+          ],
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "checkedCalls": 7100008
+          }
+        }
+      }
+    },
+    {
+      "name": "calls-64",
+      "program": ".local/bench/generated/calls-64.bend",
+      "entry": "step64",
+      "args": [
+        1
+      ],
+      "repeat": 7,
+      "sourceSha256": "aadf373ef7be287d138efe487afe6094b933aaa1f51f2671783c15177df9fd13",
+      "expected": 1,
+      "oracle": {
+        "kind": "evaluator",
+        "fuel": 65536,
+        "formulaCrossCheck": 1,
+        "literalCrossCheck": null,
+        "observations": [
+          {
+            "lane": "native",
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-native-0",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+              "step64",
+              "65536",
+              "1"
+            ],
+            "ms": 4.757333,
+            "stdout": "Evaluated\t0\t1\tOn{}",
+            "stderr": "",
+            "result": 1
+          },
+          {
+            "lane": "bun",
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-bun-0.js",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+              "step64",
+              "65536",
+              "1"
+            ],
+            "ms": 38.690583,
+            "stdout": "Evaluated\t0\t1\tOn{}",
+            "stderr": "",
+            "result": 1
+          }
+        ]
+      },
+      "lanes": {
+        "native": {
+          "compile": {
+            "unit": "ms",
+            "samples": [
+              4.574625,
+              4.258167,
+              4.768458,
+              4.300416,
+              4.659209,
+              4.276167,
+              4.230375
+            ],
+            "n": 7,
+            "median": 4.300416,
+            "mad": 0.0700409999999998,
+            "min": 4.230375
+          },
+          "runtime": {
+            "unit": "ns/call",
+            "samples": [
+              380.754833,
+              377.738417,
+              379.343875,
+              379.149459,
+              376.22575,
+              374.531084,
+              376.785667
+            ],
+            "n": 7,
+            "median": 377.738417,
+            "mad": 1.5126670000000217,
+            "min": 374.531084
+          },
+          "size": {
+            "unit": "bytes",
+            "samples": [
+              1598,
+              1598,
+              1598,
+              1598,
+              1598,
+              1598,
+              1598
+            ],
+            "n": 7,
+            "median": 1598,
+            "mad": 0,
+            "min": 1598
+          },
+          "compilations": [
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-0.wasm"
+              ],
+              "ms": 4.578584,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-0.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": true
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-1.wasm"
+              ],
+              "ms": 4.574625,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-1.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-2.wasm"
+              ],
+              "ms": 4.258167,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-2.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-3.wasm"
+              ],
+              "ms": 4.768458,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-3.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-4.wasm"
+              ],
+              "ms": 4.300416,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-4.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-5.wasm"
+              ],
+              "ms": 4.659209,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-5.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-6.wasm"
+              ],
+              "ms": 4.276167,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-6.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-7.wasm"
+              ],
+              "ms": 4.230375,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-native-7.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            }
+          ],
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "checkedCalls": 7100008
+          }
+        },
+        "bun": {
+          "compile": {
+            "unit": "ms",
+            "samples": [
+              41.349125,
+              40.0755,
+              40.816542,
+              40.825625,
+              40.370958,
+              40.971708,
+              40.638083
+            ],
+            "n": 7,
+            "median": 40.816542,
+            "mad": 0.1784589999999966,
+            "min": 40.0755
+          },
+          "runtime": {
+            "unit": "ns/call",
+            "samples": [
+              440.073625,
+              359.421833,
+              377.658584,
+              377.101625,
+              382.709417,
+              383.843333,
+              376.695167
+            ],
+            "n": 7,
+            "median": 377.658584,
+            "mad": 5.050832999999955,
+            "min": 359.421833
+          },
+          "size": {
+            "unit": "bytes",
+            "samples": [
+              1598,
+              1598,
+              1598,
+              1598,
+              1598,
+              1598,
+              1598
+            ],
+            "n": 7,
+            "median": 1598,
+            "mad": 0,
+            "min": 1598
+          },
+          "compilations": [
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-0.wasm"
+              ],
+              "ms": 42.360334,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-0.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": true
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-1.wasm"
+              ],
+              "ms": 41.349125,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-1.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-2.wasm"
+              ],
+              "ms": 40.0755,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-2.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-3.wasm"
+              ],
+              "ms": 40.816542,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-3.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-4.wasm"
+              ],
+              "ms": 40.825625,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-4.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-5.wasm"
+              ],
+              "ms": 40.370958,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-5.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-6.wasm"
+              ],
+              "ms": 40.971708,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-6.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-7.wasm"
+              ],
+              "ms": 40.638083,
+              "stdout": "Built\t1598",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/calls-64-bun-7.wasm",
+              "bytes": 1598,
+              "sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            }
+          ],
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "checkedCalls": 7100008
+          }
+        }
+      }
+    },
+    {
+      "name": "branch-locals",
+      "program": "tests/compiler-wasm/fixtures/branch-locals.bend",
+      "entry": "f",
+      "args": [
+        0,
+        1
+      ],
+      "repeat": 7,
+      "sourceSha256": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+      "expected": 1,
+      "oracle": {
+        "kind": "literal",
+        "manifest": "tests/compiler-wasm/cases.json",
+        "manifestSha256": "bd3e3f19d0cf82d17077232e5cb54f8f4120e9c6d1d93faa91174cded2b9290d",
+        "typeId": 0,
+        "constructor": "On"
+      },
+      "lanes": {
+        "native": {
+          "compile": {
+            "unit": "ms",
+            "samples": [
+              2.493125,
+              2.22325,
+              2.083666,
+              2.510166,
+              2.428084,
+              2.171417,
+              2.079917
+            ],
+            "n": 7,
+            "median": 2.22325,
+            "mad": 0.14333300000000015,
+            "min": 2.079917
+          },
+          "runtime": {
+            "unit": "ns/call",
+            "samples": [
+              7.025417,
+              6.905416,
+              6.927333,
+              7.022334,
+              6.959792,
+              6.598875,
+              6.70125
+            ],
+            "n": 7,
+            "median": 6.927333,
+            "mad": 0.09500099999999989,
+            "min": 6.598875
+          },
+          "size": {
+            "unit": "bytes",
+            "samples": [
+              106,
+              106,
+              106,
+              106,
+              106,
+              106,
+              106
+            ],
+            "n": 7,
+            "median": 106,
+            "mad": 0,
+            "min": 106
+          },
+          "compilations": [
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-0.wasm"
+              ],
+              "ms": 2.669042,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-0.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": true
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-1.wasm"
+              ],
+              "ms": 2.493125,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-1.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-2.wasm"
+              ],
+              "ms": 2.22325,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-2.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-3.wasm"
+              ],
+              "ms": 2.083666,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-3.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-4.wasm"
+              ],
+              "ms": 2.510166,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-4.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-5.wasm"
+              ],
+              "ms": 2.428084,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-5.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-6.wasm"
+              ],
+              "ms": 2.171417,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-6.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-7.wasm"
+              ],
+              "ms": 2.079917,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-native-7.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            }
+          ],
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "checkedCalls": 7100008
+          }
+        },
+        "bun": {
+          "compile": {
+            "unit": "ms",
+            "samples": [
+              27.093792,
+              26.50675,
+              26.524125,
+              26.0855,
+              26.386375,
+              26.23175,
+              26.46275
+            ],
+            "n": 7,
+            "median": 26.46275,
+            "mad": 0.07637499999999875,
+            "min": 26.0855
+          },
+          "runtime": {
+            "unit": "ns/call",
+            "samples": [
+              7.318541,
+              6.827375,
+              6.671875,
+              6.797542,
+              6.751125,
+              6.695375,
+              6.786792
+            ],
+            "n": 7,
+            "median": 6.786792,
+            "mad": 0.040582999999999814,
+            "min": 6.671875
+          },
+          "size": {
+            "unit": "bytes",
+            "samples": [
+              106,
+              106,
+              106,
+              106,
+              106,
+              106,
+              106
+            ],
+            "n": 7,
+            "median": 106,
+            "mad": 0,
+            "min": 106
+          },
+          "compilations": [
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-0.wasm"
+              ],
+              "ms": 26.850541,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-0.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": true
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-1.wasm"
+              ],
+              "ms": 27.093792,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-1.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-2.wasm"
+              ],
+              "ms": 26.50675,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-2.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-3.wasm"
+              ],
+              "ms": 26.524125,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-3.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-4.wasm"
+              ],
+              "ms": 26.0855,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-4.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-5.wasm"
+              ],
+              "ms": 26.386375,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-5.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-6.wasm"
+              ],
+              "ms": 26.23175,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-6.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-wasm/fixtures/branch-locals.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-7.wasm"
+              ],
+              "ms": 26.46275,
+              "stdout": "Built\t106",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/branch-locals-bun-7.wasm",
+              "bytes": 106,
+              "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            }
+          ],
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "checkedCalls": 7100008
+          }
+        }
+      }
+    },
+    {
+      "name": "known",
+      "program": "tests/compiler-opt/fixtures/known.bend",
+      "entry": "main",
+      "args": [],
+      "repeat": 7,
+      "sourceSha256": "42753e3f25821ceba3e834fde1a731e3c50367e9181ce95335b6841e583506c6",
+      "expected": 1,
+      "oracle": {
+        "kind": "evaluator",
+        "fuel": 65536,
+        "formulaCrossCheck": null,
+        "literalCrossCheck": 1,
+        "observations": [
+          {
+            "lane": "native",
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-native-0",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+              "main",
+              "65536"
+            ],
+            "ms": 3.0045,
+            "stdout": "Evaluated\t0\t1\tOn{}",
+            "stderr": "",
+            "result": 1
+          },
+          {
+            "lane": "bun",
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/eval-cli-bun-0.js",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+              "main",
+              "65536"
+            ],
+            "ms": 25.32075,
+            "stdout": "Evaluated\t0\t1\tOn{}",
+            "stderr": "",
+            "result": 1
+          }
+        ]
+      },
+      "lanes": {
+        "native": {
+          "compile": {
+            "unit": "ms",
+            "samples": [
+              2.382625,
+              3.1405,
+              2.372542,
+              2.282875,
+              2.7375,
+              2.528459,
+              2.335792
+            ],
+            "n": 7,
+            "median": 2.382625,
+            "mad": 0.09974999999999978,
+            "min": 2.282875
+          },
+          "runtime": {
+            "unit": "ns/call",
+            "samples": [
+              6.430417,
+              6.210292,
+              6.013084,
+              6.329458,
+              5.879958,
+              7.16475,
+              7.739667
+            ],
+            "n": 7,
+            "median": 6.329458,
+            "mad": 0.3163739999999997,
+            "min": 5.879958
+          },
+          "size": {
+            "unit": "bytes",
+            "samples": [
+              70,
+              70,
+              70,
+              70,
+              70,
+              70,
+              70
+            ],
+            "n": 7,
+            "median": 70,
+            "mad": 0,
+            "min": 70
+          },
+          "compilations": [
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-0.wasm"
+              ],
+              "ms": 2.622125,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-0.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": true
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-1.wasm"
+              ],
+              "ms": 2.382625,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-1.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-2.wasm"
+              ],
+              "ms": 3.1405,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-2.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-3.wasm"
+              ],
+              "ms": 2.372542,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-3.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-4.wasm"
+              ],
+              "ms": 2.282875,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-4.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-5.wasm"
+              ],
+              "ms": 2.7375,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-5.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-6.wasm"
+              ],
+              "ms": 2.528459,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-6.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-native-0",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-7.wasm"
+              ],
+              "ms": 2.335792,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-native-7.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            }
+          ],
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "checkedCalls": 7100008
+          }
+        },
+        "bun": {
+          "compile": {
+            "unit": "ms",
+            "samples": [
+              27.295208,
+              27.427667,
+              28.411666,
+              25.912083,
+              26.866208,
+              27.357584,
+              26.766833
+            ],
+            "n": 7,
+            "median": 27.295208,
+            "mad": 0.4289999999999985,
+            "min": 25.912083
+          },
+          "runtime": {
+            "unit": "ns/call",
+            "samples": [
+              6.369667,
+              6.083042,
+              6.066541,
+              5.890834,
+              6.111542,
+              5.991,
+              6.14575
+            ],
+            "n": 7,
+            "median": 6.083042,
+            "mad": 0.06270799999999976,
+            "min": 5.890834
+          },
+          "size": {
+            "unit": "bytes",
+            "samples": [
+              70,
+              70,
+              70,
+              70,
+              70,
+              70,
+              70
+            ],
+            "n": 7,
+            "median": 70,
+            "mad": 0,
+            "min": 70
+          },
+          "compilations": [
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-0.wasm"
+              ],
+              "ms": 27.247959,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-0.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": true
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-1.wasm"
+              ],
+              "ms": 27.295208,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-1.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-2.wasm"
+              ],
+              "ms": 27.427667,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-2.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-3.wasm"
+              ],
+              "ms": 28.411666,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-3.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-4.wasm"
+              ],
+              "ms": 25.912083,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-4.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-5.wasm"
+              ],
+              "ms": 26.866208,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-5.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-6.wasm"
+              ],
+              "ms": 27.357584,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-6.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            },
+            {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/compile-bun-0.js",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/known.bend",
+                "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-7.wasm"
+              ],
+              "ms": 26.766833,
+              "stdout": "Built\t70",
+              "stderr": "",
+              "path": "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/runs/2026-09-28T00-53-27.991Z-12b80267/known-bun-7.wasm",
+              "bytes": 70,
+              "sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+              "result": 1,
+              "valid": true,
+              "warmup": false
+            }
+          ],
+          "correctness": {
+            "valid": true,
+            "result": 1,
+            "checkedCalls": 7100008
+          }
+        }
+      }
+    }
+  ],
+  "environment": {
+    "machine": {
+      "cpuModel": "Apple M5 Max",
+      "logicalCpus": 18,
+      "platform": "darwin",
+      "arch": "arm64",
+      "release": "25.5.0",
+      "osVersion": "Darwin Kernel Version 25.5.0: Tue Jun  9 22:28:34 PDT 2026; root:xnu-12377.121.10~1/RELEASE_ARM64_T6050",
+      "totalMemory": 137438953472
+    },
+    "tools": {
+      "node": "v22.22.3",
+      "bun": "1.3.14",
+      "seed": {
+        "version": "bend 2.0.29",
+        "declaredCommit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+        "sourceSha256": "9a13271d23953046a77859d0e993e2c99423afd28899c403c09cddd5dad9e5dd"
+      },
+      "cc": {
+        "command": "clang",
+        "version": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+      }
+    },
+    "git": {
+      "commit": "3a162abca88473cf398d31b8c865bc686ad94187",
+      "dirty": true
+    },
+    "sourceHashes": {
+      "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+      "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
+      "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+      "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+      "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+      "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+      "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+      "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+      "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+      "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+      "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+      "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+      "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+      "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+      "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+      "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+      "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+      "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+      "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+      "src/opt-LAWS.bend": "e8fa549954277de8ad45bce27f5b66b8d4b06d5e80c1465cff995df6882fcb95",
+      "src/opt-PROOF.bend": "8bb823565cf195adf4983edaa330eccd16d45d32f6e6fc647ce9699778e9c4a3",
+      "src/opt-check.bend": "a49a5bedce52c62a6f58c248980d41e59e9d9643feab0dfd36e75ba0e754b081",
+      "src/opt-fold.bend": "ee0526927758f5222ab1328402f60bdab09145d4c2e8d26ff548caaa0172d2d5",
+      "src/opt-inline.bend": "6b6c10b8fb3606fc6d918444df94772276dd2a33feadae606414985a9a1cdfca",
+      "src/opt-term.bend": "32d9fb612fd2be06d52d415aef280298bf1df58c08de041a4f95fd73f2c494a0",
+      "src/opt-wasm.bend": "d2dcf7330681ceeed4cd6a15dbfd7e746c6cc6ba4146a17ccac4a386df3fb441",
+      "src/opt.bend": "3a305b91b36cb094777bb748ddaa57c9197c91c804b371371d28884164aa9b51",
+      "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+      "src/parse.bend": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+      "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+      "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+      "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+      "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+      "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+      "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+      "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+      "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+      "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3"
+    },
+    "harnessHashes": {
+      "bench/compare.mjs": "fe01c0659e2acc0f9bb385f3a1bcda93e5858992c27793513084811fbe789bef",
+      "bench/generate.mjs": "b4b3f0f69cc22e3a41f0d692291d748ecfba27892087dfbed0a2e02576641eb1",
+      "bench/lib/compare.mjs": "26beaf90e26810c859db466728004dac426783b6399357b6673b5ae1a7773fba",
+      "bench/lib/stats.mjs": "aac7db4532b7f6c8493534a21bf7bbe6c2d00653b896e614268be6bdde3ef6e9",
+      "bench/lib/suite.mjs": "79ae0cffebfcb9345a72cbdac8e51cfb8725ff0cc1f64cb9da83148d3f2c8094",
+      "bench/lib/system.mjs": "cadf751d6652248f58179885b9ad45c7a4c08300abe7d62dc15e9454cf34a491",
+      "bench/run.mjs": "4a5d484d2037c28def29698f6cacb15363c5bdf6dfa3f1573c8f8d93de444fa9",
+      "bench/wasm-worker.mjs": "f621e95ed234c1ee7112ae3eb08b24b76a1275ca6902d90cc1936d7d597096c7"
+    },
+    "entryHashes": {
+      "tests/compiler-fields-wasm/compile.bend": "48927236439b6e2d56532525be1a11ebba7b89aefdf4f83b8568cf38a53ab3c7"
+    },
+    "controls": {
+      "BEND_NO_TELEMETRY": "1",
+      "NODE_OPTIONS": "",
+      "bunNoEnvFile": true
+    }
+  },
+  "finishedAt": "2026-09-28T00:53:48.175Z"
+}

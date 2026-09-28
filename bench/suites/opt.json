@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "name": "opt",
+  "description": "Optional checked core pipeline: acyclic call chains, branch locals and a frozen known-constructor result. Enum-only programs avoid persistent arena allocation in repeated calls.",
+  "runtime": { "warmup": 100000, "iterations": 1000000 },
+  "cases": [
+    { "name": "calls-16", "program": ".local/bench/generated/calls-16.bend", "entry": "step16", "args": [1], "repeat": 7 },
+    { "name": "calls-64", "program": ".local/bench/generated/calls-64.bend", "entry": "step64", "args": [1], "repeat": 7 },
+    { "name": "branch-locals", "program": "tests/compiler-wasm/fixtures/branch-locals.bend", "entry": "f", "args": [0, 1], "repeat": 7 },
+    { "name": "known", "program": "tests/compiler-opt/fixtures/known.bend", "entry": "main", "args": [], "expected": 1, "repeat": 7 }
+  ]
+}

@@ -1,0 +1,29 @@
+Candidate / baseline; 95.0% percentile bootstrap CI; 2.00% margin.
+Case / lane / metric                    Base median ± MAD        New median ± MAD        Ratio  CI              Decision
+compiler build / native / build (info)  6480.575 ± 0.000 ms      9024.066 ± 0.000 ms     1.392  unavailable     insufficient samples
+compiler build / bun / build (info)     201.498 ± 0.000 ms       259.959 ± 0.000 ms      1.290  unavailable     insufficient samples
+calls-16 / native / compile             2.619 ± 0.013 ms         4.005 ± 0.030 ms        1.530  [1.491, 1.665]  slower
+calls-16 / native / runtime             39.545 ± 0.313 ns/call   9.265 ± 0.087 ns/call   0.234  [0.231, 0.240]  faster
+calls-16 / native / size                445.000 ± 0.000 bytes    1206.000 ± 0.000 bytes  2.710  [2.710, 2.710]  larger
+calls-16 / bun / compile                29.811 ± 0.387 ms        51.008 ± 0.253 ms       1.711  [1.635, 1.736]  slower
+calls-16 / bun / runtime                39.849 ± 0.247 ns/call   9.324 ± 0.072 ns/call   0.234  [0.230, 0.238]  faster
+calls-16 / bun / size                   445.000 ± 0.000 bytes    1206.000 ± 0.000 bytes  2.710  [2.710, 2.710]  larger
+calls-64 / native / compile             4.300 ± 0.070 ms         13.227 ± 0.182 ms       3.076  [2.819, 3.143]  slower
+calls-64 / native / runtime             377.738 ± 1.513 ns/call  20.098 ± 0.171 ns/call  0.053  [0.052, 0.054]  faster
+calls-64 / native / size                1598.000 ± 0.000 bytes   4960.000 ± 0.000 bytes  3.104  [3.104, 3.104]  larger
+calls-64 / bun / compile                40.817 ± 0.178 ms        89.434 ± 1.310 ms       2.191  [2.159, 2.254]  slower
+calls-64 / bun / runtime                377.659 ± 5.051 ns/call  19.974 ± 0.139 ns/call  0.053  [0.052, 0.054]  faster
+calls-64 / bun / size                   1598.000 ± 0.000 bytes   4960.000 ± 0.000 bytes  3.104  [3.104, 3.104]  larger
+branch-locals / native / compile        2.223 ± 0.143 ms         2.569 ± 0.107 ms        1.156  [1.014, 1.353]  no change
+branch-locals / native / runtime        6.927 ± 0.095 ns/call    6.488 ± 0.045 ns/call   0.937  [0.924, 0.975]  faster
+branch-locals / native / size           106.000 ± 0.000 bytes    122.000 ± 0.000 bytes   1.151  [1.151, 1.151]  larger
+branch-locals / bun / compile           26.463 ± 0.076 ms        37.351 ± 0.646 ms       1.411  [1.384, 1.456]  slower
+branch-locals / bun / runtime           6.787 ± 0.041 ns/call    6.503 ± 0.030 ns/call   0.958  [0.946, 0.972]  faster
+branch-locals / bun / size              106.000 ± 0.000 bytes    122.000 ± 0.000 bytes   1.151  [1.151, 1.151]  larger
+known / native / compile                2.383 ± 0.100 ms         2.418 ± 0.090 ms        1.015  [0.879, 1.108]  no change
+known / native / runtime                6.329 ± 0.316 ns/call    5.864 ± 0.166 ns/call   0.926  [0.812, 1.003]  no change
+known / native / size                   70.000 ± 0.000 bytes     74.000 ± 0.000 bytes    1.057  [1.057, 1.057]  larger
+known / bun / compile                   27.295 ± 0.429 ms        35.025 ± 0.356 ms       1.283  [1.261, 1.322]  slower
+known / bun / runtime                   6.083 ± 0.063 ns/call    5.867 ± 0.021 ns/call   0.965  [0.950, 0.983]  no change
+known / bun / size                      70.000 ± 0.000 bytes     74.000 ± 0.000 bytes    1.057  [1.057, 1.057]  larger
+Significant regression detected.

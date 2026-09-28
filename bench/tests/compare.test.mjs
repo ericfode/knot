@@ -50,6 +50,17 @@ test('different source revisions are the intended comparison, not an incompatibi
   assert.equal(compareResults(result(), candidate, options).regression, false);
 });
 
+test('optional compiler selection is candidate identity without changing the measurement protocol', () => {
+  const baseline = result(), candidate = result();
+  baseline.compiler = { pipeline: 'off', entry: 'tests/compiler-fields-wasm/compile.bend', profile: 'knot-fields-wasm-1' };
+  candidate.compiler = { pipeline: 'on', entry: 'tests/compiler-opt/compile.bend', profile: 'knot-fields-wasm-1' };
+  baseline.environment.entryHashes = { [baseline.compiler.entry]: 'baseline' };
+  candidate.environment.entryHashes = { [candidate.compiler.entry]: 'candidate' };
+  assert.equal(compareResults(baseline, candidate, options).regression, false);
+  candidate.protocol.runtime.iterations++;
+  assert.throws(() => compareResults(baseline, candidate, options));
+});
+
 test('repetition counts may differ, but both need at least three target samples', () => {
   assert.equal(compareResults(result(), result({ repeat: 5 }), options).insufficient, false);
   assert.equal(compareResults(result(), result({ repeat: 1 }), options).insufficient, true);

@@ -60,6 +60,8 @@ GATES = (
          ('tests/compiler-recursion/receipts/recursion.json',)),
     Gate('fields-wasm', ('python3', 'tests/compiler-fields-wasm/check.py'),
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
+    Gate('compiler-opt', ('python3', 'tests/compiler-opt/check.py'),
+         ('tests/compiler-opt/receipts/optimization.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
 )
@@ -198,6 +200,8 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         return {'entries': len(entries), 'proof_holes': 0}
     if record['status'] not in ('pass', 'passed'):
         raise ValueError('Receipt does not record a completed gate')
+    if gate.name == 'compiler-opt':
+        return record['counts']
     result = {key: len(record[key]) for key in ('fixtures', 'mutants', 'budgets', 'boundaries',
                                                'bounds', 'host_boundaries', 'rejects') if key in record}
     if gate.name in ('frontend', 'checker', 'structural', 'fields'):

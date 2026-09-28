@@ -941,3 +941,18 @@ separate "version 7" rubric needs reconciling against these anchors.
 Prevention: calibrate a rubric against recorded human preferences before
 optimizing code against it. v6's memetic target would have steered a paydown
 campaign toward the styles the user rejected.
+
+## 2026-09-27 — opt-1: scope controls before broad pass qualification
+
+Read-only implementation review caught four optimizer acceptance regressions:
+nested actuals, nullary locals, field extraction and erased forward self-calls.
+The [bounded review packet](../tests/compiler-opt/LAW_REVIEW.md) records the
+repaired invariants and independently seeded controls. A larger corpus then
+exposed a Bun stack failure in whole-book textual fixed-point comparison;
+bounded structural comparison replaces it. Existing expectations stayed fixed.
+
+Prevention: include nested argument scopes, closed callee locals and erased
+call-graph edges in the first substitution controls; compare IR structurally
+rather than through an unbounded rendered string. Offline Perch preflight
+parses this increment but reports truncated and oversized composition context.
+No live provider was used, no finding was invented, and no style pass is claimed.

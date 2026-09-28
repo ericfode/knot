@@ -219,6 +219,40 @@ correctness or memory-refinement theorem. See its [report and limits](../tests/c
 
 ## Outcomes and budgets
 
+The optional `knot-core-opt-1` pipeline is specified in
+[the optimization contract](../tests/compiler-opt/SPEC.md). Its separate entry,
+`tests/compiler-opt/compile.bend`, accepts the same arguments as the fields
+compiler. The default CLIs and their bytes remain unchanged.
+
+`opt.pipeline(depth,book)` composes bounded `Book -> Result<Error,Book>` passes:
+small non-recursive inlining, known-constructor/constant case reduction, and
+unused reusable-let elimination. Each output is rechecked with the same core
+types, quantities, exhaustive-arm and descent judgments in `opt-check.bend`.
+Core matches may scrutinize fresh let-bound levels; source matching restrictions
+remain in the existing source checker. Unknown core forms are Unsupported;
+malformed transformed core is InternalFailure, never an Invalid source verdict.
+
+Inlining uses at most 32 body nodes per callee and moves every callee level above
+the caller and rewritten-argument ceilings, including nullary functions. Actuals
+are bound once in declaration order, with erased actuals left unevaluated and
+unexpanded. Calls that would introduce a self-call are retained. Constructor
+fusion binds fields in declaration order only if their levels cannot capture
+argument locals and the removed parent is unused in the selected body. Value
+cases also fold through known bindings. There are no primitive operations to
+fold yet. Dead-let elimination is limited to unused erased or reusable bindings;
+affine lets are retained. Every current function is exported, so function DCE
+retains the complete ordered function list and signatures.
+
+The pipeline stops at a canonical-core fixed point within eight rounds or
+reports Exhausted. Each individual pass is checked independently by the corpus
+gate. The opt-in fields emitter additionally uses `return_call` for self-calls
+in result position. Calls in arguments, initializers and constructor fields keep
+ordinary `call`. Enum parameters/results and the fields arena ABI stay fixed.
+Resource exhaustion can change when work or allocation is removed; successful
+constructor observations must agree. Twelve checked local equations, direct
+malformed-core controls, mutation tests, and seed/evaluator/Wasm differentials
+qualify this bounded implementation, not a general preservation theorem.
+
 Return stable phase/code diagnostics with source offsets where available:
 `Invalid`, `Unsupported`, `Exhausted`, `HostFailure`, or `InternalFailure`.
 `Built` means a complete checked module has been emitted. The evaluator has a

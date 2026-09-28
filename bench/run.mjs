@@ -6,15 +6,22 @@ import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { metric } from './lib/stats.mjs';
 import { loadSuite, positiveInteger } from './lib/suite.mjs';
-import { ROOT, LOCAL, SEED_COMMAND, run, fileHash, fingerprint, sourceHashes, harnessHashes } from './lib/system.mjs';
+import { ROOT, LOCAL, SEED_COMMAND, run, fileHash, fingerprint, sourceHashes, harnessHashes, entryHashes } from './lib/system.mjs';
 
 const LANES = ['native', 'bun'];
 const command = (lane, file) => lane === 'native' ? [file] : ['bun', '--no-env-file', file];
 const json = object => JSON.stringify(object, null, 2) + '\n';
 
+export function compilerSelection(pipeline) {
+  if (pipeline === undefined) return { pipeline: 'default', entry: 'src/compile-cli.bend', profile: 'knot-enum-1' };
+  if (!['off', 'on'].includes(pipeline)) throw new Error('pipeline must be off or on');
+  return { pipeline, entry: pipeline === 'on' ? 'tests/compiler-opt/compile.bend' : 'tests/compiler-fields-wasm/compile.bend',
+    profile: 'knot-fields-wasm-1' };
+}
+
 function checkBuild(entry, executable, output) {
   const program = path.join(ROOT, 'tests/subsets/s1/flag.bend');
-  if (entry === 'eval-cli') {
+  if (entry === 'src/eval-cli.bend') {
     const observed = run([...executable, program, 'flip', 65536, 0]);
     if (observed.stdout !== 'Evaluated\t0\t1\tOn{}') throw new Error('seed-built evaluator failed flag literal guard');
     return { valid: true, result: 1, observation: observed };
@@ -31,8 +38,8 @@ function build(lane, entry, directory, repeat) {
   const samples = [], artifacts = [];
   let output;
   for (let i = 0; i < repeat; i++) {
-    output = path.join(directory, `${entry}-${lane}-${i}${lane === 'bun' ? '.js' : ''}`);
-    const built = run([...SEED_COMMAND, path.join(ROOT, `src/${entry}.bend`), '-o', output]);
+    output = path.join(directory, `${path.basename(entry, '.bend')}-${lane}-${i}${lane === 'bun' ? '.js' : ''}`);
+    const built = run([...SEED_COMMAND, path.join(ROOT, entry), '-o', output]);
     if (statSync(output).size === 0) throw new Error('empty seed output');
     samples.push(built.ms);
     artifacts.push({ ...built, path: output, sha256: fileHash(output),
@@ -50,7 +57,7 @@ function resolveOracle(c, evaluators) {
     return { lane, ...record, result: Number(match[2]) };
   });
   if (observations[0].stdout !== observations[1].stdout) throw new Error(`${c.name}: evaluator lanes disagree`);
-  if (c.expected !== null && c.expected !== observations[0].result) throw new Error(`${c.name}: evaluator disagrees with generator formula`);
+  if (c.expected !== null && c.expected !== observations[0].result) throw new Error(`${c.name}: evaluator disagrees with fixed expectation`);
   c.expected = observations[0].result;
   c.oracle.observations = observations;
 }
@@ -83,6 +90,7 @@ function measureCase(c, lane, compiler, directory, runtime) {
 }
 
 export function benchmark(options = {}) {
+  const compiler = compilerSelection(options.pipeline);
   const suite = loadSuite(options.suite ?? 'core', options);
   const buildRepeat = positiveInteger(options['build-repeat'] ?? 1, 'build-repeat', 1000);
   const id = `${new Date().toISOString().replaceAll(':', '-')}-${randomUUID().slice(0, 8)}`;
@@ -97,20 +105,21 @@ export function benchmark(options = {}) {
   mkdirSync(directory, { recursive: true });
   const result = { schemaVersion: 1, status: 'incomplete', id, name,
     startedAt: new Date().toISOString(), suite: { name: suite.name, path: suite.path, sha256: suite.sha256, caseCount: suite.cases.length },
+    compiler,
     protocol: { version: 1, lanes: LANES, compileWarmup: 1, runtime: suite.runtime, buildRepeat,
       compile: 'wall time including process startup and file IO', runtimeMetric: 'checked warm calls in one Node process per case/lane' },
     builds: {}, evaluatorBuilds: {}, cases: [] };
   let phase = 'fingerprint';
   try {
-    result.environment = fingerprint();
+    result.environment = fingerprint([compiler.entry]);
     for (const lane of LANES) {
-      phase = `build compile-cli (${lane})`;
+      phase = `build ${compiler.entry} (${lane})`;
       console.error(phase);
-      result.builds[lane] = build(lane, 'compile-cli', directory, buildRepeat);
+      result.builds[lane] = build(lane, compiler.entry, directory, buildRepeat);
       if (suite.cases.some(c => c.oracle.kind === 'evaluator')) {
         phase = `build eval-cli (${lane})`;
         console.error(phase);
-        result.evaluatorBuilds[lane] = build(lane, 'eval-cli', directory, 1);
+        result.evaluatorBuilds[lane] = build(lane, 'src/eval-cli.bend', directory, 1);
       }
     }
     for (const c of suite.cases) {
@@ -126,6 +135,7 @@ export function benchmark(options = {}) {
     }
     phase = 'input stability';
     if (JSON.stringify(sourceHashes()) !== JSON.stringify(result.environment.sourceHashes) ||
+        JSON.stringify(entryHashes([compiler.entry])) !== JSON.stringify(result.environment.entryHashes) ||
         JSON.stringify(harnessHashes()) !== JSON.stringify(result.environment.harnessHashes) ||
         fileHash(path.join(ROOT, suite.path)) !== suite.sha256 ||
         suite.cases.some(c => fileHash(path.join(ROOT, c.program)) !== c.sourceSha256) ||
@@ -150,10 +160,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   try {
     const { values } = parseArgs({ options: {
       suite: { type: 'string' }, repeat: { type: 'string' }, out: { type: 'string' },
+      pipeline: { type: 'string' },
       warmup: { type: 'string' }, iterations: { type: 'string' }, 'build-repeat': { type: 'string' },
       baseline: { type: 'boolean' }, name: { type: 'string' }, help: { type: 'boolean' },
     } });
-    if (values.help) console.log('bench --suite=smoke|core|scaling [--repeat=N] [--out=FILE] [--warmup=N] [--iterations=N] [--build-repeat=N]\nbench --baseline [--name=NAME] [same options]');
+    if (values.help) console.log('bench --suite=smoke|core|scaling|opt [--pipeline=off|on] [--repeat=N] [--out=FILE] [--warmup=N] [--iterations=N] [--build-repeat=N]\nbench --baseline [--name=NAME] [same options]');
     else benchmark(values);
   } catch (error) {
     console.error(error.message);

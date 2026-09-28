@@ -28,6 +28,22 @@ otherwise each case supplies it. `--warmup=N` and `--iterations=N` override the
 suite's runtime settings. `--build-repeat=N` repeats seed builds (default 1).
 All counts must be positive integers. `--help` lists the options.
 
+`--pipeline=off|on` selects the optional fields-profile experiment. `off` builds
+`tests/compiler-fields-wasm/compile.bend`; `on` builds
+`tests/compiler-opt/compile.bend`. Omitting this option keeps the existing
+`src/compile-cli.bend` entry. Both modes retain the same build guards, evaluator
+oracles, measurement protocol and per-call result checks. The compiler choice
+is recorded as candidate identity outside the timing protocol, so ordinary
+`bench:compare` can compare the two modes without relaxing any compatibility
+check. The selected entry's source hash is recorded and checked for changes
+during measurement, including entries outside `src/`.
+
+```sh
+npm run bench -- --suite=opt --pipeline=off --out=.local/bench/results/opt-off.json
+npm run bench -- --suite=opt --pipeline=on --out=.local/bench/results/opt-on.json
+npm run bench:compare -- .local/bench/results/opt-off.json .local/bench/results/opt-on.json
+```
+
 Without `--out`, results have unique timestamped names under
 `.local/bench/results/`. `bench:baseline` uses `.local/bench/baselines/`; `--name`
 sets its name, otherwise the suite and timestamp name it. Existing files are
@@ -44,6 +60,7 @@ suite in both lanes; it does not change `lint:verify` or existing test receipts.
 | `smoke` | 1 | `flag.flip(0)`, three repetitions, complete native/Bun path |
 | `core` | 9 | Existing enum, nested match, erasure, call, local and ordinal fixtures |
 | `scaling` | 9 | Constructor counts, match widths and call depths of 16, 64 and 128 |
+| `opt` | 4 | Call depths of 16 and 64, branch locals, and a fixed known-constructor result |
 
 Each `bench/suites/*.json` has `schemaVersion`, `name`, `runtime` settings and a
 `cases` list. Each case specifies a unique `name`, repository-relative `program`,
@@ -56,6 +73,13 @@ Existing fixture calls take their literal expected results directly from
 both native and Bun lanes, outside measured compiler/runtime work. Both
 evaluators must return the same nullary enum. Generated cases additionally
 check the evaluator against a simple closed-form expectation.
+
+An optional case `expected` fixes a literal enum ordinal in `0..255`. It must
+agree with an existing recorded oracle when one exists; otherwise both evaluator
+lanes must agree with it. `opt` fixes `known.main()` to `On` (tag 1), independently
+of optimized output. Its programs use enum-only values, so repeated calls do not
+consume the fields profile's persistent bump arena. Field allocation benchmarks
+need a separate instance-lifetime protocol before entering this warm-call suite.
 
 `node bench/generate.mjs` deterministically writes the scaling programs under
 `.local/bench/generated/`; running `scaling` invokes it automatically. Enums
@@ -110,6 +134,9 @@ the command, duration, bytes, output hash and checked result for each invocation
 `environment` records CPU model/count, OS/version/architecture/memory, Node,
 Bun, clang, seed version and source digest, declared seed revision, Git commit,
 dirty flag, `src/*.bend` hashes, and benchmark implementation hashes. The seed
+build entry is recorded under `compiler`, with its hash under
+`environment.entryHashes`. Compiler entries and source hashes may differ between
+baseline and candidate; the workload and timing protocol must match. The seed
 revision is the contract's pin; its source digest fingerprints the installed
 copy, which need not contain a Git directory. No environment-variable dump or
 credential file is read or recorded.

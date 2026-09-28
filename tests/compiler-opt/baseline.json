@@ -1,0 +1,880 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-09-28T00:26:55.580551+00:00",
+  "basis": "Before optimizer implementation: unoptimized fields-profile entry compiled by pinned seed to Bun. All existing src Bend source identities are pinned; the default enum path is checked against its existing 25 generated artifacts independently.",
+  "entry": "tests/compiler-fields-wasm/compile.bend",
+  "unchanged_source": {
+    "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+    "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3"
+  },
+  "cases": [
+    {
+      "source": "tests/subsets/s1/data-reuse.bend",
+      "source_sha256": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t82",
+      "stderr": "",
+      "wasm_sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+      "bytes": 82
+    },
+    {
+      "source": "tests/subsets/s1/erased-forward.bend",
+      "source_sha256": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t77",
+      "stderr": "",
+      "wasm_sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+      "bytes": 77
+    },
+    {
+      "source": "tests/subsets/s1/flag.bend",
+      "source_sha256": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t68",
+      "stderr": "",
+      "wasm_sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+      "bytes": 68
+    },
+    {
+      "source": "tests/subsets/s1/forward-type.bend",
+      "source_sha256": "d819b2460f350736fe9e58415fe733acdcb9276c86ace267a5ad4774f0b62195",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t54",
+      "stderr": "",
+      "wasm_sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+      "bytes": 54
+    },
+    {
+      "source": "tests/subsets/s1/nested-match.bend",
+      "source_sha256": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t82",
+      "stderr": "",
+      "wasm_sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+      "bytes": 82
+    },
+    {
+      "source": "tests/subsets/s1/shadowing.bend",
+      "source_sha256": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t100",
+      "stderr": "",
+      "wasm_sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+      "bytes": 100
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/branch-maximum.bend",
+      "source_sha256": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t68",
+      "stderr": "",
+      "wasm_sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+      "bytes": 68
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/data-argument.bend",
+      "source_sha256": "6f8987a5c8f091f6175eab46f82c96ce5a1820de6b2824c5d9fd485ae05c9a2a",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t75",
+      "stderr": "",
+      "wasm_sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+      "bytes": 75
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/data-promote.bend",
+      "source_sha256": "e8cad8cc7d508d6c3b1779c86a8aa7c86942c1ff6981c6a5d77474354b27d41c",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t84",
+      "stderr": "",
+      "wasm_sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+      "bytes": 84
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/duplicate-parameters.bend",
+      "source_sha256": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t57",
+      "stderr": "",
+      "wasm_sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+      "bytes": 57
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/erased-affine-copy.bend",
+      "source_sha256": "bc0c7cc519e526264f9bad4fbfb0917dc9a1b7e880a808b38ccb4e7646a57393",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t74",
+      "stderr": "",
+      "wasm_sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+      "bytes": 74
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/erased-binding.bend",
+      "source_sha256": "c67c9978aecfe8fa9523becbca5303700b4c87ca714613f35e21201f9c50e895",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t51",
+      "stderr": "",
+      "wasm_sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+      "bytes": 51
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/erased-forward-call.bend",
+      "source_sha256": "51e479f5525fdfdef374e71af730e812a0fa0a92560bf10c68df374f624bd5ce",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t89",
+      "stderr": "",
+      "wasm_sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+      "bytes": 89
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/matched-duplicate.bend",
+      "source_sha256": "62ae6ffd0541174e41bb53a74281f531b75b558de55b3ad0ce70a3baedbcf799",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t93",
+      "stderr": "",
+      "wasm_sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+      "bytes": 93
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/matched-return.bend",
+      "source_sha256": "49ff74b3ec4369b5c5e452689dcdddb2df794523623b2335cf3fe73c25a6fc6f",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t65",
+      "stderr": "",
+      "wasm_sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+      "bytes": 65
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/renamed.bend",
+      "source_sha256": "48ec0a0b92508402f64eccd5f2e253e43cfd4051d8eb5e82a9cad71ba89d1b2e",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t70",
+      "stderr": "",
+      "wasm_sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+      "bytes": 70
+    },
+    {
+      "source": "tests/compiler-checker/fixtures/reordered-arms.bend",
+      "source_sha256": "1ea8a66f3aec3709a6896503c783b0e69f98e9f61a521448ea906e7f939b0d63",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t68",
+      "stderr": "",
+      "wasm_sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+      "bytes": 68
+    },
+    {
+      "source": "tests/compiler-wasm/fixtures/three-colors.bend",
+      "source_sha256": "e5fbbca409af89fac9e860eec557b5091d40462ef8b75eba079aef7d965c9b43",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t80",
+      "stderr": "",
+      "wasm_sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+      "bytes": 80
+    },
+    {
+      "source": "tests/compiler-wasm/fixtures/mixed-types.bend",
+      "source_sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t73",
+      "stderr": "",
+      "wasm_sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+      "bytes": 73
+    },
+    {
+      "source": "tests/compiler-wasm/fixtures/branch-locals.bend",
+      "source_sha256": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t106",
+      "stderr": "",
+      "wasm_sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+      "bytes": 106
+    },
+    {
+      "source": "tests/compiler-wasm/fixtures/erased-cost.bend",
+      "source_sha256": "2b922e02325ae9884e8120956d32be8e7629deac3fe9cb94ba67c44e17c6d983",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t80",
+      "stderr": "",
+      "wasm_sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+      "bytes": 80
+    },
+    {
+      "source": "tests/compiler-wasm/fixtures/argument-order.bend",
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t82",
+      "stderr": "",
+      "wasm_sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+      "bytes": 82
+    },
+    {
+      "source": "tests/compiler-wasm/fixtures/high-tags.bend",
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t102",
+      "stderr": "",
+      "wasm_sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+      "bytes": 102
+    },
+    {
+      "source": "tests/compiler-wasm/fixtures/high-function-index.bend",
+      "source_sha256": "9b5765800381e3ad1cc2f3279d49d7626c45454a22ad9bf8161022af56096ace",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t2133",
+      "stderr": "",
+      "wasm_sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+      "bytes": 2133
+    },
+    {
+      "source": "tests/compiler-wasm/fixtures/high-local-index.bend",
+      "source_sha256": "9fc6330c2b1a6c6de299880b043343ade92a42eb988621acca976a1aec2ee738",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t446",
+      "stderr": "",
+      "wasm_sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+      "bytes": 446
+    },
+    {
+      "source": "tests/compiler-fields-wasm/fixtures/pair.bend",
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t335",
+      "stderr": "",
+      "wasm_sha256": "893b5cd119ede8085ffe1f031ca44c8557cfc387b6ce18c27e6caaf3759591bf",
+      "bytes": 335
+    },
+    {
+      "source": "tests/compiler-fields-wasm/fixtures/peano.bend",
+      "source_sha256": "2bb48f935fec9a37ac6cf5c3cc68d002ef5b6b629ebd620180e8b718e5780a6d",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t321",
+      "stderr": "",
+      "wasm_sha256": "c3c424ac0fa7f241de27137666fb0009bf9d046e95878aef430c60b475ec33f4",
+      "bytes": 321
+    },
+    {
+      "source": "tests/compiler-fields-wasm/fixtures/nested.bend",
+      "source_sha256": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t258",
+      "stderr": "",
+      "wasm_sha256": "d2d1166a77db072558d3c62095a4ff2130bac5cf6d8ee1c4f7a2e7056e3ecda0",
+      "bytes": 258
+    },
+    {
+      "source": "tests/compiler-fields-wasm/fixtures/aliasing.bend",
+      "source_sha256": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t205",
+      "stderr": "",
+      "wasm_sha256": "f994a945630d5fd2becf9a49fe0bdb4ecf9942b6f170bd58c563599f6e24a012",
+      "bytes": 205
+    },
+    {
+      "source": "tests/compiler-fields-wasm/fixtures/erased.bend",
+      "source_sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t341",
+      "stderr": "",
+      "wasm_sha256": "e91122cabe02c28d32df25ade4367aef8bafa3ae302a717c2af383fdd28218b2",
+      "bytes": 341
+    },
+    {
+      "source": "tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+      "source_sha256": "894223d307a63359f40dbd052f43c5c40b6810215b14fccc9056ca88bd71e569",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t466",
+      "stderr": "",
+      "wasm_sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716",
+      "bytes": 466
+    },
+    {
+      "source": "tests/compiler-fields-wasm/fixtures/deep-call.bend",
+      "source_sha256": "30ecb9719a3dc1a0793cfd94e20a130b4b0a1176756227fbba855ef52c8ce1cc",
+      "budgets": [
+        65536,
+        4096,
+        4096,
+        4096,
+        65536
+      ],
+      "exit": 0,
+      "stdout": "Built\t6797",
+      "stderr": "",
+      "wasm_sha256": "d20f882fad72a3f7836c38697a278ebc1b0b395d80cc5190073805e5bf73fee8",
+      "bytes": 6797
+    },
+    {
+      "source": "tests/compiler-fields-wasm/fixtures/deep-stack.bend",
+      "source_sha256": "bfb5dbb7eeda23ad0a20b32c3c37cf23bd413450d9949998d104944e05ca525f",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t26748",
+      "stderr": "",
+      "wasm_sha256": "a9a8a34ddd8a948f6426bd71b761c055fc8634b6206f7838cdb229ba8f5aed48",
+      "bytes": 26748
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/even.bend",
+      "source_sha256": "3511007717f5bb8f5e12514a7e133984b2665fc3cd54d390d7ecf9febb73ab41",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t644",
+      "stderr": "",
+      "wasm_sha256": "568bf6e704dd58bdd37eebaeaa99d6754579d4c3106a5c927c59a86ba8c19660",
+      "bytes": 644
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/add.bend",
+      "source_sha256": "e123fed65190aa4460bbd21ad82de0f6d6cf79cf2c3747e9a3fa34f0a93fbd24",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t607",
+      "stderr": "",
+      "wasm_sha256": "7e3ebc6bb342f808fc5f524501336677d2350027208e6f23931790a8ab7f0ef4",
+      "bytes": 607
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/mirror.bend",
+      "source_sha256": "78c9177fba5e9462326025b09781204a4b7b89786fc7b19f692b85858b3d09fb",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t361",
+      "stderr": "",
+      "wasm_sha256": "15fa0f5d8f7248b6998131636634eaec7de48fba612cc8f5cebc17540f58be9c",
+      "bytes": 361
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/length.bend",
+      "source_sha256": "2a473085fead71d45116ab59f33b10f059f7d25b00790dd52031a901b675ccc4",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t356",
+      "stderr": "",
+      "wasm_sha256": "801c9211f4eb3346068c2077f322f3c38654bad64beb04a6fa4d255937522004",
+      "bytes": 356
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/direct.bend",
+      "source_sha256": "0fc28a947a1dbd42f57231cd285ddb19c7314683841f825a02b254b2e18fea02",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t212",
+      "stderr": "",
+      "wasm_sha256": "65ecd4cb8c619f1c132a26636f797c0bbb81c25e7a229a901bcbdf12a8310cfa",
+      "bytes": 212
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/first-parameter.bend",
+      "source_sha256": "ad32451581720603e9d75c00498f884c5fd73e9ac2aac3efb4d7a41fd3ea6e96",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t230",
+      "stderr": "",
+      "wasm_sha256": "0819d4240d588f9e0c797798401d4580c02817626acaf8bbd3eee0caa04ce3fc",
+      "bytes": 230
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/ordered-calls.bend",
+      "source_sha256": "4bfa2844b2bce35465b1e1c2e47792fbd78cdab01e61dd1786aab753e790b1a3",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t162",
+      "stderr": "",
+      "wasm_sha256": "989e9165ee8297453e02f0b64d889d9149c1624c3ef0c6dc13653aa2ebdcacc3",
+      "bytes": 162
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/shadow-field.bend",
+      "source_sha256": "2f016ad017775613d7cfd2d0dab6b68930de1a2f27b42eab938d8ae92008c41c",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t212",
+      "stderr": "",
+      "wasm_sha256": "65ecd4cb8c619f1c132a26636f797c0bbb81c25e7a229a901bcbdf12a8310cfa",
+      "bytes": 212
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/after-let.bend",
+      "source_sha256": "f68a22f6b50a4ee80f220848bdbf5fba5f0791897cb8bd050f30bd2b898c5f5e",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t229",
+      "stderr": "",
+      "wasm_sha256": "e66506774e080e7c927d2571b32b160ed955f0fde71efbf269f44586b8935dc4",
+      "bytes": 229
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/deep.bend",
+      "source_sha256": "2881538c3abb517f2eb82c052a90bffa88f3bb201648205beea70b2df6ee76df",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t1724",
+      "stderr": "",
+      "wasm_sha256": "7aed22688372f9a582d77fab262c41cf15bea0541801590bbb2bc76dd977a85f",
+      "bytes": 1724
+    },
+    {
+      "source": "tests/compiler-recursion/fixtures/deep-input.bend",
+      "source_sha256": "33ed66442b3db562d311df09b31fa43d1458791775a49edd409a954ee3dcf998",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t1722",
+      "stderr": "",
+      "wasm_sha256": "d5ceba2cb8c07eeff2a6991f693036f1cb221c82305f25aa4edecb866c77d036",
+      "bytes": 1722
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/known.bend",
+      "source_sha256": "42753e3f25821ceba3e834fde1a731e3c50367e9181ce95335b6841e583506c6",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t70",
+      "stderr": "",
+      "wasm_sha256": "3ddbb497df5be21b6b97a7b0516a824b48a016038cd080558210e4653607218e",
+      "bytes": 70
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/capture.bend",
+      "source_sha256": "5427385032d555e8fe6eb13cd0149ac7dd49ee900cb1fa42db23abf9c6ac0346",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t111",
+      "stderr": "",
+      "wasm_sha256": "5594f79a25fdc794e67c04939bda9043f31d23e1cf19f3a672840439514e22ed",
+      "bytes": 111
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/used-let.bend",
+      "source_sha256": "a7afc34ea61320c71fe2dbd5bc4b7eb9c132be72e519820bf356a0c108ecbff2",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t69",
+      "stderr": "",
+      "wasm_sha256": "a2f81b592cb276239e737f24b924ed919c25413760e950272f8f582e37601bf7",
+      "bytes": 69
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/tail.bend",
+      "source_sha256": "f8dd23886cecf5fc11556ec3b8d3401cde9c2008695c0f4dabd7fd2981f32186",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t231",
+      "stderr": "",
+      "wasm_sha256": "2cff9da55acbf2d3913afb0e6fe424397567efcc80921d8bc797d15208db31a5",
+      "bytes": 231
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/known-fields.bend",
+      "source_sha256": "0c70e998d7e51cd5c207c971f835ebb43fbf5100e7b92d845c2be3cc5dfd0e46",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t197",
+      "stderr": "",
+      "wasm_sha256": "cd61d91ac76b8a6b41b77710580da27c812c386361dd2652493706386f24e6b3",
+      "bytes": 197
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/non-tail.bend",
+      "source_sha256": "230030a87ecde608a85e02e992c6373386c628ab551598f2823f77e7ea013652",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t259",
+      "stderr": "",
+      "wasm_sha256": "94a5255ceb6d60163f2473875a888a2a5e984b82659c59e60b853f213a2b4c98",
+      "bytes": 259
+    },
+    {
+      "source": ".local/bench/generated/enum-16.bend",
+      "source_sha256": "ecb42b53563b918db71d3a8437ee3b8607fd76f86144836f4055f54dd5af82a2",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t42",
+      "stderr": "",
+      "wasm_sha256": "b1a8d1c8fb87aca50030479339fbbbcebe9031feb76607dad64966f9c2d80b04",
+      "bytes": 42
+    },
+    {
+      "source": ".local/bench/generated/match-16.bend",
+      "source_sha256": "3d4388d8af7b2e06a713b90bea1be4bcd895317aab59814326723d4dc9e49422",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t207",
+      "stderr": "",
+      "wasm_sha256": "aa0217ec0e20f8305ef0d09c069aaf5ff1e160a6321dbe6ec697c9eb4e5eca4d",
+      "bytes": 207
+    },
+    {
+      "source": ".local/bench/generated/calls-16.bend",
+      "source_sha256": "99ecfe0f2a0e57e066df5a8c69d0c67fd5077a56720b5312714d30dfa2e40314",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t445",
+      "stderr": "",
+      "wasm_sha256": "c584245fc1be496d8f88d19021a082cbed6ada4db536b9645d7945c6ce29df23",
+      "bytes": 445
+    },
+    {
+      "source": ".local/bench/generated/enum-64.bend",
+      "source_sha256": "a279d893c253c03008d36601774aa29c739762fe8a25e5b561ba8e62c35b85ee",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t42",
+      "stderr": "",
+      "wasm_sha256": "b1a8d1c8fb87aca50030479339fbbbcebe9031feb76607dad64966f9c2d80b04",
+      "bytes": 42
+    },
+    {
+      "source": ".local/bench/generated/match-64.bend",
+      "source_sha256": "0a2ca18380c570f00fd9a53d501f37a467cbdff11c9ef739841e3a48c60062c0",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t735",
+      "stderr": "",
+      "wasm_sha256": "91668030b53878b9310e16e34551e76fc68e8a08838a73b516d2b1ad2babde0e",
+      "bytes": 735
+    },
+    {
+      "source": ".local/bench/generated/calls-64.bend",
+      "source_sha256": "aadf373ef7be287d138efe487afe6094b933aaa1f51f2671783c15177df9fd13",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t1598",
+      "stderr": "",
+      "wasm_sha256": "c3a611095fe058f31c08bf8905ce0ba38403653c72bdfbdb9ffa77140ee5c7a2",
+      "bytes": 1598
+    },
+    {
+      "source": ".local/bench/generated/enum-128.bend",
+      "source_sha256": "d65d25e3123e5af34a3df02acd258c954db97edd35faa4184efa925f764941f6",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t42",
+      "stderr": "",
+      "wasm_sha256": "b1a8d1c8fb87aca50030479339fbbbcebe9031feb76607dad64966f9c2d80b04",
+      "bytes": 42
+    },
+    {
+      "source": ".local/bench/generated/match-128.bend",
+      "source_sha256": "78806de6bdf09050f275c8dd878554a28786d129287ba22c4a070edcf5455715",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t1566",
+      "stderr": "",
+      "wasm_sha256": "8824a493cce42320b487cfc1b358a465d20e8a856cabe3d3dfd19e979c4c3ad1",
+      "bytes": 1566
+    },
+    {
+      "source": ".local/bench/generated/calls-128.bend",
+      "source_sha256": "b541358d850634fe8a67ff6a6550d5afb31d50ecb693f995f4086cb32aacb68c",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t3173",
+      "stderr": "",
+      "wasm_sha256": "24ea582cb745d89fda0c8c6a9e25d236c2f92045ff5b51f10ebe9e5955fca9df",
+      "bytes": 3173
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/hostile-multi-arg.bend",
+      "source_sha256": "a59d1a2841ffa6405a625cc7b3ba40c3dd575c6ed9932b16c723a60acccd1e74",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t81",
+      "stderr": "",
+      "wasm_sha256": "546612d0b28bf02f97f8ed30824f72cdf777277d1fa6f410924915410a0ffee3",
+      "bytes": 81
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/hostile-nullary.bend",
+      "source_sha256": "2b8c63b107e123b4a7469e5e70c4b47abe1ea24a13f67ab6426f75401c121c67",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t83",
+      "stderr": "",
+      "wasm_sha256": "9056f5f814443dfc6ea77f00c5fdc740310968f079da18f9b74e0abd8229ead2",
+      "bytes": 83
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/hostile-fusion.bend",
+      "source_sha256": "0f80d18c7bc710d90ac44c6d842c8c992c84171f6f610a182b845f7f036454d3",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t195",
+      "stderr": "",
+      "wasm_sha256": "54bae4de72073079542f82c598a7bab98a6f503a6b2ca6ec9a4b43a992cef631",
+      "bytes": 195
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/hostile-erased-forward.bend",
+      "source_sha256": "c9a1dbb4a87074cbb9da5f3ac39c6fa04b64b72821da68dc5bf07ba1a383bfbb",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t101",
+      "stderr": "",
+      "wasm_sha256": "4f852dd166f1f8fcc86dab24f9bacd0791522443d0a7bf5c6ea6af758e29a755",
+      "bytes": 101
+    }
+  ],
+  "generated": [
+    {
+      "name": "enum-16",
+      "entry": "identity",
+      "args": [
+        15
+      ],
+      "expected": 15,
+      "source": "type Tag is Type:\n  T0{}\n  T1{}\n  T2{}\n  T3{}\n  T4{}\n  T5{}\n  T6{}\n  T7{}\n  T8{}\n  T9{}\n  T10{}\n  T11{}\n  T12{}\n  T13{}\n  T14{}\n  T15{}\n\ndef identity(x: Tag) -> Tag:\n  x\n",
+      "program": ".local/bench/generated/enum-16.bend"
+    },
+    {
+      "name": "match-16",
+      "entry": "rotate",
+      "args": [
+        14
+      ],
+      "expected": 15,
+      "source": "type Tag is Type:\n  T0{}\n  T1{}\n  T2{}\n  T3{}\n  T4{}\n  T5{}\n  T6{}\n  T7{}\n  T8{}\n  T9{}\n  T10{}\n  T11{}\n  T12{}\n  T13{}\n  T14{}\n  T15{}\n\ndef rotate(x: Tag) -> Tag:\n  match x:\n    case T0{}: T1{}\n    case T1{}: T2{}\n    case T2{}: T3{}\n    case T3{}: T4{}\n    case T4{}: T5{}\n    case T5{}: T6{}\n    case T6{}: T7{}\n    case T7{}: T8{}\n    case T8{}: T9{}\n    case T9{}: T10{}\n    case T10{}: T11{}\n    case T11{}: T12{}\n    case T12{}: T13{}\n    case T13{}: T14{}\n    case T14{}: T15{}\n    case T15{}: T0{}\n",
+      "program": ".local/bench/generated/match-16.bend"
+    },
+    {
+      "name": "calls-16",
+      "entry": "step16",
+      "args": [
+        1
+      ],
+      "expected": 1,
+      "source": "type Flag is Type:\n  Off{}\n  On{}\n\ndef flip(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef step0(x: Flag) -> Flag:\n  x\n\ndef step1(x: Flag) -> Flag:\n  step0(flip(x))\n\ndef step2(x: Flag) -> Flag:\n  step1(flip(x))\n\ndef step3(x: Flag) -> Flag:\n  step2(flip(x))\n\ndef step4(x: Flag) -> Flag:\n  step3(flip(x))\n\ndef step5(x: Flag) -> Flag:\n  step4(flip(x))\n\ndef step6(x: Flag) -> Flag:\n  step5(flip(x))\n\ndef step7(x: Flag) -> Flag:\n  step6(flip(x))\n\ndef step8(x: Flag) -> Flag:\n  step7(flip(x))\n\ndef step9(x: Flag) -> Flag:\n  step8(flip(x))\n\ndef step10(x: Flag) -> Flag:\n  step9(flip(x))\n\ndef step11(x: Flag) -> Flag:\n  step10(flip(x))\n\ndef step12(x: Flag) -> Flag:\n  step11(flip(x))\n\ndef step13(x: Flag) -> Flag:\n  step12(flip(x))\n\ndef step14(x: Flag) -> Flag:\n  step13(flip(x))\n\ndef step15(x: Flag) -> Flag:\n  step14(flip(x))\n\ndef step16(x: Flag) -> Flag:\n  step15(flip(x))\n",
+      "program": ".local/bench/generated/calls-16.bend"
+    },
+    {
+      "name": "enum-64",
+      "entry": "identity",
+      "args": [
+        63
+      ],
+      "expected": 63,
+      "source": "type Tag is Type:\n  T0{}\n  T1{}\n  T2{}\n  T3{}\n  T4{}\n  T5{}\n  T6{}\n  T7{}\n  T8{}\n  T9{}\n  T10{}\n  T11{}\n  T12{}\n  T13{}\n  T14{}\n  T15{}\n  T16{}\n  T17{}\n  T18{}\n  T19{}\n  T20{}\n  T21{}\n  T22{}\n  T23{}\n  T24{}\n  T25{}\n  T26{}\n  T27{}\n  T28{}\n  T29{}\n  T30{}\n  T31{}\n  T32{}\n  T33{}\n  T34{}\n  T35{}\n  T36{}\n  T37{}\n  T38{}\n  T39{}\n  T40{}\n  T41{}\n  T42{}\n  T43{}\n  T44{}\n  T45{}\n  T46{}\n  T47{}\n  T48{}\n  T49{}\n  T50{}\n  T51{}\n  T52{}\n  T53{}\n  T54{}\n  T55{}\n  T56{}\n  T57{}\n  T58{}\n  T59{}\n  T60{}\n  T61{}\n  T62{}\n  T63{}\n\ndef identity(x: Tag) -> Tag:\n  x\n",
+      "program": ".local/bench/generated/enum-64.bend"
+    },
+    {
+      "name": "match-64",
+      "entry": "rotate",
+      "args": [
+        62
+      ],
+      "expected": 63,
+      "source": "type Tag is Type:\n  T0{}\n  T1{}\n  T2{}\n  T3{}\n  T4{}\n  T5{}\n  T6{}\n  T7{}\n  T8{}\n  T9{}\n  T10{}\n  T11{}\n  T12{}\n  T13{}\n  T14{}\n  T15{}\n  T16{}\n  T17{}\n  T18{}\n  T19{}\n  T20{}\n  T21{}\n  T22{}\n  T23{}\n  T24{}\n  T25{}\n  T26{}\n  T27{}\n  T28{}\n  T29{}\n  T30{}\n  T31{}\n  T32{}\n  T33{}\n  T34{}\n  T35{}\n  T36{}\n  T37{}\n  T38{}\n  T39{}\n  T40{}\n  T41{}\n  T42{}\n  T43{}\n  T44{}\n  T45{}\n  T46{}\n  T47{}\n  T48{}\n  T49{}\n  T50{}\n  T51{}\n  T52{}\n  T53{}\n  T54{}\n  T55{}\n  T56{}\n  T57{}\n  T58{}\n  T59{}\n  T60{}\n  T61{}\n  T62{}\n  T63{}\n\ndef rotate(x: Tag) -> Tag:\n  match x:\n    case T0{}: T1{}\n    case T1{}: T2{}\n    case T2{}: T3{}\n    case T3{}: T4{}\n    case T4{}: T5{}\n    case T5{}: T6{}\n    case T6{}: T7{}\n    case T7{}: T8{}\n    case T8{}: T9{}\n    case T9{}: T10{}\n    case T10{}: T11{}\n    case T11{}: T12{}\n    case T12{}: T13{}\n    case T13{}: T14{}\n    case T14{}: T15{}\n    case T15{}: T16{}\n    case T16{}: T17{}\n    case T17{}: T18{}\n    case T18{}: T19{}\n    case T19{}: T20{}\n    case T20{}: T21{}\n    case T21{}: T22{}\n    case T22{}: T23{}\n    case T23{}: T24{}\n    case T24{}: T25{}\n    case T25{}: T26{}\n    case T26{}: T27{}\n    case T27{}: T28{}\n    case T28{}: T29{}\n    case T29{}: T30{}\n    case T30{}: T31{}\n    case T31{}: T32{}\n    case T32{}: T33{}\n    case T33{}: T34{}\n    case T34{}: T35{}\n    case T35{}: T36{}\n    case T36{}: T37{}\n    case T37{}: T38{}\n    case T38{}: T39{}\n    case T39{}: T40{}\n    case T40{}: T41{}\n    case T41{}: T42{}\n    case T42{}: T43{}\n    case T43{}: T44{}\n    case T44{}: T45{}\n    case T45{}: T46{}\n    case T46{}: T47{}\n    case T47{}: T48{}\n    case T48{}: T49{}\n    case T49{}: T50{}\n    case T50{}: T51{}\n    case T51{}: T52{}\n    case T52{}: T53{}\n    case T53{}: T54{}\n    case T54{}: T55{}\n    case T55{}: T56{}\n    case T56{}: T57{}\n    case T57{}: T58{}\n    case T58{}: T59{}\n    case T59{}: T60{}\n    case T60{}: T61{}\n    case T61{}: T62{}\n    case T62{}: T63{}\n    case T63{}: T0{}\n",
+      "program": ".local/bench/generated/match-64.bend"
+    },
+    {
+      "name": "calls-64",
+      "entry": "step64",
+      "args": [
+        1
+      ],
+      "expected": 1,
+      "source": "type Flag is Type:\n  Off{}\n  On{}\n\ndef flip(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef step0(x: Flag) -> Flag:\n  x\n\ndef step1(x: Flag) -> Flag:\n  step0(flip(x))\n\ndef step2(x: Flag) -> Flag:\n  step1(flip(x))\n\ndef step3(x: Flag) -> Flag:\n  step2(flip(x))\n\ndef step4(x: Flag) -> Flag:\n  step3(flip(x))\n\ndef step5(x: Flag) -> Flag:\n  step4(flip(x))\n\ndef step6(x: Flag) -> Flag:\n  step5(flip(x))\n\ndef step7(x: Flag) -> Flag:\n  step6(flip(x))\n\ndef step8(x: Flag) -> Flag:\n  step7(flip(x))\n\ndef step9(x: Flag) -> Flag:\n  step8(flip(x))\n\ndef step10(x: Flag) -> Flag:\n  step9(flip(x))\n\ndef step11(x: Flag) -> Flag:\n  step10(flip(x))\n\ndef step12(x: Flag) -> Flag:\n  step11(flip(x))\n\ndef step13(x: Flag) -> Flag:\n  step12(flip(x))\n\ndef step14(x: Flag) -> Flag:\n  step13(flip(x))\n\ndef step15(x: Flag) -> Flag:\n  step14(flip(x))\n\ndef step16(x: Flag) -> Flag:\n  step15(flip(x))\n\ndef step17(x: Flag) -> Flag:\n  step16(flip(x))\n\ndef step18(x: Flag) -> Flag:\n  step17(flip(x))\n\ndef step19(x: Flag) -> Flag:\n  step18(flip(x))\n\ndef step20(x: Flag) -> Flag:\n  step19(flip(x))\n\ndef step21(x: Flag) -> Flag:\n  step20(flip(x))\n\ndef step22(x: Flag) -> Flag:\n  step21(flip(x))\n\ndef step23(x: Flag) -> Flag:\n  step22(flip(x))\n\ndef step24(x: Flag) -> Flag:\n  step23(flip(x))\n\ndef step25(x: Flag) -> Flag:\n  step24(flip(x))\n\ndef step26(x: Flag) -> Flag:\n  step25(flip(x))\n\ndef step27(x: Flag) -> Flag:\n  step26(flip(x))\n\ndef step28(x: Flag) -> Flag:\n  step27(flip(x))\n\ndef step29(x: Flag) -> Flag:\n  step28(flip(x))\n\ndef step30(x: Flag) -> Flag:\n  step29(flip(x))\n\ndef step31(x: Flag) -> Flag:\n  step30(flip(x))\n\ndef step32(x: Flag) -> Flag:\n  step31(flip(x))\n\ndef step33(x: Flag) -> Flag:\n  step32(flip(x))\n\ndef step34(x: Flag) -> Flag:\n  step33(flip(x))\n\ndef step35(x: Flag) -> Flag:\n  step34(flip(x))\n\ndef step36(x: Flag) -> Flag:\n  step35(flip(x))\n\ndef step37(x: Flag) -> Flag:\n  step36(flip(x))\n\ndef step38(x: Flag) -> Flag:\n  step37(flip(x))\n\ndef step39(x: Flag) -> Flag:\n  step38(flip(x))\n\ndef step40(x: Flag) -> Flag:\n  step39(flip(x))\n\ndef step41(x: Flag) -> Flag:\n  step40(flip(x))\n\ndef step42(x: Flag) -> Flag:\n  step41(flip(x))\n\ndef step43(x: Flag) -> Flag:\n  step42(flip(x))\n\ndef step44(x: Flag) -> Flag:\n  step43(flip(x))\n\ndef step45(x: Flag) -> Flag:\n  step44(flip(x))\n\ndef step46(x: Flag) -> Flag:\n  step45(flip(x))\n\ndef step47(x: Flag) -> Flag:\n  step46(flip(x))\n\ndef step48(x: Flag) -> Flag:\n  step47(flip(x))\n\ndef step49(x: Flag) -> Flag:\n  step48(flip(x))\n\ndef step50(x: Flag) -> Flag:\n  step49(flip(x))\n\ndef step51(x: Flag) -> Flag:\n  step50(flip(x))\n\ndef step52(x: Flag) -> Flag:\n  step51(flip(x))\n\ndef step53(x: Flag) -> Flag:\n  step52(flip(x))\n\ndef step54(x: Flag) -> Flag:\n  step53(flip(x))\n\ndef step55(x: Flag) -> Flag:\n  step54(flip(x))\n\ndef step56(x: Flag) -> Flag:\n  step55(flip(x))\n\ndef step57(x: Flag) -> Flag:\n  step56(flip(x))\n\ndef step58(x: Flag) -> Flag:\n  step57(flip(x))\n\ndef step59(x: Flag) -> Flag:\n  step58(flip(x))\n\ndef step60(x: Flag) -> Flag:\n  step59(flip(x))\n\ndef step61(x: Flag) -> Flag:\n  step60(flip(x))\n\ndef step62(x: Flag) -> Flag:\n  step61(flip(x))\n\ndef step63(x: Flag) -> Flag:\n  step62(flip(x))\n\ndef step64(x: Flag) -> Flag:\n  step63(flip(x))\n",
+      "program": ".local/bench/generated/calls-64.bend"
+    },
+    {
+      "name": "enum-128",
+      "entry": "identity",
+      "args": [
+        127
+      ],
+      "expected": 127,
+      "source": "type Tag is Type:\n  T0{}\n  T1{}\n  T2{}\n  T3{}\n  T4{}\n  T5{}\n  T6{}\n  T7{}\n  T8{}\n  T9{}\n  T10{}\n  T11{}\n  T12{}\n  T13{}\n  T14{}\n  T15{}\n  T16{}\n  T17{}\n  T18{}\n  T19{}\n  T20{}\n  T21{}\n  T22{}\n  T23{}\n  T24{}\n  T25{}\n  T26{}\n  T27{}\n  T28{}\n  T29{}\n  T30{}\n  T31{}\n  T32{}\n  T33{}\n  T34{}\n  T35{}\n  T36{}\n  T37{}\n  T38{}\n  T39{}\n  T40{}\n  T41{}\n  T42{}\n  T43{}\n  T44{}\n  T45{}\n  T46{}\n  T47{}\n  T48{}\n  T49{}\n  T50{}\n  T51{}\n  T52{}\n  T53{}\n  T54{}\n  T55{}\n  T56{}\n  T57{}\n  T58{}\n  T59{}\n  T60{}\n  T61{}\n  T62{}\n  T63{}\n  T64{}\n  T65{}\n  T66{}\n  T67{}\n  T68{}\n  T69{}\n  T70{}\n  T71{}\n  T72{}\n  T73{}\n  T74{}\n  T75{}\n  T76{}\n  T77{}\n  T78{}\n  T79{}\n  T80{}\n  T81{}\n  T82{}\n  T83{}\n  T84{}\n  T85{}\n  T86{}\n  T87{}\n  T88{}\n  T89{}\n  T90{}\n  T91{}\n  T92{}\n  T93{}\n  T94{}\n  T95{}\n  T96{}\n  T97{}\n  T98{}\n  T99{}\n  T100{}\n  T101{}\n  T102{}\n  T103{}\n  T104{}\n  T105{}\n  T106{}\n  T107{}\n  T108{}\n  T109{}\n  T110{}\n  T111{}\n  T112{}\n  T113{}\n  T114{}\n  T115{}\n  T116{}\n  T117{}\n  T118{}\n  T119{}\n  T120{}\n  T121{}\n  T122{}\n  T123{}\n  T124{}\n  T125{}\n  T126{}\n  T127{}\n\ndef identity(x: Tag) -> Tag:\n  x\n",
+      "program": ".local/bench/generated/enum-128.bend"
+    },
+    {
+      "name": "match-128",
+      "entry": "rotate",
+      "args": [
+        126
+      ],
+      "expected": 127,
+      "source": "type Tag is Type:\n  T0{}\n  T1{}\n  T2{}\n  T3{}\n  T4{}\n  T5{}\n  T6{}\n  T7{}\n  T8{}\n  T9{}\n  T10{}\n  T11{}\n  T12{}\n  T13{}\n  T14{}\n  T15{}\n  T16{}\n  T17{}\n  T18{}\n  T19{}\n  T20{}\n  T21{}\n  T22{}\n  T23{}\n  T24{}\n  T25{}\n  T26{}\n  T27{}\n  T28{}\n  T29{}\n  T30{}\n  T31{}\n  T32{}\n  T33{}\n  T34{}\n  T35{}\n  T36{}\n  T37{}\n  T38{}\n  T39{}\n  T40{}\n  T41{}\n  T42{}\n  T43{}\n  T44{}\n  T45{}\n  T46{}\n  T47{}\n  T48{}\n  T49{}\n  T50{}\n  T51{}\n  T52{}\n  T53{}\n  T54{}\n  T55{}\n  T56{}\n  T57{}\n  T58{}\n  T59{}\n  T60{}\n  T61{}\n  T62{}\n  T63{}\n  T64{}\n  T65{}\n  T66{}\n  T67{}\n  T68{}\n  T69{}\n  T70{}\n  T71{}\n  T72{}\n  T73{}\n  T74{}\n  T75{}\n  T76{}\n  T77{}\n  T78{}\n  T79{}\n  T80{}\n  T81{}\n  T82{}\n  T83{}\n  T84{}\n  T85{}\n  T86{}\n  T87{}\n  T88{}\n  T89{}\n  T90{}\n  T91{}\n  T92{}\n  T93{}\n  T94{}\n  T95{}\n  T96{}\n  T97{}\n  T98{}\n  T99{}\n  T100{}\n  T101{}\n  T102{}\n  T103{}\n  T104{}\n  T105{}\n  T106{}\n  T107{}\n  T108{}\n  T109{}\n  T110{}\n  T111{}\n  T112{}\n  T113{}\n  T114{}\n  T115{}\n  T116{}\n  T117{}\n  T118{}\n  T119{}\n  T120{}\n  T121{}\n  T122{}\n  T123{}\n  T124{}\n  T125{}\n  T126{}\n  T127{}\n\ndef rotate(x: Tag) -> Tag:\n  match x:\n    case T0{}: T1{}\n    case T1{}: T2{}\n    case T2{}: T3{}\n    case T3{}: T4{}\n    case T4{}: T5{}\n    case T5{}: T6{}\n    case T6{}: T7{}\n    case T7{}: T8{}\n    case T8{}: T9{}\n    case T9{}: T10{}\n    case T10{}: T11{}\n    case T11{}: T12{}\n    case T12{}: T13{}\n    case T13{}: T14{}\n    case T14{}: T15{}\n    case T15{}: T16{}\n    case T16{}: T17{}\n    case T17{}: T18{}\n    case T18{}: T19{}\n    case T19{}: T20{}\n    case T20{}: T21{}\n    case T21{}: T22{}\n    case T22{}: T23{}\n    case T23{}: T24{}\n    case T24{}: T25{}\n    case T25{}: T26{}\n    case T26{}: T27{}\n    case T27{}: T28{}\n    case T28{}: T29{}\n    case T29{}: T30{}\n    case T30{}: T31{}\n    case T31{}: T32{}\n    case T32{}: T33{}\n    case T33{}: T34{}\n    case T34{}: T35{}\n    case T35{}: T36{}\n    case T36{}: T37{}\n    case T37{}: T38{}\n    case T38{}: T39{}\n    case T39{}: T40{}\n    case T40{}: T41{}\n    case T41{}: T42{}\n    case T42{}: T43{}\n    case T43{}: T44{}\n    case T44{}: T45{}\n    case T45{}: T46{}\n    case T46{}: T47{}\n    case T47{}: T48{}\n    case T48{}: T49{}\n    case T49{}: T50{}\n    case T50{}: T51{}\n    case T51{}: T52{}\n    case T52{}: T53{}\n    case T53{}: T54{}\n    case T54{}: T55{}\n    case T55{}: T56{}\n    case T56{}: T57{}\n    case T57{}: T58{}\n    case T58{}: T59{}\n    case T59{}: T60{}\n    case T60{}: T61{}\n    case T61{}: T62{}\n    case T62{}: T63{}\n    case T63{}: T64{}\n    case T64{}: T65{}\n    case T65{}: T66{}\n    case T66{}: T67{}\n    case T67{}: T68{}\n    case T68{}: T69{}\n    case T69{}: T70{}\n    case T70{}: T71{}\n    case T71{}: T72{}\n    case T72{}: T73{}\n    case T73{}: T74{}\n    case T74{}: T75{}\n    case T75{}: T76{}\n    case T76{}: T77{}\n    case T77{}: T78{}\n    case T78{}: T79{}\n    case T79{}: T80{}\n    case T80{}: T81{}\n    case T81{}: T82{}\n    case T82{}: T83{}\n    case T83{}: T84{}\n    case T84{}: T85{}\n    case T85{}: T86{}\n    case T86{}: T87{}\n    case T87{}: T88{}\n    case T88{}: T89{}\n    case T89{}: T90{}\n    case T90{}: T91{}\n    case T91{}: T92{}\n    case T92{}: T93{}\n    case T93{}: T94{}\n    case T94{}: T95{}\n    case T95{}: T96{}\n    case T96{}: T97{}\n    case T97{}: T98{}\n    case T98{}: T99{}\n    case T99{}: T100{}\n    case T100{}: T101{}\n    case T101{}: T102{}\n    case T102{}: T103{}\n    case T103{}: T104{}\n    case T104{}: T105{}\n    case T105{}: T106{}\n    case T106{}: T107{}\n    case T107{}: T108{}\n    case T108{}: T109{}\n    case T109{}: T110{}\n    case T110{}: T111{}\n    case T111{}: T112{}\n    case T112{}: T113{}\n    case T113{}: T114{}\n    case T114{}: T115{}\n    case T115{}: T116{}\n    case T116{}: T117{}\n    case T117{}: T118{}\n    case T118{}: T119{}\n    case T119{}: T120{}\n    case T120{}: T121{}\n    case T121{}: T122{}\n    case T122{}: T123{}\n    case T123{}: T124{}\n    case T124{}: T125{}\n    case T125{}: T126{}\n    case T126{}: T127{}\n    case T127{}: T0{}\n",
+      "program": ".local/bench/generated/match-128.bend"
+    },
+    {
+      "name": "calls-128",
+      "entry": "step128",
+      "args": [
+        1
+      ],
+      "expected": 1,
+      "source": "type Flag is Type:\n  Off{}\n  On{}\n\ndef flip(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef step0(x: Flag) -> Flag:\n  x\n\ndef step1(x: Flag) -> Flag:\n  step0(flip(x))\n\ndef step2(x: Flag) -> Flag:\n  step1(flip(x))\n\ndef step3(x: Flag) -> Flag:\n  step2(flip(x))\n\ndef step4(x: Flag) -> Flag:\n  step3(flip(x))\n\ndef step5(x: Flag) -> Flag:\n  step4(flip(x))\n\ndef step6(x: Flag) -> Flag:\n  step5(flip(x))\n\ndef step7(x: Flag) -> Flag:\n  step6(flip(x))\n\ndef step8(x: Flag) -> Flag:\n  step7(flip(x))\n\ndef step9(x: Flag) -> Flag:\n  step8(flip(x))\n\ndef step10(x: Flag) -> Flag:\n  step9(flip(x))\n\ndef step11(x: Flag) -> Flag:\n  step10(flip(x))\n\ndef step12(x: Flag) -> Flag:\n  step11(flip(x))\n\ndef step13(x: Flag) -> Flag:\n  step12(flip(x))\n\ndef step14(x: Flag) -> Flag:\n  step13(flip(x))\n\ndef step15(x: Flag) -> Flag:\n  step14(flip(x))\n\ndef step16(x: Flag) -> Flag:\n  step15(flip(x))\n\ndef step17(x: Flag) -> Flag:\n  step16(flip(x))\n\ndef step18(x: Flag) -> Flag:\n  step17(flip(x))\n\ndef step19(x: Flag) -> Flag:\n  step18(flip(x))\n\ndef step20(x: Flag) -> Flag:\n  step19(flip(x))\n\ndef step21(x: Flag) -> Flag:\n  step20(flip(x))\n\ndef step22(x: Flag) -> Flag:\n  step21(flip(x))\n\ndef step23(x: Flag) -> Flag:\n  step22(flip(x))\n\ndef step24(x: Flag) -> Flag:\n  step23(flip(x))\n\ndef step25(x: Flag) -> Flag:\n  step24(flip(x))\n\ndef step26(x: Flag) -> Flag:\n  step25(flip(x))\n\ndef step27(x: Flag) -> Flag:\n  step26(flip(x))\n\ndef step28(x: Flag) -> Flag:\n  step27(flip(x))\n\ndef step29(x: Flag) -> Flag:\n  step28(flip(x))\n\ndef step30(x: Flag) -> Flag:\n  step29(flip(x))\n\ndef step31(x: Flag) -> Flag:\n  step30(flip(x))\n\ndef step32(x: Flag) -> Flag:\n  step31(flip(x))\n\ndef step33(x: Flag) -> Flag:\n  step32(flip(x))\n\ndef step34(x: Flag) -> Flag:\n  step33(flip(x))\n\ndef step35(x: Flag) -> Flag:\n  step34(flip(x))\n\ndef step36(x: Flag) -> Flag:\n  step35(flip(x))\n\ndef step37(x: Flag) -> Flag:\n  step36(flip(x))\n\ndef step38(x: Flag) -> Flag:\n  step37(flip(x))\n\ndef step39(x: Flag) -> Flag:\n  step38(flip(x))\n\ndef step40(x: Flag) -> Flag:\n  step39(flip(x))\n\ndef step41(x: Flag) -> Flag:\n  step40(flip(x))\n\ndef step42(x: Flag) -> Flag:\n  step41(flip(x))\n\ndef step43(x: Flag) -> Flag:\n  step42(flip(x))\n\ndef step44(x: Flag) -> Flag:\n  step43(flip(x))\n\ndef step45(x: Flag) -> Flag:\n  step44(flip(x))\n\ndef step46(x: Flag) -> Flag:\n  step45(flip(x))\n\ndef step47(x: Flag) -> Flag:\n  step46(flip(x))\n\ndef step48(x: Flag) -> Flag:\n  step47(flip(x))\n\ndef step49(x: Flag) -> Flag:\n  step48(flip(x))\n\ndef step50(x: Flag) -> Flag:\n  step49(flip(x))\n\ndef step51(x: Flag) -> Flag:\n  step50(flip(x))\n\ndef step52(x: Flag) -> Flag:\n  step51(flip(x))\n\ndef step53(x: Flag) -> Flag:\n  step52(flip(x))\n\ndef step54(x: Flag) -> Flag:\n  step53(flip(x))\n\ndef step55(x: Flag) -> Flag:\n  step54(flip(x))\n\ndef step56(x: Flag) -> Flag:\n  step55(flip(x))\n\ndef step57(x: Flag) -> Flag:\n  step56(flip(x))\n\ndef step58(x: Flag) -> Flag:\n  step57(flip(x))\n\ndef step59(x: Flag) -> Flag:\n  step58(flip(x))\n\ndef step60(x: Flag) -> Flag:\n  step59(flip(x))\n\ndef step61(x: Flag) -> Flag:\n  step60(flip(x))\n\ndef step62(x: Flag) -> Flag:\n  step61(flip(x))\n\ndef step63(x: Flag) -> Flag:\n  step62(flip(x))\n\ndef step64(x: Flag) -> Flag:\n  step63(flip(x))\n\ndef step65(x: Flag) -> Flag:\n  step64(flip(x))\n\ndef step66(x: Flag) -> Flag:\n  step65(flip(x))\n\ndef step67(x: Flag) -> Flag:\n  step66(flip(x))\n\ndef step68(x: Flag) -> Flag:\n  step67(flip(x))\n\ndef step69(x: Flag) -> Flag:\n  step68(flip(x))\n\ndef step70(x: Flag) -> Flag:\n  step69(flip(x))\n\ndef step71(x: Flag) -> Flag:\n  step70(flip(x))\n\ndef step72(x: Flag) -> Flag:\n  step71(flip(x))\n\ndef step73(x: Flag) -> Flag:\n  step72(flip(x))\n\ndef step74(x: Flag) -> Flag:\n  step73(flip(x))\n\ndef step75(x: Flag) -> Flag:\n  step74(flip(x))\n\ndef step76(x: Flag) -> Flag:\n  step75(flip(x))\n\ndef step77(x: Flag) -> Flag:\n  step76(flip(x))\n\ndef step78(x: Flag) -> Flag:\n  step77(flip(x))\n\ndef step79(x: Flag) -> Flag:\n  step78(flip(x))\n\ndef step80(x: Flag) -> Flag:\n  step79(flip(x))\n\ndef step81(x: Flag) -> Flag:\n  step80(flip(x))\n\ndef step82(x: Flag) -> Flag:\n  step81(flip(x))\n\ndef step83(x: Flag) -> Flag:\n  step82(flip(x))\n\ndef step84(x: Flag) -> Flag:\n  step83(flip(x))\n\ndef step85(x: Flag) -> Flag:\n  step84(flip(x))\n\ndef step86(x: Flag) -> Flag:\n  step85(flip(x))\n\ndef step87(x: Flag) -> Flag:\n  step86(flip(x))\n\ndef step88(x: Flag) -> Flag:\n  step87(flip(x))\n\ndef step89(x: Flag) -> Flag:\n  step88(flip(x))\n\ndef step90(x: Flag) -> Flag:\n  step89(flip(x))\n\ndef step91(x: Flag) -> Flag:\n  step90(flip(x))\n\ndef step92(x: Flag) -> Flag:\n  step91(flip(x))\n\ndef step93(x: Flag) -> Flag:\n  step92(flip(x))\n\ndef step94(x: Flag) -> Flag:\n  step93(flip(x))\n\ndef step95(x: Flag) -> Flag:\n  step94(flip(x))\n\ndef step96(x: Flag) -> Flag:\n  step95(flip(x))\n\ndef step97(x: Flag) -> Flag:\n  step96(flip(x))\n\ndef step98(x: Flag) -> Flag:\n  step97(flip(x))\n\ndef step99(x: Flag) -> Flag:\n  step98(flip(x))\n\ndef step100(x: Flag) -> Flag:\n  step99(flip(x))\n\ndef step101(x: Flag) -> Flag:\n  step100(flip(x))\n\ndef step102(x: Flag) -> Flag:\n  step101(flip(x))\n\ndef step103(x: Flag) -> Flag:\n  step102(flip(x))\n\ndef step104(x: Flag) -> Flag:\n  step103(flip(x))\n\ndef step105(x: Flag) -> Flag:\n  step104(flip(x))\n\ndef step106(x: Flag) -> Flag:\n  step105(flip(x))\n\ndef step107(x: Flag) -> Flag:\n  step106(flip(x))\n\ndef step108(x: Flag) -> Flag:\n  step107(flip(x))\n\ndef step109(x: Flag) -> Flag:\n  step108(flip(x))\n\ndef step110(x: Flag) -> Flag:\n  step109(flip(x))\n\ndef step111(x: Flag) -> Flag:\n  step110(flip(x))\n\ndef step112(x: Flag) -> Flag:\n  step111(flip(x))\n\ndef step113(x: Flag) -> Flag:\n  step112(flip(x))\n\ndef step114(x: Flag) -> Flag:\n  step113(flip(x))\n\ndef step115(x: Flag) -> Flag:\n  step114(flip(x))\n\ndef step116(x: Flag) -> Flag:\n  step115(flip(x))\n\ndef step117(x: Flag) -> Flag:\n  step116(flip(x))\n\ndef step118(x: Flag) -> Flag:\n  step117(flip(x))\n\ndef step119(x: Flag) -> Flag:\n  step118(flip(x))\n\ndef step120(x: Flag) -> Flag:\n  step119(flip(x))\n\ndef step121(x: Flag) -> Flag:\n  step120(flip(x))\n\ndef step122(x: Flag) -> Flag:\n  step121(flip(x))\n\ndef step123(x: Flag) -> Flag:\n  step122(flip(x))\n\ndef step124(x: Flag) -> Flag:\n  step123(flip(x))\n\ndef step125(x: Flag) -> Flag:\n  step124(flip(x))\n\ndef step126(x: Flag) -> Flag:\n  step125(flip(x))\n\ndef step127(x: Flag) -> Flag:\n  step126(flip(x))\n\ndef step128(x: Flag) -> Flag:\n  step127(flip(x))\n",
+      "program": ".local/bench/generated/calls-128.bend"
+    }
+  ],
+  "observer_cases": [
+    {
+      "source": "tests/compiler-opt/fixtures/observers/even.bend",
+      "source_sha256": "bca3d0cbfceb513e7f2d6b481f816258c46b54bb920c11d0aef7f0abe43dc440",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t970",
+      "stderr": "",
+      "wasm_sha256": "6e1b96ab3b58ebb4a5e437ad90f8ab2265c0f170ca288b277c57e7278d4bd1f0",
+      "bytes": 970
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/add.bend",
+      "source_sha256": "acb8514f7ef96481671f564cf38369a69d8edb1e9ac35b6c773f73a8f0d111ad",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t1215",
+      "stderr": "",
+      "wasm_sha256": "03949795fe5c4a22be4f8cd09822cdded09a2457acffd6d798100e87058d4457",
+      "bytes": 1215
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/mirror.bend",
+      "source_sha256": "c9a80706b20bb0274a20e9c5431c2995e21cfafab6d80a8b9d1c4b41715a738a",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t832",
+      "stderr": "",
+      "wasm_sha256": "1e321a6a95a7f393bd777449e3d6396fbfbea7daf9656025d792230dafc0cb99",
+      "bytes": 832
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/length.bend",
+      "source_sha256": "7b8b89393e29c6b25233538fba1801c587b229df4137ab55b9fcb2c63b0b294c",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t783",
+      "stderr": "",
+      "wasm_sha256": "c9bc5097147f3ad8649a233ab87ff50363cdab1be8523ded8eb07f8d1719f86a",
+      "bytes": 783
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/direct.bend",
+      "source_sha256": "236c4484ee58a1582613118b8de79212eee4aab727b2123203c185423b495aa4",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t383",
+      "stderr": "",
+      "wasm_sha256": "2d1bc617cf13a69f4d572a0ccfe6eac139d0f74489424c039c1cd7aa69ff49d5",
+      "bytes": 383
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/first-parameter.bend",
+      "source_sha256": "2592306d78068b8f8d5515d028616cad570fbe0a6b3f3f74b7c66733da8ac2bb",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t401",
+      "stderr": "",
+      "wasm_sha256": "bad764f76064921543752a488e8ece6677269f06bad65996d355af4c602b53dc",
+      "bytes": 401
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/ordered-calls.bend",
+      "source_sha256": "b927ce764cc42b1d4ebeaaaa822a324d3691ee3d7174a8d2814de8de31f50a0b",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t363",
+      "stderr": "",
+      "wasm_sha256": "4cbb3524a208233aed17a51127a39329a459dc3cd1d7a8bfd39edc496121672d",
+      "bytes": 363
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/shadow-field.bend",
+      "source_sha256": "ba6287b9963524bd24e2586dc8d84a5ba8f4a4d1d206c8aead13157929cf4197",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t383",
+      "stderr": "",
+      "wasm_sha256": "2d1bc617cf13a69f4d572a0ccfe6eac139d0f74489424c039c1cd7aa69ff49d5",
+      "bytes": 383
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/after-let.bend",
+      "source_sha256": "206ad8c7808bc291fd31983cdecd92f76264f488e82663b380926d9928bce882",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t400",
+      "stderr": "",
+      "wasm_sha256": "e2fce36ace811f24dda4efe8906582e5f9432374e368f1e5ab808e76e82d8a22",
+      "bytes": 400
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/deep.bend",
+      "source_sha256": "e723b69aac64e90b16bc52c9e2fb88fb1df19f3667577235f044e9f40a967e80",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t1895",
+      "stderr": "",
+      "wasm_sha256": "c830ffe9c8a37768738b3d30be09d7443a0c5f4fd54195ff6dd5ad3705fa4098",
+      "bytes": 1895
+    },
+    {
+      "source": "tests/compiler-opt/fixtures/observers/deep-input.bend",
+      "source_sha256": "0d41ed10e6f91692967dfe744c179126822a4d59860340eeb8dfaeec08349f93",
+      "budgets": [],
+      "exit": 0,
+      "stdout": "Built\t5318",
+      "stderr": "",
+      "wasm_sha256": "726667095dba82ea112395239af66164519c7c9c0fcb112e1c985ec9e9637c8e",
+      "bytes": 5318
+    }
+  ]
+}

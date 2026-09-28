@@ -267,6 +267,94 @@
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "First-parameter descent laws for structural self-calls, proved over the fields and runtime proof chain. The family exceeds the composition bound."
+    },
+    {
+      "name": "opt-check",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/catalog.bend",
+        "src/scope.bend",
+        "src/patterns.bend",
+        "src/check.bend",
+        "src/opt-check.bend"
+      ],
+      "task": "tests/compiler-opt/SPEC.md",
+      "notes": "Checked-core scopes, types, quantities, cases and descent; no source match-frontier restriction. Full local closure exceeds the composition bound."
+    },
+    {
+      "name": "opt-inline",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/opt-term.bend",
+        "src/opt-inline.bend"
+      ],
+      "task": "tests/compiler-opt/SPEC.md",
+      "notes": "Bounded capture-avoiding level translation and once-only argument binding."
+    },
+    {
+      "name": "opt-fold",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/opt-term.bend",
+        "src/opt-fold.bend"
+      ],
+      "task": "tests/compiler-opt/SPEC.md",
+      "notes": "Known constructor case fusion, constant propagation and unused reusable lets."
+    },
+    {
+      "name": "opt-pipeline",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/opt-term.bend",
+        "src/opt-fold.bend",
+        "src/opt-inline.bend",
+        "src/catalog.bend",
+        "src/scope.bend",
+        "src/patterns.bend",
+        "src/check.bend",
+        "src/opt-check.bend",
+        "src/opt.bend",
+        "src/opt-LAWS.bend",
+        "src/lex.bend",
+        "src/parse.bend",
+        "src/LAWS.bend",
+        "src/PROOF.bend",
+        "src/check-LAWS.bend",
+        "src/check-PROOF.bend",
+        "src/eval.bend",
+        "src/wasm-bytes.bend",
+        "src/runtime-LAWS.bend",
+        "src/runtime-PROOF.bend",
+        "src/catalog-LAWS.bend",
+        "src/catalog-PROOF.bend",
+        "src/fields-LAWS.bend",
+        "src/fields-PROOF.bend",
+        "src/recursion-LAWS.bend",
+        "src/recursion-PROOF.bend",
+        "src/opt-PROOF.bend"
+      ],
+      "task": "tests/compiler-opt/SPEC.md",
+      "notes": "Checked composition to a bounded fixed point with unchanged exports and the complete prior proof chain. Full local closure exceeds the composition bound."
+    },
+    {
+      "name": "opt-wasm",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/catalog.bend",
+        "src/scope.bend",
+        "src/patterns.bend",
+        "src/check.bend",
+        "src/wasm-bytes.bend",
+        "src/wasm.bend",
+        "src/opt-wasm.bend"
+      ],
+      "task": "tests/compiler-opt/SPEC.md",
+      "notes": "Optional fields-profile self return_call lowering. Full local closure exceeds the composition bound and ByteOutput remains external."
     }
   ]
 }

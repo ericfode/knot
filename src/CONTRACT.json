@@ -214,5 +214,32 @@
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+  },
+  "optimization": {
+    "profile": "knot-core-opt-1",
+    "entry": "tests/compiler-opt/compile.bend",
+    "core": "src/core.bend Book -> checked Book; exact types, signatures and export order",
+    "pipeline": "bounded non-recursive inlining, known-constructor cases and constant cases, unused reusable lets",
+    "checking": "src/opt-check.bend independently rechecks core types, quantities, scopes, exhaustive cases and first-parameter descent; source checker unchanged",
+    "inlining": {
+      "maximum_body_nodes": 32,
+      "maximum_level": 4095,
+      "argument_evaluation": "left-to-right, once, respecting erased quantities",
+      "renaming": "Every callee level is translated above the caller and rewritten-argument ceilings, including nullary bodies; references and binders move together.",
+      "erased_calls": "Actuals in erased positions are not unfolded; inlining cannot introduce a self-call, including an erased forward call."
+    },
+    "dce": "Unused pure reusable bindings; every current top-level function is exported, so all functions and indices are retained.",
+    "folding": "Known Value cases; direct let-Construct/case fusion binds fields once in declaration order, only when field levels cannot capture argument locals and the parent has no residual use. No primitive literals yet.",
+    "tail_calls": "src/opt-wasm.bend emits return_call only for tail self-calls in the optional fields path",
+    "budgets": "Compiler CLI budgets also bound optimization/core checking; exhaustion is distinct from rejection.",
+    "default_paths": "No changes to existing CLIs, checker, driver or emitter; off path must match frozen module hashes.",
+    "gate": "tests/compiler-opt/check.py",
+    "proof_entry": "src/opt-PROOF.bend",
+    "limits": [
+      "No general semantic-preservation theorem",
+      "No unreachable function removal until IR has private functions/export metadata",
+      "No primitive constant arithmetic before literal support",
+      "Resource exhaustion counts may improve under optimization; successful constructor observations must agree"
+    ]
   }
 }

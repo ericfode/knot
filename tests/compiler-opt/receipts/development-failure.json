@@ -1,0 +1,105 @@
+{
+  "recorded_at": "2026-09-28T00:57:50.726068+00:00",
+  "status": "historical-development-failure",
+  "classification": "compiler-host-stack-failure",
+  "implementation_state": "Intermediate uncommitted optimizer before bounded structural equality replaced recursive equality of rendered books.",
+  "provenance_limit": "The intermediate executable was overwritten during the rebuilt gate; its exact executable and source hashes were not retained. These observed failures are historical evidence, not a reproducible receipt for the final source.",
+  "observations": [
+    {
+      "case": "compiler-fields-wasm-arena-overflow",
+      "phase": "compile",
+      "result": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "observation_basis": "first direct gate failure"
+    },
+    {
+      "case": "compiler-fields-wasm-deep-call",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/compile_on.js",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-fields-wasm/fixtures/deep-call.bend",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/probe-compiler-fields-wasm-deep-call.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "65536"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      }
+    },
+    {
+      "case": "compiler-fields-wasm-deep-stack",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/compile_on.js",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-fields-wasm/fixtures/deep-stack.bend",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/probe-compiler-fields-wasm-deep-stack.wasm"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      }
+    },
+    {
+      "case": "compiler-opt-observer-deep-input",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/compile_on.js",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/tests/compiler-opt/fixtures/observers/deep-input.bend",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/probe-compiler-opt-observer-deep-input.wasm"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      }
+    },
+    {
+      "case": "bench-calls-64",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/compile_on.js",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-64.bend",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/probe-bench-calls-64.wasm"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      }
+    },
+    {
+      "case": "bench-calls-128",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/compile_on.js",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/bench/generated/calls-128.bend",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-opt-1/.local/compiler-opt/gate/probe-bench-calls-128.wasm"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      }
+    }
+  ],
+  "resolution": "The complete rebuilt gate passed all six programs in native and Bun, with fixed reference outputs and unchanged unoptimized modules. Final acceptance is the separate optimization.json receipt."
+}
