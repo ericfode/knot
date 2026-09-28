@@ -1,186 +1,158 @@
 # Knot benchmarks
 
-A dependency-free framework for measuring today's seed-built enum compiler and
-future optimization passes. It does not establish full self-hosting or GPU
-performance. The benchmark driver and statistics use Node's standard library.
-
-## Run
-
-Prerequisites: Node 22, Bun 1.3.14, clang >= 14, and the existing pinned seed at
-`.toolchain/bend-2.0.29-574b6d3`, including its already available imports. No
-additional npm dependencies are required by the harness. Native/Bun builds use
-`src/compile-cli.bend -o OUTPUT`, as in
-[the Wasm gate](../tests/compiler-wasm/README.md). The seed is invoked directly
-with `bun --no-env-file` and `BEND_NO_TELEMETRY=1`. It uses `CC` if set, otherwise
-`clang`. Build dependencies must be provisioned before a timed run.
+Measure the current seed-built compiler and its emitted Wasm, with frozen
+correctness guards and noise-aware comparisons. No dependencies, network access,
+compiler changes or fixture regeneration are needed. The seed is pinned to Bend
+2.0.29 (`574b6d3`); commands use Bun `--no-env-file` and `BEND_NO_TELEMETRY=1`.
+Prerequisites are the installed seed/packages, Node 22, Bun 1.3.14 and clang >=14.
 
 ```sh
-npm run bench -- --suite=smoke
-npm run bench -- --suite=core --repeat=15 --out=.local/bench/results/core.json
-npm run bench -- --suite=scaling --repeat=15
-npm run bench:baseline -- --suite=scaling --repeat=15 --name=main-before-pass
-npm run bench:compare -- .local/bench/baselines/main-before-pass.json .local/bench/results/candidate.json
+npm run bench:baseline -- --name=main-20260927
+npm run bench -- --out=.local/bench/results/candidate.json
+npm run bench:compare -- main-20260927 .local/bench/results/candidate.json
 npm run bench:verify
 ```
 
-`bench` defaults to `core`. `--repeat=N` overrides every case's repetition count;
-otherwise each case supplies it. `--warmup=N` and `--iterations=N` override the
-suite's runtime settings. `--build-repeat=N` repeats seed builds (default 1).
-All counts must be positive integers. `--help` lists the options.
+The default suite is **hillclimb**. Baselines live under
+`.local/bench/baselines/NAME.json`; the comparison accepts a name or a JSON path.
+Existing evidence is never overwritten. Builds, generated workloads, modules,
+worker requests and full raw results stay in ignored `.local/bench/`.
+See [HILLCLIMB.md](HILLCLIMB.md) for the procedure and a measured comparison.
+The [extension contract](SPEC.md) and [literal expectations](expectations.json)
+were fixed before implementing the new workloads.
 
-Without `--out`, results have unique timestamped names under
-`.local/bench/results/`. `bench:baseline` uses `.local/bench/baselines/`; `--name`
-sets its name, otherwise the suite and timestamp name it. Existing files are
-never overwritten. The commands print the absolute result path. Generated
-sources, binaries, Wasm, worker requests and raw results stay in ignored
-`.local/bench/`. They can be removed after preserving any evidence needed for a
-comparison. `bench:verify` runs compiler-free tests followed by the real smoke
-suite in both lanes; it does not change `lint:verify` or existing test receipts.
+## Workloads
 
-## Suites and correctness
-
-| Suite | Cases | Purpose |
+| Suite | Programs | Selection |
 | --- | ---: | --- |
-| `smoke` | 1 | `flag.flip(0)`, three repetitions, complete native/Bun path |
-| `core` | 9 | Existing enum, nested match, erasure, call, local and ordinal fixtures |
-| `scaling` | 9 | Constructor counts, match widths and call depths of 16, 64 and 128 |
+| `hillclimb` | 201 | All six frozen fixture suites plus the 12 new generators |
+| `recursion` | 19 | Structural recursion and descent boundaries |
+| `fields-wasm` | 8 | Fields, aliasing, erasure, arena and deep call fixtures |
+| `closures` | 42 | Frozen closures/higher-order corpus |
+| `baseslice` | 40 | Frozen reachable Base corpus |
+| `generics` | 40 | Frozen generic/quantity corpus |
+| `literals` | 40 | Frozen literal/primitive corpus |
+| `runtime` | 12 | Peano, fielded lists, wide matches, many small functions |
+| `smoke` / `core` / `scaling` | 1 / 9 / 9 | Retained first-wave enum suites |
 
-Each `bench/suites/*.json` has `schemaVersion`, `name`, `runtime` settings and a
-`cases` list. Each case specifies a unique `name`, repository-relative `program`,
-export `entry`, live ordinal `args`, and `repeat`. Erased arguments are omitted.
-Add cases and suites as the compiler's accepted profile grows; compare only
-runs of the same suite and inputs.
+Every fixture is probed in native and Bun compiler lanes on every run; support
+is never inferred from a hardcoded list of today's accepted programs. The same
+suite starts timing a newly supported fixture without editing its benchmark.
+One frozen enum-signature observation per program is selected (`main` first,
+otherwise the first recorded call). This is representative timing, not exhaustive
+conformance. The independent compiler gates retain all their original assertions.
 
-Existing fixture calls take their literal expected results directly from
-`tests/compiler-wasm/cases.json`. Other calls use `src/eval-cli.bend`, built in
-both native and Bun lanes, outside measured compiler/runtime work. Both
-evaluators must return the same nullary enum. Generated cases additionally
-check the evaluator against a simple closed-form expectation.
+Rejected probes remain in the result as `not-yet-compilable`, with exact process
+records and distinct **Invalid, Unsupported, Exhausted, HostFailure and
+InternalFailure** classifications. Host/internal failures invalidate a run.
+Seed-valid programs reported Invalid are explicitly marked **D4 discrepancies**;
+they are not benchmark passes for those capabilities. Acceptance of a frozen
+seed-negative program invalidates the run. A successful inventory may have zero
+measured cases; it cannot establish a performance comparison.
 
-`node bench/generate.mjs` deterministically writes the scaling programs under
-`.local/bench/generated/`; running `scaling` invokes it automatically. Enums
-export identity, match tables rotate to the next constructor, and call chains
-apply an even number of flips. These are acyclic programs within today's
-resource budgets. The generated sources are workload data, not modifications
-to the compiler, packages or accepted laws.
+Recursion fixtures return structured trees, outside today's enum-only host ABI.
+They receive compiler and evaluator timings and an explicit
+`Unsupported / host / structured-result` runtime entry. Raw cell addresses are
+never treated as constructor ordinals. The generated recursion/list workloads
+return enum observations and exercise the fields Wasm runtime directly. Those
+observations do not promote the general recursive Wasm contract to qualified.
 
-Every timed seed build is exercised with the existing flag literal guard.
-Every compiler invocation must return an exact `Built` receipt for a fresh
-output file. Each resulting module is validated, instantiated, checked for
-imports and live arity, and called against its expected result. Repeated
-compilations in a lane must produce identical bytes. Runtime warmup and **every
-measured call** also check their results. A mismatch, trap, exhaustion, timeout,
-missing artifact or input change invalidates the entire run and produces a
-failed result with a nonzero exit. Each subprocess has a 120-second timeout.
-Partial/failed records cannot be compared.
+`node bench/generate.mjs --runtime` writes deterministic programs at sizes
+32, 96 and 192. Peano parity traverses size+1 successors; list traversal consumes
+size fielded cells, constructed in 32-cell chunks to respect parser depth;
+wide enum matches rotate the penultimate tag to the last; small-function chains
+apply size flips. Literal results are checked against the live pinned seed,
+both evaluator lanes, and every emitted runtime call. The original
+`node bench/generate.mjs` still produces the nine scaling cases.
 
-These checks cover the listed observations. They do not replace the compiler's
-independent proof, negative-fixture, mutation and backend gates, or establish
-correctness for inputs absent from the suite. In particular, evaluation shares
-the compiler's frontend and is not an independent frontend implementation.
+## Measurements and guards
 
-## What the timers mean
+| Metric | Unit | Timed work |
+| --- | --- | --- |
+| Compiler build | ms | Seed to native/JS compiler, including native C compilation; informational |
+| Compile | ms | Fresh CLI process: reading, lexing, parsing, checking, emitting and writing |
+| Evaluate | ms | Fresh CLI process: reading, lexing, parsing, checking, evaluating and describing |
+| Runtime | ns/call | Warm Node batches; JS loop/result guard and the declared instance lifecycle |
+| Output size | bytes | Complete emitted module |
 
-| Metric | Unit | Timed work | Default comparison target |
-| --- | --- | --- | --- |
-| Compiler build | ms | Pinned seed to `compile-cli`, including native C compilation or JS emission | Informational |
-| Compile | ms | One fresh native/Bun compiler process, reading source and writing Wasm | Yes |
-| Runtime | ns/call | Warmed Node calls to an emitted export, including JS call/loop/result-check overhead | Yes |
-| Output size | bytes | Full emitted Wasm file, including all exported functions | Yes |
+The current driver exposes no phase clocks. `protocol.selfCost` records this
+reason and the phases included in each whole-run timer. We do not alter its
+output or subtract separate process times to invent lex/parse/check/emit costs.
+Every new accepted case gets a compiler total and, when evaluation succeeds, an
+evaluator total. Evaluation exhaustion/unsupported outcomes remain explicit;
+for example, the deep-call fixture raises compiler parser budgets but the
+public evaluator has fixed input limits. Its runtime still has a frozen seed
+oracle. Largest accepted inputs can be selected by recorded source hash/path,
+family and size; all sizes retain separate rows.
 
-Builds and measurements are sequential. Each run rebuilds the compilers; it
-never reuses a binary from another source revision. Evaluator build/evaluation
-costs are recorded separately under `evaluatorBuilds` and the case's oracle.
-Every compiler process includes startup, filesystem work and, for Bun, its
-startup/JIT cost. One unmeasured compile invocation precedes each case/lane's
-samples; its artifact is checked too. This is warm-cache CLI latency, not an
-isolated frontend/emitter timer or cold-disk experiment.
+Both `knot-enum-1` and `knot-fields-wasm-1` use the existing checked Bend drivers.
+Every compiler invocation requires a fresh file and exact `Built` record.
+Artifacts must validate, have no imports, agree byte-for-byte across repeated
+compilations in each lane, and satisfy the frozen result. The two lanes must
+agree on compilation and evaluation classifications. All generated cases get a
+live seed cross-check before timing; fixture oracles retain frozen manifest and
+source hashes. Input, compiler, harness and Git identities are rechecked at end.
 
-For each case/lane a single Node worker validates every emitted artifact, then
-uses the last identical module for warmup and all runtime batches. File reading,
-Wasm compilation/instantiation and Node process startup are outside its timers.
-The worker does not subtract an empty loop or claim to measure pure Wasm
-instruction cost. Tiny entries are dominated by the host call and check. Fixed
-arguments may favor JIT optimization. Each lane retains its own runtime and
-size observations even when both emit identical bytes.
+Enum runtime calls reuse one instance. Fields-profile calls create a fresh
+instance **for each call**, because the private 64 KiB arena has no reset or
+reclamation. The fields measurement includes instantiation and allocation/GC
+cost, reported as `fresh-instance-per-call`; it is not pure Wasm instruction
+latency. Both lanes compile the Wasm module once outside the timer, warm up, and
+iterate inside one Node process. Every call, including validation and warmup,
+checks its result. Stack and arena exhaustion are distinct from other host traps.
 
-A schema-versioned result retains raw samples plus `n`, median, **unscaled**
-median absolute deviation (MAD), and min for every metric. `compilations` keeps
-the command, duration, bytes, output hash and checked result for each invocation.
-`environment` records CPU model/count, OS/version/architecture/memory, Node,
-Bun, clang, seed version and source digest, declared seed revision, Git commit,
-dirty flag, `src/*.bend` hashes, and benchmark implementation hashes. The seed
-revision is the contract's pin; its source digest fingerprints the installed
-copy, which need not contain a Git directory. No environment-variable dump or
-credential file is read or recorded.
+One runtime **iteration/sample is a batch**, not a single source invocation.
+New suites have seven samples by default. Each batch executes at least 64 calls
+and continues in 64-call chunks until at least **10 ms** have elapsed. Raw
+`batches` retain actual calls and nanoseconds; ns/call is their quotient. Short
+work is accumulated, never discarded or extrapolated. Warmup defaults to 32
+calls. The retained enum suites keep their original fixed-count settings.
 
-## Compare
+`--suite=NAME`, `--repeat=N`, `--warmup=N`, `--iterations=N`, `--build-repeat=N`
+and `--out=FILE` are available. Iterations is the minimum/chunk call count in new
+suites. Repeats override every case; build-repeat defaults to one. All counts
+must be positive. Builds and measurements are sequential; each subprocess has
+a 120-second timeout. A mismatch, changing input, missing artifact or host/internal
+failure makes the result unusable, with the failure record retained. Arena/stack
+exhaustion is runtime-unavailable with no timing samples; the intentional
+`arena-overflow` fixture exercises this path even with fresh instances.
 
-`bench:compare BASE.json NEW.json` reports each case, lane and metric separately.
-The ratio is **candidate median / baseline median**: below 1 is faster (or
-smaller for bytes). There is no blended score. Summary fields are recomputed
-from raw samples when comparing.
+## Comparison and verification
 
-The deterministic, independent-sample percentile bootstrap resamples each side
-with replacement, calculates the ratio of medians, and takes the central 95%
-interval (10,000 resamples by default). A timing is `faster` only if the whole
-interval is below `1 - margin`; it is `slower` only if the whole interval is above
-`1 + margin`. Size uses `smaller`/`larger`. The default margin is 0.02 (2%).
-`no change` means the data do not establish a change beyond that margin; it is
-not evidence of equivalence. Minimum sample count is three on each side;
-smaller sets say `insufficient samples`, without a confidence interval.
+Raw samples retain count, median, unscaled MAD and minimum. Comparison recomputes
+summaries, uses a deterministic independent-sample percentile bootstrap (10,000
+resamples, 95% interval), and requires the entire candidate/baseline ratio
+interval to cross the 2% practical margin. Smaller is better. No blended score,
+outlier removal, or multiple-comparison correction is applied. At least three
+samples on each side are required. `no change` is inconclusive, not equivalence.
 
-```sh
-npm run bench:compare -- BASE.json NEW.json --margin=0.03 --confidence=0.99 --resamples=20000 --seed=17
-# Build comparisons need repeated builds in both input runs:
-npm run bench:compare -- BASE.json NEW.json --include-build
-```
+Exit 0 means no significant target regression; 1 means a regression; 2 means
+incompatible, failed, malformed or insufficient evidence. Compiler/evaluator
+latency, runtime and size are separate targets. Builds are informational unless
+`--include-build` is supplied. `--margin`, `--confidence`, `--resamples` and
+`--seed` adjust the comparison. Changed machine/tools, harness, workload sources,
+oracles, profile, budgets, coverage or timing protocol require a fresh baseline.
+Compiler source and revision may differ. Repetition counts may differ.
 
-Exit 0 means no significant target regression; it does **not** promise a win.
-Exit 1 means at least one target regressed. Exit 2 means failed/malformed or
-incompatible evidence, or insufficient target samples. Build intervals are
-informational unless `--include-build` is used. An increased code size can fail
-the default comparison even when latency improves: inspect the separate rows
-and explicitly justify any such tradeoff outside the automatic gate.
+`bench:verify` retains the original unit tests and two-lane enum smoke, adds
+manifest/classification/lifecycle/batch tests, then runs the complete hillclimb
+inventory at one sample. Four seed-type-correct semantic mutants (wrong parity
+base, ignored cell, wrong match arm and omitted flip) must compile in both lanes
+and be killed by unchanged runtime expectations. Its own tracked receipt is
+[receipts/verification.json](receipts/verification.json). The compiler gate runner
+is deliberately unchanged under bench-2's ownership instruction; the coordinator
+must register this command if it should run through `npm run gates`.
 
-Comparisons require matching CPU/OS/tool fingerprints, benchmark code, suite,
-program hashes, entries/arguments, expected results and timing settings.
-Compiler source hashes and Git revisions may differ: those identify the
-candidate. Repetition counts may differ. No option silently overrides these
-compatibility checks; changing a benchmark requires a fresh baseline with the
-same harness on both revisions.
+Offline style preflight covers each generated Bend program separately. Its
+receipts are under `bench/receipts/preflight/`; no laws or production Bend files
+were added. Preflight is structural evidence only; live semantic/style review
+and qualification remain the coordinator's responsibility.
 
-## Hill-climbing an optimization pass
+## Historical first-wave measurement (f324221)
 
-1. Choose the suite, specific target metric, practical margin and independent
-   compiler acceptance gates before changing the compiler. Keep fixtures and
-   literal expectations fixed.
-2. In the coordinator's existing `main` checkout, with this same benchmark
-   version available, record `npm run bench:baseline -- --suite=scaling
-   --repeat=15 --name=main-BEFORE`. Record the result's absolute path and source
-   commit. Use an otherwise idle machine on power with stable thermal conditions.
-3. In the optimization branch's own checkout, run the independent deterministic
-   compiler gates, then `npm run bench -- --suite=scaling --repeat=15
-   --out=.local/bench/results/candidate.json` with matching settings.
-4. Compare the absolute baseline/candidate paths. Accept only with correctness,
-   a significant win in the preselected target, and no unexplained significant
-   regression in the other rows. A faster build alone is not the default goal.
-5. Repeat promising results in separate sessions, alternating baseline and
-   candidate run order. Confirm on held-out programs, then retain the accepted
-   commit, raw results and comparison settings as the next baseline. The CLI
-   records evidence; it does not switch branches, merge or accept changes.
+The following example belongs to the original fixed-count enum harness. It is
+retained as historical evidence; version 2 needs fresh baselines.
 
-Noise is not removed from samples. Background agents/builds, scheduler placement
-on heterogeneous cores, power policy, filesystem caching, temperature, Bun/Node
-JIT tiering and GC can dominate small effects. Warm batches within one process
-are correlated, so their bootstrap intervals describe the observed session,
-not all future machines or runs. A 3-sample smoke suite is a wiring check; use
-more samples and independent runs for decisions. Per-row intervals have no
-multiple-comparison correction. Preselect a target and confirm it on fresh
-runs instead of selecting whichever of many rows happens to win. Seed builds
-include cache/dependency effects and default to just one observation.
-
-## Measured example
 
 Actual runs on **2026-09-27**, core at 23:17:00–23:17:09 UTC and scaling at
 23:17:24–23:17:55 UTC. Machine fingerprint: **Apple M5 Max, 18 logical CPUs,

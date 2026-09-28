@@ -19,3 +19,5 @@ const comparison = compareResults(result, result, { resamples: 200 });
 assert.equal(comparison.regression, false);
 assert.equal(comparison.insufficient, false);
 console.log('Smoke passed: both compiler lanes, validated artifacts, warm repeated calls, JSON round trip and comparison.');
+
+await import('./campaign-smoke.mjs');

@@ -4,6 +4,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { outcome } from './outcome.mjs';
 
 export const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 export const LOCAL = path.join(ROOT, '.local/bench');
@@ -11,21 +12,27 @@ export const SEED = path.join(ROOT, '.toolchain/bend-2.0.29-574b6d3/bend2/main.t
 // The same seed entry as scripts/bend-reference; Bun's automatic dotenv loading
 // and the seed's daily network version check are disabled in this harness.
 export const SEED_COMMAND = ['bun', '--no-env-file', SEED];
-export const childEnv = { ...process.env, BEND_NO_TELEMETRY: '1', NODE_OPTIONS: '', CC: process.env.CC || 'clang' };
+export const childEnv = { ...process.env, BEND_NO_TELEMETRY: '1', BEND_HUB: 'offline://disabled', NODE_OPTIONS: '', CC: process.env.CC || 'clang' };
 export const hash = data => createHash('sha256').update(data).digest('hex');
 export const fileHash = file => hash(readFileSync(file));
 
-export function run(argv, { timeout = 120000 } = {}) {
+export function observe(argv, { timeout = 120000 } = {}) {
   const start = process.hrtime.bigint();
   const result = spawnSync(argv[0], argv.slice(1).map(String), {
     cwd: ROOT, env: childEnv, encoding: 'utf8', timeout, maxBuffer: 4 * 1024 * 1024,
   });
   const ms = Number(process.hrtime.bigint() - start) / 1e6;
-  if (result.error || result.status !== 0) {
-    throw new Error(`${argv.join(' ')}: ${result.error?.message || `exit ${result.status}, signal ${result.signal}`}` +
-      `\n${result.stderr || result.stdout || ''}`);
+  return { argv: argv.map(String), ms, stdout: (result.stdout ?? '').trim(), stderr: (result.stderr ?? '').trim(),
+    exit: result.status, signal: result.signal, error: result.error?.code ?? null };
+}
+
+export function run(argv, options) {
+  const result = observe(argv, options);
+  if (result.error || result.exit !== 0) {
+    const error = new Error(`${argv.join(' ')}: ${result.error || `exit ${result.exit}, signal ${result.signal}`}\n${result.stderr || result.stdout}`);
+    error.outcome = outcome(result); throw error;
   }
-  return { argv: argv.map(String), ms, stdout: result.stdout.trim(), stderr: result.stderr.trim() };
+  return result;
 }
 
 export function hashes(directory, accept) {
@@ -34,7 +41,8 @@ export function hashes(directory, accept) {
 }
 
 export function sourceHashes() {
-  return hashes('src', name => !name.includes('/') && name.endsWith('.bend'));
+  return { ...hashes('src', name => !name.includes('/') && name.endsWith('.bend')),
+    'tests/compiler-fields-wasm/compile.bend': fileHash(path.join(ROOT, 'tests/compiler-fields-wasm/compile.bend')) };
 }
 
 export function harnessHashes() {

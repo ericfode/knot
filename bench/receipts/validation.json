@@ -1,0 +1,272 @@
+{
+  "status": "passed",
+  "bench_verify": {
+    "unit_tests": 53,
+    "enum_smoke_lanes": 2,
+    "fixture_programs": 189,
+    "generators": 12,
+    "measured_programs": 31,
+    "runtime_batches": 38,
+    "mutants": 4,
+    "mutant_lanes": 2
+  },
+  "gates_verify": {
+    "tests": 18,
+    "status": "passed"
+  },
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "frontend",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "checker",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "structural",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "exit_code": 0,
+      "name": "fields",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 64
+      },
+      "exit_code": 0,
+      "name": "wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "wasm-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "fields-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "structural-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "owned-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "exit_code": 0,
+      "name": "flat-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "exit_code": 0,
+      "name": "recursion",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "fields-wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "counts": {
+        "classes": 40,
+        "declarations": 425,
+        "files": 30
+      },
+      "exit_code": 0,
+      "name": "census",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "counts": {
+        "law_rules": 8,
+        "tests": 127
+      },
+      "exit_code": 0,
+      "name": "lint:verify",
+      "status": "passed"
+    }
+  ],
+  "receipt_drift": {
+    "identical": 63,
+    "semantic": 0,
+    "volatile-only": 17
+  },
+  "runner_summary_sha256": "b40e568d6e2a25ec2587e6f56f0081524e2370069bfac83c1e3368275406e855",
+  "runner_snapshot_sha256": "dee237e1f7b2c84bc0a2714475d8242c6a801d37431f356319d4d3a628ff14d9",
+  "runner_total_seconds": 369.329453,
+  "toolchain_selection": {
+    "PATH_prefix": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "SDKROOT": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+    "BEND_NO_TELEMETRY": "1",
+    "jobs": 1
+  },
+  "completion_records": {
+    "frontend": "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four boundary laws, six classification laws and four semantic mutants; 12 classification fixtures in two lanes, 7 classification mutants, 72 downstream rejection observations",
+    "recursion": "Recursion gate passed: 19 seed fixtures, 114 native/Bun phase observations, 4 fuel probes, 3 semantic mutants",
+    "fields-wasm": "Fields Wasm gate passed: 8 fixtures, 32 seed calls, 64 evaluator and 64 Node observations, 50 frozen enum-byte checks, 30 boundary probes, 4 type-correct mutants killed in both lanes; 5 new checked laws. /Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/gates/run-leoglca5/worktree/tests/compiler-fields-wasm/receipts/fields-wasm.json"
+  },
+  "earlier_runs": [
+    {
+      "jobs": 4,
+      "passed": 12,
+      "failed": {
+        "frontend": "seed evaluator build exceeded unchanged 30-second subprocess budget",
+        "fields-wasm": "seed reported no clang"
+      }
+    },
+    {
+      "jobs": 1,
+      "passed": 13,
+      "failed": {
+        "frontend": "seed evaluator build exceeded unchanged 30-second subprocess budget"
+      }
+    }
+  ]
+}

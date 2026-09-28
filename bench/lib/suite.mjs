@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { generate } from '../generate.mjs';
 import { ROOT, fileHash } from './system.mjs';
+import { fixtureCases } from './fixtures.mjs';
 
 export function positiveInteger(value, name, max = 100000000) {
   const number = Number(value);
@@ -13,6 +14,7 @@ export function loadSuite(name, overrides = {}) {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(name)) throw new Error('invalid suite name');
   const filename = `bench/suites/${name}.json`;
   const suite = JSON.parse(readFileSync(path.join(ROOT, filename), 'utf8'));
+  if (suite.schemaVersion === 2) return campaignSuite(suite, name, filename, overrides);
   if (suite.schemaVersion !== 1 || suite.name !== name || !Array.isArray(suite.cases) || !suite.cases.length) {
     throw new Error('invalid suite: expected schemaVersion 1, matching name, and nonempty cases');
   }
@@ -49,4 +51,27 @@ export function loadSuite(name, overrides = {}) {
       warmup: positiveInteger(overrides.warmup ?? suite.runtime.warmup, 'warmup'),
       iterations: positiveInteger(overrides.iterations ?? suite.runtime.iterations, 'iterations'),
     } };
+}
+
+function campaignSuite(suite, name, filename, overrides) {
+  if (suite.name !== name || !Array.isArray(suite.fixtures)) throw new Error('invalid campaign suite');
+  const generated = suite.generated ? generate('runtime').map(p => ({
+    ...p, source: undefined, seedValid: true, runtimeEligible: true,
+    oracle: { kind: 'literal', manifest: 'bench/expectations.json', manifestSha256: fileHash(path.join(ROOT, 'bench/expectations.json')),
+      constructor: p.constructor, seed: true, fuel: 1048576 },
+  })) : [];
+  const cases = [...suite.fixtures.flatMap(fixtureCases), ...generated].map(c => ({
+    ...c, repeat: positiveInteger(overrides.repeat ?? suite.repeat, 'repeat', 1000),
+    sourceSha256: fileHash(path.join(ROOT, c.program)), compileBudgets: c.compileBudgets ?? [],
+  }));
+  if (!cases.length || new Set(cases.map(c => c.name)).size !== cases.length) throw new Error('empty or duplicate campaign cases');
+  for (const c of cases) {
+    if (c.runtimeEligible && (!Number.isInteger(c.expected) || c.expected < 0 || c.expected > 255 ||
+        c.args.some(x => !Number.isInteger(x) || x < 0 || x > 255))) throw new Error(`${c.name}: invalid frozen enum call`);
+  }
+  const minSampleMs = Number(suite.runtime.minSampleMs);
+  if (!Number.isFinite(minSampleMs) || minSampleMs < 10 || minSampleMs > 10000) throw new Error('campaign batches must last at least 10 ms');
+  return { name, path: filename, sha256: fileHash(path.join(ROOT, filename)), cases, selfCost: true,
+    runtime: { warmup: positiveInteger(overrides.warmup ?? suite.runtime.warmup, 'warmup'),
+      iterations: positiveInteger(overrides.iterations ?? suite.runtime.iterations, 'iterations'), minSampleMs } };
 }
