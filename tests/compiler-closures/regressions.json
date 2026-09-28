@@ -1,0 +1,388 @@
+{
+  "suite": "compiler-closures-regressions",
+  "basis": "Pinned seed observations recorded before corrective implementation. These independent regression expectations do not change the original 42-fixture suite. Constructor tags follow literal Flag declaration order.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "seed_files": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "apply-scrutinee",
+      "file": "regressions/apply-scrutinee.bend",
+      "source_sha256": "201de64ae001ed507f90d1d30a57638618bfcac6fc6da922eaea487e5f96ab17",
+      "intent": "A chained closure call is a computed scrutinee and must receive the ordinary Invalid classification, not an internal failure.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/apply-scrutinee.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a parameter or field scrutinee (a match cannot scrutinize a computed value: give it its own def)\nLocation:\n 8 | def main() -> Flag:\n 9>|   match gate(On{})(Off{}):\n   |         ^^^^^^^^^^^^^^^^^\n10 |     case On{}: On{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/apply-scrutinee.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a parameter or field scrutinee (a match cannot scrutinize a computed value: give it its own def)\nLocation:\n 8 | def main() -> Flag:\n 9>|   match gate(On{})(Off{}):\n   |         ^^^^^^^^^^^^^^^^^\n10 |     case On{}: On{}\n"
+        }
+      },
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tcomputed-scrutinee\t"
+      },
+      "calls": []
+    },
+    {
+      "name": "underscore-body",
+      "file": "regressions/underscore-body.bend",
+      "source_sha256": "9055b947c29dc1b71bc40e664f2670a557c4956a660e181f464f4b028a1143cd",
+      "intent": "A discarded lambda binder does not define an underscore occurrence; the occurrence is a free name.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/underscore-body.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : _^\nContext:\n- _ : Flag\nLocation: main\n 8 | def main() -> Flag:\n 9>|   apply(_ => _, On{})\n   |              ^\n10 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/underscore-body.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : _^\nContext:\n- _ : Flag\nLocation: main\n 8 | def main() -> Flag:\n 9>|   apply(_ => _, On{})\n   |              ^\n10 | \n"
+        }
+      },
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tfree-name\t"
+      },
+      "calls": []
+    },
+    {
+      "name": "discard-lambda",
+      "file": "regressions/discard-lambda.bend",
+      "source_sha256": "94b61d65e63785d0915fb6d2ee912200fce9c8c45f60c5ebde9031290c85e4e2",
+      "intent": "An unused underscore lambda binder remains accepted; its body returns On independently of the supplied Off.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/discard-lambda.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/discard-lambda.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      },
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "erased-only-capture",
+      "file": "regressions/erased-only-capture.bend",
+      "source_sha256": "9c5fa15b59bcb18fe9d2ea985f3dadb72ae8f853c1fcb592046862f11cf42d2b",
+      "intent": "An affine value used only in an erased lambda-body position remains available for a later live call argument.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/erased-only-capture.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/erased-only-capture.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      },
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "nested-erased-capture",
+      "file": "regressions/nested-erased-capture.bend",
+      "source_sha256": "e2f4d50493355d429eb94545524f370854de935ad7bf80cf9f3c52762d60df37",
+      "intent": "An erased capture crosses two lambda environments without creating a live environment slot.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/nested-erased-capture.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/nested-erased-capture.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      },
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "reconstructed-parent",
+      "file": "regressions/reconstructed-parent.bend",
+      "source_sha256": "9e17f61063308550da7376ce450f1b3a3b55052172ea4e48da04142ebab200ed",
+      "intent": "A lambda captures the live field needed to reconstruct a matched parent and passes that parent to a named function.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/reconstructed-parent.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/reconstructed-parent.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      },
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "partial-erased-prefix",
+      "file": "regressions/partial-erased-prefix.bend",
+      "source_sha256": "d234ff4e31545c065092bae747538c1dca4e7b8ac87c02a9dfb7929162069e46",
+      "intent": "An already supplied erased argument occupies no runtime capture slot, while the later live argument may reuse its source value.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/partial-erased-prefix.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/partial-erased-prefix.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      },
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "partial-reusable",
+      "file": "regressions/partial-reusable.bend",
+      "source_sha256": "e48ec1a937d65d4a070f92ff4337b86c14e97239b62eeee2207d709a0cfea308",
+      "intent": "Partial application consumes a source argument once and retains the reusable quantity of the supplied callee parameter.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/partial-reusable.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/partial-reusable.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      },
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "empty-apply",
+      "file": "regressions/empty-apply.bend",
+      "source_sha256": "c1957b09466f07cbe728e1869731461f80157b4b3f96f668d9d3a78f97295b07",
+      "intent": "An empty argument list on a closure-valued variable preserves the function value and consumes it exactly once.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/empty-apply.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/empty-apply.bend"
+          ],
+          "exit": 0,
+          "stdout": "Off{}\n",
+          "stderr": ""
+        }
+      },
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        }
+      ]
+    }
+  ]
+}
