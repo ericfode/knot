@@ -1,0 +1,985 @@
+{
+  "schema": "knot-modules-review-round6-1",
+  "purpose": "Seed-derived review-round-6 regressions frozen before repairs. No existing oracle is changed.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "implementation_at_freeze": {
+    "src/qualify.bend": "465241928d9cd9966c8df74b13ee57f17f5d8e1d9faff61c0cb25f17e1ed0e35",
+    "src/imports.bend": "b8d5b15dd60e64482769e8952c5a22331e421a60b92fe325864f9c1725305d3e",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/patterns.bend": "f8265042a647dda5dbfa0217d21a7f3ff732c3a69b870203a4b64739176b8907"
+  },
+  "findings": [
+    "own",
+    "hub",
+    "dotted"
+  ],
+  "sources": {
+    "dotted/arm.bend": "fa53f90921f92b3a06d0153ae9a661aadc4267f91fe72eee1df1500bbc357174",
+    "dotted/erased-let.bend": "a864ac8f8899dfdc822ab6fc87ae24ed2de3faaee474cc567abaaa6fb90ba127",
+    "dotted/field.bend": "4576333ce2eb93a2cca99e72b41eeeb5d189fe1c60d2666f45f622ad67bce304",
+    "dotted/let.bend": "b3495a9dd633c505ef636428a40aba1cf41fa72e6e37a22c57853bbea6a19538",
+    "dotted/module/lib/m.bend": "6728165d728b38f2a6720b89ba929a31e47cd45829927bcc0aeaa2c6a46d5090",
+    "dotted/module/main.bend": "1efe6c4fa643798fd2a4b56a7fd35d4205a9e0bb540a01a28d434edf7d8b1f5e",
+    "dotted/parameter.bend": "ea623f191df8b6fdf4288b01e0cb6750b8d6b2f81001a37a320b33c13aa97964",
+    "dotted/rebound-field.bend": "c5a85788fced34e421927d0b0976d73fc1a4592ba3d35446a008cfc25cc0621d",
+    "dotted/rebound-let.bend": "4681b8fbb456f5ac40a3b45b9cfe1b2bcd31af62b9b8ee359c4ac338306d994f",
+    "dotted/rebound-typed-let.bend": "2037044e87286c515be4cc90a851b2d69dcfa6207d962f4da251f448908cce0c",
+    "dotted/typed-let.bend": "70bee9c87b6f6c693199de22b47604c1cd19c5181fc2a6f2c3fae3a6c95c1e02",
+    "hub/bare-empty.bend": "c4ef6de898ddce42797f9340adfc78da6bed494bd67594cdfa6c1c41f4e0db00",
+    "hub/inner-empty.bend": "976b6e8647a83be0c15be10534aedcc5de6005320025c43cfc233fa36932bfa8",
+    "hub/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "hub/lib/mid.bend": "9f38a2559000a1a4403a158d12e3049b5157d5f5dd4e3de727d4f74c62f8eb86",
+    "hub/parent-empty.bend": "7d724e180309aaf1c84773e689b489b48d4e5898648cf7eba9991516078eef29",
+    "hub/rooted-climb.bend": "bbf0099a130e6499c5e9f24301b487d573a3b49f6297fe10625f7e3144fd1513",
+    "hub/rooted-diamond.bend": "56a32b734d619f7b1abe802f92a8aae1b4fc5e88de484ec08aea86fbabf9f007",
+    "hub/rooted-hash.bend": "d9a71c3afb0fc1aeb399c506345d45ba9e222c888c9b3d3b69c6b3c5f3543db1",
+    "hub/rooted-nested.bend": "fd0408759be208fa86f7940cb95ef2da288a6b8450b5b95aea58b659a01556eb",
+    "hub/rooted-transitive.bend": "e8010207480a861e4d8490a8f94ee7732d1aaab4fd97a3b4b1b2628456480f39",
+    "hub/rooted-twice.bend": "6e279794711b227b13c6dc63b28e0411ff0e86eadba7743c6b44a5d02077f57e",
+    "hub/rooted.bend": "bd32b66a127d890d5b0955572b2de9b954c91811318f342fd1ab0a8dbad1778a",
+    "hub/x.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "own/constructor/m.bend": "477a622e81b2edf7d34438370762323cc505f52e31706698aec6081aec2cca5c",
+    "own/constructor/main.bend": "60ff1e58d5c465acd03aab117067ab0a02dc4f570f0285abb67b21e03226c0b8",
+    "own/entry-exact.bend": "068453ecf079d030bfad0fad33f45732c7e17e9d33e9cf58190e7ca6737f796a",
+    "own/exact-constructor/m.bend": "3ab8e92a1f6e7f49ba2f0785c571f97c60e676d2a3e9930f6bfba4bb1ac0ec1f",
+    "own/exact-constructor/main.bend": "294d92423fceee178e28dddee1264554431ffa376bec1da1922cdd75e6c9c264",
+    "own/exact-function/m.bend": "ed3dfc46f0964e5d92ebc3d554b73ce9a284a08dd7055844c9520a1ff4eea0b3",
+    "own/exact-function/main.bend": "60ff1e58d5c465acd03aab117067ab0a02dc4f570f0285abb67b21e03226c0b8",
+    "own/function/m.bend": "c31224c8652d51684535416555f570b318ad463e0add7b766aa0708d7263d939",
+    "own/function/main.bend": "922514cf179de6489e025c34fdf70ead4a25999554c0645b55a162735194a235",
+    "own/in-type/m.bend": "8183299d0f03ab9ea31dbd4ac7d0159f7bab57394d320a9a452d4955f66069f5",
+    "own/in-type/main.bend": "a8927a4412c3eb440e09c6115441474ddcb9eb9fc8b743ec94e8cca877d87f90",
+    "own/reversed/m.bend": "911c1ac6f9d579128ce8d940cb69f442e860f499eea146be9815203029289b78",
+    "own/reversed/main.bend": "922514cf179de6489e025c34fdf70ead4a25999554c0645b55a162735194a235",
+    "own/type/m.bend": "22ff32f99245c934b17e08d4fbe19ad0abd186e2c29ccf99a7066b3241a69900",
+    "own/type/main.bend": "50004befb065a0fd8a9310e2de5cb0e360d8cd4e11bc846fb2acf95e685e05c3"
+  },
+  "fixtures": [
+    {
+      "name": "own-bare-after-qualified",
+      "finding": "own",
+      "file": "own/function/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "own/function/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/own/function/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: m.f)\n- observed : 'm.f'\nLocation:\n7 | \n8>| def m.f(x: Flag) -> Flag:\n  |     ^^^\n9 |   match x:\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "own-constructor-across-types",
+      "finding": "own",
+      "file": "own/constructor/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "own/constructor/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/own/constructor/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: m.On)\n- observed : 'm.On'\nLocation:\n5 | type Mark is Type:\n6>|   m.On{}\n  |   ^^^^\n7 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "own-constructor-in-type",
+      "finding": "own",
+      "file": "own/in-type/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "own/in-type/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/own/in-type/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: m.On)\n- observed : 'm.On'\nLocation:\n3 |   On{}\n4>|   m.On{}\n  |   ^^^^\n5 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "own-function-after-type",
+      "finding": "own",
+      "file": "own/type/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "own/type/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/own/type/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: m.Flag)\n- observed : 'm.Flag'\nLocation:\n4 | \n5>| def m.Flag(x: Flag) -> Flag:\n  |     ^^^^^^\n6 |   x\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "own-qualified-then-bare",
+      "finding": "own",
+      "file": "own/reversed/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "own/reversed/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/own/reversed/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "own/reversed/main.bend",
+        "own/reversed/m.bend"
+      ]
+    },
+    {
+      "name": "own-exact-function",
+      "finding": "own",
+      "file": "own/exact-function/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "own/exact-function/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/own/exact-function/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: f)\n- observed : 'f'\nLocation:\n7 | \n8>| def f(x: Flag) -> Flag:\n  |     ^\n9 |   x\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "own-exact-constructor",
+      "finding": "own",
+      "file": "own/exact-constructor/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "own/exact-constructor/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/own/exact-constructor/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: On)\n- observed : 'On'\nLocation:\n5 | type Mark is Type:\n6>|   On{}\n  |   ^^\n7 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "entry-exact-function",
+      "finding": "own",
+      "file": "own/entry-exact.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "own/entry-exact.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/own/entry-exact.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: f)\n- observed : 'f'\nLocation:\n7 | \n8>| def f(x: Light) -> Light:\n  |     ^\n9 |   x\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tcheck\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "rooted-local-import",
+      "finding": "hub",
+      "file": "hub/rooted.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/rooted.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/rooted.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "hub/rooted.bend",
+        "hub/x.bend"
+      ]
+    },
+    {
+      "name": "rooted-nested-import",
+      "finding": "hub",
+      "file": "hub/rooted-nested.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/rooted-nested.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/rooted-nested.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "hub/rooted-nested.bend",
+        "hub/lib/flag.bend"
+      ]
+    },
+    {
+      "name": "rooted-hash-import",
+      "finding": "hub",
+      "file": "hub/rooted-hash.bend",
+      "modules": [
+        "0x4454ff15e96d17231b8b4ebd9030ac38/board.bend",
+        "0x4454ff15e96d17231b8b4ebd9030ac38/mark.bend"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/rooted-hash.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/rooted-hash.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      }
+    },
+    {
+      "name": "rooted-transitive-import",
+      "finding": "hub",
+      "file": "hub/rooted-transitive.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/rooted-transitive.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/rooted-transitive.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "hub/rooted-transitive.bend",
+        "hub/lib/mid.bend",
+        "hub/lib/flag.bend"
+      ]
+    },
+    {
+      "name": "rooted-diamond",
+      "finding": "hub",
+      "file": "hub/rooted-diamond.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/rooted-diamond.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/rooted-diamond.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "hub/rooted-diamond.bend",
+        "hub/x.bend"
+      ]
+    },
+    {
+      "name": "inner-empty-segment",
+      "finding": "hub",
+      "file": "hub/inner-empty.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/inner-empty.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/inner-empty.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : './lib//flag.bend'\nLocation:\n1>| import ./lib//flag.bend as Y\n  |        ^\n2 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-path",
+        "diagnostic_prefix": "Invalid\tload\timport-path\t"
+      }
+    },
+    {
+      "name": "parent-empty-segment",
+      "finding": "hub",
+      "file": "hub/parent-empty.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/parent-empty.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/parent-empty.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : '..//lib/flag.bend'\nLocation:\n1>| import ..//lib/flag.bend as Y\n  |        ^\n2 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-path",
+        "diagnostic_prefix": "Invalid\tload\timport-path\t"
+      }
+    },
+    {
+      "name": "rooted-climb",
+      "finding": "hub",
+      "file": "hub/rooted-climb.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/rooted-climb.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/rooted-climb.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : './/../hub/x.bend'\nLocation:\n1>| import .//../hub/x.bend as Y\n  |        ^\n2 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-path",
+        "diagnostic_prefix": "Invalid\tload\timport-path\t"
+      }
+    },
+    {
+      "name": "rooted-twice",
+      "finding": "hub",
+      "file": "hub/rooted-twice.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/rooted-twice.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/rooted-twice.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : './//x.bend'\nLocation:\n1>| import .///x.bend as Y\n  |        ^\n2 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-path",
+        "diagnostic_prefix": "Invalid\tload\timport-path\t"
+      }
+    },
+    {
+      "name": "bare-empty-segment",
+      "finding": "hub",
+      "file": "hub/bare-empty.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hub/bare-empty.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/hub/bare-empty.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : 'lib//flag.bend'\nLocation:\n1>| import lib//flag.bend as Y\n  |        ^\n2 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-path",
+        "diagnostic_prefix": "Invalid\tload\timport-path\t"
+      }
+    },
+    {
+      "name": "dotted-let-binder",
+      "finding": "dotted",
+      "file": "dotted/let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/let.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n5 | def f(x: Light) -> Light:\n6>|   a.b = x\n  |   ^^^\n7 |   a.b\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "dotted-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tdotted-binder\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "dotted-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tdotted-binder\t"
+      }
+    },
+    {
+      "name": "dotted-typed-let-binder",
+      "finding": "dotted",
+      "file": "dotted/typed-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/typed-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/typed-let.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n5 | def f(x: Light) -> Light:\n6>|   a.b : Light = x\n  |   ^^^\n7 |   a.b\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "dotted-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tdotted-binder\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "dotted-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tdotted-binder\t"
+      }
+    },
+    {
+      "name": "dotted-field-binder",
+      "finding": "dotted",
+      "file": "dotted/field.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/field.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/field.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n 9 |   match p:\n10>|     case Box{a.b}: a.b\n   |              ^^^\n11 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "dotted-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tdotted-binder\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "dotted-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tdotted-binder\t"
+      }
+    },
+    {
+      "name": "dotted-module-let-binder",
+      "finding": "dotted",
+      "file": "dotted/module/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/module/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/module/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : lib/m.a.b\nLocation:\n10 | def g(x: Flag) -> Flag:\n11>|   a.b = x\n   |   ^^^\n12 |   a.b\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "dotted-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tdotted-binder\t"
+      }
+    },
+    {
+      "name": "dotted-parameter",
+      "finding": "dotted",
+      "file": "dotted/parameter.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/parameter.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/parameter.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "dotted/parameter.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "dotted-rebound-let",
+      "finding": "dotted",
+      "file": "dotted/rebound-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/rebound-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/rebound-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "dotted/rebound-let.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "dotted-rebound-typed-let",
+      "finding": "dotted",
+      "file": "dotted/rebound-typed-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/rebound-typed-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/rebound-typed-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "dotted/rebound-typed-let.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "dotted-rebound-field",
+      "finding": "dotted",
+      "file": "dotted/rebound-field.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/rebound-field.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/rebound-field.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "fields"
+        ]
+      },
+      "loaded_files": [
+        "dotted/rebound-field.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "dotted-erased-let",
+      "finding": "dotted",
+      "file": "dotted/erased-let.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/erased-let.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/erased-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "dotted/erased-let.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "dotted-arm-binder",
+      "finding": "dotted",
+      "file": "dotted/arm.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "dotted/arm.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round6/dotted/arm.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n6 |   match x:\n7>|     case a.b: a.b\n  |          ^^^\n8 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "variable-pattern",
+        "diagnostic_prefix": "Unsupported\tcheck\tvariable-pattern\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "variable-pattern",
+        "diagnostic_prefix": "Unsupported\tcheck\tvariable-pattern\t"
+      }
+    }
+  ]
+}
