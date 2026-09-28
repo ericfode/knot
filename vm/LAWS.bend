@@ -1,5 +1,10 @@
 import Base
-import ./model.bend as M
+import ./model/word.bend as W
+import ./model/decode.bend as D
+import ./model/encode.bend as E
+import ./model/memory.bend as H
+import ./model/machine.bend as M
+import ./model/audit.bend as A
 
 # Laws of the knot-vm-1 model: bounded, computed equations on committed golden
 # images (vm/check-model.py requires each fixture to equal its .kimg words) and
@@ -53,23 +58,23 @@ def foreign_print() -> List<&2,U32>:
    3,4,1953259848,4,8,1882083145,1953393010,3,4,1852399981]
 
 def none12() -> List<&2,U32>:
-  +o = M.none()
+  +o = W.none()
   [o,o,o,o,o,o,o,o,o,o,o,o]
 
 # value-on's plan, written by hand: Flag{Off,On} and `main` returning On.
-def flag_plan() -> M.Plan:
-  M.Plan{0,[M.Algebraic{M.text("Flag"),[M.Constructor{M.text("Off"),[]},M.Constructor{M.text("On"),[]}]}],
-    [M.Function{M.text("main"),[],0,0,M.Value{0,1}}],none12()}
+def flag_plan() -> W.Plan:
+  W.Plan{0,[W.Algebraic{M.text("Flag"),[W.Constructor{M.text("Off"),[]},W.Constructor{M.text("On"),[]}]}],
+    [W.Function{M.text("main"),[],0,0,W.Value{0,1}}],none12()}
 
-def reencoded(result: Result<String,M.Plan>) -> List<&2,U32>:
+def reencoded(result: Result<String,W.Plan>) -> List<&2,U32>:
   match result:
     case Fail{reason}: Nil{}
-    case Done{plan}: M.encode(plan)
+    case Done{plan}: E.encode(plan)
 
 def canonical(images: List<&2,List<&2,U32>>) -> Bool:
   match images:
     case Nil{}: True{}
-    case Con{+w,rest}: Bool.and(M.same(reencoded(M.decode(w)),w),canonical(rest))
+    case Con{+w,rest}: Bool.and(W.same(reencoded(D.decode(w)),w),canonical(rest))
 
 def fixtures() -> List<&2,List<&2,U32>>:
   [value_on(),closure_captures(),recursion_map(),string_append_mortal(),foreign_print()]
@@ -79,16 +84,16 @@ def fixtures() -> List<&2,List<&2,U32>>:
 type Summary is Data:
   Summary{outcome: M.Outcome, balanced: Bool, live: U32, printed: List<&2,List<&2,U32>>}
 
-def printed(run: M.Run) -> List<&2,List<&2,U32>>:
+def printed(run: A.Run) -> List<&2,List<&2,U32>>:
   match run:
-    case M.Ran{code,M.Machine{control,stack,heap,meter,out},ok}: List.reverse(&2,List<&2,U32>,out)
+    case A.Ran{code,M.Machine{control,stack,heap,meter,out},ok}: List.reverse(&2,List<&2,U32>,out)
     case _: Nil{}
 
-def summary(+run: M.Run) -> Summary:
-  Summary{M.outcome_of(run),M.balanced_run(run),M.leak_of(run),printed(run)}
+def summary(+run: A.Run) -> Summary:
+  Summary{A.outcome_of(run),A.balanced_run(run),A.leak_of(run),printed(run)}
 
 def ran(+words: List<&2,U32>) -> Summary:
-  summary(M.run_words(words,100000n,1000000))
+  summary(A.run_words(words,100000n,1000000))
 
 def described(+result: U32, +tag: U32, tree: String) -> Summary:
   Summary{M.Described{result,tag,M.text(tree)},True{},0,Nil{}}
@@ -96,13 +101,13 @@ def described(+result: U32, +tag: U32, tree: String) -> Summary:
 # ---------------------------------------------------------------- codec
 
 law words_round_trip:
-  {M.pack(M.unpack([0,1,255,256,2147483648,4294967295,1196247371])) == [0,1,255,256,2147483648,4294967295,1196247371] : List<&2,U32>}
+  {W.pack(W.unpack([0,1,255,256,2147483648,4294967295,1196247371])) == [0,1,255,256,2147483648,4294967295,1196247371] : List<&2,U32>}
 
 law plan_encodes_image:
-  {M.encode(flag_plan()) == value_on() : List<&2,U32>}
+  {E.encode(flag_plan()) == value_on() : List<&2,U32>}
 
 law image_decodes_plan:
-  {M.decode(value_on()) == Done{flag_plan()} : Result<String,M.Plan>}
+  {D.decode(value_on()) == Done{flag_plan()} : Result<String,W.Plan>}
 
 law images_canonical:
   {canonical(fixtures()) == True{} : Bool}
@@ -110,77 +115,77 @@ law images_canonical:
 # ---------------------------------------------------------------- validation
 
 law magic_refused:
-  {M.admit(M.replaced(value_on(),0,0)) == Fail{M.Refused{"image","magic"}} : Result<M.Stop,M.Plan>}
+  {E.admit(H.replaced(value_on(),0,0)) == Fail{W.Refused{"image","magic"}} : Result<W.Stop,W.Plan>}
 
 law opcode_refused:
-  {M.admit(M.replaced(value_on(),59,13)) == Fail{M.Refused{"image","node record"}} : Result<M.Stop,M.Plan>}
+  {E.admit(H.replaced(value_on(),59,13)) == Fail{W.Refused{"image","node record"}} : Result<W.Stop,W.Plan>}
 
 law tag_refused:
-  {M.admit(M.replaced(value_on(),61,2)) == Fail{M.Refused{"image","validator: main: value is not a nullary constructor"}} : Result<M.Stop,M.Plan>}
+  {E.admit(H.replaced(value_on(),61,2)) == Fail{W.Refused{"image","validator: main: value is not a nullary constructor"}} : Result<W.Stop,W.Plan>}
 
 law layout_refused:
-  {M.admit(M.replaced(value_on(),4,M.none())) == Fail{M.Refused{"image","noncanonical"}} : Result<M.Stop,M.Plan>}
+  {E.admit(H.replaced(value_on(),4,W.none())) == Fail{W.Refused{"image","noncanonical"}} : Result<W.Stop,W.Plan>}
 
 # Every single-word mutation of value-on's function, constant and node
 # sections (words 49-61) is refused or runs soundly.
 law mutations_sound:
-  {M.all_sound(M.mutations(13n,value_on(),49),100000n,1000000) == True{} : Bool}
+  {A.all_sound(A.mutations(13n,value_on(),49),100000n,1000000) == True{} : Bool}
 
 # ---------------------------------------------------------------- the machine
 
 law entry_needs_fuel:
-  for code: M.Code
+  for code: H.Code
   for f: U32
   for ops: List<&2,U32>
-  for stack: M.Stack
-  for heap: M.Heap
+  for stack: H.Stack
+  for heap: H.Heap
   for calls: U32
   for quantum: U32
   for out: List<&2,List<&2,U32>>
-  {M.entered(code,M.Callee{f},ops,stack,heap,M.Meter{0,calls,quantum},out) == Fail{M.Exhausted{1,"fuel"}} : Result<M.Stop,M.Machine>}
+  {M.entered(code,M.Callee{f},ops,stack,heap,M.Meter{0,calls,quantum},out) == Fail{W.Exhausted{1,"fuel"}} : Result<W.Stop,M.Machine>}
 
 law finished_is_final:
-  for code: M.Code
+  for code: H.Code
   for outcome: M.Outcome
-  for stack: M.Stack
-  for heap: M.Heap
+  for stack: H.Stack
+  for heap: H.Heap
   for meter: M.Meter
   for out: List<&2,List<&2,U32>>
-  {M.step(code,M.Machine{M.Finished{outcome},stack,heap,meter,out}) == Done{M.Machine{M.Finished{outcome},stack,heap,meter,out}} : Result<M.Stop,M.Machine>}
+  {M.step(code,M.Machine{M.Finished{outcome},stack,heap,meter,out}) == Done{M.Machine{M.Finished{outcome},stack,heap,meter,out}} : Result<W.Stop,M.Machine>}
 
 law tail_skips_scopes:
-  {M.tail([M.Scope{2},M.Scope{1},M.Call{0}]) == True{} : Bool}
+  {M.tail([H.Scope{2},H.Scope{1},H.Call{0}]) == True{} : Bool}
 
 law operands_are_not_tail:
-  {M.tail([M.Scope{1},M.Gather{0,2,Nil{}},M.Call{0}]) == False{} : Bool}
+  {M.tail([H.Scope{1},H.Gather{0,2,Nil{}},H.Call{0}]) == False{} : Bool}
 
 law nat_sum_bound:
-  for heap: M.Heap
-  {M.nat_sum(heap,4294967295,1) == Fail{M.Exhausted{2,"NatRange"}} : Result<M.Stop,M.Cell>}
+  for heap: H.Heap
+  {H.nat_sum(heap,4294967295,1) == Fail{W.Exhausted{2,"NatRange"}} : Result<W.Stop,H.Cell>}
 
 law nat_product_bound:
-  for heap: M.Heap
-  {M.nat_product(heap,65536,65536) == Fail{M.Exhausted{2,"NatRange"}} : Result<M.Stop,M.Cell>}
+  for heap: H.Heap
+  {H.nat_product(heap,65536,65536) == Fail{W.Exhausted{2,"NatRange"}} : Result<W.Stop,H.Cell>}
 
 law division_by_zero:
-  for code: M.Code
-  for heap: M.Heap
+  for code: H.Code
+  for heap: H.Heap
   for a: U32
   for b: U32
   for x: U32
-  {M.computed(3n,code,heap,a,b,x,0) == Done{M.Cell{heap,1}} : Result<M.Stop,M.Cell>}
+  {H.computed(3n,code,heap,a,b,x,0) == Done{H.Cell{heap,1}} : Result<W.Stop,H.Cell>}
 
 law remainder_by_zero:
-  for code: M.Code
-  for heap: M.Heap
+  for code: H.Code
+  for heap: H.Heap
   for a: U32
   for b: U32
   for x: U32
-  {M.computed(4n,code,heap,a,b,x,0) == M.word_of(heap,x) : Result<M.Stop,M.Cell>}
+  {H.computed(4n,code,heap,a,b,x,0) == H.word_of(heap,x) : Result<W.Stop,H.Cell>}
 
 law wide_shifts_vanish:
   for a: U32
-  {M.shifted(True{},a,32) == 0 : U32}
+  {H.shifted(True{},a,32) == 0 : U32}
 
 # ---------------------------------------------------------------- runs: answer, RC audit, zero leak
 

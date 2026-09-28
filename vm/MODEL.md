@@ -1,21 +1,28 @@
 # The Bend model of `knot-vm-1`
 
-`vm/model.bend` is the normative semantics of [SPEC.md](SPEC.md), written in
-the I-profile from the spec text alone (no WAT exists on this branch). One
-idea carries it: **the machine is a word store at SPEC addresses plus a few
+`vm/model/` is the normative semantics of [SPEC.md](SPEC.md), written in the
+I-profile from the spec text alone (no WAT exists on this branch). One idea
+carries it: **the machine is a word store at SPEC addresses plus a few
 registers, and every transition is a store update.** Cells, Activations and
 the constant pool live in one store keyed by word address; the image is a
 second, read-only store; frames are typed records whose word sizes match
 §6's `[value[n], node, aux, head]` layout.
 
-| Part | What it fixes |
+Seven sections, each importing only earlier ones, under the alias it is read by:
+
+| Section | What it fixes |
 |---|---|
-| word store | a most-significant-first trie; absent words read 0 |
-| codec | little-endian packing, strict UTF-8, the §2 decoder, the §2 encoder |
-| validator | §4 rules 1-5, refusing in `serializer.py`'s order and wording |
-| memory | §5 words and cells, power-of-two classes, LIFO free lists, bump allocation at the §5 heap base, uniform RC, the iterative release worklist bounded by the frame region, immortal constants, the terminal continuation |
-| machine | §6's Eval/Return/Enter table, tail entry, inspection, Case selection, §7 fuel and quantum, §8 Book describe and Program phases, §9 prims, IO.print Actions |
-| audit | `balanced` (rc equals owners among roots and edges; no word above an Activation's depth) and `leaked` (mortal cells still live) |
+| `word.bend` (`W`) | `none` and lazy choice, the word store (a most-significant-first trie; absent words read 0), little-endian packing, strict UTF-8, the plan, the stop type |
+| `decode.bend` (`D`) | the §2 decoder, refusing in `serializer.decode`'s order and wording |
+| `validate.bend` (`V`) | the registry tables and §4 rules 1-5, refusing in `serializer.validate`'s order and wording |
+| `encode.bend` (`E`) | the §2 encoder, and the loader: decoded, validated and canonical |
+| `memory.bend` (`H`) | §5 words and cells, power-of-two classes, LIFO free lists, bump allocation at the §5 heap base, uniform RC, the iterative release worklist bounded by the frame region, the loaded code, frames, §6 inspection, §9 prims |
+| `machine.bend` (`M`) | §6's Eval/Return/Enter table, tail entry, Case selection, §7 fuel and quantum, §8 describe, booting (immortal constants, the terminal continuation), the Book invocation walk and Program phases, IO.print Actions |
+| `audit.bend` (`A`) | `balanced` (rc equals owners among roots and edges; no word above an Activation's depth), `leaked` (mortal cells still live), and the law predicates |
+
+[perch-manifest.json](perch-manifest.json) gives each section, the entries and
+the laws a Perch composition group: the section in full, its collaborators as
+interfaces (`interfaces-v1`), each under the 48,000-byte composition bound.
 
 ## Commands
 
@@ -71,9 +78,16 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
 - A stopped machine keeps the control it could not advance, so the words of a
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
-  model's differential covers the 91 goldens and vm-spec's 17 admitted controls
-  (three plan, seven code-list and seven run controls), each against the
-  reference evaluation's outcome and call count (`vm/evaluate.py`).
+  model's differential covers the 91 goldens, their 28 frozen Book invocations,
+  vm-spec's 17 admitted controls (three plan, seven code-list and seven run
+  controls) and the model's own eight controls in
+  [model-controls/](model-controls/) (a tags-mode Case on Char, immediate and
+  Big, and key-mode Cases on U32 and Char at the key 0xffffffff), each against
+  the reference evaluation's outcome and call count (`vm/evaluate.py`) and,
+  for the model's own, the seed.
+- A Case arm that is absent or not a Branch or Default cannot be selected in
+  an admitted image; if it were, the machine stops as `InternalFailure vm case
+  arm` rather than reading a wrapped offset.
 - Deep lists recurse without a tail call (`pack`, `slice`); compiler-sized
   images are unmeasured. The checker's evaluator is slow: PROOF.bend takes
   about 100 s, most of it in the five audited runs.

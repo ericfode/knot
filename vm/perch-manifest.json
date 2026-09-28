@@ -1,0 +1,145 @@
+{
+ "schema": 1,
+ "context": "interfaces-v1",
+ "groups": [
+  {
+   "name": "vm-word",
+   "files": [
+    "vm/model/word.bend"
+   ],
+   "selected_files": [
+    "vm/model/word.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "The u32 vocabulary: none, lazy choice, word stores, byte packing, strict UTF-8, the plan and the stop type."
+  },
+  {
+   "name": "vm-decode",
+   "files": [
+    "vm/model/word.bend",
+    "vm/model/decode.bend"
+   ],
+   "selected_files": [
+    "vm/model/decode.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "SPEC section 2: header, sections and records to the plan, refused in serializer.decode order."
+  },
+  {
+   "name": "vm-validate",
+   "files": [
+    "vm/model/word.bend",
+    "vm/model/decode.bend",
+    "vm/model/validate.bend"
+   ],
+   "selected_files": [
+    "vm/model/validate.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "SPEC section 4 rules 1-5: the registry tables and the validator obligations."
+  },
+  {
+   "name": "vm-encode",
+   "files": [
+    "vm/model/word.bend",
+    "vm/model/decode.bend",
+    "vm/model/validate.bend",
+    "vm/model/encode.bend"
+   ],
+   "selected_files": [
+    "vm/model/encode.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "SPEC section 2 canonical encoding, then the loader: decoded, validated, canonical."
+  },
+  {
+   "name": "vm-memory",
+   "files": [
+    "vm/model/word.bend",
+    "vm/model/decode.bend",
+    "vm/model/validate.bend",
+    "vm/model/memory.bend"
+   ],
+   "selected_files": [
+    "vm/model/memory.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "SPEC sections 5, 6 and 9: words, cells, reference counts, the loaded code, frames, inspection and prims."
+  },
+  {
+   "name": "vm-machine",
+   "files": [
+    "vm/model/word.bend",
+    "vm/model/decode.bend",
+    "vm/model/validate.bend",
+    "vm/model/encode.bend",
+    "vm/model/memory.bend",
+    "vm/model/machine.bend"
+   ],
+   "selected_files": [
+    "vm/model/machine.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "SPEC sections 6-8: Eval, Return and Enter, fuel, Case selection, describe, boot, Books and Programs."
+  },
+  {
+   "name": "vm-audit",
+   "files": [
+    "vm/model/word.bend",
+    "vm/model/decode.bend",
+    "vm/model/validate.bend",
+    "vm/model/encode.bend",
+    "vm/model/memory.bend",
+    "vm/model/machine.bend",
+    "vm/model/audit.bend"
+   ],
+   "selected_files": [
+    "vm/model/audit.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "The RC audit and the law predicates: balanced, leaked, sound, mutations."
+  },
+  {
+   "name": "vm-entries",
+   "files": [
+    "vm/model/word.bend",
+    "vm/model/decode.bend",
+    "vm/model/validate.bend",
+    "vm/model/encode.bend",
+    "vm/model/memory.bend",
+    "vm/model/machine.bend",
+    "vm/model/audit.bend",
+    "vm/model-cli.bend",
+    "vm/model-audit.bend",
+    "vm/model-sweep.bend"
+   ],
+   "selected_files": [
+    "vm/model-cli.bend",
+    "vm/model-audit.bend",
+    "vm/model-sweep.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "The run, audit and sweep command lines."
+  },
+  {
+   "name": "vm-laws",
+   "files": [
+    "vm/model/word.bend",
+    "vm/model/decode.bend",
+    "vm/model/validate.bend",
+    "vm/model/encode.bend",
+    "vm/model/memory.bend",
+    "vm/model/machine.bend",
+    "vm/model/audit.bend",
+    "vm/LAWS.bend",
+    "vm/PROOF.bend"
+   ],
+   "selected_files": [
+    "vm/LAWS.bend",
+    "vm/PROOF.bend"
+   ],
+   "task": "vm/SPEC.md",
+   "notes": "Twenty-three laws and their proof entry."
+  }
+ ]
+}

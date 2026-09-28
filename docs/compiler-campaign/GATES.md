@@ -74,20 +74,23 @@ outputs and the seed-native measurements pinned by digest in
 `vm/bench/workloads.json`. It writes only `vm/receipts/spec.json`.
 
 The vm-model increment adds gate `vm-model` (`python3 vm/check-model.py`). It
-builds `vm/model.bend`, the Bend model of `knot-vm-1` ([vm/MODEL.md](../../vm/MODEL.md)),
+builds the Bend model of `knot-vm-1` in `vm/model/` ([vm/MODEL.md](../../vm/MODEL.md))
 with the seed's native lane and requires: the goldens to be their frozen
 plans' encodings and the `vm/LAWS.bend` fixtures their words; the model's prim and
-foreign tables to equal `vm/registry.json`; all 78 golden runs to agree with
-`vm/golden/vm-expected.json`; literal fuel and inspection controls; the 61
-frozen refusal controls and a child-at-parent boundary refused with
-check-spec's exact reason; the RC audit before every transition of every golden
-and zero live mortal cells after each completed run; the bounded soundness
-sweep, every single-word mutation of every golden refused exactly when the
-reference codec refuses it, for the same reason, and otherwise run soundly;
-`vm/PROOF.bend` printing `All terms check.`;
-and 16 model mutants killed by a wrong observation, never a crash, five of
-them also refuted by a law of `vm/PROOF.bend`. It writes only
-`vm/receipts/model.json`.
+foreign tables to equal `vm/registry.json`; all 91 golden runs and 28 frozen Book
+invocations to agree with `vm/golden/vm-expected.json`; literal fuel and
+inspection controls; the 61 frozen refusal controls and a child-at-parent
+boundary refused with check-spec's exact reason; 25 admitted controls (vm-spec's
+three admitted plan, seven code-list and seven run controls, and the model's own
+eight in `vm/model-controls/`, whose values the seed prints) run to the
+reference evaluation's outcome and call count; the RC audit before every
+transition of every golden and zero live mortal cells after each completed run,
+with the reference evaluation's call count; the bounded soundness sweep, every
+single-word mutation of every golden refused exactly when the reference codec
+refuses it, for the same reason, and otherwise run soundly; `vm/PROOF.bend`
+printing `All terms check.`; and 24 model mutants killed by a wrong observation,
+never a crash, five of them also refuted by a law of `vm/PROOF.bend`. It writes
+only `vm/receipts/model.json`.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.

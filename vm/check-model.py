@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Gate vm-model: the Bend model of knot-vm-1 against the frozen goldens.
 
-Builds vm/model.bend's three entries (run, RC audit, soundness sweep) with the
+Builds the model's three entries (run, RC audit, soundness sweep) from vm/model/ with the
 seed's native lane and requires:
 - every golden image to be its frozen plan's encoding, and each LAWS.bend
   fixture to equal its image's words;
@@ -49,7 +49,9 @@ BUILD = ROOT / '.local/vm-model/gate'
 SEED = ROOT / 'scripts/bend-reference'
 RECEIPT = HERE / 'receipts/model.json'
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # hang guard only
-SOURCES = ('model.bend', 'model-cli.bend', 'model-audit.bend', 'model-sweep.bend', 'LAWS.bend', 'PROOF.bend')
+SECTIONS = ('word', 'decode', 'validate', 'encode', 'memory', 'machine', 'audit')  # vm/model/, in import order
+SOURCES = tuple(f'model/{s}.bend' for s in SECTIONS) + (
+    'model-cli.bend', 'model-audit.bend', 'model-sweep.bend', 'LAWS.bend', 'PROOF.bend')
 ENTRIES = {'model': 'model-cli.bend', 'audit': 'model-audit.bend', 'sweep': 'model-sweep.bend'}
 SWEEP_FUEL = '256'  # every golden completes within 256 entries; mutants that loop stop early
 
@@ -117,7 +119,7 @@ def check_inputs(expected: dict) -> dict:
 
 def check_registry() -> dict:
     """The model's prim and foreign rows equal registry.json's, by representation position."""
-    source = (HERE / 'model.bend').read_text()
+    source = (HERE / 'model/validate.bend').read_text()
     reps = REGISTRY['representations']
 
     def table(name):
@@ -135,12 +137,12 @@ def check_registry() -> dict:
 
 # ------------------------------------------------------------------ builds
 
-def build_tree(name: str, mutation=None) -> Path:
+def build_tree(name: str, section=None, mutation=()) -> Path:
     tree = BUILD / name
-    (tree / 'vm').mkdir(parents=True, exist_ok=True)
+    (tree / 'vm' / 'model').mkdir(parents=True, exist_ok=True)
     for source in SOURCES:
         text = (HERE / source).read_text()
-        if source == 'model.bend' and mutation:
+        if source == f'model/{section}.bend':
             for old, new in mutation:
                 require(text.count(old) == 1, f'mutant {name}: {old!r} occurs {text.count(old)} times')
                 text = text.replace(old, new)
@@ -535,60 +537,81 @@ def proof() -> dict:
 
 # ------------------------------------------------------------------ mutants
 
-# Type-correct semantic mutants of vm/model.bend: (name, [(old, new)], what it breaks).
+# Type-correct semantic mutants of the model: (name, section of vm/model/, [(old, new)],
+# what it breaks). The last eight are review fix round 1's, each killed by the control
+# that witnessed its defect.
 MUTANTS = [
-    ('rc-under-count', [('    Done{stored_word(heap,w,0,U32.add(rc,1))})))',
-                         '    Done{stored_word(heap,w,0,rc)})))')], 'dup adds no reference'),
-    ('rc-over-count', [('    u => Done{stored_word(heap,w,0,U32.sub(rc,1))})))\n\ndef drops(',
-                        '    u => Done{stored_word(heap,w,0,rc)})))\n\ndef drops(')], 'drop above one keeps its count'),
-    ('append-drops-tail', [('Bool.or(Bool.and(U32.is_eq(id,35),U32.is_eq(i,1)),Bool.and(within(id,16,19),U32.is_eq(i,0)))',
-                            'Bool.and(within(id,16,19),U32.is_eq(i,0))')], 'String.append also drops its moved tail'),
-    ('tail-keeps-caller', [('    u => bind(Heap,Next,drop(heap,room(unscoped(stack)),act_of(stack)),heap => to(Eval{0},with_act(unscoped(stack),0),heap)),',
-                            '    u => to(Eval{0},with_act(unscoped(stack),0),heap),')], 'a tail entry does not release its caller'),
-    ('scope-keeps-slots', [('      bind(Heap,Next,unwound(U32.to_nat(U32.sub(d,saved)),heap,act,U32.sub(d,1),room(popped)),heap =>',
-                            '      bind(Heap,Next,unwound(0n,heap,act,U32.sub(d,1),room(popped)),heap =>')], 'leaving a scope keeps its slots'),
-    ('arm-selection', [('u => operand(code,node,U32.add(4,tag)),u => none())', 'u => operand(code,node,U32.add(4,U32.sub(1,tag))),u => none())')],
+    ('rc-under-count', 'memory', [('    Done{stored_word(heap,w,0,U32.add(rc,1))})))',
+       '    Done{stored_word(heap,w,0,rc)})))')],
+     'dup adds no reference'),
+    ('rc-over-count', 'memory', [('    u => Done{stored_word(heap,w,0,U32.sub(rc,1))})))\n\ndef drops(',
+       '    u => Done{stored_word(heap,w,0,rc)})))\n\ndef drops(')],
+     'drop above one keeps its count'),
+    ('append-drops-tail', 'memory', [('Bool.or(Bool.and(U32.is_eq(id,35),U32.is_eq(i,1)),Bool.and(W.within(id,16,19),U32.is_eq(i,0)))',
+       'Bool.and(W.within(id,16,19),U32.is_eq(i,0))')],
+     'String.append also drops its moved tail'),
+    ('tail-keeps-caller', 'machine', [('    u => H.bind(H.Heap,Next,H.drop(heap,H.room(unscoped(stack)),H.act_of(stack)),heap => to(Eval{0},H.with_act(unscoped(stack),0),heap)),',
+       '    u => to(Eval{0},H.with_act(unscoped(stack),0),heap),')],
+     'a tail entry does not release its caller'),
+    ('scope-keeps-slots', 'machine', [('      H.bind(H.Heap,Next,unwound(U32.to_nat(U32.sub(d,saved)),heap,act,U32.sub(d,1),H.room(popped)),heap =>',
+       '      H.bind(H.Heap,Next,unwound(0n,heap,act,U32.sub(d,1),H.room(popped)),heap =>')],
+     'leaving a scope keeps its slots'),
+    ('arm-selection', 'machine', [('u => H.operand(code,node,U32.add(4,tag)),u => W.none())',
+       'u => H.operand(code,node,U32.add(4,U32.sub(1,tag))),u => W.none())')],
      'a tag selects the other row'),
-    ('slot-off-by-one', [('def slot(+heap: Heap, +act: U32, +i: U32) -> U32:\n  load_word(heap,act,U32.add(4,i))',
-                          'def slot(+heap: Heap, +act: U32, +i: U32) -> U32:\n  load_word(heap,act,U32.add(5,i))')], 'slots read one word late'),
-    ('erased-argument', [('      choose(Result<Stop,Next>,U32.is_eq(operand(code,node,1),1),\n        u => then_stack(Next,pushed(popped,InvokeArgument{node,w})',
-                          '      choose(Result<Stop,Next>,U32.is_eq(operand(code,node,1),0),\n        u => then_stack(Next,pushed(popped,InvokeArgument{node,w})')],
+    ('slot-off-by-one', 'memory', [('def slot(+heap: Heap, +act: U32, +i: U32) -> U32:\n  load_word(heap,act,U32.add(4,i))',
+       'def slot(+heap: Heap, +act: U32, +i: U32) -> U32:\n  load_word(heap,act,U32.add(5,i))')],
+     'slots read one word late'),
+    ('erased-argument', 'machine', [('      W.choose(Result<W.Stop,Next>,U32.is_eq(H.operand(code,node,1),1),\n        u => then_stack(Next,H.pushed(popped,H.InvokeArgument{node,w})',
+       '      W.choose(Result<W.Stop,Next>,U32.is_eq(H.operand(code,node,1),0),\n        u => then_stack(Next,H.pushed(popped,H.InvokeArgument{node,w})')],
      'live and erased Invokes swap'),
-    ('nat-bound', [('choose(Result<Stop,Cell>,U32.is_gt(b,U32.sub(none(),a)),u => Fail{Exhausted{2,"NatRange"}},u => word_of(heap,U32.add(a,b)))',
-                    'word_of(heap,U32.add(a,b))')], 'Nat.add wraps instead of exhausting'),
-    ('succ-bound', [('choose(Result<Stop,Next>,U32.is_eq(scalar(heap,a),none()),u => Fail{Exhausted{2,"NatRange"}},u =>',
-                     'choose(Result<Stop,Next>,False{},u => Fail{Exhausted{2,"NatRange"}},u =>')], 'Succ wraps instead of exhausting'),
-    ('remainder-by-zero', [('    case 4n: word_of(heap,choose(U32,U32.is_eq(y,0),u => x,u => U32.mod(x,y)))',
-                            '    case 4n: word_of(heap,choose(U32,U32.is_eq(y,0),u => 0,u => U32.mod(x,y)))')], 'x % 0 is 0'),
-    ('wide-shift', [('choose(U32,U32.is_ge(n,32),u => 0,', 'choose(U32,U32.is_ge(n,31),u => 0,')], 'a shift by 31 loses its bits'),
-    ('fuel-unchecked', [('  choose(Result<Stop,Machine>,U32.is_eq(fuel_of(meter),0),u => Fail{Exhausted{1,"fuel"}},u =>',
-                         '  choose(Result<Stop,Machine>,False{},u => Fail{Exhausted{1,"fuel"}},u =>')], 'an entry at fuel 0 proceeds'),
-    ('child-order', [('      unless(Claims,U32.is_ge(at,parent),"child after parent",u =>',
-                      '      unless(Claims,U32.is_gt(at,parent),"child after parent",u =>')], 'a child may sit at its parent'),
-    ('capture-exactness', [('        unless(U32,Bool.not(exact),at_where(owner,"captures are not exactly the free slots of the body"),u =>',
-                            '        unless(U32,False{},at_where(owner,"captures are not exactly the free slots of the body"),u =>')],
+    ('nat-bound', 'memory', [('W.choose(Result<W.Stop,Cell>,U32.is_gt(b,U32.sub(W.none(),a)),u => Fail{W.Exhausted{2,"NatRange"}},u => word_of(heap,U32.add(a,b)))',
+       'word_of(heap,U32.add(a,b))')],
+     'Nat.add wraps instead of exhausting'),
+    ('succ-bound', 'machine', [('W.choose(Result<W.Stop,Next>,U32.is_eq(H.scalar(heap,a),W.none()),u => Fail{W.Exhausted{2,"NatRange"}},u =>',
+       'W.choose(Result<W.Stop,Next>,False{},u => Fail{W.Exhausted{2,"NatRange"}},u =>')],
+     'Succ wraps instead of exhausting'),
+    ('remainder-by-zero', 'memory', [('    case 4n: word_of(heap,W.choose(U32,U32.is_eq(y,0),u => x,u => U32.mod(x,y)))',
+       '    case 4n: word_of(heap,W.choose(U32,U32.is_eq(y,0),u => 0,u => U32.mod(x,y)))')],
+     'x % 0 is 0'),
+    ('wide-shift', 'memory', [('W.choose(U32,U32.is_ge(n,32),u => 0,',
+       'W.choose(U32,U32.is_ge(n,31),u => 0,')],
+     'a shift by 31 loses its bits'),
+    ('fuel-unchecked', 'machine', [('  W.choose(Result<W.Stop,Machine>,U32.is_eq(fuel_of(meter),0),u => Fail{W.Exhausted{1,"fuel"}},u =>',
+       '  W.choose(Result<W.Stop,Machine>,False{},u => Fail{W.Exhausted{1,"fuel"}},u =>')],
+     'an entry at fuel 0 proceeds'),
+    ('child-order', 'decode', [('      W.unless(Claims,U32.is_ge(at,parent),"child after parent",u =>',
+       '      W.unless(Claims,U32.is_gt(at,parent),"child after parent",u =>')],
+     'a child may sit at its parent'),
+    ('capture-exactness', 'validate', [('        W.unless(U32,Bool.not(exact),at_where(owner,"captures are not exactly the free slots of the body"),u =>',
+       '        W.unless(U32,False{},at_where(owner,"captures are not exactly the free slots of the body"),u =>')],
      'unused captures are admitted'),
-    ('inspection', [('  choose(Result<Stop,A>,admits(code,heap,t,w),next,u => ill_typed(A))',
-                     '  choose(Result<Stop,A>,True{},next,u => ill_typed(A))')], 'words are read without inspection'),
-    # Review fix round 1: each is killed by the control that witnessed its defect.
-    ('char-tag', [('  choose(U32,is_rep(code,t,2),u => 0,u =>\n', '  choose(U32,False{},u => 0,u =>\n')],
+    ('inspection', 'memory', [('  W.choose(Result<W.Stop,A>,admits(code,heap,t,w),next,u => ill_typed(A))',
+       '  W.choose(Result<W.Stop,A>,True{},next,u => ill_typed(A))')],
+     'words are read without inspection'),
+    ('char-tag', 'memory', [('  W.choose(U32,is_rep(code,t,2),u => 0,u =>\n',
+       '  W.choose(U32,False{},u => 0,u =>\n')],
      'a Char dispatches on its code, not on Chr'),
-    ('key-bound', [('Expect{Bool.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,Node,fallback))',
-                    'Expect{Bool.or(Bool.not(Bool.and(increasing(keys_of(rows)),below(keys_of(rows),none()))),Maybe.is_none(&2,Node,fallback))')],
+    ('key-bound', 'validate', [('Expect{Bool.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,W.Node,fallback))',
+       'Expect{Bool.or(Bool.not(Bool.and(increasing(keys_of(rows)),below(keys_of(rows),W.none()))),Maybe.is_none(&2,W.Node,fallback))')],
      'the key 0xffffffff is refused'),
-    ('none-slot', [('Bool.not(Bool.or(is_none(held),U32.is_eq(held,scrutinee)))', 'Bool.not(U32.is_eq(held,scrutinee))')],
+    ('none-slot', 'validate', [('Bool.not(Bool.or(W.is_none(held),U32.is_eq(held,scrutinee)))',
+       'Bool.not(U32.is_eq(held,scrutinee))')],
      'a Case on a none-typed slot is refused'),
-    ('debit-refunded', [('    case Fail{stop}: Done{halted(m,stop)}', '    case Fail{stop}: Fail{stop}')],
+    ('debit-refunded', 'machine', [('    case Fail{stop}: Done{halted(m,stop)}',
+       '    case Fail{stop}: Fail{stop}')],
      'a target that stops the machine refunds its entry'),
-    ('non-scalar-printed', [('choose(Result<Stop,Machine>,Bool.not(is_scalar_text(scalars_of(line,heap))),u => Fail{Refused{"io","abi"}},u =>',
-                             'choose(Result<Stop,Machine>,False{},u => Fail{Refused{"io","abi"}},u =>')],
+    ('non-scalar-printed', 'machine', [('W.choose(Result<W.Stop,Machine>,Bool.not(is_scalar_text(H.scalars_of(line,heap))),u => Fail{W.Refused{"io","abi"}},u =>',
+       'W.choose(Result<W.Stop,Machine>,False{},u => Fail{W.Refused{"io","abi"}},u =>')],
      'a non-scalar Char is printed (D20)'),
-    ('enter-arity', [('u => U32.is_eq(count(U32,ops),choose(U32,is_none(node),u => 1,u => operand(code,node,1))),',
-                      'u => U32.is_le(count(U32,ops),1),')], 'a closure takes either operand count'),
-    ('calls-uncounted', [('Meter{U32.sub(fuel,1),U32.add(calls,1),', 'Meter{U32.sub(fuel,1),calls,')],
+    ('enter-arity', 'machine', [('u => U32.is_eq(W.count(U32,ops),W.choose(U32,W.is_none(node),u => 1,u => H.operand(code,node,1))),',
+       'u => U32.is_le(W.count(U32,ops),1),')],
+     'a closure takes either operand count'),
+    ('calls-uncounted', 'machine', [('Meter{U32.sub(fuel,1),U32.add(calls,1),',
+       'Meter{U32.sub(fuel,1),calls,')],
      'an entry is not counted'),
-    ('arrow-argument', [('choose(Result<Stop,List<&2,U32>>,is_arrow(kind(types,p)),u => Fail{Refused{"invoke","function-argument"}},u =>',
-                         'choose(Result<Stop,List<&2,U32>>,False{},u => Fail{Refused{"invoke","function-argument"}},u =>')],
+    ('arrow-argument', 'machine', [('W.choose(Result<W.Stop,List<&2,U32>>,V.is_arrow(V.kind(types,p)),u => Fail{W.Refused{"invoke","function-argument"}},u =>',
+       'W.choose(Result<W.Stop,List<&2,U32>>,False{},u => Fail{W.Refused{"invoke","function-argument"}},u =>')],
      'an arrow parameter is refused as argument-range'),
 ]
 
@@ -616,8 +639,8 @@ def kills(base: dict, mutant: dict) -> list:
 
 def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> list:
     def one(entry):
-        name, mutation, meaning = entry
-        tree = build_tree(f'mutants/{name}', mutation)
+        name, section, mutation, meaning = entry
+        tree = build_tree(f'mutants/{name}', section, mutation)
         bins = built(tree, ('model', 'audit'))
         observed = {'goldens': golden_runs(bins['model'], expected),
                     'invocations': invocation_runs(bins['model'], bins['audit'], expected),
