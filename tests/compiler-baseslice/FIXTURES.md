@@ -306,10 +306,10 @@ rejections.
 | `u32-index-walk` | 9 | agree | - | recursion, fields, patterns, literals, generics |
 | `io-pure-bind` | 13 | agree | - | recursion, fields, patterns, literals, generics, closures |
 | `io-do-sequence` | 4 | agree-or-unsupported | - | recursion, fields, patterns, literals, generics, closures, do-notation |
-| `io-print-helper` | 1 | unsupported | `Unsupported\tcheck\thost-effect\t` | recursion, fields, patterns, literals, generics, closures, io-host |
-| `io-args-helper` | 1 | unsupported | `Unsupported\tcheck\thost-effect\t` | recursion, fields, patterns, literals, generics, closures, io-host |
-| `io-file-read-helper` | 1 | unsupported | `Unsupported\tcheck\thost-effect\t` | recursion, fields, patterns, literals, generics, closures, io-host |
-| `io-file-write-helper` | 1 | unsupported | `Unsupported\tcheck\thost-effect\t` | recursion, fields, patterns, literals, generics, closures, io-host |
+| `io-print-helper` | 1 | unsupported | `Unsupported\tcompile\thost-effect\t` | recursion, fields, patterns, literals, generics, closures, io-host |
+| `io-args-helper` | 1 | unsupported | `Unsupported\tcompile\thost-effect\t` | recursion, fields, patterns, literals, generics, closures, io-host |
+| `io-file-read-helper` | 1 | unsupported | `Unsupported\tcompile\thost-effect\t` | recursion, fields, patterns, literals, generics, closures, io-host |
+| `io-file-write-helper` | 1 | unsupported | `Unsupported\tcompile\thost-effect\t` | recursion, fields, patterns, literals, generics, closures, io-host |
 | `reserved-affine` | 0 | reject | `Invalid\tcheck\taffine-reuse\t` | recursion, fields, patterns, literals, generics |
 | `cmp-string-reuse` | 0 | reject | `Invalid\tcheck\taffine-reuse\t` | recursion, fields, patterns, literals, generics |
 | `length-missing-quantity` | 0 | reject | exit 2 | recursion, fields, patterns, literals, generics |
@@ -357,7 +357,7 @@ pinned diagnostics, `\t` stands for a tab, as in the other compiler suites.
 - **`agree-or-unsupported`: `io-do-sequence`.** A `do IO<..>:` block is
   compiler-driver syntax (`driver.read_pair`, `compile-cli.write_pair`), not a
   Base form, even though it desugars to `IO.bind`. Baseslice may defer it.
-- **`unsupported`, pinned `Unsupported\tcheck\thost-effect\t`: the four
+- **`unsupported`, pinned `Unsupported\tcompile\thost-effect\t`: the four
   `io-*-helper` fixtures.**
   - **Form.** An uncalled helper in the driver's exact shape references Base
     host declarations:
