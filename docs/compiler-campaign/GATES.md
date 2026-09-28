@@ -45,11 +45,11 @@ The vm-spec increment adds gate `vm-spec` (`python3 vm/check-spec.py`), which
 freezes the `knot-image-1`/`knot-vm-1` contract of `vm/SPEC.md` before any VM
 exists. It builds the pinned literals and closures heads' `eval-cli` and
 `check-cli` from `vm/oracles/` with the seed's native lane, re-executes the seed
-and eval-cli on 55 golden sources, and requires the frozen observations byte for
+and eval-cli on 78 golden sources, and requires the frozen observations byte for
 byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display. It
 also checks the frozen VM expectation table, 61 refused malformed-image controls,
-four expectation and bench controls, 30 codec mutants and 3 source mutants, and the bench freeze: sources, guards,
+five expectation and bench controls, 30 codec mutants and 3 source mutants, and the bench freeze: sources, guards,
 outputs and the seed-native measurements pinned by digest in
 `vm/bench/workloads.json`. It writes only `vm/receipts/spec.json`.
 

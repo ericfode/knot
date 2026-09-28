@@ -1,0 +1,20 @@
+{
+ "entry":"book",
+ "representation":{"Nat":0,"U32":1,"Char":2,"String":3},
+ "types":[
+  {"kind":"data","name":"Nat","constructors":[{"name":"Zero","fields":[]},{"name":"Succ","fields":[0]}]},
+  {"kind":"opaque","name":"U32"},
+  {"kind":"data","name":"Char","constructors":[{"name":"Chr","fields":[1]}]},
+  {"kind":"data","name":"String","constructors":[{"name":"SNil","fields":[]},{"name":"SCon","fields":[2,3]}]},
+  {"kind":"data","name":"Codes","constructors":[{"name":"Stop","fields":[]},{"name":"Code","fields":[0,4]}]}
+ ],
+ "functions":[
+  {"name":"U32.to_nat","parameters":[1],"result":0,"slots":1,"body":["prim",0,16,[["ref",1,0]]]},
+  {"name":"Char.to_u32","parameters":[2],"result":1,"slots":1,"body":["prim",1,19,[["ref",2,0]]]},
+  {"name":"String.append","parameters":[3,3],"result":3,"slots":2,"body":["prim",3,35,[["ref",3,0],["ref",3,1]]]},
+  {"name":"String.reverse","parameters":[3],"result":3,"slots":1,"body":["prim",3,36,[["ref",3,0]]]},
+  {"name":"U32.show","parameters":[1],"result":3,"slots":1,"body":["prim",3,32,[["ref",1,0]]]},
+  {"name":"codes","parameters":[3],"result":4,"slots":3,"body":["case",4,0,3,"tags",[["branch",0,1,0,["value",4,0]],["branch",1,1,2,["con",4,1,[["call",0,0,[["call",1,1,[["ref",2,1]]]]],["call",4,5,[["ref",3,2]]]]]]],null]},
+  {"name":"main","parameters":[],"result":4,"slots":0,"body":["call",4,5,[["call",3,2,[["call",3,3,[["lit",3,"String","ab"]]],["call",3,4,[["lit",1,"U32",12]]]]]]]}
+ ]
+}

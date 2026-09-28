@@ -6,6 +6,21 @@
    "kind": 2,
    "cause": "NatRange",
    "basis": "D15: Nat.add(4294967295n,1n) is 4294967296, above the VM's Nat bound 2^32-1. The seed's native lane (Nat to about 2^48) prints True{}; the VM must stop with Exhausted kind 2 before the Succ/add result is narrowed, never wrap to 0."
+  },
+  "nat-succ-range": {
+   "kind": 2,
+   "cause": "NatRange",
+   "basis": "D15: Succ{4294967295n} is 4294967296, above the VM's Nat bound 2^32-1. The seed's native lane prints True{}; the VM must stop with Exhausted kind 2 when completing the Succ Construct (section 6), never wrap to 0."
+  },
+  "nat-mul-range": {
+   "kind": 2,
+   "cause": "NatRange",
+   "basis": "D15: Nat.mul(65536n,65536n) is 2^32, above the VM's Nat bound 2^32-1. The seed's native lane prints True{}; the VM must stop with Exhausted kind 2 before the product is narrowed, never wrap to 0."
+  },
+  "result-u32": {
+   "outcome": "HostFailure",
+   "cause": "invoke scalar-result",
+   "basis": "Section 11's Book-describe bound: a Book result is described only as an algebraic tree with unary Nats (section 8). The seed prints the U32 5; eval-cli has no describe spelling for it either (InternalFailure eval result-tag). The VM reports HostFailure invoke scalar-result instead of inventing a rendering; Programs print scalars through IO."
   }
  },
  "cases": {
@@ -669,6 +684,284 @@
    "basis": "bound",
    "reason": "D15: Nat.add(4294967295n,1n) is 4294967296, above the VM's Nat bound 2^32-1. The seed's native lane (Nat to about 2^48) prints True{}; the VM must stop with Exhausted kind 2 before the Succ/add result is narrowed, never wrap to 0.",
    "eval_lane": "Exhausted"
+  },
+  "u32-ne": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tFalse{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-ne": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tFalse{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "char-ne": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tFalse{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-ne-order": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tFalse{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-ne-length": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tFalse{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-shr-32": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tZero{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-shr-33": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tZero{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-shl-33": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tZero{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-sub-wrap": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-mul-wrap": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-and": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tSucc{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-lt-unsigned": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-cmp": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tLT{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-to-nat-big": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Exhausted"
+  },
+  "nat-pred": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tSucc{Succ{Zero{}}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-succ": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-succ-range": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "NatRange",
+   "basis": "bound",
+   "reason": "D15: Succ{4294967295n} is 4294967296, above the VM's Nat bound 2^32-1. The seed's native lane prints True{}; the VM must stop with Exhausted kind 2 when completing the Succ Construct (section 6), never wrap to 0.",
+   "eval_lane": "Exhausted"
+  },
+  "nat-mul-range": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "NatRange",
+   "basis": "bound",
+   "reason": "D15: Nat.mul(65536n,65536n) is 2^32, above the VM's Nat bound 2^32-1. The seed's native lane prints True{}; the VM must stop with Exhausted kind 2 before the product is narrowed, never wrap to 0.",
+   "eval_lane": "Exhausted"
+  },
+  "string-codes": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t4\t1\tCode{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},Code{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},Code{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},Code{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},Stop{}}}}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-show-codes": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t4\t1\tCode{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},Code{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},Code{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},Stop{}}}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-append-mortal": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "result-u32": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "invoke scalar-result",
+   "basis": "bound",
+   "reason": "Section 11's Book-describe bound: a Book result is described only as an algebraic tree with unary Nats (section 8). The seed prints the U32 5; eval-cli has no describe spelling for it either (InternalFailure eval result-tag). The VM reports HostFailure invoke scalar-result instead of inventing a rendering; Programs print scalars through IO.",
+   "eval_lane": "InternalFailure"
+  },
+  "io-bind": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "a\nb\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Invalid"
   }
  }
 }

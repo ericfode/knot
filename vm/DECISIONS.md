@@ -12,9 +12,10 @@ follows it (§5, §10, §11) without a new image header word.
   Nat result is checked before narrowing; a result above 2^32-1 is `Exhausted`
   kind 2 with cause `NatRange` in the VM's own outcome, never U32 wraparound. U32
   still wraps. Pure Char keeps every u32 code, non-scalars included; scalar
-  validation happens only at IO. Witnesses: `nat-big` (inside the bound; the VM
-  owes the seed's `True{}` although eval-cli is exhausted at 2^20) and `nat-range`
-  (the VM owes `Exhausted NatRange` although the seed's native lane succeeds).
+  validation happens only at IO. Witnesses: `nat-big` and `u32-to-nat-big`
+  (inside the bound; the VM owes the seed's `True{}` although eval-cli is
+  exhausted at 2^20) and `nat-range`, `nat-mul-range` and `nat-succ-range` (the
+  VM owes `Exhausted NatRange` although the seed's native lane succeeds).
 - **D16 (fuel).** One unit per entry: the requested Book function or Program
   `main`, every Application, every Invoke including erased ones, both applications
   of an Action, and every continuation application including the terminal one.
@@ -75,9 +76,10 @@ follows it (§5, §10, §11) without a new image header word.
 1. **A D4 classification defect in the literals head.** For
    `def main() -> IO(Unit): IO.print("vm")`, which the seed runs, both `eval-cli`
    and `check-cli` at `2ea222e` report `Invalid parse function-result`. D4 requires
-   Unsupported. The golden `foreign-print` records the observation as it is; its
-   plan is hand-built from §1's rules because no Knot core exists for it. The
-   literals owner, or io-check, should fix the classification.
+   Unsupported. The goldens `foreign-print` and `io-bind` record the observation
+   as it is; their plans are hand-built from §1's rules because no Knot core
+   exists for them. The literals owner, or io-check, should fix the
+   classification.
 2. **The speed gate needs vm-rc.** The frozen workloads allocate far more than
    they keep live. By SPEC §5's size rule, without release `deep-recursion` alone
    allocates 10^9 Activations of at least 16 bytes (16 GB), `peano` at least

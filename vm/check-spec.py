@@ -514,8 +514,17 @@ def vm_expectation(case, plan, bounds, source) -> dict:
                 'basis': 'seed', 'eval_lane': classify(ev)}
     if case['name'] in bounds:
         bound = bounds[case['name']]
-        return {'argv': ['IMAGE', 'main', str(fuel)], 'outcome': 'Exhausted', 'kind': bound['kind'],
-                'cause': bound['cause'], 'basis': 'bound', 'reason': bound['basis'], 'eval_lane': classify(ev)}
+        row = {'argv': ['IMAGE', 'main', str(fuel)], 'outcome': bound.get('outcome', 'Exhausted')}
+        if row['outcome'] == 'Exhausted':
+            row['kind'] = bound['kind']
+        else:
+            # Section 11's Book-describe bound: a scalar result has no describe spelling.
+            require(bound['cause'] == 'invoke scalar-result', f"{case['name']}: unknown bound {bound['cause']}")
+            main, rep = next(f for f in plan['functions'] if f['name'] == 'main'), plan.get('representation', {})
+            require(main['result'] in [rep.get(r) for r in ('U32', 'Char', 'String') if r in rep],
+                    f"{case['name']}: a scalar-result bound needs a scalar main")
+        require(seed['exit'] == 0, f"{case['name']}: a bound excuses only a succeeding seed")
+        return {**row, 'cause': bound['cause'], 'basis': 'bound', 'reason': bound['basis'], 'eval_lane': classify(ev)}
     require(seed['exit'] == 0, f"{case['name']}: the seed must succeed")
     value = described(seed['stdout'], erased_fields(source))
     if ev['exit'] == 0:
@@ -543,7 +552,8 @@ def expectation_controls(plans: dict, bounds: dict, sources: dict) -> list:
     for label, name, seed, ev in [
             ('eval-disagrees', 'value-on', 'Off{}\n', 'Evaluated\t0\t1\tOn{}\n'),
             ('eval-keeps-erased-field', 'erased-construct', 'ProofBox{Off{}, On{}}\n',
-             'Evaluated\t1\t0\tProofBox{Off{}}\n')]:
+             'Evaluated\t1\t0\tProofBox{Off{}}\n'),
+            ('eval-nat-binds-n', 'nat-pred', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n')]:
         try:
             vm_expectation({'name': f'control:{label}', **row(seed, ev)}, plans[name], bounds, sources[name])
         except AssertionError as refusal:
@@ -1032,6 +1042,8 @@ def main() -> int:
     require(modes == set(codec.CASE_MODES), 'both case modes')
     big = [n for p in plans.values() for n in walk(p) if n[0] == 'lit' and n[2] != 'String' and n[3] >= 1 << 31]
     require(big, 'a boxed scalar constant')
+    abstract = [n for p in plans.values() for n in walk(p) if n[0] not in ('branch', 'default') and n[1] is None]
+    require(abstract, 'a none-typed node')
 
     controls = byte_controls(images, digest) + [
         (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in plan_controls(plans)]
@@ -1049,7 +1061,8 @@ def main() -> int:
     boundaries += bench_controls(built)
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries, mutants=mutants,
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
-                            'program_images': sum(p['entry'] == 'program' for p in plans.values())})
+                            'program_images': sum(p['entry'] == 'program' for p in plans.values()),
+                            'none_typed_nodes': len(abstract)})
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "

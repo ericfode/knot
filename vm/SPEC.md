@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 55 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 78 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden, derived by the rule of §11 |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
 | [check-spec.py](check-spec.py) | gate `vm-spec` |
@@ -355,7 +355,8 @@ to its post-state. No row runs user code or a second host effect.
   its code word unchanged; any other constructor allocates an Object that takes the
   operands. Return the result.
 - Intrinsic: compute the prim (§9), allocating its result, then drop the operands
-  in operand order. Return the result.
+  in operand order, except an operand the prim moves into its result (§9), which
+  is neither dropped nor duplicated. Return the result.
 - Foreign: allocate an Action that takes the operands. Return it.
 - Application: `Enter(function, operands)`.
 
@@ -443,7 +444,8 @@ value and `Name{f1,f2}` for an Object's live fields, without spaces. A Nat word
 `}`. Erased fields do not exist and are not printed (golden `erased-construct`:
 eval-cli prints `ProofBox{On{}}`, the seed `ProofBox{Off{}, On{}}`). eval-cli
 reports `InternalFailure eval result-tag` for any U32, Char or String result, so
-the VM reports `HostFailure invoke scalar-result` for one anywhere in the tree;
+the VM reports `HostFailure invoke scalar-result` for one anywhere in the tree
+(§11's Book-describe bound; golden `result-u32`);
 a closure is `function-result` and an untyped (`none`) immediate is
 `abstract-result`. Rendering is iterative, bounded by 1,048,576 visits and 16 MiB
 of text; hitting either is `Exhausted` kind 2 (`display`), never a truncated
@@ -490,25 +492,42 @@ registry is complete.
 **Semantics** (the pinned Base bodies, on words):
 - U32 `add`, `sub` and `mul` wrap modulo 2^32; comparisons are unsigned; `div` by 0
   is 0 and `mod` by 0 is the dividend; `shln` and `shrn` by 32 or more give 0;
-  `not` and `and` are bitwise. Witnesses: `u32-wrap`, `u32-unsigned`,
-  `u32-div-zero`, `u32-rem-zero`, `u32-shift`, `u32-shr`, `u32-not`, `u32-cmp`.
+  `not` and `and` are bitwise. Witnesses: `u32-wrap`, `u32-sub-wrap`,
+  `u32-mul-wrap`, `u32-unsigned`, `u32-lt-unsigned`, `u32-div-zero`,
+  `u32-rem-zero`, `u32-not`, `u32-and`, `u32-cmp`; shifts below 32 `u32-shr` (by
+  31); shifts by 32 or more `u32-shift` (`shln` by 32), `u32-shl-33`, `u32-shr-32`
+  and `u32-shr-33`, the last three observed as a Nat rather than through an
+  equality. Equalities answer False as well as True (`u32-ne`, `nat-ne`,
+  `char-ne`, `string-ne-order`, `string-ne-length`).
 - Nat `sub` floors at 0 (`base.bend` lines 562–571; `nat-sub-floor`). `add`, `mul`,
   Succ and every conversion check the mathematical result before narrowing:
   above 2^32-1 is `Exhausted` kind 2 (`NatRange`), never U32 wraparound
-  (`nat-big` inside the bound, `nat-range` beyond it).
+  (`nat-big` and `u32-to-nat-big` inside the bound; `nat-range`, `nat-mul-range`
+  and `nat-succ-range` beyond it). A Nat Case binds `n-1` (`nat-pred`); Succ adds
+  one (`nat-succ`); `Nat.cmp` orders (`nat-cmp`).
 - `U32.to_nat`, `U32.from_nat`, `Char.from_u32` and `Char.to_u32` keep the word.
   `Char.is_space` is 9..13 or 32 (`base.bend` 1765–1768; `char-space`).
 - Bool is False 0, True 1; Cmp is LT 0, EQ 1, GT 2.
 - String is the immutable Chr list: `eq` compares length and codes, `append`,
   `reverse`, `length` and `is_empty` observe the list, and `U32.show`/`Nat.show`
-  give unsigned decimal without leading zeros except `0`.
+  give unsigned decimal without leading zeros except `0`. `string-codes` and
+  `nat-show-codes` observe `append`, `reverse` and `show` through their character
+  codes, not through `String.eq`.
+
+**Ownership.** Every prim borrows its operands, and §6 drops them after the result
+is allocated, except for these moves, which consume the operand into the result:
+`String.append(a,b)` moves `b`, whose reference becomes the result's tail, and
+drops only `a`; `U32.to_nat`, `U32.from_nat`, `Char.from_u32` and `Char.to_u32`
+move their operand word, which is the result (a Big cell is reused, never copied
+or dropped). Golden `string-append-mortal` appends a freshly allocated `b`, so
+dropping it as well is a use after free.
 
 **Allocation order.** A String result is allocated last cell first: `append(a,b)`
-copies `a`'s cells onto `b` (moved) from `a`'s last character to its first;
+copies `a`'s cells onto the moved `b` from `a`'s last character to its first;
 `reverse(a)` allocates from `a`'s first character; `show` from its last digit. A
-Big result is allocated before the operands are dropped. Prims without a golden
-witness (U32 `sub`, `mul`, `and`, `is_ne/lt/le/ge`, the conversions, and Nat
-`cmp`, `is_ne/lt/le/ge`) owe edge witnesses in vm-prims: 0, 1, 2^31 and 2^32-1.
+Big result is allocated before the operands are dropped. Prims still without a
+golden witness (U32 `is_ne/le/ge`, `U32.from_nat`, `Char.from_u32`, and Nat
+`is_ne/lt/le/ge`) owe edge witnesses in vm-prims: 0, 1, 2^31 and 2^32-1.
 
 ## 10. IO and `knot-io-2` (D17)
 
@@ -563,7 +582,7 @@ reached:
 | seed native | Nat to about 2^48; its runtime resources |
 | seed Bun | about 32K stack frames (`List.length`); unary Nat materialization: `nat-big` passed 60 GB of RSS in about 6 minutes and was stopped, so word-Nat goldens use the native lane |
 | literals eval | unary Nat and String up to 2^20 (`nat-big`, `nat-range`: `Exhausted primitive budget`); at most 1,048,576 transitions; display 4,096 visits and 65,536 characters |
-| knot-vm-1 | Nat at most 2^32-1; call fuel; 16 MiB image; 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8 |
+| knot-vm-1 | Nat at most 2^32-1; call fuel; 16 MiB image; 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8; Book describe: algebraic trees with unary Nats only, so a U32, Char or String leaf is `HostFailure invoke scalar-result` (`result-u32`: eval-cli has no describe spelling for it either; Programs print scalars through IO) |
 
 `NatRange`, `RCOverflow`, image size and display are representation-resource
 exhaustion, kind 2 at the host boundary; the VM's own outcome keeps the precise
@@ -579,17 +598,20 @@ and a missing lane are neither Exhausted nor agreement. Expected values are neve
 regenerated from a candidate VM.
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
-golden: the eval-cli line where eval agrees with the seed (52 goldens), agreement
+golden: the eval-cli line where eval agrees with the seed (70 goldens), agreement
 meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
-value rendered by §8 where eval is excused (`nat-big`); `Exhausted` kind 2
-`NatRange` where the seed's value lies outside the VM's domain (`nat-range`,
-justified in [golden/bounds.json](golden/bounds.json)); and the seed's stdout for
-the Program `foreign-print`. For that Program the eval lane is not excused but
+value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
+`Exhausted` kind 2 `NatRange` where the seed's value lies outside the VM's domain
+(`nat-range`, `nat-mul-range`, `nat-succ-range`) and `HostFailure invoke
+scalar-result` outside the Book-describe domain (`result-u32`), each justified in
+[golden/bounds.json](golden/bounds.json); and the seed's stdout for the Programs
+`foreign-print` and `io-bind`. For those Programs the eval lane is not excused but
 unavailable: both literals `eval-cli` and `check-cli` report
 `Invalid parse function-result` for `def main() -> IO(Unit)`, a program the seed
 runs. Under D4 that should be Unsupported; it is recorded as observed, not
-relabelled, and its plan follows §1 by hand.
+relabelled, and their plans follow §1 by hand. `io-bind` keeps Base's `IO.bind`
+and `IO.pure` unspecialized, so its `A`-typed nodes are `none`.
 
 ## 12. Frozen evidence and later obligations
 
@@ -604,12 +626,12 @@ lane and requires:
   head's `check-cli` core display;
 - the eval result's type index and constructor matching the image, and its tree
   equal to the seed's value in §8's spelling; a disagreeing eval lane is refused
-  (two frozen expectation controls);
+  (three frozen expectation controls);
 - every literal review (`seed_stdout`, written before observation) equal to the
   seed's printed value;
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations;
-- all 13 node forms, both Case modes, a Program and a boxed scalar constant
-  covered;
+- all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
+  `none`-typed node covered;
 - all 61 refusals of §4 with their frozen reasons;
 - 30 codec mutants and 3 source mutants killed through a changed image, a changed
   refusal or a changed observation, never a crash;
