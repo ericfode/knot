@@ -26,14 +26,22 @@ The scope comes from the census in
 [`implementation.json`](../../docs/compiler-campaign/inventory/implementation.json)
 under `generics`, `higher-order`, `templates` and `dependent`, plus the
 `quantities.arguments`, `quantities.polymorphic`, `function-values` and
-`calls.partial` classes, restricted to the bundle S. VM-DESIGN.md defines S
-as `src/compile-cli.bend` and its imports: all of `src/`, the reached slice
-of the pinned Base, and the bytes package
-(`0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend`, published from
-`packages/output_builder/bytes.bend`). The census also scans five other
-published packages that S does not import. Their shapes are listed at the end
-of the appendix but are not required. Each seed-valid
-fixture mirrors named shapes in miniature, in the compact spelling Knot uses:
+`calls.partial` classes. It is restricted to Knot's own source:
+- every non-law file in `src/`. This includes the bundle S that VM-DESIGN.md
+  defines as `src/compile-cli.bend` and its imports, and also `check-cli`,
+  `parse-cli`, `eval-cli`, `eval` and `checked-display`, which S does not
+  import but `vm-e2e2` and the conformance runs compile;
+- the reached slice of the pinned Base;
+- the bytes package that S imports
+  (`0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend`, published from
+  `packages/output_builder/bytes.bend`).
+
+The census also scans package modules that no `src/` file imports: `int_map`,
+`source`, `symbols`, `term_store`, `vec` and `output_builder`'s `main.bend`.
+Their shapes in these classes are listed at the end of the appendix but are
+not required.
+
+Each seed-valid fixture mirrors named shapes in miniature, in the compact spelling Knot uses:
 no space after a comma in a call, and `case K{..}: e` on one line. Each case's
 `mirrors` field cites `path:line name`. Line numbers are those at this suite's
 base commit; `base.bend` is the pinned `.toolchain/bend-2.0.29-574b6d3/bend2/base.bend`.
@@ -64,7 +72,7 @@ reaches `IO`, `IO.bind`, `IO.die`, `Pair`, `Sigma`, `Result`, `List.length`,
 | `List<&1,Result<S.Error,String>>` folded through `S.bind` with a `Con{Done{+head},tail}` pattern | `src/diagnostic.bend:25`, `src/wasm-bytes.bend:18` | `kind-result-list` |
 | `set_known(~A: Data, ~value: A -> S.Token -> U32 -> C.Term, ..)`, with `refine` and `replace` passing closed lambdas whose binders shadow their own parameters | `src/scope.bend:77`, `src/scope.bend:85`, `src/scope.bend:108` | `template-set-known-thunk` |
 | `Pair(A,B) = Sigma<&1,&1,A,_ => B>`, spelled `File & Result<..>` and destructured by `(file,result) = pair`; `Sigma`'s field `snd: B(fst)` | `base.bend:127`, `base.bend:25`, `src/driver.bend:44`, `src/check-cli.bend:33` | `sigma-pair`, `sigma-dependent` |
-| `unpack(-A,-B,-R, pair: A & B, f: A -> B -> R)`, a census `dependent` and `higher-order` declaration of `vec`, a package the census scans but S does not import; its `(a,b) = pair` under rigid types is also Knot's `read_pair` shape | `packages/vec/main.bend:97` (the census records it at line 101 of the published package `0xd684886d…`) | `sigma-unpack` |
+| `unpack(-A,-B,-R, pair: A & B, f: A -> B -> R)`, a census `dependent` and `higher-order` declaration of `vec`, a package the census scans but no `src/` file imports; its `(a,b) = pair` is the destructuring Knot's `read_pair` writes, here under rigid types | `packages/vec/main.bend:97` (the census records it at line 101 of the published package `0xd684886d…`) | `sigma-unpack` |
 
 **Base shapes outside the reached slice, and edges.** These fixtures are not
 reached by Knot's source today. Each exercises the same machinery in a form
@@ -700,8 +708,8 @@ Follow the pattern of `tests/compiler-fields/check.py`.
 
 The goal of `poly-fixtures` is to cover every shape that S's census lists
 under `generics`, `higher-order`, `templates` and `dependent`. This table
-covers every declaration of S in those classes and in `function-values` and
-`calls.partial`, 43 in all:
+covers every declaration of Knot's source (see Scope) in those classes and in
+`function-values` and `calls.partial`, 43 in all:
 - In non-law `src/` files: all 25 `higher-order` declarations, all 3
   `templates` declarations, the 10 non-law `dependent` declarations, the 4
   `function-values` declarations and the 4 `calls.partial` declarations. That
@@ -782,10 +790,11 @@ The fixtures write each spelling on their own carriers:
 - `Seq<&1,Res<Fault,Flag>>` for `List<&1,T>`;
 - `do Act<Color>` for `do IO<Unit>`.
 
-**Census packages outside S.** The census also scans `int_map`, `symbols`,
-`term_store` and `vec`, plus the published copy of `vec`
-(`0xd684886d10b431b9dce6c3b2d1ef1980`). S imports none of them, so no fixture
-is required for their declarations in these classes:
+**Census packages outside Knot's source.** Of the package modules that the
+census scans and no `src/` file imports, four have declarations in these
+classes: `int_map`, `symbols`, `term_store` and `vec`. `vec` is also scanned
+as its published copy (`0xd684886d10b431b9dce6c3b2d1ef1980`). No fixture is
+required for them:
 - `term_store` (41) and `vec` (34, and the same 34 in the published copy): all
   `dependent`, meaning a type mentions an earlier erased parameter. The
   exception is `vec`'s `unpack` (`packages/vec/main.bend:97`), which is also
@@ -793,11 +802,11 @@ is required for their declarations in these classes:
 - `symbols`: `Trie.rejoin` (`packages/symbols/main.bend:35`), a monomorphic
   `context: Trie -> Trie` applied inside a Base pair. That is closures plus
   sugar tuples.
-- `int_map` (20): its templates, `edit_path`, `set_path`, `remove_path`,
-  `IntMap.fold`, `combine_value`, `union_step` and `IntMap.union_with`
-  (`packages/int_map/main.bend:44-107`). `edit_path` takes a template binder
+- `int_map` (20): 13 are `dependent` only. The other seven are templates:
+  `edit_path`, `set_path`, `remove_path`, `IntMap.fold`, `combine_value`,
+  `union_step` and `IntMap.union_with` (`packages/int_map/main.bend:44-107`). `edit_path` takes a template binder
   of rank-2 type, `~join: @-T: Data -> IntMap<T> -> IntMap<T> -> IntMap<T>`.
   `set_path` feeds it the type lambda `~(T => lo => hi => Branch{lo,hi})`, and
   `remove_path` feeds it the generic def `~branch`. The audit's seed probe of
-  that shape checks and runs. No suite has a fixture for it. If S comes to
-  import `int_map`, it is the one shape here that no suite covers.
+  that shape checks and runs. No suite has a fixture for it. If Knot's source
+  comes to import `int_map`, it is the one shape here that no suite covers.
