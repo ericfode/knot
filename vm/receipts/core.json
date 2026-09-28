@@ -1,14 +1,14 @@
 {
- "date": "2026-09-28T14:29:30.302224+00:00",
+ "date": "2026-09-28T14:39:23.023375+00:00",
  "status": "passed",
  "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
  "inputs": {
   "scripts/run-wasm-io.mjs": "4ee7b16d5ae02614a47087dd8498352a487b7efffad6fca8ea629a60eae0b3ec",
-  "vm/SPEC.md": "92f82a8910419f3a5b095f8a603a2332f168aae03df8071a2c6cb7d9fbed3932",
+  "vm/SPEC.md": "125de63ab67327d55f2d05010734be16747d86f119a8b986c4b3734ad77f0792",
   "vm/build.json": "dfe524854d4be197d724cd0ad2f69163a1044811fbd988768a1d33ae1eb45b53",
   "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
-  "vm/check-core.py": "8438f26cd5048e7850d8c66281b36bb0153676ce5ed69d08d93ace22fa0e3b4d",
-  "vm/check-spec.py": "5e7d771ff8b0a6097c1109185a1c57e84d42b2d29d6dbfd6df4908e0d2108117",
+  "vm/check-core.py": "6e45ad50a9cf28f669b7207671c56af727422a2a7d74f6a0da840be29ef85e1e",
+  "vm/check-spec.py": "8db320e809af47bf1006e4c3df08b451dac79e89d16384132fd8114a0b98f1f7",
   "vm/core/ceiling-append-top.kimg": "6218878b405984ad47e4664ae542743fd168e40eee11ab7e090740e8e38b6b47",
   "vm/core/ceiling-append-top.plan.json": "b7e0b093d587dad40cc8595af23b09a063c142fc3ced688e483936caeab56009",
   "vm/core/ceiling-band.kimg": "26c6ebdcdcc807b4671d67deb34a87a0edf345f77e83e92a16f8fc270bd2e720",
@@ -55,10 +55,10 @@
   "vm/core/unsupported-foreign.kimg": "ab7e2eda7b5b2de10ff0e713d85489055352a894c8bbf7d8386e8b1cb9b36bab",
   "vm/core/unsupported-foreign.plan.json": "48b7962552cfc0f7723ee3fbddf5a93acd79712c710f4e6516eba9ba5938d93b",
   "vm/evaluate.py": "b4c5754ad7b09ad75a355c60aaa0869c0ca951f26735c96f342d36a6e2134c2c",
-  "vm/golden/vm-expected.json": "d8905d9e9c17107b3e60d89d06d0db9ac1356ec9f8c0a823e3d8d5c9b6e4ae31",
+  "vm/golden/vm-expected.json": "b26c5fda956d1d77830710b351b93536bded307c7b9d303a30dbbf854f540e90",
   "vm/harness.mjs": "cd8c7c38107106a3be21d8efaaf40844c8cb4be09f21d135b96efe969f09a1ab",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
-  "vm/serializer.py": "3c6bc2b8d5379841aa4b169c15f9eebf955f04f6073eaa64776e87ddcfc78546",
+  "vm/serializer.py": "ef47e887c0233ca1716a5c7952f9e306646ab11b29db05f80c7347b973ca5da5",
   "vm/vm.wasm": "a91a39b5afaa85e7b6abf2677a95fed435524146971bb2a46b6cb51e1477507c",
   "vm/vm.wat": "a34a07a13a66ccd60fa3ee635709862b40effc346f671422a11cec4b633fcc72"
  },
@@ -381,6 +381,16 @@
    "audited": 15
   },
   {
+   "name": "invoke-words",
+   "exit": 0,
+   "stdout_sha256": "049a4e8be7957e5da87c558c79198b061b08ae9ae9e8bd950641dfe7964d6461",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
    "name": "io-bind",
    "exit": 0,
    "stdout_sha256": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
@@ -419,6 +429,16 @@
    "calls": 3,
    "transitions": 24,
    "audited": 24
+  },
+  {
+   "name": "nat-case-big",
+   "exit": 0,
+   "stdout_sha256": "ad9e8c9b30aae0a5b82706afa95f0dbb5835baa01e518e280d3a2177e223c725",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 4,
+   "transitions": 25,
+   "audited": 25
   },
   {
    "name": "nat-cmp",
@@ -1247,6 +1267,118 @@
    "outcome": "HostFailure",
    "cause": "argument-arity",
    "calls": 0
+  },
+  {
+   "invocation": "invoke-words absent 1000000 x",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words absent x",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 9 x",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 01 0",
+   "exit": 0,
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1
+  },
+  {
+   "invocation": "invoke-words two 1000000 000000000001 0",
+   "exit": 0,
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1
+  },
+  {
+   "invocation": "invoke-words two 1000000 4294967295 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 4294967296 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 4294967297 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 +1 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 -1 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000  1 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 1 ",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 \u0661 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 1000000 1_0 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 4294967296 1 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "expected-u32",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-words two 0001048576 1 0",
+   "exit": 0,
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1
   }
  ],
  "fixtures": {
@@ -1639,6 +1771,73 @@
    }
   }
  },
+ "arguments": [
+  {
+   "control": "book-without-fuel",
+   "verdict": "HostFailure arguments usage",
+   "exit": 5
+  },
+  {
+   "control": "book-usage-before-lookup",
+   "verdict": "HostFailure arguments usage",
+   "exit": 5
+  },
+  {
+   "control": "book-long-zeros",
+   "verdict": null,
+   "exit": 0
+  },
+  {
+   "control": "book-program-form",
+   "verdict": "HostFailure arguments expected-u32",
+   "exit": 5
+  },
+  {
+   "control": "program-runs",
+   "verdict": null,
+   "exit": 0
+  },
+  {
+   "control": "program-args",
+   "verdict": null,
+   "exit": 0
+  },
+  {
+   "control": "program-fuel-word",
+   "verdict": "HostFailure arguments expected-u32",
+   "exit": 5
+  },
+  {
+   "control": "program-fuel-beyond",
+   "verdict": "HostFailure arguments expected-u32",
+   "exit": 5
+  },
+  {
+   "control": "program-without-fuel",
+   "verdict": "HostFailure arguments usage",
+   "exit": 5
+  },
+  {
+   "control": "program-without-separator",
+   "verdict": "HostFailure arguments usage",
+   "exit": 5
+  },
+  {
+   "control": "program-shape-before-fuel",
+   "verdict": "HostFailure arguments usage",
+   "exit": 5
+  },
+  {
+   "control": "program-book-form",
+   "verdict": "HostFailure arguments usage",
+   "exit": 5
+  },
+  {
+   "control": "image-before-words",
+   "verdict": "HostFailure image: magic",
+   "exit": 5
+  }
+ ],
  "malformed": {
   "controls": [
    {
@@ -2191,6 +2390,17 @@
     ]
    },
    {
+    "control": "run:nat-default-big",
+    "sha256": "b2d917830e18e84a0988fda5445edbb43242da0c2985ab16ac31fcacf15c9de7",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 1,
+    "fuel_runs": [
+     "1000000",
+     "1"
+    ]
+   },
+   {
     "control": "run:display-visits-at-bound",
     "sha256": "55966b543097ab29ebcab7f1cd4398cf3bb4fd347c90915e46f2a97cea7a6c3f",
     "exit": 0,
@@ -2237,15 +2447,139 @@
      "1000000",
      "1"
     ]
+   },
+   {
+    "control": "run:fuel-book-exact",
+    "sha256": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 6,
+    "fuel_runs": [
+     "6"
+    ]
+   },
+   {
+    "control": "run:fuel-book-short",
+    "sha256": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08",
+    "exit": 4,
+    "outcome": "Exhausted",
+    "cause": "fuel",
+    "kind": 1,
+    "calls": 5,
+    "fuel_runs": [
+     "5"
+    ]
+   },
+   {
+    "control": "run:fuel-invoke-exact",
+    "sha256": "ba4b4ab066c50995f4626acda6a26f70efc0ea9c3d54722a86ee397c259169c7",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 4,
+    "fuel_runs": [
+     "4"
+    ]
+   },
+   {
+    "control": "run:fuel-invoke-short",
+    "sha256": "ba4b4ab066c50995f4626acda6a26f70efc0ea9c3d54722a86ee397c259169c7",
+    "exit": 4,
+    "outcome": "Exhausted",
+    "cause": "fuel",
+    "kind": 1,
+    "calls": 3,
+    "fuel_runs": [
+     "3"
+    ]
+   },
+   {
+    "control": "run:fuel-program-exact",
+    "sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 5,
+    "fuel_runs": [
+     "5"
+    ]
+   },
+   {
+    "control": "run:fuel-continuation-short",
+    "sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f",
+    "exit": 4,
+    "outcome": "Exhausted",
+    "cause": "fuel",
+    "kind": 1,
+    "calls": 4,
+    "fuel_runs": [
+     "4"
+    ]
+   },
+   {
+    "control": "run:fuel-action-short",
+    "sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f",
+    "exit": 4,
+    "outcome": "Exhausted",
+    "cause": "fuel",
+    "kind": 1,
+    "calls": 3,
+    "fuel_runs": [
+     "3"
+    ]
+   },
+   {
+    "control": "run:fuel-zero-book",
+    "sha256": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08",
+    "exit": 4,
+    "outcome": "Exhausted",
+    "cause": "fuel",
+    "kind": 1,
+    "calls": 0,
+    "fuel_runs": [
+     "0"
+    ]
+   },
+   {
+    "control": "run:fuel-zero-program",
+    "sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f",
+    "exit": 4,
+    "outcome": "Exhausted",
+    "cause": "fuel",
+    "kind": 1,
+    "calls": 0,
+    "fuel_runs": [
+     "0"
+    ]
+   },
+   {
+    "control": "run:fuel-zero-ill-typed-invoke",
+    "sha256": "520e2b57133e287510b66fc5f7722019d239f2d43d35dc86281f29fbf4871e4f",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 2,
+    "fuel_runs": [
+     "2"
+    ]
+   },
+   {
+    "control": "run:fuel-zero-ill-typed-phase",
+    "sha256": "ea8963bd6995a6639549e85bb8f42a3e902779ce0bc751204495d332ef9a1222",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 2,
+    "fuel_runs": [
+     "2"
+    ]
    }
   ],
   "fuzz": {
    "seed": 20260928,
    "per_image": 40,
-   "images": 3640,
-   "corpus_sha256": "8fa4ecdd2e27afab99bc951e7cd3b410d2db484cae42fb010367081a811d7fd4",
-   "refused": 3336,
-   "accepted": 304,
+   "images": 3720,
+   "corpus_sha256": "61c14eee6f43ae2848c9eab770d8e70c286144335b8746a50b85289bbb782cae",
+   "refused": 3431,
+   "accepted": 289,
    "reference_crash": 0
   }
  },
@@ -2258,10 +2592,10 @@
     "golden:case-off",
     "golden:case-on",
     "golden:char-space",
-    "golden:nat-pred",
-    "golden:nat-show-codes"
+    "golden:nat-case-big",
+    "golden:nat-pred"
    ],
-   "wrong_observations": 10,
+   "wrong_observations": 11,
    "crashes": 0
   },
   {
@@ -2275,7 +2609,7 @@
     "golden:char-space",
     "golden:closure-capture-off"
    ],
-   "wrong_observations": 74,
+   "wrong_observations": 76,
    "crashes": 0
   },
   {
@@ -2300,7 +2634,7 @@
     "golden:char-code",
     "golden:char-eq"
    ],
-   "wrong_observations": 153,
+   "wrong_observations": 155,
    "crashes": 0
   },
   {
@@ -2413,7 +2747,7 @@
     "run:live-closure-invoked-erased@2",
     "run:phase-one-live@1000000"
    ],
-   "wrong_observations": 8,
+   "wrong_observations": 10,
    "crashes": 0
   },
   {
@@ -2438,7 +2772,7 @@
     "run:live-closure-invoked-erased@2",
     "run:phase-one-live@1000000"
    ],
-   "wrong_observations": 8,
+   "wrong_observations": 10,
    "crashes": 0
   },
   {

@@ -27,11 +27,14 @@ Checks, in order:
   vm-spec admits, loaded and run as vm/core/fixtures.json freezes them (and as
   the reference evaluation runs them), and its
   run controls, run to the outcome and call count check-spec.py freezes with
-  them, also on exactly that much fuel (section 7's operand check); and a
+  them, at their frozen fuel (section 7's boundary) or also on exactly that
+  much fuel (section 7's operand check); its argument controls, with their
+  frozen verdicts or the reference evaluation's run (section 8's words); and a
   seeded fuzz corpus of mutated goldens, where every refusal matches the
   reference and no run traps;
 - WAT mutants, each killed by a named fixture group through a wrong
-  observation (a trap, host stack failure or timeout never counts).
+  observation (a trap, host stack failure or timeout never counts, except for
+  group `trap`, whose defect is the trap).
 
 It writes only vm/receipts/core.json.
 """
@@ -186,7 +189,7 @@ def expected_run(case: dict) -> dict:
         return {k: case[k] for k in ('exit', 'stdout', 'stderr')}
     outcome, cause = case['outcome'], case['cause'].replace(' ', '\t')
     if outcome == 'Exhausted':
-        return {'exit': 4, 'stdout': '', 'stderr': f"Exhausted\tio\t{KINDS[case['kind']]}\n"}
+        return {'exit': 4, 'stdout': case.get('stdout', ''), 'stderr': f"Exhausted\tio\t{KINDS[case['kind']]}\n"}
     require(outcome in ('Unsupported', 'HostFailure'), f'a golden outcome {outcome}')
     return {'exit': 3 if outcome == 'Unsupported' else 5, 'stdout': case.get('stdout', ''),
             'stderr': f'{outcome}\t{cause}\n'}
@@ -918,18 +921,20 @@ def main() -> int:
         admissions.append({'control': r['label'], 'sha256': r['sha256'], 'exit': g['exit'], **row['dump']})
 
     # the run controls vm-spec admits and freezes with their runs (SPEC sections 4, 7
-    # and 12): loaded, then run to the frozen outcome and call count. Section 7 checks
-    # Enter's operands before its fuel, so each also runs on exactly its `calls` of
-    # fuel to the same outcome: an ill-typed Enter is refused at fuel 0 too.
+    # and 12): loaded, then run to the frozen outcome and call count. A control that
+    # freezes its fuel (section 7's boundary) runs on exactly that fuel; any other on
+    # 1,000,000 and again on exactly its `calls`, to the same outcome, since section 7
+    # checks Enter's operands before its fuel: an ill-typed Enter is refused at fuel 0 too.
     runs_frozen = spec.run_controls(plans)
     run_rows = []
     for i, (label, plan, run) in enumerate(runs_frozen):
         data = codec.encode(plan, digest)
         require(spec.rejected(data, reg, digest) is None, f'run control {label}: the reference refuses it')
         (loaded / f'r{i}.kimg').write_bytes(data)
-        want = {'stderr': '', **{k: v for k, v in run.items() if k != 'calls'}} if 'exit' in run else expected_run(run)
+        want = ({'stderr': '', **{k: v for k, v in run.items() if k not in ('calls', 'fuel')}} if 'exit' in run
+                else expected_run(run))
         dump = {**expected_dump(run if 'exit' not in run else {'exit': 0}), 'calls': run['calls']}
-        for fuel in ('1000000', str(run['calls'])):
+        for fuel in [str(run['fuel'])] if 'fuel' in run else ['1000000', str(run['calls'])]:
             argv = ['main', fuel] if plan['entry'] == 'book' else [fuel, '--']
             run_rows.append({'label': f'run:{label}@{fuel}', 'sha256': sha(data), 'argv': [f'r{i}.kimg', *argv],
                              'want': want, 'dump': dump})
@@ -946,6 +951,31 @@ def main() -> int:
         rows_for = [r for r in run_rows if r['label'].startswith(f'run:{label}@')]
         admissions.append({'control': f'run:{label}', 'sha256': rows_for[0]['sha256'], 'exit': rows_for[0]['want']['exit'],
                            **rows_for[0]['dump'], 'fuel_runs': [r['label'].split('@')[1] for r in rows_for]})
+
+    # section 8's argument words where no frozen invocation reaches (vm-spec D16): the image
+    # first, its entry kind's shape (`usage`), then each decimal u32 word. Each control gets
+    # its frozen verdict; where the words are admitted, the reference evaluation's run
+    argued = BUILD / 'arguments'
+    argued.mkdir()
+    word_rows = []
+    for i, (label, data, words, verdict) in enumerate(spec.argument_controls(images)):
+        (argued / f'w{i}.kimg').write_bytes(data)
+        if verdict is None:
+            plan = codec.decode(data, digest)
+            if plan['entry'] == 'book':
+                ran = spec.reference.book(plan, words[0], [codec.decimal(w) for w in words[2:]], codec.decimal(words[1]))
+                want = {'exit': ran['exit'], 'stdout': ran['stdout'], 'stderr': ''}
+            else:
+                ran = spec.reference.program(plan, codec.decimal(words[0]))
+                want = {'exit': ran['exit'], 'stdout': ran['stdout'].decode(), 'stderr': ''}
+        elif verdict.startswith('HostFailure image: '):
+            want = {'exit': 5, 'stdout': '', 'stderr': f'HostFailure\timage\t{expected_reason(verdict)}\n'}
+        else:
+            want = {'exit': 5, 'stdout': '', 'stderr': verdict.replace(' ', '\t') + '\n'}
+        word_rows.append({'label': label, 'argv': [f'w{i}.kimg', *words], 'verdict': verdict, 'want': want})
+    for r, g in zip(word_rows, pool(lambda r: host(module, argued, r['argv']), word_rows)):
+        require(g == r['want'], f"argument control {r['label']}: {g} vs {r['want']}")
+    record['arguments'] = [{'control': r['label'], 'verdict': r['verdict'], 'exit': r['want']['exit']} for r in word_rows]
 
     fuzz = BUILD / 'fuzz'
     fuzz.mkdir()
@@ -1040,6 +1070,7 @@ def main() -> int:
     print(f"vm-core passed: {len(goldens)} golden images, {len(invocations)} Book invocations, {len(core)} fixture runs, "
           f"{len(dumps)} dump rows, {len(agreed)} runs equal to the reference evaluation, "
           f"{len(high)} ceiling runs, {len(stack)} small-stack runs, {len(refused)} refused and {len(admissions)} admitted controls, "
+          f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted, {tally['reference_crash']} reference crashes), "
           f"{len(killed)} killed mutants; {RECEIPT.relative_to(ROOT)}")

@@ -86,8 +86,8 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - The pinned `wat2wasm` reassembles `vm/vm.wasm` byte for byte. The module's
   imports, exports and 65,536-page memory are as the spec requires, and its call
   graph has no cycle.
-- All 91 golden images run through `scripts/run-wasm-io.mjs` with their
-  `vm-expected.json` outputs. So do its 28 frozen Book invocations. The test
+- All 93 golden images run through `scripts/run-wasm-io.mjs` with their
+  `vm-expected.json` outputs. So do its 44 frozen Book invocations. The test
   build confirms each exhaustion cause and audits the state after every
   transition.
 - `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and
@@ -104,13 +104,17 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   derivation alone. A cell may end exactly at 4 GiB, where the pre-fix VM
   trapped.
 - A 200,000-deep nested expression runs on a 64 KiB host stack.
-- The 62 malformed-image controls and a seeded fuzz corpus of 3,640 mutated
+- The 62 malformed-image controls and a seeded fuzz corpus of 3,720 mutated
   goldens are refused with the reference codec's first defect, and none traps.
-- The 24 controls vm-spec admits load:
+- The 36 controls vm-spec admits load:
   - 13 run as literal review froze them, and as the reference evaluation
     runs them;
-  - 11 run controls run to the outcome and call count that `check-spec.py`
-    freezes, also on exactly that much fuel.
+  - 23 run controls run to the outcome and call count that `check-spec.py`
+    freezes: the eleven fuel controls at their frozen fuel, the others also on
+    exactly that much fuel.
+- `check-spec.py`'s 13 argument controls run through the real host to their
+  frozen verdicts, or, where the words are admitted, as the reference
+  evaluation runs them.
 - Thirty WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right.
