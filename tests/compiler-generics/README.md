@@ -15,7 +15,9 @@ in parameter, return and binding types under its later authorization
 (`78c4942`). [Review round 2](#review-round-2) repairs three seed-accepted
 forms the generic path had exposed as Invalid. [Review round 3](#review-round-3)
 repairs one more such form, and three classes of seed-rejected books that the
-generic path had checked.
+generic path had checked. [Review round 4](#review-round-4) corrects the
+boundary corpora's provenance and records every changed gate assertion
+([ASSERTION-CHANGES.md](ASSERTION-CHANGES.md)).
 
 The mechanism is a type-expression algebra with rigid binder indices. A single
 sequential substitution list instantiates later parameter domains and results.
@@ -115,6 +117,32 @@ extends `generics.bend`; see the dual checker path in
 [COMPILER-CAMPAIGN.md](../../docs/COMPILER-CAMPAIGN.md)), and run live Perch
 semantic and style review. No package, runtime IR, evaluator or Wasm emitter
 implementation changes are part of this increment.
+
+## Review round 4
+
+The coordinator's workflow sent this round as "review round 2". This README
+calls it round 4 because three rounds precede it here. The branch merges main
+`c0bd08d` (`737e241`; D21, documentation only). The two confirmed findings
+concern records, not code, so no fixture is frozen and no source changes.
+
+| Finding | Fix | Disposition |
+| --- | --- | --- |
+| The 24 boundary and dispatch-boundary expectations were committed with the checker in `f39ba7e`. The documents claimed they came first. | `67a92b7`: the README table, both corpus READMEs, `LAW_REVIEW.md` and the review log now name `f39ba7e`. [BOUNDARY-PINS.md](BOUNDARY-PINS.md) maps each Knot pin to its contract clause, to a source older than `f39ba7e` and to the integration base's own outcome. | Claims fixed. The pin review is prepared, not done: the coordinator's literal review is open. |
+| The gates pass only because existing assertions changed, and the supersession's authorization was recorded inconsistently. | `379137f`: the six `superseded.by` fields name the coordinator authorization that `78c4942` applied. `CLASSIFICATION.md` drops "awaiting authorization". [ASSERTION-CHANGES.md](ASSERTION-CHANGES.md) lists all nine changed assertions, with their authorization text and before/after gate output. | Records fixed. The coordinator's confirmation of rows 7 to 9 (the census literals and the `recursion.wasm` promotion) and of parts of rows 2, 5 and 6 is open. |
+
+The pin mapping grades the 24 pins as 7 seed-derived, 9 exact, 5 code-only
+and 3 loose. The three loose pins are the `type-level-term` pins; no
+`unsupported` contract entry names a type-valued term. `67a92b7`'s commit
+message miscounts these grades; `379137f` corrects it. Two base outcomes were
+D4 violations that the pins repair. On the base, `type-valued-result` was
+Invalid parse function-result and `unannotated-erased-type` was Invalid check
+free-name.
+
+The seed side of both corpora reproduces unchanged: `boundaries/regen.py`
+gives 15 fixtures and 26 calls, and `dispatch-boundaries/regen.py` gives
+9 fixtures and 9 calls, both identical. The classification gate and the
+frontend gate pass on the edited manifest, with the same output as before the
+edit. `census --check` exits 0.
 
 ## Review round 3
 

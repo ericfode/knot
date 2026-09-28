@@ -9,7 +9,9 @@ the matching `src/SPEC.md` text. Git history therefore cannot show that these
 24 expectations preceded the checker. Their Knot pins are phase/code strings
 that the implementer chose, and the checker in the same commit produces them.
 Every corpus added after `f39ba7e` was frozen in its own commit before its
-repair (see the [README](README.md) table).
+repair (see the [README](README.md) table). The one later addition is the
+pattern-order binding variant. `d3fe024` added its two cases after the repair
+`2e9646f`, and its commit message says so.
 
 The seed side does not depend on Knot, and it reproduces:
 

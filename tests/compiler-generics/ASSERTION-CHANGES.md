@@ -9,6 +9,9 @@ and census tests. This ledger lists each change with its commit, the
 authorization text and its status. Gate runs pass only with these changes, so
 they need the coordinator's explicit confirmation or rejection before merge.
 
+The round-1 and round-2 tasks are the coordinator's executor prompts for
+those rounds. They are quoted here because they are not in the repository.
+
 **Status** takes three values:
 
 - *authorized*: coordinator text explicitly covers the change.
@@ -27,7 +30,7 @@ they need the coordinator's explicit confirmation or rejection before merge.
 | 6 | `tests/compiler-classification/check.py` | `78c4942`, `d3cee9f` | `78c4942` deleted three mutants (6 to 3). `d3cee9f` takes a file and a witness list per mutant, checks each witness's hash and unmutated outcome, and kills 7 mutants on 9 witnesses. The law summary moves from 16 laws to 17. | Round-2 finding: "Retarget `parameter-application-invalid` ... Add a type-correct mutant that demotes type-parse.bend's `Unsupported{...type-expression...}` ... restore the gate's kill count". | required for `parameter-application-invalid` and `type-expression-invalid`; the two route mutants and the witness mechanics unconfirmed |
 | 7 | `tools/census/fixtures/expected.json` | `6086dfa` | `frontend_definitions` 41 to 47. Generics adds six definitions reachable from `lex.tokenize`/`parse.parse`: `type_then`, `wrap_generic`, `plain_parameters`, `wrap_typed_function`, `generic_parameter` and `typed_result`. | Round-3 finding reported `census:test` at 73/75; no text chose this repair. | unconfirmed |
 | 8 | `tools/census/tests/evidence.test.mjs` | `6086dfa` | `recursion.wasm.evidence` changes from `[]` to the generics fixtures `quantity-parity.bend` and `seq-parity.bend`. | As in row 7. | unconfirmed |
-| 9 | `docs/compiler-campaign/inventory/accepted.json` (generated) | `cac8dd2` (census regenerated at the round-1 merge) | `recursion.wasm` changes from `no-positive-fixture-evidence` to `observed-in-successful-fixtures`, driven by another increment's receipt. Every call of the two fixtures agreed in the evaluator and in Node Wasm, in both lanes. | none | proposed campaign decision; unconfirmed |
+| 9 | `docs/compiler-campaign/inventory/accepted.json` (generated) | `cac8dd2` (census regenerated at the round-1 merge) | `recursion.wasm` changes from `no-positive-fixture-evidence` to `observed-in-successful-fixtures`, driven by the generics receipt rather than by the recursion increment's own evidence. Every call of the two fixtures agreed in the evaluator and in Node Wasm, in both lanes. | none | proposed campaign decision; unconfirmed |
 
 ## Before and after
 
