@@ -23,9 +23,14 @@
   },
   "findings": [
     "truncation",
+    "hash",
     "adapters"
   ],
   "sources": {
+    "hash/alias-comment.bend": "55281d0ff70fcf3b7bf9c3a9875a27b6c9a022f269d7a762621168a5305833f5",
+    "hash/glued-base.bend": "65408a469c8fd81a1c695606969e6892ac351ef45fd81a48b8721ef3f8b376c8",
+    "hash/glued-empty.bend": "34c5f4fb5526a7ee594f5b76ccb1e582f531cb106aaf9b868a24e422c993559e",
+    "hash/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
     "trunc/base.bend": "df1f0eced058141cd072b1a7755ab6bd3371c95affd0088eb63faa3c732fc4b7",
     "trunc/entry.bend": "5cff46f038e9666f4cbd5518c6c194043c5b44e1f555e4c8f47cddc88f806984",
     "trunc/exact.bend": "44e4f1c6fff6b176ab78dcb0ab295f68feebacb0aa7523bed430bb67a7fa441a",
@@ -190,6 +195,99 @@
         "code": "budget",
         "diagnostic_prefix": "Exhausted\tlex\tbudget\t"
       }
+    },
+    {
+      "name": "hash-glued-base",
+      "finding": "hash",
+      "file": "hash/glued-base.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hash/glued-base.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/hash/glued-base.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import ('import Base', or 'import <path> as <Name>')\n- observed : 'import Base#c'\nLocation:\n1>| import Base#c\n  |        ^\n2 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-alias",
+        "diagnostic_prefix": "Invalid\tload\timport-alias\t"
+      }
+    },
+    {
+      "name": "hash-glued-empty",
+      "finding": "hash",
+      "file": "hash/glued-empty.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hash/glued-empty.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/hash/glued-empty.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import ('import Base', or 'import <path> as <Name>')\n- observed : 'import Base#'\nLocation:\n1 | import ./lib/flag.bend as F # trailing\n2>| import Base#\n  |        ^\n3 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "import-alias",
+        "diagnostic_prefix": "Invalid\tload\timport-alias\t"
+      }
+    },
+    {
+      "name": "hash-alias-comment",
+      "finding": "hash",
+      "file": "hash/alias-comment.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "hash/alias-comment.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/hash/alias-comment.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "hash/alias-comment.bend",
+        "hash/lib/flag.bend"
+      ]
     }
   ],
   "adapter_pins": {
