@@ -101,12 +101,15 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   bound, and six inspection controls, each against the reference evaluation's
   outcome and call count (`vm/evaluate.py`) and, for the seed-derived eight,
   the seed.
-- The seed's native lane can evaluate `Bool.or` or `Bool.xor` of a U32
-  comparison against a call with constant arguments as True when both sides
-  are False: `Bool.or(U32.is_gt(3,limit()),False{})` with `limit() = 1048576`
-  prints 1 natively and 0 on the Bun lane. The describe walk therefore tests
-  each bound in its own choice; no other `Bool.or` or `Bool.xor` operand in the
-  model compares against a constant-argument call.
+- The seed's native lane can evaluate `Bool.or` or `Bool.xor` as True when
+  both sides are False and one is a U32 comparison against a user-defined call
+  with constant arguments: `Bool.or(U32.is_gt(3,limit()),False{})` with
+  `limit() = 1048576` prints 1 natively and 0 on the Bun lane (so do `four()`
+  and `id(4)`; the builtin `U32.add(4,1)`, `Bool.and`, `Bool.not` and a
+  comparison as a choice's condition behave). The trigger was found by probes,
+  not proved. The describe walk therefore tests each bound in its own choice;
+  a scan finds no other `Bool.or` or `Bool.xor` operand of that shape in the
+  model, and the gate's differential covers the rest.
 - A Case arm that is absent or not a Branch or Default cannot be selected in
   an admitted image; if it were, the machine stops as `InternalFailure vm case
   arm` rather than reading a wrapped offset.
