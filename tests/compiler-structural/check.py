@@ -11,6 +11,7 @@ TIMEOUT_SCALE = float(__import__('os').environ.get('KNOT_GATE_TIMEOUT_SCALE', '1
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
+HOST_CHECKS = json.loads((ROOT / 'tests/compiler-modules/host-check-expectations.json').read_text())['entries']
 BUILD = ROOT / '.local/compiler-structural/gate'
 SEED = ROOT / 'scripts/bend-reference'
 RECEIPT = HERE / 'receipts/catalog.json'
@@ -182,7 +183,7 @@ def main():
             observer.write_text((HERE / 'observe.bend').read_text().replace('../../src/', './'))
             entry = observer if target == 'catalog' else directory / 'compile-cli.bend'
             typecheck = successful([SEED, entry, '--check-only'])
-            require(typecheck['stdout'].strip() == 'All terms check.', typecheck)
+            require(typecheck['stdout'].strip() == HOST_CHECKS.get(entry.name, {'stdout': 'All terms check.'})['stdout'].strip(), typecheck)
             output = directory / 'mutant.js'
             build = successful([SEED, entry, '-o', output])
             if witness == 'fields-257':

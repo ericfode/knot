@@ -12,6 +12,7 @@ TIMEOUT_SCALE = float(__import__('os').environ.get('KNOT_GATE_TIMEOUT_SCALE', '1
 
 ROOT=Path(__file__).resolve().parents[2]
 HERE=Path(__file__).resolve().parent
+HOST_CHECKS = json.loads((ROOT / 'tests/compiler-modules/host-check-expectations.json').read_text())['entries']
 BUILD=ROOT/'.local/compiler-wasm/gate'
 GENERATED=HERE/'generated'
 SEED=ROOT/'scripts/bend-reference'
@@ -158,7 +159,7 @@ def main():
             for source in (ROOT/'src').glob('*.bend'):shutil.copy2(source,directory/source.name)
             target=directory/file;text=target.read_text();require(text.count(old_text)==1,(name,'unique mutation'));target.write_text(text.replace(old_text,new_text))
             entry='eval-cli.bend' if kind in ('eval','fuel') else 'compile-cli.bend'
-            typecheck=successful([SEED,directory/entry,'--check-only']);require(typecheck['stdout'].strip()=='All terms check.',typecheck)
+            typecheck=successful([SEED,directory/entry,'--check-only']);require(typecheck['stdout'].strip()==HOST_CHECKS[entry]['stdout'].strip(),typecheck)
             program=directory/'cli.js';compiled=successful([SEED,directory/entry,'-o',program]);c=case_by_name[witness]
             item={'name':name,'file':file,'old':old_text,'new':new_text,'source_sha256':digest(target),'typecheck':typecheck,'build':compiled,'witness':c['file'],'export':export,'arguments':args,'expected_tag':expected}
             if kind in ('eval','fuel'):

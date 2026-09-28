@@ -13,6 +13,7 @@ TIMEOUT_SCALE = float(__import__('os').environ.get('KNOT_GATE_TIMEOUT_SCALE', '1
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
+HOST_CHECKS = json.loads((ROOT / 'tests/compiler-modules/host-check-expectations.json').read_text())['entries']
 BUILD = ROOT / '.local/compiler-recursion/gate'
 SEED = ['bun', ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/main.ts']
 RECEIPTS = HERE / 'receipts'
@@ -158,7 +159,7 @@ def main():
             target.write_text(source.replace(old, new))
             entry = directory / 'check-cli.bend'
             typecheck = successful([*SEED, entry, '--check-only'])
-            require(typecheck['stdout'].strip() == 'All terms check.', typecheck)
+            require(typecheck['stdout'].strip() == HOST_CHECKS.get(entry.name, {'stdout': 'All terms check.'})['stdout'].strip(), typecheck)
             output = directory / 'mutant.js'; built = successful([*SEED, entry, '-o', output])
             actual = run(['bun', output, HERE / cases[witness]['file']])
             # Require the intended semantic observation, never a crash or timeout.

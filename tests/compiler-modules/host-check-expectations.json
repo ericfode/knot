@@ -27,5 +27,71 @@
     "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
     "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
     "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2"
+  },
+  "entries": {
+    "check-cli.bend": {
+      "exit": 0,
+      "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+      "stderr": ""
+    },
+    "eval-cli.bend": {
+      "exit": 0,
+      "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+      "stderr": ""
+    },
+    "compile-cli.bend": {
+      "exit": 0,
+      "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+      "stderr": ""
+    }
+  },
+  "entry_commands": {
+    "check-cli.bend": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/check-cli.bend",
+      "--check-only"
+    ],
+    "eval-cli.bend": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/eval-cli.bend",
+      "--check-only"
+    ],
+    "compile-cli.bend": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/compile-cli.bend",
+      "--check-only"
+    ]
+  },
+  "compiled_foreign": {
+    "command": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/compile-cli.bend",
+      "-o",
+      ".local/compiler-modules/gate/compile.js"
+    ],
+    "artifact_sha256": "8c702c38138dd2c37fe29501766934f26b35fbd2870ba5462e3d3133772bc1fc",
+    "seed_foreign": [
+      "File.close",
+      "File.open",
+      "File.read",
+      "File.write_bytes",
+      "IO.args",
+      "IO.print",
+      "path-host.inspect"
+    ],
+    "census_foreign": [
+      "File.close",
+      "File.open",
+      "File.read",
+      "File.write_bytes",
+      "IO.args",
+      "IO.print",
+      "src/path-host.inspect"
+    ],
+    "namespace_note": "The census prefixes repository namespaces with src/; the seed CLI uses the entry directory as namespace root. The emitted effect requirement list is read from the pinned compiler output, not from census."
   }
 }
