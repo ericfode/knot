@@ -153,14 +153,15 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | `Name<...` in a parameter type | `parse` | `parameter-type` |
 | `Name<...` in a return type or local binding annotation | `parse` | `type-application` |
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
-| A line break where a bracketed list expects an element, a separator or its closer | `parse` | `line-break` |
+| A line break where call or constructor arguments expect an element, a separator or their closer | `parse` | `line-break` |
 | A second `case` arm on the line of an arm's body | `parse` | `same-line-arm` |
 
-The seed reads a line break inside call or constructor arguments, a def header's
-parameters or a type's fields as whitespace, and a second arm on an arm's line
-as the next arm; Knot ends a term at a line break, so the last two forms are
-unsupported, never invalid. Recognition stops at that prefix; it neither
-validates the suffix nor loads a module. Malformed supported syntax still reports `Invalid`. The reviewed
+The seed reads a line break inside call or constructor arguments as whitespace,
+and a second arm on an arm's line as the next arm; Knot ends a term at a line
+break, so the last two forms are unsupported, never invalid. A def header's
+parameters and a type's fields have the same gap, which stays open (the selfhost
+suite's `layout` need). Recognition stops at that prefix; it neither validates
+the suffix nor loads a module. Malformed supported syntax still reports `Invalid`. The reviewed
 [classification fixtures](../tests/subsets/classification-cases.json) retain six
 seed-accepted programs (local and hash imports separately) and six nearby
 syntax errors, and add 17 precision controls with fixed seed commands and outputs,

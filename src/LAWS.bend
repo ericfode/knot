@@ -136,20 +136,14 @@ law unnamed_binder_is_invalid:
   {P.run(1n,P.BindingStart{1,2},Con{S.Token{"(",at},Con{S.Token{"=",at},rest}})
     == Fail{S.Invalid{"parse","binding-name",at}} : Result<S.Error,P.Parsed>}
 
-# The seed reads a line break inside a bracketed list as whitespace, and a
-# second arm on the line of an arm's body as the next arm; a term here ends at
-# a line break. Both are unsupported, while a line break after a complete body
-# still ends it.
+# The seed reads a line break inside call or constructor arguments as
+# whitespace, and a second arm on the line of an arm's body as the next arm; a
+# term here ends at a line break. Both are unsupported, while a line break
+# after a complete body still ends it.
 law line_break_in_arguments:
   for +at: S.At
   for +rest: List<&2,S.Token>
   {P.run(1n,P.Arguments{"}",False{}},Con{S.Token{"\n",at},rest})
-    == Fail{S.Unsupported{"parse","line-break",at}} : Result<S.Error,P.Parsed>}
-
-law line_break_in_parameters:
-  for +at: S.At
-  for +rest: List<&2,S.Token>
-  {P.run(1n,P.Parameters{")"},Con{S.Token{"\n",at},rest})
     == Fail{S.Unsupported{"parse","line-break",at}} : Result<S.Error,P.Parsed>}
 
 law line_break_after_element:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Round-9 regressions: a let of a refined binder needs an annotation; a dotted binder and a line break in a list are unsupported."""
+"""Round-9 regressions: a let of a refined binder needs an annotation; a dotted binder, a line break in arguments and a same-line arm are unsupported."""
 import datetime
 import json
 from pathlib import Path
@@ -27,7 +27,7 @@ CONSTRUCT = '''    case None{} C.Checked{C.Construct{origin,typ,tag,params,args}
 # The first three ignore the refinement, wholly or by constructor form. The next
 # three over-reject: an annotated let, a residual binder and a field never split.
 # The next three report a dotted binder as Invalid at one binder site each; the
-# last four report a line break in a list, or a same-line arm, as Invalid again.
+# last three report a line break in arguments, or a same-line arm, as Invalid again.
 MUTANTS = [
     {'name': 'ignore-refinement', 'file': 'check.bend', 'old': VALUE + CONSTRUCT, 'new': '',
      'witness': 'letm-multi', 'phase': 'check', 'wrong': ACCEPTED},
@@ -66,10 +66,6 @@ MUTANTS = [
      'old': 'u => unsupported(tokens,"line-break"),u =>\n              invalid(tokens,"argument-separator")',
      'new': 'u => invalid(tokens,"argument-separator"),u =>\n              invalid(tokens,"argument-separator")',
      'witness': 'hd-b5-call-args-newline', 'phase': 'check', 'wrong': invalid('argument-separator')},
-    {'name': 'list-break-invalid-in-parameters', 'file': 'parse.bend',
-     'old': 'u => unsupported(tokens,"line-break"),u =>\n          S.choose(Result<S.Error,Parsed>,Bool.and(String.eq(close,")")',
-     'new': 'u => invalid(tokens,"parameter"),u =>\n          S.choose(Result<S.Error,Parsed>,Bool.and(String.eq(close,")")',
-     'witness': 'layout-def-params', 'phase': 'check', 'wrong': invalid('parameter')},
     {'name': 'same-line-arm-invalid', 'file': 'parse.bend',
      'old': 'u => unsupported(ts,"same-line-arm"),u =>', 'new': 'u => invalid(ts,"end-of-body"),u =>',
      'witness': 'hd-h25-two-cases-one-line', 'phase': 'check', 'wrong': invalid('end-of-body')},

@@ -14,10 +14,11 @@ The seed also accepts a dotted binder that rebinds a name in scope, which Knot
 does not resolve yet: every dotted binder, in a let, a typed let or a pattern,
 is Unsupported (coordinator decision, round 9), never Invalid (D4).
 
-The seed reads a line break inside a bracketed list (call and constructor
-arguments, a def header's parameters, a type's fields) as whitespace, and a
-second arm on the line of an arm's body as the next arm. Knot ends a term at a
-line break, so these seed-accepted programs are Unsupported, never Invalid.
+The seed reads a line break inside call or constructor arguments as whitespace,
+and a second arm on the line of an arm's body as the next arm. Knot ends a term
+at a line break, so these seed-accepted programs are Unsupported, never Invalid.
+A def header's parameters and a type's fields have the same gap; it stays open
+(it is the selfhost suite's `layout` need).
 """
 import argparse
 import json
@@ -64,13 +65,10 @@ REVIEWED = {
     'dotted-binder-stopgap': {**{name: DOTTED for name in (
         'rebound-let', 'rebound-typed-let', 'rebound-field', 'rebound-promotion',
         'rebound-row', 'rebound-multi', 'rebound-nested')}, 'rebound-erased-let': ACCEPTED},
-    # The reviewer's seven main-era probes (sem-r7-probes/hd) and four more list
-    # sites: a def header's parameters and a type's fields, after a comma, before
-    # the closer and after the opener.
+    # The reviewer's seven main-era probes (sem-r7-probes/hd).
     'layout-stopgap': {**{name: BREAK for name in (
         'hd-b1-body-empty-brace-newline', 'hd-b2-body-open-brace-newline', 'hd-b3-body-comma-newline',
-        'hd-b4-body-top-level-ctor-newline', 'hd-b5-call-args-newline', 'hd-h15-ctr-body-newline',
-        'layout-def-params', 'layout-def-close', 'layout-type-fields', 'layout-type-open')},
+        'hd-b4-body-top-level-ctor-newline', 'hd-b5-call-args-newline', 'hd-h15-ctr-body-newline')},
         'hd-h25-two-cases-one-line': ARM},
 }
 

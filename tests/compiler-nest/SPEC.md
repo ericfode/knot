@@ -195,17 +195,18 @@ frontier, and five whole-checker witnesses pin each site: a destructured
 promoted parameter and field check, and returning the binder, a later matrix
 split and a later zero-row match are each rejected.
 
-`round9-expectations.json` freezes 73 round-9 programs and 101 seed calls before
+`round9-expectations.json` freezes 80 round-9 programs and 111 seed calls before
 the repairs. The seed cannot infer a constructor, and in a positive branch it
 substitutes a matched binder by its constructor. An unannotated let of a
 refined binder (flat or in a matrix, through an alias, a nested field or an
 enclosing match; `v =`, `+v =`, `-v =`) is `Invalid check annotation-required`;
 a residual, unsplit, later or annotated binder and a call stay inferable. Every
 dotted binder, including a rebound one that the seed accepts, is `Unsupported
-parse dotted-binder`, a line break in a bracketed list `Unsupported parse
-line-break` and a second arm on an arm's line `same-line-arm`. `round9.py` checks both lanes, evaluator and Wasm
-agreement, rejection in every phase and thirteen mutants. `fuzz.py` draws lets of
-matched binders: 36 false acceptances before the repair, 0 after.
+parse dotted-binder`; a line break in call or constructor arguments is
+`Unsupported parse line-break` and a second arm on an arm's line `same-line-arm`.
+`round9.py` checks both lanes, evaluator and Wasm agreement, rejection in every
+phase and twelve mutants. `fuzz.py` draws lets of matched binders: 36 false
+acceptances before the repair, 0 after.
 
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual
