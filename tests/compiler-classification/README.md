@@ -66,6 +66,25 @@ of the three type application positions as Invalid. Every kill requires the
 specific wrong classification and unchanged source location; build failures,
 timeouts and host failures cannot count as kills.
 
+**After the generics supersession.** Generics parses `Name<...>` in all three
+positions, which removed the two `type-application` anchors. The gate now
+kills seven mutants, each on frozen witnesses from the classification
+manifest:
+
+| Mutant | File | Witnesses | Kill |
+| --- | --- | --- | --- |
+| `nonleading-template`, `equality-as-binding`, `arrow-as-binding` | `parse.bend` | unchanged | unchanged |
+| `parameter-application-invalid` | `parse.bend` | `function-parameter` (generics) | `Invalid parse parameter-type` at the witness span |
+| `type-expression-invalid` | `type-parse.bend` | the three `application-*-after-prefix` twins | `Invalid parse type-expression` at each twin's span |
+| `return-application-untyped` | `parse.bend` | `application-return` | `Invalid parse function-result 46:47:5:11` instead of `Parsed` |
+| `binding-application-untyped` | `parse.bend` | `application-binding` | `Invalid parse expected-= 65:66:6:10` instead of `Parsed` |
+
+The parameter mutant keeps its original anchor, `unsupported(rest,"parameter-type")`;
+only its witness moved, as in the frontend gate's `parameter-type-invalid`.
+The last two break the routes from a result type and a local annotation into
+the type grammar, so a seed-valid application is reported Invalid. Every
+witness's frozen hash and unmutated parser outcome are checked first.
+
 The unchanged frontend harness additionally checks all 29 classification cases
 in native and Bun parser, checker, evaluator and compiler lanes. Its 174
 downstream rejection observations include 58 compiler failures preserving an

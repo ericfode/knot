@@ -28,6 +28,7 @@ def main():
     sources = sorted((ROOT / 'src').glob('*.bend'))
     inputs = sources + [MANIFEST, Path(__file__), ROOT / 'tests/subsets/check_frontend.py']
     inputs += [ROOT / 'tests/subsets' / c['file'] for c in cases]
+    inputs += [ROOT / 'tests/subsets/classification/function-parameter.bend']
     record = {
         'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
         'status': 'incomplete',
@@ -58,22 +59,42 @@ def main():
                                        'expected': expected, 'lanes': {'bun': actual}})
 
         # Each mutant changes an outcome, not syntax, typing, budgets, or tests.
-        # The three type-application mutants were retired with their anchors:
-        # generics parses Name<...> in parameter, return and binding types.
+        # A witness is a frozen manifest case. The kill is the mutant's code at
+        # the witness's own span, or at a literal span for an accepted witness.
+        # Generics removed the classify-2 type-application prefixes: the
+        # parameter mutant keeps its anchor through the generics witness
+        # function-parameter, the malformed twins witness the type grammar's
+        # Unsupported fallback, and the accepted applications witness the
+        # routes into that grammar.
         mutations = [
-            ('nonleading-template', 'Bool.and(parameters,starts(t,"~"))', 'False{}',
-             'template-nonleading', 'Unsupported\tparse\ttemplate-binder'),
-            ('equality-as-binding', 'Bool.or(starts(tail,"="),starts(tail,">"))',
-             'starts(tail,">")', 'destructure-equality', 'Unsupported\tparse\tdestructuring-binding'),
-            ('arrow-as-binding', 'Bool.or(starts(tail,"="),starts(tail,">"))',
-             'starts(tail,"=")', 'destructure-arrow', 'Unsupported\tparse\tdestructuring-binding'),
+            ('nonleading-template', 'parse.bend', 'Bool.and(parameters,starts(t,"~"))', 'False{}',
+             ['template-nonleading'], 'Unsupported\tparse\ttemplate-binder'),
+            ('equality-as-binding', 'parse.bend', 'Bool.or(starts(tail,"="),starts(tail,">"))',
+             'starts(tail,">")', ['destructure-equality'], 'Unsupported\tparse\tdestructuring-binding'),
+            ('arrow-as-binding', 'parse.bend', 'Bool.or(starts(tail,"="),starts(tail,">"))',
+             'starts(tail,"=")', ['destructure-arrow'], 'Unsupported\tparse\tdestructuring-binding'),
+            ('parameter-application-invalid', 'parse.bend', 'unsupported(rest,"parameter-type")',
+             'invalid(rest,"parameter-type")', ['function-parameter'], 'Invalid\tparse\tparameter-type'),
+            ('type-expression-invalid', 'type-parse.bend',
+             'Fail{S.Unsupported{"parse","type-expression",S.at(h)}}',
+             'Fail{S.Invalid{"parse","type-expression",S.at(h)}}',
+             ['application-parameter-after-prefix', 'application-return-after-prefix',
+              'application-binding-after-prefix'], 'Invalid\tparse\ttype-expression'),
+            ('return-application-untyped', 'parse.bend',
+             'S.choose(Result<S.Error,Parsed>,typed_result(tokens),u =>',
+             'S.choose(Result<S.Error,Parsed>,False{},u =>',
+             ['application-return'], 'Invalid\tparse\tfunction-result\t46:47:5:11'),
+            ('binding-application-untyped', 'parse.bend',
+             'Bool.and(S.identifier(typ),starts(tail,"="))', 'S.identifier(typ)',
+             ['application-binding'], 'Invalid\tparse\texpected-=\t65:66:6:10'),
         ]
-        for name, before, after, witness, wrong in mutations:
+        manifest = {Path(c['file']).stem: c for c in json.loads(MANIFEST.read_text())['cases']}
+        for name, file, before, after, witnesses, wrong in mutations:
             directory = BUILD / name
             directory.mkdir(exist_ok=True)
             for source in sources:
                 shutil.copyfile(source, directory / source.name)
-            target = directory / 'parse.bend'
+            target = directory / file
             source = target.read_text()
             require(source.count(before) == 1, f'Mutation anchor: {name}')
             target.write_text(source.replace(before, after))
@@ -81,23 +102,32 @@ def main():
             require(checked['stdout'].strip() == 'All terms check.', checked)
             mutated = directory / 'parse.js'
             built = successful([*seed, directory / 'parse-cli.bend', '-o', mutated])
-            case = next(c for c in cases if Path(c['file']).stem == witness)
-            actual = run(['bun', mutated, ROOT / 'tests/subsets' / case['file']])
-            span = case['knot']['diagnostic'].rsplit('\t', 1)[1]
-            classified(actual, {'exit': 3 if wrong.startswith('Unsupported') else 2,
-                                'diagnostic': wrong + '\t' + span})
-            require(actual['exit'] != case['knot']['exit'], actual)
-            record['mutants'].append({'name': name, 'before': before, 'after': after,
+            kills = []
+            for witness in witnesses:
+                case = manifest[witness]
+                path = ROOT / 'tests/subsets' / case['file']
+                require(digest(path) == case['sha256'], f"Frozen witness changed: {case['file']}")
+                expected = expectation(case, 'parse')
+                observed(run(['bun', output, path]), expected)
+                diagnostic = wrong if wrong.count('\t') == 3 else (
+                    wrong + '\t' + expected['diagnostic'].rsplit('\t', 1)[1])
+                actual = run(['bun', mutated, path])
+                classified(actual, {'exit': 3 if wrong.startswith('Unsupported') else 2,
+                                    'diagnostic': diagnostic})
+                require(actual['exit'] != expected['exit'], actual)
+                kills.append({'witness': case['file'], 'expected': expected, 'actual': actual})
+            record['mutants'].append({'name': name, 'file': file, 'before': before, 'after': after,
                                       'typecheck': checked, 'build': built,
-                                      'mutated_sha256': digest(target), 'witness': case['file'],
-                                      'expected': case['knot'], 'actual': actual,
+                                      'mutated_sha256': digest(target), 'kills': kills,
                                       'outcome': 'semantic-kill'})
         require(all(digest(ROOT / p) == h for p, h in record['inputs'].items()),
                 'Inputs changed during the gate')
         record['status'] = 'passed'
         print(f"PASS: {len(cases)} frozen seed outputs; {len(record['fixtures'])} parser observations; "
-              f"{len(record['mutants'])} type-correct semantic mutants killed; "
-              '15 filled frontend laws (classify-2: 5 added, 1 narrowed; 1 restated and 1 retired by generics).')
+              f"{len(record['mutants'])} type-correct semantic mutants killed on "
+              f"{sum(len(m['kills']) for m in record['mutants'])} witnesses; "
+              '16 filled frontend laws (classify-2: 5 added, 1 narrowed; generics: 1 restated, 1 retired, '
+              '1 added).')
     except Exception as error:
         record.update(status='failed', failure=str(error))
         raise
