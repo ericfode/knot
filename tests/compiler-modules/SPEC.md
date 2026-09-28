@@ -155,10 +155,25 @@ the coordinator owns live semantic and style review.
 ## Single-file deltas (accepted by the coordinator, 2026-09-28)
 
 The single-file CLIs share the parser and checker with the bundle lanes, so the
-module rules change some of their diagnostics. The coordinator accepted every
-change on 2026-09-28: each moves Knot toward the seed's verdict and is pinned by
-seed-derived fixtures. The [compiler specification](../../src/SPEC.md) lists
-them. Rounds 3 to 5 made the first eight
-([decision table](REVIEW-ROUND-5.md#single-file-deltas)); round 6 adds
-`Invalid check dotted-binder` for an unbound dotted let, typed-let or field
-binder, which was accepted and which the seed rejects.
+module rules change some of their diagnostics. Arguments, limits and exit codes
+are unchanged. The coordinator accepted every change on 2026-09-28: each moves
+Knot toward the seed's verdict and is pinned by seed-derived fixtures.
+
+| Form | Before | After |
+| --- | --- | --- |
+| Let binder named like an earlier constructor | Checked | `Invalid check constructor-pattern-binder` |
+| Arm binder named like an earlier constructor | `Unsupported check variable-pattern` | `Invalid check constructor-pattern-binder` |
+| Field binder named like a later constructor | `Invalid check constructor-pattern-binder` | accepted |
+| Declaration-order binder walk past 65,536 steps | — | `Exhausted check` |
+| Result type longer than one name | `Invalid parse function-result` | `Unsupported parse result-type` |
+| Spaced `- >` arrow | Checked | `Invalid parse function-result` |
+| Parent-relative import | `Invalid parse declaration-name` | `Unsupported parse import` |
+| `&` or `\|` after a parameter or field type | `Invalid parse argument-separator` | `Unsupported parse parameter-type` |
+| `(`, `->`, `&` or `\|` after a typed-let type | `Invalid parse expected-=` | `Unsupported parse binding-type` |
+| Unbound dotted let, typed-let or field binder | Checked | `Invalid check dotted-binder` |
+
+Rounds 3 to 5 made the first nine; their seed evidence, fixtures and
+authorization are in the [round-5 decision table](REVIEW-ROUND-5.md#single-file-deltas).
+Round 6 adds the last ([round 6](REVIEW-ROUND-6.md#single-file-deltas)). The
+[compiler specification](../../src/SPEC.md) and `legacy_commands` in
+`src/CONTRACT.json` list the same changes.
