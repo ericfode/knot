@@ -779,5 +779,120 @@
     "basis": "String.eq([0xD83D, 0xDE00], [0x1F600]): two codes against one, never merged, False{} (Bool is type 0)"
    }
   ]
+ },
+ "ceiling": {
+  "rule": "Books whose bump pointer ends within 16 MiB of 4 GiB, where describe used to reserve a 16 MiB text window and a worklist above it in 32-bit arithmetic (review round 2). Expected runs are literal review of each plan under SPEC sections 5 and 8, written before the VM change (D7); `bump` is the design target that section 5's allocation sizes give, and keeps each image in its band. Each run touches about 4 GiB, so they run one at a time.",
+  "rows": [
+   {
+    "name": "ceiling-wrap-name",
+    "image": "core/ceiling-wrap-name",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t2\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "bump": 4278194480
+    },
+    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 313300, b = 4; every function returns On, so main is On{} of Res (type 2, tag 1). A worklist based 16 MiB above the text wrapped onto On's name word, and the VM printed Evaluated\t2\t1\t{} (review round 2)"
+   },
+   {
+    "name": "ceiling-wrap-type",
+    "image": "core/ceiling-wrap-type",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t2\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "bump": 4278194336
+    },
+    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 313300, b = 1; every function returns On, so main is On{} of Res (type 2, tag 1). The wrapped worklist overwrote Res's type record, and the VM failed ill-typed (review round 2)"
+   },
+   {
+    "name": "ceiling-wrap-dead",
+    "image": "core/ceiling-wrap-dead",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t2\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "bump": 4278259872
+    },
+    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 314324, b = 1; every function returns On, so main is On{} of Res (type 2, tag 1). The control: the wrapped worklist landed past the image, and the answer was right"
+   },
+   {
+    "name": "ceiling-band",
+    "image": "core/ceiling-band",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t2\t1\tB1{B1{B0{}}}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "bump": 4278190048
+    },
+    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 313231, b = 1, each loop returning Nat 0 at Zero; main returns B1{B1{B0{}}} of Box (type 2, tag 1), 26 bytes of text. Just below the wrap: a worklist 16 MiB above the text began 8 bytes below 4 GiB, and opening the first B1 trapped"
+   },
+   {
+    "name": "ceiling-top",
+    "image": "core/ceiling-top",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tSucc{Succ{Zero{}}}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "bump": 4294967264
+    },
+    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 575376, b = 1, each loop returning Nat 0 at Zero; main returns Nat 2 (type 0, tag 1). Its 32 bytes of text end exactly at 4 GiB, inside the memory maximum (D19)"
+   },
+   {
+    "name": "ceiling-over",
+    "image": "core/ceiling-over",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 4,
+     "stdout": "",
+     "stderr": "Exhausted\tio\tmemory\n"
+    },
+    "dump": {
+     "outcome": "Exhausted",
+     "kind": 2,
+     "cause": "heap",
+     "bump": 4294967280
+    },
+    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 575377, b = 0, as ceiling-top 16 bytes higher: its 32 bytes of text would end 16 bytes beyond 4 GiB. Section 5 stops an allocation beyond the maximum with Exhausted kind 2 (heap); the output text is one (CORE.md choice 12)"
+   }
+  ]
  }
 }
