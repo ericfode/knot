@@ -245,7 +245,8 @@ A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
 refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls,
 and MUST admit its three admitted plan controls (a Case on a `none` slot, among
 them `list-head-match`, S's shape), its seven code-list controls and its seven
-run controls, each of which it then runs to the outcome frozen with it (§7, §12).
+run controls; vm-model and vm-core MUST run each run control to the outcome
+frozen with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
