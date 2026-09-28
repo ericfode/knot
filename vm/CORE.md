@@ -46,8 +46,9 @@ BEND_NO_TELEMETRY=1 python3 vm/check-core.py
 
 These follow eval-cli's status numbers and its tab-separated layout, without a
 source location. The host shows only an exhaustion's kind. The precise cause
-(`fuel`, `heap`, `frames`, `NatRange`, `image-size`, `display`) stays in the
-outcome registers, which the test build's `vm_dump` exposes (SPEC §11).
+(`fuel`, `heap`, `frames`, `NatRange`, `display`, and §4's image limits
+`image-size`, `records`, `arity` and `slots`) stays in the outcome registers,
+which the test build's `vm_dump` exposes (SPEC §11).
 
 **Refusal codes.** A refused image names one kebab-case code, such as
 `section-offset`, `slot-depth` or `noncanonical`. Each code corresponds to
@@ -55,10 +56,19 @@ exactly one of `serializer.py`'s messages; `check-core.py` holds the table. The
 loader decodes in `serializer.decode`'s order. The validator follows the order
 of `serializer.validate`'s recursion and stops at the first defect, and the
 canonical check comes last. A refusal therefore names the reference codec's
-first defect. The gate requires this on:
-- the 62 frozen controls, counted against SPEC §4's own figure;
+first defect. A resource limit of §4 is no refusal: an image past one stops
+`Exhausted` kind 2 with the limit as its cause (choice 14), and the gate
+compares that in the reference's own words (`Exhausted 2 records`). The gate
+requires this on:
+- the 71 frozen controls, counted against SPEC §4's own figure (20 byte-level,
+  9 at the limits, 42 plan-level). Each equals its frozen refusal, and the
+  VM's own outcome registers name the outcome the refusal gives;
 - 3,720 seeded single mutations of the goldens: 3,431 refused, and 289 admitted
-  and run to a clean outcome.
+  and run to a clean outcome;
+- 7,741 images that set one word of a limit (each section's record count, each
+  function's arity and `slots`, each Closure's `slots`) to values around its
+  limit and, for a count, around the fit of two words per record: all refused,
+  516 of them at a limit.
 
 A refusal is read only from a run that stopped before `vm_boot` returned. A run
 that got past boot and failed `ill-typed` inspected a word at run time (§6). It
@@ -194,8 +204,20 @@ adopt them or record its own, so that lockstep compares like with like.
    Step 1 is the host's: without an IMAGE word there is no image to read.
    Steps 2–5 are §8's; the 13 argument controls and `invoke-words` pin them.
 8. **Halted states.**
-   - At an `ill-typed` halt only the outcome is specified: a Gather frame may
-     already be popped.
+   - **Stated limit.** An ill-typed operand of a prim, Succ or Chr halts with
+     its Gather frame already popped. When the last operand arrives, `$run`
+     pops the frame (`$top` becomes the operand block) and only then calls
+     `$complete`, which inspects the operands (`$num`, `$slen`). A step that
+     inspects first would leave the frame in the halted state.
+
+     The outcome, `HostFailure image` (`ill-typed`), the heap and `calls` do
+     not depend on it: the inspection precedes every allocation and `$dup` and
+     `$drop` do nothing in vm-core. No control observes it: the run controls
+     and the dump rows pin a halted state's outcome, cause and `calls`, and the
+     structural audit runs before each transition, so it never sees the state
+     a halt leaves. Only a comparison of the frames of such a halt would tell
+     the two readings apart. None exists, and the reading is not changed,
+     since no outcome depends on it.
    - At zero fuel the pending Enter's registers are kept and the mode reads
      Halt. §7 asks that the Enter stay in the state, while §6 lists Halt as a
      control.
@@ -236,6 +258,29 @@ adopt them or record its own, so that lockstep compares like with like.
     Succ and Chr operand (vm-spec `31aeaf2`), and `inspect-chr` freezes it.
     The `reference` fixtures compare `chr-unchecked`, `chr-closure` and the
     control `chr-big-code` with `evaluate.book`.
+14. **§4's resource limits (settled by SPEC §4, vm-spec DECISIONS 19).** An
+    image past a limit of version 1 is `Exhausted` kind 2 with the limit as its
+    cause, never a malformed image. Each limit is checked where its count is
+    read, after the count's own structure and before anything it governs, in
+    the order §4's table gives:
+
+    | §4 limit, inclusive | cause | vm.wat |
+    |---|---|---|
+    | 4,194,304 words (16 MiB), first, even when the image is also malformed | `image-size` | `$read_image`, after each 1 MiB chunk, before the image's length is known |
+    | 1,048,576 records per table | `records` | `$decode`, each section: `$limit` once the count is fitted to the words that remain at two per record (`record-count`), before any record |
+    | a Closure's `slots`, 65,536 | `slots` | `$decode`'s node shapes: `$limit` once the record's length is known (`node-length`) |
+    | a function's live arity, 4,096, then its `slots`, 65,536 | `arity`, `slots` | `$decode`'s function loop: `$limit` once the record's length holds its parameters (`function-record`), before its root, name and parameter types |
+
+    `$limit` is the one test (`count > max`, then `$exhaust` kind 2 with the
+    cause), so every limit is inclusive; the size check is its inline twin,
+    because it must run while the image is still being read. A count the
+    structure cannot hold (`record-count`, `function-record`) is malformed and
+    is checked first. The validator checks no limit: `$check` used to refuse an
+    arity above 4,096 or `slots` above 65,536 as `limits`, a `HostFailure
+    image` that §4 does not give, and a Closure's `slots` had no limit at all.
+    Decode has all of them for every function before validation starts. The
+    gate names each verdict in the reference's words (`Exhausted 2 arity`), so a
+    limit reported as malformed differs from it.
 
 ## Findings for the spec owner
 
@@ -249,9 +294,10 @@ adopt them or record its own, so that lockstep compares like with like.
   fail on images nested deeper than Python's recursion limit. `check-core.py`
   lays out its 200,000-deep image iteratively. At depth 40 that layout is
   checked equal to `serializer.encode`.
-- **Ambiguities.** Choice 8 above is a real ambiguity in §6–§7 and needs one
-  normative reading before lockstep. SPEC §8 has settled choice 6, and §6.1
-  choice 5 (D17).
+- **Ambiguities.** Choice 8's zero-fuel state is a real ambiguity in §6–§7 and
+  needs one normative reading before lockstep; its Gather frame at an
+  ill-typed halt is a stated limit no control observes. SPEC §8 has settled
+  choice 6, and §6.1 choice 5 (D17).
 - **Chr's inspection (choice 13, resolved).** §6's Inspection list now names
   the operand of a Chr construction (vm-spec `31aeaf2`).
 - **Other readings where the reference evaluation differs.** These are not
@@ -286,10 +332,12 @@ adopt them or record its own, so that lockstep compares like with like.
   lookup and before a Program's FUEL, `expected-u32`, and a bad magic word
   refused whatever the words), and each admitted one runs as the reference
   evaluation runs it, a 4,401-character ordinal of leading zeros among them.
-- **Admitted controls.** vm-spec's six admitted plan controls and seven
-  code-list controls load. They run as `fixtures.json` froze them by literal
-  review, and vm-spec's reference evaluation (`evaluate.book`) gives each the
-  same run and `calls`:
+- **Admitted controls.** vm-spec's six admitted plan controls, its admitted
+  limit control and seven code-list controls load. They run as `fixtures.json`
+  froze them by literal review, and vm-spec's reference evaluation
+  (`evaluate.book`) gives each the same run and `calls`:
+  - `arity-at-limit`, `value-on` beside an unused function of 4,096
+    parameters, prints `On{}` after 1 call;
   - `list-head-match` prints `True{}`;
   - the two `case-none-*` controls fail `ill-typed` after boot;
   - `first-code`, `first-code-none-case` and `key-arms-none`, whose arms fit
@@ -398,9 +446,14 @@ adopt them or record its own, so that lockstep compares like with like.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
-- **Malformed images.** As above: 62 frozen controls and 3,720 fuzz images,
-  with no trap.
-- **Mutants.** Thirty-five, each killed by a wrong observation in a named group
+- **Malformed images.** As above: 71 frozen controls, nine of them at §4's
+  limits (each `Exhausted` kind 2 on one side, malformed or invalid on the
+  other), 3,720 fuzz images and 7,741 limit-word images, with no trap. The
+  VM of `6f78bd2` refused 2,190 of the limit-word images differently from the
+  reference codec: 1,674 counts that the remaining words cannot hold (it read
+  `record-length`), 468 `limits` and 48 Closure `closure-slots`
+  (.local/vm-core/logs/r6-limit-words-prefix.log).
+- **Mutants.** Fifty, each killed by a wrong observation in a named group
   (one by a trap, below):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
@@ -435,4 +488,18 @@ adopt them or record its own, so that lockstep compares like with like.
     rows at exactly 4 GiB);
   - the pre-fix VM's trap restored at both (`top-trap`, group `trap`). Its
     defect is the trap, so it is killed by a trap, but only when all three
-    rows at exactly 4 GiB trap and the other seven ceiling rows stay right.
+    rows at exactly 4 GiB trap and the other seven ceiling rows stay right;
+  - §4's limits (fifteen, choice 14). Order: the size checked after the image's
+    length, the record limit before the count's fit, the arity limit before
+    the record's length, and both `slots` limits after the validator's
+    exact-slots rule. Absence: no limit on a Closure's `slots`, on a function's
+    `slots`, on the arity or on the records.
+    Kind: a count, or the size, refused as a malformed image; each limit
+    exclusive; an arity that names `slots` as its cause. Fit: a count that
+    exactly fills the remaining words refused, and a record taken as one word
+    of them. Each survives all 93 goldens and 41 run controls
+    (.local/vm-core/logs/r6-mutants-probe.log) and dies by a limit control
+    (group `image-limits`: the nine refusals, the three oversize images and
+    `arity-at-limit`, with the outcome registers). The two fit mutants survive
+    every frozen control, whose counts sit far from the fit, and die only by
+    the limit-word images (group `limit-words`).

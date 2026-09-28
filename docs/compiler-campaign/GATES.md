@@ -111,11 +111,17 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   derivation alone. A cell may end exactly at 4 GiB, where the pre-fix VM
   trapped.
 - A 200,000-deep nested expression runs on a 64 KiB host stack.
-- The 62 malformed-image controls and a seeded fuzz corpus of 3,720 mutated
-  goldens are refused with the reference codec's first defect, and none traps.
-- The 54 controls vm-spec admits load:
-  - 13 run as literal review froze them, and as the reference evaluation
-    runs them;
+- The 71 refusal controls, a seeded fuzz corpus of 3,720 mutated goldens and
+  7,741 goldens that each set one limit word (a record count, an arity or a
+  `slots`) around its limit are refused with the reference codec's first
+  defect, and none traps. Nine of the controls sit on either side of SPEC
+  section 4's resource limits: past a limit the VM stops `Exhausted` kind 2
+  with the limit as its cause, and the gate compares that with the reference's
+  `Exhausted 2 <limit>`, in the VM's own outcome registers too.
+- The 55 controls vm-spec admits load:
+  - 14 run as literal review froze them, and as the reference evaluation
+    runs them, `arity-at-limit` (a function of exactly 4,096 parameters)
+    among them;
   - all 41 run controls, as many as SPEC section 12 states, run to the outcome
     and call count that `check-spec.py` freezes: the eleven fuel controls at
     their frozen fuel, the others also on exactly that much fuel. Eighteen of
@@ -123,12 +129,16 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Thirty-five WAT mutants are each killed by a wrong observation. One restores the
+- Fifty WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right. Four read less than an inspection extent (`append`'s
   `b`, `is_empty` past its head, `eq` past a difference or an end, the moved
   word of a conversion); each survives every golden and dies by its own
-  inspection controls.
+  inspection controls. Fifteen move SPEC section 4's limits: checked in the
+  wrong order, absent, reported as a malformed image, exclusive, given another
+  limit's cause, or fitted to the wrong number of words. Each survives every
+  golden and run control and dies by a limit control, except the two fits,
+  which only the limit-word images kill.
 
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.
