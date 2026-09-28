@@ -43,6 +43,8 @@ PLAN = {
     'u32-constructor-pattern': ('u32 constructor', 'case U32{w} on a U32 scrutinee', [], U32_CONSTRUCTOR),
     'u32-constructor-rebuild': ('u32 constructor', 'case U32{w}: U32{w}', [], U32_CONSTRUCTOR),
     'u32-constructor-word': ('u32 constructor', 'U32{Word.zero(32n)} without a pattern', [], WORD),
+    'string-long-primitives': ('long strings', 'String.length, append (both sides) and eq at 39999-40001 Chars',
+                               ['length', 'append_left', 'append_right', 'equal'], oracle.AGREE),
 }
 
 
