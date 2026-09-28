@@ -666,7 +666,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "073ffd43e81dd68d02291bd531e8f1f6a87b1459728db9187eff3a74ab4d9c7e"
+      "sha256": "cac95cf1b6b2afa77b55817fd104ffdb7cbeb1e2f2f3eb375415ba7f771ebc65"
     },
     {
       "lane": "native",
@@ -684,7 +684,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "40d8f06c99b8b19f3dccf014c168a874c63d04e90d3191fa3c53fe6cec93436c"
+      "sha256": "a3ab8b275b6d3150440223de2d24e19488c46e1c751faebf5859cc761386e368"
     },
     {
       "lane": "native",
@@ -702,7 +702,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "bb4b1d0ab169a45f2f06a6c3d5476b4d054fddf24b38048feadc430730f65516"
+      "sha256": "6bdbc0a61ed26c5e55ac64043de17146a9a482c108d44d86b5b2174f689ca72e"
     },
     {
       "lane": "bun",
@@ -720,7 +720,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "1a085e2d594d5c1a07c0979803c842f07a527ed597f98cd804b175e0b8b08fa0"
+      "sha256": "e44a4213e877dac7bb679b2ac9be0e418b29b53c368f7909232f30c6c6742c79"
     },
     {
       "lane": "bun",
@@ -738,7 +738,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "83554e0a1f23fc13efbb307c3fcc4bad95179aa3209addb600bf8a1295a28ebd"
+      "sha256": "04bd8e29b77724ad9a76ec5aab334196a644bb25da8eba556393a4fea5f58c8f"
     },
     {
       "lane": "bun",
@@ -756,35 +756,35 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "41ba9a67f640751c2b44ea0a31eb683edcadde4770a0425dc832152539fecf19"
+      "sha256": "b26f9d544cbc5f1f2e185895c64578eed0563264d17001f57a7d50f84ae06463"
     }
   ],
   "counts": {
     "agree_eval_observations": 886,
     "agree_fixtures": 34,
-    "artifact_preservation_probes": 106,
+    "artifact_preservation_probes": 148,
     "boundary_probes": 8,
     "byte_identity_pairs": 34,
-    "check_observations": 174,
-    "compile_observations": 174,
-    "eval_observations": 992,
+    "check_observations": 216,
+    "compile_observations": 216,
+    "eval_observations": 1034,
     "execution_lanes": 2,
-    "fixtures": 87,
-    "invalid_fixtures": 38,
+    "fixtures": 108,
+    "invalid_fixtures": 44,
     "mutant_eval_observations": 6,
-    "mutant_verdict_observations": 9,
+    "mutant_verdict_observations": 12,
     "mutant_wasm_observations": 5,
-    "no_artifact_probes": 106,
+    "no_artifact_probes": 148,
     "proof_entries": 3,
     "proof_laws": 32,
-    "reference_calls": 454,
+    "reference_calls": 468,
     "result_byte_identity_pairs": 5,
     "result_calls": 61,
     "result_display_observations": 122,
     "result_fixtures": 5,
-    "semantic_mutants": 18,
+    "semantic_mutants": 21,
     "trust_audits": 68,
-    "unsupported_fixtures": 15,
+    "unsupported_fixtures": 30,
     "wasm_observations": 886
   },
   "date": "<normalized-date>",
@@ -55140,6 +55140,2352 @@
       "reference_calls": 0
     },
     {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-char-duplicate.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t275:279:16:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-char-duplicate-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t275:279:16:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t275:279:16:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-char-duplicate-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t275:279:16:14\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-char-duplicate.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t275:279:16:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-char-duplicate-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t275:279:16:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t275:279:16:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-char-duplicate-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t275:279:16:14\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-char-duplicate",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-affine.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:290:17:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-affine-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:290:17:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t283:290:17:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-affine-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:290:17:13\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-affine.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:290:17:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-affine-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:290:17:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t283:290:17:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-affine-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:290:17:13\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-nat-affine",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t282:285:16:17\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-constructor-duplicate-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t282:285:16:17\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t282:285:16:17\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-constructor-duplicate-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t282:285:16:17\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t282:285:16:17\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-constructor-duplicate-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t282:285:16:17\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t282:285:16:17\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-constructor-duplicate-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t282:285:16:17\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-nat-constructor-duplicate",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t271:274:16:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-duplicate-zero-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t271:274:16:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t271:274:16:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-duplicate-zero-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t271:274:16:13\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t271:274:16:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-duplicate-zero-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t271:274:16:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t271:274:16:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-duplicate-zero-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t271:274:16:13\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-nat-duplicate-zero",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:286:17:15\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-offset-subsumed-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:286:17:15\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t283:286:17:15\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-offset-subsumed-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:286:17:15\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:286:17:15\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-offset-subsumed-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:286:17:15\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t283:286:17:15\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-offset-subsumed-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t283:286:17:15\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-nat-offset-subsumed",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t279:282:17:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-subsumed-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t279:282:17:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t279:282:17:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-subsumed-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t279:282:17:13\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t279:282:17:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-subsumed-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t279:282:17:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t279:282:17:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-nat-subsumed-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t279:282:17:13\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-nat-subsumed",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-after-default.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t284:287:16:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-after-default-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t284:287:16:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t284:287:16:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-after-default-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t284:287:16:14\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-after-default.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t284:287:16:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-after-default-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t284:287:16:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t284:287:16:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-after-default-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t284:287:16:14\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-string-after-default",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-duplicate.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:279:16:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-duplicate-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:279:16:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t277:279:16:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-duplicate-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:279:16:14\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-duplicate.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:279:16:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-duplicate-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:279:16:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t277:279:16:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-duplicate-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:279:16:14\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-string-duplicate",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-nested.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t304:307:16:28\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-nested-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t304:307:16:28\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t304:307:16:28\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-nested-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t304:307:16:28\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-nested.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t304:307:16:28\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-nested-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t304:307:16:28\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t304:307:16:28\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-string-nested-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t304:307:16:28\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-string-nested",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-affine.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t281:288:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-affine-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t281:288:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t281:288:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-affine-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t281:288:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-affine.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t281:288:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-affine-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t281:288:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t281:288:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-affine-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t281:288:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-u32-affine",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-after-default.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-after-default-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-after-default-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-after-default.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-after-default-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-after-default-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-u32-after-default",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t263:266:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-duplicate-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t263:266:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t263:266:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-duplicate-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t263:266:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t263:266:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-duplicate-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t263:266:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t263:266:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-duplicate-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t263:266:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-u32-duplicate",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "exit": 3,
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-free-name.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t272:275:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-free-name-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t272:275:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t272:275:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-free-name-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t272:275:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-free-name.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t272:275:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-free-name-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t272:275:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tdead-arm\t272:275:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-arm-u32-free-name-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tdead-arm\t272:275:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-arm-u32-free-name",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-arity\t",
+        "exit": 2,
+        "justification": "Seed-invalid (\"a Succ pattern with 1 field\"): the seed checks the patterns of unreachable arms.",
+        "outcome": "Invalid"
+      },
+      "file": "tests/compiler-literals/regressions/dead-pattern-arity.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-arity.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-arity\t262:266:16:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-arity.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-arity-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-arity\t262:266:16:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-pattern-arity.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\tpattern-arity\t262:266:16:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-arity.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-arity-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-arity\t262:266:16:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-arity.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-arity\t262:266:16:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-arity.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-arity-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-arity\t262:266:16:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-pattern-arity.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\tpattern-arity\t262:266:16:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-arity.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-arity-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-arity\t262:266:16:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-pattern-arity",
+      "reference_calls": 0
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "exit": 2,
+        "justification": "Seed-invalid (\"a constructor of Nat\"): the seed checks the patterns of unreachable arms.",
+        "outcome": "Invalid"
+      },
+      "file": "tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-constructor.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:274:16:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-constructor-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:274:16:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\tpattern-type\t270:274:16:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-constructor-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:274:16:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-constructor.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:274:16:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-constructor-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:274:16:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\tpattern-type\t270:274:16:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-constructor-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:274:16:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-pattern-constructor",
+      "reference_calls": 0
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tnat-offset-pattern\t",
+        "exit": 2,
+        "justification": "Seed-invalid (\"a pattern (a binder or a constructor)\"): an offset above 256 is no pattern, reachable or not.",
+        "outcome": "Invalid"
+      },
+      "file": "tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-offset-limit.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tnat-offset-pattern\t265:266:16:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-offset-limit-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tnat-offset-pattern\t265:266:16:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tparse\tnat-offset-pattern\t265:266:16:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-offset-limit-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tnat-offset-pattern\t265:266:16:13\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-offset-limit.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tnat-offset-pattern\t265:266:16:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-offset-limit-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tnat-offset-pattern\t265:266:16:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tparse\tnat-offset-pattern\t265:266:16:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-offset-limit-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tnat-offset-pattern\t265:266:16:13\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-pattern-offset-limit",
+      "reference_calls": 0
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "exit": 2,
+        "justification": "Seed-invalid (\"a constructor of U32\"): the seed checks the patterns of unreachable arms.",
+        "outcome": "Invalid"
+      },
+      "file": "tests/compiler-literals/regressions/dead-pattern-type.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-type.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:273:16:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-type.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-type-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:273:16:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-pattern-type.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\tpattern-type\t270:273:16:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-type.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-type-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:273:16:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-type.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:273:16:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-type.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-type-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:273:16:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/dead-pattern-type.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\tpattern-type\t270:273:16:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/dead-pattern-type.bend",
+              "$ROOT/.local/compiler-literals/gate/dead-pattern-type-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\tpattern-type\t270:273:16:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "dead-pattern-type",
+      "reference_calls": 0
+    },
+    {
       "byte_identical": true,
       "expected": {
         "exit": 0,
@@ -61660,6 +64006,282 @@
       "reference_calls": 0
     },
     {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\ttype-mismatch\t",
+        "exit": 2,
+        "justification": "Seed-invalid (\"expected U32\"): the arm is the first applicable one on some path, so its body is checked there.",
+        "outcome": "Invalid"
+      },
+      "file": "tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-nat-offset.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t271:274:16:15\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+              "$ROOT/.local/compiler-literals/gate/live-arm-nat-offset-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t271:274:16:15\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\ttype-mismatch\t271:274:16:15\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+              "$ROOT/.local/compiler-literals/gate/live-arm-nat-offset-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t271:274:16:15\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-nat-offset.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t271:274:16:15\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+              "$ROOT/.local/compiler-literals/gate/live-arm-nat-offset-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t271:274:16:15\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\ttype-mismatch\t271:274:16:15\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+              "$ROOT/.local/compiler-literals/gate/live-arm-nat-offset-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t271:274:16:15\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "live-arm-nat-offset",
+      "reference_calls": 0
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\ttype-mismatch\t",
+        "exit": 2,
+        "justification": "Seed-invalid (\"expected U32\"): the arm is the first applicable one on some path, so its body is checked there.",
+        "outcome": "Invalid"
+      },
+      "file": "tests/compiler-literals/regressions/live-arm-u32-default.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend",
+              "$ROOT/.local/compiler-literals/gate/live-arm-u32-default-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\ttype-mismatch\t277:280:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend",
+              "$ROOT/.local/compiler-literals/gate/live-arm-u32-default-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend",
+              "$ROOT/.local/compiler-literals/gate/live-arm-u32-default-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tcheck\ttype-mismatch\t277:280:16:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend",
+              "$ROOT/.local/compiler-literals/gate/live-arm-u32-default-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t277:280:16:12\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "live-arm-u32-default",
+      "reference_calls": 0
+    },
+    {
       "byte_identical": true,
       "expected": {
         "exit": 0,
@@ -66204,6 +68826,282 @@
       },
       "name": "offset-zero",
       "reference_calls": 13
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "exit": 3,
+        "justification": "A literal spells an installed primitive; the book's own datatype of that name is none. The seed accepts the Nat book and rejects the U32 book, so Knot claims neither (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/own-nat-literal.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t83:86:2:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend",
+              "$ROOT/.local/compiler-literals/gate/own-nat-literal-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t83:86:2:5\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tliteral-base-type\t83:86:2:5\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend",
+              "$ROOT/.local/compiler-literals/gate/own-nat-literal-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t83:86:2:5\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t83:86:2:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend",
+              "$ROOT/.local/compiler-literals/gate/own-nat-literal-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t83:86:2:5\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tliteral-base-type\t83:86:2:5\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend",
+              "$ROOT/.local/compiler-literals/gate/own-nat-literal-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t83:86:2:5\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "own-nat-literal",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "exit": 3,
+        "justification": "A literal spells an installed primitive; the book's own datatype of that name is none. The seed accepts the Nat book and rejects the U32 book, so Knot claims neither (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals/regressions/own-u32-literal.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-u32-literal.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t76:79:2:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-u32-literal.bend",
+              "$ROOT/.local/compiler-literals/gate/own-u32-literal-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t76:79:2:5\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/own-u32-literal.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tliteral-base-type\t76:79:2:5\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-u32-literal.bend",
+              "$ROOT/.local/compiler-literals/gate/own-u32-literal-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t76:79:2:5\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-u32-literal.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t76:79:2:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-u32-literal.bend",
+              "$ROOT/.local/compiler-literals/gate/own-u32-literal-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t76:79:2:5\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/regressions/own-u32-literal.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tliteral-base-type\t76:79:2:5\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/regressions/own-u32-literal.bend",
+              "$ROOT/.local/compiler-literals/gate/own-u32-literal-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-base-type\t76:79:2:5\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "own-u32-literal",
+      "reference_calls": 0
     },
     {
       "expected": {
@@ -82685,10 +85583,10 @@
   ],
   "inputs": {
     "scripts/run-wasm.mjs": "e83f1bc5c97caed7106f794921fe073aabd824cb702d9cf6de2df1e234522117",
-    "src/CONTRACT.json": "e9c96233ec02c085aa877e7337a1b9a66af28008dc43b6703ec1f1cbf971c3a0",
+    "src/CONTRACT.json": "26eb0eba4adbd6ee892af0662672ad570393eefe4eba858f333d588a4877b221",
     "src/LAWS.bend": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
     "src/PROOF.bend": "c4b03d3046b45054c6fd00db7f77387ab2cb8f829a090eaacd4e34e6788493e1",
-    "src/SPEC.md": "489bd678687f3c89de0a27ed86e6a229d91699796fb290e9f20de9dc82b91f72",
+    "src/SPEC.md": "7844e28091ed657fc59583c332510d7feb035c96b25d45ca3001c5d2a5d1b21f",
     "src/base-load-LAWS.bend": "bc474ba56a21d9bba54c413d6543325e6596f2ae7469b426adcf02af0810a009",
     "src/base-load-PROOF.bend": "ee43281f8668b287cab6b7eb415f748533392fe98e40c30c94433529c55031df",
     "src/base-load.bend": "e871b4f942500c0c5e767e72417599b07112b33c5da2743f150a0cadf3cffcab",
@@ -82698,10 +85596,10 @@
     "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
     "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
     "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
-    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
-    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-LAWS.bend": "7b3c742bc0545a0104a4c7a3071f89c8a584f4d3e9264626bff1a4631aab4b22",
+    "src/check-PROOF.bend": "1a33d6690ebf102ea81aa37918477092c79f18d54980047a710e411c2a0ce203",
     "src/check-cli.bend": "8ef374bae94bb2b18144e569e6564b9195f0b93e0c24b87b1c7cf527aef6b77b",
-    "src/check.bend": "f4e74c99c8163bdbdf6a01ceb4346a3a41349307f132ec196551584ba5340f43",
+    "src/check.bend": "8907a67769de34e9f62ef484614144d2285296f9be24da913bc612b77c0ddd6e",
     "src/checked-display.bend": "50b064e3551ef13193c5e29e4a4f45613c764382778fe94f033f3d8e5ea50c06",
     "src/compile-cli.bend": "55b0b8a85db27ab54390b3e05104ff34dee1ef7d2f55c7ef89c051ae3859ee64",
     "src/core.bend": "08fced0cb1d5b053895e84fe4375868074a8e6fa186be828267c3cb404399115",
@@ -82718,7 +85616,7 @@
     "src/literal-LAWS.bend": "f025d9bdad664893236ca744b6ac548a0af0e715c6a434280fb2649b4e82f94b",
     "src/literal-PROOF.bend": "4fa4ee46addd71b5b5b48a4959920fc2e93eaa3eef1c23085e6ebff49bc3fa38",
     "src/literal-base.bend": "d7ceb9e4c9be90fc726c83eaf9786e19e348f8d3819208065f232b47256a9290",
-    "src/literal-check.bend": "776696bc5b1d0b2b6cff8050ee11d3e6c5e6bb8ee0cfdb5e5367c90328640610",
+    "src/literal-check.bend": "5cf9962077e167608048f2e01b26f231dd0ab348f1c22c390e3bdc9c8c80d64e",
     "src/literal-core-LAWS.bend": "aa431abdf8eeae87157e63da892ce3dcefb15910357b06be3ff4a863a97351f4",
     "src/literal-core-PROOF.bend": "7d8652d9baa110e11019df5d2164fe6a63dae3c98e4cfbf8e0332412adfe4804",
     "src/literal-lex.bend": "7d984b2fd366c582336689359251e144f370e0253a8bab728574ebc6b86896b1",
@@ -82755,7 +85653,7 @@
     "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
     "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
     "tests/compiler-literals/FIXTURES.md": "6c2521b11817173339ca16ce7c4c82e2b47470cf5e24eb8a6f98e8bd17361274",
-    "tests/compiler-literals/check.py": "ddd1ce894dfbcd83d371af1f692e92c540c2b5f7a65761b03e6b38f0674ff0de",
+    "tests/compiler-literals/check.py": "d3d75a6945e345775840fc09358f32a255c4ce2e461a576cae1d49ef17f49328",
     "tests/compiler-literals/expectations.json": "93f46e9f7abe944ccc8a1246410bdfabd0b2f4e8ae2243aa8bd12d6368ee1bd9",
     "tests/compiler-literals/fixtures/char-bad-escape.bend": "635cf183ec3f9adc142af658a902a80bd950a64a070a0eb4c60c572690e9023d",
     "tests/compiler-literals/fixtures/char-empty.bend": "7d29c371620476c901c3bd15308e4fc7e563793f11172f5cf72d47ad1ea1da9f",
@@ -82798,8 +85696,8 @@
     "tests/compiler-literals/fixtures/u32-unsigned-order.bend": "63e9b4ef51191cac758689c031ff45df44bd23e5b7b069b6a9a76096c9c34d99",
     "tests/compiler-literals/fixtures/u32-wraparound.bend": "397a5554e58308d676030d0e953397a91aa3581f3e40fe602c7600c0a21a245c",
     "tests/compiler-literals/regen.py": "327fad5b28666dc83c95d87b090a0967479d6cb621555345e453bf8b77c31b0a",
-    "tests/compiler-literals/regressions.json": "aedc2d2edfd1b0cf50f7d9a7f786d9161497b7c2b9f48d3994bb34d71e63b21c",
-    "tests/compiler-literals/regressions.py": "dfd39a6fdd642ccf8072fed1ebb01c0b7bbb2674da8902f374f9a4772e2f1b29",
+    "tests/compiler-literals/regressions.json": "2246a92033c3b60da9872cb4e93d4a68d9ded76cf6b1ebb6944fadc9fbb55d23",
+    "tests/compiler-literals/regressions.py": "83b87a8dc4212c3a384e7763cf0f4dfacb0f09788b8ffe9c6e2fd34784566bbd",
     "tests/compiler-literals/regressions/affine-column.bend": "dec694debdcb56f89cc4d55a8c501d4513b6ad90fca88ff82d6fd3a526cf6adb",
     "tests/compiler-literals/regressions/affine-default-binder.bend": "2f2d22b887c62afb12d5dce7b7d9b10185b62ef784ccc7c3777a88d36e517f23",
     "tests/compiler-literals/regressions/affine-default-scrutinee.bend": "7e16c0b2e1d81010e9efb707010f1775edda3f2f9ea00efe4d786912d8c44745",
@@ -82808,6 +85706,23 @@
     "tests/compiler-literals/regressions/affine-split-alias.bend": "c2b10dc46b0c8324fb8a48ad46ee4fde5da0567e1c842ed3e787d6bde816352c",
     "tests/compiler-literals/regressions/affine-split-field.bend": "c54090dfad9a96aa267b8667113bb70586fca1dc042f1ee5c38e43c2ba06cc59",
     "tests/compiler-literals/regressions/affine-split-tail.bend": "c07644a84f2ff156ba17d24f7c34e8a74cd273919e1e89a34f5bc1a7ea79b3bd",
+    "tests/compiler-literals/regressions/dead-arm-char-duplicate.bend": "c9efacea5002d2daf1c164f4472289d7a28780dac3cc056baf598359985e05d5",
+    "tests/compiler-literals/regressions/dead-arm-nat-affine.bend": "d87d83b880b0b86b2ec522e25768ecf199e0084677a8838c6519e2c38e082ced",
+    "tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend": "dae2e4ee83b08f94b4d49b90ba117c39a88fe3f528e57953651010fa4f2c3f62",
+    "tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend": "608b6584d9f03b9ca4a782340499a16bed718c826986dea1fbc2eabd7e25e475",
+    "tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend": "b28b466105efb348f94e7ec8234eaf5757c36da4f70777d2332abb872c91c9f8",
+    "tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend": "89e5020dedc58911f34b20c4adfa73e5e2cba7b751e510edc720644991468813",
+    "tests/compiler-literals/regressions/dead-arm-string-after-default.bend": "50f5c0266a9eaf1ca1dafa8136748fc8424fe31998acc77aaee942d7cf82f4fc",
+    "tests/compiler-literals/regressions/dead-arm-string-duplicate.bend": "0f605f8a9b298b2912e87091140bc7efe9c76a7cdbfbeebd81d76085ec371434",
+    "tests/compiler-literals/regressions/dead-arm-string-nested.bend": "d5030d8448c40a9cea03aa873278571b2e9cb6a6a7c4594d2b3521b039047771",
+    "tests/compiler-literals/regressions/dead-arm-u32-affine.bend": "15fab1bf28280f1d970fe2925eb11bfe15fe81d6da8c6757870d97c33af887e5",
+    "tests/compiler-literals/regressions/dead-arm-u32-after-default.bend": "3524083c22f3fab17297bc15a6530a191e9e734a892f79ad808bcfd651d67f83",
+    "tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend": "b8944919d54b595a4eba302436a55edf486efe7ac4672785d9f86e967130012d",
+    "tests/compiler-literals/regressions/dead-arm-u32-free-name.bend": "646d3e88ae660e61d1086540ea2412fa96c95b8858e645c755cc4e56bc8ad01d",
+    "tests/compiler-literals/regressions/dead-pattern-arity.bend": "772111c00252902cbfdd5f1861b8c79a3b4750a3f0c6d7efd16031348ffd4e4a",
+    "tests/compiler-literals/regressions/dead-pattern-constructor.bend": "5741351ad6a4d6e931b2aebf5b780b7554e3bf5936cfdc9fe1310e6d827571c3",
+    "tests/compiler-literals/regressions/dead-pattern-offset-limit.bend": "9eb0bc527abbf4de5f516282a515827318e3171d4dc289d48bca2c476959178c",
+    "tests/compiler-literals/regressions/dead-pattern-type.bend": "9e1cc6ed2c85d174e32b1f2cf1eaacdfee5371af39e49bad8b0766445b8d30a4",
     "tests/compiler-literals/regressions/escape-brace-unknown.bend": "30a62237f355792a76f3ebb0429b67751bbc9d99919e0b0f14e5c18cddcca630",
     "tests/compiler-literals/regressions/escape-brace.bend": "34cdfb87d76fec86a819dc2ca991d583334fa2a9c1d69b14a1bfe9f3e036af0a",
     "tests/compiler-literals/regressions/field-pattern-offset.bend": "dbf3377e3849e0ab67dbd1eae8f30944a656ebe50cd7e913596d59f31b940eee",
@@ -82822,12 +85737,16 @@
     "tests/compiler-literals/regressions/let-string.bend": "5cf1cc253de44fc48a83270dfb6204e66b3eb77a4adbe32090c1904444b02bb1",
     "tests/compiler-literals/regressions/let-u32-promoted.bend": "7d544bdf3b6b4745bd5a0a5966e115a410a34579e2a661db91e0e14086110618",
     "tests/compiler-literals/regressions/let-u32.bend": "75c1b3e44cde8ba1d4bf6903c558286863b9e7aa660cce7a31c9cf2943f25e09",
+    "tests/compiler-literals/regressions/live-arm-nat-offset.bend": "549903502abd6b3a1541062ff2102e0d41106c63c82b69576a1aea64d9dbf33d",
+    "tests/compiler-literals/regressions/live-arm-u32-default.bend": "bc3850bf2f445e2af0272a4a23e29fb0b15eb94dd20432bd853a22e278621bda",
     "tests/compiler-literals/regressions/offset-adjacent.bend": "0d74a77dc65f7372d6c823e6cb056c0f767632a7198b7ca81d50ad494dd81417",
     "tests/compiler-literals/regressions/offset-spaced-expression.bend": "978bb5a5a4c5fea5af063d8f8584da5b91a5c30f43b500d5d6d1306c4e41840e",
     "tests/compiler-literals/regressions/offset-spaced-pattern.bend": "d58bb8c4f133bf7c643262d9aad97e1661dea76cf82358aad5632a7f0283c8e1",
     "tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend": "9600d1f6568c2f76d49a152cb02aa5fca560e5dbdc45378540243153f2fc8d62",
     "tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend": "b747c1a1cbf57395ed528ed21d62781c760a01f6efa6582b0dfb43691f0d171d",
     "tests/compiler-literals/regressions/offset-zero.bend": "0400f920bfca2a0ba1686cba6881386aac03e1ba53b460bbea6852ef5987672a",
+    "tests/compiler-literals/regressions/own-nat-literal.bend": "913c59e6d1e09378cd53b8efa5075c3f78818006d4ce811ac42069ba9a17334b",
+    "tests/compiler-literals/regressions/own-u32-literal.bend": "60fb88c21647d4d51c1494de4a11580510903dc9cb72d03670a83b387560bd74",
     "tests/compiler-literals/regressions/pattern-offset-on-enum.bend": "b8c5f4f599ca44692c967666f2fb1890c5546b12894e2e7192c69792b8ba4d20",
     "tests/compiler-literals/regressions/pattern-offset-zero-on-enum.bend": "76cfd98901da93cd3dc62be4a8a50a4f94d29a37fa39df8710401923928fe015",
     "tests/compiler-literals/regressions/pattern-string-on-enum.bend": "6780b4b5b8152f356999530b53818e994ef84289d235410fb357ce40efb720a5",
@@ -83460,7 +86379,7 @@
       "name": "inferred-let-literal",
       "new": "expected(token,wanted,value)",
       "old": "annotated(wanted,token,target => expected(token,Some{target},value))",
-      "sha256": "b1b6d9e7bf374b2f46b060e912c4101cf3b56719e54f18f1f51ce48e47c629e0",
+      "sha256": "4997086c07fd7dee7d0f616145ef5515a8e2509f85e5dbb864dff4e13d02d101",
       "typecheck": {
         "argv": [
           "bun",
@@ -83619,7 +86538,7 @@
       "name": "unsupported-literal-pattern",
       "new": "case S.Literal{token,kind,number,text}: C.unsupported(G.ConstructorRef,\"pattern-type\",token)",
       "old": "case S.Literal{token,kind,number,text}: C.invalid(G.ConstructorRef,\"pattern-type\",token)",
-      "sha256": "981445d3495aa8f66a5bd080506651a1ea900abbabfd918eebab7b8df2b04b24",
+      "sha256": "7b0bfacc9300e7bbaf5df0a80f785be4581ad798f1ce3db8b4d0773c3c069eb1",
       "typecheck": {
         "argv": [
           "bun",
@@ -83794,6 +86713,165 @@
       "verdict": [
         0,
         "Built\t"
+      ]
+    },
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/all-leaf-invalid/compile-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals/gate/mutants/all-leaf-invalid/compile.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals/gate/mutants/all-leaf-invalid/compile.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+          "$ROOT/.local/compiler-literals/gate/mutants/all-leaf-invalid/witness.wasm"
+        ],
+        "exit": 2,
+        "outcome": "Invalid",
+        "stderr": "Invalid\tcheck\ttype-mismatch\t263:266:16:12\n",
+        "stdout": ""
+      },
+      "expected_exit": 3,
+      "file": "check.bend",
+      "fixture": "dead-arm-u32-duplicate",
+      "killed": true,
+      "name": "all-leaf-invalid",
+      "new": "run(n,MatrixLeaves{Con{live,rest},target},catalog,current,scope)",
+      "old": "run(n,Matrix{live,target,False{}},catalog,current,scope)",
+      "sha256": "195ea7c43457db78c2ee5240eacc482dbb302556f1908771ced881ce87eb43ab",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/all-leaf-invalid/compile-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        2,
+        "Invalid\tcheck\ttype-mismatch\t"
+      ]
+    },
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/dead-before-live/compile-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals/gate/mutants/dead-before-live/compile.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals/gate/mutants/dead-before-live/compile.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals/regressions/live-arm-u32-default.bend",
+          "$ROOT/.local/compiler-literals/gate/mutants/dead-before-live/witness.wasm"
+        ],
+        "exit": 3,
+        "outcome": "Unsupported",
+        "stderr": "Unsupported\tcheck\tdead-arm\t277:280:16:12\n",
+        "stdout": ""
+      },
+      "expected_exit": 2,
+      "file": "check.bend",
+      "fixture": "live-arm-u32-default",
+      "killed": true,
+      "name": "dead-before-live",
+      "new": "run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>\n                S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>",
+      "old": "run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>\n                S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>",
+      "sha256": "e70661e6f1de4fef2c53eab947b0df6a91839615868d6878c61205793e1f6446",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/dead-before-live/compile-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        3,
+        "Unsupported\tcheck\tdead-arm\t"
+      ]
+    },
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/invalid-own-primitive/compile-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals/gate/mutants/invalid-own-primitive/compile.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals/gate/mutants/invalid-own-primitive/compile.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals/regressions/own-nat-literal.bend",
+          "$ROOT/.local/compiler-literals/gate/mutants/invalid-own-primitive/witness.wasm"
+        ],
+        "exit": 2,
+        "outcome": "Invalid",
+        "stderr": "Invalid\tcheck\tliteral-base-type\t83:86:2:5\n",
+        "stdout": ""
+      },
+      "expected_exit": 3,
+      "file": "literal-check.bend",
+      "fixture": "own-nat-literal",
+      "killed": true,
+      "name": "invalid-own-primitive",
+      "new": "C.invalid(U32,\"literal-base-type\",token)",
+      "old": "C.unsupported(U32,\"literal-base-type\",token)",
+      "sha256": "6e873739bba747d1a0441a2e546851a660aefd256b48caea11ea3f551ad17161",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/invalid-own-primitive/compile-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        2,
+        "Invalid\tcheck\tliteral-base-type\t"
       ]
     },
     {
@@ -84030,7 +87108,7 @@
     "exit": 0,
     "outcome": "success",
     "stderr": "",
-    "stdout": "literals regressions match the seed: 46 fixtures, 167 calls\n"
+    "stdout": "literals regressions match the seed: 67 fixtures, 181 calls\n"
   },
   "result_verification": {
     "argv": [

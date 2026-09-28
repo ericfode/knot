@@ -4,6 +4,125 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Review round 5
+
+The coordinator's review of `3246fa3` confirmed one blocking and one major
+finding (review round 1 of this fix cycle in the coordinator's numbering).
+Both are fixed in new commits; no history was rewritten and no earlier
+expectation changed.
+
+| Commit | Content |
+| --- | --- |
+| `42a775b` | Freeze: 21 regression books from the seed (13 dead-arm, 6 controls, 2 own-type) |
+| `f3a18ee` | Two-walk matrix check, own-type literals Unsupported, two checker laws, three mutants |
+| `32331e4` | Regenerated census inventories (the first gate run failed census on a stale inventory) |
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [blocking] A failing body in an unreachable match arm makes a seed-valid book Invalid | Fixed in `f3a18ee`. Each path's first leaf is live and the rest are dead there. `check.bend` walks the plan twice, all live leaves before any dead one; `dead_arm` turns a dead leaf's Invalid into `Unsupported check dead-arm` and keeps every other outcome. Every leaf is still checked. Reachability comes from the matrix, so subsumption and nested String columns are covered, and patterns stay checked in every row, as in the seed. | All 13 seed-valid dead-arm books (the review's two repros, the q5 and q9 shapes) now report `Unsupported check dead-arm` in both lanes for check, eval and compile, with the output file preserved; before the fix they were Invalid type-mismatch, affine-reuse or free-name. The six controls keep their codes: live-arm-nat-offset and live-arm-u32-default (a catch-all shadowed on the `5` path only) stay `Invalid check type-mismatch`, and the four q6 dead-pattern books stay pattern-arity, `parse` nat-offset-pattern and pattern-type (twice). Laws `dead_arm_invalid` and `dead_arm_exhausted`. Mutants all-leaf-invalid and dead-before-live. |
+| [major] A literal typed by the book's own Nat is `Invalid check literal-base-type` | Fixed in `f3a18ee`: `literal-check.bend::type_id` reports `Unsupported check literal-base-type` for a type name that resolves to a user datatype. | own-nat-literal (seed `Yes{}`) and own-u32-literal (seed-invalid) are both `Unsupported check literal-base-type`. Mutant invalid-own-primitive. |
+
+The walk order is the point of the design. A per-leaf downgrade would
+report `case 5: 0 / case _: 'q'` as Unsupported: the catch-all is dead on
+the `5` path, which is checked first, but live on the default path, where
+the seed rejects it. Two walks report it Invalid, because every live leaf is
+checked before any dead one; the `dead-before-live` mutant is killed on
+exactly this book. The alternative of rejecting any match with an
+unreachable arm would have turned the frozen agreeing books
+`u32-pattern-first-match` and `promoted-column` (`unreached`) into
+Unsupported.
+
+### Differential evidence
+
+- Verdicts, base (`3246fa3` source) against fix, native lane, over all 541
+  tracked `tests/compiler-*` books plus the 36 earlier probe books in
+  `.local/literals/r4`: 562 of 577 identical, byte for byte including the
+  printed checked core. The 15 changes are the 13 dead-arm books and the 2
+  own-type books, Invalid to Unsupported.
+- Random primitive matches (U32, Char, Nat, String scrutinees; 2-5 arms from
+  literals, offsets, constructors, nested String patterns, binders and `+`
+  rows; bodies well-typed, ill-typed, affine-reusing or with a free name),
+  seed `--check-only` against both check lanes, 480 books, on the final
+  build: 0 Invalid on a seed-valid book (the base build had 98), 0 accepted
+  seed-invalid books, 0 lane mismatches. Seed-valid books: 142 Checked, 98
+  `Unsupported dead-arm`. Seed-invalid books: Invalid affine-reuse 74,
+  type-mismatch 71, free-name 62, missing-arm 29, and 4
+  `Unsupported dead-arm`, each a catch-all after rows that name every
+  constructor (the first known limit below).
+
+Scripts are in the executor scratchpad (`impl-literals/r5/probe.py`,
+`diffverdict.py`, `sweep.py`).
+
+### Gates on the round-5 fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `32331e4` passed all 20
+registered gates (exit 0) in 468.9 seconds with 4 workers. The one-minute load
+average was 6.3 at the start and at the end (run directory
+`run-uvvdyadb`). The first run, on `f3a18ee`, passed 19 gates and failed
+census on a stale implementation inventory; `32331e4` regenerated the
+inventories. `npm run -s gates:verify` passed 18 tests. Counts are copied
+from the runner; categories overlap and are not summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1137; files=65 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=840; mutants=9; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| literals | agree eval observations=886; agree fixtures=34; artifact preservation probes=148; boundary probes=8; byte identity pairs=34; check observations=216; compile observations=216; eval observations=1034; execution lanes=2; fixtures=108; invalid fixtures=44; mutant eval observations=6; mutant verdict observations=12; mutant wasm observations=5; no artifact probes=148; proof entries=3; proof laws=32; reference calls=468; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=21; trust audits=68; unsupported fixtures=30; wasm observations=886 |
+
+Receipt drift: identical=64; semantic=16; volatile-only=7. The 15
+semantic drifts in shared receipts are the same 15 as in rounds 2 to 4
+(source hashes and derived code), left for the coordinator. The literals
+receipt was copied from the run's normalized output after every recorded
+input hash was checked against the tree.
+
+All 13 `src/*PROOF.bend` entries print `All terms check.`; the two new laws
+fail when their right-hand side is changed.
+
+### Offline preflight
+
+- The compiler-manifest preflight reports 32 groups and 0 structural
+  blockers. literal-patterns stays at 47995/48000 bytes, because
+  `literal-matrix.bend` is unchanged; a first draft that put the helper and
+  its laws there reached 48820 and was moved to `check.bend` and
+  `check-LAWS.bend`. checking is 45288/48000 and checker-laws 20154/48000.
+- Per changed file (`--preflight FILE`), truncated-context counts equal
+  those at `3246fa3`: check.bend 6, check-LAWS.bend 1, check-PROOF.bend 0,
+  literal-check.bend 0. The single-file compositions of check.bend
+  (82151 bytes) and check-LAWS.bend (52828) were already over the limit
+  before this round (81135 and 51605).
+- Zero provider requests were made. Live Perch review remains the
+  coordinator's.
+
+### Known limits
+
+- A catch-all after rows that name every constructor (`SNil{}` and
+  `SCon{c, t}`, then `y: zzz`) is dead in Knot's plan. The seed checks it in
+  a default continuation where the scrutinee is neither constructor, and
+  rejects the book; Knot reports `Unsupported check dead-arm`. This is safe
+  under D4 but less precise than before the fix, which said Invalid. No
+  frozen book has this shape; the 480-book sweep found four.
+- A dead leaf is checked in the scope of each path where it is dead. A live
+  row is also checked, as a dead leaf, on paths that shadow it; a failure
+  that appears only there is Unsupported. The seed does not check those
+  occurrences, so no Invalid is lost.
+
 ## Review round 4
 
 The coordinator's review of `f3a81fa` (literals review fix round 3 in the
