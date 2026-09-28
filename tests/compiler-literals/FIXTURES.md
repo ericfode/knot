@@ -94,7 +94,10 @@ requires a recorded review. Implementation results never justify one.
 
 - **Milestone 3 (pattern matrix).** Wildcard and binder defaults and the
   first-match duplicate arms in `u32-pattern-first-match` need it. Today's
-  profile reports duplicate arms as `Unsupported`.
+  profile reports duplicate arms as `Unsupported`. Nested patterns need it
+  too: in `string-pattern`, `case "ab"` is an `SCon` chain and `SCon{'a', t}`
+  puts a Char literal inside a constructor; in `nat-pattern-offset`, `2n+p`
+  is a double `Succ`.
 - **Milestone 1 (structural recursion).** `nat-recursion` and
   `nat-pattern-offset` (a `2n+p` descent) need it, as does much of the
   reachable Base.
