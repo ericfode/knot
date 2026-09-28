@@ -82,6 +82,22 @@ law return_type_application:
     Con{S.Token{"-",at},Con{S.Token{">",at},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
     == Fail{S.Unsupported{"parse","type-application",at}} : Result<S.Error,P.Parsed>}
 
+law longer_result_type:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {(P.run(1n,P.FunctionTail{S.Token{"main",at},S.Sequence{Nil{}}},
+      Con{S.Token{"-",at},Con{S.Token{">",at},Con{S.Token{"IO",at},Con{S.Token{"(",at},rest}}}}),
+    P.run(1n,P.FunctionTail{S.Token{"main",at},S.Sequence{Nil{}}},
+      Con{S.Token{"-",at},Con{S.Token{">",at},Con{S.Token{"(",at},Con{S.Token{"Light",at},rest}}}}))
+    == (Fail{S.Unsupported{"parse","result-type",at}},Fail{S.Unsupported{"parse","result-type",at}})
+    : Result<S.Error,P.Parsed> & Result<S.Error,P.Parsed>}
+
+law spaced_result_arrow:
+  {P.run(1n,P.FunctionTail{S.Token{"main",S.At{4,8,1,4}},S.Sequence{Nil{}}},
+    [S.Token{"-",S.At{11,12,1,11}},S.Token{">",S.At{13,14,1,13}},S.Token{"Light",S.At{15,20,1,15}},
+     S.Token{":",S.At{20,21,1,20}},S.Token{"<eof>",S.At{21,21,1,21}}])
+    == Fail{S.Invalid{"parse","function-result",S.At{11,12,1,11}}} : Result<S.Error,P.Parsed>}
+
 law binding_type_application:
   for +at: S.At
   for +rest: List<&2,S.Token>

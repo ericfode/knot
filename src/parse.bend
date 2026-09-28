@@ -85,6 +85,17 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
         Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
 
+# The seed reads "->" as one word; the lexer yields "-" then ">".
+def adjacent(left: S.Token, right: S.Token) -> Bool:
+  match left right:
+    case S.Token{l,S.At{lo,hi,line,column}} S.Token{r,S.At{start,end,row,col}}: U32.is_eq(hi,start)
+
+# A result type is read as one bare name. A longer type, which the seed's term
+# parser reads on, is Unsupported; a missing name or colon is Invalid.
+def result_type(+tokens: List<&2,S.Token>, +next: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  S.choose(Result<S.Error,Parsed>,Bool.or(starts(next,":"),Bool.or(starts(next,"\n"),starts(next,"<eof>"))),u =>
+    invalid(tokens,"function-result"),u => unsupported(next,"result-type"))
+
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match rest:
     case Con{h,t}:
@@ -264,12 +275,14 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{+name,S.Sequence{+params}}:
       match tokens:
         case Con{+dash,Con{+arrow,Con{+typ,Con{+colon,+body}}}}:
-          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),S.identifier(typ))),u =>
-            S.choose(Result<S.Error,Parsed>,S.matches(colon,"<"),u =>
-              unsupported(Con{colon,body},"type-application"),u =>
-            S.choose(Result<S.Error,Parsed>,S.matches(colon,":"),u =>
-              then(run(n,Body{0},body),value => rest => wrap_function(name,S.Sequence{params},typ,value,rest)),u =>
-              invalid(tokens,"function-result"))),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),S.matches(arrow,">")),u =>
+            S.choose(Result<S.Error,Parsed>,S.identifier(typ),u =>
+              S.choose(Result<S.Error,Parsed>,S.matches(colon,"<"),u =>
+                unsupported(Con{colon,body},"type-application"),u =>
+              S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(colon,":"),adjacent(dash,arrow)),u =>
+                then(run(n,Body{0},body),value => rest => wrap_function(name,S.Sequence{params},typ,value,rest)),u =>
+                result_type(tokens,Con{colon,body}))),u =>
+              result_type(tokens,Con{typ,Con{colon,body}})),u =>
             invalid(tokens,"function-result"))
         case _: invalid(tokens,"function-result")
     case 1n+ +n FunctionTail{token,other}:

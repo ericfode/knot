@@ -51,6 +51,12 @@ def L.parameter_type_application(at,rest):
 def L.return_type_application(at,rest):
   {==}
 
+def L.longer_result_type(at,rest):
+  {==}
+
+def L.spaced_result_arrow():
+  {==}
+
 def L.binding_type_application(at,rest):
   {==}
 

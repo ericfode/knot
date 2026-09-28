@@ -647,6 +647,15 @@ MUTANTS += [
      'new': 'Bool.and(Bool.not(open),is_import)',
      'witness': 'string-module-import',
      'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-after-declaration\t'}},
+    {'name': 'result-type-invalid', 'file': 'parse.bend',
+     'old': 'u => unsupported(next,"result-type"))',
+     'new': 'u => invalid(tokens,"function-result"))',
+     'witness': 'result-parenthesized',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tparse\tfunction-result\t'}},
+    {'name': 'spaced-arrow-accepted', 'file': 'parse.bend',
+     'old': 'Bool.and(S.matches(colon,":"),adjacent(dash,arrow))',
+     'new': 'S.matches(colon,":")',
+     'witness': 'result-spaced-arrow', 'actual': {'exit': 0}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -659,7 +668,7 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'constructor-order-ignored', 'let-binder-unchecked', 'file-let-binder-unchecked',
                     'file-constructor-order-ignored', 'file-arm-binders-unchecked', 'field-binder-book-wide',
                     'climbing-target-accepted', 'climbing-root-accepted', 'working-directory-bundle-empty',
-                    'quoted-import-classified'}
+                    'quoted-import-classified', 'result-type-invalid', 'spaced-arrow-accepted'}
 
 
 def mutants(fixtures):
