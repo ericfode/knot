@@ -1,4 +1,4 @@
-# U32 comparison is unsigned: 2147483648 (bit 31 set) is above 0.
+# Every U32 comparison is unsigned: 2147483648 (bit 31 set) is above 0.
 import Base
 
 type Answer is Type:
@@ -37,6 +37,18 @@ def compare(a: Mark, b: Mark) -> Order:
 
 def below(a: Mark, b: Mark) -> Answer:
   verdict(U32.is_lt(value(a), value(b)))
+
+def at_most(a: Mark, b: Mark) -> Answer:
+  verdict(U32.is_le(value(a), value(b)))
+
+def above(a: Mark, b: Mark) -> Answer:
+  verdict(U32.is_gt(value(a), value(b)))
+
+def at_least(a: Mark, b: Mark) -> Answer:
+  verdict(U32.is_ge(value(a), value(b)))
+
+def differs(a: Mark, b: Mark) -> Answer:
+  verdict(U32.is_ne(value(a), value(b)))
 
 def main() -> Order:
   compare(Middle{}, Bottom{})

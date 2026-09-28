@@ -1,4 +1,4 @@
-# Strings are Unicode scalar sequences: an escaped surrogate pair is two Chars.
+# A String counts Chars, not UTF-16 units: an escaped surrogate pair stays two Chars.
 import Base
 
 type Answer is Type:

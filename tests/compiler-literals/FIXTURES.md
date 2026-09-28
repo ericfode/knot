@@ -46,14 +46,15 @@ Fixture names omit the directory and the `.bend` suffix. K marks a Knot-specific
 | Base import | | | `literal-without-base` |
 | Outside the stage (K) | `u32-operators`, `string-concat-operator`, `string-raw-non-ascii`, `f32-literal` | | |
 
-The seed accepts 28 books and rejects 12. The suite has 239 recorded seed
-calls, 232 of them on the 24 fixtures where Knot must agree. The calls of each
+The seed accepts 28 books and rejects 12. The suite has 275 recorded seed
+calls, 268 of them on the 24 fixtures where Knot must agree. The calls of each
 such fixture yield at least two distinct constructors (`regen.py` asserts this),
 so a constant answer cannot pass.
 
 The Wasm-hostile edges are the most discriminating:
 
-- **Unsigned comparison.** `U32.cmp(2147483648, 0)` is `GT`.
+- **Unsigned comparison.** `U32.cmp(2147483648, 0)` is `GT`, and `is_gt`,
+  `is_ge`, `is_le` and `is_lt` agree, where signed `i32` comparisons flip them.
 - **Unsigned division.** `4294967295 / 2` is `2147483647` and `4294967295 % 10`
   is `5`.
 - **Division by zero.** `7 / 0` is `0` and `7 % 0` is `7`, where Wasm

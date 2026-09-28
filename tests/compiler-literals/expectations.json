@@ -5337,10 +5337,10 @@
     {
       "name": "string-unicode",
       "file": "tests/compiler-literals/fixtures/string-unicode.bend",
-      "sha256": "d53693da8c709514ee2e01d8e5c962f130eb0320726c619bf9f23c124c5a750b",
+      "sha256": "99136b7caf808bc23d4aff7e04106c4422fffaea368bf70a318d44a85c37ddf7",
       "feature": "string",
       "kind": "edge",
-      "covers": "scalar counts; escaped surrogates stay two Chars",
+      "covers": "Char counts, not UTF-16 units; escaped surrogates stay two Chars",
       "base_names": [
         "Bool",
         "Chr",
@@ -6962,10 +6962,10 @@
     {
       "name": "u32-unsigned-order",
       "file": "tests/compiler-literals/fixtures/u32-unsigned-order.bend",
-      "sha256": "d3f20a6e87c77baeb9a89366a183ddb762540ea37b0cb91f56bcdc0b1281e624",
+      "sha256": "63e9b4ef51191cac758689c031ff45df44bd23e5b7b069b6a9a76096c9c34d99",
       "feature": "u32",
       "kind": "edge",
-      "covers": "cmp and is_lt are unsigned: 2147483648 > 0",
+      "covers": "cmp and is_lt/is_le/is_gt/is_ge/is_ne are unsigned: 2147483648 > 0",
       "base_names": [
         "Bool",
         "Cmp",
@@ -6976,7 +6976,11 @@
         "True",
         "U32",
         "U32.cmp",
-        "U32.is_lt"
+        "U32.is_ge",
+        "U32.is_gt",
+        "U32.is_le",
+        "U32.is_lt",
+        "U32.is_ne"
       ],
       "enums": {
         "Answer": [
@@ -7522,6 +7526,1014 @@
               "bun",
               ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
               ".local/compiler-literals/calls/u32-unsigned-order-below-Top-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            0,
+            0
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Bottom-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Bottom{}, F.Bottom{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Bottom-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            0,
+            1
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Bottom-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Bottom{}, F.Middle{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Bottom-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            0,
+            2
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Bottom-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Bottom{}, F.Top{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Bottom-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            1,
+            0
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Middle-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Middle{}, F.Bottom{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Middle-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            1,
+            1
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Middle-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Middle{}, F.Middle{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Middle-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            1,
+            2
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Middle-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Middle{}, F.Top{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Middle-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            2,
+            0
+          ],
+          "argument_constructors": [
+            "Top",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Top-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Top{}, F.Bottom{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Top-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            2,
+            1
+          ],
+          "argument_constructors": [
+            "Top",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Top-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Top{}, F.Middle{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Top-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_most",
+          "arguments": [
+            2,
+            2
+          ],
+          "argument_constructors": [
+            "Top",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_most-Top-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_most(F.Top{}, F.Top{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_most-Top-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            0,
+            0
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Bottom-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Bottom{}, F.Bottom{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Bottom-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            0,
+            1
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Bottom-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Bottom{}, F.Middle{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Bottom-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            0,
+            2
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Bottom-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Bottom{}, F.Top{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Bottom-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            1,
+            0
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Middle-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Middle{}, F.Bottom{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Middle-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            1,
+            1
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Middle-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Middle{}, F.Middle{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Middle-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            1,
+            2
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Middle-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Middle{}, F.Top{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Middle-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            2,
+            0
+          ],
+          "argument_constructors": [
+            "Top",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Top-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Top{}, F.Bottom{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Top-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            2,
+            1
+          ],
+          "argument_constructors": [
+            "Top",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Top-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Top{}, F.Middle{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Top-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "above",
+          "arguments": [
+            2,
+            2
+          ],
+          "argument_constructors": [
+            "Top",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-above-Top-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.above(F.Top{}, F.Top{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-above-Top-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            0,
+            0
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Bottom-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Bottom{}, F.Bottom{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Bottom-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            0,
+            1
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Bottom-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Bottom{}, F.Middle{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Bottom-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            0,
+            2
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Bottom-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Bottom{}, F.Top{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Bottom-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            1,
+            0
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Middle-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Middle{}, F.Bottom{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Middle-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            1,
+            1
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Middle-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Middle{}, F.Middle{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Middle-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            1,
+            2
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Middle-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Middle{}, F.Top{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Middle-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            2,
+            0
+          ],
+          "argument_constructors": [
+            "Top",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Top-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Top{}, F.Bottom{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Top-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            2,
+            1
+          ],
+          "argument_constructors": [
+            "Top",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Top-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Top{}, F.Middle{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Top-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "at_least",
+          "arguments": [
+            2,
+            2
+          ],
+          "argument_constructors": [
+            "Top",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-at_least-Top-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.at_least(F.Top{}, F.Top{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-at_least-Top-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            0,
+            0
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Bottom-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Bottom{}, F.Bottom{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Bottom-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            0,
+            1
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Bottom-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Bottom{}, F.Middle{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Bottom-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            0,
+            2
+          ],
+          "argument_constructors": [
+            "Bottom",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Bottom-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Bottom{}, F.Top{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Bottom-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            1,
+            0
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Middle-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Middle{}, F.Bottom{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Middle-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            1,
+            1
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Middle-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Middle{}, F.Middle{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Middle-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            1,
+            2
+          ],
+          "argument_constructors": [
+            "Middle",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Middle-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Middle{}, F.Top{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Middle-Top.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            2,
+            0
+          ],
+          "argument_constructors": [
+            "Top",
+            "Bottom"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Top-Bottom.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Top{}, F.Bottom{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Top-Bottom.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            2,
+            1
+          ],
+          "argument_constructors": [
+            "Top",
+            "Middle"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Top-Middle.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Top{}, F.Middle{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Top-Middle.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "differs",
+          "arguments": [
+            2,
+            2
+          ],
+          "argument_constructors": [
+            "Top",
+            "Top"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/calls/u32-unsigned-order-differs-Top-Top.bend",
+            "source": "import ../../../tests/compiler-literals/fixtures/u32-unsigned-order.bend as F\n\ndef main() -> F.Answer:\n  F.differs(F.Top{}, F.Top{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/calls/u32-unsigned-order-differs-Top-Top.bend"
             ],
             "exit": 0,
             "stdout": "../../../tests/compiler-literals/fixtures/u32-unsigned-order.No{}\n",
