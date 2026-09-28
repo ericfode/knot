@@ -119,7 +119,8 @@ A pinned outcome carries `knot_expected: true` and a one-line justification.
     closures (increment 7). This reuses the code that
     `tests/compiler-structural` already pins for the same arrow type in a field
     (`function-field`).
-  - `template-twice` must report `Unsupported\tparse\ttemplate\t`. The `~` binder
+  - `template-twice` must report `Unsupported\tparse\ttemplate-binder\t` (the classify
+    increment's code). The `~` binder
     is the first form belonging to templates (S3).
 
 The classification invariant holds for every fixture. When the seed accepts,
@@ -147,7 +148,7 @@ Knot never reports `Invalid`. When the seed rejects, Knot never reports
 | `phantom-type` | agree | - | fields | - |
 | `erased-interleaved` | agree | - | - | - |
 | `closure-apply` | unsupported | `Unsupported\tparse\tparameter-type\t` | closures | - |
-| `template-twice` | unsupported | `Unsupported\tparse\ttemplate\t` | templates | - |
+| `template-twice` | unsupported | `Unsupported\tparse\ttemplate-binder\t` | templates | - |
 | `match-erased-type` | agree-or-unsupported | - | variable-pattern | - |
 | `alias-type` | agree-or-unsupported | - | fields, type-level-definition | - |
 | `affine-dup-type` | reject | `Invalid\tcheck\taffine-reuse\t` | fields | `reusable-generic` |
