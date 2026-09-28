@@ -1,9 +1,10 @@
 # Imported books and pinned Base
 
 This increment adds an explicit `--bundle ROOT` mode to the existing check,
-evaluation and compilation CLIs. The original argument forms retain the enum
-profile's diagnostics, budgets and exit codes. A bundle root supplies files; it
-is never a hub address and is never filled from the network.
+evaluation and compilation CLIs. The original argument forms keep the enum
+profile's budgets and exit codes; the few single-file diagnostic changes are
+listed in the [compiler specification](../../src/SPEC.md). A bundle root supplies
+files; it is never a hub address and is never filled from the network.
 
 An imported book has one ordered declaration stream. Each user file contributes
 all of its declarations, including unreachable definitions. An import header
@@ -22,6 +23,11 @@ report `Invalid`. File access failures other than missing imported files remain
 Path identity uses normalized filesystem paths, with imported local namespaces
 relative to the entry directory and bundle namespaces relative to the bundle.
 Dot and parent segments are eliminated before identity or namespace decisions.
+A relative entry, bundle root or import target whose normalized spelling still
+begins with `..` names its file through a parent of the working directory, whose
+name the loader cannot observe, so it has no canonical spelling and reports
+`Unsupported load path-identity`. The normalized working directory (`--bundle .`)
+contains every relative path.
 The host query rejects symlink components and non-exact directory-entry spellings
 with `Unsupported load path-identity`, including case aliases on insensitive
 filesystems. Entry and bundle roots are queried before lexical normalization;
@@ -65,7 +71,12 @@ has a separate finite depth/work bound. These limits are operational bounds, not
 proofs about the validity of larger programs.
 
 The compiler checks the combined book before opening its output. Rejection and
-exhaustion preserve an existing output file. The default emitter remains the
+exhaustion preserve an existing output file. Before that, the output passes the
+same path query as the sources and may not climb above the working directory
+(`HostFailure arguments output-path`), and it may not name the entry, a loaded
+module or the Base path (`HostFailure arguments source-is-output`). Spellings on
+one basis must differ; across bases, the absolute spelling may not end with the
+relative one. The default emitter remains the
 enum profile; no fielded Wasm or recursive Wasm capability is added by importing
 a module. Evaluator observations and Wasm results are compared with the frozen
 seed calls, and native/Bun compiler builds must emit identical bytes.
@@ -106,6 +117,16 @@ book, which crossed module namespaces. The gate also
 pins the bytes of the path query's Bend wrapper and C/JS adapters to
 `host-check-expectations.json`, requires the adapters to equal the io-abi-2
 reference bodies, and runs literal drift controls.
+
+Review-round-4 fixtures (`review-round4.json`) freeze relative spellings that
+climb above the working directory, run from their own directory with literal
+entry and bundle arguments for both the seed and Knot; multi-line string
+literals whose continuation line begins with `import`; result types longer than
+one name and a spaced `- >` arrow; and eleven literal output-guard cases. Once
+body text has held a double quote, a later `import` line stays body text, and
+the lexer or parser reports it. A result type other than one bare name reports
+`Unsupported parse result-type`; a missing name or colon stays `Invalid parse
+function-result`, and the arrow's two tokens must be adjacent.
 
 The reading hypothesis is one explicit machine state for loading: pending
 headers, active paths, completed paths and the accumulated declaration stream.

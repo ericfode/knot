@@ -28,7 +28,8 @@ The [module increment](tests/compiler-modules/README.md) adds explicit
 `--bundle ROOT` commands for local/hash imports and the pinned Base's checked
 reachable slice. A combined ordered book preserves file-local aliases and
 checks every user definition. An audit lists unchecked Base declarations.
-The original single-file command behavior remains available.
+The original single-file command forms remain available; their few diagnostic
+changes are listed in the [compiler specification](src/SPEC.md).
 
 The approved [longer goal](docs/SELF-HOSTING-GOAL.md) ends with a reproducible
 whole-compiler bootstrap and compiler-generated GPU execution. The first

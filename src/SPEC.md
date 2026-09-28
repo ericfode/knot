@@ -119,7 +119,8 @@ inspection itself does not imply execution or a structured host ABI.
 ## Imported books and pinned Base
 
 The [module contract](../tests/compiler-modules/SPEC.md) adds these explicit
-argument forms; all existing single-file forms and exit codes are retained:
+argument forms. The existing single-file forms keep their arguments, limits and
+exit codes; the single-file diagnostic changes are listed below:
 
 ```text
 check-cli --bundle ROOT source
@@ -138,7 +139,11 @@ report `Unsupported parse import`, correcting the former D4 misclassification.
 
 An explicit machine suspends import headers while dependencies load. Active
 paths detect back edges; completed paths suppress repeated loads in diamonds.
-Paths are normalized lexically before assigning module identity. Local names
+Paths are normalized lexically before assigning module identity. A relative
+entry, bundle root or import target that still begins with `..` after
+normalization names its file through a parent of the working directory, so no
+spelling of it is canonical: it reports `Unsupported load path-identity`. The
+normalized working directory (`--bundle .`) contains every relative path. Local names
 are relative to the entry directory; bundle names are relative to `ROOT`.
 Aliases are file-local. A minimal native/Bun host query verifies exact directory
 entry spelling and rejects symlink components before user-module reads. Entry
@@ -178,16 +183,37 @@ import-header removal, so a larger file is Exhausted, never truncated. Header
 lines follow the seed's import grammar: a glued `#` belongs to the path word
 (`import Base#c` is `Invalid load import-alias`); until the header closes, a line
 with anything but printable ASCII, space or tab is `Unsupported load header-character`.
+Once body text has held a double quote, a later `import` line may lie inside a
+multi-line string literal; it stays body text for the lexer and parser, which
+report the literal or the misplaced import as Unsupported.
 Base reads are capped at 131,072 ASCII bytes and constrained by the exact digest.
 Base dependency traversal has a finite work bound. User and traversal bound
 failures report `Exhausted`; Base identity/encoding failures report
 `HostFailure load base-pin`. The host identity query adds one trusted foreign
 effect; user foreign definitions remain Unsupported. The default Wasm emitter
 retains its enum profile, without fielded or recursive Wasm support.
+`compile-cli --bundle` opens its output only after loading. The output must pass
+the same path query as the sources and must not climb above the working
+directory (otherwise `HostFailure arguments output-path`), and it must not name
+the entry, a loaded module or the Base path, compared as equal spellings on one
+basis or, across bases, as an absolute spelling that ends with the relative one
+(otherwise `HostFailure arguments source-is-output`).
+
+Single-file deltas. The module rules also reach the single-file lanes in these
+diagnostics: a let or arm binder named like an earlier constructor reports
+`Invalid check constructor-pattern-binder` (previously accepted for let binders,
+`Unsupported check variable-pattern` for arms); a field binder named like a
+later constructor is accepted (previously Invalid); the declaration-order binder
+walk is bounded at 65,536 work steps (`Exhausted check`, not expected under the
+65,536-byte source cap). A result type longer than one name, such as
+`-> IO(Unit)`, `-> (T)`, `-> A -> B` or `-> A & B`, reports
+`Unsupported parse result-type` (previously `Invalid parse function-result`), and a
+spaced `- >` arrow, which the seed rejects, reports `Invalid parse function-result`
+(previously accepted). Parent-relative imports report `Unsupported parse import`.
 
 The [module gate](../tests/compiler-modules/README.md) compares frozen seed
 expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
-entries check 89 path, scope, loader-transition, Base-selection and digest-boundary
+entries check 94 path, scope, loader-transition, Base-selection and digest-boundary
 laws. These are helper/transition laws; whole-graph order independence and
 compiler correctness are not proved.
 
