@@ -613,7 +613,7 @@ def main():
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
-            'proof_laws': 36, 'semantic_mutants': len(record['mutants']),
+            'proof_laws': 37, 'semantic_mutants': len(record['mutants']),
             'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
             'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
             'mutant_fault_observations': sum('faulted' in m for m in record['mutants']),

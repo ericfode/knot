@@ -267,7 +267,7 @@ The new gate builds native and Bun versions of check/eval/compile. It requires:
   probe the count of an expression offset in both lanes: 2047 successors
   builds and runs; 2048 and 4096 evaluate but are `Exhausted emit`; 4097 is
   `Exhausted check`.
-- Three complete proof entries, 36 filled laws; 28 type-correct semantic
+- Three complete proof entries, 37 filled laws; 28 type-correct semantic
   mutants: seven Wasm value kills, one exhaustion kill in both Wasm and the
   evaluator, one Bun-lane fault kill, fifteen verdict kills and eight
   evaluator kills.

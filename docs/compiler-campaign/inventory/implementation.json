@@ -125,8 +125,8 @@
   "totals": {
     "compiler": {
       "files": 66,
-      "declarations": 1173,
-      "unique_declarations": 983,
+      "declarations": 1175,
+      "unique_declarations": 984,
       "definitions": 719,
       "classes": 42
     },
@@ -68460,7 +68460,7 @@
     },
     {
       "file": "src/literal-core-LAWS.bend",
-      "sha256": "55d9d0ee01a0903be4b1f67981cfb553e371b7d534feb155d1795c2e6e11e8fd",
+      "sha256": "81d05b88f8555fd4d5421da4d807e0386da9178f3d9caa7177a502f1d78ac880",
       "imports": [
         {
           "module": "Base",
@@ -68797,8 +68797,8 @@
           "key": "src/literal-core-LAWS.offset_cells",
           "kind": "law",
           "lines": [
-            50,
-            65
+            51,
+            67
           ],
           "features": [
             "calls",
@@ -68845,6 +68845,7 @@
             "Nat.add",
             "Result",
             "U32",
+            "src/core.Book",
             "src/core.Term",
             "src/eval.Entry",
             "src/eval.Frame",
@@ -68864,13 +68865,72 @@
           }
         },
         {
+          "id": "src/literal-core-LAWS.bend::offset_cells_call:law",
+          "name": "offset_cells_call",
+          "key": "src/literal-core-LAWS.offset_cells_call",
+          "kind": "law",
+          "lines": [
+            71,
+            75
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.nat",
+            "literals.u32",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "Result",
+            "src/core.Application",
+            "src/core.Book",
+            "src/core.Function",
+            "src/core.Parameter",
+            "src/core.Signature",
+            "src/core.Value",
+            "src/eval.Evaluate",
+            "src/eval.Return",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/literal-core-LAWS.cells",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/literal-core-LAWS.cells",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-core-LAWS.bend::intrinsic_arguments:law",
           "name": "intrinsic_arguments",
           "key": "src/literal-core-LAWS.intrinsic_arguments",
           "kind": "law",
           "lines": [
-            67,
-            74
+            77,
+            84
           ],
           "features": [
             "calls",
@@ -68932,8 +68992,8 @@
           "key": "src/literal-core-LAWS.default_selection",
           "kind": "law",
           "lines": [
-            76,
-            80
+            86,
+            90
           ],
           "features": [
             "calls",
@@ -68980,8 +69040,8 @@
           "key": "src/literal-core-LAWS.default_scope",
           "kind": "law",
           "lines": [
-            82,
-            87
+            92,
+            97
           ],
           "features": [
             "calls",
@@ -69034,8 +69094,8 @@
           "key": "src/literal-core-LAWS.text_cell",
           "kind": "law",
           "lines": [
-            89,
-            97
+            99,
+            107
           ],
           "features": [
             "calls",
@@ -69090,8 +69150,8 @@
           "key": "src/literal-core-LAWS.primitive_fields_display_as_literals",
           "kind": "law",
           "lines": [
-            99,
-            107
+            109,
+            117
           ],
           "features": [
             "calls",
@@ -69138,7 +69198,7 @@
     },
     {
       "file": "src/literal-core-PROOF.bend",
-      "sha256": "6cba64aad59e4bfa4aaf2ce78ef7716a6e17adfb6b50d22a3b0a5019e96bdba0",
+      "sha256": "5a4824537d93291344dd9595437d421826c64a560e7dc376d4fc82bef49f3a73",
       "imports": [
         {
           "module": "Base",
@@ -69436,6 +69496,7 @@
             "Nat.add",
             "Result",
             "U32",
+            "src/core.Book",
             "src/core.Term",
             "src/eval.Entry",
             "src/eval.Frame",
@@ -69449,8 +69510,9 @@
           ],
           "captures": [
             {
-              "offset": 394,
+              "offset": 399,
               "names": [
+                "book",
                 "frames",
                 "id",
                 "m",
@@ -69460,9 +69522,10 @@
               ]
             },
             {
-              "offset": 395,
+              "offset": 400,
               "names": [
                 "_",
+                "book",
                 "frames",
                 "id",
                 "m",
@@ -69484,13 +69547,88 @@
           }
         },
         {
+          "id": "src/literal-core-PROOF.bend::L.offset_cells_call:law_fill",
+          "name": "L.offset_cells_call",
+          "key": "src/literal-core-LAWS.offset_cells_call",
+          "kind": "law_fill",
+          "lines": [
+            17,
+            18
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.nat",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "Result",
+            "src/core.Application",
+            "src/core.Book",
+            "src/core.Function",
+            "src/core.Parameter",
+            "src/core.Signature",
+            "src/core.Value",
+            "src/eval.Evaluate",
+            "src/eval.Return",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/literal-core-LAWS.cells",
+            "src/literal-core-LAWS.offset_cells",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/literal-core-LAWS.cells",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/literal-core-LAWS.offset_cells"
+            ],
+            "types": [
+              "Con",
+              "Nat",
+              "Nil",
+              "U32",
+              "src/core.Application",
+              "src/core.Book",
+              "src/core.Function",
+              "src/core.Signature",
+              "src/core.Value",
+              "src/eval.Value"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-core-PROOF.bend::L.intrinsic_arguments:law_fill",
           "name": "L.intrinsic_arguments",
           "key": "src/literal-core-LAWS.intrinsic_arguments",
           "kind": "law_fill",
           "lines": [
-            17,
-            17
+            19,
+            19
           ],
           "features": [
             "calls",
@@ -69551,8 +69689,8 @@
           "key": "src/literal-core-LAWS.default_selection",
           "kind": "law_fill",
           "lines": [
-            18,
-            18
+            20,
+            20
           ],
           "features": [
             "calls",
@@ -69599,8 +69737,8 @@
           "key": "src/literal-core-LAWS.default_scope",
           "kind": "law_fill",
           "lines": [
-            19,
-            22
+            21,
+            24
           ],
           "features": [
             "calls",
@@ -69659,8 +69797,8 @@
           "key": "src/literal-core-LAWS.text_cell",
           "kind": "law_fill",
           "lines": [
-            23,
-            23
+            25,
+            25
           ],
           "features": [
             "calls",
@@ -69714,8 +69852,8 @@
           "key": "src/literal-core-LAWS.primitive_fields_display_as_literals",
           "kind": "law_fill",
           "lines": [
-            24,
-            24
+            26,
+            26
           ],
           "features": [
             "calls",

@@ -9,7 +9,7 @@ weakens an existing compiler gate.
 | Family | Laws | Proof entry | Obligation |
 | --- | --- | --- | --- |
 | Algebra and reading | 22 | `src/literal-PROOF.bend` | Division/remainder by zero; wide left/right shifts with explicit `n >= 32` evidence; inhabited boundary 32; String append order, length count and a length-mismatch inequality through the accumulator traversals; an escape before `{` stays an escape; surrogate and scalar sequences; decimal maximum/overflow; full-bit signed LEB; section runs of width 2 over five bytes are `[[1,2],[3,4],[5]]`, and `seq` restores seven bytes split at width 3; NUL; legacy literal capability boundary; the displayed Char `'\''` and a String of every escape class read back through the reader as their codes; raw/escaped glyphs on both sides of each boundary |
-| Core source machine | 9 | `src/literal-core-PROOF.bend` | Nat literal starts unary materialization; one successor cell; the core of `2n+t` (two Succ constructs around t) builds exactly the cells of a literal's Natural state around t's shared value, in 9 transitions (the k = 2 witness); **for every k and every tail term with a known value, k successors around it return k cells around that value in 4k+c transitions (induction on k, `offset_cells`)**; intrinsic argument state; default selection and scope; one String cell; a record's Char, U32, Nat and String fields display as their literals inside the `Name{a,b}` frame |
+| Core source machine | 10 | `src/literal-core-PROOF.bend` | Nat literal starts unary materialization; one successor cell; the core of `2n+t` (two Succ constructs around t) builds exactly the cells of a literal's Natural state around t's shared value, in 9 transitions (the k = 2 witness); **for every k, in any book, and every tail term with a known value, k successors around it return k cells around that value in 4k+c transitions (induction on k, `offset_cells`)**, applied to a tail that calls a book function (`offset_cells_call`: 2 successors, 11 transitions); intrinsic argument state; default selection and scope; one String cell; a record's Char, U32, Nat and String fields display as their literals inside the `Name{a,b}` frame |
 | Pattern matrix | 5 | `src/literal-matrix-PROOF.bend` | Zero/one offset, Nat/String constructor expansion and stable distinct numeric test order |
 | Dead leaves | 2 | `src/check-PROOF.bend` | A dead leaf's Invalid becomes `Unsupported check dead-arm` at the same phase and location; its Exhausted stays Exhausted |
 | Offset expressions | 4 | `src/check-PROOF.bend` | The checker lowers `2n+Zero{}` against an installed Nat to its matrix spelling: two Succ constructs around the checked tail, in any scope (the k = 2 witness `offset_spelling`); **for every count up to 4096 and every tail that checks to a term and its uses, it returns `successors(to_nat(count), term)` with those uses (`offset_lowering`); above 4096 it is `Exhausted check` at the offset (`offset_bound`)**; a constructor of one argument keeps its uses (`single_argument_keeps_uses`, induction on the list) |
@@ -34,7 +34,7 @@ promotion has no law: the literal-patterns group is at 47968 of its 48000
 composition bytes. Three frozen books and a mutant pin it instead. For the
 same reason the round-5 dead-leaf helper and its two laws sit in
 `check.bend` and `check-LAWS.bend`, beside the checker walk that uses them;
-the checker gate runs their proof entry, and the 36 counted here are the
+the checker gate runs their proof entry, and the 37 counted here are the
 three literal entries only. The round-6 own-type laws sit there too, beside
 the checker that calls `L.primitive_type`; checker-laws is at 22435/48000
 bytes and literal-patterns is unchanged. Their spellings come from the
@@ -52,7 +52,8 @@ is not provable by reflexivity, and Base states no Word lemma that inverts the
 lowering therefore converts the count once, `U32.to_nat`, and wraps the tail by
 `literal-offset.bend::successors`, which is structural in a Nat. Then
 `offset_cells` (literal-core-LAWS) is an induction on that Nat, with the tail
-given by its evaluation as a hypothesis (any frames, any fuel), and
+given by its evaluation as a hypothesis (any frames, any fuel, any book, so a
+tail may call the book's functions), and
 `offset_lowering` and `offset_bound` (check-LAWS) state, for every count and
 every tail that checks, that the checker's result is that builder's. Both
 directions are exact: `steps(k,c,m)` and the wrapped term are the

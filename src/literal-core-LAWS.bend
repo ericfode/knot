@@ -45,8 +45,9 @@ law natural_offset:
     E.run(3n,E.Natural{id,2,value,Nil{}},C.Book{Nil{},Nil{}}) : Result<S.Error,E.Value>}
 
 # For every k and every tail term with a known value (ev: it returns v in c
-# transitions under any frames and fuel), k successors around it return k cells
-# around v in 4k+c transitions. Ground instance k=2, c=1: natural_offset.
+# transitions under any frames and fuel, in any book), k successors around it
+# return k cells around v in 4k+c transitions. Ground instance k=2, c=1:
+# natural_offset.
 law offset_cells:
   for k: Nat
   for +id: U32
@@ -57,12 +58,21 @@ law offset_cells:
   for +env: List<&2,E.Entry>
   for +v: E.Value
   for +c: Nat
+  for +book: C.Book
   for ev: @fr: List<&2,E.Frame> -> @m: Nat ->
-    {E.run(m,E.Return{v,fr},C.Book{Nil{},Nil{}}) == E.run(Nat.add(c,m),E.Evaluate{term,env,fr},C.Book{Nil{},Nil{}}) : Result<S.Error,E.Value>}
+    {E.run(m,E.Return{v,fr},book) == E.run(Nat.add(c,m),E.Evaluate{term,env,fr},book) : Result<S.Error,E.Value>}
   for m: Nat
   for +frames: List<&2,E.Frame>
-  {E.run(m,E.Return{cells(k,id,tag,v),frames},C.Book{Nil{},Nil{}}) ==
-    E.run(steps(k,c,m),E.Evaluate{N.successors(k,term,token,id,tag,[C.Parameter{field,1,id}]),env,frames},C.Book{Nil{},Nil{}}) : Result<S.Error,E.Value>}
+  {E.run(m,E.Return{cells(k,id,tag,v),frames},book) ==
+    E.run(steps(k,c,m),E.Evaluate{N.successors(k,term,token,id,tag,[C.Parameter{field,1,id}]),env,frames},book) : Result<S.Error,E.Value>}
+
+# The hypothesis of offset_cells holds for a call: a tail that calls a book's
+# constant function returns its value in 3 transitions, so 2 successors take 11.
+law offset_cells_call:
+  for +tok: S.Token
+  {E.run(0n,E.Return{cells(2n,1,1,E.Value{1,0}),Nil{}},C.Book{Nil{},[C.Function{C.Signature{tok,Nil{},1},C.Value{tok,1,0}}]}) ==
+    E.run(11n,E.Evaluate{N.successors(2n,C.Application{tok,0,1,Nil{}},tok,1,1,[C.Parameter{tok,1,1}]),Nil{},Nil{}},
+      C.Book{Nil{},[C.Function{C.Signature{tok,Nil{},1},C.Value{tok,1,0}}]}) : Result<S.Error,E.Value>}
 
 law intrinsic_arguments:
   for token: S.Token

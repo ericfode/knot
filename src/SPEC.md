@@ -428,11 +428,13 @@ each successor, so an offset above 2047 (less inside a deeper expression) is
 still evaluates up to 4096. These are resource bounds, never rejections. Until
 review round 9 the checker took three levels per successor and stopped at 1364.
 The construction is proved for every count, not only k = 2:
-`literal-core-LAWS.bend::offset_cells` (by induction on k, k successors around
-any tail with a known value return k cells around it, in 4k+c transitions),
-`check-LAWS.bend::offset_lowering` (for every count up to 4096 and every tail,
-the checker returns `successors(to_nat(count), t)` with t's uses) and
-`offset_bound` (above 4096, `Exhausted check`). Their k = 2 ground instances,
+`literal-core-LAWS.bend::offset_cells` (by induction on k, in any book, k
+successors around any tail whose value is known return k cells around it, in
+4k+c transitions), `check-LAWS.bend::offset_lowering` (for every count up to
+4096 and every tail that checks to a term and its uses, against the installed
+Nat, the checker returns `successors(to_nat(count), term)` with those uses) and
+`offset_bound` (the same tails above 4096: `Exhausted check`). Their k = 2
+ground instances,
 `natural_offset` and `offset_spelling`, stay as witnesses. Outside the laws:
 `U32.to_nat` as Base's reading of the count, and the linear-allocation claim,
 which the frozen depth books measure.
@@ -511,7 +513,7 @@ builder as runs of at most 4,096 bytes (`machine-code.bend::runs`, inverted by
 `List.append`, so the run width, not the module size, bounds that stack depth,
 and both compiler lanes build identical modules up to the instruction bound.
 
-Three complete new proof entries check 36 helper laws. They cover the required
+Three complete new proof entries check 37 helper laws. They cover the required
 arithmetic guard equations, String traversal order and length, literal
 decoding and display round trips, section runs, core transitions (including
 the successor chain of an expression offset for every k) and matrix

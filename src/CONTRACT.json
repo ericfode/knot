@@ -373,7 +373,7 @@
       "src/literal-core-PROOF.bend",
       "src/literal-matrix-PROOF.bend"
     ],
-    "proof_laws": 36,
+    "proof_laws": 37,
     "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, section runs, core transitions, offset construction (for every k, and every count up to 4096 in the checker laws) and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
     "expression_offset": {
       "lowering": "The tail is checked once and k = U32.to_nat(count) Succ constructors wrap it (src/literal-offset.bend::successors), keeping the tail's uses; the outermost takes the expected type.",
@@ -381,9 +381,10 @@
       "count_limit_outcome": "Exhausted check at the offset; the seed answers Yes",
       "compile_limit": "2047 successors: the emitter takes two of its 4096 levels for each, so above that compilation is Exhausted emit and the checker CLI's core display is Exhausted inspect; evaluation continues to the count limit. Resource bounds, never rejections.",
       "proved": [
-        "src/literal-core-LAWS.bend::offset_cells: for every k and tail with a known value, k successors return k cells around it in 4k+c transitions (induction on k)",
-        "src/check-LAWS.bend::offset_lowering: for every count up to 4096 and every tail, the checker returns successors(to_nat(count), tail) with the tail's uses",
-        "src/check-LAWS.bend::offset_bound: above 4096, Exhausted check",
+        "src/literal-core-LAWS.bend::offset_cells: for every k, in any book, and every tail with a known value, k successors return k cells around it in 4k+c transitions (induction on k)",
+        "src/literal-core-LAWS.bend::offset_cells_call: offset_cells applied to a tail that calls a book function (k = 2, c = 3, 11 transitions)",
+        "src/check-LAWS.bend::offset_lowering: for every count up to 4096 and every tail that checks to a term and its uses, against the installed Nat, the checker returns successors(to_nat(count), term) with those uses",
+        "src/check-LAWS.bend::offset_bound: the same tails above 4096, Exhausted check",
         "src/check-LAWS.bend::single_argument_keeps_uses: a constructor of one argument keeps its uses"
       ],
       "witnesses": [
