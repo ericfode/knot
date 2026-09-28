@@ -67,7 +67,7 @@ for p in paths:
  elif name=='duplicate-arm':
   knot={'exit':3,'diagnostic':'Unsupported\tcheck\tduplicate-arm\t'};ref={'exit':0,'stdout':'On{}'}
  elif name=='recursive-call':
-  knot={'exit':3,'diagnostic':'Unsupported\tcheck\trecursive-call\t'};ref={'exit':1,'diagnostic':'a decreasing self-call'}
+  knot={'exit':2,'diagnostic':'Invalid\tcheck\trecursive-call\t'};ref={'exit':1,'diagnostic':'a decreasing self-call'}
  else: raise AssertionError(name)
  cases.append({'file':str(p.relative_to(ROOT)),'knot':knot,'reference':ref})
 (HERE/'cases.json').write_text(json.dumps({'profile':'knot-enum-1','scope':'Resolution/checking and literal resolved-term observations, not evaluation or Wasm','cases':cases},indent=2)+'\n')
