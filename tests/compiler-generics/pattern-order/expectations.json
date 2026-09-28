@@ -1,0 +1,431 @@
+{
+  "suite": "compiler-generics/pattern-order",
+  "increment": "6: generics and quantity arguments (S2), review round 3",
+  "basis": "Frozen before the repair (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "later-family-parameter",
+      "file": "fixtures/later-family-parameter.bend",
+      "class": "negative",
+      "feature": "pattern-order",
+      "intent": "A generic parameter matched by `case Box{value}` above `type Box`.",
+      "twin": "earlier-family-forward-uses",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "a declared constructor (unknown: Box)"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t",
+        "knot_expected": true,
+        "justification": "The seed resolves a constructor pattern only against datatypes declared above it and rejects this one as unknown. Knot reports the pattern Invalid check unknown-constructor at its name; before the repair the generic checker resolved it against the whole book and checked, evaluated and compiled the program."
+      }
+    },
+    {
+      "name": "later-family-unbox",
+      "file": "fixtures/later-family-unbox.bend",
+      "class": "negative",
+      "feature": "pattern-order",
+      "intent": "The review's unbox: a Box pattern above both `type Flag` and `type Box`.",
+      "twin": "earlier-family-forward-uses",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "a declared constructor (unknown: Box)"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t",
+        "knot_expected": true,
+        "justification": "The seed resolves a constructor pattern only against datatypes declared above it and rejects this one as unknown. Knot reports the pattern Invalid check unknown-constructor at its name; before the repair the generic checker resolved it against the whole book and checked, evaluated and compiled the program."
+      }
+    },
+    {
+      "name": "later-family-nested",
+      "file": "fixtures/later-family-nested.bend",
+      "class": "negative",
+      "feature": "pattern-order",
+      "intent": "A Box pattern in the arm of a Flag match, above `type Box` and below `type Flag`.",
+      "twin": "earlier-family-nested",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "a declared constructor (unknown: Box)"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t",
+        "knot_expected": true,
+        "justification": "The seed resolves a constructor pattern only against datatypes declared above it and rejects this one as unknown. Knot reports the pattern Invalid check unknown-constructor at its name; before the repair the generic checker resolved it against the whole book and checked, evaluated and compiled the program."
+      }
+    },
+    {
+      "name": "later-enum-generic-book",
+      "file": "fixtures/later-enum-generic-book.bend",
+      "class": "negative",
+      "feature": "pattern-order",
+      "intent": "Monomorphic Flag patterns above `type Flag`, in a book that a later generic family routes to the generic checker.",
+      "twin": "earlier-family-forward-uses",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "a declared constructor (unknown: Off)"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t",
+        "knot_expected": true,
+        "justification": "The seed resolves a constructor pattern only against datatypes declared above it and rejects this one as unknown. Knot reports the pattern Invalid check unknown-constructor at its name; before the repair the generic checker resolved it against the whole book and checked, evaluated and compiled the program."
+      }
+    },
+    {
+      "name": "earlier-family-forward-uses",
+      "file": "fixtures/earlier-family-forward-uses.bend",
+      "class": "positive",
+      "feature": "pattern-order",
+      "intent": "A forward Box<Flag> result and Box constructor expression above the declarations; the Box pattern follows them.",
+      "twin": "later-family-unbox",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Every constructor pattern follows its family's declaration; forward types and constructor expressions resolve in the whole book, so the seed's results fix the evaluator and Wasm results."
+      }
+    },
+    {
+      "name": "earlier-family-nested",
+      "file": "fixtures/earlier-family-nested.bend",
+      "class": "positive",
+      "feature": "pattern-order",
+      "intent": "The nested Flag and Box patterns, both below their declarations.",
+      "twin": "later-family-nested",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Every constructor pattern follows its family's declaration; forward types and constructor expressions resolve in the whole book, so the seed's results fix the evaluator and Wasm results."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "later-family-parameter",
+        "source_sha256": "267a27fbe4d062a48fe87fc5d4c8107d648847b547a317a592552d05e514ad96",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-family-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n2 |   match b:\n3>|     case Box{value}: value\n  |          ^^^^^^^^^^\n4 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-family-parameter.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n2 |   match b:\n3>|     case Box{value}: value\n  |          ^^^^^^^^^^\n4 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "later-family-unbox",
+        "source_sha256": "c726566ec13b3fb9e660c9ffe1e2f39ee5a643fc13f966f041db85bb7c4a5ac1",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-family-unbox.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n2 |   match b:\n3>|     case Box{v}:\n  |          ^^^^^^\n4 |       v\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-family-unbox.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n2 |   match b:\n3>|     case Box{v}:\n  |          ^^^^^^\n4 |       v\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "later-family-nested",
+        "source_sha256": "b1461248f097e6439c027348a28b1ef4a992f30234115742db5df7cf5c224dd2",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-family-nested.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n10 |       match b:\n11>|         case Box{v}:\n   |              ^^^^^^\n12 |           v\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-family-nested.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n10 |       match b:\n11>|         case Box{v}:\n   |              ^^^^^^\n12 |           v\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "later-enum-generic-book",
+        "source_sha256": "5d93362fab56a52c992917d83fa73809fac910707739f7f84445dbdbcade0ba8",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-enum-generic-book.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}:\n  |          ^^^^^\n4 |       On{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-enum-generic-book.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}:\n  |          ^^^^^\n4 |       On{}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "earlier-family-forward-uses",
+        "source_sha256": "14554ce5bca1107168552a4807674aa7f86469907ddc5d7e685a4fb2a45a47ee",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-uses.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-uses.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-uses.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/pattern-order-wrappers/earlier-family-forward-uses--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-uses.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/pattern-order-wrappers/earlier-family-forward-uses--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-uses.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/pattern-order-wrappers/earlier-family-forward-uses--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-uses.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/pattern-order-wrappers/earlier-family-forward-uses--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-uses.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "earlier-family-nested",
+        "source_sha256": "4954af57ab922a3298feb85728cff53efad6231e9afd67ad68b1c4b1de39ad4f",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/earlier-family-nested.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/earlier-family-nested.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/pattern-order/fixtures/earlier-family-nested.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
