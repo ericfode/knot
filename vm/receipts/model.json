@@ -1,0 +1,1590 @@
+{
+ "gate": "vm-model",
+ "date": "2026-09-28T09:28:43+00:00",
+ "status": "passed",
+ "sources": {
+  "model.bend": "ac4741b5e8c923b7a0dd78883ca4924fa2acc4f944a6000402d521571ae246bb",
+  "model-cli.bend": "618ac610240e679981a8458339308f3a99bb157a654d85938f4b0536401905d2",
+  "model-audit.bend": "3675cf28ae8fb11574c2f67d74bd8c5f3046c67a26a2ed26b13582835e1df5a2",
+  "model-sweep.bend": "318f1276ea395ae0403b5c5bb75d12938c14d3029f4128918dbe4bb12d163f00",
+  "LAWS.bend": "37f956e04ef844fbb722fb7a5510a6039686c5cf13321f948daec72c7226c17b",
+  "PROOF.bend": "7ff4f096b6c09196e424eed5e7519ec0fd453fc6438245c870b016f6954c44b7"
+ },
+ "fixtures": {
+  "value_on": 75,
+  "closure_captures": 162,
+  "recursion_map": 238,
+  "string_append_mortal": 247,
+  "foreign_print": 191
+ },
+ "registry": {
+  "prims": 39,
+  "foreign": 8
+ },
+ "goldens": {
+  "value-off": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tOff{}"
+  },
+  "value-on": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "reference": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "nested-call": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "let": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "shadow": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "erased-let": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "erased-argument": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "case-off": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "case-on": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tOff{}"
+  },
+  "construct": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t0\tBox{On{}}"
+  },
+  "unpack": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "pair": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t0\tPair{Off{},On{}}"
+  },
+  "second": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "erased-field": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "closure-id": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "closure-capture-off": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tOff{}"
+  },
+  "closure-capture-on": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "closure-return": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "closure-nested": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "closure-shadow": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "u32-zero": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-big": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-wrap": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-unsigned": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-div-zero": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-rem-zero": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-shift": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "nat-add": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "char-code": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "string-empty": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "string-eq": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "string-append": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "string-reverse": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "default-hit": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t1\tOn{}"
+  },
+  "default-miss": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t0\tOff{}"
+  },
+  "nat-unpack": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t1\tOn{}"
+  },
+  "foreign-print": {
+   "exit": 0,
+   "outcome": "vm"
+  },
+  "nat-sub-floor": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "char-space": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-show": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "string-length": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-not": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-shr": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "nat-mul": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "nat-show": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "char-eq": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-cmp": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t2\tGT{}"
+  },
+  "case-char": {
+   "exit": 0,
+   "outcome": "Evaluated\t2\t1\tOn{}"
+  },
+  "recursion-map": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t1\tPush{Off{},Push{On{},Stop{}}}"
+  },
+  "recursion-tail": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "erased-construct": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t0\tProofBox{On{}}"
+  },
+  "closure-captures": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t0\tPair{On{},Off{}}"
+  },
+  "nat-big": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "nat-range": {
+   "exit": 4,
+   "outcome": "Exhausted\tvm\t2\tNatRange"
+  },
+  "u32-ne": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tFalse{}"
+  },
+  "nat-ne": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tFalse{}"
+  },
+  "char-ne": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tFalse{}"
+  },
+  "string-ne-order": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tFalse{}"
+  },
+  "string-ne-length": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tFalse{}"
+  },
+  "u32-shr-32": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tZero{}"
+  },
+  "u32-shr-33": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tZero{}"
+  },
+  "u32-shl-33": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tZero{}"
+  },
+  "u32-sub-wrap": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-mul-wrap": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "u32-and": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tSucc{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}"
+  },
+  "u32-lt-unsigned": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "nat-cmp": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t0\tLT{}"
+  },
+  "u32-to-nat-big": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "nat-pred": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tSucc{Succ{Zero{}}}"
+  },
+  "nat-succ": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}"
+  },
+  "nat-succ-range": {
+   "exit": 4,
+   "outcome": "Exhausted\tvm\t2\tNatRange"
+  },
+  "nat-mul-range": {
+   "exit": 4,
+   "outcome": "Exhausted\tvm\t2\tNatRange"
+  },
+  "string-codes": {
+   "exit": 0,
+   "outcome": "Evaluated\t4\t1\tCode{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{S"
+  },
+  "nat-show-codes": {
+   "exit": 0,
+   "outcome": "Evaluated\t4\t1\tCode{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{S"
+  },
+  "string-append-mortal": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "result-u32": {
+   "exit": 3,
+   "outcome": "Unsupported\tinvoke\tresult-type"
+  },
+  "io-bind": {
+   "exit": 0,
+   "outcome": "a\nb"
+  }
+ },
+ "fuel": {
+  "agree": 78,
+  "total": 78,
+  "differ": []
+ },
+ "inspection": {
+  "inspect-case": "HostFailure\timage\till-typed",
+  "inspect-prim": "HostFailure\timage\till-typed"
+ },
+ "controls": {
+  "truncated": "HostFailure image: total",
+  "bad-magic": "HostFailure image: magic",
+  "version-2": "HostFailure image: magic",
+  "total-words": "HostFailure image: total",
+  "entry-kind": "HostFailure image: header",
+  "reserved-word": "HostFailure image: header",
+  "registry-digest": "HostFailure image: registry digest",
+  "section-offset": "HostFailure image: section 1 offset",
+  "record-length": "HostFailure image: section 4 record length",
+  "trailing-word": "HostFailure image: trailing words",
+  "opcode": "HostFailure image: node record",
+  "main-index": "HostFailure image: main index",
+  "name-utf8": "HostFailure image: name utf-8",
+  "function-root-shared": "HostFailure image: function root",
+  "child-not-record": "HostFailure image: child offset",
+  "child-after-parent": "HostFailure image: child after parent",
+  "oversize": "HostFailure image: exhausted image-size",
+  "oversize-and-bad-magic": "HostFailure image: exhausted image-size",
+  "oversize-and-misaligned": "HostFailure image: exhausted image-size",
+  "unused-constant": "HostFailure image: noncanonical",
+  "plan:ref-beyond-depth": "HostFailure image: validator: id: slot 1 beyond depth 1",
+  "plan:let-slot": "HostFailure image: validator: main: let slot 1 at depth 0",
+  "plan:branch-first-slot": "HostFailure image: validator: second: branch binders",
+  "plan:branch-fields": "HostFailure image: validator: second: branch binders",
+  "plan:missing-tag": "HostFailure image: validator: flip: default must cover exactly the missing tags",
+  "plan:redundant-default": "HostFailure image: validator: flip: default must cover exactly the missing tags",
+  "plan:keys-without-default": "HostFailure image: validator: select: keys must increase strictly, with a default",
+  "plan:keys-descending": "HostFailure image: validator: vowel: keys must increase strictly, with a default",
+  "plan:unused-capture": "HostFailure image: validator: capture: captures are not exactly the free slots of the body",
+  "plan:capture-order": "HostFailure image: validator: swap: captures must increase strictly below depth",
+  "plan:closure-slots": "HostFailure image: validator: main: closure slots 2, reached 1",
+  "plan:function-slots": "HostFailure image: validator: second: slots 2, reached 3",
+  "plan:call-arity": "HostFailure image: validator: main: call arity",
+  "plan:call-result": "HostFailure image: validator: main: call types",
+  "plan:construct-arity": "HostFailure image: validator: main: construct arity",
+  "plan:value-with-fields": "HostFailure image: validator: main: value is not a nullary constructor",
+  "plan:reference-type": "HostFailure image: validator: get: reference type",
+  "plan:prim-unknown": "HostFailure image: validator: U32.is_eq: unknown prim id 41",
+  "plan:prim-reserved": "HostFailure image: validator: U32.add: unknown prim id 39",
+  "plan:prim-arity": "HostFailure image: validator: U32.not: prim arity",
+  "plan:prim-result": "HostFailure image: validator: U32.is_eq: prim result is not the pinned Bool",
+  "plan:foreign-unknown": "HostFailure image: validator: IO.print: unknown foreign id 99",
+  "plan:invoke-non-arrow": "HostFailure image: validator: apply: invoke arity",
+  "plan:literal-kind": "HostFailure image: validator: main: U32 literal at a non-U32 type",
+  "plan:program-main-arity": "HostFailure image: validator: program: main must exist with no live parameters",
+  "plan:program-representation": "HostFailure image: validator: program: missing representation ['IO.OP']",
+  "plan:foreign-operand-type": "HostFailure image: validator: IO.print: foreign operand is not the pinned String",
+  "plan:representation-shape": "HostFailure image: validator: representation: Bool shape",
+  "plan:key-body-type": "HostFailure image: validator: vowel: key branch body type",
+  "plan:default-body-type": "HostFailure image: validator: vowel: default body type",
+  "plan:prim-on-flags": "HostFailure image: validator: main: prim operand is not the pinned U32",
+  "plan:nat-add-of-flags": "HostFailure image: validator: main: prim operand is not the pinned Nat",
+  "plan:prim-result-undeclared": "HostFailure image: validator: U32.is_eq: prim result is not the pinned Bool",
+  "plan:foreign-on-flag": "HostFailure image: validator: main: foreign operand is not the pinned String",
+  "plan:foreign-result": "HostFailure image: validator: IO.print: foreign result is not IO(Unit)",
+  "plan:program-main-unit": "HostFailure image: validator: program: main must return IO(Unit)",
+  "plan:inspect-none-parameter": "HostFailure image: validator: pred: case scrutinee type",
+  "plan:inspect-none-let": "HostFailure image: validator: pred: case scrutinee type",
+  "plan:nat-field-type": "HostFailure image: validator: representation: Nat shape",
+  "plan:reference-none-view": "HostFailure image: validator: id: reference type",
+  "plan:arrow-cycle": "HostFailure image: validator: types: arrow cycle",
+  "model:child-is-parent": "HostFailure image: child after parent"
+ },
+ "audit": {
+  "value-off": {
+   "transitions": 3,
+   "live": 0
+  },
+  "value-on": {
+   "transitions": 3,
+   "live": 0
+  },
+  "reference": {
+   "transitions": 7,
+   "live": 0
+  },
+  "nested-call": {
+   "transitions": 12,
+   "live": 0
+  },
+  "let": {
+   "transitions": 7,
+   "live": 0
+  },
+  "shadow": {
+   "transitions": 11,
+   "live": 0
+  },
+  "erased-let": {
+   "transitions": 3,
+   "live": 0
+  },
+  "erased-argument": {
+   "transitions": 7,
+   "live": 0
+  },
+  "case-off": {
+   "transitions": 8,
+   "live": 0
+  },
+  "case-on": {
+   "transitions": 8,
+   "live": 0
+  },
+  "construct": {
+   "transitions": 5,
+   "live": 0
+  },
+  "unpack": {
+   "transitions": 11,
+   "live": 0
+  },
+  "pair": {
+   "transitions": 7,
+   "live": 0
+  },
+  "second": {
+   "transitions": 13,
+   "live": 0
+  },
+  "erased-field": {
+   "transitions": 11,
+   "live": 0
+  },
+  "closure-id": {
+   "transitions": 15,
+   "live": 0
+  },
+  "closure-capture-off": {
+   "transitions": 16,
+   "live": 0
+  },
+  "closure-capture-on": {
+   "transitions": 16,
+   "live": 0
+  },
+  "closure-return": {
+   "transitions": 14,
+   "live": 0
+  },
+  "closure-nested": {
+   "transitions": 21,
+   "live": 0
+  },
+  "closure-shadow": {
+   "transitions": 15,
+   "live": 0
+  },
+  "u32-zero": {
+   "transitions": 13,
+   "live": 0
+  },
+  "u32-big": {
+   "transitions": 13,
+   "live": 0
+  },
+  "u32-wrap": {
+   "transitions": 24,
+   "live": 0
+  },
+  "u32-unsigned": {
+   "transitions": 13,
+   "live": 0
+  },
+  "u32-div-zero": {
+   "transitions": 24,
+   "live": 0
+  },
+  "u32-rem-zero": {
+   "transitions": 24,
+   "live": 0
+  },
+  "u32-shift": {
+   "transitions": 24,
+   "live": 0
+  },
+  "nat-add": {
+   "transitions": 24,
+   "live": 0
+  },
+  "char-code": {
+   "transitions": 20,
+   "live": 0
+  },
+  "string-empty": {
+   "transitions": 9,
+   "live": 0
+  },
+  "string-eq": {
+   "transitions": 13,
+   "live": 0
+  },
+  "string-append": {
+   "transitions": 24,
+   "live": 0
+  },
+  "string-reverse": {
+   "transitions": 20,
+   "live": 0
+  },
+  "default-hit": {
+   "transitions": 8,
+   "live": 0
+  },
+  "default-miss": {
+   "transitions": 8,
+   "live": 0
+  },
+  "nat-unpack": {
+   "transitions": 9,
+   "live": 0
+  },
+  "foreign-print": {
+   "transitions": 14,
+   "live": 0
+  },
+  "nat-sub-floor": {
+   "transitions": 24,
+   "live": 0
+  },
+  "char-space": {
+   "transitions": 44,
+   "live": 0
+  },
+  "u32-show": {
+   "transitions": 20,
+   "live": 0
+  },
+  "string-length": {
+   "transitions": 20,
+   "live": 0
+  },
+  "u32-not": {
+   "transitions": 20,
+   "live": 0
+  },
+  "u32-shr": {
+   "transitions": 24,
+   "live": 0
+  },
+  "nat-mul": {
+   "transitions": 24,
+   "live": 0
+  },
+  "nat-show": {
+   "transitions": 20,
+   "live": 0
+  },
+  "char-eq": {
+   "transitions": 13,
+   "live": 0
+  },
+  "u32-cmp": {
+   "transitions": 13,
+   "live": 0
+  },
+  "case-char": {
+   "transitions": 8,
+   "live": 0
+  },
+  "recursion-map": {
+   "transitions": 50,
+   "live": 0
+  },
+  "recursion-tail": {
+   "transitions": 32,
+   "live": 0
+  },
+  "erased-construct": {
+   "transitions": 5,
+   "live": 0
+  },
+  "closure-captures": {
+   "transitions": 22,
+   "live": 0
+  },
+  "nat-big": {
+   "transitions": 24,
+   "live": 0
+  },
+  "nat-range": {
+   "transitions": 13,
+   "live": 2
+  },
+  "u32-ne": {
+   "transitions": 13,
+   "live": 0
+  },
+  "nat-ne": {
+   "transitions": 13,
+   "live": 0
+  },
+  "char-ne": {
+   "transitions": 13,
+   "live": 0
+  },
+  "string-ne-order": {
+   "transitions": 13,
+   "live": 0
+  },
+  "string-ne-length": {
+   "transitions": 13,
+   "live": 0
+  },
+  "u32-shr-32": {
+   "transitions": 20,
+   "live": 0
+  },
+  "u32-shr-33": {
+   "transitions": 20,
+   "live": 0
+  },
+  "u32-shl-33": {
+   "transitions": 20,
+   "live": 0
+  },
+  "u32-sub-wrap": {
+   "transitions": 24,
+   "live": 0
+  },
+  "u32-mul-wrap": {
+   "transitions": 24,
+   "live": 0
+  },
+  "u32-and": {
+   "transitions": 20,
+   "live": 0
+  },
+  "u32-lt-unsigned": {
+   "transitions": 13,
+   "live": 0
+  },
+  "nat-cmp": {
+   "transitions": 13,
+   "live": 0
+  },
+  "u32-to-nat-big": {
+   "transitions": 20,
+   "live": 0
+  },
+  "nat-pred": {
+   "transitions": 9,
+   "live": 0
+  },
+  "nat-succ": {
+   "transitions": 9,
+   "live": 0
+  },
+  "nat-succ-range": {
+   "transitions": 9,
+   "live": 2
+  },
+  "nat-mul-range": {
+   "transitions": 13,
+   "live": 2
+  },
+  "string-codes": {
+   "transitions": 133,
+   "live": 0
+  },
+  "nat-show-codes": {
+   "transitions": 90,
+   "live": 0
+  },
+  "string-append-mortal": {
+   "transitions": 31,
+   "live": 0
+  },
+  "io-bind": {
+   "transitions": 100,
+   "live": 0
+  }
+ },
+ "sweep": {
+  "case-char": {
+   "mutations": 489,
+   "admitted": 49,
+   "refused": 440,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "case-off": {
+   "mutations": 369,
+   "admitted": 48,
+   "refused": 321,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "case-on": {
+   "mutations": 369,
+   "admitted": 48,
+   "refused": 321,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "char-code": {
+   "mutations": 528,
+   "admitted": 67,
+   "refused": 461,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "char-eq": {
+   "mutations": 432,
+   "admitted": 56,
+   "refused": 376,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "char-ne": {
+   "mutations": 444,
+   "admitted": 56,
+   "refused": 388,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "char-space": {
+   "mutations": 849,
+   "admitted": 120,
+   "refused": 729,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "closure-capture-off": {
+   "mutations": 390,
+   "admitted": 48,
+   "refused": 342,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "closure-capture-on": {
+   "mutations": 390,
+   "admitted": 48,
+   "refused": 342,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "closure-captures": {
+   "mutations": 486,
+   "admitted": 52,
+   "refused": 434,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "closure-id": {
+   "mutations": 375,
+   "admitted": 46,
+   "refused": 329,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "closure-nested": {
+   "mutations": 429,
+   "admitted": 48,
+   "refused": 381,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "closure-return": {
+   "mutations": 357,
+   "admitted": 42,
+   "refused": 315,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "closure-shadow": {
+   "mutations": 354,
+   "admitted": 39,
+   "refused": 315,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "construct": {
+   "mutations": 285,
+   "admitted": 34,
+   "refused": 251,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "default-hit": {
+   "mutations": 399,
+   "admitted": 43,
+   "refused": 356,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "default-miss": {
+   "mutations": 399,
+   "admitted": 43,
+   "refused": 356,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "erased-argument": {
+   "mutations": 285,
+   "admitted": 35,
+   "refused": 250,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "erased-construct": {
+   "mutations": 288,
+   "admitted": 36,
+   "refused": 252,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "erased-field": {
+   "mutations": 396,
+   "admitted": 49,
+   "refused": 347,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "erased-let": {
+   "mutations": 225,
+   "admitted": 26,
+   "refused": 199,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "foreign-print": {
+   "mutations": 573,
+   "admitted": 61,
+   "refused": 512,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "io-bind": {
+   "mutations": 1194,
+   "admitted": 95,
+   "refused": 1099,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "let": {
+   "mutations": 255,
+   "admitted": 29,
+   "refused": 226,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-add": {
+   "mutations": 570,
+   "admitted": 70,
+   "refused": 500,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-big": {
+   "mutations": 570,
+   "admitted": 70,
+   "refused": 500,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-cmp": {
+   "mutations": 462,
+   "admitted": 55,
+   "refused": 407,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-mul": {
+   "mutations": 570,
+   "admitted": 70,
+   "refused": 500,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-mul-range": {
+   "mutations": 558,
+   "admitted": 71,
+   "refused": 487,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-ne": {
+   "mutations": 444,
+   "admitted": 56,
+   "refused": 388,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-pred": {
+   "mutations": 396,
+   "admitted": 50,
+   "refused": 346,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-range": {
+   "mutations": 558,
+   "admitted": 72,
+   "refused": 486,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-show": {
+   "mutations": 684,
+   "admitted": 86,
+   "refused": 598,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-show-codes": {
+   "mutations": 924,
+   "admitted": 96,
+   "refused": 828,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-sub-floor": {
+   "mutations": 570,
+   "admitted": 71,
+   "refused": 499,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-succ": {
+   "mutations": 318,
+   "admitted": 38,
+   "refused": 280,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-succ-range": {
+   "mutations": 522,
+   "admitted": 60,
+   "refused": 462,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nat-unpack": {
+   "mutations": 456,
+   "admitted": 48,
+   "refused": 408,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "nested-call": {
+   "mutations": 303,
+   "admitted": 38,
+   "refused": 265,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "pair": {
+   "mutations": 303,
+   "admitted": 38,
+   "refused": 265,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "recursion-map": {
+   "mutations": 714,
+   "admitted": 74,
+   "refused": 640,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "recursion-tail": {
+   "mutations": 567,
+   "admitted": 65,
+   "refused": 502,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "reference": {
+   "mutations": 285,
+   "admitted": 35,
+   "refused": 250,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "result-u32": {
+   "mutations": 315,
+   "admitted": 0,
+   "refused": 315,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "second": {
+   "mutations": 414,
+   "admitted": 55,
+   "refused": 359,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "shadow": {
+   "mutations": 285,
+   "admitted": 34,
+   "refused": 251,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "string-append": {
+   "mutations": 660,
+   "admitted": 87,
+   "refused": 573,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "string-append-mortal": {
+   "mutations": 741,
+   "admitted": 95,
+   "refused": 646,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "string-codes": {
+   "mutations": 1146,
+   "admitted": 123,
+   "refused": 1023,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "string-empty": {
+   "mutations": 480,
+   "admitted": 62,
+   "refused": 418,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "string-eq": {
+   "mutations": 519,
+   "admitted": 73,
+   "refused": 446,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 1
+  },
+  "string-length": {
+   "mutations": 693,
+   "admitted": 94,
+   "refused": 599,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "string-ne-length": {
+   "mutations": 534,
+   "admitted": 78,
+   "refused": 456,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "string-ne-order": {
+   "mutations": 531,
+   "admitted": 75,
+   "refused": 456,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "string-reverse": {
+   "mutations": 618,
+   "admitted": 85,
+   "refused": 533,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-and": {
+   "mutations": 474,
+   "admitted": 59,
+   "refused": 415,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-big": {
+   "mutations": 381,
+   "admitted": 52,
+   "refused": 329,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-cmp": {
+   "mutations": 411,
+   "admitted": 54,
+   "refused": 357,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-div-zero": {
+   "mutations": 507,
+   "admitted": 71,
+   "refused": 436,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-lt-unsigned": {
+   "mutations": 393,
+   "admitted": 56,
+   "refused": 337,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-mul-wrap": {
+   "mutations": 507,
+   "admitted": 68,
+   "refused": 439,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-ne": {
+   "mutations": 393,
+   "admitted": 53,
+   "refused": 340,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-not": {
+   "mutations": 474,
+   "admitted": 58,
+   "refused": 416,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-rem-zero": {
+   "mutations": 507,
+   "admitted": 68,
+   "refused": 439,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-shift": {
+   "mutations": 594,
+   "admitted": 72,
+   "refused": 522,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-shl-33": {
+   "mutations": 474,
+   "admitted": 58,
+   "refused": 416,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-show": {
+   "mutations": 633,
+   "admitted": 102,
+   "refused": 531,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-shr": {
+   "mutations": 594,
+   "admitted": 75,
+   "refused": 519,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-shr-32": {
+   "mutations": 474,
+   "admitted": 58,
+   "refused": 416,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-shr-33": {
+   "mutations": 474,
+   "admitted": 58,
+   "refused": 416,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-sub-wrap": {
+   "mutations": 519,
+   "admitted": 70,
+   "refused": 449,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-to-nat-big": {
+   "mutations": 552,
+   "admitted": 71,
+   "refused": 481,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-unsigned": {
+   "mutations": 393,
+   "admitted": 53,
+   "refused": 340,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-wrap": {
+   "mutations": 519,
+   "admitted": 65,
+   "refused": 454,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "u32-zero": {
+   "mutations": 381,
+   "admitted": 52,
+   "refused": 329,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "unpack": {
+   "mutations": 393,
+   "admitted": 47,
+   "refused": 346,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "value-off": {
+   "mutations": 225,
+   "admitted": 26,
+   "refused": 199,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  },
+  "value-on": {
+   "mutations": 225,
+   "admitted": 26,
+   "refused": 199,
+   "unsound": 0,
+   "differ": 0,
+   "plan-text": 0
+  }
+ },
+ "proof": {
+  "laws": 23,
+  "stdout": "All terms check."
+ },
+ "mutants": [
+  {
+   "mutant": "rc-under-count",
+   "breaks": "dup adds no reference",
+   "killed": true,
+   "by": [
+    "goldens:closure-capture-off",
+    "goldens:closure-capture-on",
+    "goldens:closure-shadow",
+    "goldens:string-append",
+    "goldens:string-reverse",
+    "goldens:u32-show",
+    "goldens:nat-show",
+    "goldens:recursion-tail"
+   ],
+   "kills": 29,
+   "law": "closure_captures_runs",
+   "crashes": 0
+  },
+  {
+   "mutant": "rc-over-count",
+   "breaks": "drop above one keeps its count",
+   "killed": true,
+   "by": [
+    "audit:string-append",
+    "audit:string-reverse",
+    "audit:u32-show",
+    "audit:u32-not",
+    "audit:nat-show",
+    "audit:recursion-map",
+    "audit:nat-big",
+    "audit:u32-sub-wrap"
+   ],
+   "kills": 12,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "append-drops-tail",
+   "breaks": "String.append also drops its moved tail",
+   "killed": true,
+   "by": [
+    "goldens:string-codes",
+    "goldens:string-append-mortal",
+    "audit:string-codes",
+    "audit:string-append-mortal"
+   ],
+   "kills": 4,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "tail-keeps-caller",
+   "breaks": "a tail entry does not release its caller",
+   "killed": true,
+   "by": [
+    "audit:reference",
+    "audit:nested-call",
+    "audit:erased-argument",
+    "audit:case-off",
+    "audit:case-on",
+    "audit:unpack",
+    "audit:second",
+    "audit:erased-field"
+   ],
+   "kills": 66,
+   "law": "closure_captures_runs",
+   "crashes": 0
+  },
+  {
+   "mutant": "scope-keeps-slots",
+   "breaks": "leaving a scope keeps its slots",
+   "killed": true,
+   "by": [
+    "audit:let",
+    "audit:shadow",
+    "audit:unpack",
+    "audit:second",
+    "audit:erased-field",
+    "audit:nat-unpack",
+    "audit:recursion-map",
+    "audit:nat-pred"
+   ],
+   "kills": 10,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "arm-selection",
+   "breaks": "a tag selects the other row",
+   "killed": true,
+   "by": [
+    "goldens:case-off",
+    "goldens:case-on",
+    "goldens:unpack",
+    "goldens:second",
+    "goldens:erased-field",
+    "goldens:nat-unpack",
+    "goldens:char-space",
+    "goldens:recursion-map"
+   ],
+   "kills": 15,
+   "law": "recursion_map_runs",
+   "crashes": 0
+  },
+  {
+   "mutant": "slot-off-by-one",
+   "breaks": "slots read one word late",
+   "killed": true,
+   "by": [
+    "goldens:reference",
+    "goldens:nested-call",
+    "goldens:let",
+    "goldens:shadow",
+    "goldens:erased-argument",
+    "goldens:case-off",
+    "goldens:case-on",
+    "goldens:unpack"
+   ],
+   "kills": 140,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "erased-argument",
+   "breaks": "live and erased Invokes swap",
+   "killed": true,
+   "by": [
+    "goldens:closure-id",
+    "goldens:closure-capture-off",
+    "goldens:closure-capture-on",
+    "goldens:closure-return",
+    "goldens:closure-nested",
+    "goldens:closure-shadow",
+    "goldens:closure-captures",
+    "goldens:io-bind"
+   ],
+   "kills": 16,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "nat-bound",
+   "breaks": "Nat.add wraps instead of exhausting",
+   "killed": true,
+   "by": [
+    "goldens:nat-range",
+    "audit:nat-range"
+   ],
+   "kills": 2,
+   "law": "nat_sum_bound",
+   "crashes": 0
+  },
+  {
+   "mutant": "succ-bound",
+   "breaks": "Succ wraps instead of exhausting",
+   "killed": true,
+   "by": [
+    "goldens:nat-succ-range",
+    "audit:nat-succ-range"
+   ],
+   "kills": 2,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "remainder-by-zero",
+   "breaks": "x % 0 is 0",
+   "killed": true,
+   "by": [
+    "goldens:u32-rem-zero"
+   ],
+   "kills": 1,
+   "law": "remainder_by_zero",
+   "crashes": 0
+  },
+  {
+   "mutant": "wide-shift",
+   "breaks": "a shift by 31 loses its bits",
+   "killed": true,
+   "by": [
+    "goldens:u32-shr"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "fuel-unchecked",
+   "breaks": "an entry at fuel 0 proceeds",
+   "killed": true,
+   "by": [
+    "fuel:value-off",
+    "fuel:value-on",
+    "fuel:reference",
+    "fuel:nested-call",
+    "fuel:let",
+    "fuel:shadow",
+    "fuel:erased-let",
+    "fuel:erased-argument"
+   ],
+   "kills": 77,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "child-order",
+   "breaks": "a child may sit at its parent",
+   "killed": true,
+   "by": [
+    "controls:model:child-is-parent"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "capture-exactness",
+   "breaks": "unused captures are admitted",
+   "killed": true,
+   "by": [
+    "controls:plan:unused-capture"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "inspection",
+   "breaks": "words are read without inspection",
+   "killed": true,
+   "by": [
+    "inspection:inspect-case"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  }
+ ]
+}

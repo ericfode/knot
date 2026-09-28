@@ -1,8 +1,10 @@
 import Base
 
-# The normative model of knot-image-1 and knot-vm-1 (vm/SPEC.md).
-# Words are u32; `none` is 0xffffffff. A reason is the refusal text of SPEC §4,
-# spelled as vm/serializer.py spells its first problem.
+# The normative model of knot-image-1 and knot-vm-1 (vm/SPEC.md): the image is
+# a read-only word store, the heap a word store at SPEC byte addresses, and
+# each machine transition a function of those stores and a few registers.
+# Words are u32; `none` is 0xffffffff. A refusal reason is SPEC §4's, spelled
+# as vm/serializer.py spells its first problem.
 
 def none() -> U32:
   4294967295
@@ -2641,15 +2643,27 @@ def heap_of(m: Machine) -> Heap:
 def base_of(+code: Code) -> U32:
   heap_base(code_word(code,2))
 
+# An Activation's slots at and above its depth hold 0 (SPEC §5).
+def vacant(cells: List<&2,U32>, +heap: Heap) -> Bool:
+  match cells:
+    case Nil{}: True{}
+    case Con{+c,rest}:
+      +depth = load_word(heap,c,3)
+      +capacity = U32.sub(U32.shrn(load_word(heap,c,1),3n),2)
+      Bool.and(choose(Bool,Bool.or(Bool.not(U32.is_eq(cell_class(heap,c),4)),U32.is_gt(depth,capacity)),u => True{},
+          u => zero_all(slice(U32.to_nat(U32.sub(capacity,depth)),memory_of(heap),U32.add(U32.shrn(c,2n),U32.add(4,depth))))),
+        vacant(rest,heap))
+
 # The RC audit: each live mortal cell's count equals its owners among the
-# roots and every live cell's edges, and no owner points outside them.
+# roots and every live cell's edges, no owner points outside them, and no
+# Activation holds a word above its depth.
 def balanced(+code: Code, +m: Machine) -> Bool:
   +heap = heap_of(m)
   +cells = live_cells(heap,base_of(code))
   +owners = List.append(&2,U32,roots(m),all_edges(cells,heap))
   +counts = tallied(owners,heap,empty())
   +mortals = mortal_cells(cells,heap)
-  Bool.and(matched(mortals,heap,counts),U32.is_eq(counted_total(mortals,counts),mortal_words(owners,heap)))
+  Bool.and(Bool.and(matched(mortals,heap,counts),U32.is_eq(counted_total(mortals,counts),mortal_words(owners,heap))),vacant(cells,heap))
 
 # Mortal cells still live; zero once a finished run has released its answer.
 def leaked(+code: Code, +m: Machine) -> U32:
