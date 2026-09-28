@@ -1,0 +1,554 @@
+{
+  "suite": "compiler-generics/empty-families",
+  "increment": "6: generics and quantity arguments (S2), review round 2",
+  "basis": "Frozen before the repair (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "empty-generic-absurd",
+      "file": "fixtures/empty-generic-absurd.bend",
+      "class": "boundary",
+      "feature": "empty-datatype",
+      "intent": "A generic empty family Never<-A: Type> eliminated by an absurd match with no arms.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype."
+      }
+    },
+    {
+      "name": "empty-generic-family",
+      "file": "fixtures/empty-generic-family.bend",
+      "class": "boundary",
+      "feature": "empty-datatype",
+      "intent": "An empty family with an erased type parameter.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype."
+      }
+    },
+    {
+      "name": "empty-quantity-family",
+      "file": "fixtures/empty-quantity-family.bend",
+      "class": "boundary",
+      "feature": "empty-datatype",
+      "intent": "An empty family with a leading quantity parameter, Kind(a).",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype."
+      }
+    },
+    {
+      "name": "empty-kind-family",
+      "file": "fixtures/empty-kind-family.bend",
+      "class": "boundary",
+      "feature": "empty-datatype",
+      "intent": "A parameterless empty Kind(&2) family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype."
+      }
+    },
+    {
+      "name": "empty-type-generic-book",
+      "file": "fixtures/empty-type-generic-book.bend",
+      "class": "boundary",
+      "feature": "empty-datatype",
+      "intent": "A monomorphic empty type in a book that also declares a generic family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype."
+      }
+    },
+    {
+      "name": "empty-type",
+      "file": "fixtures/empty-type.bend",
+      "class": "boundary",
+      "feature": "empty-datatype",
+      "intent": "A monomorphic empty type in a book without generic syntax.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype."
+      }
+    },
+    {
+      "name": "empty-data-absurd",
+      "file": "fixtures/empty-data-absurd.bend",
+      "class": "boundary",
+      "feature": "empty-datatype",
+      "intent": "A monomorphic empty Data type eliminated by an absurd match, without generic syntax.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "empty-generic-absurd",
+        "source_sha256": "386383afca41143250b4faad6e28fa2c44ad24221e8cb8e6311607c72f374ecf",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "empty-generic-family",
+        "source_sha256": "d763707e1d9b60afad1059694115ee482edfff2cb1dbd6a050a2498a8560e5f2",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "empty-quantity-family",
+        "source_sha256": "39efe8f53103a180e53bcd1df923941a5c349d4781f5f5a9f0c4bb07f76e3ac0",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "empty-kind-family",
+        "source_sha256": "aab8d94295aaaf7c712eceba2539a94383211e4e44c55f33f604dc10f100f5cb",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "empty-type-generic-book",
+        "source_sha256": "a32e425841c72cb7e7f5d54a33f0951facf938580c214acf5293cf45a5061739",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "empty-type",
+        "source_sha256": "9d351e107f3d63266a91132dfaa570b383d7902c372cd3bc60f6c821d1e6a61c",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/empty-families/fixtures/empty-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "empty-data-absurd",
+        "source_sha256": "bb404a585bf3400d1d51173640c8206508cfd5fe76ccfbc548055fc5522a35b4",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
