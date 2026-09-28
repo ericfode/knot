@@ -18,6 +18,8 @@ Later additions the same day:
 ## Definition of done
 
 1. **Self-hosting.** Knot compiles its own complete source bundle, including the Base slice it reaches. The seed builds C1; C1 emits the Wasm compiler A2; A2 compiles the same frozen bundle to A3.
+   - **Names.** C1 means "compiler, generation 1": the upstream seed builds Knot's own Bend source into a runnable compiler. It is not the C language, and not the `knot-c-1` backend. A2 and A3 are Wasm modules: the self-hosted compiler emits Wasm directly from its core IR, and no step of the chain goes through Knot's C backend.
+   - **C1 lane.** C1 is built with the seed's native lane (the seed compiles through clang). The seed's Bun lane is only a cross-check. Its known fault (`List.length` overflows the stack at about 32,000 elements) makes it inconclusive on compiler-sized inputs, so it is recorded as Exhausted there, not as a disagreement.
    - A2 and A3 are byte-identical.
    - Both generations pass the conformance corpus against the pinned reference Bend (2.0.29, `574b6d3`).
    - The upstream fallback is used only by the seed step.
