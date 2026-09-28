@@ -44,7 +44,7 @@ try {
 '''
 SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries',
            HERE / 'bare-families', HERE / 'value-arguments', HERE / 'empty-families',
-           HERE / 'def-references', HERE / 'type-level-names')
+           HERE / 'def-references', HERE / 'type-level-names', HERE / 'marked-binders')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
@@ -104,11 +104,16 @@ MUTANTS = (
      'new': 'dependent-type",token))\n    case Some{Definition{name}}: next(Unit{})',
      'witness': 'definition-field-later', 'phase': 'check',
      'actual': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tunknown-type\t'}},
+    {'name': 'marked-binder-quantity', 'file': 'type-parse.bend',
+     'old': 'S.choose(Result<S.Error,Parsed>,U32.is_eq(quantity,1),u =>',
+     'new': 'S.choose(Result<S.Error,Parsed>,True{},u =>',
+     'witness': 'marked-reusable-binder', 'phase': 'check',
+     'actual': {'exit': 0, 'contains': 'Checked\n'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
                 'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid',
-                'def-reference-free', 'type-level-definition-unknown'}
+                'def-reference-free', 'type-level-definition-unknown', 'marked-binder-quantity'}
 
 
 def require(condition, detail):

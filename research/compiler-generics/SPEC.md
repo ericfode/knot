@@ -16,7 +16,10 @@ symbolic meets compare structurally, like the seed.
 
 Supported families have erased type parameters (`-A: Type`, `-A: Data`,
 `-A: Kind(a)`) and leading erased quantity parameters (`a`, `-a: Quant`).
-Supported kinds are `Type`, `Data` and `Kind(q)`.
+Supported kinds are `Type`, `Data` and `Kind(q)`. Only an unmarked bare binder
+is a quantity parameter. A marked one, `+a,` or `-a,`, is a parameter missing
+its type. The seed rejects it where it expects `:`, and Knot reports `Invalid
+parse parameter` at the same token (law `marked_binder`).
 
 - `Name<..>` instantiates a family. A short application fills every omitted
   leading quantity with `&1`; prefix `+` fills all of them with `&2`, including

@@ -67,6 +67,20 @@ def L.term_argument(n,head,token,rest,close,comma):
       == Fail{S.Unsupported{"parse","term-argument",S.at(token)}} : Result<S.Error,T.Parsed>}
   {==}
 
+def L.marked_binder(fuel,q,name,at,rest,word,marked):
+  %Equal.sym(Bool,S.identifier(name),True{},word) :
+    {S.choose(Result<S.Error,T.Parsed>,_,
+      u => S.choose(Result<S.Error,T.Parsed>,U32.is_eq(q,1),
+        u => Done{T.Parsed{S.TypedParameter{name,0,S.QuantType{name}},Con{S.Token{",",at},rest}}},
+        u => T.invalid(Con{S.Token{",",at},rest},"parameter")),
+      u => T.invalid(Con{name,Con{S.Token{",",at},rest}},"parameter"))
+      == Fail{S.Invalid{"parse","parameter",at}} : Result<S.Error,T.Parsed>}
+  %Equal.sym(Bool,U32.is_eq(q,1),False{},marked) :
+    {S.choose(Result<S.Error,T.Parsed>,_,
+      u => Done{T.Parsed{S.TypedParameter{name,0,S.QuantType{name}},Con{S.Token{",",at},rest}}},
+      u => T.invalid(Con{S.Token{",",at},rest},"parameter"))
+      == Fail{S.Invalid{"parse","parameter",at}} : Result<S.Error,T.Parsed>}
+  {==}
 def L.local_import(at,rest):
   {==}
 

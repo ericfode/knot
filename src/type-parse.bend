@@ -140,6 +140,8 @@ def parameter_node(+bare: Bool, +name: S.Token, +quantity: U32, +typ: S.Node,
         Fail{S.Unsupported{"parse","parameter-type",S.here(rest)}},u =>
         Done{Parsed{S.TypedParameter{name,quantity,typ},rest}})
 
+# Only an unmarked bare binder is a quantity parameter. A marked one, `+a,`,
+# is a parameter missing its type, rejected where the seed expects `:`.
 def parameter_parts(+fuel: Nat, +bare: Bool, +quantity: U32,
   +tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match tokens:
@@ -148,7 +150,9 @@ def parameter_parts(+fuel: Nat, +bare: Bool, +quantity: U32,
       S.choose(Result<S.Error,Parsed>,S.matches(colon,":"),u =>
         then(expression(fuel,rest),typ => end => parameter_node(bare,name,quantity,typ,end)),u =>
       S.choose(Result<S.Error,Parsed>,Bool.and(bare,Bool.or(S.matches(colon,","),Bool.or(S.matches(colon,")"),S.matches(colon,">")))),u =>
-        Done{Parsed{S.TypedParameter{name,0,S.QuantType{name}},Con{colon,rest}}},u =>
+        S.choose(Result<S.Error,Parsed>,U32.is_eq(quantity,1),u =>
+          Done{Parsed{S.TypedParameter{name,0,S.QuantType{name}},Con{colon,rest}}},u =>
+          invalid(Con{colon,rest},"parameter")),u =>
         Fail{S.Unsupported{"parse","bare-quantity-field",S.at(name)}})),u => invalid(tokens,"parameter"))
     case _: invalid(tokens,"parameter")
 

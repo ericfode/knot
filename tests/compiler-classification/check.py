@@ -126,8 +126,8 @@ def main():
         print(f"PASS: {len(cases)} frozen seed outputs; {len(record['fixtures'])} parser observations; "
               f"{len(record['mutants'])} type-correct semantic mutants killed on "
               f"{sum(len(m['kills']) for m in record['mutants'])} witnesses; "
-              '16 filled frontend laws (classify-2: 5 added, 1 narrowed; generics: 1 restated, 1 retired, '
-              '1 added).')
+              '17 filled frontend laws (classify-2: 5 added, 1 narrowed; generics: 1 restated, 1 retired, '
+              '2 added).')
     except Exception as error:
         record.update(status='failed', failure=str(error))
         raise
