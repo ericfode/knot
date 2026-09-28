@@ -14,10 +14,15 @@ const b64 = bytes => Buffer.from(bytes).toString('base64');
 const note = (exit, outcome, phase, code) => ({ exit, stdout: '', stderr: b64(`${outcome}\t${phase}\t${code}\n`), host: true });
 const blocked = (source, exit, outcome, code) => ({ source, exit, stdout: '', stderr: `${outcome}\thost\t${code}\n` });
 
-// A trap is the host's observation, not the module's own exit record.
-function trap(error) {
+// A trap is the host's observation, not the module's own exit record. Running
+// out of the host's stack or memory is Exhausted (host: true), which the
+// harness tags host-stack or host-memory; any other trap is a HostFailure.
+export function trap(error) {
   if (error instanceof RangeError && /maximum call stack size exceeded/i.test(error.message)) {
     return note(4, 'Exhausted', 'wasm', 'call-stack');
+  }
+  if (error instanceof RangeError && /out of memory|(could not|cannot) allocate|allocation failed/i.test(error.message)) {
+    return note(4, 'Exhausted', 'wasm', 'memory');
   }
   return note(5, 'HostFailure', 'wasm', String(error.message).replace(/\s+/g, ' '));
 }
@@ -70,9 +75,12 @@ async function invoke(request) {
   return { abi, blocked: blocked('harness', 3, 'Unsupported', 'abi-unrecognized'), runs: [] };
 }
 
-const [requestPath] = process.argv.slice(2);
-if (!requestPath) {
-  console.error('HostFailure\targuments\texpected request.json');
-  process.exit(5);
+// Imported (by the harness's classification control) it only exports trap().
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  const [requestPath] = process.argv.slice(2);
+  if (!requestPath) {
+    console.error('HostFailure\targuments\texpected request.json');
+    process.exit(5);
+  }
+  process.stdout.write(JSON.stringify(await invoke(JSON.parse(fs.readFileSync(requestPath, 'utf8')))) + '\n');
 }
-process.stdout.write(JSON.stringify(await invoke(JSON.parse(fs.readFileSync(requestPath, 'utf8')))) + '\n');

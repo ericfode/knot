@@ -1,0 +1,3805 @@
+{
+  "boundary": "Hand-serialized effect programs only; no Knot checking, lowering or evaluator claim.",
+  "cli": [
+    {
+      "name": "args-echo/none",
+      "observed": {
+        "exit": 0,
+        "files": [],
+        "stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0,
+          "text": ""
+        },
+        "stdout": {
+          "sha256": "fba58cb9d42c138d7c8438660f7f83065b75bb609f62b28b4a6f08405a1b7d72",
+          "size": 7,
+          "text": "argc 0\n"
+        }
+      }
+    },
+    {
+      "name": "args-echo/many",
+      "observed": {
+        "exit": 0,
+        "files": [],
+        "stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0,
+          "text": ""
+        },
+        "stdout": {
+          "sha256": "1acf9133193855d06c645ffc66467ed57ba1fcfe008ce2248119a9d1be4be124",
+          "size": 133,
+          "text": "[a] 97\n[b] 98\n[c] 99\n[d] 100\n[e] 101\n[f] 102\n[g] 103\n[h] 104\n[i] 105\n[j] 106\n[k] 107\n[l] 108\n[m] 109\n[n] 110\n[o] 111\n[p] 112\nargc 16\n"
+        }
+      }
+    },
+    {
+      "name": "args-echo/unicode",
+      "observed": {
+        "exit": 0,
+        "files": [],
+        "stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0,
+          "text": ""
+        },
+        "stdout": {
+          "sha256": "58710c656fc915cf52a6119f972611659501c45f9d90932a77f8c716f31237aa",
+          "size": 80,
+          "text": "[é] 233\n[日本] 26085 26412\n[😀] 128512\n[é] 101 769\n[􏿿] 1114111\nargc 5\n"
+        }
+      }
+    },
+    {
+      "name": "args-echo/blank",
+      "observed": {
+        "exit": 0,
+        "files": [],
+        "stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0,
+          "text": ""
+        },
+        "stdout": {
+          "sha256": "aae4dc13d163c116e919a63652542838a75440c790d1c6d3b4d584e678f97016",
+          "size": 99,
+          "text": "[]\n[ ] 32\n[a b] 97 32 98\n[tab\tx] 116 97 98 9 120\n[nl\nx] 110 108 10 120\n[cr\rx] 99 114 13 120\nargc 6\n"
+        }
+      }
+    },
+    {
+      "name": "args-echo/dashes",
+      "observed": {
+        "exit": 0,
+        "files": [],
+        "stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0,
+          "text": ""
+        },
+        "stdout": {
+          "sha256": "933d708254487b51e836c510b4270778582a13f0ad2b1336e86d48bf516b7537",
+          "size": 131,
+          "text": "[-x] 45 120\n[--] 45 45\n[--check-only] 45 45 99 104 101 99 107 45 111 110 108 121\n[-o] 45 111\n[--help] 45 45 104 101 108 112\nargc 5\n"
+        }
+      }
+    },
+    {
+      "name": "args-echo/invalid-utf8",
+      "observed": {
+        "exit": 0,
+        "files": [],
+        "stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0,
+          "text": ""
+        },
+        "stdout": {
+          "sha256": "8d5da657d55bd7ec18cfb2f83932c80bdc271102bed256c85bcc762e7c6b57e2",
+          "size": 86,
+          "text": "[�] 65533\n[a�] 97 65533\n[���] 65533 65533 65533\n[��] 65533 65533\nargc 4\n"
+        }
+      }
+    }
+  ],
+  "cli_runs": 6,
+  "conformance_runs": 86,
+  "errno": [
+    2,
+    9,
+    20,
+    21,
+    22,
+    92
+  ],
+  "fixtures": [
+    {
+      "name": "args-echo",
+      "runs": [
+        {
+          "name": "none",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "fba58cb9d42c138d7c8438660f7f83065b75bb609f62b28b4a6f08405a1b7d72",
+              "size": 7,
+              "text": "argc 0\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "7470bc0d04fa059ec614b42547dd753f97ff84344dbbbb654424ad56bb76f6db"
+        },
+        {
+          "name": "many",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "1acf9133193855d06c645ffc66467ed57ba1fcfe008ce2248119a9d1be4be124",
+              "size": 133,
+              "text": "[a] 97\n[b] 98\n[c] 99\n[d] 100\n[e] 101\n[f] 102\n[g] 103\n[h] 104\n[i] 105\n[j] 106\n[k] 107\n[l] 108\n[m] 109\n[n] 110\n[o] 111\n[p] 112\nargc 16\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "7470bc0d04fa059ec614b42547dd753f97ff84344dbbbb654424ad56bb76f6db"
+        },
+        {
+          "name": "unicode",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "58710c656fc915cf52a6119f972611659501c45f9d90932a77f8c716f31237aa",
+              "size": 80,
+              "text": "[é] 233\n[日本] 26085 26412\n[😀] 128512\n[é] 101 769\n[􏿿] 1114111\nargc 5\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "7470bc0d04fa059ec614b42547dd753f97ff84344dbbbb654424ad56bb76f6db"
+        },
+        {
+          "name": "blank",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "aae4dc13d163c116e919a63652542838a75440c790d1c6d3b4d584e678f97016",
+              "size": 99,
+              "text": "[]\n[ ] 32\n[a b] 97 32 98\n[tab\tx] 116 97 98 9 120\n[nl\nx] 110 108 10 120\n[cr\rx] 99 114 13 120\nargc 6\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "7470bc0d04fa059ec614b42547dd753f97ff84344dbbbb654424ad56bb76f6db"
+        },
+        {
+          "name": "dashes",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "933d708254487b51e836c510b4270778582a13f0ad2b1336e86d48bf516b7537",
+              "size": 131,
+              "text": "[-x] 45 120\n[--] 45 45\n[--check-only] 45 45 99 104 101 99 107 45 111 110 108 121\n[-o] 45 111\n[--help] 45 45 104 101 108 112\nargc 5\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "7470bc0d04fa059ec614b42547dd753f97ff84344dbbbb654424ad56bb76f6db"
+        },
+        {
+          "name": "invalid-utf8",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "8d5da657d55bd7ec18cfb2f83932c80bdc271102bed256c85bcc762e7c6b57e2",
+              "size": 86,
+              "text": "[�] 65533\n[a�] 97 65533\n[���] 65533 65533 65533\n[��] 65533 65533\nargc 4\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "7470bc0d04fa059ec614b42547dd753f97ff84344dbbbb654424ad56bb76f6db"
+        }
+      ]
+    },
+    {
+      "name": "print-lines",
+      "runs": [
+        {
+          "name": "one",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "4936844246f0c5dced05284f8bfa7344710399d220d457aa4096589c79be4d75",
+              "size": 74,
+              "text": "plain\n\ntwo\nlines\ntab\there\rreturn\nnul\u0000inside\né😀􏿿\n\\ and \"quotes\"\nend\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "205cc936cb1f61ab1108c0eb8408eb1270ef7be7ec78ec037df93c893f8aa1a1"
+        }
+      ]
+    },
+    {
+      "name": "print-large",
+      "runs": [
+        {
+          "name": "one",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "be6e9be4f67a068e6676589b665c310c6aac82566dfb66bb24a4a99ae3578cb6",
+              "size": 100001
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "de7c3e4292af0c24c766584f234a6e2cddd598c50cca8213c9c91961fa8e2992"
+        }
+      ]
+    },
+    {
+      "name": "print-many",
+      "runs": [
+        {
+          "name": "one",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "342747e72c7bf1e38483f3e82efb26cc0382ff3aeeff6147393dd2a0504f9a26",
+              "size": 23903
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "2f70d18b06325f5c55284683c2cdce2b33d38404961588cd9bc76d53869c88a4"
+        }
+      ]
+    },
+    {
+      "name": "die-codes",
+      "runs": [
+        {
+          "name": "code-0",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Halted"
+          },
+          "wasm_sha256": "8856ec1cc5586d2b58e2d15ecfddf9dd54b17fd5a1b40605122396aa6f29349c"
+        },
+        {
+          "name": "code-1",
+          "observed": {
+            "exit": 1,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 1,
+            "status": "Halted"
+          },
+          "wasm_sha256": "44e8d0bb9bef9c6c841f0cb807ee1b8711834a24a36b10027de0c839d835a0fe"
+        },
+        {
+          "name": "code-2",
+          "observed": {
+            "exit": 2,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 2,
+            "status": "Halted"
+          },
+          "wasm_sha256": "8733c6e426e272916446f5a8855bfdbb87d5d595c593537f24733d95bf570784"
+        },
+        {
+          "name": "code-3",
+          "observed": {
+            "exit": 3,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 3,
+            "status": "Halted"
+          },
+          "wasm_sha256": "f5f4ce61ebbd11dbbf14d8a40f4fd98599b6d79aa3a695b74e7840f9cd6f60b1"
+        },
+        {
+          "name": "code-4",
+          "observed": {
+            "exit": 4,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 4,
+            "status": "Halted"
+          },
+          "wasm_sha256": "7fa9230e1570782ebf9ef43e9a3b3c91a0c55df01d99e3f35f51c6150b07a69a"
+        },
+        {
+          "name": "code-5",
+          "observed": {
+            "exit": 5,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "1dd868db878314a0c79bbc36ebaafddc043b39fb3cd0816f4622dad3a07c6fa6"
+        },
+        {
+          "name": "code-255",
+          "observed": {
+            "exit": 255,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 255,
+            "status": "Halted"
+          },
+          "wasm_sha256": "589ccc2b174a9a5393462dc2cfa40bf4e9253421cec03e403c9e779e9c55c6aa"
+        },
+        {
+          "name": "code-256",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Halted"
+          },
+          "wasm_sha256": "5f69ea113932920c52f40d98d417d7d889fdf1d6713266bfec55d11234ab45f2"
+        },
+        {
+          "name": "code-4294967295",
+          "observed": {
+            "exit": 255,
+            "files": [],
+            "stderr": {
+              "sha256": "a11c3d917a2149a4b548217038bc8f2dd2130a1966e0c7af5c4225d81f25a8c3",
+              "size": 5,
+              "text": "stop\n"
+            },
+            "stdout": {
+              "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+              "size": 7,
+              "text": "before\n"
+            }
+          },
+          "outcome": {
+            "exit": 255,
+            "status": "Halted"
+          },
+          "wasm_sha256": "bb013af2b4aa69b6cf202e25c7ed712f3278374372f2c8a4f1cb3e5fa3d67965"
+        }
+      ]
+    },
+    {
+      "name": "die-messages",
+      "runs": [
+        {
+          "name": "host-failure",
+          "observed": {
+            "exit": 3,
+            "files": [],
+            "stderr": {
+              "sha256": "e7a429e2a13114bbd1c914623c40b27f2c8f95f51c323462c5e16b6ca7bc6981",
+              "size": 35,
+              "text": "HostFailure\tread\t21\tIs a directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 3,
+            "status": "Halted"
+          },
+          "wasm_sha256": "f311fb4d0d568cd83c5f15600d9d2318fd88ee8c053315f4a66d44825fa00957"
+        },
+        {
+          "name": "empty",
+          "observed": {
+            "exit": 3,
+            "files": [],
+            "stderr": {
+              "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+              "size": 1,
+              "text": "\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 3,
+            "status": "Halted"
+          },
+          "wasm_sha256": "d699e6cbbed24f0856e12eedf05346853f2ccd7fff2b2e75a019821ecc7c0a6c"
+        },
+        {
+          "name": "lines",
+          "observed": {
+            "exit": 3,
+            "files": [],
+            "stderr": {
+              "sha256": "da8c8750e5e5ba899b48818c9dd7501da7472db982b346ea7e40b76cfb6247af",
+              "size": 11,
+              "text": "multi\nline\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 3,
+            "status": "Halted"
+          },
+          "wasm_sha256": "2166578cc0f02e258c1ccd40cdaa72b1410d63f2bf2f4ac1105967ac454ec138"
+        },
+        {
+          "name": "unicode",
+          "observed": {
+            "exit": 3,
+            "files": [],
+            "stderr": {
+              "sha256": "f26b68b6994ea006d176890661e1c0401f133bb6cffe91cecfc5bd0570921cb8",
+              "size": 7,
+              "text": "é😀\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 3,
+            "status": "Halted"
+          },
+          "wasm_sha256": "cfda72f0d4ec3f6e2bd8771ca5da7a970e6b2c42702da8dffdb0224b5f0ccbbe"
+        },
+        {
+          "name": "long",
+          "observed": {
+            "exit": 3,
+            "files": [],
+            "stderr": {
+              "sha256": "6b564581be8d90ccb18645443f362b6074639b7478a4b45a99d32425b670553c",
+              "size": 4097
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 3,
+            "status": "Halted"
+          },
+          "wasm_sha256": "873e8d03e3c11aad7634b71c16f7c1ecdb8def87f5ca3c0364b6098500c22291"
+        }
+      ]
+    },
+    {
+      "name": "die-stops-effects",
+      "runs": [
+        {
+          "name": "split",
+          "observed": {
+            "exit": 4,
+            "files": [],
+            "stderr": {
+              "sha256": "3464fd1871ec6e74b0248c195c91bfe62435cf5675b11a63d8a8a3c030e493c2",
+              "size": 5,
+              "text": "halt\n"
+            },
+            "stdout": {
+              "sha256": "2c8b08da5ce60398e1f19af0e5dccc744df274b826abe585eaba68c525434806",
+              "size": 4,
+              "text": "one\n"
+            }
+          },
+          "outcome": {
+            "exit": 4,
+            "status": "Halted"
+          },
+          "wasm_sha256": "4c7fd73b97d0f6e32abd42f7d1c0551aa56ace6fdddec611fe0f05629619c8c8"
+        },
+        {
+          "name": "merged",
+          "observed": {
+            "exit": 4,
+            "files": [],
+            "output": {
+              "sha256": "ebdde42df430731ba9524b3c902797fd2e4fe29d4ef5f53ba397b05133e68e19",
+              "size": 9,
+              "text": "one\nhalt\n"
+            }
+          },
+          "outcome": {
+            "exit": 4,
+            "status": "Halted"
+          },
+          "wasm_sha256": "4c7fd73b97d0f6e32abd42f7d1c0551aa56ace6fdddec611fe0f05629619c8c8"
+        }
+      ]
+    },
+    {
+      "name": "die-after-write",
+      "runs": [
+        {
+          "name": "after",
+          "observed": {
+            "exit": 3,
+            "files": [
+              {
+                "path": "out.bin",
+                "sha256": "9e95250273e56e33889e5dfdfe624d3af3e53b93667008d846885e44e63ff9cb",
+                "size": 4,
+                "text": "KNOT",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "cebfd5931e8e8db2e1b8405f4f2fe1eb87e6a29c0a44e2ee0c4d04ea0b06112c",
+              "size": 12,
+              "text": "after write\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 3,
+            "status": "Halted"
+          },
+          "wasm_sha256": "7b2f40ec80f300ad9156c5b71736ef9c3dd6816bdaa2b8543577108e0338a054"
+        },
+        {
+          "name": "before",
+          "observed": {
+            "exit": 3,
+            "files": [],
+            "stderr": {
+              "sha256": "a5175883de3ab0482e9674f0a541a8d946c754ca0dadd16dd5bd28a398f3cf30",
+              "size": 12,
+              "text": "before open\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 3,
+            "status": "Halted"
+          },
+          "wasm_sha256": "ca2e216f47c5ec7b8077c063738b1349157f6b79456d2e696a210fdbb47fb838"
+        }
+      ]
+    },
+    {
+      "name": "open-modes",
+      "runs": [
+        {
+          "name": "w-new",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "out.txt",
+                "sha256": "7167a273aea114c65e741c2b287e24748542a292aab9607a3d586c1cb051ed6c",
+                "size": 3,
+                "text": "AB\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "4c57fed48eeae282692057979305d9b1ad9fc49957771eda11e7863615b13406",
+              "size": 43,
+              "text": "write Done\nread Fail 9 Bad file descriptor\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "d3db76a70f8d8f864abca8dd685bc4c9d416118c71fa9f30d505a265fbb04f6d"
+        },
+        {
+          "name": "w-truncate",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": true,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "7167a273aea114c65e741c2b287e24748542a292aab9607a3d586c1cb051ed6c",
+                "size": 3,
+                "text": "AB\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "4c57fed48eeae282692057979305d9b1ad9fc49957771eda11e7863615b13406",
+              "size": 43,
+              "text": "write Done\nread Fail 9 Bad file descriptor\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "af71a368c3f55fe4e23279b15b85c4049f270489ddbf4d635969b4fb59c324ef"
+        },
+        {
+          "name": "a-append",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": true,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "8f759925490192f38345c22476d84626eeb2f1cf95890eee8173d9cef4463dd7",
+                "size": 15,
+                "text": "old content\nAB\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "4c57fed48eeae282692057979305d9b1ad9fc49957771eda11e7863615b13406",
+              "size": 43,
+              "text": "write Done\nread Fail 9 Bad file descriptor\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "b4ec01bfeaf1aa5a8e3fa680d3bd077da89e7cc0ab5187bc112e5c12adf0c2fd"
+        },
+        {
+          "name": "a-new",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "out.txt",
+                "sha256": "7167a273aea114c65e741c2b287e24748542a292aab9607a3d586c1cb051ed6c",
+                "size": 3,
+                "text": "AB\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "4c57fed48eeae282692057979305d9b1ad9fc49957771eda11e7863615b13406",
+              "size": 43,
+              "text": "write Done\nread Fail 9 Bad file descriptor\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "0d0f844f926c8ba91ffd3222cea6183a2ac465f51221f92639cf4b3edf92a848"
+        },
+        {
+          "name": "r-existing",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "40eda80edfc38b36bdcdc408aa6ff2cc40b708e46ece9dfd2b2801a05a18a5fc",
+                "size": 12,
+                "text": "old content\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "3bbd9655a4ecc3fec3dc72482b0210b92002b952bc5e33d22158fe247379d6c7",
+              "size": 56,
+              "text": "write Fail 9 Bad file descriptor\nread Done old content\n\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "1f650f570907a33066617ea4a8a756607a114ccbf946bfe4af7e63e69a71e0eb"
+        },
+        {
+          "name": "r-missing",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "5c125771cbeaa94d9fbbbbcd8574d5b60eb802ccc3b6fa34cfe8913b5e4fddad",
+              "size": 38,
+              "text": "open Fail 2 No such file or directory\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "ca0a163878b1357d5d79a6b81a483c258405edae30b5ee89944a18ce462e8778"
+        },
+        {
+          "name": "mode-rw",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "40eda80edfc38b36bdcdc408aa6ff2cc40b708e46ece9dfd2b2801a05a18a5fc",
+                "size": 12,
+                "text": "old content\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "3c0598581c20fca621e846d74d5528a01dd35912a2ec83a67248c69dce276bd1",
+              "size": 30,
+              "text": "open Fail 22 Invalid argument\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "3cdcb7125f6d5bbc57baf30b0cb2d090b4dc1e858ba53649b4b2cb26b6057a0e"
+        },
+        {
+          "name": "mode-empty",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "40eda80edfc38b36bdcdc408aa6ff2cc40b708e46ece9dfd2b2801a05a18a5fc",
+                "size": 12,
+                "text": "old content\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "3c0598581c20fca621e846d74d5528a01dd35912a2ec83a67248c69dce276bd1",
+              "size": 30,
+              "text": "open Fail 22 Invalid argument\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "24dc3c6f2a1785ead2d46c97afbafc95da2b54af32b2c0c38185fc9e53ce5d35"
+        },
+        {
+          "name": "mode-upper",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "40eda80edfc38b36bdcdc408aa6ff2cc40b708e46ece9dfd2b2801a05a18a5fc",
+                "size": 12,
+                "text": "old content\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "3c0598581c20fca621e846d74d5528a01dd35912a2ec83a67248c69dce276bd1",
+              "size": 30,
+              "text": "open Fail 22 Invalid argument\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "c282c7fdb3e5cd7d6d56b08cbf4e06cf4906a73619a9c6b7f2e767ddbb127af8"
+        },
+        {
+          "name": "mode-plus",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "40eda80edfc38b36bdcdc408aa6ff2cc40b708e46ece9dfd2b2801a05a18a5fc",
+                "size": 12,
+                "text": "old content\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "3c0598581c20fca621e846d74d5528a01dd35912a2ec83a67248c69dce276bd1",
+              "size": 30,
+              "text": "open Fail 22 Invalid argument\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "a1b0d126fd13be04b0942556680cc906727dbb29e54f7631d9fbb7e35d4824dd"
+        },
+        {
+          "name": "w-directory",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "41af2f9ac085e02c009c5a9de8076be9771eaf2dd91c8d87b87b5a90f1df686f",
+              "size": 28,
+              "text": "open Fail 21 Is a directory\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "822f6ca133dbb3713696ae59fc7db2cc9ad94c88638e4a9b2d1416ba94ed5cef"
+        },
+        {
+          "name": "a-directory",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "41af2f9ac085e02c009c5a9de8076be9771eaf2dd91c8d87b87b5a90f1df686f",
+              "size": 28,
+              "text": "open Fail 21 Is a directory\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "8141f9da1d0c50805de529fce9695f9393443d4c446de46344607c1f49cad584"
+        },
+        {
+          "name": "r-directory",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "7de0b69355f63d6ee8025eaacd58659261d8edfbd588196d2b703b291ddd2a9f",
+              "size": 61,
+              "text": "write Fail 9 Bad file descriptor\nread Fail 21 Is a directory\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "d2a149bd1b1a20fb02a5488b31a67820a1fdf5169c7c393d9648dc1a9c59e82b"
+        }
+      ]
+    },
+    {
+      "name": "open-nul-path",
+      "runs": [
+        {
+          "name": "one",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "b98ade125358bbefdbeb8cf5b3494ae5d3c4a2f96bb75873262dc74fac4933fb",
+              "size": 111,
+              "text": "mode r\nFail 92 Illegal byte sequence\nmode w\nFail 92 Illegal byte sequence\nmode q\nFail 92 Illegal byte sequence\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "ea1521df20fd094ddb24f152d03bfc84a389c9e67660fd03593aafdc55c78d0f"
+        }
+      ]
+    },
+    {
+      "name": "read-text",
+      "runs": [
+        {
+          "name": "small",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "small.txt",
+                "seeded_from": "small.txt",
+                "sha256": "4a1e67f2fe1d1cc7b31d0ca2ec441da4778203a036a77da10344c85e24ff0f92",
+                "size": 12,
+                "text": "hello\nworld\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "5043bc4465f042d45120f0b0959db68e8c98571e793075dd618a67e9a07820e7",
+              "size": 18,
+              "text": "Read\thello\nworld\n\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "3a287f9083e38cb95a3f26755b8e677d00e04a8a85d83b086a01bd397b13a130"
+        },
+        {
+          "name": "empty",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "empty.txt",
+                "seeded_from": "empty.txt",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size": 0,
+                "text": "",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "1fbb5ccf462540a82fcb4f6580091d7455dc1b1afb3c8bd985c7784b1ed0ab9a",
+              "size": 6,
+              "text": "Read\t\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "7c4d2d71f1751e50c6102476110bd2ffee36821b654764cdd44e6076f030b7e1"
+        },
+        {
+          "name": "unicode",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "unicode.txt",
+                "seeded_from": "unicode.txt",
+                "sha256": "8150ccb7f860d61e812908b0a66c7487667ef37f9706871920ea7d3c4660f656",
+                "size": 18,
+                "text": "café 😀 日本\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "f661ce5721ec177b28a479052b47c4243d70db67578ceac173f3a7be5e6c8665",
+              "size": 24,
+              "text": "Read\tcafé 😀 日本\n\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "9bed7b9aaa2cf4cf92668e6d8714cfafc775c0d7bc0298e5107b6328fa16bf97"
+        },
+        {
+          "name": "unicode-path",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "é.txt",
+                "seeded_from": "small.txt",
+                "sha256": "4a1e67f2fe1d1cc7b31d0ca2ec441da4778203a036a77da10344c85e24ff0f92",
+                "size": 12,
+                "text": "hello\nworld\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "5043bc4465f042d45120f0b0959db68e8c98571e793075dd618a67e9a07820e7",
+              "size": 18,
+              "text": "Read\thello\nworld\n\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "50e8aca36c1157989de3c87a22f920b5eeb4a8a9e1210027569a08d2bc8c6471"
+        },
+        {
+          "name": "at-limit",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "limit-65537.txt",
+                "seeded_from": "limit-65537.txt",
+                "sha256": "63c52c151b0cca9a42f12c4c435d62c3ef2bab952bd644c00e863455289839ea",
+                "size": 65537,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "a94bf8dccc59bb5be692137c11bc604474498638f72575cac8e77c9803869d1f",
+              "size": 65543
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "49eaf233243b010186258c19e7cf6754ccc6b4c7847678000ca9e527523ba20b"
+        },
+        {
+          "name": "over-limit",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "limit-65538.txt",
+                "seeded_from": "limit-65538.txt",
+                "sha256": "4665f79a251755d749b076bbe923362e5a9c922981f9b4f6bb06abcd3967a3f3",
+                "size": 65538,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "a94bf8dccc59bb5be692137c11bc604474498638f72575cac8e77c9803869d1f",
+              "size": 65543
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "b0f1e5921e9a6248b9e193e207f42650da00c5fda849f9f3c8444138c73193cd"
+        },
+        {
+          "name": "missing",
+          "observed": {
+            "exit": 5,
+            "files": [],
+            "stderr": {
+              "sha256": "b6e5fe1badba85c866e1f91f2fdb1a7e8cae1162958195617fc8993163bdf79c",
+              "size": 45,
+              "text": "HostFailure\topen\t2\tNo such file or directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "268fb490dfe01e93b6cfb6d5844f16d188942af9b64dcdab5cce4124ebf67853"
+        },
+        {
+          "name": "directory",
+          "observed": {
+            "exit": 5,
+            "files": [],
+            "stderr": {
+              "sha256": "e7a429e2a13114bbd1c914623c40b27f2c8f95f51c323462c5e16b6ca7bc6981",
+              "size": 35,
+              "text": "HostFailure\tread\t21\tIs a directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "7508cc82f4f69a908df5bc9bcbd8a09f72c329440c8593fd5a26d0ae4a1b2a58"
+        },
+        {
+          "name": "not-directory",
+          "observed": {
+            "exit": 5,
+            "files": [
+              {
+                "changed": false,
+                "path": "small.txt",
+                "seeded_from": "small.txt",
+                "sha256": "4a1e67f2fe1d1cc7b31d0ca2ec441da4778203a036a77da10344c85e24ff0f92",
+                "size": 12,
+                "text": "hello\nworld\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "428c5d7618ea0f89ccf84922ceb8a44b6c7aea2305c403a31712d031f2c476ea",
+              "size": 36,
+              "text": "HostFailure\topen\t20\tNot a directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "dec1b943b6ba4faeaa80757a5e068377b450890f6beb91e8b2353fe027e96fe0"
+        },
+        {
+          "name": "empty-path",
+          "observed": {
+            "exit": 5,
+            "files": [],
+            "stderr": {
+              "sha256": "b6e5fe1badba85c866e1f91f2fdb1a7e8cae1162958195617fc8993163bdf79c",
+              "size": 45,
+              "text": "HostFailure\topen\t2\tNo such file or directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "faa8b393f9350c7ad917a890e93c0ea3e6d42a8d4167c860cc34cc74290a015c"
+        },
+        {
+          "name": "usage",
+          "observed": {
+            "exit": 5,
+            "files": [],
+            "stderr": {
+              "sha256": "a33498d211e3e8a13447e556c5d7b63b14c9f9fa3b5a0fa603bf22741370c7a4",
+              "size": 36,
+              "text": "HostFailure\targuments\texpected path\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "d3db28ba3354d2f54d4260eebf93c70cef1626352405e5cf743d61ff228f3e3a"
+        }
+      ]
+    },
+    {
+      "name": "read-limit",
+      "runs": [
+        {
+          "name": "empty",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "empty.txt",
+                "seeded_from": "empty.txt",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size": 0,
+                "text": "",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "dca4050400bd0db67f05043a398485ef4141363cab461d7bc4a0e44dcfc1d29e",
+              "size": 43,
+              "text": "first chars 0 last 0\nsecond chars 0 last 0\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "2b9b233320f5aa233a453f5c83d9f1a7e48a0bbb6a66792e88f211a1fee1e5a1"
+        },
+        {
+          "name": "below",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "limit-65536.txt",
+                "seeded_from": "limit-65536.txt",
+                "sha256": "36863b667d0801a3462aa26459a21501e33e16133c2ba31c461d94673165c486",
+                "size": 65536,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "c1504a385dd2a498128be0c522ead9bfeee5426d2d7f8f8cf4f16987ef15627e",
+              "size": 48,
+              "text": "first chars 65536 last 10\nsecond chars 0 last 0\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "008017de99a78fa883484b44495d19c440c347e715954f97672703aa5fa28973"
+        },
+        {
+          "name": "at",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "limit-65537.txt",
+                "seeded_from": "limit-65537.txt",
+                "sha256": "63c52c151b0cca9a42f12c4c435d62c3ef2bab952bd644c00e863455289839ea",
+                "size": 65537,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "aa4a39b4d9de2cfd5bfae894d4e37a13fefada07f9a4dfd9d225f244c9418b73",
+              "size": 48,
+              "text": "first chars 65537 last 48\nsecond chars 0 last 0\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "4dea3cffb586647d3fc8536724c8302492372aa6fe96e2b4a24e4e8c7eef185d"
+        },
+        {
+          "name": "over",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "limit-65538.txt",
+                "seeded_from": "limit-65538.txt",
+                "sha256": "4665f79a251755d749b076bbe923362e5a9c922981f9b4f6bb06abcd3967a3f3",
+                "size": 65538,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "1c3050d62a2d04b68ef93392bfa23ba0fa560e79d9b6c0e42023acd164ddb00f",
+              "size": 49,
+              "text": "first chars 65537 last 48\nsecond chars 1 last 49\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "9c0b62cf357c32f11fde7ced8366cf893eaffd55cda12d7fefe02096d8f7de54"
+        },
+        {
+          "name": "straddle",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "limit-straddle.txt",
+                "seeded_from": "limit-straddle.txt",
+                "sha256": "4456c2f5aa883ec1709252b21065b247bf1be8e2df9f8872868f59535e530bea",
+                "size": 65538,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "8aa16a717521cd46a5e2d029f3c74d3a94baa631f0b2312d14456337b9805641",
+              "size": 55,
+              "text": "first chars 65537 last 65533\nsecond chars 1 last 65533\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "1586dc9ae774e8f57a4ea5eb70d4a62859cd8c239b046d3fcbd2467ac7f9ebe8"
+        },
+        {
+          "name": "zero",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "small.txt",
+                "seeded_from": "small.txt",
+                "sha256": "4a1e67f2fe1d1cc7b31d0ca2ec441da4778203a036a77da10344c85e24ff0f92",
+                "size": 12,
+                "text": "hello\nworld\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "dca4050400bd0db67f05043a398485ef4141363cab461d7bc4a0e44dcfc1d29e",
+              "size": 43,
+              "text": "first chars 0 last 0\nsecond chars 0 last 0\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "c43ea071416a276654bc75ba48ba240a7fe974baa762b80cad0e7172e7d9b892"
+        },
+        {
+          "name": "max-u32",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "small.txt",
+                "seeded_from": "small.txt",
+                "sha256": "4a1e67f2fe1d1cc7b31d0ca2ec441da4778203a036a77da10344c85e24ff0f92",
+                "size": 12,
+                "text": "hello\nworld\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "6076b93f685cfc19cab4bfa1fb2bdfe4870591bbe80cea5181e5fcfbe798e67c",
+              "size": 45,
+              "text": "first chars 12 last 10\nsecond chars 0 last 0\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "15b8d4c647cfc262ae7a009efe843616cccfb46b26e937b29e6e98e62ca69c6d"
+        }
+      ]
+    },
+    {
+      "name": "read-decode",
+      "runs": [
+        {
+          "name": "split-char",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "split-char.txt",
+                "seeded_from": "split-char.txt",
+                "sha256": "2860cbc78bbcc8a0a161253a00a402a24a7c6de864d088301c00b3efac4e0457",
+                "size": 6,
+                "text": "abcéx",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "d87b0be83cda53d9289a26c9446d13d692ff0f4a5b18366b8a1949a267493c51",
+              "size": 40,
+              "text": "first: 97 98 99 65533\nsecond: 65533 120\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "c053cbc6b3e5f0ee576b65e91fc045d79626d7cd7c96bccbf0bfac02fbaaaad6"
+        },
+        {
+          "name": "split-emoji",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "split-emoji.txt",
+                "seeded_from": "split-emoji.txt",
+                "sha256": "c8e873d0655567fd0a3a7ca49690ca80b589babeec5d1985284a2e54e9738967",
+                "size": 5,
+                "text": "😀z",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "ef770f877c1cd864f3c904da4c28c584794011cb75a5d6ee19ba5f8f805ad686",
+              "size": 33,
+              "text": "first: 65533\nsecond: 65533 65533\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "f1461d8466cc68471e531471d840a31f543d4684e1a507887cb187dd9afa1892"
+        },
+        {
+          "name": "bad-utf8",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "hex": "ffc328e282eda0807a",
+                "path": "bad-utf8.txt",
+                "seeded_from": "bad-utf8.txt",
+                "sha256": "cbc3c4bb0b91e88d05336465e0ea3bffb6f313c9e504b6b8b825a648e1016847",
+                "size": 9,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "f08cc84e1f0f755ae748f2975cfc1206427c14e7687ab262664bbaa4ec584051",
+              "size": 58,
+              "text": "first: 65533 65533 40 65533 65533 65533 65533\nsecond: 122\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "c7606a86ad0745d772661ec67ee444822a32786e72552b5d10c14902b2a70b89"
+        },
+        {
+          "name": "bom",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "bom.txt",
+                "seeded_from": "bom.txt",
+                "sha256": "6f6dd753736cf20980444f88ca28e2539375957c93f3bb357fc897e12b20e39f",
+                "size": 6,
+                "text": "﻿hi\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "3d4d4e881beab9952ccd2e77db00c48b78b4f7757dfd065058fab4a79acba67d",
+              "size": 32,
+              "text": "first: 65279 104 105 10\nsecond:\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "f6406837d1445e430a11fd492e6d4090bbe1408a220161ddce79443c53c63249"
+        },
+        {
+          "name": "nul-byte",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "nul-byte.txt",
+                "seeded_from": "nul-byte.txt",
+                "sha256": "3a100994c4e38751871e6e8eef9adad2b20177fdeaf650daacdcd74f4c9421e3",
+                "size": 4,
+                "text": "a\u0000b\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "1ea2ddeeedee723892dc2469c843a5bee58d3775a4547c46dc47763db550676d",
+              "size": 26,
+              "text": "first: 97 0 98 10\nsecond:\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "74f0dea3e0dfefad76796391a3ee47d69e975669a1d86b0b216e1dbe88f17837"
+        },
+        {
+          "name": "unicode",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "unicode.txt",
+                "seeded_from": "unicode.txt",
+                "sha256": "8150ccb7f860d61e812908b0a66c7487667ef37f9706871920ea7d3c4660f656",
+                "size": 18,
+                "text": "café 😀 日本\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "f2496e702772fd132358de2de65070095264b3f79c0723aaff1492387953fcee",
+              "size": 57,
+              "text": "first: 99 97 102 233 32 128512 32 26085 26412 10\nsecond:\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "7988e23c412f0d5682180a2532ca0061ae17bff885c829d419577ab7f0f6488a"
+        },
+        {
+          "name": "directory",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "d0a188b66a1d7bea23d5facd2a7538e9e212ee7d529b878b24c07a108cb77871",
+              "size": 61,
+              "text": "first: Fail 21 Is a directory\nsecond: Fail 21 Is a directory\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "033bfb9e7c4ec0d99697873b80ece6f68ccdd6eb4ef2cb9c3a95b621a128d3c8"
+        }
+      ]
+    },
+    {
+      "name": "write-bytes",
+      "runs": [
+        {
+          "name": "empty",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "empty.bin",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size": 0,
+                "text": "",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "2a331be523365b1ef271ee6fc4017ea508d63e6e03e7761d560192caded562cd",
+              "size": 8,
+              "text": "Built\t0\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "d0f082823a6cc325bb62422240471cbd0fcffd9f28c0330d59572fd8af5203af"
+        },
+        {
+          "name": "all-bytes",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+                "path": "all.bin",
+                "sha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880",
+                "size": 256,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "e8016f113262a32196c2d0874eb3bb4eae91fe8aa58a214e2cebf566d5e0afd2",
+              "size": 10,
+              "text": "Built\t256\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "2750ea7439470ccd6acad63488155fdb1359e3a1a9a0093dac83a0c6f1f5742f"
+        },
+        {
+          "name": "large",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "large.bin",
+                "sha256": "fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83",
+                "size": 1048576,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "cb401660557a4e6fab2aea2ce65aad9256f3dc6a5de84f944234afecfc6fc94a",
+              "size": 14,
+              "text": "Built\t1048576\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "6a22bbf3e49ff1df7e54f78dea4d3709b29e9d61f533bb995238bdd249f75aad"
+        },
+        {
+          "name": "truncate",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": true,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "ae4b3280e56e2faf83f414a6e3dabe9d5fbe18976544c05fed121accb85b53fc",
+                "size": 3,
+                "text": "\u0000\u0001\u0002",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "effb0179f06fdc51d6274d3a6b1bc7e3c3837daa5d7c838d6a46112ad2be16e3",
+              "size": 8,
+              "text": "Built\t3\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "6cb865224945b81c6a3884a28641cecbc5e2713a9db517fd5f20c4c2ae6e12d2"
+        },
+        {
+          "name": "missing-dir",
+          "observed": {
+            "exit": 5,
+            "files": [],
+            "stderr": {
+              "sha256": "e8b09dc6d33daa748e0082498ef1bee4b6948ac664f72da0d46b298c9dd1d308",
+              "size": 52,
+              "text": "HostFailure\toutput-open\t2\tNo such file or directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "f18e8437d341c140721aaaf87f29a3f9513443f5a24c7e1c130d527a50ee2cd1"
+        },
+        {
+          "name": "directory",
+          "observed": {
+            "exit": 5,
+            "files": [],
+            "stderr": {
+              "sha256": "0e3e22871705ec72bac40ffcded976a71ee3c84cd4438b1e29edd2388dc5d1f3",
+              "size": 42,
+              "text": "HostFailure\toutput-open\t21\tIs a directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "b9b212d0d00893dae169f6043d34f17e6f12ba90ed6460bd978dc5fa489c05a0"
+        },
+        {
+          "name": "bad-count",
+          "observed": {
+            "exit": 5,
+            "files": [],
+            "stderr": {
+              "sha256": "6cd90213bacba9405559ea4696cd46e33ba31e7faf40f7a952d8a5dd4dd5b67d",
+              "size": 35,
+              "text": "HostFailure\targuments\texpected-u32\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 5,
+            "status": "Halted"
+          },
+          "wasm_sha256": "110cfebb2de1a3a06303a8f0d9e1e98780734180691f45163ccd6506cab8573f"
+        }
+      ]
+    },
+    {
+      "name": "write-values",
+      "runs": [
+        {
+          "name": "none",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "out.bin",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size": 0,
+                "text": "",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "cd1a43ffc818abda14920110f637fbfed8cf3cb38308c3e9684a76f21faf571b",
+              "size": 11,
+              "text": "write Done\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "8e4e70215c261ffe58a1f7d5d1e70c422a475ac0d0b7560b15e44e3103d67409"
+        },
+        {
+          "name": "edges",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "hex": "00ff",
+                "path": "out.bin",
+                "sha256": "06eb7d6a69ee19e5fbdf749018d3d2abfa04bcbd1365db312eb86dc7169389b8",
+                "size": 2,
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "cd1a43ffc818abda14920110f637fbfed8cf3cb38308c3e9684a76f21faf571b",
+              "size": 11,
+              "text": "write Done\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "002e0f6d7f6e6f22ac0511b891b41c284e4cc0666df6d850ce37798876ed5ce4"
+        },
+        {
+          "name": "over",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "out.bin",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size": 0,
+                "text": "",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "2be698256650aa995abf1083b0789b6bb1b6f68e5d15c1da748ad2a77ecb5b40",
+              "size": 31,
+              "text": "write Fail 22 Invalid argument\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "8d4737fdd8a895951d9d68e1f5dc2f98b1df1270244113040f279b59335c8f30"
+        },
+        {
+          "name": "max",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "out.bin",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size": 0,
+                "text": "",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "2be698256650aa995abf1083b0789b6bb1b6f68e5d15c1da748ad2a77ecb5b40",
+              "size": 31,
+              "text": "write Fail 22 Invalid argument\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "5e497e6f380394b9d2514793d47890d366b51586a673e884d7a07b2a54bbd461"
+        },
+        {
+          "name": "truncate-then-refuse",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": true,
+                "path": "old.txt",
+                "seeded_from": "old.txt",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size": 0,
+                "text": "",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "2be698256650aa995abf1083b0789b6bb1b6f68e5d15c1da748ad2a77ecb5b40",
+              "size": 31,
+              "text": "write Fail 22 Invalid argument\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "35f0c2af99de777822220390a74005799efcc63c112c0b6d0bfd7587a97a6c6a"
+        }
+      ]
+    },
+    {
+      "name": "write-read-back",
+      "runs": [
+        {
+          "name": "one",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "back.txt",
+                "sha256": "37c1ef0f903b8920ad1d94e9ed2dd2ecb7e75d4f710b083126fedfc288fefbdf",
+                "size": 12,
+                "text": "héllo 😀\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "6db2c44d6ce535c53b7e7dbe387d6b9d93c0ae3271346910782e48ac131a21ca",
+              "size": 57,
+              "text": "text héllo 😀\n\ncodes 104 233 108 108 111 32 128512 10\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "e784e33c2fcc0893f088b74a264f097c2c063d2f6cf449150ac62e5c77435efb"
+        }
+      ]
+    },
+    {
+      "name": "handle-dropped",
+      "runs": [
+        {
+          "name": "one",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "path": "drop.txt",
+                "sha256": "35e4dbbcbd8d282b765d794239597078fcce7725f457f6eef29fb7847e1635d1",
+                "size": 5,
+                "text": "drop\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "05a2bf1d7bde149ffa950e6e0e56409eba44337568a487c8a2781b089f35b6cd",
+              "size": 8,
+              "text": "dropped\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "4a4e755df70014e6667b256581db0191fb5e659510f4f8882d58ec8fb50c5af9"
+        }
+      ]
+    },
+    {
+      "name": "bind-deep",
+      "runs": [
+        {
+          "name": "one",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "dd6e4b1435af9936b53fed6037f894cd4ed8d4245a890f33065b09ac010725cf",
+              "size": 25,
+              "text": "right 100000\nleft 100000\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "dedd1878f9b907622faf36e710e8407eabff97616ccbd109897fdcffb9cc7d8a"
+        }
+      ]
+    },
+    {
+      "name": "main-value",
+      "runs": [
+        {
+          "name": "one",
+          "observed": {
+            "exit": 0,
+            "files": [],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "3131e9268bf543d3463bf02301822482fa628bf389b73365c6974a498f09d509",
+              "size": 16,
+              "text": "value discarded\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "9a8b0ba841923f8663e16a8f973f94632dca03d02636c1fa202a20334e37463c"
+        }
+      ]
+    },
+    {
+      "name": "result-try",
+      "runs": [
+        {
+          "name": "small",
+          "observed": {
+            "exit": 0,
+            "files": [
+              {
+                "changed": false,
+                "path": "small.txt",
+                "seeded_from": "small.txt",
+                "sha256": "4a1e67f2fe1d1cc7b31d0ca2ec441da4778203a036a77da10344c85e24ff0f92",
+                "size": 12,
+                "text": "hello\nworld\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            },
+            "stdout": {
+              "sha256": "572190ab88441f2dd9e32623adecfb4cf8d1ed30eb40663ef80baae139990fcb",
+              "size": 13,
+              "text": "hello\nworld\n\n"
+            }
+          },
+          "outcome": {
+            "exit": 0,
+            "status": "Completed"
+          },
+          "wasm_sha256": "b9f2d236eccf33b8679df96ca281102dd4bbf1eac88db4a8e2f313f818253fae"
+        },
+        {
+          "name": "missing",
+          "observed": {
+            "exit": 2,
+            "files": [],
+            "stderr": {
+              "sha256": "7833838098dff21a62433384c486ade9ca1da78ee9f7995fa051640e4a6db5e4",
+              "size": 26,
+              "text": "No such file or directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 2,
+            "status": "Halted"
+          },
+          "wasm_sha256": "5fcea24498ad9f10de252d5e161fd1641c5bb476427422cfa36ecedeee031ecc"
+        },
+        {
+          "name": "directory",
+          "observed": {
+            "exit": 21,
+            "files": [],
+            "stderr": {
+              "sha256": "4ef409c1ceb0b8589cd7f6ba2d03bc979392a488a89bcd49053c6700ae920944",
+              "size": 15,
+              "text": "Is a directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 21,
+            "status": "Halted"
+          },
+          "wasm_sha256": "230fd028c079ab98384ac2256684b3ee42df1ff837940b3ef57f1fbe3b8d20b4"
+        },
+        {
+          "name": "not-directory",
+          "observed": {
+            "exit": 20,
+            "files": [
+              {
+                "changed": false,
+                "path": "small.txt",
+                "seeded_from": "small.txt",
+                "sha256": "4a1e67f2fe1d1cc7b31d0ca2ec441da4778203a036a77da10344c85e24ff0f92",
+                "size": 12,
+                "text": "hello\nworld\n",
+                "type": "file"
+              }
+            ],
+            "stderr": {
+              "sha256": "ea1c13311f1f42ace8d8313c13acf13ee3d5a41f830c8c2e4ce02a3c4368158b",
+              "size": 16,
+              "text": "Not a directory\n"
+            },
+            "stdout": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0,
+              "text": ""
+            }
+          },
+          "outcome": {
+            "exit": 20,
+            "status": "Halted"
+          },
+          "wasm_sha256": "5935984294fc4eb8a95b62921a319f997cd1faa2706966b5a7ad5d9a38d53f20"
+        }
+      ]
+    }
+  ],
+  "host_boundaries": [
+    {
+      "name": "unknown_import",
+      "outcome": {
+        "code": "import",
+        "exit": 3,
+        "status": "Unsupported"
+      }
+    },
+    {
+      "name": "wrong_import_signature",
+      "outcome": {
+        "code": "abi",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "wrong_entry_signature",
+      "outcome": {
+        "code": "abi",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "invalid_module",
+      "outcome": {
+        "code": "module",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "start_section",
+      "outcome": {
+        "code": "abi",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "bad_pointer",
+      "outcome": {
+        "code": "abi",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "unaligned_result",
+      "outcome": {
+        "code": "abi",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "non_scalar_text",
+      "outcome": {
+        "code": "abi",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "unknown_handle",
+      "outcome": {
+        "code": "handle",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "parent_escape",
+      "outcome": {
+        "code": "sandbox",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "absolute_escape",
+      "outcome": {
+        "code": "sandbox",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "symlink_escape",
+      "outcome": {
+        "code": "sandbox",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "symlink_parent",
+      "outcome": {
+        "code": "sandbox",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "secret_path",
+      "outcome": {
+        "code": "sandbox",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "step_budget",
+      "outcome": {
+        "code": "steps",
+        "exit": 4,
+        "status": "Exhausted"
+      }
+    },
+    {
+      "name": "allocation_budget",
+      "outcome": {
+        "code": "memory",
+        "exit": 4,
+        "status": "Exhausted"
+      }
+    },
+    {
+      "name": "allocator_effect",
+      "outcome": {
+        "code": "abi",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "unexpected_trap",
+      "outcome": {
+        "code": "trap",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "caught_die",
+      "outcome": {
+        "exit": 7,
+        "status": "Halted"
+      }
+    },
+    {
+      "name": "caught_sandbox",
+      "outcome": {
+        "code": "sandbox",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "caught_allocator",
+      "outcome": {
+        "code": "abi",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    },
+    {
+      "name": "missing_module",
+      "outcome": {
+        "code": "module",
+        "exit": 5,
+        "status": "HostFailure"
+      }
+    }
+  ],
+  "mutants": [
+    {
+      "changed_fields": [
+        "stdout"
+      ],
+      "host_outcome": {
+        "exit": 0,
+        "status": "Completed"
+      },
+      "host_sha256": "05a90ea386cdc65324e6af82b038280d2393dd4dc34014b029f01b3a0988d9bb",
+      "killed": true,
+      "name": "utf16-units",
+      "witness": "args-echo/unicode"
+    },
+    {
+      "changed_fields": [
+        "stdout"
+      ],
+      "host_outcome": {
+        "exit": 0,
+        "status": "Completed"
+      },
+      "host_sha256": "0d9e907f6613d102cdf34edb31cd98ba6d8053eb5d93b64ebf886abe1fe12edc",
+      "killed": true,
+      "name": "drop-truncated-replacement",
+      "witness": "read-decode/split-char"
+    },
+    {
+      "changed_fields": [
+        "host-outcome"
+      ],
+      "host_outcome": {
+        "exit": 256,
+        "status": "Halted"
+      },
+      "host_sha256": "cee3c7aea933a4b2bb2607c3fc966c8ce5cacfe475efd48b5f2715b0ee01a54e",
+      "killed": true,
+      "name": "unmasked-exit",
+      "witness": "die-codes/code-256"
+    },
+    {
+      "changed_fields": [
+        "stdout"
+      ],
+      "host_outcome": {
+        "exit": 0,
+        "status": "Completed"
+      },
+      "host_sha256": "5f827a985a384336f8a20c3c706e7d3f25885bbe984d221fcde0a687c654b810",
+      "killed": true,
+      "name": "read-write-handle",
+      "witness": "open-modes/w-new"
+    },
+    {
+      "changed_fields": [
+        "files",
+        "stdout"
+      ],
+      "host_outcome": {
+        "exit": 0,
+        "status": "Completed"
+      },
+      "host_sha256": "30016f71f157f0bbebe7cf0d7cfc8cfbdcfc18745833b5909dca6659809fcac9",
+      "killed": true,
+      "name": "unchecked-byte",
+      "witness": "write-values/over"
+    },
+    {
+      "changed_fields": [
+        "stdout"
+      ],
+      "host_outcome": {
+        "exit": 0,
+        "status": "Completed"
+      },
+      "host_sha256": "32dc9b78de4a470f9c2bccfee60f20a8b2c41cfd5c92f66f787490331724eaf9",
+      "killed": true,
+      "name": "print-no-lf",
+      "witness": "print-lines/one"
+    }
+  ],
+  "profile": "knot-io-1",
+  "review": {
+    "empty_write": [
+      {
+        "name": "file",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {
+            "file.txt": "hello\n"
+          },
+          "stderr": "",
+          "stdout": "write Done\nread Done hello\n\n"
+        },
+        "outcome": {
+          "exit": 0,
+          "status": "Completed"
+        },
+        "wasm_sha256": "ed5c03cea19931844e7476cb161742999a3e5e15ada297531d0e14c37569f679"
+      },
+      {
+        "name": "empty-file",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {
+            "empty.txt": ""
+          },
+          "stderr": "",
+          "stdout": "write Done\nread Done \n"
+        },
+        "outcome": {
+          "exit": 0,
+          "status": "Completed"
+        },
+        "wasm_sha256": "02ebf7dd478c6614173e37aef3df38a0bd809b50c9e4abed5166ae50e566d57e"
+      },
+      {
+        "name": "directory",
+        "observed": {
+          "directories": [
+            "dir"
+          ],
+          "exit": 0,
+          "files": {},
+          "stderr": "",
+          "stdout": "write Done\nread Fail 21 Is a directory\n"
+        },
+        "outcome": {
+          "exit": 0,
+          "status": "Completed"
+        },
+        "wasm_sha256": "3f5bfe4f86266c84db5238d261f43ad4c1fb18c1060b9c069b9aa0bc0d538f72"
+      },
+      {
+        "name": "dot-directory",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {},
+          "stderr": "",
+          "stdout": "write Done\nread Fail 21 Is a directory\n"
+        },
+        "outcome": {
+          "exit": 0,
+          "status": "Completed"
+        },
+        "wasm_sha256": "15c1800a13aef966d0102ab74db8144a1854aa27ad5fc999421f14083b2d707c"
+      }
+    ],
+    "mutants": [
+      {
+        "killed": true,
+        "name": "case-sensitive-secret",
+        "sha256": "90a160b615b3643660c6ac5f48d64c52f9419631302087c6d8c424e900dc8975",
+        "witnesses": [
+          {
+            "exit": 0,
+            "files_unchanged": true,
+            "mode": "r",
+            "outcome": {
+              "exit": 0,
+              "status": "Completed"
+            },
+            "path": ".ENV",
+            "stderr": "",
+            "stdout": "",
+            "wasm_sha256": "157f276ddbb6ebee8d50ff4e7e0f87911a216afd80df7baeab6e10a6e67e0f09"
+          },
+          {
+            "exit": 0,
+            "files_unchanged": false,
+            "mode": "w",
+            "outcome": {
+              "exit": 0,
+              "status": "Completed"
+            },
+            "path": ".ENV",
+            "stderr": "",
+            "stdout": "",
+            "wasm_sha256": "1c0183a34801d32dee757824c56321e528658b5b0ccd84f032bae6fba96ed0a2"
+          },
+          {
+            "exit": 0,
+            "files_unchanged": true,
+            "mode": "a",
+            "outcome": {
+              "exit": 0,
+              "status": "Completed"
+            },
+            "path": ".ENV",
+            "stderr": "",
+            "stdout": "",
+            "wasm_sha256": "3a38b77e2c1f4507c95b5adee4d92f9d6ae8e1d8baa6cbbbce22093d686af2de"
+          }
+        ]
+      },
+      {
+        "killed": true,
+        "name": "empty-write-ebadf",
+        "sha256": "af8129af3821d5d7c679cff2ad38554a83c8fdd228ec32b34b13dda0e3098ff0",
+        "witnesses": [
+          {
+            "name": "file",
+            "observed": {
+              "directories": [],
+              "exit": 0,
+              "files": {
+                "file.txt": "hello\n"
+              },
+              "stderr": "",
+              "stdout": "write Fail 9 Bad file descriptor\nread Done hello\n\n"
+            },
+            "outcome": {
+              "exit": 0,
+              "status": "Completed"
+            },
+            "wasm_sha256": "ed5c03cea19931844e7476cb161742999a3e5e15ada297531d0e14c37569f679"
+          },
+          {
+            "name": "empty-file",
+            "observed": {
+              "directories": [],
+              "exit": 0,
+              "files": {
+                "empty.txt": ""
+              },
+              "stderr": "",
+              "stdout": "write Fail 9 Bad file descriptor\nread Done \n"
+            },
+            "outcome": {
+              "exit": 0,
+              "status": "Completed"
+            },
+            "wasm_sha256": "02ebf7dd478c6614173e37aef3df38a0bd809b50c9e4abed5166ae50e566d57e"
+          },
+          {
+            "name": "directory",
+            "observed": {
+              "directories": [
+                "dir"
+              ],
+              "exit": 0,
+              "files": {},
+              "stderr": "",
+              "stdout": "write Fail 9 Bad file descriptor\nread Fail 21 Is a directory\n"
+            },
+            "outcome": {
+              "exit": 0,
+              "status": "Completed"
+            },
+            "wasm_sha256": "3f5bfe4f86266c84db5238d261f43ad4c1fb18c1060b9c069b9aa0bc0d538f72"
+          },
+          {
+            "name": "dot-directory",
+            "observed": {
+              "directories": [],
+              "exit": 0,
+              "files": {},
+              "stderr": "",
+              "stdout": "write Fail 9 Bad file descriptor\nread Fail 21 Is a directory\n"
+            },
+            "outcome": {
+              "exit": 0,
+              "status": "Completed"
+            },
+            "wasm_sha256": "15c1800a13aef966d0102ab74db8144a1854aa27ad5fc999421f14083b2d707c"
+          }
+        ]
+      },
+      {
+        "killed": true,
+        "name": "freeze-seed-memory-fault",
+        "sha256": "eef7baeb67312db105bbe9744af1faa595a7fa9c9106547c37c0a2f54d575be6",
+        "witnesses": [
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 1,
+            "passed": false,
+            "seed_exit": 0,
+            "stream": "stdout"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 2,
+            "passed": false,
+            "seed_exit": 0,
+            "stream": "stdout"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 1,
+            "passed": false,
+            "seed_exit": 1,
+            "stream": "stdout"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 2,
+            "passed": false,
+            "seed_exit": 1,
+            "stream": "stdout"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 1,
+            "passed": false,
+            "seed_exit": 0,
+            "stream": "stderr"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 2,
+            "passed": false,
+            "seed_exit": 0,
+            "stream": "stderr"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 1,
+            "passed": false,
+            "seed_exit": 1,
+            "stream": "stderr"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 2,
+            "passed": false,
+            "seed_exit": 1,
+            "stream": "stderr"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 1,
+            "passed": false,
+            "seed_exit": 0,
+            "stream": "merged"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 2,
+            "passed": false,
+            "seed_exit": 0,
+            "stream": "merged"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 1,
+            "passed": false,
+            "seed_exit": 1,
+            "stream": "merged"
+          },
+          {
+            "exhausted": false,
+            "expectations_preserved": false,
+            "fault_pass": 2,
+            "passed": false,
+            "seed_exit": 1,
+            "stream": "merged"
+          },
+          {
+            "ordinary_exit": 0,
+            "passed": true
+          },
+          {
+            "ordinary_exit": 1,
+            "passed": true
+          }
+        ]
+      }
+    ],
+    "oracle_controls": [
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 1,
+        "passed": true,
+        "seed_exit": 0,
+        "stream": "stdout"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 2,
+        "passed": true,
+        "seed_exit": 0,
+        "stream": "stdout"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 1,
+        "passed": true,
+        "seed_exit": 1,
+        "stream": "stdout"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 2,
+        "passed": true,
+        "seed_exit": 1,
+        "stream": "stdout"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 1,
+        "passed": true,
+        "seed_exit": 0,
+        "stream": "stderr"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 2,
+        "passed": true,
+        "seed_exit": 0,
+        "stream": "stderr"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 1,
+        "passed": true,
+        "seed_exit": 1,
+        "stream": "stderr"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 2,
+        "passed": true,
+        "seed_exit": 1,
+        "stream": "stderr"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 1,
+        "passed": true,
+        "seed_exit": 0,
+        "stream": "merged"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 2,
+        "passed": true,
+        "seed_exit": 0,
+        "stream": "merged"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 1,
+        "passed": true,
+        "seed_exit": 1,
+        "stream": "merged"
+      },
+      {
+        "exhausted": true,
+        "expectations_preserved": true,
+        "fault_pass": 2,
+        "passed": true,
+        "seed_exit": 1,
+        "stream": "merged"
+      },
+      {
+        "ordinary_exit": 0,
+        "passed": true
+      },
+      {
+        "ordinary_exit": 1,
+        "passed": true
+      }
+    ],
+    "preflight": {
+      "command": "style-preflight",
+      "composition": {
+        "available": true,
+        "byte_limit": 48000,
+        "context_files": 1,
+        "reasons": [],
+        "required": "always",
+        "selected_files": [
+          "tests/compiler-io/host/empty-write.bend"
+        ],
+        "source_bytes": 1539,
+        "unresolved": [],
+        "unresolved_by_reason": {}
+      },
+      "file_groups": null,
+      "inventory": null,
+      "mode": "targets",
+      "note": "Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups.",
+      "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+      "provider_requests": 0,
+      "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+      "rubric_version": 8,
+      "schema": 1,
+      "structural_blockers": 0,
+      "summary": {
+        "composition_available": true,
+        "composition_reasons": [],
+        "empty_files": 0,
+        "files": 1,
+        "max_state_bytes": 6752,
+        "role_gap_units_by_reason": {},
+        "supporting_role_impossible": 0,
+        "truncated_by_limit": {},
+        "truncated_units": 0,
+        "units": 7,
+        "unranked_files": 0
+      },
+      "task": {
+        "available": true,
+        "bytes": 2372,
+        "origin": "task-file",
+        "path": "tests/compiler-io/host/REVIEW-2.md",
+        "reason": null,
+        "sha256": "37b71de8676083ff0686e62df05db2d5a548b5fb2311f05d120ed6c0ed71d226"
+      },
+      "units": [
+        {
+          "diagnostics_available": true,
+          "kind": "bend_definition",
+          "limit_reasons": [],
+          "line": 3,
+          "role_context_gaps": [],
+          "state_bytes": 4116,
+          "supporting_role_possible": true,
+          "target": "tests/compiler-io/host/empty-write.bend::write_result",
+          "truncated": false
+        },
+        {
+          "diagnostics_available": true,
+          "kind": "bend_definition",
+          "limit_reasons": [],
+          "line": 8,
+          "role_context_gaps": [],
+          "state_bytes": 4177,
+          "supporting_role_possible": true,
+          "target": "tests/compiler-io/host/empty-write.bend::read_result",
+          "truncated": false
+        },
+        {
+          "diagnostics_available": true,
+          "kind": "bend_definition",
+          "limit_reasons": [],
+          "line": 13,
+          "role_context_gaps": [],
+          "state_bytes": 4712,
+          "supporting_role_possible": true,
+          "target": "tests/compiler-io/host/empty-write.bend::read_pair",
+          "truncated": false
+        },
+        {
+          "diagnostics_available": true,
+          "kind": "bend_definition",
+          "limit_reasons": [],
+          "line": 19,
+          "role_context_gaps": [],
+          "state_bytes": 5737,
+          "supporting_role_possible": true,
+          "target": "tests/compiler-io/host/empty-write.bend::write_pair",
+          "truncated": false
+        },
+        {
+          "diagnostics_available": true,
+          "kind": "bend_definition",
+          "limit_reasons": [],
+          "line": 26,
+          "role_context_gaps": [],
+          "state_bytes": 6175,
+          "supporting_role_possible": true,
+          "target": "tests/compiler-io/host/empty-write.bend::opened",
+          "truncated": false
+        },
+        {
+          "diagnostics_available": true,
+          "kind": "bend_definition",
+          "limit_reasons": [],
+          "line": 31,
+          "role_context_gaps": [],
+          "state_bytes": 6650,
+          "supporting_role_possible": true,
+          "target": "tests/compiler-io/host/empty-write.bend::arguments",
+          "truncated": false
+        },
+        {
+          "diagnostics_available": true,
+          "kind": "bend_definition",
+          "limit_reasons": [],
+          "line": 36,
+          "role_context_gaps": [],
+          "state_bytes": 6752,
+          "supporting_role_possible": true,
+          "target": "tests/compiler-io/host/empty-write.bend::main",
+          "truncated": false
+        }
+      ]
+    },
+    "secret_paths": [
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "r",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".env",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "dd7810303d07ff54b37d36f4c2f1feea2007629cea148192849f5a700ccd9fa2"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "w",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".env",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "7f85365539cdaaea3a0b365cbd9f108afff78bf482634e55b3ad6c8c051681b5"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "a",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".env",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "963f7ce0813d99d567ac7095bc927e643e936e68a090ef8c7ce1435d774f3a17"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "r",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".ENV",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "157f276ddbb6ebee8d50ff4e7e0f87911a216afd80df7baeab6e10a6e67e0f09"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "w",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".ENV",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "1c0183a34801d32dee757824c56321e528658b5b0ccd84f032bae6fba96ed0a2"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "a",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".ENV",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "3a38b77e2c1f4507c95b5adee4d92f9d6ae8e1d8baa6cbbbce22093d686af2de"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "r",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".Env",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "e3c0388e689f83dd06bd5db7f24121248634b8ee671fa2f0a7ed7e3ce5d74e07"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "w",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".Env",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "1453d1794ff886deb7f273dacc9ccb645d21cbb6711c1ec924ea0838f30f5448"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "a",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": ".Env",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "80f53ca5fb7d21a1731e7f987939561e1c0b6b67e75b43b96fdafd0d6ae3eb21"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "r",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "sub/.ENV.local",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "1a1cb0afdfde7014f0936405e6510f7cc6b2a137ef7e9827e24514e591e83ac8"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "w",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "sub/.ENV.local",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "d1e87492fb6d45f45be956e05eeaf3cac7254a9f1aa4d4da5e476796e85e0036"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "a",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "sub/.ENV.local",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "e7fb99c79e71befd53f7c469eec956be7ceadefe303361cd509c4a97536fc740"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "r",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "sub/.Env.local",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "af2087ab8a8e0fdee3b90da1346f24602ec104174dd52dcd8558a113c9053708"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "w",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "sub/.Env.local",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "f9f69135d37d89c73ce9c546e395a69eb85ee467fe968f369e7a4fb46f372a30"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "a",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "sub/.Env.local",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "e8ebb4edbc04c88e7af985d293889a4304d30e67bd672e8ead3b55facc53d385"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "r",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "SUB/.env.LOCAL",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "bb4a57a498df4e836f06c686436740b1946ec4db02462240a851f2693eb312d2"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "w",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "SUB/.env.LOCAL",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "11e6c2fee353d4ad61da1bb4207e26d7dce3d1743ef9f29271ef65f67d1a6eed"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "a",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "SUB/.env.LOCAL",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "0c78a0d7164f61188234a414efa0638683640ca51175b9268353bc55cfcc98e0"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "r",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "./.eNv",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "0c4b04777ce105763f6f813800902b2ea7c80edddc60853c1538a0be0da36d2b"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "w",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "./.eNv",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "1e672d49d5e4c1e3d64891f20e95a2a397e7b42fd486c05fc3659f309672ed4b"
+      },
+      {
+        "exit": 5,
+        "files_unchanged": true,
+        "mode": "a",
+        "outcome": {
+          "code": "sandbox",
+          "exit": 5,
+          "status": "HostFailure"
+        },
+        "path": "./.eNv",
+        "stderr": "HostFailure\tio\tsandbox\n",
+        "stdout": "",
+        "wasm_sha256": "dd3d0aead0ce9c8252103b52c5c4d24599149206c421b4c9e65330ec630311fb"
+      }
+    ],
+    "seed_runs": [
+      {
+        "lane": "interpreter",
+        "name": "file",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {
+            "file.txt": "hello\n"
+          },
+          "stderr": "",
+          "stdout": "write Done\nread Done hello\n\n"
+        }
+      },
+      {
+        "lane": "native",
+        "name": "file",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {
+            "file.txt": "hello\n"
+          },
+          "stderr": "",
+          "stdout": "write Done\nread Done hello\n\n"
+        }
+      },
+      {
+        "lane": "js",
+        "name": "file",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {
+            "file.txt": "hello\n"
+          },
+          "stderr": "",
+          "stdout": "write Done\nread Done hello\n\n"
+        }
+      },
+      {
+        "lane": "interpreter",
+        "name": "empty-file",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {
+            "empty.txt": ""
+          },
+          "stderr": "",
+          "stdout": "write Done\nread Done \n"
+        }
+      },
+      {
+        "lane": "native",
+        "name": "empty-file",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {
+            "empty.txt": ""
+          },
+          "stderr": "",
+          "stdout": "write Done\nread Done \n"
+        }
+      },
+      {
+        "lane": "js",
+        "name": "empty-file",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {
+            "empty.txt": ""
+          },
+          "stderr": "",
+          "stdout": "write Done\nread Done \n"
+        }
+      },
+      {
+        "lane": "interpreter",
+        "name": "directory",
+        "observed": {
+          "directories": [
+            "dir"
+          ],
+          "exit": 0,
+          "files": {},
+          "stderr": "",
+          "stdout": "write Done\nread Fail 21 Is a directory\n"
+        }
+      },
+      {
+        "lane": "native",
+        "name": "directory",
+        "observed": {
+          "directories": [
+            "dir"
+          ],
+          "exit": 0,
+          "files": {},
+          "stderr": "",
+          "stdout": "write Done\nread Fail 21 Is a directory\n"
+        }
+      },
+      {
+        "lane": "js",
+        "name": "directory",
+        "observed": {
+          "directories": [
+            "dir"
+          ],
+          "exit": 0,
+          "files": {},
+          "stderr": "",
+          "stdout": "write Done\nread Fail 21 Is a directory\n"
+        }
+      },
+      {
+        "lane": "interpreter",
+        "name": "dot-directory",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {},
+          "stderr": "",
+          "stdout": "write Done\nread Fail 21 Is a directory\n"
+        }
+      },
+      {
+        "lane": "native",
+        "name": "dot-directory",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {},
+          "stderr": "",
+          "stdout": "write Done\nread Fail 21 Is a directory\n"
+        }
+      },
+      {
+        "lane": "js",
+        "name": "dot-directory",
+        "observed": {
+          "directories": [],
+          "exit": 0,
+          "files": {},
+          "stderr": "",
+          "stdout": "write Done\nread Fail 21 Is a directory\n"
+        }
+      }
+    ]
+  },
+  "review_counts": {
+    "empty_write": 4,
+    "mutants": 3,
+    "oracle_controls": 14,
+    "secret_paths": 21,
+    "seed_runs": 12
+  },
+  "schema": 1,
+  "seed": {
+    "bun": "1.3.14",
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "launcher": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+    ],
+    "sha256": {
+      "bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "bend2/effs/args.js": "ed1a7e7b73ae7fe58ac6d428d2762b66f223f4c70a165570fc5d68dc874ddc0b",
+      "bend2/effs/file_close.js": "2b83f900113776ab875fa3afd29f31000a191fe48645abe78b1d7b34cb12a7fe",
+      "bend2/effs/file_open.js": "dd549f5f05eb896aef9a3a02ffecf2ee902e653f5463be72781edab1cd1180ae",
+      "bend2/effs/file_read.js": "07e65f568689eb8bd90c26f811b9dc102b69c3c6cf8cf5e759379b76f754833b",
+      "bend2/effs/file_write.js": "a643df366fdd1aafa2c2d00a16ec50e3f84d1b909c22f9ccefa2dcb5cd314506",
+      "bend2/effs/get_env.js": "2fab2162d5ff9842d1b84bfdc56466a606eeb0b81b04dd29f091652ff715ded6",
+      "bend2/effs/print.js": "814ceba4efbaa291b7b6a9ff29aa20e3a23c06eb4fa165c69ee0bd22878adaa9",
+      "bend2/effs/print_err.js": "16bae7b06f270b4ec5a09fd10810b0e5d043ee560f2b591cf2c1d8c2e7cba99b",
+      "bend2/effs/write.js": "e3495066a5d8c53fe1c46cfd2bb32577e3bd7dcae9797808801599073504dacb",
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884"
+    },
+    "version": "2.0.29"
+  },
+  "seed_fixtures": 40,
+  "seed_runs": 109,
+  "sources": {
+    "scripts/run-wasm-io.mjs": "4ee7b16d5ae02614a47087dd8498352a487b7efffad6fca8ea629a60eae0b3ec",
+    "tests/compiler-io/expectations.json": "118c922f459aa2b968cd69ed886eca3e305349d56f61c1e45a92423d22047806",
+    "tests/compiler-io/host-check.py": "21df9ba4a3930d6ee755a1467240623a4ca16452e884a9d0aee7312d905cf746",
+    "tests/compiler-io/host/PLAN.json": "570127c0668df45322c430d4cc2f3581f33c71f51d16d6f83e9efc04e790e0fd",
+    "tests/compiler-io/host/REVIEW-2.md": "37b71de8676083ff0686e62df05db2d5a548b5fb2311f05d120ed6c0ed71d226",
+    "tests/compiler-io/host/empty-write.bend": "5eabc41ec5245b5e7d87e4d6b5f18112677bcfda82def88020b43b6d08834876",
+    "tests/compiler-io/host/invoke.mjs": "94282fff5cc0d8fdf847e7ade9cc356de2a2682e8f877fd4eacd8c7afcd400ec",
+    "tests/compiler-io/host/programs.py": "859255196d07558503dccf26bcbfb95ee3aff8c53da595b93454b100109212f4",
+    "tests/compiler-io/host/review-expectations.json": "eebdc753183a70415e8f5904debd5851c29c5c29fa16c279e71aa8c7432dd5cf",
+    "tests/compiler-io/host/review-seed.json": "3ac54e932f1464da5d2d68e4ccb4a46b101d67a4452c8b0bc9f5b214822d03c4",
+    "tests/compiler-io/host/review.py": "415d372d28ae62cc8652c9db0e578896afe134015fb17d27bc3566d73622e72a",
+    "tests/compiler-io/host/runtime.wat": "ca2b5d4974ea49ecf5dff15069439da6846580247850f37297960783eba9b2d5",
+    "tests/compiler-io/regen.py": "fd0c20f819734444d0db711ca26dc20bc0b79d74318ddc0106d739ef15dfb0f9"
+  },
+  "status": "pass",
+  "stress": {
+    "left_binds": 100000,
+    "right_binds": 100000
+  },
+  "style": {
+    "changed_bend_targets": 1,
+    "status": "preflight-only; live review pending",
+    "structural_blockers": 0
+  },
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "wat2wasm": "1.0.41"
+  }
+}
