@@ -140,10 +140,14 @@ Out of scope:
     few entries. Entries take and return only nullary enums declared in the
     fixture, because the host boundary is enum-only. Every closure, action,
     template instance and pair is built and consumed inside the program.
-  - Every negative is its twin plus one reviewed edit: a changed line, or an
-    added definition built from the twin's own declarations. The edit is
-    visible with `diff fixtures/<twin>.bend fixtures/<negative>.bend`. The
-    seed's error is the intended one, and the `seed_reason` substrings pin it.
+  - Every negative is its twin plus one reviewed edit. Besides the summary
+    line, the edit is at most two diff hunks: a changed line, or an added
+    definition built from the twin's own declarations plus the caller line
+    that uses it (`rigid-closure-twice`, `kind-quantity-mismatch`,
+    `kind-reuse-affine-result`, `sigma-reuse-affine`). The edit is visible with
+    `diff fixtures/<twin>.bend fixtures/<negative>.bend`. The seed's error line
+    lies in a declaration the edit adds or changes. The error is the intended
+    one, and the `seed_reason` substrings pin it.
     Where a second error is unavoidable (`kind-closure-at-data`,
     `template-quant-kind`), only the `Invalid` class is pinned.
 - `expectations.json`: all expectations, in these sections:
@@ -187,10 +191,26 @@ Wrappers are written to the ignored `.local/compiler-poly/wrappers/` directory.
   - the fixture files differ from the cases;
   - a summary line differs, a fixture imports something, or `main()` is missing;
   - a class, requirement, increment, need, census class or mirror citation is
-    malformed or inconsistent;
+    malformed or inconsistent, a feature is not owned by the case's increment,
+    or a census class is not one of `implementation.json`'s;
+  - a need that is visible in the syntax (`destructuring-let` for a
+    `Ctor{..} = e` let, `do-notation` for a `do` block, `nested-patterns` for
+    a nested constructor or wildcard pattern) is required without its form, or
+    the form occurs without the need;
   - a negative does not name a seed-valid `agree` twin of the same feature and
     increment, or a seed-valid fixture names one;
-  - a pinned code has no precedent;
+  - the reviewed sections (everything but `observations`) differ from the
+    `REVIEWED_SHA256` constant in `regen.py`, or `NEEDS` and `INCREMENTS`
+    there differ from the `needs` and `increments` sections;
+  - a pinned code has no precedent, or a precedent is not a reject case of its
+    frozen suite that pins the same code (or, like this case, leaves it open);
+  - a `seed_reason` entry is empty, or none of them anchors the error with a
+    `Location:` or an `NN>|` line;
+  - a negative differs from its twin by more than two hunks besides the
+    summary line, or the seed's error line falls outside the declarations
+    that the edit adds or changes;
+  - a boundary names no need that puts it outside both increments
+    (`do-notation`);
   - the seed accepts a fixture marked `reject`, or rejects one that is not;
   - a negative's `seed_reason` substrings are missing, meaning the seed
     rejected it for a different reason;
@@ -201,8 +221,10 @@ Wrappers are written to the ignored `.local/compiler-poly/wrappers/` directory.
   - the seed times out;
   - the seed identity, the seed file hashes or the Bun version changed;
   - a recorded output contains a checkout-specific path.
-- **Bootstrapping.** `--write` never touches `cases`. After running it, read the
-  diff by hand.
+- **Bootstrapping.** `--write` never touches the reviewed sections. After
+  running it, read the diff by hand. A reviewed amendment to a case, a need, an
+  increment or any other reviewed section also updates `REVIEWED_SHA256` in
+  `regen.py`, in the same change. The failing run prints the new digest.
 
 ## Coverage matrix
 
