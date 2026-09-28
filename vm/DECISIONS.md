@@ -297,6 +297,9 @@ follows it (§5, §10, §11) without a new image header word.
    table gives every prim's operand types, extent and moves, and inspection
    precedes computation and allocation. §8's phase 3 reads a Halt's code and
    whole message, and §10 reads an Action's whole String before the scalar check.
+   The list also names §7's check of an Enter's target, and a byte List's whole
+   extent for `File.write_bytes`; the reference evaluation performs only
+   `IO.print`, so vm-io owes that List's control and mutant (§12).
    Eighteen run controls freeze those points by literal review, the reviewer's
    seven probes among them (each Succ discarded by a `let`, as the Chr is, so that
    only its read can halt), with the calls §7 counts: 2 for Succ and Chr, whose

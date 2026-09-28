@@ -407,17 +407,18 @@ to its post-state. No row runs user code or a second host effect.
 validator cannot exclude every ill-typed word. The VM therefore checks a word
 against the type it is read at, at exactly these points: a Case scrutinee (§6.1);
 the operand of Succ and of Chr (above); every operand of every prim, over the
-extent §9's table gives it, the moved operands included; every word §8 renders;
-every Action operand §10 converts; and the final IO.OP with a Halt's code and
-message (§8). Nothing else is inspected: a Let, a Reference, any other Construct,
-a Foreign, a Closure's captures and an Enter's operands move or share their words
-unread. An algebraic type admits an immediate naming one of its nullary
+extent §9's table gives it, the moved operands included; an Enter's target, whose
+class and operand count §7 checks; every word §8 renders; every Action operand §10
+converts, whole; and the final IO.OP with a Halt's code and message (§8). Nothing
+else is inspected: a Let, a Reference, any other Construct, a Foreign, a Closure's
+captures and an Enter's operands move or share their words unread. An algebraic type admits an immediate naming one of its nullary
 constructors, or an Object (class 0) whose `type` is that type and whose tag
 names a constructor with fields; Nat, U32 and Char admit an immediate or a Big
 cell (class 2), and File an immediate. Checking a word is shallow: it reads the
-word and, for a cell, its class and an Object's `type` and tag. The one deeper
-read is a String's **whole** extent: each SCon cell and its Char word, head to
-tail, to SNil. A mismatch halts with `HostFailure image` (`ill-typed`) before the
+word and, for a cell, its class and an Object's `type` and tag. The deeper reads
+are **whole** extents: a String's, each SCon cell and its Char word, head to
+tail, to SNil; and a byte List's (`File.write_bytes`, §10), each cell and its U32
+element, head to tail, to its end. A mismatch halts with `HostFailure image` (`ill-typed`) before the
 step changes any state; no read leaves a cell.
 
 ### 6.1 Case selection
@@ -713,8 +714,9 @@ Foreign rows in `registry.json`: 0 `IO.args`, 1 `IO.print`, 2 `File.open`,
 7 modules `inspect`. Each row's `output` names the representation `X` of its
 `IO(X)` result; the gate re-derives it from the Base declarations (`inspect`'s
 comes from its pinned declaration). Applying an Action inspects (§6) every
-operand before it converts any: a String over its whole extent, so an ill-typed
-cell anywhere in it halts as `ill-typed` even after a non-scalar Char. Then it
+operand before it converts any, a String or a byte List over its whole extent,
+so an ill-typed cell anywhere in it halts as `ill-typed` even after a non-scalar
+Char or a byte above 255. Then it
 converts its operands, calls the host, builds the exact pinned Base Result, pair
 and handle view, and enters `k`. Outgoing Strings must be Unicode scalars and are encoded as
 canonical UTF-8, with no surrogate merging or replacement. An outgoing String that
@@ -948,6 +950,9 @@ RC, so this gate checks only their values. vm-core adds the iterative loader, va
 quantum re-entry, and completes the 250,000-deep workload. vm-lockstep compares
 every transition and the four value lanes, and derives each golden's exact call
 count; vm-rc, vm-io and vm-prims close reclamation, effects and the final registry.
+The reference evaluation performs only `IO.print`, so vm-io also owes the
+inspection controls and mutants for every other foreign's operands, the byte
+List's whole extent among them.
 Goldens of the `list-head-match` shape (a Case on a List element) and the
 `first-code` shape (a concrete arm beside the `none` head), each seed `True{}`, are
 owed as soon as a pinned head checks a `List<T>` parameter; until then the admitted
