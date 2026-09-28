@@ -92,8 +92,14 @@ def L.anonymous_reference_is_free(scope,at):
     case E.Scope{bindings,next,open,live,smaller}: {==}
 def L.default_reference_stays_live(name,level,q,type_id,live): {==}
 def L.empty_reference_stays_live(name,level,q,type_id,live): {==}
+def L.pending_binder_witnesses_nothing(token,level,q,type_id,param,known,tail,types,pending,inside):
+  Equal.cong(Bool,Bool,inside =>
+    Bool.or(Bool.and(Bool.not(inside),Bool.and(U32.is_ne(q,0),E.empty(known,types,type_id))),E.witnessed(tail,types,pending)),
+    E.contains(pending,level),True{},inside)
 def L.erased_empty_is_not_dead(name): {==}
 def L.live_empty_is_dead(name): {==}
+def L.introduced_empty_type_is_dead(): {==}
+def L.pending_empty_type_is_not_dead(): {==}
 def L.let_alias_available(name,token): {==}
 def L.terminal_expansion_preserves_budget(name,types,scope,work): {==}
 def L.leaf_expansion_spends_one(token,arm,name,types,scope): {==}

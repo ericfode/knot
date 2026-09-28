@@ -131,16 +131,32 @@ def residual(scope: Scope, binding: C.Binding, +empty: Bool) -> Scope:
       Scope{replace(bindings,level,S.choose(C.Term,empty,u => C.Case{token,level,type_id,Nil{}},u => C.Reference{token,level,type_id})),
         next,Con{level,after(open,level)},live,smaller}
 
-def empty_bindings(bindings: List<&2,C.Binding>) -> Bool:
+def uninhabited(types: List<&2,C.Datatype>, +type_id: U32) -> Bool:
+  match types:
+    case Nil{}: False{}
+    case Con{C.Datatype{token,data,ctors},tail}:
+      S.choose(Bool,U32.is_eq(type_id,0),u => List.is_empty(&2,C.Constructor,ctors),u => uninhabited(tail,U32.sub(type_id,1)))
+
+# A binder's constructor set is empty for an emptied residual or an empty datatype.
+def empty(known: Maybe<&2,C.Term>, types: List<&2,C.Datatype>, +type_id: U32) -> Bool:
+  match known:
+    case Some{C.Case{token,level,typ,Nil{}}}: True{}
+    case _: uninhabited(types,type_id)
+
+# The seed's check-efq: a missing arm is dead code when a live binder in
+# context has an empty constructor set. The context is every binder outside
+# the pending suffix of the match frontier, which starts at the scrutinee.
+# A residual stays pending ahead of later columns, so it witnesses them all.
+def witnessed(bindings: List<&2,C.Binding>, +types: List<&2,C.Datatype>, +pending: List<&2,U32>) -> Bool:
   match bindings:
     case Nil{}: False{}
-    case Con{C.Binding{token,level,q,type_id,param,Some{C.Case{a,b,c,Nil{}}}},tail}:
-      Bool.or(U32.is_ne(q,0),empty_bindings(tail))
-    case Con{head,tail}: empty_bindings(tail)
+    case Con{C.Binding{token,+level,q,+type_id,param,known},tail}:
+      Bool.or(Bool.and(Bool.not(contains(pending,level)),Bool.and(U32.is_ne(q,0),empty(known,types,type_id))),
+        witnessed(tail,types,pending))
 
-def dead(scope: Scope) -> Bool:
+def dead(scope: Scope, types: List<&2,C.Datatype>, +level: U32) -> Bool:
   match scope:
-    case Scope{bindings,next,open,live,smaller}: empty_bindings(bindings)
+    case Scope{bindings,next,open,live,smaller}: witnessed(bindings,types,Con{level,after(open,level)})
 
 def parameters(params: List<&2,C.Parameter>, +index: U32, +bindings: List<&2,C.Binding>) -> Scope:
   match params:

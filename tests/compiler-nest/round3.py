@@ -24,6 +24,18 @@ MUTANTS = [
     {'name': 'accept-malformed-name', 'file': 'lex.bend',
      'old': 'S.malformed(text),u => Fail', 'new': 'False{},u => Fail',
      'witness': 'name-double-dot', 'phase': 'check', 'wrong': {'exit': 0}},
+    {'name': 'unordered-empty-context', 'file': 'scope.bend',
+     'old': 'witnessed(bindings,types,Con{level,after(open,level)})', 'new': 'witnessed(bindings,types,Nil{})',
+     'witness': 'empty-after-multi', 'phase': 'check', 'wrong': {'exit': 0}},
+    {'name': 'fields-after-parameters', 'file': 'patterns.bend',
+     'old': 'List.append(&2,U32,E.levels(introduced),open)', 'new': 'List.append(&2,U32,open,E.levels(introduced))',
+     'witness': 'empty-param-after-field', 'phase': 'check', 'wrong': {'exit': 0}},
+    {'name': 'ignore-empty-datatype', 'file': 'scope.bend',
+     'old': 'case _: uninhabited(types,type_id)', 'new': 'case _: False{}',
+     'witness': 'empty-multi', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tmissing-arm\t'}},
+    {'name': 'erased-empty-witness', 'file': 'scope.bend',
+     'old': 'Bool.and(U32.is_ne(q,0),empty(known,types,type_id))', 'new': 'empty(known,types,type_id)',
+     'witness': 'empty-erased-control', 'phase': 'check', 'wrong': {'exit': 0}},
 ]
 
 

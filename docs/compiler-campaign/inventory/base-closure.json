@@ -6166,7 +6166,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 386,
+          "declarations": 388,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -10958,8 +10958,12 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "List",
+              "U32",
+              "src/core.Datatype",
               "src/scope.Scope",
-              "src/scope.empty_bindings"
+              "src/scope.after",
+              "src/scope.witnessed"
             ],
             "dynamic_calls": []
           },
@@ -10998,21 +11002,20 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/scope.empty_bindings",
+            "key": "src/scope.empty",
             "file": "src/scope.bend",
-            "via": "src/scope.dead",
+            "via": "src/scope.witnessed",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.or",
               "List",
               "Maybe",
               "U32",
-              "U32.is_ne",
-              "src/core.Binding",
-              "src/core.Term"
+              "src/core.Datatype",
+              "src/core.Term",
+              "src/scope.uninhabited"
             ],
             "dynamic_calls": []
           },
@@ -11376,6 +11379,25 @@
             ]
           },
           {
+            "key": "src/scope.uninhabited",
+            "file": "src/scope.bend",
+            "via": "src/scope.empty",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "List.is_empty",
+              "U32",
+              "U32.is_eq",
+              "U32.sub",
+              "src/core.Datatype",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.unknown",
             "file": "src/scope.bend",
             "via": "src/scope.occurrence",
@@ -11396,6 +11418,28 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.witnessed",
+            "file": "src/scope.bend",
+            "via": "src/scope.dead",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "List",
+              "U32",
+              "U32.is_ne",
+              "src/core.Binding",
+              "src/core.Datatype",
+              "src/scope.contains",
+              "src/scope.empty"
             ],
             "dynamic_calls": []
           },
@@ -13385,7 +13429,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 386,
+          "declarations": 388,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -18177,8 +18221,12 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "List",
+              "U32",
+              "src/core.Datatype",
               "src/scope.Scope",
-              "src/scope.empty_bindings"
+              "src/scope.after",
+              "src/scope.witnessed"
             ],
             "dynamic_calls": []
           },
@@ -18217,21 +18265,20 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/scope.empty_bindings",
+            "key": "src/scope.empty",
             "file": "src/scope.bend",
-            "via": "src/scope.dead",
+            "via": "src/scope.witnessed",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.or",
               "List",
               "Maybe",
               "U32",
-              "U32.is_ne",
-              "src/core.Binding",
-              "src/core.Term"
+              "src/core.Datatype",
+              "src/core.Term",
+              "src/scope.uninhabited"
             ],
             "dynamic_calls": []
           },
@@ -18595,6 +18642,25 @@
             ]
           },
           {
+            "key": "src/scope.uninhabited",
+            "file": "src/scope.bend",
+            "via": "src/scope.empty",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "List.is_empty",
+              "U32",
+              "U32.is_eq",
+              "U32.sub",
+              "src/core.Datatype",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.unknown",
             "file": "src/scope.bend",
             "via": "src/scope.occurrence",
@@ -18615,6 +18681,28 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.witnessed",
+            "file": "src/scope.bend",
+            "via": "src/scope.dead",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "List",
+              "U32",
+              "U32.is_ne",
+              "src/core.Binding",
+              "src/core.Datatype",
+              "src/scope.contains",
+              "src/scope.empty"
             ],
             "dynamic_calls": []
           },
@@ -20604,7 +20692,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 337,
+          "declarations": 339,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -23621,7 +23709,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/scope.empty_bindings"
+              "src/scope.after",
+              "src/scope.witnessed"
             ],
             "dynamic_calls": []
           },
@@ -23654,15 +23743,14 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/scope.empty_bindings",
+            "key": "src/scope.empty",
             "file": "src/scope.bend",
-            "via": "src/scope.dead",
+            "via": "src/scope.witnessed",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
-              "U32.is_ne"
+              "src/scope.uninhabited"
             ],
             "dynamic_calls": []
           },
@@ -23913,6 +24001,21 @@
             ]
           },
           {
+            "key": "src/scope.uninhabited",
+            "file": "src/scope.bend",
+            "via": "src/scope.empty",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List.is_empty",
+              "U32.is_eq",
+              "U32.sub",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.unknown",
             "file": "src/scope.bend",
             "via": "src/scope.occurrence",
@@ -23924,6 +24027,23 @@
               "U32.is_eq",
               "src/core.invalid",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.witnessed",
+            "file": "src/scope.bend",
+            "via": "src/scope.dead",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "U32.is_ne",
+              "src/scope.contains",
+              "src/scope.empty"
             ],
             "dynamic_calls": []
           },
@@ -25326,7 +25446,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 424,
+          "declarations": 426,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -30182,8 +30302,12 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "List",
+              "U32",
+              "src/core.Datatype",
               "src/scope.Scope",
-              "src/scope.empty_bindings"
+              "src/scope.after",
+              "src/scope.witnessed"
             ],
             "dynamic_calls": []
           },
@@ -30222,20 +30346,20 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/scope.empty_bindings",
+            "key": "src/scope.empty",
             "file": "src/scope.bend",
-            "via": "src/scope.dead",
+            "via": "src/scope.witnessed",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.or",
               "List",
               "Maybe",
-              "U32.is_ne",
-              "src/core.Binding",
-              "src/core.Term"
+              "U32",
+              "src/core.Datatype",
+              "src/core.Term",
+              "src/scope.uninhabited"
             ],
             "dynamic_calls": []
           },
@@ -30591,6 +30715,26 @@
             ]
           },
           {
+            "key": "src/scope.uninhabited",
+            "file": "src/scope.bend",
+            "via": "src/scope.empty",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "List.is_empty",
+              "U32",
+              "U32.is_eq",
+              "U32.sub",
+              "src/core.Constructor",
+              "src/core.Datatype",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.unknown",
             "file": "src/scope.bend",
             "via": "src/scope.occurrence",
@@ -30610,6 +30754,28 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.witnessed",
+            "file": "src/scope.bend",
+            "via": "src/scope.dead",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "List",
+              "U32",
+              "U32.is_ne",
+              "src/core.Binding",
+              "src/core.Datatype",
+              "src/scope.contains",
+              "src/scope.empty"
             ],
             "dynamic_calls": []
           },

@@ -169,13 +169,37 @@ law empty_reference_stays_live:
   {E.occurrence(Some{C.Case{name,level,type_id,Nil{}}},name,level,q,type_id,live) ==
     E.unknown(name,level,q,type_id,live) : Result<S.Error,C.Checked>}
 
+# Dead code needs a live binder in context with an empty constructor set.
+# A binder still pending at or after the scrutinee is not in context.
+law pending_binder_witnesses_nothing:
+  for +token: S.Token
+  for +level: U32
+  for +q: U32
+  for +type_id: U32
+  for +param: Bool
+  for +known: Maybe<&2,C.Term>
+  for +tail: List<&2,C.Binding>
+  for +types: List<&2,C.Datatype>
+  for +pending: List<&2,U32>
+  for inside: {E.contains(pending,level) == True{} : Bool}
+  {E.witnessed(Con{C.Binding{token,level,q,type_id,param,known},tail},types,pending) == E.witnessed(tail,types,pending) : Bool}
+
+def void() -> C.Datatype: C.Datatype{token("V"),False{},Nil{}}
+
 law erased_empty_is_not_dead:
   for +name: S.Token
-  {E.dead(E.Scope{[C.Binding{name,0,0,0,True{},Some{C.Case{name,0,0,Nil{}}}}],1,[0],True{},Nil{}}) == False{} : Bool}
+  {E.dead(E.Scope{[C.Binding{name,0,0,0,True{},Some{C.Case{name,0,0,Nil{}}}}],2,[0,1],True{},Nil{}},[flag()],1) == False{} : Bool}
 
 law live_empty_is_dead:
   for +name: S.Token
-  {E.dead(E.Scope{[C.Binding{name,0,1,0,True{},Some{C.Case{name,0,0,Nil{}}}}],1,[0],True{},Nil{}}) == True{} : Bool}
+  {E.dead(E.Scope{[C.Binding{name,0,1,0,True{},Some{C.Case{name,0,0,Nil{}}}}],2,[0,1],True{},Nil{}},[flag()],1) == True{} : Bool}
+
+# f(x: V, y: Flag) matching y is dead; f(y: Flag, x: V) matching y is not.
+law introduced_empty_type_is_dead:
+  {E.dead(E.parameters([C.Parameter{token("x"),1,1},C.Parameter{token("y"),1,0}],0,Nil{}),[flag(),void()],1) == True{} : Bool}
+
+law pending_empty_type_is_not_dead:
+  {E.dead(E.parameters([C.Parameter{token("y"),1,0},C.Parameter{token("x"),1,1}],0,Nil{}),[flag(),void()],0) == False{} : Bool}
 
 # The most recent let supplies a variable-only column without constructor inspection.
 law let_alias_available:

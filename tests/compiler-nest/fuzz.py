@@ -13,49 +13,70 @@ SEED = 0x4E455354
 COUNT = 3000
 
 
+DOTTED = ['a.b', '+a.b', '_.x', 'On.x', 'v.', 'a..b', 'a.1']
+
+
 def programs(count=COUNT):
     rng = random.Random(SEED)
+
+    def atom():
+        return rng.choice(DOTTED) if rng.randrange(12) == 0 else rng.choice(
+            ['Off{}', 'On{}', '_', 'v', 'w', 'x', '+v', '_x'])
+
     for index in range(count):
         shape = rng.choice(('flag', 'multi', 'pair', 'box'))
         kind = rng.choice(('Type', 'Data'))
+        # Live, reusable or erased binders of an empty datatype, before or after
+        # the scrutinee, as parameters or fields; f is then uncallable.
+        empty = rng.randrange(4) == 0
+        y = 'y.z' if rng.randrange(10) == 0 else 'y'
         prefix = f'type Flag is {kind}:\n  Off{{}}\n  On{{}}\n\ntype Color is Data:\n  Red{{}}\n'
+        prefix += f"\ntype V is {rng.choice(('Type', 'Data'))}:\n"
         fields = shape in ('pair', 'box')
+        slots = ['a: Flag', 'b: Flag']
+        if fields and empty and rng.randrange(2) == 0:
+            slots.insert(rng.randrange(3), rng.choice(('', '', '-')) + 'e: V')
         if fields:
-            prefix += '\ntype Pair is Type:\n  P{a: Flag, b: Flag}\n'
+            prefix += '\ntype Pair is Type:\n  P{' + ', '.join(slots) + '}\n'
         if shape == 'box':
             prefix += '\ntype Box is Type:\n  B{p: Pair}\n'
         prefix += '\ndef both(a: Flag, b: Flag) -> Flag:\n  a\n'
         prefix += '\ndef id(a: Flag) -> Flag:\n  a\n'
-        params = 'x: Flag, y: Flag, -ghost: Flag'
+        params = ['x: Flag', f'{y}: Flag', '-ghost: Flag']
         arguments = 'Off{}, On{}, Off{}'
         if fields:
-            prefix += '\ndef left(p: Pair) -> Flag:\n  match p:\n    case P{a, b}: a\n'
-            params = ('p: Pair' if shape == 'pair' else 'p: Box') + ', y: Flag, -ghost: Flag'
+            prefix += '\ndef left(p: Pair) -> Flag:\n  match p:\n    case P{' + ', '.join('_' if s.endswith('V') else s[0] for s in slots) + '}: a\n'
+            params[0] = 'p: Pair' if shape == 'pair' else 'p: Box'
             arguments = ('P{Off{}, On{}}' if shape == 'pair' else 'B{P{Off{}, On{}}}') + ', On{}, Off{}'
         elif rng.randrange(8) == 0:
-            params = rng.choice(('-', '+')) + params
-        body_terms = ['On{}', 'Off{}', 'y', 'v', 'w', '_', 'nope', 'Red{}',
-                      'ghost', 'both(v, v)', 'both(y, y)', 'both(v, y)', 'both(w, w)']
+            params[0] = rng.choice(('-', '+')) + params[0]
+        if empty:
+            params.insert(rng.randrange(4), rng.choice(('', '', '-', '+')) + 'e: V')
+        body_terms = ['On{}', 'Off{}', y, 'v', 'w', '_', 'nope', 'Red{}', 'a.b', 'e',
+                      'ghost', 'both(v, v)', f'both({y}, {y})', f'both(v, {y})', 'both(w, w)']
         if not fields:
             body_terms += ['x', 'both(x, x)', 'both(x, v)']
         elif shape == 'pair':
             body_terms += ['left(p)', 'both(left(p), left(p))', 'left(v)']
-        atoms = ['Off{}', 'On{}', '_', 'v', 'w', 'x', '+v', '_x']
+        columns = ['x', y] if shape == 'multi' else ['p' if fields else 'x']
+        if empty and shape == 'multi' and rng.randrange(2) == 0:
+            columns.insert(rng.randrange(3), 'e')
         rows = []
-        for _ in range(rng.randrange(1, 8)):
+        for _ in range(rng.randrange(0 if empty else 1, 8)):
             if shape == 'flag':
-                pattern = rng.choice(atoms)
+                pattern = atom()
             elif shape == 'multi':
-                pattern = rng.choice(atoms) + rng.choice((' ', ', ')) + rng.choice(atoms)
+                pattern = rng.choice((' ', ', ')).join(atom() for _ in columns)
             else:
-                pattern = f'P{{{rng.choice(atoms)}, {rng.choice(atoms)}}}'
+                pattern = 'P{' + ', '.join(atom() for _ in slots) + '}'
                 if shape == 'box':
                     pattern = 'B{' + rng.choice((pattern, '_', 'v')) + '}'
                 pattern = rng.choice((pattern, pattern, '_', 'v', '+v'))
             rows.append(f'    case {pattern}: {rng.choice(body_terms)}\n')
-        scrutinee = 'p' if fields else ('x' + rng.choice((' y', ', y')) if shape == 'multi' else 'x')
-        source = prefix + f'\ndef f({params}) -> Flag:\n  match {scrutinee}:\n' + ''.join(rows)
-        source += f'\ndef main() -> Flag:\n  f({arguments})\n'
+        scrutinee = rng.choice((' ', ', ')).join(columns)
+        source = prefix + f'\ndef f({", ".join(params)}) -> Flag:\n  match {scrutinee}:\n' + ''.join(rows)
+        call = rng.choice(('On{}', 'Off{}')) if empty else f'f({arguments})'
+        source += f'\ndef main() -> Flag:\n  {call}\n'
         yield index, fields, source
 
 
