@@ -942,7 +942,7 @@ Prevention: calibrate a rubric against recorded human preferences before
 optimizing code against it. v6's memetic target would have steered a paydown
 campaign toward the styles the user rejected.
 
-## 2026-09-27: law rules skipped compiler test packets
+## 2026-09-27 — Law rules skipped compiler test packets
 
 The compiler campaign's first increments put their law packets beside their
 gates, for example `tests/compiler-recursion/LAW_REVIEW.md`. The eight law
@@ -959,3 +959,6 @@ and every target was clean.
 
 Prevention: when a new packet location appears, run the law rules on it once
 and treat `no-coverage` as a finding.
+The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
+8 checks came back clean, with a maximum broken probability of 0.70 on
+`law-observable-essence`.
