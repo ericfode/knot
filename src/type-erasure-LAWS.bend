@@ -17,6 +17,18 @@ law empty_family:
   {G.header_kind(G.Typed{T.Sort{q},kind},token,params,Nil{},generic)
     == Fail{S.Unsupported{"check","empty-datatype",S.at(token)}} : Result<S.Error,G.Family>}
 
+# A type name that resolves to a definition computes a type: Unsupported,
+# whatever families the book declares.
+law type_level_definition:
+  for fuel: Nat
+  for +token: S.Token
+  for name: S.Token
+  for families: List<&2,G.Family>
+  for symbols: List<&2,G.Symbol>
+  for found: {G.named(symbols,token) == Some{G.Definition{name}} : Maybe<&2,G.Symbol>}
+  {G.resolve(1n+fuel,G.Expression{S.Variable{token}},families,symbols)
+    == Fail{S.Unsupported{"check","type-level-definition",S.at(token)}} : Result<S.Error,G.Typed>}
+
 law nominal_identity:
   for +index: U32
   {E.type_id(T.Family{index}) == index : U32}

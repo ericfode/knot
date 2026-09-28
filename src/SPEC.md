@@ -139,7 +139,8 @@ algebra with sequential substitution, and a boxed erasure into the existing
 runtime terms. `check-dispatch.bend` routes a book with generic syntax to
 `generics.bend` and every other book to the monomorphic checker. A bare family
 name instantiates only a parameterless family; quantity defaults need an
-explicit `Name<..>`. The default enum emitter still rejects fielded books; the
+explicit `Name<..>`. A type name that resolves to a definition reports
+Unsupported `type-level-definition`, whatever the declaration order. The default enum emitter still rejects fielded books; the
 fields-profile driver compiles generic families. Evidence, boundaries and
 proofs are in [`tests/compiler-generics/`](../tests/compiler-generics/README.md).
 

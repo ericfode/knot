@@ -8,6 +8,13 @@ import ./wasm.bend as W
 import ./type-erasure-LAWS.bend as L
 
 def L.empty_family(token,q,kind,params,generic): {==}
+def L.type_level_definition(fuel,token,name,families,symbols,found):
+  %Equal.sym(Maybe<&2,G.Symbol>,G.named(symbols,token),Some{G.Definition{name}},found) :
+    {G.named_type(_,token,u =>
+      S.bind(G.Named,G.Typed,G.family_named(families,token,0),reference =>
+        G.bare(reference,token,mode => G.resolve(fuel,mode,families,symbols))))
+     == Fail{S.Unsupported{"check","type-level-definition",S.at(token)}} : Result<S.Error,G.Typed>}
+  {==}
 def L.nominal_identity(index): {==}
 def L.application_erases_argument(function,argument): {==}
 def L.parameter_retains_quantity(token,q,typ): {==}

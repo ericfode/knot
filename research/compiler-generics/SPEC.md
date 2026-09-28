@@ -46,7 +46,12 @@ first-live-parameter descent also applies to a monomorphic function in a book
 that has generic syntax elsewhere. Both checkers classify an unbound term name
 that names a datatype as `Unsupported check type-level-term`, and one that
 names a definition, a first-class function value, as `Unsupported check
-def-reference` (law `def_reference`).
+def-reference` (law `def_reference`). The type positions mirror this rule. A
+type scope binds type variables over the book's definitions, so a type name
+that resolves to a definition computes a type. It reports `Unsupported check
+type-level-definition` wherever the definition is declared (law
+`type_level_definition`). A name that resolves to nothing stays `Invalid
+check unknown-type`.
 
 ## Erasure
 

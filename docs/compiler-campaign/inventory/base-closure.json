@@ -7744,7 +7744,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 522,
+          "declarations": 524,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -10762,6 +10762,7 @@
               "String",
               "src/core.internal",
               "src/generic-catalog.Family",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.family_body",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -10804,6 +10805,7 @@
               "U32",
               "src/generic-catalog.Catalog",
               "src/generic-catalog.bodies",
+              "src/generic-catalog.definitions",
               "src/generic-catalog.headers",
               "src/generic-catalog.signatures",
               "src/generic-catalog.unique_families",
@@ -11002,6 +11004,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generic-catalog.definitions",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.catalog",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/generic-catalog.Symbol",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generic-catalog.demand",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.parameter_value",
@@ -11115,6 +11131,7 @@
               "U32",
               "src/core.internal",
               "src/generic-catalog.Family",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.resolve_constructors",
               "src/generic-catalog.symbols",
               "src/syntax.Error",
@@ -11399,6 +11416,7 @@
               "U32.is_ge",
               "src/core.exhausted",
               "src/generic-catalog.Family",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.expression",
               "src/generic-catalog.header_kind",
               "src/generic-catalog.header_parameters",
@@ -11552,6 +11570,7 @@
               "Maybe",
               "String.eq",
               "src/generic-catalog.Symbol",
+              "src/generic-catalog.symbol_name",
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.text"
@@ -11904,6 +11923,7 @@
               "src/core.exhausted",
               "src/generic-catalog.Family",
               "src/generic-catalog.Signature",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.expression",
               "src/generic-catalog.function_parts",
               "src/generic-catalog.parameters",
@@ -11947,7 +11967,7 @@
           {
             "key": "src/generic-catalog.Symbol",
             "file": "src/generic-catalog.bend",
-            "via": "src/generic-catalog.expression",
+            "via": "src/generic-catalog.bodies",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -11955,6 +11975,19 @@
               "U32",
               "src/syntax.Token",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.symbol_name",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.named",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/generic-catalog.Symbol",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -17676,7 +17709,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 522,
+          "declarations": 524,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -20694,6 +20727,7 @@
               "String",
               "src/core.internal",
               "src/generic-catalog.Family",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.family_body",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -20736,6 +20770,7 @@
               "U32",
               "src/generic-catalog.Catalog",
               "src/generic-catalog.bodies",
+              "src/generic-catalog.definitions",
               "src/generic-catalog.headers",
               "src/generic-catalog.signatures",
               "src/generic-catalog.unique_families",
@@ -20934,6 +20969,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generic-catalog.definitions",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.catalog",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/generic-catalog.Symbol",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generic-catalog.demand",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.parameter_value",
@@ -21047,6 +21096,7 @@
               "U32",
               "src/core.internal",
               "src/generic-catalog.Family",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.resolve_constructors",
               "src/generic-catalog.symbols",
               "src/syntax.Error",
@@ -21331,6 +21381,7 @@
               "U32.is_ge",
               "src/core.exhausted",
               "src/generic-catalog.Family",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.expression",
               "src/generic-catalog.header_kind",
               "src/generic-catalog.header_parameters",
@@ -21484,6 +21535,7 @@
               "Maybe",
               "String.eq",
               "src/generic-catalog.Symbol",
+              "src/generic-catalog.symbol_name",
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.text"
@@ -21836,6 +21888,7 @@
               "src/core.exhausted",
               "src/generic-catalog.Family",
               "src/generic-catalog.Signature",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.expression",
               "src/generic-catalog.function_parts",
               "src/generic-catalog.parameters",
@@ -21879,7 +21932,7 @@
           {
             "key": "src/generic-catalog.Symbol",
             "file": "src/generic-catalog.bend",
-            "via": "src/generic-catalog.expression",
+            "via": "src/generic-catalog.bodies",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -21887,6 +21940,19 @@
               "U32",
               "src/syntax.Token",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.symbol_name",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.named",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/generic-catalog.Symbol",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -27608,7 +27674,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 453,
+          "declarations": 455,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -29463,6 +29529,7 @@
             "unsafe": false,
             "dependencies": [
               "src/generic-catalog.bodies",
+              "src/generic-catalog.definitions",
               "src/generic-catalog.headers",
               "src/generic-catalog.signatures",
               "src/generic-catalog.unique_families",
@@ -29566,6 +29633,16 @@
             "key": "src/generic-catalog.defaults",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.application_arguments",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.definitions",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.catalog",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29926,6 +30003,7 @@
             "unsafe": false,
             "dependencies": [
               "String.eq",
+              "src/generic-catalog.symbol_name",
               "src/syntax.choose",
               "src/syntax.text"
             ],
@@ -30166,6 +30244,16 @@
             "key": "src/generic-catalog.source_offset",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.application_arguments",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.symbol_name",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.named",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -33994,7 +34082,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 560,
+          "declarations": 562,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -37082,6 +37170,7 @@
               "Result",
               "src/core.internal",
               "src/generic-catalog.Family",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.family_body",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -37125,6 +37214,7 @@
               "src/generic-catalog.Family",
               "src/generic-catalog.Signature",
               "src/generic-catalog.bodies",
+              "src/generic-catalog.definitions",
               "src/generic-catalog.headers",
               "src/generic-catalog.signatures",
               "src/generic-catalog.unique_families",
@@ -37319,6 +37409,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generic-catalog.definitions",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.catalog",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/generic-catalog.Symbol",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generic-catalog.demand",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.parameter_value",
@@ -37429,6 +37533,7 @@
               "src/core.internal",
               "src/generic-catalog.Constructor",
               "src/generic-catalog.Family",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.resolve_constructors",
               "src/generic-catalog.symbols",
               "src/syntax.Error",
@@ -37703,6 +37808,7 @@
               "src/core.exhausted",
               "src/generic-catalog.Family",
               "src/generic-catalog.Parameter",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.Typed",
               "src/generic-catalog.expression",
               "src/generic-catalog.header_kind",
@@ -37856,6 +37962,7 @@
               "Maybe",
               "String.eq",
               "src/generic-catalog.Symbol",
+              "src/generic-catalog.symbol_name",
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.text"
@@ -38205,6 +38312,7 @@
               "src/generic-catalog.Family",
               "src/generic-catalog.Parameter",
               "src/generic-catalog.Signature",
+              "src/generic-catalog.Symbol",
               "src/generic-catalog.Typed",
               "src/generic-catalog.expression",
               "src/generic-catalog.function_parts",
@@ -38250,7 +38358,7 @@
           {
             "key": "src/generic-catalog.Symbol",
             "file": "src/generic-catalog.bend",
-            "via": "src/generic-catalog.expression",
+            "via": "src/generic-catalog.bodies",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -38258,6 +38366,19 @@
               "U32",
               "src/syntax.Token",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.symbol_name",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.named",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/generic-catalog.Symbol",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },

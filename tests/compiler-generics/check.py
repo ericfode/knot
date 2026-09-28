@@ -44,7 +44,7 @@ try {
 '''
 SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries',
            HERE / 'bare-families', HERE / 'value-arguments', HERE / 'empty-families',
-           HERE / 'def-references')
+           HERE / 'def-references', HERE / 'type-level-names')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
@@ -99,11 +99,16 @@ MUTANTS = (
      'new': 'Fail{error}',
      'witness': 'def-reference-live', 'phase': 'check',
      'actual': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tfree-name\t'}},
+    {'name': 'type-level-definition-unknown', 'file': 'generic-catalog.bend',
+     'old': 'dependent-type",token))\n    case Some{Definition{name}}: C.unsupported(Typed,"type-level-definition",token)',
+     'new': 'dependent-type",token))\n    case Some{Definition{name}}: next(Unit{})',
+     'witness': 'definition-field-later', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tunknown-type\t'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
                 'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid',
-                'def-reference-free'}
+                'def-reference-free', 'type-level-definition-unknown'}
 
 
 def require(condition, detail):

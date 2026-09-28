@@ -5,8 +5,11 @@ import ./types.bend as T
 
 type Parameter is Data:
   Parameter{token: S.Token, quantity: U32, domain: T.Expr}
+# A type scope binds type variables over the book's definitions. A type
+# position that names a definition computes a type: Unsupported.
 type Symbol is Data:
   Symbol{token: S.Token, index: U32, domain: T.Expr}
+  Definition{token: S.Token}
 type Constructor is Data:
   Constructor{token: S.Token, fields: List<&2,Parameter>}
 type Family is Data:
@@ -66,19 +69,23 @@ def demand(+token: S.Token, q: U32, +kind: T.Expr) -> Result<S.Error,Unit>:
   S.choose(Result<S.Error,Unit>,U32.is_eq(q,2),u =>
     S.choose(Result<S.Error,Unit>,fits(kind,data()),u => Done{Unit{}},u => C.invalid(Unit,"reusable-type",token)),u => Done{Unit{}})
 
+def symbol_name(symbol: Symbol) -> S.Token:
+  match symbol:
+    case Symbol{token,index,domain}: token
+    case Definition{token}: token
+
 def named(symbols: List<&2,Symbol>, +token: S.Token) -> Maybe<&2,Symbol>:
   match symbols:
     case Nil{}: None{}
     case Con{+head,+tail}:
-      match head:
-        case Symbol{name,index,domain}:
-          S.choose(Maybe<&2,Symbol>,String.eq(S.text(name),S.text(token)),u => Some{head},u => named(tail,token))
+      S.choose(Maybe<&2,Symbol>,String.eq(S.text(symbol_name(head)),S.text(token)),u => Some{head},u => named(tail,token))
 
 def bound(symbols: List<&2,Symbol>, +index: U32) -> Result<S.Error,T.Expr>:
   match symbols:
     case Nil{}: C.internal(T.Expr,"type-variable")
     case Con{Symbol{token,id,+domain},+tail}:
       S.choose(Result<S.Error,T.Expr>,U32.is_eq(index,id),u => Done{domain},u => bound(tail,index))
+    case Con{Definition{token},tail}: bound(tail,index)
 
 def family_at(families: List<&2,Family>, +index: U32) -> Result<S.Error,Family>:
   match families:
@@ -201,11 +208,13 @@ def named_type(found: Maybe<&2,Symbol>, +token: S.Token, next: Unit -> Result<S.
     case None{}: next(Unit{})
     case Some{Symbol{name,index,+domain}}:
       S.choose(Result<S.Error,Typed>,Bool.or(is_sort(domain),is_quant(domain)),u => Done{Typed{T.Bound{index},domain}},u => C.unsupported(Typed,"dependent-type",token))
+    case Some{Definition{name}}: C.unsupported(Typed,"type-level-definition",token)
 
 def applied_name(found: Maybe<&2,Symbol>, token: S.Token, next: Unit -> Result<S.Error,Typed>) -> Result<S.Error,Typed>:
   match found:
     case None{}: next(Unit{})
-    case Some{symbol}: C.unsupported(Typed,"type-variable-application",token)
+    case Some{Symbol{name,index,domain}}: C.unsupported(Typed,"type-variable-application",token)
+    case Some{Definition{name}}: C.unsupported(Typed,"type-level-definition",token)
 
 def type_argument(+value: Typed, wanted: T.Expr, +token: S.Token) -> Result<S.Error,Typed>:
   match value:
@@ -352,19 +361,19 @@ def header_parameters(nodes: List<&2,S.Node>) -> Result<S.Error,Unit>:
     case Con{S.Parameter{token,q,domain},tail}: C.unsupported(Unit,"generic-value-parameter",token)
     case _: C.internal(Unit,"generic-parameter-node")
 
-def headers(nodes: List<&2,S.Node>, +index: U32, +depth: Nat) -> Result<S.Error,List<&2,Family>>:
+def headers(nodes: List<&2,S.Node>, +scope: List<&2,Symbol>, +index: U32, +depth: Nat) -> Result<S.Error,List<&2,Family>>:
   match nodes:
     case Nil{}: Done{Nil{}}
-    case Con{S.Function{name,params,result,body},tail}: headers(tail,index,depth)
-    case Con{S.TypedFunction{name,params,result,body},tail}: headers(tail,index,depth)
+    case Con{S.Function{name,params,result,body},tail}: headers(tail,scope,index,depth)
+    case Con{S.TypedFunction{name,params,result,body},tail}: headers(tail,scope,index,depth)
     case Con{node,+tail}:
       header_parts(node,+token => +params => +kind => +ctors => +generic =>
         S.choose(Result<S.Error,List<&2,Family>>,U32.is_ge(index,256),u => C.exhausted(List<&2,Family>,token),u =>
           S.bind(Unit,List<&2,Family>,header_parameters(params),u =>
-            S.bind(List<&2,Parameter>,List<&2,Family>,parameters(params,Nil{},Nil{},0,depth),+ps =>
-              S.bind(Typed,List<&2,Family>,expression(depth,kind,Nil{},symbols(ps,0,Nil{})),typed =>
+            S.bind(List<&2,Parameter>,List<&2,Family>,parameters(params,Nil{},scope,0,depth),+ps =>
+              S.bind(Typed,List<&2,Family>,expression(depth,kind,Nil{},symbols(ps,0,scope)),typed =>
                 S.bind(Family,List<&2,Family>,header_kind(typed,token,ps,ctors,generic),family =>
-                  S.bind(List<&2,Family>,List<&2,Family>,headers(tail,U32.add(index,1),depth),rest => Done{Con{family,rest}})))))))
+                  S.bind(List<&2,Family>,List<&2,Family>,headers(tail,scope,U32.add(index,1),depth),rest => Done{Con{family,rest}})))))))
 
 def token_seen(tokens: List<&2,S.Token>, +token: S.Token) -> Bool:
   match tokens:
@@ -416,22 +425,22 @@ def resolve_constructors(nodes: List<&2,S.Node>, +families: List<&2,Family>, +pa
           S.bind(List<&2,Constructor>,List<&2,Constructor>,resolve_constructors(tail,families,parent,env,depth),rest => Done{Con{Constructor{token,ps},rest}})))
     case _: C.internal(List<&2,Constructor>,"generic-constructor-node")
 
-def family_body(family: Family, node: S.Node, families: List<&2,Family>, depth: Nat) -> Result<S.Error,Family>:
+def family_body(family: Family, node: S.Node, families: List<&2,Family>, scope: List<&2,Symbol>, depth: Nat) -> Result<S.Error,Family>:
   match family node:
     case Family{+token,+params,+kind,old,+generic} S.Datatype{name,data,ctors}:
-      S.bind(List<&2,Constructor>,Family,resolve_constructors(ctors,families,kind,symbols(params,0,Nil{}),depth),cs => Done{Family{token,params,kind,cs,generic}})
+      S.bind(List<&2,Constructor>,Family,resolve_constructors(ctors,families,kind,symbols(params,0,scope),depth),cs => Done{Family{token,params,kind,cs,generic}})
     case Family{+token,+params,+kind,old,+generic} S.Generic{name,ps,k,ctors}:
-      S.bind(List<&2,Constructor>,Family,resolve_constructors(ctors,families,kind,symbols(params,0,Nil{}),depth),cs => Done{Family{token,params,kind,cs,generic}})
+      S.bind(List<&2,Constructor>,Family,resolve_constructors(ctors,families,kind,symbols(params,0,scope),depth),cs => Done{Family{token,params,kind,cs,generic}})
     case _ _: C.internal(Family,"generic-family-node")
 
-def bodies(nodes: List<&2,S.Node>, remaining: List<&2,Family>, +families: List<&2,Family>, +depth: Nat) -> Result<S.Error,List<&2,Family>>:
+def bodies(nodes: List<&2,S.Node>, remaining: List<&2,Family>, +families: List<&2,Family>, +scope: List<&2,Symbol>, +depth: Nat) -> Result<S.Error,List<&2,Family>>:
   match nodes remaining:
     case Nil{} Nil{}: Done{Nil{}}
-    case Con{S.Function{name,params,result,body},tail} _: bodies(tail,remaining,families,depth)
-    case Con{S.TypedFunction{name,params,result,body},tail} _: bodies(tail,remaining,families,depth)
+    case Con{S.Function{name,params,result,body},tail} _: bodies(tail,remaining,families,scope,depth)
+    case Con{S.TypedFunction{name,params,result,body},tail} _: bodies(tail,remaining,families,scope,depth)
     case Con{head,+tail} Con{family,+rest}:
-      S.bind(Family,List<&2,Family>,family_body(family,head,families,depth),resolved =>
-        S.bind(List<&2,Family>,List<&2,Family>,bodies(tail,rest,families,depth),more => Done{Con{resolved,more}}))
+      S.bind(Family,List<&2,Family>,family_body(family,head,families,scope,depth),resolved =>
+        S.bind(List<&2,Family>,List<&2,Family>,bodies(tail,rest,families,scope,depth),more => Done{Con{resolved,more}}))
     case _ _: C.internal(List<&2,Family>,"generic-family-alignment")
 
 def function_parts(node: S.Node, next: S.Token -> List<&2,S.Node> -> S.Node -> S.Node -> Result<S.Error,List<&2,Signature>>) -> Result<S.Error,List<&2,Signature>>:
@@ -440,23 +449,33 @@ def function_parts(node: S.Node, next: S.Token -> List<&2,S.Node> -> S.Node -> S
     case S.TypedFunction{token,params,result,body}: next(token,params,result,body)
     case _: C.internal(List<&2,Signature>,"generic-function-node")
 
-def signatures(nodes: List<&2,S.Node>, +families: List<&2,Family>, +index: U32, +depth: Nat) -> Result<S.Error,List<&2,Signature>>:
+def signatures(nodes: List<&2,S.Node>, +families: List<&2,Family>, +scope: List<&2,Symbol>, +index: U32, +depth: Nat) -> Result<S.Error,List<&2,Signature>>:
   match nodes:
     case Nil{}: Done{Nil{}}
-    case Con{S.Datatype{token,kind,ctors},tail}: signatures(tail,families,index,depth)
-    case Con{S.Generic{token,params,kind,ctors},tail}: signatures(tail,families,index,depth)
+    case Con{S.Datatype{token,kind,ctors},tail}: signatures(tail,families,scope,index,depth)
+    case Con{S.Generic{token,params,kind,ctors},tail}: signatures(tail,families,scope,index,depth)
     case Con{node,+tail}:
       function_parts(node,+token => params => +result => +body =>
         S.choose(Result<S.Error,List<&2,Signature>>,U32.is_ge(index,256),u => C.exhausted(List<&2,Signature>,token),u =>
-          S.bind(List<&2,Parameter>,List<&2,Signature>,parameters(params,families,Nil{},0,depth),+ps =>
-            S.bind(Typed,List<&2,Signature>,expression(depth,result,families,symbols(ps,0,Nil{})),typed =>
+          S.bind(List<&2,Parameter>,List<&2,Signature>,parameters(params,families,scope,0,depth),+ps =>
+            S.bind(Typed,List<&2,Signature>,expression(depth,result,families,symbols(ps,0,scope)),typed =>
               S.bind(T.Expr,List<&2,Signature>,result_type(typed,token),domain =>
-                S.bind(List<&2,Signature>,List<&2,Signature>,signatures(tail,families,U32.add(index,1),depth),rest =>
+                S.bind(List<&2,Signature>,List<&2,Signature>,signatures(tail,families,scope,U32.add(index,1),depth),rest =>
                   Done{Con{Signature{token,ps,domain,body},rest}}))))))
 
+def definitions(nodes: List<&2,S.Node>) -> List<&2,Symbol>:
+  match nodes:
+    case Nil{}: Nil{}
+    case Con{S.Function{token,params,result,body},tail}: Con{Definition{token},definitions(tail)}
+    case Con{S.TypedFunction{token,params,result,body},tail}: Con{Definition{token},definitions(tail)}
+    case Con{node,tail}: definitions(tail)
+
+# Function bodies resolve types without the definition scope: a catalog
+# exists only when no signature computes a type (result_type).
 def catalog(+depth: Nat, +nodes: List<&2,S.Node>) -> Result<S.Error,Catalog>:
+  +scope = definitions(nodes)
   S.bind(Unit,Catalog,unique_names(nodes,Nil{}),u =>
-    S.bind(List<&2,Family>,Catalog,headers(nodes,0,depth),+heads =>
+    S.bind(List<&2,Family>,Catalog,headers(nodes,scope,0,depth),+heads =>
       S.bind(Unit,Catalog,unique_families(heads,Nil{}),u =>
-        S.bind(List<&2,Family>,Catalog,bodies(nodes,heads,heads,depth),+families =>
-          S.bind(List<&2,Signature>,Catalog,signatures(nodes,families,0,depth),sigs => Done{Catalog{families,sigs}})))))
+        S.bind(List<&2,Family>,Catalog,bodies(nodes,heads,heads,scope,depth),+families =>
+          S.bind(List<&2,Signature>,Catalog,signatures(nodes,families,scope,0,depth),sigs => Done{Catalog{families,sigs}})))))
