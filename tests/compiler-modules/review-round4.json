@@ -22,7 +22,8 @@
   "findings": [
     "containment",
     "identity",
-    "string"
+    "string",
+    "result"
   ],
   "sources": {
     "rel/w/app/back.bend": "3a5407812fb20ca075dbc2ae121bdda1996746adcd753799621b2a3b0b3a39e6",
@@ -34,6 +35,14 @@
     "rel/w/app/two.bend": "f1d8b8ec6004cc060e125b176c5f415eff9ee9a5c14422c6f1d355d541efc582",
     "rel/w/lib/extra/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
     "rel/w/lib/main.bend": "432853bfff99010846bb81c45af42f1d687d0d6a635d8eb3da486af3c9ade887",
+    "result/arrow.bend": "74e8f151a4a57f9c757ab07bcd8545c97fe82a9b0ad501b3f53e8be88430ee69",
+    "result/equality.bend": "2f11ba768d589071ba3adfb66b5be7e69ea73bb46481a5d7715cc71b3f6e0eb9",
+    "result/io.bend": "fb5f6c5b3909dc3a7c31643e2b3089b8a00e76150d6d3807e8320d88bd871655",
+    "result/missing-colon.bend": "3e2544ea27fb7db242f8e0597d3356498a5e93c351612865d589f5ba5b52f048",
+    "result/missing-type.bend": "687d78f40fa8e083b0dae089296b73ebd2ace73a62dc33c36ef54750cdc80fc5",
+    "result/pair.bend": "04737abd6b4012f875b13bb94a14594476783f103a419ce5343dc7e0285fbdf0",
+    "result/paren.bend": "2f05a47bbbb7a5a5eeb6008673f30793aa75c42a5b8f265f2f19a5a584b7a1ae",
+    "result/spaced-arrow.bend": "c5736bb43caa01ee959cd52c40365da09f3bbee3a8089357755d6fd8ec615d9c",
     "string/base-import.bend": "52bdeebfbb64519d7bc2a21d9d002507c68ed7d663b6e3e68ca1ecad651b3e03",
     "string/comment-quote.bend": "4724864797c876e55a2f65e57c3eba89d17be816d38c1ce1d850940eff38f2c3",
     "string/foreign-import.bend": "df685405906776f8cd205ba7ef973dfc37c69c999d8d25cef2cb082d81212e44",
@@ -528,6 +537,296 @@
         "phase": "parse",
         "code": "import",
         "diagnostic_prefix": "Unsupported\tparse\timport\t"
+      }
+    },
+    {
+      "name": "result-io-application",
+      "finding": "result",
+      "file": "result/io.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "result/io.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/result/io.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "result-type",
+        "diagnostic_prefix": "Unsupported\tparse\tresult-type\t"
+      }
+    },
+    {
+      "name": "result-pair",
+      "finding": "result",
+      "file": "result/pair.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "result/pair.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/result/pair.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "result-type",
+        "diagnostic_prefix": "Unsupported\tparse\tresult-type\t"
+      }
+    },
+    {
+      "name": "result-parenthesized",
+      "finding": "result",
+      "file": "result/paren.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "result/paren.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/result/paren.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "result-type",
+        "diagnostic_prefix": "Unsupported\tparse\tresult-type\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "result-type",
+        "diagnostic_prefix": "Unsupported\tparse\tresult-type\t"
+      }
+    },
+    {
+      "name": "result-arrow",
+      "finding": "result",
+      "file": "result/arrow.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "result/arrow.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/result/arrow.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "result-type",
+        "diagnostic_prefix": "Unsupported\tparse\tresult-type\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "result-type",
+        "diagnostic_prefix": "Unsupported\tparse\tresult-type\t"
+      }
+    },
+    {
+      "name": "result-equality",
+      "finding": "result",
+      "file": "result/equality.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "result/equality.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/result/equality.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "result-type",
+        "diagnostic_prefix": "Unsupported\tparse\tresult-type\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "parse",
+        "code": "result-type",
+        "diagnostic_prefix": "Unsupported\tparse\tresult-type\t"
+      }
+    },
+    {
+      "name": "result-missing-colon",
+      "finding": "result",
+      "file": "result/missing-colon.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "result/missing-colon.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/result/missing-colon.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : 'L'\nLocation:\n5 | def main() -> Light\n6>|   Lit{}\n  |   ^\n7 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "function-result",
+        "diagnostic_prefix": "Invalid\tparse\tfunction-result\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "function-result",
+        "diagnostic_prefix": "Invalid\tparse\tfunction-result\t"
+      }
+    },
+    {
+      "name": "result-missing-type",
+      "finding": "result",
+      "file": "result/missing-type.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "result/missing-type.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/result/missing-type.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n4 | \n5>| def main() ->:\n  |              ^\n6 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "function-result",
+        "diagnostic_prefix": "Invalid\tparse\tfunction-result\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "function-result",
+        "diagnostic_prefix": "Invalid\tparse\tfunction-result\t"
+      }
+    },
+    {
+      "name": "result-spaced-arrow",
+      "finding": "result",
+      "file": "result/spaced-arrow.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "result/spaced-arrow.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round4/result/spaced-arrow.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named main is in scope)\n- observed : '-'\nLocation:\n4 | \n5>| def main() - > Light:\n  |            ^\n6 |   Lit{}\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "function-result",
+        "diagnostic_prefix": "Invalid\tparse\tfunction-result\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "parse",
+        "code": "function-result",
+        "diagnostic_prefix": "Invalid\tparse\tfunction-result\t"
       }
     }
   ]
