@@ -46,6 +46,11 @@ Zero/Succ cases; String literals expand into SNil/SCon cases with Char tests.
 The first applicable leaf supplies the result; all leaves, including redundant
 ones, are checked. Offset fields preserve the existing quantity and strict
 structural-descent rules. Offsets above 256 are Invalid, matching the seed.
+Quantities follow the seed's `match_flatten`:
+- a row that binds a column with `+` promotes that column, and every field
+  opened from it, in all rows;
+- a binder row (`x`, `_`) names its column's unrefined value, so a `+` on a
+  field alone does not let a catch-all use the column twice.
 General nested patterns and `Chr{...}` patterns remain outside this increment.
 Base spells U32 as `U32{data: Word(32n)}`, but an installed U32 is unboxed
 bits, so that constructor reports `Unsupported\tcheck\tu32-constructor` in

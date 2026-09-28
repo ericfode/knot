@@ -23,8 +23,12 @@ regression entry is unchanged (compared entry by entry after each `--write`).
 | `530a5c1` | Freeze: affine-default-scrutinee, -binder, -string (seed-invalid books that `905486e` accepted) |
 | `0da2aae` | Binder rows name their column's unrefined value, as the seed's default continuation does |
 
-The `0da2aae` commit message drops two `+` characters to shell substitution. It
-should read "that column's own `+` marks" and "a field-level `+`".
+Two commit-message errata; history is not rewritten.
+- The `0da2aae` message lost two `+` characters to shell substitution. It
+  should read "that column's own `+` marks" and "a field-level `+`".
+- The `982594f` message gives wrong sweep totals. The correct figures are
+  2236 matrix books (848 replayed, 848 in the second draw, 240 and 300) and
+  200 escape books; the table below is correct.
 
 | Finding | Disposition | Evidence |
 | --- | --- | --- |
