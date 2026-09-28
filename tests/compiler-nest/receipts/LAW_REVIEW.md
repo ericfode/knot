@@ -40,7 +40,7 @@ Commas and spaces separate scrutinees and row patterns.
 ## Proof inventory
 
 The complete `src/matrix-PROOF.bend` imports the earlier proof chain and fills
-every matrix law (21 in round 2, 24 in round 3, 31 after round 4), with no added axiom, unsafe
+every matrix law (21 in round 2, 24 in round 3, 31 after round 4, 34 after round 7), with no added axiom, unsafe
 declaration or proof hole.
 `src/PROOF.bend` additionally fills the comma-scrutinee parser law.
 
@@ -51,7 +51,7 @@ declaration or proof hole.
 | `irrefutable_specialization`, `irrefutable_default`, `first_row_selected` | Arbitrary relevant inputs; preservation at one step and at a zero-column leaf | No induction over a complete lowering |
 | `remainder_omits_split`, `remainder_keeps_other` | Arbitrary tag lists, given the split-constructor comparison; replaced the dead default-signature laws in round 4 | One step of the live remainder; coverage follows by induction but is not stated |
 | `remainder_drops_split_rows`, `irrefutable_remainder` | Arbitrary rows, given the comparison; any variable-headed row | One step of the negative matrix |
-| Alias erasure and identity | Arbitrary names and known terms, inhabited Flag scopes | Scope/quantity helpers |
+| Alias erasure and identity | Arbitrary names and known terms, inhabited Flag scopes; round 7 adds parameter promotion and let quantity under every row mark | Scope/quantity helpers |
 | `anonymous_reference_is_free` | Every scope and source location | Source lookup only |
 | `default_reference_stays_live`, `empty_reference_stays_live` | Every token, level, type, quantity and liveness | Residual markers preserve ordinary occurrence rules |
 | `live_empty_is_dead`, `erased_empty_is_not_dead` | Arbitrary names, explicit live/erased empty bindings | Inhabited context witnesses |
@@ -252,3 +252,38 @@ inventory (`src/SPEC.md`, *Trust inventory: open proof obligations*, and
 |---|---|
 | Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds; witnessed by `irrefutable_lowering_witness`, `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz. Its partial-correctness part is proved in round 5 (`irrefutable_first_row_selected`: every successful lowering selects the body at every leaf); this entry does not restate that proof as the total law |
 | Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch | Unproved general law; witnessed by `exhaustive_matrix_witness`, the remainder helper laws (`remainder_omits_split`, `remainder_keeps_other`, `remainder_drops_split_rows`, `irrefutable_remainder`), the `multi-*`, `nested-*`, `rec-*-nested` and `empty-*` fixtures, and the 3,000-program seed fuzz. Round 5 records the typing obstacle to its proof |
+
+## Round 7
+
+The round-7 review confirmed an unsound acceptance, a regression from main
+at `eb15da8`: a `+` row on an alias of an affine let binder made the let
+reusable. `k = a; match k: case +y: both(y, y)` checked with the quantity-1
+let used twice, where the seed reports `k (consumed more than once)`.
+
+No earlier law pinned a let binder's quantity: `erased_alias_stays_erased` and
+`alias_preserves_descent_and_identity` both state parameter bindings
+(`param = True`). The round therefore adds two laws rather than restating
+one. `alias_bound` is the single quantity site that the column promotion and
+the row binder both reach; it passes a `+` row's mark only to a lambda-case
+binder (a parameter or field, and every alias of its level).
+
+| Law | Quantification and evidence | Limit |
+|---|---|---|
+| `let_alias_keeps_quantity` | Every row mark and every known term, arbitrary names: aliasing an affine let at its level leaves the let and the alias affine | One inhabited Flag scope with the let at level 0; quantity 1, the only one a mark could raise |
+| `parameter_alias_promotes` | Arbitrary names: a `+` row (mark 2) raises an affine parameter and its alias to 2 | One inhabited Flag scope; guards the over-correction that the let law alone would admit |
+
+Falsification (`round7-falsification.txt`):
+
+- Reverting the gate (`+mark = row`) and passing the row mark to lets
+  (`promote-let-alias`) both falsify `let_alias_keeps_quantity`.
+- Withholding the mark from parameters (`never-promote`) falsifies
+  `parameter_alias_promotes`.
+- Promoting every variable column at the promote site leaves both laws true,
+  since `M.alias` is unchanged. It stops only at `lowering-PROOF`'s
+  `aliased_variable`, whose proof mirrors `alias_column`.
+
+`nest-round7` kills `promote-let-alias`, `promote-every-variable-column` and
+`never-promote` on the 35 frozen fixtures, in both lanes. The reviewer's
+let/alias generator (`letalias.py`, random seeds 0 to 1,499) reports 63 false
+acceptances against `384acc6`, the reviewer's flagged set exactly, and none
+after the repair.

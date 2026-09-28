@@ -1166,3 +1166,29 @@ Prevention:
 - Give each layout-sensitive token pair a spaced, commented and line-broken
   fuzz atom, and disposition every probe observation in the round's report,
   including observations outside the round's finding.
+
+## 2026-09-28 — nest review round 7: a `+` row made an affine let reusable
+
+Confirmed:
+- A `+` row on an alias of an affine let binder raised the let to reusable, so
+  `k = a; match k: case +y: both(y, y)` checked and ran where the seed reports
+  `consumed more than once`. `eb15da8` admitted the latest let as a
+  variable-only column, and that path reached a quantity rule written for
+  parameters. The same promotion also turned a `+` row on a let of a
+  `Type`-kind value into a false `Invalid check reusable-type`.
+
+See the [round-7 dispositions](../tests/compiler-nest/receipts/REVIEW-7.md).
+`alias_bound`, the quantity site both promotion paths reach, now passes a row's
+mark only to a lambda-case binder; `let_alias_keeps_quantity` and
+`parameter_alias_promotes` state the rule from both sides.
+
+Prevention:
+- When a change admits a new binder kind to an existing rule (here a let
+  binder to the variable-column alias path), state a law for that kind at the
+  rule's quantity or identity site in the same commit, with a companion law
+  for the old kind so an over-correction also fails.
+- Give each new binder kind a small seeded generator over its quantity and
+  row marks (the reviewer's let/alias generator found 63 programs in 1,500)
+  and run it against the parent commit to confirm it bites.
+- Freeze a `Type`-kind companion for every quantity rule: the reusable-kind
+  check is a second observable of the same promotion.
