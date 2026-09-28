@@ -28,11 +28,14 @@ law generic_header:
   {P.run(1n,P.Header{S.Token{"type",at},S.Token{"Box",at}},Con{S.Token{"<",at},rest})
     == Fail{S.Unsupported{"parse","generic-datatype",at}} : Result<S.Error,P.Parsed>}
 
+# Two scrutinees form one ordered column sequence; an empty arm list is parsed.
 law multiple_scrutinees:
   for +at: S.At
-  for +rest: List<&2,S.Token>
-  {P.run(1n,P.MatchTail{S.Token{"match",at},S.Variable{S.Token{"a",at}},0},Con{S.Token{"b",at},rest})
-    == Fail{S.Unsupported{"parse","match-scrutinees",at}} : Result<S.Error,P.Parsed>}
+  {P.run(4n,P.MatchTail{S.Token{"match",at},S.Variable{S.Token{"a",at}},0},
+      [S.Token{"b",at},S.Token{":",at},S.Token{"<eof>",at}])
+    == Done{P.Parsed{S.Match{S.Token{"match",at},
+      S.Sequence{[S.Variable{S.Token{"a",at}},S.Variable{S.Token{"b",at}}]},Nil{}},
+      [S.Token{"<eof>",at}]}} : Result<S.Error,P.Parsed>}
 
 law template_binder:
   for +at: S.At

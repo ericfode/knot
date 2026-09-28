@@ -5,7 +5,8 @@ Profile `knot-structural-terms-1`, seed Bend 2.0.29 at
 and preserves the `knot-enum-1` source-to-Wasm subprofile.
 
 Extend the existing monomorphic catalog with constructor arguments and flat
-constructor patterns whose fields are plain or `+` binders. Every argument is
+constructor patterns whose fields are plain or `+` binders, including ordered
+multi-scrutinee matches. Every argument is
 checked against its field's type and demand; erased arguments are checked but
 not executed. Constructor expressions still require an expected type. Nested
 constructor patterns and recursion remain explicit later capabilities.

@@ -20,7 +20,7 @@ def L.no_parser_budget(tokens):
 def L.generic_header(at,rest):
   {==}
 
-def L.multiple_scrutinees(at,rest):
+def L.multiple_scrutinees(at):
   {==}
 
 def L.template_binder(at,rest):
