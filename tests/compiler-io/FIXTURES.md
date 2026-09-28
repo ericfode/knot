@@ -106,9 +106,12 @@ every record conforms.
 Unicode scalar value. The seed's two lanes disagree beyond that. In the JS lane,
 the lane these records come from, printing `"\u{d800}"` exits 1 with
 `bend: 55296 is not a Unicode scalar value` after the earlier output. The native
-lane's source instead encodes such Chars as generalized UTF-8. The
-precondition is safe for self-hosting: Knot's diagnostics are ASCII, and
-`File.read` produces only scalar values.
+lane's source instead encodes such Chars as generalized UTF-8. Knot meets the
+precondition today. Its lexer admits only ASCII source, `checked-display.bend`
+prints identifier lexemes and numeric ids, and `File.read` produces only scalar
+values. The literals suite admits escaped non-scalar Chars such as
+`"\u{d83d}\u{de00}"`. Any later display of such a literal must print its escape
+text. Otherwise this precondition becomes an open fixture question.
 
 ## Coverage
 
