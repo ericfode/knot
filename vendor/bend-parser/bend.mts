@@ -332,7 +332,7 @@ export type Body  = Match | Local | LTerm
 
 // Parser
 export type ParseObserver = {
-  declaration?: (kind: string, name: Name, beg: number, end: number, term?: Body, tele?: LTerm[]) => void;
+  declaration?: (kind: string, name: Name, beg: number, end: number, term?: Body, tele?: LTerm[], bodyBeg?: number) => void;
   call?: (term: LTerm, beg: number, end: number) => void;
   externalLaw?: (name: Name, resolved: Name, beg: number, end: number) => Def | undefined;
   externalConstructor?: (name: Name, fields: number) => Ctr | null;
@@ -2302,6 +2302,7 @@ export function parse_def(p: Parse, u: Bool): void {
   }
   def.u ||= un;
   parse_eat(p, ":");
+  const bodyBeg = p.pos; // Knot: exclusive signature end, before body trivia.
   if (parse_at_word(p, "import")) {
     if (def.x > 0 && Number.isFinite(def.x)) {
       parse_fail(p, "a body (a template is not foreign)");
@@ -2323,11 +2324,11 @@ export function parse_def(p: Parse, u: Bool): void {
     const vars = tele.map((cell): PVar => ({ $: "PVar", k: cell[1], i: cell[2], q: Lone(), s: cell[4] }));
     const body = parse_body(p);
     p.observer?.declaration?.(law ? "law_fill" : "definition", nm, p.declBeg ?? 0,
-      p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, body, signature ? [signature] : tele.map((cell) => cell[3]));
+      p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, body, signature ? [signature] : tele.map((cell) => cell[3]), bodyBeg);
     def.v = term_higher(term_lower(term_higher(body_flatten(body, vars, () => p.frs++))));
   }
   if (def.i) p.observer?.declaration?.("foreign_definition", nm, p.declBeg ?? 0,
-    p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, undefined, signature ? [signature] : tele.map((cell) => cell[3]));
+    p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, undefined, signature ? [signature] : tele.map((cell) => cell[3]), bodyBeg);
   book.order.push(k);
 }
 

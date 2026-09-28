@@ -31,6 +31,19 @@ evaluator and compiler in both lanes (72 observations); all 24 compiler failures
 must preserve an existing output file. This checks rejection, not execution of
 the unsupported forms.
 
+The classify-2 increment appends 17 seed-verified controls without changing those
+12 expectations. They cover non-leading template binders (ordinary, erased and
+reusable), leading templates, `==`/`=>` after constructors, and generic type
+applications in parameter, return and local annotation positions before the
+generic datatype header. Each family includes malformed-after-prefix controls.
+The expanded gate checks 29 classifications in two parser lanes and 174
+downstream observations, including 58 preserved compiler outputs. The complete
+frontend proof entry has 16 filled laws: four boundary laws and twelve
+classification laws. The gate's older printed law count is historical; the
+complete proof entry is authoritative. The separate
+[precision gate](../compiler-classification/README.md) checks full frozen seed
+outputs and six more type-correct semantic mutants.
+
 Receipts distinguish universal boundary proofs, finite observations and runtime
 checks. None proves general parser correctness or checker soundness. The host
 harness orchestrates commands and compares observations; all lexing, parsing

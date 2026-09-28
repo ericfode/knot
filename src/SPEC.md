@@ -82,18 +82,29 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | --- | --- | --- |
 | `type Name<...` generic datatype header | `parse` | `generic-datatype` |
 | `match a b...` with a second named scrutinee | `parse` | `match-scrutinees` |
-| `~name:` in a function parameter list | `parse` | `template-binder` |
-| Parsed constructor pattern followed by `=` in a body | `parse` | `destructuring-binding` |
+| Leading `~name:` in a function parameter list | `parse` | `template-binder` |
+| Parsed constructor pattern followed by `=` (next token neither `=` nor `>`) in a body | `parse` | `destructuring-binding` |
+| `Name<...` in a parameter type | `parse` | `parameter-type` |
+| `Name<...` in a return type or local binding annotation | `parse` | `type-application` |
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
 
 Recognition stops at that prefix; it neither validates the suffix nor loads a
 module. Malformed supported syntax still reports `Invalid`. The reviewed
-[classification fixtures](../tests/subsets/classification-cases.json) pair six
-seed-accepted programs (local and hash imports separately) with six nearby
-syntax errors, fixing complete diagnostics including locations. The hash
+[classification fixtures](../tests/subsets/classification-cases.json) retain six
+seed-accepted programs (local and hash imports separately) and six nearby
+syntax errors, and add 17 precision controls with fixed seed commands and outputs,
+including malformed suffixes after recognized prefixes. All 29 cases fix complete
+Knot diagnostics including locations. The hash
 fixture uses a frozen local cache; it does not claim a published package.
-Six checked prefix laws quantify over source locations and unconsumed suffixes;
-they are classification laws, not a parser soundness theorem or feature support.
+Twelve checked classification laws quantify over source locations and unconsumed
+suffixes; they are classification laws, not a parser soundness theorem or feature
+support. The destructuring law excludes `==` and `=>`; both report
+`Invalid parse end-of-body`. A `~` after an ordinary binder reports
+`Invalid parse parameter`. An initial template binder stops recognition, so its
+later binders and body are not validated. Generic parameter types retain the
+existing `parameter-type` code, which also covers other unsupported parameter
+type forms. Return types and binding annotations use `type-application` at `<`.
+These applications are recognized even before their generic datatype declaration.
 
 The parser and catalog now have a separate
 [structural declaration checkpoint](../research/compiler-structural/SPEC.md).

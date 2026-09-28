@@ -2,8 +2,9 @@
 // referenced local Bend imports are read, always from the current working tree.
 import { createHash } from 'node:crypto';
 import { readFile, realpath } from 'node:fs/promises';
-import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
+import { dirname, isAbsolute, posix, relative, resolve, sep } from 'node:path';
 import { analyzeBendSource } from './perch-bend.mjs';
+import { INTERFACE_CONTEXT, createPackageStore, createInterfaceReview } from './perch-context-interfaces.mjs';
 
 const hash = source => createHash('sha256').update(source).digest('hex');
 const identifier = (path, declaration) => `${path}::${declaration.qualified_name}`;
@@ -13,17 +14,64 @@ const within = (root, path) => {
   return rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel);
 };
 
+// The parser validates spelling. Classification must also recognize bare local
+// paths and every syntactically valid hash length before applying store policy.
+export const bendImportKind = module => module === 'Base' ? 'builtin'
+  : /^0x[0-9a-f]+\//.test(module) ? 'package'
+  : module.includes('@') ? 'named'
+  : isAbsolute(module) ? 'absolute' : 'local';
+
 /** Explicit files only; each real source is read and parsed once for this command. */
-export async function createBendSourceSnapshot(root) {
+export async function createBendSourceSnapshot(root, { contextPolicy = null, packageStore = null } = {}) {
+  if (contextPolicy !== null && contextPolicy !== INTERFACE_CONTEXT) throw new Error('Unknown Bend context policy');
   const realRoot = await realpath(root), paths = new Map(), sources = new Map();
+  const store = contextPolicy === INTERFACE_CONTEXT ? await createPackageStore(realRoot, packageStore) : null;
+  const packages = new Map();
   let parseCalls = 0;
   const outside = () => Object.assign(new Error('Bend source is outside this workspace'), {
     code: 'BEND_OUTSIDE_WORKSPACE', bend_snapshot_io: true,
   });
   return {
     root: realRoot,
+    contextPolicy,
     get stats() { return { requested_paths: paths.size, parse_calls: parseCalls }; },
+    async readCurrent(path) {
+      return packages.has(path) ? store.readCurrent(path) : readFile(resolve(realRoot, path));
+    },
+    async resolveImport(from, module) {
+      const kind = bendImportKind(module);
+      if (kind === 'package' && store) {
+        const found = await store.resolve(module);
+        if (found.reason) return found;
+        for (const member of found.members.values()) packages.set(member.path, { ...member,
+          package_hash: found.package_hash, package_provenance: found.provenance, members: found.members });
+        return { path: found.path };
+      }
+      if (kind !== 'local' || !store && !module.startsWith('./') && !module.startsWith('../')) return { reason: 'nonlocal-import' };
+      const owner = packages.get(from);
+      if (owner) {
+        const path = posix.normalize(posix.join(posix.dirname(from), module));
+        const member = [...owner.members.values()].find(m => m.path === path);
+        return member && path.endsWith('.bend') ? { path } : { reason: 'package-member-not-found' };
+      }
+      const absolute = resolve(realRoot, dirname(from), module);
+      if (!within(realRoot, absolute) || !absolute.endsWith('.bend')) return { reason: 'outside-workspace' };
+      try {
+        const actual = await realpath(absolute);
+        return within(realRoot, actual) ? { path: relative(realRoot, actual).split(sep).join('/') } : { reason: 'outside-workspace' };
+      } catch (e) { return { reason: `unavailable-local-import:${e.code ?? 'read-error'}` }; }
+    },
     async load(path) {
+      if (packages.has(path)) {
+        if (!paths.has(path)) paths.set(path, (async () => {
+          const member = packages.get(path);
+          parseCalls++;
+          const analysis = await analyzeBendSource(member.source);
+          return Object.freeze({ source: member.source, source_sha256: member.source_sha256, analysis,
+            package_hash: member.package_hash, package_provenance: member.package_provenance });
+        })());
+        return paths.get(path);
+      }
       const absolute = resolve(realRoot, path);
       if (!within(realRoot, absolute)) throw outside();
       if (!paths.has(absolute)) paths.set(absolute, (async () => {
@@ -59,6 +107,7 @@ export function bendDeclarationSource(source, declaration, location = declaratio
 
 /** One immutable working-tree source snapshot per file-check invocation. */
 export async function createBendReview({ root, path, source, analysis, limits = {}, snapshot = null }) {
+  if (snapshot?.contextPolicy === INTERFACE_CONTEXT) return createInterfaceReview({ root, path, source, analysis, limits, snapshot });
   const bounds = { helpers: 48, files: 12, bytes: 48_000, callers: 4, ...limits };
   const realRoot = await realpath(root);
   if (snapshot && snapshot.root !== realRoot) throw new Error('Bend source snapshot belongs to another workspace');

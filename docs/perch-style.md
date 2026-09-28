@@ -154,13 +154,94 @@ mechanism's full local import closure; a test checks coverage of every current
 `src/*.bend` file and every local import, including earlier proof entries.
 
 Every selected group gets the same declaration review and composition targets
-as explicit file targets. Only composition source ordering changes: listed files
-come first in their stated order, followed by known collaborator files in lexical
-order. Context bounds, closure checks and all rubric targets remain unchanged.
-The tool does not infer additional transitive collaborators beyond the existing
-bounded context; include missing local files in the manifest. Nonlocal imports
-remain explicit context gaps. Shared declarations are obligations in each group,
-with that group's contract; the run's unit count includes those repetitions.
+as explicit file targets. Without a context policy, listed files come first in
+their stated order, followed by known complete collaborators in lexical order.
+This legacy policy preserves historical requests and their fixed controls.
+Shared declarations are obligations in each selecting group with that group's
+contract; the unit count includes those repetitions.
+
+#### Interface context rule (`interfaces-v1`)
+
+The compiler manifest sets top-level `"context": "interfaces-v1"`. This changes
+context assembly, **not rubric v8 or any target**. In this policy, `files` is
+the closed local dependency inventory. An optional group `selected_files`
+lists the whole sources reviewed in full, in reading order; absent means all
+`files`. It must be a nonempty, distinct subset of `files`. Every inventory
+file must be selected in full in at least one manifest group. Runtime validation
+and the compiler-manifest controls retain total source coverage and each
+group's local import closure. A group filter cannot establish full coverage.
+
+The seven oversized or downstream families now select their own mechanism
+explicitly; their previous inventories remain intact. Earlier proof entries
+and other collaborators are interfaces unless selected. Each selected source
+appears byte-for-byte in full. Other files enter in lexical order with their
+full-file SHA-256, import aliases, complete datatype declarations, and referenced
+`def`/`law` signatures. Signature references are closed transitively. Law
+statements are types/contracts; proof fills contribute heads without proof
+bodies, with their matching law statement resolved separately. An unused proof
+entry retains its imports and hash even when none of its heads is required.
+Every omitted implementation is marked `interface-only` / `body omitted`.
+The judge must not infer implementations or proof execution from these heads.
+The legacy composition instruction, including its prohibition on inferring a
+potential verdict, previous scores or missing implementation, is retained
+verbatim before this interface warning. Definition heads end at the offset
+reported by the parser after consuming the body colon, not a separate lexer.
+
+Composition bytes count the UTF-8 text actually supplied: all complete selected
+sources plus interface text, including its markers and hashes. The bound stays
+**48,000 bytes**. Equal fits; larger is unavailable with
+`composition_byte_limit`, and no selected source is shortened. Metadata and
+the task are not source bytes. Declaration states also retain the independent
+60,000-byte encoded-state bound, including task and metadata.
+
+Datatype contexts follow referenced datatypes through the transitive import
+closure, with cycle detection and the existing source-byte budget. File-count
+and helper-count limits do not cut this type closure. Declaration contexts keep
+up to 48 helper bodies and four caller bodies. Overflow uses marked signatures;
+their type dependencies are still followed. Byte pressure or encoded-state
+pressure may also replace a helper/caller body by a signature. Receipts classify
+these as `context-helper-interface`, `context-caller-interface`,
+`context-byte-interface` or `context-state-interface`, separately from missing
+context. Required text that cannot fit retains `context-byte-limit` and a
+truncation marker; qualification is withheld as before.
+
+Hash imports resolve **offline** from the repository's `packages/`, followed by
+`--package-store=DIR` if supplied, otherwise `BEND_LIB` if set, otherwise
+`~/.bend/lib`, matching the seed's default. A store may contain hash-named directories with
+complete package members, or package directories whose `RELEASE.json` has a
+`closure` inventory of paths and SHA-256 digests. The resolver hashes actual
+member bytes, sorts `sha256(file) path\n` by path, hashes the concatenation and
+requires the first 32 hex digits to match the imported identity. All members,
+including unused ones and licenses, are verified. Traversal, symlinks, duplicate
+members, environment-file members and imports outside verified membership are
+rejected. Failure reasons remain unresolved; no network or package installation
+is performed. Every verified member participates in freshness checks. Release
+metadata locates a candidate; verified member bytes establish its identity.
+Headers, representations, file lists, provenance and all request hashes use
+`0x<hash>/<member>`. Filesystem locations stay inside the local snapshot reader;
+moving the store or checkout does not change review bytes or request identity.
+Bare relative imports participate in local manifest closure. Other hash lengths
+remain explicit `unsupported-package-identity`, and named/absolute imports
+remain unresolved.
+
+The current repository OutputBuilder source has advanced past its publication.
+Its `bytes.bend` correctly fails the published digest. The default installed
+store supplies the unmodified local release only after verification:
+
+```sh
+BEND_NO_TELEMETRY=1 node scripts/perch-style.mjs --preflight \
+  --manifest=docs/compiler-campaign/manifest.json \
+  --output=.local/compiler-context.json.gz
+# Same context policy on a bounded explicit target:
+BEND_NO_TELEMETRY=1 node scripts/perch-style.mjs --preflight \
+  --context=interfaces-v1 src/core.bend
+```
+
+Without any verified candidate the published dependency stays unresolved; the resolver
+does not reinterpret current package source as the old release. Other style
+invocations keep legacy assembly unless `--context=interfaces-v1` is explicit.
+The [context contract and controls](../tests/perch-context/CONTRACT.md) qualify
+assembly only. Live ratings and semantic acceptance remain separate.
 
 All selected groups prepare against one source snapshot before the first
 provider request. Live groups run in manifest order, retaining `--jobs` concurrency
@@ -181,8 +262,8 @@ structural blockers, never a rating. Exit 1 denotes a failed/incomplete live run
 or invalid invocation; live exit 3 denotes attention; live exit 0 means the
 selected style obligations met their targets, still advisory to semantic gates.
 
-The [compiler baseline](compiler-campaign/perch-baseline.md) records the current
-48 KB, datatype-context and published-import blockers. It is not a Perch pass.
+The [compiler baseline](compiler-campaign/perch-baseline.md) retains the original
+blockers and the new offline before/after receipt. It is not a Perch pass.
 
 `lint:rank` remains an alias. `--task=SPEC.md` supplies a fixed task contract;
 `--cohort='purpose or contract'` is an inline alternative. Without either, ordinary
@@ -216,7 +297,8 @@ Function/law context uses the same pinned Bend parser and bounded working-copy
 helpers as normal Perch checks. Parsed datatype references resolve locally and
 through explicit relative imports, including aliases, generic type arguments and
 transitive referenced types, within the existing helper/file/byte limits.
-Direct datatype targets retain their one-file, four-caller and 48 KB limits:
+Under the legacy policy, direct datatype targets retain their one-file,
+four-caller and 48 KB limits:
 sibling datatypes and same-file users are included, while required external
 dependencies report an explicit file-cap failure. Explicit composition groups
 check datatype dependencies against their selected files within the existing
@@ -389,8 +471,9 @@ pass or become a claim that Galaxy brain was achieved. This intentionally
 permissive default follows the user's preference to under-constrain the ambition.
 
 When relevant, **Galaxy-brain level 5** is added to the three composition
-requirements. The composition judgment uses complete selected files and known collaborator files
-within a 48 KB bound. It is not an average or maximum of helper ratings. Missing
+requirements. The composition judgment uses complete selected files and the
+collaborator representation specified by its context policy within a 48 KB
+source bound. It is not an average or maximum of helper ratings. Missing
 imports, unknown required context, parse failures or the size cap leave the
 composition requirement unavailable. Source hashes and actual scope remain in
 the receipt; this is not a claim to have reviewed an unseen whole project.

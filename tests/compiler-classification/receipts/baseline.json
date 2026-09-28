@@ -1,0 +1,179 @@
+{
+  "status": "baseline-defects",
+  "source_commit": "fa31fec064ba0993ed31205fd4b4fdc00df5d761",
+  "parser_sha256": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+  "expectations_sha256": "bcdd834433989baf93038cfa53026aea5ece5975b1bf8d4bfa39864e3270622c",
+  "fixtures": [
+    {
+      "file": "classification/template-nonleading.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\ttemplate-binder\t57:58:5:22\n",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t57:58:5:22"
+      }
+    },
+    {
+      "file": "classification/template-nonleading-malformed.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\ttemplate-binder\t57:58:5:22\n",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t57:58:5:22"
+      }
+    },
+    {
+      "file": "classification/template-nonleading-erased.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\ttemplate-binder\t58:59:5:23\n",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t58:59:5:23"
+      }
+    },
+    {
+      "file": "classification/template-nonleading-reusable.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\ttemplate-binder\t58:59:5:23\n",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t58:59:5:23"
+      }
+    },
+    {
+      "file": "classification/template-leading-pair.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttemplate-binder\t48:49:5:13"
+      }
+    },
+    {
+      "file": "classification/template-after-prefix.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttemplate-binder\t48:49:5:13"
+      }
+    },
+    {
+      "file": "classification/destructure-equality.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-arrow.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-equality-malformed.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-arrow-malformed.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-after-prefix.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/application-parameter.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tparameter-type\t52:53:5:17\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t52:53:5:17"
+      }
+    },
+    {
+      "file": "classification/application-return.bend",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\tfunction-result\t46:47:5:11\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttype-application\t53:54:5:18"
+      }
+    },
+    {
+      "file": "classification/application-binding.bend",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\texpected-=\t65:66:6:10\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttype-application\t65:66:6:10"
+      }
+    },
+    {
+      "file": "classification/application-parameter-after-prefix.bend",
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tparameter-type\t52:53:5:17\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t52:53:5:17"
+      }
+    },
+    {
+      "file": "classification/application-return-after-prefix.bend",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\tfunction-result\t46:47:5:11\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttype-application\t53:54:5:18"
+      }
+    },
+    {
+      "file": "classification/application-binding-after-prefix.bend",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\texpected-=\t65:66:6:10\n",
+      "expected": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttype-application\t65:66:6:10"
+      }
+    }
+  ],
+  "mismatches": 12
+}
