@@ -399,7 +399,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 87,
+          "declarations": 89,
           "base": 39,
           "base_intrinsics": 9,
           "foreign": 0
@@ -798,6 +798,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -1023,6 +1038,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.result_type",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -1047,12 +1084,14 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
+              "src/parse.result_type",
               "src/parse.scrutinee",
               "src/parse.starts",
               "src/parse.template_parameter",
@@ -1818,7 +1857,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 87,
+          "declarations": 89,
           "base": 39,
           "base_intrinsics": 8,
           "foreign": 0
@@ -2217,6 +2256,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -2442,6 +2496,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.result_type",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -2466,12 +2542,14 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
+              "src/parse.result_type",
               "src/parse.scrutinee",
               "src/parse.starts",
               "src/parse.template_parameter",
@@ -3237,7 +3315,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 67,
+          "declarations": 69,
           "base": 27,
           "base_intrinsics": 9,
           "foreign": 0
@@ -3441,6 +3519,18 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -3573,6 +3663,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.result_type",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "src/parse.invalid",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -3588,12 +3694,14 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
+              "src/parse.result_type",
               "src/parse.scrutinee",
               "src/parse.starts",
               "src/parse.template_parameter",
@@ -4117,7 +4225,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 101,
+          "declarations": 103,
           "base": 53,
           "base_intrinsics": 9,
           "foreign": 0
@@ -4590,6 +4698,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -4808,6 +4931,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.result_type",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "Result",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -4831,12 +4975,14 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
+              "src/parse.result_type",
               "src/parse.scrutinee",
               "src/parse.starts",
               "src/parse.template_parameter",
@@ -5730,7 +5876,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 573,
+          "declarations": 581,
           "base": 93,
           "base_intrinsics": 27,
           "foreign": 7
@@ -5995,7 +6141,7 @@
           {
             "key": "Bool.or",
             "file": "Base",
-            "via": "src/parse.run",
+            "via": "src/load.named",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -6356,7 +6502,7 @@
           {
             "key": "List.reverse",
             "file": "Base",
-            "via": "src/load.finish",
+            "via": "src/imports.segments",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9520,7 +9666,7 @@
               "Unit",
               "src/compile-cli.Options",
               "src/compile-cli.compile",
-              "src/driver.bundle",
+              "src/driver.bundle_to",
               "src/driver.fail",
               "src/syntax.Error",
               "src/syntax.choose"
@@ -9884,7 +10030,7 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/driver.bundle",
+            "key": "src/driver.bundle_to",
             "file": "src/driver.bend",
             "via": "src/compile-cli.module_configured",
             "kind": "Def",
@@ -9897,6 +10043,7 @@
               "src/core.Book",
               "src/driver.Limits",
               "src/driver.loaded",
+              "src/load.guarded",
               "src/load.load"
             ],
             "dynamic_calls": []
@@ -9993,7 +10140,7 @@
           {
             "key": "src/driver.loaded",
             "file": "src/driver.bend",
-            "via": "src/driver.bundle",
+            "via": "src/driver.bundle_to",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10207,10 +10354,30 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.or",
               "String",
               "String.append",
               "String.ends_with",
+              "String.is_empty",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.climbs",
+            "file": "src/imports.bend",
+            "via": "src/load.written",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char",
+              "String",
+              "String.eq",
+              "U32",
+              "src/imports.first",
+              "src/imports.split"
             ],
             "dynamic_calls": []
           },
@@ -10249,7 +10416,7 @@
           {
             "key": "src/imports.first",
             "file": "src/imports.bend",
-            "via": "src/imports.hashed",
+            "via": "src/imports.climbs",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10358,11 +10525,13 @@
               "Bool",
               "Bool.and",
               "Bool.not",
+              "Bool.or",
               "List",
               "List.is_empty",
               "List.reverse",
               "Result",
               "String",
+              "String.contains",
               "String.eq",
               "U32",
               "U32.add",
@@ -10507,7 +10676,7 @@
           {
             "key": "src/imports.normalize",
             "file": "src/imports.bend",
-            "via": "src/load.start",
+            "via": "src/load.written",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10707,6 +10876,7 @@
               "U32",
               "src/imports.Target",
               "src/imports.bundle_prefix",
+              "src/imports.climbs",
               "src/imports.directory",
               "src/imports.hashed",
               "src/imports.join",
@@ -10714,6 +10884,26 @@
               "src/imports.without_suffix",
               "src/syntax.At",
               "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.same_file",
+            "file": "src/imports.bend",
+            "via": "src/load.named",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Bool.xor",
+              "String",
+              "String.append",
+              "String.ends_with",
+              "String.eq",
+              "String.starts_with",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -10740,7 +10930,7 @@
           {
             "key": "src/imports.split",
             "file": "src/imports.bend",
-            "via": "src/imports.normalize",
+            "via": "src/imports.climbs",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11087,7 +11277,7 @@
           {
             "key": "src/load.base_path",
             "file": "src/load.bend",
-            "via": "src/load.plan",
+            "via": "src/load.written",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11141,6 +11331,21 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/load.canonical_output",
+            "file": "src/load.bend",
+            "via": "src/load.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "Unit",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },
@@ -11265,6 +11470,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.guarded",
+            "file": "src/load.bend",
+            "via": "src/driver.bundle_to",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "IO",
+              "Result",
+              "String",
+              "Unit",
+              "src/load.Receipt",
+              "src/load.canonical_output",
+              "src/load.written",
+              "src/path-host.check",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/load.has_base",
             "file": "src/load.bend",
             "via": "src/load.plan",
@@ -11372,7 +11600,7 @@
           {
             "key": "src/load.load",
             "file": "src/load.bend",
-            "via": "src/driver.bundle",
+            "via": "src/driver.bundle_to",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11411,6 +11639,22 @@
               "src/load.start",
               "src/path-host.check",
               "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/load.named",
+            "file": "src/load.bend",
+            "via": "src/load.written",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String",
+              "src/imports.same_file"
             ],
             "dynamic_calls": []
           },
@@ -11725,11 +11969,14 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "Bool.or",
               "Bool.xor",
               "List",
               "String",
+              "String.eq",
               "String.starts_with",
               "U32",
+              "src/imports.climbs",
               "src/imports.normalize",
               "src/load.Action",
               "src/load.State",
@@ -11973,6 +12220,43 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.written",
+            "file": "src/load.bend",
+            "via": "src/load.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "Unit",
+              "src/imports.climbs",
+              "src/imports.normalize",
+              "src/load.Receipt",
+              "src/load.base_path",
+              "src/load.named",
+              "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -12198,6 +12482,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.result_type",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -12222,12 +12528,14 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
+              "src/parse.result_type",
               "src/parse.scrutinee",
               "src/parse.starts",
               "src/parse.template_parameter",
@@ -12443,7 +12751,7 @@
           {
             "key": "src/path-host.check",
             "file": "src/path-host.bend",
-            "via": "src/load.load_roots",
+            "via": "src/load.guarded",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15471,7 +15779,7 @@
           {
             "key": "String.contains",
             "file": "Base",
-            "via": "src/imports.import_words",
+            "via": "src/imports.header_lines",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15514,7 +15822,7 @@
           {
             "key": "String.ends_with",
             "file": "Base",
-            "via": "src/imports.bundle_prefix",
+            "via": "src/imports.same_file",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15560,7 +15868,7 @@
           {
             "key": "String.is_empty",
             "file": "Base",
-            "via": "src/imports.words",
+            "via": "src/imports.bundle_prefix",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15614,7 +15922,7 @@
           {
             "key": "String.reverse",
             "file": "Base",
-            "via": "src/lex.finish",
+            "via": "src/imports.split_chars",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16079,7 +16387,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 573,
+          "declarations": 581,
           "base": 93,
           "base_intrinsics": 25,
           "foreign": 7
@@ -16344,7 +16652,7 @@
           {
             "key": "Bool.or",
             "file": "Base",
-            "via": "src/parse.run",
+            "via": "src/load.named",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -16705,7 +17013,7 @@
           {
             "key": "List.reverse",
             "file": "Base",
-            "via": "src/load.finish",
+            "via": "src/imports.segments",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19869,7 +20177,7 @@
               "Unit",
               "src/compile-cli.Options",
               "src/compile-cli.compile",
-              "src/driver.bundle",
+              "src/driver.bundle_to",
               "src/driver.fail",
               "src/syntax.Error",
               "src/syntax.choose"
@@ -20233,7 +20541,7 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/driver.bundle",
+            "key": "src/driver.bundle_to",
             "file": "src/driver.bend",
             "via": "src/compile-cli.module_configured",
             "kind": "Def",
@@ -20246,6 +20554,7 @@
               "src/core.Book",
               "src/driver.Limits",
               "src/driver.loaded",
+              "src/load.guarded",
               "src/load.load"
             ],
             "dynamic_calls": []
@@ -20342,7 +20651,7 @@
           {
             "key": "src/driver.loaded",
             "file": "src/driver.bend",
-            "via": "src/driver.bundle",
+            "via": "src/driver.bundle_to",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20556,10 +20865,30 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.or",
               "String",
               "String.append",
               "String.ends_with",
+              "String.is_empty",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.climbs",
+            "file": "src/imports.bend",
+            "via": "src/load.written",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char",
+              "String",
+              "String.eq",
+              "U32",
+              "src/imports.first",
+              "src/imports.split"
             ],
             "dynamic_calls": []
           },
@@ -20598,7 +20927,7 @@
           {
             "key": "src/imports.first",
             "file": "src/imports.bend",
-            "via": "src/imports.hashed",
+            "via": "src/imports.climbs",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20707,11 +21036,13 @@
               "Bool",
               "Bool.and",
               "Bool.not",
+              "Bool.or",
               "List",
               "List.is_empty",
               "List.reverse",
               "Result",
               "String",
+              "String.contains",
               "String.eq",
               "U32",
               "U32.add",
@@ -20856,7 +21187,7 @@
           {
             "key": "src/imports.normalize",
             "file": "src/imports.bend",
-            "via": "src/load.start",
+            "via": "src/load.written",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21056,6 +21387,7 @@
               "U32",
               "src/imports.Target",
               "src/imports.bundle_prefix",
+              "src/imports.climbs",
               "src/imports.directory",
               "src/imports.hashed",
               "src/imports.join",
@@ -21063,6 +21395,26 @@
               "src/imports.without_suffix",
               "src/syntax.At",
               "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.same_file",
+            "file": "src/imports.bend",
+            "via": "src/load.named",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Bool.xor",
+              "String",
+              "String.append",
+              "String.ends_with",
+              "String.eq",
+              "String.starts_with",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -21089,7 +21441,7 @@
           {
             "key": "src/imports.split",
             "file": "src/imports.bend",
-            "via": "src/imports.normalize",
+            "via": "src/imports.climbs",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21436,7 +21788,7 @@
           {
             "key": "src/load.base_path",
             "file": "src/load.bend",
-            "via": "src/load.plan",
+            "via": "src/load.written",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21490,6 +21842,21 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/load.canonical_output",
+            "file": "src/load.bend",
+            "via": "src/load.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "Unit",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },
@@ -21614,6 +21981,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.guarded",
+            "file": "src/load.bend",
+            "via": "src/driver.bundle_to",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "IO",
+              "Result",
+              "String",
+              "Unit",
+              "src/load.Receipt",
+              "src/load.canonical_output",
+              "src/load.written",
+              "src/path-host.check",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/load.has_base",
             "file": "src/load.bend",
             "via": "src/load.plan",
@@ -21721,7 +22111,7 @@
           {
             "key": "src/load.load",
             "file": "src/load.bend",
-            "via": "src/driver.bundle",
+            "via": "src/driver.bundle_to",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21760,6 +22150,22 @@
               "src/load.start",
               "src/path-host.check",
               "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/load.named",
+            "file": "src/load.bend",
+            "via": "src/load.written",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String",
+              "src/imports.same_file"
             ],
             "dynamic_calls": []
           },
@@ -22074,11 +22480,14 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "Bool.or",
               "Bool.xor",
               "List",
               "String",
+              "String.eq",
               "String.starts_with",
               "U32",
+              "src/imports.climbs",
               "src/imports.normalize",
               "src/load.Action",
               "src/load.State",
@@ -22322,6 +22731,43 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.written",
+            "file": "src/load.bend",
+            "via": "src/load.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "Unit",
+              "src/imports.climbs",
+              "src/imports.normalize",
+              "src/load.Receipt",
+              "src/load.base_path",
+              "src/load.named",
+              "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -22547,6 +22993,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.result_type",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -22571,12 +23039,14 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
+              "src/parse.result_type",
               "src/parse.scrutinee",
               "src/parse.starts",
               "src/parse.template_parameter",
@@ -22792,7 +23262,7 @@
           {
             "key": "src/path-host.check",
             "file": "src/path-host.bend",
-            "via": "src/load.load_roots",
+            "via": "src/load.guarded",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25820,7 +26290,7 @@
           {
             "key": "String.contains",
             "file": "Base",
-            "via": "src/imports.import_words",
+            "via": "src/imports.header_lines",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25863,7 +26333,7 @@
           {
             "key": "String.ends_with",
             "file": "Base",
-            "via": "src/imports.bundle_prefix",
+            "via": "src/imports.same_file",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25909,7 +26379,7 @@
           {
             "key": "String.is_empty",
             "file": "Base",
-            "via": "src/imports.words",
+            "via": "src/imports.bundle_prefix",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25963,7 +26433,7 @@
           {
             "key": "String.reverse",
             "file": "Base",
-            "via": "src/lex.finish",
+            "via": "src/imports.split_chars",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -26428,7 +26898,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 503,
+          "declarations": 511,
           "base": 79,
           "base_intrinsics": 27,
           "foreign": 7
@@ -26593,7 +27063,7 @@
           {
             "key": "Bool.or",
             "file": "Base",
-            "via": "src/parse.run",
+            "via": "src/load.named",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -26812,7 +27282,7 @@
           {
             "key": "List.reverse",
             "file": "Base",
-            "via": "src/load.finish",
+            "via": "src/imports.segments",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28954,7 +29424,7 @@
             "dependencies": [
               "String.eq",
               "src/compile-cli.compile",
-              "src/driver.bundle",
+              "src/driver.bundle_to",
               "src/driver.fail",
               "src/syntax.choose"
             ],
@@ -29115,7 +29585,7 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/driver.bundle",
+            "key": "src/driver.bundle_to",
             "file": "src/driver.bend",
             "via": "src/compile-cli.module_configured",
             "kind": "Def",
@@ -29123,6 +29593,7 @@
             "unsafe": false,
             "dependencies": [
               "src/driver.loaded",
+              "src/load.guarded",
               "src/load.load"
             ],
             "dynamic_calls": []
@@ -29187,7 +29658,7 @@
           {
             "key": "src/driver.loaded",
             "file": "src/driver.bend",
-            "via": "src/driver.bundle",
+            "via": "src/driver.bundle_to",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29336,9 +29807,25 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.or",
               "String.append",
               "String.ends_with",
+              "String.is_empty",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.climbs",
+            "file": "src/imports.bend",
+            "via": "src/load.written",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "String.eq",
+              "src/imports.first",
+              "src/imports.split"
             ],
             "dynamic_calls": []
           },
@@ -29372,7 +29859,7 @@
           {
             "key": "src/imports.first",
             "file": "src/imports.bend",
-            "via": "src/imports.hashed",
+            "via": "src/imports.climbs",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29445,8 +29932,10 @@
             "dependencies": [
               "Bool.and",
               "Bool.not",
+              "Bool.or",
               "List.is_empty",
               "List.reverse",
+              "String.contains",
               "String.eq",
               "U32.add",
               "src/imports.alias",
@@ -29553,7 +30042,7 @@
           {
             "key": "src/imports.normalize",
             "file": "src/imports.bend",
-            "via": "src/load.start",
+            "via": "src/load.written",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29714,11 +30203,30 @@
               "String.length",
               "String.starts_with",
               "src/imports.bundle_prefix",
+              "src/imports.climbs",
               "src/imports.directory",
               "src/imports.hashed",
               "src/imports.join",
               "src/imports.relative_path",
               "src/imports.without_suffix",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.same_file",
+            "file": "src/imports.bend",
+            "via": "src/load.named",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "Bool.xor",
+              "String.append",
+              "String.ends_with",
+              "String.eq",
+              "String.starts_with",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -29742,7 +30250,7 @@
           {
             "key": "src/imports.split",
             "file": "src/imports.bend",
-            "via": "src/imports.normalize",
+            "via": "src/imports.climbs",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29953,7 +30461,7 @@
           {
             "key": "src/load.base_path",
             "file": "src/load.bend",
-            "via": "src/load.plan",
+            "via": "src/load.written",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29991,6 +30499,16 @@
               "src/qualify.qualify",
               "src/syntax.bind"
             ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/load.canonical_output",
+            "file": "src/load.bend",
+            "via": "src/load.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -30081,6 +30599,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.guarded",
+            "file": "src/load.bend",
+            "via": "src/driver.bundle_to",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/load.canonical_output",
+              "src/load.written",
+              "src/path-host.check",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/load.has_base",
             "file": "src/load.bend",
             "via": "src/load.plan",
@@ -30150,7 +30685,7 @@
           {
             "key": "src/load.load",
             "file": "src/load.bend",
-            "via": "src/driver.bundle",
+            "via": "src/driver.bundle_to",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30174,6 +30709,19 @@
               "src/load.run",
               "src/load.start",
               "src/path-host.check"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/load.named",
+            "file": "src/load.bend",
+            "via": "src/load.written",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "src/imports.same_file"
             ],
             "dynamic_calls": []
           },
@@ -30369,8 +30917,11 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.or",
               "Bool.xor",
+              "String.eq",
               "String.starts_with",
+              "src/imports.climbs",
               "src/imports.normalize",
               "src/syntax.choose"
             ],
@@ -30509,6 +31060,34 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.written",
+            "file": "src/load.bend",
+            "via": "src/load.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/imports.climbs",
+              "src/imports.normalize",
+              "src/load.base_path",
+              "src/load.named",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -30641,6 +31220,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.result_type",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "src/parse.invalid",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -30656,12 +31251,14 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
+              "src/parse.result_type",
               "src/parse.scrutinee",
               "src/parse.starts",
               "src/parse.template_parameter",
@@ -30809,7 +31406,7 @@
           {
             "key": "src/path-host.check",
             "file": "src/path-host.bend",
-            "via": "src/load.load_roots",
+            "via": "src/load.guarded",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -32858,7 +33455,7 @@
           {
             "key": "String.contains",
             "file": "Base",
-            "via": "src/imports.import_words",
+            "via": "src/imports.header_lines",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -32894,7 +33491,7 @@
           {
             "key": "String.ends_with",
             "file": "Base",
-            "via": "src/imports.bundle_prefix",
+            "via": "src/imports.same_file",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -32932,7 +33529,7 @@
           {
             "key": "String.is_empty",
             "file": "Base",
-            "via": "src/imports.words",
+            "via": "src/imports.bundle_prefix",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -32976,7 +33573,7 @@
           {
             "key": "String.reverse",
             "file": "Base",
-            "via": "src/lex.finish",
+            "via": "src/imports.split_chars",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -33344,7 +33941,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 614,
+          "declarations": 622,
           "base": 134,
           "base_intrinsics": 31,
           "foreign": 7
@@ -33636,7 +34233,7 @@
           {
             "key": "Bool.or",
             "file": "Base",
-            "via": "U32.divmod.go.shl",
+            "via": "src/load.named",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -34037,7 +34634,7 @@
           {
             "key": "List.reverse",
             "file": "Base",
-            "via": "src/load.finish",
+            "via": "src/imports.segments",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -37176,7 +37773,7 @@
               "Unit",
               "src/compile-cli.Options",
               "src/compile-cli.compile",
-              "src/driver.bundle",
+              "src/driver.bundle_to",
               "src/driver.fail",
               "src/syntax.Error",
               "src/syntax.choose"
@@ -37540,7 +38137,7 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/driver.bundle",
+            "key": "src/driver.bundle_to",
             "file": "src/driver.bend",
             "via": "src/compile-cli.module_configured",
             "kind": "Def",
@@ -37553,6 +38150,7 @@
               "src/core.Book",
               "src/driver.Limits",
               "src/driver.loaded",
+              "src/load.guarded",
               "src/load.load"
             ],
             "dynamic_calls": []
@@ -37652,7 +38250,7 @@
           {
             "key": "src/driver.loaded",
             "file": "src/driver.bend",
-            "via": "src/driver.bundle",
+            "via": "src/driver.bundle_to",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -37867,10 +38465,29 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.or",
               "String",
               "String.append",
               "String.ends_with",
+              "String.is_empty",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.climbs",
+            "file": "src/imports.bend",
+            "via": "src/load.written",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char",
+              "String",
+              "String.eq",
+              "src/imports.first",
+              "src/imports.split"
             ],
             "dynamic_calls": []
           },
@@ -37908,7 +38525,7 @@
           {
             "key": "src/imports.first",
             "file": "src/imports.bend",
-            "via": "src/imports.hashed",
+            "via": "src/imports.climbs",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -38014,11 +38631,13 @@
               "Bool",
               "Bool.and",
               "Bool.not",
+              "Bool.or",
               "List",
               "List.is_empty",
               "List.reverse",
               "Result",
               "String",
+              "String.contains",
               "String.eq",
               "U32",
               "U32.add",
@@ -38161,7 +38780,7 @@
           {
             "key": "src/imports.normalize",
             "file": "src/imports.bend",
-            "via": "src/load.start",
+            "via": "src/load.written",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -38356,6 +38975,7 @@
               "String.starts_with",
               "src/imports.Target",
               "src/imports.bundle_prefix",
+              "src/imports.climbs",
               "src/imports.directory",
               "src/imports.hashed",
               "src/imports.join",
@@ -38363,6 +38983,26 @@
               "src/imports.without_suffix",
               "src/syntax.At",
               "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.same_file",
+            "file": "src/imports.bend",
+            "via": "src/load.named",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Bool.xor",
+              "String",
+              "String.append",
+              "String.ends_with",
+              "String.eq",
+              "String.starts_with",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -38389,7 +39029,7 @@
           {
             "key": "src/imports.split",
             "file": "src/imports.bend",
-            "via": "src/imports.normalize",
+            "via": "src/imports.climbs",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -38727,7 +39367,7 @@
           {
             "key": "src/load.base_path",
             "file": "src/load.bend",
-            "via": "src/load.plan",
+            "via": "src/load.written",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -38782,6 +39422,20 @@
               "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/load.canonical_output",
+            "file": "src/load.bend",
+            "via": "src/load.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "Unit",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },
@@ -38907,6 +39561,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.guarded",
+            "file": "src/load.bend",
+            "via": "src/driver.bundle_to",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "IO",
+              "Result",
+              "String",
+              "Unit",
+              "src/load.Receipt",
+              "src/load.canonical_output",
+              "src/load.written",
+              "src/path-host.check",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/load.has_base",
             "file": "src/load.bend",
             "via": "src/load.plan",
@@ -39012,7 +39689,7 @@
           {
             "key": "src/load.load",
             "file": "src/load.bend",
-            "via": "src/driver.bundle",
+            "via": "src/driver.bundle_to",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -39050,6 +39727,22 @@
               "src/load.start",
               "src/path-host.check",
               "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/load.named",
+            "file": "src/load.bend",
+            "via": "src/load.written",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String",
+              "src/imports.same_file"
             ],
             "dynamic_calls": []
           },
@@ -39365,10 +40058,13 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "Bool.or",
               "Bool.xor",
               "List",
               "String",
+              "String.eq",
               "String.starts_with",
+              "src/imports.climbs",
               "src/imports.normalize",
               "src/load.Action",
               "src/load.State",
@@ -39612,6 +40308,43 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.written",
+            "file": "src/load.bend",
+            "via": "src/load.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "Unit",
+              "src/imports.climbs",
+              "src/imports.normalize",
+              "src/load.Receipt",
+              "src/load.base_path",
+              "src/load.named",
+              "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -39830,6 +40563,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.result_type",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "Result",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -39853,12 +40607,14 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
               "src/parse.reply",
+              "src/parse.result_type",
               "src/parse.scrutinee",
               "src/parse.starts",
               "src/parse.template_parameter",
@@ -40068,7 +40824,7 @@
           {
             "key": "src/path-host.check",
             "file": "src/path-host.bend",
-            "via": "src/load.load_roots",
+            "via": "src/load.guarded",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -43084,7 +43840,7 @@
           {
             "key": "String.contains",
             "file": "Base",
-            "via": "src/imports.import_words",
+            "via": "src/imports.header_lines",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -43127,7 +43883,7 @@
           {
             "key": "String.ends_with",
             "file": "Base",
-            "via": "src/imports.bundle_prefix",
+            "via": "src/imports.same_file",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -43174,7 +43930,7 @@
           {
             "key": "String.is_empty",
             "file": "Base",
-            "via": "src/imports.words",
+            "via": "src/imports.bundle_prefix",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -43228,7 +43984,7 @@
           {
             "key": "String.reverse",
             "file": "Base",
-            "via": "src/lex.finish",
+            "via": "src/imports.split_chars",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,

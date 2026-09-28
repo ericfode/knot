@@ -143,7 +143,9 @@ Paths are normalized lexically before assigning module identity. A relative
 entry, bundle root or import target that still begins with `..` after
 normalization names its file through a parent of the working directory, so no
 spelling of it is canonical: it reports `Unsupported load path-identity`. The
-normalized working directory (`--bundle .`) contains every relative path. Local names
+normalized working directory (`--bundle .`) contains every relative path. The
+seed's bundle prefix is `realpath(ROOT) + "/"`, which contains nothing for the
+root directory, so `--bundle /` reports `Unsupported load root-bundle`. Local names
 are relative to the entry directory; bundle names are relative to `ROOT`.
 Aliases are file-local. A minimal native/Bun host query verifies exact directory
 entry spelling and rejects symlink components before user-module reads. Entry

@@ -9,10 +9,10 @@ fixture, expectation and pinned host observation is unchanged.
 
 | Finding | Freeze | Repair | Disposition and evidence |
 | --- | --- | --- | --- |
-| A climbing `--bundle` spelling escapes bundle containment (blocking) | `c19600f` | `cbf35bc` | **Fixed.** `--bundle ../w/lib` and the import `../../w/lib/extra/flag.bend` report `Unsupported load path-identity`. They were Checked; the seed rejects both. The plain `--bundle lib` control stays `Invalid load import-path`. `--bundle .` was also Checked; it now contains every relative path and reports `Invalid load import-path`, as the seed does. |
+| A climbing `--bundle` spelling escapes bundle containment (blocking) | `c19600f`, `dba4614` | `cbf35bc`, `4f1db9e` | **Fixed.** `--bundle ../w/lib` and the import `../../w/lib/extra/flag.bend` report `Unsupported load path-identity`. They were Checked; the seed rejects both. The plain `--bundle lib` control stays `Invalid load import-path`. `--bundle .` was also Checked; it now contains every relative path and reports `Invalid load import-path`, as the seed does. `--bundle /` was Invalid import-path where the seed prints Lit; it now reports `Unsupported load root-bundle`. |
 | Module identity is lexical, so one file loads twice (blocking) | `c19600f` | `cbf35bc` | **Fixed.** Two spellings under two aliases were Invalid type-mismatch; the seed prints Lit. A single climbing import was Checked with namespace `../../w/app/m/flag`. A climbing back edge was Invalid cycle. A climbing entry was Checked. All four now report `Unsupported load path-identity`. A non-climbing relative control still runs to Lit and is audited with relative module paths. |
 | A string continuation line starting with `import` is Invalid (blocking) | `d4e3e6a` | `1ab6394` | **Fixed.** In three seed-accepted programs, a multi-line literal closes on a line that begins with an `import`: a module import, `import Base` and a quoted foreign import. The module lanes now report `Unsupported lex literal`, as the single-file lanes do. |
-| Documents claim unchanged single-file behavior (major) | — | this round's documentation commit | **Fixed in the documents; the acknowledgement is open.** `src/CONTRACT.json` `legacy_commands`, `src/SPEC.md` and both READMEs now list the single-file deltas. |
+| Documents claim unchanged single-file behavior (major) | — | `6062ec4` | **Fixed in the documents; the acknowledgement is open.** `src/CONTRACT.json` `legacy_commands`, `src/SPEC.md` and both READMEs now list the single-file deltas. |
 | Seed-accepted result types are Invalid (major) | `2f3d5af` | `a50bbb5` | **Fixed** in the module lanes and, where Base is not needed, the single-file lanes. The result types are `-> IO(Unit)`, `-> Light & Light`, `-> (Light)`, `-> Light -> Light` and an equality type. They report `Unsupported parse result-type`. A missing colon and a missing type stay `Invalid parse function-result`. |
 | `compile --bundle` can overwrite a module or Base (major) | `c49ff88` | `532aef0` | **Fixed.** Eleven literal cases pass in both lanes. Nine are refused: an imported module named absolutely, relatively and with dots; `./main.bend`; both mixed-basis spellings; a symlinked output; a climbing output; and a private real-file Base copy named relatively and absolutely. In each refused case the named file keeps its bytes. A fresh output is still Built. |
 
@@ -32,6 +32,11 @@ therefore has no canonical form. `imports.climbs` names that condition.
 applies it to every target before any containment, namespace or package-escape
 decision. The normalized working directory is `""`, and
 `imports.bundle_prefix("")` is now `""`, so it contains every relative path.
+The seed's containment prefix is `realpath(BEND_LIB) + "/"`. For the root
+directory that is `//`, which contains nothing. Knot cannot reproduce that
+degenerate containment for hash imports, so `load.start` reports a bundle that
+normalizes to `/` as `Unsupported load root-bundle`. Every canonical bundle
+spelling now agrees with the seed's prefix or is Unsupported.
 
 **Quoted bodies.** A string literal is the only seed construct that spans lines.
 `imports.header_lines` records whether any body line has held a double quote.
@@ -60,8 +65,8 @@ one. The compiler CLIs' foreign-dependency lists are unchanged.
 
 ## Laws, fixtures and mutants
 
-Seven new filled laws. The five module laws make 94 in the modules gate's four
-proof entries: loader and path 33, qualification 26, Base selection 20, pin
+Eight new filled laws. The six module laws make 95 in the modules gate's four
+proof entries: loader and path 34, qualification 26, Base selection 20, pin
 helpers 15. The two frontend laws bring `src/PROOF.bend` to 18. Each law was
 checked in a scratch copy: it prints `All terms check.` unmutated and fails at
 its own location under its matching mutation. The two output laws fail under
@@ -69,6 +74,7 @@ two mutations each.
 
 - `climbing_paths_have_no_identity`
 - `working_directory_bundle_contains_local_paths`
+- `root_bundle_is_unsupported`
 - `quoted_body_leaves_imports_to_the_lexer`
 - `output_names_no_file_the_load_read`
 - `uncanonical_output_is_refused`
@@ -77,22 +83,23 @@ two mutations each.
 
 These are helper/transition laws, not a theorem of compiler correctness.
 
-Round 4 freezes 22 seed fixtures, one seed call each, and 11 literal
-output-guard cases. The seed fixtures are four containment, five identity,
+Round 4 freezes 23 seed fixtures, one seed call each, and 11 literal
+output-guard cases. The seed fixtures are five containment, five identity,
 five string and eight result-type cases. Ten of them also run the
 single-file CLIs in both lanes.
 
 The containment and identity cases run from a directory inside the copied
-round folder. Their entry and bundle spellings are literal and relative, the
-same for the seed and for Knot. Every climb stays inside the copy, so the
-cases do not depend on the scratch root.
+round folder. Their entry and bundle spellings are literal, the same for the
+seed and for Knot: relative, except the root-bundle case's absolute entry. Every
+climb stays inside the copy, so the cases do not depend on the scratch root.
 
-The gate has eleven new type-correct semantic mutants, each killed by its
+The gate has twelve new type-correct semantic mutants, each killed by its
 frozen witness:
 
 - `climbing-target-accepted`
 - `climbing-root-accepted`
 - `working-directory-bundle-empty`
+- `root-bundle-contains-all`
 - `quoted-import-classified`
 - `result-type-invalid`
 - `spaced-arrow-accepted`

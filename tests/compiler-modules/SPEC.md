@@ -27,7 +27,9 @@ A relative entry, bundle root or import target whose normalized spelling still
 begins with `..` names its file through a parent of the working directory, whose
 name the loader cannot observe, so it has no canonical spelling and reports
 `Unsupported load path-identity`. The normalized working directory (`--bundle .`)
-contains every relative path.
+contains every relative path. The seed's containment prefix for the root
+directory is `//`, which contains nothing; `--bundle /` reports `Unsupported load
+root-bundle`.
 The host query rejects symlink components and non-exact directory-entry spellings
 with `Unsupported load path-identity`, including case aliases on insensitive
 filesystems. Entry and bundle roots are queried before lexical normalization;

@@ -71,9 +71,9 @@ repairs in `0474aa7` and `483f684`. Two controls preserve canonical duplicate
 imports and a no-Base namespace. The case-alias probe explicitly requires a
 case-insensitive filesystem. Round 3 adds 26 seed fixtures in `review-round3/`,
 five of them also through the single-file CLIs, and six literal adapter-pin
-controls. Round 4 adds 22 seed fixtures in `review-round4/`, ten of them also
-through the single-file CLIs and nine run from their own directory with literal
-relative spellings, and eleven literal output-guard cases.
+controls. Round 4 adds 23 seed fixtures in `review-round4/`, ten of them also
+through the single-file CLIs and ten run from their own directory with literal
+entry and bundle spellings, and eleven literal output-guard cases.
 
 ```sh
 BEND_NO_TELEMETRY=1 python3 tests/compiler-modules/regen.py
