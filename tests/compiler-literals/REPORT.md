@@ -144,10 +144,12 @@ four).
   uses one is Unsupported, never Checked.
 - Only the outermost spelled constructor is compared with the target: `2n`
   against a type that declares Succ but not Zero is Unsupported, where the
-  seed rejects it. That is safe under D4.
+  seed rejects it ("unknown: Zero", probed). That is safe under D4.
 - Without Base, a U32 or Char literal is Unsupported against any target,
-  although the seed rejects every one ("unknown: U32"), because Knot does not
-  model Base's Word spelling.
+  because Knot does not model Base's Word spelling. The seed rejected every
+  such book probed: "unknown: U32" for own Char and U32 types, and "unknown:
+  WCon" for one declaring its own `U32{data: Word}`. A book that declares
+  Word's own constructors might be seed-valid; it would be Unsupported too.
 
 ## Review round 5
 
