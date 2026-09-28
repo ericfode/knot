@@ -1,4 +1,4 @@
-"""Freeze or verify the review-round-1 regression books against the pinned seed.
+"""Freeze or verify the review regression books against the pinned seed.
 
     python3 tests/compiler-literals/regressions.py          # verify (default)
     python3 tests/compiler-literals/regressions.py --write  # before implementation only
@@ -19,6 +19,12 @@ FIXTURES = HERE / 'regressions'
 DEST = HERE / 'regressions.json'
 CALLS = ROOT / '.local/compiler-literals/regression-calls'
 
+
+def invalid(phase, code, why):
+    return {'outcome': 'Invalid', 'exit': 2, 'artifact': False,
+            'diagnostic_prefix': f'Invalid\t{phase}\t{code}\t', 'justification': why}
+
+
 SPACED = oracle.unsupported(
     'parse', 'operator',
     'Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is '
@@ -31,6 +37,26 @@ WORD = oracle.unsupported(
     'load', 'base-function-result',
     'Seed-valid: Word.zero returns the type-level Word(32n), which the Base loader does not '
     'lower, so the U32 construction is never reached (D4).')
+ANNOTATION = invalid(
+    'check', 'annotation-required',
+    'Seed-invalid ("an annotated term (cannot infer)"): a literal or a Nat offset checks '
+    'against a known type, and an unannotated binding supplies none.')
+SCRUTINEE = invalid(
+    'check', 'constructor-scrutinee',
+    'Seed-invalid ("an undestructed scrutinee"): a literal or a Nat offset is already a '
+    'constructor value.')
+PATTERN = invalid(
+    'check', 'pattern-type',
+    'Seed-invalid ("a constructor of" the scrutinee type): a literal or a Nat offset '
+    'pattern spells a constructor of its primitive type, never of the scrutinee type.')
+NESTED = oracle.unsupported(
+    'check', 'nested-field-pattern',
+    'Knot has no nested field patterns, and a literal inside a constructor pattern is one '
+    '(D4); the seed also rejects this single-arm book as missing cases.')
+BINDER = oracle.unsupported(
+    'check', 'variable-pattern',
+    'Seed-valid: `0n+p` reads as the binder p, and Knot does not check a binder arm over a '
+    'datatype (D4).')
 
 # name -> (finding, covers, entries, Knot)
 PLAN = {
@@ -47,7 +73,44 @@ PLAN = {
                                ['length', 'append_left', 'append_right', 'equal'], oracle.AGREE),
     'string-doubling': ('long strings', 'String.append doubling to 131072 Chars; length, reverse and eq',
                         ['length', 'mirrored'], oracle.AGREE),
+    'let-u32': ('let literal', 'n = 3', [], ANNOTATION),
+    'let-u32-promoted': ('let literal', '+n = 3', [], ANNOTATION),
+    'let-char': ('let literal', "c = 'a'", [], ANNOTATION),
+    'let-nat': ('let literal', 'n = 3n', [], ANNOTATION),
+    'let-nat-promoted': ('let literal', '+n = 3n', [], ANNOTATION),
+    'let-string': ('let literal', 's = "ab"', [], ANNOTATION),
+    'let-string-promoted': ('let literal', '+s = "ab"', [], ANNOTATION),
+    'let-offset': ('let literal', 'n = 2n+m', [], ANNOTATION),
+    'let-annotated': ('let literal control', 'annotated U32, Char, Nat offset and String lets',
+                      ['word', 'letter', 'number', 'text'], oracle.AGREE),
+    'scrutinee-u32': ('literal scrutinee', 'match 3', [], SCRUTINEE),
+    'scrutinee-char': ('literal scrutinee', "match 'a'", [], SCRUTINEE),
+    'scrutinee-nat': ('literal scrutinee', 'match 3n', [], SCRUTINEE),
+    'scrutinee-string': ('literal scrutinee', 'match "ab"', [], SCRUTINEE),
+    'scrutinee-offset': ('literal scrutinee', 'match 1n+m', [], SCRUTINEE),
+    'pattern-u32-on-enum': ('literal pattern on a datatype', 'case 3 on Answer', [], PATTERN),
+    'pattern-string-on-enum': ('literal pattern on a datatype', 'case "a" on Answer', [], PATTERN),
+    'pattern-offset-on-enum': ('literal pattern on a datatype', 'case 1n+p on Answer', [], PATTERN),
+    'pattern-u32-on-bool': ('literal pattern on a datatype', 'case 0 on Base Bool', [], PATTERN),
+    'offset-zero': ('zero offset', '0n+t as an inferred let, a checked argument, a scrutinee, '
+                    'and a Nat, U32 or String binder arm',
+                    ['inferred', 'checked', 'scrutinee', 'nat_binder', 'u32_binder', 'string_binder'],
+                    oracle.AGREE),
+    'let-offset-zero-literal': ('zero offset', 'n = 0n+3n reads as n = 3n', [], ANNOTATION),
+    'pattern-offset-zero-on-enum': ('zero offset', 'case 0n+p on Answer is the binder p', [], BINDER),
+    'field-pattern-u32': ('literal field pattern', 'case Box{3}', [], NESTED),
+    'field-pattern-offset': ('literal field pattern', 'case Cell{1n+p}', [], NESTED),
 }
+
+
+def enums(source):
+    """Nullary enums by name; a datatype with fields never types an entry argument."""
+    found = {}
+    for name, body in re.findall(r'^type (\w+) is (?:Type|Data):\n((?:  .*\n)+)', source, re.M):
+        ctors = re.findall(r'^  (\w+)\{\}$', body, re.M)
+        if len(ctors) == len(body.splitlines()):
+            found[name] = ctors
+    return found
 
 
 def call(name, fn, args, kinds, sigs):
@@ -78,7 +141,7 @@ def fixture(name):
     finding, covers, entries, knot = PLAN[name]
     path = FIXTURES / f'{name}.bend'
     source = path.read_text()
-    kinds, sigs = oracle.enums(source), oracle.signatures(source)
+    kinds, sigs = enums(source), oracle.signatures(source)
     entry = {'name': name, 'file': str(path.relative_to(ROOT)), 'sha256': oracle.sha256(path),
              'finding': finding, 'covers': covers, 'enums': kinds}
     entry['seed_check'] = oracle.seed([entry['file'], '--check-only'])
@@ -93,7 +156,7 @@ def fixture(name):
             assert len({c['constructor'] for c in entry['calls']}) > 1, f'{name} is constant'
     else:
         assert entry['seed_check']['exit'] == 1 and not entries, (name, entry['seed_check'])
-        assert knot['outcome'] == 'Unsupported', name
+        assert knot['outcome'] in ('Invalid', 'Unsupported'), name
         entry['seed_run'] = oracle.seed([entry['file']])
         assert entry['seed_run']['exit'] == 1, entry['seed_run']
     entry['knot' if knot is oracle.AGREE else 'knot_expected'] = knot

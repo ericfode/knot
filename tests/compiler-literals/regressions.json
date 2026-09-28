@@ -8,6 +8,718 @@
   },
   "fixtures": [
     {
+      "name": "field-pattern-offset",
+      "file": "tests/compiler-literals/regressions/field-pattern-offset.bend",
+      "sha256": "dbf3377e3849e0ab67dbd1eae8f30944a656ebe50cd7e913596d59f31b940eee",
+      "finding": "literal field pattern",
+      "covers": "case Cell{1n+p}",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/field-pattern-offset.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Zero\n- observed : \\{}\nLocation: inspect\n11 | def inspect(c: Cell) -> Answer:\n12>|   match c:\n   |   ^^^^^^^^\n13 |     case Cell{1n+p}: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/field-pattern-offset.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Zero\n- observed : \\{}\nLocation: inspect\n11 | def inspect(c: Cell) -> Answer:\n12>|   match c:\n   |   ^^^^^^^^\n13 |     case Cell{1n+p}: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tnested-field-pattern\t",
+        "justification": "Knot has no nested field patterns, and a literal inside a constructor pattern is one (D4); the seed also rejects this single-arm book as missing cases."
+      }
+    },
+    {
+      "name": "field-pattern-u32",
+      "file": "tests/compiler-literals/regressions/field-pattern-u32.bend",
+      "sha256": "c2aec70ed2e0fcd225fc2c7c12cb8d129139b9fba8f79d4ae2569765b9024952",
+      "finding": "literal field pattern",
+      "covers": "case Box{3}",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/field-pattern-u32.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for True\n- observed : \\{}\nLocation: inspect\n11 | def inspect(b: Box) -> Answer:\n12>|   match b:\n   |   ^^^^^^^^\n13 |     case Box{3}: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/field-pattern-u32.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for True\n- observed : \\{}\nLocation: inspect\n11 | def inspect(b: Box) -> Answer:\n12>|   match b:\n   |   ^^^^^^^^\n13 |     case Box{3}: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tnested-field-pattern\t",
+        "justification": "Knot has no nested field patterns, and a literal inside a constructor pattern is one (D4); the seed also rejects this single-arm book as missing cases."
+      }
+    },
+    {
+      "name": "let-annotated",
+      "file": "tests/compiler-literals/regressions/let-annotated.bend",
+      "sha256": "d542773d0d0691b99e9185b8de27efb756d67dc77f8a0ea5beeb5ea9d9f14ba5",
+      "finding": "let literal control",
+      "covers": "annotated U32, Char, Nat offset and String lets",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Probe": [
+          "Low",
+          "High"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-annotated.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/let-annotated.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "word",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/let-annotated-word-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/let-annotated.bend as F\n\ndef main() -> F.Answer:\n  F.word(F.Low{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/let-annotated-word-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/let-annotated.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "word",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/let-annotated-word-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/let-annotated.bend as F\n\ndef main() -> F.Answer:\n  F.word(F.High{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/let-annotated-word-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/let-annotated.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "letter",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/let-annotated-letter-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/let-annotated.bend as F\n\ndef main() -> F.Answer:\n  F.letter(F.Low{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/let-annotated-letter-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/let-annotated.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "letter",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/let-annotated-letter-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/let-annotated.bend as F\n\ndef main() -> F.Answer:\n  F.letter(F.High{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/let-annotated-letter-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/let-annotated.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "number",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/let-annotated-number-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/let-annotated.bend as F\n\ndef main() -> F.Answer:\n  F.number(F.Low{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/let-annotated-number-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/let-annotated.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "number",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/let-annotated-number-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/let-annotated.bend as F\n\ndef main() -> F.Answer:\n  F.number(F.High{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/let-annotated-number-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/let-annotated.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "text",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/let-annotated-text-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/let-annotated.bend as F\n\ndef main() -> F.Answer:\n  F.text(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/let-annotated-text-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/let-annotated.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "text",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/let-annotated-text-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/let-annotated.bend as F\n\ndef main() -> F.Answer:\n  F.text(F.High{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/let-annotated-text-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/let-annotated.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "let-char",
+      "file": "tests/compiler-literals/regressions/let-char.bend",
+      "sha256": "769bce18b2f0de8c382ebdad08388c5d174f9424ef7796d4901b5070ee88f9d0",
+      "finding": "let literal",
+      "covers": "c = 'a'",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-char.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 'a'\nLocation: bound\n13 | def bound() -> Answer:\n14>|   c = 'a'\n   |       ^^^\n15 |   answer(Char.is_eq(c, 'a'))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-char.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 'a'\nLocation: bound\n13 | def bound() -> Answer:\n14>|   c = 'a'\n   |       ^^^\n15 |   answer(Char.is_eq(c, 'a'))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-nat",
+      "file": "tests/compiler-literals/regressions/let-nat.bend",
+      "sha256": "65bd76543e1a5d4b9f73bf1e9da997cc38efb57579a941f9243c7a43a1600009",
+      "finding": "let literal",
+      "covers": "n = 3n",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-nat.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3n\nLocation: bound\n13 | def bound() -> Answer:\n14>|   n = 3n\n   |       ^^\n15 |   answer(Nat.is_eq(n, 3n))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-nat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3n\nLocation: bound\n13 | def bound() -> Answer:\n14>|   n = 3n\n   |       ^^\n15 |   answer(Nat.is_eq(n, 3n))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-nat-promoted",
+      "file": "tests/compiler-literals/regressions/let-nat-promoted.bend",
+      "sha256": "6894d2531abe866a29f232ce87cbf558395afd4198813ccc8b25ab0f8fa851b3",
+      "finding": "let literal",
+      "covers": "+n = 3n",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-nat-promoted.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3n\nLocation: bound\n13 | def bound() -> Answer:\n14>|   +n = 3n\n   |        ^^\n15 |   answer(Nat.is_eq(n, n))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-nat-promoted.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3n\nLocation: bound\n13 | def bound() -> Answer:\n14>|   +n = 3n\n   |        ^^\n15 |   answer(Nat.is_eq(n, n))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-offset",
+      "file": "tests/compiler-literals/regressions/let-offset.bend",
+      "sha256": "f1f32622b8d0d4887bd02a38080483f4fa64a6d33e2aca2c7d397043ba4a4a08",
+      "finding": "let literal",
+      "covers": "n = 2n+m",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-offset.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 2n+m\nContext:\n- m : Nat\nLocation: bound\n13 | def bound(m: Nat) -> Answer:\n14>|   n = 2n+m\n   |       ^^^^\n15 |   answer(Nat.is_eq(n, 4n))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-offset.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 2n+m\nContext:\n- m : Nat\nLocation: bound\n13 | def bound(m: Nat) -> Answer:\n14>|   n = 2n+m\n   |       ^^^^\n15 |   answer(Nat.is_eq(n, 4n))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-offset-zero-literal",
+      "file": "tests/compiler-literals/regressions/let-offset-zero-literal.bend",
+      "sha256": "5a58c108bf33c7397344a8c05d2c5c704bddf8ef72a0f3e8552f31471e23d985",
+      "finding": "zero offset",
+      "covers": "n = 0n+3n reads as n = 3n",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-offset-zero-literal.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3n\nLocation: bound\n13 | def bound() -> Answer:\n14>|   n = 0n+3n\n   |       ^^^^^\n15 |   answer(Nat.is_eq(n, 3n))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-offset-zero-literal.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3n\nLocation: bound\n13 | def bound() -> Answer:\n14>|   n = 0n+3n\n   |       ^^^^^\n15 |   answer(Nat.is_eq(n, 3n))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-string",
+      "file": "tests/compiler-literals/regressions/let-string.bend",
+      "sha256": "5cf1cc253de44fc48a83270dfb6204e66b3eb77a4adbe32090c1904444b02bb1",
+      "finding": "let literal",
+      "covers": "s = \"ab\"",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-string.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : \"ab\"\nLocation: bound\n13 | def bound() -> Answer:\n14>|   s = \"ab\"\n   |       ^^^^\n15 |   answer(String.eq(s, \"ab\"))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-string.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : \"ab\"\nLocation: bound\n13 | def bound() -> Answer:\n14>|   s = \"ab\"\n   |       ^^^^\n15 |   answer(String.eq(s, \"ab\"))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-string-promoted",
+      "file": "tests/compiler-literals/regressions/let-string-promoted.bend",
+      "sha256": "34238e72a099a8342c2548041cfbccb4a5ebe5bba81e75768ff07101021d049d",
+      "finding": "let literal",
+      "covers": "+s = \"ab\"",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-string-promoted.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : \"ab\"\nLocation: bound\n13 | def bound() -> Answer:\n14>|   +s = \"ab\"\n   |        ^^^^\n15 |   answer(String.eq(s, s))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-string-promoted.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : \"ab\"\nLocation: bound\n13 | def bound() -> Answer:\n14>|   +s = \"ab\"\n   |        ^^^^\n15 |   answer(String.eq(s, s))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-u32",
+      "file": "tests/compiler-literals/regressions/let-u32.bend",
+      "sha256": "75c1b3e44cde8ba1d4bf6903c558286863b9e7aa660cce7a31c9cf2943f25e09",
+      "finding": "let literal",
+      "covers": "n = 3",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-u32.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3\nLocation: bound\n13 | def bound() -> Answer:\n14>|   n = 3\n   |       ^\n15 |   answer(U32.is_eq(n, 3))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-u32.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3\nLocation: bound\n13 | def bound() -> Answer:\n14>|   n = 3\n   |       ^\n15 |   answer(U32.is_eq(n, 3))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-u32-promoted",
+      "file": "tests/compiler-literals/regressions/let-u32-promoted.bend",
+      "sha256": "7d544bdf3b6b4745bd5a0a5966e115a410a34579e2a661db91e0e14086110618",
+      "finding": "let literal",
+      "covers": "+n = 3",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-u32-promoted.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3\nLocation: bound\n13 | def bound() -> Answer:\n14>|   +n = 3\n   |        ^\n15 |   answer(U32.is_eq(n, n))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-u32-promoted.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : 3\nLocation: bound\n13 | def bound() -> Answer:\n14>|   +n = 3\n   |        ^\n15 |   answer(U32.is_eq(n, n))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
+        "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
       "name": "offset-adjacent",
       "file": "tests/compiler-literals/regressions/offset-adjacent.bend",
       "sha256": "0d74a77dc65f7372d6c823e6cb056c0f767632a7198b7ca81d50ad494dd81417",
@@ -430,6 +1142,791 @@
         "artifact": false,
         "diagnostic_prefix": "Unsupported\tparse\toperator\t",
         "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      }
+    },
+    {
+      "name": "offset-zero",
+      "file": "tests/compiler-literals/regressions/offset-zero.bend",
+      "sha256": "0400f920bfca2a0ba1686cba6881386aac03e1ba53b460bbea6852ef5987672a",
+      "finding": "zero offset",
+      "covers": "0n+t as an inferred let, a checked argument, a scrutinee, and a Nat, U32 or String binder arm",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Probe": [
+          "Three",
+          "Four"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-zero.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/offset-zero.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "inferred",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-inferred-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.inferred(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-inferred-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "inferred",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Four"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-inferred-Four.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.inferred(F.Four{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-inferred-Four.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "checked",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-checked-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.checked(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-checked-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "checked",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Four"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-checked-Four.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.checked(F.Four{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-checked-Four.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "scrutinee",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-scrutinee-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.scrutinee(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-scrutinee-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "scrutinee",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Four"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-scrutinee-Four.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.scrutinee(F.Four{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-scrutinee-Four.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_binder",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-nat_binder-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.nat_binder(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-nat_binder-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_binder",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Four"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-nat_binder-Four.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.nat_binder(F.Four{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-nat_binder-Four.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_binder",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-u32_binder-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.u32_binder(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-u32_binder-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_binder",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Four"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-u32_binder-Four.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.u32_binder(F.Four{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-u32_binder-Four.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_binder",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-string_binder-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.string_binder(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-string_binder-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_binder",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Four"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-zero-string_binder-Four.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-zero.bend as F\n\ndef main() -> F.Answer:\n  F.string_binder(F.Four{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-zero-string_binder-Four.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-zero.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "pattern-offset-on-enum",
+      "file": "tests/compiler-literals/regressions/pattern-offset-on-enum.bend",
+      "sha256": "b8c5f4f599ca44692c967666f2fb1890c5546b12894e2e7192c69792b8ba4d20",
+      "finding": "literal pattern on a datatype",
+      "covers": "case 1n+p on Answer",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-offset-on-enum.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Answer (missing, or already matched)\n- observed : \\{Succ: (p => No{}); (a => Yes{})}\nLocation: inspect\n 9 |   match a:\n10>|     case 1n+p: No{}\n   |          ^^^^\n11 |     case _: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-offset-on-enum.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Answer (missing, or already matched)\n- observed : \\{Succ: (p => No{}); (a => Yes{})}\nLocation: inspect\n 9 |   match a:\n10>|     case 1n+p: No{}\n   |          ^^^^\n11 |     case _: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "justification": "Seed-invalid (\"a constructor of\" the scrutinee type): a literal or a Nat offset pattern spells a constructor of its primitive type, never of the scrutinee type."
+      }
+    },
+    {
+      "name": "pattern-offset-zero-on-enum",
+      "file": "tests/compiler-literals/regressions/pattern-offset-zero-on-enum.bend",
+      "sha256": "76cfd98901da93cd3dc62be4a8a50a4f94d29a37fa39df8710401923928fe015",
+      "finding": "zero offset",
+      "covers": "case 0n+p on Answer is the binder p",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-offset-zero-on-enum.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/pattern-offset-zero-on-enum.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tvariable-pattern\t",
+        "justification": "Seed-valid: `0n+p` reads as the binder p, and Knot does not check a binder arm over a datatype (D4)."
+      }
+    },
+    {
+      "name": "pattern-string-on-enum",
+      "file": "tests/compiler-literals/regressions/pattern-string-on-enum.bend",
+      "sha256": "6780b4b5b8152f356999530b53818e994ef84289d235410fb357ce40efb720a5",
+      "finding": "literal pattern on a datatype",
+      "covers": "case \"a\" on Answer",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-string-on-enum.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Answer (missing, or already matched)\n- observed : \\{SCon: \\{Chr: \\{U32: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{True: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WNil: \\{SNil: No{}; (_6 => Yes{})}; (_72 => _6 => Yes{})}; (_71 => _72 => _6 => Yes{})}; (_70 => _6 => Yes{})}; (_69 => _70 => _6 => Yes{})}; (_68 => _6 => Yes{})}; (_67 => _68 => _6 => Yes{})}; (_66 => _6 => Yes{})}; (_65 => _66 => _6 => Yes{})}; (_64 => _6 => Yes{})}; (_63 => _64 => _6 => Yes{})}; (_62 => _6 => Yes{})}; (_61 => _62 => _6 => Yes{})}; (_60 => _6 => Yes{})}; (_59 => _60 => _6 => Yes{})}; (_58 => _6 => Yes{})}; (_57 => _58 => _6 => Yes{})}; (_56 => _6 => Yes{})}; (_55 => _56 => _6 => Yes{})}; (_54 => _6 => Yes{})}; (_53 => _54 => _6 => Yes{})}; (_52 => _6 => Yes{})}; (_51 => _52 => _6 => Yes{})}; (_50 => _6 => Yes{})}; (_49 => _50 => _6 => Yes{})}; (_48 => _6 => Yes{})}; (_47 => _48 => _6 => Yes{})}; (_46 => _6 => Yes{})}; (_45 => _46 => _6 => Yes{})}; (_44 => _6 => Yes{})}; (_43 => _44 => _6 => Yes{})}; (_42 => _6 => Yes{})}; (_41 => _42 => _6 => Yes{})}; (_40 => _6 => Yes{})}; (_39 => _40 => _6 => Yes{})}; (_38 => _6 => Yes{})}; (_37 => _38 => _6 => Yes{})}; (_36 => _6 => Yes{})}; (_35 => _36 => _6 => Yes{})}; (_34 => _6 => Yes{})}; (_33 => _34 => _6 => Yes{})}; (_32 => _6 => Yes{})}; (_31 => _32 => _6 => Yes{})}; (_30 => _6 => Yes{})}; (_29 => _30 => _6 => Yes{})}; (_28 => _6 => Yes{})}; (_27 => _28 => _6 => Yes{})}; (_26 => _6 => Yes{})}; (_25 => _26 => _6 => Yes{})}; (_24 => _6 => Yes{})}; (_23 => _24 => _6 => Yes{})}; (_22 => _6 => Yes{})}; (_21 => _22 => _6 => Yes{})}; (_20 => _6 => Yes{})}; (_19 => _20 => _6 => Yes{})}; (_18 => _6 => Yes{})}; (_17 => _18 => _6 => Yes{})}; (_16 => _6 => Yes{})}; (_15 => _16 => _6 => Yes{})}; (_14 => _6 => Yes{})}; (_13 => _14 => _6 => Yes{})}; (_12 => _6 => Yes{})}; (_11 => _12 => _6 => Yes{})}; (_10 => _6 => Yes{})}; (_9 => _10 => _6 => Yes{})}; (_8 => _6 => Yes{})}; (_7 => _6 => Yes{})}; (_5 => _6 => Yes{})}; (a => Yes{})}\nLocation: inspect\n 9 |   match a:\n10>|     case \"a\": No{}\n   |          ^^^\n11 |     case _: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-string-on-enum.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Answer (missing, or already matched)\n- observed : \\{SCon: \\{Chr: \\{U32: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{True: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WNil: \\{SNil: No{}; (_6 => Yes{})}; (_72 => _6 => Yes{})}; (_71 => _72 => _6 => Yes{})}; (_70 => _6 => Yes{})}; (_69 => _70 => _6 => Yes{})}; (_68 => _6 => Yes{})}; (_67 => _68 => _6 => Yes{})}; (_66 => _6 => Yes{})}; (_65 => _66 => _6 => Yes{})}; (_64 => _6 => Yes{})}; (_63 => _64 => _6 => Yes{})}; (_62 => _6 => Yes{})}; (_61 => _62 => _6 => Yes{})}; (_60 => _6 => Yes{})}; (_59 => _60 => _6 => Yes{})}; (_58 => _6 => Yes{})}; (_57 => _58 => _6 => Yes{})}; (_56 => _6 => Yes{})}; (_55 => _56 => _6 => Yes{})}; (_54 => _6 => Yes{})}; (_53 => _54 => _6 => Yes{})}; (_52 => _6 => Yes{})}; (_51 => _52 => _6 => Yes{})}; (_50 => _6 => Yes{})}; (_49 => _50 => _6 => Yes{})}; (_48 => _6 => Yes{})}; (_47 => _48 => _6 => Yes{})}; (_46 => _6 => Yes{})}; (_45 => _46 => _6 => Yes{})}; (_44 => _6 => Yes{})}; (_43 => _44 => _6 => Yes{})}; (_42 => _6 => Yes{})}; (_41 => _42 => _6 => Yes{})}; (_40 => _6 => Yes{})}; (_39 => _40 => _6 => Yes{})}; (_38 => _6 => Yes{})}; (_37 => _38 => _6 => Yes{})}; (_36 => _6 => Yes{})}; (_35 => _36 => _6 => Yes{})}; (_34 => _6 => Yes{})}; (_33 => _34 => _6 => Yes{})}; (_32 => _6 => Yes{})}; (_31 => _32 => _6 => Yes{})}; (_30 => _6 => Yes{})}; (_29 => _30 => _6 => Yes{})}; (_28 => _6 => Yes{})}; (_27 => _28 => _6 => Yes{})}; (_26 => _6 => Yes{})}; (_25 => _26 => _6 => Yes{})}; (_24 => _6 => Yes{})}; (_23 => _24 => _6 => Yes{})}; (_22 => _6 => Yes{})}; (_21 => _22 => _6 => Yes{})}; (_20 => _6 => Yes{})}; (_19 => _20 => _6 => Yes{})}; (_18 => _6 => Yes{})}; (_17 => _18 => _6 => Yes{})}; (_16 => _6 => Yes{})}; (_15 => _16 => _6 => Yes{})}; (_14 => _6 => Yes{})}; (_13 => _14 => _6 => Yes{})}; (_12 => _6 => Yes{})}; (_11 => _12 => _6 => Yes{})}; (_10 => _6 => Yes{})}; (_9 => _10 => _6 => Yes{})}; (_8 => _6 => Yes{})}; (_7 => _6 => Yes{})}; (_5 => _6 => Yes{})}; (a => Yes{})}\nLocation: inspect\n 9 |   match a:\n10>|     case \"a\": No{}\n   |          ^^^\n11 |     case _: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "justification": "Seed-invalid (\"a constructor of\" the scrutinee type): a literal or a Nat offset pattern spells a constructor of its primitive type, never of the scrutinee type."
+      }
+    },
+    {
+      "name": "pattern-u32-on-bool",
+      "file": "tests/compiler-literals/regressions/pattern-u32-on-bool.bend",
+      "sha256": "f362f96339e776ad625421406020ce5ca22b2aa0103a624242489220841ea1a7",
+      "finding": "literal pattern on a datatype",
+      "covers": "case 0 on Base Bool",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-u32-on-bool.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Bool (missing, or already matched)\n- observed : \\{U32: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WNil: No{}; (_69 => Yes{})}; (_68 => _69 => Yes{})}; (_67 => Yes{})}; (_66 => _67 => Yes{})}; (_65 => Yes{})}; (_64 => _65 => Yes{})}; (_63 => Yes{})}; (_62 => _63 => Yes{})}; (_61 => Yes{})}; (_60 => _61 => Yes{})}; (_59 => Yes{})}; (_58 => _59 => Yes{})}; (_57 => Yes{})}; (_56 => _57 => Yes{})}; (_55 => Yes{})}; (_54 => _55 => Yes{})}; (_53 => Yes{})}; (_52 => _53 => Yes{})}; (_51 => Yes{})}; (_50 => _51 => Yes{})}; (_49 => Yes{})}; (_48 => _49 => Yes{})}; (_47 => Yes{})}; (_46 => _47 => Yes{})}; (_45 => Yes{})}; (_44 => _45 => Yes{})}; (_43 => Yes{})}; (_42 => _43 => Yes{})}; (_41 => Yes{})}; (_40 => _41 => Yes{})}; (_39 => Yes{})}; (_38 => _39 => Yes{})}; (_37 => Yes{})}; (_36 => _37 => Yes{})}; (_35 => Yes{})}; (_34 => _35 => Yes{})}; (_33 => Yes{})}; (_32 => _33 => Yes{})}; (_31 => Yes{})}; (_30 => _31 => Yes{})}; (_29 => Yes{})}; (_28 => _29 => Yes{})}; (_27 => Yes{})}; (_26 => _27 => Yes{})}; (_25 => Yes{})}; (_24 => _25 => Yes{})}; (_23 => Yes{})}; (_22 => _23 => Yes{})}; (_21 => Yes{})}; (_20 => _21 => Yes{})}; (_19 => Yes{})}; (_18 => _19 => Yes{})}; (_17 => Yes{})}; (_16 => _17 => Yes{})}; (_15 => Yes{})}; (_14 => _15 => Yes{})}; (_13 => Yes{})}; (_12 => _13 => Yes{})}; (_11 => Yes{})}; (_10 => _11 => Yes{})}; (_9 => Yes{})}; (_8 => _9 => Yes{})}; (_7 => Yes{})}; (_6 => _7 => Yes{})}; (_5 => Yes{})}; (a => Yes{})}\nLocation: inspect\n 9 |   match a:\n10>|     case 0: No{}\n   |          ^\n11 |     case _: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-u32-on-bool.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Bool (missing, or already matched)\n- observed : \\{U32: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WNil: No{}; (_69 => Yes{})}; (_68 => _69 => Yes{})}; (_67 => Yes{})}; (_66 => _67 => Yes{})}; (_65 => Yes{})}; (_64 => _65 => Yes{})}; (_63 => Yes{})}; (_62 => _63 => Yes{})}; (_61 => Yes{})}; (_60 => _61 => Yes{})}; (_59 => Yes{})}; (_58 => _59 => Yes{})}; (_57 => Yes{})}; (_56 => _57 => Yes{})}; (_55 => Yes{})}; (_54 => _55 => Yes{})}; (_53 => Yes{})}; (_52 => _53 => Yes{})}; (_51 => Yes{})}; (_50 => _51 => Yes{})}; (_49 => Yes{})}; (_48 => _49 => Yes{})}; (_47 => Yes{})}; (_46 => _47 => Yes{})}; (_45 => Yes{})}; (_44 => _45 => Yes{})}; (_43 => Yes{})}; (_42 => _43 => Yes{})}; (_41 => Yes{})}; (_40 => _41 => Yes{})}; (_39 => Yes{})}; (_38 => _39 => Yes{})}; (_37 => Yes{})}; (_36 => _37 => Yes{})}; (_35 => Yes{})}; (_34 => _35 => Yes{})}; (_33 => Yes{})}; (_32 => _33 => Yes{})}; (_31 => Yes{})}; (_30 => _31 => Yes{})}; (_29 => Yes{})}; (_28 => _29 => Yes{})}; (_27 => Yes{})}; (_26 => _27 => Yes{})}; (_25 => Yes{})}; (_24 => _25 => Yes{})}; (_23 => Yes{})}; (_22 => _23 => Yes{})}; (_21 => Yes{})}; (_20 => _21 => Yes{})}; (_19 => Yes{})}; (_18 => _19 => Yes{})}; (_17 => Yes{})}; (_16 => _17 => Yes{})}; (_15 => Yes{})}; (_14 => _15 => Yes{})}; (_13 => Yes{})}; (_12 => _13 => Yes{})}; (_11 => Yes{})}; (_10 => _11 => Yes{})}; (_9 => Yes{})}; (_8 => _9 => Yes{})}; (_7 => Yes{})}; (_6 => _7 => Yes{})}; (_5 => Yes{})}; (a => Yes{})}\nLocation: inspect\n 9 |   match a:\n10>|     case 0: No{}\n   |          ^\n11 |     case _: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "justification": "Seed-invalid (\"a constructor of\" the scrutinee type): a literal or a Nat offset pattern spells a constructor of its primitive type, never of the scrutinee type."
+      }
+    },
+    {
+      "name": "pattern-u32-on-enum",
+      "file": "tests/compiler-literals/regressions/pattern-u32-on-enum.bend",
+      "sha256": "fafe301d1744e0d6609bad0655bb5c7edffb0af7ce932f8a246b163502973122",
+      "finding": "literal pattern on a datatype",
+      "covers": "case 3 on Answer",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-u32-on-enum.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Answer (missing, or already matched)\n- observed : \\{U32: \\{WCon: \\{True: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WNil: No{}; (_69 => Yes{})}; (_68 => _69 => Yes{})}; (_67 => Yes{})}; (_66 => _67 => Yes{})}; (_65 => Yes{})}; (_64 => _65 => Yes{})}; (_63 => Yes{})}; (_62 => _63 => Yes{})}; (_61 => Yes{})}; (_60 => _61 => Yes{})}; (_59 => Yes{})}; (_58 => _59 => Yes{})}; (_57 => Yes{})}; (_56 => _57 => Yes{})}; (_55 => Yes{})}; (_54 => _55 => Yes{})}; (_53 => Yes{})}; (_52 => _53 => Yes{})}; (_51 => Yes{})}; (_50 => _51 => Yes{})}; (_49 => Yes{})}; (_48 => _49 => Yes{})}; (_47 => Yes{})}; (_46 => _47 => Yes{})}; (_45 => Yes{})}; (_44 => _45 => Yes{})}; (_43 => Yes{})}; (_42 => _43 => Yes{})}; (_41 => Yes{})}; (_40 => _41 => Yes{})}; (_39 => Yes{})}; (_38 => _39 => Yes{})}; (_37 => Yes{})}; (_36 => _37 => Yes{})}; (_35 => Yes{})}; (_34 => _35 => Yes{})}; (_33 => Yes{})}; (_32 => _33 => Yes{})}; (_31 => Yes{})}; (_30 => _31 => Yes{})}; (_29 => Yes{})}; (_28 => _29 => Yes{})}; (_27 => Yes{})}; (_26 => _27 => Yes{})}; (_25 => Yes{})}; (_24 => _25 => Yes{})}; (_23 => Yes{})}; (_22 => _23 => Yes{})}; (_21 => Yes{})}; (_20 => _21 => Yes{})}; (_19 => Yes{})}; (_18 => _19 => Yes{})}; (_17 => Yes{})}; (_16 => _17 => Yes{})}; (_15 => Yes{})}; (_14 => _15 => Yes{})}; (_13 => Yes{})}; (_12 => _13 => Yes{})}; (_11 => Yes{})}; (_10 => _11 => Yes{})}; (_9 => Yes{})}; (_8 => _9 => Yes{})}; (_7 => Yes{})}; (_6 => _7 => Yes{})}; (_5 => Yes{})}; (a => Yes{})}\nLocation: inspect\n 9 |   match a:\n10>|     case 3: No{}\n   |          ^\n11 |     case _: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/pattern-u32-on-enum.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Answer (missing, or already matched)\n- observed : \\{U32: \\{WCon: \\{True: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WNil: No{}; (_69 => Yes{})}; (_68 => _69 => Yes{})}; (_67 => Yes{})}; (_66 => _67 => Yes{})}; (_65 => Yes{})}; (_64 => _65 => Yes{})}; (_63 => Yes{})}; (_62 => _63 => Yes{})}; (_61 => Yes{})}; (_60 => _61 => Yes{})}; (_59 => Yes{})}; (_58 => _59 => Yes{})}; (_57 => Yes{})}; (_56 => _57 => Yes{})}; (_55 => Yes{})}; (_54 => _55 => Yes{})}; (_53 => Yes{})}; (_52 => _53 => Yes{})}; (_51 => Yes{})}; (_50 => _51 => Yes{})}; (_49 => Yes{})}; (_48 => _49 => Yes{})}; (_47 => Yes{})}; (_46 => _47 => Yes{})}; (_45 => Yes{})}; (_44 => _45 => Yes{})}; (_43 => Yes{})}; (_42 => _43 => Yes{})}; (_41 => Yes{})}; (_40 => _41 => Yes{})}; (_39 => Yes{})}; (_38 => _39 => Yes{})}; (_37 => Yes{})}; (_36 => _37 => Yes{})}; (_35 => Yes{})}; (_34 => _35 => Yes{})}; (_33 => Yes{})}; (_32 => _33 => Yes{})}; (_31 => Yes{})}; (_30 => _31 => Yes{})}; (_29 => Yes{})}; (_28 => _29 => Yes{})}; (_27 => Yes{})}; (_26 => _27 => Yes{})}; (_25 => Yes{})}; (_24 => _25 => Yes{})}; (_23 => Yes{})}; (_22 => _23 => Yes{})}; (_21 => Yes{})}; (_20 => _21 => Yes{})}; (_19 => Yes{})}; (_18 => _19 => Yes{})}; (_17 => Yes{})}; (_16 => _17 => Yes{})}; (_15 => Yes{})}; (_14 => _15 => Yes{})}; (_13 => Yes{})}; (_12 => _13 => Yes{})}; (_11 => Yes{})}; (_10 => _11 => Yes{})}; (_9 => Yes{})}; (_8 => _9 => Yes{})}; (_7 => Yes{})}; (_6 => _7 => Yes{})}; (_5 => Yes{})}; (a => Yes{})}\nLocation: inspect\n 9 |   match a:\n10>|     case 3: No{}\n   |          ^\n11 |     case _: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "justification": "Seed-invalid (\"a constructor of\" the scrutinee type): a literal or a Nat offset pattern spells a constructor of its primitive type, never of the scrutinee type."
+      }
+    },
+    {
+      "name": "scrutinee-char",
+      "file": "tests/compiler-literals/regressions/scrutinee-char.bend",
+      "sha256": "9b7776a94673a4ae17d169f9a8aaa972ca2f594dc3888e7806cf536b0001a9e5",
+      "finding": "literal scrutinee",
+      "covers": "match 'a'",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-char.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect() -> Answer:\n 9>|   match 'a':\n   |   ^^^^^^^^^^\n10 |     case 'a': Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-char.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect() -> Answer:\n 9>|   match 'a':\n   |   ^^^^^^^^^^\n10 |     case 'a': Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-scrutinee\t",
+        "justification": "Seed-invalid (\"an undestructed scrutinee\"): a literal or a Nat offset is already a constructor value."
+      }
+    },
+    {
+      "name": "scrutinee-nat",
+      "file": "tests/compiler-literals/regressions/scrutinee-nat.bend",
+      "sha256": "2dfb15acda559fd7325d43deefcb681e8b923de84a213dfee5d5f9c138d6dcbb",
+      "finding": "literal scrutinee",
+      "covers": "match 3n",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-nat.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect() -> Answer:\n 9>|   match 3n:\n   |   ^^^^^^^^^\n10 |     case 3n: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-nat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect() -> Answer:\n 9>|   match 3n:\n   |   ^^^^^^^^^\n10 |     case 3n: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-scrutinee\t",
+        "justification": "Seed-invalid (\"an undestructed scrutinee\"): a literal or a Nat offset is already a constructor value."
+      }
+    },
+    {
+      "name": "scrutinee-offset",
+      "file": "tests/compiler-literals/regressions/scrutinee-offset.bend",
+      "sha256": "c1c1f9bdbd6f1c7f2108fc45bf70a1cf090504157bbbcd2eaa529795bb088d2d",
+      "finding": "literal scrutinee",
+      "covers": "match 1n+m",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-offset.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect(m: Nat) -> Answer:\n 9>|   match 1n+m:\n   |   ^^^^^^^^^^^\n10 |     case 3n: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-offset.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect(m: Nat) -> Answer:\n 9>|   match 1n+m:\n   |   ^^^^^^^^^^^\n10 |     case 3n: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-scrutinee\t",
+        "justification": "Seed-invalid (\"an undestructed scrutinee\"): a literal or a Nat offset is already a constructor value."
+      }
+    },
+    {
+      "name": "scrutinee-string",
+      "file": "tests/compiler-literals/regressions/scrutinee-string.bend",
+      "sha256": "c5758d154925c4bc513bdbcfaff149eeb75111bba68d1f810d3016eb0aaae752",
+      "finding": "literal scrutinee",
+      "covers": "match \"ab\"",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-string.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect() -> Answer:\n 9>|   match \"ab\":\n   |   ^^^^^^^^^^^\n10 |     case \"ab\": Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-string.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect() -> Answer:\n 9>|   match \"ab\":\n   |   ^^^^^^^^^^^\n10 |     case \"ab\": Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-scrutinee\t",
+        "justification": "Seed-invalid (\"an undestructed scrutinee\"): a literal or a Nat offset is already a constructor value."
+      }
+    },
+    {
+      "name": "scrutinee-u32",
+      "file": "tests/compiler-literals/regressions/scrutinee-u32.bend",
+      "sha256": "57982ef742289c5e61fd3f63ce949c8eba6f030471669c1bbe69a0f5f2a6b247",
+      "finding": "literal scrutinee",
+      "covers": "match 3",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-u32.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect() -> Answer:\n 9>|   match 3:\n   |   ^^^^^^^^\n10 |     case 3: Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/scrutinee-u32.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n 8 | def inspect() -> Answer:\n 9>|   match 3:\n   |   ^^^^^^^^\n10 |     case 3: Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-scrutinee\t",
+        "justification": "Seed-invalid (\"an undestructed scrutinee\"): a literal or a Nat offset is already a constructor value."
       }
     },
     {
