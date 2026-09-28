@@ -247,24 +247,24 @@ def opcode_name(+op: U32) -> String:
   nth_text(["lit","prim","default","value","con","ref","call","let","case","branch","closure","invoke","foreign"],op)
 
 # Record offsets of one section, in order, and the offset after its last record.
-def records(n: Nat, +image: Store, +total: U32, +section: U32, +at: U32, found: List<&2,U32>, next: List<&2,U32> -> U32 -> Result<String,Plan>) -> Result<String,Plan>:
+def records(-B: Data, n: Nat, +image: Store, +total: U32, +section: U32, +at: U32, found: List<&2,U32>, next: List<&2,U32> -> U32 -> Result<String,B>) -> Result<String,B>:
   match n:
     case 0n: next(List.reverse(&2,U32,found),at)
     case 1n+m:
       +size = read(image,at)
-      unless(Plan,Bool.or(U32.is_ge(at,total),Bool.or(U32.is_lt(size,2),U32.is_gt(size,U32.sub(total,at)))),
+      unless(B,Bool.or(U32.is_ge(at,total),Bool.or(U32.is_lt(size,2),U32.is_gt(size,U32.sub(total,at)))),
         String.concat(["section ",U32.show(section)," record length"]),u =>
-        records(m,image,total,section,U32.add(at,size),Con{at,found},next))
+        records(B,m,image,total,section,U32.add(at,size),Con{at,found},next))
 
-def sections(n: Nat, +image: Store, +total: U32, +section: U32, +cursor: U32, found: List<&2,List<&2,U32>>, next: List<&2,List<&2,U32>> -> Result<String,Plan>) -> Result<String,Plan>:
+def sections(-B: Data, n: Nat, +image: Store, +total: U32, +section: U32, +cursor: U32, found: List<&2,List<&2,U32>>, next: List<&2,List<&2,U32>> -> Result<String,B>) -> Result<String,B>:
   match n:
-    case 0n: unless(Plan,Bool.not(U32.is_eq(cursor,total)),"trailing words",u => next(List.reverse(&2,List<&2,U32>,found)))
+    case 0n: unless(B,Bool.not(U32.is_eq(cursor,total)),"trailing words",u => next(List.reverse(&2,List<&2,U32>,found)))
     case 1n+m:
       +count = read(image,cursor)
-      unless(Plan,Bool.not(U32.is_eq(read(image,U32.add(5,section)),cursor)),String.concat(["section ",U32.show(section)," offset"]),u =>
-      unless(Plan,U32.is_gt(count,1048576),"record count",u =>
-      records(U32.to_nat(count),image,total,section,U32.add(cursor,1),Nil{},list => end =>
-        sections(m,image,total,U32.add(section,1),end,Con{list,found},next))))
+      unless(B,Bool.not(U32.is_eq(read(image,U32.add(5,section)),cursor)),String.concat(["section ",U32.show(section)," offset"]),u =>
+      unless(B,U32.is_gt(count,1048576),"record count",u =>
+      records(B,U32.to_nat(count),image,total,section,U32.add(cursor,1),Nil{},list => end =>
+        sections(B,m,image,total,U32.add(section,1),end,Con{list,found},next))))
 
 
 def zero_all(bytes: List<&2,U32>) -> Bool:
@@ -488,7 +488,7 @@ def rooted(+env: Env, +at: U32, +claims: Claims) -> Result<String,Claims>:
 def is_arm(+op: U32) -> Bool:
   Bool.or(U32.is_eq(op,2),U32.is_eq(op,9))
 
-def operand(role: Role) -> Bool:
+def is_operand(role: Role) -> Bool:
   match role:
     case Operand{}: True{}
     case _: False{}
@@ -499,7 +499,7 @@ def inspected(+env: Env, +at: U32, role: Role) -> Result<String,Unit>:
       +t = read(image,U32.add(at,2))
       +op = read(image,U32.add(at,1))
       unless(Unit,Bool.and(Bool.not(is_none(t)),U32.is_ge(t,types)),"type index",u =>
-      unless(Unit,Bool.and(is_arm(op),operand(role)),"standalone arm",u =>
+      unless(Unit,Bool.and(is_arm(op),is_operand(role)),"standalone arm",u =>
       unless(Unit,Bool.and(U32.is_eq(op,0),U32.is_ge(read(image,U32.add(at,3)),count(Constant,constants))),"constant index",u =>
         Done{Unit{}})))
 
@@ -724,7 +724,7 @@ def decode(+words: List<&2,U32>) -> Result<String,Plan>:
   unless(Plan,Bool.not(U32.is_eq(read(image,2),total)),"total",u =>
   unless(Plan,Bool.or(U32.is_ge(read(image,3),2),Bool.not(U32.is_eq(read(image,11),0))),"header",u =>
   unless(Plan,Bool.not(same(slice(8n,image,24),digest())),"registry digest",u =>
-    sections(6n,image,total,0,32,Nil{},lists => decoded(lists,image,total))))))
+    sections(Plan,6n,image,total,0,32,Nil{},lists => decoded(lists,image,total))))))
 
 # ---------------------------------------------------------------- registry
 
@@ -1240,7 +1240,7 @@ def main_returns(+types: List<&2,Sort>, +reps: List<&2,U32>, found: Maybe<&2,Fun
     case None{}: True{}
 
 # A Program's main takes no live argument and returns IO(Unit) (SPEC §8).
-def program(+entry: U32, +cx: Context) -> Result<String,Unit>:
+def program_valid(+entry: U32, +cx: Context) -> Result<String,Unit>:
   match cx:
     case Context{+types,+functions,+reps}:
       +absent = missing(reps,[6,3,10])
@@ -1276,7 +1276,7 @@ def validate(plan: Plan) -> Result<String,Unit>:
       then(Unit,Unit,representations(12n,types,reps,0),u =>
       unless(Unit,repeated(function_names(functions)),"functions: duplicate function name",u =>
       unless(Unit,Bool.not(acyclic(types)),"types: arrow cycle",u =>
-      then(Unit,Unit,program(entry,cx),u => functions_valid(functions,cx)))))
+      then(Unit,Unit,program_valid(entry,cx),u => functions_valid(functions,cx)))))
 
 # ---------------------------------------------------------------- encoding
 
@@ -1561,3 +1561,1015 @@ def load(+bytes: List<&2,U32>) -> Result<Stop,Plan>:
   choose(Result<Stop,Plan>,U32.is_gt(size,image_limit()),u => Fail{Exhausted{2,"image-size"}},u =>
   choose(Result<Stop,Plan>,Bool.or(Bool.not(U32.is_eq(U32.mod(size,4),0)),U32.is_lt(size,128)),u => Fail{Refused{"image","length"}},u =>
     refused(Plan,then(Plan,Plan,decode(pack(bytes)),+plan => admitted(pack(bytes),plan)))))
+
+# ---------------------------------------------------------------- words, cells and memory
+
+# Zero marks an empty slot. An immediate is (v << 1) | 1 for v < 2^31; every
+# other nonzero word is the 8-byte-aligned address of a cell (SPEC §5).
+def immediate(+v: U32) -> U32:
+  U32.add(U32.shln(v,1n),1)
+
+def is_pointer(+w: U32) -> Bool:
+  Bool.and(Bool.not(U32.is_eq(w,0)),U32.is_eq(U32.and(w,1),0))
+
+def boxed(+v: U32) -> Bool:
+  U32.is_ge(v,2147483648)
+
+# Word indices: the image at byte 4096, the frame region at the next 64 KiB
+# boundary, 16 MiB of frames, then the heap up to 4 GiB.
+def image_base() -> U32:
+  1024
+
+def region_words() -> U32:
+  4194304
+
+def memory_words() -> U32:
+  1073741824
+
+def heap_base(+total: U32) -> U32:
+  U32.add(U32.mul(U32.div(U32.add(U32.add(4096,U32.mul(4,total)),65535),65536),16384),region_words())
+
+# Cell classes: 0 Object, 1 Closure, 2 Big, 3 Action, 4 Activation.
+# free[k] heads the LIFO list of free cells of 4 << k words.
+type Heap is Data:
+  Heap{memory: Store, bump: U32, free: List<&2,U32>}
+
+type Cell is Data:
+  Cell{heap: Heap, word: U32}
+
+def memory_of(heap: Heap) -> Store:
+  match heap:
+    case Heap{memory,bump,free}: memory
+
+def load_word(+heap: Heap, +address: U32, +i: U32) -> U32:
+  read(memory_of(heap),U32.add(U32.shrn(address,2n),i))
+
+def stored_word(heap: Heap, +address: U32, +i: U32, word: U32) -> Heap:
+  match heap:
+    case Heap{memory,bump,free}: Heap{write(memory,U32.add(U32.shrn(address,2n),i),word),bump,free}
+
+def writes(words: List<&2,U32>, memory: Store, +at: U32) -> Store:
+  match words:
+    case Nil{}: memory
+    case Con{w,rest}: writes(rest,write(memory,at,w),U32.add(at,1))
+
+def zeros(n: Nat) -> List<&2,U32>:
+  match n:
+    case 0n: Nil{}
+    case 1n+m: Con{0,zeros(m)}
+
+def replaced(xs: List<&2,U32>, +i: U32, +x: U32) -> List<&2,U32>:
+  match xs:
+    case Nil{}: Nil{}
+    case Con{y,+rest}: choose(List<&2,U32>,U32.is_eq(i,0),u => Con{x,rest},u => Con{y,replaced(rest,U32.sub(i,1),x)})
+
+# The smallest k with 4 << k words holding `words`.
+def size_class(fuel: Nat, +words: U32, +k: U32) -> U32:
+  match fuel:
+    case 0n: k
+    case 1n+f: choose(U32,U32.is_ge(U32.shln(4,U32.to_nat(k)),words),u => k,u => size_class(f,words,U32.add(k,1)))
+
+def class_of(+words: U32) -> U32:
+  size_class(29n,words,0)
+
+def filled(+memory: Store, +at: U32, +rc: U32, +class: U32, +payload: List<&2,U32>, +words: U32) -> Store:
+  writes(List.append(&2,U32,[rc,U32.add(U32.shln(count(U32,payload),3n),class)],List.append(&2,U32,payload,zeros(U32.to_nat(U32.sub(words,U32.add(2,count(U32,payload))))))),memory,at)
+
+# Pop the class's free list, else take the bump pointer; write rc, header,
+# payload and zeroed padding. A cell past 4 GiB is heap exhaustion.
+def allocate(+heap: Heap, +rc: U32, +class: U32, +payload: List<&2,U32>) -> Result<Stop,Cell>:
+  match heap:
+    case Heap{+memory,+bump,+free}:
+      +k = class_of(U32.add(2,count(U32,payload)))
+      +words = U32.shln(4,U32.to_nat(k))
+      +head = nth(free,k)
+      choose(Result<Stop,Cell>,Bool.not(U32.is_eq(head,0)),
+        u => Done{Cell{Heap{filled(memory,U32.shrn(head,2n),rc,class,payload,words),bump,replaced(free,k,read(memory,U32.shrn(head,2n)))},head}},
+        u => choose(Result<Stop,Cell>,U32.is_gt(words,U32.sub(memory_words(),bump)),u => Fail{Exhausted{2,"heap"}},
+          u => Done{Cell{Heap{filled(memory,bump,rc,class,payload,words),U32.add(bump,words),free},U32.shln(bump,2n)}}))
+
+def alloc(+heap: Heap, +class: U32, +payload: List<&2,U32>) -> Result<Stop,Cell>:
+  allocate(heap,1,class,payload)
+
+def bind(-A: Data, -B: Data, result: Result<Stop,A>, next: A -> Result<Stop,B>) -> Result<Stop,B>:
+  match result:
+    case Fail{stop}: Fail{stop}
+    case Done{value}: next(value)
+
+def with_cell(-B: Data, result: Result<Stop,Cell>, next: Heap -> U32 -> Result<Stop,B>) -> Result<Stop,B>:
+  match result:
+    case Fail{stop}: Fail{stop}
+    case Done{Cell{heap,word}}: next(heap,word)
+
+def stop(-A: Data, s: Stop) -> Result<Stop,A>:
+  Fail{s}
+
+# ---------------------------------------------------------------- reference counts
+
+def rc_of(+heap: Heap, +w: U32) -> U32:
+  load_word(heap,w,0)
+
+def mortal(+heap: Heap, +w: U32) -> Bool:
+  Bool.and(is_pointer(w),Bool.not(is_none(rc_of(heap,w))))
+
+# dup and drop ignore zero, immediates and immortal cells (SPEC §5).
+def dup(+heap: Heap, +w: U32) -> Result<Stop,Heap>:
+  +rc = rc_of(heap,w)
+  choose(Result<Stop,Heap>,Bool.not(mortal(heap,w)),u => Done{heap},u =>
+  choose(Result<Stop,Heap>,U32.is_eq(rc,0),u => Fail{Internal{"dangling pointer"}},u =>
+  choose(Result<Stop,Heap>,U32.is_eq(rc,4294967294),u => Fail{Exhausted{2,"RCOverflow"}},u =>
+    Done{stored_word(heap,w,0,U32.add(rc,1))})))
+
+def dups(words: List<&2,U32>, +heap: Heap) -> Result<Stop,Heap>:
+  match words:
+    case Nil{}: Done{heap}
+    case Con{+w,rest}: bind(Heap,Heap,dup(heap,w),heap => dups(rest,heap))
+
+# Owning edges: Object fields, Closure captures, Action operands and
+# Activation slots; a Big has none. Metadata words are never edges.
+def edges(+heap: Heap, +q: U32) -> List<&2,U32>:
+  +header = load_word(heap,q,1)
+  +length = U32.shrn(header,3n)
+  +class = U32.and(header,7)
+  +skip = Bool.pick(U32,Bool.or(U32.is_eq(class,1),U32.is_eq(class,3)),1,Bool.pick(U32,U32.is_eq(class,2),length,2))
+  slice(U32.to_nat(U32.sub(length,Bool.pick(U32,U32.is_gt(skip,length),length,skip))),memory_of(heap),U32.add(U32.shrn(q,2n),U32.add(2,skip)))
+
+def freed(+heap: Heap, +q: U32) -> Heap:
+  match heap:
+    case Heap{+memory,bump,+free}:
+      +k = class_of(U32.add(2,U32.shrn(read(memory,U32.add(U32.shrn(q,2n),1)),3n)))
+      Heap{write(write(memory,U32.shrn(q,2n),nth(free,k)),U32.add(U32.shrn(q,2n),1),U32.shln(4,U32.to_nat(k))),bump,replaced(free,k,q)}
+
+type Pending is Data:
+  Pending{heap: Heap, work: List<&2,U32>, size: U32}
+
+def with_pending(-B: Data, result: Result<Stop,Pending>, next: Heap -> List<&2,U32> -> U32 -> Result<Stop,B>) -> Result<Stop,B>:
+  match result:
+    case Fail{stop}: Fail{stop}
+    case Done{Pending{heap,work,size}}: next(heap,work,size)
+
+# Decrement each edge, last to first; a count reaching zero joins the worklist,
+# which lives in the frame region's free words.
+def decremented(edges: List<&2,U32>, +heap: Heap, +work: List<&2,U32>, +size: U32, +room: U32) -> Result<Stop,Pending>:
+  match edges:
+    case Nil{}: Done{Pending{heap,work,size}}
+    case Con{+e,+rest}:
+      +rc = rc_of(heap,e)
+      choose(Result<Stop,Pending>,Bool.not(mortal(heap,e)),u => decremented(rest,heap,work,size,room),u =>
+      choose(Result<Stop,Pending>,U32.is_eq(rc,0),u => Fail{Internal{"rc underflow"}},u =>
+      choose(Result<Stop,Pending>,U32.is_eq(rc,1),
+        u => choose(Result<Stop,Pending>,U32.is_ge(size,room),u => Fail{Exhausted{3,"frames"}},
+               u => decremented(rest,stored_word(heap,e,0,0),Con{e,work},U32.add(size,1),room)),
+        u => decremented(rest,stored_word(heap,e,0,U32.sub(rc,1)),work,size,room))))
+
+def release(fuel: Nat, +heap: Heap, work: List<&2,U32>, +size: U32, +room: U32) -> Result<Stop,Heap>:
+  match fuel work:
+    case _ Nil{}: Done{heap}
+    case 0n _: Fail{Internal{"release fuel"}}
+    case 1n+ +f Con{+q,rest}:
+      with_pending(Heap,decremented(List.reverse(&2,U32,edges(heap,q)),heap,rest,U32.sub(size,1),room),heap => work => size =>
+        release(f,freed(heap,q),work,size,room))
+
+def drop(+heap: Heap, +room: U32, +w: U32) -> Result<Stop,Heap>:
+  +rc = rc_of(heap,w)
+  choose(Result<Stop,Heap>,Bool.not(mortal(heap,w)),u => Done{heap},u =>
+  choose(Result<Stop,Heap>,U32.is_eq(rc,0),u => Fail{Internal{"rc underflow"}},u =>
+  choose(Result<Stop,Heap>,U32.is_eq(rc,1),
+    u => choose(Result<Stop,Heap>,U32.is_eq(room,0),u => Fail{Exhausted{3,"frames"}},
+           u => release(U32.to_nat(memory_words()),stored_word(heap,w,0,0),[w],1,room)),
+    u => Done{stored_word(heap,w,0,U32.sub(rc,1))})))
+
+def drops(words: List<&2,U32>, +heap: Heap, +room: U32) -> Result<Stop,Heap>:
+  match words:
+    case Nil{}: Done{heap}
+    case Con{+w,rest}: bind(Heap,Heap,drop(heap,room,w),heap => drops(rest,heap,room))
+
+# ---------------------------------------------------------------- code
+
+# The loaded image: record offsets by table index and the constant pool words.
+type Code is Data:
+  Code{image: Store, types: Store, constructors: Store, functions: Store, names: Store, pool: Store, representation: List<&2,U32>, terminal: U32}
+
+def code_word(+code: Code, +at: U32) -> U32:
+  match code:
+    case Code{image,types,constructors,functions,names,pool,reps,terminal}: read(image,at)
+
+def type_record(+code: Code, +t: U32) -> U32:
+  match code:
+    case Code{image,types,constructors,functions,names,pool,reps,terminal}: read(types,t)
+
+def function_record(+code: Code, +f: U32) -> U32:
+  match code:
+    case Code{image,types,constructors,functions,names,pool,reps,terminal}: read(functions,f)
+
+def name_record(+code: Code, +n: U32) -> U32:
+  match code:
+    case Code{image,types,constructors,functions,names,pool,reps,terminal}: read(names,n)
+
+def pool_word(+code: Code, +c: U32) -> U32:
+  match code:
+    case Code{image,types,constructors,functions,names,pool,reps,terminal}: read(pool,c)
+
+def rep(+code: Code, +r: U32) -> U32:
+  match code:
+    case Code{image,types,constructors,functions,names,pool,reps,terminal}: nth(reps,r)
+
+def terminal(code: Code) -> U32:
+  match code:
+    case Code{image,types,constructors,functions,names,pool,reps,terminal}: terminal
+
+def is_rep(+code: Code, +t: U32, +r: U32) -> Bool:
+  Bool.and(Bool.not(is_none(t)),U32.is_eq(t,rep(code,r)))
+
+def type_kind(+code: Code, +t: U32) -> U32:
+  choose(U32,is_none(t),u => none(),u => code_word(code,U32.add(type_record(code,t),1)))
+
+def constructor_count(+code: Code, +t: U32) -> U32:
+  code_word(code,U32.add(type_record(code,t),4))
+
+def constructor_record(+code: Code, +t: U32, +tag: U32) -> U32:
+  match code:
+    case Code{+image,types,constructors,functions,names,pool,reps,terminal}:
+      read(constructors,U32.add(code_word(Code{image,types,constructors,functions,names,pool,reps,terminal},U32.add(read(types,t),3)),tag))
+
+def field_count(+code: Code, +t: U32, +tag: U32) -> U32:
+  code_word(code,U32.add(constructor_record(code,t,tag),4))
+
+def field_type(+code: Code, +t: U32, +tag: U32, +i: U32) -> U32:
+  code_word(code,U32.add(constructor_record(code,t,tag),U32.add(5,i)))
+
+def node_op(+code: Code, +at: U32) -> Nat:
+  U32.to_nat(code_word(code,U32.add(at,1)))
+
+def node_type(+code: Code, +at: U32) -> U32:
+  code_word(code,U32.add(at,2))
+
+def operand(+code: Code, +at: U32, +i: U32) -> U32:
+  code_word(code,U32.add(at,U32.add(3,i)))
+
+def node_last(+code: Code, +at: U32) -> U32:
+  code_word(code,U32.sub(U32.add(at,code_word(code,at)),1))
+
+# ---------------------------------------------------------------- frames
+
+# A frame record is [value[n], node, aux, head] (SPEC §6); `Gather` keeps its
+# filled operands newest first and reserves `need` slots.
+type Frame is Data:
+  Top{phase: U32}
+  Gather{node: U32, need: U32, got: List<&2,U32>}
+  Bind{node: U32}
+  Scope{depth: U32}
+  Call{caller: U32}
+  InvokeFunction{node: U32}
+  InvokeArgument{node: U32, function: U32}
+
+def frame_words(frame: Frame) -> U32:
+  match frame:
+    case Gather{node,need,got}: U32.add(need,3)
+    case Call{caller}: 4
+    case InvokeArgument{node,function}: 4
+    case _: 3
+
+# The current Activation, the frames newest first, and the words they occupy.
+type Stack is Data:
+  Stack{act: U32, frames: List<&2,Frame>, top: U32}
+
+def room(stack: Stack) -> U32:
+  match stack:
+    case Stack{act,frames,top}: U32.sub(region_words(),top)
+
+def act_of(stack: Stack) -> U32:
+  match stack:
+    case Stack{act,frames,top}: act
+
+def pushed(+stack: Stack, +frame: Frame) -> Result<Stop,Stack>:
+  match stack:
+    case Stack{act,frames,+top}:
+      choose(Result<Stop,Stack>,U32.is_gt(frame_words(frame),U32.sub(region_words(),top)),u => Fail{Exhausted{3,"frames"}},
+        u => Done{Stack{act,Con{frame,frames},U32.add(top,frame_words(frame))}})
+
+def popped(stack: Stack) -> Stack:
+  match stack:
+    case Stack{act,Con{+frame,rest},top}: Stack{act,rest,U32.sub(top,frame_words(frame))}
+    case Stack{act,Nil{},top}: Stack{act,Nil{},top}
+
+def with_act(stack: Stack, act: U32) -> Stack:
+  match stack:
+    case Stack{old,frames,top}: Stack{act,frames,top}
+
+# Activation payload: owner, depth, slot[capacity].
+def depth_of(+heap: Heap, +act: U32) -> U32:
+  load_word(heap,act,3)
+
+def slot(+heap: Heap, +act: U32, +i: U32) -> U32:
+  load_word(heap,act,U32.add(4,i))
+
+def bound(heap: Heap, +act: U32, +i: U32, w: U32) -> Heap:
+  stored_word(heap,act,U32.add(4,i),w)
+
+def deepened(heap: Heap, +act: U32, depth: U32) -> Heap:
+  stored_word(heap,act,3,depth)
+
+def binds(words: List<&2,U32>, heap: Heap, +act: U32, +i: U32) -> Heap:
+  match words:
+    case Nil{}: heap
+    case Con{w,rest}: binds(rest,bound(heap,act,i,w),act,U32.add(i,1))
+
+# ---------------------------------------------------------------- inspection
+
+def cell_class(+heap: Heap, +w: U32) -> U32:
+  U32.and(load_word(heap,w,1),7)
+
+# The word read at type t is of that type (SPEC §6): Nat, U32 and Char admit an
+# immediate or a Big cell, File an immediate, and an algebraic type a nullary
+# tag or an Object of its own type whose tag has fields.
+def admits(+code: Code, +heap: Heap, +t: U32, +w: U32) -> Bool:
+  choose(Bool,Bool.or(is_rep(code,t,0),Bool.or(is_rep(code,t,1),is_rep(code,t,2))),
+    u => Bool.or(U32.is_eq(U32.and(w,1),1),Bool.and(is_pointer(w),U32.is_eq(cell_class(heap,w),2))),u =>
+  choose(Bool,is_rep(code,t,11),u => U32.is_eq(U32.and(w,1),1),u =>
+  choose(Bool,Bool.not(U32.is_eq(type_kind(code,t),0)),u => False{},u =>
+  choose(Bool,U32.is_eq(U32.and(w,1),1),
+    u => Bool.and(U32.is_lt(U32.shrn(w,1n),constructor_count(code,t)),U32.is_eq(field_count(code,t,U32.shrn(w,1n)),0)),
+    u => Bool.and(Bool.and(is_pointer(w),U32.is_eq(cell_class(heap,w),0)),
+          Bool.and(U32.is_eq(load_word(heap,w,2),t),
+          Bool.and(U32.is_lt(load_word(heap,w,3),constructor_count(code,t)),Bool.not(U32.is_eq(field_count(code,t,load_word(heap,w,3)),0)))))))))
+
+def ill_typed(-A: Data) -> Result<Stop,A>:
+  Fail{Refused{"image","ill-typed"}}
+
+def inspected_at(-A: Data, +code: Code, +heap: Heap, +t: U32, +w: U32, next: Unit -> Result<Stop,A>) -> Result<Stop,A>:
+  choose(Result<Stop,A>,admits(code,heap,t,w),next,u => ill_typed(A))
+
+# The value of a Nat, U32 or Char word, and the canonical word of a value.
+def scalar(+heap: Heap, +w: U32) -> U32:
+  choose(U32,U32.is_eq(U32.and(w,1),1),u => U32.shrn(w,1n),u => load_word(heap,w,2))
+
+def word_of(+heap: Heap, +v: U32) -> Result<Stop,Cell>:
+  choose(Result<Stop,Cell>,boxed(v),u => alloc(heap,2,[v]),u => Done{Cell{heap,immediate(v)}})
+
+def tag_of(+code: Code, +heap: Heap, +t: U32, +w: U32) -> U32:
+  choose(U32,is_rep(code,t,0),u => Bool.pick(U32,U32.is_eq(scalar(heap,w),0),0,1),u =>
+    choose(U32,U32.is_eq(U32.and(w,1),1),u => U32.shrn(w,1n),u => load_word(heap,w,3)))
+
+# ---------------------------------------------------------------- primitives
+
+def truth(b: Bool) -> U32:
+  immediate(Bool.to_u32(b))
+
+def order(+a: U32, +b: U32) -> U32:
+  choose(U32,U32.is_lt(a,b),u => 0,u => Bool.pick(U32,U32.is_eq(a,b),1,2))
+
+# Comparison k of is_eq, is_ne, is_lt, is_le, is_gt, is_ge, unsigned.
+def compared(+k: U32, +a: U32, +b: U32) -> Bool:
+  nth_bool([U32.is_eq(a,b),U32.is_ne(a,b),U32.is_lt(a,b),U32.is_le(a,b),U32.is_gt(a,b),U32.is_ge(a,b)],k)
+
+def shifted(left: Bool, +a: U32, +n: U32) -> U32:
+  choose(U32,U32.is_ge(n,32),u => 0,u => Bool.pick(U32,left,U32.shln(a,U32.to_nat(n)),U32.shrn(a,U32.to_nat(n))))
+
+def spaced(+c: U32) -> Bool:
+  Bool.or(within(c,9,13),U32.is_eq(c,32))
+
+def digits(fuel: Nat, +v: U32, +acc: List<&2,U32>) -> List<&2,U32>:
+  match fuel:
+    case 0n: acc
+    case 1n+f: choose(List<&2,U32>,U32.is_lt(v,10),u => Con{U32.add(48,v),acc},u => digits(f,U32.div(v,10),Con{U32.add(48,U32.mod(v,10)),acc}))
+
+def code_words(codes: List<&2,U32>) -> List<&2,U32>:
+  match codes:
+    case Nil{}: Nil{}
+    case Con{c,rest}: Con{immediate(c),code_words(rest)}
+
+# The Char words of a String, each cell inspected at String and each
+# character at Char.
+def chars(fuel: Nat, +code: Code, +heap: Heap, +w: U32) -> Result<Stop,List<&2,U32>>:
+  match fuel:
+    case 0n: Fail{Internal{"string fuel"}}
+    case 1n+f:
+      inspected_at(List<&2,U32>,code,heap,rep(code,3),w,u =>
+      choose(Result<Stop,List<&2,U32>>,U32.is_eq(U32.and(w,1),1),u => Done{Nil{}},u =>
+      inspected_at(List<&2,U32>,code,heap,rep(code,2),load_word(heap,w,4),u =>
+        bind(List<&2,U32>,List<&2,U32>,chars(f,code,heap,load_word(heap,w,5)),rest => Done{Con{load_word(heap,w,4),rest}}))))
+
+def string_of(+code: Code, +heap: Heap, +w: U32) -> Result<Stop,List<&2,U32>>:
+  chars(U32.to_nat(memory_words()),code,heap,w)
+
+def scalars_of(words: List<&2,U32>, +heap: Heap) -> List<&2,U32>:
+  match words:
+    case Nil{}: Nil{}
+    case Con{w,rest}: Con{scalar(heap,w),scalars_of(rest,heap)}
+
+# SCon cells from the chain's last character to its first, each holding a
+# new reference to its character.
+def chain(last_first: List<&2,U32>, +code: Code, +heap: Heap, +tail: U32) -> Result<Stop,Cell>:
+  match last_first:
+    case Nil{}: Done{Cell{heap,tail}}
+    case Con{+c,rest}:
+      bind(Heap,Cell,dup(heap,c),heap =>
+        with_cell(Cell,alloc(heap,0,[rep(code,3),1,c,tail]),heap => w => chain(rest,code,heap,w)))
+
+def natural(+heap: Heap, +v: U32) -> Result<Stop,Cell>:
+  word_of(heap,v)
+
+# Nat results are checked before narrowing: above 2^32-1 is NatRange.
+def nat_sum(+heap: Heap, +a: U32, +b: U32) -> Result<Stop,Cell>:
+  choose(Result<Stop,Cell>,U32.is_gt(b,U32.sub(none(),a)),u => Fail{Exhausted{2,"NatRange"}},u => word_of(heap,U32.add(a,b)))
+
+def nat_product(+heap: Heap, +a: U32, +b: U32) -> Result<Stop,Cell>:
+  choose(Result<Stop,Cell>,Bool.and(Bool.not(U32.is_eq(a,0)),U32.is_gt(b,U32.div(none(),a))),u => Fail{Exhausted{2,"NatRange"}},u => word_of(heap,U32.mul(a,b)))
+
+def immediate_cell(+heap: Heap, +w: U32) -> Result<Stop,Cell>:
+  Done{Cell{heap,w}}
+
+def string_cell(+code: Code, +heap: Heap, +w: U32, next: List<&2,U32> -> Result<Stop,Cell>) -> Result<Stop,Cell>:
+  bind(List<&2,U32>,Cell,string_of(code,heap,w),next)
+
+# SPEC §9 on inspected operand words `a` and `b`; the result is allocated
+# before any operand is dropped.
+def computed(id: Nat, +code: Code, +heap: Heap, +a: U32, +b: U32, +x: U32, +y: U32) -> Result<Stop,Cell>:
+  match id:
+    case 0n: word_of(heap,U32.add(x,y))
+    case 1n: word_of(heap,U32.sub(x,y))
+    case 2n: word_of(heap,U32.mul(x,y))
+    case 3n: word_of(heap,choose(U32,U32.is_eq(y,0),u => 0,u => U32.div(x,y)))
+    case 4n: word_of(heap,choose(U32,U32.is_eq(y,0),u => x,u => U32.mod(x,y)))
+    case 5n: word_of(heap,U32.not(x))
+    case 6n: word_of(heap,U32.and(x,y))
+    case 7n: immediate_cell(heap,immediate(order(x,y)))
+    case 8n: immediate_cell(heap,truth(compared(0,x,y)))
+    case 9n: immediate_cell(heap,truth(compared(1,x,y)))
+    case 10n: immediate_cell(heap,truth(compared(2,x,y)))
+    case 11n: immediate_cell(heap,truth(compared(3,x,y)))
+    case 12n: immediate_cell(heap,truth(compared(4,x,y)))
+    case 13n: immediate_cell(heap,truth(compared(5,x,y)))
+    case 14n: word_of(heap,shifted(True{},x,y))
+    case 15n: word_of(heap,shifted(False{},x,y))
+    case 16n: immediate_cell(heap,a)
+    case 17n: immediate_cell(heap,a)
+    case 18n: immediate_cell(heap,a)
+    case 19n: immediate_cell(heap,a)
+    case 20n: immediate_cell(heap,truth(U32.is_eq(x,y)))
+    case 21n: immediate_cell(heap,truth(spaced(x)))
+    case 22n: nat_sum(heap,x,y)
+    case 23n: word_of(heap,choose(U32,U32.is_lt(x,y),u => 0,u => U32.sub(x,y)))
+    case 24n: nat_product(heap,x,y)
+    case 25n: immediate_cell(heap,immediate(order(x,y)))
+    case 26n: immediate_cell(heap,truth(compared(0,x,y)))
+    case 27n: immediate_cell(heap,truth(compared(1,x,y)))
+    case 28n: immediate_cell(heap,truth(compared(2,x,y)))
+    case 29n: immediate_cell(heap,truth(compared(3,x,y)))
+    case 30n: immediate_cell(heap,truth(compared(4,x,y)))
+    case 31n: immediate_cell(heap,truth(compared(5,x,y)))
+    case 32n: chain(List.reverse(&2,U32,code_words(digits(10n,x,Nil{}))),code,heap,immediate(0))
+    case 33n: chain(List.reverse(&2,U32,code_words(digits(10n,x,Nil{}))),code,heap,immediate(0))
+    case 34n: string_cell(code,heap,a,s => string_cell(code,heap,b,t => immediate_cell(heap,truth(same(scalars_of(s,heap),scalars_of(t,heap))))))
+    case 35n: string_cell(code,heap,a,s => chain(List.reverse(&2,U32,s),code,heap,b))
+    case 36n: string_cell(code,heap,a,s => chain(s,code,heap,immediate(0)))
+    case 37n: string_cell(code,heap,a,s => word_of(heap,count(U32,s)))
+    case 38n: string_cell(code,heap,a,s => immediate_cell(heap,truth(U32.is_eq(count(U32,s),0))))
+    case _: Fail{Refused{"image","prim"}}
+
+def compute(+id: U32, +code: Code, +heap: Heap, +a: U32, +b: U32) -> Result<Stop,Cell>:
+  computed(U32.to_nat(id),code,heap,a,b,scalar(heap,a),scalar(heap,b))
+
+# Operands the prim moves into its result: append's tail and the word-keeping
+# conversions. Every other operand is dropped after the result exists.
+def moved(+id: U32, +i: U32) -> Bool:
+  Bool.or(Bool.and(U32.is_eq(id,35),U32.is_eq(i,1)),Bool.and(within(id,16,19),U32.is_eq(i,0)))
+
+def dropped_operands(+id: U32, words: List<&2,U32>, +i: U32) -> List<&2,U32>:
+  match words:
+    case Nil{}: Nil{}
+    case Con{+w,+rest}: choose(List<&2,U32>,moved(id,i),u => dropped_operands(id,rest,U32.add(i,1)),u => Con{w,dropped_operands(id,rest,U32.add(i,1))})
+
+def all_admitted(+code: Code, +heap: Heap, words: List<&2,U32>, inputs: List<&2,U32>) -> Bool:
+  match words inputs:
+    case Con{w,ws} Con{r,rs}: Bool.and(admits(code,heap,rep(code,r),w),all_admitted(code,heap,ws,rs))
+    case _ _: True{}
+
+def primitive_inputs(entry: Maybe<&2,Primitive>) -> List<&2,U32>:
+  match entry:
+    case Some{Primitive{inputs,output}}: inputs
+    case None{}: Nil{}
+
+# ---------------------------------------------------------------- the machine
+
+type Target is Data:
+  Callee{function: U32}
+  Held{word: U32}
+
+# A Book halts Answered, then is Described; a Program Emits or Dies.
+type Outcome is Data:
+  Answered{word: U32}
+  Described{result: U32, tag: U32, tree: List<&2,U32>}
+  Emitted{}
+  Died{code: U32, message: List<&2,U32>}
+  Stopped{stop: Stop}
+
+type Control is Data:
+  Eval{node: U32}
+  Return{word: U32}
+  Enter{target: Target, ops: List<&2,U32>}
+  Finished{outcome: Outcome}
+
+type Meter is Data:
+  Meter{fuel: U32, calls: U32, quantum: U32}
+
+# `out` holds the printed lines, newest first.
+type Machine is Data:
+  Machine{control: Control, stack: Stack, heap: Heap, meter: Meter, out: List<&2,List<&2,U32>>}
+
+# A transition's control, frames and heap; fuel and output change only on Enter.
+type Next is Data:
+  Next{control: Control, stack: Stack, heap: Heap}
+
+def to(control: Control, stack: Stack, heap: Heap) -> Result<Stop,Next>:
+  Done{Next{control,stack,heap}}
+
+def then_stack(-B: Data, result: Result<Stop,Stack>, next: Stack -> Result<Stop,B>) -> Result<Stop,B>:
+  bind(Stack,B,result,next)
+
+def act_heap(+stack: Stack, +heap: Heap, next: U32 -> Result<Stop,Next>) -> Result<Stop,Next>:
+  next(act_of(stack))
+
+def operands_of(+code: Code, +node: U32, n: Nat, +i: U32) -> List<&2,U32>:
+  match n:
+    case 0n: Nil{}
+    case 1n+m: Con{operand(code,node,i),operands_of(code,node,m,U32.add(i,1))}
+
+def slots_of(+heap: Heap, +act: U32, words: List<&2,U32>) -> List<&2,U32>:
+  match words:
+    case Nil{}: Nil{}
+    case Con{i,rest}: Con{slot(heap,act,i),slots_of(heap,act,rest)}
+
+# Completing a gathered node (SPEC §6): Nat Succ and Char Chr act on words,
+# other constructors allocate an Object, prims compute then drop what they did
+# not move, a Foreign builds an inert Action, an Application enters its callee.
+def completed(+code: Code, +node: U32, +ops: List<&2,U32>, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  +t = node_type(code,node)
+  +id = operand(code,node,0)
+  +a = nth(ops,0)
+  choose(Result<Stop,Next>,U32.is_eq(code_word(code,U32.add(node,1)),6),u => to(Enter{Callee{id},ops},stack,heap),u =>
+  choose(Result<Stop,Next>,U32.is_eq(code_word(code,U32.add(node,1)),12),u => with_cell(Next,alloc(heap,3,Con{id,ops}),heap => w => to(Return{w},stack,heap)),u =>
+  choose(Result<Stop,Next>,U32.is_eq(code_word(code,U32.add(node,1)),1),
+    u => choose(Result<Stop,Next>,Bool.not(all_admitted(code,heap,ops,primitive_inputs(primitive_at(prims(),id)))),u => ill_typed(Next),u =>
+           with_cell(Next,compute(id,code,heap,a,nth(ops,1)),heap => w =>
+             bind(Heap,Next,drops(dropped_operands(id,ops,0),heap,room(stack)),heap => to(Return{w},stack,heap)))),u =>
+  choose(Result<Stop,Next>,is_rep(code,t,0),
+    u => inspected_at(Next,code,heap,t,a,u =>
+           choose(Result<Stop,Next>,U32.is_eq(scalar(heap,a),none()),u => Fail{Exhausted{2,"NatRange"}},u =>
+             with_cell(Next,word_of(heap,U32.add(scalar(heap,a),1)),heap => w =>
+               bind(Heap,Next,drop(heap,room(stack),a),heap => to(Return{w},stack,heap))))),u =>
+  choose(Result<Stop,Next>,is_rep(code,t,2),u => to(Return{a},stack,heap),u =>
+    with_cell(Next,alloc(heap,0,Con{t,Con{id,ops}}),heap => w => to(Return{w},stack,heap)))))))
+
+def gathered(+code: Code, +node: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  +n = operand(code,node,1)
+  choose(Result<Stop,Next>,U32.is_eq(n,0),u => completed(code,node,Nil{},stack,heap),u =>
+    then_stack(Next,pushed(stack,Gather{node,n,Nil{}}),stack => to(Eval{operand(code,node,2)},stack,heap)))
+
+# §6.1: the matching row, the key's arm, or else the default.
+def row_arm(+code: Code, +node: U32, +tag: U32) -> U32:
+  +arm = choose(U32,U32.is_lt(tag,operand(code,node,3)),u => operand(code,node,U32.add(4,tag)),u => none())
+  choose(U32,is_none(arm),u => node_last(code,node),u => arm)
+
+def key_arm(n: Nat, +code: Code, +node: U32, +v: U32, +i: U32) -> U32:
+  match n:
+    case 0n: node_last(code,node)
+    case 1n+m:
+      choose(U32,U32.is_eq(operand(code,node,U32.add(4,U32.mul(2,i))),v),u => operand(code,node,U32.add(5,U32.mul(2,i))),u =>
+        key_arm(m,code,node,v,U32.add(i,1)))
+
+type Fields is Data:
+  Fields{heap: Heap, words: List<&2,U32>}
+
+def with_fields(-B: Data, result: Result<Stop,Fields>, next: Heap -> List<&2,U32> -> Result<Stop,B>) -> Result<Stop,B>:
+  match result:
+    case Fail{stop}: Fail{stop}
+    case Done{Fields{heap,words}}: next(heap,words)
+
+# Words a selected Branch binds: a Nat's predecessor is a new word, a Char
+# binds its own code word, an Object its fields; each slot owns a reference.
+def selected_fields(+code: Code, +heap: Heap, +t: U32, +w: U32, +f: U32) -> Result<Stop,Fields>:
+  +fields = slice(U32.to_nat(f),memory_of(heap),U32.add(U32.shrn(w,2n),4))
+  choose(Result<Stop,Fields>,is_rep(code,t,0),u => with_cell(Fields,word_of(heap,U32.sub(scalar(heap,w),1)),heap => x => Done{Fields{heap,[x]}}),u =>
+  choose(Result<Stop,Fields>,is_rep(code,t,2),u => bind(Heap,Fields,dup(heap,w),heap => Done{Fields{heap,[w]}}),u =>
+    bind(Heap,Fields,dups(fields,heap),heap => Done{Fields{heap,fields}})))
+
+def entered_arm(+code: Code, +arm: U32, +t: U32, +w: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  +f = operand(code,arm,2)
+  +act = act_of(stack)
+  choose(Result<Stop,Next>,Bool.or(U32.is_eq(code_word(code,U32.add(arm,1)),2),U32.is_eq(f,0)),
+    u => to(Eval{choose(U32,U32.is_eq(code_word(code,U32.add(arm,1)),2),u => operand(code,arm,0),u => operand(code,arm,3))},stack,heap),
+    u => with_fields(Next,selected_fields(code,heap,t,w,f),+heap => words =>
+           then_stack(Next,pushed(stack,Scope{depth_of(heap,act)}),stack =>
+             to(Eval{operand(code,arm,3)},stack,deepened(binds(words,heap,act,depth_of(heap,act)),act,U32.add(depth_of(heap,act),f))))))
+
+def selected(+code: Code, +node: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  +t = operand(code,node,1)
+  +w = slot(heap,act_of(stack),operand(code,node,0))
+  inspected_at(Next,code,heap,t,w,u =>
+    entered_arm(code,choose(U32,U32.is_eq(operand(code,node,2),0),
+      u => row_arm(code,node,tag_of(code,heap,t,w)),
+      u => key_arm(U32.to_nat(operand(code,node,3)),code,node,scalar(heap,w),0)),t,w,stack,heap))
+
+def closed(+code: Code, +node: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  +captured = slots_of(heap,act_of(stack),operands_of(code,node,U32.to_nat(operand(code,node,3)),4))
+  bind(Heap,Next,dups(captured,heap),heap =>
+    with_cell(Next,alloc(heap,1,Con{node,captured}),heap => w => to(Return{w},stack,heap)))
+
+def evaluated(op: Nat, +code: Code, +node: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  match op:
+    case 0n: to(Return{pool_word(code,operand(code,node,0))},stack,heap)
+    case 3n: to(Return{immediate(operand(code,node,0))},stack,heap)
+    case 5n:
+      +w = slot(heap,act_of(stack),operand(code,node,0))
+      bind(Heap,Next,dup(heap,w),heap => to(Return{w},stack,heap))
+    case 1n: gathered(code,node,stack,heap)
+    case 4n: gathered(code,node,stack,heap)
+    case 6n: gathered(code,node,stack,heap)
+    case 12n: gathered(code,node,stack,heap)
+    case 7n: then_stack(Next,pushed(stack,Bind{node}),stack => to(Eval{operand(code,node,1)},stack,heap))
+    case 8n: selected(code,node,stack,heap)
+    case 10n: closed(code,node,stack,heap)
+    case 11n: then_stack(Next,pushed(stack,InvokeFunction{node}),stack => to(Eval{operand(code,node,0)},stack,heap))
+    case _: Fail{Internal{"eval arm"}}
+
+def unwound(n: Nat, +heap: Heap, +act: U32, +i: U32, +room: U32) -> Result<Stop,Heap>:
+  match n:
+    case 0n: Done{heap}
+    case 1n+m: bind(Heap,Heap,drop(heap,room,slot(heap,act,i)),heap => unwound(m,bound(heap,act,i,0),act,U32.sub(i,1),room))
+
+def topped(+code: Code, +phase: U32, +w: U32, +rest: List<&2,Frame>, +top: U32, +heap: Heap) -> Result<Stop,Next>:
+  choose(Result<Stop,Next>,U32.is_eq(phase,0),u => to(Finished{Answered{w}},Stack{0,Con{Top{0},rest},top},heap),u =>
+  choose(Result<Stop,Next>,U32.is_eq(phase,1),u => to(Enter{Held{w},Nil{}},Stack{0,Con{Top{2},rest},top},heap),u =>
+  choose(Result<Stop,Next>,U32.is_eq(phase,2),u => to(Enter{Held{w},[terminal(code)]},Stack{0,Con{Top{3},rest},top},heap),u =>
+    inspected_at(Next,code,heap,rep(code,10),w,u =>
+      choose(Result<Stop,Next>,U32.is_eq(load_word(heap,w,3),0),
+        u => bind(Heap,Next,drop(heap,room(Stack{0,rest,top}),w),heap => to(Finished{Emitted{}},Stack{0,Con{Top{3},rest},top},heap)),
+        u => inspected_at(Next,code,heap,rep(code,1),load_word(heap,w,4),u =>
+               bind(List<&2,U32>,Next,string_of(code,heap,load_word(heap,w,5)),message =>
+               bind(Heap,Next,drop(heap,room(Stack{0,rest,top}),w),heap2 =>
+                 to(Finished{Died{scalar(heap,load_word(heap,w,4)),scalars_of(message,heap)}},Stack{0,Con{Top{3},rest},top},heap2)))))))))
+
+# The Return transitions of SPEC §6, by the top frame.
+def returned(+code: Code, +w: U32, stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  match stack:
+    case Stack{+act,Con{Gather{+node,+need,+got},+rest},+top}:
+      +have : List<&2,U32> = Con{w,got}
+      choose(Result<Stop,Next>,U32.is_lt(count(U32,have),need),
+        u => to(Eval{operand(code,node,U32.add(2,count(U32,have)))},Stack{act,Con{Gather{node,need,have},rest},top},heap),
+        u => completed(code,node,List.reverse(&2,U32,have),Stack{act,rest,U32.sub(top,U32.add(need,3))},heap))
+    case Stack{+act,Con{Bind{+node},rest},+top}:
+      +d = depth_of(heap,act)
+      then_stack(Next,pushed(Stack{act,rest,U32.sub(top,3)},Scope{d}),stack =>
+        to(Eval{operand(code,node,2)},stack,deepened(bound(heap,act,d,w),act,U32.add(d,1))))
+    case Stack{+act,Con{Scope{+saved},rest},+top}:
+      +popped : Stack = Stack{act,rest,U32.sub(top,3)}
+      +d = depth_of(heap,act)
+      bind(Heap,Next,unwound(U32.to_nat(U32.sub(d,saved)),heap,act,U32.sub(d,1),room(popped)),heap =>
+        to(Return{w},popped,deepened(heap,act,saved)))
+    case Stack{+act,Con{Call{+caller},rest},+top}:
+      +popped : Stack = Stack{act,rest,U32.sub(top,4)}
+      bind(Heap,Next,drop(heap,room(popped),act),heap => to(Return{w},with_act(popped,caller),heap))
+    case Stack{+act,Con{InvokeFunction{+node},rest},+top}:
+      +popped : Stack = Stack{act,rest,U32.sub(top,3)}
+      choose(Result<Stop,Next>,U32.is_eq(operand(code,node,1),1),
+        u => then_stack(Next,pushed(popped,InvokeArgument{node,w}),stack => to(Eval{operand(code,node,2)},stack,heap)),
+        u => to(Enter{Held{w},Nil{}},popped,heap))
+    case Stack{+act,Con{InvokeArgument{node,+f},rest},+top}:
+      to(Enter{Held{f},[w]},Stack{act,rest,U32.sub(top,4)},heap)
+    case Stack{+act,Con{Top{+phase},+rest},+top}:
+      bind(Heap,Next,drop(heap,room(Stack{act,rest,top}),act),heap => topped(code,phase,w,rest,top,heap))
+    case Stack{act,Nil{},top}: Fail{Internal{"no frame"}}
+
+# §6.2: an entry is in tail position when only Scope frames separate it from
+# the nearest Call or Top frame.
+def tail(frames: List<&2,Frame>) -> Bool:
+  match frames:
+    case Con{Scope{d},rest}: tail(rest)
+    case Con{Call{c},rest}: True{}
+    case Con{Top{p},rest}: True{}
+    case _: False{}
+
+def unscoped_frames(frames: List<&2,Frame>, +act: U32, +top: U32) -> Stack:
+  match frames:
+    case Con{Scope{d},rest}: unscoped_frames(rest,act,U32.sub(top,3))
+    case _: Stack{act,frames,top}
+
+def unscoped(stack: Stack) -> Stack:
+  match stack:
+    case Stack{act,frames,top}: unscoped_frames(frames,act,top)
+
+def frames_of(stack: Stack) -> List<&2,Frame>:
+  match stack:
+    case Stack{act,frames,top}: frames
+
+def called(+stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  choose(Result<Stop,Next>,tail(frames_of(stack)),
+    u => bind(Heap,Next,drop(heap,room(unscoped(stack)),act_of(stack)),heap => to(Eval{0},with_act(unscoped(stack),0),heap)),
+    u => then_stack(Next,pushed(stack,Call{act_of(stack)}),stack => to(Eval{0},with_act(stack,0),heap)))
+
+def with_next(-B: Data, result: Result<Stop,Next>, next: Stack -> Heap -> Result<Stop,B>) -> Result<Stop,B>:
+  match result:
+    case Fail{stop}: Fail{stop}
+    case Done{Next{control,stack,heap}}: next(stack,heap)
+
+# Entering a body (SPEC §7): tail entries release the caller first, others
+# push Call; then a fresh Activation holds the bound slots. A closure's
+# captures gain references and the closure itself is dropped last.
+def body_entered(+code: Code, +owner: U32, +capacity: U32, +depth: U32, +words: List<&2,U32>, +body: U32, +captures: List<&2,U32>, +closure: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  with_next(Next,called(stack,heap),+stack => heap =>
+    with_cell(Next,alloc(heap,4,Con{owner,Con{depth,List.append(&2,U32,words,zeros(U32.to_nat(U32.sub(capacity,count(U32,words)))))}}),heap => a =>
+      bind(Heap,Next,dups(captures,heap),heap =>
+        bind(Heap,Next,drop(heap,room(stack),closure),heap => to(Eval{body},with_act(stack,a),heap)))))
+
+def machine_of(result: Result<Stop,Next>, meter: Meter, out: List<&2,List<&2,U32>>) -> Result<Stop,Machine>:
+  match result:
+    case Fail{stop}: Fail{stop}
+    case Done{Next{control,stack,heap}}: Done{Machine{control,stack,heap,meter,out}}
+
+def charged(meter: Meter) -> Meter:
+  match meter:
+    case Meter{fuel,calls,+quantum}:
+      Meter{U32.sub(fuel,1),U32.add(calls,1),Bool.pick(U32,U32.is_eq(U32.add(quantum,1),65536),0,U32.add(quantum,1))}
+
+def fuel_of(meter: Meter) -> U32:
+  match meter:
+    case Meter{fuel,calls,quantum}: fuel
+
+# §7 step 1: the target is a function, a Closure cell (the terminal
+# continuation is one with node none), or an Action cell, applied to as many
+# words as its arrow is live.
+def admissible(+code: Code, +heap: Heap, target: Target, +ops: List<&2,U32>) -> Bool:
+  match target:
+    case Callee{f}: True{}
+    case Held{+w}:
+      +class = cell_class(heap,w)
+      +node = load_word(heap,w,2)
+      Bool.and(is_pointer(w),
+        choose(Bool,U32.is_eq(class,3),u => U32.is_le(count(U32,ops),1),u =>
+        choose(Bool,U32.is_eq(class,1),
+          u => U32.is_eq(count(U32,ops),choose(U32,is_none(node),u => 1,u => operand(code,node,1))),
+          u => False{})))
+
+def is_scalar_text(codes: List<&2,U32>) -> Bool:
+  match codes:
+    case Nil{}: True{}
+    case Con{+c,rest}: Bool.and(Bool.and(U32.is_le(c,1114111),Bool.not(within(c,55296,57343))),is_scalar_text(rest))
+
+# Applying an Action to its continuation performs its one effect. Only
+# IO.print is modelled here; other foreign leaves are refused, never faked.
+def performed(+code: Code, +w: U32, +k: U32, +stack: Stack, +heap: Heap, meter: Meter, out: List<&2,List<&2,U32>>) -> Result<Stop,Machine>:
+  choose(Result<Stop,Machine>,Bool.not(U32.is_eq(load_word(heap,w,2),1)),
+    u => Fail{Unsupported{"vm",String.append("foreign ",U32.show(load_word(heap,w,2)))}},
+    u => bind(List<&2,U32>,Machine,string_of(code,heap,load_word(heap,w,3)),+line =>
+      choose(Result<Stop,Machine>,Bool.not(is_scalar_text(scalars_of(line,heap))),u => Fail{Refused{"io","abi"}},u =>
+        bind(Heap,Machine,drop(heap,room(stack),w),heap2 =>
+          Done{Machine{Enter{Held{k},[immediate(0)]},stack,heap2,meter,Con{scalars_of(line,heap),out}}}))))
+
+def held_entered(+code: Code, +w: U32, +ops: List<&2,U32>, +stack: Stack, +heap: Heap, +meter: Meter, +out: List<&2,List<&2,U32>>) -> Result<Stop,Machine>:
+  +node = load_word(heap,w,2)
+  +captures = slice(U32.to_nat(U32.sub(U32.shrn(load_word(heap,w,1),3n),1)),memory_of(heap),U32.add(U32.shrn(w,2n),3))
+  choose(Result<Stop,Machine>,U32.is_eq(cell_class(heap,w),3),
+    u => choose(Result<Stop,Machine>,U32.is_eq(count(U32,ops),0),
+      u => Done{Machine{Return{w},stack,heap,meter,out}},
+      u => performed(code,w,nth(ops,0),stack,heap,meter,out)),
+    u => choose(Result<Stop,Machine>,is_none(node),
+      u => machine_of(with_cell(Next,alloc(heap,0,[rep(code,10),0,nth(ops,0)]),heap => e => to(Return{e},stack,heap)),meter,out),
+      u => machine_of(body_entered(code,node,operand(code,node,2),U32.add(count(U32,captures),count(U32,ops)),
+             List.append(&2,U32,captures,ops),node_last(code,node),captures,w,stack,heap),meter,out)))
+
+def target_entered(+code: Code, target: Target, +ops: List<&2,U32>, +stack: Stack, +heap: Heap, meter: Meter, out: List<&2,List<&2,U32>>) -> Result<Stop,Machine>:
+  match target:
+    case Callee{+f}:
+      +record = function_record(code,f)
+      +body = code_word(code,U32.add(record,5))
+      machine_of(body_entered(code,body,code_word(code,U32.add(record,4)),code_word(code,U32.add(record,3)),ops,body,Nil{},0,stack,heap),meter,out)
+    case Held{+w}: held_entered(code,w,ops,stack,heap,meter,out)
+
+# Enter (SPEC §7): check the target, pay one fuel, then run the target.
+def entered(+code: Code, +target: Target, +ops: List<&2,U32>, +stack: Stack, +heap: Heap, +meter: Meter, out: List<&2,List<&2,U32>>) -> Result<Stop,Machine>:
+  choose(Result<Stop,Machine>,Bool.not(admissible(code,heap,target,ops)),u => ill_typed(Machine),u =>
+  choose(Result<Stop,Machine>,U32.is_eq(fuel_of(meter),0),u => Fail{Exhausted{1,"fuel"}},u =>
+    target_entered(code,target,ops,stack,heap,charged(meter),out)))
+
+def step(+code: Code, m: Machine) -> Result<Stop,Machine>:
+  match m:
+    case Machine{Eval{+node},stack,heap,meter,out}: machine_of(evaluated(node_op(code,node),code,node,stack,heap),meter,out)
+    case Machine{Return{w},stack,heap,meter,out}: machine_of(returned(code,w,stack,heap),meter,out)
+    case Machine{Enter{target,ops},stack,heap,meter,out}: entered(code,target,ops,stack,heap,meter,out)
+    case Machine{Finished{outcome},stack,heap,meter,out}: Done{Machine{Finished{outcome},stack,heap,meter,out}}
+
+def halted(m: Machine, stop: Stop) -> Machine:
+  match m:
+    case Machine{control,stack,heap,meter,out}: Machine{Finished{Stopped{stop}},stack,heap,meter,out}
+
+# A refused step leaves the machine as it was and records why.
+def settled(result: Result<Stop,Machine>, m: Machine) -> Machine:
+  match result:
+    case Fail{stop}: halted(m,stop)
+    case Done{next}: next
+
+def is_finished(m: Machine) -> Bool:
+  match m:
+    case Machine{Finished{o},stack,heap,meter,out}: True{}
+    case _: False{}
+
+# Transitions until the machine finishes. The Nat bound is the model's own
+# harness limit, reported as `Bound`, never as VM exhaustion.
+def run(fuel: Nat, +code: Code, +m: Machine) -> Machine:
+  match fuel:
+    case 0n: halted(m,Bound{"transitions"})
+    case 1n+f: choose(Machine,is_finished(m),u => m,u => run(f,code,settled(step(code,m),m)))
+
+# ---------------------------------------------------------------- describing a Book result
+
+type Piece is Data:
+  Shown{word: U32, result: U32}
+  Said{text: List<&2,U32>}
+
+def text(s: String) -> List<&2,U32>:
+  match s:
+    case SNil{}: Nil{}
+    case SCon{Chr{c},rest}: Con{c,text(rest)}
+
+def repeated_text(n: Nat, +t: List<&2,U32>) -> List<&2,U32>:
+  match n:
+    case 0n: Nil{}
+    case 1n+m: List.append(&2,U32,t,repeated_text(m,t))
+
+def image_of_code(code: Code) -> Store:
+  match code:
+    case Code{image,types,constructors,functions,names,pool,reps,terminal}: image
+
+def name_codes(+code: Code, +n: U32) -> List<&2,U32>:
+  +record = name_record(code,n)
+  Maybe.default(&2,List<&2,U32>,scalars(List.take(&2,U32,unpack(slice(U32.to_nat(U32.sub(code_word(code,record),2)),image_of_code(code),U32.add(record,2))),U32.to_nat(code_word(code,U32.add(record,1))))),Nil{})
+
+def field_pieces(n: Nat, +code: Code, +heap: Heap, +t: U32, +tag: U32, +w: U32, +i: U32) -> List<&2,Piece>:
+  match n:
+    case 0n: [Said{text("}")}]
+    case 1n+m:
+      Con{Said{Bool.pick(List<&2,U32>,U32.is_eq(i,0),Nil{},text(","))},Con{Shown{load_word(heap,w,U32.add(4,i)),field_type(code,t,tag,i)},
+        field_pieces(m,code,heap,t,tag,w,U32.add(i,1))}}
+
+def pieces(+code: Code, +heap: Heap, +w: U32, +t: U32) -> List<&2,Piece>:
+  +tag = tag_of(code,heap,t,w)
+  +name = name_codes(code,code_word(code,U32.add(constructor_record(code,t,tag),3)))
+  +fields = field_count(code,t,tag)
+  choose(List<&2,Piece>,is_rep(code,t,0),
+    u => [Said{List.append(&2,U32,repeated_text(U32.to_nat(scalar(heap,w)),text("Succ{")),List.append(&2,U32,text("Zero{}"),repeated_text(U32.to_nat(scalar(heap,w)),text("}"))))}],
+    u => choose(List<&2,Piece>,U32.is_eq(fields,0),u => [Said{List.append(&2,U32,name,text("{}"))}],
+      u => Con{Said{List.append(&2,U32,name,text("{"))},field_pieces(U32.to_nat(fields),code,heap,t,tag,w,0)}))
+
+def display_limit() -> U32:
+  16777216
+
+def visit_limit() -> U32:
+  1048576
+
+# §8: an iterative walk bounded by 1,048,576 visits and 16 MiB of text; a
+# Nat's unary spelling is sized before it is spelled.
+def render(fuel: Nat, +code: Code, +heap: Heap, work: List<&2,Piece>, +visits: U32, +size: U32, parts: List<&2,List<&2,U32>>) -> Result<Stop,List<&2,U32>>:
+  match fuel work:
+    case _ Nil{}: Done{List.concat(&2,U32,List.reverse(&2,List<&2,U32>,parts))}
+    case 0n _: Fail{Internal{"render fuel"}}
+    case 1n+ +f Con{Said{+t},rest}:
+      choose(Result<Stop,List<&2,U32>>,U32.is_gt(count(U32,t),U32.sub(display_limit(),size)),u => Fail{Exhausted{2,"display"}},u =>
+        render(f,code,heap,rest,visits,U32.add(size,count(U32,t)),Con{t,parts}))
+    case 1n+ +f Con{Shown{+w,+t},rest}:
+      choose(Result<Stop,List<&2,U32>>,U32.is_ge(visits,visit_limit()),u => Fail{Exhausted{2,"display"}},u =>
+      inspected_at(List<&2,U32>,code,heap,t,w,u =>
+      choose(Result<Stop,List<&2,U32>>,Bool.and(is_rep(code,t,0),U32.is_gt(scalar(heap,w),U32.div(U32.sub(display_limit(),size),6))),u => Fail{Exhausted{2,"display"}},u =>
+        render(f,code,heap,List.append(&2,Piece,pieces(code,heap,w,t),rest),U32.add(visits,1),size,parts))))
+
+def described(+code: Code, +heap: Heap, +w: U32, +t: U32) -> Result<Stop,List<&2,U32>>:
+  render(U32.to_nat(none()),code,heap,[Shown{w,t}],0,0,Nil{})
+
+# ---------------------------------------------------------------- booting
+
+def indexed(offsets: List<&2,U32>, store: Store, +i: U32) -> Store:
+  match offsets:
+    case Nil{}: store
+    case Con{a,rest}: indexed(rest,write(store,i,a),U32.add(i,1))
+
+type Pooled is Data:
+  Pooled{heap: Heap, pool: Store}
+
+def with_pooled(-B: Data, result: Result<Stop,Pooled>, next: Heap -> Store -> Result<Stop,B>) -> Result<Stop,B>:
+  match result:
+    case Fail{stop}: Fail{stop}
+    case Done{Pooled{heap,pool}}: next(heap,pool)
+
+def immortal_scalar(+heap: Heap, +v: U32) -> Result<Stop,Cell>:
+  choose(Result<Stop,Cell>,boxed(v),u => allocate(heap,none(),2,[v]),u => Done{Cell{heap,immediate(v)}})
+
+# A String constant is an immortal SCon chain built from its last character,
+# each boxed code in a Big cell just before the SCon holding it (SPEC §5).
+def immortal_chain(last_first: List<&2,U32>, +string: U32, +heap: Heap, +tail: U32) -> Result<Stop,Cell>:
+  match last_first:
+    case Nil{}: Done{Cell{heap,tail}}
+    case Con{c,rest}:
+      with_cell(Cell,immortal_scalar(heap,c),heap => char =>
+        with_cell(Cell,allocate(heap,none(),0,[string,1,char,tail]),heap => w => immortal_chain(rest,string,heap,w)))
+
+def pooled(constants: List<&2,U32>, +image: Store, +string: U32, +heap: Heap, +pool: Store, +i: U32) -> Result<Stop,Pooled>:
+  match constants:
+    case Nil{}: Done{Pooled{heap,pool}}
+    case Con{+a,rest}:
+      with_cell(Pooled,choose(Result<Stop,Cell>,U32.is_eq(read(image,U32.add(a,1)),3),
+          u => immortal_chain(List.reverse(&2,U32,slice(U32.to_nat(read(image,U32.add(a,2))),image,U32.add(a,3))),string,heap,immediate(0)),
+          u => immortal_scalar(heap,read(image,U32.add(a,3)))),heap => w =>
+        pooled(rest,image,string,heap,write(pool,i,w),U32.add(i,1)))
+
+type Booted is Data:
+  Booted{code: Code, heap: Heap}
+
+def terminal_cell(+program: Bool, +heap: Heap) -> Result<Stop,Cell>:
+  choose(Result<Stop,Cell>,program,u => allocate(heap,none(),1,[none()]),u => Done{Cell{heap,0}})
+
+# Load time (SPEC §5): constants materialize in index order from the heap
+# base, immortal; a Program then gets its immortal terminal continuation.
+def booted_sections(lists: List<&2,List<&2,U32>>, +image: Store, +total: U32) -> Result<Stop,Booted>:
+  match lists:
+    case Con{t,Con{c,Con{f,Con{k,Con{n,Con{m,Nil{}}}}}}}:
+      +reps = slice(12n,image,12)
+      with_pooled(Booted,pooled(k,image,nth(reps,3),Heap{empty(),heap_base(total),zeros(29n)},empty(),0),heap => pool =>
+        with_cell(Booted,terminal_cell(U32.is_eq(read(image,3),1),heap),heap => last =>
+          Done{Booted{Code{image,indexed(t,empty(),0),indexed(c,empty(),0),indexed(f,empty(),0),indexed(m,empty(),0),pool,reps,last},heap}}))
+    case _: Fail{Internal{"sections"}}
+
+def boot(+words: List<&2,U32>) -> Result<Stop,Booted>:
+  +image = stored(words,empty(),0)
+  +total = count(U32,words)
+  bind(List<&2,List<&2,U32>>,Booted,refused(List<&2,List<&2,U32>>,sections(List<&2,List<&2,U32>>,6n,image,total,0,32,Nil{},lists => Done{lists})),lists =>
+    booted_sections(lists,image,total))
+
+# ---------------------------------------------------------------- Books and Programs
+
+def constructor_fields(cs: List<&2,Constructor>) -> List<&2,List<&2,U32>>:
+  match cs:
+    case Nil{}: Nil{}
+    case Con{Constructor{name,fields},rest}: Con{fields,constructor_fields(rest)}
+
+# §8's describe domain: algebraic, with every live field of every constructor
+# describable in turn; a cycle through algebraic types stays describable.
+def describable(fuel: Nat, +types: List<&2,Sort>, work: List<&2,U32>, +seen: List<&2,U32>) -> Bool:
+  match fuel work:
+    case _ Nil{}: True{}
+    case 0n _: False{}
+    case 1n+ +f Con{+t,+rest}:
+      choose(Bool,is_none(t),u => False{},u =>
+      choose(Bool,member(seen,t),u => describable(f,types,rest,seen),u =>
+      choose(Bool,Bool.not(U32.is_eq(kind(types,t),0)),u => False{},u =>
+        describable(f,types,List.append(&2,U32,List.concat(&2,U32,constructor_fields(constructors_of(types,t))),rest),Con{t,seen}))))
+
+# Host ordinals are nullary tags of the parameter types, checked in
+# parameter order as eval-cli checks them.
+def arguments(parameters: List<&2,U32>, ordinals: List<&2,U32>, +types: List<&2,Sort>) -> Result<Stop,List<&2,U32>>:
+  match parameters ordinals:
+    case Nil{} Nil{}: Done{Nil{}}
+    case Con{+p,ps} Con{+o,os}:
+      choose(Result<Stop,List<&2,U32>>,Bool.not(U32.is_eq(kind(types,p),0)),u => Fail{Refused{"invoke","structured-argument"}},u =>
+      choose(Result<Stop,List<&2,U32>>,U32.is_ge(o,count(Constructor,constructors_of(types,p))),u => Fail{Refused{"invoke","argument-range"}},u =>
+      choose(Result<Stop,List<&2,U32>>,Bool.not(U32.is_eq(count(U32,fields_of(constructors_of(types,p),o)),0)),u => Fail{Refused{"invoke","structured-argument"}},u =>
+        bind(List<&2,U32>,List<&2,U32>,arguments(ps,os,types),words => Done{Con{immediate(o),words}}))))
+    case _ _: Fail{Refused{"invoke","argument-arity"}}
+
+def with_function(-B: Data, found: Maybe<&2,Function>, next: List<&2,U32> -> U32 -> Result<Stop,B>) -> Result<Stop,B>:
+  match found:
+    case None{}: Fail{Refused{"invoke","unknown-export"}}
+    case Some{Function{name,parameters,result,slots,body}}: next(parameters,result)
+
+# A Book request (SPEC §8) reads only the image: the export, its arguments and
+# its describable result, before any fuel is spent.
+def book(+plan: Plan, +booted: Booted, +name: List<&2,U32>, +fuel: U32, ordinals: List<&2,U32>) -> Result<Stop,Machine>:
+  match plan booted:
+    case Plan{entry,+types,+functions,reps} Booted{code,heap}:
+      +index = function_index(functions,name,0)
+      with_function(Machine,function_at(functions,index),parameters => +result =>
+        bind(List<&2,U32>,Machine,arguments(parameters,ordinals,types),words =>
+          choose(Result<Stop,Machine>,Bool.not(describable(U32.to_nat(none()),types,[result],Nil{})),u => Fail{Unsupported{"invoke","result-type"}},u =>
+            Done{Machine{Enter{Callee{index},words},Stack{0,[Top{0}],3},heap,Meter{fuel,0,0},Nil{}}})))
+
+def program(+plan: Plan, +booted: Booted, +fuel: U32) -> Machine:
+  match plan booted:
+    case Plan{entry,types,+functions,reps} Booted{code,heap}:
+      Machine{Enter{Callee{function_index(functions,main_bytes(),0)},Nil{}},Stack{0,[Top{1}],3},heap,Meter{fuel,0,0},Nil{}}
+
+def code_of(booted: Booted) -> Code:
+  match booted:
+    case Booted{code,heap}: code
+
+def result_type(+plan: Plan, +name: List<&2,U32>) -> U32:
+  match plan:
+    case Plan{entry,types,functions,reps}: callee_result(function_at(functions,function_index(functions,name,0)))
+
+# A Book's answer is described, then dropped (SPEC §8).
+def concluded(+code: Code, +t: U32, m: Machine) -> Result<Stop,Machine>:
+  match m:
+    case Machine{Finished{Answered{+w}},+stack,+heap,+meter,+out}:
+      bind(List<&2,U32>,Machine,described(code,heap,w,t),tree =>
+        bind(Heap,Machine,drop(heap,room(stack),w),heap2 =>
+          Done{Machine{Finished{Described{t,tag_of(code,heap,t,w),tree}},stack,heap2,meter,out}}))
+    case _: Done{m}
