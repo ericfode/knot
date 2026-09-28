@@ -541,7 +541,9 @@ and a missing lane are neither Exhausted nor agreement. Expected values are neve
 regenerated from a candidate VM.
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
-golden: the eval-cli line where eval agrees with the seed (52 goldens); the seed's
+golden: the eval-cli line where eval agrees with the seed (52 goldens), agreement
+meaning that eval's tree equals the seed's printed value in §8's spelling (no
+spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
 value rendered by §8 where eval is excused (`nat-big`); `Exhausted` kind 2
 `NatRange` where the seed's value lies outside the VM's domain (`nat-range`,
 justified in [golden/bounds.json](golden/bounds.json)); and the seed's stdout for
@@ -562,7 +564,11 @@ lane and requires:
   and passing validation;
 - each Book plan equal to an independent erasure and slot projection of that
   head's `check-cli` core display;
-- the eval result's type index and constructor matching the image;
+- the eval result's type index and constructor matching the image, and its tree
+  equal to the seed's value in §8's spelling; a disagreeing eval lane is refused
+  (two frozen expectation controls);
+- every literal review (`seed_stdout`, written before observation) equal to the
+  seed's printed value;
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations;
 - all 13 node forms, both Case modes, a Program and a boxed scalar constant
   covered;

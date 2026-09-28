@@ -32,6 +32,7 @@ BUILD = ROOT / '.local/vm-spec/gate'
 SEED = ROOT / 'scripts/bend-reference'
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # hang guard only
 EVAL_BUDGET = '1048576'
+DISPLAY_VISITS = 1_048_576  # SPEC section 8's rendering bound
 VM_FUEL = 1_000_000
 RECEIPT = HERE / 'receipts/spec.json'
 EXPECTED = GOLDEN / 'vm-expected.json'
@@ -458,7 +459,39 @@ def result_view(plan: dict, stdout: str):
     return t, tag, tree
 
 
-def vm_expectation(case, plan, bounds) -> dict:
+def described(printed: str, quantities: dict) -> str:
+    """The seed's printed value in SPEC section 8's describe spelling: no spaces, erased
+    fields dropped by the golden's own declarations, a Nat as its unary view."""
+    s, at = printed.removesuffix('\n'), 0
+    token = re.compile(r'(\d+)n|([\w.]+)\{')
+
+    def value():
+        nonlocal at
+        m = token.match(s, at)
+        require(m, f'seed value: cannot read {s[at:at + 30]!r}')
+        at = m.end()
+        if m[1] is not None:
+            n = int(m[1])
+            require(n <= DISPLAY_VISITS, f'seed value: Nat {n} exceeds the display bound')
+            return 'Succ{' * n + 'Zero{}' + '}' * n
+        kids = []
+        while not s.startswith('}', at):
+            kids.append(value())
+            if s.startswith(', ', at):
+                at += 2
+            else:
+                require(s.startswith('}', at), f'seed value: cannot read {s[at:at + 30]!r}')
+        at += 1
+        live = quantities.get(m[2], [1] * len(kids))
+        require(len(live) == len(kids), f'seed value: {m[2]} has {len(kids)} fields, declared {len(live)}')
+        return m[2] + '{' + ','.join(k for q, k in zip(live, kids) if q) + '}'
+
+    tree = value()
+    require(at == len(s), f'seed value: trailing text {s[at:at + 30]!r}')
+    return tree
+
+
+def vm_expectation(case, plan, bounds, source) -> dict:
     """The Exhausted-lane rule, applied to the frozen observations of one golden."""
     seed, ev = case['seed'], case['eval']
     fuel = VM_FUEL
@@ -471,20 +504,40 @@ def vm_expectation(case, plan, bounds) -> dict:
         return {'argv': ['IMAGE', 'main', str(fuel)], 'outcome': 'Exhausted', 'kind': bound['kind'],
                 'cause': bound['cause'], 'basis': 'bound', 'reason': bound['basis'], 'eval_lane': classify(ev)}
     require(seed['exit'] == 0, f"{case['name']}: the seed must succeed")
+    value = described(seed['stdout'], erased_fields(source))
     if ev['exit'] == 0:
-        result_view(plan, ev['stdout'])
+        _, _, tree = result_view(plan, ev['stdout'])
+        require(tree == value, f"{case['name']}: eval-cli prints {tree!r}, the seed {value!r}")
         return {'argv': ['IMAGE', 'main', str(fuel)], 'exit': 0, 'stdout': ev['stdout'], 'stderr': '',
                 'basis': 'eval-cli', 'eval_lane': 'agree'}
     # The eval lane is excused only by a documented bound; the VM owes the seed's value.
     require(classify(ev) == 'Exhausted', f"{case['name']}: eval lane {ev} is not a documented bound")
     main = next(f for f in plan['functions'] if f['name'] == 'main')
-    m = re.fullmatch(r'(\w+)\{\}\n', seed['stdout'])
-    require(m, f"{case['name']}: only a nullary seed value can be rendered without eval-cli")
+    root = re.match(r'[\w.]+', value)[0]
     ctors = [c['name'] for c in plan['types'][main['result']]['constructors']]
-    tag = ctors.index(m[1])
+    require(root in ctors, f"{case['name']}: seed root {root} is not a constructor of main's result")
     return {'argv': ['IMAGE', 'main', str(fuel)], 'exit': 0,
-            'stdout': f"Evaluated\t{main['result']}\t{tag}\t{m[1]}{{}}\n", 'stderr': '',
+            'stdout': f"Evaluated\t{main['result']}\t{ctors.index(root)}\t{value}\n", 'stderr': '',
             'basis': 'seed', 'eval_lane': 'Exhausted'}
+
+
+def expectation_controls(plans: dict, bounds: dict, sources: dict) -> list:
+    """Observations the rule must refuse: an eval lane that disagrees with the seed."""
+    def row(seed, ev):
+        return {'seed': {'exit': 0, 'stdout': seed, 'stderr': ''},
+                'eval': {'exit': 0, 'stdout': ev, 'stderr': ''}}
+    out = []
+    for label, name, seed, ev in [
+            ('eval-disagrees', 'value-on', 'Off{}\n', 'Evaluated\t0\t1\tOn{}\n'),
+            ('eval-keeps-erased-field', 'erased-construct', 'ProofBox{Off{}, On{}}\n',
+             'Evaluated\t1\t0\tProofBox{Off{}}\n')]:
+        try:
+            vm_expectation({'name': f'control:{label}', **row(seed, ev)}, plans[name], bounds, sources[name])
+        except AssertionError as refusal:
+            out.append({'control': f'expectation:{label}', 'refused': str(refusal)})
+            continue
+        raise AssertionError(f'expectation control {label} was admitted')
+    return out
 
 
 def classify(result) -> str:
@@ -826,10 +879,18 @@ def main() -> int:
 
     frozen = json.loads((GOLDEN / 'expectations.json').read_text())
     cases = {c['name']: c for c in frozen['cases']}
-    planned = [c['name'] for c in json.loads((GOLDEN / 'plan.json').read_text())['cases']]
-    require(sorted(planned) == sorted(cases) and len(planned) == len(cases), 'plan.json and expectations.json list the same cases')
+    planned = {c['name']: c for c in json.loads((GOLDEN / 'plan.json').read_text())['cases']}
+    require(sorted(planned) == sorted(cases) and len(planned) == len(frozen['cases']),
+            'plan.json and expectations.json list the same cases')
     for c in cases.values():
         require(sha((ROOT / c['source']).read_bytes()) == c['sha256'], f"frozen source {c['name']}")
+        # D7: the literal review written before observation is the seed's printed value
+        # (plan.json's first reviews spelled `, ` as `,`).
+        require(c['seed_stdout'] == c['seed']['stdout'],
+                f"{c['name']}: literal review {c['seed_stdout']!r}, seed printed {c['seed']['stdout']!r}")
+        require(planned[c['name']]['seed_stdout'].replace(', ', ',') == c['seed_stdout'].replace(', ', ','),
+                f"{c['name']}: plan.json literal review differs from the frozen row")
+    sources = {name: (ROOT / c['source']).read_text() for name, c in cases.items()}
 
     with ThreadPoolExecutor(max_workers=4) as pool:
         fresh = dict(zip(cases, pool.map(lambda c: lanes(c, built), cases.values())))
@@ -852,24 +913,24 @@ def main() -> int:
         require(codec.decode(data, digest) == plan, f'{name}: image does not decode to its plan')
         problems = codec.validate(plan, reg)
         require(not problems, (name, problems))
-        check_declarations(plan, (ROOT / case['source']).read_text())
+        check_declarations(plan, sources[name])
         shown = displays[name]
         if shown['exit'] == 0:
-            derived = from_display(shown['stdout'], plan, (ROOT / case['source']).read_text(), reg)
+            derived = from_display(shown['stdout'], plan, sources[name], reg)
             require(derived == plan['functions'], (name, 'plan differs from the checked core', derived))
             view = 'checked-core'
         else:
             require(plan['entry'] == 'program', f'{name}: no checked core for a Book plan')
             view = f"unavailable: {shown['stderr'].strip()}"
-        table[name] = vm_expectation(case, plan, bounds)
+        table[name] = vm_expectation(case, plan, bounds, sources[name])
         plans[name], images[name] = plan, data
         fixtures.append({'name': name, 'lane': case['lane'], 'seed_lane': case.get('seed_lane', 'bun'),
                          'features': case['features'], 'image_sha256': sha(data), 'words': len(data) // 4,
                          'plan_matches': view, 'seed': classify(case['seed']), 'eval': classify(case['eval']),
                          'vm': table[name]})
 
-    expected = {'rule': 'SPEC section 9: the VM owes the seed value wherever the seed succeeds within the '
-                        'declared domain and budgets; eval-cli supplies the describe text where it agrees.',
+    expected = {'rule': 'SPEC section 11: the VM owes the seed value wherever the seed succeeds within the '
+                        'declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed.',
                 'fuel': VM_FUEL, 'bounds': bounds, 'cases': table}
     if args.write_expected:
         EXPECTED.write_text(json.dumps(expected, indent=1) + '\n')
@@ -884,7 +945,7 @@ def main() -> int:
 
     controls = byte_controls(images, digest) + [
         (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in plan_controls(plans)]
-    boundaries = []
+    boundaries = expectation_controls(plans, bounds, sources)
     for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
         require(got is not None and got.startswith(reason) and message in got, f'control {label}: {got}')

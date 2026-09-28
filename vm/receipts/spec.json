@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T04:47:52.165656+00:00",
+ "date": "2026-09-28T05:33:33.701340+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -8,7 +8,7 @@
  },
  "inputs": {
   "vm/DECISIONS.md": "98ea11b8160815c61d28053063d9a9150c51d74ebf2a1ced9a93076ef39e7b1f",
-  "vm/SPEC.md": "8766740dd99fadc82c5e393412a0b972bdffdcdb3de02162ce8dcbb2b86fa508",
+  "vm/SPEC.md": "136d61779e5e848c9af32a146f5986482fb348c30ec5db56696fcb981033985d",
   "vm/bench/README.md": "51b5c362c2f4cda3168dae2161591858f1bcf91c1682d4a69065a22006af949b",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,8 +20,8 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "060a1b3b55a10072b6dcf27e90aaa99338243baa5f22e9ec790d2b03081425a7",
-  "vm/check-spec.py": "a24f2a01dc7b977efbdc2e4c76336dc96fa8a07f1f620bbf34db2a2811ba0de1",
-  "vm/golden/bounds.json": "3045599dca7704244419cff44e259db9e2997fa07a8b361bb04a8e936306da0e",
+  "vm/check-spec.py": "08630345745c5e7f4e7ea69db4b06531d58b2beec929f8989c5d275c6ff7a5ab",
+  "vm/golden/bounds.json": "3b010e3f6898cfdb942d9ce612b22225b19301223fd28cd72d467b923eb2c5af",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
   "vm/golden/case-char.kimg": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
   "vm/golden/case-char.plan.json": "4e518be75be5ab174377eba9b932ce7defef2bd45f13f51f4c09eea1d5135268",
@@ -189,7 +189,7 @@
   "vm/golden/value-on.bend": "68f9c5675b153f1f72913e68254caa4779bb383a63e7b8b477e3f65500847ce3",
   "vm/golden/value-on.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
   "vm/golden/value-on.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
-  "vm/golden/vm-expected.json": "0cb7e69a751477287bca68b2caa50100e9c07b0ab2892eb37a4128af693a8495",
+  "vm/golden/vm-expected.json": "a5b71ba937e747b266c9f0e5027635a5e90387b00fbafa81c856baa53e2b12d6",
   "vm/golden/write-sources.py": "e2632c0f73731e6e3ef52cc6c319cea1c38c218c5c7c0042da3a8c2594cb7623",
   "vm/oracles/closures.json.gz": "de15465bd281b9bcb9cdd582581eb5c6755de58c8a92e133d4d04b8989b7fcab",
   "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
@@ -1651,6 +1651,14 @@
   }
  ],
  "boundaries": [
+  {
+   "control": "expectation:eval-disagrees",
+   "refused": "control:eval-disagrees: eval-cli prints 'On{}', the seed 'Off{}'"
+  },
+  {
+   "control": "expectation:eval-keeps-erased-field",
+   "refused": "control:eval-keeps-erased-field: eval-cli prints 'ProofBox{Off{}}', the seed 'ProofBox{On{}}'"
+  },
   {
    "control": "truncated",
    "refused": "HostFailure image: total"
