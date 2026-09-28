@@ -119,3 +119,44 @@ The executor could not stage a commit: the sandbox denied the worktree's index
 lock under `/Users/ericfode/src/knot/.git/worktrees/campaign-classify/`.
 The reviewed files remain in this dedicated worktree; an explicit-path patch and
 commit message are provided under `.local/` for the coordinator.
+
+## Generics supersession — 2026-09-28
+
+The generics increment (`knot-generics-1`) parses generic datatype headers, so
+the `generic` fixture no longer reports `Unsupported parse generic-datatype`.
+The coordinator's review-round-1 authorization replaces that one pin with
+phase-specific expectations. They were derived from the fixture's unchanged
+seed reference (`bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts
+tests/subsets/classification/generic.bend` exits 0 with `Box{On{}}`) and
+literal review, not from Knot output:
+
+| Phase | Expectation | Basis |
+| --- | --- | --- |
+| parse | exit 0, `Parsed<TAB>` record | seed accepts; generic headers are in profile |
+| check | exit 0, `Checked` record | seed accepts |
+| eval `main` | `Evaluated<TAB>0<TAB>0<TAB>Box{On{}}` | seed value; `CONTRACT.json` evaluator record; `Box` is type 0, constructor 0 |
+| compile (enum profile) | exit 3, `Unsupported check constructor-fields 30:33:2:2`, prior artifact kept | `catalog-LAWS.bend::field_capability_is_not_acceptance` locates the first fielded constructor; `Box` spans bytes 30..33 at line 2, column 2 |
+
+The retired pin is kept in the case record under `superseded`. The gate reads
+a case's `phases` record when present and otherwise applies its shared record
+to every phase, as before.
+
+The `generic-invalid` mutant's anchor no longer exists. Its replacement,
+`parameter-type-invalid`, demotes `unsupported(rest,"parameter-type")` in
+`parse.bend`, the coordinator's suggested anchor. Its only witness among the
+29 original cases, `application-parameter`, now parses as a type application.
+A new seed-accepted witness therefore pins the anchor's remaining reachable
+use, a function-typed parameter:
+
+- `classification/function-parameter.bend`: the seed prints `On{}` (exit 0);
+- Knot reports `Unsupported parse parameter-type 52:53:5:17` at the `-` of
+  `->` (byte 52, line 5, column 17), derived from the source bytes.
+
+The classification-mutant count stays at seven. The closures increment will
+need to supersede this witness when it accepts function-typed parameters.
+
+Six classify-2 cases (`application-parameter`, `-return`, `-binding` and their
+`-after-prefix` twins), their three classification-gate mutants and the laws
+`return_type_application` and `binding_type_application` also conflict with
+generic type applications. They are unchanged here and await the
+coordinator's decision.

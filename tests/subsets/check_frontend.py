@@ -50,6 +50,23 @@ def classified(actual, expected):
     require(actual['stderr'].strip() == expected['diagnostic'], actual)
 
 
+def expectation(case, phase):
+    """One phase's fixed Knot record: shared by every phase unless the case lists `phases`."""
+    knot = case['knot']
+    return knot['phases'][phase] if 'phases' in knot else knot
+
+
+def observed(actual, expected):
+    if 'diagnostic' in expected:
+        classified(actual, expected)
+        return
+    require(actual['exit'] == expected['exit'] and actual['stderr'] == '', actual)
+    if 'stdout' in expected:
+        require(actual['stdout'].rstrip('\n') == expected['stdout'], actual)
+    else:
+        require(actual['stdout'].startswith(expected['stdout_prefix']), actual)
+
+
 def classification(record, manifest, lanes, source_paths):
     # A frozen local cache exercises the seed's hash loader without a hub request.
     module = manifest['hash_import']
@@ -77,7 +94,7 @@ def classification(record, manifest, lanes, source_paths):
         item = {'file': case['file'], 'reference': ref, 'lanes': {}}
         for name, command in lanes.items():
             actual = run([*command, path])
-            classified(actual, case['knot'])
+            observed(actual, expectation(case, 'parse'))
             item['lanes'][name] = actual
         record['fixtures'].append(item)
 
@@ -99,16 +116,19 @@ def classification(record, manifest, lanes, source_paths):
                     artifact.write_bytes(b'prior artifact\n')
                     arguments.append(artifact)
                 actual = run([*command, *arguments])
-                classified(actual, case['knot'])
-                if phase == 'compile':
+                expected = expectation(case, phase)
+                observed(actual, expected)
+                if phase == 'compile' and expected['exit'] != 0:
                     require(artifact.read_bytes() == b'prior artifact\n', actual)
                 record['downstream'].append({'phase': phase, 'lane': lane, 'file': case['file'],
-                                              'output_preserved': phase == 'compile', **actual})
+                                              'output_preserved': phase == 'compile' and expected['exit'] != 0,
+                                              **actual})
 
     record['mutants'] = []
     mutations = [
-        ('generic-invalid', 'unsupported(tokens,"generic-datatype")',
-         'invalid(tokens,"generic-datatype")', 'generic'),
+        # Retargeted from the retired generic-datatype prefix (generics supersedes it).
+        ('parameter-type-invalid', 'unsupported(rest,"parameter-type")',
+         'invalid(rest,"parameter-type")', 'function-parameter'),
         ('match-invalid', 'unsupported(tokens,"match-scrutinees")',
          'invalid(tokens,"match-scrutinees")', 'match'),
         ('template-invalid', 'unsupported(ts,"template-binder")',
@@ -279,7 +299,7 @@ def main():
               f"and four semantic mutants; "
               f"{len(record['classification']['fixtures'])} classification fixtures in two lanes, "
               f"{len(record['classification']['mutants'])} classification mutants, "
-              f"{len(record['classification']['downstream'])} downstream rejection observations")
+              f"{len(record['classification']['downstream'])} downstream phase observations")
     except Exception as error:
         record['status'] = 'failed'
         record['failure'] = str(error)

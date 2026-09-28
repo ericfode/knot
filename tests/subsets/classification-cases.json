@@ -15,8 +15,29 @@
         "value": "Box{On{}}"
       },
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8"
+        "superseded": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8",
+          "by": "generics (coordinator authorization, review round 1)"
+        },
+        "phases": {
+          "parse": {
+            "exit": 0,
+            "stdout_prefix": "Parsed\t"
+          },
+          "check": {
+            "exit": 0,
+            "stdout_prefix": "Checked\n"
+          },
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tBox{On{}}"
+          },
+          "compile": {
+            "exit": 3,
+            "diagnostic": "Unsupported\tcheck\tconstructor-fields\t30:33:2:2"
+          }
+        }
       }
     },
     {
@@ -138,6 +159,19 @@
       "knot": {
         "exit": 2,
         "diagnostic": "Invalid\tparse\tdeclaration-name\t8:42:1:8"
+      }
+    },
+    {
+      "file": "classification/function-parameter.bend",
+      "increment": "generics",
+      "sha256": "704882f5819b01a866d7dac28cf876bb9a08af3299fab4eed485496b745c5feb",
+      "reference": {
+        "exit": 0,
+        "value": "On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t52:53:5:17"
       }
     },
     {
