@@ -224,6 +224,26 @@ def contract_problems(c, bundle, manifest) -> list[str]:
     return problems
 
 
+def audit_problems(audit, modules, bundle, manifest) -> list[str]:
+    """FX-21: under module loading, C1's loader closure (--audit-bundle Module
+    lines) is exactly the staged sandbox, minus Base, which the audit pins
+    instead; or the audit is blocked by an allowed classification."""
+    status = audit.get('status')
+    if not modules:
+        return [] if status == 'unavailable' else ['audit recorded although the compiler advertises no module loading']
+    if status == 'blocked':
+        kind = outcome(audit['blocker'])
+        return [] if kind in ALLOWED else [f'loader audit blocker is {kind}; only Unsupported or Exhausted may block']
+    if status != 'recorded':
+        return [f'loader audit is {status}; module loading requires a recorded or blocked audit']
+    staged = {x for x in bundle['order'] if x.endswith('.bend') and x != manifest['base']['path']}
+    problems = [] if set(audit['modules']) == staged else [
+        'loader closure (--audit-bundle Module lines) differs from the staged sandbox']
+    if audit['trust']['base_pin'] != [manifest['base']['sha256']]:
+        problems.append('audit BasePin differs from the pinned Base')
+    return problems
+
+
 def generation_problems(p, manifest) -> list[str]:
     """The generation contract, the staged sandboxes, the loader audit, the
     artifacts and C1's per-case observations, from recorded fields."""
@@ -251,18 +271,7 @@ def generation_problems(p, manifest) -> list[str]:
             pages = c['runtime']['memory_maximum']['pages']
             if a['memory'] is not None and (a['memory'].get('maximum') is None or a['memory']['maximum'] > pages):
                 problems.append(f"{sid}: artifact memory {a['memory']} has no maximum within the declared {pages} pages")
-    audit = p.get('audit', {})
-    modules = contracts[GENERATIONS[0]]['modules']
-    if not modules and audit.get('status') != 'unavailable':
-        problems.append('audit recorded although the compiler advertises no module loading')
-    if modules and audit.get('status') == 'recorded':
-        staged = {x for x in bundles[COMPILER]['order'] if x.endswith('.bend') and x != manifest['base']['path']}
-        if set(audit['modules']) != staged:
-            problems.append('loader closure (--audit-bundle Module lines) differs from the staged sandbox')
-        if audit['trust']['base_pin'] != [manifest['base']['sha256']]:
-            problems.append('audit BasePin differs from the pinned Base')
-    elif modules and not (audit.get('status') == 'blocked' and outcome(audit['blocker']) in ALLOWED):
-        problems.append(f"loader audit is {audit.get('status')}; module loading requires a recorded or blocked audit")
+    problems += audit_problems(p.get('audit', {}), contracts[GENERATIONS[0]]['modules'], bundles[COMPILER], manifest)
     c1 = by_id['e2e3.c1']
     reference = c1.get('observations') or []
     if len(reference) != c1['corpus']:
@@ -910,7 +919,7 @@ def reached_chain(progress) -> dict:
     return p
 
 
-def mutants(progress) -> list[dict]:
+def mutants(progress, manifest) -> list[dict]:
     """Scratch copies with substituted recorded fields; the judge must reject
     each for its named reason. The first nine mutate the real receipt; the
     rest mutate the reached chain, whose unmutated copy must pass."""
@@ -986,6 +995,17 @@ def mutants(progress) -> list[dict]:
         a = step(p)['artifact']
         a['bytes'] = a['output_bytes'] + 1
 
+    def bundled(p, drop=0):
+        """The chain as module loading records it: --bundle in both steps, and a recorded audit."""
+        for c, sid in zip(contracts(p), GENERATIONS):
+            if not c['modules']:
+                c['modules'], c['argv'] = True, ['--bundle', c['root'], *c['argv']]
+            step(p, sid)['args'] = list(c['argv'])
+        b, base = p['bundles'][COMPILER], manifest['base']
+        loaded = [x for x in b['order'] if x.endswith('.bend') and x != base['path']]
+        p['audit'] = {'status': 'recorded', 'args': ['--audit-bundle', LIB, b['entry']], 'modules': loaded[drop:],
+                      'trust': {'base_pin': [base['sha256']], 'base_checked': [], 'base_unchecked': []}}
+
     real = (
         ('unmutated', 0, None, lambda p: None),
         ('blocker-invalid', 1, 'only Unsupported or Exhausted may block', lambda p: invalid(knot_blocker(p))),
@@ -1014,6 +1034,10 @@ def mutants(progress) -> list[dict]:
         ('a3-resource-forged', 1, 'resource tag', lambda p: exhausted(p, tag='knot-budget')),
         ('diagnostic-tail', 1, 'diagnostics differ from C1', diagnostic_tail),
         ('artifact-over-budget', 1, 'exceeds output_bytes', oversize),
+        ('reached-chain-bundled', 0, None, bundled),
+        ('audit-closure-differs', 1, 'loader closure', lambda p: bundled(p, drop=1)),
+        ('audit-missing', 1, 'requires a recorded or blocked audit',
+         lambda p: bundled(p) or p.update(audit={'status': 'unavailable'})),
     )
     result = []
     for base, cases in ((progress, real), (reached_chain(progress), chain)):
@@ -1068,6 +1092,36 @@ def audit(contract, manifest, folder: Path, bundle, checker: Path | None) -> dic
     return {'status': 'recorded', 'args': argv, 'tool': 'seed-built src/check-cli.bend', 'modules': pick('Module'),
             'trust': {'base_pin': pick('BasePin'), 'base_checked': pick('BaseChecked'),
                       'base_unchecked': pick('BaseUnchecked')}}
+
+
+# A two-module entry that loads under module loading today: a local module and Base.
+PROBE = {
+    'probe/side.bend': 'import Base\n\ndef yes() -> Bool:\n  True{}\n',
+    'probe/main.bend': ('import ./side.bend as W\n\ntype Light is Type:\n  Dark{}\n  Lit{}\n\n'
+                        'def see(x: Bool) -> Light:\n  match x:\n    case False{}: Dark{}\n    case True{}: Lit{}\n\n'
+                        'def main() -> Light:\n  see(Bool.not(W.yes()))\n'),
+}
+
+
+def audit_control(contract, manifest, checker: Path | None) -> dict:
+    """The FX-21 comparator on a real audit of an entry that loads today. It
+    applies only where the compiler advertises --audit-bundle."""
+    if checker is None:
+        return {'name': 'audit-closure', 'expected': {'status': 'unavailable'}, 'observed': {'status': 'unavailable'}}
+    folder = ROOT / BUILD / 'controls' / 'audit-closure'
+    shutil.rmtree(folder, ignore_errors=True)
+    base = manifest['base']['path']
+    for name, data in ((base, (ROOT / base).read_bytes()), *((n, t.encode()) for n, t in PROBE.items())):
+        (folder / name).parent.mkdir(parents=True, exist_ok=True)
+        (folder / name).write_bytes(data)
+    (folder / LIB).mkdir()
+    bundle = {'entry': 'probe/main.bend', 'root': LIB, 'sandbox': folder.name, 'order': [base, *PROBE],
+              'files': inspect(folder), 'unresolved': []}
+    record = audit(contract, manifest, folder, bundle, checker)
+    return {'name': 'audit-closure',
+            'expected': {'status': 'recorded', 'problems': [], 'modules': list(PROBE)},
+            'observed': {'status': record['status'], 'problems': audit_problems(record, True, bundle, manifest),
+                         'modules': record.get('modules')}}
 
 
 def main() -> int:
@@ -1233,8 +1287,9 @@ def main() -> int:
                                             **({'resource': first['blocker']['resource']}
                                                if 'resource' in first['blocker'] else {})}}
 
-        progress['controls'] = controls(names, native, bun) + sandbox_controls(bundle, manifest, contracts['e2e3.a2']['argv'])
-        progress['mutants'] = mutants(progress)
+        progress['controls'] = (controls(names, native, bun) + sandbox_controls(bundle, manifest, contracts['e2e3.a2']['argv'])
+                                + [audit_control(contract, manifest, build / 'check-cli' if auditing else None)])
+        progress['mutants'] = mutants(progress, manifest)
         violations = judge(progress, manifest)
         failed_controls = [c['name'] for c in progress['controls'] if c['expected'] != {
             k: c['observed'].get(k) for k in c['expected']}]
