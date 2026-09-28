@@ -171,6 +171,14 @@ whose static reach includes the entry. "Via dependency edges" marks a helper or
 type that no fixture spells. It is reached through its caller, which is how
 Knot reaches it too.
 
+The seven host entries cannot be observed at the enum-only boundary: `File`,
+`File.close`, `File.open`, `File.read`, `File.write_bytes`, `IO.args` and
+`IO.print`. The contract has no host imports, and a foreign operation applied in
+a pure run gets stuck. These entries are reached only by the pinned
+`host-effect` helpers, and no `agree` fixture reaches them; `regen.py` enforces
+both. `IO`, `IO.OP`, `IO.bind` and `IO.die` are observable, because
+`io-pure-bind` runs them through the continuation.
+
 | Entry | Roots | Boundary | Forms | Spelled by | Reached by (A / A-or-U / U) |
 | --- | --- | --- | --- | --- | --- |
 | `Bool` | F, C | source | - | 15 fixtures | 24 / 1 / 4 |
