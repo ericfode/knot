@@ -1116,3 +1116,28 @@ Prevention:
   descent rule is one of them. Freeze a recursive fixture for each path by
   which a variable row can reach its body: through the negative branch (a
   reference) and through a positive branch (a rebuild).
+
+## 2026-09-28 — nest review round 5: general matrix laws left as ground witnesses
+
+Confirmed:
+- Two of the three requested matrix laws were proved only as ground
+  normalizations over one Flag catalog. The gap was disclosed, but it carried
+  over from round 1 through round 4.
+
+See the [round-5 dispositions](../tests/compiler-nest/receipts/REVIEW-5.md).
+The irrefutable-first-row law is now general
+(`src/lowering-LAWS.bend::irrefutable_first_row_selected`); the exhaustive law
+remains unmet, and its typing obstacle is recorded.
+
+Prevention:
+- Attempt a requested general law before substituting a witness. The general
+  proof needed three Bend idioms.
+  - A Data-kinded invariant (`Sigma<&2,&2,...>`, or a record type indexed by
+    values) lets a proof serve both branches of a split; `A & B` is affine.
+  - Continuations are passed explicitly to generic bind lemmas, because a
+    match cannot scrutinize a computed value.
+  - The induction hypothesis is passed as a function when the proof would
+    otherwise need mutually recursive definitions.
+- When a law's proof grows a module past the 48 KB composition bound, give it
+  its own LAWS/PROOF pair and manifest group. Import that pair from the gated
+  proof entry, so the existing gate still checks it.
