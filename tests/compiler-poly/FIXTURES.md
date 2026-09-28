@@ -25,32 +25,67 @@ Changing a fixture, a case or a pinned outcome is a separately reviewed amendmen
 The scope comes from the census in
 [`implementation.json`](../../docs/compiler-campaign/inventory/implementation.json)
 under `generics`, `higher-order`, `templates` and `dependent`, plus the
-`quantities.arguments` and `quantities.polymorphic` classes, and from the
-reachable Base declarations that Knot's calls land in. Each seed-valid fixture
-mirrors named shapes in miniature, in the compact spelling Knot uses: no space
-after a comma in a call, and `case K{..}: e` on one line. Each case's `mirrors`
-field cites `path:line name`. Line numbers are those at this suite's base
-commit; `base.bend` is the pinned `.toolchain/bend-2.0.29-574b6d3/bend2/base.bend`.
+`quantities.arguments` and `quantities.polymorphic` classes. Each seed-valid
+fixture mirrors named shapes in miniature, in the compact spelling Knot uses:
+no space after a comma in a call, and `case K{..}: e` on one line. Each case's
+`mirrors` field cites `path:line name`. Line numbers are those at this suite's
+base commit; `base.bend` is the pinned `.toolchain/bend-2.0.29-574b6d3/bend2/base.bend`.
+[Census coverage](#census-coverage) maps every census declaration in these
+classes to the fixture that covers it.
 
-| Shape in Knot source | Where | Fixtures |
+**Shapes in Knot source.** These are the shapes that `src/` writes, or that
+its calls land in within the reached Base slice
+([`base-closure.json`](../../docs/compiler-campaign/inventory/base-closure.json)
+reaches `IO`, `IO.bind`, `IO.die`, `Pair`, `Sigma`, `Result`, `List.length`,
+`List.append`, `List.reverse` and `List.reverse.go`).
+
+| Shape | Where | Fixtures |
 | --- | --- | --- |
 | `S.choose(-A: Type, c, yes: Unit -> A, no: Unit -> A)` (with `S.bind`, about 300 call sites by VM-DESIGN.md's count), instantiated at `Result<S.Error,State>`, `List<&2,Token>` and `Maybe<&2,C.Term>` | `src/syntax.bend:76`, `src/syntax.bend:98` (skip_lines), `src/lex.bend:12` (normal, four chained), `src/lex.bend:35` (step_at), `src/parse.bend:54` (wrap_call) | `choose-rigid`, `choose-result-chain` |
 | `S.bind(-A: Data, -B: Data, r: Result<Error,A>, next: A -> Result<Error,B>)` at `List<&2,S.Token>`, `P.Parsed` and `List<&2,U32>`, nested, the inner lambda capturing the outer binder | `src/syntax.bend:81`, `src/driver.bend:30` (source), `src/driver.bend:69` (ordinals), `src/lex.bend:67` (scan) | `bind-instance-chain`, `bind-rigid-caller` |
-| lambdas created inside generic code at rigid arrows: `R => k => k(x)`, `x => f(x,R,k)` | `base.bend:152` (IO.pure), `base.bend:155` (IO.bind) | `choose-rigid`, `bind-rigid-caller`, `generic-compose`, `generic-capture` |
+| lambdas created inside generic code at rigid arrows: `x => f(x,R,k)` captures `f: A -> IO(B)` | `base.bend:155` (IO.bind) | `choose-rigid`, `bind-rigid-caller`, `generic-compose`, `generic-capture` |
 | curried continuations into `Result` instances, one captured in a choose thunk whose body is a let then a call | `src/patterns.bend:14` (add), `src/check.bend:165` (arm_scope), `src/parse.bend:43` (then), `src/check.bend:141` (call_body), `src/core.bend:39` (exhausted) | `curried-generic-continuation`, `generic-arrow-instances` |
-| `IO(A) = @-R: Type -> @k: (A -> IO.OP<R>) -> IO.OP<R>` with `pure`, `bind`, `die`, `pass`, `try` | `base.bend:147`, `:152`, `:155`, `:184`, `:187`, `:194` | `rank2-pure-bind`, `rank2-try`, `rank2-two-answers`, `rank2-param` |
-| `next: C.Book -> IO(Unit)` threaded through `checked`, `opened` and `load`, and captured by a bind lambda | `src/driver.bend:15`, `:39`, `:50`, `:55` | `rank2-continuation`, `rank2-try` |
+| `IO(A) = @-R: Type -> @k: (A -> IO.OP<R>) -> IO.OP<R>` with `bind` and `die` | `base.bend:147`, `:155`, `:184` | `rank2-pure-bind`, `rank2-two-answers`, `rank2-param` |
+| `next: C.Book -> IO(Unit)` threaded through `checked`, `read_result`, `opened` and `load`, and captured by a bind lambda | `src/driver.bend:15`, `:39`, `:50`, `:55` | `rank2-continuation`, `rank2-try` |
 | `IO.bind(..,opened(characters,depth))` (partial application) and `IO.bind(..,IO.args(),arguments)` (a named def) | `src/check-cli.bend:39`, `src/check-cli.bend:45`, `src/parse-cli.bend:56` | `rank2-partial-bind` |
 | `do IO<Unit>:` | `src/driver.bend:44` (read_pair) | `rank2-do-block` (boundary) |
-| `List.length(&2,S.Node,args)`, `List.reverse(&2,S.Token,..)` into Base's `a, -A: Kind(a)` definitions, which forward `a, A` to a helper | `src/check.bend:55`, `src/lex.bend:55` (finish), `src/eval.bend:133`, `base.bend:814`, `base.bend:835`, `base.bend:843` | `kind-closure-list`, `kind-forward`, `kind-zero-arrow` |
+| `List.length(&2,S.Node,args)`, `List.reverse(&2,S.Token,..)` into Base's `a, -A: Kind(a)` definitions; `List.reverse` forwards `a, A` to `List.reverse.go` | `src/check.bend:55`, `src/lex.bend:55` (finish), `src/eval.bend:133`, `base.bend:814`, `base.bend:835`, `base.bend:843` | `kind-closure-list`, `kind-forward` |
 | `Result<&1,&1,U32 & String,String>`, the two-quantity family `Result<a, b, -E: Kind(a), -A: Kind(b)> is Kind(a <&> b)` and its short form `Result<S.Error,A>` | `src/check-cli.bend:28`, `src/syntax.bend:81`, `base.bend:36` | `kind-two-quantities` |
 | `List<&1,Result<S.Error,String>>` folded through `S.bind` with a `Con{Done{+head},tail}` pattern | `src/diagnostic.bend:25`, `src/wasm-bytes.bend:18` | `kind-result-list` |
-| higher-order generics over `Kind(a)`: `f: A -> B` with `-A: Kind(a), -B: Kind(a)` | `base.bend:713` (Maybe.bind), `base.bend:739` (Maybe.map), `src/catalog.bend:50` (constructor_next) | `kind-higher-order` |
 | `set_known(~A: Data, ~value: A -> S.Token -> U32 -> C.Term, ..)`, with `refine` and `replace` passing closed lambdas whose binders shadow their own parameters | `src/scope.bend:77`, `src/scope.bend:85`, `src/scope.bend:108` | `template-set-known-thunk` |
-| Base templates reached from Knot: `List.map(~A,~B,~f,..)`, `List.filter(~A: Data,..)`, `List.foldl(~a: Quant, ~A: Kind(a),..)`, `List.any` | `base.bend:807`, `base.bend:952`, `base.bend:959`, `base.bend:977` | `template-map-types`, `template-filter-data`, `template-fold-quant`, `template-any-forward`, `template-generic-arg` |
-| `Sigma<a, b, -A: Kind(a), -B: @-x: A -> Kind(b)>`, `Pair(A,B) = Sigma<&1,&1,A,_ => B>`, `Exists`, and `File & Result<..>` destructured by `(file,result) = pair` | `base.bend:25`, `base.bend:127`, `base.bend:130`, `src/driver.bend:44`, `src/check-cli.bend:33` | `sigma-pair`, `sigma-dependent` |
-| `unpack(-A,-B,-R, pair: A & B, f: A -> B -> R)`, a census `dependent` and `higher-order` declaration | `packages/vec/main.bend:97` (the census records it at line 101 of the published package `0xd684886d…`) | `sigma-unpack` |
-| `List<a, Sigma<&2, a, String, _ => V>>` | `base.bend:2828` (Map.to_list) | `sigma-reusable` |
+| `Pair(A,B) = Sigma<&1,&1,A,_ => B>`, spelled `File & Result<..>` and destructured by `(file,result) = pair`; `Sigma`'s field `snd: B(fst)` | `base.bend:127`, `base.bend:25`, `src/driver.bend:44`, `src/check-cli.bend:33` | `sigma-pair`, `sigma-dependent` |
+| `unpack(-A,-B,-R, pair: A & B, f: A -> B -> R)`, a census `dependent` and `higher-order` declaration of a package in the census scope | `packages/vec/main.bend:97` (the census records it at line 101 of the published package `0xd684886d…`) | `sigma-unpack` |
+
+**Base shapes outside the reached slice, and edges.** These fixtures are not
+reached by Knot's source today. Each exercises the same machinery in a form
+Knot's source would reach the moment it calls one more Base def, or pins an
+adversarial case that the owning increment must not reject:
+- `IO.pure`, `IO.pass` and `IO.try` (`base.bend:152`, `:187`, `:194`) are not
+  in the reached slice. `src/driver.bend:39` (read_result) and `:50` (opened)
+  write their bodies by hand: a match on a `Result`, then `IO.die` or the
+  continuation. They ground `rank2-pure-bind` and `rank2-try`. `Act.pure` is
+  also what a `do` block's `return` desugars to (`rank2-do-block`).
+- Base's templates are not reached: `List.map(~A: Type, ~B: Type, ~f, ..)`,
+  `List.filter(~A: Data, ..)`, `List.foldl(~a: Quant, ~A: Kind(a), ~B: Type, ..)`
+  and `List.any` (`base.bend:807`, `:952`, `:959`, `:977`). scope.bend's
+  `~A: Data` is the only template binder Knot writes. These fixtures pin its
+  generalizations: type binders (`template-map-types`), a `~A: Data` forwarded
+  as an erased argument (`template-filter-data`), and quantity and kind binders
+  (`template-fold-quant`, `template-any-forward`). D2's whole-Base milestone
+  needs all of them, and the VM design lists `List.map` for baseslice-check.
+- `Maybe.map` and `Maybe.bind` (`base.bend:739`, `:713`) are not reached. Knot
+  passes `Maybe<&2,U32>` beside a continuation instead
+  (`src/catalog.bend:50`, constructor_next). `kind-higher-order` pins arrows
+  whose types range over `Kind(a)`.
+- `Exists` and `Map.to_list` (`base.bend:130`, `:2828`) are not reached. They
+  are Base's uses of a family that computes a type, and of a `&2` Sigma inside
+  a list. `sigma-dependent` and `sigma-reusable` pin those two uses of the
+  reached `Sigma`.
+- Edges with no counterpart in any source: `generic-arrow-instances` (a type
+  argument that is an arrow), `rank2-two-answers` (one action type at two
+  answers, and `Act(Act(Flag))`), `rank2-param` (rank-2 parameter types
+  written out), `kind-zero-arrow` (`Kind(&0)` at an arrow) and
+  `template-generic-arg` (closed `~` arguments built from generic defs).
 
 Out of scope:
 - **Shapes already frozen elsewhere.** These are covered by other suites and
@@ -433,8 +468,9 @@ because an implementer could reasonably expect otherwise.
     and never called (`kind-zero-arrow`).
   - The explicit quantity argument fixes the instance: `rev(&2,Flag,xs)` refuses
     a `Seq<&1,Flag>` (`kind-quantity-mismatch`).
-  - `Res<Fault,A>` is `Res<&1,&1,Fault,A>`; the seed prints the long form in
-    its diagnostics (`choose-branch-mismatch`).
+  - `Res<Fault,A>` is `Res<&1,&1,Fault,A>`. The seed accepts the short form
+    where the long one is spelled (`kind-two-quantities`), and prints the long
+    form in its diagnostics (`choose-branch-mismatch`).
 - **Templates.**
   - A `~` binder may be passed on as the erased type argument of a plain
     generic def (`template-filter-data`, `put(A,..)`).
@@ -505,3 +541,73 @@ Follow the pattern of `tests/compiler-fields/check.py`.
 - Continuations stay short: at most three list elements and four chained
   chooses. The suite does not measure stack depth, allocation or the cost of
   polymorphic dispatch; that belongs to the VM benchmarks.
+
+## Census coverage
+
+The goal of `poly-fixtures` is to cover every shape that the census lists
+under `generics`, `higher-order`, `templates` and `dependent`. This table
+covers the declarations in non-law `src/` files: all 25 `higher-order`
+declarations, all 3 `templates` declarations and the 10 non-law `dependent`
+declarations, 34 in all. Law and proof files are out of scope (see Scope).
+Fixture names without a suite are in this suite.
+
+| Declaration | Census classes | Covered by |
+| --- | --- | --- |
+| `src/catalog.bend:50` constructor_next | higher-order | `choose-result-chain` (thunks `Unit -> Res<Fault,State>`); closures `choose-thunks` |
+| `src/check.bend:51` constructor | higher-order | `choose-result-chain`; closures `choose-thunks` |
+| `src/check.bend:58` variable | higher-order | `curried-generic-continuation`, `generic-arrow-instances` |
+| `src/check.bend:141` call_body | higher-order | `curried-generic-continuation` (a continuation over `Seq<&2,Flag>`) |
+| `src/check.bend:147` binding_body | higher-order | `curried-generic-continuation` (`add`, `next: Scope -> ..`) |
+| `src/check.bend:153` match_body | higher-order | `curried-generic-continuation` |
+| `src/check.bend:161` arm_body | higher-order | `curried-generic-continuation` (`open`) |
+| `src/check.bend:165` arm_scope | higher-order | `curried-generic-continuation` (`open`) |
+| `src/core.bend:35` invalid | dependent | sugar `dependent-result` |
+| `src/core.bend:37` unsupported | dependent | sugar `dependent-result` |
+| `src/core.bend:39` exhausted | dependent | `curried-generic-continuation` (`exhausted(-A: Type)`); sugar `dependent-result` |
+| `src/core.bend:41` internal | dependent | sugar `dependent-result` |
+| `src/driver.bend:15` checked | higher-order | `rank2-continuation` |
+| `src/driver.bend:25` parsed | higher-order | `bind-instance-chain`, `rank2-continuation` |
+| `src/driver.bend:30` source | higher-order | `bind-instance-chain` |
+| `src/driver.bend:39` read_result | higher-order | `rank2-try`, `rank2-continuation` |
+| `src/driver.bend:44` read_pair | higher-order | `rank2-do-block` (boundary), `sigma-pair` |
+| `src/driver.bend:50` opened | higher-order | `rank2-continuation`, `rank2-partial-bind` |
+| `src/driver.bend:55` load | higher-order | `rank2-continuation` |
+| `src/eval.bend:23` internal | dependent | sugar `dependent-result` |
+| `src/eval.bend:26` host | dependent | sugar `dependent-result` |
+| `src/eval.bend:90` host_argument | higher-order | `curried-generic-continuation` |
+| `src/parse.bend:43` then | higher-order | `curried-generic-continuation` (`open`) |
+| `src/patterns.bend:14` add | higher-order | `curried-generic-continuation` (`add`) |
+| `src/patterns.bend:21` binder | higher-order | `curried-generic-continuation` (a two-argument curried continuation) |
+| `src/scope.bend:77` set_known | higher-order, templates, dependent | `template-set-known-thunk`; sugar `template-set-known` |
+| `src/scope.bend:85` refine | templates | `template-set-known-thunk` |
+| `src/scope.bend:108` replace | templates | `template-set-known-thunk` |
+| `src/syntax.bend:76` choose | higher-order, dependent | `choose-rigid`, `choose-result-chain`; sugar `dependent-choose`; closures `generic-choose-bind` |
+| `src/syntax.bend:81` bind | higher-order, dependent | `bind-instance-chain`, `bind-rigid-caller`, `kind-result-list`; sugar `dependent-bind` |
+| `src/wasm.bend:55` internal | dependent | sugar `dependent-result` |
+| `src/wasm.bend:100` call_body | higher-order | `curried-generic-continuation` |
+| `src/wasm.bend:104` after_argument | higher-order | `curried-generic-continuation` |
+| `src/wasm.bend:108` after_initializer | higher-order | `curried-generic-continuation` |
+
+`generics` (380 declarations) and `quantities.arguments` (379) are type
+applications. `quantities.polymorphic` is empty in `src/`: Knot declares no
+`Kind(a)` parameter of its own. It reaches Base's `List.length`, `List.append`,
+`List.reverse` and `List.reverse.go` instead, which `kind-closure-list` and
+`kind-forward` mirror. A grep of non-law `src/` at this base finds these
+type-application spellings, counted by occurrence:
+- `List<&2,T>` (397);
+- `Result<S.Error,T>` (327), the short form of `Result<&1,&1,S.Error,T>`;
+- `Maybe<&2,T>` (32);
+- `Result<&1,&1,..>` (20);
+- `List<String>` (9), short for `List<&1,String>`;
+- `Result<Error,A>` (3, in `syntax.bend`), `List<&1,T>` (2) and `Result<B.Error,..>` (1);
+- `IO<Unit>` in `do` headers (4).
+
+The fixtures write each spelling on their own carriers:
+- `Seq<&2,Flag>` for `List<&2,T>`;
+- `Res<Fault,A>` for the short `Result`, and `Res<&1,&1,Fault,Flag>` for the
+  long one (`kind-two-quantities` passes the short form where the long one is
+  spelled);
+- `Opt<&2,Term>` for `Maybe<&2,T>`;
+- `Seq<Flag>` for `List<String>`;
+- `Seq<&1,Res<Fault,Flag>>` for `List<&1,T>`;
+- `do Act<Color>` for `do IO<Unit>`.

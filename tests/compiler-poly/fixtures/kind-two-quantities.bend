@@ -45,8 +45,11 @@ def make_short(f: Flag) -> Res<Fault,Flag>:
     case Off{}: Fail{Unsupported{}}
     case On{}: Done{On{}}
 
+def read_long(r: Res<&1,&1,Fault,Flag>) -> Flag:
+  done(&1,&1,Fault,Flag,r)
+
 def affine(f: Flag) -> Flag:
-  done(&1,&1,Fault,Flag,make_short(f))
+  read_long(make_short(f))
 
 def handler(f: Flag) -> Res<&2,&1,Fault,Flag -> Flag>:
   match f:

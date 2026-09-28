@@ -1530,7 +1530,7 @@
       ],
       "knot": {
         "require": "agree",
-        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. Res<a,b,..> at &1,&1 (the short form), &2,&2 (reused with +) and &2,&1 with a closure payload, all read by one generic def."
+        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. Res<a,b,..> at &1,&1 (the short form Res<Fault,Flag> passed where Res<&1,&1,Fault,Flag> is spelled), &2,&2 (reused with +) and &2,&1 with a closure payload, all read by one generic def."
       }
     },
     {
@@ -1666,7 +1666,7 @@
       "seed_reason": [
         "- expected : Data\n- observed : Type\n",
         "Location: run\n",
-        "56>| def run(+r: Res<&2,&1,Fault,Flag -> Flag>, x: Flag) -> Flag:\n"
+        "59>| def run(+r: Res<&2,&1,Fault,Flag -> Flag>, x: Flag) -> Flag:\n"
       ],
       "knot": {
         "require": "reject",
@@ -8825,7 +8825,7 @@
       },
       {
         "case": "kind-two-quantities",
-        "source_sha256": "ef1795c423caca9a242c6bfa1d70836603a31cc4262dbe202816bcf2a38da86f",
+        "source_sha256": "7e21f646c5c2a62608d9fc5fce778197db3c38992e6e51cf484189ef0cc6bce9",
         "enums": {
           "Flag": [
             "Off",
@@ -9363,7 +9363,7 @@
       },
       {
         "case": "kind-meet-reuse",
-        "source_sha256": "9f124d066cc3be389ab530e1a664521a22f9f9504c452237761d67c71e17110c",
+        "source_sha256": "8ba94cfbd33677a630d2c4c4b32fec7ec7941624429b03756bb830dc1a84533b",
         "enums": {
           "Flag": [
             "Off",
@@ -9383,7 +9383,7 @@
           ],
           "exit": 1,
           "stdout": "",
-          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: run\n55 | \n56>| def run(+r: Res<&2,&1,Fault,Flag -> Flag>, x: Flag) -> Flag:\n   |             ^^^^^^\n57 |   match r:\n"
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: run\n58 | \n59>| def run(+r: Res<&2,&1,Fault,Flag -> Flag>, x: Flag) -> Flag:\n   |             ^^^^^^\n60 |   match r:\n"
         },
         "run": {
           "argv": [
@@ -9393,7 +9393,7 @@
           ],
           "exit": 1,
           "stdout": "",
-          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: run\n55 | \n56>| def run(+r: Res<&2,&1,Fault,Flag -> Flag>, x: Flag) -> Flag:\n   |             ^^^^^^\n57 |   match r:\n"
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: run\n58 | \n59>| def run(+r: Res<&2,&1,Fault,Flag -> Flag>, x: Flag) -> Flag:\n   |             ^^^^^^\n60 |   match r:\n"
         },
         "calls": []
       },
