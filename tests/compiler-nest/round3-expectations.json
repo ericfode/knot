@@ -430,6 +430,808 @@
       "finding": "dotted-binder"
     },
     {
+      "name": "empty-after-control",
+      "file": "tests/compiler-nest/round3-fixtures/empty-after-control.bend",
+      "sha256": "ca3476fbae70dabd89208d897c7c80b51e307a68d47c08300b77a598c10461cc",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-after-control.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n7 | def f(y: Flag, x: V) -> Flag:\n8>|   match y x:\n  |   ^^^^^^^^^^\n9 |     case On{} _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-after-flat",
+      "file": "tests/compiler-nest/round3-fixtures/empty-after-flat.bend",
+      "sha256": "ed4cd864cc5986bc43249ee2d67592a3b8c8c4133ec9f3fa7e1abde1537e4bce",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-after-flat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n10 | def f(y: Flag, x: V) -> Flag:\n11>|   match y:\n   |   ^^^^^^^^\n12 |     case On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-after-multi",
+      "file": "tests/compiler-nest/round3-fixtures/empty-after-multi.bend",
+      "sha256": "86754f8cf59b4e44d1468af2644e709fa70694c51c7e162bf6e38f214feaa61a",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-after-multi.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n7 | def f(x: Flag, v: V) -> Flag:\n8>|   match x v:\n  |   ^^^^^^^^^^\n9 |     case On{} _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-alias-erased",
+      "file": "tests/compiler-nest/round3-fixtures/empty-alias-erased.bend",
+      "sha256": "2a910b3512b502d4eac31cae5e387e21e8ea2522af0b88b56832c9b24ca3d2ee",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-alias-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- x : V\nLocation: f\n10 | def f(-x: V, y: Flag) -> Flag:\n11>|   match x y:\n   |   ^^^^^^^^^^\n12 |     case z On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-data",
+      "file": "tests/compiler-nest/round3-fixtures/empty-data.bend",
+      "sha256": "86aa977bb262a922492f6ab1c36b3b591289de37e925042bd08dbd8a73abe416",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-data.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-data/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-data.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-erased-control",
+      "file": "tests/compiler-nest/round3-fixtures/empty-erased-control.bend",
+      "sha256": "81361e088bd48bf178f5f9dc89fb467967b36880295250a1b3be3dc5bac7e2bf",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-erased-control.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- x : V\nLocation: f\n7 | def f(-x: V, y: Flag) -> Flag:\n8>|   match y:\n  |   ^^^^^^^^\n9 |     case On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-after-flat",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-after-flat.bend",
+      "sha256": "cb47fb14a2bf21c9e58354117b9ab90e3f5c6aaf92aef8c2f66d1604602d4733",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-after-flat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n12 |     case P{a, v}:\n13>|       match a:\n   |       ^^^^^^^^\n14 |         case On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-after-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-after-nested.bend",
+      "sha256": "bcf5c580975fd34df4c3f3db48894bec780d219a19f234aba6093025aeb19778",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-after-nested.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n13 | def f(q: Q) -> Flag:\n14>|   match q:\n   |   ^^^^^^^^\n15 |     case Q{P2{On{}, _}, _}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-after",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-after.bend",
+      "sha256": "e7849bb2784c36e5f57129017c46359baf7a4a6404d1d35619816cbb76d14415",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-after.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n10 | def f(p: P) -> Flag:\n11>|   match p:\n   |   ^^^^^^^^\n12 |     case P{On{}, _}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-before-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-before-nested.bend",
+      "sha256": "11a8e4012e66758e71a5d726725ca9b39f69727fc6f62de51aedc380b2d47d9b",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-before-nested.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-field-before-nested/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-field-before-nested.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-binder",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-binder.bend",
+      "sha256": "490341dd47ebcb7deb4a737c31b9066ecf0728f4378d18bd7918fd115c4d7863",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-binder.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-field-binder/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-field-binder.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-erased",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-erased.bend",
+      "sha256": "912987ece81909d9226382685f480acb2470ba16b7ccd49ffe2d1a5b8b328cec",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- v : V\nLocation: f\n10 | def f(p: Q) -> Flag:\n11>|   match p:\n   |   ^^^^^^^^\n12 |     case Q{v, On{}}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-flat",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-flat.bend",
+      "sha256": "568d5b6879d194abfa36cccd39d6bb77df9ac129d4af39ba3569f635f82af507",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-flat.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-field-flat/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-field-flat.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-nested.bend",
+      "sha256": "d3a6523fe6d61869ed1a31e3d0d5bd7aefee8c2727db42c90ef437633e597008",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-nested.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-field-nested/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-field-nested.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-flat-zero-row",
+      "file": "tests/compiler-nest/round3-fixtures/empty-flat-zero-row.bend",
+      "sha256": "f648e757bdaeb8f5a1095c32b9c20a24ce8d756656fa6bbe8b0200b695f89b41",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-flat-zero-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-flat-zero-row/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-flat-zero-row.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-flat",
+      "file": "tests/compiler-nest/round3-fixtures/empty-flat.bend",
+      "sha256": "3b7203a72cdd50bfd9ba8abdea1a1265e2a9ea4c63a131550e84b7161d4a657d",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-flat.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-flat/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-flat.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi-alias",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi-alias.bend",
+      "sha256": "96722baf018a29e60e8637d70d7a945f3f378f65944176dac6a76812072295d2",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi-alias.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi-alias/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi-alias.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi-first",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi-first.bend",
+      "sha256": "2aba72f68baa01a03af2e96912836c1ed5ed51d5b0c2758d9722505a1cd6981e",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi-first.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi-first/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi-first.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi-middle",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi-middle.bend",
+      "sha256": "a57ea57320d2ab4e94ae78207287d6ddeaaddb4cfc06ff4937d2bb4a22c5f8ba",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi-middle.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi-middle/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi-middle.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi-skip",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi-skip.bend",
+      "sha256": "019e7cfa148cee6ddf136daf7d9c5e8be8a82315837b78044e704b2120cf662c",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi-skip.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi-skip/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi-skip.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi.bend",
+      "sha256": "6ca9fd5e0721b596dd128262ab61c3eb839fe25f19b42b727e255ed4cba9c21c",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-param-after-field",
+      "file": "tests/compiler-nest/round3-fixtures/empty-param-after-field.bend",
+      "sha256": "83ca5229e0c5cf92311c2eccf52d7f707fca2c1730a862fd17d63884a71ea97c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-param-after-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- a : Flag\nLocation: f\n12 |     case P2{a, b}:\n13>|       match b:\n   |       ^^^^^^^^\n14 |         case On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-param-after-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-param-after-nested.bend",
+      "sha256": "bba2e3a18eedd2d45f50ac59959e0f31db0bc3839a1ac6a57894028051d55e5f",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-param-after-nested.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- _ : Flag\nLocation: f\n10 | def f(p: P2, v: V) -> Flag:\n11>|   match p:\n   |   ^^^^^^^^\n12 |     case P2{_, On{}}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-param-before-field",
+      "file": "tests/compiler-nest/round3-fixtures/empty-param-before-field.bend",
+      "sha256": "78aa5979ca675f03864cbbdeaecb0a3a0c4da952862b9114913898fbe907f158",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-param-before-field.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-param-before-field/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-param-before-field.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-param-before-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-param-before-nested.bend",
+      "sha256": "4b5e401a6b6801061a2512890511a275fa85104d8a9f3d8e2ac0096a26cad587",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-param-before-nested.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-param-before-nested/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-param-before-nested.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
       "name": "name-comment",
       "file": "tests/compiler-nest/round3-fixtures/name-comment.bend",
       "sha256": "7e308aaeff722e070860d5015b8402369203ea52c6273a65af4aa0482cce130e",
