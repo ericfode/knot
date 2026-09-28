@@ -27,10 +27,10 @@
 
   ;; ---------------------------------------------------------------- control region
   ;; [0,4096): 16 host result record; 32 single-operand buffer; 36 "r"; 40 "--";
-  ;; 44 "main"; 64 decimal scratch; 128 message prefixes (32-byte slots);
-  ;; 384 representation shapes; 480 pinned Base digest; 512 message buffer;
-  ;; 1024 reason codes (24-byte slots, NUL-terminated); 3712 prim table;
-  ;; 3880 foreign table.
+  ;; 44 "main"; 60 constant kinds; 64 decimal scratch; 96 describe punctuation;
+  ;; 128 message prefixes (32-byte slots); 384 representation shapes; 480 pinned
+  ;; Base digest; 512 message buffer; 1024 reason codes (24-byte slots,
+  ;; NUL-terminated); 3712 prim table; 3880 foreign table; 3920 test dump.
   (data (i32.const 36) "r")
   (data (i32.const 40) "--")
   (data (i32.const 44) "main")
@@ -2573,7 +2573,6 @@
     (global.set $olimit (i32.add (local.get $out) (i32.const 0x1000100)))
     (call $emit (i32.const 352) (i32.const 10))
     (call $emitdec (global.get $resT))
-    (call $emit (i32.const 353) (i32.const 0))
     (i32.store8 (i32.const 96) (i32.const 9))
     (call $emit (i32.const 96) (i32.const 1))
     (if (i32.eq (global.get $resT) (global.get $rNat))
@@ -2806,9 +2805,10 @@
     (i32.store (local.get $c) (i32.const -1))
     (local.get $c))
 
+  ;; a pool scalar: immediate below 2^31, else an immortal Big
   (func $constant (param $v i32) (result i32)
     (if (result i32) (i32.ge_u (local.get $v) (i32.const 0x80000000))
-      (then (drop (call $immortal (call $scalar (local.get $v)))) (i32.sub (global.get $bump) (i32.const 16)))
+      (then (call $immortal (call $scalar (local.get $v))))
       (else (call $scalar (local.get $v)))))
 
   (func $materialize
