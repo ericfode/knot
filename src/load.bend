@@ -1,6 +1,6 @@
 import Base
 import ./syntax.bend as S
-import ./lex.bend as L
+import ./literal-lex.bend as L
 import ./parse.bend as P
 import ./imports.bend as I
 import ./qualify.bend as Q
@@ -247,4 +247,4 @@ def describe(receipt: Receipt) -> String:
   match receipt:
     case Receipt{root,files,checked,unchecked}:
       String.concat(["BasePin\t",base_hash(),"\n",lines("Module\t",files),
-        lines("BaseChecked\t",checked),lines("BaseUnchecked\t",unchecked)])
+        B.review(checked),lines("BaseUnchecked\t",unchecked)])

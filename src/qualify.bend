@@ -200,6 +200,10 @@ def prepend(head: S.Node, binders: List<&2,String>, tail: S.Node, more: List<&2,
 def walk(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound: List<&2,String>) -> Result<S.Error,Qualified>:
   match fuel node:
     case 0n _: Fail{S.Exhausted{"load",S.At{0,0,0,0}}}
+    case 1n+ n S.Literal{token,kind,number,text}: done(S.Literal{token,kind,number,text})
+    case 1n+ n S.Offset{token,count,tail}:
+      then(walk(n,tail,position,names,bound),value => binders => Done{Qualified{S.Offset{token,count,value},binders}})
+    case 1n+ n S.Intrinsic{token,op,args}: Fail{S.Internal{"load","user-intrinsic"}}
     case 1n+ n S.Variable{+token}:
       S.choose(Result<S.Error,Qualified>,is_pattern(position),u => Done{Qualified{S.Variable{token},[S.text(token)]}},u =>
         S.bind(S.Token,Qualified,local(token,names,bound),t => done(S.Variable{t})))

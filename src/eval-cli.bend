@@ -29,7 +29,7 @@ def configured(path: String, +name: String, result: Result<S.Error,Request>) -> 
 def module_configured(root: String, path: String, +name: String, result: Result<S.Error,Request>) -> IO(Unit):
   match result:
     case Fail{e}: D.fail(e)
-    case Done{+request}: D.bundle(path,root,D.Limits{65536n,512n,512n},book => evaluate(book,name,request))
+    case Done{+request}: D.bundle(path,root,D.Limits{65536n,512n,4096n},book => evaluate(book,name,request))
 
 def arguments(args: List<String>) -> IO(Unit):
   match args:

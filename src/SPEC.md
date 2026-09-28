@@ -142,10 +142,12 @@ The downstream checker, evaluator and emitters have no module-specific bypass.
 Base is the unmodified 67,190-byte `base.bend` from the pinned seed, SHA-256
 `22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b`.
 The loader verifies this digest in Bend before inventorying 466 declarations.
-Only the dependency closure reachable from all user declarations is parsed,
-checked and lowered. A required Base form outside the current language reports
-its specific `Unsupported` reason. `--audit-bundle` first checks the entire
-combined book, then prints the Base pin, loaded paths, checked Base declarations
+The dependency closure reachable from all user declarations is selected.
+Ordinary bodies are parsed and checked; the literals extension below
+distinguishes its closed intrinsic registry from those source-checked bodies.
+A required Base form outside the current language reports its specific
+`Unsupported` reason. `--audit-bundle` first checks the combined book, then
+prints the Base pin, loaded paths, checked and intrinsic Base declarations
 and their exact unchecked complement. This is an explicit D2 trust inventory,
 not whole-Base acceptance or proof of unchecked declarations.
 
@@ -154,8 +156,9 @@ character/parser limits. The character cap applies before import-header removal.
 Base reads are capped at 131,072 ASCII bytes and constrained by the exact digest.
 Base dependency traversal has a finite work bound. User and traversal bound
 failures report `Exhausted`; Base identity/encoding failures report
-`HostFailure load base-pin`. The default Wasm emitter remains the enum profile. No additional
-foreign effects, fielded Wasm support or recursive Wasm support are introduced.
+`HostFailure load base-pin`. Books without installed primitive types retain
+the enum profile. The loader adds no foreign effects; the separate literals
+profile below supplies its own fielded and recursive execution path.
 
 The [module gate](../tests/compiler-modules/README.md) compares frozen seed
 expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
@@ -366,3 +369,59 @@ checks and runtime agreement are distinct evidence. Do not claim a general
 compiler-correctness or checker-soundness theorem. Final receipts must identify
 source hashes, seed hashes, commands, generated modules, tool versions, Perch
 coverage/adjudications and remaining limitations.
+
+
+## Primitives and literals: `knot-literals-wasm-1`
+
+The `--bundle` path accepts the unchanged 40-book literals freeze plus the
+separately frozen bootstrap-helper fixture. See
+[`tests/compiler-literals/README.md`](../tests/compiler-literals/README.md) for
+the complete representation, bounds, evidence and remaining obligations.
+Decimal U32 and Nat literals reject overflow. Escaped Char/String payloads are
+lists of U32 codes: 1–8 hex digits, NUL, surrogates and codes above U+10FFFF are
+preserved. Escaped surrogate pairs remain two Chars. Operator sugar, F32 and
+raw non-ASCII quoted text report the exact frozen Unsupported prefixes.
+
+The first-match matrix lowers Nat literals/offsets through Zero/Succ and String
+patterns through SNil/SCon. U32/Char literal patterns require a default; all
+leaves are checked. The 256-offset bound, quantities, first-parameter strict
+field descent and forward-call restrictions remain enforced. `Chr{...}`
+patterns and broader nested pattern support are still Unsupported.
+
+Hash-verified Base supplies a closed lowering registry: four primitive types
+and 39 operations. Calls retain explicit typed quantities. Intrinsic nodes and
+installed-type markers cannot be written in user syntax. `BaseIntrinsic` audit
+lines identify these trusted lowerings, including datatype representations;
+`BaseChecked` identifies bodies parsed/checked as source; `BaseUnchecked` is
+the exact remainder of all 466 seed declarations. This does not claim checked
+Base-body proofs for the lowered operations.
+
+The independent evaluator interprets Literal, Intrinsic and Default core
+terms. Nat remains unary source data and String remains SNil/SCon data. The new
+Wasm profile uses an instruction graph, a Wasm dispatcher and explicit source
+frames/returns. Every function body is emitted and executed at invocation time.
+U32/Char use i32 bits; Nat uses Zero/Succ cells, String uses tag/head/tail cells.
+Unsigned division/remainder, zero divisors, logical right shift and counts of
+at least 32 match the frozen seed algebra. This is not a binary Nat ABI.
+
+The frozen 65536n and deep non-tail-recursion witnesses require more than the
+old one-page heap and host call stack. The new ABI therefore fixes 64 MiB of
+linear memory, with static data below 1 MiB, returns at 1–5 MiB, frames at
+5–22 MiB and an immutable bump heap at 22–64 MiB. It bounds instructions at
+32768 and traversed primitive Nat/String values at 1048576 elements. It has no
+reclamation. Resource guards are Exhausted, not Invalid; other runtime traps
+are HostFailure. The profile must be selected explicitly in the Node adapter.
+
+Bundle checking now defaults to depth 4096 and compilation to a 1048576-byte
+output budget, sufficient for the frozen offset matrix. Legacy single-file
+defaults and explicit maximum limits remain. Evaluator transition budgeting is
+unchanged; primitive decoding/application also has separate fixed work bounds.
+Enum-signatured host observations remain the supported external boundary.
+
+Three complete new proof entries check 24 helper laws. They cover the required
+arithmetic guard equations, literal decoding, core transitions and matrix
+expansion; they do not prove whole-compiler correctness or all-input intrinsic
+refinement. The registered literals gate compares 280 accepted calls in both
+evaluator and compiler lanes, and kills five type-correct semantic mutants.
+Live Perch review remains a coordinator gate; offline preflight alone is not a
+style pass. Existing compiler gates and their frozen expectations are retained.

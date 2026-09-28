@@ -4,9 +4,17 @@ import ./core.bend as C
 import ./catalog.bend as G
 import ./scope.bend as E
 import ./patterns.bend as P
+import ./literal-check.bend as L
+import ./literal-base.bend as LB
+import ./primitive-op.bend as R
+import ./primitive.bend as O
+import ./literal-matrix.bend as M
 
 type Mode is Data:
   Rebuild{term: C.Term}
+  Matrix{plan: M.Plan, expected: U32}
+  MatrixArms{plans: List<&2,M.Plan>, expected: U32}
+  MatrixLeaves{plans: List<&2,M.Plan>, expected: U32}
   RebuildArguments{terms: List<&2,C.Term>, parameters: List<&2,C.Parameter>, token: S.Token}
   Expression{node: S.Node, expected: Maybe<&2,U32>}
   Arguments{nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, token: S.Token}
@@ -171,16 +179,75 @@ def rebuilt(value: C.Checked, token: S.Token, +type_id: U32, tag: U32, params: L
     case C.Checked{C.Sequence{args},ignored,uses}: Done{C.Checked{P.value(token,type_id,tag,params,args),type_id,uses}}
     case _: C.internal(C.Checked,"refined-arguments")
 
+def literal_constructor(value: C.Checked, types: List<&2,C.Datatype>) -> Result<S.Error,C.Checked>:
+  match value:
+    case C.Checked{term,+type_id,uses}: Done{C.Checked{L.constructor(term,types,type_id),type_id,uses}}
+
+def intrinsic_type(reference: G.TypeRef, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+  match reference:
+    case G.TypeRef{id,definition}: next(id)
+
+def matrix_wanted(wanted: Maybe<&2,U32>, token: S.Token, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+  match wanted:
+    case None{}: C.invalid(C.Checked,"annotation-required",token)
+    case Some{target}: next(target)
+
+def matrix_consumed(body: C.Checked, +binding: C.Binding, +scope: E.Scope) -> Result<S.Error,C.Checked>:
+  match binding:
+    case C.Binding{+token,+level,q,typ,param,known}:
+      S.bind(C.Checked,C.Checked,E.reference(binding,token,scope),inspected => M.consumed(body,inspected,level,token))
+
+def matrix_case(value: C.Checked, column: C.Binding, +target: U32) -> Result<S.Error,C.Checked>:
+  match value column:
+    case C.Checked{C.Sequence{arms},ignored,uses} C.Binding{token,level,q,typ,param,known}:
+      Done{C.Checked{C.Case{token,level,target,arms},target,uses}}
+    case _ _: C.internal(C.Checked,"matrix-case")
+
+def matrix_default(value: C.Checked) -> Result<S.Error,C.Checked>:
+  match value:
+    case C.Checked{term,typ,uses}: Done{C.Checked{C.Sequence{[C.Default{term}]},0,uses}}
+
+def matrix_retained(first: C.Checked, rest: C.Checked) -> Result<S.Error,C.Checked>:
+  Done{first}
+
 def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Scope) -> Result<S.Error,C.Checked>:
   match fuel mode catalog scope:
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
+    case 1n+ +n Matrix{M.MatrixLeaf{bound,body},target} _ _:
+      run(n,Expression{body,Some{target}},catalog,current,bound)
+    case 1n+ +n Matrix{M.MLeaves{plans},target} _ _:
+      run(n,MatrixLeaves{plans,target},catalog,current,scope)
+    case 1n+ +n Matrix{M.MCase{+column,arms},+target} _ _:
+      S.bind(C.Checked,C.Checked,run(n,MatrixArms{arms,target},catalog,current,scope),value => matrix_case(value,column,target))
+    case 1n+ +n Matrix{plan,target} _ _: C.internal(C.Checked,"matrix-plan")
+    case 1n+ +n MatrixArms{Nil{},target} _ _: Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
+    case 1n+ +n MatrixArms{Con{M.MBranch{+tag,+fields,body},+tail},+target} _ _:
+      S.bind(C.Checked,C.Checked,run(n,Matrix{body,target},catalog,current,scope),head =>
+        S.bind(C.Checked,C.Checked,run(n,MatrixArms{tail,target},catalog,current,scope),rest => prepend_arm(tag,fields,head,rest)))
+    case 1n+ +n MatrixArms{Con{M.MDefault{body},Nil{}},target} _ _:
+      S.bind(C.Checked,C.Checked,run(n,Matrix{body,target},catalog,current,scope),matrix_default)
+    case 1n+ +n MatrixArms{plans,target} _ _: C.internal(C.Checked,"matrix-arm")
+    case 1n+ +n MatrixLeaves{Nil{},target} _ _: Done{C.Checked{C.Sequence{Nil{}},target,Nil{}}}
+    case 1n+ +n MatrixLeaves{Con{head,+tail},+target} _ _:
+      S.bind(C.Checked,C.Checked,run(n,Matrix{head,target},catalog,current,scope),first =>
+        S.bind(C.Checked,C.Checked,run(n,MatrixLeaves{tail,target},catalog,current,scope),rest => matrix_retained(first,rest)))
+    case 1n+ +n Expression{S.Literal{+token,kind,number,text},+wanted} C.Catalog{types,sigs} _:
+      S.bind(C.Checked,C.Checked,L.literal(token,kind,number,text,types),value => expected(token,wanted,value))
+    case 1n+ +n Expression{S.Offset{+token,count,tail},wanted} _ _:
+      run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},wanted},catalog,current,scope)
+    case 1n+ +n Expression{S.Intrinsic{+token,+op,+args},+wanted} C.Catalog{+types,sigs} _:
+      S.bind(G.TypeRef,C.Checked,G.find_type(types,LB.token(O.output(op)),0),reference =>
+        intrinsic_type(reference,+id =>
+          S.bind(List<&2,C.Parameter>,C.Checked,L.arguments(op,types),params =>
+            S.bind(C.Checked,C.Checked,run(n,Arguments{args,params,token},catalog,current,scope),arguments =>
+              S.bind(C.Checked,C.Checked,L.result(arguments,token,id,op),value => expected(token,wanted,value))))))
     case 1n+ +n Expression{S.Variable{+token},+wanted} _ _:
       S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>
         S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,token,0),+reference =>
         S.bind(List<&2,C.Parameter>,C.Checked,G.field_signature(reference,types),+params =>
-          constructor(reference,args,token,wanted,params,u => run(n,Arguments{args,params,token},catalog,current,scope))))
+          S.bind(C.Checked,C.Checked,constructor(reference,args,token,wanted,params,u => run(n,Arguments{args,params,token},catalog,current,scope)),value => literal_constructor(value,types))))
     case 1n+ +n Expression{S.Call{+token,+args},+wanted} C.Catalog{types,sigs} _:
       S.bind(G.FunctionRef,C.Checked,G.find_function(sigs,token,0),reference =>
         S.bind(G.FunctionRef,C.Checked,callable(reference,token,current,scope),call =>
@@ -191,10 +258,14 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
               S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q))))))
-    case 1n+ +n Expression{S.Match{+token,value,+arms},+wanted} C.Catalog{types,sigs} _:
-      S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),binding =>
-        match_body(binding,token,arms,types,scope,wanted,level =>
-          run(n,Arms{arms,token,level,wanted},catalog,current,scope)))
+    case 1n+ +n Expression{S.Match{+token,value,+arms},+wanted} C.Catalog{+types,sigs} _:
+      S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),+binding =>
+        S.choose(Result<S.Error,C.Checked>,M.enabled(types,binding),u =>
+          matrix_wanted(wanted,token,target =>
+            S.bind(M.Plan,C.Checked,M.compile(4096n,binding,arms,types,scope),plan =>
+              S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target},catalog,current,scope),body => matrix_consumed(body,binding,scope)))),u =>
+          match_body(binding,token,arms,types,scope,wanted,level =>
+            run(n,Arms{arms,token,level,wanted},catalog,current,scope))))
     case 1n+ +n Expression{node,wanted} _ _: C.internal(C.Checked,"expression-node")
     case 1n+ +n Arguments{Nil{},Nil{},token} _ _:
       Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}

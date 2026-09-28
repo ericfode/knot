@@ -6,6 +6,7 @@ import ./parse.bend as P
 import ./check.bend as K
 import ./diagnostic.bend as D
 import ./load.bend as M
+import ./literal.bend as Q
 
 type Limits is Data:
   Limits{characters: Nat, parser: Nat, checker: Nat}
@@ -23,10 +24,13 @@ def parsed_root(value: P.Parsed) -> S.Node:
   match value:
     case P.Parsed{root,rest}: root
 
+def legacy(depth: Nat, +root: S.Node) -> Result<S.Error,C.Book>:
+  S.bind(Unit,C.Book,Q.legacy(65536n,[root]),u => K.check(depth,root))
+
 def parsed(limits: Limits, result: Result<S.Error,P.Parsed>, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
     case Limits{chars,parser,+checker}:
-      checked(S.bind(P.Parsed,C.Book,result,tree => K.check(checker,parsed_root(tree))),next)
+      checked(S.bind(P.Parsed,C.Book,result,tree => legacy(checker,parsed_root(tree))),next)
 
 def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
@@ -34,7 +38,7 @@ def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):
       checked(
         S.bind(List<&2,S.Token>,C.Book,L.tokenize(chars,text),tokens =>
           S.bind(P.Parsed,C.Book,P.parse(parser,tokens),tree =>
-            K.check(checker,parsed_root(tree)))),
+            legacy(checker,parsed_root(tree)))),
         next)
 
 def read_result(limits: Limits, result: Result<&1,&1,U32 & String,String>, next: C.Book -> IO(Unit)) -> IO(Unit):
@@ -78,7 +82,7 @@ def audited(result: Result<S.Error,M.Receipt>) -> IO(Unit):
   match result:
     case Fail{error}: fail(error)
     case Done{+receipt}:
-      checked(K.check(512n,M.tree(receipt)),book => print(M.describe(receipt)))
+      checked(K.check(4096n,M.tree(receipt)),book => print(M.describe(receipt)))
 
 def audit(path: String, root: String) -> IO(Unit):
   M.load(path,root,65536n,512n,audited)

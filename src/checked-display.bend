@@ -2,6 +2,8 @@ import Base
 import ./syntax.bend as S
 import ./core.bend as C
 import ./diagnostic.bend as D
+import ./primitive-op.bend as R
+import ./primitive.bend as O
 
 def binders(fields: List<&2,C.Binding>) -> String:
   match fields:
@@ -13,6 +15,10 @@ def binders(fields: List<&2,C.Binding>) -> String:
 def term(fuel: Nat, value: C.Term) -> Result<S.Error,String>:
   match fuel value:
     case 0n _: Fail{S.Exhausted{"inspect",S.At{0,0,0,0}}}
+    case 1n+ +n C.Literal{token,type_id,kind,number,text}: Done{S.text(token)}
+    case 1n+ +n C.Intrinsic{token,type_id,op,args}:
+      D.concat([Done{O.name(op)},Done{"("},term(n,C.Sequence{args}),Done{")"}])
+    case 1n+ +n C.Default{body}: D.concat([Done{"_=>"},term(n,body)])
     case 1n+ +n C.Value{token,type_id,tag}: Done{String.concat(["v",U32.show(type_id),".",U32.show(tag)])}
     case 1n+ +n C.Construct{token,type_id,tag,fields,args}:
       D.concat([Done{"v"},Done{U32.show(type_id)},Done{"."},Done{U32.show(tag)},Done{"{"},term(n,C.Sequence{args}),Done{"}"}])

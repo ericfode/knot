@@ -2,6 +2,7 @@ import Base
 import ./syntax.bend as S
 import ./lex.bend as L
 import ./parse.bend as P
+import ./literal-base.bend as R
 
 type Decl is Data:
   Decl{name: String, names: List<&2,String>, source: String, unsafe: Bool}
@@ -17,6 +18,16 @@ type Use is Data:
 
 type Slice is Data:
   Slice{tree: S.Node, checked: List<&2,String>, unchecked: List<&2,String>}
+
+def review_prefix(value: Maybe<&2,S.Node>) -> String:
+  match value:
+    case None{}: "BaseChecked\t"
+    case Some{node}: "BaseIntrinsic\t"
+
+def review(names: List<&2,String>) -> String:
+  match names:
+    case Nil{}: ""
+    case Con{+name,tail}: String.concat([review_prefix(R.declaration(name)),name,"\n",review(tail)])
 
 def member(names: List<&2,String>, +name: String) -> Bool:
   match names:
@@ -189,6 +200,8 @@ def pattern_scope(node: S.Node, scope: List<&2,String>) -> List<&2,String>:
   match node:
     case S.Variable{token}: Con{S.text(token),scope}
     case S.Constructor{token,args}: List.append(&2,String,pattern_names(args),scope)
+    case S.Offset{token,count,tail}: pattern_scope(tail,scope)
+    case S.Promotion{token}: Con{S.text(token),scope}
     case _: scope
 
 def free(+token: S.Token, scope: List<&2,String>) -> List<&2,Use>:
@@ -203,6 +216,10 @@ def annotation(token: Maybe<&2,S.Token>) -> List<&2,Use>:
 def references(depth: Nat, node: S.Node, +scope: List<&2,String>) -> Result<S.Error,List<&2,Use>>:
   match depth node:
     case 0n _: Fail{S.Exhausted{"base-references",S.At{0,0,0,0}}}
+    case 1n+n S.Literal{token,kind,number,text}: Done{[Use{R.kind_name(kind),False{}}]}
+    case 1n+n S.Offset{token,count,tail}:
+      S.bind(List<&2,Use>,List<&2,Use>,references(n,tail,scope),refs => Done{Con{Use{"Nat",False{}},refs}})
+    case 1n+n S.Intrinsic{token,op,args}: references(n,S.Sequence{args},scope)
     case 1n+n S.Variable{token}: Done{free(token,scope)}
     case 1n+n S.Promotion{token}: Done{free(token,scope)}
     case 1n+ +n S.Constructor{+token,args}:
@@ -261,13 +278,18 @@ def tokens(+depth: Nat, result: Result<S.Error,List<&2,S.Token>>) -> Result<S.Er
     case Fail{error}: Fail{base_error(error)}
     case Done{values}: parsed(P.parse(depth,values))
 
+def lowered(value: Maybe<&2,S.Node>, next: Unit -> Result<S.Error,S.Node>) -> Result<S.Error,S.Node>:
+  match value:
+    case None{}: next(Unit{})
+    case Some{node}: Done{S.Sequence{[node]}}
+
 def parse(+depth: Nat, declaration: Decl) -> Result<S.Error,S.Node>:
   match declaration:
-    case Decl{name,values,+source,unsafe}:
+    case Decl{name,values,+source,+unsafe}:
       S.choose(Result<S.Error,S.Node>,unsafe,u => Fail{S.Unsupported{"load","base-unsafe",S.At{0,0,0,0}}},u =>
       S.choose(Result<S.Error,S.Node>,String.contains(source,"\n  import \""),u =>
         Fail{S.Unsupported{"check","foreign-definition",S.At{0,0,0,0}}},u =>
-        tokens(depth,L.tokenize(String.length(source),source))))
+        lowered(R.declaration(name),u => tokens(depth,L.tokenize(String.length(source),source)))))
 
 def selected(items: List<&2,Selected>, +name: String) -> Maybe<&2,S.Node>:
   match items:

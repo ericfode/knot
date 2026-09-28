@@ -21,7 +21,7 @@ def show_check(result: Result<S.Error,C.Book>) -> IO(Unit):
 def show_parse(depth: Nat, result: Result<S.Error,P.Parsed>) -> IO(Unit):
   match result:
     case Fail{+e}: IO.die(Unit,D.status(e),D.error(e))
-    case Done{P.Parsed{value,rest}}: show_check(K.check(depth,value))
+    case Done{P.Parsed{value,rest}}: show_check(R.legacy(depth,value))
 
 def source(characters: Nat, depth: Nat, text: String) -> IO(Unit):
   show_parse(depth,S.bind(List<&2,S.Token>,P.Parsed,L.tokenize(characters,text),tokens => P.parse(512n,tokens)))
@@ -64,7 +64,7 @@ def arguments(args: List<String>) -> IO(Unit):
 
 def module_arguments(+root: String, args: List<String>) -> IO(Unit):
   match args:
-    case Con{path,Nil{}}: R.bundle(path,root,R.Limits{65536n,512n,512n},book => show_check(Done{book}))
+    case Con{path,Nil{}}: R.bundle(path,root,R.Limits{65536n,512n,4096n},book => show_check(Done{book}))
     case _: R.fail(S.Host{"arguments","expected --bundle root source"})
 
 def audit_arguments(root: String, args: List<String>) -> IO(Unit):

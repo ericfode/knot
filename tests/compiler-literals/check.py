@@ -1,0 +1,362 @@
+#!/usr/bin/env python3
+"""Frozen seed observations versus both Knot lanes; no host language semantics."""
+from __future__ import annotations
+import datetime
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[2]
+HERE = Path(__file__).resolve().parent
+BUILD = ROOT / '.local/compiler-literals/gate'
+RECEIPT = HERE / 'receipts/literals.json'
+SEED = ['bun', ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/main.ts']
+BUNDLE = ROOT / 'tests/compiler-modules/bundle/lib'
+HOST = ROOT / 'scripts/run-wasm.mjs'
+PROFILE = '--profile=knot-literals-wasm-1'
+PROOFS = ['src/literal-PROOF.bend', 'src/literal-core-PROOF.bend',
+          'src/literal-matrix-PROOF.bend']
+OUTCOMES = {0: 'success', 2: 'Invalid', 3: 'Unsupported', 4: 'Exhausted',
+            5: 'HostFailure', 6: 'InternalFailure'}
+INTRINSICS = {
+    'U32', 'Nat', 'Char', 'String',
+    *('U32.' + x for x in ('add', 'sub', 'mul', 'div', 'mod', 'not', 'and', 'cmp',
+                           'is_eq', 'is_ne', 'is_lt', 'is_le', 'is_gt', 'is_ge',
+                           'shln', 'shrn', 'to_nat', 'from_nat', 'show')),
+    *('Nat.' + x for x in ('add', 'sub', 'mul', 'cmp', 'is_eq', 'is_ne',
+                           'is_lt', 'is_le', 'is_gt', 'is_ge', 'show')),
+    *('Char.' + x for x in ('from_u32', 'to_u32', 'is_eq', 'is_space')),
+    *('String.' + x for x in ('eq', 'append', 'reverse', 'length', 'is_empty')),
+}
+
+
+def require(condition, detail):
+    if not condition:
+        raise AssertionError(detail)
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def environment():
+    env = {k: v for k, v in os.environ.items() if not k.startswith('BEND_')}
+    env.update(BEND_NO_TELEMETRY='1', BEND_LIB=str(BUNDLE),
+               BEND_HUB=(ROOT / 'tests/compiler-modules/bundle/hub').as_uri(),
+               BEND_ORIGIN='offline://disabled')
+    return env
+
+
+def run(argv, timeout=180):
+    command = [str(x) for x in argv]
+    try:
+        r = subprocess.run(command, cwd=ROOT, env=environment(), capture_output=True,
+                           text=True, timeout=timeout)
+        return {'argv': command, 'exit': r.returncode, 'stdout': r.stdout, 'stderr': r.stderr,
+                'outcome': OUTCOMES.get(r.returncode, 'unclassified-process-failure')}
+    except subprocess.TimeoutExpired:
+        return {'argv': command, 'exit': None, 'outcome': 'harness-timeout',
+                'budget_seconds': timeout, 'stdout': '', 'stderr': ''}
+    except OSError as error:
+        return {'argv': command, 'exit': None, 'outcome': 'host-launch-failure',
+                'stdout': '', 'stderr': str(error)}
+
+
+def success(argv, timeout=180):
+    r = run(argv, timeout)
+    require(r['exit'] == 0 and r['stderr'] == '', r)
+    return r
+
+
+def reject(r, code, prefix=None):
+    require(r['exit'] == code and r['stdout'] == '', r)
+    require(r['stderr'].startswith(prefix or OUTCOMES[code] + '\t'), r)
+    require(len(r['stderr'].strip().split('\t')) >= 3, r)
+
+
+def observed(r):
+    return {k: r[k] for k in ('exit', 'stdout', 'stderr')}
+
+
+def value(r, call):
+    require(r['exit'] == 0 and r['stderr'] == '', r)
+    m = re.fullmatch(r'Evaluated\t([0-9]+)\t([0-9]+)\t([^\n]+)\n', r['stdout'])
+    require(m and int(m[2]) == call['tag'] and m[3] == call['constructor'] + '{}', (call, r))
+
+
+def wasm(path, call):
+    return run(['node', HOST, PROFILE, path, call['export'], *call['arguments']])
+
+
+def wasm_value(r, path, call):
+    require(r['exit'] == 0 and r['stderr'] == '', r)
+    require(json.loads(r['stdout']) == {'validated': True, 'export': call['export'],
+            'arguments': call['arguments'], 'result': call['tag'], 'bytes': path.stat().st_size}, (call, r))
+
+
+def base_inventory():
+    seed = ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2'
+    probe = BUILD / 'base.ts'
+    probe.write_text(f'import * as B from {json.dumps(str(seed / "bend.ts"))};\n'
+        'const book = B.book_nil();\n'
+        f'await B.book_load(book, {json.dumps(str(seed / "base.bend"))}, "", new Map());\n'
+        'B.book_valid(book);\nconsole.log(JSON.stringify(Object.keys(book.tlds)));\n')
+    r = success(['bun', probe])
+    names = json.loads(r['stdout'])
+    require(len(names) == len(set(names)) == 466 and INTRINSICS <= set(names), names)
+    return {'declarations': names, 'result': r}
+
+
+def audit(r, base, pin):
+    require(r['exit'] == 0 and r['stderr'] == '', r)
+    rows = [line.split('\t') for line in r['stdout'].strip().splitlines()]
+    require(all(len(row) == 2 for row in rows), r)
+    allowed = {'BasePin', 'Module', 'BaseChecked', 'BaseIntrinsic', 'BaseUnchecked'}
+    require(all(row[0] in allowed for row in rows), r)
+    groups = {key: [name for kind, name in rows if kind == key] for key in allowed}
+    require(groups['BasePin'] == [pin], r)
+    inventories = [groups[x] for x in ('BaseChecked', 'BaseIntrinsic', 'BaseUnchecked')]
+    flat = sum(inventories, [])
+    require(len(flat) == len(set(flat)) == 466 and set(flat) == set(base['declarations']), r)
+    require(set(groups['BaseIntrinsic']) <= INTRINSICS and
+            not (set(groups['BaseChecked']) & INTRINSICS), r)
+    return {'result': r, **{k: groups[k] for k in ('BaseChecked', 'BaseIntrinsic', 'BaseUnchecked')}}
+
+
+def build_lanes(record):
+    lanes = {}
+    record['builds'] = []
+    for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
+        lanes[lane] = {}
+        for phase in ('check', 'eval', 'compile'):
+            path = BUILD / (phase + suffix)
+            path.unlink(missing_ok=True)
+            r = success([*SEED, ROOT / f'src/{phase}-cli.bend', '-o', path])
+            record['builds'].append({'lane': lane, 'phase': phase, 'sha256': digest(path), 'result': r})
+            lanes[lane][phase] = [*runtime, path, '--bundle', BUNDLE]
+            if phase == 'check':
+                lanes[lane]['audit'] = [*runtime, path, '--audit-bundle', BUNDLE]
+    return lanes
+
+
+def fixture(f, lanes, base, pin):
+    source = ROOT / f['file']
+    require(digest(source) == f['sha256'], ('fixture changed', f['file']))
+    expected = f.get('knot', f.get('knot_expected'))
+    accepted = expected['outcome'] == 'agree'
+    item = {'name': f['name'], 'file': f['file'], 'expected': expected, 'lanes': {},
+            'reference_calls': len(f.get('calls', []))}
+    binaries = {}
+    for lane, commands in lanes.items():
+        output = BUILD / f'{f["name"]}-{lane}.wasm'
+        marker = b'existing output must survive a rejected source\n'
+        output.write_bytes(marker)
+        check = run([*commands['check'], source])
+        compiled = run([*commands['compile'], source, output])
+        ev = {'check': check, 'compile': compiled, 'evaluations': [], 'wasm': []}
+        if accepted:
+            require(check['exit'] == 0 and check['stderr'] == '' and check['stdout'].startswith('Checked\n'), check)
+            require(compiled['exit'] == 0 and compiled['stderr'] == '', compiled)
+            binary = output.read_bytes()
+            require(binary.startswith(b'\0asm\x01\0\0\0') and
+                    compiled['stdout'] == f'Built\t{len(binary)}\n', compiled)
+            binaries[lane] = binary
+            ev['sha256'] = digest(output)
+            ev['audit'] = audit(run([*commands['audit'], source]), base, pin)
+            for call in f['calls']:
+                result = run([*commands['eval'], source, call['export'], 1048576, *call['arguments']])
+                value(result, call)
+                executed = wasm(output, call)
+                wasm_value(executed, output, call)
+                observation = {'export': call['export'], 'arguments': call['arguments'], 'expected_tag': call['tag']}
+                ev['evaluations'].append({**observation, 'result': result})
+                ev['wasm'].append({**observation, 'result': executed})
+        else:
+            for r in (check, compiled):
+                reject(r, expected['exit'], expected.get('diagnostic_prefix'))
+            require(output.read_bytes() == marker, ('rejected source changed output', compiled))
+            ev['artifact_preserved'] = True
+            result = run([*commands['eval'], source, 'main', 1048576])
+            reject(result, expected['exit'], expected.get('diagnostic_prefix'))
+            ev['evaluations'].append({'result': result})
+            output.unlink()
+            absent = run([*commands['compile'], source, output])
+            reject(absent, expected['exit'], expected.get('diagnostic_prefix'))
+            require(not output.exists(), ('rejection emitted an artifact', absent))
+            ev['no_artifact'] = absent
+        item['lanes'][lane] = ev
+    a, b = item['lanes'].values()
+    for phase in ('check', 'compile'):
+        require(observed(a[phase]) == observed(b[phase]), (f['name'], phase, a[phase], b[phase]))
+    require([observed(r['result']) for r in a['evaluations']] ==
+            [observed(r['result']) for r in b['evaluations']], (f['name'], 'evaluation lane mismatch'))
+    if accepted:
+        require(binaries['native'] == binaries['bun'], (f['name'], 'binary lane mismatch'))
+        require(observed(a['audit']['result']) == observed(b['audit']['result']), (f['name'], 'audit lane mismatch'))
+        item['byte_identical'] = True
+    return item
+
+
+# Fixed before mutant execution. Compiler validation/build failure is never a kill.
+MUTANTS = [
+    {'name': 'signed-compare', 'file': 'primitive-wasm.bend',
+     'old': 'A.select(A.binary(73,a,b)', 'new': 'A.select(A.binary(72,a,b)',
+     'fixture': 'u32-unsigned-order', 'export': 'compare', 'arguments': [1, 0], 'wrong_tag': 0},
+    {'name': 'trapping-div-zero', 'file': 'primitive-wasm.bend',
+     'old': 'arm(R.WDiv{},divide(False{}))', 'new': 'arm(R.WDiv{},A.binary(110,1,2))',
+     'fixture': 'u32-division', 'export': 'exact', 'arguments': [2], 'trap': 'divide by zero'},
+    {'name': 'masked-shift', 'file': 'primitive-wasm.bend',
+     'old': 'A.select(A.seq([A.get(3),A.i32(32),[79]]),A.i32(0),A.binary(op,1,3))',
+     'new': 'A.binary(op,1,3)',
+     'fixture': 'u32-shifts', 'export': 'exact', 'arguments': [1], 'wrong_tag': 0},
+    {'name': 'merged-surrogates', 'file': 'literal.bend',
+     'old': 'first_code(text),text}}', 'new': 'first_code(text),merge(text)}}',
+     'prepend': '''def merge(codes: List<&2,U32>) -> List<&2,U32>:
+  match codes:
+    case Con{55357,Con{56832,tail}}: Con{128512,merge(tail)}
+    case Con{head,tail}: Con{head,merge(tail)}
+    case Nil{}: Nil{}
+
+''',
+     'fixture': 'string-unicode', 'export': 'check', 'arguments': [3], 'wrong_tag': 1, 'eval': True},
+    {'name': 'offset-off-by-one', 'file': 'literal-matrix.bend',
+     'old': '    case S.Offset{token,0,tail}: literal(tail)',
+     'new': '''    case S.Offset{+token,256,tail}:
+      S.Constructor{retoken("Succ",token),[S.Offset{token,254,tail}]}
+    case S.Offset{token,0,tail}: literal(tail)''',
+     'fixture': 'nat-pattern-offset', 'export': 'at_least_256', 'arguments': [3], 'wrong_tag': 1, 'eval': True},
+]
+
+
+def mutants(fixtures):
+    by_name = {f['name']: f for f in fixtures}
+    records = []
+    for m in MUTANTS:
+        folder = BUILD / 'mutants' / m['name']
+        folder.mkdir(parents=True, exist_ok=True)
+        for source in sorted((ROOT / 'src').glob('*.bend')):
+            shutil.copy2(source, folder / source.name)
+        path = folder / m['file']
+        code = path.read_text()
+        require(code.count(m['old']) == 1, (m['name'], 'mutation anchor not unique'))
+        code = code.replace(m['old'], m['new'])
+        if 'prepend' in m:
+            code = code.replace('def decoded(', m['prepend'] + 'def decoded(')
+        path.write_text(code)
+        entry = folder / 'compile-cli.bend'
+        typed = success([*SEED, entry, '--check-only'])
+        require(typed['stdout'] == 'All terms check.\n', typed)
+        compiler = folder / 'compile.js'
+        built = success([*SEED, entry, '-o', compiler])
+        f = by_name[m['fixture']]
+        call = next(c for c in f['calls'] if c['export'] == m['export'] and c['arguments'] == m['arguments'])
+        output = folder / 'witness.wasm'
+        compiled = success(['bun', compiler, '--bundle', BUNDLE, ROOT / f['file'], output])
+        require(compiled['stdout'] == f'Built\t{output.stat().st_size}\n', compiled)
+        result = wasm(output, call)
+        if 'trap' in m:
+            reject(result, 5, 'HostFailure\twasm\t' + m['trap'])
+        else:
+            require(m['wrong_tag'] != call['tag'], m)
+            wasm_value(result, output, {**call, 'tag': m['wrong_tag']})
+        record = {**m, 'expected_tag': call['tag'], 'sha256': digest(path), 'typecheck': typed,
+                  'build': built, 'compile': compiled, 'wasm': result, 'killed': True}
+        if m.get('eval'):
+            evaluator = folder / 'eval.js'
+            record['eval_build'] = success([*SEED, folder / 'eval-cli.bend', '-o', evaluator])
+            evaluated = run(['bun', evaluator, '--bundle', BUNDLE, ROOT / f['file'],
+                             call['export'], 1048576, *call['arguments']])
+            wrong = re.fullmatch(r'Evaluated\t[0-9]+\t([0-9]+)\t[^\n]+\n', evaluated['stdout'])
+            require(evaluated['exit'] == 0 and evaluated['stderr'] == '' and
+                    wrong and int(wrong[1]) == m['wrong_tag'], evaluated)
+            record['eval'] = evaluated
+        records.append(record)
+    return records
+
+
+def boundaries(lanes):
+    records = []
+    source = HERE / 'fixtures/u32-literals.bend'
+    for lane, commands in lanes.items():
+        for name, args, status in [('zero-eval-budget', ['main', 0], 4),
+                                   ('bad-eval-budget', ['main', 1048577], 5)]:
+            r = run([*commands['eval'], source, *args])
+            reject(r, status)
+            records.append({'lane': lane, 'name': name, 'result': r})
+        for name, depth, capacity in [('zero-emitter-budget', 0, 1048576),
+                                       ('zero-output-budget', 4096, 0)]:
+            path = BUILD / f'{lane}-{name}.wasm'
+            marker = b'budget exhaustion preserves this file\n'
+            path.write_bytes(marker)
+            r = run([*commands['compile'], source, path, 65536, 512, 4096, depth, capacity])
+            reject(r, 4)
+            require(path.read_bytes() == marker, r)
+            records.append({'lane': lane, 'name': name, 'artifact_preserved': True, 'result': r})
+    return records
+
+
+def main():
+    BUILD.mkdir(parents=True, exist_ok=True)
+    RECEIPT.parent.mkdir(parents=True, exist_ok=True)
+    manifest = json.loads((HERE / 'expectations.json').read_text())
+    supplemental = json.loads((HERE / 'supplemental.json').read_text())
+    inputs = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json', HOST,
+              Path(__file__), HERE / 'expectations.json', HERE / 'regen.py', HERE / 'supplemental.json',
+              HERE / 'supplemental.py', HERE / 'FIXTURES.md']
+    inputs += sorted((HERE / 'fixtures').glob('*.bend')) + sorted((HERE / 'supplemental').glob('*.bend'))
+    record = {'status': 'incomplete', 'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'seed': manifest['seed'], 'inputs': {p.relative_to(ROOT).as_posix(): digest(p) for p in inputs}}
+    try:
+        record['reference_verification'] = success(['python3', HERE / 'regen.py'])
+        record['supplemental_verification'] = success(['python3', HERE / 'supplemental.py'])
+        require(supplemental['seed_sha256'] == manifest['seed']['sha256'], 'Seed identity differs')
+        record['tools'] = {tool: success([tool, '--version'])['stdout'].strip() for tool in ('bun', 'node', 'python3')}
+        require(record['tools']['node'] == 'v22.22.3', record['tools'])
+        record['base'] = base_inventory()
+        record['proofs'] = []
+        for entry in PROOFS:
+            r = success([*SEED, ROOT / entry])
+            require(r['stdout'] == 'All terms check.\n', r)
+            record['proofs'].append({'entry': entry, 'result': r})
+        lanes = build_lanes(record)
+        record['fixtures'] = []
+        for f in [*manifest['fixtures'], *supplemental['fixtures']]:
+            record['fixtures'].append(fixture(f, lanes, record['base'], manifest['seed']['sha256']['bend2/base.bend']))
+        record['boundaries'] = boundaries(lanes)
+        record['mutants'] = mutants(manifest['fixtures'])
+        require(all(digest(ROOT / path) == h for path, h in record['inputs'].items()), 'Inputs changed during literals gate')
+        fs = record['fixtures']
+        ls = [lane for f in fs for lane in f['lanes'].values()]
+        record['counts'] = {
+            'fixtures': len(fs), 'agree_fixtures': sum(f['expected']['outcome'] == 'agree' for f in fs),
+            'invalid_fixtures': sum(f['expected']['outcome'] == 'Invalid' for f in fs),
+            'unsupported_fixtures': sum(f['expected']['outcome'] == 'Unsupported' for f in fs),
+            'reference_calls': sum(f['reference_calls'] for f in fs), 'execution_lanes': len(lanes),
+            'check_observations': len(ls), 'compile_observations': len(ls),
+            'eval_observations': sum(len(l['evaluations']) for l in ls),
+            'agree_eval_observations': sum(len(l['wasm']) for l in ls),
+            'wasm_observations': sum(len(l['wasm']) for l in ls),
+            'byte_identity_pairs': sum(f.get('byte_identical', False) for f in fs),
+            'artifact_preservation_probes': sum(l.get('artifact_preserved', False) for l in ls),
+            'no_artifact_probes': sum('no_artifact' in l for l in ls),
+            'trust_audits': sum('audit' in l for l in ls),
+            'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
+            'proof_laws': 24, 'semantic_mutants': len(record['mutants']),
+            'mutant_wasm_observations': len(record['mutants']),
+            'mutant_eval_observations': sum(m.get('eval') is not None for m in record['mutants']),
+        }
+        record['status'] = 'passed'
+    except Exception as error:
+        record['failure'] = repr(error)
+        raise
+    finally:
+        RECEIPT.write_text(json.dumps(record, indent=2) + '\n')
+    print('Literals gate passed: ' + json.dumps(record['counts'], sort_keys=True))
+
+
+if __name__ == '__main__':
+    main()

@@ -991,3 +991,31 @@ and treat `no-coverage` as a finding.
 The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
 8 checks came back clean, with a maximum broken probability of 0.70 on
 `law-observable-essence`.
+
+## 2026-09-27 — Literal payload and serialization boundaries
+
+The literals implementation initially reconstructed escaped code points through
+host String values. The frozen surrogate/non-Unicode witnesses exposed that
+compiled `Char.from_u32` cannot preserve that representation. Literal payloads
+now retain U32 code lists until source-value or Wasm-cell construction. The
+checked surrogate laws and the merged-surrogates mutant are in
+[the literal packet](../tests/compiler-literals/LAW_REVIEW.md).
+
+The 256-offset matrix then exposed host stack exhaustion while serializing a
+39191-byte instruction module. A graph-only probe isolated serialization from
+lowering. Byte concatenation, byte length and instruction serialization now use
+accumulators. The same frozen offset book is compiled and every recorded call
+executed in both lanes by [the gate](../tests/compiler-literals/check.py).
+
+Prevention: make code-point preservation an explicit representation invariant,
+and exercise the largest frozen shape through serialization before broadening
+runtime checks. These were deterministic implementation defects, not model
+findings. Live Perch review remains the coordinator's responsibility; no elapsed
+time or style score is inferred from this work.
+
+The complete suite also retained a 50000-blank-line module regression and the
+legacy single-file literal rejection. The former caught a non-tail float-token
+scan; it now accumulates tokens. The latter caught a profile-boundary leak;
+legacy checking now rejects literal nodes explicitly, with a checked boundary
+law. Prevention: run the shared profile and large-input regressions before
+calling the new fixture surface complete. Their assertions were not changed.

@@ -1,5 +1,6 @@
 import Base
 import ./syntax.bend as S
+import ./literal.bend as Q
 
 type Parsed is Data:
   Parsed{value: S.Node, rest: List<&2,S.Token>}
@@ -11,6 +12,7 @@ type Mode is Data:
   Parameters{close: String}
   Arguments{close: String, pattern: Bool}
   Term{pattern: Bool}
+  LiteralTail{node: S.Node, pattern: Bool}
   Body{parent: U32}
   StartBody{parent: U32}
   BodyAt{column: U32}
@@ -83,7 +85,8 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
     case Nil{}: Fail{S.Invalid{"parse","unexpected-end",S.here(ts)}}
     case Con{+h,+t}:
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
-        Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
+        S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,"+"),u => Fail{S.Unsupported{"parse","operator",S.at(h)}},u =>
+          Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}}))
 
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match rest:
@@ -121,7 +124,7 @@ def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{h,t}:
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")),u =>
-        Done{Parsed{value,ts}},u => invalid(ts,"end-of-body"))
+        Done{Parsed{value,ts}},u => S.choose(Result<S.Error,Parsed>,S.matches(h,"+"),u => unsupported(ts,"operator"),u => invalid(ts,"end-of-body")))
     case _: invalid(ts,"unexpected-end")
 
 def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -131,12 +134,19 @@ def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
         unsupported(ts,"destructuring-binding"),u => body_end(value,ts))
     case _: body_end(value,ts)
 
+def operator_tail(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{+h,+t}:
+      S.choose(Bool,S.matches(h,"\n"),u => False{},u =>
+        Bool.or(Bool.or(S.matches(h,"+"),Bool.or(S.matches(h,"*"),Bool.or(S.matches(h,"<"),S.matches(h,"-")))),operator_tail(t)))
+
 def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{+h,t}:
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,")"),Bool.or(S.matches(h,"}"),
         Bool.or(S.matches(h,":"),Bool.or(S.matches(h,","),Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")))))),u =>
-          invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
+          invalid(ts,"expected-term"),u => S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(h,"("),operator_tail(ts)),u => unsupported(ts,"operator"),u => unsupported(ts,"term-form")))
     case _: invalid(ts,"unexpected-end")
 
 # One recursive dispatcher makes the parser's depth budget explicit and avoids
@@ -196,7 +206,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
             then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest)),u =>
-            invalid(tokens,"argument-separator")))
+            S.choose(Result<S.Error,Parsed>,S.matches(h,"+"),u => unsupported(tokens,"operator"),u => invalid(tokens,"argument-separator"))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{+pattern}:
       match tokens:
@@ -209,8 +219,16 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
             then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
             Done{Parsed{S.Variable{name},Con{open,tail}}})),u =>
-            term_failure(tokens)))
+            S.choose(Result<S.Error,Parsed>,Q.starts(S.text(name)),u =>
+              S.bind(S.Node,Parsed,Q.parse(name),node => run(n,LiteralTail{node,pattern},Con{open,tail})),u => term_failure(tokens))))
         case _: invalid(tokens,"term")
+    case 1n+ +n LiteralTail{S.Literal{+token,1,+count,+text},+pattern}:
+      S.choose(Result<S.Error,Parsed>,starts(tokens,"+"),u =>
+        S.choose(Result<S.Error,Parsed>,Bool.and(pattern,U32.is_gt(count,256)),u => invalid(tokens,"nat-offset-pattern"),u =>
+          S.bind(List<&2,S.Token>,Parsed,expect(tokens,"+"),tail =>
+            then(run(n,Term{pattern},tail),value => rest => Done{Parsed{S.Offset{token,count,value},rest}}))),u =>
+        Done{Parsed{S.Literal{token,1,count,text},tokens}})
+    case 1n+ +n LiteralTail{node,pattern}: Done{Parsed{node,tokens}}
     case 1n+ +n Body{+parent}:
       run(n,StartBody{parent},S.skip_lines(tokens))
     case 1n+ +n StartBody{+parent}:

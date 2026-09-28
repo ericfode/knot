@@ -39,7 +39,15 @@
       "checker_depth": 4096,
       "emitter_depth": 4096,
       "output_bytes": 1048576
-    }
+    },
+    "bundle_defaults": {
+      "characters": 65536,
+      "parser_depth": 512,
+      "checker_depth": 4096,
+      "emitter_depth": 4096,
+      "output_bytes": 1048576
+    },
+    "profile_selection": "Books containing a loader-installed primitive type select knot-literals-wasm-1; other books retain knot-enum-1."
   },
   "evaluator": {
     "entry": "src/eval-cli.bend",
@@ -51,7 +59,12 @@
     },
     "maximum_transitions": 1048576,
     "recommended_transitions": 65536,
-    "budget_unit": "one explicit source-machine step; a terminal return consumes no further budget"
+    "budget_unit": "one explicit source-machine step; a terminal return consumes no further budget; primitive decoding and application have separate fixed bounds",
+    "bundle_input_limits": {
+      "characters": 65536,
+      "parser_depth": 512,
+      "checker_depth": 4096
+    }
   },
   "catalog_limits": {
     "types": 256,
@@ -149,7 +162,7 @@
     "emitter": "src/wasm.bend::emit_profile(Fields{}, checked_book, depth, bytes)",
     "arguments": "source output [characters parser-depth checker-depth emitter-depth output-bytes]",
     "budgets": "Same defaults and maximum overrides as compiler; profile selection is explicit.",
-    "enum_entry_unchanged": "src/compile-cli.bend calls emit, which selects Enum{} and retains enum_profile rejection.",
+    "enum_entry_unchanged": "Books without installed primitive types retain Enum{} and its unchanged capability rejection; primitive books select the separate literals profile.",
     "sections": [
       1,
       3,
@@ -240,9 +253,9 @@
       "declarations": 466,
       "pin": "Runtime Bend SHA-256 over bounded ASCII input, before inventory construction.",
       "registration": "Book-global from first import event, with distinct type/function and constructor namespaces.",
-      "slice": "Transitive dependencies of every user declaration; selected Base source is parsed and checked in the combined book.",
-      "trust_inventory": "After combined checking, audit records BasePin, Module paths, BaseChecked names and exact BaseUnchecked complement.",
-      "unsupported": "Reachable features outside the language yield specific Unsupported reasons; no unchecked acceptance or substitute prelude."
+      "slice": "Transitive dependencies of every user declaration. Selected ordinary Base bodies are parsed/checked; the closed literal registry lowers four types and 39 operations with checked signatures and quantities.",
+      "trust_inventory": "After combined checking: BasePin, Module, BaseChecked source bodies, BaseIntrinsic trusted lowerings, BaseUnchecked exact unselected complement. The three declaration inventories partition all 466 declarations.",
+      "unsupported": "Reachable forms outside the supported source or closed intrinsic surface retain specific Unsupported reasons; unsafe/foreign declarations are rejected before registry lookup."
     },
     "limits": {
       "loader_transitions": 1024,
@@ -264,6 +277,99 @@
     "proof_laws": 68,
     "proof_boundary": "Path, scope, transition, selection and digest helper laws; not whole-graph confluence, SHA-256 refinement or compiler correctness.",
     "foreign_effects": "Existing IO arguments/print and file open/read/close/write only; no realpath, environment lookup or network added.",
-    "wasm_profile": "Existing enum emitter; importing a book adds no fielded or recursive Wasm capability."
+    "wasm_profile": "Enum by default; loader-installed primitive types select knot-literals-wasm-1 as documented below."
+  },
+  "literals": {
+    "profile": "knot-literals-wasm-1",
+    "contract": "tests/compiler-literals/README.md",
+    "evidence": "tests/compiler-literals/receipts/literals.json",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-literals/check.py",
+    "frozen_expectations": [
+      "tests/compiler-literals/expectations.json",
+      "tests/compiler-literals/supplemental.json"
+    ],
+    "reader": "ASCII source; decimal U32/Nat; quoted code lists; 1-8 digit Unicode escapes preserve arbitrary U32 codes including surrogates and NUL.",
+    "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; all leaves checked; Nat offsets 0..256.",
+    "intrinsic_registry": {
+      "types": 4,
+      "operations": 39,
+      "source": "src/literal-base.bend",
+      "signatures": "src/primitive.bend",
+      "trust": "Pinned semantics, independent finite differential checks and helper laws; no all-input Base refinement proof."
+    },
+    "unsupported": [
+      "operator sugar",
+      "F32",
+      "raw non-ASCII quoted text",
+      "Chr constructor patterns",
+      "general nested patterns beyond the bounded primitive matrix"
+    ],
+    "core": [
+      "Literal for Nat/String",
+      "Intrinsic with typed primitive opcode and checked arguments",
+      "Default branch"
+    ],
+    "representation": {
+      "U32": "unboxed i32 bits",
+      "Char": "unboxed i32 code, no surrogate merging",
+      "Nat": "unary Zero/Succ cells",
+      "String": "SNil/SCon cells with unboxed Char head",
+      "other_data": "tag plus live fields in declaration order",
+      "erased_fields": "no evaluation or slot"
+    },
+    "wasm": {
+      "sections": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        10,
+        11
+      ],
+      "imports": [],
+      "memory_pages": 1024,
+      "maximum_pages": 1024,
+      "exports": "all source functions; runtime helpers, memory and globals unexported",
+      "static_bytes": [
+        0,
+        1048576
+      ],
+      "return_stack_bytes": [
+        1048576,
+        5242880
+      ],
+      "frame_stack_bytes": [
+        5242880,
+        23068672
+      ],
+      "heap_bytes": [
+        23068672,
+        67108864
+      ],
+      "lifetime": "instance; immutable initialized cells; monotonic allocation; no reclamation",
+      "instruction_words": 5,
+      "max_instructions": 32768,
+      "host_command": "node scripts/run-wasm.mjs --profile=knot-literals-wasm-1 module export [live-ordinals...]",
+      "host_boundary": "Enum-only live parameter/result signatures; valid declared ordinals and compiler provenance are caller preconditions.",
+      "unreachable": "Exhausted wasm resource-limit, exit 4",
+      "other_traps": "HostFailure, exit 5"
+    },
+    "fixed_primitive_work_limit": 1048576,
+    "abi_deviation": "64 MiB heap/stacks and an explicit instruction machine support frozen unary 65536n and deep non-tail self-recursion without a binary Nat representation or host-stack dependence.",
+    "proof_entries": [
+      "src/literal-PROOF.bend",
+      "src/literal-core-PROOF.bend",
+      "src/literal-matrix-PROOF.bend"
+    ],
+    "proof_laws": 24,
+    "proof_boundary": "Arithmetic guards, reader cases, core transitions and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
+    "unmet": [
+      "R3/R7 owned storage and reclamation",
+      "broader recursion",
+      "primitive/structured host observations",
+      "self-hosting"
+    ],
+    "style": "Offline preflight only; live review and ratings belong to coordinator."
   }
 }

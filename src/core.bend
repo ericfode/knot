@@ -1,5 +1,6 @@
 import Base
 import ./syntax.bend as S
+import ./primitive-op.bend as R
 
 type Constructor is Data:
   Constructor{token: S.Token, fields: List<&2,Parameter>}
@@ -15,6 +16,9 @@ type Catalog is Data:
 # Levels identify binders independently of display names. Branch scopes may
 # reuse levels. Branch and Sequence are internal traversal containers only.
 type Term is Data:
+  Literal{token: S.Token, type_id: U32, kind: U32, number: U32, text: List<&2,U32>}
+  Intrinsic{token: S.Token, type_id: U32, op: R.Op, arguments: List<&2,Term>}
+  Default{body: Term}
   Value{token: S.Token, type_id: U32, tag: U32}
   Construct{token: S.Token, type_id: U32, tag: U32, fields: List<&2,Parameter>, arguments: List<&2,Term>}
   Reference{token: S.Token, level: U32, type_id: U32}

@@ -1,6 +1,10 @@
 import Base
 import ./syntax.bend as S
 import ./core.bend as C
+import ./primitive-op.bend as R
+import ./primitive.bend as O
+import ./primitive-eval.bend as P
+import ./literal-types.bend as L
 
 # This machine interprets checked source terms, never Wasm instructions.
 type Value is Data:
@@ -9,10 +13,14 @@ type Value is Data:
 type Entry is Data:
   Entry{level: U32, value: Value}
 type Frame is Data:
+  PrimitiveArgument{type_id: U32, op: R.Op, kind: String, kinds: List<&2,String>, arguments: List<&2,C.Term>, environment: List<&2,Entry>, values: List<&2,P.Datum>}
   Bind{level: U32, body: C.Term, environment: List<&2,Entry>}
   Argument{parameters: List<&2,C.Parameter>, arguments: List<&2,C.Term>, level: U32, caller: List<&2,Entry>, callee: List<&2,Entry>, body: C.Term}
   Field{type_id: U32, tag: U32, parameters: List<&2,C.Parameter>, arguments: List<&2,C.Term>, environment: List<&2,Entry>, values: List<&2,Value>}
 type State is Data:
+  PrimitiveArguments{type_id: U32, op: R.Op, kinds: List<&2,String>, arguments: List<&2,C.Term>, environment: List<&2,Entry>, values: List<&2,P.Datum>, frames: List<&2,Frame>}
+  Natural{type_id: U32, remaining: U32, value: Value, frames: List<&2,Frame>}
+  TextBuild{type_id: U32, char_id: U32, remaining: List<&2,U32>, value: Value, frames: List<&2,Frame>}
   Fields{type_id: U32, tag: U32, parameters: List<&2,C.Parameter>, arguments: List<&2,C.Term>, environment: List<&2,Entry>, values: List<&2,Value>, frames: List<&2,Frame>}
   Unpack{parameters: List<&2,C.Binding>, values: List<&2,Value>, environment: List<&2,Entry>, body: C.Term, frames: List<&2,Frame>}
   Evaluate{term: C.Term, environment: List<&2,Entry>, frames: List<&2,Frame>}
@@ -51,6 +59,7 @@ def select(arms: List<&2,C.Term>, +tag: U32) -> Result<S.Error,C.Term>:
     case Nil{}: internal(C.Term,"missing-arm")
     case Con{+head,+tail}:
       match head:
+        case C.Default{body}: Done{head}
         case C.Branch{pattern,fields,body}:
           S.choose(Result<S.Error,C.Term>,U32.is_eq(tag,pattern),u => Done{head},u => select(tail,tag))
         case _: internal(C.Term,"arm-node")
@@ -62,6 +71,7 @@ def select_value(value: Value, arms: List<&2,C.Term>) -> Result<S.Error,C.Term>:
 
 def enter_branch(value: Value, branch: C.Term, env: List<&2,Entry>, frames: List<&2,Frame>) -> Result<S.Error,State>:
   match value branch:
+    case _ C.Default{body}: Done{Evaluate{body,env,frames}}
     case Value{typ,tag} C.Branch{pattern,Nil{},body}: Done{Evaluate{body,env,frames}}
     case Object{typ,tag,values} C.Branch{pattern,params,body}: Done{Unpack{params,values,env,body,frames}}
     case _ _: internal(State,"branch-value")
@@ -103,10 +113,48 @@ def unpack_live(values: List<&2,Value>, level: U32, params: List<&2,C.Binding>, 
     case Nil{}: internal(State,"missing-field")
     case Con{value,rest}: Done{Unpack{params,rest,Con{Entry{level,value},env},body,frames}}
 
+def natural(fuel: Nat, value: Value, +count: U32) -> Result<S.Error,P.Datum>:
+  match fuel value:
+    case _ Value{typ,0}: Done{P.Count{count}}
+    case 0n _: P.exhausted(P.Datum)
+    case 1n+n Object{typ,1,Con{pred,Nil{}}}: natural(n,pred,U32.add(count,1))
+    case _ _: internal(P.Datum,"natural-value")
+
+def text_value(fuel: Nat, value: Value, codes: List<&2,U32>) -> Result<S.Error,P.Datum>:
+  match fuel value:
+    case _ Value{typ,0}: Done{P.Codes{List.reverse(&2,U32,codes)}}
+    case 0n _: P.exhausted(P.Datum)
+    case 1n+n Object{typ,1,Con{Value{char_id,code},Con{tail,Nil{}}}}:
+      text_value(n,tail,Con{code,codes})
+    case _ _: internal(P.Datum,"string-value")
+
+def bits(value: Value) -> Result<S.Error,P.Datum>:
+  match value:
+    case Value{typ,word}: Done{P.Bits{word}}
+    case _: internal(P.Datum,"scalar-value")
+
+def datum(+value: Value, +kind: String) -> Result<S.Error,P.Datum>:
+  S.choose(Result<S.Error,P.Datum>,String.eq(kind,"Nat"),u => natural(1048576n,value,0),u =>
+  S.choose(Result<S.Error,P.Datum>,String.eq(kind,"String"),u => text_value(1048576n,value,Nil{}),u => bits(value)))
+
+def materialize(value: P.Datum, +type_id: U32, types: List<&2,C.Datatype>, +frames: List<&2,Frame>) -> Result<S.Error,State>:
+  match value:
+    case P.Bits{bits}: Done{Return{Value{type_id,bits},frames}}
+    case P.Count{+count}:
+      S.choose(Result<S.Error,State>,U32.is_le(count,1048576),u => Done{Natural{type_id,count,Value{type_id,0},frames}},u => P.exhausted(State))
+    case P.Codes{+codes}:
+      S.bind(U32,State,L.primitive_type(types,"Char"),id => Done{TextBuild{type_id,id,List.reverse(&2,U32,codes),Value{type_id,0},frames}})
+
 # Each step either advances one source-machine transition or reports a failure.
 # Erased initializers and arguments are skipped before entering Evaluate.
 def step(state: State, +book: C.Book) -> Result<S.Error,State>:
   match state book:
+    case Evaluate{C.Literal{token,type_id,1,number,codes},env,frames} C.Book{types,functions}:
+      materialize(P.Count{number},type_id,types,frames)
+    case Evaluate{C.Literal{token,type_id,3,number,codes},env,frames} C.Book{types,functions}:
+      materialize(P.Codes{codes},type_id,types,frames)
+    case Evaluate{C.Intrinsic{token,type_id,+op,args},env,frames} _:
+      Done{PrimitiveArguments{type_id,op,O.inputs(op),args,env,Nil{},frames}}
     case Evaluate{C.Value{token,type_id,tag},env,frames} _:
       Done{Return{Value{type_id,tag},frames}}
     case Evaluate{C.Construct{token,type_id,tag,params,args},env,frames} _:
@@ -122,6 +170,19 @@ def step(state: State, +book: C.Book) -> Result<S.Error,State>:
       S.bind(Value,State,lookup(env,level),+value =>
         S.bind(C.Term,State,select_value(value,arms),branch => enter_branch(value,branch,env,frames)))
     case Evaluate{term,env,frames} _: internal(State,"expression-node")
+    case Natural{type_id,0,value,frames} _: Done{Return{value,frames}}
+    case Natural{+type_id,+count,value,frames} _:
+      Done{Natural{type_id,U32.sub(count,1),Object{type_id,1,[value]},frames}}
+    case TextBuild{type_id,char_id,Nil{},value,frames} _: Done{Return{value,frames}}
+    case TextBuild{+type_id,+char_id,Con{code,tail},value,frames} _:
+      Done{TextBuild{type_id,char_id,tail,Object{type_id,1,[Value{char_id,code},value]},frames}}
+    case PrimitiveArguments{+type_id,op,Nil{},Nil{},env,values,+frames} C.Book{+types,functions}:
+      S.bind(P.Datum,State,P.apply(op,List.reverse(&2,P.Datum,values)),value => materialize(value,type_id,types,frames))
+    case PrimitiveArguments{type_id,op,Con{kind,kinds},Con{head,args},+env,values,frames} _:
+      Done{Evaluate{head,env,Con{PrimitiveArgument{type_id,op,kind,kinds,args,env,values},frames}}}
+    case PrimitiveArguments{type_id,op,kinds,args,env,values,frames} _: internal(State,"primitive-arity")
+    case Return{value,Con{PrimitiveArgument{+type_id,+op,kind,+kinds,+args,+env,+values},+frames}} _:
+      S.bind(P.Datum,State,datum(value,kind),decoded => Done{PrimitiveArguments{type_id,op,kinds,args,env,Con{decoded,values},frames}})
     case Return{value,Con{Bind{level,body,env},rest}} _:
       Done{Evaluate{body,Con{Entry{level,value},env},rest}}
     case Return{value,Con{Argument{params,args,+level,caller,callee,body},rest}} _:

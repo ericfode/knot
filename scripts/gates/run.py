@@ -64,6 +64,8 @@ GATES = (
          ('tests/compiler-modules/receipts/modules.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
+    Gate('literals', ('python3', 'tests/compiler-literals/check.py'),
+         ('tests/compiler-literals/receipts/literals.json',)),
 )
 
 
@@ -200,6 +202,8 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         return {'entries': len(entries), 'proof_holes': 0}
     if record['status'] not in ('pass', 'passed'):
         raise ValueError('Receipt does not record a completed gate')
+    if gate.name == 'literals':
+        return record['counts']
     result = {key: len(record[key]) for key in ('fixtures', 'mutants', 'budgets', 'boundaries',
                                                'bounds', 'host_boundaries', 'rejects') if key in record}
     if gate.name in ('frontend', 'checker', 'structural', 'fields'):

@@ -1,4 +1,5 @@
 import Base
+import ./primitive-op.bend as R
 
 type At is Data:
   At{start: U32, end: U32, line: U32, column: U32}
@@ -17,6 +18,9 @@ type Token is Data:
 # appear in checked expressions; the resolver validates that invariant.
 type Node is Data:
   Variable{token: Token}
+  Literal{token: Token, kind: U32, number: U32, text: List<&2,U32>}
+  Offset{token: Token, count: U32, tail: Node}
+  Intrinsic{token: Token, op: R.Op, arguments: List<&2,Node>}
   Promotion{token: Token}
   Constructor{token: Token, arguments: List<&2,Node>}
   Call{token: Token, arguments: List<&2,Node>}
