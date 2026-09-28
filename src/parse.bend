@@ -31,6 +31,12 @@ def invalid(+ts: List<&2,S.Token>, code: String) -> Result<S.Error,Parsed>:
 def unsupported(+ts: List<&2,S.Token>, code: String) -> Result<S.Error,Parsed>:
   Fail{S.Unsupported{"parse",code,S.here(ts)}}
 
+# The seed accepts a dotted binder where it rebinds a name in scope, and the
+# parser does not resolve scopes: every dotted binder is unsupported, and any
+# other name that cannot bind is invalid.
+def binder_failure(+ts: List<&2,S.Token>, +name: S.Token, code: String) -> Result<S.Error,Parsed>:
+  S.choose(Result<S.Error,Parsed>,S.identifier(name),u => unsupported(ts,"dotted-binder"),u => invalid(ts,code))
+
 def starts(ts: List<&2,S.Token>, word: String) -> Bool:
   match ts:
     case Nil{}: False{}
@@ -226,7 +232,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+name,Con{+open,+tail}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(pattern,S.matches(name,"+")),u =>
-            S.choose(Result<S.Error,Parsed>,S.binder(open),u => Done{Parsed{S.Promotion{open},tail}},u => invalid(tokens,"pattern-binder")),u =>
+            S.choose(Result<S.Error,Parsed>,S.binder(open),u => Done{Parsed{S.Promotion{open},tail}},u => binder_failure(tokens,open,"pattern-binder")),u =>
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
             then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
@@ -236,7 +242,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
               then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
               invalid(Con{open,tail},"detached-brace")),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(Bool.not(pattern),S.binder(name)),u =>
-            Done{Parsed{S.Variable{name},Con{open,tail}}},u => invalid(tokens,"pattern-binder")))),u =>
+            Done{Parsed{S.Variable{name},Con{open,tail}}},u => binder_failure(tokens,name,"pattern-binder")))),u =>
             term_failure(tokens)))
         case _: invalid(tokens,"term")
     case 1n+ +n Body{+parent}:
@@ -314,7 +320,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             run(n,AnnotatedBinding{name,quantity,column},tail),u =>
             S.bind(List<&2,S.Token>,Parsed,expect(Con{separator,tail},"="),rhs =>
               then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest)))),u =>
-            invalid(tokens,"binding-name"))
+            binder_failure(tokens,name,"binding-name"))
         case _: invalid(tokens,"binding")
     case 1n+ +n AnnotatedBinding{+name,+quantity,+column}:
       match tokens:

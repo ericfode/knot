@@ -103,17 +103,37 @@ law line_broken_scrutinees_witness:
     == Done{P.Parsed{S.Match{indented("match"),S.Sequence{[S.Variable{indented("a")},S.Variable{indented("b")}]},Nil{}},
       [indented("<eof>")]}} : Result<S.Error,P.Parsed>}
 
-# A pattern or live let binds one word; a dotted name refers to a declaration.
+# A dotted binder rebinds a name only where that name is in scope, which the
+# parser cannot see: in a pattern, a `+` promotion, a let and a typed let it is
+# unsupported, while a token that is no name at all stays invalid.
 law dotted_pattern_binder:
   for +at: S.At
   for +rest: List<&2,S.Token>
   {P.run(1n,P.Term{True{}},Con{S.Token{"a.b",at},Con{S.Token{":",at},rest}})
-    == Fail{S.Invalid{"parse","pattern-binder",at}} : Result<S.Error,P.Parsed>}
+    == Fail{S.Unsupported{"parse","dotted-binder",at}} : Result<S.Error,P.Parsed>}
+
+law dotted_promotion_binder:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Term{True{}},Con{S.Token{"+",at},Con{S.Token{"a.b",at},rest}})
+    == Fail{S.Unsupported{"parse","dotted-binder",at}} : Result<S.Error,P.Parsed>}
 
 law dotted_let_binder:
   for +at: S.At
   for +rest: List<&2,S.Token>
   {P.run(1n,P.BindingStart{1,2},Con{S.Token{"a.b",at},Con{S.Token{"=",at},rest}})
+    == Fail{S.Unsupported{"parse","dotted-binder",at}} : Result<S.Error,P.Parsed>}
+
+law dotted_typed_let_binder:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.BindingStart{1,2},Con{S.Token{"a.b",at},Con{S.Token{":",at},rest}})
+    == Fail{S.Unsupported{"parse","dotted-binder",at}} : Result<S.Error,P.Parsed>}
+
+law unnamed_binder_is_invalid:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.BindingStart{1,2},Con{S.Token{"(",at},Con{S.Token{"=",at},rest}})
     == Fail{S.Invalid{"parse","binding-name",at}} : Result<S.Error,P.Parsed>}
 
 law template_binder:

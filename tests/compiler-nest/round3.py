@@ -20,7 +20,7 @@ MUTANTS = [
      'witness': 'dot-let', 'phase': 'check', 'wrong': {'exit': 0}},
     {'name': 'erased-let-as-pattern', 'file': 'parse.bend',
      'old': 'Bool.or(U32.is_eq(quantity,0),S.binder(name))', 'new': 'Bool.or(False{},S.binder(name))',
-     'witness': 'dot-erased-let', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\tbinding-name\t'}},
+     'witness': 'dot-erased-let', 'phase': 'check', 'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tdotted-binder\t'}},
     {'name': 'accept-malformed-name', 'file': 'lex.bend',
      'old': 'S.malformed(text),u => Fail', 'new': 'False{},u => Fail',
      'witness': 'name-double-dot', 'phase': 'check', 'wrong': {'exit': 0}},

@@ -78,7 +78,13 @@ def L.line_broken_scrutinees_witness(): {==}
 
 def L.dotted_pattern_binder(at,rest): {==}
 
+def L.dotted_promotion_binder(at,rest): {==}
+
 def L.dotted_let_binder(at,rest): {==}
+
+def L.dotted_typed_let_binder(at,rest): {==}
+
+def L.unnamed_binder_is_invalid(at,rest): {==}
 
 def L.template_binder(at,rest):
   {==}
