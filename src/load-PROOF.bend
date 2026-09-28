@@ -49,6 +49,15 @@ def L.package_escape_is_invalid():
 def L.namespace_is_lexically_canonical():
   {==}
 
+def L.glued_hash_stays_in_the_path():
+  {==}
+
+def L.glued_hash_ends_an_alias():
+  {==}
+
+def L.header_separator_outside_ascii_is_unsupported():
+  {==}
+
 def L.duplicate_alias_is_invalid():
   {==}
 

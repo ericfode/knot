@@ -101,6 +101,22 @@ law package_escape_is_invalid:
 law namespace_is_lexically_canonical:
   {I.normalize("source/./lib/../lib/flag.bend") == "source/lib/flag.bend" : String}
 
+law glued_hash_stays_in_the_path:
+  {(I.header("import Base#c\n"),I.header("import Base #c\n")) ==
+    (Fail{S.Invalid{"load","import-alias",S.At{0,0,1,0}}},Done{I.Header{[I.Import{"Base",""}],"\n"}})
+    : Result<S.Error,I.Header> & Result<S.Error,I.Header>}
+
+law glued_hash_ends_an_alias:
+  {I.header("import ./a.bend as A#x y\n") == Done{I.Header{[I.Import{"./a.bend","A"}],"\n"}}
+    : Result<S.Error,I.Header>}
+
+law header_separator_outside_ascii_is_unsupported:
+  {(I.header("\u{FEFF}import ./a.bend as A\nimport ./b.bend as B\n"),
+    I.header("import\u{C}./a.bend as A\nimport ./b.bend as B\n")) ==
+    (Fail{S.Unsupported{"load","header-character",S.At{0,0,1,0}}},
+     Fail{S.Unsupported{"load","header-character",S.At{0,0,1,0}}})
+    : Result<S.Error,I.Header> & Result<S.Error,I.Header>}
+
 law duplicate_alias_is_invalid:
   {I.header("import ./a.bend as A\nimport ./b.bend as A\n")
     == Fail{S.Invalid{"load","duplicate-alias",S.At{0,0,0,0}}} : Result<S.Error,I.Header>}

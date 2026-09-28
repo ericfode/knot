@@ -562,6 +562,20 @@ def fallback(+qualified: String, +bare: String, +names: Names) -> String:
      'new': '+cost : Nat = 1n',
      'witness': 'multibyte-entry-tail',
      'actual': {'exit': 3, 'diagnostic_prefix': 'Unsupported\tload\theader-character\t'}},
+    {'name': 'import-comment-splits-anywhere', 'file': 'imports.bend',
+     'old': '+parts = words(line,"",Nil{})',
+     'new': "+parts = words(first(split(line,'#')),\"\",Nil{})",
+     'witness': 'hash-glued-base', 'actual': {'exit': 0}},
+    {'name': 'alias-keeps-glued-comment', 'file': 'imports.bend',
+     'old': "aliased(path,as,first(split(alias,'#')),at)",
+     'new': 'aliased(path,as,alias,at)',
+     'witness': 'hash-alias-comment',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-alias\t'}},
+    {'name': 'header-character-ignored', 'file': 'imports.bend',
+     'old': 'Bool.and(open,Bool.not(printable(line)))',
+     'new': 'False{}',
+     'witness': 'header-bom',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-after-declaration\t'}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -569,7 +583,8 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'pattern-constructor-ignored', 'foreign-body-uses-column',
                     'host-symlink-ignored', 'host-case-ignored',
                     'pattern-global-ctors-dropped', 'promoted-constructor-ignored',
-                    'source-budget-counts-characters'}
+                    'source-budget-counts-characters', 'import-comment-splits-anywhere',
+                    'alias-keeps-glued-comment', 'header-character-ignored'}
 
 
 def mutants(fixtures):

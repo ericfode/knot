@@ -141,28 +141,49 @@ def resolve(+importer: String, +namespace: String, +bundle: String, +path: Strin
   S.choose(Result<S.Error,Target>,Bool.and(inside,Bool.not(hashed(space))),u =>
     Fail{S.Invalid{"load","import-path",S.At{0,0,0,0}}},u => Done{Target{target,space}}))
 
-def words(text: String, +current: String, +rest: List<&2,String>) -> List<&2,String>:
+def pushed(+word: String, +rest: List<&2,String>) -> List<&2,String>:
+  S.choose(List<&2,String>,String.is_empty(word),u => rest,u => Con{String.reverse(word),rest})
+
+# A '#' that begins a word begins the comment; one inside a word belongs to it,
+# as in the seed's `import\s+(\S+)`. Words accumulate reversed.
+def words(text: String, +word: String, +rest: List<&2,String>) -> List<&2,String>:
   match text:
-    case SNil{}:
-      List.reverse(&2,String,S.choose(List<&2,String>,String.eq(current,""),u => rest,u => Con{current,rest}))
+    case SNil{}: List.reverse(&2,String,pushed(word,rest))
     case SCon{+c,+tail}:
       S.choose(List<&2,String>,Bool.or(Char.is_eq(c,' '),Char.is_eq(c,'\t')),u =>
-        words(tail,"",S.choose(List<&2,String>,String.eq(current,""),u => rest,u => Con{current,rest})),u =>
-        words(tail,String.append(current,SCon{c,SNil{}}),rest))
+        words(tail,"",pushed(word,rest)),u =>
+      S.choose(List<&2,String>,Bool.and(String.is_empty(word),Char.is_eq(c,'#')),u =>
+        List.reverse(&2,String,rest),u =>
+        words(tail,SCon{c,word},rest)))
 
+# The seed splits header lines on JavaScript whitespace, which also covers form
+# feed, vertical tab, U+00A0 and U+FEFF. Only printable ASCII, space and tab are
+# classified here; any other header character is Unsupported.
+def printable(text: String) -> Bool:
+  match text:
+    case SNil{}: True{}
+    case SCon{c,tail}:
+      +n = Char.to_u32(c)
+      S.choose(Bool,Bool.or(U32.is_eq(n,9),Bool.and(U32.is_ge(n,32),U32.is_le(n,126))),u => printable(tail),u => False{})
+
+def aliased(+path: String, +as: String, +alias: String, +at: S.At) -> Result<S.Error,Import>:
+  S.choose(Result<S.Error,Import>,Bool.and(String.eq(as,"as"),plain(alias,False{})),u =>
+  S.choose(Result<S.Error,Import>,String.contains(first(split(path,'/')),"@"),u =>
+    Fail{S.Unsupported{"load","named-package",at}},u =>
+  S.choose(Result<S.Error,Import>,String.starts_with(path,"/"),u =>
+    Fail{S.Unsupported{"load","absolute-import",at}},u =>
+  S.choose(Result<S.Error,Import>,valid(path),u => Done{Import{path,alias}},u =>
+    Fail{S.Invalid{"load","import-path",at}}))),u => Fail{S.Invalid{"load","import-alias",at}})
+
+# An alias ends with its identifier: a '#' glued to it starts the comment.
 def import_words(parts: List<&2,String>, +at: S.At) -> Result<S.Error,Import>:
   match parts:
     case Con{word,Con{+path,Nil{}}}:
       S.choose(Result<S.Error,Import>,String.eq(path,"Base"),u => Done{Import{"Base",""}},u =>
         Fail{S.Invalid{"load","import-alias",at}})
-    case Con{word,Con{+path,Con{+as,Con{+alias,Nil{}}}}}:
-      S.choose(Result<S.Error,Import>,Bool.and(String.eq(as,"as"),plain(alias,False{})),u =>
-      S.choose(Result<S.Error,Import>,String.contains(first(split(path,'/')),"@"),u =>
-        Fail{S.Unsupported{"load","named-package",at}},u =>
-      S.choose(Result<S.Error,Import>,String.starts_with(path,"/"),u =>
-        Fail{S.Unsupported{"load","absolute-import",at}},u =>
-      S.choose(Result<S.Error,Import>,valid(path),u => Done{Import{path,alias}},u =>
-        Fail{S.Invalid{"load","import-path",at}}))),u => Fail{S.Invalid{"load","import-alias",at}})
+    case Con{word,Con{+path,Con{+as,Con{+alias,+rest}}}}:
+      S.choose(Result<S.Error,Import>,Bool.or(List.is_empty(&2,String,rest),String.contains(alias,"#")),u =>
+        aliased(path,as,first(split(alias,'#')),at),u => Fail{S.Invalid{"load","import-syntax",at}})
     case _: Fail{S.Invalid{"load","import-syntax",at}}
 
 def alias(item: Import) -> String:
@@ -196,9 +217,10 @@ def header_lines(lines: List<&2,String>, +open: Bool, +row: U32,
   match lines:
     case Nil{}: Done{Header{List.reverse(&2,Import,imports),body_lines(body)}}
     case Con{+line,+tail}:
-      +clean = String.trim(first(split(line,'#')))
-      +parts = words(clean,"",Nil{})
+      +parts = words(line,"",Nil{})
       +is_import = String.eq(first(parts),"import")
+      S.choose(Result<S.Error,Header>,Bool.and(open,Bool.not(printable(line))),u =>
+        Fail{S.Unsupported{"load","header-character",S.At{0,0,row,0}}},u =>
       S.choose(Result<S.Error,Header>,Bool.and(open,is_import),u =>
         push_import(import_words(parts,S.At{0,0,row,0}),seen,+item =>
           header_lines(tail,True{},U32.add(row,1),Con{item,imports},Con{alias(item),seen},Con{"",body})),u =>
@@ -206,7 +228,7 @@ def header_lines(lines: List<&2,String>, +open: Bool, +row: U32,
         S.choose(Result<S.Error,Header>,foreign(parts),u =>
           Fail{S.Unsupported{"check","foreign-definition",S.At{0,0,row,0}}},u =>
           Fail{S.Invalid{"load","import-after-declaration",S.At{0,0,row,0}}}),u =>
-        header_lines(tail,Bool.and(open,String.eq(clean,"")),U32.add(row,1),imports,seen,Con{line,body})))
+        header_lines(tail,Bool.and(open,List.is_empty(&2,String,parts)),U32.add(row,1),imports,seen,Con{line,body}))))
 
 def header(text: String) -> Result<S.Error,Header>:
   header_lines(split(text,'\n'),True{},1,Nil{},Nil{},Nil{})
