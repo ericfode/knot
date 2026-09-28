@@ -282,11 +282,15 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{token,other}:
       Fail{S.Internal{"parse","declaration-mode"}}
     case 1n+ +n MatchTail{+token,+value,+column}:
+      S.choose(Result<S.Error,Parsed>,starts(tokens,","),u =>
+        S.bind(List<&2,S.Token>,Parsed,expect(tokens,","),tail =>
+          then(run(n,Term{False{}},tail),item => after =>
+            run(n,MatchTail{token,columns(value,item),column},after))),u =>
       S.choose(Result<S.Error,Parsed>,scrutinee(tokens),u =>
         then(run(n,Term{False{}},tokens),more => rest =>
           run(n,MatchTail{token,columns(value,more),column},rest)),u =>
       S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),arms =>
-        then(run(n,Arms{column,0},S.skip_lines(arms)),items => rest => wrap_match(token,value,items,rest))))
+        then(run(n,Arms{column,0},S.skip_lines(arms)),items => rest => wrap_match(token,value,items,rest)))))
     case 1n+ +n BindingStart{+quantity,+column}:
       match tokens:
         case Con{+name,Con{+separator,+tail}}:
@@ -312,13 +316,17 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         then(run(n,BodyAt{column},S.skip_lines(body)),next => rest =>
           Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}}))
     case 1n+ +n RowTail{+keyword,+pattern,+parent,+column}:
+      S.choose(Result<S.Error,Parsed>,starts(tokens,","),u =>
+        S.bind(List<&2,S.Token>,Parsed,expect(tokens,","),tail =>
+          then(run(n,Term{True{}},tail),more => rest =>
+            run(n,RowTail{keyword,columns(pattern,more),parent,column},rest))),u =>
       S.choose(Result<S.Error,Parsed>,Bool.or(scrutinee(tokens),starts(tokens,"+")),u =>
         then(run(n,Term{True{}},tokens),more => rest =>
           run(n,RowTail{keyword,columns(pattern,more),parent,column},rest)),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),body =>
           then(run(n,Body{S.column(keyword)},body),value => after =>
             then(run(n,Arms{parent,column},S.skip_lines(after)),more => end =>
-              prepend(S.Arm{keyword,pattern,value},more,end)))))
+              prepend(S.Arm{keyword,pattern,value},more,end))))))
     case 1n+ +n Arms{+parent,+column}:
       match tokens:
         case Con{+keyword,+tail}:
@@ -326,7 +334,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"case"),Bool.or(U32.is_eq(column,0),U32.is_eq(column,S.column(keyword)))),u =>
             then(run(n,Term{True{}},tail),+pattern => +rest =>
-              S.choose(Result<S.Error,Parsed>,Bool.or(scrutinee(rest),starts(rest,"+")),u =>
+              S.choose(Result<S.Error,Parsed>,Bool.or(starts(rest,","),Bool.or(scrutinee(rest),starts(rest,"+"))),u =>
                 run(n,RowTail{keyword,pattern,parent,S.column(keyword)},rest),u =>
               S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
                 then(run(n,Body{S.column(keyword)},body),value => after =>

@@ -1040,3 +1040,21 @@ zero semantic. An intervening loaded-host run exhausted three native-build
 budgets; it remains a failed run. A one-worker retry passed without changing
 any limit. All 33 context controls and eight semantic mutants pass, and the
 literal manifest command has zero blockers and no provider requests.
+
+## 2026-09-27 — nest review round 2: default regions and profile coverage
+
+Confirmed: the first nest gate missed affine reuse in unrefined defaults and
+unresolved bodies after an empty remainder; its nested-alias mutant exercised
+a different region. It also omitted the enum instruction whitelist for its own
+new modules. The branch's divided quota rejected linear-size matches, and two
+checked ground witnesses had general-law names. See the
+[round-2 packet](../tests/compiler-nest/receipts/LAW_REVIEW.md) and
+[dispositions](../tests/compiler-nest/receipts/REVIEW-2.md).
+
+Prevention: freeze positive and ill-formed bodies in positive, default and empty
+remainder regions; apply each selected profile's whitelist to every added module;
+pair expansion-resource negatives with deep/wide linear controls; distinguish
+quantified laws from normalization witnesses by name and recorded obligations.
+The repair gate adds the reviewer fixtures, seven semantic mutants and a fixed
+3,000-program seed comparison. Earlier failures remain evidence. Offline
+preflight reports context blockers; no provider result or style pass is claimed.

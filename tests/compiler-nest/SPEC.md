@@ -11,17 +11,24 @@ binders only when no constructor with that name has been declared yet.
 
 A matrix is a list of columns and an ordered list of rows. A variable-only
 column aliases its lexical identity without inspecting it or closing earlier
-parameters. A constructor column specializes each distinct constructor in order
-of first appearance; unmatched constructors use the default rows. Specialization
-retains row order. A wildcard row survives every constructor specialization.
-When no columns remain, the first row supplies the body. Source pattern names
-and arities are validated before body selection, including unreachable rows.
-Unreachable bodies are neither resolved nor checked. A constructor pattern
-makes its column strict even under an earlier irrefutable row.
+parameters. This also applies to the latest let binder. `_` is anonymous in
+both row and field positions; `_x` is an ordinary name. Commas and spaces are
+accepted between scrutinees and between patterns.
 
-Each generated match has one scrutinee and flat field binders. The existing
-checker checks type, exhaustiveness, quantity, ordered matching and structural
-descent before constructing core `Case` trees. Aliases share lexical levels;
+A constructor column splits on its first constructor. The positive matrix
+specializes matching and variable rows, retaining order. The negative matrix
+removes that constructor's rows and narrows its available constructor set;
+the scrutinee remains a live unrefined binding. Variable rows are checked even
+when that set is empty. A live emptied type permits a later empty match, as in
+the seed's `ctx_dead`; erased empty bindings do not establish this fact. Every
+selected body still undergoes scope, type and quantity checking. When no columns
+remain, the first row supplies the body. Only bodies shadowed at that leaf are
+discarded. Pattern names and arities are validated before body selection.
+
+Each generated decision has one scrutinee and flat positive field binders. The
+checker checks both branches before coalescing the binary spine into existing
+core `Case` trees. A terminal default is checked once and then shared across its
+remaining runtime constructors, with their field layouts. Aliases share lexical levels;
 matching refines every name for that level. Reconstruction uses the live field
 obligations, including through nested aliases. Promotion can make affine Data
 reusable; it cannot make erased fields live. The evaluator and both Wasm
@@ -29,16 +36,18 @@ profiles consume the same existing checked core.
 
 Flat, unique single-scrutinee cases retain their original path and byte order.
 The 25 enum modules must match their frozen hashes in both native/Bun compiler
-lanes and both emitter profiles. A checked zero-row match on an empty datatype
-emits `unreachable`; that function has no domain-valid host invocation. This
-instruction is distinct from the field arena guard. No new host ABI is added.
+lanes and both emitter profiles. A checked empty case emits `i32.const 0`; it has
+no domain-valid execution. The enum whitelist is unchanged and is checked on
+every enum-profile nest module. The field arena guard remains the only
+`unreachable` in the fields profile. No new host ABI is added.
 
-Every expanded source match receives 4096 matrix steps. A variable column
-spends one; a constructor split divides the remaining steps equally among its
-branches, rounding down. Exhaustion is conservative and reports `Exhausted
-check budget`. This bounds expansion as well as depth; it is not a total-work
-counter for the entire compiler. Existing source, parser/checker depth,
-lexical-level, emitter and evaluator limits still apply.
+Every expanded source match receives 4096 residual-matrix visits, including
+leaves and empty remainders. `Expansion` returns the unused work; the positive
+branch's remainder funds the negative branch. There is no division by width.
+Exhaustion reports `Exhausted check budget`. The counter bounds total expansion
+for one source match, not total compiler work. Separately reached source matches
+start separate quotas. Existing source, expansion/checker depth, lexical-level,
+emitter and evaluator limits still apply.
 
 The fields profile executes the three accepted recursive nest fixtures. Their
 recursive calls descend through nested field patterns using the existing
@@ -55,7 +64,12 @@ The added controls have independent seed/literal expectations in
 bytes for its tree cells plus 100 bytes for the depth value, exceeding the
 65,536-byte arena. The seed and evaluator return On; emitted Wasm reports
 `Exhausted wasm arena-overflow`. The depth-4 control needs 344 bytes and succeeds.
-A wide total matrix exhausts the matrix-step budget. Reusing a reconstructed
+A wide total matrix exhausts the matrix-step budget. Under binary expansion its
+13 independent strict columns require `T(0)=1; T(n+1)=2+2*T(n)`, or 24,574
+matrix visits. This literal derivation independently justifies the unchanged
+`matrix-work` exhaustion expectation. The depth-13 unary, 13-column/two-row,
+14-constructor/depth-3 and compiler self-shape controls are linear-size and must
+be accepted. Reusing a reconstructed
 nested affine alias must remain Invalid. Rejected/exhausted compilation must
 preserve an existing output file.
 
@@ -69,7 +83,25 @@ Proof scope: stable row-identity selection is universal over source row lists;
 irrefutable-column preservation, first-leaf selection, alias identity/erasure
 default completion and exhaustion are quantified helper laws. Two complete checker normalizations
 exercise an overlapping irrefutable row and an exhaustive 2-by-2 matrix. Those
-full-tree witnesses are concrete, not a general compiler-correctness or
-exhaustiveness theorem. Runtime differential checks remain separate evidence.
+full-tree witnesses, now `irrefutable_lowering_witness` and
+`exhaustive_matrix_witness`, are concrete. The general irrefutable-first-row and
+exhaustive-lowering laws remain **unmet** in `state.json` and `CONTRACT.json`.
+Additional checked helpers cover anonymous lookup, live residual references,
+empty-type evidence, latest-let aliases and total-counter leaves. Runtime
+differential checks remain separate evidence.
 Live Perch review belongs to the coordinator; this increment records offline
 preflight without claiming style ratings or automatic qualification.
+
+`review-expectations.json` freezes 29 copied reviewer programs and 49 seed calls
+before repairs. `review.py` checks both compiler lanes, evaluator/Wasm agreement,
+rejection in both profiles, preserved output artifacts, the enum whitelist and
+seven additional type-correct semantic mutants. `fuzz.py` generates exactly
+3,000 programs with random seed 1313166164. Seed and Knot verdicts are compared
+independently; accepted inputs also run through the Bend evaluator. Host/internal
+failures are gate failures, never language rejection. The gate rejects any false
+acceptance or seed-valid program classified Invalid.
+
+A new source match on a binding narrowed by an earlier default currently
+reports `Unsupported check default-scrutinee`. Carrying arbitrary residual
+constructor sets through such nested source matches is a subsequent increment;
+internal matrix remainders are handled here.

@@ -70,6 +70,8 @@ GATES = (
          ('tests/compiler-classification/receipts/precision.json',)),
     Gate('nest', ('python3', 'tests/compiler-nest/check.py'),
          ('tests/compiler-nest/receipts/nest.json',)),
+    Gate('nest-review', ('python3', 'tests/compiler-nest/review.py'),
+         ('tests/compiler-nest/receipts/review.json',)),
 )
 
 
@@ -234,6 +236,8 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
             result[lane] = {k: wasm[k] for k in ('observations', 'instances', 'installed_boundary_states', 'lifecycle_checks')}
+    if gate.name in ('nest', 'nest-review'):
+        result.update(record['counts'])
     return result
 
 

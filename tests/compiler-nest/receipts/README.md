@@ -1,5 +1,10 @@
 # Nest increment handoff
 
+This is the historical first-round handoff from `57a0c01`. Its default-region,
+budget and empty-emission claims were corrected in
+[review round 2](REVIEW-2.md). Current evidence is `nest.json`, `review.json` and
+the round-2 gate report; the original frozen expectations remain unchanged.
+
 The implementation is verified within the authorized bounded scope: all 15
 registered gates pass, and the runner exits 0. Frozen nest conformance is
 **38/40**, with `rec-swapped-args` and `rec-alias` explicitly unmet. Their Invalid

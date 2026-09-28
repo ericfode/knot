@@ -37,6 +37,14 @@ law multiple_scrutinees:
       S.Sequence{[S.Variable{S.Token{"a",at}},S.Variable{S.Token{"b",at}}]},Nil{}},
       [S.Token{"<eof>",at}]}} : Result<S.Error,P.Parsed>}
 
+law comma_scrutinees:
+  for +at: S.At
+  {P.run(4n,P.MatchTail{S.Token{"match",at},S.Variable{S.Token{"a",at}},0},
+      [S.Token{",",at},S.Token{"b",at},S.Token{":",at},S.Token{"<eof>",at}])
+    == Done{P.Parsed{S.Match{S.Token{"match",at},
+      S.Sequence{[S.Variable{S.Token{"a",at}},S.Variable{S.Token{"b",at}}]},Nil{}},
+      [S.Token{"<eof>",at}]}} : Result<S.Error,P.Parsed>}
+
 law template_binder:
   for +at: S.At
   for +rest: List<&2,S.Token>

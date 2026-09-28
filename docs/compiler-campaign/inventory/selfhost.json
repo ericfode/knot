@@ -4632,8 +4632,8 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 362,
-        "compiler": 275,
+        "declarations": 382,
+        "compiler": 295,
         "packages": 14,
         "base": 73,
         "check": 0,
@@ -4647,51 +4647,51 @@
         "check": [
           {
             "feature": "types.base",
-            "declarations": 353
+            "declarations": 371
           },
           {
             "feature": "imports.base",
-            "declarations": 289
+            "declarations": 309
           },
           {
             "feature": "generics",
-            "declarations": 266
+            "declarations": 280
           },
           {
             "feature": "imports.local",
-            "declarations": 257
+            "declarations": 277
           },
           {
             "feature": "quantities.arguments",
-            "declarations": 252
+            "declarations": 266
           },
           {
             "feature": "lambdas",
-            "declarations": 139
+            "declarations": 149
           },
           {
             "feature": "captures",
-            "declarations": 137
+            "declarations": 147
           },
           {
             "feature": "literals.string",
-            "declarations": 103
+            "declarations": 109
           },
           {
             "feature": "literals.u32",
-            "declarations": 100
+            "declarations": 107
           },
           {
             "feature": "imports.package",
             "declarations": 56
           },
           {
-            "feature": "literals.list",
+            "feature": "higher-order",
             "declarations": 30
           },
           {
-            "feature": "higher-order",
-            "declarations": 27
+            "feature": "literals.list",
+            "declarations": 30
           },
           {
             "feature": "io",
@@ -4699,15 +4699,15 @@
           },
           {
             "feature": "literals.nat",
+            "declarations": 25
+          },
+          {
+            "feature": "calls.variable",
             "declarations": 24
           },
           {
             "feature": "dependent",
             "declarations": 22
-          },
-          {
-            "feature": "calls.variable",
-            "declarations": 21
           },
           {
             "feature": "literals.tuple",
@@ -4745,51 +4745,51 @@
         "wasm": [
           {
             "feature": "types.base",
-            "declarations": 353
+            "declarations": 371
           },
           {
             "feature": "imports.base",
-            "declarations": 289
+            "declarations": 309
           },
           {
             "feature": "generics",
-            "declarations": 266
+            "declarations": 280
           },
           {
             "feature": "imports.local",
-            "declarations": 257
+            "declarations": 277
           },
           {
             "feature": "quantities.arguments",
-            "declarations": 252
+            "declarations": 266
           },
           {
             "feature": "lambdas",
-            "declarations": 139
+            "declarations": 149
           },
           {
             "feature": "captures",
-            "declarations": 137
+            "declarations": 147
           },
           {
             "feature": "literals.string",
-            "declarations": 103
+            "declarations": 109
           },
           {
             "feature": "literals.u32",
-            "declarations": 100
+            "declarations": 107
           },
           {
             "feature": "imports.package",
             "declarations": 56
           },
           {
-            "feature": "literals.list",
+            "feature": "higher-order",
             "declarations": 30
           },
           {
-            "feature": "higher-order",
-            "declarations": 27
+            "feature": "literals.list",
+            "declarations": 30
           },
           {
             "feature": "io",
@@ -4797,15 +4797,15 @@
           },
           {
             "feature": "literals.nat",
+            "declarations": 25
+          },
+          {
+            "feature": "calls.variable",
             "declarations": 24
           },
           {
             "feature": "dependent",
             "declarations": 22
-          },
-          {
-            "feature": "calls.variable",
-            "declarations": 21
           },
           {
             "feature": "literals.tuple",
@@ -4845,7 +4845,7 @@
         "check": [
           {
             "feature": "imports.local",
-            "declarations": 257
+            "declarations": 277
           },
           {
             "feature": "imports.package",
@@ -4871,7 +4871,7 @@
         "wasm": [
           {
             "feature": "imports.local",
-            "declarations": 257
+            "declarations": 277
           },
           {
             "feature": "imports.package",
@@ -9698,6 +9698,42 @@
           }
         },
         {
+          "key": "src/check.branch_term",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "imports.base",
+              "imports.local",
+              "types.base"
+            ],
+            "wasm": [
+              "imports.base",
+              "imports.local",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/check.call_body",
           "file": "src/check.bend",
           "origin": "compiler",
@@ -10238,6 +10274,278 @@
           }
         },
         {
+          "key": "src/check.decision_arms",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/check.decision_body",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "bindings",
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "captures",
+              "generics",
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "calls.variable",
+              "captures",
+              "generics",
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/check.default_arm",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/check.default_arms",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/check.empty_remainder",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/check.enum_at",
           "file": "src/check.bend",
           "origin": "compiler",
@@ -10435,6 +10743,57 @@
               "imports.local",
               "lambdas",
               "literals.string",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/check.fallback",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
               "quantities.arguments",
               "types.base"
             ]
@@ -11048,6 +11407,50 @@
           }
         },
         {
+          "key": "src/check.residual_constructors",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/check.resolved",
           "file": "src/check.bend",
           "origin": "compiler",
@@ -11106,6 +11509,8 @@
           "origin": "compiler",
           "boundary": "source",
           "features": [
+            "annotations",
+            "bindings",
             "calls",
             "captures",
             "constructors",
@@ -13345,6 +13750,40 @@
           }
         },
         {
+          "key": "src/matrix.Expansion",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "fields",
+            "imports.base",
+            "imports.local",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "missing": {
+            "check": [
+              "imports.base",
+              "imports.local",
+              "types.base"
+            ],
+            "wasm": [
+              "imports.base",
+              "imports.local",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/matrix.alias",
           "file": "src/matrix.bend",
           "origin": "compiler",
@@ -13494,47 +13933,86 @@
           }
         },
         {
-          "key": "src/matrix.arms",
+          "key": "src/matrix.at_level",
           "file": "src/matrix.bend",
           "origin": "compiler",
           "boundary": "source",
           "features": [
-            "bindings",
             "calls",
-            "captures",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "generics",
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "calls.variable",
+              "generics",
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/matrix.available",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
             "constructors",
             "fields",
             "generics",
             "imports.base",
             "imports.local",
-            "lambdas",
-            "literals.u32",
             "matches",
+            "matches.multi",
             "patterns.variable",
+            "patterns.wildcard",
             "quantities.affine",
             "quantities.arguments",
-            "quantities.reusable",
-            "recursion",
             "types.base"
           ],
           "missing": {
             "check": [
-              "captures",
               "generics",
               "imports.base",
               "imports.local",
-              "lambdas",
-              "literals.u32",
               "quantities.arguments",
               "types.base"
             ],
             "wasm": [
-              "captures",
               "generics",
               "imports.base",
               "imports.local",
-              "lambdas",
-              "literals.u32",
               "quantities.arguments",
               "types.base"
             ]
@@ -13626,6 +14104,52 @@
               "imports.local",
               "lambdas",
               "literals.string",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/matrix.column_binding",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
               "quantities.arguments",
               "types.base"
             ]
@@ -13849,6 +14373,101 @@
           }
         },
         {
+          "key": "src/matrix.expand",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.nat",
+              "literals.string",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.nat",
+              "literals.string",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/matrix.expanded",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine"
+          ],
+          "missing": {
+            "check": [
+              "imports.base",
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.base",
+              "imports.local"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/matrix.flat",
           "file": "src/matrix.bend",
           "origin": "compiler",
@@ -14037,51 +14656,6 @@
           }
         },
         {
-          "key": "src/matrix.has_default",
-          "file": "src/matrix.bend",
-          "origin": "compiler",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "generics",
-            "imports.base",
-            "imports.local",
-            "matches",
-            "patterns.nested",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "recursion",
-            "types.base"
-          ],
-          "missing": {
-            "check": [
-              "generics",
-              "imports.base",
-              "imports.local",
-              "quantities.arguments",
-              "types.base"
-            ],
-            "wasm": [
-              "generics",
-              "imports.base",
-              "imports.local",
-              "quantities.arguments",
-              "types.base"
-            ]
-          },
-          "missing_requirements": {
-            "check": [
-              "imports.local"
-            ],
-            "wasm": [
-              "imports.local"
-            ]
-          }
-        },
-        {
           "key": "src/matrix.items",
           "file": "src/matrix.bend",
           "origin": "compiler",
@@ -14221,6 +14795,39 @@
           }
         },
         {
+          "key": "src/matrix.opened",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine"
+          ],
+          "missing": {
+            "check": [
+              "imports.base",
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.base",
+              "imports.local"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/matrix.prepare",
           "file": "src/matrix.bend",
           "origin": "compiler",
@@ -14329,6 +14936,107 @@
           }
         },
         {
+          "key": "src/matrix.reference",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/matrix.remaining",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/matrix.remarked",
           "file": "src/matrix.bend",
           "origin": "compiler",
@@ -14384,53 +15092,7 @@
           }
         },
         {
-          "key": "src/matrix.share",
-          "file": "src/matrix.bend",
-          "origin": "compiler",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "generics",
-            "imports.base",
-            "imports.local",
-            "literals.u32",
-            "matches",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "types.base"
-          ],
-          "missing": {
-            "check": [
-              "generics",
-              "imports.base",
-              "imports.local",
-              "literals.u32",
-              "quantities.arguments",
-              "types.base"
-            ],
-            "wasm": [
-              "generics",
-              "imports.base",
-              "imports.local",
-              "literals.u32",
-              "quantities.arguments",
-              "types.base"
-            ]
-          },
-          "missing_requirements": {
-            "check": [
-              "imports.local"
-            ],
-            "wasm": [
-              "imports.local"
-            ]
-          }
-        },
-        {
-          "key": "src/matrix.signature",
+          "key": "src/matrix.residual",
           "file": "src/matrix.bend",
           "origin": "compiler",
           "boundary": "source",
@@ -14443,8 +15105,11 @@
             "imports.base",
             "imports.local",
             "lambdas",
+            "literals.string",
             "matches",
+            "matches.multi",
             "patterns.variable",
+            "patterns.wildcard",
             "quantities.affine",
             "quantities.arguments",
             "quantities.reusable",
@@ -14457,6 +15122,7 @@
               "imports.base",
               "imports.local",
               "lambdas",
+              "literals.string",
               "quantities.arguments",
               "types.base"
             ],
@@ -14466,6 +15132,7 @@
               "imports.base",
               "imports.local",
               "lambdas",
+              "literals.string",
               "quantities.arguments",
               "types.base"
             ]
@@ -14549,9 +15216,12 @@
             "imports.base",
             "imports.local",
             "lambdas",
+            "literals.string",
+            "literals.u32",
             "matches",
             "matches.multi",
             "patterns.variable",
+            "patterns.wildcard",
             "quantities.affine",
             "quantities.arguments",
             "quantities.reusable",
@@ -14564,6 +15234,8 @@
               "imports.base",
               "imports.local",
               "lambdas",
+              "literals.string",
+              "literals.u32",
               "quantities.arguments",
               "types.base"
             ],
@@ -14573,6 +15245,8 @@
               "imports.base",
               "imports.local",
               "lambdas",
+              "literals.string",
+              "literals.u32",
               "quantities.arguments",
               "types.base"
             ]
@@ -14687,6 +15361,56 @@
           }
         },
         {
+          "key": "src/matrix.thread",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "generics",
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "calls.variable",
+              "generics",
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/matrix.validate",
           "file": "src/matrix.bend",
           "origin": "compiler",
@@ -14764,6 +15488,7 @@
             "imports.local",
             "lambdas",
             "literals.string",
+            "literals.u32",
             "matches",
             "matches.multi",
             "patterns.nested",
@@ -14782,6 +15507,7 @@
               "imports.local",
               "lambdas",
               "literals.string",
+              "literals.u32",
               "quantities.arguments",
               "types.base"
             ],
@@ -14792,6 +15518,7 @@
               "imports.local",
               "lambdas",
               "literals.string",
+              "literals.u32",
               "quantities.arguments",
               "types.base"
             ]
@@ -14846,6 +15573,58 @@
               "imports.local",
               "lambdas",
               "literals.string",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/matrix.without",
+          "file": "src/matrix.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
               "quantities.arguments",
               "types.base"
             ]
@@ -16695,6 +17474,43 @@
           }
         },
         {
+          "key": "src/scope.dead",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "imports.base",
+              "imports.local",
+              "types.base"
+            ],
+            "wasm": [
+              "imports.base",
+              "imports.local",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/scope.descendants",
           "file": "src/scope.bend",
           "origin": "compiler",
@@ -16775,6 +17591,54 @@
               "generics",
               "imports.base",
               "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/scope.empty_bindings",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "literals.u32",
               "quantities.arguments",
               "types.base"
             ]
@@ -17029,29 +17893,39 @@
           "boundary": "source",
           "features": [
             "calls",
+            "captures",
             "constructors",
             "fields",
             "generics",
             "imports.base",
             "imports.local",
+            "lambdas",
+            "literals.string",
             "matches",
             "patterns.variable",
             "quantities.affine",
             "quantities.arguments",
+            "quantities.reusable",
             "types.base"
           ],
           "missing": {
             "check": [
+              "captures",
               "generics",
               "imports.base",
               "imports.local",
+              "lambdas",
+              "literals.string",
               "quantities.arguments",
               "types.base"
             ],
             "wasm": [
+              "captures",
               "generics",
               "imports.base",
               "imports.local",
+              "lambdas",
+              "literals.string",
               "quantities.arguments",
               "types.base"
             ]
@@ -17131,16 +18005,12 @@
           "boundary": "source",
           "features": [
             "calls",
-            "captures",
             "constructors",
             "fields",
             "generics",
             "imports.base",
             "imports.local",
-            "lambdas",
-            "literals.list",
             "literals.string",
-            "literals.u32",
             "matches",
             "patterns.nested",
             "patterns.variable",
@@ -17151,26 +18021,18 @@
           ],
           "missing": {
             "check": [
-              "captures",
               "generics",
               "imports.base",
               "imports.local",
-              "lambdas",
-              "literals.list",
               "literals.string",
-              "literals.u32",
               "quantities.arguments",
               "types.base"
             ],
             "wasm": [
-              "captures",
               "generics",
               "imports.base",
               "imports.local",
-              "lambdas",
-              "literals.list",
               "literals.string",
-              "literals.u32",
               "quantities.arguments",
               "types.base"
             ]
@@ -17478,6 +18340,51 @@
           }
         },
         {
+          "key": "src/scope.residual",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/scope.scrutinee",
           "file": "src/scope.bend",
           "origin": "compiler",
@@ -17650,6 +18557,63 @@
             "wasm": [
               "imports.local",
               "templates"
+            ]
+          }
+        },
+        {
+          "key": "src/scope.unknown",
+          "file": "src/scope.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.list",
+              "literals.string",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "captures",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "lambdas",
+              "literals.list",
+              "literals.string",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
             ]
           }
         },
@@ -24707,8 +25671,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "15d2a9210c0d6a1108d7bfea0f457eb1197ea91b5dd6e6c411bba843b64829a9",
-    "docs/compiler-campaign/inventory/base-closure.json": "5392e664b23fd8febec6d0ad99959269d75f2aed667e49e3107617386fb207c6",
-    "docs/compiler-campaign/inventory/accepted.json": "ce8c5910fb604b1848c943bc92c24c84096143e65b84c6a284dc6bcb08471f27"
+    "docs/compiler-campaign/inventory/implementation.json": "a4da6d12545dfdfcfca51ef6dd7c853ce1b0d9e91ffe52720a005006c02f3748",
+    "docs/compiler-campaign/inventory/base-closure.json": "cf8d3ce8177d1134eb382be63c8a346ba0ca4a117ab51bccf2855319231fa840",
+    "docs/compiler-campaign/inventory/accepted.json": "24354f0786330dfdacb5fe0db992274192fc1c3f780f3143363b3b81bf323e3c"
   }
 }

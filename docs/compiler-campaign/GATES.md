@@ -29,6 +29,9 @@ Both check commands exit 0 only when all registered gates finish successfully
 and their required outputs are present and readable. The runner's self-test
 requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
+this branch retains the seventeen main gates and appends `nest` and
+`nest-review`, for nineteen total. The latter checks the frozen reviewer repros,
+enum whitelist, semantic repair mutants and fixed-seed 3,000-program comparison.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,

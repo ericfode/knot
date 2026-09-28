@@ -15,7 +15,7 @@ type Token is Data:
 
 # The parser has a single recursive tree. Declaration/sequence variants never
 # appear in checked expressions; the resolver validates that invariant.
-# Matrix and Alias are internal lowering states, never parsed source forms.
+# Matrix, Decision, Remainder and Alias are internal lowering states.
 type Node is Data:
   Variable{token: Token}
   Promotion{token: Token}
@@ -25,6 +25,8 @@ type Node is Data:
   Match{token: Token, value: Node, arms: List<&2,Node>}
   Arm{token: Token, pattern: Node, body: Node}
   Matrix{token: Token, columns: List<&2,Node>, rows: List<&2,Node>, work: U32}
+  Decision{token: Token, column: Node, pattern: Node, yes: Node, no: Node}
+  Remainder{token: Token, level: U32, constructors: List<&2,Token>}
   Alias{token: Token, level: U32, mark: U32, body: Node}
   Parameter{token: Token, quantity: U32, type_name: Token}
   Datatype{token: Token, reusable: Bool, constructors: List<&2,Node>}

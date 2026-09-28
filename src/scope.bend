@@ -48,17 +48,23 @@ def find(bindings: List<&2,C.Binding>, +name: S.Token) -> Result<S.Error,C.Bindi
         case C.Binding{token,level,q,type_id,param,known}:
           S.choose(Result<S.Error,C.Binding>,String.eq(S.text(token),S.text(name)),u => Done{head},u => find(tail,name))
 
-def lookup(scope: Scope, name: S.Token) -> Result<S.Error,C.Binding>:
+def lookup(scope: Scope, +name: S.Token) -> Result<S.Error,C.Binding>:
   match scope:
-    case Scope{bindings,level,from,live,smaller}: find(bindings,name)
+    case Scope{+bindings,level,from,live,smaller}:
+      S.choose(Result<S.Error,C.Binding>,S.matches(name,"_"),u => C.invalid(C.Binding,"free-name",name),u => find(bindings,name))
+
+def unknown(+token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
+  S.choose(Result<S.Error,C.Checked>,Bool.and(live,U32.is_eq(q,0)),u => C.invalid(C.Checked,"erased-live",token),u =>
+    Done{C.Checked{C.Reference{token,level,type_id},type_id,S.choose(List<&2,U32>,Bool.and(live,U32.is_eq(q,1)),u => [level],u => Nil{})}})
 
 def occurrence(known: Maybe<&2,C.Term>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
   match known:
     case Some{C.Value{origin,source_type,tag}}: Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
+    case Some{C.Reference{origin,id,typ}}: unknown(token,level,q,type_id,live)
+    case Some{C.Case{origin,id,typ,Nil{}}}: unknown(token,level,q,type_id,live)
     case Some{other}: C.internal(C.Checked,"compound-refinement")
     case None{}:
-      S.choose(Result<S.Error,C.Checked>,Bool.and(live,U32.is_eq(q,0)),u => C.invalid(C.Checked,"erased-live",token),u =>
-        Done{C.Checked{C.Reference{token,level,type_id},type_id,S.choose(List<&2,U32>,Bool.and(live,U32.is_eq(q,1)),u => [level],u => Nil{})}})
+      unknown(token,level,q,type_id,live)
 
 def reference(binding: C.Binding, token: S.Token, scope: Scope) -> Result<S.Error,C.Checked>:
   match binding scope:
@@ -117,6 +123,25 @@ def branch(scope: Scope, +level: U32, tag: U32) -> Scope:
   match scope:
     case Scope{bindings,next,from,live,smaller}: Scope{refine(bindings,level,tag),next,after(from,level),live,smaller}
 
+# A default region narrows the constructor set, never the runtime value.
+# A self-reference marks that distinction without reconstructing a constructor.
+def residual(scope: Scope, binding: C.Binding, +empty: Bool) -> Scope:
+  match scope binding:
+    case Scope{bindings,next,open,live,smaller} C.Binding{+token,+level,q,+type_id,param,known}:
+      Scope{replace(bindings,level,S.choose(C.Term,empty,u => C.Case{token,level,type_id,Nil{}},u => C.Reference{token,level,type_id})),
+        next,Con{level,after(open,level)},live,smaller}
+
+def empty_bindings(bindings: List<&2,C.Binding>) -> Bool:
+  match bindings:
+    case Nil{}: False{}
+    case Con{C.Binding{token,level,q,type_id,param,Some{C.Case{a,b,c,Nil{}}}},tail}:
+      Bool.or(U32.is_ne(q,0),empty_bindings(tail))
+    case Con{head,tail}: empty_bindings(tail)
+
+def dead(scope: Scope) -> Bool:
+  match scope:
+    case Scope{bindings,next,open,live,smaller}: empty_bindings(bindings)
+
 def parameters(params: List<&2,C.Parameter>, +index: U32, +bindings: List<&2,C.Binding>) -> Scope:
   match params:
     case Nil{}: Scope{bindings,index,List.reverse(&2,U32,levels(bindings)),True{},Nil{}}
@@ -125,6 +150,10 @@ def parameters(params: List<&2,C.Parameter>, +index: U32, +bindings: List<&2,C.B
 
 def matchable(binding: C.Binding, +token: S.Token, scope: Scope) -> Result<S.Error,C.Binding>:
   match binding scope:
+    case C.Binding{name,level,q,type_id,param,Some{C.Reference{a,b,c}}} _:
+      C.unsupported(C.Binding,"default-scrutinee",token)
+    case C.Binding{name,level,q,type_id,param,Some{C.Case{a,b,c,Nil{}}}} _:
+      C.unsupported(C.Binding,"default-scrutinee",token)
     case C.Binding{+name,+level,+q,+type_id,+param,None{}} Scope{bindings,next,from,live,smaller}:
       S.choose(Result<S.Error,C.Binding>,U32.is_eq(q,0),u => C.invalid(C.Binding,"erased-scrutinee",token),u =>
         S.choose(Result<S.Error,C.Binding>,Bool.and(param,contains(from,level)),u =>

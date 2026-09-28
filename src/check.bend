@@ -117,13 +117,14 @@ def complete_arms(definition: C.Datatype, seen: List<&2,U32>, +token: S.Token) -
     case C.Datatype{name,data,tokens}:
       S.choose(Result<S.Error,Unit>,Nat.is_eq(List.length(&2,C.Constructor,tokens),List.length(&2,U32,seen)),u => Done{Unit{}},u => C.invalid(Unit,"missing-arm",token))
 
-def patterns(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +type_id: U32, +seen: List<&2,U32>, +token: S.Token) -> Result<S.Error,Unit>:
+def patterns(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +type_id: U32, +seen: List<&2,U32>, +token: S.Token, +partial: Bool) -> Result<S.Error,Unit>:
   match nodes:
     case Nil{}:
-      S.bind(C.Datatype,Unit,enum_at(types,type_id),definition => complete_arms(definition,seen,token))
+      S.choose(Result<S.Error,Unit>,partial,u => Done{Unit{}},u =>
+        S.bind(C.Datatype,Unit,enum_at(types,type_id),definition => complete_arms(definition,seen,token)))
     case Con{S.Arm{+arm,pat,body},+tail}:
       S.bind(G.ConstructorRef,Unit,pattern(pat,types),reference =>
-        S.bind(U32,Unit,pattern_id(reference,type_id,seen,arm),tag => patterns(tail,types,type_id,Con{tag,seen},token)))
+        S.bind(U32,Unit,pattern_id(reference,type_id,seen,arm),tag => patterns(tail,types,type_id,Con{tag,seen},token,partial)))
     case _: C.internal(Unit,"arm-node")
 
 def prepend_arm(tag: U32, +fields: List<&2,C.Binding>, head: C.Checked, tail: C.Checked) -> Result<S.Error,C.Checked>:
@@ -154,7 +155,7 @@ def binding_body(initial: C.Checked, +token: S.Token, +q: U32, types: List<&2,C.
 def match_body(binding: C.Binding, +token: S.Token, +arms: List<&2,S.Node>, types: List<&2,C.Datatype>, +scope: E.Scope, +wanted: Maybe<&2,U32>, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match binding wanted:
     case C.Binding{+name,+level,+q,+type_id,+param,+known} Some{target}:
-      S.bind(Unit,C.Checked,patterns(arms,types,type_id,Nil{},token),u =>
+      S.bind(Unit,C.Checked,patterns(arms,types,type_id,Nil{},token,E.dead(scope)),u =>
         S.bind(C.Checked,C.Checked,E.reference(C.Binding{name,level,q,type_id,param,known},token,scope),inspected =>
           S.bind(C.Checked,C.Checked,next(level),branches => case_result(branches,inspected,token,level,wanted))))
     case _ None{}: C.invalid(C.Checked,"annotation-required",token)
@@ -171,6 +172,67 @@ def rebuilt(value: C.Checked, token: S.Token, +type_id: U32, tag: U32, params: L
   match value:
     case C.Checked{C.Sequence{args},ignored,uses}: Done{C.Checked{P.value(token,type_id,tag,params,args),type_id,uses}}
     case _: C.internal(C.Checked,"refined-arguments")
+
+def branch_term(fields: P.Fields, tag: U32, body: C.Term) -> C.Term:
+  match fields:
+    case P.Fields{scope,bindings,args}: C.Branch{tag,bindings,body}
+
+def default_arm(reference: G.ConstructorRef, +ctor: S.Token, +body: C.Term, +scope: E.Scope, +level: U32,
+  +types: List<&2,C.Datatype>, next: U32) -> Result<S.Error,C.Term>:
+  match reference:
+    case G.ConstructorRef{+type_id,+tag}:
+      S.bind(List<&2,C.Parameter>,C.Term,G.field_signature(G.ConstructorRef{type_id,tag},types),params =>
+        S.bind(P.Fields,C.Term,P.branch(scope,level,G.ConstructorRef{type_id,tag},
+          S.Constructor{ctor,M.fresh(params,next,S.at(ctor))},types),fields => Done{branch_term(fields,tag,body)}))
+
+def default_arms(tags: List<&2,S.Token>, +body: C.Term, +scope: E.Scope, +level: U32, +types: List<&2,C.Datatype>) -> Result<S.Error,List<&2,C.Term>>:
+  match tags scope:
+    case Nil{} _: Done{Nil{}}
+    case Con{+ctor,+tail} E.Scope{bindings,next,open,live,smaller}:
+      S.bind(G.ConstructorRef,List<&2,C.Term>,G.find_constructor(types,ctor,0),reference =>
+        S.bind(C.Term,List<&2,C.Term>,default_arm(reference,ctor,body,scope,level,types,next),head =>
+          S.bind(List<&2,C.Term>,List<&2,C.Term>,default_arms(tail,body,scope,level,types),rest => Done{Con{head,rest}})))
+
+# Coalesce a binary spine into the existing exhaustive core Case. A terminal
+# default is checked once while live, then shared by its remaining runtime tags.
+def fallback(+term: C.Term, +level: U32, +tags: List<&2,S.Token>, +types: List<&2,C.Datatype>, +scope: E.Scope) -> Result<S.Error,List<&2,C.Term>>:
+  match term:
+    case C.Case{token,id,type_id,+arms}:
+      S.choose(Result<S.Error,List<&2,C.Term>>,U32.is_eq(id,level),u => Done{arms},u => default_arms(tags,term,scope,level,types))
+    case _: default_arms(tags,term,scope,level,types)
+
+def decision_arms(+positive: C.Checked, negative: C.Checked, +tag: U32, +fields: List<&2,C.Binding>,
+  +tags: List<&2,S.Token>, +level: U32, types: List<&2,C.Datatype>, scope: E.Scope) -> Result<S.Error,C.Checked>:
+  match negative:
+    case C.Checked{term,type_id,+uses}:
+      S.bind(List<&2,C.Term>,C.Checked,fallback(term,level,tags,types,scope),tail =>
+        prepend_arm(tag,fields,positive,C.Checked{C.Sequence{tail},0,E.remove(uses,level)}))
+
+def decision_body(+binding: C.Binding, +token: S.Token, +column: S.Node, +ctor: S.Token,
+  +types: List<&2,C.Datatype>, +scope: E.Scope, +wanted: Maybe<&2,U32>,
+  next: U32 -> U32 -> List<&2,S.Token> -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+  match binding:
+    case C.Binding{name,+level,q,+type_id,param,known}:
+      S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,ctor,0),reference =>
+        S.bind(U32,C.Checked,pattern_id(reference,type_id,Nil{},ctor),+tag =>
+          S.bind(C.Datatype,C.Checked,G.type_at(types,type_id),definition =>
+            +tags = M.remaining(M.available(column,definition),ctor)
+            S.bind(C.Checked,C.Checked,E.reference(binding,token,scope),inspected =>
+              S.bind(C.Checked,C.Checked,next(level,tag,tags),branches => case_result(branches,inspected,token,level,wanted))))))
+
+def residual_constructors(tags: List<&2,S.Token>) -> List<&2,C.Constructor>:
+  match tags:
+    case Nil{}: Nil{}
+    case Con{token,tail}: Con{C.Constructor{token,Nil{}},residual_constructors(tail)}
+
+def empty_remainder(+tags: List<&2,S.Token>, +token: S.Token, +level: U32, +scope: E.Scope, +wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
+  match scope:
+    case E.Scope{+bindings,next,open,live,smaller}:
+      S.bind(Unit,C.Checked,S.choose(Result<S.Error,Unit>,E.dead(scope),u => Done{Unit{}},u =>
+        complete_arms(C.Datatype{token,False{},residual_constructors(tags)},Nil{},token)),u =>
+        S.bind(C.Binding,C.Checked,E.find_level(bindings,level),residual =>
+          S.bind(C.Checked,C.Checked,E.reference(residual,token,scope),inspected =>
+            case_result(C.Checked{C.Sequence{Nil{}},0,Nil{}},inspected,token,level,wanted))))
 
 def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Scope) -> Result<S.Error,C.Checked>:
   match fuel mode catalog scope:
@@ -192,6 +254,18 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
               S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q))))))
+    case 1n+ +n Expression{S.Match{token,S.Remainder{name,level,tags},Nil{}},wanted} _ _:
+      empty_remainder(tags,token,level,scope,wanted)
+    case 1n+ +n Expression{S.Decision{+token,+column,S.Constructor{+ctor,+args},+yes,+no},+wanted} C.Catalog{+types,sigs} _:
+      +pat : S.Node = S.Constructor{ctor,args}
+      S.bind(C.Binding,C.Checked,M.column_binding(column,scope),+binding =>
+        decision_body(binding,token,column,ctor,types,scope,wanted,+level => +tag => +tags =>
+          S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,ctor,0),reference =>
+          S.bind(P.Fields,C.Checked,P.branch(scope,level,reference,pat,types),opened =>
+            arm_scope(opened,bound => +fields =>
+              S.bind(C.Checked,C.Checked,run(n,Expression{yes,wanted},catalog,current,bound),positive =>
+                S.bind(C.Checked,C.Checked,run(n,Expression{no,wanted},catalog,current,E.residual(scope,binding,List.is_empty(&2,S.Token,tags))),negative =>
+                  decision_arms(positive,negative,tag,fields,tags,level,types,scope))))))))
     case 1n+ +n Expression{S.Match{+token,+value,+arms},+wanted} C.Catalog{+types,sigs} _:
       S.choose(Result<S.Error,C.Checked>,M.flat(value,arms),u =>
         S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),binding =>
@@ -199,9 +273,9 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
             run(n,Arms{arms,token,level,wanted},catalog,current,scope))),u =>
         S.bind(S.Node,C.Checked,M.start(n,token,value,arms,types),node =>
           run(n,Expression{node,wanted},catalog,current,scope)))
-    case 1n+ +n Expression{S.Matrix{token,columns,rows,work},+wanted} C.Catalog{types,sigs} _:
-      S.bind(S.Node,C.Checked,M.step(token,columns,rows,work,types,scope),node =>
-        run(n,Expression{node,wanted},catalog,current,scope))
+    case 1n+ +n Expression{S.Matrix{token,columns,rows,+work},+wanted} C.Catalog{types,sigs} _:
+      S.bind(M.Expansion,C.Checked,M.expand(n,S.Matrix{token,columns,rows,work},types,scope,work),tree =>
+        run(n,Expression{M.expanded(tree),wanted},catalog,current,scope))
     case 1n+ +n Expression{S.Alias{token,level,mark,+body},+wanted} C.Catalog{types,sigs} _:
       S.bind(E.Scope,C.Checked,M.alias(scope,token,level,mark,types),bound =>
         run(n,Expression{body,wanted},catalog,current,bound))

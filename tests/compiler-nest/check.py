@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import datetime
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -17,6 +18,9 @@ RECEIPT = HERE / 'receipts/nest.json'
 SEED = ['bun', ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/main.ts']
 HOST = ROOT / 'scripts/run-wasm.mjs'
 FIELDS = '--profile=knot-fields-wasm-1'
+_enum_spec = importlib.util.spec_from_file_location('enum_contract', ROOT / 'tests/compiler-wasm/check.py')
+_enum_contract = importlib.util.module_from_spec(_enum_spec)
+_enum_spec.loader.exec_module(_enum_contract)
 # Explicitly authorized conservative outcomes; these NEVER count as conformance.
 UNMET = {'rec-swapped-args', 'rec-alias'}
 
@@ -121,6 +125,8 @@ def fixtures(record, manifest, lanes):
                 decoder = successful(['wasm2wat', output])
                 item['lanes'][lane].update(compile=compile_result, module_sha256=digest(output),
                                            wat_sha256=hashlib.sha256(decoder['stdout'].encode()).hexdigest(), calls=[])
+                if not fields:
+                    item['lanes'][lane]['instructions'] = _enum_contract.mvp_instructions(decoder['stdout'])
                 for call in calls(case):
                     evaluation = run([*commands['eval'], source, call['export'], 65536, *call['ordinals']])
                     evaluated(evaluation, call)
@@ -214,7 +220,7 @@ MUTANTS = [
      'old': 'prepare(fuel,rows,List.length', 'new': 'prepare(fuel,List.sort(~S.Node,~more_specific,rows),List.length',
      'prefix': SPECIFICITY, 'witness': 'first-match-nested', 'phase': 'eval', 'export': 'probe', 'args': [1, 1, 0, 1], 'wrong_tag': 2},
     {'name': 'drop-default-matrix', 'file': 'matrix.bend',
-     'old': 'List.append(&2,S.Token,explicit,defaults(ctors,explicit))', 'new': 'explicit',
+     'old': 'without(rows,ctor),work}', 'new': 'Nil{},work}',
      'witness': 'wildcard-default', 'phase': 'check',
      'wrong': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tmissing-arm\t'}},
     {'name': 'accept-nonexhaustive-matrix', 'file': 'check.bend',

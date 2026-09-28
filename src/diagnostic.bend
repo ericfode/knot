@@ -62,5 +62,9 @@ def tree(fuel: Nat, node: S.Node) -> Result<S.Error,String>:
       concat([tree(n,head),Done{"; "},tree(n,S.Sequence{tail})])
     case 1n+ +n S.Matrix{token,columns,rows,work}:
       concat([Done{"matrix["},tree(n,S.Sequence{columns}),Done{"]("},tree(n,S.Sequence{rows}),Done{")"}])
+    case 1n+ +n S.Decision{token,column,pattern,yes,no}:
+      concat([Done{"split["},tree(n,column),Done{" "},tree(n,pattern),Done{"]("},tree(n,yes),Done{"; "},tree(n,no),Done{")"}])
+    case 1n+ +n S.Remainder{token,level,tags}:
+      Done{String.append("remainder $",U32.show(level))}
     case 1n+ +n S.Alias{token,level,mark,body}:
       concat([Done{"alias "},Done{S.text(token)},Done{"=$"},Done{U32.show(level)},Done{" "},tree(n,body)])

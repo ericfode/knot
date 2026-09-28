@@ -81,7 +81,8 @@
     "simd": false,
     "threads": false,
     "gc": false,
-    "gpu": false
+    "gpu": false,
+    "empty_matches": "i32.const 0 in a region with no domain-valid execution; remains inside the eight-instruction knot-enum-1 whitelist"
   },
   "exit_codes": {
     "success": 0,
@@ -131,7 +132,7 @@
     "independent_evaluator": true,
     "wasm": false,
     "owned_heap": false,
-    "patterns": "ordered first-match matrices over multiple scrutinees, wildcard/variable rows and nested constructors; plain/+ binders share lexical identities; erased fields stay erased; zero-row matches require empty datatypes",
+    "patterns": "ordered binary first-match matrices over multiple scrutinees, wildcard/variable rows and nested constructors; optional comma separators; plain/+ binders share lexical identities; _ is anonymous; all-variable columns on the latest let binder alias without inspection; erased fields stay erased",
     "observation": "Live-field projection, declaration order; erased fields omitted",
     "inspection_work": 4096,
     "inspection_characters": 65536,
@@ -172,7 +173,7 @@
       "maximum_pages": 1,
       "bytes": 65536,
       "initial_bump": 0,
-      "guard": "unsigned size > 65536 - bump; the only reachable unreachable for domain-valid fields-profile calls",
+      "guard": "unsigned size > 65536 - bump; the only unreachable in the profile",
       "allocation": "Arguments saved before allocation; stores after bounded pointer advance",
       "lifetime": "Instance lifetime; immutable initialized cells; no free, reset, growth or reclamation"
     },
@@ -216,7 +217,7 @@
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py",
     "additional_evidence": "tests/compiler-nest/receipts/nest.json",
-    "empty_matches": "unreachable; the scrutinee type has no value and no valid host ordinal"
+    "empty_matches": "i32.const 0; no domain-valid execution reaches the empty branch"
   },
   "pattern_matrix": {
     "module": "src/matrix.bend",
@@ -224,11 +225,17 @@
     "evidence": "tests/compiler-nest/receipts/nest.json",
     "proof": "src/matrix-PROOF.bend",
     "frozen_expectations": "tests/compiler-nest/expectations.json",
-    "core": "single-scrutinee Case; internal Matrix and Alias syntax is eliminated by checking",
-    "bounds": "4096 matrix steps per expanded source match; splits partition the remainder, rounding down; depth/level limits remain",
+    "core": "Binary Decision with live Remainder scopes, checked then coalesced into exhaustive core Case; Matrix, Decision, Remainder and Alias never enter runtime core",
+    "bounds": "4096 residual-matrix visits per expanded source match, including leaves and empty remainders; Expansion threads the unused total through both branches without division. Each separately reached source match starts a new budget; checker/expansion depth and lexical-level limits remain.",
     "unmet": [
       "rec-swapped-args: Unsupported check recursive-call, frozen Invalid expectation unchanged",
-      "rec-alias: Unsupported check recursive-call, frozen Invalid expectation unchanged"
-    ]
+      "rec-alias: Unsupported check recursive-call, frozen Invalid expectation unchanged",
+      "General law: lowering any matrix with an irrefutable first row selects that row (only helper laws and irrefutable_lowering_witness are proved)",
+      "General law: every exhaustive matrix lowers without a missing branch (only helper laws and exhaustive_matrix_witness are proved)"
+    ],
+    "defaults": "The negative branch excludes one constructor and retains the live unrefined lexical binding. A variable row is checked even when its remainder is empty. A live emptied type permits a later empty match but never bypasses body checking.",
+    "unsupported": "A new source match on a residual binding reports Unsupported check default-scrutinee until source-level residual constructor sets are carried through nested matches.",
+    "review_evidence": "tests/compiler-nest/receipts/review.json",
+    "review_fixtures": "tests/compiler-nest/review-expectations.json"
   }
 }

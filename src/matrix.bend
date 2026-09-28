@@ -5,8 +5,8 @@ import ./catalog.bend as G
 import ./scope.bend as E
 import ./patterns.bend as P
 
-# Rows stay in source order. A column either aliases its binder or specializes
-# constructors; each residual matrix becomes a body of the existing flat match.
+# Rows stay in source order. Each constructor splits a positive matrix from
+# its remainder; a default retains the live scrutinee, even at the empty type.
 def items(node: S.Node) -> List<&2,S.Node>:
   match node:
     case S.Sequence{nodes}: nodes
@@ -141,43 +141,58 @@ def default_rows(rows: List<&2,S.Node>, +level: U32) -> List<&2,S.Node>:
       Con{S.Arm{arm,S.Sequence{rest},bind_body(body,token,level,2)},default_rows(tail,level)}
     case Con{head,tail}: default_rows(tail,level)
 
-def arms(ctors: List<&2,S.Token>, +columns: List<&2,S.Node>, +rows: List<&2,S.Node>, +level: U32, +next: U32,
-  +types: List<&2,C.Datatype>, +origin: S.Token, +work: U32) -> Result<S.Error,List<&2,S.Node>>:
-  match ctors:
-    case Nil{}: Done{Nil{}}
-    case Con{+ctor,+tail}:
-      S.bind(G.ConstructorRef,List<&2,S.Node>,G.find_constructor(types,ctor,0),reference =>
-        S.bind(List<&2,C.Parameter>,List<&2,S.Node>,G.field_signature(reference,types),params =>
-          +fields = fresh(params,next,S.at(origin))
-          S.bind(List<&2,S.Node>,List<&2,S.Node>,arms(tail,columns,rows,level,next,types,origin,work),rest =>
-            Done{Con{S.Arm{ctor,S.Constructor{ctor,fields},S.Matrix{origin,
-              List.append(&2,S.Node,fields,columns),specialize(rows,ctor,fields,level),work}},rest}})))
-
 # A variable column binds without inspecting or closing the ordered frontier.
 def variable_column(+binding: C.Binding, +scope: E.Scope, +token: S.Token) -> Result<S.Error,C.Binding>:
   match binding scope:
     case C.Binding{name,level,q,type_id,param,None{}} E.Scope{bindings,next,open,live,smaller}:
-      S.choose(Result<S.Error,C.Binding>,Bool.and(param,E.contains(open,level)),u => Done{binding},u =>
+      S.choose(Result<S.Error,C.Binding>,S.choose(Bool,param,u => E.contains(open,level),u => U32.is_eq(U32.add(level,1),next)),u => Done{binding},u =>
         C.invalid(C.Binding,"unmatchable-binder",token))
+    case C.Binding{name,level,q,type_id,param,Some{C.Reference{a,b,c}}} _:
+      C.unsupported(C.Binding,"default-scrutinee",token)
+    case C.Binding{name,level,q,type_id,param,Some{C.Case{a,b,c,Nil{}}}} _:
+      C.unsupported(C.Binding,"default-scrutinee",token)
     case _ _: C.invalid(C.Binding,"already-matched",token)
 
 def promote(token: S.Token, level: U32, q: U32, +body: S.Node) -> S.Node:
   S.choose(S.Node,U32.is_eq(q,2),u => S.Alias{token,level,2,body},u => body)
 
-def share(work: U32, branches: List<&2,S.Token>) -> U32:
-  match branches:
-    case Nil{}: 0
-    case Con{head,tail}: U32.div(work,U32.from_nat(1n+List.length(&2,S.Token,tail)))
+def remaining(tokens: List<&2,S.Token>, +ctor: S.Token) -> List<&2,S.Token>:
+  match tokens:
+    case Nil{}: Nil{}
+    case Con{+head,+tail}:
+      S.choose(List<&2,S.Token>,S.matches(head,S.text(ctor)),u => remaining(tail,ctor),u => Con{head,remaining(tail,ctor)})
 
-def split(binding: C.Binding, +token: S.Token, +column: S.Node, +columns: List<&2,S.Node>, +rows: List<&2,S.Node>,
-  scope: E.Scope, +types: List<&2,C.Datatype>, +work: U32) -> Result<S.Error,S.Node>:
-  match binding scope:
-    case C.Binding{+name,+level,q,+type_id,param,known} E.Scope{bindings,+next,open,live,smaller}:
+def without(rows: List<&2,S.Node>, +ctor: S.Token) -> List<&2,S.Node>:
+  match rows:
+    case Nil{}: Nil{}
+    case Con{S.Arm{+arm,S.Sequence{Con{S.Constructor{+token,+args},+rest}},+body},+tail}:
+      S.choose(List<&2,S.Node>,S.matches(token,S.text(ctor)),u => without(tail,ctor),u =>
+        Con{S.Arm{arm,S.Sequence{Con{S.Constructor{token,args},rest}},body},without(tail,ctor)})
+    case Con{head,tail}: Con{head,without(tail,ctor)}
+
+def available(column: S.Node, definition: C.Datatype) -> List<&2,S.Token>:
+  match column definition:
+    case S.Remainder{token,level,tags} _: tags
+    case _ C.Datatype{token,data,ctors}: defaults(ctors,Nil{})
+
+def column_binding(+column: S.Node, +scope: E.Scope) -> Result<S.Error,C.Binding>:
+  match column scope:
+    case S.Remainder{token,level,tags} E.Scope{bindings,next,open,live,smaller}: E.find_level(bindings,level)
+    case _ _: E.scrutinee(column,scope)
+
+def split(tags: List<&2,S.Token>, binding: C.Binding, +token: S.Token, +column: S.Node,
+  +columns: List<&2,S.Node>, +rows: List<&2,S.Node>, scope: E.Scope, +types: List<&2,C.Datatype>, +work: U32) -> Result<S.Error,S.Node>:
+  match tags binding scope:
+    case Nil{} _ _: C.internal(S.Node,"matrix-split")
+    case Con{+ctor,tail} C.Binding{+name,+level,q,+type_id,param,known} E.Scope{bindings,+next,open,live,smaller}:
       S.bind(C.Datatype,S.Node,G.type_at(types,type_id),definition =>
-        +tags = signature(definition,constructors(rows,Nil{}),has_default(rows))
-        S.bind(List<&2,S.Node>,S.Node,arms(tags,
-          columns,rows,level,next,types,token,share(work,tags)),branches =>
-            Done{promote(name,level,mark(rows),S.Match{token,column,branches})}))
+        +rest = remaining(available(column,definition),ctor)
+        S.bind(G.ConstructorRef,S.Node,G.find_constructor(types,ctor,0),reference =>
+          S.bind(List<&2,C.Parameter>,S.Node,G.field_signature(reference,types),params =>
+            +fields = fresh(params,next,S.at(token))
+            Done{promote(name,level,mark(rows),S.Decision{token,column,S.Constructor{ctor,fields},
+              S.Matrix{token,List.append(&2,S.Node,fields,columns),specialize(rows,ctor,fields,level),work},
+              S.Matrix{token,Con{S.Remainder{name,level,rest},columns},without(rows,ctor),work}})})))
 
 def alias_column(+binding: C.Binding, +token: S.Token, columns: List<&2,S.Node>, +rows: List<&2,S.Node>, work: U32) -> S.Node:
   match binding:
@@ -186,6 +201,8 @@ def alias_column(+binding: C.Binding, +token: S.Token, columns: List<&2,S.Node>,
 
 def variable_step(+column: S.Node, +token: S.Token, +columns: List<&2,S.Node>, +rows: List<&2,S.Node>, +scope: E.Scope, +work: U32) -> Result<S.Error,S.Node>:
   match column:
+    case S.Remainder{name,level,tags}:
+      S.bind(C.Binding,S.Node,column_binding(column,scope),binding => Done{alias_column(binding,token,columns,rows,work)})
     case S.Variable{+name}:
       S.bind(C.Binding,S.Node,E.lookup(scope,name),binding =>
         S.bind(C.Binding,S.Node,variable_column(binding,scope,name),bound =>
@@ -200,12 +217,12 @@ def column_step(+token: S.Token, columns: List<&2,S.Node>, +rows: List<&2,S.Node
       S.choose(Result<S.Error,S.Node>,Bool.not(List.is_empty(&2,S.Node,rows)),u =>
         S.choose(Result<S.Error,S.Node>,List.is_empty(&2,S.Token,constructors(rows,Nil{})),u =>
           variable_step(column,token,tail,rows,scope,work),u =>
-          S.bind(C.Binding,S.Node,E.scrutinee(column,scope),binding => split(binding,token,column,tail,rows,scope,types,work))),u =>
+          S.bind(C.Binding,S.Node,column_binding(column,scope),binding => split(constructors(rows,Nil{}),binding,token,column,tail,rows,scope,types,work))),u =>
         Done{S.Match{token,column,Nil{}}})
     case _ _: C.internal(S.Node,"matrix-leaf")
 
-# A source match receives 4096 matrix steps. Splits partition the remainder;
-# this bounds expansion as well as depth, and exhaustion is inconclusive.
+# One unit per residual matrix. Expansion threads the unused work through
+# both sides of every decision; the quota bounds the entire generated tree.
 def step(+token: S.Token, columns: List<&2,S.Node>, rows: List<&2,S.Node>, +work: U32,
   types: List<&2,C.Datatype>, scope: E.Scope) -> Result<S.Error,S.Node>:
   S.choose(Result<S.Error,S.Node>,U32.is_eq(work,0),u => C.exhausted(S.Node,token),u =>
@@ -231,3 +248,58 @@ def alias(+scope: E.Scope, token: S.Token, level: U32, mark: U32, types: List<&2
   match scope:
     case E.Scope{bindings,next,open,live,smaller}:
       S.bind(C.Binding,E.Scope,E.find_level(bindings,level),binding => alias_bound(binding,token,mark,scope,types))
+
+
+type Expansion is Data:
+  Expansion{node: S.Node, remaining: U32}
+
+def thread(result: Result<S.Error,Expansion>, next: S.Node -> U32 -> Result<S.Error,Expansion>) -> Result<S.Error,Expansion>:
+  match result:
+    case Fail{error}: Fail{error}
+    case Done{Expansion{node,work}}: next(node,work)
+
+def expanded(value: Expansion) -> S.Node:
+  match value:
+    case Expansion{node,work}: node
+
+def opened(value: P.Fields) -> E.Scope:
+  match value:
+    case P.Fields{scope,bindings,args}: scope
+
+def at_level(binding: C.Binding, next: U32 -> Result<S.Error,Expansion>) -> Result<S.Error,Expansion>:
+  match binding:
+    case C.Binding{name,level,q,type_id,param,known}: next(level)
+
+def reference(pattern: S.Node, types: List<&2,C.Datatype>) -> Result<S.Error,G.ConstructorRef>:
+  match pattern:
+    case S.Constructor{token,args}: G.find_constructor(types,token,0)
+    case _: C.internal(G.ConstructorRef,"matrix-constructor")
+
+def residual(+binding: C.Binding, column: S.Node, pattern: S.Node, +scope: E.Scope, types: List<&2,C.Datatype>) -> Result<S.Error,E.Scope>:
+  match binding pattern:
+    case C.Binding{name,level,q,type_id,param,known} S.Constructor{+ctor,args}:
+      S.bind(C.Datatype,E.Scope,G.type_at(types,type_id),definition =>
+        Done{E.residual(scope,binding,List.is_empty(&2,S.Token,remaining(available(column,definition),ctor)))})
+    case _ _: C.internal(E.Scope,"matrix-residual")
+
+# Only internal lowering states are traversed. A source body starts its own
+# matrix budget when the checker reaches it; discarded source bodies stay dead.
+def expand(fuel: Nat, +node: S.Node, +types: List<&2,C.Datatype>, +scope: E.Scope, +work: U32) -> Result<S.Error,Expansion>:
+  match fuel node:
+    case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
+    case 1n+ +n S.Matrix{token,columns,rows,quota}:
+      S.bind(S.Node,Expansion,step(token,columns,rows,work,types,scope),tree =>
+        expand(n,tree,types,scope,U32.sub(work,1)))
+    case 1n+ +n S.Alias{+token,+level,+mark,body}:
+      S.bind(E.Scope,Expansion,alias(scope,token,level,mark,types),bound =>
+        thread(expand(n,body,types,bound,work),tree => left => Done{Expansion{S.Alias{token,level,mark,tree},left}}))
+    case 1n+ +n S.Decision{+token,+column,+pattern,+yes,+no}:
+      S.bind(C.Binding,Expansion,column_binding(column,scope),+binding =>
+        at_level(binding,+level =>
+          S.bind(G.ConstructorRef,Expansion,reference(pattern,types),reference =>
+            S.bind(P.Fields,Expansion,P.branch(scope,level,reference,pattern,types),fields =>
+              thread(expand(n,yes,types,opened(fields),work),positive => left =>
+                S.bind(E.Scope,Expansion,residual(binding,column,pattern,scope,types),remaining =>
+                  thread(expand(n,no,types,remaining,left),negative => rest =>
+                    Done{Expansion{S.Decision{token,column,pattern,positive,negative},rest}})))))))
+    case 1n+n _: Done{Expansion{node,work}}

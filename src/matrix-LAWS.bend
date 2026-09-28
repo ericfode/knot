@@ -98,14 +98,14 @@ def lower(rows: List<&2,S.Node>) -> Result<S.Error,C.Checked>:
 def branches(off: U32, on: U32) -> List<&2,C.Term>:
   [C.Branch{0,Nil{},C.Value{token("Off"),0,off}},C.Branch{1,Nil{},C.Value{token("On"),0,on}}]
 
-law irrefutable_lowering_selects_first:
+law irrefutable_lowering_witness:
   {lower([row(S.Variable{token("_")},S.Variable{token("_")},"On"),
           row(ctor("Off"),ctor("Off"),"Off")]) ==
     Done{C.Checked{C.Case{token("match"),0,0,[
       C.Branch{0,Nil{},C.Case{token("match"),1,0,[C.Branch{0,Nil{},C.Value{token("On"),0,1}},C.Branch{1,Nil{},C.Value{token("On"),0,1}}]}},
       C.Branch{1,Nil{},C.Value{token("On"),0,1}}]},0,[0,1]}} : Result<S.Error,C.Checked>}
 
-law exhaustive_matrix_has_no_missing_branch:
+law exhaustive_matrix_witness:
   {lower([row(ctor("Off"),ctor("Off"),"Off"),row(ctor("Off"),ctor("On"),"On"),
           row(ctor("On"),ctor("Off"),"On"),row(ctor("On"),ctor("On"),"Off")]) ==
     Done{C.Checked{C.Case{token("match"),0,0,[
@@ -145,3 +145,58 @@ law default_does_not_repeat_explicit_branch:
 
 law default_completion_witness:
   {M.signature(flag(),[token("Off")],True{}) == [token("Off"),token("On")] : List<&2,S.Token>}
+
+law anonymous_reference_is_free:
+  for scope: E.Scope
+  for +at: S.At
+  {E.lookup(scope,S.Token{"_",at}) == Fail{S.Invalid{"check","free-name",at}} : Result<S.Error,C.Binding>}
+
+law default_reference_stays_live:
+  for +name: S.Token
+  for +level: U32
+  for +q: U32
+  for +type_id: U32
+  for +live: Bool
+  {E.occurrence(Some{C.Reference{name,level,type_id}},name,level,q,type_id,live) ==
+    E.unknown(name,level,q,type_id,live) : Result<S.Error,C.Checked>}
+
+law empty_reference_stays_live:
+  for +name: S.Token
+  for +level: U32
+  for +q: U32
+  for +type_id: U32
+  for +live: Bool
+  {E.occurrence(Some{C.Case{name,level,type_id,Nil{}}},name,level,q,type_id,live) ==
+    E.unknown(name,level,q,type_id,live) : Result<S.Error,C.Checked>}
+
+law erased_empty_is_not_dead:
+  for +name: S.Token
+  {E.dead(E.Scope{[C.Binding{name,0,0,0,True{},Some{C.Case{name,0,0,Nil{}}}}],1,[0],True{},Nil{}}) == False{} : Bool}
+
+law live_empty_is_dead:
+  for +name: S.Token
+  {E.dead(E.Scope{[C.Binding{name,0,1,0,True{},Some{C.Case{name,0,0,Nil{}}}}],1,[0],True{},Nil{}}) == True{} : Bool}
+
+# The most recent let supplies a variable-only column without constructor inspection.
+law let_alias_available:
+  for +name: S.Token
+  for token: S.Token
+  {M.variable_column(C.Binding{name,0,1,0,False{},None{}},
+      E.Scope{[C.Binding{name,0,1,0,False{},None{}}],1,Nil{},True{},Nil{}},token) ==
+    Done{C.Binding{name,0,1,0,False{},None{}}} : Result<S.Error,C.Binding>}
+
+law terminal_expansion_preserves_budget:
+  for +name: S.Token
+  for types: List<&2,C.Datatype>
+  for scope: E.Scope
+  for +work: U32
+  {M.expand(1n,S.Variable{name},types,scope,work) == Done{M.Expansion{S.Variable{name},work}} : Result<S.Error,M.Expansion>}
+
+law leaf_expansion_spends_one:
+  for token: S.Token
+  for arm: S.Token
+  for +name: S.Token
+  for types: List<&2,C.Datatype>
+  for scope: E.Scope
+  {M.expand(2n,S.Matrix{token,Nil{},[S.Arm{arm,S.Sequence{Nil{}},S.Variable{name}}],1},types,scope,1) ==
+    Done{M.Expansion{S.Variable{name},0}} : Result<S.Error,M.Expansion>}

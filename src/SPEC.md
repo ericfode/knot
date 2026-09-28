@@ -49,13 +49,21 @@ digits, underscores or dots. Keywords cannot be identifiers.
   A binding is visible in the remainder of its body, not in its own initializer.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
-- A body may end in a match on function parameters or bound fields. Rows contain
+- A body may end in a match on function parameters or bound fields.
+  Scrutinees and row patterns may be separated by spaces or commas. Rows contain
   constructor, wildcard or variable patterns, with nested constructor fields in
   the structural profile. The first matching row wins, including duplicate rows;
   every constructor combination must be covered. Empty datatypes admit zero
-  rows. Unreachable bodies are discarded before checking, but source patterns
-  still constrain their columns and undergo name/arity validation.
-  Computed and local-binding scrutinees remain invalid at the pinned seed.
+  rows. Bodies shadowed at the same leaf are discarded, but source patterns
+  still constrain their columns and undergo name/arity validation. Variable
+  defaults remain checked even past the last constructor, with a live binding
+  at the emptied type. A live emptied type permits a later empty match; it
+  never bypasses the checking of a selected body. `_` is anonymous in row and
+  field positions; referring to it reports `Invalid check free-name`. Names
+  such as `_x` remain ordinary binders.
+  All-variable columns on the latest local binder are aliases without
+  inspection. Constructor inspection of local binders and computed scrutinees
+  remain invalid at the pinned seed.
   Constructor columns follow binder order and close earlier parameters.
   Variable-only columns leave that frontier open, so they may be reordered.
   Local bindings close the outer frontier; matched constructors cannot be
@@ -78,7 +86,13 @@ affine reuse and live inspection of erased values are invalid.
 Duplicate constructor rows are accepted. The first matching row supplies the
 body; shadowed row bodies are discarded before checking. Nested patterns
 expand into single-constructor decisions; field binders retain their lexical
-identities, declared quantities and reconstruction obligations.
+identities, declared quantities and reconstruction obligations. Each constructor
+splits a positive matrix from its negative remainder. The negative branch keeps
+the scrutinee live and unrefined; only its available constructor set narrows.
+A later source match on that residual binding currently reports
+`Unsupported check default-scrutinee`. Internal binary remainder processing is
+supported. General irrefutable-first-row and exhaustive-lowering theorems remain
+unmet; the two renamed `_witness` laws are checked ground normalizations.
 
 Generic/dependent types, imports, literals, closures, destructuring local
 bindings, laws, templates, foreign code and effects remain explicitly
@@ -146,7 +160,9 @@ it must not replace whole functions by evaluator results.
 ## Wasm and host contract
 
 Emit an actual Wasm binary with version 1 header and only MVP numeric/control
-instructions. Enum values are i32 constructor ordinals in declaration order.
+instructions from the eight-operation whitelist in `CONTRACT.json`.
+An empty case emits `i32.const 0`; no domain-valid call reaches that branch.
+Enum values are i32 constructor ordinals in declaration order.
 Use type, function, export and code sections. No imports, linear memory, tables,
 GC, SIMD, threads or WASI are required for this profile. Erased parameters are
 omitted from the external function signature; live arguments/results are i32.
@@ -191,8 +207,8 @@ A module containing a fielded datatype adds memory and global sections:
 `[1,3,5,6,7,10]`. Memory has exactly one page (65,536 bytes, min=max=1). The
 mutable i32 bump starts at zero; zero is a valid cell address. The appended,
 unexported allocator checks `size > 65536 - bump` before advancing the bump.
-That guard traps with `unreachable`. Empty matches also emit `unreachable`,
-but their scrutinee has no domain-valid runtime value. An allocation ending at
+That guard is the only `unreachable` in the profile. Empty matches emit
+`i32.const 0` and have no domain-valid execution. An allocation ending at
 65,536 succeeds; an allocation beyond the remaining space traps before writing.
 Cells stay immutable after initialization, so reusable Data may share addresses.
 There is no memory growth, free, reset, reclamation, generation tracking or
@@ -261,9 +277,10 @@ are recursion-depth bounds, not total work counters. Overrides permit checker
 depth 0 through 4,096 and source budgets 0 through 65,536. The catalog allows
 256 types, 256 functions, 256 constructors per type, 256 fields per constructor and 256 parameters per
 function; lexical levels are limited to 4,096 per branch scope. Exceeding any
-of these bounds is exhaustion. Each expanded source match has 4096 matrix steps; constructor splits divide
-the remaining quota among their branches. This conservative work cap bounds
-pattern-tree expansion separately from checker depth. Catalog passes and
+of these bounds is exhaustion. Each expanded source match has 4096 matrix
+visits, including leaves and empty remainders. `Expansion` returns the unused
+counter from each positive branch to its negative branch. The counter is never
+divided; the bound covers total expansion separately from recursion depth. Catalog passes and
 environment/set scans are structural list traversals bounded by the catalog
 limits and source cap. Lookup
 and affine-set merging are deliberately simple linear/quadratic algorithms.
