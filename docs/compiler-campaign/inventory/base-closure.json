@@ -5823,7 +5823,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 362,
+          "declarations": 385,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -7211,6 +7211,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.admit",
+            "file": "src/check.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.invalid",
+              "src/descent.smaller",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -7338,6 +7361,7 @@
             "dependencies": [
               "List",
               "Maybe",
+              "Nat",
               "Result",
               "U32",
               "src/catalog.FunctionRef",
@@ -7364,19 +7388,23 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
-              "Bool.not",
+              "Cmp",
+              "List",
+              "Nat",
               "Result",
               "String",
               "U32",
               "U32.is_eq",
+              "src/check.admit",
               "src/core.Checked",
+              "src/core.Parameter",
               "src/core.Term",
               "src/core.internal",
-              "src/core.unsupported",
+              "src/descent.columns",
               "src/scope.Scope",
-              "src/scope.descends",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -8448,6 +8476,427 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.at"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Alias",
+            "file": "src/descent.bend",
+            "via": "src/scope.Scope",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.aligned",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "List.length",
+              "Nat.is_eq",
+              "U32",
+              "U32.is_eq",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.arguments",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.columns",
+            "file": "src/descent.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Parameter",
+              "src/core.Term",
+              "src/core.internal",
+              "src/descent.Alias",
+              "src/descent.compare_in",
+              "src/descent.equal",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.compare_in",
+            "file": "src/descent.bend",
+            "via": "src/descent.columns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Nat",
+              "Result",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.Comparison",
+              "src/descent.Progress",
+              "src/descent.Shape",
+              "src/descent.drive",
+              "src/descent.order",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Comparison",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.deferred",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Term",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.drive",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Binding",
+              "src/descent.Alias",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.step",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.equal",
+            "file": "src/descent.bend",
+            "via": "src/descent.columns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Frame",
+            "file": "src/descent.bend",
+            "via": "src/descent.Progress",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.join",
+            "file": "src/descent.bend",
+            "via": "src/descent.settle",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.known",
+            "file": "src/descent.bend",
+            "via": "src/descent.origin",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.order",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "src/descent.Product"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.origin",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.known",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Product",
+            "file": "src/descent.bend",
+            "via": "src/descent.Progress",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "Maybe",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Progress",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.reference",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "U32",
+              "src/core.Term",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.settle",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32",
+              "U32.add",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.join"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Shape",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.skipped",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Maybe",
+              "U32",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.smaller",
+            "file": "src/descent.bend",
+            "via": "src/check.admit",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.step",
+            "file": "src/descent.bend",
+            "via": "src/descent.drive",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "src/core.Binding",
+              "src/core.internal",
+              "src/descent.Alias",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.Shape",
+              "src/descent.aligned",
+              "src/descent.arguments",
+              "src/descent.settle",
+              "src/descent.skipped",
+              "src/descent.variable",
+              "src/descent.view",
+              "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.variable",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "U32",
+              "U32.is_eq",
+              "src/descent.Shape",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.view",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.Shape",
+              "src/descent.deferred",
+              "src/descent.origin",
+              "src/descent.reference"
             ],
             "dynamic_calls": []
           },
@@ -10084,7 +10533,6 @@
               "src/patterns.Fields",
               "src/patterns.value",
               "src/scope.Scope",
-              "src/scope.descendants",
               "src/scope.levels",
               "src/scope.replace",
               "src/syntax.Token"
@@ -10224,40 +10672,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/scope.descendants",
-            "file": "src/scope.bend",
-            "via": "src/patterns.finish",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.or",
-              "List",
-              "List.append",
-              "U32",
-              "U32.is_eq",
-              "src/scope.contains",
-              "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/scope.descends",
-            "file": "src/scope.bend",
-            "via": "src/check.call_result",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "U32",
-              "src/core.Term",
-              "src/scope.contains"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/scope.extend",
             "file": "src/scope.bend",
             "via": "src/check.binding_body",
@@ -10271,6 +10685,8 @@
               "U32",
               "U32.add",
               "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
               "src/scope.Scope",
               "src/syntax.Token"
             ],
@@ -10525,7 +10941,8 @@
               "Bool",
               "List",
               "U32",
-              "src/core.Binding"
+              "src/core.Binding",
+              "src/descent.Alias"
             ],
             "dynamic_calls": []
           },
@@ -12517,7 +12934,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 362,
+          "declarations": 385,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -13905,6 +14322,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.admit",
+            "file": "src/check.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.invalid",
+              "src/descent.smaller",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -14032,6 +14472,7 @@
             "dependencies": [
               "List",
               "Maybe",
+              "Nat",
               "Result",
               "U32",
               "src/catalog.FunctionRef",
@@ -14058,19 +14499,23 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
-              "Bool.not",
+              "Cmp",
+              "List",
+              "Nat",
               "Result",
               "String",
               "U32",
               "U32.is_eq",
+              "src/check.admit",
               "src/core.Checked",
+              "src/core.Parameter",
               "src/core.Term",
               "src/core.internal",
-              "src/core.unsupported",
+              "src/descent.columns",
               "src/scope.Scope",
-              "src/scope.descends",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -15142,6 +15587,427 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.at"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Alias",
+            "file": "src/descent.bend",
+            "via": "src/scope.Scope",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.aligned",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "List.length",
+              "Nat.is_eq",
+              "U32",
+              "U32.is_eq",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.arguments",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.columns",
+            "file": "src/descent.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Parameter",
+              "src/core.Term",
+              "src/core.internal",
+              "src/descent.Alias",
+              "src/descent.compare_in",
+              "src/descent.equal",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.compare_in",
+            "file": "src/descent.bend",
+            "via": "src/descent.columns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Nat",
+              "Result",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.Comparison",
+              "src/descent.Progress",
+              "src/descent.Shape",
+              "src/descent.drive",
+              "src/descent.order",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Comparison",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.deferred",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Term",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.drive",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Binding",
+              "src/descent.Alias",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.step",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.equal",
+            "file": "src/descent.bend",
+            "via": "src/descent.columns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Frame",
+            "file": "src/descent.bend",
+            "via": "src/descent.Progress",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.join",
+            "file": "src/descent.bend",
+            "via": "src/descent.settle",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.known",
+            "file": "src/descent.bend",
+            "via": "src/descent.origin",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.order",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "src/descent.Product"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.origin",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.known",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Product",
+            "file": "src/descent.bend",
+            "via": "src/descent.Progress",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "Maybe",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Progress",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.reference",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "U32",
+              "src/core.Term",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.settle",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32",
+              "U32.add",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.join"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Shape",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.skipped",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Maybe",
+              "U32",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.smaller",
+            "file": "src/descent.bend",
+            "via": "src/check.admit",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.step",
+            "file": "src/descent.bend",
+            "via": "src/descent.drive",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "src/core.Binding",
+              "src/core.internal",
+              "src/descent.Alias",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.Shape",
+              "src/descent.aligned",
+              "src/descent.arguments",
+              "src/descent.settle",
+              "src/descent.skipped",
+              "src/descent.variable",
+              "src/descent.view",
+              "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.variable",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "U32",
+              "U32.is_eq",
+              "src/descent.Shape",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.view",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.Shape",
+              "src/descent.deferred",
+              "src/descent.origin",
+              "src/descent.reference"
             ],
             "dynamic_calls": []
           },
@@ -16778,7 +17644,6 @@
               "src/patterns.Fields",
               "src/patterns.value",
               "src/scope.Scope",
-              "src/scope.descendants",
               "src/scope.levels",
               "src/scope.replace",
               "src/syntax.Token"
@@ -16918,40 +17783,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/scope.descendants",
-            "file": "src/scope.bend",
-            "via": "src/patterns.finish",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.or",
-              "List",
-              "List.append",
-              "U32",
-              "U32.is_eq",
-              "src/scope.contains",
-              "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/scope.descends",
-            "file": "src/scope.bend",
-            "via": "src/check.call_result",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "U32",
-              "src/core.Term",
-              "src/scope.contains"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/scope.extend",
             "file": "src/scope.bend",
             "via": "src/check.binding_body",
@@ -16965,6 +17796,8 @@
               "U32",
               "U32.add",
               "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
               "src/scope.Scope",
               "src/syntax.Token"
             ],
@@ -17219,7 +18052,8 @@
               "Bool",
               "List",
               "U32",
-              "src/core.Binding"
+              "src/core.Binding",
+              "src/descent.Alias"
             ],
             "dynamic_calls": []
           },
@@ -19211,7 +20045,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 314,
+          "declarations": 331,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -20064,6 +20898,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.admit",
+            "file": "src/check.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.invalid",
+              "src/descent.smaller",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -20167,11 +21015,11 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
-              "Bool.not",
               "U32.is_eq",
+              "src/check.admit",
               "src/core.internal",
-              "src/core.unsupported",
-              "src/scope.descends",
+              "src/descent.columns",
+              "src/syntax.bind",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -20780,6 +21628,235 @@
             "unsafe": false,
             "dependencies": [
               "src/syntax.at"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.aligned",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List.length",
+              "Nat.is_eq",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.arguments",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.columns",
+            "file": "src/descent.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.add",
+              "U32.is_eq",
+              "src/core.internal",
+              "src/descent.compare_in",
+              "src/descent.equal",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.compare_in",
+            "file": "src/descent.bend",
+            "via": "src/descent.columns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/descent.drive",
+              "src/descent.order",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.deferred",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.drive",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/descent.step",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.equal",
+            "file": "src/descent.bend",
+            "via": "src/descent.columns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.join",
+            "file": "src/descent.bend",
+            "via": "src/descent.settle",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.known",
+            "file": "src/descent.bend",
+            "via": "src/descent.origin",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.order",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.origin",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/descent.known",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.reference",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.settle",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.add",
+              "src/descent.join"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.skipped",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.smaller",
+            "file": "src/descent.bend",
+            "via": "src/check.admit",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.step",
+            "file": "src/descent.bend",
+            "via": "src/descent.drive",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.add",
+              "src/core.internal",
+              "src/descent.aligned",
+              "src/descent.arguments",
+              "src/descent.settle",
+              "src/descent.skipped",
+              "src/descent.variable",
+              "src/descent.view",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.variable",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.view",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/descent.deferred",
+              "src/descent.origin",
+              "src/descent.reference"
             ],
             "dynamic_calls": []
           },
@@ -21861,7 +22938,6 @@
             "dependencies": [
               "List.append",
               "src/patterns.value",
-              "src/scope.descendants",
               "src/scope.levels",
               "src/scope.replace"
             ],
@@ -21965,34 +23041,6 @@
             "dependencies": [
               "Bool.or",
               "U32.is_eq"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/scope.descendants",
-            "file": "src/scope.bend",
-            "via": "src/patterns.finish",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.or",
-              "List.append",
-              "U32.is_eq",
-              "src/scope.contains",
-              "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/scope.descends",
-            "file": "src/scope.bend",
-            "via": "src/check.call_result",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/scope.contains"
             ],
             "dynamic_calls": []
           },
@@ -23573,7 +24621,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 400,
+          "declarations": 423,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -25043,6 +26091,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.admit",
+            "file": "src/check.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Result",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.invalid",
+              "src/descent.smaller",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -25172,6 +26242,7 @@
             "dependencies": [
               "List",
               "Maybe",
+              "Nat",
               "Result",
               "U32",
               "src/catalog.FunctionRef",
@@ -25198,18 +26269,22 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
-              "Bool.not",
+              "Cmp",
+              "List",
+              "Nat",
               "Result",
               "U32",
               "U32.is_eq",
+              "src/check.admit",
               "src/core.Checked",
+              "src/core.Parameter",
               "src/core.Term",
               "src/core.internal",
-              "src/core.unsupported",
+              "src/descent.columns",
               "src/scope.Scope",
-              "src/scope.descends",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -26270,6 +27345,422 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.at"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Alias",
+            "file": "src/descent.bend",
+            "via": "src/scope.Scope",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.aligned",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "List.length",
+              "Nat.is_eq",
+              "U32",
+              "U32.is_eq",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.arguments",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.columns",
+            "file": "src/descent.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Parameter",
+              "src/core.Term",
+              "src/core.internal",
+              "src/descent.Alias",
+              "src/descent.compare_in",
+              "src/descent.equal",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.compare_in",
+            "file": "src/descent.bend",
+            "via": "src/descent.columns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Nat",
+              "Result",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.Comparison",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.Shape",
+              "src/descent.drive",
+              "src/descent.order",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Comparison",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.deferred",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Term",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.drive",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "src/core.Binding",
+              "src/descent.Alias",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.step",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.equal",
+            "file": "src/descent.bend",
+            "via": "src/descent.columns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Frame",
+            "file": "src/descent.bend",
+            "via": "src/descent.Progress",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.join",
+            "file": "src/descent.bend",
+            "via": "src/descent.settle",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.known",
+            "file": "src/descent.bend",
+            "via": "src/descent.origin",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.order",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "src/descent.Product"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.origin",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.known",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Product",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "Maybe",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Progress",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.reference",
+            "file": "src/descent.bend",
+            "via": "src/descent.view",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Maybe",
+              "U32",
+              "src/core.Term",
+              "src/descent.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.settle",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "U32.add",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.join"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.Shape",
+            "file": "src/descent.bend",
+            "via": "src/descent.compare_in",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.skipped",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Maybe",
+              "U32",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.smaller",
+            "file": "src/descent.bend",
+            "via": "src/check.admit",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.step",
+            "file": "src/descent.bend",
+            "via": "src/descent.drive",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "List",
+              "Maybe",
+              "Result",
+              "U32.add",
+              "src/core.Binding",
+              "src/core.internal",
+              "src/descent.Alias",
+              "src/descent.Comparison",
+              "src/descent.Frame",
+              "src/descent.Product",
+              "src/descent.Progress",
+              "src/descent.Shape",
+              "src/descent.aligned",
+              "src/descent.arguments",
+              "src/descent.settle",
+              "src/descent.skipped",
+              "src/descent.variable",
+              "src/descent.view",
+              "src/syntax.Error",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.variable",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp",
+              "U32",
+              "U32.is_eq",
+              "src/descent.Shape",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/descent.view",
+            "file": "src/descent.bend",
+            "via": "src/descent.step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
+              "src/descent.Shape",
+              "src/descent.deferred",
+              "src/descent.origin",
+              "src/descent.reference"
             ],
             "dynamic_calls": []
           },
@@ -27891,7 +29382,6 @@
               "src/patterns.Fields",
               "src/patterns.value",
               "src/scope.Scope",
-              "src/scope.descendants",
               "src/scope.levels",
               "src/scope.replace",
               "src/syntax.Token"
@@ -28031,40 +29521,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/scope.descendants",
-            "file": "src/scope.bend",
-            "via": "src/patterns.finish",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.or",
-              "List",
-              "List.append",
-              "U32",
-              "U32.is_eq",
-              "src/scope.contains",
-              "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/scope.descends",
-            "file": "src/scope.bend",
-            "via": "src/check.call_result",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "U32",
-              "src/core.Term",
-              "src/scope.contains"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/scope.extend",
             "file": "src/scope.bend",
             "via": "src/check.binding_body",
@@ -28078,6 +29534,8 @@
               "U32",
               "U32.add",
               "src/core.Binding",
+              "src/core.Term",
+              "src/descent.Alias",
               "src/scope.Scope",
               "src/syntax.Token"
             ],
@@ -28327,7 +29785,8 @@
               "Bool",
               "List",
               "U32",
-              "src/core.Binding"
+              "src/core.Binding",
+              "src/descent.Alias"
             ],
             "dynamic_calls": []
           },

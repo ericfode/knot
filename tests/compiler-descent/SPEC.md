@@ -50,6 +50,15 @@ Host/internal failures retain their own categories. Unsupported syntax such as
 generics and literals is still rejected by its existing specific frontend code,
 before this rule runs. This increment adds no generic/literal approximation.
 
+Each live column receives a total transition quota equal to the remaining
+checker depth. Head exposure, componentwise comparison and fallback search
+spend one shared quota. Constructor children stay deferred, so shared aliases
+are inspected only as demanded by comparison. A transition may push one
+continuation frame; returning pops those frames without further charges.
+Their total number is bounded by the charged transitions. List scans within a
+transition retain the checked catalog and lexical-scope limits. This work cap
+can exhaust on a seed-accepted input; that outcome remains inconclusive.
+
 The seed inspects its pending raw argument spine before typechecking arguments;
 Knot checks arguments first. Multiply-invalid calls may therefore report a
 different Invalid code. This contract pins the decreasing-call decision for
@@ -81,3 +90,11 @@ expectation. Additional controls cover alias opacity, product versus
 lexicographic comparison, erasure and resource exhaustion. Proofs state the
 comparison algebra and concrete call boundaries; they are not a general
 termination or compiler-refinement theorem.
+
+`resources.json` and `receipts/resources-reference.json` independently freeze
+two 32-alias constructor DAGs before the resource repair: one must immediately
+reject against an unrefined variable column, and the other must accept after an
+earlier strict decrease. A harness timeout fails the gate; it is never a
+semantic mutant kill or a matched compiler diagnostic. `work-bounds.json`
+separately fixes total-transition boundaries without changing the original
+`bounds.json` expectations.

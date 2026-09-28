@@ -122,7 +122,7 @@
     "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call.",
     "wasm_evidence": "tests/compiler-descent/receipts/descent.json",
     "unsupported": "Generics, literals and other unsupported source forms keep their specific frontend codes; no unchecked approximation.",
-    "bounds": "Provenance expansion and comparison use the current checker depth; exhausted comparison reports Exhausted check budget, never Invalid."
+    "bounds": "Each live column receives a total transition quota equal to the current checker depth, shared across lazy alias-head exposure, fields and fallback search. Exhaustion reports Exhausted check budget, never Invalid."
   },
   "structural_terms": {
     "profile": "knot-structural-terms-1",

@@ -50,8 +50,8 @@ law opaque_argument_cannot_decrease:
 
 law failed_alignment_skips_its_field:
   for +index: U32
-  {D.fallback(D.Product{GT{},Some{index}},at => Done{D.Product{EQ{},Some{at}}}) ==
-    Done{D.Product{EQ{},Some{index}}} : Result<S.Error,D.Product>}
+  {D.settle([D.Aligned{D.Variable{0},Nil{}}],D.Product{GT{},Some{index}}) ==
+    D.Continue{D.Inside{D.Variable{0},Nil{},Some{index},0},Nil{}} : D.Progress}
 
 law erased_column_is_skipped:
   for token: S.Token
@@ -94,3 +94,23 @@ law inspection_exhaustion_is_not_rejection:
   for bindings: List<&2,C.Binding>
   for aliases: List<&2,D.Alias>
   {D.shape(0n,term,bindings,aliases) == Fail{S.Exhausted{"check",S.At{0,0,0,0}}} : Result<S.Error,D.Shape>}
+
+law constructor_head_keeps_children_deferred:
+  for token: S.Token
+  for +type_id: U32
+  for +tag: U32
+  for fields: List<&2,C.Parameter>
+  for +args: List<&2,C.Term>
+  for bindings: List<&2,C.Binding>
+  for aliases: List<&2,D.Alias>
+  {D.shape(1n,C.Construct{token,type_id,tag,fields,args},bindings,aliases) ==
+    Done{D.Constructor{type_id,tag,D.deferred(args)}} : Result<S.Error,D.Shape>}
+
+law product_finishes_with_six_transitions:
+  {D.compare(6n,D.Constructor{0,0,[D.Variable{0},D.Variable{1}]},
+    D.Constructor{0,0,[D.Variable{0},D.Variable{1}]}) == Done{EQ{}} : Result<S.Error,Cmp>}
+
+law product_exhausts_after_five_transitions:
+  {D.compare(5n,D.Constructor{0,0,[D.Variable{0},D.Variable{1}]},
+    D.Constructor{0,0,[D.Variable{0},D.Variable{1}]}) ==
+    Fail{S.Exhausted{"check",S.At{0,0,0,0}}} : Result<S.Error,Cmp>}

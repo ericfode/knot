@@ -257,12 +257,15 @@ pattern-tree expansion separately from checker depth. Catalog passes and
 environment/set scans are structural list traversals bounded by the catalog
 limits and source cap. Lookup
 and affine-set merging are deliberately simple linear/quadratic algorithms.
-Self-call comparison uses the available checker depth for each column's
-provenance expansion and structural comparison. Aliases and branch refinements
-are resolved without evaluating applications. Comparison traversals consume
-fuel across fields and report exhaustion separately from `GT`; their failure
-cannot establish nondecrease. No performance claim or general checker-soundness
-proof is made.
+Self-call comparison gives each live column a total transition quota equal to
+the available checker depth. A single machine spends that quota on alias heads,
+componentwise fields and fallback search. Constructor children remain deferred;
+comparison does not expand shared aliases into trees in advance. Returning
+through frames costs no extra transition, and every frame was pushed by a
+charged transition. Per-transition list scans are bounded by the catalog/scope
+limits above. Aliases and branch refinements resolve without evaluating
+applications. Exhaustion remains separate from `GT` and cannot establish
+nondecrease. No performance claim or general checker-soundness proof is made.
 
 The checker CLI prints a resolved-term observation and emits no executable.
 Its `Checked` result is not `Built`. The separate compiler/evaluator commands

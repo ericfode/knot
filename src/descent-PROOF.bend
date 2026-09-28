@@ -29,3 +29,6 @@ def L.alias_follows_initializer(token): {==}
 def L.computed_alias_stays_opaque(token,args): {==}
 def L.comparison_exhaustion_is_not_rejection(arg,col): {==}
 def L.inspection_exhaustion_is_not_rejection(term,bindings,aliases): {==}
+def L.constructor_head_keeps_children_deferred(token,type_id,tag,fields,args,bindings,aliases): {==}
+def L.product_finishes_with_six_transitions(): {==}
+def L.product_exhausts_after_five_transitions(): {==}

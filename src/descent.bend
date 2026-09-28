@@ -9,16 +9,20 @@ type Shape is Data:
   Variable{level: U32}
   Constructor{type_id: U32, tag: U32, fields: List<&2,Shape>}
   Opaque{}
-  Sequence{items: List<&2,Shape>}
-type Inspection is Data:
-  Inspect{term: C.Term}
-  InspectMany{terms: List<&2,C.Term>}
+  Deferred{term: C.Term}
 type Comparison is Data:
   Compare{argument: Shape, column: Shape}
   Fields{arguments: List<&2,Shape>, columns: List<&2,Shape>, index: U32, order: Cmp}
   Inside{argument: Shape, columns: List<&2,Shape>, failed: Maybe<&2,U32>, index: U32}
 type Product is Data:
   Product{order: Cmp, failed: Maybe<&2,U32>}
+type Frame is Data:
+  Aligned{argument: Shape, columns: List<&2,Shape>}
+  Field{arguments: List<&2,Shape>, columns: List<&2,Shape>, index: U32, order: Cmp}
+  Search{argument: Shape, columns: List<&2,Shape>, failed: Maybe<&2,U32>, index: U32}
+type Progress is Data:
+  Complete{result: Product}
+  Continue{mode: Comparison, frames: List<&2,Frame>}
 
 def equal(order: Cmp) -> Bool:
   match order:
@@ -28,11 +32,6 @@ def equal(order: Cmp) -> Bool:
 def smaller(order: Cmp) -> Bool:
   match order:
     case LT{}: True{}
-    case _: False{}
-
-def greater(order: Cmp) -> Bool:
-  match order:
-    case GT{}: True{}
     case _: False{}
 
 def known(bindings: List<&2,C.Binding>, +level: U32) -> Maybe<&2,C.Term>:
@@ -47,37 +46,34 @@ def origin(aliases: List<&2,Alias>, +bindings: List<&2,C.Binding>, +level: U32) 
     case Con{Alias{id,+value},+tail}:
       S.choose(Maybe<&2,C.Term>,U32.is_eq(id,level),u => Some{value},u => origin(tail,bindings,level))
 
-def reference(value: Maybe<&2,C.Term>, level: U32, next: C.Term -> Result<S.Error,Shape>) -> Result<S.Error,Shape>:
+def reference(value: Maybe<&2,C.Term>, level: U32) -> Shape:
   match value:
-    case None{}: Done{Variable{level}}
-    case Some{term}: next(term)
+    case None{}: Variable{level}
+    case Some{term}: Deferred{term}
 
-def prepend(head: Shape, tail: Shape) -> Result<S.Error,Shape>:
-  match tail:
-    case Sequence{items}: Done{Sequence{Con{head,items}}}
-    case _: C.internal(Shape,"descent-shape-list")
+def deferred(terms: List<&2,C.Term>) -> List<&2,Shape>:
+  match terms:
+    case Nil{}: Nil{}
+    case Con{term,tail}: Con{Deferred{term},deferred(tail)}
 
-def constructed(value: Shape, type_id: U32, tag: U32) -> Result<S.Error,Shape>:
-  match value:
-    case Sequence{items}: Done{Constructor{type_id,tag,items}}
-    case _: C.internal(Shape,"descent-shape-fields")
+# Expose one head; constructor children retain sharing until compared.
+def view(term: C.Term, bindings: List<&2,C.Binding>, aliases: List<&2,Alias>) -> Shape:
+  match term:
+    case C.Reference{token,+level,type_id}: reference(origin(aliases,bindings,level),level)
+    case C.Value{token,type_id,tag}: Constructor{type_id,tag,Nil{}}
+    case C.Construct{token,type_id,tag,params,args}: Constructor{type_id,tag,deferred(args)}
+    case _: Opaque{}
 
-def inspect(fuel: Nat, mode: Inspection, +bindings: List<&2,C.Binding>, +aliases: List<&2,Alias>) -> Result<S.Error,Shape>:
-  match fuel mode:
-    case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
-    case 1n+ +n Inspect{C.Reference{token,+level,type_id}}:
-      reference(origin(aliases,bindings,level),level,value => inspect(n,Inspect{value},bindings,aliases))
-    case 1n+ n Inspect{C.Value{token,type_id,tag}}: Done{Constructor{type_id,tag,Nil{}}}
-    case 1n+ +n Inspect{C.Construct{token,+type_id,+tag,params,args}}:
-      S.bind(Shape,Shape,inspect(n,InspectMany{args},bindings,aliases),value => constructed(value,type_id,tag))
-    case 1n+ n Inspect{term}: Done{Opaque{}}
-    case 1n+ n InspectMany{Nil{}}: Done{Sequence{Nil{}}}
-    case 1n+ +n InspectMany{Con{head,+tail}}:
-      S.bind(Shape,Shape,inspect(n,Inspect{head},bindings,aliases),+value =>
-        S.bind(Shape,Shape,inspect(n,InspectMany{tail},bindings,aliases),rest => prepend(value,rest)))
+def force(+head: Shape, next: C.Term -> Result<S.Error,Shape>) -> Result<S.Error,Shape>:
+  match head:
+    case Deferred{term}: next(term)
+    case _: Done{head}
 
-def shape(fuel: Nat, term: C.Term, bindings: List<&2,C.Binding>, aliases: List<&2,Alias>) -> Result<S.Error,Shape>:
-  inspect(fuel,Inspect{term},bindings,aliases)
+def shape(fuel: Nat, term: C.Term, +bindings: List<&2,C.Binding>, +aliases: List<&2,Alias>) -> Result<S.Error,Shape>:
+  match fuel:
+    case 0n: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
+    case 1n+ n:
+      force(view(term,bindings,aliases),next => shape(n,next,bindings,aliases))
 
 # A product keeps every field non-increasing; columns below are lexicographic.
 def join(prior: Cmp, current: Cmp) -> Cmp:
@@ -110,44 +106,63 @@ def arguments(arg: Shape) -> List<&2,Shape>:
     case Constructor{type_id,tag,items}: items
     case _: Nil{}
 
-def fallback(result: Product, next: U32 -> Result<S.Error,Product>) -> Result<S.Error,Product>:
-  match result:
-    case Product{order,None{}}: Done{Product{order,None{}}}
-    case Product{order,Some{index}}: next(index)
-
-def field(result: Product, +index: U32, +order: Cmp,
-  next: Cmp -> Result<S.Error,Product>) -> Result<S.Error,Product>:
-  match result:
-    case Product{GT{},failed}: Done{Product{GT{},Some{index}}}
-    case Product{actual,failed}: next(join(order,actual))
-
 def order(result: Product) -> Cmp:
   match result:
     case Product{value,failed}: value
 
+# Every popped frame was pushed by one charged transition.
+def settle(frames: List<&2,Frame>, result: Product) -> Progress:
+  match frames result:
+    case Nil{} value: Complete{value}
+    case Con{Aligned{arg,cols},tail} Product{value,None{}}:
+      settle(tail,Product{value,None{}})
+    case Con{Aligned{arg,cols},tail} Product{value,Some{index}}:
+      Continue{Inside{arg,cols,Some{index},0},tail}
+    case Con{Field{args,cols,index,prior},tail} Product{GT{},failed}:
+      settle(tail,Product{GT{},Some{index}})
+    case Con{Field{args,cols,index,prior},tail} Product{value,failed}:
+      Continue{Fields{args,cols,U32.add(index,1),join(prior,value)},tail}
+    case Con{Search{arg,cols,failed,index},tail} Product{GT{},unused}:
+      Continue{Inside{arg,cols,failed,U32.add(index,1)},tail}
+    case Con{Search{arg,cols,failed,index},tail} Product{value,unused}:
+      settle(tail,Product{LT{},None{}})
+
+def step(mode: Comparison, +frames: List<&2,Frame>, bindings: List<&2,C.Binding>, aliases: List<&2,Alias>) -> Result<S.Error,Progress>:
+  match mode:
+    case Compare{Deferred{term},col}: Done{Continue{Compare{view(term,bindings,aliases),col},frames}}
+    case Compare{arg,Deferred{term}}: Done{Continue{Compare{arg,view(term,bindings,aliases)},frames}}
+    case Compare{arg,Variable{level}}: Done{settle(frames,Product{variable(arg,level),None{}})}
+    case Compare{+arg,Constructor{+type_id,+tag,+cols}}:
+      Done{S.choose(Progress,aligned(arg,type_id,tag,cols),u =>
+        Continue{Fields{arguments(arg),cols,0,EQ{}},Con{Aligned{arg,cols},frames}},u =>
+        Continue{Inside{arg,cols,None{},0},frames})}
+    case Compare{arg,col}: Done{settle(frames,Product{GT{},None{}})}
+    case Fields{Nil{},Nil{},index,value}: Done{settle(frames,Product{value,None{}})}
+    case Fields{Con{arg,tail},Con{col,rest},index,value}:
+      Done{Continue{Compare{arg,col},Con{Field{tail,rest,index,value},frames}}}
+    case Fields{args,cols,index,value}: C.internal(Progress,"descent-product-arity")
+    case Inside{arg,Nil{},failed,index}: Done{settle(frames,Product{GT{},None{}})}
+    case Inside{+arg,Con{+col,+tail},+failed,+index}:
+      Done{S.choose(Progress,skipped(failed,index),u =>
+        Continue{Inside{arg,tail,failed,U32.add(index,1)},frames},u =>
+        Continue{Compare{arg,col},Con{Search{arg,tail,failed,index},frames}})}
+
+# A single quota covers head exposure, products and fallback search.
+def drive(fuel: Nat, progress: Progress, +bindings: List<&2,C.Binding>, +aliases: List<&2,Alias>) -> Result<S.Error,Product>:
+  match fuel progress:
+    case n Complete{result}: Done{result}
+    case 0n Continue{mode,frames}: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
+    case 1n+ n Continue{mode,frames}:
+      S.bind(Progress,Product,step(mode,frames,bindings,aliases),next => drive(n,next,bindings,aliases))
+
 def run(fuel: Nat, mode: Comparison) -> Result<S.Error,Product>:
-  match fuel mode:
-    case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
-    case 1n+ n Compare{arg,Variable{level}}: Done{Product{variable(arg,level),None{}}}
-    case 1n+ +n Compare{+arg,Constructor{+type_id,+tag,+cols}}:
-      S.choose(Result<S.Error,Product>,aligned(arg,type_id,tag,cols),u =>
-        S.bind(Product,Product,run(n,Fields{arguments(arg),cols,0,EQ{}}),result =>
-          fallback(result,index => run(n,Inside{arg,cols,Some{index},0}))),u =>
-        run(n,Inside{arg,cols,None{},0}))
-    case 1n+ n Compare{arg,col}: Done{Product{GT{},None{}}}
-    case 1n+ n Fields{Nil{},Nil{},index,value}: Done{Product{value,None{}}}
-    case 1n+ +n Fields{Con{arg,+tail},Con{col,+rest},+index,+value}:
-      S.bind(Product,Product,run(n,Compare{arg,col}),result =>
-        field(result,index,value,actual => run(n,Fields{tail,rest,U32.add(index,1),actual})))
-    case 1n+ n Fields{args,cols,index,value}: C.internal(Product,"descent-product-arity")
-    case 1n+ n Inside{arg,Nil{},failed,index}: Done{Product{GT{},None{}}}
-    case 1n+ +n Inside{+arg,Con{+col,+tail},+failed,+index}:
-      S.choose(Result<S.Error,Product>,skipped(failed,index),u => run(n,Inside{arg,tail,failed,U32.add(index,1)}),u =>
-        S.bind(Product,Product,run(n,Compare{arg,col}),result =>
-          S.choose(Result<S.Error,Product>,greater(order(result)),u => run(n,Inside{arg,tail,failed,U32.add(index,1)}),u => Done{Product{LT{},None{}}})))
+  drive(fuel,Continue{mode,Nil{}},Nil{},Nil{})
 
 def compare(fuel: Nat, arg: Shape, col: Shape) -> Result<S.Error,Cmp>:
   S.bind(Product,Cmp,run(fuel,Compare{arg,col}),result => Done{order(result)})
+
+def compare_in(fuel: Nat, arg: C.Term, col: C.Term, bindings: List<&2,C.Binding>, aliases: List<&2,Alias>) -> Result<S.Error,Cmp>:
+  S.bind(Product,Cmp,drive(fuel,Continue{Compare{Deferred{arg},Deferred{col}},Nil{}},bindings,aliases),result => Done{order(result)})
 
 def columns(params: List<&2,C.Parameter>, args: List<&2,C.Term>, +index: U32, +fuel: Nat,
   +bindings: List<&2,C.Binding>, +aliases: List<&2,Alias>) -> Result<S.Error,Cmp>:
@@ -155,8 +170,6 @@ def columns(params: List<&2,C.Parameter>, args: List<&2,C.Term>, +index: U32, +f
     case Nil{} Nil{}: Done{EQ{}}
     case Con{C.Parameter{+token,q,+type_id},+tail} Con{+arg,+rest}:
       S.choose(Result<S.Error,Cmp>,U32.is_eq(q,0),u => columns(tail,rest,U32.add(index,1),fuel,bindings,aliases),u =>
-        S.bind(Shape,Cmp,shape(fuel,arg,bindings,aliases),+actual =>
-          S.bind(Shape,Cmp,shape(fuel,C.Reference{token,index,type_id},bindings,aliases),col =>
-            S.bind(Cmp,Cmp,compare(fuel,actual,col),+order =>
-              S.choose(Result<S.Error,Cmp>,equal(order),u => columns(tail,rest,U32.add(index,1),fuel,bindings,aliases),u => Done{order})))))
+        S.bind(Cmp,Cmp,compare_in(fuel,arg,C.Reference{token,index,type_id},bindings,aliases),+order =>
+          S.choose(Result<S.Error,Cmp>,equal(order),u => columns(tail,rest,U32.add(index,1),fuel,bindings,aliases),u => Done{order})))
     case _ _: C.internal(Cmp,"descent-call-arity")

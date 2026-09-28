@@ -19,7 +19,7 @@ def shape_text(value: D.Shape) -> String:
     case D.Constructor{type_id,tag,fields}:
       String.concat(["Constructor\t",U32.show(type_id),"\t",U32.show(tag),"\t",Nat.show(List.length(&2,D.Shape,fields))])
     case D.Opaque{}: "Opaque"
-    case D.Sequence{items}: String.append("Sequence\t",Nat.show(List.length(&2,D.Shape,items)))
+    case D.Deferred{term}: "Deferred"
 
 def order_text(order: Cmp) -> String:
   match order:
@@ -32,6 +32,10 @@ def shape_probe(fuel: Nat, aliases: List<&2,D.Alias>) -> Result<S.Error,String>:
 
 def compare_probe(fuel: Nat) -> Result<S.Error,String>:
   S.bind(Cmp,String,D.compare(fuel,D.Variable{0},D.Constructor{0,1,[D.Variable{0}]}),order => Done{order_text(order)})
+
+def work_probe(fuel: Nat) -> Result<S.Error,String>:
+  S.bind(Cmp,String,D.compare(fuel,D.Constructor{0,0,[D.Variable{0},D.Variable{1}]},
+    D.Constructor{0,0,[D.Variable{0},D.Variable{1}]}),order => Done{order_text(order)})
 
 def columns_probe(fuel: Nat, q: U32) -> Result<S.Error,String>:
   S.bind(Cmp,String,D.columns([C.Parameter{token(),q,0}],[C.Reference{token(),0,0}],0,fuel,Nil{},Nil{}),
@@ -52,7 +56,9 @@ def request(+name: String) -> Result<S.Error,String>:
   S.choose(Result<S.Error,String>,String.eq(name,"compare-short"),u => compare_probe(2n),u =>
   S.choose(Result<S.Error,String>,String.eq(name,"product-arity"),u => product_arity(),u =>
   S.choose(Result<S.Error,String>,String.eq(name,"erased-column-zero"),u => columns_probe(0n,0),u =>
-    Fail{S.Host{"bounds","unknown-case"}}))))))))))
+  S.choose(Result<S.Error,String>,String.eq(name,"total-work-enough"),u => work_probe(6n),u =>
+  S.choose(Result<S.Error,String>,String.eq(name,"total-work-short"),u => work_probe(5n),u =>
+    Fail{S.Host{"bounds","unknown-case"}}))))))))))))
 
 def print(result: Result<S.Error,String>) -> IO(Unit):
   match result:

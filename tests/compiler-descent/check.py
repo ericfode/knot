@@ -17,6 +17,7 @@ HERE = Path(__file__).resolve().parent
 BUILD = ROOT / '.local/compiler-descent/gate'
 RECEIPT = HERE / 'receipts/descent.json'
 REFERENCE = HERE / 'receipts/reference.json'
+RESOURCE_REFERENCE = HERE / 'receipts/resources-reference.json'
 SEED_DIR = ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2'
 SEED = ['bun', SEED_DIR / 'main.ts']
 HOST = ROOT / 'scripts/run-wasm.mjs'
@@ -45,7 +46,9 @@ def input_paths(manifest):
     return [*sorted((ROOT / 'src').glob('*.bend')),
             ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json',
             *sorted(HERE.glob('*.py')), HERE / 'expectations.json', HERE / 'mutants.json',
-            HERE / 'bounds.json', HERE / 'bounds.bend',
+            HERE / 'bounds.json', HERE / 'work-bounds.json', HERE / 'bounds.bend',
+            HERE / 'resources.json', RESOURCE_REFERENCE,
+            *sorted((HERE / 'resources').glob('*.bend')),
             REFERENCE, HOST, ROOT / 'tests/compiler-fields-wasm/compile.bend',
             *(ROOT / case['file'] for case in manifest['fixtures'] + manifest['legacy']),
             *sorted(SEED_DIR.glob('*.ts')), SEED_DIR / 'base.bend']
@@ -143,6 +146,29 @@ def verify_reference(record, cases):
     line(record['oracle'], f'Verified {len(cases)} frozen seed observations; no differences')
 
 
+def resource_cases(record):
+    manifest = json.loads((HERE / 'resources.json').read_text())
+    cases = manifest['cases']
+    require(cases and len({case['name'] for case in cases}) == len(cases),
+            'Empty or duplicate resource cases')
+    require({str(path.relative_to(ROOT)) for path in (HERE / 'resources').glob('*.bend')}
+            == {case['file'] for case in cases}, 'Resource fixture manifest mismatch')
+    fixed = json.loads(RESOURCE_REFERENCE.read_text())
+    require(fixed['status'] == 'passed', 'Resource reference is not passed')
+    require(fixed['inputs'] == hashes([HERE / 'resources.json', HERE / 'resource-freeze.py',
+                                      *(ROOT / case['file'] for case in cases)]),
+            'Frozen resource inputs changed')
+    require(fixed['seed'] == hashes([*SEED_DIR.glob('*.ts'), SEED_DIR / 'base.bend']),
+            'Resource reference seed changed')
+    require([item['name'] for item in fixed['observations']] == [case['name'] for case in cases],
+            'Resource reference coverage differs')
+    record['resource_reference'] = {'file': str(RESOURCE_REFERENCE.relative_to(ROOT)),
+                                    'sha256': digest(RESOURCE_REFERENCE), 'observations': len(cases)}
+    record['resource_oracle'] = run([sys.executable, HERE / 'resource-freeze.py'])
+    line(record['resource_oracle'], f'Verified {len(cases)} frozen resource seed observations; no differences')
+    return cases
+
+
 def build_lanes(record):
     entries = {'check': ROOT / 'src/check-cli.bend', 'eval': ROOT / 'src/eval-cli.bend',
                'compile': ROOT / 'tests/compiler-fields-wasm/compile.bend'}
@@ -161,8 +187,8 @@ def build_lanes(record):
     return lanes
 
 
-def executed(module, expected):
-    result = run(['node', HOST, PROFILE, module, expected['export'], *expected['arguments']])
+def executed(module, expected, timeout=120):
+    result = run(['node', HOST, PROFILE, module, expected['export'], *expected['arguments']], timeout=timeout)
     successful(result)
     observation = json.loads(result['stdout'])
     require(observation == {'validated': True, 'export': expected['export'],
@@ -171,24 +197,25 @@ def executed(module, expected):
     return result
 
 
-def fixtures(record, manifest, cases, lanes):
+def fixtures(record, manifest, cases, lanes, *, target='fixtures', timeout=120):
     new_names = {case['name'] for case in manifest['fixtures']}
+    records = record[target]
     for index, case in enumerate(cases):
         source = ROOT / case['file']
         item = {'name': case['name'], 'file': case['file'], 'sha256': digest(source),
-                'group': 'fixtures' if case['name'] in new_names else 'legacy',
+                'group': target if case['name'] in new_names else 'legacy',
                 'expected': {phase: case[phase] for phase in PHASES}, 'lanes': {}}
-        record['fixtures'].append(item)
+        records.append(item)
         module_hashes = []
         for lane, commands in lanes.items():
             actual = item['lanes'][lane] = {}
-            actual['check'] = run([*commands['check'], source])
+            actual['check'] = run([*commands['check'], source], timeout=timeout)
             observe(actual['check'], case['check'], 'check')
-            actual['eval'] = run([*commands['eval'], source, *case.get('eval_args', ['main', 65536])])
+            actual['eval'] = run([*commands['eval'], source, *case.get('eval_args', ['main', 65536])], timeout=timeout)
             observe(actual['eval'], case['eval'], 'eval')
-            output = BUILD / f'case-{index:03d}-{lane}.wasm'
+            output = BUILD / f'{target}-{index:03d}-{lane}.wasm'
             output.write_bytes(MARKER)
-            actual['compile'] = run([*commands['compile'], source, output])
+            actual['compile'] = run([*commands['compile'], source, output], timeout=timeout)
             observe(actual['compile'], case['compile'], 'compile')
             if case['compile']['exit'] == 0:
                 require(output.is_file() and output.read_bytes().startswith(b'\0asm\x01\0\0\0'),
@@ -198,7 +225,7 @@ def fixtures(record, manifest, cases, lanes):
                 module_hashes.append(actual['module_sha256'])
                 if 'wasm' in case:
                     actual['wasm_expected'] = case['wasm']
-                    actual['wasm'] = executed(output, case['wasm'])
+                    actual['wasm'] = executed(output, case['wasm'], timeout=timeout)
                 else:
                     actual['wasm_observer'] = case['wasm_observer']
             else:
@@ -209,8 +236,8 @@ def fixtures(record, manifest, cases, lanes):
             require(len(module_hashes) == len(LANES) and len(set(module_hashes)) == 1,
                     ('native/Bun module bytes differ', case['name'], module_hashes))
             item['module_bytes_equal'] = True
-    by_name = {item['name']: item for item in record['fixtures']}
-    for item in record['fixtures']:
+    by_name = {item['name']: item for item in records}
+    for item in records:
         for lane, actual in item['lanes'].items():
             if 'wasm_observer' in actual:
                 observer = by_name[actual['wasm_observer']]['lanes'][lane]
@@ -269,17 +296,19 @@ def mutants(record, cases, mutations):
 
 
 def bounds(record):
-    manifest = json.loads((HERE / 'bounds.json').read_text())
-    require(manifest['driver'] == 'tests/compiler-descent/bounds.bend', 'Unexpected bounds driver')
-    cases = manifest['cases']
+    paths = [HERE / 'bounds.json', HERE / 'work-bounds.json']
+    manifests = [json.loads(path.read_text()) for path in paths]
+    require(all(manifest['driver'] == 'tests/compiler-descent/bounds.bend' for manifest in manifests),
+            'Unexpected bounds driver')
+    cases = [case for manifest in manifests for case in manifest['cases']]
     by_name = {case['name']: case for case in cases}
     require(cases and len(by_name) == len(cases), 'Empty or duplicate bounds cases')
     for case in cases:
         if 'control' in case:
             require(case['control'] in by_name and by_name[case['control']]['expected']['exit'] == 0,
                     ('bounds control', case['name']))
-    source = ROOT / manifest['driver']
-    record['bounds_inputs'] = hashes([HERE / 'bounds.json', source])
+    source = HERE / 'bounds.bend'
+    record['bounds_inputs'] = hashes([*paths, source])
     record['bounds_typecheck'] = run([*SEED, source, '--check-only'])
     line(record['bounds_typecheck'], 'All terms check.')
     for case in cases:
@@ -298,7 +327,7 @@ def bounds(record):
             if item['expected']['exit'] != 0:
                 diagnostic = item['expected']['diagnostic']
                 require(actual['stderr'] in (diagnostic, diagnostic + '\n'), (item, actual))
-    require(hashes([HERE / 'bounds.json', source]) == record['bounds_inputs'],
+    require(hashes([*paths, source]) == record['bounds_inputs'],
             'Bounds inputs changed during execution')
 
 
@@ -306,7 +335,20 @@ def counts(record):
     observations = [(phase, result) for item in record['fixtures']
                     for lane in item['lanes'].values() for phase, result in lane.items()
                     if phase in PHASES]
+    resources = record['resources']
+    resource_observations = [(phase, result) for item in resources
+                             for lane in item['lanes'].values() for phase, result in lane.items()
+                             if phase in PHASES]
     return {'seed_fixtures': record['reference']['observations'],
+            'resource_seed_fixtures': record['resource_reference']['observations'],
+            'resource_accepted_books': sum(item['expected']['check']['exit'] == 0 for item in resources),
+            'resource_phase_observations': len(resource_observations),
+            'resource_evaluation_values': sum(phase == 'eval' and result['exit'] == 0
+                                              for phase, result in resource_observations),
+            'resource_wasm_values': sum('wasm' in lane for item in resources for lane in item['lanes'].values()),
+            'resource_module_hash_pairs': sum(item.get('module_bytes_equal', False) for item in resources),
+            'resource_preserved_artifacts': sum(lane.get('artifact_preserved', False)
+                                                for item in resources for lane in item['lanes'].values()),
             'new_fixtures': sum(item['group'] == 'fixtures' for item in record['fixtures']),
             'legacy_fixtures': sum(item['group'] == 'legacy' for item in record['fixtures']),
             'accepted_books': sum(item['expected']['check']['exit'] == 0 for item in record['fixtures']),
@@ -335,7 +377,7 @@ def main():
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'status': 'incomplete',
               'profile': 'knot-fields-wasm-1', 'builds': [], 'proofs': [], 'fixtures': [],
-              'mutants': [], 'bounds': []}
+              'mutants': [], 'bounds': [], 'resources': []}
     try:
         manifest = json.loads((HERE / 'expectations.json').read_text())
         cases = validate_manifest(manifest)
@@ -343,6 +385,9 @@ def main():
         record['inputs'] = hashes(input_paths(manifest))
         record['seed_revision'] = manifest['seed_revision']
         verify_reference(record, cases)
+        resources = resource_cases(record)
+        require(not {case['name'] for case in cases}.intersection(case['name'] for case in resources),
+                'Resource case names overlap the original manifest')
         record['tools'] = {}
         for tool in ('bun', 'node', 'python3'):
             record['tools'][tool] = successful(run([tool, '--version']))['stdout'].strip()
@@ -353,6 +398,9 @@ def main():
             line(item['result'], 'All terms check.')
         lanes = build_lanes(record)
         fixtures(record, manifest, cases, lanes)
+        # A short harness limit prevents an expansion regression from running unchecked.
+        # A timeout fails this gate; it is never a matched language diagnostic.
+        fixtures(record, {'fixtures': resources}, resources, lanes, target='resources', timeout=2)
         bounds(record)
         mutants(record, cases, mutations)
         validate_manifest(manifest)
@@ -370,6 +418,7 @@ def main():
     print(f"Descent gate passed: {total['seed_fixtures']} seed fixtures, "
           f"{total['accepted_books']} accepted books, {total['phase_observations']} phase observations; "
           f"{total['evaluation_values']} evaluator values, {total['wasm_values']} Wasm values; "
+          f"{total['resource_seed_fixtures']} resource fixtures / {total['resource_phase_observations']} phases; "
           f"{total['bounds_observations']} bounds observations; "
           f"{total['mutants']} mutants / {total['semantic_kills']} semantic kills")
 
