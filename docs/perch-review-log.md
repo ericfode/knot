@@ -1164,3 +1164,10 @@ constructors as well as its literals) through D4. Exercise every new
 traversal near its declared element bound in both evaluator lanes, not only
 at the sizes the fixtures happen to use. Live Perch review remains the
 coordinator's.
+
+Avoidable rework in the same round: after merging `main`, only the modules and
+literals gates were run directly. The merged `checking` manifest group already
+exceeded the 48000-byte composition bound, and a later catalog import pushed
+three literal groups over it. The perch-context gate caught both only in the
+first full run. Prevention: run the full gate runner once after every merge,
+before fixture work begins.

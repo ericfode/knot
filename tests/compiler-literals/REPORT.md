@@ -4,7 +4,79 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
-## Deterministic gates
+## Review round 1
+
+The coordinator's review of `2ea222e` confirmed five findings. Each finding
+has a seed-derived regression book, committed before its fix, in
+[regressions.json](regressions.json). The fixes are new commits on
+`campaign/literals` after merging `main` (`0798a27`) and `campaign/modules`
+0111f13 (`9b3425e`).
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [blocking] spaced Nat offset `+` accepted | Fixed. An Offset forms only when the literal's `At.end` equals the `+` token's `At.start`. Otherwise the parser reports `Unsupported\tparse\toperator\t`. | Four seed-rejected books expect that prefix; four seed-accepted controls (`1n+ p`, `1n+ +p`, `1n++p`, `3n+ x`) agree. The `spaced-offset` verdict mutant compiles `case 1n + p` to `Built` and is killed. |
+| [major] modules audit rejects BaseIntrinsic | Adapter extended as authorized. The modules contract now has a literals amendment. Sign-off on the rewritten clauses and the raised `--bundle` defaults is **pending with the coordinator and the modules owner**. | The modules gate passes with unchanged counts. The audit requires a three-way partition of all 466 declarations in pinned order and declared intrinsic rows; the offline controls are recorded in `e088dea`. |
+| [major] gate flakes under host load | Coordinator decision. `main`'s `KNOT_GATE_TIMEOUT_SCALE` (4 in the runner) now applies to every gate, including this one, and no budget was edited. The passing run below used the default four workers at load average 9.9 falling to 5.7. | The run is `run-hsj2ido2`, recorded in [campaign-gates.json](receipts/campaign-gates.json). Native CLI builds remain the dominant cost. |
+| [major] seed-valid `U32{w}` reported Invalid | Fixed. `lookup` in literal-matrix.bend reports `Unsupported\tcheck\tu32-constructor` for the Base U32 constructor at all three constructor sites. `Chr{x}` expressions already agree with the seed. | The pattern and rebuild books expect the new prefix. A `U32{Word.zero(32n)}` book pins `Unsupported\tload\tbase-function-result`. The `invalid-u32-constructor` verdict mutant restores `Invalid` and is killed. |
+| [major] Bun evaluator memory fault on long Strings | Fixed. `count`, `onto` (reverse-append) and a verdict-carrying `equal` are tail calls with accumulators. Three new laws cover append order, length count and length mismatch. | 40000-Char and 131072-Char books agree in both evaluator lanes and in Wasm; before the fix the Bun lane faulted on every call. Up to the 2^21-code bound, both lanes report identical Exhausted verdicts. The evaluator-only `append-reversed` mutant is killed. |
+
+### Gates on the fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` passed all 20 registered gates (exit 0)
+in 311.7 seconds, and `npm run -s gates:verify` passed 18 tests. Counts are
+copied from the runner. Categories overlap and are not summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1110; files=65 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=778; mutants=9; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| literals | agree eval observations=606; agree fixtures=28; artifact preservation probes=46; boundary probes=8; byte identity pairs=28; check observations=102; compile observations=102; eval observations=652; execution lanes=2; fixtures=51; invalid fixtures=11; mutant eval observations=3; mutant verdict observations=2; mutant wasm observations=5; no artifact probes=46; proof entries=3; proof laws=27; reference calls=313; semantic mutants=8; trust audits=56; unsupported fixtures=12; wasm observations=606 |
+
+Receipt drift: identical=64; semantic=16; volatile-only=7. The semantic drifts are source-hash
+and derived-code changes in shared receipts, which are left for the coordinator
+to refresh. Only this gate's receipt is copied from the run, after its input
+hashes were checked against the working tree.
+
+The first full run on `ff49ddb` failed two gates. perch-context failed because
+the merged `checking` group, and three literal groups after the U32 helper
+first imported the catalog, exceeded the 48000-byte composition bound. census
+failed on a stale hosts inventory. `3292322` fixed both without changing an
+assertion.
+
+### Offline preflight
+
+The eight changed source files report 25 structural blockers (24 truncated
+units and the ad-hoc composition bound), identical to the same files at
+`9b3425e`. Every new declaration has complete context. The compiler-manifest
+preflight reports 32 groups and 0 structural blockers. Zero provider requests
+were made; live semantic and style Perch review remain the coordinator's.
+
+### Known limits
+
+The raised bundle defaults and the rewritten modules clauses await sign-off.
+Frozen shared receipts need the coordinator's refresh after merging. Native
+CLI build time still dominates gate wall time under load. A literal
+`U32{...}` construction is reachable only through Base Word functions, which
+the loader reports as Unsupported first.
+
+## Original implementation run (`2ea222e`): deterministic gates
 
 All 16 registered gates completed with exit 0 in one serial runner invocation. The runner self-test also passed all 18 tests. Counts below are copied from the runner; categories overlap and are not summed.
 
