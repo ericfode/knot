@@ -10,17 +10,24 @@ links the source, generator, actual artifacts, and GPU record path.
 From the repository root:
 
 ```sh
-python3 research/adaptive-tasks/codegen/generate.py
+BEND_NO_TELEMETRY=1 python3 research/adaptive-tasks/codegen/generate.py
 ```
 
-The script verifies the existing protocol and seed core hashes, then runs:
+Plain replay writes under ignored `.local/adaptive-tasks/codegen/`.
+`--out-dir DIR` selects another output directory; only `--update-receipts`
+replaces the retained generated files and receipt in this directory.
+
+The script verifies the pinned seed and all Bend/WGSL semantic input hashes,
+then reruns the seed interpreter against the retained protocol transcript.
+Harness hashes are recorded as provenance rather than required to equal the
+historical harness. For the default output directory it then runs:
 
 ```sh
-scripts/bend-reference research/adaptive-tasks/conformance.bend -o research/adaptive-tasks/codegen/conformance.c
-scripts/bend-reference research/adaptive-tasks/conformance.bend -o research/adaptive-tasks/codegen/conformance.js
+BEND_NO_TELEMETRY=1 scripts/bend-reference research/adaptive-tasks/conformance.bend -o .local/adaptive-tasks/codegen/conformance.c
+BEND_NO_TELEMETRY=1 scripts/bend-reference research/adaptive-tasks/conformance.bend -o .local/adaptive-tasks/codegen/conformance.js
 ```
 
-It executes the retained JavaScript with Node and compiles the retained C with
+It executes the newly generated JavaScript with Node and compiles the new C with
 Clang (`-std=c11 -O3 -lpthread -lm`), requiring both to reproduce the existing
 eleven-line protocol transcript. It refuses those CPU-only build flags if the
 generated program contains GPU bangs. No generated source is hand-edited.
@@ -44,7 +51,9 @@ iterates its representation facts, and includes an upstream runtime template.
 For the GPU capture, [capture-gpu.mjs](capture-gpu.mjs) runs the independent Bend
 fixture generator, then executes the exact `word`/`pack` function text from the
 existing host. It checks the source boundaries/constants rather than maintaining
-a second packer. It does not request a device or regenerate the device receipt.
+a second packer. Generation compares its fixture, root, field names, operation
+records and initial task records with the retained capture; source line numbers
+are provenance. It does not request a device or regenerate the device receipt.
 The captured four nodes are: leaf 7; leaf 11 with three ticks; unary continuation
 with factor 3/bias 5; root fork over nodes 0/2. Parent/slot fields preserve source
 result order. The independently evaluated answer is 231817934.
@@ -59,7 +68,8 @@ emission, and device emitter are still future work.
 
 [receipt.json](receipt.json) records exact commands, hashes, tools, and execution
 results. [conformance.stdout](conformance.stdout) is the verified transcript.
-The existing 38-run device receipt covers the unchanged shader/packer/fixtures;
-this capture adds code visibility, not a new GPU execution claim. The new host
+The existing 38-run device receipt remains historical evidence for its exact
+source hashes; fresh capture validates the same model/shader inputs and record
+observations, without a new GPU execution claim. The host
 capture scripts and generated outputs are outside the earlier Bend-file Perch
 audit. No Bend model, proof, or LAW_REVIEW packet changed for this walkthrough.

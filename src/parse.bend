@@ -30,6 +30,16 @@ def invalid(+ts: List<&2,S.Token>, code: String) -> Result<S.Error,Parsed>:
 def unsupported(+ts: List<&2,S.Token>, code: String) -> Result<S.Error,Parsed>:
   Fail{S.Unsupported{"parse",code,S.here(ts)}}
 
+def starts(ts: List<&2,S.Token>, word: String) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{head,tail}: S.matches(head,word)
+
+def scrutinee(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{head,tail}: S.identifier(head)
+
 def then(result: Result<S.Error,Parsed>,
   next: S.Node -> List<&2,S.Token> -> Result<S.Error,Parsed>) -> Result<S.Error,Parsed>:
   match result:
@@ -100,12 +110,26 @@ def parameter(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
         parameter_parts(1,ts)))
     case _: invalid(ts,"parameter")
 
+def template_parameter(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  match ts:
+    case Con{marker,Con{+name,Con{+colon,tail}}}:
+      S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(name),S.matches(colon,":")),u =>
+        unsupported(ts,"template-binder"),u => invalid(ts,"parameter"))
+    case _: invalid(ts,"parameter")
+
 def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{h,t}:
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")),u =>
         Done{Parsed{value,ts}},u => invalid(ts,"end-of-body"))
     case _: invalid(ts,"unexpected-end")
+
+def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  match value:
+    case S.Constructor{token,items}:
+      S.choose(Result<S.Error,Parsed>,starts(ts,"="),u =>
+        unsupported(ts,"destructuring-binding"),u => body_end(value,ts))
+    case _: body_end(value,ts)
 
 def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
@@ -154,7 +178,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+h,+t}:
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Nil{}},t}},u =>
-            then(parameter(tokens),p => rest => run(n,ListTail{close,p,True{},False{}},rest)))
+          S.choose(Result<S.Error,Parsed>,Bool.and(String.eq(close,")"),S.matches(h,"~")),u =>
+            template_parameter(tokens),u =>
+            then(parameter(tokens),p => rest => run(n,ListTail{close,p,True{},False{}},rest))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Arguments{+close,+pattern}:
       match tokens:
@@ -203,18 +229,23 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             run(n,BindingStart{Bool.pick(U32,S.matches(h,"+"),2,0),S.column(h)},Con{second,tail}),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(second,"="),S.matches(second,":")),u =>
             run(n,BindingStart{1,S.column(h)},tokens),u =>
-            then(run(n,Term{False{}},tokens),value => rest => body_end(value,rest))))),u =>
+            then(run(n,Term{False{}},tokens),value => rest => reply(value,rest))))),u =>
             invalid(tokens,"body-indentation"))
         case _: invalid(tokens,"body")
     case 1n+ +n Header{+keyword,+name}:
+      S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"import"),Bool.and(starts(tokens,"/"),
+        Bool.or(S.matches(name,"."),String.starts_with(S.text(name),"0x")))),u =>
+        unsupported(Con{name,tokens},"import"),u =>
       S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(keyword,"type"),u =>
+      S.choose(Result<S.Error,Parsed>,starts(tokens,"<"),u =>
+        unsupported(tokens,"generic-datatype"),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,"is"),kind =>
-          run(n,TypeKind{name},kind)),u =>
+          run(n,TypeKind{name},kind))),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(keyword,"def"),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,"("),args =>
           then(run(n,Parameters{")"},args),params => rest => run(n,FunctionTail{name,params},rest))),u =>
-        unsupported(Con{keyword,tokens},"declaration-form"))),u => invalid(tokens,"declaration-name"))
+        unsupported(Con{keyword,tokens},"declaration-form"))),u => invalid(tokens,"declaration-name")))
     case 1n+ +n TypeKind{+name}:
       match tokens:
         case Con{+kind,+tail}:
@@ -233,8 +264,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{token,other}:
       Fail{S.Internal{"parse","declaration-mode"}}
     case 1n+ +n MatchTail{+token,+value,+column}:
+      S.choose(Result<S.Error,Parsed>,scrutinee(tokens),u =>
+        unsupported(tokens,"match-scrutinees"),u =>
       S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),arms =>
-        then(run(n,Arms{column,0},S.skip_lines(arms)),items => rest => wrap_match(token,value,items,rest)))
+        then(run(n,Arms{column,0},S.skip_lines(arms)),items => rest => wrap_match(token,value,items,rest))))
     case 1n+ +n BindingStart{+quantity,+column}:
       match tokens:
         case Con{+name,Con{+separator,+tail}}:

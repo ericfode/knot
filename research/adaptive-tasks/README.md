@@ -43,7 +43,7 @@ each artifact back to the code that produces it.
 6. [gpu/tasks.wgsl](gpu/tasks.wgsl) implements three dispatch phases. Its
    [layout and lifetime contract](DEVICE-PROTOCOL.md) explains their invariants.
 7. [check.py](check.py) and [gpu/check.mjs](gpu/check.mjs) build, dispatch,
-   compare, mutate, and write receipts. They contain no semantic evaluator.
+   compare, mutate, and write replay evidence. They contain no semantic evaluator.
 
 ## Reproduce
 
@@ -52,7 +52,7 @@ Python 3, Node, the native C toolchain, and a hardware Metal adapter:
 
 ```sh
 npm ci --prefix research/adaptive-tasks/gpu
-python3 research/adaptive-tasks/check.py
+BEND_NO_TELEMETRY=1 python3 research/adaptive-tasks/check.py
 ```
 
 The nested lockfile pins `webgpu` 0.6.1, Dawn's
@@ -65,7 +65,51 @@ The reference core hashes are pinned by the sibling join experiment to upstream
 `574b6d39a235b539eb19a5c532993a0abb3d11ad` (Bend 2.0.29). This does not choose
 Knot's compatibility pin or independently verify the seed, Base, or native tools.
 Each command has a bounded timeout; a failed run leaves any old receipts as old
-evidence. Successful checks rewrite the two receipts above.
+evidence. Plain checks write under ignored `.local/adaptive-tasks/replay/` and
+never replace the two retained receipts above. `--out-dir DIR` selects another
+evidence directory. Only explicit `--update-receipts` replaces retained receipts.
+
+To compare a fresh hardware replay with the retained 38-case run:
+
+```sh
+BEND_NO_TELEMETRY=1 python3 research/adaptive-tasks/check.py \
+  --out-dir .local/adaptive-tasks/after \
+  --compare-receipt research/adaptive-tasks/receipts/gpu.json
+```
+
+The standalone GPU runner accepts the same output and comparison flags. The
+comparison requires the same ordered case inventory, options, fixture identity,
+results, ownership/bounds observations and deterministic transition counters.
+It excludes `stateSha256` and `logicalWorkerMoves`: frontier allocation order can
+change physical state bytes and logical worker placement. All original live
+assertions remain active, including movement in adaptive mode and no movement in
+fixed mode. Dates, tool/runner provenance and adapter descriptions are retained
+as metadata; both compared receipts must still identify nonfallback Metal runs.
+Version 2 receipts include `maxRounds`. The original 38-case receipt is normalized
+using its fixed schedule: case 35 has budget 3, case 36 budget 2, all others 512
+(zero-based indices).
+
+The offline replay checks preserve all seven retained receipt/generated files:
+
+```sh
+node --test research/adaptive-tasks/tests/replay.mjs
+BEND_NO_TELEMETRY=1 python3 research/adaptive-tasks/tests/replay.py
+BEND_NO_TELEMETRY=1 python3 research/adaptive-tasks/check.py --cpu-only
+```
+
+`--cpu-only` runs the existing proof, quantity, native/reference and CPU mutant
+gates, recording `cpu-only` rather than device acceptance. It cannot be combined
+with `--update-receipts`. The default complete gate still fails when no hardware
+adapter is available; completed CPU evidence is saved in `checks.failed.json`
+with `HostFailure` for that condition.
+
+## Runtime follow-up
+
+The [R4/R6 record-interpreter increment](runtime/README.md) adds generation-checked
+slot reuse, bounded frontier ownership, an independent Bend three-phase model,
+mutants and a versioned layout candidate. Its CPU and shader-validation gates pass;
+real-device qualification is blocked by unavailable Metal access in the executor.
+It does not replace or promote the historical 38-case device receipt.
 
 ## What this teaches us
 

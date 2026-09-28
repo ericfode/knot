@@ -1,0 +1,50 @@
+{
+  "authority": "Literal source review, fixed independently of census outputs.",
+  "declarations": {
+    "control.bend::identity": {
+      "exact": ["quantities.affine"]
+    },
+    "lambda.bend::apply": {
+      "includes": ["higher-order", "calls.variable"]
+    },
+    "lambda.bend::identity": {
+      "includes": ["lambdas"],
+      "excludes": ["captures"]
+    },
+    "features.bend::Box": {
+      "includes": ["generics", "dependent", "fields", "quantities.polymorphic", "quantities.erased"]
+    },
+    "features.bend::capture": {
+      "includes": ["lambdas", "captures", "literals.u32"],
+      "capture_names": ["x"]
+    },
+    "features.bend::descend": {
+      "includes": ["recursion", "literals.nat", "matches"],
+      "excludes": ["matches.multi"]
+    },
+    "features.bend::pattern": {
+      "includes": ["matches.multi", "patterns.nested", "patterns.wildcard", "quantities.arguments"]
+    },
+    "features.bend::char": {
+      "includes": ["literals.char"],
+      "excludes": ["literals.u32"]
+    },
+    "features.bend::text": {
+      "includes": ["literals.string"],
+      "excludes": ["lambdas", "arrays", "imports.local", "imports.package"]
+    },
+    "features.bend::float": {"includes": ["literals.f32"]},
+    "features.bend::list": {"includes": ["literals.list"]},
+    "features.bend::specialize": {"includes": ["templates", "calls.variable", "higher-order"]},
+    "features.bend::same:law": {"includes": ["laws", "equality"]},
+    "features.bend::same:law_fill": {"includes": ["proofs"], "excludes": ["quantities.polymorphic"]}
+  },
+  "execution": {
+    "roots": ["src/lex.tokenize", "src/parse.parse"],
+    "frontend_definitions": 37,
+    "base_runtime_entries": 37,
+    "js_intrinsics": 9,
+    "native_intrinsics": 8,
+    "foreign": 0
+  }
+}
