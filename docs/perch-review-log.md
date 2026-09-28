@@ -1078,7 +1078,10 @@ The [kind boundaries](../tests/compiler-generics/boundaries/README.md) and
 retain the seed observations. Live static arguments and local type normalization
 now report Unsupported before erasure; lexical bindings still shadow datatype
 names. Empty type applications are Invalid. The original fixture outcomes and
-old gate assertions remain unchanged. The separate generic-header classification
+old gate assertions remained unchanged at `f39ba7e`, apart from the restated
+`generic_header` law. Later changes are listed in the generics
+[assertion ledger](../tests/compiler-generics/ASSERTION-CHANGES.md). The
+separate generic-header classification
 conflict is retained as an integration blocker.
 
 Prevention: pair every erasure path with live/erased static-value controls, and
@@ -1107,3 +1110,29 @@ Unsupported that an in-flight increment will accept, name that owner and a
 supersession path in the pin itself, and keep the classification law out of
 the shared proof chain or state it as a transition that the later increment
 can restate.
+
+## 2026-09-28 — Generics review round 4: provenance and authorization records drifted
+
+The coordinator's review confirmed two record defects without a code defect.
+First, the kind and dispatch boundary corpora (24 expectations) were committed
+in `f39ba7e` together with the checker they test. Four documents nonetheless
+said they were fixed first, and one said the dispatch pins did not come from
+Knot output. The implementer chose those pins' phase/code strings. Every later
+corpus was frozen in its own commit. Second, existing frontend, classification
+and census assertions changed across three rounds. Their authorization was
+recorded inconsistently: six `superseded.by` fields still read "awaiting
+coordinator authorization" after the coordinator's `78c4942` had applied the
+supersession. The runner's frontend `counts` hid the changed sub-counts.
+
+The claims are corrected, and each pin is mapped for the coordinator's literal
+review ([BOUNDARY-PINS.md](../tests/compiler-generics/BOUNDARY-PINS.md)).
+Every changed assertion is listed with its authorization text and status
+([ASSERTION-CHANGES.md](../tests/compiler-generics/ASSERTION-CHANGES.md)).
+Rows 7 to 9, including the `recursion.wasm` promotion, are still
+unconfirmed. So are parts of rows 2, 5 and 6.
+
+Prevention: freeze each corpus in its own commit even when it is found during
+implementation. Claim an ordering only when `git log` shows it. When an
+authorization lands, update every data field that names it in the same commit.
+Keep a running ledger of assertion changes from the first one, not after
+review.

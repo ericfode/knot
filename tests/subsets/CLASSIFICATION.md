@@ -158,19 +158,27 @@ need to supersede this witness when it accepts function-typed parameters.
 Six classify-2 cases (`application-parameter`, `-return`, `-binding` and their
 `-after-prefix` twins), their three classification-gate mutants and the laws
 `return_type_application` and `binding_type_application` also conflict with
-generic type applications. They are unchanged here and await the
-coordinator's decision.
+generic type applications. The review-round-1 authorization did not cover
+them, so `5eea108` left them unchanged.
 
-### Proposed classify-2 supersession (awaiting authorization)
+### classify-2 supersession (authorized, `78c4942`)
 
-The same reconciliation for the six application cases, as a proposal: the
+The coordinator authorized the same reconciliation for the six application
+cases on 2026-09-28 and applied it in `78c4942`. The review-round-2 task
+restates this: the branch "now carries the coordinator-authorized
+supersession of classify-2's type-application pins". Each retired pin is kept
+under `superseded`, whose `by` field names that authorization. The first
+version of those six fields read "proposed ..., awaiting coordinator
+authorization" (review round 4 corrected them). The
 three seed-accepted cases get phase expectations (parse and check accept;
 eval `Evaluated<TAB>0<TAB>1<TAB>On{}`, `Evaluated<TAB>1<TAB>0<TAB>Nil{}` and
 `Evaluated<TAB>0<TAB>1<TAB>On{}` from the seed values, CONTRACT.json and
 declaration order; enum compile `Unsupported check constructor-fields` at the
 generic `List`'s first constructor `Nil`, which carries the boxed family's
 synthetic erased field). The three after-prefix twins pin
-`Unsupported parse type-expression` at the first token after `<`. The
-classification gate retires its three application mutants with their anchors;
+`Unsupported parse type-expression` at the first token after `<`.
 `return_type_application` is restated as the typed-result transition and
-`binding_type_application` is retired.
+`binding_type_application` is retired. `78c4942` also retired the
+classification gate's three application mutants. Review round 2 found that
+one of their anchors still existed, and `d3cee9f` restored the gate to seven
+mutants (see `tests/compiler-classification/README.md`).

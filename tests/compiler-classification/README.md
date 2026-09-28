@@ -92,6 +92,13 @@ existing output. No evaluator value or Wasm execution is claimed for Unsupported
 or Invalid programs. The existing accepted program differential gates remain
 the execution controls.
 
+On the generics branch that paragraph describes main, not the current
+harness. Generics changed the harness in `5eea108`: it now reads per-phase
+expectations. It checks 30 cases, adding the `function-parameter` witness, and
+reports 180 downstream phase observations. The generics
+[assertion ledger](../compiler-generics/ASSERTION-CHANGES.md) lists every
+change to this gate and the frontend gate.
+
 Fresh precision evidence belongs to this increment. Existing frontend and other
 shared receipts are left for the coordinator to refresh after merging.
 

@@ -5,7 +5,10 @@ plus the two supplements committed before implementation. Accept generic headers
 instantiate parameter domains and results, check erased arguments, preserve
 quantity restrictions, and use one boxed representation for generic families.
 The boundary corpus records seed observations for adjacent syntax and kind cases.
-No original fixture, pinned outcome or existing gate assertion changes.
+No original fixture or pinned outcome changes. At `f39ba7e` the only change
+to an existing gate assertion was the restated `generic_header` law. Later
+rounds changed others; each is listed with its authorization in
+[ASSERTION-CHANGES.md](ASSERTION-CHANGES.md).
 
 The reading hypothesis is a small type-expression algebra shared by catalog and
 term checking. A sequential substitution list instantiates every dependent
