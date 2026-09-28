@@ -294,7 +294,7 @@
     ],
     "reader": "ASCII source; decimal U32/Nat; quoted code lists; 1-8 digit Unicode escapes preserve arbitrary U32 codes including surrogates and NUL.",
     "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; every leaf checked, each path's first leaf before any other, and a failing leaf that its path does not select is Unsupported dead-arm, since the seed never checks it; Nat offsets 0..256, with `+` adjacent to the literal; `0n+t` reads as t, as in the seed. With Base, a literal or Nat offset arm on a datatype scrutinee is Invalid pattern-type; without it, the arm takes the literal-base-type rule.",
-    "checking": "Literals and Nat offsets check against a known type, as in the seed: an unannotated binding is Invalid annotation-required, and a literal or Nat offset scrutinee is Invalid constructor-scrutinee. An expression offset kn+t checks as its matrix spelling, k Succ constructors around the shared tail, as in the seed; each successor takes three levels of the checker depth budget, so an offset above 1364 (less when nested deeper) is Exhausted check.",
+    "checking": "Literals and Nat offsets check against a known type, as in the seed: an unannotated binding is Invalid annotation-required, and a literal or Nat offset scrutinee is Invalid constructor-scrutinee. An expression offset kn+t checks its tail once and wraps k = U32.to_nat(count) Succ constructors around it (src/literal-offset.bend::successors), the matrix spelling as in the seed; a successor takes no checker level. A count above 4096 is Exhausted check. See expression_offset for the compile limit and the laws.",
     "intrinsic_registry": {
       "types": 4,
       "operations": 39,
@@ -373,8 +373,26 @@
       "src/literal-core-PROOF.bend",
       "src/literal-matrix-PROOF.bend"
     ],
-    "proof_laws": 35,
-    "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, section runs, core transitions, offset construction and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
+    "proof_laws": 36,
+    "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, section runs, core transitions, offset construction (for every k, and every count up to 4096 in the checker laws) and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
+    "expression_offset": {
+      "lowering": "The tail is checked once and k = U32.to_nat(count) Succ constructors wrap it (src/literal-offset.bend::successors), keeping the tail's uses; the outermost takes the expected type.",
+      "count_limit": 4096,
+      "count_limit_outcome": "Exhausted check at the offset; the seed answers Yes",
+      "compile_limit": "2047 successors: the emitter takes two of its 4096 levels for each, so above that compilation is Exhausted emit and the checker CLI's core display is Exhausted inspect; evaluation continues to the count limit. Resource bounds, never rejections.",
+      "proved": [
+        "src/literal-core-LAWS.bend::offset_cells: for every k and tail with a known value, k successors return k cells around it in 4k+c transitions (induction on k)",
+        "src/check-LAWS.bend::offset_lowering: for every count up to 4096 and every tail, the checker returns successors(to_nat(count), tail) with the tail's uses",
+        "src/check-LAWS.bend::offset_bound: above 4096, Exhausted check",
+        "src/check-LAWS.bend::single_argument_keeps_uses: a constructor of one argument keeps its uses"
+      ],
+      "witnesses": [
+        "src/literal-core-LAWS.bend::natural_offset (k = 2)",
+        "src/check-LAWS.bend::offset_spelling (k = 2)"
+      ],
+      "trusted": "U32.to_nat as Base's reading of the count; the linear allocation of recursion through an offset is measured by the frozen depth books, not proved",
+      "open_obligations": []
+    },
     "unmet": [
       "R3/R7 owned storage and reclamation",
       "broader recursion",

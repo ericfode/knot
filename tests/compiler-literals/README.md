@@ -30,7 +30,10 @@ recursion 3000 to 4000 deep, with a `0n+t` control and a mismatch control.
 Round 8 (one book, committed as `788be82` before its fix): a 3000-Char String
 literal, a `case 450n` and a 100-Char String pattern in one module of 156918
 bytes, past the size at which one section chunk faulted the Bun compiler.
-All four freezes are verified against seed 2.0.29,
+Round 9 (four books, committed as `9263b15` before its fix): `1364n+t`,
+`1365n+t` and `2000n+t` as single expressions with a No control, and three
+Invalid controls that pin the offset diagnostics the fix must keep.
+All five freezes are verified against seed 2.0.29,
 commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on every gate run.
 
 ## Mechanism
@@ -61,10 +64,19 @@ k cells, so recursion through `1n+up(p)` or Base's `Nat.double`
 (`2n+double(p)`) is linear in its depth. Until round 7 it lowered to
 `Nat.add(kn,t)`, which counts both arguments and materializes a fresh Nat:
 about n²/2 cells over a depth-n recursion, Exhausted at `up(2000n)` in the
-evaluator and at `up(3400n)` in Wasm. Each successor costs three levels of
-the 4096-deep checker budget, so an expression offset above 1364 (less
-inside a deeper expression) is `Exhausted check budget`; it checked before,
-at O(k+|t|) per evaluation.
+evaluator and at `up(3400n)` in Wasm. From round 7 to round 8 the checker
+reached the successors one checker level at a time, three per successor, so an
+offset above 1364 was `Exhausted check budget` where the seed answers Yes, and
+no law covered a count beyond k = 2: the count is a U32, decremented through
+`U32.sub`, which a proof cannot invert. Round 9 checks the tail once and wraps
+it in k = `U32.to_nat(count)` Succ constructors with one Nat-structural builder
+(`literal-offset.bend::successors`); its laws hold for every k
+([LAW_REVIEW.md](LAW_REVIEW.md)). The count sizes the core, so above 4096 it is
+`Exhausted check` at the offset. Compilation stops sooner, because the emitter
+takes two of its 4096 levels for each successor: up to 2047 successors build
+and agree with the seed in the evaluator and Wasm, and 2048 to 4096 check and
+evaluate but are `Exhausted emit` (the checker CLI's core display is
+`Exhausted inspect` there).
 Pattern offsets stop at 256 either way.
 
 The primitive pattern matrix specializes columns without changing row order.
@@ -242,22 +254,25 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 127 fixture books, 494 fresh seed calls, 254 checks and 254 primary compilations.
-- 912 agreeing evaluator observations and 912 matching Node/Wasm observations;
-  182 additional evaluator rejections, giving 1094 evaluator observations total.
-- 36 byte-identical native/Bun module pairs and 72 complete Base trust audits.
-- 182 rejected-compilation output-preservation probes and 182 additional
+- 131 fixture books, 499 fresh seed calls, 262 checks and 262 primary compilations.
+- 922 agreeing evaluator observations and 922 matching Node/Wasm observations;
+  188 additional evaluator rejections, giving 1110 evaluator observations total.
+- 37 byte-identical native/Bun module pairs and 74 complete Base trust audits.
+- 188 rejected-compilation output-preservation probes and 188 additional
   compilations proving no artifact is created at an absent output path.
 - 5 result books and 61 frozen displays: 122 exact evaluator displays across
   both lanes, lane-equal, and 5 byte-identical native/Bun module pairs. The
   Node host observes enum results only, so these calls have no Wasm lane.
-- Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 35 filled laws; 25 type-correct semantic
-  mutants: five Wasm value kills, one exhaustion kill in both Wasm and the
-  evaluator, one Bun-lane fault kill, fourteen verdict kills and six
+- Sixteen budget/host probes, including ten preserved outputs on exhaustion. Eight
+  probe the count of an expression offset in both lanes: 2047 successors
+  builds and runs; 2048 and 4096 evaluate but are `Exhausted emit`; 4097 is
+  `Exhausted check`.
+- Three complete proof entries, 36 filled laws; 28 type-correct semantic
+  mutants: seven Wasm value kills, one exhaustion kill in both Wasm and the
+  evaluator, one Bun-lane fault kill, fifteen verdict kills and eight
   evaluator kills.
-  The two dead-arm laws, the five own-type literal laws and the offset
-  spelling law live in
+  The two dead-arm laws, the five own-type literal laws and the four offset
+  laws (spelling, lowering, bound, single argument) live in
   `src/check-LAWS.bend`, beside the checker they describe, and the checker
   gate proves them.
 
@@ -285,9 +300,16 @@ literal-arm type check rejects the seed-valid own-nat-zero-pattern as
 `Invalid check pattern-type`; and ignoring the spelled constructor rejects the
 seed-valid own-n-literal-expr as `Invalid check unknown-type`. The
 exhaustion mutant offset-nat-add restores the `Nat.add(kn,t)` lowering of an
-expression offset; `successor` in offset-expression-depth (frozen Yes) then
+expression offset (in the arm that now wraps the tail); `successor` in
+offset-expression-depth (frozen Yes) then
 reports `Exhausted wasm resource-limit` from its compiled module and
-`Exhausted eval budget` from its evaluator. The width mutant unbounded-chunk
+`Exhausted eval budget` from its evaluator. The count mutants offset-one-short
+(one successor too few) and offset-extra-successor (one too many around every
+tail) are killed by an exact wrong enum result from the compiled module and
+the evaluator (`wide_sum` in offset-expression-width, `successor` in
+offset-expression-depth); offset-unchecked-type drops the expected-type check
+of the outermost Succ and compiles the seed-invalid offset-expression-mismatch
+to `Built`. The width mutant unbounded-chunk
 hands each section body to the builder as one chunk again; it builds the
 u32-literals module byte for byte, and its Bun compiler faults with exactly
 `bend: memory fault (machine stack overflow?)` (exit 1, output untouched) on

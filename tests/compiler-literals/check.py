@@ -346,10 +346,24 @@ MUTANTS = [
     # Exhaustion mutant: Nat.add(kn,t) re-counts t at every level of a recursion,
     # so the frozen linear value becomes resource exhaustion in both lanes.
     {'name': 'offset-nat-add', 'file': 'check.bend', 'import': 'import ./primitive-op.bend as R\n',
-     'old': 'run(n,Expression{spelled,Some{target}},catalog,current,scope)',
+     'old': '''S.bind(G.ConstructorRef,C.Checked,M.lookup(types,M.retoken("Succ",token)),+reference =>
+            S.bind(List<&2,C.Parameter>,C.Checked,G.field_signature(reference,types),params =>
+              S.bind(C.Checked,C.Checked,run(n,Expression{M.literal(tail),Some{id}},catalog,current,scope),inner =>
+                offset(inner,count,reference,M.retoken("Succ",token),target,params))))))''',
      'new': 'run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},Some{target}},'
-            'catalog,current,scope)',
+            'catalog,current,scope)))',
      'fixture': 'offset-expression-depth', 'export': 'successor', 'arguments': [], 'exhausted': True, 'eval': True},
+    # Count mutants: the offset wraps one successor too few, or every wrapped tail gains one.
+    {'name': 'offset-one-short', 'file': 'check.bend',
+     'old': 'N.successors(U32.to_nat(count),term', 'new': 'N.successors(U32.to_nat(U32.sub(count,1)),term',
+     'fixture': 'offset-expression-width', 'export': 'wide_sum', 'arguments': [], 'wrong_tag': 0, 'eval': True},
+    {'name': 'offset-unchecked-type', 'file': 'check.bend',
+     'old': 'expected(token,Some{target},C.Checked{N.successors(U32.to_nat(count),term,token,type_id,tag,params),type_id,uses})',
+     'new': 'Done{C.Checked{N.successors(U32.to_nat(count),term,token,type_id,tag,params),type_id,uses}}',
+     'fixture': 'offset-expression-mismatch', 'verdict': (0, 'Built\t')},
+    {'name': 'offset-extra-successor', 'file': 'literal-offset.bend',
+     'old': '    case 0n: term', 'new': '    case 0n: C.Construct{token,type_id,tag,fields,[term]}',
+     'fixture': 'offset-expression-depth', 'export': 'successor', 'arguments': [], 'wrong_tag': 0, 'eval': True},
     # Width mutant: one chunk per section is the same module wherever the stack
     # suffices, but the builder copies a chunk with a non-tail List.append, so on
     # the Bun lane a chunk's length is a stack depth.
@@ -504,6 +518,45 @@ def boundaries(lanes):
     return records
 
 
+OFFSET_LIMITS = [  # count k: (evaluator status, compiler status, refusing phase)
+    (2047, 0, 0, None), (2048, 0, 4, 'emit'), (4096, 0, 4, 'emit'), (4097, 4, 4, 'check')]
+
+
+def offset_limits(lanes):
+    """The count of `kn+t` up to 4096 checks and evaluates, and its module builds up to 2047
+    successors (the emitter takes two of its 4096 levels for each); past 4096 is Exhausted check."""
+    records = []
+    yes = {'export': 'main', 'arguments': [], 'tag': 1, 'constructor': 'Yes'}
+    for k, evaluates, compiles, phase in OFFSET_LIMITS:
+        source = BUILD / f'offset-{k}.bend'
+        source.write_text('import Base\n\ntype Answer is Type:\n  No{}\n  Yes{}\n\n'
+                          'def answer(b: Bool) -> Answer:\n  match b:\n    case False{}: No{}\n    case True{}: Yes{}\n\n'
+                          f'def f(t: Nat) -> Nat:\n  {k}n+t\n\n'
+                          f'def main() -> Answer:\n  answer(Nat.is_eq(f(0n), {k}n))\n')
+        for lane, commands in lanes.items():
+            output = BUILD / f'{lane}-offset-{k}.wasm'
+            marker = b'a refused offset preserves this file\n'
+            output.write_bytes(marker)
+            evaluated = run([*commands['eval'], source, 'main', 1048576])
+            compiled = run([*commands['compile'], source, output])
+            record = {'lane': lane, 'name': f'offset-{k}', 'eval': evaluated, 'compile': compiled}
+            if evaluates:
+                reject(evaluated, 4, 'Exhausted\tcheck\tbudget\t')
+            else:
+                value(evaluated, yes)
+            if compiles:
+                reject(compiled, 4, f'Exhausted\t{phase}\tbudget\t')
+                require(output.read_bytes() == marker, compiled)
+                record['artifact_preserved'] = True
+            else:
+                require(compiled['exit'] == 0 and compiled['stderr'] == '' and
+                        compiled['stdout'] == f'Built\t{output.stat().st_size}\n', compiled)
+                record['wasm'] = wasm(output, yes)
+                wasm_value(record['wasm'], output, yes)
+            records.append(record)
+    return records
+
+
 def main():
     BUILD.mkdir(parents=True, exist_ok=True)
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
@@ -540,7 +593,7 @@ def main():
         for f in [*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures']]:
             record['fixtures'].append(fixture(f, lanes, record['base'], manifest['seed']['sha256']['bend2/base.bend']))
         record['results'] = [result_fixture(f, lanes) for f in results['fixtures']]
-        record['boundaries'] = boundaries(lanes)
+        record['boundaries'] = boundaries(lanes) + offset_limits(lanes)
         record['mutants'] = mutants([*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures'],
                                      *results['fixtures']])
         require(all(digest(ROOT / path) == h for path, h in record['inputs'].items()), 'Inputs changed during literals gate')
@@ -560,7 +613,7 @@ def main():
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
-            'proof_laws': 35, 'semantic_mutants': len(record['mutants']),
+            'proof_laws': 36, 'semantic_mutants': len(record['mutants']),
             'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
             'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
             'mutant_fault_observations': sum('faulted' in m for m in record['mutants']),

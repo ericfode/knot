@@ -8,6 +8,7 @@ import ./literal-check.bend as L
 import ./literal-base.bend as LB
 import ./primitive.bend as O
 import ./literal-matrix.bend as M
+import ./literal-offset.bend as N
 
 type Mode is Data:
   Rebuild{term: C.Term}
@@ -203,9 +204,16 @@ def intrinsic_type(reference: G.TypeRef, next: U32 -> Result<S.Error,C.Checked>)
   match reference:
     case G.TypeRef{id,definition}: next(id)
 
+# A count past 4096 is Exhausted check; the outermost Succ takes the expected type.
+def offset(inner: C.Checked, +count: U32, reference: G.ConstructorRef, +token: S.Token, +target: U32, params: List<&2,C.Parameter>) -> Result<S.Error,C.Checked>:
+  match inner reference:
+    case C.Checked{term,typ,uses} G.ConstructorRef{+type_id,tag}:
+      S.choose(Result<S.Error,C.Checked>,U32.is_gt(count,4096),u => C.exhausted(C.Checked,token),u =>
+        expected(token,Some{target},C.Checked{N.successors(U32.to_nat(count),term,token,type_id,tag,params),type_id,uses}))
+
 # Literals, Nat offsets and literal matches check against a known type; the
-# seed infers none of them. A parsed offset has at least one successor, and it
-# checks as its matrix spelling: Succ constructors around the shared tail.
+# seed infers none of them. A parsed offset has at least one successor: its tail
+# is checked once, and k Succ constructors go around it.
 def annotated(wanted: Maybe<&2,U32>, token: S.Token, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match wanted:
     case None{}: C.invalid(C.Checked,"annotation-required",token)
@@ -267,7 +275,10 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
       +spelled = M.literal(S.Offset{token,count,tail})
       annotated(wanted,token,+target =>
         S.bind(U32,C.Checked,L.primitive_type(types,1,token,Some{target},spelled),id =>
-          run(n,Expression{spelled,Some{target}},catalog,current,scope)))
+          S.bind(G.ConstructorRef,C.Checked,M.lookup(types,M.retoken("Succ",token)),+reference =>
+            S.bind(List<&2,C.Parameter>,C.Checked,G.field_signature(reference,types),params =>
+              S.bind(C.Checked,C.Checked,run(n,Expression{M.literal(tail),Some{id}},catalog,current,scope),inner =>
+                offset(inner,count,reference,M.retoken("Succ",token),target,params))))))
     case 1n+ +n Expression{S.Intrinsic{+token,+op,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.TypeRef,C.Checked,G.find_type(types,LB.token(O.output(op)),0),reference =>
         intrinsic_type(reference,+id =>

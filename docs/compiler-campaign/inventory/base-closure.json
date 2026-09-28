@@ -8061,7 +8061,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 779,
+          "declarations": 781,
           "base": 102,
           "base_intrinsics": 27,
           "foreign": 7
@@ -11646,6 +11646,32 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.offset",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "U32",
+              "U32.is_gt",
+              "U32.to_nat",
+              "src/catalog.ConstructorRef",
+              "src/check.expected",
+              "src/core.Checked",
+              "src/core.Parameter",
+              "src/core.exhausted",
+              "src/literal-offset.successors",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.pattern",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -11868,6 +11894,7 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
+              "src/check.offset",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -11890,6 +11917,7 @@
               "src/literal-matrix.enabled",
               "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
+              "src/literal-matrix.retoken",
               "src/patterns.branch",
               "src/primitive.output",
               "src/scope.Scope",
@@ -14516,7 +14544,7 @@
           {
             "key": "src/literal-matrix.retoken",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.literal",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14710,6 +14738,23 @@
               "src/scope.contains",
               "src/syntax.Node",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-offset.successors",
+            "file": "src/literal-offset.bend",
+            "via": "src/check.offset",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "U32",
+              "src/core.Parameter",
+              "src/core.Term",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -22283,7 +22328,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 779,
+          "declarations": 781,
           "base": 102,
           "base_intrinsics": 25,
           "foreign": 7
@@ -25868,6 +25913,32 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.offset",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "U32",
+              "U32.is_gt",
+              "U32.to_nat",
+              "src/catalog.ConstructorRef",
+              "src/check.expected",
+              "src/core.Checked",
+              "src/core.Parameter",
+              "src/core.exhausted",
+              "src/literal-offset.successors",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.pattern",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -26090,6 +26161,7 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
+              "src/check.offset",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -26112,6 +26184,7 @@
               "src/literal-matrix.enabled",
               "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
+              "src/literal-matrix.retoken",
               "src/patterns.branch",
               "src/primitive.output",
               "src/scope.Scope",
@@ -28738,7 +28811,7 @@
           {
             "key": "src/literal-matrix.retoken",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.literal",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28932,6 +29005,23 @@
               "src/scope.contains",
               "src/syntax.Node",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-offset.successors",
+            "file": "src/literal-offset.bend",
+            "via": "src/check.offset",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "U32",
+              "src/core.Parameter",
+              "src/core.Term",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -36505,7 +36595,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 694,
+          "declarations": 696,
           "base": 85,
           "base_intrinsics": 27,
           "foreign": 7
@@ -38895,6 +38985,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.offset",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_gt",
+              "U32.to_nat",
+              "src/check.expected",
+              "src/core.exhausted",
+              "src/literal-offset.successors",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.pattern",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -39045,6 +39152,7 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
+              "src/check.offset",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -39062,6 +39170,7 @@
               "src/literal-matrix.enabled",
               "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
+              "src/literal-matrix.retoken",
               "src/patterns.branch",
               "src/primitive.output",
               "src/scope.find_level",
@@ -40766,7 +40875,7 @@
           {
             "key": "src/literal-matrix.retoken",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.literal",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40900,6 +41009,16 @@
               "src/scope.contains",
               "src/syntax.choose"
             ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-offset.successors",
+            "file": "src/literal-offset.bend",
+            "via": "src/check.offset",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -46225,7 +46344,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 817,
+          "declarations": 819,
           "base": 140,
           "base_intrinsics": 31,
           "foreign": 7
@@ -49852,6 +49971,32 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.offset",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "U32",
+              "U32.is_gt",
+              "U32.to_nat",
+              "src/catalog.ConstructorRef",
+              "src/check.expected",
+              "src/core.Checked",
+              "src/core.Parameter",
+              "src/core.exhausted",
+              "src/literal-offset.successors",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.pattern",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -50070,6 +50215,7 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
+              "src/check.offset",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -50093,6 +50239,7 @@
               "src/literal-matrix.enabled",
               "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
+              "src/literal-matrix.retoken",
               "src/patterns.Fields",
               "src/patterns.branch",
               "src/primitive.output",
@@ -52689,7 +52836,7 @@
           {
             "key": "src/literal-matrix.retoken",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.literal",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -52882,6 +53029,23 @@
               "src/scope.contains",
               "src/syntax.Node",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-offset.successors",
+            "file": "src/literal-offset.bend",
+            "via": "src/check.offset",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "U32",
+              "src/core.Parameter",
+              "src/core.Term",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },

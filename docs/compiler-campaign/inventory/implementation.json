@@ -124,10 +124,10 @@
   },
   "totals": {
     "compiler": {
-      "files": 65,
-      "declarations": 1160,
-      "unique_declarations": 974,
-      "definitions": 714,
+      "files": 66,
+      "declarations": 1173,
+      "unique_declarations": 983,
+      "definitions": 719,
       "classes": 42
     },
     "frontend_files": {
@@ -47978,7 +47978,7 @@
     },
     {
       "file": "src/check-LAWS.bend",
-      "sha256": "eb22fc4e50622d0978e3b810c7f016b0cca184db0d60c9c87711147590595491",
+      "sha256": "ba03bcb531ef8bfd8774e34ccfcab5c449bf8099617e0d42b33d19976920fe0c",
       "imports": [
         {
           "module": "Base",
@@ -48021,6 +48021,12 @@
           "alias": "M",
           "file": "src/literal-matrix.bend",
           "feature": "imports.local"
+        },
+        {
+          "module": "./literal-offset.bend",
+          "alias": "N",
+          "file": "src/literal-offset.bend",
+          "feature": "imports.local"
         }
       ],
       "features": [
@@ -48049,8 +48055,55 @@
           "key": "src/check-LAWS.empty_sequence_preserves_uses",
           "kind": "law",
           "lines": [
-            10,
-            15
+            11,
+            16
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "src/scope.sequential",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/scope.sequential",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/check-LAWS.bend::single_argument_keeps_uses:law",
+          "name": "single_argument_keeps_uses",
+          "key": "src/check-LAWS.single_argument_keeps_uses",
+          "kind": "law",
+          "lines": [
+            20,
+            23
           ],
           "features": [
             "calls",
@@ -48096,8 +48149,8 @@
           "key": "src/check-LAWS.repeated_affine_level",
           "kind": "law",
           "lines": [
-            17,
-            21
+            25,
+            29
           ],
           "features": [
             "calls",
@@ -48149,8 +48202,8 @@
           "key": "src/check-LAWS.live_erased_occurrence",
           "kind": "law",
           "lines": [
-            23,
-            29
+            31,
+            37
           ],
           "features": [
             "calls",
@@ -48202,8 +48255,8 @@
           "key": "src/check-LAWS.erased_occurrence_preserves_identity",
           "kind": "law",
           "lines": [
-            31,
-            37
+            39,
+            45
           ],
           "features": [
             "calls",
@@ -48252,8 +48305,8 @@
           "key": "src/check-LAWS.refined_constructor_is_fresh",
           "kind": "law",
           "lines": [
-            39,
-            45
+            47,
+            53
           ],
           "features": [
             "calls",
@@ -48302,8 +48355,8 @@
           "key": "src/check-LAWS.nearest_binding_wins",
           "kind": "law",
           "lines": [
-            47,
-            50
+            55,
+            58
           ],
           "features": [
             "calls",
@@ -48354,8 +48407,8 @@
           "key": "src/check-LAWS.no_checker_budget",
           "kind": "law",
           "lines": [
-            52,
-            54
+            60,
+            62
           ],
           "features": [
             "calls",
@@ -48402,8 +48455,8 @@
           "key": "src/check-LAWS.dead_arm_invalid",
           "kind": "law",
           "lines": [
-            56,
-            60
+            64,
+            68
           ],
           "features": [
             "calls",
@@ -48451,8 +48504,8 @@
           "key": "src/check-LAWS.dead_arm_exhausted",
           "kind": "law",
           "lines": [
-            62,
-            65
+            70,
+            73
           ],
           "features": [
             "calls",
@@ -48497,8 +48550,8 @@
           "key": "src/check-LAWS.installed_literal_type",
           "kind": "law",
           "lines": [
-            69,
-            73
+            77,
+            81
           ],
           "features": [
             "calls",
@@ -48553,8 +48606,8 @@
           "key": "src/check-LAWS.spelled_own_literal",
           "kind": "law",
           "lines": [
-            75,
-            80
+            83,
+            88
           ],
           "features": [
             "calls",
@@ -48616,8 +48669,8 @@
           "key": "src/check-LAWS.unspelled_literal",
           "kind": "law",
           "lines": [
-            82,
-            87
+            90,
+            95
           ],
           "features": [
             "calls",
@@ -48679,8 +48732,8 @@
           "key": "src/check-LAWS.word_spells_any_target",
           "kind": "law",
           "lines": [
-            89,
-            94
+            97,
+            102
           ],
           "features": [
             "calls",
@@ -48741,8 +48794,8 @@
           "key": "src/check-LAWS.untargeted_literal",
           "kind": "law",
           "lines": [
-            96,
-            99
+            104,
+            107
           ],
           "features": [
             "calls",
@@ -48794,8 +48847,8 @@
           "key": "src/check-LAWS.offset_spelling",
           "kind": "law",
           "lines": [
-            103,
-            112
+            111,
+            120
           ],
           "features": [
             "calls",
@@ -48855,12 +48908,218 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/check-LAWS.bend::nat:definition",
+          "name": "nat",
+          "key": "src/check-LAWS.nat",
+          "kind": "definition",
+          "lines": [
+            123,
+            125
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.string",
+            "literals.u32"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "True",
+            "src/core.Catalog",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/syntax.At",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "src/core.Catalog"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "True",
+              "U32",
+              "src/core.Catalog",
+              "src/core.Constructor",
+              "src/core.Datatype",
+              "src/core.Parameter",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/check-LAWS.bend::offset_lowering:law",
+          "name": "offset_lowering",
+          "key": "src/check-LAWS.offset_lowering",
+          "kind": "law",
+          "lines": [
+            131,
+            143
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Done",
+            "False",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "Some",
+            "Succ",
+            "U32",
+            "U32.is_gt",
+            "U32.to_nat",
+            "src/check-LAWS.nat",
+            "src/check.Expression",
+            "src/check.run",
+            "src/core.Checked",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/literal-matrix.literal",
+            "src/literal-matrix.retoken",
+            "src/literal-offset.successors",
+            "src/scope.Scope",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Offset",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "U32.is_gt",
+            "U32.to_nat",
+            "src/check-LAWS.nat",
+            "src/check.run",
+            "src/core.Checked",
+            "src/core.Term",
+            "src/literal-matrix.literal",
+            "src/literal-matrix.retoken",
+            "src/literal-offset.successors",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/check-LAWS.bend::offset_bound:law",
+          "name": "offset_bound",
+          "key": "src/check-LAWS.offset_bound",
+          "kind": "law",
+          "lines": [
+            146,
+            158
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Done",
+            "Fail",
+            "List",
+            "Nat",
+            "Result",
+            "Some",
+            "Succ",
+            "True",
+            "U32",
+            "U32.is_gt",
+            "src/check-LAWS.nat",
+            "src/check.Expression",
+            "src/check.run",
+            "src/core.Checked",
+            "src/core.Term",
+            "src/literal-matrix.literal",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Exhausted",
+            "src/syntax.Node",
+            "src/syntax.Offset",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "U32.is_gt",
+            "src/check-LAWS.nat",
+            "src/check.run",
+            "src/core.Checked",
+            "src/core.Term",
+            "src/literal-matrix.literal",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/check-PROOF.bend",
-      "sha256": "20c53a83e5360d7b16443d750de0f896570c24e749ecaceb89edcb3a239f30f4",
+      "sha256": "a9e22e4f3cfefba95ab04ebe742d5989b89ba734fa5e3a45f5fdf942310c44e3",
       "imports": [
         {
           "module": "Base",
@@ -48879,10 +49138,53 @@
           "alias": "L",
           "file": "src/check-LAWS.bend",
           "feature": "imports.local"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./scope.bend",
+          "alias": "E",
+          "file": "src/scope.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./check.bend",
+          "alias": "K",
+          "file": "src/check.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./catalog.bend",
+          "alias": "G",
+          "file": "src/catalog.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./literal-matrix.bend",
+          "alias": "M",
+          "file": "src/literal-matrix.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./literal-offset.bend",
+          "alias": "N",
+          "file": "src/literal-offset.bend",
+          "feature": "imports.local"
         }
       ],
       "features": [
         "calls",
+        "captures",
         "constructors",
         "dependent",
         "equality",
@@ -48890,13 +49192,19 @@
         "generics",
         "imports.base",
         "imports.local",
+        "lambdas",
+        "literals.list",
         "literals.nat",
         "literals.string",
         "literals.u32",
+        "matches",
+        "patterns.variable",
         "proofs",
         "quantities.affine",
         "quantities.arguments",
         "quantities.reusable",
+        "recursion",
+        "rewrites",
         "types.base"
       ],
       "declarations": [
@@ -48906,8 +49214,8 @@
           "key": "src/check-LAWS.empty_sequence_preserves_uses",
           "kind": "law_fill",
           "lines": [
-            5,
-            6
+            12,
+            13
           ],
           "features": [
             "calls",
@@ -48948,13 +49256,94 @@
           }
         },
         {
+          "id": "src/check-PROOF.bend::L.single_argument_keeps_uses:law_fill",
+          "name": "L.single_argument_keeps_uses",
+          "key": "src/check-LAWS.single_argument_keeps_uses",
+          "kind": "law_fill",
+          "lines": [
+            14,
+            19
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "rewrites",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "src/check-LAWS.single_argument_keeps_uses",
+            "src/scope.sequential",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/scope.sequential",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 429,
+              "names": [
+                "h",
+                "t"
+              ]
+            },
+            {
+              "offset": 430,
+              "names": [
+                "_",
+                "h",
+                "t"
+              ]
+            },
+            {
+              "offset": 524,
+              "names": [
+                "h"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [
+              "Con",
+              "Nil"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/check-PROOF.bend::L.repeated_affine_level:law_fill",
           "name": "L.repeated_affine_level",
           "key": "src/check-LAWS.repeated_affine_level",
           "kind": "law_fill",
           "lines": [
-            7,
-            8
+            20,
+            21
           ],
           "features": [
             "calls",
@@ -49005,8 +49394,8 @@
           "key": "src/check-LAWS.live_erased_occurrence",
           "kind": "law_fill",
           "lines": [
-            9,
-            10
+            22,
+            23
           ],
           "features": [
             "calls",
@@ -49058,8 +49447,8 @@
           "key": "src/check-LAWS.erased_occurrence_preserves_identity",
           "kind": "law_fill",
           "lines": [
-            11,
-            12
+            24,
+            25
           ],
           "features": [
             "calls",
@@ -49108,8 +49497,8 @@
           "key": "src/check-LAWS.refined_constructor_is_fresh",
           "kind": "law_fill",
           "lines": [
-            13,
-            14
+            26,
+            27
           ],
           "features": [
             "calls",
@@ -49158,8 +49547,8 @@
           "key": "src/check-LAWS.nearest_binding_wins",
           "kind": "law_fill",
           "lines": [
-            15,
-            16
+            28,
+            29
           ],
           "features": [
             "calls",
@@ -49210,8 +49599,8 @@
           "key": "src/check-LAWS.no_checker_budget",
           "kind": "law_fill",
           "lines": [
-            17,
-            18
+            30,
+            31
           ],
           "features": [
             "calls",
@@ -49258,8 +49647,8 @@
           "key": "src/check-LAWS.dead_arm_invalid",
           "kind": "law_fill",
           "lines": [
-            19,
-            20
+            32,
+            33
           ],
           "features": [
             "calls",
@@ -49307,8 +49696,8 @@
           "key": "src/check-LAWS.dead_arm_exhausted",
           "kind": "law_fill",
           "lines": [
-            21,
-            22
+            34,
+            35
           ],
           "features": [
             "calls",
@@ -49353,8 +49742,8 @@
           "key": "src/check-LAWS.installed_literal_type",
           "kind": "law_fill",
           "lines": [
-            23,
-            24
+            36,
+            37
           ],
           "features": [
             "calls",
@@ -49408,8 +49797,8 @@
           "key": "src/check-LAWS.spelled_own_literal",
           "kind": "law_fill",
           "lines": [
-            25,
-            26
+            38,
+            39
           ],
           "features": [
             "calls",
@@ -49470,8 +49859,8 @@
           "key": "src/check-LAWS.unspelled_literal",
           "kind": "law_fill",
           "lines": [
-            27,
-            28
+            40,
+            41
           ],
           "features": [
             "calls",
@@ -49532,8 +49921,8 @@
           "key": "src/check-LAWS.word_spells_any_target",
           "kind": "law_fill",
           "lines": [
-            29,
-            30
+            42,
+            43
           ],
           "features": [
             "calls",
@@ -49593,8 +49982,8 @@
           "key": "src/check-LAWS.untargeted_literal",
           "kind": "law_fill",
           "lines": [
-            31,
-            32
+            44,
+            45
           ],
           "features": [
             "calls",
@@ -49646,8 +50035,8 @@
           "key": "src/check-LAWS.offset_spelling",
           "kind": "law_fill",
           "lines": [
-            33,
-            34
+            46,
+            47
           ],
           "features": [
             "calls",
@@ -49706,12 +50095,311 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/check-PROOF.bend::L.offset_lowering:law_fill",
+          "name": "L.offset_lowering",
+          "key": "src/check-LAWS.offset_lowering",
+          "kind": "law_fill",
+          "lines": [
+            48,
+            54
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "rewrites",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Done",
+            "False",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "Some",
+            "Succ",
+            "U32",
+            "U32.is_gt",
+            "U32.to_nat",
+            "src/catalog.ConstructorRef",
+            "src/check-LAWS.nat",
+            "src/check.Expression",
+            "src/check.offset",
+            "src/check.run",
+            "src/core.Checked",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/core.exhausted",
+            "src/literal-matrix.literal",
+            "src/literal-matrix.retoken",
+            "src/literal-offset.successors",
+            "src/scope.Scope",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Offset",
+            "src/syntax.Token",
+            "src/syntax.at",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "U32.is_gt",
+            "U32.to_nat",
+            "src/check-LAWS.nat",
+            "src/check.run",
+            "src/core.Checked",
+            "src/core.Term",
+            "src/literal-matrix.literal",
+            "src/literal-matrix.retoken",
+            "src/literal-offset.successors",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 1398,
+              "names": [
+                "count",
+                "term",
+                "token",
+                "uses"
+              ]
+            },
+            {
+              "offset": 1399,
+              "names": [
+                "_",
+                "count",
+                "term",
+                "token",
+                "uses"
+              ]
+            },
+            {
+              "offset": 1438,
+              "names": [
+                "count",
+                "token"
+              ]
+            },
+            {
+              "offset": 1751,
+              "names": [
+                "count",
+                "term",
+                "token",
+                "uses"
+              ]
+            },
+            {
+              "offset": 1752,
+              "names": [
+                "_",
+                "count",
+                "term",
+                "token",
+                "uses"
+              ]
+            },
+            {
+              "offset": 1800,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 1856,
+              "names": [
+                "count",
+                "term",
+                "token",
+                "uses"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/check-PROOF.bend::L.offset_bound:law_fill",
+          "name": "L.offset_bound",
+          "key": "src/check-LAWS.offset_bound",
+          "kind": "law_fill",
+          "lines": [
+            55,
+            61
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "rewrites",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Done",
+            "Fail",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "Some",
+            "Succ",
+            "True",
+            "U32",
+            "U32.is_gt",
+            "U32.to_nat",
+            "src/catalog.ConstructorRef",
+            "src/check-LAWS.nat",
+            "src/check.Expression",
+            "src/check.offset",
+            "src/check.run",
+            "src/core.Checked",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/core.exhausted",
+            "src/literal-matrix.literal",
+            "src/literal-offset.successors",
+            "src/scope.Scope",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted",
+            "src/syntax.Node",
+            "src/syntax.Offset",
+            "src/syntax.Token",
+            "src/syntax.at",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "U32.is_gt",
+            "src/check-LAWS.nat",
+            "src/check.run",
+            "src/core.Checked",
+            "src/core.Term",
+            "src/literal-matrix.literal",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "captures": [
+            {
+              "offset": 2275,
+              "names": [
+                "count",
+                "token"
+              ]
+            },
+            {
+              "offset": 2276,
+              "names": [
+                "_",
+                "count",
+                "token"
+              ]
+            },
+            {
+              "offset": 2315,
+              "names": [
+                "count",
+                "token"
+              ]
+            },
+            {
+              "offset": 2525,
+              "names": [
+                "count",
+                "term",
+                "token",
+                "uses"
+              ]
+            },
+            {
+              "offset": 2526,
+              "names": [
+                "_",
+                "count",
+                "term",
+                "token",
+                "uses"
+              ]
+            },
+            {
+              "offset": 2573,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 2629,
+              "names": [
+                "count",
+                "term",
+                "token",
+                "uses"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/check.bend",
-      "sha256": "01344e362440ebf505e968f493cd272c9227aa642afa34449a50b4ee0789c58b",
+      "sha256": "a9735e7ad3389850000f607bd88b00f742c6479d154d6754dbd69b7d9726d4d3",
       "imports": [
         {
           "module": "Base",
@@ -49772,6 +50460,12 @@
           "alias": "M",
           "file": "src/literal-matrix.bend",
           "feature": "imports.local"
+        },
+        {
+          "module": "./literal-offset.bend",
+          "alias": "N",
+          "file": "src/literal-offset.bend",
+          "feature": "imports.local"
         }
       ],
       "features": [
@@ -49810,8 +50504,8 @@
           "key": "src/check.Mode",
           "kind": "datatype",
           "lines": [
-            12,
-            20
+            13,
+            21
           ],
           "features": [
             "fields",
@@ -49858,8 +50552,8 @@
           "key": "src/check.expected",
           "kind": "definition",
           "lines": [
-            22,
-            26
+            23,
+            27
           ],
           "features": [
             "calls",
@@ -49902,13 +50596,13 @@
           ],
           "captures": [
             {
-              "offset": 1073,
+              "offset": 1107,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 1090,
+              "offset": 1124,
               "names": [
                 "token"
               ]
@@ -49936,8 +50630,8 @@
           "key": "src/check.enum_at",
           "kind": "definition",
           "lines": [
-            28,
-            32
+            29,
+            33
           ],
           "features": [
             "calls",
@@ -49980,13 +50674,13 @@
           ],
           "captures": [
             {
-              "offset": 1379,
+              "offset": 1413,
               "names": [
                 "head"
               ]
             },
             {
-              "offset": 1395,
+              "offset": 1429,
               "names": [
                 "index",
                 "tail"
@@ -50017,8 +50711,8 @@
           "key": "src/check.annotation_id",
           "kind": "definition",
           "lines": [
-            34,
-            36
+            35,
+            37
           ],
           "features": [
             "constructors",
@@ -50063,8 +50757,8 @@
           "key": "src/check.annotation",
           "kind": "definition",
           "lines": [
-            38,
-            42
+            39,
+            43
           ],
           "features": [
             "calls",
@@ -50126,8 +50820,8 @@
           "key": "src/check.constant",
           "kind": "definition",
           "lines": [
-            44,
-            48
+            45,
+            49
           ],
           "features": [
             "calls",
@@ -50174,7 +50868,7 @@
           ],
           "captures": [
             {
-              "offset": 2115,
+              "offset": 2149,
               "names": [
                 "tag",
                 "token",
@@ -50182,7 +50876,7 @@
               ]
             },
             {
-              "offset": 2178,
+              "offset": 2212,
               "names": [
                 "token"
               ]
@@ -50213,8 +50907,8 @@
           "key": "src/check.constructor_result",
           "kind": "definition",
           "lines": [
-            50,
-            56
+            51,
+            57
           ],
           "features": [
             "calls",
@@ -50267,7 +50961,7 @@
           ],
           "captures": [
             {
-              "offset": 2660,
+              "offset": 2694,
               "names": [
                 "args",
                 "params",
@@ -50278,7 +50972,7 @@
               ]
             },
             {
-              "offset": 2742,
+              "offset": 2776,
               "names": [
                 "token"
               ]
@@ -50310,8 +51004,8 @@
           "key": "src/check.constructor",
           "kind": "definition",
           "lines": [
-            58,
-            63
+            59,
+            64
           ],
           "features": [
             "calls",
@@ -50366,7 +51060,7 @@
           ],
           "captures": [
             {
-              "offset": 3342,
+              "offset": 3376,
               "names": [
                 "next",
                 "params",
@@ -50376,7 +51070,7 @@
               ]
             },
             {
-              "offset": 3395,
+              "offset": 3429,
               "names": [
                 "params",
                 "reference",
@@ -50385,7 +51079,7 @@
               ]
             },
             {
-              "offset": 3461,
+              "offset": 3495,
               "names": [
                 "token"
               ]
@@ -50417,8 +51111,8 @@
           "key": "src/check.variable",
           "kind": "definition",
           "lines": [
-            65,
-            69
+            66,
+            70
           ],
           "features": [
             "calls",
@@ -50478,8 +51172,8 @@
           "key": "src/check.bound",
           "kind": "definition",
           "lines": [
-            71,
-            75
+            72,
+            76
           ],
           "features": [
             "calls",
@@ -50537,8 +51231,8 @@
           "key": "src/check.callable",
           "kind": "definition",
           "lines": [
-            77,
-            81
+            78,
+            82
           ],
           "features": [
             "calls",
@@ -50580,13 +51274,13 @@
           ],
           "captures": [
             {
-              "offset": 4400,
+              "offset": 4434,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 4451,
+              "offset": 4485,
               "names": [
                 "current",
                 "index",
@@ -50596,13 +51290,13 @@
               ]
             },
             {
-              "offset": 4543,
+              "offset": 4577,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 4599,
+              "offset": 4633,
               "names": [
                 "index",
                 "sig"
@@ -50632,8 +51326,8 @@
           "key": "src/check.call_result",
           "kind": "definition",
           "lines": [
-            83,
-            88
+            84,
+            89
           ],
           "features": [
             "calls",
@@ -50681,13 +51375,13 @@
           ],
           "captures": [
             {
-              "offset": 5004,
+              "offset": 5038,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 5065,
+              "offset": 5099,
               "names": [
                 "index",
                 "items",
@@ -50724,8 +51418,8 @@
           "key": "src/check.prepend_argument",
           "kind": "definition",
           "lines": [
-            90,
-            94
+            91,
+            95
           ],
           "features": [
             "calls",
@@ -50769,7 +51463,7 @@
           ],
           "captures": [
             {
-              "offset": 5465,
+              "offset": 5499,
               "names": [
                 "items",
                 "term"
@@ -50799,8 +51493,8 @@
           "key": "src/check.let_result",
           "kind": "definition",
           "lines": [
-            96,
-            100
+            97,
+            101
           ],
           "features": [
             "calls",
@@ -50840,7 +51534,7 @@
           ],
           "captures": [
             {
-              "offset": 5894,
+              "offset": 5928,
               "names": [
                 "initial",
                 "level",
@@ -50872,8 +51566,8 @@
           "key": "src/check.pattern_arity",
           "kind": "definition",
           "lines": [
-            102,
-            103
+            103,
+            104
           ],
           "features": [
             "calls",
@@ -50913,13 +51607,13 @@
           ],
           "captures": [
             {
-              "offset": 6267,
+              "offset": 6301,
               "names": [
                 "reference"
               ]
             },
             {
-              "offset": 6288,
+              "offset": 6322,
               "names": [
                 "token"
               ]
@@ -50945,8 +51639,8 @@
           "key": "src/check.pattern",
           "kind": "definition",
           "lines": [
-            107,
-            117
+            108,
+            118
           ],
           "features": [
             "calls",
@@ -50996,7 +51690,7 @@
           ],
           "captures": [
             {
-              "offset": 6701,
+              "offset": 6735,
               "names": [
                 "args",
                 "token",
@@ -51004,7 +51698,7 @@
               ]
             },
             {
-              "offset": 6803,
+              "offset": 6837,
               "names": [
                 "args",
                 "reference",
@@ -51040,8 +51734,8 @@
           "key": "src/check.arm_pattern",
           "kind": "definition",
           "lines": [
-            122,
-            130
+            123,
+            131
           ],
           "features": [
             "calls",
@@ -51086,7 +51780,7 @@
           ],
           "captures": [
             {
-              "offset": 7828,
+              "offset": 7862,
               "names": [
                 "kind",
                 "number",
@@ -51096,7 +51790,7 @@
               ]
             },
             {
-              "offset": 8050,
+              "offset": 8084,
               "names": [
                 "count",
                 "tail",
@@ -51127,8 +51821,8 @@
           "key": "src/check.pattern_id",
           "kind": "definition",
           "lines": [
-            132,
-            136
+            133,
+            137
           ],
           "features": [
             "calls",
@@ -51169,7 +51863,7 @@
           ],
           "captures": [
             {
-              "offset": 8381,
+              "offset": 8415,
               "names": [
                 "seen",
                 "tag",
@@ -51177,19 +51871,19 @@
               ]
             },
             {
-              "offset": 8444,
+              "offset": 8478,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 8490,
+              "offset": 8524,
               "names": [
                 "tag"
               ]
             },
             {
-              "offset": 8506,
+              "offset": 8540,
               "names": [
                 "token"
               ]
@@ -51217,8 +51911,8 @@
           "key": "src/check.complete_arms",
           "kind": "definition",
           "lines": [
-            138,
-            141
+            139,
+            142
           ],
           "features": [
             "calls",
@@ -51261,7 +51955,7 @@
           ],
           "captures": [
             {
-              "offset": 8839,
+              "offset": 8873,
               "names": [
                 "token"
               ]
@@ -51289,8 +51983,8 @@
           "key": "src/check.patterns",
           "kind": "definition",
           "lines": [
-            143,
-            150
+            144,
+            151
           ],
           "features": [
             "calls",
@@ -51343,14 +52037,14 @@
           ],
           "captures": [
             {
-              "offset": 9109,
+              "offset": 9143,
               "names": [
                 "seen",
                 "token"
               ]
             },
             {
-              "offset": 9269,
+              "offset": 9303,
               "names": [
                 "arm",
                 "seen",
@@ -51361,7 +52055,7 @@
               ]
             },
             {
-              "offset": 9345,
+              "offset": 9379,
               "names": [
                 "seen",
                 "tail",
@@ -51396,8 +52090,8 @@
           "key": "src/check.prepend_arm",
           "kind": "definition",
           "lines": [
-            152,
-            156
+            153,
+            157
           ],
           "features": [
             "calls",
@@ -51464,8 +52158,8 @@
           "key": "src/check.case_result",
           "kind": "definition",
           "lines": [
-            158,
-            163
+            159,
+            164
           ],
           "features": [
             "calls",
@@ -51513,7 +52207,7 @@
           ],
           "captures": [
             {
-              "offset": 10198,
+              "offset": 10232,
               "names": [
                 "items",
                 "level",
@@ -51546,8 +52240,8 @@
           "key": "src/check.call_body",
           "kind": "definition",
           "lines": [
-            165,
-            169
+            166,
+            170
           ],
           "features": [
             "calls",
@@ -51596,7 +52290,7 @@
           ],
           "captures": [
             {
-              "offset": 10719,
+              "offset": 10753,
               "names": [
                 "current",
                 "index",
@@ -51607,7 +52301,7 @@
               ]
             },
             {
-              "offset": 10815,
+              "offset": 10849,
               "names": [
                 "token",
                 "wanted"
@@ -51635,8 +52329,8 @@
           "key": "src/check.binding_body",
           "kind": "definition",
           "lines": [
-            171,
-            175
+            172,
+            176
           ],
           "features": [
             "calls",
@@ -51681,7 +52375,7 @@
           ],
           "captures": [
             {
-              "offset": 11156,
+              "offset": 11190,
               "names": [
                 "next",
                 "q",
@@ -51691,7 +52385,7 @@
               ]
             },
             {
-              "offset": 11231,
+              "offset": 11265,
               "names": [
                 "next",
                 "q",
@@ -51722,8 +52416,8 @@
           "key": "src/check.match_body",
           "kind": "definition",
           "lines": [
-            177,
-            183
+            178,
+            184
           ],
           "features": [
             "calls",
@@ -51781,7 +52475,7 @@
           ],
           "captures": [
             {
-              "offset": 11658,
+              "offset": 11692,
               "names": [
                 "known",
                 "level",
@@ -51796,7 +52490,7 @@
               ]
             },
             {
-              "offset": 11767,
+              "offset": 11801,
               "names": [
                 "level",
                 "next",
@@ -51805,7 +52499,7 @@
               ]
             },
             {
-              "offset": 11829,
+              "offset": 11863,
               "names": [
                 "inspected",
                 "level",
@@ -51840,8 +52534,8 @@
           "key": "src/check.arm_body",
           "kind": "definition",
           "lines": [
-            185,
-            187
+            186,
+            188
           ],
           "features": [
             "calls",
@@ -51887,8 +52581,8 @@
           "key": "src/check.arm_scope",
           "kind": "definition",
           "lines": [
-            189,
-            191
+            190,
+            192
           ],
           "features": [
             "calls",
@@ -51938,8 +52632,8 @@
           "key": "src/check.rebuilt",
           "kind": "definition",
           "lines": [
-            193,
-            196
+            194,
+            197
           ],
           "features": [
             "calls",
@@ -51999,8 +52693,8 @@
           "key": "src/check.literal_constructor",
           "kind": "definition",
           "lines": [
-            198,
-            200
+            199,
+            201
           ],
           "features": [
             "calls",
@@ -52048,8 +52742,8 @@
           "key": "src/check.intrinsic_type",
           "kind": "definition",
           "lines": [
-            202,
-            204
+            203,
+            205
           ],
           "features": [
             "calls",
@@ -52090,13 +52784,104 @@
           }
         },
         {
+          "id": "src/check.bend::offset:definition",
+          "name": "offset",
+          "key": "src/check.offset",
+          "kind": "definition",
+          "lines": [
+            208,
+            212
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Result",
+            "Some",
+            "U32",
+            "U32.is_gt",
+            "U32.to_nat",
+            "src/catalog.ConstructorRef",
+            "src/check.expected",
+            "src/core.Checked",
+            "src/core.Parameter",
+            "src/core.exhausted",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/catalog.ConstructorRef",
+            "src/core.Checked",
+            "src/core.Parameter",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 13502,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 13536,
+              "names": [
+                "count",
+                "params",
+                "tag",
+                "target",
+                "term",
+                "token",
+                "type_id",
+                "uses"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_gt",
+              "U32.to_nat",
+              "src/check.expected",
+              "src/core.exhausted",
+              "src/literal-offset.successors",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Some",
+              "U32",
+              "src/catalog.ConstructorRef",
+              "src/core.Checked"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/check.bend::annotated:definition",
           "name": "annotated",
           "key": "src/check.annotated",
           "kind": "definition",
           "lines": [
-            209,
-            212
+            217,
+            220
           ],
           "features": [
             "calls",
@@ -52152,8 +52937,8 @@
           "key": "src/check.matrix_consumed",
           "kind": "definition",
           "lines": [
-            214,
-            217
+            222,
+            225
           ],
           "features": [
             "calls",
@@ -52188,7 +52973,7 @@
           ],
           "captures": [
             {
-              "offset": 13781,
+              "offset": 14363,
               "names": [
                 "body",
                 "level",
@@ -52214,8 +52999,8 @@
           "key": "src/check.matrix_case",
           "kind": "definition",
           "lines": [
-            219,
-            223
+            227,
+            231
           ],
           "features": [
             "calls",
@@ -52273,8 +53058,8 @@
           "key": "src/check.matrix_default",
           "kind": "definition",
           "lines": [
-            225,
-            227
+            233,
+            235
           ],
           "features": [
             "constructors",
@@ -52324,8 +53109,8 @@
           "key": "src/check.dead_arm",
           "kind": "definition",
           "lines": [
-            232,
-            236
+            240,
+            244
           ],
           "features": [
             "constructors",
@@ -52372,8 +53157,8 @@
           "key": "src/check.matrix_retained",
           "kind": "definition",
           "lines": [
-            238,
-            239
+            246,
+            247
           ],
           "features": [
             "constructors",
@@ -52409,8 +53194,8 @@
           "key": "src/check.run",
           "kind": "definition",
           "lines": [
-            241,
-            334
+            249,
+            345
           ],
           "features": [
             "bindings",
@@ -52484,6 +53269,7 @@
             "src/check.matrix_consumed",
             "src/check.matrix_default",
             "src/check.matrix_retained",
+            "src/check.offset",
             "src/check.pattern",
             "src/check.prepend_argument",
             "src/check.prepend_arm",
@@ -52516,6 +53302,7 @@
             "src/literal-matrix.enabled",
             "src/literal-matrix.literal",
             "src/literal-matrix.lookup",
+            "src/literal-matrix.retoken",
             "src/patterns.Fields",
             "src/patterns.branch",
             "src/primitive.output",
@@ -52553,14 +53340,14 @@
           ],
           "captures": [
             {
-              "offset": 15683,
+              "offset": 16265,
               "names": [
                 "column",
                 "target"
               ]
             },
             {
-              "offset": 16076,
+              "offset": 16658,
               "names": [
                 "catalog",
                 "current",
@@ -52574,7 +53361,7 @@
               ]
             },
             {
-              "offset": 16177,
+              "offset": 16759,
               "names": [
                 "fields",
                 "head",
@@ -52582,7 +53369,7 @@
               ]
             },
             {
-              "offset": 16728,
+              "offset": 17310,
               "names": [
                 "catalog",
                 "current",
@@ -52593,50 +53380,95 @@
               ]
             },
             {
-              "offset": 16827,
+              "offset": 17409,
               "names": [
                 "first"
               ]
             },
             {
-              "offset": 17090,
+              "offset": 17672,
               "names": [
                 "token",
                 "wanted"
               ]
             },
             {
-              "offset": 17122,
+              "offset": 17704,
               "names": [
                 "token",
                 "value"
               ]
             },
             {
-              "offset": 17344,
+              "offset": 17926,
               "names": [
                 "catalog",
+                "count",
                 "current",
                 "n",
                 "scope",
                 "spelled",
+                "tail",
                 "token",
                 "types"
               ]
             },
             {
-              "offset": 17437,
+              "offset": 18019,
               "names": [
                 "catalog",
+                "count",
                 "current",
                 "n",
                 "scope",
-                "spelled",
-                "target"
+                "tail",
+                "target",
+                "token",
+                "types"
               ]
             },
             {
-              "offset": 17686,
+              "offset": 18109,
+              "names": [
+                "catalog",
+                "count",
+                "current",
+                "id",
+                "n",
+                "scope",
+                "tail",
+                "target",
+                "token",
+                "types"
+              ]
+            },
+            {
+              "offset": 18208,
+              "names": [
+                "catalog",
+                "count",
+                "current",
+                "id",
+                "n",
+                "reference",
+                "scope",
+                "tail",
+                "target",
+                "token"
+              ]
+            },
+            {
+              "offset": 18325,
+              "names": [
+                "count",
+                "params",
+                "reference",
+                "target",
+                "token"
+              ]
+            },
+            {
+              "offset": 18592,
               "names": [
                 "args",
                 "catalog",
@@ -52650,7 +53482,7 @@
               ]
             },
             {
-              "offset": 17732,
+              "offset": 18638,
               "names": [
                 "args",
                 "catalog",
@@ -52664,7 +53496,7 @@
               ]
             },
             {
-              "offset": 17809,
+              "offset": 18715,
               "names": [
                 "args",
                 "catalog",
@@ -52678,7 +53510,7 @@
               ]
             },
             {
-              "offset": 17916,
+              "offset": 18822,
               "names": [
                 "id",
                 "op",
@@ -52687,14 +53519,14 @@
               ]
             },
             {
-              "offset": 18002,
+              "offset": 18908,
               "names": [
                 "token",
                 "wanted"
               ]
             },
             {
-              "offset": 18160,
+              "offset": 19066,
               "names": [
                 "catalog",
                 "current",
@@ -52705,7 +53537,7 @@
               ]
             },
             {
-              "offset": 18235,
+              "offset": 19141,
               "names": [
                 "catalog",
                 "current",
@@ -52714,14 +53546,14 @@
               ]
             },
             {
-              "offset": 18287,
+              "offset": 19193,
               "names": [
                 "token",
                 "wanted"
               ]
             },
             {
-              "offset": 18479,
+              "offset": 19385,
               "names": [
                 "args",
                 "catalog",
@@ -52734,7 +53566,7 @@
               ]
             },
             {
-              "offset": 18574,
+              "offset": 19480,
               "names": [
                 "args",
                 "catalog",
@@ -52748,7 +53580,7 @@
               ]
             },
             {
-              "offset": 18669,
+              "offset": 19575,
               "names": [
                 "args",
                 "catalog",
@@ -52760,13 +53592,13 @@
               ]
             },
             {
-              "offset": 18733,
+              "offset": 19639,
               "names": [
                 "types"
               ]
             },
             {
-              "offset": 18927,
+              "offset": 19833,
               "names": [
                 "args",
                 "catalog",
@@ -52778,7 +53610,7 @@
               ]
             },
             {
-              "offset": 19019,
+              "offset": 19925,
               "names": [
                 "args",
                 "catalog",
@@ -52790,7 +53622,7 @@
               ]
             },
             {
-              "offset": 19079,
+              "offset": 19985,
               "names": [
                 "args",
                 "catalog",
@@ -52801,13 +53633,13 @@
               ]
             },
             {
-              "offset": 19352,
+              "offset": 20258,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 19386,
+              "offset": 20292,
               "names": [
                 "ann",
                 "body",
@@ -52824,7 +53656,7 @@
               ]
             },
             {
-              "offset": 19452,
+              "offset": 20358,
               "names": [
                 "body",
                 "catalog",
@@ -52840,7 +53672,7 @@
               ]
             },
             {
-              "offset": 19569,
+              "offset": 20475,
               "names": [
                 "body",
                 "catalog",
@@ -52855,7 +53687,7 @@
               ]
             },
             {
-              "offset": 19634,
+              "offset": 20540,
               "names": [
                 "body",
                 "catalog",
@@ -52869,7 +53701,7 @@
               ]
             },
             {
-              "offset": 19743,
+              "offset": 20649,
               "names": [
                 "initial",
                 "next",
@@ -52878,7 +53710,7 @@
               ]
             },
             {
-              "offset": 19948,
+              "offset": 20854,
               "names": [
                 "arms",
                 "catalog",
@@ -52891,7 +53723,7 @@
               ]
             },
             {
-              "offset": 20028,
+              "offset": 20934,
               "names": [
                 "arms",
                 "binding",
@@ -52905,7 +53737,7 @@
               ]
             },
             {
-              "offset": 20066,
+              "offset": 20972,
               "names": [
                 "arms",
                 "binding",
@@ -52917,7 +53749,7 @@
               ]
             },
             {
-              "offset": 20155,
+              "offset": 21061,
               "names": [
                 "binding",
                 "catalog",
@@ -52928,7 +53760,7 @@
               ]
             },
             {
-              "offset": 20262,
+              "offset": 21168,
               "names": [
                 "binding",
                 "catalog",
@@ -52940,7 +53772,7 @@
               ]
             },
             {
-              "offset": 20369,
+              "offset": 21275,
               "names": [
                 "binding",
                 "body",
@@ -52948,7 +53780,7 @@
               ]
             },
             {
-              "offset": 20432,
+              "offset": 21338,
               "names": [
                 "arms",
                 "binding",
@@ -52962,7 +53794,7 @@
               ]
             },
             {
-              "offset": 20496,
+              "offset": 21402,
               "names": [
                 "arms",
                 "catalog",
@@ -52974,7 +53806,7 @@
               ]
             },
             {
-              "offset": 20966,
+              "offset": 21872,
               "names": [
                 "catalog",
                 "current",
@@ -52986,14 +53818,14 @@
               ]
             },
             {
-              "offset": 21068,
+              "offset": 21974,
               "names": [
                 "checked",
                 "token"
               ]
             },
             {
-              "offset": 21479,
+              "offset": 22385,
               "names": [
                 "body",
                 "catalog",
@@ -53009,7 +53841,7 @@
               ]
             },
             {
-              "offset": 21520,
+              "offset": 22426,
               "names": [
                 "body",
                 "catalog",
@@ -53026,7 +53858,7 @@
               ]
             },
             {
-              "offset": 21606,
+              "offset": 22512,
               "names": [
                 "body",
                 "catalog",
@@ -53041,7 +53873,7 @@
               ]
             },
             {
-              "offset": 21645,
+              "offset": 22551,
               "names": [
                 "body",
                 "catalog",
@@ -53056,7 +53888,7 @@
               ]
             },
             {
-              "offset": 21654,
+              "offset": 22560,
               "names": [
                 "body",
                 "bound",
@@ -53072,7 +53904,7 @@
               ]
             },
             {
-              "offset": 21759,
+              "offset": 22665,
               "names": [
                 "catalog",
                 "current",
@@ -53087,7 +53919,7 @@
               ]
             },
             {
-              "offset": 21872,
+              "offset": 22778,
               "names": [
                 "checked",
                 "fields",
@@ -53095,7 +53927,7 @@
               ]
             },
             {
-              "offset": 22305,
+              "offset": 23211,
               "names": [
                 "catalog",
                 "current",
@@ -53105,7 +53937,7 @@
               ]
             },
             {
-              "offset": 22353,
+              "offset": 23259,
               "names": [
                 "catalog",
                 "current",
@@ -53114,7 +53946,7 @@
               ]
             },
             {
-              "offset": 22581,
+              "offset": 23487,
               "names": [
                 "params",
                 "tag",
@@ -53123,7 +53955,7 @@
               ]
             },
             {
-              "offset": 23006,
+              "offset": 23912,
               "names": [
                 "catalog",
                 "current",
@@ -53135,7 +53967,7 @@
               ]
             },
             {
-              "offset": 23115,
+              "offset": 24021,
               "names": [
                 "checked",
                 "token"
@@ -53167,6 +53999,7 @@
               "src/check.matrix_consumed",
               "src/check.matrix_default",
               "src/check.matrix_retained",
+              "src/check.offset",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -53185,6 +54018,7 @@
               "src/literal-matrix.enabled",
               "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
+              "src/literal-matrix.retoken",
               "src/patterns.branch",
               "src/primitive.output",
               "src/scope.find_level",
@@ -53249,8 +54083,8 @@
           "key": "src/check.checked_function",
           "kind": "definition",
           "lines": [
-            336,
-            338
+            347,
+            349
           ],
           "features": [
             "constructors",
@@ -53285,8 +54119,8 @@
           "key": "src/check.function_body",
           "kind": "definition",
           "lines": [
-            340,
-            343
+            351,
+            354
           ],
           "features": [
             "calls",
@@ -53334,7 +54168,7 @@
           ],
           "captures": [
             {
-              "offset": 23748,
+              "offset": 24654,
               "names": [
                 "signature"
               ]
@@ -53364,8 +54198,8 @@
           "key": "src/check.functions",
           "kind": "definition",
           "lines": [
-            345,
-            355
+            356,
+            366
           ],
           "features": [
             "calls",
@@ -53420,7 +54254,7 @@
           ],
           "captures": [
             {
-              "offset": 24372,
+              "offset": 25278,
               "names": [
                 "catalog",
                 "depth",
@@ -53430,7 +54264,7 @@
               ]
             },
             {
-              "offset": 24491,
+              "offset": 25397,
               "names": [
                 "head"
               ]
@@ -53462,8 +54296,8 @@
           "key": "src/check.enum_constructors",
           "kind": "definition",
           "lines": [
-            359,
-            364
+            370,
+            375
           ],
           "features": [
             "calls",
@@ -53521,8 +54355,8 @@
           "key": "src/check.enum_profile",
           "kind": "definition",
           "lines": [
-            366,
-            370
+            377,
+            381
           ],
           "features": [
             "calls",
@@ -53561,7 +54395,7 @@
           ],
           "captures": [
             {
-              "offset": 25264,
+              "offset": 26170,
               "names": [
                 "tail"
               ]
@@ -53589,8 +54423,8 @@
           "key": "src/check.resolved",
           "kind": "definition",
           "lines": [
-            372,
-            375
+            383,
+            386
           ],
           "features": [
             "calls",
@@ -53631,7 +54465,7 @@
           ],
           "captures": [
             {
-              "offset": 25515,
+              "offset": 26421,
               "names": [
                 "types"
               ]
@@ -53657,8 +54491,8 @@
           "key": "src/check.check",
           "kind": "definition",
           "lines": [
-            377,
-            382
+            388,
+            393
           ],
           "features": [
             "calls",
@@ -53706,7 +54540,7 @@
           ],
           "captures": [
             {
-              "offset": 25788,
+              "offset": 26694,
               "names": [
                 "n",
                 "nodes"
@@ -67626,7 +68460,7 @@
     },
     {
       "file": "src/literal-core-LAWS.bend",
-      "sha256": "e4acee6423bb2517612337e31875db08d2eea917c7ceca69fa6d93e66dad447e",
+      "sha256": "55d9d0ee01a0903be4b1f67981cfb553e371b7d534feb155d1795c2e6e11e8fd",
       "imports": [
         {
           "module": "Base",
@@ -67657,6 +68491,12 @@
           "alias": "O",
           "file": "src/primitive-op.bend",
           "feature": "imports.local"
+        },
+        {
+          "module": "./literal-offset.bend",
+          "alias": "N",
+          "file": "src/literal-offset.bend",
+          "feature": "imports.local"
         }
       ],
       "features": [
@@ -67666,6 +68506,7 @@
         "equality",
         "fields",
         "generics",
+        "higher-order",
         "imports.base",
         "imports.local",
         "laws",
@@ -67673,20 +68514,119 @@
         "literals.nat",
         "literals.string",
         "literals.u32",
+        "matches",
+        "patterns.variable",
         "quantities.affine",
         "quantities.arguments",
         "quantities.reusable",
+        "recursion",
         "types.base"
       ],
       "declarations": [
+        {
+          "id": "src/literal-core-LAWS.bend::cells:definition",
+          "name": "cells",
+          "key": "src/literal-core-LAWS.cells",
+          "kind": "definition",
+          "lines": [
+            10,
+            13
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.nat",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nat",
+            "Nil",
+            "Succ",
+            "U32",
+            "Zero",
+            "src/eval.Object",
+            "src/eval.Value",
+            "src/literal-core-LAWS.cells"
+          ],
+          "type_references": [
+            "Nat",
+            "U32",
+            "src/eval.Value"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/literal-core-LAWS.cells"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "Succ",
+              "Zero",
+              "src/eval.Object"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-core-LAWS.bend::steps:definition",
+          "name": "steps",
+          "key": "src/literal-core-LAWS.steps",
+          "kind": "definition",
+          "lines": [
+            15,
+            18
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.nat",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Nat",
+            "Nat.add",
+            "Succ",
+            "Zero",
+            "src/literal-core-LAWS.steps"
+          ],
+          "type_references": [
+            "Nat"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Nat.add",
+              "src/literal-core-LAWS.steps"
+            ],
+            "types": [
+              "Succ",
+              "Zero"
+            ],
+            "dynamic_calls": []
+          }
+        },
         {
           "id": "src/literal-core-LAWS.bend::natural_literal:law",
           "name": "natural_literal",
           "key": "src/literal-core-LAWS.natural_literal",
           "kind": "law",
           "lines": [
-            7,
-            13
+            20,
+            26
           ],
           "features": [
             "calls",
@@ -67744,8 +68684,8 @@
           "key": "src/literal-core-LAWS.natural_cell",
           "kind": "law",
           "lines": [
-            15,
-            20
+            28,
+            33
           ],
           "features": [
             "calls",
@@ -67800,8 +68740,8 @@
           "key": "src/literal-core-LAWS.natural_offset",
           "kind": "law",
           "lines": [
-            24,
-            32
+            37,
+            45
           ],
           "features": [
             "calls",
@@ -67852,13 +68792,85 @@
           }
         },
         {
+          "id": "src/literal-core-LAWS.bend::offset_cells:law",
+          "name": "offset_cells",
+          "key": "src/literal-core-LAWS.offset_cells",
+          "kind": "law",
+          "lines": [
+            50,
+            65
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "higher-order",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nat",
+            "Nat.add",
+            "Nil",
+            "Result",
+            "U32",
+            "src/core.Book",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/eval.Entry",
+            "src/eval.Evaluate",
+            "src/eval.Frame",
+            "src/eval.Return",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/literal-core-LAWS.cells",
+            "src/literal-core-LAWS.steps",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Nat.add",
+            "Result",
+            "U32",
+            "src/core.Term",
+            "src/eval.Entry",
+            "src/eval.Frame",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/literal-core-LAWS.cells",
+            "src/literal-core-LAWS.steps",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-core-LAWS.bend::intrinsic_arguments:law",
           "name": "intrinsic_arguments",
           "key": "src/literal-core-LAWS.intrinsic_arguments",
           "kind": "law",
           "lines": [
-            34,
-            41
+            67,
+            74
           ],
           "features": [
             "calls",
@@ -67920,8 +68932,8 @@
           "key": "src/literal-core-LAWS.default_selection",
           "kind": "law",
           "lines": [
-            43,
-            47
+            76,
+            80
           ],
           "features": [
             "calls",
@@ -67968,8 +68980,8 @@
           "key": "src/literal-core-LAWS.default_scope",
           "kind": "law",
           "lines": [
-            49,
-            54
+            82,
+            87
           ],
           "features": [
             "calls",
@@ -68022,8 +69034,8 @@
           "key": "src/literal-core-LAWS.text_cell",
           "kind": "law",
           "lines": [
-            56,
-            64
+            89,
+            97
           ],
           "features": [
             "calls",
@@ -68078,8 +69090,8 @@
           "key": "src/literal-core-LAWS.primitive_fields_display_as_literals",
           "kind": "law",
           "lines": [
-            66,
-            74
+            99,
+            107
           ],
           "features": [
             "calls",
@@ -68126,7 +69138,7 @@
     },
     {
       "file": "src/literal-core-PROOF.bend",
-      "sha256": "d23a100c0d4d7a3a1006d75cb250e5c022db0e0d91f447c0b2eebbca74251c9f",
+      "sha256": "6cba64aad59e4bfa4aaf2ce78ef7716a6e17adfb6b50d22a3b0a5019e96bdba0",
       "imports": [
         {
           "module": "Base",
@@ -68141,6 +69153,18 @@
           "feature": "imports.local"
         },
         {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
           "module": "./eval.bend",
           "alias": "E",
           "file": "src/eval.bend",
@@ -68149,13 +69173,18 @@
       ],
       "features": [
         "calls",
+        "calls.variable",
+        "captures",
         "constructors",
         "dependent",
         "equality",
         "fields",
         "generics",
+        "higher-order",
         "imports.base",
         "imports.local",
+        "lambdas",
+        "literals.list",
         "literals.nat",
         "literals.string",
         "literals.u32",
@@ -68165,6 +69194,8 @@
         "quantities.affine",
         "quantities.arguments",
         "quantities.reusable",
+        "recursion",
+        "rewrites",
         "types.base"
       ],
       "declarations": [
@@ -68174,8 +69205,8 @@
           "key": "src/literal-core-LAWS.natural_literal",
           "kind": "law_fill",
           "lines": [
-            5,
-            5
+            7,
+            7
           ],
           "features": [
             "calls",
@@ -68233,8 +69264,8 @@
           "key": "src/literal-core-LAWS.natural_cell",
           "kind": "law_fill",
           "lines": [
-            6,
-            6
+            8,
+            8
           ],
           "features": [
             "calls",
@@ -68288,8 +69319,8 @@
           "key": "src/literal-core-LAWS.natural_offset",
           "kind": "law_fill",
           "lines": [
-            7,
-            7
+            9,
+            9
           ],
           "features": [
             "calls",
@@ -68339,13 +69370,127 @@
           }
         },
         {
+          "id": "src/literal-core-PROOF.bend::L.offset_cells:law_fill",
+          "name": "L.offset_cells",
+          "key": "src/literal-core-LAWS.offset_cells",
+          "kind": "law_fill",
+          "lines": [
+            10,
+            16
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "literals.list",
+            "literals.nat",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "rewrites",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nat",
+            "Nat.add",
+            "Nil",
+            "Result",
+            "Succ",
+            "U32",
+            "Zero",
+            "src/core.Book",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/eval.Entry",
+            "src/eval.Evaluate",
+            "src/eval.Field",
+            "src/eval.Frame",
+            "src/eval.Object",
+            "src/eval.Return",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/literal-core-LAWS.cells",
+            "src/literal-core-LAWS.offset_cells",
+            "src/literal-core-LAWS.steps",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Nat.add",
+            "Result",
+            "U32",
+            "src/core.Term",
+            "src/eval.Entry",
+            "src/eval.Frame",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/literal-core-LAWS.cells",
+            "src/literal-core-LAWS.steps",
+            "src/literal-offset.successors",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 394,
+              "names": [
+                "frames",
+                "id",
+                "m",
+                "p",
+                "tag",
+                "v"
+              ]
+            },
+            {
+              "offset": 395,
+              "names": [
+                "_",
+                "frames",
+                "id",
+                "m",
+                "p",
+                "tag",
+                "v"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [
+              "Succ",
+              "Zero"
+            ],
+            "dynamic_calls": [
+              "ev"
+            ]
+          }
+        },
+        {
           "id": "src/literal-core-PROOF.bend::L.intrinsic_arguments:law_fill",
           "name": "L.intrinsic_arguments",
           "key": "src/literal-core-LAWS.intrinsic_arguments",
           "kind": "law_fill",
           "lines": [
-            8,
-            8
+            17,
+            17
           ],
           "features": [
             "calls",
@@ -68406,8 +69551,8 @@
           "key": "src/literal-core-LAWS.default_selection",
           "kind": "law_fill",
           "lines": [
-            9,
-            9
+            18,
+            18
           ],
           "features": [
             "calls",
@@ -68454,8 +69599,8 @@
           "key": "src/literal-core-LAWS.default_scope",
           "kind": "law_fill",
           "lines": [
-            10,
-            13
+            19,
+            22
           ],
           "features": [
             "calls",
@@ -68514,8 +69659,8 @@
           "key": "src/literal-core-LAWS.text_cell",
           "kind": "law_fill",
           "lines": [
-            14,
-            14
+            23,
+            23
           ],
           "features": [
             "calls",
@@ -68569,8 +69714,8 @@
           "key": "src/literal-core-LAWS.primitive_fields_display_as_literals",
           "kind": "law_fill",
           "lines": [
-            15,
-            15
+            24,
+            24
           ],
           "features": [
             "calls",
@@ -73433,6 +74578,110 @@
             ],
             "types": [
               "U32"
+            ],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/literal-offset.bend",
+      "sha256": "929583dad4ec38756dbcb7ed585190952359d9ae97cb33ddb1b0bfebd97894aa",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "calls",
+        "constructors",
+        "fields",
+        "generics",
+        "imports.base",
+        "imports.local",
+        "literals.list",
+        "literals.nat",
+        "matches",
+        "patterns.variable",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.reusable",
+        "recursion",
+        "types.base"
+      ],
+      "declarations": [
+        {
+          "id": "src/literal-offset.bend::successors:definition",
+          "name": "successors",
+          "key": "src/literal-offset.successors",
+          "kind": "definition",
+          "lines": [
+            6,
+            9
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.nat",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nat",
+            "Nil",
+            "Succ",
+            "U32",
+            "Zero",
+            "src/core.Construct",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/literal-offset.successors",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "U32",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/literal-offset.successors"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "Succ",
+              "Zero",
+              "src/core.Construct"
             ],
             "dynamic_calls": []
           }

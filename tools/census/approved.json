@@ -950,10 +950,27 @@
         {
           "module": "./literal-matrix.bend",
           "file": "src/literal-matrix.bend"
+        },
+        {
+          "module": "./literal-offset.bend",
+          "file": "src/literal-offset.bend"
         }
       ],
       "declarations": {
         "src/check-LAWS.bend::empty_sequence_preserves_uses:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-LAWS.bend::single_argument_keeps_uses:law": [
           "calls",
           "constructors",
           "dependent",
@@ -1169,6 +1186,44 @@
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
+        ],
+        "src/check-LAWS.bend::nat:definition": [
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.string",
+          "literals.u32"
+        ],
+        "src/check-LAWS.bend::offset_lowering:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-LAWS.bend::offset_bound:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
         ]
       }
     },
@@ -1185,6 +1240,34 @@
         {
           "module": "./check-LAWS.bend",
           "file": "src/check-LAWS.bend"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./scope.bend",
+          "file": "src/scope.bend"
+        },
+        {
+          "module": "./check.bend",
+          "file": "src/check.bend"
+        },
+        {
+          "module": "./catalog.bend",
+          "file": "src/catalog.bend"
+        },
+        {
+          "module": "./literal-matrix.bend",
+          "file": "src/literal-matrix.bend"
+        },
+        {
+          "module": "./literal-offset.bend",
+          "file": "src/literal-offset.bend"
         }
       ],
       "declarations": {
@@ -1199,6 +1282,25 @@
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-PROOF.bend::L.single_argument_keeps_uses:law_fill": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "rewrites",
           "types.base"
         ],
         "src/check-PROOF.bend::L.repeated_affine_level:law_fill": [
@@ -1398,6 +1500,44 @@
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
+        ],
+        "src/check-PROOF.bend::L.offset_lowering:law_fill": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "rewrites",
+          "types.base"
+        ],
+        "src/check-PROOF.bend::L.offset_bound:law_fill": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "rewrites",
+          "types.base"
         ]
       }
     },
@@ -1442,6 +1582,10 @@
         {
           "module": "./literal-matrix.bend",
           "file": "src/literal-matrix.bend"
+        },
+        {
+          "module": "./literal-offset.bend",
+          "file": "src/literal-offset.bend"
         }
       ],
       "declarations": {
@@ -1904,6 +2048,22 @@
           "patterns.variable",
           "quantities.affine",
           "quantities.arguments",
+          "types.base"
+        ],
+        "src/check.bend::offset:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
           "types.base"
         ],
         "src/check.bend::annotated:definition": [
@@ -12557,9 +12717,37 @@
         {
           "module": "./primitive-op.bend",
           "file": "src/primitive-op.bend"
+        },
+        {
+          "module": "./literal-offset.bend",
+          "file": "src/literal-offset.bend"
         }
       ],
       "declarations": {
+        "src/literal-core-LAWS.bend::cells:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.list",
+          "literals.nat",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/literal-core-LAWS.bend::steps:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.nat",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "recursion",
+          "types.base"
+        ],
         "src/literal-core-LAWS.bend::natural_literal:law": [
           "calls",
           "constructors",
@@ -12598,6 +12786,22 @@
           "laws",
           "literals.list",
           "literals.nat",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/literal-core-LAWS.bend::offset_cells:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "higher-order",
+          "laws",
+          "literals.list",
           "literals.u32",
           "quantities.affine",
           "quantities.arguments",
@@ -12686,6 +12890,14 @@
           "file": "src/literal-core-LAWS.bend"
         },
         {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
           "module": "./eval.bend",
           "file": "src/eval.bend"
         }
@@ -12731,6 +12943,30 @@
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
+          "types.base"
+        ],
+        "src/literal-core-PROOF.bend::L.offset_cells:law_fill": [
+          "calls",
+          "calls.variable",
+          "captures",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "rewrites",
           "types.base"
         ],
         "src/literal-core-PROOF.bend::L.intrinsic_arguments:law_fill": [
@@ -16264,6 +16500,39 @@
           "lambdas",
           "quantities.affine",
           "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/literal-offset.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        }
+      ],
+      "declarations": {
+        "src/literal-offset.bend::successors:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.nat",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
           "types.base"
         ]
       }

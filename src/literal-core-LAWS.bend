@@ -3,6 +3,19 @@ import ./syntax.bend as S
 import ./core.bend as C
 import ./eval.bend as E
 import ./primitive-op.bend as O
+import ./literal-offset.bend as N
+
+# Specification of the offset laws: k unary constructors around a value, and the
+# transitions that build them. The compiler uses neither.
+def cells(k: Nat, +id: U32, +tag: U32, value: E.Value) -> E.Value:
+  match k:
+    case 0n: value
+    case 1n+p: E.Object{id,tag,[cells(p,id,tag,value)]}
+
+def steps(k: Nat, c: Nat, m: Nat) -> Nat:
+  match k:
+    case 0n: Nat.add(c,m)
+    case 1n+p: 1n+1n+steps(p,c,1n+1n+m)
 
 law natural_literal:
   for token: S.Token
@@ -30,6 +43,26 @@ law natural_offset:
   {E.run(9n,E.Evaluate{C.Construct{token,id,1,[C.Parameter{field,1,id}],
       [C.Construct{token,id,1,[C.Parameter{field,1,id}],[C.Reference{tail,0,id}]}]},[E.Entry{0,value}],Nil{}},C.Book{Nil{},Nil{}}) ==
     E.run(3n,E.Natural{id,2,value,Nil{}},C.Book{Nil{},Nil{}}) : Result<S.Error,E.Value>}
+
+# For every k and every tail term with a known value (ev: it returns v in c
+# transitions under any frames and fuel), k successors around it return k cells
+# around v in 4k+c transitions. Ground instance k=2, c=1: natural_offset.
+law offset_cells:
+  for k: Nat
+  for +id: U32
+  for +tag: U32
+  for +token: S.Token
+  for +field: S.Token
+  for +term: C.Term
+  for +env: List<&2,E.Entry>
+  for +v: E.Value
+  for +c: Nat
+  for ev: @fr: List<&2,E.Frame> -> @m: Nat ->
+    {E.run(m,E.Return{v,fr},C.Book{Nil{},Nil{}}) == E.run(Nat.add(c,m),E.Evaluate{term,env,fr},C.Book{Nil{},Nil{}}) : Result<S.Error,E.Value>}
+  for m: Nat
+  for +frames: List<&2,E.Frame>
+  {E.run(m,E.Return{cells(k,id,tag,v),frames},C.Book{Nil{},Nil{}}) ==
+    E.run(steps(k,c,m),E.Evaluate{N.successors(k,term,token,id,tag,[C.Parameter{field,1,id}]),env,frames},C.Book{Nil{},Nil{}}) : Result<S.Error,E.Value>}
 
 law intrinsic_arguments:
   for token: S.Token

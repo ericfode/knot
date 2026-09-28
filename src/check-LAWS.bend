@@ -5,6 +5,7 @@ import ./scope.bend as E
 import ./check.bend as K
 import ./literal-check.bend as L
 import ./literal-matrix.bend as M
+import ./literal-offset.bend as N
 
 # These are helper/boundary laws. They are not a checker soundness theorem.
 law empty_sequence_preserves_uses:
@@ -13,6 +14,13 @@ law empty_sequence_preserves_uses:
   {E.sequential(Nil{},uses,token)
    == Done{uses}
    : Result<S.Error,List<&2,U32>>}
+
+# A constructor of one argument keeps that argument's uses: what `offset` relies on
+# when it wraps the tail without sequencing it against nothing.
+law single_argument_keeps_uses:
+  for +uses: List<&2,U32>
+  for token: S.Token
+  {Done{uses} == E.sequential(uses,Nil{},token) : Result<S.Error,List<&2,U32>>}
 
 law repeated_affine_level:
   for +token: S.Token
@@ -110,3 +118,41 @@ law offset_spelling:
    == Done{C.Checked{C.Construct{M.retoken("Succ",token),0,1,[C.Parameter{S.Token{"pred",S.At{0,0,0,0}},1,0}],
         [C.Construct{M.retoken("Succ",token),0,1,[C.Parameter{S.Token{"pred",S.At{0,0,0,0}},1,0}],
           [C.Value{S.Token{"Zero",S.At{0,0,0,0}},0,0}]}]},0,Nil{}}} : Result<S.Error,C.Checked>}
+
+# The installed Nat, Zero and Succ{pred: Nat}, as the loader registers it.
+def nat() -> C.Catalog:
+  C.Catalog{[C.Datatype{S.Token{"Nat",S.At{0,0,0,0}},True{},[C.Constructor{S.Token{"Zero",S.At{0,0,0,0}},Nil{}},
+    C.Constructor{S.Token{"Succ",S.At{0,0,0,0}},[C.Parameter{S.Token{"pred",S.At{0,0,0,0}},1,0}]}]}],Nil{}}
+
+# For every count up to the bound, an expression offset checks its tail once and
+# wraps it in k = to_nat(count) Succ constructors that keep the tail's uses.
+# Ground instance k=2: offset_spelling. The wrapped term is the one offset_cells
+# evaluates.
+law offset_lowering:
+  for +token: S.Token
+  for +count: U32
+  for +tail: S.Node
+  for current: U32
+  for scope: E.Scope
+  for n: Nat
+  for +term: C.Term
+  for uses: List<&2,U32>
+  for bounded: {False{} == U32.is_gt(count,4096) : Bool}
+  for tailed: {Done{C.Checked{term,0,uses}} == K.run(n,K.Expression{M.literal(tail),Some{0}},nat(),current,scope) : Result<S.Error,C.Checked>}
+  {K.run(1n+n,K.Expression{S.Offset{token,count,tail},Some{0}},nat(),current,scope)
+   == Done{C.Checked{N.successors(U32.to_nat(count),term,M.retoken("Succ",token),0,1,[C.Parameter{S.Token{"pred",S.At{0,0,0,0}},1,0}]),0,uses}} : Result<S.Error,C.Checked>}
+
+# Past the bound the count is Exhausted check at the offset: its core is never built.
+law offset_bound:
+  for +token: S.Token
+  for +count: U32
+  for +tail: S.Node
+  for current: U32
+  for scope: E.Scope
+  for n: Nat
+  for +term: C.Term
+  for uses: List<&2,U32>
+  for beyond: {True{} == U32.is_gt(count,4096) : Bool}
+  for tailed: {Done{C.Checked{term,0,uses}} == K.run(n,K.Expression{M.literal(tail),Some{0}},nat(),current,scope) : Result<S.Error,C.Checked>}
+  {K.run(1n+n,K.Expression{S.Offset{token,count,tail},Some{0}},nat(),current,scope)
+   == Fail{S.Exhausted{"check",S.at(token)}} : Result<S.Error,C.Checked>}

@@ -418,9 +418,24 @@ must touch its literal (`1n+p`); a separated `+` is operator sugar,
 parsed offset always spells a successor. An expression offset checks as that
 spelling, the matrix's own expansion: `kn+t` is k Succ constructors around the
 shared tail, as the seed builds it, so recursion through `1n+f(p)` allocates
-linearly in its depth. Each successor takes three levels of the 4096-deep
-checker budget; an expression offset above 1364 (less when nested deeper)
-is `Exhausted check`.
+linearly in its depth. The checker checks the tail once and wraps it in
+k = `U32.to_nat` of the count Succ constructors with one Nat-indexed builder
+(`literal-offset.bend::successors`), so a successor takes no checker level. The
+count sizes the core, so above 4096 it is `Exhausted check`; the seed answers Yes
+there. Compilation stops earlier: the emitter takes two of its 4096 levels for
+each successor, so an offset above 2047 (less inside a deeper expression) is
+`Exhausted emit`, and the checker CLI's core display is `Exhausted inspect`; it
+still evaluates up to 4096. These are resource bounds, never rejections. Until
+review round 9 the checker took three levels per successor and stopped at 1364.
+The construction is proved for every count, not only k = 2:
+`literal-core-LAWS.bend::offset_cells` (by induction on k, k successors around
+any tail with a known value return k cells around it, in 4k+c transitions),
+`check-LAWS.bend::offset_lowering` (for every count up to 4096 and every tail,
+the checker returns `successors(to_nat(count), t)` with t's uses) and
+`offset_bound` (above 4096, `Exhausted check`). Their k = 2 ground instances,
+`natural_offset` and `offset_spelling`, stay as witnesses. Outside the laws:
+`U32.to_nat` as Base's reading of the count, and the linear-allocation claim,
+which the frozen depth books measure.
 Literals and Nat offsets check against
 a known type, as bare constructors do: an unannotated binding (`n = 3`,
 `n = 2n+m`) is `Invalid check annotation-required`, a literal or offset
@@ -496,9 +511,10 @@ builder as runs of at most 4,096 bytes (`machine-code.bend::runs`, inverted by
 `List.append`, so the run width, not the module size, bounds that stack depth,
 and both compiler lanes build identical modules up to the instruction bound.
 
-Three complete new proof entries check 35 helper laws. They cover the required
+Three complete new proof entries check 36 helper laws. They cover the required
 arithmetic guard equations, String traversal order and length, literal
-decoding and display round trips, section runs, core transitions and matrix
+decoding and display round trips, section runs, core transitions (including
+the successor chain of an expression offset for every k) and matrix
 expansion; they
 do not prove whole-compiler correctness or all-input intrinsic refinement. The
 registered literals gate compares the frozen accepted calls in both evaluator
