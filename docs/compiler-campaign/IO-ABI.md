@@ -202,35 +202,48 @@ and its `expectations.json`, fixed before the host changed. D17 adds exactly:
   answers 0 at once. Every other existing component must equal an actual
   directory entry byte for byte, so a case alias answers 0 on a
   case-insensitive volume. ENOENT and ENOTDIR answer 1 at once: a missing path
-  is left to `File.open`. Success is errno 0 with value 0 or 1 and an empty
-  range; 0 is an answer, not `Invalid`. Identity never follows a link, opens a
-  file or reads contents, so FIFOs, hardlinks and special files answer 1 and
-  `open` still refuses them.
+  is left to `File.open`. A component is `lstat`ed before its parent is
+  listed, so an existing component under a search-only parent (mode 0100)
+  fails with 13. Success is errno 0 with value 0 or 1 and an empty range; 0
+  is an answer, not `Invalid`. Identity never follows a link, opens a file or
+  reads contents, so FIFOs, hardlinks and special files answer 1 and `open`
+  still refuses them.
 - **`exhausted(3)`** is frame-region exhaustion: `Exhausted io frames`, exit 4.
 
 Precedence for `path_identity`: result range, then strict UTF-8 (`abi`), then
 NUL (errno 92, value 0), then path policy, then the walk. Its error surface is
-92 and 63 (`File name too long`, the witnessed `lstat` failure); any other OS
-failure is `HostFailure io os`. The `open` surface is unchanged. Policy is
-lexical: `.env`/`.env.*` in any spelling is refused as for `open`; a relative
-spelling may use `..` inside the root but never above it; an absolute
-spelling must begin with the canonical root (native realpath, which restores
-on-disk case) and is then walked from it. Anything else is `HostFailure io
-sandbox`. This bounds where the host looks; it does not redefine identity.
+92, 63 (`File name too long`, the witnessed `lstat` failure) and 13
+(`Permission denied`, the witnessed listing failure); any other OS failure is
+`HostFailure io os`. The `open` surface is unchanged. Policy is lexical:
+`.env`/`.env.*` in any spelling is refused as for `open`; a relative spelling
+may use `..` inside the root but never above it; an absolute spelling must
+begin with the canonical root (native realpath, which restores on-disk case).
+Anything else is `HostFailure io sandbox`. Policy only refuses spellings; it
+does not redefine identity. An accepted spelling is walked exactly as the
+foreign bodies walk it: a relative one from the root, an absolute one from `/`
+through every ancestor of the root. The walk therefore reads the metadata and
+directory listings of those ancestors, outside the root, but never follows a
+link or opens a file. An unlistable ancestor fails an absolute spelling with
+13, while the same file spelled relatively answers 1, as in both foreign
+bodies.
 
 Gate `io-abi-2` runs three independent lanes before the host lane. The two
-unmodified foreign bodies reproduce all 26 identity literals (52
-observations). The pinned seed's `File.read_bytes`/`File.read` reproduce
+unmodified foreign bodies reproduce all 32 identity literals (64
+observations), six of them on trees with a search-only (mode 0100) ancestor or
+subdirectory. The pinned seed's `File.read_bytes`/`File.read` reproduce
 errno and bytes of all 11 byte fixtures in the interpreter, native and JS
 lanes, via
 [`read-bytes.bend`](../../tests/compiler-io-abi-2/read-bytes.bend); only the
 documented Bun stack bound excuses the two Bun lanes on the 65,537-byte
-fixture. Then the Wasm host must equal the literals (37 fixtures, 21 read
+fixture. Then the Wasm host must equal the literals (43 fixtures, 21 read
 observations), equal both foreign bodies on 153 generated spellings, meet 25
-boundary controls, and kill four mutants: decoding raw reads, accepting
-symlinks, ignoring directory-entry case and reporting frames as steps. The
-case mutant needs a case-insensitive volume; elsewhere it is recorded
-unavailable, never killed. No VM, image or Knot evaluator lane exists yet.
+boundary controls, and kill five mutants: decoding raw reads, accepting
+symlinks, ignoring directory-entry case, reporting frames as steps and walking
+an absolute spelling from the root instead of `/`. The case mutant needs a
+case-insensitive volume, and the unlistable fixtures and ancestor mutant need
+mode 0100 to refuse listing (not so for root); elsewhere they are recorded
+unavailable, never passed or killed. No VM, image or Knot evaluator lane
+exists yet.
 
 ## Guest execution under D14
 

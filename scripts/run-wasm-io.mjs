@@ -15,9 +15,10 @@ const errors = Object.freeze({
   ENOTDIR: [20, 'Not a directory'], EISDIR: [21, 'Is a directory'],
   EINVAL: [22, 'Invalid argument'], EILSEQ: [92, 'Illegal byte sequence'],
 });
-// Identity fails only on NUL and on the length error its foreign bodies witness.
+// Identity fails only on NUL and on the length and listing errors its foreign bodies witness.
 const identityErrors = Object.freeze({
-  EILSEQ: errors.EILSEQ, ENAMETOOLONG: [63, 'File name too long'],
+  EACCES: [13, 'Permission denied'], EILSEQ: errors.EILSEQ,
+  ENAMETOOLONG: [63, 'File name too long'],
 });
 const MAX_MEMORY = 128 * 1024 * 1024;
 const MAX_TRANSFER = 16 * 1024 * 1024;
@@ -183,19 +184,18 @@ export async function runIO({modulePath, sandbox, args = []}) {
     return root + '/' + name;
   }
   // Identity may spell the canonical root absolutely and step back to it, never above it.
+  // Policy only refuses spellings: an absolute one is walked from '/', through the root's ancestors.
   function rooted(name) {
     const parts = name.split('/').filter(p => p && p !== '.');
     const base = path.isAbsolute(name) ? root.split('/').filter(Boolean) : [];
-    const rest = parts.slice(base.length);
     let depth = 0;
     if (secret(parts) || base.some((b, i) => parts[i] !== b) ||
-        rest.some(p => (depth += p === '..' ? -1 : 1) < 0)) bad('sandbox', 'path refused');
-    return rest;
+        parts.slice(base.length).some(p => (depth += p === '..' ? -1 : 1) < 0)) bad('sandbox', 'path refused');
+    return path.isAbsolute(name) ? ['/', parts] : [root, parts];
   }
   // The modules loader's foreign `inspect`: in spelling order, every existing
   // component is an exact directory entry and no symlink; a missing one defers to open.
-  function canonical(parts) {
-    let current = root;
+  function canonical(current, parts) {
     for (const part of parts) {
       if (part === '..') { current = path.dirname(current); continue; }
       const next = path.join(current, part);
@@ -308,9 +308,9 @@ export async function runIO({modulePath, sandbox, args = []}) {
       resultRange(out);
       const name = text(p, n);
       if (name.includes('\0')) return fail(out, 'EILSEQ');
-      const parts = rooted(name);
+      const walk = rooted(name);
       let exact;
-      try { exact = canonical(parts); }
+      try { exact = canonical(...walk); }
       catch (error) { return fail(out, error.code, 0, identityErrors); }
       result(out, 0, exact ? 1 : 0);
     },

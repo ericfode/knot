@@ -427,6 +427,8 @@ def mutants(mode):
         'ignore-path-identity': ('if (st.isSymbolicLink()) return false;', 'if (st.isSymbolicLink()) return true;'),
         'ignore-case-identity': ('if (!exact) return false;', 'if (false) return false;'),
         'misclassify-frames': ("if (kind === 3) exhausted('frames');", "if (kind === 3) exhausted('steps');"),
+        'skip-root-ancestors': ("return path.isAbsolute(name) ? ['/', parts] : [root, parts];",
+                                'return [root, parts.slice(base.length)];'),
     }
     rows = []
     for mutant in PLAN['mutants']:

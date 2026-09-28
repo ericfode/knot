@@ -3,11 +3,11 @@
   "status": "pass",
   "profile": "knot-io-2",
   "sources": {
-    "scripts/run-wasm-io.mjs": "b540bc362fc1c8cd889b6468b3ae1b94f5d5da4c54a5cd20c78c16b6743644e4",
+    "scripts/run-wasm-io.mjs": "43b2246bdbd14d3068033466cdd7d17f2771959e0de5fb6cf642797e9c3b75e7",
     "tests/compiler-io/host/invoke.mjs": "94282fff5cc0d8fdf847e7ade9cc356de2a2682e8f877fd4eacd8c7afcd400ec",
-    "tests/compiler-io-abi-2/FIXTURES.md": "cd821fc9b43401f98d2edd2f785d240c4d4f11a70d1e3aced99e56505d6e8382",
-    "tests/compiler-io-abi-2/check.py": "aabf628a9198c8f8fe1a4323507972b2f770ca819e4412a0b1a278584f52803c",
-    "tests/compiler-io-abi-2/expectations.json": "98a52e9ced3d2b377370a8eec492022c4e9835bbd619af61529591703366bb38",
+    "tests/compiler-io-abi-2/FIXTURES.md": "6f214e710d33a76659525006882ec0a975b04bb2dd281c2942c6f7e468532852",
+    "tests/compiler-io-abi-2/check.py": "649980e394f53f7beb27ffc0ce24b8560fb9b93fc2c456a295cf50a08d6f266d",
+    "tests/compiler-io-abi-2/expectations.json": "73fe3bb65077c1846a7afd51b207e9cdc60b8cce1ebded682e9279a378d452dd",
     "tests/compiler-io-abi-2/probe.wat": "761f4198709ab5cd17ab51bd163c1161903dd0bc97598c4e34c19e984e12c97b",
     "tests/compiler-io-abi-2/read-bytes.bend": "51c096fed76a2a9d3f6b4e85b374ccaed3e9a9dc5e5dc2292c77ed8c40a6e253",
     "tests/compiler-io-abi-2/reference/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
@@ -668,6 +668,102 @@
           63,
           0,
           "46696c65206e616d6520746f6f206c6f6e67"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-ancestor-file",
+      "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+      "observations": [
+        [
+          13,
+          0,
+          "5065726d697373696f6e2064656e696564"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-ancestor-root",
+      "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+      "observations": [
+        [
+          13,
+          0,
+          "5065726d697373696f6e2064656e696564"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-ancestor-relative",
+      "wasm_sha256": "2a43a8167e1597788794a44ca678702f06451750cd16fcfd760d0e9f99f969fc",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-directory",
+      "wasm_sha256": "ced2f8696d79953a5337d63e6fc2b6b24a23c2d58f49506bd4f30ed6bb0101cb",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-directory-entry",
+      "wasm_sha256": "1af2407ebdc489b44718e1039fff69fd5603661a67bf7ee03a9e70a85a348dc9",
+      "observations": [
+        [
+          13,
+          0,
+          "5065726d697373696f6e2064656e696564"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-directory-missing",
+      "wasm_sha256": "495706d8202a51a45570e91c688064d4fcaa77806dd87fa8345df7da10f78219",
+      "observations": [
+        [
+          0,
+          1,
+          ""
         ]
       ],
       "outcome": {
@@ -2050,7 +2146,7 @@
       "name": "decode-raw-bytes",
       "witness": "binary",
       "killed": true,
-      "host_sha256": "fa924686f1436b1ea508b22d45f7c40147620ba249b78c4fd64101ee92f1830a",
+      "host_sha256": "5203ea64a2dc55d697b183267b16e8f80a64599fdebe72a7fc199b32d8545d00",
       "observation": {
         "name": "binary",
         "wasm_sha256": "c621b7812f5f9ff46bd0b5e612d424cc46f210b6aeb9bd2be2b8697d3f854d98",
@@ -2071,7 +2167,7 @@
       "name": "ignore-path-identity",
       "witness": "symlink-file",
       "killed": true,
-      "host_sha256": "4b13fa4277f3e74b73201cb78611506b335aa4bd4777f212edc953d46f503a8f",
+      "host_sha256": "59dbbfe4eadc717c209abc0a5dec43a7bea08e910126f155619e827f01267176",
       "observation": {
         "name": "symlink-file",
         "wasm_sha256": "669fdffe3211c1437ff3ca5a93b002000657d6262b4c85f7c41cd85f44f4a15a",
@@ -2092,7 +2188,7 @@
       "name": "ignore-case-identity",
       "witness": "case-file",
       "killed": true,
-      "host_sha256": "b2747decb634be403593a983dc742bc984f8408934184e20ed39a28ee5c36a42",
+      "host_sha256": "a128f9308c3ed44dce33afae6c604f33fdc7658c2f8ce2c3c889b7104d5aed27",
       "observation": {
         "name": "case-file",
         "wasm_sha256": "d1e239861e1caa63b73b078b820ec7f66ec1754cf8086b7a37e92885f10e3557",
@@ -2113,7 +2209,7 @@
       "name": "misclassify-frames",
       "witness": "frame-exhaustion",
       "killed": true,
-      "host_sha256": "3c3967969522ac114d8912239591631a732e5bbbf1b9f4575204ada911698c2c",
+      "host_sha256": "4ac191ce32ee99bffab19a6154fe864b41b58a89b37dd192c83356883a728942",
       "observation": {
         "name": "frame-exhaustion",
         "wasm_sha256": "d961a0006443c58dad85ba713b5b9df0928d8e88ebbd9e065273ad15ae20e6b7",
@@ -2125,14 +2221,36 @@
         "stdout": "",
         "stderr": "Exhausted\tio\tsteps\n"
       }
+    },
+    {
+      "name": "skip-root-ancestors",
+      "witness": "unlistable-ancestor-file",
+      "killed": true,
+      "host_sha256": "d1253984cf4930af6b57772d193677941dba64dc907802851d1fd3d0a48c3a21",
+      "observation": {
+        "name": "unlistable-ancestor-file",
+        "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+        "observations": [
+          [
+            0,
+            1,
+            ""
+          ]
+        ],
+        "outcome": {
+          "status": "Completed",
+          "exit": 0
+        }
+      }
     }
   ],
   "read_observations": 21,
-  "reference_observations": 52,
+  "reference_observations": 64,
   "case_mode": "insensitive",
+  "seal_mode": "enforced",
   "seed_observations": 61,
   "seed_exhausted": 2,
-  "mutants_killed": 4,
+  "mutants_killed": 5,
   "style": {
     "changed_bend_targets": 12,
     "structural_blockers": 0,
