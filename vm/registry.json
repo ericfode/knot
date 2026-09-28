@@ -1,0 +1,696 @@
+{
+ "schema": "knot-image-1 registry",
+ "note": "Prim ids 0..38 are derived mechanically from the literals snapshot (check-spec.py re-derives them). 39 and 40 are reserved: vm-prims supplies their seed witnesses before any image may use them. Foreign rows name hash-pinned declarations; a familiar spelling is not an authorization.",
+ "base": {
+  "path": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+  "sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+ },
+ "derived_from": {
+  "commit": "2ea222e7a832445a764f6ab1852b85aeaad11820",
+  "files": {
+   "src/primitive-op.bend": "1d4df1e7ad163619b61f5d62082c3681e0b95e3e6e56b27b001194a7f0ddde76",
+   "src/primitive.bend": "c8accc564240eeb0efe3acbf4ec27b245b4e50fb391369b00599ed6bce7e8cca"
+  }
+ },
+ "representations": [
+  "Nat",
+  "U32",
+  "Char",
+  "String",
+  "Bool",
+  "Cmp",
+  "Unit",
+  "List",
+  "Result",
+  "Sigma",
+  "IO.OP",
+  "File"
+ ],
+ "prims": [
+  {
+   "id": 0,
+   "op": "WAdd",
+   "name": "U32.add",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 1,
+   "op": "WSub",
+   "name": "U32.sub",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 2,
+   "op": "WMul",
+   "name": "U32.mul",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 3,
+   "op": "WDiv",
+   "name": "U32.div",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    2
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 4,
+   "op": "WRem",
+   "name": "U32.mod",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    2
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 5,
+   "op": "WNot",
+   "name": "U32.not",
+   "inputs": [
+    "U32"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 6,
+   "op": "WAnd",
+   "name": "U32.and",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 7,
+   "op": "WCmp",
+   "name": "U32.cmp",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Cmp"
+  },
+  {
+   "id": 8,
+   "op": "WEq",
+   "name": "U32.is_eq",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 9,
+   "op": "WNe",
+   "name": "U32.is_ne",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 10,
+   "op": "WLt",
+   "name": "U32.is_lt",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 11,
+   "op": "WLe",
+   "name": "U32.is_le",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 12,
+   "op": "WGt",
+   "name": "U32.is_gt",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 13,
+   "op": "WGe",
+   "name": "U32.is_ge",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 14,
+   "op": "WShl",
+   "name": "U32.shln",
+   "inputs": [
+    "U32",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 15,
+   "op": "WShr",
+   "name": "U32.shrn",
+   "inputs": [
+    "U32",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 16,
+   "op": "ToNat",
+   "name": "U32.to_nat",
+   "inputs": [
+    "U32"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "Nat"
+  },
+  {
+   "id": 17,
+   "op": "FromNat",
+   "name": "U32.from_nat",
+   "inputs": [
+    "Nat"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 18,
+   "op": "FromCode",
+   "name": "Char.from_u32",
+   "inputs": [
+    "U32"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "Char"
+  },
+  {
+   "id": 19,
+   "op": "ToCode",
+   "name": "Char.to_u32",
+   "inputs": [
+    "Char"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "U32"
+  },
+  {
+   "id": 20,
+   "op": "CEq",
+   "name": "Char.is_eq",
+   "inputs": [
+    "Char",
+    "Char"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 21,
+   "op": "CSpace",
+   "name": "Char.is_space",
+   "inputs": [
+    "Char"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 22,
+   "op": "NAdd",
+   "name": "Nat.add",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Nat"
+  },
+  {
+   "id": 23,
+   "op": "NSub",
+   "name": "Nat.sub",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Nat"
+  },
+  {
+   "id": 24,
+   "op": "NMul",
+   "name": "Nat.mul",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    2
+   ],
+   "output": "Nat"
+  },
+  {
+   "id": 25,
+   "op": "NCmp",
+   "name": "Nat.cmp",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Cmp"
+  },
+  {
+   "id": 26,
+   "op": "NEq",
+   "name": "Nat.is_eq",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 27,
+   "op": "NNe",
+   "name": "Nat.is_ne",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 28,
+   "op": "NLt",
+   "name": "Nat.is_lt",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 29,
+   "op": "NLe",
+   "name": "Nat.is_le",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 30,
+   "op": "NGt",
+   "name": "Nat.is_gt",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 31,
+   "op": "NGe",
+   "name": "Nat.is_ge",
+   "inputs": [
+    "Nat",
+    "Nat"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 32,
+   "op": "WShow",
+   "name": "U32.show",
+   "inputs": [
+    "U32"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "String"
+  },
+  {
+   "id": 33,
+   "op": "NShow",
+   "name": "Nat.show",
+   "inputs": [
+    "Nat"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "String"
+  },
+  {
+   "id": 34,
+   "op": "SEq",
+   "name": "String.eq",
+   "inputs": [
+    "String",
+    "String"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 35,
+   "op": "SAppend",
+   "name": "String.append",
+   "inputs": [
+    "String",
+    "String"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "String"
+  },
+  {
+   "id": 36,
+   "op": "SReverse",
+   "name": "String.reverse",
+   "inputs": [
+    "String"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "String"
+  },
+  {
+   "id": 37,
+   "op": "SLength",
+   "name": "String.length",
+   "inputs": [
+    "String"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "Nat"
+  },
+  {
+   "id": 38,
+   "op": "SEmpty",
+   "name": "String.is_empty",
+   "inputs": [
+    "String"
+   ],
+   "quantities": [
+    1
+   ],
+   "output": "Bool"
+  },
+  {
+   "id": 39,
+   "name": "U32.or",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "U32",
+   "status": "reserved"
+  },
+  {
+   "id": 40,
+   "name": "U32.xor",
+   "inputs": [
+    "U32",
+    "U32"
+   ],
+   "quantities": [
+    1,
+    1
+   ],
+   "output": "U32",
+   "status": "reserved"
+  }
+ ],
+ "foreign": [
+  {
+   "id": 0,
+   "name": "IO.args",
+   "import": "args",
+   "abi": "knot-io-1",
+   "inputs": [],
+   "bodies": {
+    "effs/args.c": "2635223ad1d401b07e1834b9341e3f0be254796f6de1d9a0e800ca59fb3000b4",
+    "effs/args.js": "ed1a7e7b73ae7fe58ac6d428d2762b66f223f4c70a165570fc5d68dc874ddc0b"
+   }
+  },
+  {
+   "id": 1,
+   "name": "IO.print",
+   "import": "print",
+   "abi": "knot-io-1",
+   "inputs": [
+    "String"
+   ],
+   "bodies": {
+    "effs/print.c": "baa246e2f6131f7b33f4be8b444f8a689744287a1f4c56bac1ffb1a9bfb410d7",
+    "effs/print.js": "814ceba4efbaa291b7b6a9ff29aa20e3a23c06eb4fa165c69ee0bd22878adaa9"
+   }
+  },
+  {
+   "id": 2,
+   "name": "File.open",
+   "import": "open",
+   "abi": "knot-io-1",
+   "inputs": [
+    "String",
+    "String"
+   ],
+   "bodies": {
+    "effs/file_open.c": "62d98ea6e21c4aeede4eadae7abac2ff2601e5335a3bd19faa1f74afa514521f",
+    "effs/file_open.js": "dd549f5f05eb896aef9a3a02ffecf2ee902e653f5463be72781edab1cd1180ae"
+   }
+  },
+  {
+   "id": 3,
+   "name": "File.read",
+   "import": "read",
+   "abi": "knot-io-1",
+   "inputs": [
+    "File",
+    "U32"
+   ],
+   "bodies": {
+    "effs/file_read.c": "477ffc5d92c302261c6c46a2f6e32ae0d73ee82b635cc33b9e9f9a46c9b766a8",
+    "effs/file_read.js": "07e65f568689eb8bd90c26f811b9dc102b69c3c6cf8cf5e759379b76f754833b"
+   }
+  },
+  {
+   "id": 4,
+   "name": "File.write_bytes",
+   "import": "write_bytes",
+   "abi": "knot-io-1",
+   "inputs": [
+    "File",
+    "List"
+   ],
+   "bodies": {
+    "effs/file_write.c": "4ffac62a2989139ec520424bc2e1eacb2cef10ef96494af73986f8c628a3ebfa",
+    "effs/file_write.js": "a643df366fdd1aafa2c2d00a16ec50e3f84d1b909c22f9ccefa2dcb5cd314506"
+   }
+  },
+  {
+   "id": 5,
+   "name": "File.close",
+   "import": "close",
+   "abi": "knot-io-1",
+   "inputs": [
+    "File"
+   ],
+   "bodies": {
+    "effs/file_close.c": "08fdd18ef43dff0bc6f7e064eb7ccf7a49f4140c238450f1b5f49ee1a2739dd5",
+    "effs/file_close.js": "2b83f900113776ab875fa3afd29f31000a191fe48645abe78b1d7b34cb12a7fe"
+   }
+  },
+  {
+   "id": 6,
+   "name": "File.read_bytes",
+   "import": "read_bytes",
+   "abi": "knot-io-2",
+   "inputs": [
+    "File",
+    "U32"
+   ],
+   "bodies": {
+    "effs/file_read.c": "477ffc5d92c302261c6c46a2f6e32ae0d73ee82b635cc33b9e9f9a46c9b766a8",
+    "effs/file_read.js": "07e65f568689eb8bd90c26f811b9dc102b69c3c6cf8cf5e759379b76f754833b"
+   }
+  },
+  {
+   "id": 7,
+   "name": "inspect",
+   "import": "path_identity",
+   "abi": "knot-io-2",
+   "inputs": [
+    "String"
+   ],
+   "declaration": {
+    "repository_commit": "0111f13352e0fe8da3332ac68072eef35dbd2de2",
+    "file": "src/path-host.bend",
+    "sha256": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065"
+   },
+   "bodies": {
+    "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
+    "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2"
+   }
+  }
+ ]
+}

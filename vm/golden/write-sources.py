@@ -3,9 +3,10 @@ import json
 out=Path('vm/golden');out.mkdir(exist_ok=True)
 flag='type Flag is Data:\n  Off{}\n  On{}\n\n'
 cases=[]
-def put(name,source,expected,lane='literals',features=()):
+def put(name,source,expected,lane='literals',features=(),seed_lane=None):
  p=out/(name+'.bend');p.write_text(source)
  cases.append(dict(name=name,source=str(p),lane=lane,seed_stdout=expected+'\n',features=list(features)))
+ if seed_lane: cases[-1]['seed_lane']=seed_lane
 def simple(name,defs,body,expected='On{}',features=()):
  put(name,flag+defs+'def main() -> Flag:\n  '+body+'\n',expected,features=features)
 simple('value-off','','Off{}','Off{}',('Value',))
@@ -45,7 +46,7 @@ nums=[
  ('nat-add','Nat.is_eq(Nat.add(2n,3n),5n)'),
  ('char-code',"U32.is_eq(Char.to_u32('A'),65)"),
  ('string-empty','String.is_empty(\"\")'),
- ('string-eq','String.eq(\"ab\\u0000\",\"ab\\u0000\")'),
+ ('string-eq','String.eq(\"ab\\0\",\"ab\\0\")'),
  ('string-append','String.eq(String.append(\"a\",\"b\"),\"ab\")'),
  ('string-reverse','String.eq(String.reverse(\"ab\"),\"ba\")'),
 ]
@@ -54,6 +55,30 @@ for name,body in nums:
 for name,n,result in [('default-hit',7,'On{}'),('default-miss',9,'Off{}')]:
  put(name,'import Base\n\n'+flag+'def select(x: U32) -> Flag:\n  match x:\n    case 7: On{}\n    case _: Off{}\n\ndef main() -> Flag:\n  select('+str(n)+')\n',result,features=('Literal','Case','Branch','Default'))
 put('nat-unpack','import Base\n\n'+flag+'def pred(x: Nat) -> Flag:\n  match x:\n    case 0n: Off{}\n    case 1n+n: On{}\n\ndef main() -> Flag:\n  pred(2n)\n','On{}',features=('Literal','Case','Branch'))
+# Added by the Claude continuation of vm-spec, frozen before their plans were written.
+more=[
+ ('nat-sub-floor','Nat.is_eq(Nat.sub(2n,5n),0n)'),
+ ('char-space','Bool.and(Char.is_space(Char.from_u32(9)),Bool.not(Char.is_space(Char.from_u32(14))))'),
+ ('u32-show','String.eq(U32.show(4294967295),"4294967295")'),
+ ('string-length','Nat.is_eq(String.length("abc"),3n)'),
+ ('u32-not','U32.is_eq(U32.not(0),4294967295)'),
+ ('u32-shr','U32.is_eq(U32.shrn(2147483648,31n),1)'),
+ ('nat-mul','Nat.is_eq(Nat.mul(3n,4n),12n)'),
+ ('nat-show','String.eq(Nat.show(10n),"10")'),
+ ('char-eq',"Char.is_eq('a','a')"),
+]
+for name,body in more:
+ put(name,'import Base\n\ndef main() -> Bool:\n  '+body+'\n','True{}',features=('Literal','Intrinsic'))
+put('u32-cmp','import Base\n\ndef main() -> Cmp:\n  U32.cmp(4294967295,1)\n','GT{}',features=('Literal','Intrinsic'))
+put('case-char','import Base\n\n'+flag+"def vowel(c: Char) -> Flag:\n  match c:\n    case 'a': On{}\n    case 'e': On{}\n    case _: Off{}\n\ndef main() -> Flag:\n  vowel('e')\n",'On{}',features=('Literal','Case','Branch','Default'))
+flags='type Flags is Data:\n  Stop{}\n  Push{head: Flag, tail: Flags}\n\n'
+put('recursion-map',flag+flags+flip+'def flip_all(xs: Flags) -> Flags:\n  match xs:\n    case Stop{}: Stop{}\n    case Push{h,t}: Push{flip(h),flip_all(t)}\n\ndef main() -> Flags:\n  flip_all(Push{On{},Push{Off{},Stop{}}})\n','Push{Off{}, Push{On{}, Stop{}}}',features=('Application','Construct','Case','recursion'))
+put('recursion-tail',flag+flags+'def last(xs: Flags, d: Flag) -> Flag:\n  match xs:\n    case Stop{}: d\n    case Push{h,t}: last(t,h)\n\ndef main() -> Flag:\n  last(Push{Off{},Push{On{},Stop{}}},Off{})\n','On{}',features=('Application','Case','tail'))
+put('erased-construct',flag+erased+'def main() -> ProofBox:\n  ProofBox{Off{},On{}}\n','ProofBox{Off{}, On{}}',features=('erasure','Construct'))
+put('closure-captures',flag+pair+'def swap(a: Flag, b: Flag) -> Pair:\n  f : Flag -> Pair = x => Pair{b,a}\n  f(Off{})\n\ndef main() -> Pair:\n  swap(Off{},On{})\n','Pair{On{}, Off{}}','closures',('Closure','Invoke','capture'))
+# Word-Nat witnesses: the seed's native lane is their reference (see SPEC section 9).
+put('nat-big','import Base\n\ndef main() -> Bool:\n  Nat.is_eq(Nat.add(2147483647n,1n),2147483648n)\n','True{}',features=('Literal','Intrinsic','bound'),seed_lane='native')
+put('nat-range','import Base\n\ndef main() -> Bool:\n  Nat.is_gt(Nat.add(4294967295n,1n),4294967295n)\n','True{}',features=('Literal','Intrinsic','bound'),seed_lane='native')
 put('foreign-print','import Base\n\ndef main() -> IO(Unit):\n  IO.print("vm")\n','vm',features=('Foreign',))
 Path('vm/golden/plan.json').write_text(json.dumps({'basis':'Literal observations fixed before the serializer or VM implementation. Separate evaluator heads; no VM yet.','cases':cases},indent=2)+'\n')
 print('sources',len(cases))
