@@ -18,6 +18,12 @@ npm run gates:verify                  # offline wrapper controls and mutants
 npm run gates -- --jobs 2 --keep-scratch
 ```
 
+On macOS the runner resolves the toolchain clang once (`xcrun --find clang`) and
+passes it to every gate as `CC`, unless the caller set `CC`. The seed probes
+`$CC` before `clang`. The `/usr/bin/clang` shim intermittently printed nothing
+under parallel load, which the seed reported as "found no clang". The resolved
+binary is the same compiler the shim forwards to.
+
 Harness wall-clock guards inside the gate scripts (the seed-build and CLI
 `run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
 unless the caller sets it. These guards only catch hangs; no passing receipt
