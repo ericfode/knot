@@ -1842,6 +1842,38 @@
         "stdout": "Evaluated\t0\t1\tSucc{Zero{}}\n",
         "stderr": ""
       }
+    },
+    {
+      "name": "print-non-scalar-wide",
+      "source": "vm/golden/print-non-scalar-wide.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "\ud83d\ude00\n",
+      "seed_bun_stderr": "bend: 67237376 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "",
+      "features": [
+        "Foreign",
+        "Intrinsic",
+        "Construct",
+        "non-scalar output"
+      ],
+      "sha256": "080630b363ff64626cbce9c294481072808a277e31816788e788557c7d5a4f3c",
+      "seed": {
+        "exit": 0,
+        "stdout": "\ud83d\ude00\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: 67237376 is not a Unicode scalar value\n"
+      }
     }
   ]
 }
