@@ -703,6 +703,8 @@
       (if (i32.ge_u (local.get $cursor) (global.get $W)) (then (call $refuse (global.get $R_record_length))))
       (local.set $count (call $w (local.get $cursor)))
       (local.set $at (i32.add (local.get $cursor) (i32.const 1)))
+      ;; §4: a record takes two words at least, so a count that the words which
+      ;; remain cannot hold is malformed; one they hold is limited, before any record
       (if (i32.gt_u (local.get $count) (i32.shr_u (i32.sub (global.get $W) (local.get $at)) (i32.const 1)))
         (then (call $refuse (global.get $R_record_count))))
       (call $limit (local.get $count) (i32.const 0x100000) (global.get $R_records))
@@ -890,6 +892,7 @@
             (br_if $bad (i32.lt_u (local.get $lx) (i32.const 5)))
             (br_if $ok (i32.eq (i32.sub (local.get $lx) (i32.const 5)) (call $w (i32.add (local.get $at) (i32.const 6))))))
           (call $refuse (global.get $R_node_length)))
+        ;; §4: a Closure's `slots` is limited like a function's, once its length is known
         (if (i32.eq (local.get $op) (i32.const 10))
           (then (call $limit (call $w (i32.add (local.get $at) (i32.const 5))) (i32.const 65536) (global.get $R_slots))))
         (local.set $at (i32.add (local.get $at) (call $w (local.get $at))))
@@ -911,6 +914,8 @@
         (if (i32.or (i32.lt_u (local.get $len) (i32.const 5))
                     (i32.ne (call $w (i32.add (local.get $at) (i32.const 3))) (i32.sub (local.get $len) (i32.const 5))))
           (then (call $refuse (global.get $R_function_record))))
+        ;; §4: arity, then `slots`, once the record's length holds its parameters and
+        ;; before the root, the name and the types they govern
         (call $limit (call $w (i32.add (local.get $at) (i32.const 3))) (i32.const 4096) (global.get $R_arity))
         (call $limit (call $w (i32.add (local.get $at) (i32.const 4))) (i32.const 65536) (global.get $R_slots))
         (local.set $root (call $w (i32.add (local.get $at) (i32.const 5))))
