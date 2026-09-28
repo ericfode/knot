@@ -15,10 +15,11 @@ Checks, in order:
   frame exhaustion, invocation errors), state-dump rows and lowered limits;
   and Books whose frozen run the reference evaluation (vm/evaluate.py) must
   also give (Chr's operand);
-- the ceiling fixtures: Books whose bump pointer ends near 4 GiB, described
-  exactly or, where the text cannot fit, Exhausted kind 2 (heap). Each row's
-  bump pointer and outcome are first derived from SPEC section 5's cell sizes
-  over its plan (`ceiling_run`), independently of any VM;
+- the ceiling fixtures: Books and a Program whose bump pointer ends near or
+  exactly at 4 GiB, described exactly or completed, or Exhausted kind 2 (heap)
+  where a cell or the text would end beyond it. Each row's bump pointer and
+  outcome are first derived from SPEC section 5's cell sizes over its plan
+  (`ceiling_run`), independently of any VM;
 - a 200,000-deep nested expression, generated iteratively, and the deep
   fixtures again under a 64 KiB host stack;
 - the malformed-image controls vm-spec froze (as many as SPEC section 4
@@ -231,21 +232,40 @@ def cell(payload: int) -> int:
     return 4 * words
 
 
-def ceiling_run(plan: dict, image: bytes) -> tuple[int, str]:
-    """(bump, line) when a ceiling Book's result is described, from SPEC section 5 alone.
+class Beyond(Exception):
+    """A cell that would end beyond 4 GiB (section 5): the machine stops, bump unchanged."""
+
+    def __init__(self, bump: int):
+        super().__init__(bump)
+        self.bump = bump
+
+
+TERMINAL = 'terminal'  # a Program's terminal continuation
+
+
+def ceiling_run(plan: dict, image: bytes) -> tuple[int, str | None]:
+    """(bump, line) when a ceiling image finishes, from SPEC section 5 alone.
 
     The heap starts at H0: the image at byte 4096, the frame region from the next 64 KiB
-    boundary, and its 16 MiB. The pool is materialized first. Each entry allocates an
-    Activation of its owner's `slots` (section 7), each Construct with fields an Object, a
-    U32 result at or above 2^31 a Big cell, and `append` one String cell per code of its
-    first operand (CORE.md choice 4). Nothing is freed (choice 1), so the bump pointer is
-    the sum. A String here is its code count, since only sizes reach the heap. The line is
-    section 8's rendering, by the reference evaluation's `describe`."""
+    boundary, and its 16 MiB. The pool is materialized first, then a Program's terminal
+    continuation. Each entry allocates an Activation of its owner's `slots` (section 7):
+    a function's or a Closure node's. Each Construct with fields allocates an Object, a
+    Closure its cell, a U32 result at or above 2^31 a Big cell, `append` one String cell
+    per code of its first operand as one block (CORE.md choice 4), and the terminal
+    continuation `Emit{x}`. Nothing is freed (choice 1), so the bump pointer is the sum.
+    A cell may end exactly at 4 GiB; one that would end beyond raises `Beyond`. A String
+    here is its code count, since only sizes reach the heap. A Book's line is section 8's
+    rendering, by the reference evaluation's `describe`; a Program's Emit has none."""
     rep, fns = plan['representation'], plan['functions']
     big, scon = cell(1), cell(4)  # a Big scalar; a String cell (type, tag, Char, tail)
     end = 4096 + len(image)
     require(end % 65536, 'the image does not end on a 64 KiB boundary, where "next" reads two ways')
     heap = [(end // 65536 + 1) * 65536 + (16 << 20)]
+
+    def take(n: int):
+        if heap[0] + n > 1 << 32:
+            raise Beyond(heap[0])
+        heap[0] += n
 
     pool = set()  # interned: one entry per distinct kind and value, as serializer.encode keeps them
 
@@ -262,10 +282,26 @@ def ceiling_run(plan: dict, image: bytes) -> tuple[int, str]:
         elif op in ('con', 'prim', 'call'):
             for kid in node[3]:
                 lits(kid)
+        elif op == 'closure':
+            lits(node[5])
+        elif op == 'invoke':
+            for kid in [node[2], *node[3]]:
+                lits(kid)
     for f in fns:
         lits(f['body'])
-    for kind, v in pool:
-        heap[0] += sum(scon + big * (c >= 2 ** 31) for c in v) if kind == 'String' else big * (v >= 2 ** 31)
+    for kind, v in pool:  # the pool sits just above H0, far below 4 GiB
+        take(sum(scon + big * (c >= 2 ** 31) for c in v) if kind == 'String' else big * (v >= 2 ** 31))
+    if plan['entry'] == 'program':
+        take(cell(1))  # the terminal continuation: a Closure-class cell, node none
+
+    def apply(f, ops):
+        """Section 7's entry of a Closure or the terminal continuation."""
+        if f == TERMINAL:
+            take(cell(3))  # Emit{x}: type, tag, x
+            return ('obj', rep['IO.OP'], 0, tuple(ops))
+        _, node, caps = f
+        take(cell(2 + node[3]))  # the Closure node's Activation
+        return value(node[5], [*caps, *ops] + [None] * node[3])
 
     def value(node, env, tail=False):
         op = node[0]
@@ -284,28 +320,34 @@ def ceiling_run(plan: dict, image: bytes) -> tuple[int, str]:
             n = env[slot]
             arm = rows[n > 0]
             if n:  # choice 5: n - 1 is allocated only when a Branch binds it
-                heap[0] += big * (n - 1 >= 2 ** 31)
+                take(big * (n - 1 >= 2 ** 31))
                 env[arm[2]] = n - 1
             return value(arm[4], env, tail)
+        if op == 'closure':  # the captures in order; the body stays code
+            take(cell(1 + len(node[4])))
+            return ('clo', node, tuple(env[s] for s in node[4]))
+        if op == 'invoke':  # the function, then its argument if live
+            f = value(node[2], env)
+            return apply(f, [value(k, env) for k in node[3]])
         ops = [value(k, env) for k in node[3]]
         if op == 'call':
             return Tail((node[2], ops)) if tail else enter(node[2], ops)
         if op == 'con' and node[1] not in (rep['Nat'], rep['Char']):
-            heap[0] += cell(2 + len(ops))
+            take(cell(2 + len(ops)))
             return ('obj', node[1], node[2], tuple(ops))
         if op == 'prim' and node[2] == 0:  # U32.add
             r = (ops[0] + ops[1]) & NONE
-            heap[0] += big * (r >= 2 ** 31)
+            take(big * (r >= 2 ** 31))
             return r
         if op == 'prim' and node[2] == 35:  # String.append
-            heap[0] += scon * ops[0]
+            take(scon * ops[0])
             return ops[0] + ops[1]
         raise AssertionError(f'the section 5 model does not cover {node[:3]}')
 
     def enter(index, ops):
         while True:
             f = fns[index]
-            heap[0] += cell(2 + f['slots'])  # an Activation: owner, depth, slot[slots]
+            take(cell(2 + f['slots']))  # an Activation: owner, depth, slot[slots]
             result = value(f['body'], ops + [None] * f['slots'], True)
             if not isinstance(result, Tail):
                 return result
@@ -313,18 +355,28 @@ def ceiling_run(plan: dict, image: bytes) -> tuple[int, str]:
 
     main = next(i for i, f in enumerate(fns) if f['name'] == 'main')
     result = enter(main, [])
-    return heap[0], spec.reference.Machine(plan, 0).describe(result, fns[main]['result'])
+    if plan['entry'] == 'book':
+        return heap[0], spec.reference.Machine(plan, 0).describe(result, fns[main]['result'])
+    final = apply(apply(result, []), [TERMINAL])  # section 8's phases 1 and 2
+    require(final[:3] == ('obj', rep['IO.OP'], 0), f'the model ends a Program at Emit only, not {final}')
+    return heap[0], None
 
 
 def ceiling_expectation(plan: dict, image: bytes) -> tuple[dict, dict]:
-    """(host run, dump) that section 5's bump and CORE.md choice 12 give: the text starts
-    at the bump pointer and is printed when it ends at or below 4 GiB, else it is Exhausted
-    kind 2 (heap)."""
-    bump, line = ceiling_run(plan, image)
+    """(host run, dump) that section 5's bump and CORE.md choice 12 give. A cell beyond
+    4 GiB stops the machine with Exhausted kind 2 (heap). A Program's Emit completes with
+    no text. A Book's text starts at the bump pointer and is printed when it ends at or
+    below 4 GiB, else it is Exhausted kind 2 (heap) too."""
+    exhausted = {'exit': 4, 'stdout': '', 'stderr': 'Exhausted\tio\tmemory\n'}
+    try:
+        bump, line = ceiling_run(plan, image)
+    except Beyond as stop:
+        return exhausted, {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap', 'bump': stop.bump}
+    if line is None:
+        return {'exit': 0, 'stdout': '', 'stderr': ''}, {'outcome': 'Completed', 'bump': bump}
     if bump + len(line) - 1 <= 1 << 32:  # the text is the line without its LF
         return {'exit': 0, 'stdout': line, 'stderr': ''}, {'outcome': 'Completed', 'bump': bump}
-    return ({'exit': 4, 'stdout': '', 'stderr': 'Exhausted\tio\tmemory\n'},
-            {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap', 'bump': bump})
+    return exhausted, {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap', 'bump': bump}
 
 
 def refusal_counts() -> tuple[int, int, int]:

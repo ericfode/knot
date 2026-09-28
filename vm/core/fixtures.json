@@ -832,7 +832,7 @@
   ]
  },
  "ceiling": {
-  "rule": "Books whose bump pointer ends within 16 MiB of 4 GiB, where describe used to reserve a 16 MiB text window and a worklist above it in 32-bit arithmetic (review round 2). Provenance: c9869ef chose each plan's fill counts a and b by measuring the pre-fix VM's bump pointer, and pinned `bump` from that measurement; review round 3 found it labelled literal review. The gate now derives every row before any VM runs: check-core's `ceiling_run` sums SPEC section 5's cell sizes over the plan (no reclamation, CORE.md choice 1; append as one block, choice 4), and `ceiling_expectation` starts the text at the bump pointer (choice 12). Each `expect` and `dump` must equal that derivation; it agrees with every measured pin, so no value changed. Each basis records the arithmetic. Each run touches about 4 GiB, so at most two run at a time, each in its own process.",
+  "rule": "Images whose bump pointer ends within 16 MiB of 4 GiB, where describe used to reserve a 16 MiB text window and a worklist above it in 32-bit arithmetic (review round 2), and, from review round 4, images whose last cell ends exactly at 4 GiB, which section 5 allows (only a cell ending beyond the maximum stops). Provenance: c9869ef chose the first six plans' fill counts a and b by measuring the pre-fix VM's bump pointer, and pinned `bump` from that measurement; review round 3 found it labelled literal review. The gate now derives every row before any VM runs: check-core's `ceiling_run` sums SPEC section 5's cell sizes over the plan (no reclamation, CORE.md choice 1; append as one block, choice 4), stops at a cell that would end beyond 4 GiB with Exhausted kind 2 (heap), and `ceiling_expectation` completes a Program at its Emit and starts a Book's text at the bump pointer (choice 12). Each `expect` and `dump` must equal that derivation; it agrees with every measured pin, so no value changed. The four rows at exactly 4 GiB chose their fill counts from that model alone, before any VM ran them. Each basis records the arithmetic. Each run touches about 4 GiB, so at most two run at a time, each in its own process.",
   "rows": [
    {
     "name": "ceiling-wrap-name",
@@ -943,6 +943,84 @@
      "bump": 4294967280
     },
     "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); main's Activation of 13 slots (128 B; main lets all 13 calls); dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11: k + 1 Activations and 2^k - 1 appended String cells, 32 B each, 32 * sum(k + 2^k) = 4,241,300,160; fill1(a = 575,377, B0): a + 1 Activations and a B1 cells, 64a + 32 = 36,824,160; fill2(b = 0, 2^31): b + 1 Activations and b Big U32 cells, 48b + 32 = 32; bump = 4,294,967,280. The stdout is literal review: as ceiling-top 16 bytes higher: its 32 bytes of text would end 16 bytes beyond 4 GiB. Section 5 stops an allocation beyond the maximum with Exhausted kind 2 (heap); the text is one (choice 12)"
+   },
+   {
+    "name": "ceiling-top32",
+    "image": "core/ceiling-top32",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 4,
+     "stdout": "",
+     "stderr": "Exhausted\tio\tmemory\n"
+    },
+    "dump": {
+     "outcome": "Exhausted",
+     "kind": 2,
+     "cause": "heap",
+     "bump": 4294967296
+    },
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); then as ceiling-top, whose 13 lets end at 4,294,967,264; main returns B1{B0{}} of Box (type 2) instead of Nat 2: one Object (type, tag, field: 5 words, so 8) of 32 B, which ends exactly at 4 GiB, 4,294,967,296. Section 5 stops only a cell ending beyond the maximum, so it is allocated, and the bump pointer is 2^32. Describe's text then starts at 4 GiB and cannot fit: Exhausted kind 2 (heap) (choice 12). Review round 4's probe image, byte for byte (sha256 5fc91bb6...6d5f); the pre-fix VM trapped at that allocation (HostFailure io trap)"
+   },
+   {
+    "name": "ceiling-cell-over",
+    "image": "core/ceiling-cell-over",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 4,
+     "stdout": "",
+     "stderr": "Exhausted\tio\tmemory\n"
+    },
+    "dump": {
+     "outcome": "Exhausted",
+     "kind": 2,
+     "cause": "heap",
+     "bump": 4294967280
+    },
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); then as ceiling-over, whose 13 lets end at 4,294,967,280; main returns B1{B0{}} of Box: its 32-byte Object would end 16 B beyond 4 GiB, so section 5 stops the machine there with Exhausted kind 2 (heap), and the bump pointer stays at 4,294,967,280. The control for ceiling-top32, 16 bytes higher"
+   },
+   {
+    "name": "ceiling-append-top",
+    "image": "core/ceiling-append-top",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 4,
+     "stdout": "",
+     "stderr": "Exhausted\tio\tmemory\n"
+    },
+    "dump": {
+     "outcome": "Exhausted",
+     "kind": 2,
+     "cause": "heap",
+     "bump": 4294967296
+    },
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); then as ceiling-top with fill1(a = 575,375), one 64-byte step fewer, so the 13 lets end at 4,294,967,200; main's 14th let (its Activation of 14 slots is still 128 B) is append(append(\"x\", \"x\"), \"x\"): the inner append writes a one-cell block of 32 B, and the outer append of that 2-code String a two-cell block of 64 B (choice 4), which ends exactly at 4 GiB, 4,294,967,296. main returns Nat 2 (type 0, tag 1); its text starts at 4 GiB and cannot fit: Exhausted kind 2 (heap) (choice 12). The pre-fix VM trapped at the block (HostFailure io trap)"
+   },
+   {
+    "name": "ceiling-program-top",
+    "image": "core/ceiling-program-top",
+    "argv": [
+     "4294967295",
+     "--"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "bump": 4294967296
+    },
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); a Program (section 8): the terminal continuation, 16 B; then main's Activation of 13 slots (128 B) and ceiling-top's 13 lets with fill1(a = 575,373) and fill2(b = 3), three 64-byte steps fewer and two 48-byte steps more, so they end at 4,294,967,184; main returns the erased Closure of \\R. \\k. k(Unit), 16 B (node, no captures); phase 1 enters it (an Activation of 0 slots, 16 B), and it returns the live Closure, 16 B; phase 2 enters that with the terminal continuation (an Activation of 1 slot, 32 B), and its Invoke of k allocates Emit{Unit}, 32 B, which ends exactly at 4 GiB, 4,294,967,296. Phase 3 completes with exit 0 and no output, and nothing more is allocated. The reference evaluation (evaluate.program) completes the same plan, with every fill shortened to 3, with exit 0 and no output. The pre-fix VM trapped at Emit's allocation; a VM that stopped a cell ending at 4 GiB would exhaust early (section 11)"
    }
   ]
  },
