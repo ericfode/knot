@@ -65,6 +65,32 @@ AFFINE = invalid(
     'check', 'affine-reuse',
     'Seed-invalid ("consumed more than once"): a binder or field without `+` over a split '
     'column is affine, so two uses are a reuse.')
+DEAD = oracle.unsupported(
+    'check', 'dead-arm',
+    'Seed-valid: the seed checks a body only where its arm is the first applicable one, so a '
+    'failing body that no path reaches first is not evidence of an invalid book (D4).')
+LIVE = invalid(
+    'check', 'type-mismatch',
+    'Seed-invalid ("expected U32"): the arm is the first applicable one on some path, so its '
+    'body is checked there.')
+DEAD_PATTERN = {
+    'arity': invalid('check', 'pattern-arity',
+                     'Seed-invalid ("a Succ pattern with 1 field"): the seed checks the patterns of '
+                     'unreachable arms.'),
+    'offset-limit': invalid('parse', 'nat-offset-pattern',
+                            'Seed-invalid ("a pattern (a binder or a constructor)"): an offset above '
+                            '256 is no pattern, reachable or not.'),
+    'constructor': invalid('check', 'pattern-type',
+                           'Seed-invalid ("a constructor of Nat"): the seed checks the patterns of '
+                           'unreachable arms.'),
+    'type': invalid('check', 'pattern-type',
+                    'Seed-invalid ("a constructor of U32"): the seed checks the patterns of '
+                    'unreachable arms.'),
+}
+BASE_TYPE = oracle.unsupported(
+    'check', 'literal-base-type',
+    "A literal spells an installed primitive; the book's own datatype of that name is none. "
+    'The seed accepts the Nat book and rejects the U32 book, so Knot claims neither (D4).')
 
 # name -> (finding, covers, entries, Knot)
 PLAN = {
@@ -138,6 +164,29 @@ PLAN = {
                               [], AFFINE),
     'affine-default-string': ('promoted split binder control', '`v ++ v` in a catch-all after '
                               '`SCon{+c, +t}`', [], AFFINE),
+    'dead-arm-u32-duplicate': ('dead arm', "case 5: 'q' after case 5", [], DEAD),
+    'dead-arm-u32-after-default': ('dead arm', 'case 3: "s" after case y', [], DEAD),
+    'dead-arm-u32-affine': ('dead arm', 'case 3: k + k after case y', [], DEAD),
+    'dead-arm-u32-free-name': ('dead arm', 'case 3: zzz after case y', [], DEAD),
+    'dead-arm-char-duplicate': ('dead arm', "case 'a': \"no\" after case 'a'", [], DEAD),
+    'dead-arm-nat-subsumed': ('dead arm', "case 2n: 'a' after case 1n+p", [], DEAD),
+    'dead-arm-nat-affine': ('dead arm', 'case 2n: k + k after case 1n+p', [], DEAD),
+    'dead-arm-nat-offset-subsumed': ('dead arm', "case 3n+q: 'x' after case 1n+p", [], DEAD),
+    'dead-arm-nat-duplicate-zero': ('dead arm', "case 0n: 'x' after case 0n", [], DEAD),
+    'dead-arm-nat-constructor-duplicate': ('dead arm', "case Zero{}: 'x' after case Zero{}", [], DEAD),
+    'dead-arm-string-after-default': ('dead arm', "case \"a\": 'c' after case _", [], DEAD),
+    'dead-arm-string-duplicate': ('dead arm', 'case "a": 1n after case "a"', [], DEAD),
+    'dead-arm-string-nested': ('dead arm', "case SCon{'a', SNil{}}: 'x' after case \"a\"", [], DEAD),
+    'live-arm-nat-offset': ('dead arm control', "case 3n+q: 'x' before case 1n+p", [], LIVE),
+    'live-arm-u32-default': ('dead arm control', "case _: 'q', shadowed on the 5 path only", [], LIVE),
+    'dead-pattern-arity': ('dead arm control', 'case Succ{a, b} after case _', [], DEAD_PATTERN['arity']),
+    'dead-pattern-offset-limit': ('dead arm control', 'case 300n+p after case _', [],
+                                  DEAD_PATTERN['offset-limit']),
+    'dead-pattern-constructor': ('dead arm control', 'case SNil{} on Nat after case _', [],
+                                 DEAD_PATTERN['constructor']),
+    'dead-pattern-type': ('dead arm control', "case 'a' on U32 after case _", [], DEAD_PATTERN['type']),
+    'own-nat-literal': ('own primitive type', "2n against the book's own Nat, without Base", [], BASE_TYPE),
+    'own-u32-literal': ('own primitive type', "3 against the book's own U32, without Base", [], BASE_TYPE),
 }
 
 

@@ -336,6 +336,833 @@
       }
     },
     {
+      "name": "dead-arm-char-duplicate",
+      "file": "tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+      "sha256": "c9efacea5002d2daf1c164f4472289d7a28780dac3cc056baf598359985e05d5",
+      "finding": "dead arm",
+      "covers": "case 'a': \"no\" after case 'a'",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-char-duplicate.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-nat-affine",
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+      "sha256": "d87d83b880b0b86b2ec522e25768ecf199e0084677a8838c6519e2c38e082ced",
+      "finding": "dead arm",
+      "covers": "case 2n: k + k after case 1n+p",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-nat-affine.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-nat-affine.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-nat-constructor-duplicate",
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+      "sha256": "dae2e4ee83b08f94b4d49b90ba117c39a88fe3f528e57953651010fa4f2c3f62",
+      "finding": "dead arm",
+      "covers": "case Zero{}: 'x' after case Zero{}",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-nat-constructor-duplicate.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-nat-duplicate-zero",
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+      "sha256": "608b6584d9f03b9ca4a782340499a16bed718c826986dea1fbc2eabd7e25e475",
+      "finding": "dead arm",
+      "covers": "case 0n: 'x' after case 0n",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-nat-duplicate-zero.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-nat-offset-subsumed",
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+      "sha256": "b28b466105efb348f94e7ec8234eaf5757c36da4f70777d2332abb872c91c9f8",
+      "finding": "dead arm",
+      "covers": "case 3n+q: 'x' after case 1n+p",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-nat-offset-subsumed.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-nat-subsumed",
+      "file": "tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+      "sha256": "89e5020dedc58911f34b20c4adfa73e5e2cba7b751e510edc720644991468813",
+      "finding": "dead arm",
+      "covers": "case 2n: 'a' after case 1n+p",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-nat-subsumed.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-string-after-default",
+      "file": "tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+      "sha256": "50f5c0266a9eaf1ca1dafa8136748fc8424fe31998acc77aaee942d7cf82f4fc",
+      "finding": "dead arm",
+      "covers": "case \"a\": 'c' after case _",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-string-after-default.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-string-after-default.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-string-duplicate",
+      "file": "tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+      "sha256": "0f605f8a9b298b2912e87091140bc7efe9c76a7cdbfbeebd81d76085ec371434",
+      "finding": "dead arm",
+      "covers": "case \"a\": 1n after case \"a\"",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-string-duplicate.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-string-duplicate.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-string-nested",
+      "file": "tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+      "sha256": "d5030d8448c40a9cea03aa873278571b2e9cb6a6a7c4594d2b3521b039047771",
+      "finding": "dead arm",
+      "covers": "case SCon{'a', SNil{}}: 'x' after case \"a\"",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-string-nested.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-string-nested.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-u32-affine",
+      "file": "tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+      "sha256": "15fab1bf28280f1d970fe2925eb11bfe15fe81d6da8c6757870d97c33af887e5",
+      "finding": "dead arm",
+      "covers": "case 3: k + k after case y",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-u32-affine.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-u32-affine.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-u32-after-default",
+      "file": "tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+      "sha256": "3524083c22f3fab17297bc15a6530a191e9e734a892f79ad808bcfd651d67f83",
+      "finding": "dead arm",
+      "covers": "case 3: \"s\" after case y",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-u32-after-default.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-u32-after-default.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-u32-duplicate",
+      "file": "tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+      "sha256": "b8944919d54b595a4eba302436a55edf486efe7ac4672785d9f86e967130012d",
+      "finding": "dead arm",
+      "covers": "case 5: 'q' after case 5",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-u32-duplicate.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-arm-u32-free-name",
+      "file": "tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+      "sha256": "646d3e88ae660e61d1086540ea2412fa96c95b8858e645c755cc4e56bc8ad01d",
+      "finding": "dead arm",
+      "covers": "case 3: zzz after case y",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-arm-u32-free-name.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/dead-arm-u32-free-name.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tdead-arm\t",
+        "justification": "Seed-valid: the seed checks a body only where its arm is the first applicable one, so a failing body that no path reaches first is not evidence of an invalid book (D4)."
+      }
+    },
+    {
+      "name": "dead-pattern-arity",
+      "file": "tests/compiler-literals/regressions/dead-pattern-arity.bend",
+      "sha256": "772111c00252902cbfdd5f1861b8c79a3b4750a3f0c6d7efd16031348ffd4e4a",
+      "finding": "dead arm control",
+      "covers": "case Succ{a, b} after case _",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-pattern-arity.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a Succ pattern with 1 field\nLocation:\n15 |     case _: 0\n16>|     case Succ{a, b}: 1\n   |          ^^^^^^^^^^\n17 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-pattern-arity.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a Succ pattern with 1 field\nLocation:\n15 |     case _: 0\n16>|     case Succ{a, b}: 1\n   |          ^^^^^^^^^^\n17 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-arity\t",
+        "justification": "Seed-invalid (\"a Succ pattern with 1 field\"): the seed checks the patterns of unreachable arms."
+      }
+    },
+    {
+      "name": "dead-pattern-constructor",
+      "file": "tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+      "sha256": "5741351ad6a4d6e931b2aebf5b780b7554e3bf5936cfdc9fe1310e6d827571c3",
+      "finding": "dead arm control",
+      "covers": "case SNil{} on Nat after case _",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-pattern-constructor.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Nat (missing, or already matched)\n- observed : \\{SNil: 0; (n => 0)}\nLocation: pick\n15 |     case _: 0\n16>|     case SNil{}: 1\n   |          ^^^^^^\n17 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-pattern-constructor.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Nat (missing, or already matched)\n- observed : \\{SNil: 0; (n => 0)}\nLocation: pick\n15 |     case _: 0\n16>|     case SNil{}: 1\n   |          ^^^^^^\n17 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "justification": "Seed-invalid (\"a constructor of Nat\"): the seed checks the patterns of unreachable arms."
+      }
+    },
+    {
+      "name": "dead-pattern-offset-limit",
+      "file": "tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+      "sha256": "9eb0bc527abbf4de5f516282a515827318e3171d4dc289d48bca2c476959178c",
+      "finding": "dead arm control",
+      "covers": "case 300n+p after case _",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-pattern-offset-limit.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : Nat.add(300n, p)\nLocation:\n15 |     case _: 0\n16>|     case 300n+p: 1\n   |          ^^^^^^\n17 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-pattern-offset-limit.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : Nat.add(300n, p)\nLocation:\n15 |     case _: 0\n16>|     case 300n+p: 1\n   |          ^^^^^^\n17 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tnat-offset-pattern\t",
+        "justification": "Seed-invalid (\"a pattern (a binder or a constructor)\"): an offset above 256 is no pattern, reachable or not."
+      }
+    },
+    {
+      "name": "dead-pattern-type",
+      "file": "tests/compiler-literals/regressions/dead-pattern-type.bend",
+      "sha256": "9e1cc6ed2c85d174e32b1f2cf1eaacdfee5371af39e49bad8b0766445b8d30a4",
+      "finding": "dead arm control",
+      "covers": "case 'a' on U32 after case _",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-pattern-type.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of U32 (missing, or already matched)\n- observed : \\{Chr: \\{U32: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{True: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WNil: 0; (_70 => 0)}; (_69 => _70 => 0)}; (_68 => 0)}; (_67 => _68 => 0)}; (_66 => 0)}; (_65 => _66 => 0)}; (_64 => 0)}; (_63 => _64 => 0)}; (_62 => 0)}; (_61 => _62 => 0)}; (_60 => 0)}; (_59 => _60 => 0)}; (_58 => 0)}; (_57 => _58 => 0)}; (_56 => 0)}; (_55 => _56 => 0)}; (_54 => 0)}; (_53 => _54 => 0)}; (_52 => 0)}; (_51 => _52 => 0)}; (_50 => 0)}; (_49 => _50 => 0)}; (_48 => 0)}; (_47 => _48 => 0)}; (_46 => 0)}; (_45 => _46 => 0)}; (_44 => 0)}; (_43 => _44 => 0)}; (_42 => 0)}; (_41 => _42 => 0)}; (_40 => 0)}; (_39 => _40 => 0)}; (_38 => 0)}; (_37 => _38 => 0)}; (_36 => 0)}; (_35 => _36 => 0)}; (_34 => 0)}; (_33 => _34 => 0)}; (_32 => 0)}; (_31 => _32 => 0)}; (_30 => 0)}; (_29 => _30 => 0)}; (_28 => 0)}; (_27 => _28 => 0)}; (_26 => 0)}; (_25 => _26 => 0)}; (_24 => 0)}; (_23 => _24 => 0)}; (_22 => 0)}; (_21 => _22 => 0)}; (_20 => 0)}; (_19 => _20 => 0)}; (_18 => 0)}; (_17 => _18 => 0)}; (_16 => 0)}; (_15 => _16 => 0)}; (_14 => 0)}; (_13 => _14 => 0)}; (_12 => 0)}; (_11 => _12 => 0)}; (_10 => 0)}; (_9 => _10 => 0)}; (_8 => 0)}; (_7 => _8 => 0)}; (_6 => 0)}; (_5 => 0)}; (x => 0)}\nLocation: pick\n15 |     case _: 0\n16>|     case 'a': 1\n   |          ^^^\n17 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dead-pattern-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of U32 (missing, or already matched)\n- observed : \\{Chr: \\{U32: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{True: \\{WCon: \\{True: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WCon: \\{False: \\{WNil: 0; (_70 => 0)}; (_69 => _70 => 0)}; (_68 => 0)}; (_67 => _68 => 0)}; (_66 => 0)}; (_65 => _66 => 0)}; (_64 => 0)}; (_63 => _64 => 0)}; (_62 => 0)}; (_61 => _62 => 0)}; (_60 => 0)}; (_59 => _60 => 0)}; (_58 => 0)}; (_57 => _58 => 0)}; (_56 => 0)}; (_55 => _56 => 0)}; (_54 => 0)}; (_53 => _54 => 0)}; (_52 => 0)}; (_51 => _52 => 0)}; (_50 => 0)}; (_49 => _50 => 0)}; (_48 => 0)}; (_47 => _48 => 0)}; (_46 => 0)}; (_45 => _46 => 0)}; (_44 => 0)}; (_43 => _44 => 0)}; (_42 => 0)}; (_41 => _42 => 0)}; (_40 => 0)}; (_39 => _40 => 0)}; (_38 => 0)}; (_37 => _38 => 0)}; (_36 => 0)}; (_35 => _36 => 0)}; (_34 => 0)}; (_33 => _34 => 0)}; (_32 => 0)}; (_31 => _32 => 0)}; (_30 => 0)}; (_29 => _30 => 0)}; (_28 => 0)}; (_27 => _28 => 0)}; (_26 => 0)}; (_25 => _26 => 0)}; (_24 => 0)}; (_23 => _24 => 0)}; (_22 => 0)}; (_21 => _22 => 0)}; (_20 => 0)}; (_19 => _20 => 0)}; (_18 => 0)}; (_17 => _18 => 0)}; (_16 => 0)}; (_15 => _16 => 0)}; (_14 => 0)}; (_13 => _14 => 0)}; (_12 => 0)}; (_11 => _12 => 0)}; (_10 => 0)}; (_9 => _10 => 0)}; (_8 => 0)}; (_7 => _8 => 0)}; (_6 => 0)}; (_5 => 0)}; (x => 0)}\nLocation: pick\n15 |     case _: 0\n16>|     case 'a': 1\n   |          ^^^\n17 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "justification": "Seed-invalid (\"a constructor of U32\"): the seed checks the patterns of unreachable arms."
+      }
+    },
+    {
       "name": "escape-brace",
       "file": "tests/compiler-literals/regressions/escape-brace.bend",
       "sha256": "34cdfb87d76fec86a819dc2ca991d583334fa2a9c1d69b14a1bfe9f3e036af0a",
@@ -1723,6 +2550,88 @@
       }
     },
     {
+      "name": "live-arm-nat-offset",
+      "file": "tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+      "sha256": "549903502abd6b3a1541062ff2102e0d41106c63c82b69576a1aea64d9dbf33d",
+      "finding": "dead arm control",
+      "covers": "case 3n+q: 'x' before case 1n+p",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/live-arm-nat-offset.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : U32\n- observed : Char\nContext:\n- q : Nat\nLocation: pick\n15 |     case 0n: 0\n16>|     case 3n+q: 'x'\n   |                ^^^\n17 |     case 1n+p: 1\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/live-arm-nat-offset.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : U32\n- observed : Char\nContext:\n- q : Nat\nLocation: pick\n15 |     case 0n: 0\n16>|     case 3n+q: 'x'\n   |                ^^^\n17 |     case 1n+p: 1\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\ttype-mismatch\t",
+        "justification": "Seed-invalid (\"expected U32\"): the arm is the first applicable one on some path, so its body is checked there."
+      }
+    },
+    {
+      "name": "live-arm-u32-default",
+      "file": "tests/compiler-literals/regressions/live-arm-u32-default.bend",
+      "sha256": "bc3850bf2f445e2af0272a4a23e29fb0b15eb94dd20432bd853a22e278621bda",
+      "finding": "dead arm control",
+      "covers": "case _: 'q', shadowed on the 5 path only",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/live-arm-u32-default.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : U32\n- observed : Char\nContext:\n- _69 : Word.Nil<> - WNil{}\nLocation: pick\n15 |     case 5: 0\n16>|     case _: 'q'\n   |             ^^^\n17 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/live-arm-u32-default.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : U32\n- observed : Char\nContext:\n- _69 : Word.Nil<> - WNil{}\nLocation: pick\n15 |     case 5: 0\n16>|     case _: 'q'\n   |             ^^^\n17 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\ttype-mismatch\t",
+        "justification": "Seed-invalid (\"expected U32\"): the arm is the first applicable one on some path, so its body is checked there."
+      }
+    },
+    {
       "name": "offset-adjacent",
       "file": "tests/compiler-literals/regressions/offset-adjacent.bend",
       "sha256": "0d74a77dc65f7372d6c823e6cb056c0f767632a7198b7ca81d50ad494dd81417",
@@ -2510,6 +3419,101 @@
         "outcome": "agree",
         "exit": 0,
         "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "own-nat-literal",
+      "file": "tests/compiler-literals/regressions/own-nat-literal.bend",
+      "sha256": "913c59e6d1e09378cd53b8efa5075c3f78818006d4ce811ac42069ba9a17334b",
+      "finding": "own primitive type",
+      "covers": "2n against the book's own Nat, without Base",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-nat-literal.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/own-nat-literal.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "A literal spells an installed primitive; the book's own datatype of that name is none. The seed accepts the Nat book and rejects the U32 book, so Knot claims neither (D4)."
+      }
+    },
+    {
+      "name": "own-u32-literal",
+      "file": "tests/compiler-literals/regressions/own-u32-literal.bend",
+      "sha256": "60fb88c21647d4d51c1494de4a11580510903dc9cb72d03670a83b387560bd74",
+      "finding": "own primitive type",
+      "covers": "3 against the book's own U32, without Base",
+      "enums": {
+        "U32": [
+          "Z"
+        ],
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-u32-literal.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a declared constructor (U32 declares Z)\n- observed : 3\nLocation: main\n13 | def main() -> Answer:\n14>|   pick(3)\n   |        ^\n15 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/own-u32-literal.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a declared constructor (U32 declares Z)\n- observed : 3\nLocation: main\n13 | def main() -> Answer:\n14>|   pick(3)\n   |        ^\n15 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-base-type\t",
+        "justification": "A literal spells an installed primitive; the book's own datatype of that name is none. The seed accepts the Nat book and rejects the U32 book, so Knot claims neither (D4)."
       }
     },
     {
