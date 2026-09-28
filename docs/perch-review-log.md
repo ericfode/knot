@@ -1118,11 +1118,12 @@ First, the kind and dispatch boundary corpora (24 expectations) were committed
 in `f39ba7e` together with the checker they test. Four documents nonetheless
 said they were fixed first, and one said the dispatch pins did not come from
 Knot output. The implementer chose those pins' phase/code strings. Every later
-corpus was frozen in its own commit. Second, existing frontend, classification
+corpus was frozen in its own commit (one binding variant was added after its
+repair, as its message states). Second, existing frontend, classification
 and census assertions changed across three rounds. Their authorization was
 recorded inconsistently: six `superseded.by` fields still read "awaiting
-coordinator authorization" after the coordinator's `78c4942` had applied the
-supersession. The runner's frontend `counts` hid the changed sub-counts.
+coordinator authorization" after `78c4942` had applied the supersession
+under the coordinator authorization its message cites. The runner's frontend `counts` hid the changed sub-counts.
 
 The claims are corrected, and each pin is mapped for the coordinator's literal
 review ([BOUNDARY-PINS.md](../tests/compiler-generics/BOUNDARY-PINS.md)).

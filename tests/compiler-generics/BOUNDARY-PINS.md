@@ -29,8 +29,9 @@ under "Contract" (`src/CONTRACT.json` `generics` and `src/SPEC.md`, as of
 reason, each row also cites a source that predates `f39ba7e`, where one
 exists:
 
-- **[F]** `tests/compiler-generics/FIXTURES.md` at `629c51f`. It was written
-  before implementation and independently of the implementer. It says that
+- **[F]** `tests/compiler-generics/FIXTURES.md` at `629c51f`. Git shows it
+  before `f39ba7e`. Its own text says it was written "independently of the
+  implementer". It says that
   `type-level-definition` and `live-type-parameter` are "not on the increment 6
   ladder". For rules that belong to increment 6 but have no existing code, the
   implementer chooses the code ("class-only pins").

@@ -163,10 +163,12 @@ them, so `5eea108` left them unchanged.
 
 ### classify-2 supersession (authorized, `78c4942`)
 
-The coordinator authorized the same reconciliation for the six application
-cases on 2026-09-28 and applied it in `78c4942`. The review-round-2 task
-restates this: the branch "now carries the coordinator-authorized
-supersession of classify-2's type-application pins". Each retired pin is kept
+`78c4942` applied the same reconciliation to the six application cases.
+Its message cites "Coordinator authorization (2026-09-28)" for a patch that
+the generics round-1 executor prepared. Git records only the shared author.
+The review-round-2 task restates the authorization: the branch "now carries
+the coordinator-authorized supersession of classify-2's type-application
+pins". Each retired pin is kept
 under `superseded`, whose `by` field names that authorization. The first
 version of those six fields read "proposed ..., awaiting coordinator
 authorization" (review round 4 corrected them). The
