@@ -19,6 +19,8 @@ coordinator accepted on 2026-09-28.
 [Review round 6](REVIEW-ROUND-6.md) records three more: a file's own earlier
 qualified names in the freshness test, the seed's `.//` and `0x<hash>//`
 imports, and dotted binders resolved in scope.
+[Review round 7](REVIEW-ROUND-7.md) records two more: binders read in type
+positions, and declared types and functions used as terms.
 The earlier [verification receipt](receipts/verification.json) and preflight
 receipts without `review-round2` remain historical evidence for the first round.
 
@@ -63,7 +65,9 @@ Bare and qualified collisions reject in either load order, and user definitions
 cannot shadow Base dependencies. The slice follows references from every user
 definition. A pattern or let binder may not name a constructor registered
 before it (all of Base once imported), even when that constructor is outside
-the slice; a later constructor leaves it a variable.
+the slice; a later constructor leaves it a variable. A user value mention of a
+Base type or function is Unsupported before selection, as the checker reports a
+user one, so it selects nothing.
 
 The audit follows complete checking and emits `BasePin`, loaded `Module` paths,
 and the exact ordered `BaseChecked` / `BaseUnchecked` partition. Unchecked Base
@@ -86,7 +90,10 @@ entry and bundle spellings, and eleven literal output-guard cases. Round 5 adds
 CLIs: shadowed call heads with their controls, and type continuations. Round 6
 adds 28 seed fixtures in `review-round6/`, ten of them also through the
 single-file CLIs: own-file name collisions, rooted imports with seed-rejected
-controls, and dotted binders, free and rebound.
+controls, and dotted binders, free and rebound. Round 7 adds 33 seed fixtures in
+`review-round7/`, twenty of them also through the single-file CLIs: binders in
+type positions with their controls, and declared types and functions used as
+terms, with brace-less constructor, undeclared and scrutinee controls.
 
 ```sh
 BEND_NO_TELEMETRY=1 python3 tests/compiler-modules/regen.py
@@ -96,20 +103,22 @@ BEND_NO_TELEMETRY=1 npm run -s gates:verify
 BEND_NO_TELEMETRY=1 npm run -s census:test   # also a runner gate since round 5
 ```
 
-The module gate checks 158 fixtures and 166 seed calls, both native and Bun:
-316 checks, 332 evaluations, 316 compilations, 90 Wasm observations, 39 identical
-Wasm pairs, 238 preserved outputs, 84 trust audits, 192 single-file observations,
+The module gate checks 191 fixtures and 199 seed calls, both native and Bun:
+382 checks, 398 evaluations, 382 compilations, 96 Wasm observations, 42 identical
+Wasm pairs, 298 preserved outputs, 94 trust audits, 312 single-file observations,
 22 pin observations, six corrupted-Base observations, 22 output-guard observations
-and six adapter-pin controls. All 47 semantic mutants are independently
-seed-typechecked and killed. The four complete proof entries check 99 filled
-laws: loader/path 36, qualification 28, Base selection 20 and pin helpers 15.
+and six adapter-pin controls. All 53 semantic mutants are independently
+seed-typechecked and killed. The four complete proof entries check 102 filled
+laws: loader/path 36, qualification 29, Base selection 22 and pin helpers 15.
 These are helper/transition proofs, not a general compiler-correctness theorem.
 
 Offline preflight covers every compiler declaration through 23 bounded manifest
-groups with zero structural blockers (1,425 declaration occurrences, all 23
-compositions available; `checking` is 47,988 of its 48,000 bytes). The direct
-eight-file round-6 review (238 declarations) has 26 truncated contexts, none of
-them a changed declaration, and an oversized combined composition: 27 blockers. Deliberately invalid
+groups with zero structural blockers (1,428 declaration occurrences, all 23
+compositions available). Since round 7, `checking` takes the declaration catalog
+as an interface (37,484 of its 48,000 bytes); `catalog` composes it in full. The
+direct thirteen-file round-7 review (335 declarations) has 32 truncated
+contexts, two of them changed declarations (`check.run`, `base-load.slice`), and
+an oversized combined composition. Deliberately invalid
 binder fixtures fail parsing as expected. No live style ratings or style pass
 are claimed; live Perch remains with the coordinator.
 

@@ -186,6 +186,19 @@ reference. In both lanes a dotted let, typed-let or field binder must therefore
 rebind a name already in scope, or it reports `Invalid check dotted-binder`; an
 erased let reads its name as a name, and a dotted arm binder remains
 `Unsupported check variable-pattern`.
+The seed also reads a type as a term, so a binder in scope shadows a type name
+in every later type position of its scope: a later parameter type, the result
+type, a typed-let annotation after a let (live or erased) or arm field binder,
+and a later field type. In both lanes that is `Invalid check binder-as-type`;
+every Knot binder holds a value, and a Type binder is Unsupported at parse.
+Qualification leaves a bound name bare in a type position, and a declared
+constructor's fields bind only within it. An unbound term name that names a
+declared type is `Unsupported check type-as-term`, and one that names a declared
+function is `Unsupported check function-reference`: the seed reads both as
+values, which Knot cannot represent yet. A constructor without braces, an
+undeclared name and a match scrutinee naming a declaration stay `Invalid check
+free-name`. The Base slice classifies a user value mention of a Base type or
+function before selection, so no such mention selects a Base declaration.
 The downstream checker, evaluator and emitters have no module-specific bypass.
 
 Base is the unmodified 67,190-byte `base.bend` from the pinned seed, SHA-256
@@ -222,15 +235,16 @@ basis or, across bases, as an absolute spelling that ends with the relative one
 
 The [module gate](../tests/compiler-modules/README.md) compares frozen seed
 expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
-entries check 99 path, scope, loader-transition, Base-selection and digest-boundary
+entries check 102 path, scope, loader-transition, Base-selection and digest-boundary
 laws. These are helper/transition laws; whole-graph order independence and
 compiler correctness are not proved.
 
 ### Single-file deltas (accepted by the coordinator, 2026-09-28)
 
-The module rules also reach the single-file lanes. The coordinator accepted each
-change below on 2026-09-28, because each moves Knot toward the seed's verdict and
-is pinned by seed-derived fixtures:
+The module rules also reach the single-file lanes. The coordinator accepted the
+first nine changes below on 2026-09-28, because each moves Knot toward the seed's
+verdict and is pinned by seed-derived fixtures. Review round 7's findings asked
+for the last two, which are pinned the same way:
 
 - A let or arm binder named like an earlier constructor reports
   `Invalid check constructor-pattern-binder` (previously accepted for let
@@ -253,11 +267,20 @@ is pinned by seed-derived fixtures:
 - An unbound dotted let, typed-let or field binder, which the seed rejects,
   reports `Invalid check dotted-binder` (previously accepted). Added by review
   round 6 under the same rule.
+- A binder named in a later type position of its scope, which the seed rejects,
+  reports `Invalid check binder-as-type` (previously accepted). Added by review
+  round 7, finding 1.
+- A declared type or function used as an unapplied term reports
+  `Unsupported check type-as-term` or `Unsupported check function-reference`
+  (previously `Invalid check free-name`). The seed accepts it as the value of an
+  unannotated let and rejects it where a datatype is expected; Knot reports it
+  Unsupported in both, conservatively. Added by review round 7, finding 2.
 
 [Review round 5](../tests/compiler-modules/REVIEW-ROUND-5.md#single-file-deltas)
 lists the first eight with their seed evidence, frozen fixtures and
 authorization; [review round 6](../tests/compiler-modules/REVIEW-ROUND-6.md)
-adds the last.
+adds the ninth and [review round 7](../tests/compiler-modules/REVIEW-ROUND-7.md)
+the last two.
 
 ## Binding and quantity semantics
 

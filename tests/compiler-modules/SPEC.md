@@ -146,6 +146,22 @@ field binder is `Invalid check dotted-binder` in both lanes, while a dotted
 binder that rebinds a name in scope, and an erased let's dotted name, are
 accepted.
 
+Review-round-7 fixtures (`review-round7.json`) freeze two more seed rules. The
+seed reads a type as a term, so a binder in scope shadows a type name in every
+later type position of its scope: a later parameter type, the result type, a
+typed-let annotation after a let (live or erased) or arm field binder, and a
+later field type. Such a program is `Invalid check binder-as-type` in both
+lanes. Every Knot binder holds a value; a Type binder is Unsupported at parse.
+Qualification leaves a bound name bare in a type position, and a declared
+constructor's fields bind only within it. The seed also reads a declared type
+or function as a term. Knot has neither value yet, so an unbound term name
+naming a type is `Unsupported check type-as-term` and one naming a function is
+`Unsupported check function-reference`, in both lanes and for own, forward,
+module and Base declarations. A constructor without braces, an undeclared name
+and a match scrutinee naming a declaration stay `Invalid check free-name`. The
+Base slice classifies a user value mention of a Base type or function before
+selection, so no such mention selects, parses or checks a Base declaration.
+
 The reading hypothesis is one explicit machine state for loading: pending
 headers, active paths, completed paths and the accumulated declaration stream.
 Qualification and Base reachability are separate mechanisms with bounded
@@ -156,8 +172,10 @@ the coordinator owns live semantic and style review.
 
 The single-file CLIs share the parser and checker with the bundle lanes, so the
 module rules change some of their diagnostics. Arguments, limits and exit codes
-are unchanged. The coordinator accepted every change on 2026-09-28: each moves
-Knot toward the seed's verdict and is pinned by seed-derived fixtures.
+are unchanged. The coordinator accepted the first ten changes on 2026-09-28:
+each moves Knot toward the seed's verdict and is pinned by seed-derived
+fixtures. The round-7 findings asked for the last two, which are pinned the
+same way.
 
 | Form | Before | After |
 | --- | --- | --- |
@@ -171,9 +189,14 @@ Knot toward the seed's verdict and is pinned by seed-derived fixtures.
 | `&` or `\|` after a parameter or field type | `Invalid parse argument-separator` | `Unsupported parse parameter-type` |
 | `(`, `->`, `&` or `\|` after a typed-let type | `Invalid parse expected-=` | `Unsupported parse binding-type` |
 | Unbound dotted let, typed-let or field binder | Checked | `Invalid check dotted-binder` |
+| Binder named in a later type position of its scope | Checked | `Invalid check binder-as-type` |
+| Declared type or function as an unapplied term | `Invalid check free-name` | `Unsupported check type-as-term` or `function-reference` |
 
 Rounds 3 to 5 made the first nine; their seed evidence, fixtures and
 authorization are in the [round-5 decision table](REVIEW-ROUND-5.md#single-file-deltas).
-Round 6 adds the last ([round 6](REVIEW-ROUND-6.md#single-file-deltas)). The
+Round 6 adds the tenth ([round 6](REVIEW-ROUND-6.md#single-file-deltas)) and
+round 7 the last two ([round 7](REVIEW-ROUND-7.md#single-file-deltas)). The seed
+rejects a declared function or type where a datatype is expected; Knot reports
+it Unsupported there too, which round 7 records as conservative. The
 [compiler specification](../../src/SPEC.md) and `legacy_commands` in
 `src/CONTRACT.json` list the same changes.
