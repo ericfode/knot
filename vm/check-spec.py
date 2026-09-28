@@ -148,6 +148,18 @@ def derived_prims(snapshot: dict) -> list:
     return rows
 
 
+def foreign_output(base: str, name: str) -> str:
+    """The representation X of a Base foreign declaration's `IO(X)` result."""
+    m = re.search(rf'^def {re.escape(name)}\([^)]*\) ->\s*IO\((.*)\):$', base, re.M)
+    require(m, f'foreign declaration {name}')
+    top = m[1]
+    while re.search(r'<[^<>]*>', top):
+        top = re.sub(r'<[^<>]*>', '', top)
+    if ' & ' in top:
+        return 'Sigma'
+    return re.match(r'[\w.]+', top)[0]
+
+
 def check_registry(registry: dict, built: dict) -> dict:
     rows = derived_prims(built['literals']['files'])
     require(registry['prims'][:len(rows)] == rows, 'registry prims differ from the literals derivation')
@@ -162,6 +174,7 @@ def check_registry(registry: dict, built: dict) -> dict:
         for path, digest in row['bodies'].items():
             if path.startswith('effs/'):
                 require(sha((base.parent / path).read_bytes()) == digest, f'foreign body {path}')
+                require(foreign_output(base.read_text(), row['name']) == row['output'], f"foreign output {row['name']}")
     require([f['id'] for f in registry['foreign']] == list(range(len(registry['foreign']))), 'foreign ids')
     require(tuple(registry['representations']) == codec.REPRESENTATIONS, 'representation order')
     return {'prims': len(registry['prims']), 'derived': len(rows), 'reserved': len(extra),
@@ -664,6 +677,11 @@ def plan_controls(plans: dict) -> list:
         return plan
 
     char_rows = plans['case-char']['functions'][0]['body'][5]
+    flag = {'kind': 'data', 'name': 'Flag', 'constructors': [{'name': 'Off', 'fields': []}, {'name': 'On', 'fields': []}]}
+
+    def flag_rows(depth):
+        """A tag table over a Flag at type index 1 answering its own value."""
+        return [['branch', 0, depth, 0, ['value', 1, 0]], ['branch', 1, depth, 0, ['value', 1, 1]]]
     return [
         ('ref-beyond-depth', edit('reference', [*body(0), 2], 1), 'slot 1 beyond depth 1'),
         ('let-slot', edit('let', [*body(0), 2], 1), 'let slot 1 at depth 0'),
@@ -698,6 +716,39 @@ def plan_controls(plans: dict) -> list:
                                        ([*body(0), 3, 0, 1], 0)), 'foreign operand is not the pinned String'),
         ('representation-shape', edit('u32-zero', ['types', 0, 'constructors'], [{'name': 'False', 'fields': []}]),
          'Bool shape'),
+        # Type rules at inspection points and pinned representations (review round 1).
+        ('key-body-type', edit('case-char', [*body(0), 5, 0, 4], ['lit', 0, 'U32', 7]), 'key branch body type'),
+        ('default-body-type', edit('case-char', [*body(0), 6, 1], ['lit', 0, 'U32', 7]), 'default body type'),
+        ('prim-on-flags', edit('value-on', body(0), ['prim', 0, 8, [['value', 0, 0], ['value', 0, 1]]]),
+         'prim operand is not the pinned U32'),
+        ('nat-add-of-flags', edit('value-on', body(0), ['prim', 0, 22, [['value', 0, 1], ['value', 0, 1]]]),
+         'prim operand is not the pinned Nat'),
+        ('prim-result-undeclared', edit('u32-zero', ['representation'], {'U32': 1}), 'prim result is not the pinned Bool'),
+        ('foreign-on-flag', edit('value-on', body(0), ['foreign', 0, 1, [['value', 0, 1]]]),
+         'foreign operand is not the pinned String'),
+        ('foreign-result', edits('foreign-print', (['entry'], 'book'), (['types'], plans['foreign-print']['types'] + [flag]),
+                                 (['functions', 0, 'result'], 8), ([*body(0), 1], 8),
+                                 (['functions', 1, 'result'], 8), ([*body(1), 1], 8)),
+         'foreign result is not IO(Unit)'),
+        ('program-main-unit', edit('foreign-print', ['functions', 1],
+                                   {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['value', 0, 0]}),
+         'main must return IO(Unit)'),
+        ('inspect-none-parameter', edits('nat-unpack', (['functions', 0, 'parameters'], [None]),
+                                         ([*body(0), 3], 1), ([*body(0), 5], flag_rows(1)),
+                                         (body(1), ['call', 1, 0, [['lit', 0, 'Nat', 7]]])),
+         'case scrutinee type'),
+        ('inspect-none-let', edits('nat-unpack', (['functions'], [
+            {'name': 'seven', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['lit', 0, 'Nat', 7]},
+            {'name': 'pred', 'parameters': [], 'result': 1, 'slots': 1,
+             'body': ['let', 1, 0, ['call', None, 0, []], ['case', 1, 0, 1, 'tags', flag_rows(1), None]]},
+            {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0, 'body': ['call', 1, 1, []]}])),
+         'case scrutinee type'),
+        ('nat-field-type', edits('nat-unpack', (['types', 0, 'constructors', 1, 'fields'], [1]),
+                                 ([*body(0), 5, 1], ['branch', 1, 1, 1, ['case', 1, 1, 1, 'tags', flag_rows(2), None]]),
+                                 (['functions', 0, 'slots'], 2)),
+         'Nat shape'),
+        ('reference-none-view', edit('reference', [*body(0), 1], None), 'reference type'),
+        ('arrow-cycle', edit('closure-id', ['types', 1, 'domain'], 1), 'arrow cycle'),
     ]
 
 
@@ -739,14 +790,27 @@ CODEC_MUTANTS = [
     ('validator-ignores-binders', [("                    if r[2] != depth or r[3] != len(fields):\n",
                                     "                    if r[3] != len(fields):\n")]),
     ('validator-admits-reserved-prim', [(" or table[node[2]].get('status') == 'reserved'", "")]),
-    ('validator-ignores-prim-arity', [("            if len(node[3]) != arity:\n                fail(where, f'{op} arity')\n            elif",
-                                       "            if False:\n                pass\n            elif")]),
+    ('validator-ignores-prim-arity', [("            if len(node[3]) != len(row['inputs']):\n                fail(where, f'{op} arity')\n"
+                                       "                return deepest\n", "")]),
     ('validator-any-literal-kind', [("            if kind_of_rep(t) != node[2]:", "            if False:")]),
     ('validator-ignores-representation', [("            fail('representation', f'{r} shape')", "            pass")]),
     ('validator-program-without-io-op', [("        missing = [r for r in ('Unit', 'String', 'IO.OP') if r not in rep]",
                                           "        missing = []")]),
-    ('validator-ignores-foreign-operands', [("                for k, name in zip(node[3], table[node[2]]['inputs']):\n",
-                                             "                for k, name in zip(node[3], table[node[2]]['inputs']) if op == 'prim' else []:\n")]),
+    ('validator-ignores-foreign-operands', [("            for k, name in zip(node[3], row['inputs']):\n",
+                                             "            for k, name in zip(node[3], row['inputs']) if op == 'prim' else []:\n")]),
+    ('validator-ignores-key-body-type', [("                    if r[4][1] != t:\n                        fail(where, 'key branch body type')\n", "")]),
+    ('validator-ignores-default-body-type', [("                if default[1][1] != t:\n                    fail(where, 'default body type')\n", "")]),
+    ('validator-vacuous-operand-representation', [("                if name not in rep or k[1] != rep[name]:",
+                                                   "                if rep.get(name, k[1]) != k[1]:")]),
+    ('validator-vacuous-prim-result', [("            if op == 'prim' and (row['output'] not in rep or t != rep[row['output']]):",
+                                        "            if op == 'prim' and rep.get(row['output'], t) != t:")]),
+    ('validator-ignores-foreign-result', [("            if op == 'foreign' and not io(t, rep.get(row['output'])):", "            if False:")]),
+    ('validator-program-any-result', [("        elif main and not io(main[0]['result'], rep['Unit']):", "        elif False:")]),
+    ('validator-inspects-none', [("            if scrutinee is None or scope[slot] != scrutinee:",
+                                  "            if not fits(scrutinee, scope[slot]):")]),
+    ('validator-reference-wildcard', [("                if scope[node[2]] != t:", "                if not fits(scope[node[2]], t):")]),
+    ('validator-shape-counts-only', [("[c['fields'] for c in types[t]['constructors']] != [\n                [pinned(n) for n in fields]",
+                                      "[len(c['fields']) for c in types[t]['constructors']] != [\n                len(fields)")]),
 ]
 
 

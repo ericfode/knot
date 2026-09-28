@@ -22,9 +22,11 @@ OPCODES = ('lit', 'prim', 'default', 'value', 'con', 'ref', 'call', 'let', 'case
            'branch', 'closure', 'invoke', 'foreign')
 CASE_MODES = ('tags', 'keys')
 LIMITS = {'image_words': 4 * 1024 * 1024, 'records': 1 << 20, 'arity': 4096, 'slots': 65536}
-# Pinned shapes of the representation types (constructor field counts by tag).
-SHAPES = {'Nat': [0, 1], 'Char': [1], 'String': [0, 2], 'Bool': [0, 0], 'Cmp': [0, 0, 0],
-          'Unit': [0], 'List': [0, 2], 'Result': [1, 1], 'Sigma': [2], 'IO.OP': [1, 2]}
+# Pinned field types of the representation types, by tag: a representation, or None for
+# an erased type parameter.
+FIELDS = {'Nat': [[], ['Nat']], 'Char': [['U32']], 'String': [[], ['Char', 'String']],
+          'Bool': [[], []], 'Cmp': [[], [], []], 'Unit': [[]], 'List': [[], [None, 'List']],
+          'Result': [[None], [None]], 'Sigma': [[None, None]], 'IO.OP': [[None], ['U32', 'String']]}
 OPAQUE = ('U32', 'File')
 
 
@@ -75,7 +77,7 @@ def encode(plan: dict, digest: bytes) -> bytes:
         if op in ('branch', 'default'):
             kids = [emit(node[-1])]
             operands = [node[1], node[2], node[3], ('@', kids[0])] if op == 'branch' else [('@', kids[0])]
-            nodes.append([OPCODES.index(op), result, *operands])
+            nodes.append([OPCODES.index(op), opt(result), *operands])
             return len(nodes) - 1
         t = node[1]
         if op == 'lit':
@@ -111,7 +113,7 @@ def encode(plan: dict, digest: bytes) -> bytes:
             operands = [('@', kids[0]), len(kids) - 1, *(('@', k) for k in kids[1:])]
         else:
             raise ValueError(f'unknown plan node {op!r}')
-        nodes.append([OPCODES.index(op), t, *operands])
+        nodes.append([OPCODES.index(op), opt(t), *operands])
         return len(nodes) - 1
 
     roots = [emit(f['body']) for f in plan['functions']]
@@ -378,17 +380,54 @@ def validate(plan: dict, registry: dict) -> list[str]:
     def live_fields(t, tag):
         return types[t]['constructors'][tag]['fields']
 
+    def pinned(name):
+        return None if name is None else rep.get(name, -1)      # -1: required but undeclared
+
     for r, t in rep.items():
         if r in OPAQUE:
             if types[t]['kind'] != 'opaque':
                 fail('representation', f'{r} must be opaque')
-        elif types[t]['kind'] != 'data' or [len(c['fields']) for c in types[t]['constructors']] != SHAPES[r]:
+        elif types[t]['kind'] != 'data' or [c['fields'] for c in types[t]['constructors']] != [
+                [pinned(n) for n in fields] for fields in FIELDS[r]]:
             fail('representation', f'{r} shape')
     scalar = {rep.get('U32'): 'U32', rep.get('Char'): 'Char'}
     scalar.pop(None, None)
     names = [f['name'] for f in functions]
     if len(set(names)) != len(names):
         fail('functions', 'duplicate function name')
+
+    arrows = ('arrow', 'erased-arrow')
+    grounded, grew = {None} | {i for i, t in enumerate(types) if t['kind'] not in arrows}, True
+    while grew:
+        grew = False
+        for i, t in enumerate(types):
+            if i not in grounded and t['domain'] in grounded and t['result'] in grounded:
+                grounded.add(i)
+                grew = True
+    if len(grounded) != len(types) + 1:
+        fail('types', 'arrow cycle')
+        return errors
+
+    def fits(declared, actual) -> bool:
+        """A value of type `actual` may flow where `declared` is expected: None, an erased
+        type parameter, fits anything; arrows of one kind fit position by position."""
+        if declared is None or actual is None or declared == actual:
+            return True
+        return (kind(declared) in arrows and kind(declared) == kind(actual)
+                and fits(types[declared]['domain'], types[actual]['domain'])
+                and fits(types[declared]['result'], types[actual]['result']))
+
+    def io(t, x) -> bool:
+        """t is IO(x) = @-R: Type -> (x -> IO.OP<R>) -> IO.OP<R>, x concrete (SPEC section 8)."""
+        op = rep.get('IO.OP')
+        if x is None or op is None or kind(t) != 'erased-arrow' or types[t]['domain'] is not None:
+            return False
+        live = types[t]['result']
+        if kind(live) != 'arrow' or types[live]['result'] != op:
+            return False
+        k = types[live]['domain']
+        return kind(k) == 'arrow' and types[k]['domain'] == x and types[k]['result'] == op
+
     if plan['entry'] == 'program':
         main = [f for f in functions if f['name'] == 'main']
         if not main or main[0]['parameters']:
@@ -396,12 +435,11 @@ def validate(plan: dict, registry: dict) -> list[str]:
         missing = [r for r in ('Unit', 'String', 'IO.OP') if r not in rep]
         if missing:
             fail('program', f'missing representation {missing}')
+        elif main and not io(main[0]['result'], rep['Unit']):
+            fail('program', 'main must return IO(Unit)')
 
     def kind_of_rep(t):
         return next((r for r, i in rep.items() if i == t), None)
-
-    def same(a, b):
-        return a is None or b is None or a == b
 
     def check(node, scope, where, used) -> int:
         """Returns the maximum scope depth reached; records slot uses in `used`."""
@@ -426,7 +464,7 @@ def validate(plan: dict, registry: dict) -> list[str]:
                 fail(where, f'slot {node[2]} beyond depth {depth}')
             else:
                 used.add(node[2])
-                if not same(scope[node[2]], t):
+                if scope[node[2]] != t:
                     fail(where, 'reference type')
             return depth
         if op == 'con':
@@ -437,41 +475,45 @@ def validate(plan: dict, registry: dict) -> list[str]:
                 fields = live_fields(t, node[2])
                 if not fields or len(fields) != len(node[3]):
                     fail(where, 'construct arity')
-                elif not all(same(f, k[1]) for f, k in zip(fields, node[3])):
+                elif not all(fits(f, k[1]) for f, k in zip(fields, node[3])):
                     fail(where, 'construct field type')
             return deepest
-        if op in ('prim', 'foreign', 'call'):
+        if op == 'call':
             deepest = max([depth] + [check(k, scope, where, used) for k in node[3]])
-            if op == 'call':
-                if node[2] >= len(functions):
-                    fail(where, 'function index')
-                    return deepest
-                callee = functions[node[2]]
-                arity, result = len(callee['parameters']), callee['result']
-                inputs = callee['parameters']
-            else:
-                table = prims if op == 'prim' else foreign
-                if node[2] not in table or table[node[2]].get('status') == 'reserved':
-                    fail(where, f'unknown {op} id {node[2]}')
-                    return deepest
-                arity, result, inputs = len(table[node[2]]['inputs']), None, [None] * len(node[3])
-                for k, name in zip(node[3], table[node[2]]['inputs']):
-                    if rep.get(name, k[1]) != k[1]:
-                        fail(where, f'{op} operand is not the pinned {name}')
-                expected = table[node[2]].get('output')
-                if op == 'prim' and rep.get(expected, t) != t:
-                    fail(where, f'prim result is not the pinned {expected}')
-            if len(node[3]) != arity:
+            if node[2] >= len(functions):
+                fail(where, 'function index')
+                return deepest
+            callee = functions[node[2]]
+            if len(node[3]) != len(callee['parameters']):
+                fail(where, 'call arity')
+            elif not fits(callee['result'], t) or not all(
+                    fits(p, k[1]) for p, k in zip(callee['parameters'], node[3])):
+                fail(where, 'call types')
+            return deepest
+        if op in ('prim', 'foreign'):
+            deepest = max([depth] + [check(k, scope, where, used) for k in node[3]])
+            table = prims if op == 'prim' else foreign
+            if node[2] not in table or table[node[2]].get('status') == 'reserved':
+                fail(where, f'unknown {op} id {node[2]}')
+                return deepest
+            row = table[node[2]]
+            if len(node[3]) != len(row['inputs']):
                 fail(where, f'{op} arity')
-            elif not same(result, t) or not all(same(p, k[1]) for p, k in zip(inputs, node[3])):
-                fail(where, f'{op} types')
+                return deepest
+            for k, name in zip(node[3], row['inputs']):
+                if name not in rep or k[1] != rep[name]:
+                    fail(where, f'{op} operand is not the pinned {name}')
+            if op == 'prim' and (row['output'] not in rep or t != rep[row['output']]):
+                fail(where, f"prim result is not the pinned {row['output']}")
+            if op == 'foreign' and not io(t, rep.get(row['output'])):
+                fail(where, f"foreign result is not IO({row['output']})")
             return deepest
         if op == 'let':
             if node[2] != depth:
                 fail(where, f'let slot {node[2]} at depth {depth}')
             a = check(node[3], scope, where, used)
             b = check(node[4], scope + [node[3][1]], where, used)
-            if not same(node[4][1], t):
+            if node[4][1] != t:
                 fail(where, 'let body type')
             return max(a, b)
         if op == 'case':
@@ -480,7 +522,7 @@ def validate(plan: dict, registry: dict) -> list[str]:
                 fail(where, 'case slot beyond depth')
                 return depth
             used.add(slot)
-            if not same(scope[slot], scrutinee):
+            if scrutinee is None or scope[slot] != scrutinee:
                 fail(where, 'case scrutinee type')
             deepest = depth
             if mode == 'tags':
@@ -503,7 +545,7 @@ def validate(plan: dict, registry: dict) -> list[str]:
                         fail(where, 'branch binders')
                         continue
                     deepest = max(deepest, check(r[4], scope + list(fields), where, used))
-                    if not same(r[4][1], t):
+                    if r[4][1] != t:
                         fail(where, 'branch body type')
             else:
                 if scrutinee not in scalar:
@@ -516,13 +558,17 @@ def validate(plan: dict, registry: dict) -> list[str]:
                         fail(where, 'key branch binds nothing')
                         continue
                     deepest = max(deepest, check(r[4], scope, where, used))
+                    if r[4][1] != t:
+                        fail(where, 'key branch body type')
             if default is not None:
                 deepest = max(deepest, check(default[1], scope, where, used))
+                if default[1][1] != t:
+                    fail(where, 'default body type')
             return deepest
         if op == 'closure':
             _, _, live, slots, captures, body = node
             arrow = kind(t)
-            if arrow not in ('arrow', 'erased-arrow') or live != (arrow == 'arrow'):
+            if arrow not in arrows or live != (arrow == 'arrow'):
                 fail(where, 'closure arrow')
                 return depth
             if captures != sorted(set(captures)) or any(c >= depth for c in captures):
@@ -536,16 +582,16 @@ def validate(plan: dict, registry: dict) -> list[str]:
                 fail(where, 'captures are not exactly the free slots of the body')
             if deepest != slots:
                 fail(where, f'closure slots {slots}, reached {deepest}')
-            if not same(body[1], types[t]['result']):
+            if not fits(types[t]['result'], body[1]):
                 fail(where, 'closure result type')
             return depth
         if op == 'invoke':
             deepest = max([check(node[2], scope, where, used)] + [check(a, scope, where, used) for a in node[3]])
             f = node[2][1]
             arrow = kind(f)
-            if arrow not in ('arrow', 'erased-arrow') or len(node[3]) != (1 if arrow == 'arrow' else 0):
+            if arrow not in arrows or len(node[3]) != (1 if arrow == 'arrow' else 0):
                 fail(where, 'invoke arity')
-            elif not same(types[f]['result'], t) or (node[3] and not same(types[f]['domain'], node[3][0][1])):
+            elif not fits(types[f]['result'], t) or (node[3] and not fits(types[f]['domain'], node[3][0][1])):
                 fail(where, 'invoke types')
             return deepest
         fail(where, f'unknown node {op}')
@@ -558,7 +604,7 @@ def validate(plan: dict, registry: dict) -> list[str]:
         deepest = check(f['body'], list(f['parameters']), f['name'], used)
         if deepest != f['slots']:
             fail(f['name'], f'slots {f["slots"]}, reached {deepest}')
-        if not same(f['body'][1], f['result']):
+        if not fits(f['result'], f['body'][1]):
             fail(f['name'], 'body type')
     return errors
 

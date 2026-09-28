@@ -109,14 +109,19 @@ be zero. An index is a record's zero-based position in its own table.
 count), 1 live arrow (`a` domain, `b` result), 2 erased arrow (`a` domain or
 `none`, `b` result), 3 opaque (`a = b = 0`). Arrows have name `none`; every other
 type is named. Constructor rows are grouped by type in type order, tags dense
-`0..b-1` in declaration order. A field or signature type may be `none`: a value of
-an erased abstract type, which may be moved but never inspected or described.
+`0..b-1` in declaration order. A field, signature or node result type may be
+`none`: a value of an erased abstract type (a generic parameter), which may be
+moved but never inspected or described (§3). Arrow types MUST NOT form a cycle
+through their domains and results.
 
 **Representations.** Header words 12–23 name the hash-pinned Base types; a
-familiar name is never authority. Their pinned shapes, live field counts by tag:
-Nat `[0,1]` (Zero, Succ), Char `[1]` (Chr), String `[0,2]` (SNil, SCon),
-Bool `[0,0]`, Cmp `[0,0,0]`, Unit `[0]`, List `[0,2]`, Result `[1,1]` (Fail, Done),
-Sigma `[2]` (Tuple), IO.OP `[1,2]` (Emit, Halt). U32 and File are **opaque**:
+familiar name is never authority. Their pinned constructors, by tag, with live field
+types (`none` is an erased type parameter): Nat `Zero{}`, `Succ{Nat}`; Char
+`Chr{U32}`; String `SNil{}`, `SCon{Char, String}`; Bool two and Cmp three nullary
+constructors; Unit one; List `Nil{}`, `Con{none, List}`; Result `Fail{none}`,
+`Done{none}`; Sigma `Tuple{none, none}`; IO.OP `Emit{none}`, `Halt{U32, String}`.
+A field naming another representation requires that representation declared.
+U32 and File are **opaque**:
 U32's `Word` representation is never exposed to the VM, and the encoder rejects a
 reachable non-prim body that destructures it. A File is a host handle token.
 
@@ -139,7 +144,9 @@ reproduces it byte for byte**; `serializer.py` is that re-encoder.
 ## 3. Node records
 
 `child` is the offset of an earlier node record. Every node carries its result
-type; a Branch or Default carries its Case's.
+type; a Branch or Default carries its Case's. A node's type is `none` exactly when
+its value has an erased abstract type; such a value may be referenced, bound,
+passed, stored in a field or capture and returned, but never inspected.
 
 | Code | Form | Operands after the result type | Children, in order |
 |---:|---|---|---|
@@ -161,8 +168,19 @@ type; a Branch or Default carries its Case's.
   and String's SNil. **Construct** has exactly the constructor's live field count,
   at least one. U32 and Char literals are Literal nodes, never Values.
 - **Application** passes exactly the callee's live arity. **Intrinsic** and
-  **Foreign** pass exactly the registry arity; their operand and result types are
-  the pinned representations the registry names.
+  **Foreign** pass exactly the registry arity; their operand types, and an
+  Intrinsic's result type, are the pinned representations the registry names,
+  which the image MUST declare. A Foreign's result type is `IO(X)` in §8's shape,
+  with `X` the registry's `output` representation.
+- **Types agree.** Exactly, with `none` equal only to `none`: a Reference and its
+  slot, a Let and its body, a Case and every arm body, and a Case's scrutinee type
+  and its slot, which MUST be concrete. Where a value flows into a declared
+  position (an Application's arguments and result, a Construct's fields, an
+  Invoke's argument and result, a Closure's and a function's body) it **fits**:
+  `none` on either side fits any type, arrows of one kind fit when their domains
+  and results fit, and any other type fits only itself. Fit is instantiation of
+  an erased parameter, so validation does not establish type soundness under
+  generics; §6.1 checks every inspected word at run time.
 - **Let** binds slot = current depth; its value runs at that depth, its body one
   deeper. **Reference** and **Case** read a slot below the current depth.
 - **Case mode 0 (tags)**: a dense table over the scrutinee type's constructors,
@@ -203,13 +221,13 @@ stack. The validator checks every function, reachable or not:
 3. Every index and child offset is in range and names a record of the right
    table; every child precedes its parent; each node has exactly one parent or is
    exactly one function's root.
-4. The scope, arity and type rules of §2–§3, including representation shapes,
-   literal kinds, prim and foreign ids and arities (a reserved id is refused, never
+4. The scope, arity and type rules of §2–§3, including representation field
+   types, acyclic arrows, `IO(Unit)` for a Program's `main`, literal kinds, prim and foreign ids and arities (a reserved id is refused, never
    run as a Base body), arrow kinds, captures and exact `slots`.
 5. Canonicality as defined in §2.
 
-A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 48
-refusals (20 byte-level, 28 plan-level); vm-core MUST refuse the same controls.
+A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
+refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls.
 Other version-1 limits: at most 1,048,576 records per table, live arity at most
 4,096, `slots` at most 65,536. These are resource limits, not source rules.
 
@@ -343,8 +361,14 @@ to its post-state. No row runs user code or a second host effect.
 
 ### 6.1 Case selection
 
-The scrutinee is borrowed from its slot. For an Object, the tag and fields come
-from its payload; for an immediate of an algebraic type, the tag is `v` and there
+The scrutinee is borrowed from its slot. Its word is first checked against the
+scrutinee type, because a `none`-typed value may be instantiated at any type (§3):
+an algebraic type admits an immediate below its constructor count or an Object
+(class 0) whose `type` is that type; Nat, U32 and Char admit an immediate or a Big
+cell (class 2). Every word a prim reads is checked the same way against the pinned
+representation it expects, String cells included. A mismatch halts with
+`HostFailure image` (`ill-typed`) before the step changes any state; no read
+leaves a cell. For an Object, the tag and fields come from its payload; for an immediate of an algebraic type, the tag is `v` and there
 are no fields. A Nat word `n` is Zero when `n = 0`, otherwise Succ with the new
 word `n - 1` (a Big is allocated when `n - 1 >= 2^31`). A Char word is Chr with
 its own code word. In key mode, the scalar's value is compared with the keys;
@@ -364,8 +388,11 @@ the callee, so a tail loop reuses its cell. A non-tail entry pushes Call(`act`).
 
 `Enter(target, ops)`:
 
-1. If `fuel = 0`, stop with `Exhausted` kind 1; the pending `Enter` stays in the
-   state and no effect happens. Otherwise `fuel -= 1`, `calls += 1`, `quantum += 1`.
+1. A target that is neither a function (Application) nor a Closure cell, an Action
+   cell or the terminal continuation halts with `HostFailure image` (`ill-typed`)
+   before anything else. If `fuel = 0`, stop with `Exhausted` kind 1; the pending
+   `Enter` stays in the state and no effect happens. Otherwise `fuel -= 1`,
+   `calls += 1`, `quantum += 1`.
 2. By target:
    - a function: enter its body with `ops` moved into slots `0..arity-1`;
    - a Closure: enter its body with the captures `dup`ed into slots `0..n-1` and
@@ -424,14 +451,16 @@ value. The result is dropped after printing.
 
 **Program** (`IMAGE FUEL -- [ARGS…]`; only `ARGS` reach `IO.args`). `main` takes no
 live argument and returns `IO(Unit)`, where
-`IO(A) = @-R: Type -> (A -> IO.OP<R>) -> IO.OP<R>`: an erased arrow to a live arrow.
+`IO(A) = @-R: Type -> (A -> IO.OP<R>) -> IO.OP<R>`: an erased arrow (domain `none`)
+to a live arrow whose domain is a live arrow from `A` to IO.OP and whose result is
+IO.OP. The validator requires exactly this shape, with `A` the pinned Unit.
 The VM pushes Top(phase 1) and starts with `Enter(main, [])`. Returns to Top:
 
 | Phase | On Return of `w` |
 |---|---|
 | 1 | set phase 2; `Enter(w, [])` applies the erased `R` |
 | 2 | set phase 3; `Enter(w, [terminal])` |
-| 3 | `w` is an IO.OP Object: Emit ends with exit 0, Halt calls the host's `die` with its code and message. Drop `w` first. |
+| 3 | `w` must be an IO.OP Object (else `HostFailure image`, `ill-typed`): Emit ends with exit 0, Halt calls the host's `die` with its code and message. Drop `w` first. |
 
 `IO.pure`, `IO.bind` and `IO.die` are ordinary Base code; `IO.die` returns `Halt`
 directly. Emit is not an effect request. Program images require the Unit, String
@@ -506,7 +535,9 @@ passes that contract's fixtures.
 
 Foreign rows in `registry.json`: 0 `IO.args`, 1 `IO.print`, 2 `File.open`,
 3 `File.read`, 4 `File.write_bytes`, 5 `File.close`, 6 `File.read_bytes`,
-7 modules `inspect`. Applying an Action converts its operands, calls the host,
+7 modules `inspect`. Each row's `output` names the representation `X` of its
+`IO(X)` result; the gate re-derives it from the Base declarations (`inspect`'s
+comes from its pinned declaration). Applying an Action converts its operands, calls the host,
 builds the exact pinned Base Result, pair and handle view, and enters `k`.
 Outgoing Strings must be Unicode scalars and are encoded as canonical UTF-8, with
 no surrogate merging or replacement. Incoming text follows the host's replacement
@@ -579,8 +610,8 @@ lane and requires:
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations;
 - all 13 node forms, both Case modes, a Program and a boxed scalar constant
   covered;
-- all 48 refusals of §4 with their frozen reasons;
-- 21 codec mutants and 3 source mutants killed through a changed image, a changed
+- all 61 refusals of §4 with their frozen reasons;
+- 30 codec mutants and 3 source mutants killed through a changed image, a changed
   refusal or a changed observation, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
