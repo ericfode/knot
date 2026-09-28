@@ -303,7 +303,11 @@ tree.
 ## Style preflight
 
 `round9-preflight.txt` records the offline preflight (0 provider requests). The
-whole compiler manifest exits 0: 20 groups, every composition available, 0
+eight changed Bend files together (296 declarations) exit 3, as the seven of round
+8 did: 45 contexts are truncated (32 by the helper limit, 10 by the caller or
+byte limit, 3 by the file limit) and the composition is unavailable (153,170 of
+48,000 bytes). Those are limits of a whole-file selection, not of the manifest
+groups. The whole compiler manifest exits 0: 20 groups, every composition available, 0
 truncated, 0 role-limited, 0 structural blockers. The new mechanisms and laws
 (`expected`, `binder_failure`, `body_end`, the check and parser laws) have
 complete contexts (0 truncated, 0 role-limited). Three whole-checker helper
