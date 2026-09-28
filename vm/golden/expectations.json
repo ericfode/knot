@@ -2625,6 +2625,80 @@
         "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
         "stderr": ""
       }
+    },
+    {
+      "name": "chr-pattern",
+      "source": "vm/golden/chr-pattern.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "unavailable": "Unsupported check char-constructor-pattern",
+      "features": [
+        "Case",
+        "Branch",
+        "Reference",
+        "Literal",
+        "Intrinsic",
+        "tags-mode Char"
+      ],
+      "sha256": "fc9133c0e68b433b32188b72037f003b975a8304b476fcdc15e16e4738ea548d",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tcheck\tchar-constructor-pattern\t60:63:5:9\n"
+      }
+    },
+    {
+      "name": "list-head-match",
+      "source": "vm/golden/list-head-match.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "unavailable": "Unsupported parse parameter-type",
+      "features": [
+        "Case",
+        "Branch",
+        "Reference",
+        "Construct",
+        "generic"
+      ],
+      "sha256": "84010bf42ff3dc9a28a7830c077d0398866915543f26562e999d14966b41e007",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:21\n"
+      }
+    },
+    {
+      "name": "nat-transitions",
+      "source": "vm/golden/nat-transitions.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "bound"
+      ],
+      "sha256": "ea0205e7e046128e8f8911c3bf897556daf4ac58e0db23e14fc6a4f9235d2e31",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
     }
   ]
 }
