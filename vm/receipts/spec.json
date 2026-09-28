@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T11:57:12.956612+00:00",
+ "date": "2026-09-28T13:15:19.706312+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "96bf3829e854341813fe11425ba93fef43a013f71f4403cc772410aebb05e218",
-  "vm/SPEC.md": "92f82a8910419f3a5b095f8a603a2332f168aae03df8071a2c6cb7d9fbed3932",
+  "vm/DECISIONS.md": "8e24be46cc552b1c2b0560089a552eb2e6d16cc520e131a121d7206a2082a90e",
+  "vm/SPEC.md": "269d2fa0423aa773520c684dee80838d5dec8bf1666ca8080b4fe926a39a63b8",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "5e7d771ff8b0a6097c1109185a1c57e84d42b2d29d6dbfd6df4908e0d2108117",
+  "vm/check-spec.py": "dfb5a87a40ec6f2d10e65dd3eee0a8d2edabf36e01284f0af76427c51e64a7e7",
   "vm/evaluate.py": "b4c5754ad7b09ad75a355c60aaa0869c0ca951f26735c96f342d36a6e2134c2c",
   "vm/golden/bounds.json": "acaea7544a23ce7d1502dc42dfec108e799f0c909bbc29cabcc6c7ba4fc47500",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
@@ -3107,6 +3107,17 @@
   "run:display-visits-beyond-bound",
   "run:display-bytes-at-bound",
   "run:display-bytes-beyond-bound",
+  "run:fuel-book-exact",
+  "run:fuel-book-short",
+  "run:fuel-invoke-exact",
+  "run:fuel-invoke-short",
+  "run:fuel-program-exact",
+  "run:fuel-continuation-short",
+  "run:fuel-action-short",
+  "run:fuel-zero-book",
+  "run:fuel-zero-program",
+  "run:fuel-zero-ill-typed-invoke",
+  "run:fuel-zero-ill-typed-phase",
   "codes:surrogate-pair",
   "codes:u1f600",
   "codes:lone-surrogate",
@@ -3120,54 +3131,99 @@
  ],
  "runs": {
   "arrow-through-identity": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
    "exit": 0,
    "stdout": "Evaluated\t0\t1\tOn{}\n",
    "calls": 3,
    "image_sha256": "ad51452d060ed6671a936355609922734835e9693462756c39f87a6771f51c4a"
   },
   "erased-closure-invoked-live": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
    "outcome": "HostFailure",
    "cause": "image ill-typed",
    "calls": 2,
    "image_sha256": "520e2b57133e287510b66fc5f7722019d239f2d43d35dc86281f29fbf4871e4f"
   },
   "live-closure-invoked-erased": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
    "outcome": "HostFailure",
    "cause": "image ill-typed",
    "calls": 2,
    "image_sha256": "50d41b7b161178606ef9102cfc6b273185d73ced24b1ac74a6c6f1e147bd5565"
   },
   "terminal-invoked-erased": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
    "outcome": "HostFailure",
    "cause": "image ill-typed",
    "calls": 4,
    "image_sha256": "0bdce1ae49b18c513376c0ffe920eba60ddfb32536a9b5abbf4be6d0ba058444"
   },
   "phase-one-live": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
    "outcome": "HostFailure",
    "cause": "image ill-typed",
    "calls": 2,
    "image_sha256": "ea8963bd6995a6639549e85bb8f42a3e902779ce0bc751204495d332ef9a1222"
   },
   "phase-two-erased": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
    "outcome": "HostFailure",
    "cause": "image ill-typed",
    "calls": 3,
    "image_sha256": "5be8b945c1d1c0fc9d9c37c2cfad8a4578ea2861b542c109997377af376e40e6"
   },
   "u32-file-alias": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
    "exit": 0,
    "stdout": "Evaluated\t0\t0\tOff{}\n",
    "calls": 1,
    "image_sha256": "a4c1758eed3b8c2427cb34af500e430e40c06d1227654b9f79c4348347431033"
   },
   "display-visits-at-bound": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
    "exit": 0,
    "stdout_sha256": "84b0be7c71db35d6578783135877b1b67c63a3b8049e435986e256f5779ade0a",
    "calls": 1,
    "image_sha256": "55966b543097ab29ebcab7f1cd4398cf3bb4fd347c90915e46f2a97cea7a6c3f"
   },
   "display-visits-beyond-bound": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
    "outcome": "Exhausted",
    "kind": 2,
    "cause": "display",
@@ -3175,17 +3231,168 @@
    "image_sha256": "8cfa8e0082525f9e3fb055b032bc0b1f776f89ab9d19a8cfefa66949b2c630c2"
   },
   "display-bytes-at-bound": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
    "exit": 0,
    "stdout_sha256": "e6b0dd0f00875b17a05cf35d5dcdcd0fc4820fb1535e0be6a9e0650d86c2a797",
    "calls": 1,
    "image_sha256": "b428dec61169b5a32ec9b0fa2ea261a74532b34fadd6f8e604406519a528b5bd"
   },
   "display-bytes-beyond-bound": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
    "outcome": "Exhausted",
    "kind": 2,
    "cause": "display",
    "calls": 1,
    "image_sha256": "12f0abce145a2e7e7233025c125b28823188ff056f8f7fff3e9e8654d7b53821"
+  },
+  "fuel-book-exact": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "6"
+   ],
+   "fuel": 6,
+   "exit": 0,
+   "stdout": "Evaluated\t1\t1\tPush{Off{},Push{On{},Stop{}}}\n",
+   "calls": 6,
+   "image_sha256": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08"
+  },
+  "fuel-book-short": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "5"
+   ],
+   "fuel": 5,
+   "outcome": "Exhausted",
+   "kind": 1,
+   "cause": "fuel",
+   "calls": 5,
+   "image_sha256": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08"
+  },
+  "fuel-invoke-exact": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "4"
+   ],
+   "fuel": 4,
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "calls": 4,
+   "image_sha256": "ba4b4ab066c50995f4626acda6a26f70efc0ea9c3d54722a86ee397c259169c7"
+  },
+  "fuel-invoke-short": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "3"
+   ],
+   "fuel": 3,
+   "outcome": "Exhausted",
+   "kind": 1,
+   "cause": "fuel",
+   "calls": 3,
+   "image_sha256": "ba4b4ab066c50995f4626acda6a26f70efc0ea9c3d54722a86ee397c259169c7"
+  },
+  "fuel-program-exact": {
+   "argv": [
+    "IMAGE",
+    "5",
+    "--"
+   ],
+   "fuel": 5,
+   "exit": 0,
+   "stdout": "vm\n",
+   "calls": 5,
+   "image_sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f"
+  },
+  "fuel-continuation-short": {
+   "argv": [
+    "IMAGE",
+    "4",
+    "--"
+   ],
+   "fuel": 4,
+   "outcome": "Exhausted",
+   "kind": 1,
+   "cause": "fuel",
+   "stdout": "vm\n",
+   "calls": 4,
+   "image_sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f"
+  },
+  "fuel-action-short": {
+   "argv": [
+    "IMAGE",
+    "3",
+    "--"
+   ],
+   "fuel": 3,
+   "outcome": "Exhausted",
+   "kind": 1,
+   "cause": "fuel",
+   "stdout": "",
+   "calls": 3,
+   "image_sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f"
+  },
+  "fuel-zero-book": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "0"
+   ],
+   "fuel": 0,
+   "outcome": "Exhausted",
+   "kind": 1,
+   "cause": "fuel",
+   "calls": 0,
+   "image_sha256": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08"
+  },
+  "fuel-zero-program": {
+   "argv": [
+    "IMAGE",
+    "0",
+    "--"
+   ],
+   "fuel": 0,
+   "outcome": "Exhausted",
+   "kind": 1,
+   "cause": "fuel",
+   "stdout": "",
+   "calls": 0,
+   "image_sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f"
+  },
+  "fuel-zero-ill-typed-invoke": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "2"
+   ],
+   "fuel": 2,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 2,
+   "image_sha256": "520e2b57133e287510b66fc5f7722019d239f2d43d35dc86281f29fbf4871e4f"
+  },
+  "fuel-zero-ill-typed-phase": {
+   "argv": [
+    "IMAGE",
+    "2",
+    "--"
+   ],
+   "fuel": 2,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 2,
+   "image_sha256": "ea8963bd6995a6639549e85bb8f42a3e902779ce0bc751204495d332ef9a1222"
   }
  },
  "describe": {
@@ -3575,6 +3782,31 @@
    "mutant": "evaluator:display-separators-free",
    "killed": true,
    "by": "run control display-bytes-beyond-bound: {'outcome': None, 'kind': None, 'cause': None, 'calls': 1}"
+  },
+  {
+   "mutant": "evaluator:fuel-never-exhausts",
+   "killed": true,
+   "by": "run control fuel-book-short: {'fuel': 5, 'outcome': None, 'kind': None, 'cause': None, 'calls': 6}"
+  },
+  {
+   "mutant": "evaluator:fuel-exhausts-early",
+   "killed": true,
+   "by": "run control fuel-book-exact: {'fuel': 6, 'exit': None, 'stdout': None, 'calls': 5}"
+  },
+  {
+   "mutant": "evaluator:effect-before-debit",
+   "killed": true,
+   "by": "run control fuel-action-short: {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': 'vm\\n', 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:fuel-before-operand-check",
+   "killed": true,
+   "by": "run control fuel-zero-ill-typed-invoke: {'fuel': 2, 'outcome': 'Exhausted', 'cause': 'fuel', 'calls': 2}"
+  },
+  {
+   "mutant": "evaluator:terminal-entry-free",
+   "killed": true,
+   "by": "run control fuel-program-exact: {'fuel': 5, 'exit': 0, 'stdout': 'vm\\n', 'calls': 4}"
   }
  ],
  "code_lists": {

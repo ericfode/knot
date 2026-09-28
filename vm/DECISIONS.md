@@ -206,6 +206,23 @@ follows it (§5, §10, §11) without a new image header word.
    pass it by one, two seed controls refuse one visit and one byte beyond, and four
    evaluator mutants (each bound exclusive, a Nat as one visit, separators free)
    are killed. No expectation changed.
+15. **Fuel runs out at a frozen boundary.** The targeted round-5 re-review found
+   D16 unwitnessed: no golden, run control or mutant reached fuel exhaustion, so
+   the evaluator mutants `if False:` and `if self.fuel <= 1:` of `debit` left the
+   gate's summary unchanged, and a vm-core whose fuel never ran out, or ran out one
+   entry early, passed every frozen check. §7 now states the boundary: a run
+   completes with fuel equal to its calls, and one unit less stops its last entry
+   after one call fewer; the operand check precedes the fuel test; an Action is
+   debited before its effect and `k` after it. Eleven run controls freeze it by
+   literal review of `recursion-map` (6 Applications), `closure-nested` (its last
+   entry an Invoke), `foreign-print` (5 entries: at 4 `vm\n` is written and `k`
+   stops, at 3 the Action's second application stops before its effect), a Book
+   and a Program at fuel 0, and two ill-typed Enters that meet fuel 0. Five
+   evaluator mutants (fuel that never runs out or runs out early, the effect
+   before the debit, the fuel test before the operand check, a free terminal
+   continuation) survive with those controls withheld and each dies by one. Run
+   controls now carry their fuel, and the receipt records each one's argv. No
+   golden or expectation changed.
 
 ## Findings that need an owner
 

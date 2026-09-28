@@ -261,9 +261,9 @@ A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 62
 refusals (20 byte-level, 42 plan-level); vm-core MUST refuse the same controls,
 and MUST admit its six admitted plan controls (three Cases on a `none` slot,
 among them `list-head-match`, and three whose arms fit their Case, among them
-`first-code`, S's shapes), its seven code-list controls and its eleven run
-controls; vm-model and vm-core MUST run each run control to the outcome
-frozen with it (§7, §12).
+`first-code`, S's shapes), its seven code-list controls and its 22 run
+controls; vm-model and vm-core MUST run each run control, at the fuel frozen with
+it, to the outcome frozen with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
@@ -466,6 +466,15 @@ independent of eval-cli's transition budget, so no claim compares equal numbers
 across the two. Goldens run with 1,000,000; benchmarks with the u32 maximum,
 4,294,967,295 (`deep-recursion` alone makes about 2 × 10^9 entries).
 `calls` is the total of successful debits, so the initial fuel is `fuel + calls`.
+
+**The boundary.** A run whose entries total `calls` completes with initial fuel
+`calls`; with one unit less, its last entry stops with `Exhausted` kind 1 after
+`calls - 1` debits, and at fuel 0 its first entry stops after none. The operand
+check precedes the fuel test, so an ill-typed Enter is `HostFailure image` at
+fuel 0 too. An Action applied to `k` is debited before its effect, and `k` is a
+separate entry: when the Action's second application meets fuel 0, nothing is
+written; when `k`'s entry does, the effect's output is already written. Eleven
+fuel run controls freeze each side (§12).
 
 **Quantum.** When a debit makes `quantum` reach 65,536, the Enter step completes
 (the new body is ready to Eval, or the Action's continuation is pending) and
@@ -770,8 +779,9 @@ lane and requires:
   controls; `first-code` also equals the independent lowering of its `check-cli`
   display, written by hand in the literals head's grammar because no pinned head
   checks a `List<U32>` parameter;
-- eleven admitted **run controls** (`check-spec.py run_controls`), each frozen
-  with the run §7 and §8 require, by literal review. Through a `none`-typed identity: a
+- 22 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+  its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
+  review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
   closure invoked live, a live closure invoked erased, the terminal continuation
   invoked erased, a live closure as main's value at phase 1 and an erased closure
@@ -785,15 +795,24 @@ lane and requires:
   successor is named with 15 bytes renders in exactly 16,777,216 bytes, and
   `Pair{a,b}`, one byte longer, is `Exhausted`. Their lines are frozen by SHA-256.
   The seed's value obeys the same bounds (two frozen controls refuse one visit
-  and one byte beyond them);
+  and one byte beyond them). Eleven fuel controls meet §7's boundary:
+  `recursion-map` completes at fuel 6 and stops at 5 after 5 calls; `closure-nested`
+  completes at 4, and its last Invoke stops at 3; `foreign-print` completes at 5,
+  stops at `k` at 4 after writing `vm\n`, and stops at the Action's second
+  application at 3 having written nothing; a Book and a Program stop at fuel 0 after
+  0 calls; and two ill-typed Enters (an erased closure invoked live, a live closure
+  at phase 1) meet fuel 0 after 2 calls and stay `HostFailure image`;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
 - 49 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe or invocation verdict or a changed observation, and 15 evaluator mutants
-  through a changed or refused expectation, Book value or run control, never a crash;
+  changed describe or invocation verdict or a changed observation, and 20 evaluator mutants
+  through a changed or refused expectation, Book value or run control, never a crash.
+  Five survive every golden and die only by a fuel control: fuel that never runs
+  out, fuel that runs out one entry early, an Action's effect before its debit,
+  the fuel test before the operand check, and a free terminal continuation;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).

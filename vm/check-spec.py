@@ -879,13 +879,24 @@ def reproduced(name: str, plan: dict, expected: dict, evaluator=None):
 
 
 def ran(plan: dict, frozen: dict, evaluator=None) -> dict:
-    """A run control's outcome and call count under the reference evaluation."""
-    ev = evaluator or reference
-    got = ev.book(plan, 'main', [], VM_FUEL) if plan['entry'] == 'book' else ev.program(plan, VM_FUEL)
+    """A run control's outcome and call count under the reference evaluation, at its frozen
+    fuel (VM_FUEL unless it names one)."""
+    ev, fuel = evaluator or reference, frozen.get('fuel', VM_FUEL)
+    got = ev.book(plan, 'main', [], fuel) if plan['entry'] == 'book' else ev.program(plan, fuel)
+    got['fuel'] = fuel
+    if isinstance(got.get('stdout'), bytes):
+        # A Program's written bytes; every run control writes ASCII.
+        got['stdout'] = got['stdout'].decode('utf-8', 'replace')
     if 'stdout' in got:
         # A display control freezes its multi-megabyte line by digest.
-        got['stdout_sha256'] = sha(got['stdout'] if isinstance(got['stdout'], bytes) else got['stdout'].encode())
+        got['stdout_sha256'] = sha(got['stdout'].encode())
     return {k: got.get(k) for k in frozen}
+
+
+def run_argv(plan: dict, frozen: dict) -> list:
+    """How vm-core invokes a run control (section 8)."""
+    fuel = str(frozen.get('fuel', VM_FUEL))
+    return ['IMAGE', 'main', fuel] if plan['entry'] == 'book' else ['IMAGE', fuel, '--']
 
 
 # ------------------------------------------------------------------ controls and mutants
@@ -1196,7 +1207,7 @@ def run_controls(plans: dict) -> list:
                 'types': fp['types'] + [{'kind': 'erased-arrow', 'domain': None, 'result': 4}],
                 'functions': [ident, {'name': 'main', 'parameters': [], 'result': 7, 'slots': 0, 'body': body}]}
     halt = ['closure', 8, 0, 0, [], ['con', 4, 1, [['lit', 1, 'U32', 0], ['value', 3, 0]]]]
-    return [
+    laundered = [
         ('arrow-through-identity',
          book(['invoke', 0, ['call', 1, 0, [['closure', 1, 1, 1, [], ['ref', 0, 0]]]], [['value', 0, 1]]]),
          {'exit': 0, 'stdout': 'Evaluated\t0\t1\tOn{}\n', 'calls': 3}),
@@ -1221,7 +1232,41 @@ def run_controls(plans: dict) -> list:
           'functions': [{'name': 'main', 'parameters': [], 'result': 0, 'slots': 1,
                          'body': ['let', 0, 0, ['lit', 1, 'U32', 7], ['value', 0, 0]]}]},
          {'exit': 0, 'stdout': 'Evaluated\t0\t0\tOff{}\n', 'calls': 1}),
-        *display_controls(),
+    ]
+    return [*laundered, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in laundered}})]
+
+
+def fuel_controls(plans: dict) -> list:
+    """Section 7's fuel boundary, by literal review of golden plans and two controls above:
+    `calls` counts successful debits, so a run completes with fuel equal to its calls, and
+    one unit less stops its last entry with Exhausted kind 1 after one call fewer.
+    - recursion-map enters main, flip_all(Push{On{},Push{Off{},Stop{}}}), flip(On{}),
+      flip_all(Push{Off{},Stop{}}), flip(Off{}) and flip_all(Stop{}): 6 Applications.
+    - closure-nested enters main, keep(On{}), the closure keep returns and the closure that
+      one returns: at 3 the last Invoke stops.
+    - foreign-print enters main, IO.print, the Action applied to the erased R (phase 1),
+      the Action applied to k (phase 2), which writes `vm\n`, and the terminal continuation
+      k: at 4 the output is written and k's entry stops; at 3 the Action's second
+      application stops before its effect, so nothing is written.
+    - At fuel 0 the first entry stops: nothing is entered, written or counted.
+    - The third Enter of erased-closure-invoked-live, and phase-one-live's phase 1, are
+      ill-typed. At fuel 2 each meets fuel 0, and the operand check still refuses it first."""
+    def at(fuel, outcome, calls, **more):
+        return {'fuel': fuel, **outcome, **more, 'calls': calls}
+    fuel = {'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel'}
+    flags, closed, printed = plans['recursion-map'], plans['closure-nested'], plans['foreign-print']
+    return [
+        ('fuel-book-exact', flags, at(6, {'exit': 0}, 6, stdout='Evaluated\t1\t1\tPush{Off{},Push{On{},Stop{}}}\n')),
+        ('fuel-book-short', flags, at(5, fuel, 5)),
+        ('fuel-invoke-exact', closed, at(4, {'exit': 0}, 4, stdout='Evaluated\t0\t1\tOn{}\n')),
+        ('fuel-invoke-short', closed, at(3, fuel, 3)),
+        ('fuel-program-exact', printed, at(5, {'exit': 0}, 5, stdout='vm\n')),
+        ('fuel-continuation-short', printed, at(4, fuel, 4, stdout='vm\n')),
+        ('fuel-action-short', printed, at(3, fuel, 3, stdout='')),
+        ('fuel-zero-book', flags, at(0, fuel, 0)),
+        ('fuel-zero-program', printed, at(0, fuel, 0, stdout='')),
+        ('fuel-zero-ill-typed-invoke', plans['erased-closure-invoked-live'], at(2, ILL_TYPED, 2)),
+        ('fuel-zero-ill-typed-phase', plans['phase-one-live'], at(2, ILL_TYPED, 2)),
     ]
 
 
@@ -1539,6 +1584,18 @@ EVALUATOR_MUTANTS = [
     ('display-bytes-exclusive', [(' or cost[1] > DISPLAY_BYTES:', ' or cost[1] >= DISPLAY_BYTES:')]),
     ('display-nat-one-visit', [('                charge(v + 1, ', '                charge(1, ')]),
     ('display-separators-free', [('                charge(0, len(item))', '                charge(0, 0)')]),
+    # Section 7's fuel boundary (fuel_controls): no golden runs out of fuel.
+    ('fuel-never-exhausts', [('        if self.fuel == 0:\n            raise Halt', '        if False:\n            raise Halt')]),
+    ('fuel-exhausts-early', [('        if self.fuel == 0:\n            raise Halt', '        if self.fuel <= 1:\n            raise Halt')]),
+    ('effect-before-debit', [("        self.debit()\n        if kind == 'closure':",
+                              "        if kind != 'action' or not operands:\n            self.debit()\n        if kind == 'closure':"),
+                             ('        return self.apply(operands[0], [self.effect(f)])',
+                              '        r = self.effect(f)\n        self.debit()\n        return self.apply(operands[0], [r])')]),
+    ('fuel-before-operand-check', [('        if kind not in takes or not takes[kind]():',
+                                    '        if self.fuel == 0:\n            self.debit()\n'
+                                    '        if kind not in takes or not takes[kind]():')]),
+    ('terminal-entry-free', [("        self.debit()\n        if kind == 'closure':",
+                              "        if kind != 'terminal':\n            self.debit()\n        if kind == 'closure':")]),
 ]
 
 
@@ -1819,7 +1876,7 @@ def main() -> int:
         require(codec.decode(data, digest) == plan, f'run control {label}: decodes to another plan')
         admitted.append((f'run:{label}', data))
         require(ran(plan, frozen) == frozen, f'run control {label}: the reference evaluation gives {ran(plan, frozen)}')
-        runs[label] = {**frozen, 'image_sha256': sha(data)}
+        runs[label] = {'argv': run_argv(plan, frozen), **frozen, 'image_sha256': sha(data)}
     describing = describe_controls(plans)
     verdicts = describe_verdicts(describing)
     for label, _, _, verdict in describing:
