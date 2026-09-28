@@ -244,11 +244,12 @@ It never runs a body or an effect while validating. Validation, UTF-8 decoding,
 constant materialization and rendering use explicit worklists, never the host
 stack. The validator checks every function, reachable or not:
 
-1. Size first: an image above 16 MiB (4,194,304 words) is `Exhausted image-size`,
-   even when it is also malformed. Then length, magic, version, total, entry kind,
-   reserved word and registry digest.
-2. Section offsets, adjacency, counts, record lengths, name UTF-8, padding and
-   uniqueness; constructor grouping; known type, constant and node tags.
+1. Size first: an image above 16 MiB (4,194,304 words) is `Exhausted` kind 2
+   (`image-size`), even when it is also malformed. Then length, magic, version,
+   total, entry kind, reserved word and registry digest.
+2. Section offsets, adjacency, counts and the limits below, record lengths, name
+   UTF-8, padding and uniqueness; constructor grouping; known type, constant and
+   node tags.
 3. Every index and child offset is in range and names a record of the right
    table; every child precedes its parent; each node has exactly one parent or is
    exactly one function's root.
@@ -257,18 +258,34 @@ stack. The validator checks every function, reachable or not:
    run as a Base body), arrow kinds, captures and exact `slots`.
 5. Canonicality as defined in §2.
 
-A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 62
-refusals (20 byte-level, 42 plan-level); vm-core MUST refuse the same controls,
-and MUST admit its six admitted plan controls (three Cases on a `none` slot,
-among them `list-head-match`, and three whose arms fit their Case, among them
-`first-code`, S's shapes), its seven code-list controls and its 23 run
-controls; vm-model and vm-core MUST run each run control, at the fuel frozen with
-it, to the outcome frozen with it (§7, §12).
+A refused image is `HostFailure image` with a reason, except past a **resource
+limit** of version 1, which is `Exhausted` kind 2 with the limit as its cause (D16).
+These are limits of this VM, not source rules. Each bounds a count that the image's
+structure admits: a count the structure cannot hold is malformed, and a count equal
+to the limit is within it. A limit is checked when its count is read, after the
+count's own structure and before anything the count governs, so it precedes a
+malformed record, an inexact `slots` and every later rule:
+
+| Limit, inclusive | `Exhausted` kind 2 (cause) | Malformed: `HostFailure image` |
+|---|---|---|
+| 4,194,304 words (16 MiB) per image | more words (`image-size`), checked first, even when also malformed | none: a size is not a count |
+| 1,048,576 records per table | a larger count that the words after it can hold, at two words per record (`records`) | a count they cannot hold (`record count`) |
+| live arity 4,096 | a larger arity in a function record whose length holds it (`arity`) | a length that does not (`function record`) |
+| `slots` 65,536, a function's or a Closure's | a larger `slots` (`slots`), even when inexact | none: every word is a count; exactness is step 4 |
+
+`check-spec.py` freezes 71 refusals (20 byte-level, 9 at the limits, 42 plan-level):
+each limit passed by one, a record count beyond the image and an arity beyond its
+record, an image of exactly 16 MiB (`total`), 2^20 records whose first zero word is
+a malformed record, and a `slots` of 65,536 that its body does not reach. vm-core
+MUST refuse the same controls, and MUST admit its six admitted plan controls (three
+Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
+Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
+4,096 parameters), its seven code-list controls and its 41 run controls; vm-model and
+vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
+with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
-Other version-1 limits: at most 1,048,576 records per table, live arity at most
-4,096, `slots` at most 65,536. These are resource limits, not source rules.
 
 ## 5. Words, cells and memory
 
@@ -733,7 +750,7 @@ copies low bytes and passes the flag; a nonzero flag is errno 22 before any writ
 
 Accepted, Invalid, Unsupported, Exhausted, HostFailure and InternalFailure are
 recorded separately. Malformed images, unknown ids and malformed invocations are
-HostFailure; source forms Knot does not handle are Unsupported, and so is a Book
+HostFailure, and an image past a resource limit of §4 is Exhausted kind 2; source forms Knot does not handle are Unsupported, and so is a Book
 result that §8 cannot describe; a broken invariant is a defect. A timeout or
 crash never counts as a semantic mutant kill.
 
@@ -748,9 +765,9 @@ reached:
 | seed native | Nat to about 2^48; its runtime resources |
 | seed Bun | about 32K stack frames (`List.length`); unary Nat materialization: `nat-big` passed 60 GB of RSS in about 6 minutes and was stopped, so word-Nat goldens use the native lane |
 | literals eval | unary Nat and String up to 2^20 (`nat-big`, `nat-range`: `Exhausted primitive budget`); at most 1,048,576 transitions; display 4,096 visits and 65,536 characters |
-| knot-vm-1 | Nat at most 2^32-1; call fuel; 16 MiB image; 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8 |
+| knot-vm-1 | Nat at most 2^32-1; call fuel; §4's image limits (16 MiB, records, arity, `slots`); 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8 |
 
-`NatRange`, `RCOverflow`, image size and display are representation-resource
+`NatRange`, `RCOverflow`, §4's image limits and display are representation-resource
 exhaustion, kind 2 at the host boundary; the VM's own outcome keeps the precise
 cause, request and limit, because `exhausted(2)` alone does not say which bound
 was hit. Frame capacity is kind 3. Model tracing memory is a harness bound and
@@ -867,8 +884,9 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
   `none`-typed node covered;
-- all 62 refusals of §4 with their frozen reasons, and its six admitted plan
-  controls; `first-code` also equals the independent lowering of its `check-cli`
+- all 71 refusals of §4 with their frozen reasons, each resource limit
+  `Exhausted` kind 2 on one side and malformed or invalid on the other, its six
+  admitted plan controls and `arity-at-limit`; `first-code` also equals the independent lowering of its `check-cli`
   display, written by hand in the literals head's grammar because no pinned head
   checks a `List<U32>` parameter;
 - 41 admitted **run controls** (`check-spec.py run_controls`), each frozen with
@@ -913,10 +931,15 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 64 codec mutants and 4 source mutants killed through a changed image, a decode
+- 69 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe, invocation or argument verdict or a changed observation, and 39 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
+  Five codec mutants move §4's limits: a limit reported as malformed, a limit
+  exclusive, the record limit before the count's fit, the arity limit before its
+  record's length, and no limit on a Closure's `slots`. Rule mutants of
+  `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
+  `HostFailure image`.
   Five survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, an Action's effect before its debit
   (which the print inspection control also counts, after 4 calls), the fuel test

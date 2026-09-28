@@ -40,6 +40,7 @@ RECEIPT = HERE / 'receipts/spec.json'
 EXPECTED = GOLDEN / 'vm-expected.json'
 CODEC = HERE / 'serializer.py'
 EVALUATOR = HERE / 'evaluate.py'
+RULE = Path(__file__).resolve()
 
 
 def load(path: Path, text: str | None = None):
@@ -929,10 +930,13 @@ def word(data: bytes, index: int) -> int:
 
 
 def rejected(data: bytes, reg: dict, digest: bytes, c=None) -> str | None:
-    """None when the image is admitted; otherwise the refusal, as the VM loader must classify it."""
+    """None when the image is admitted; otherwise the refusal, as the VM loader must classify it:
+    a resource limit of section 4 is Exhausted kind 2, any other refusal HostFailure image."""
     c = c or codec
     try:
         plan = c.decode(data, digest)
+    except c.Exhausted as e:
+        return f'Exhausted 2 {e}'
     except c.Malformed as e:
         return f'HostFailure image: {e}'
     problems = c.validate(plan, reg)
@@ -977,6 +981,51 @@ def byte_controls(images: dict, digest: bytes) -> list:
     ]
     return [(label, data, 'HostFailure image: ' + reason, '') for label, data, reason in out] + \
         [(label, data, 'Exhausted 2 ' + cause, '') for label, data, cause in exhausted]
+
+
+def limit_controls(plans: dict, images: dict, digest: bytes) -> list:
+    """(label, bytes, frozen refusal or None to admit) on both sides of section 4's limits. A
+    count its structure admits and that passes its limit is Exhausted kind 2, even when what it
+    governs is malformed or inexact; a count its structure cannot hold is malformed; every
+    limit is inclusive. The size's malformed side is an image of exactly 16 MiB."""
+    limits, second, capture = codec.LIMITS, images['second'], images['closure-captures']
+    names_at, swap = word(second, 10), word(capture, 7) + 1
+
+    def names(count, room):
+        """`second` with `count` name records declared and `room` more zero words."""
+        data = word_patch(second, names_at, count) + b'\0' * 4 * room
+        return word_patch(data, 2, len(data) // 4)
+
+    def edited(name, path, value):
+        plan = json.loads(json.dumps(plans[name]))
+        *head, last = path
+        target = plan
+        for key in head:
+            target = target[key]
+        target[last] = value
+        return codec.encode(plan, digest)
+
+    def wide(arity):
+        """value-on beside an unused function of `arity` Flag parameters."""
+        plan = json.loads(json.dumps(plans['value-on']))
+        plan['functions'].insert(0, {'name': 'wide', 'parameters': [0] * arity, 'result': 0, 'slots': arity,
+                                     'body': ['value', 0, 0]})
+        return codec.encode(plan, digest)
+    room = 2 * (limits['records'] + 1)                  # two words for each of 2^20 + 1 records
+    return [
+        ('size-at-limit', second + b'\0' * (4 * limits['image_words'] - len(second)), 'HostFailure image: total'),
+        ('records-over-limit', names(limits['records'] + 1, room), 'Exhausted 2 records'),
+        ('records-beyond-image', names(limits['records'] + 1, 0), 'HostFailure image: record count'),
+        ('records-at-limit', names(limits['records'], room), 'HostFailure image: section 5 record length'),
+        ('arity-over-limit', wide(limits['arity'] + 1), 'Exhausted 2 arity'),
+        ('arity-beyond-record', word_patch(capture, swap + 3, limits['arity'] + 1), 'HostFailure image: function record'),
+        ('arity-at-limit', wide(limits['arity']), None),
+        ('slots-over-limit', edited('value-on', ['functions', 0, 'slots'], limits['slots'] + 1), 'Exhausted 2 slots'),
+        ('closure-slots-over-limit', edited('closure-id', ['functions', 1, 'body', 3, 0, 3], limits['slots'] + 1),
+         'Exhausted 2 slots'),
+        ('slots-at-limit', edited('value-on', ['functions', 0, 'slots'], limits['slots']),
+         'HostFailure image: validator: main: slots 65536, reached 0'),
+    ]
 
 
 def unused_constant(image: bytes) -> bytes:
@@ -1558,10 +1607,22 @@ CODEC_MUTANTS = [
                       "            types.append([kind, 0, opt(t['domain']), opt(t['result'])])")]),
     ('decoder-skips-digest', [("    if bytes(b for x in w[24:32] for b in x.to_bytes(4, 'little')) != digest:\n"
                                "        raise Malformed('registry digest')\n", "")]),
-    ('size-guard-after-shape', [("    if len(data) > LIMITS['image_words'] * 4:\n        raise Malformed('exhausted image-size')\n", ""),
+    ('size-guard-after-shape', [("    if len(data) > LIMITS['image_words'] * 4:\n        raise Exhausted('image-size')\n", ""),
                                 ("        raise Malformed('length')\n",
                                  "        raise Malformed('length')\n    if len(data) > LIMITS['image_words'] * 4:\n"
-                                 "        raise Malformed('exhausted image-size')\n")]),
+                                 "        raise Exhausted('image-size')\n")]),
+    # Review round 8: section 4's limits are Exhausted kind 2, checked after their count's
+    # structure and before what it governs, inclusively.
+    ('limit-as-malformed', [("        raise Exhausted(name)\n", "        raise Malformed(name)\n")]),
+    ('limit-exclusive', [("    if count > LIMITS[name]:", "    if count >= LIMITS[name]:")]),
+    ('record-limit-before-fit', [("        limit(count, 'records')\n", ""),
+                                 ("        if count > (len(w) - at) // 2:",
+                                  "        limit(count, 'records')\n        if count > (len(w) - at) // 2:")]),
+    ('arity-limit-before-record', [("        limit(r[2], 'arity')\n", ""),
+                                   ("        if len(r) < 5 or len(r) != 5 + r[2]:\n            raise Malformed('function record')",
+                                    "        limit(r[2], 'arity')\n"
+                                    "        if len(r) < 5 or len(r) != 5 + r[2]:\n            raise Malformed('function record')")]),
+    ('closure-slots-unlimited', [("            limit(x[2], 'slots')\n", "")]),
     ('validator-ignores-let-slot', [("            if node[2] != depth:\n                fail(where, f'let slot {node[2]} at depth {depth}')\n", "")]),
     ('validator-ignores-free-captures', [("                fail(where, 'captures are not exactly the free slots of the body')\n", "                pass\n")]),
     ('validator-optional-key-default', [("                if keys != sorted(set(keys)) or default is None:",
@@ -1906,6 +1967,54 @@ def source_mutants(cases, built) -> list:
     return out
 
 
+# Semantic mutants of this gate's own rule: each must change a refusal or an expectation, or
+# admit an expectation control; a crash is never a kill.
+RULE_MUTANTS = [
+    ('rejected-limit-as-host-failure', [("        return f'Exhausted 2 {e}'\n", "        return f'HostFailure image: exhausted {e}'\n")]),
+]
+
+
+def rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest) -> list:
+    """Each mutant of check-spec.py re-derives every refusal, golden expectation and
+    expectation control."""
+    source = RULE.read_text()
+    results = []
+    for name, edits in RULE_MUTANTS:
+        text = source
+        for old, new in edits:
+            require(text.count(old) == 1, f'rule mutant {name} is not uniquely located')
+            text = text.replace(old, new)
+        mutant, killed_by = load(RULE, text), None
+        for label, data, reason, message in controls:
+            try:
+                got = mutant.rejected(data, reg, digest)
+            except Exception:
+                continue
+            if got is None or not got.startswith(reason) or message not in got:
+                killed_by = f'control {label}: {got}'
+                break
+        for case_name, case in [] if killed_by else cases.items():
+            try:
+                got = mutant.vm_expectation(case, plans[case_name], bounds, sources[case_name])
+            except AssertionError as refusal:
+                killed_by = f'{case_name}: {refusal}'
+            except Exception:
+                continue
+            else:
+                killed_by = None if got == table[case_name] else f'{case_name}: expectation {got}'
+            if killed_by:
+                break
+        if not killed_by:
+            try:
+                mutant.expectation_controls(cases, plans, bounds, sources)
+            except AssertionError as admitted:
+                killed_by = str(admitted)
+            except Exception:
+                pass
+        results.append({'mutant': f'rule:{name}', 'killed': killed_by is not None, 'by': killed_by})
+    return results
+
+
 # ------------------------------------------------------------------ bench freeze
 
 def committed(path: str) -> bytes:
@@ -2107,9 +2216,11 @@ def main() -> int:
 
     planned = plan_controls(plans)
     lowered = lowered_controls(planned, reg)
-    controls = byte_controls(images, digest) + [
+    limited = limit_controls(plans, images, digest)
+    controls = byte_controls(images, digest) + [(f'limit:{k}', d, r, '') for k, d, r in limited if r] + [
         (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
-    admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None]
+    admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None] + \
+        [(f'limit:{k}', d) for k, d, r in limited if r is None]
     boundaries = expectation_controls(cases, plans, bounds, sources) + invocation_controls(cases, plans, sources) + \
         seed_display_controls()
     for label, data, reason, message in controls:
@@ -2146,7 +2257,8 @@ def main() -> int:
         require(got == verdict, f'argument control {label}: {got!r}, frozen {verdict!r}')
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
                             controls, admitted, describing, reg, digest, invoking, arguing) + source_mutants(cases, built) + \
-        evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans))
+        evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans)) + \
+        rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest)
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
 
