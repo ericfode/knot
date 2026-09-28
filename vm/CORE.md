@@ -30,8 +30,8 @@ BEND_NO_TELEMETRY=1 python3 vm/check-core.py
 - [harness.mjs](harness.mjs) is an in-memory `knot_io` host for batches and
   for the test build. It steps the machine, reads registers and audits each
   state. Acceptance runs use the real host, `scripts/run-wasm-io.mjs`.
-- That host is main's file byte for byte (`2e93d58`, sha256 `4ee7b16d…`),
-  because this branch's base predates io-host. An identical add merges cleanly.
+- That host is main's file byte for byte (sha256 `4ee7b16d…`, last changed at
+  `2e93d58`). It arrived with main through the vm-spec merge.
 
 ## Outcomes at the host boundary
 
@@ -39,7 +39,7 @@ BEND_NO_TELEMETRY=1 python3 vm/check-core.py
 |---|---|
 | Book result | `print("Evaluated\ttype\ttag\ttree")`, then `knot_main` returns (exit 0) |
 | Program `Emit` / `Halt` | return (exit 0) / `die(code, message)` |
-| HostFailure | `die(5, "HostFailure\t<phase>\t<code>")`; the phase is `image`, `invoke`, `arguments` or `io` |
+| HostFailure | `die(5, "HostFailure\t<phase>\t<code>")`; the phase is `image`, `invoke`, `arguments` or `io` (`io abi`: D20's non-scalar output) |
 | Unsupported | `die(3, "Unsupported\t<phase>\t<code>")`: `invoke result-type`, and `vm foreign` |
 | InternalFailure | `die(6, "InternalFailure\tvm\tinternal")` |
 | Exhausted | `exhausted(kind)` |
@@ -56,9 +56,13 @@ loader decodes in `serializer.decode`'s order. The validator follows the order
 of `serializer.validate`'s recursion and stops at the first defect, and the
 canonical check comes last. A refusal therefore names the reference codec's
 first defect. The gate requires this on:
-- the 61 frozen controls;
-- 3,120 seeded single mutations of the goldens: 2,868 refused, and 252 admitted
+- the 61 frozen controls, counted against SPEC §4's own figure;
+- 3,400 seeded single mutations of the goldens: 3,116 refused, and 284 admitted
   and run to a clean outcome.
+
+A refusal is read only from a run that stopped before `vm_boot` returned. A run
+that got past boot and failed `ill-typed` inspected a word at run time (§6). It
+did not refuse the image.
 
 ## Memory beyond SPEC §5's map
 
@@ -142,14 +146,21 @@ adopt them or record its own, so that lockstep compares like with like.
    is dropped.
 10. **4 GiB.** A cell ending exactly at 4 GiB would wrap the i32 bump pointer.
     It traps (HostFailure) instead; no host grows memory that far.
+11. **Output before D20's check.** `$utf8out` grows memory by 4 bytes per Char
+    for the whole String, then scans and encodes. A String whose encoding cannot
+    fit fails at that growth (a trap, as in 10) before the scan, even if it
+    holds a non-scalar Char. §10 does not order the two, and the growth is not
+    bounded by the heap limit. vm-io, which owns the effect path, should settle
+    both.
 
 ## Findings for the spec owner
 
-- **String constants above U+10FFFF.** §2 says a String constant holds exact
-  Chr codes and pure Char admits every u32. `serializer.decode` instead refuses
-  a code above `0x10FFFF` (`string code beyond plan text`). Canonical form is
-  defined by that codec, so vm-core refuses too (`string-code`). The spec or
-  the codec should change, and vm-model should follow whichever rule results.
+- **String constants above U+10FFFF (resolved).** At the branch base,
+  `serializer.decode` refused a code above `0x10FFFF`, against §2, and vm-core
+  refused too. vm-spec settled it in the codec (`4e3642f`): plans spell a String
+  as its code list, and every u32 code is kept. vm-core now admits every code.
+  `$materialize` already built Big code cells, so golden `string-beyond-unicode`
+  and the seven code-list controls run unchanged. vm-model should admit them too.
 - **Deep images.** The reference codec's `decode` and `encode` recurse, so they
   fail on images nested deeper than Python's recursion limit. `check-core.py`
   lays out its 200,000-deep image iteratively. At depth 40 that layout is
@@ -159,9 +170,17 @@ adopt them or record its own, so that lockstep compares like with like.
 
 ## Evidence (gate `vm-core`)
 
-- **Goldens.** All 78 through the real host, equal to `vm-expected.json`. The
-  test build confirms every Exhausted and Unsupported cause and audits the
-  state after all 1,503 transitions.
+- **Goldens.** All 85 through the real host, equal to `vm-expected.json`. The
+  test build confirms every Exhausted, Unsupported and HostFailure cause in the
+  VM's own outcome registers, and audits the state at all 1,553 transitions.
+  For D20's `print-non-scalar` and `print-non-scalar-mid` the registers show
+  that the VM refused before its host call: the real host would refuse the
+  same bytes with the same `HostFailure io abi` line.
+- **Admitted controls.** vm-spec's three admitted plan controls (a Case on a
+  `none` slot) and seven code-list controls load. They run as `fixtures.json`
+  froze them by literal review: `list-head-match` prints `True{}`, the two
+  `case-none-*` controls fail `ill-typed` after boot, and every code list
+  compares `False{}`.
 - **[core/fixtures.json](core/fixtures.json).** Literal review, frozen before
   any run:
   - the 250,000-deep non-tail recursion, with 500,003 entries and seven yields
@@ -174,12 +193,15 @@ adopt them or record its own, so that lockstep compares like with like.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
-- **Malformed images.** As above: 61 frozen controls and 3,120 fuzz images,
+- **Malformed images.** As above: 61 frozen controls and 3,400 fuzz images,
   with no trap.
-- **Mutants.** Nine, each killed by a wrong observation in a named group:
+- **Mutants.** Twelve, each killed by a wrong observation in a named group:
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
   - quantum state loss (quantum re-entry);
   - tail release (display bound);
-  - host-stack recursion (call graph).
+  - host-stack recursion (call graph);
+  - a refused `none` slot (the admitted controls);
+  - a refused code above U+10FFFF (`string-beyond-unicode`);
+  - a surrogate left to the host (the D20 goldens, through the VM's registers).
