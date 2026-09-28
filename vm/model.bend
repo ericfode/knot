@@ -2524,13 +2524,14 @@ def describable(fuel: Nat, +types: List<&2,Sort>, work: List<&2,U32>, +seen: Lis
       choose(Bool,Bool.not(U32.is_eq(kind(types,t),0)),u => False{},u =>
         describable(f,types,List.append(&2,U32,List.concat(&2,U32,constructor_fields(constructors_of(types,t))),rest),Con{t,seen}))))
 
-# Host ordinals are nullary tags of the parameter types, checked in
-# parameter order as eval-cli checks them.
+# §8's walk: each live parameter, left to right, takes the next ordinal, which
+# must be a nullary tag of its algebraic type. An arrow takes none, and an
+# opaque or `none` type has no tag. Missing and leftover ordinals are arity.
 def arguments(parameters: List<&2,U32>, ordinals: List<&2,U32>, +types: List<&2,Sort>) -> Result<Stop,List<&2,U32>>:
   match parameters ordinals:
     case Nil{} Nil{}: Done{Nil{}}
     case Con{+p,ps} Con{+o,os}:
-      choose(Result<Stop,List<&2,U32>>,Bool.not(U32.is_eq(kind(types,p),0)),u => Fail{Refused{"invoke","structured-argument"}},u =>
+      choose(Result<Stop,List<&2,U32>>,is_arrow(kind(types,p)),u => Fail{Refused{"invoke","function-argument"}},u =>
       choose(Result<Stop,List<&2,U32>>,U32.is_ge(o,count(Constructor,constructors_of(types,p))),u => Fail{Refused{"invoke","argument-range"}},u =>
       choose(Result<Stop,List<&2,U32>>,Bool.not(U32.is_eq(count(U32,fields_of(constructors_of(types,p),o)),0)),u => Fail{Refused{"invoke","structured-argument"}},u =>
         bind(List<&2,U32>,List<&2,U32>,arguments(ps,os,types),words => Done{Con{immediate(o),words}}))))

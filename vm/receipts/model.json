@@ -1,9 +1,9 @@
 {
  "gate": "vm-model",
- "date": "2026-09-28T10:53:44+00:00",
+ "date": "2026-09-28T10:59:37+00:00",
  "status": "passed",
  "sources": {
-  "model.bend": "9786260376f7256c6ad0b40649f2368db9024dcf5cdbcacac59ddaacb388bbbc",
+  "model.bend": "226a064995f977b6564e4cd0a87c5d33abc16ec911cfd179dcc19f3479855e3c",
   "model-cli.bend": "7cda62a2fa27fe44a05c30395f7bc2baacd2a82ea2249740d1c7a22deece9dbe",
   "model-audit.bend": "3675cf28ae8fb11574c2f67d74bd8c5f3046c67a26a2ed26b13582835e1df5a2",
   "model-sweep.bend": "318f1276ea395ae0403b5c5bb75d12938c14d3029f4128918dbe4bb12d163f00",
@@ -396,6 +396,36 @@
    "exit": 0,
    "outcome": "Evaluated\t0\t1\tOn{}"
   }
+ },
+ "invocations": {
+  "invoke-args:two 1000000 1 0": "Evaluated\t6\t0\tTwo{On{},Off{}}",
+  "invoke-args:two 1000000 1": "HostFailure\tinvoke\targument-arity",
+  "invoke-args:two 1000000 1 0 1": "HostFailure\tinvoke\targument-arity",
+  "invoke-args:two 1000000 5": "HostFailure\tinvoke\targument-range",
+  "invoke-args:two 1000000 5 0 1": "HostFailure\tinvoke\targument-range",
+  "invoke-args:two 1000000 1 2": "HostFailure\tinvoke\targument-range",
+  "invoke-args:succ 1000000 0": "Evaluated\t1\t1\tSucc{Zero{}}",
+  "invoke-args:succ 1000000 1": "HostFailure\tinvoke\tstructured-argument",
+  "invoke-args:succ 1000000 1 0": "HostFailure\tinvoke\tstructured-argument",
+  "invoke-args:succ 1000000 2": "HostFailure\tinvoke\targument-range",
+  "invoke-args:size 1000000 0": "Evaluated\t1\t0\tZero{}",
+  "invoke-args:size 1000000 1": "HostFailure\tinvoke\tstructured-argument",
+  "invoke-args:code 1000000 0": "HostFailure\tinvoke\tstructured-argument",
+  "invoke-args:code 1000000 1": "HostFailure\tinvoke\targument-range",
+  "invoke-args:is_zero 1000000 0": "HostFailure\tinvoke\targument-range",
+  "invoke-args:is_zero 1000000 7": "HostFailure\tinvoke\targument-range",
+  "invoke-args:real 1000000 0": "Evaluated\t5\t0\tOff{}",
+  "invoke-args:real 1000000 1": "Evaluated\t5\t1\tOn{}",
+  "invoke-args:real 1000000 2": "HostFailure\tinvoke\targument-range",
+  "invoke-args:text 1000000 1": "Unsupported\tinvoke\tresult-type",
+  "invoke-args:text 1000000 2": "HostFailure\tinvoke\targument-range",
+  "invoke-args:absent 1000000": "HostFailure\tinvoke\tunknown-export",
+  "invoke-args:main 1000000 0": "HostFailure\tinvoke\targument-arity",
+  "invoke-arrow:feed 1000000 1 0": "HostFailure\tinvoke\tfunction-argument",
+  "invoke-arrow:feed 1000000 1 0 0": "HostFailure\tinvoke\tfunction-argument",
+  "invoke-arrow:feed 1000000 1": "HostFailure\tinvoke\targument-arity",
+  "invoke-arrow:feed 1000000 2 0": "HostFailure\tinvoke\targument-range",
+  "invoke-arrow:feed 1000000": "HostFailure\tinvoke\targument-arity"
  },
  "fuel": {
   "agree": 88,
@@ -1708,16 +1738,16 @@
    "breaks": "a tail entry does not release its caller",
    "killed": true,
    "by": [
+    "invocations:invoke-args:size 1000000 0",
     "admitted:plan:case-none-parameter",
     "admitted:plan:case-none-let",
     "admitted:plan:list-head-match",
     "admitted:codes:surrogate-pair",
     "admitted:codes:u1f600",
     "admitted:codes:lone-surrogate",
-    "admitted:codes:u10ffff",
-    "admitted:codes:u110000"
+    "admitted:codes:u10ffff"
    ],
-   "kills": 97,
+   "kills": 98,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -1753,7 +1783,7 @@
     "goldens:char-space",
     "goldens:recursion-map"
    ],
-   "kills": 24,
+   "kills": 26,
    "law": "recursion_map_runs",
    "crashes": 0
   },
@@ -1771,7 +1801,7 @@
     "goldens:case-on",
     "goldens:unpack"
    ],
-   "kills": 174,
+   "kills": 179,
    "law": null,
    "crashes": 0
   },
@@ -1981,16 +2011,28 @@
    "breaks": "an entry is not counted",
    "killed": true,
    "by": [
+    "invocations:invoke-args:two 1000000 1 0",
+    "invocations:invoke-args:succ 1000000 0",
+    "invocations:invoke-args:size 1000000 0",
+    "invocations:invoke-args:real 1000000 0",
+    "invocations:invoke-args:real 1000000 1",
     "admitted:plan:case-none-parameter",
     "admitted:plan:case-none-let",
-    "admitted:plan:list-head-match",
-    "admitted:codes:surrogate-pair",
-    "admitted:codes:u1f600",
-    "admitted:codes:lone-surrogate",
-    "admitted:codes:u10ffff",
-    "admitted:codes:u110000"
+    "admitted:plan:list-head-match"
    ],
-   "kills": 112,
+   "kills": 117,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "arrow-argument",
+   "breaks": "an arrow parameter is refused as argument-range",
+   "killed": true,
+   "by": [
+    "invocations:invoke-arrow:feed 1000000 1 0",
+    "invocations:invoke-arrow:feed 1000000 1 0 0"
+   ],
+   "kills": 2,
    "law": null,
    "crashes": 0
   }

@@ -6,7 +6,8 @@ seed's native lane and requires:
 - every golden image to be its frozen plan's encoding, and each LAWS.bend
   fixture to equal its image's words;
 - the model's prim and foreign tables to equal registry.json;
-- every golden run to agree with vm/golden/vm-expected.json (SPEC section 11);
+- every golden run and frozen Book invocation to agree with
+  vm/golden/vm-expected.json (SPEC sections 8 and 11);
 - literal fuel controls (SPEC section 7): fuel 0 exhausts every golden at its
   first entry, and value-on, which makes one entry, completes on fuel 1;
 - the 61 frozen refusal controls, and a child at its parent's offset, refused
@@ -193,6 +194,27 @@ def golden_runs(model: Path, expected: dict) -> dict:
     with ThreadPoolExecutor(max_workers=8) as pool:
         got = dict(zip(cases, pool.map(lambda n: run(argv_of(model, n, cases[n]['argv']), 120), cases)))
     return {n: {'result': got[n], 'agrees': agrees(cases[n], got[n])} for n in cases}
+
+
+def invocation_runs(model: Path, audit: Path, expected: dict) -> dict:
+    """SPEC section 8's frozen Book invocations: each refusal or describe line, and for an
+    entered one the RC audit and the reference evaluation's call count."""
+    plans = golden_plans()
+    rows = {f"{n}:{' '.join(r['argv'][1:])}": (n, r) for n, listed in expected['invocations'].items() for r in listed}
+
+    def one(label):
+        n, row = rows[label]
+        result = run(argv_of(model, n, row['argv']), 120)
+        good = agrees(row, result)
+        if good and row.get('exit') == 0:
+            audited = run(argv_of(audit, n, row['argv']), 300)
+            m = AUDIT.match(audited['stdout'].strip())
+            calls = reference_calls(plans[n], row['argv'])
+            good = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and int(m.group(5)) == calls
+            result = result if good else audited
+        return label, {'result': result, 'agrees': good}
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        return dict(pool.map(one, rows))
 
 
 def fuel_argv(case: dict, fuel: str) -> list:
@@ -565,6 +587,9 @@ MUTANTS = [
                       'u => U32.is_le(count(U32,ops),1),')], 'a closure takes either operand count'),
     ('calls-uncounted', [('Meter{U32.sub(fuel,1),U32.add(calls,1),', 'Meter{U32.sub(fuel,1),calls,')],
      'an entry is not counted'),
+    ('arrow-argument', [('choose(Result<Stop,List<&2,U32>>,is_arrow(kind(types,p)),u => Fail{Refused{"invoke","function-argument"}},u =>',
+                         'choose(Result<Stop,List<&2,U32>>,False{},u => Fail{Refused{"invoke","function-argument"}},u =>')],
+     'an arrow parameter is refused as argument-range'),
 ]
 
 
@@ -595,6 +620,7 @@ def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> lis
         tree = build_tree(f'mutants/{name}', mutation)
         bins = built(tree, ('model', 'audit'))
         observed = {'goldens': golden_runs(bins['model'], expected),
+                    'invocations': invocation_runs(bins['model'], bins['audit'], expected),
                     'inspection': inspection_runs(bins['model']),
                     'fuel': fuel_runs(bins['model'], expected),
                     'controls': control_runs(bins['model'], listed),
@@ -632,6 +658,7 @@ def main() -> int:
     listed = controls()
     admitted = admitted_controls()
     base = {'goldens': golden_runs(bins['model'], expected),
+            'invocations': invocation_runs(bins['model'], bins['audit'], expected),
             'inspection': inspection_runs(bins['model']),
             'fuel': fuel_runs(bins['model'], expected),
             'controls': control_runs(bins['model'], listed),
@@ -655,6 +682,7 @@ def main() -> int:
         status='passed',
         goldens={n: {'exit': r['result']['exit'], 'outcome': (r['result']['stdout'] or r['result']['stderr']).strip()[:120]}
                  for n, r in base['goldens'].items()},
+        invocations={n: (r['result']['stdout'] or r['result']['stderr']).strip()[:120] for n, r in base['invocations'].items()},
         fuel=summary(base['fuel']),
         inspection={n: r['result']['stderr'].strip() for n, r in base['inspection'].items()},
         controls={n: r['reference'] for n, r in base['controls'].items()},
@@ -667,7 +695,8 @@ def main() -> int:
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     swept_total = sum(r['stats']['mutations'] for r in swept.values())
-    print(f"vm-model passed: {len(base['goldens'])} goldens, {len(base['fuel'])} fuel controls, "
+    print(f"vm-model passed: {len(base['goldens'])} goldens, {len(base['invocations'])} invocations, "
+          f"{len(base['fuel'])} fuel controls, "
           f"{len(base['controls'])} refusal controls, {len(base['admitted'])} admitted controls, "
           f"{len(base['audit'])} audited runs, "
           f"{swept_total} swept mutations of {len(swept)} images, {proven['laws']} laws, "
