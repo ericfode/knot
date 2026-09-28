@@ -201,3 +201,20 @@ accepted, and a selfhost parse location moved by the round-3 header join.
 Those shared receipts belong to the coordinator and are not modified here.
 The nest-owned receipts `nest.json`, `review.json`, `round3.json` and
 `round4.json` are refreshed from direct runs of their gates on this tree.
+
+## Addendum (review round 8): the recursion contract this round supersedes
+
+The repair above (`3a35051`) broadened the descent rule, but this report did not
+say that it contradicts two sentences of
+[`tests/compiler-recursion/SPEC.md`](../../compiler-recursion/SPEC.md). That
+contract says that "reconstructed constructors" do not satisfy the rule, and
+that "even reconstruction of a strict descendant does not qualify once its
+checked term is no longer a Reference". Since `3a35051` a rebuilt
+`Value`/`Construct` that denotes a strict descendant qualifies. Rebuilt parents
+and rebuilt non-descendants still report `Unsupported check recursive-call`,
+so the recursion gate's assertions hold. `src/CONTRACT.json`
+`structural_recursion.rule` is authoritative, and its new `contract_note` and
+`src/SPEC.md` now record the supersession. The recursion SPEC belongs to
+another increment and is not amended here. Its amendment is left to the
+coordinator and to the campaign/descent-2 integration
+([REVIEW-8.md](REVIEW-8.md)).

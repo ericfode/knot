@@ -250,7 +250,7 @@ inventory (`src/SPEC.md`, *Trust inventory: open proof obligations*, and
 
 | Law | Entry |
 |---|---|
-| Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds; witnessed by `irrefutable_lowering_witness`, `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz. Its partial-correctness part is proved in round 5 (`irrefutable_first_row_selected`: every successful lowering selects the body at every leaf); this entry does not restate that proof as the total law |
+| Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds, and **false at the implemented 4,096-visit quota** (corrected in round 8): the frozen `matrix-work` control, whose first row is 13 `_` with body `On{}` and which the seed evaluates to `On{}`, reports `Exhausted check budget`. It holds only relative to sufficient work, or once expansion stops splitting an irrefutable first row, a frozen-control change for coordinator review. Witnessed by `irrefutable_lowering_witness`, `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz. Its partial-correctness part is proved in round 5 (`irrefutable_first_row_selected`: every successful lowering selects the body at every leaf); this entry does not restate that proof as the total law |
 | Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch | Unproved general law; witnessed by `exhaustive_matrix_witness`, the remainder helper laws (`remainder_omits_split`, `remainder_keeps_other`, `remainder_drops_split_rows`, `irrefutable_remainder`), the `multi-*`, `nested-*`, `rec-*-nested` and `empty-*` fixtures, and the 3,000-program seed fuzz. Round 5 records the typing obstacle to its proof |
 
 ## Round 7
@@ -287,3 +287,54 @@ Falsification (`round7-falsification.txt`):
 let/alias generator (`letalias.py`, random seeds 0 to 1,499) reports 63 false
 acceptances against `384acc6`, the reviewer's flagged set exactly, and none
 after the repair.
+
+## Round 8
+
+The round-8 review confirmed a D4 false Invalid. A `+` row on a `Type`-kind
+binder that is destructured before any variable use reported `Invalid check
+reusable-type`, while the seed accepts. `match m: case +y: match y: case Lo{}:
+Lo{}; case Hi{}: Hi{}` is the smallest instance. The seed's `match_flatten`
+turns a pending binder into a lambda, and asks a `+` binder's type to be
+`Data`, only where the binder leaves the frontier undestructured. A binder
+destructured first is never formed, and its fields inherit the mark. Knot
+judged the kind at the promotion itself (`alias_bound`) and at a field's
+binding (`patterns.fields`).
+
+No earlier law pinned where the kind is judged. The round adds four frontier
+laws and five whole-checker witnesses, one for each binding site. The two
+round-7 alias laws and `erased_alias_stays_erased` and
+`alias_preserves_descent_and_identity` keep their statements; they drop only
+the catalog argument that `M.alias` no longer takes.
+
+| Law | Quantification and evidence | Limit |
+|---|---|---|
+| `destructured_promotion_is_unbound` | Arbitrary names: a match on the promoted binder itself binds nothing ahead of it | One two-binder frontier at a `Type` kind |
+| `later_match_binds_promotion` | Arbitrary names: a match on a later binder binds the promoted binder ahead of it, which is `Invalid reusable-type` | As above |
+| `leaf_binds_promotion` | Arbitrary name: a leaf closes the frontier, rejecting a promoted `Type` binder | One-binder frontier |
+| `leaf_closes_frontier` | Arbitrary name: at a `Data` kind, closing clears the frontier and keeps the bindings | One-binder frontier |
+| `destructured_promotion_witness`, `destructured_field_promotion_witness` | The whole checker accepts a destructured promoted parameter and field, with their literal core terms (the field bound at quantity 2) | Ground programs |
+| `bound_promotion_witness`, `split_binds_promotion_witness`, `empty_match_binds_promotion_witness` | The whole checker rejects returning the binder, a later matrix split and a later zero-row match | Ground programs |
+
+Falsification (`round8-falsification.txt`): each mutation falsifies a named
+law. Dropping the field site falsifies the field witness. Dropping the leaf,
+split and zero-row sites falsifies `leaf_binds_promotion`,
+`split_binds_promotion_witness` and `empty_match_binds_promotion_witness`.
+Letting `ahead` include the matched level, or advancing over the whole
+frontier, falsifies `destructured_promotion_is_unbound`. Advancing over
+nothing falsifies `later_match_binds_promotion`, and keeping the frontier on
+close falsifies `leaf_closes_frontier`. Judging the kind at `check.run`'s alias
+falsifies `destructured_promotion_witness`. The same judgement at `expand`'s
+alias stops earlier, at `lowering-PROOF`'s `expanded`, a proof-shape failure
+because that proof mirrors `expand`'s alias case.
+
+`nest-round8` kills five type-correct mutants in both lanes:
+`judge-kind-at-promotion` (the finding restored, k1),
+`judge-field-kind-at-binding` (k6), `skip-leaf-binding` (c2),
+`skip-split-binding` (n6) and `skip-empty-match-binding` (n5). The reviewer's
+Type-kind generator (`typekind.py`, random seeds 0 to 2,999) reports five
+false Invalid programs against `99053a7`, the reviewer's flagged set, and none
+after the repair.
+
+The D21 table above now names `matrix-work` as a counterexample to the total
+irrefutable-first-row law at the implemented quota. The law is unchanged and
+still required.

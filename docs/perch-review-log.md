@@ -1192,3 +1192,28 @@ Prevention:
   and run it against the parent commit to confirm it bites.
 - Freeze a `Type`-kind companion for every quantity rule: the reusable-kind
   check is a second observable of the same promotion.
+
+## 2026-09-28 — nest review round 8: a `+` binder's kind was judged too early
+
+Confirmed:
+- A `+` row on a `Type`-kind binder that is destructured before any variable
+  use reported `Invalid check reusable-type`, while the seed accepts: a D4
+  false Invalid. It was present from the implementation commit `57a0c01`
+  through every review round, and round 7 froze the seed-rejected side (t2)
+  without its destructured twin. The seed judges the kind only where its
+  `match_flatten` turns a pending binder into a lambda. Knot judged it at the
+  promotion and at a field's binding.
+
+See the [round-8 dispositions](../tests/compiler-nest/receipts/REVIEW-8.md).
+The kind is now judged where the match frontier binds the binder: ahead of a
+matched level (`P.advance`) or at a leaf (`P.close`). Five whole-checker
+witnesses pin the binding sites.
+
+Prevention:
+- When a check mirrors a seed judgement, locate the seed's judgement site
+  first (here `match_flatten`'s `Lam` formation), and state the Knot rule at
+  the same site. Do not state it at the nearest convenient one.
+- Freeze each seed-rejected control with its seed-accepted twin that differs
+  by one step. `case +y: y` needs `case +y: match y: ...` beside it.
+- Draw kinds in the seeded generators: a `Data`-only generator (round 7's
+  let/alias) cannot see a kind rule.

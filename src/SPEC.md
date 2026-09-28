@@ -13,8 +13,12 @@ The [first-parameter descent contract](../tests/compiler-recursion/SPEC.md)
 adds structural self-calls to checking and evaluation: the first checked argument
 must be a reference to a field of parameter 0, directly or through further
 matches, or a rebuilt value denoting such a field: the level's refinement,
-unfolded, with the same types, tags and field levels in order. Other
-self-calls report `Unsupported check recursive-call`; forward
+unfolded, with the same types, tags and field levels in order. This rebuilt
+form supersedes two sentences of the linked contract, which say that
+reconstructed constructors, and reconstruction of a strict descendant, never
+qualify; `src/CONTRACT.json` `structural_recursion.rule` is authoritative, and
+the linked contract's amendment is left to the coordinator (it belongs to
+another increment). Other self-calls report `Unsupported check recursive-call`; forward
 and mutual calls retain their existing classification. The
 [pattern-matrix gate](../tests/compiler-nest/SPEC.md) executes nested-pattern
 structural recursion in `knot-fields-wasm-1`. Structured host arguments remain
@@ -370,7 +374,7 @@ evidence named here, not on a proof.
 
 | Law | Status | Witnessed by |
 | --- | --- | --- |
-| Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds. Its partial-correctness part is proved: `src/lowering-LAWS.bend::irrefutable_first_row_selected` shows that every *successful* `M.expand` selects the body at every leaf | The ground-instance laws `irrefutable_lowering_witness` and `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz |
+| Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds. Its partial-correctness part is proved: `src/lowering-LAWS.bend::irrefutable_first_row_selected` shows that every *successful* `M.expand` selects the body at every leaf. The total form is **false at the implemented quota**: the frozen control `tests/compiler-nest/controls/matrix-work.bend` (13 columns, a first row of 13 `_` with body `On{}`, which the seed evaluates to `On{}`) reports `Exhausted check budget`, because expansion splits on a constructor head in any row even when the first row is irrefutable (`T(n+1)=2+2T(n)`, 24,574 visits against 4,096). That `Exhausted` is Knot's cost model applied to a seed-accepted program, a resource limit under D4. The total obligation holds only relative to sufficient work, and stays undischargeable as stated until expansion selects an irrefutable first row without splitting, which changes that frozen control and needs coordinator review | The ground-instance laws `irrefutable_lowering_witness` and `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz |
 | Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch | Unproved general law | The ground-instance law `exhaustive_matrix_witness`, the remainder helper laws (`remainder_omits_split`, `remainder_keeps_other`, `remainder_drops_split_rows`, `irrefutable_remainder`), the `multi-*`, `nested-*`, `rec-*-nested` and `empty-*` fixtures, and the 3,000-program seed fuzz |
 
 ## Required evidence

@@ -69,9 +69,9 @@
     {
       "id": "nest",
       "executor": "claude",
-      "state": "review round 6 ready for coordinator: the detached-brace unsound acceptance is fixed (a constructor's { must touch its name; a space, comment or line break reports Invalid parse detached-brace, and the header join keeps offsets so it no longer bridges the gap), after a seed-derived freeze of 35 fixtures; nest-round6 gate added (5 mutants in both lanes) and the fuzz draws detached braces. The main-era flat, outer, body, argument and let forms close with the same rule, for the coordinator to ratify. D21: both general lowering laws stay required and are recorded as open proof obligations in src/SPEC.md and src/CONTRACT.json. Integration note: campaign/descent-2 (based on 57a0c01) replaces the descent rule and must pass the round-4 fixtures; its complete rule may turn the six seed-rejected round-4 controls from Unsupported to Invalid, which needs a reviewed amendment",
+      "state": "review round 8 (review round 1 of the Claude executor) ready for coordinator: the false Invalid reusable-type on a destructured Type-kind `+` binder is fixed (the kind is judged where the match frontier binds the binder, as in the seed), after a seed-derived freeze of 37 fixtures; nest-round8 gate added (5 mutants in both lanes, 3,000-program Type-kind generator). D21: the record names matrix-work as a counterexample to the total irrefutable-first-row law at the fixed quota; both laws stay required open obligations. The CONTRACT.json recursion rule supersedes the 'reconstruction never qualifies' sentences of tests/compiler-recursion/SPEC.md (not amended here). Integration note: campaign/descent-2 (based on 57a0c01) replaces the descent rule and must pass the round-4 fixtures; its complete rule may turn the six seed-rejected round-4 controls from Unsupported to Invalid, which needs a reviewed amendment, and it should carry the recursion SPEC amendment",
       "unmet_laws": [
-        "Irrefutable first row, total form: a matrix whose first row is irrefutable lowers to that row's body (open proof obligation, D21)",
+        "Irrefutable first row, total form: a matrix whose first row is irrefutable lowers to that row's body (open proof obligation, D21). False at the fixed 4096-visit quota: the frozen control matrix-work (first row 13 _, seed On{}) reports Exhausted check budget, since expansion splits on any constructor head; it holds only relative to sufficient work, or after expansion stops splitting an irrefutable first row (a frozen-control change for coordinator review)",
         "Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch (open proof obligation, D21)"
       ],
       "partial_laws": [
@@ -82,7 +82,7 @@
         "src/matrix-LAWS.bend::irrefutable_first_row_witness",
         "src/matrix-LAWS.bend::exhaustive_matrix_witness"
       ],
-      "review_report": "tests/compiler-nest/receipts/REVIEW-7.md"
+      "review_report": "tests/compiler-nest/receipts/REVIEW-8.md"
     },
     {
       "id": "modules",

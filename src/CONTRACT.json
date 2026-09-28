@@ -120,6 +120,7 @@
     "independent_evaluator": true,
     "wasm": true,
     "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0, or a rebuilt Value/Construct that denotes one (its refinement unfolded layer by layer: same types, tags and field levels in order); matches propagate descendant levels.",
+    "contract_note": "This rule supersedes two sentences of tests/compiler-recursion/SPEC.md: that reconstructed constructors do not satisfy the rule, and that reconstruction of a strict descendant does not qualify once its checked term is no longer a Reference. Since nest round 4 (3a35051) a rebuilt Value/Construct that denotes a strict descendant qualifies; rebuilt parents and rebuilt non-descendants still report Unsupported check recursive-call. The recursion SPEC belongs to another increment and is unamended here; the amendment is left to the coordinator and the campaign/descent-2 integration.",
     "other_self_calls": "Unsupported check recursive-call",
     "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call.",
     "wasm_evidence": "tests/compiler-nest/receipts/nest.json"
@@ -232,7 +233,7 @@
       "rec-swapped-args: Unsupported check recursive-call, frozen Invalid expectation unchanged",
       "rec-alias: Unsupported check recursive-call, frozen Invalid expectation unchanged",
       "General law: every exhaustive matrix lowers without a missing branch (only helper laws and exhaustive_matrix_witness are proved; open obligation, D21)",
-      "General law in its total form: a matrix whose first row is irrefutable lowers to that row's body (only its partial-correctness part is proved; open obligation, D21)"
+      "General law in its total form: a matrix whose first row is irrefutable lowers to that row's body (only its partial-correctness part is proved; open obligation, D21). The total form is false at the fixed 4096-visit quota: the frozen control tests/compiler-nest/controls/matrix-work.bend (13 columns, first row all _, body On{}; the seed prints On{}) reports Exhausted check budget, because column_step splits on any constructor head even when the first row is irrefutable (T(n+1)=2+2T(n), 24,574 visits). It is dischargeable only relative to sufficient work, or once expansion stops splitting a matrix whose first row is irrefutable, a change to that frozen control that needs coordinator review"
     ],
     "defaults": "The negative branch excludes one constructor and retains the live unrefined lexical binding. A variable row is checked even when its remainder is empty. A missing arm is dead code only when a live binder outside the pending suffix of the match frontier (which starts at the scrutinee) has an empty constructor set: an emptied residual or a zero-constructor datatype. Dead code never bypasses body checking.",
     "names": "Names are words joined by dots (Invalid lex name otherwise); pattern binders and live let binders are single words (Invalid parse pattern-binder or binding-name). Match and case headers join lines up to their colon. A constructor's { must touch its name in patterns and bodies (Invalid parse detached-brace otherwise); joined header tokens keep their offsets, so a line break never bridges that gap.",
@@ -247,10 +248,12 @@
     "round6_fixtures": "tests/compiler-nest/round6-expectations.json",
     "round7_evidence": "tests/compiler-nest/receipts/round7.json",
     "round7_fixtures": "tests/compiler-nest/round7-expectations.json",
-    "promotion": "A + row makes a lambda-case binder (a parameter or field) reusable with every alias of its level; a let binder and its aliases keep the let's declared quantity under any row (src/matrix-LAWS.bend::parameter_alias_promotes, let_alias_keeps_quantity).",
+    "promotion": "A + row makes a lambda-case binder (a parameter or field) reusable with every alias of its level; a let binder and its aliases keep the let's declared quantity under any row (src/matrix-LAWS.bend::parameter_alias_promotes, let_alias_keeps_quantity). A + mark may raise a frontier binder past its type's kind; as in the seed, the kind is judged only where the match frontier binds the binder: leaving it undestructured, ahead of a later matched binder (flat match, matrix split or zero-row match) or at a body that is not a match, a let included (src/patterns.bend::advance and close; src/matrix-LAWS.bend::destructured_promotion_is_unbound, later_match_binds_promotion, leaf_binds_promotion). A promoted Type-kind binder destructured first is never bound; its fields carry the promoted quantity.",
     "open_obligations": [
-      "Irrefutable first row (D21): unproved general law in its total form, which includes that the lowering succeeds; the partial-correctness part is proved by src/lowering-LAWS.bend::irrefutable_first_row_selected; witnessed by irrefutable_lowering_witness, irrefutable_first_row_witness, the first-match, wildcard and variable fixtures and the 3,000-program seed fuzz",
+      "Irrefutable first row (D21): unproved general law in its total form, which includes that the lowering succeeds; the partial-correctness part is proved by src/lowering-LAWS.bend::irrefutable_first_row_selected; witnessed by irrefutable_lowering_witness, irrefutable_first_row_witness, the first-match, wildcard and variable fixtures and the 3,000-program seed fuzz. Counterexample to the total form at the implemented quota: the frozen control matrix-work (a 13-column matrix whose first row is 13 _ with body On{}, accepted by the seed with On{}) exhausts the fixed 4096-visit quota (Exhausted check budget), because expansion splits on a constructor head in any row even when the first row is irrefutable (24,574 visits). The control's Exhausted is Knot's cost model applied to a seed-accepted program (a D4 resource limit, not an Invalid). So the total obligation holds only relative to sufficient work (a quota at least the expansion's visits) and stays undischargeable as stated until expansion selects an irrefutable first row without splitting, which changes the frozen control and needs coordinator review",
       "Exhaustive matrix (D21): unproved general law that an exhaustive matrix lowers to a tree with no missing branch; witnessed by exhaustive_matrix_witness, the remainder helper laws, the multi, nested, rec-nested and empty fixtures and the 3,000-program seed fuzz"
-    ]
+    ],
+    "round8_evidence": "tests/compiler-nest/receipts/round8.json",
+    "round8_fixtures": "tests/compiler-nest/round8-expectations.json"
   }
 }
