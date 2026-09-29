@@ -118,6 +118,16 @@ def identifier_text(+s: String) -> Bool:
 def identifier(t: Token) -> Bool:
   identifier_text(text(t))
 
+# A numeral opens a literal pattern; Knot has no form for one.
+def numeral(+s: String) -> Bool:
+  match s:
+    case SNil{}: False{}
+    case SCon{c,tail}: digit(Char.to_u32(c))
+
+# The seed reads a name, `match` or a marker at a line's start as a statement.
+def statement(+t: Token) -> Bool:
+  Bool.or(identifier(t),Bool.or(matches(t,"match"),Bool.or(matches(t,"+"),matches(t,"-"))))
+
 # A pattern binds one word; a dotted name refers to a declaration.
 def binder(+t: Token) -> Bool:
   Bool.and(identifier(t),U32.is_eq(words(text(t),True{},0),1))

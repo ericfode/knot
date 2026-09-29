@@ -41,11 +41,20 @@ def scrutinee(ts: List<&2,S.Token>) -> Bool:
     case Nil{}: False{}
     case Con{head,tail}: S.identifier(head)
 
+def numeral(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{head,tail}: S.numeral(S.text(head))
+
 # After a term, `a +b` opens another column and `a + b` is an operator.
 def promotes(ts: List<&2,S.Token>) -> Bool:
   match ts:
     case Con{+plus,Con{next,rest}}: Bool.and(S.matches(plus,"+"),S.marks(plus,next))
     case _: False{}
+
+# A row's next column opens at a name, a numeral or a marking `+`.
+def opens(+ts: List<&2,S.Token>) -> Bool:
+  Bool.or(scrutinee(ts),Bool.or(numeral(ts),promotes(ts)))
 
 # A line break, then a name: whitespace to the seed.
 def broken(+ts: List<&2,S.Token>) -> Bool:
@@ -110,9 +119,9 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
         Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
 
-# A line break before a let's `=` or before its value is whitespace to the seed.
+# A line break before a let's `=` or `:`, or before its value, is whitespace to the seed.
 def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
-  S.choose(Result<S.Error,List<&2,S.Token>>,Bool.and(starts(ts,"\n"),starts(S.skip_lines(ts),"=")),u =>
+  S.choose(Result<S.Error,List<&2,S.Token>>,Bool.and(starts(ts,"\n"),Bool.or(starts(S.skip_lines(ts),"="),starts(S.skip_lines(ts),":"))),u =>
     Fail{S.Unsupported{"parse","line-break",S.here(ts)}},u =>
   S.bind(List<&2,S.Token>,List<&2,S.Token>,expect(ts,"="),+rhs =>
     S.choose(Result<S.Error,List<&2,S.Token>>,broken(rhs),u =>
@@ -204,7 +213,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,U32.is_eq(S.column(head),0),u =>
             then(run(n,Header{head,name},tail),value => rest =>
               then(run(n,Book{},rest),more => end => prepend(value,more,end))),u =>
-            invalid(tokens,"top-level-indentation")))
+          # The seed reads a case left of its match's column as a row of that match.
+          S.choose(Result<S.Error,Parsed>,S.matches(head,"case"),u =>
+            unsupported(tokens,"pattern-or-indentation"),u => invalid(tokens,"top-level-indentation"))))
         case Con{+head,Nil{}}:
           S.choose(Result<S.Error,Parsed>,S.matches(head,"<eof>"),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u => invalid(tokens,"unexpected-end"))
@@ -281,7 +292,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,U32.is_gt(S.column(h),parent),u =>
             run(n,BodyAt{S.column(h),True{}},tokens),u =>
           # The seed lays an arm body out anywhere; a def body keeps its indentation.
-          S.choose(Result<S.Error,Parsed>,Bool.and(U32.is_gt(parent,0),S.identifier(h)),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(U32.is_gt(parent,0),S.statement(h)),u =>
             unsupported(tokens,"body-indentation"),u => invalid(tokens,"body-indentation")))
         case _: invalid(tokens,"body")
     case 1n+ +n BodyAt{+column,+first}:
@@ -298,7 +309,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(second,"="),S.matches(second,":")),u =>
             run(n,BindingStart{1,S.column(h)},tokens),u =>
             then(run(n,Term{False{}},tokens),value => rest => reply(value,rest))))),u =>
-            invalid(tokens,"body-indentation"))
+          # The seed checks no column for a statement.
+          S.choose(Result<S.Error,Parsed>,S.statement(h),u =>
+            unsupported(tokens,"body-indentation"),u => invalid(tokens,"body-indentation")))
         case _: invalid(tokens,"body")
     case 1n+ +n Header{+keyword,+name}:
       S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"import"),Bool.and(starts(tokens,"/"),
@@ -375,7 +388,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,","),tail =>
           then(run(n,Term{True{}},tail),more => rest =>
             run(n,RowTail{keyword,columns(pattern,more),parent,column},rest))),u =>
-      S.choose(Result<S.Error,Parsed>,Bool.or(scrutinee(tokens),promotes(tokens)),u =>
+      S.choose(Result<S.Error,Parsed>,opens(tokens),u =>
         then(run(n,Term{True{}},tokens),more => rest =>
           run(n,RowTail{keyword,columns(pattern,more),parent,column},rest)),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),body =>
@@ -389,7 +402,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"case"),Bool.or(U32.is_eq(column,0),U32.is_eq(column,S.column(keyword)))),u =>
             then(run(n,Term{True{}},header(tail)),+pattern => +rest =>
-              S.choose(Result<S.Error,Parsed>,Bool.or(starts(rest,","),Bool.or(scrutinee(rest),promotes(rest))),u =>
+              S.choose(Result<S.Error,Parsed>,Bool.or(starts(rest,","),opens(rest)),u =>
                 run(n,RowTail{keyword,pattern,parent,S.column(keyword)},rest),u =>
               S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
                 then(run(n,Body{S.column(keyword)},body),value => after =>

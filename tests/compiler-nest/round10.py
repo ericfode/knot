@@ -17,7 +17,8 @@ def invalid(code):
     return {'exit': 2, 'diagnostic': f'Invalid\tparse\t{code}\t'}
 
 
-TAIL = 'Bool.or(scrutinee(tokens),promotes(tokens))'
+TAIL = 'opens(tokens)'
+BREAK = 'Bool.and(starts(ts,"\\n"),Bool.or(starts(S.skip_lines(ts),"="),starts(S.skip_lines(ts),":")))'
 FIRST = 'Bool.or(first,S.marks(h,second))'
 ARROW = 'Bool.and(S.touches(dash,arrow),S.identifier(typ))'
 # The first two ignore the row gap (the finding, then the later-column site alone; Arms
@@ -35,7 +36,7 @@ MUTANTS = [
      'old': 'Bool.and(S.matches(plus,"+"),S.marks(plus,next))', 'new': 'S.matches(plus,"+")',
      'witness': 'rowplus-second-spaced', 'phase': 'check', 'wrong': ACCEPTED},
     {'name': 'ignore-plus-gap-later-column', 'file': 'parse.bend',
-     'old': TAIL, 'new': 'Bool.or(scrutinee(tokens),starts(tokens,"+"))',
+     'old': TAIL, 'new': 'Bool.or(scrutinee(tokens),Bool.or(numeral(tokens),starts(tokens,"+")))',
      'witness': 'rowplus-three-cols-last', 'phase': 'check', 'wrong': ACCEPTED},
     {'name': 'mark-a-line-break', 'file': 'syntax.bend',
      'old': 'Bool.and(touches(t,next),identifier(next))', 'new': 'touches(t,next)',
@@ -75,7 +76,7 @@ MUTANTS = [
      'old': 'broken(rhs),u =>', 'new': 'False{},u =>',
      'witness': 'letsplit-after-eq-flat', 'phase': 'check', 'wrong': invalid('expected-term')},
     {'name': 'equals-line-break-invalid', 'file': 'parse.bend',
-     'old': 'Bool.and(starts(ts,"\\n"),starts(S.skip_lines(ts),"="))', 'new': 'False{}',
+     'old': 'starts(S.skip_lines(ts),"=")', 'new': 'False{}',
      'witness': 'letsplit-before-eq-flat', 'phase': 'check', 'wrong': invalid('expected-=')},
     {'name': 'typed-equals-line-break-invalid', 'file': 'parse.bend',
      'old': 'assign(tail)', 'new': 'expect(tail,"=")',
@@ -92,7 +93,7 @@ MUTANTS = [
      'witness': 'letsplit-after-eq-junk', 'phase': 'check',
      'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}},
     {'name': 'line-break-before-any-token', 'file': 'parse.bend',
-     'old': 'Bool.and(starts(ts,"\\n"),starts(S.skip_lines(ts),"="))', 'new': 'starts(ts,"\\n")',
+     'old': BREAK, 'new': 'starts(ts,"\\n")',
      'witness': 'letsplit-before-eq-junk', 'phase': 'check',
      'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}},
     {'name': 'erased-repeated-promotion', 'file': 'parse.bend',
@@ -100,10 +101,10 @@ MUTANTS = [
      'witness': 'plusplus-erased-let', 'phase': 'check',
      'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\trepeated-promotion\t'}},
     {'name': 'arm-body-layout-invalid', 'file': 'parse.bend',
-     'old': 'Bool.and(U32.is_gt(parent,0),S.identifier(h))', 'new': 'False{}',
+     'old': 'Bool.and(U32.is_gt(parent,0),S.statement(h))', 'new': 'False{}',
      'witness': 'bodycol-arm-flat', 'phase': 'check', 'wrong': invalid('body-indentation')},
     {'name': 'body-layout-any-token', 'file': 'parse.bend',
-     'old': 'Bool.and(U32.is_gt(parent,0),S.identifier(h))', 'new': 'U32.is_gt(parent,0)',
+     'old': 'Bool.and(U32.is_gt(parent,0),S.statement(h))', 'new': 'U32.is_gt(parent,0)',
      'witness': 'bodycol-empty-arm', 'phase': 'check',
      'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tbody-indentation\t'}},
 ]
