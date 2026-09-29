@@ -566,23 +566,21 @@ are not words that any of these points reads. Nothing reads them until Top's loo
 request (§8), and a Let, a Reference, a Construct, a Foreign, a Closure's captures and an Enter's
 operands move or share a request unread, so a request can be stored, captured, passed and dropped.
 Dropping one releases it (§5) and has no effect. One read takes a request without refusing it (D24): a
-tags-mode Case matches no constructor row of a request, so its Default takes it, unread; only a Case without a
-Default refuses it (§6.1, and §8 for the seed's native lane, which does the same). A key-mode Case compares a
-scalar, which reads the word, and refuses it like every other point of the list.
+Case matches no row of a request, in either mode, so its Default takes it, unread; only a Case without a Default,
+a tags Case whose every row names a constructor, refuses it (§6.1, and §8 for the seed's native lane, which does the
+same).
 
 ### 6.1 Case selection
 
 The scrutinee is borrowed from its slot. **A request selects no row (D24).** A class-5
-scrutinee of a tags-mode Case is not inspected: it matches no constructor row, so the Case takes its Default,
-and a Case without a Default stops `Unsupported vm effect` (§6). It holds at any scrutinee type, whether the
-Case's rows are an Emit row, a Halt row or none (`program-case-request-emit-default`, `-halt-default` and
-`-default-only`, and a Case that names Flag, `case-request-default-at-flag`), because the Case never reads the
-word beyond its class. The Default binds nothing, the request is neither read nor performed, and the Case
-borrows it as it borrows every scrutinee, so the Default's value is what the run goes on with (§8: the goldens
-`case-request-emit-default-u32`, `-halt-default-u32` and `case-request-emit-default`). A key-mode Case is not
-part of D24: it compares the scalar's value, which reads the word, and a key row is no constructor row, so a
-request is refused there before any Default is chosen, as at every other read of §6 (`inspect-request-keys`).
-Any other word is inspected (§6) against the Case's scrutinee type, whether its slot is typed so or `none`, and
+scrutinee is not inspected: it matches no row, of a tags table or of a keys table, so the Case takes its Default, and a
+Case without a Default, a tags Case whose every row names a constructor, stops `Unsupported vm effect` (§6). A keys Case
+has a Default always (§3), so it never refuses a request. It holds at any scrutinee type, whether the Case's rows are an
+Emit row, a Halt row, keys or none (`program-case-request-emit-default`, `-halt-default` and `-default-only`; a Case
+that names Flag, `case-request-default-at-flag`; a keys Case, `case-request-default-keys`), because the Case never reads
+the word beyond its class. The Default binds nothing, the request is neither read nor performed, and the Case borrows it
+as it borrows every scrutinee, so the Default's value is what the run goes on with (§8: the goldens
+`case-request-emit-default-u32`, `-halt-default-u32` and `case-request-emit-default`). Any other word is inspected (§6) against the Case's scrutinee type, whether its slot is typed so or `none`, and
 whether the Case has rows or only a Default. Selection reads a tag and
 allocates nothing: an Object's tag is in its payload, an immediate of an algebraic
 type is tag `v`, a Nat word `n` is Zero (tag 0) when `n = 0` and otherwise Succ
@@ -835,16 +833,16 @@ and witnesses below; the native lane is the reference and the VM follows it):
 
 So "fail-stops in every lane" holds of the first row alone, and the Bun lane agrees with the native lane on the
 first and third rows. D24 gives the VM the native lane's rule wherever a Case can meet a request: a request
-matches no constructor row, so a tags-mode Case takes its Default when it has one and otherwise stops
+matches no row, so a Case takes its Default when it has one (a keys Case always does) and otherwise stops
 `Unsupported vm effect`, which is the first row's answer and D4's refusal (§6.1); a binder or a lone catch-all
 holds no Case and never reads the request, so it binds it as a value, and a plan may still hold a Case whose rows
 are all `none` (`program-case-request-default-only`), which takes its Default. The three goldens freeze the second
 row's values by the seed's native lane, each with the Bun lane recorded beside it (a fail-stop, exit 1, on all
 three); before D24 they were witnesses, and D23 refused every such Case, a Default included, as a capability gap
-(DECISIONS entries 33 and 35, finding 14). The refusal of a request that a Case without a Default, a key-mode
-Case or any other read of §6 meets is unchanged, and no golden agrees with the seed there: `program-case-request` is
+(DECISIONS entries 33 and 35, finding 14). The refusal of a request that a Case without a Default
+or any other read of §6 meets is unchanged, and no golden agrees with the seed there: `program-case-request` is
 a Case in a Program, `book-request-rendered` and `book-request-field` the render of a root and of a field, and
-`inspect-request-chr`, `inspect-request-prim`, `inspect-request-keys`, `inspect-request-print` and
+`inspect-request-chr`, `inspect-request-prim`, `inspect-request-print` and
 `enter-request-target` each other kind of read (§12). The pinned literals head reports `Unsupported check
 variable-pattern` for every catch-all on an algebraic type (`_` alone, a binder, and `_` after a constructor arm, each
 tried on a Flag: the witnesses `catch-all-lone`, `-binder` and `-after-arm`, which the seed runs), so those goldens'
@@ -1027,8 +1025,8 @@ copies low bytes and passes the flag; a nonzero flag is errno 22 before any writ
 Accepted, Invalid, Unsupported, Exhausted, HostFailure and InternalFailure are
 recorded separately. Malformed images, unknown ids and malformed invocations are
 HostFailure, and an image past a resource limit of §4 is Exhausted kind 2; source forms Knot does not handle are Unsupported, and so is a Book
-result that §8 cannot describe and a request that is inspected, rendered or otherwise consumed as data (D23), a tags-mode
-Case's Default aside (D24); a broken invariant is a defect. A timeout or
+result that §8 cannot describe and a request that is inspected, rendered or otherwise consumed as data (D23), a Case's
+Default aside (D24); a broken invariant is a defect. A timeout or
 crash never counts as a semantic mutant kill.
 
 The observation lanes are the seed, pinned Knot eval-cli, the Bend model on the
@@ -1316,17 +1314,18 @@ lane and requires:
   after 7, nothing written);
   a Book's result and a field of it, rendered (`book-request-rendered`,
   `book-request-field`, after 5); a request handed through `id` to a Chr operand (`inspect-request-chr`,
-  after 5), a prim operand (`inspect-request-prim`, `U32.add`, after 6), a key-mode Case
-  (`inspect-request-keys`, after 6) and an Enter's target (`enter-request-target`, after 5, the Enter
+  after 5), a prim operand (`inspect-request-prim`, `U32.add`, after 6)
+  and an Enter's target (`enter-request-target`, after 5, the Enter
   refused before it is debited, and with fuel 5 the same Enter meets fuel 0 and is refused all the same,
   `fuel-zero-request-target`); and a String whose tail is a request, which the loop reads whole when it
-  performs the print (`inspect-request-print`, after 10, nothing written). A tags-mode Case with a Default
+  performs the print (`inspect-request-print`, after 10, nothing written). A Case with a Default
   takes the request instead (D24, §6.1): the same Case with a Default beside an Emit row, a Halt row or no row ends
   exit 0 after the same 7 entries, nothing written and `effects` 0 (`program-case-request-emit-default`, `-halt-default`
   and `-default-only`, whose Default's Flag goes into an Emit's unread field), and so does a Book's Case that names
-  Flag, handed the request through `id` (`case-request-default-at-flag`, `Evaluated 8 0 Off{}` after 6); the values
+  Flag, handed the request through `id` (`case-request-default-at-flag`, `Evaluated 8 0 Off{}` after 6), and a Book's keys
+  Case, which has a Default always (`case-request-default-keys`, the same line after the same 6 entries); the values
   are the seed's in the goldens `case-request-emit-default-u32` (`2`), `-halt-default-u32` (`4`) and
-  `case-request-emit-default` (no output). A key-mode Case refuses it as before (`inspect-request-keys`). The same Action prints under a
+  `case-request-emit-default` (no output). The same Action prints under a
   Program entry from inside an argument of a call (`program-print-through-id`, whose source the seed
   prints `x` for on both lanes), `x\n` after 9; a Halt whose message is a lone surrogate (`halt-surrogate`)
   stops `HostFailure io abi` before `die` after 3; and one whose message is scalar
@@ -1446,12 +1445,12 @@ lane and requires:
   without a Default that picks an arm of a request, or takes it for an ill-typed word (each by the seven Book
   controls that hand `got` a request and `program-case-request`); a request taken for an ill-typed word where a
   String or a result is read (by `book-request-rendered`, `book-request-field` and `inspect-request-print`);
-  D24's rule, that a tags-mode Case takes its Default over a request: refused, as D23 refused it (by the three
-  goldens of a Case with a Default, the three Default controls and `case-request-default-at-flag`), picking a row and
-  not the Default (by the goldens `case-request-emit-default-u32` and `-halt-default-u32`, which print 1 and 3 for 2
-  and 4, and by `case-request-default-at-flag`), taken only at IO.OP (by `case-request-default-at-flag` alone) or
-  by a key-mode Case as well (by `inspect-request-keys` alone); a request taken for an ill-typed word at a scalar
-  (by `inspect-request-chr`, `-prim` and `-keys` alone) or at an
+  D24's rule, that a Case takes its Default over a request: refused, as D23 refused it (by the three
+  goldens of a Case with a Default, the three Default controls, `case-request-default-at-flag` and
+  `case-request-default-keys`), picking a row and not the Default (by the goldens `case-request-emit-default-u32` and
+  `-halt-default-u32`, which print 1 and 3 for 2 and 4, and by those two controls), taken only at IO.OP (by those two
+  controls) or not by a keys Case (by `case-request-default-keys` alone); a request taken for an ill-typed word at a
+  scalar (by `inspect-request-chr` and `-prim` alone) or at an
   Enter's target (by `enter-request-target` and `fuel-zero-request-target`); an Enter that tests fuel before it
   reads a request (by `fuel-zero-request-target` alone); a rendered field that admits a request (by
   `book-request-field` alone); a request's operands read when it is built (by `book-print-ill-typed` and

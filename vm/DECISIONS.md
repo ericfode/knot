@@ -761,7 +761,7 @@ follows it (§5, §10, §11) without a new image header word.
    to accept a generic `type Box<-R: Type> is Type:` beside `type Flag is Data:`.
 
 33. **A Case over a request is refused whatever rows it has, and the seed's lanes disagree (round 12, review
-   finding 2).** *Superseded in round 13: the coordinator chose option b, D24 (entry 35). A tags-mode Case with a
+   finding 2).** *Superseded in round 13: the coordinator chose option b, D24 (entry 35). A Case with a
    Default takes it; the three `program-case-request-*` controls below are runs now, and the witnesses that show the
    native lane taking the catch-all are goldens. What stays true is the measurement, and the refusal of a Case without a
    Default.* Entry 27's round-11 correction and finding 11 said that the seed fail-stops in every lane on a
@@ -807,24 +807,27 @@ follows it (§5, §10, §11) without a new image header word.
    lengths before their arrays, and arities and `slots` against §4's limits. Measured: 0xFFFFFFFF in every
    data type record of four goldens refuses in under a millisecond at a 22 MB process peak.
 
-35. **D24: a request matches no constructor row, so a tags-mode Case takes its Default (round 13).** The coordinator
+35. **D24: a request matches no row, so a Case takes its Default (round 13).** The coordinator
    chose option b of finding 14 (main `51ca324b`): the seed's native lane takes the catch-all on every shape measured in
    entry 33, and the pattern matrix of the nest increment now accepts catch-alls on algebraic types, so compiled programs
    will reach these shapes; §11 owes the native lane's value wherever it succeeds. SPEC §6, §6.1 and §8 now say: a class-5
-   scrutinee of a tags-mode Case is not inspected; the Default takes it, unread, and a Case without a Default stops
-   `Unsupported vm effect`; a binder or a lone catch-all holds no Case and binds the request as a value. Three points of
-   the rule are the executor's reading, each pinned by a frozen control so that the coordinator can move it with one
-   sentence and one frozen value:
+   scrutinee is not inspected; it matches no row of a tags table or of a keys table, so the Case's Default takes it, unread,
+   and a Case without a Default stops `Unsupported vm effect`; a binder or a lone catch-all holds no Case and binds the
+   request as a value. That is D24's text as written ("a Case over a request takes its Default when it has one", with D23's
+   refusal remaining "for a Case without a Default"), and a keys Case always has a Default, so no keys Case refuses a request.
+   Two points of it are pinned by a frozen control each:
 
-   - **Tags mode only.** A key-mode Case compares a scalar's value, which reads the word, and a key row is no constructor
-     row, so `inspect-request-keys` keeps D23's refusal (`Unsupported vm effect` after 6). D24's text ("a Case over a
-     request takes its Default when it has one") read uniformly would send a key-mode Case to its Default too, since it
-     always has one, and turn that control into `Evaluated 8 0 Off{}` after 6. The seed has no observation of it: a
-     request reaches a U32 Case only through a `none` position that a hand-written plan hands a request, so no compiled
-     program is affected either way. The evaluator mutant `keys-case-takes-request-default` dies by that control alone.
+   - **Either mode.** The rule does not ask what the Case compares. `case-request-default-keys` (a Book: a request handed
+     through `id` to a keys Case whose Default answers `Off{}`; `Evaluated 8 0 Off{}` after 6 entries) is the twin of
+     `case-request-default-at-flag`. The first commits of round 13 read the rule as a tags-mode rule and kept a keys Case
+     refusing (`inspect-request-keys`); that contradicted the text and the any-type point below, and was corrected in the
+     same round (two commits: the control re-frozen, then the evaluator). The evaluator mutant `keys-case-refuses-request`
+     (the old key-mode refusal) dies by that control alone. No compiled program reaches a keys Case with a request, since a
+     request arrives there only through a `none` position that a hand-written plan hands a request, so the choice is the
+     text's alone.
    - **Any scrutinee type.** The Case never reads the word beyond its class, so the Default is taken at IO.OP and at a
      type that a plan names by mistake alike (`case-request-default-at-flag`, a Book whose Case names Flag: `Evaluated 8 0
-     Off{}` after 6 entries). `case-request-default-at-io-op-only` dies by it alone.
+     Off{}` after 6 entries). `case-request-default-at-io-op-only` dies by it and by the keys control.
    - **Without a Default, refused as before**: `Unsupported vm effect`, never ill-typed (`case-request-without-default-ill-typed`),
      and no row is picked (`case-request-picks-arm`); the seven Book controls that hand `got` a request and
      `program-case-request` freeze it.
@@ -841,11 +844,11 @@ follows it (§5, §10, §11) without a new image header word.
    (14 witnesses become 11; `witness_refusals` uses `case-request-both-arms`); `case-request-default-only` and `-binder`
    stay, since a lone catch-all holds no Case. One control is new, `case-request-default-at-flag`. The evaluator
    mutant `case-default-takes-request` is the rule now and is removed; five are new, and each dies by named controls
-   (SPEC §12): `case-request-refused-with-default` (D23's refusal: the three goldens, the three Default controls and
-   `case-request-default-at-flag`), `case-request-ignores-default` (picks the first present row: the `2` and `4`
-   goldens print 1 and 3), `case-request-without-default-ill-typed`, `case-request-default-at-io-op-only` and
-   `keys-case-takes-request-default`; `case-request-picks-arm` is re-anchored on the Case without a Default. Nothing
-   else moved: vm-expected.json gained exactly three rows.
+   (SPEC §12): `case-request-refused-with-default` (D23's refusal: the three goldens, the three Default controls and the
+   two Book controls), `case-request-ignores-default` (picks the first present row: the `2` and `4` goldens print 1 and 3),
+   `case-request-without-default-ill-typed`, `case-request-default-at-io-op-only` and `keys-case-refuses-request`;
+   `case-request-picks-arm` is re-anchored on the Case without a Default. Round 11's control `inspect-request-keys`
+   is `case-request-default-keys` and a run. Nothing else moved: vm-expected.json gained exactly three rows.
 
 36. **Round 13, review findings 1 to 3: the conditions of §4 are listed form by form, and each is pinned.** The review of
    round 12 ran 47 mutants of the reference codec against the frozen controls and 19 survived: a loader could omit a condition
@@ -990,7 +993,9 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    Construct, Foreign, a Closure's captures, an Enter's operands and an Emit's field do not read a request.
    Controls: `program-case-request`, `book-request-rendered`, `book-request-field`, `inspect-request-chr`,
    `inspect-request-prim`, `inspect-request-keys`, `inspect-request-print`, `enter-request-target` and
-   `fuel-zero-request-target` (the same Enter at fuel 5, which meets fuel 0 and is refused, not exhausted).
+   `fuel-zero-request-target` (the same Enter at fuel 5, which meets fuel 0 and is refused, not exhausted). *(Round 13, D24:
+   a Case with a Default takes a request, so `inspect-request-keys` is now the run `case-request-default-keys`, and a Case
+   is no read of this list when it has a Default.)*
 4. **Seven frozen values move (each re-frozen in its own commit).**
 
    | control | before | now | why |
@@ -1045,7 +1050,7 @@ worktrees; the checks below are what the harnesses read from `check-spec.py`, SP
 3. **Three run controls for a Case with a Default over a request (§6, §8, entry 33).**
    `program-case-request-emit-default`, `-halt-default` and `-default-only` stop `Unsupported vm effect` after 7
    entries with nothing written and `effects` 0, as `program-case-request`. *(Superseded by D24: round 13's list
-   item 1 says the opposite. A VM takes the Default of a tags-mode Case over a request.)* The run
+   item 2 says the opposite. A VM takes the Default of a Case over a request.)* The run
    controls are 103 (34 effect controls), which vm-core's `run_control_count` reads from §12.
 4. **Nothing else moves.** No frozen value changed: the 102 earlier goldens, the 100 earlier run controls and the 87
    earlier refusals hold as frozen, and the seed witnesses (`golden/witnesses.json`, 14, §8 and §12) are
@@ -1066,17 +1071,18 @@ This list is the one to work from; the earlier lists remain the detail behind ea
    it inspects the request's operands whole, makes D20's scalar check, calls the host, builds the Base result, `dup`s `k`, drops the
    request and enters `k`, and ends only at an Emit or a Halt. A dropped request is no effect. D22 follows: a Book has no loop,
    so it never performs one (`book-drop` is `On{}`; `book-request-dropped` is 4 entries).
-2. **A request is never inspected, except that a tags-mode Case takes its Default (D24; §6, §6.1; supersedes round 12's item 3).**
+2. **A request is never inspected, except that a Case takes its Default (D24; §6, §6.1; supersedes round 12's item 3).**
    At every read of §6 the class is read first and a request stops the run `Unsupported vm effect`, whatever the type and before
-   any state changes, and at an Enter's target before its operand count and its debit. The one exception: a **tags-mode Case whose
-   scrutinee is a request takes its Default** (a class-5 word reads no tag, matches no row, and the Default binds nothing), at any
-   scrutinee type, with or without rows (`program-case-request-emit-default`, `-halt-default`, `-default-only`: exit 0 after 7
-   entries, nothing written, `effects` 0; `case-request-default-at-flag`: a Book, `Evaluated 8 0 Off{}` after 6; the goldens
-   `case-request-emit-default-u32` prints `2`, `case-request-halt-default-u32` `4`, `case-request-emit-default` nothing). A tags-mode
-   Case **without** a Default still stops `Unsupported vm effect` (`program-case-request` and the seven Book controls that hand `got`
-   a request), and a **key-mode** Case refuses a request as before (`inspect-request-keys`, after 6): a key comparison reads a scalar
-   and a key row is no constructor row (entry 35 records this reading for the coordinator). A VM must not read the request's
-   payload, perform it, or take a row.
+   any state changes, and at an Enter's target before its operand count and its debit. The one exception: a **Case whose scrutinee
+   is a request takes its Default**, in tags mode and in keys mode alike (a class-5 word reads no tag and no key, matches no row,
+   and the Default binds nothing), at any scrutinee type, with or without rows (`program-case-request-emit-default`,
+   `-halt-default`, `-default-only`: exit 0 after 7 entries, nothing written, `effects` 0; `case-request-default-at-flag` and
+   `case-request-default-keys`: Books, `Evaluated 8 0 Off{}` after 6, the second at a keys Case; the goldens
+   `case-request-emit-default-u32` prints `2`, `case-request-halt-default-u32` `4`, `case-request-emit-default` nothing). A Case
+   **without** a Default, a tags Case whose every row names a constructor, still stops `Unsupported vm effect`
+   (`program-case-request` and the seven Book controls that hand `got` a request). A keys Case has a Default always, so it never
+   refuses one: round 11's `inspect-request-keys` (a refusal after 6) is now `case-request-default-keys` (a run after 6). A VM must
+   not read the request's payload, perform it, or take a row.
 3. **Frozen values that are new or moved since round 8 (re-freeze each; the outcome, `stdout` and `effects` are otherwise as before).**
    `book-print`, `-continuation-call`, `-twice`, `-non-scalar` and `book-args` refuse after 5 entries (were 4), `book-print-ill-typed`
    after 6 (was 5), `fuel-book-effect-exact` at fuel 5 (was 4), and the three `program-case-request-*` Default controls, which round 12

@@ -92,7 +92,7 @@ controls; two excused eval-bound controls; eight admitted plan controls (two of 
 one admitted limit control, seven admitted code-list controls and 104 run controls with their frozen
 fuel, calls and outcomes (among them D23's requests: built by the Action's second application,
 performed only by the Program's Top loop, dropped without effect and refused as
-`Unsupported vm effect` wherever a read meets one, except a tags-mode Case, whose Default takes it (D24), with the
+`Unsupported vm effect` wherever a read meets one, except a Case, whose Default takes it (D24), with the
 bytes and host calls a Book makes, which are none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar); nine describe-domain controls; 13 argument controls;
 the lowering of two hand-written displays; 11 seed witnesses (sources whose two seed lanes, and for
 three the literals head, it re-executes and compares with frozen bytes and a literal review, with three
