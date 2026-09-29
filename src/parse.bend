@@ -243,7 +243,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         S.choose(Result<S.Error,Parsed>,touches(S.at(token),S.here(tokens)),u =>
         S.choose(Result<S.Error,Parsed>,Bool.and(pattern,U32.is_gt(count,256)),u => invalid(tokens,"nat-offset-pattern"),u =>
           S.bind(List<&2,S.Token>,Parsed,expect(tokens,"+"),tail =>
-            then(run(n,Term{pattern},tail),value => rest => Done{Parsed{offset(token,count,value),rest}}))),u =>
+            then(run(n,Term{pattern},S.skip_lines(tail)),value => rest => Done{Parsed{offset(token,count,value),rest}}))),u =>
         unsupported(tokens,"operator")),u =>
         Done{Parsed{S.Literal{token,1,count,text},tokens}})
     case 1n+ +n LiteralTail{node,pattern}: Done{Parsed{node,tokens}}

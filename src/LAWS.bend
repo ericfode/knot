@@ -99,3 +99,10 @@ law hash_import:
   for +rest: List<&2,S.Token>
   {P.run(1n,P.Header{S.Token{"import",at},S.Token{"0x77a1a37baca5d86f62241cab956a1fb1",at}},Con{S.Token{"/",at},rest})
     == Fail{S.Unsupported{"parse","import",at}} : Result<S.Error,P.Parsed>}
+
+law offset_tail_after_newline:
+  for +rest: List<&2,S.Token>
+  {P.run(2n,P.LiteralTail{S.Literal{S.Token{"1n",S.At{0,2,1,0}},1,1,Nil{}},True{}},
+    Con{S.Token{"+",S.At{2,3,1,2}},Con{S.Token{"\n",S.At{3,4,1,3}},Con{S.Token{"p",S.At{6,7,2,2}},Con{S.Token{":",S.At{7,8,2,3}},rest}}}})
+    == Done{P.Parsed{S.Offset{S.Token{"1n",S.At{0,2,1,0}},1,S.Variable{S.Token{"p",S.At{6,7,2,2}}}},Con{S.Token{":",S.At{7,8,2,3}},rest}}}
+    : Result<S.Error,P.Parsed>}

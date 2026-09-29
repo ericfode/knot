@@ -59,3 +59,5 @@ def L.local_import(at,rest):
 
 def L.hash_import(at,rest):
   {==}
+
+def L.offset_tail_after_newline(rest): {==}

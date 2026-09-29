@@ -382,6 +382,11 @@ MUTANTS = [
     {'name': 'raw-delete', 'file': 'primitive-eval.bend', 'lane': 'eval',
      'old': 'Bool.and(U32.is_ge(code,32),U32.is_ne(code,127))', 'new': 'U32.is_ge(code,32)',
      'fixture': 'result-char', 'export': 'sample', 'arguments': [12], 'wrong_display': "'\x7f'"},
+    # Review round 10: the tail of an offset follows its `+` after a newline or a comment.
+    {'name': 'offset-newline-kept', 'file': 'parse.bend',
+     'old': 'then(run(n,Term{pattern},S.skip_lines(tail)),value => rest =>',
+     'new': 'then(run(n,Term{pattern},tail),value => rest =>',
+     'fixture': 'offset-layout', 'verdict': (2, 'Invalid\tparse\texpected-term\t')},
 ]
 
 
