@@ -393,7 +393,7 @@ Cases on a `none` slot, among them `list-head-match`, three whose arms fit their
 Case, among them `first-code`, S's shapes, and two of names, a type named with each length of
 UTF-8 (U+0024, U+00A2, U+20AC, U+10348) and one named with every edge of a length (U+0080, U+07FF, U+0800, U+D7FF, U+E000,
 U+FFFF, U+10000, U+10FFFF)), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 104 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 110 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -567,8 +567,9 @@ request (§8), and a Let, a Reference, a Construct, a Foreign, a Closure's captu
 operands move or share a request unread, so a request can be stored, captured, passed and dropped.
 Dropping one releases it (§5) and has no effect. One read takes a request without refusing it (D24): a
 Case matches no row of a request, in either mode, so its Default takes it, unread; only a Case without a Default,
-a tags Case whose every row names a constructor, refuses it (§6.1, and §8 for the seed's native lane, which does the
-same).
+a tags Case whose every row names a constructor, refuses it (§6.1). The seed's native lane does the same for a source
+with no catch-all; a source with one is taken by the native lane, and a compiler that lowers the catch-all into rows leaves
+its plan no Default to take (§8).
 
 ### 6.1 Case selection
 
@@ -580,7 +581,10 @@ Emit row, a Halt row, keys or none (`program-case-request-emit-default`, `-halt-
 that names Flag, `case-request-default-at-flag`; a keys Case, `case-request-default-keys`), because the Case never reads
 the word beyond its class. The Default binds nothing, the request is neither read nor performed, and the Case borrows it
 as it borrows every scrutinee, so the Default's value is what the run goes on with (§8: the goldens
-`case-request-emit-default-u32`, `-halt-default-u32` and `case-request-emit-default`). Any other word is inspected (§6) against the Case's scrutinee type, whether its slot is typed so or `none`, and
+`case-request-emit-default-u32`, `-halt-default-u32` and `case-request-emit-default`). Only a plan that holds a Default takes
+one, and §3 keeps a Default only where a row is absent: a lowering that expands a source catch-all into a row for each
+constructor that no arm names hands the VM a Case that names every constructor, which a request refuses like any Case without a
+Default (§8's fourth row and its `-compiled` controls). Any other word is inspected (§6) against the Case's scrutinee type, whether its slot is typed so or `none`, and
 whether the Case has rows or only a Default. Selection reads a tag and
 allocates nothing: an Object's tag is in its payload, an immediate of an algebraic
 type is tag `v`, a Nat word `n` is Zero (tag 0) when `n = 0` and otherwise Succ
@@ -823,31 +827,47 @@ loop reads a `k` that is an immediate.
 **Where the seed refuses, and the VM with it.** The seed's boundary is the loop: an effect fires only
 where the pure evaluator answers its request to the loop, so a request that is dropped never fires. A
 request that a Case meets is where the seed's two lanes part, and they do not fail-stop alike (the goldens
-and witnesses below; the native lane is the reference and the VM follows it):
+and witnesses below; the native lane is the reference, and the VM follows it wherever its plan can):
 
 | A Case over a request that | seed native | seed Bun | VM |
 |---|---|---|---|
 | names both Emit and Halt, no Default (witness `case-request-both-arms`; the seed's own test `tests/io/request_out_of_band.bend`) | fail-stop (`bend: runtime fail-stop`), exit 1 | fail-stop, exit 1 | `Unsupported vm effect` (`program-case-request`) |
-| names one constructor beside a catch-all (goldens `case-request-emit-default-u32` prints `2`, `-halt-default-u32` prints `4`, `case-request-emit-default` prints nothing) | takes the catch-all, exit 0 | fail-stop, exit 1 | takes the Default (D24) |
+| names one constructor beside a catch-all (goldens `case-request-emit-default-u32` prints `2`, `-halt-default-u32` prints `4`, `case-request-emit-default` prints nothing) | takes the catch-all, exit 0 | fail-stop, exit 1 | takes the Default of a plan that holds one (D24); a compiled plan holds none (below) |
 | is only a catch-all or a binder (witnesses `case-request-default-only`, `-binder`) | exit 0, the request is never read | exit 0 | binds it as a value: no Case (D24) |
+| names every constructor and a catch-all beside them, or reaches the catch-all only through a field pattern (witnesses `case-request-both-plus-default` and `-nested-default` print `3`; the Book `case-request-book-both-plus-default` yields `On{}`) | takes the catch-all, exit 0 | fail-stop, exit 1 (the Book prints its stuck term) | `Unsupported vm effect`: a table that names every constructor has no Default (§3), and a request matches none of its rows (`case-request-emit-default-u32-compiled`, `case-request-nested-default-compiled`; `book-print` for a Book) |
 
 So "fail-stops in every lane" holds of the first row alone, and the Bun lane agrees with the native lane on the
-first and third rows. D24 gives the VM the native lane's rule wherever a Case can meet a request: a request
-matches no row, so a Case takes its Default when it has one (a keys Case always does) and otherwise stops
-`Unsupported vm effect`, which is the first row's answer and D4's refusal (§6.1); a binder or a lone catch-all
-holds no Case and never reads the request, so it binds it as a value, and a plan may still hold a Case whose rows
-are all `none` (`program-case-request-default-only`), which takes its Default. The three goldens freeze the second
-row's values by the seed's native lane, each with the Bun lane recorded beside it (a fail-stop, exit 1, on all
-three); before D24 they were witnesses, and D23 refused every such Case, a Default included, as a capability gap
-(DECISIONS entries 33 and 35, finding 14). The refusal of a request that a Case without a Default
-or any other read of §6 meets is unchanged, and no golden agrees with the seed there: `program-case-request` is
-a Case in a Program, `book-request-rendered` and `book-request-field` the render of a root and of a field, and
-`inspect-request-chr`, `inspect-request-prim`, `inspect-request-print` and
+first and third rows. **D24 is the VM's rule for a plan that holds a Default.** A request matches no row, so a Case
+takes its Default when its plan has one (a keys Case always does) and otherwise stops `Unsupported vm effect`, which is
+the first row's answer and D4's refusal (§6.1); a binder or a lone catch-all holds no Case and never reads the request, so
+it binds it as a value, and a plan may still hold a Case whose rows are all `none`
+(`program-case-request-default-only`), which takes its Default. The three goldens freeze the second row's values by the
+seed's native lane, each with the Bun lane recorded beside it (a fail-stop, exit 1, on all three); before D24 they were
+witnesses, and D23 refused every such Case, a Default included, as a capability gap (DECISIONS entries 33 and 35,
+finding 14). Their plans are hand-lowered (§1) witnesses of the plan-level rule, and no lowering emits their Default.
+A plan holds a Default only where a row is absent (§3), and the checker of the nest increment (`campaign/nest` at
+2a84a4f5) lowers a source catch-all on an algebraic type into a row for each constructor that no arm of the source names,
+with the catch-all's body copied into it, and emits no Default; a lone catch-all or a binder lowers to its bare body, with
+no Case, the third row's shape. (That checker refuses an `IO.OP<R>` parameter as `Unsupported parse parameter-type`, so
+this was measured on sources over a user type of IO.OP's shape, DECISIONS entry 37.) The second row's sources therefore
+lower to the complete tables of `case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled` and
+`case-request-emit-default-compiled`, the fourth row's sources are complete tables already, and the VM refuses each
+request where the seed's native lane takes the catch-all: four run controls, `Unsupported vm effect` after 8 entries with
+nothing written. That is a recorded capability gap (D4: Unsupported, never Invalid, never a bound), and no rule of the VM
+closes it, because a complete table has lost what the catch-all was for: the sources of `case-request-emit-default-u32`
+(`Emit: 1 / _: 2`, native `2`) and of `case-request-both-plus-default` (`Emit: 1 / Halt: 2 / _: 3`, native `3`) lower to
+one plan, and so do those of `case-request-nested-default` (native `3`) and `case-request-inner-default-only` (a native
+fail-stop). The image can express the seed's answer: a Default that tests the slot again for the arms that the source
+names after the catch-all takes a request as the native lane does (`case-request-both-plus-default-retested` and
+`-nested-default-retested`, each `3\n` after 13 entries with one effect). Closing the gap is therefore a change of the
+lowering, to emit that shape, or of §3, to admit a Default beside a complete table; the VM's Case rule needs neither. The
+refusal of a request that a Case without a Default or any other read of §6 meets is unchanged, and no golden agrees with the
+seed there: `program-case-request` is a Case in a Program, `book-request-rendered` and `book-request-field` the render of a
+root and of a field, and `inspect-request-chr`, `inspect-request-prim`, `inspect-request-print` and
 `enter-request-target` each other kind of read (§12). The pinned literals head reports `Unsupported check
 variable-pattern` for every catch-all on an algebraic type (`_` alone, a binder, and `_` after a constructor arm, each
 tried on a Flag: the witnesses `catch-all-lone`, `-binder` and `-after-arm`, which the seed runs), so those goldens'
-plans are hand-lowered and the eval lane of each is observed (`Unsupported parse parameter-type`), not compared; the
-pattern matrix of the nest increment accepts these catch-alls, which is why compiled programs reach the rule.
+plans are hand-lowered and the eval lane of each is observed (`Unsupported parse parameter-type`), not compared.
 A `_` after key arms on a U32 or a Char is accepted (`default-hit`, `case-char`) and is not about requests.
 
 **The seed's crash is `main`'s form, not a let.** The seed crashes on a Program whose `main` is itself
@@ -1071,8 +1091,10 @@ reports an engine trap as a budget fails. Unsupported, timeout, unknown failure
 and a missing lane are neither Exhausted nor agreement. An Unsupported outcome is
 D4's refusal of a form Knot does not handle: a recorded capability gap, never a
 bound. Round 12 recorded one that a hand-written plan could hold and Knot could not lower, a Case with a Default
-over a request, where the seed's native lane picks the Default; D24 closed it by giving the VM the native lane's
-value (§6.1, §8). Expected values are never regenerated from a candidate VM.
+over a request, where the seed's native lane picks the Default. D24 gave the VM the native lane's value for a plan that
+holds the Default (§6.1, §8). A compiler that lowers a source catch-all into a row for each remaining constructor emits no
+Default, so for compiled programs the gap stays open and §8's table records it (round 13, review round 1). Expected values
+are never regenerated from a candidate VM.
 
 **Non-scalar output (D20).** The program's own value decides it, never a seed
 lane. The reference evaluation of the plan ([evaluate.py](evaluate.py), §6–§10 on
@@ -1228,7 +1250,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 104 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 110 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1284,7 +1306,7 @@ lane and requires:
   control, and not each instance: the prim ids that no control names (U32 `mul` … `shrn`
   but `shln`, and Nat `mul` … `is_ge`) are vm-prims' to witness, one control per id and
   operand (§9), and the byte List and the operands of every foreign but `IO.print` are
-  vm-io's. Thirty-five effect controls (`effect_controls`) freeze
+  vm-io's. Forty-one effect controls (`effect_controls`) freeze
   D23 (§8), D24 (§6.1), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`, which builds a
   request that `got` receives: `book-print`, `book-print-continuation-call` (`k` a function) and
@@ -1325,7 +1347,13 @@ lane and requires:
   Flag, handed the request through `id` (`case-request-default-at-flag`, `Evaluated 8 0 Off{}` after 6), and a Book's keys
   Case, which has a Default always (`case-request-default-keys`, the same line after the same 6 entries); the values
   are the seed's in the goldens `case-request-emit-default-u32` (`2`), `-halt-default-u32` (`4`) and
-  `case-request-emit-default` (no output). The same Action prints under a
+  `case-request-emit-default` (no output). Lowered as a compiler lowers those three sources and the fourth row's nested one
+  (a row for each constructor, the catch-all's body copied, no Default), the same Cases refuse the request:
+  `Unsupported vm effect` after 8 entries with nothing written and `effects` 0 (`case-request-emit-default-u32-compiled`,
+  `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and `case-request-nested-default-compiled`); and a
+  Default that tests the slot again for the arms named after the catch-all takes the request as the native lane does,
+  `3\n` after 13 entries and one effect (`case-request-both-plus-default-retested` and `-nested-default-retested`). The
+  same Action prints under a
   Program entry from inside an argument of a call (`program-print-through-id`, whose source the seed
   prints `x` for on both lanes), `x\n` after 9; a Halt whose message is a lone surrogate (`halt-surrogate`)
   stops `HostFailure io abi` before `die` after 3; and one whose message is scalar
@@ -1447,7 +1475,7 @@ lane and requires:
   before it performs the effect (by `fuel-continuation-short`, `inspect-continuation-target`,
   `inspect-print-after-surrogate`, `inspect-request-print` and the four D20 goldens' `calls`); a Case
   without a Default that picks an arm of a request, or takes it for an ill-typed word (each by the seven Book
-  controls that hand `got` a request and `program-case-request`); a request taken for an ill-typed word where a
+  controls that hand `got` a request, `program-case-request` and the four `-compiled` twins); a request taken for an ill-typed word where a
   String or a result is read (by `book-request-rendered`, `book-request-field` and `inspect-request-print`);
   D24's rule, that a Case takes its Default over a request: refused, as D23 refused it (by the three
   goldens of a Case with a Default, the three Default controls, `case-request-default-at-flag` and
@@ -1472,7 +1500,7 @@ lane and requires:
   (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
   and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused print
   whose debit is refunded (by the D20 goldens' `calls`);
-- 11 **seed witnesses** (`golden/witnesses.json`, `check-spec.py witness_controls`): sources that §8 cites
+- 15 **seed witnesses** (`golden/witnesses.json`, `check-spec.py witness_controls`): sources that §8 cites
   and no golden can carry, each re-run on both seed lanes (three also through the literals head's check-cli) and held
   to its source's hash, to its frozen exit, stdout and stderr, and to the review of its exit and stdout that
   was written before the bytes were frozen. Five show that the seed crashes on a `main` that is itself a
@@ -1480,7 +1508,11 @@ lane and requires:
   holds no Case with a Default beside a constructor row (`case-request-default-only` and `-binder`, which
   read nothing, and `-both-arms`, which fail-stops in both lanes; the three that D24 promoted to goldens are
   `case-request-emit-default-u32`, `-halt-default-u32` and `case-request-emit-default`); three (`catch-all-lone`, `-binder` and `-after-arm`) that both lanes run a catch-all on
-  an algebraic type that the literals head refuses as `Unsupported check variable-pattern`. Three frozen
+  an algebraic type that the literals head refuses as `Unsupported check variable-pattern`; four (round 13, review round 1)
+  on a catch-all for which a compiled plan has no place (`case-request-both-plus-default`, `-nested-default`,
+  `-inner-default-only` and the Book `-book-both-plus-default`): the native lane takes it, printing `3`, `3` and `On{}`,
+  and fail-stops only where the catch-all is inside the Halt arm; the plans of the first two lower to the complete tables of
+  `case-request-emit-default-u32-compiled` and `case-request-nested-default-compiled`, which the VM refuses (§8). Three frozen
   refusals of the comparison (a source that drifted, a lane that drifted, a lane that contradicts its
   review) are held by three rule mutants. A witness is evidence for the text and never a VM expectation:
   vm-model and vm-core do not read it;

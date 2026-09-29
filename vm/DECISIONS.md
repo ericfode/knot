@@ -812,7 +812,10 @@ follows it (§5, §10, §11) without a new image header word.
 35. **D24: a request matches no row, so a Case takes its Default (round 13).** The coordinator
    chose option b of finding 14 (main `51ca324b`): the seed's native lane takes the catch-all on every shape measured in
    entry 33, and the pattern matrix of the nest increment now accepts catch-alls on algebraic types, so compiled programs
-   will reach these shapes; §11 owes the native lane's value wherever it succeeds. SPEC §6, §6.1 and §8 now say: a class-5
+   will reach these shapes; §11 owes the native lane's value wherever it succeeds. *(Corrected in entry 37: nest's checker
+   accepts a catch-all but lowers it into a row for each remaining constructor and emits no Default, so a compiled program
+   reaches the complete tables of the `-compiled` controls, which the VM refuses; the Default rule is reached by a
+   hand-written plan and by a keys Case.)* SPEC §6, §6.1 and §8 now say: a class-5
    scrutinee is not inspected; it matches no row of a tags table or of a keys table, so the Case's Default takes it, unread,
    and a Case without a Default stops `Unsupported vm effect`; a binder or a lone catch-all holds no Case and binds the
    request as a value. That is D24's text as written ("a Case over a request takes its Default when it has one", with D23's
@@ -886,7 +889,8 @@ follows it (§5, §10, §11) without a new image header word.
 
 37. **Round 13, review round 1: three confirmed findings (the audit's memory; D24 and compiled programs; a fourth row of §8).**
    The coordinator's review of the tip `3b43fca4` confirmed three findings, all measured and reproduced by a verifier. This
-   entry records each; the fixes are separate commits, and no frozen expectation moved for finding 1.
+   entry records each; the fixes are separate commits, no frozen expectation of an existing golden or control moved, and the
+   witnesses and controls that they add were frozen first (D7), with the entries counted by hand before any of them ran.
    - **Finding 1: the gate held 35 GB.** The clause-level audit of entry 36 omits every refusal of the reference codec, and its
      omission of `decode`'s `constructor count` guard is exactly the late size check that entry 34 said no mutant restores: without
      it `type-count-max` (0xFFFFFFFF) sized `[None] * r[3]`, a list of 32 GiB. The gate passed on a host with the memory
@@ -901,6 +905,50 @@ follows it (§5, §10, §11) without a new image header word.
      bytes for the whole process tree (the seed's builds included), 430,030,848 bytes (410 MiB) in the gate's own process.
      What the audit still cannot hold is the order of the check against the allocation in a codec that allocates first: that mutant
      would ask for 32 GiB, so the committed codec's order is held by running `type-count-max` against it, and by the assertion.
+   - **Finding 2: D24's Default is unreachable from compiled programs.** D24's rationale (`docs/COMPILER-CAMPAIGN.md`: nest's pattern
+     matrix accepts catch-alls, so compiled programs will reach these shapes) does not hold for the lowering. `campaign/nest` at
+     2a84a4f5 accepts a catch-all on an algebraic type and lowers it into a row for each constructor that no source arm names, the
+     catch-all's body copied into each, with no Default (`src/check.bend`, `default_arms` and `fallback`: a terminal default "is
+     checked once while live, then shared by its remaining runtime tags"); the image encoder (`campaign/image` 54f47b2a,
+     `src/image.bend`) has no Default term and builds every tags Case as a complete table. Reproduced here on my own build of that
+     commit (`BEND_NO_TELEMETRY=1 bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts src/check-cli.bend -o .local/nest-check`, then
+     `.local/nest-check` on a source over `type Op is Data: Emit{v: Flag} / Halt{c: Flag, m: Flag}`, since that checker refuses an
+     `IO.OP<R>` parameter as `Unsupported parse parameter-type`): `Emit: On / _: Off`, `Emit: On / Halt: Off / _: On` and
+     `Emit: On / Halt: Off` all print the core `case $0 [0(1 $1:0;)=>v0.1;1(1 $1:0;1 $2:0;)=>v0.0]`; `Emit: On / Halt{On{}, m}: Off / _: On`
+     and the same with the `_` only inside `match c` both print `case $0 [0(1 $1:0;)=>v0.1;1(1 $1:0;1 $2:0;)=>case $1
+     [1=>v0.0;0=>v0.1]]`; a lone `_` and a binder print the bare body `v0.1`, so §8's third row does hold for compiled programs.
+     So a compiled Case over a request is a complete table with no Default: the VM answers `Unsupported vm effect` where the native
+     lane takes the catch-all, and the three D24 goldens witness plans that no lowering emits.
+     - *Fixed inside `vm/`, by the review's second option* (the first is nest's and image's to change, so it is the coordinator's
+       call). SPEC §6, §6.1, §8 and §11 and entry 35 now say that D24's rule is the VM's for a plan that holds a Default (a
+       hand-written plan, a keys Case), that a compiled program meets the refusal for a catch-all, and that this is a recorded
+       `Unsupported` gap, never a bound. Four run controls freeze the compiled twins (`case-request-emit-default-u32-compiled`,
+       `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and `case-request-nested-default-compiled`: `Unsupported vm
+       effect` after 8 entries, nothing written, `effects` 0, the entries walked by hand before they ran), and the three goldens
+       are described as hand-lowered witnesses of the plan-level rule. No frozen expectation of a golden moved. The four twins die by
+       `case-request-picks-arm` and `case-request-without-default-ill-typed`; no new mutant was needed.
+     - *For the coordinator: not vm-spec's to edit.* `docs/COMPILER-CAMPAIGN.md`'s D24 row says that compiled programs will reach
+       the shapes, which is false of nest at 2a84a4f5. A rationale that is true of it: "A request matches no constructor row, so a
+       Case takes its Default when its plan has one and otherwise stops `Unsupported vm effect`. The seed's native lane takes a
+       source's catch-all, and the checker's lowering of an algebraic catch-all is a complete table with no Default, so compiled
+       programs meet the refusal, a recorded `Unsupported` gap; hand-written plans and keys Cases reach the rule." The alternative
+       that keeps D24's rationale is a change of nest's checker (keep a terminal catch-all as a Default term) and of the encoder
+       (§3 maps it to a tags Default), which closes the second row of §8's table; the fourth row needs finding 3's shape too.
+   - **Finding 3: a fourth row of §8's table.** The native lane takes a catch-all that sits beside a table naming every constructor
+     (`Emit: 1 / Halt: 2 / _: 3` prints `3`) or that is reached only through a field pattern (`Emit: 1 / Halt{0, m}: 2 / _: 3` prints
+     `3`), while the plan of such a source is a complete table with no Default, since §3 keeps a Default only where a row is absent.
+     §8 had no row for it, and its sentences "wherever a Case can meet a request" (§8) and "D24 closed it" (§11) promised more than
+     a plan can carry. The review's headline, that the image cannot express the native answer, is refuted by its own verifier and by
+     two controls here: `case-request-both-plus-default-retested` and `case-request-nested-default-retested`, whose Default tests the
+     slot again for the arms named after the catch-all, validate, round-trip and print `3` after 13 entries with one effect, as the
+     native lane does. What stands is that no lowering emits them. Fixed: a fourth row of the table (§8); four seed witnesses,
+     `case-request-both-plus-default` (`3`), `-nested-default` (`3`), `-inner-default-only` (a fail-stop on both lanes) and the Book
+     `-book-both-plus-default` (`On{}`; the Bun lane prints its stuck term), each with its literal review written before
+     `--freeze-new` observed the seed; the two sentences corrected. `-inner-default-only` is the review's p1e with the same constants
+     as the nested witness: its plan equals the nested one's, so two sources, one plan and two native answers show that no rule of the
+     VM agrees with the seed on it. The Book's plan is the complete table that `book-print` already freezes. The gap closes by a
+     lowering that emits the retested shape, or by a §3 that admits a Default beside a complete table (with `redundant-default` and
+     the canonical-order clause changed); both are the coordinator's call.
 
 ## What vm-model and vm-core must now follow (round 9)
 
@@ -1102,12 +1150,17 @@ This list is the one to work from; the earlier lists remain the detail behind ea
    **without** a Default, a tags Case whose every row names a constructor, still stops `Unsupported vm effect`
    (`program-case-request` and the seven Book controls that hand `got` a request). A keys Case has a Default always, so it never
    refuses one: round 11's `inspect-request-keys` (a refusal after 6) is now `case-request-default-keys` (a run after 6). A VM must
-   not read the request's payload, perform it, or take a row.
+   not read the request's payload, perform it, or take a row. Only a plan that holds a Default takes one, and a compiler's plan
+   does not (nest's checker expands a catch-all into a row for each remaining constructor): the four `-compiled` controls
+   refuse the request, `Unsupported vm effect` after 8 entries with nothing written, and the two `-retested` controls, whose
+   Default tests the slot again, take it (`3\n` after 13 entries, one effect); a VM follows the plan, not the source.
 3. **Frozen values that are new or moved since round 8 (re-freeze each; the outcome, `stdout` and `effects` are otherwise as before).**
    `book-print`, `-continuation-call`, `-twice`, `-non-scalar` and `book-args` refuse after 5 entries (were 4), `book-print-ill-typed`
    after 6 (was 5), `fuel-book-effect-exact` at fuel 5 (was 4), and the three `program-case-request-*` Default controls, which round 12
    froze as `Unsupported vm effect` after 7 entries, run to exit 0 after the same 7 (D24). New controls: the request controls of round 11 (fifteen) and round 12's `call-shaped`
-   goldens (six), the three D24 goldens, `case-request-default-at-flag`.
+   goldens (six), the three D24 goldens, `case-request-default-at-flag`, and the six of review round 1: the four
+   `case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and
+   `case-request-nested-default-compiled`, and the two `case-request-both-plus-default-retested` and `-nested-default-retested`.
 4. **`stdout` and `effects` are compared on every run control that freezes them** (`effects` is the number of host calls the run
    made: the `knot_io` calls of vm-core's trace, the effects of vm-model's model), and `calls` at every stop (§7: a stop keeps its debit).
 5. **The loader refuses every image of `byte_controls` and `plan_controls`, and admits every admitted control (§2, §4).** Round 13
@@ -1119,10 +1172,10 @@ This list is the one to work from; the earlier lists remain the detail behind ea
    (§4 step 5: a loader with no encoder checks them one by one; `piecewise_rejected` is a model of it). Each refusal carries the
    reference's reason where the VM reports one.
 6. **The counts, which both harnesses read from SPEC.** §4 states `freezes 211 refusals (124 byte-level, 9 at the limits, 78
-   plan-level)` and §12 `104 admitted **run controls**` (35 effect controls); the sentence shapes are unchanged and the numbers
-   are new. Goldens 111; admitted controls 120 (7 code lists, 104 runs, 8 admitted plan controls, `arity-at-limit`); mutants
+   plan-level)` and §12 `110 admitted **run controls**` (41 effect controls); the sentence shapes are unchanged and the numbers
+   are new. Goldens 111; admitted controls 126 (7 code lists, 110 runs, 8 admitted plan controls, `arity-at-limit`); mutants
    137 codec, 4 source, 97 evaluator and 23 rule (261). vm-model reads the lists themselves.
-7. **Not obligations.** The 11 seed witnesses (`golden/witnesses.json`) and the codec's refusal accounting (`statement_audit`, finding
+7. **Not obligations.** The 15 seed witnesses (`golden/witnesses.json`) and the codec's refusal accounting (`statement_audit`, finding
    12) are evidence for the text and for the reference; neither VM reads them.
 
 ## Findings that need an owner
@@ -1329,8 +1382,9 @@ This list is the one to work from; the earlier lists remain the detail behind ea
      run(IO.print("dead"), IO.print("live"))
    ```
 14. **The seed's lanes disagree on a Case with a catch-all over a request; D23 refuses it (coordinator's choice).**
-   *Resolved in round 13: the coordinator chose option b as D24, and entry 35 has the rule and the controls. The text
-   below is the round-12 record.* Recorded in entry 33, which has the measurements and the witnesses. D23 as decided is option a: every Case over
+   *Resolved in round 13: the coordinator chose option b as D24, and entry 35 has the rule and the controls; entry 37
+   records that nest's lowering emits no Default, so compiled programs do not reach it. The text below is the round-12
+   record.* Recorded in entry 33, which has the measurements and the witnesses. D23 as decided is option a: every Case over
    a request is `Unsupported vm effect`, and the shapes on which the native lane succeeds are a recorded capability
    gap that no compiled program reaches, because the pinned literals head refuses every catch-all on an algebraic
    type. Option b, from review finding 2: a request selects no tag row, so a Case with a Default takes the
