@@ -1341,9 +1341,9 @@ lane and requires:
   and no golden can carry, each re-run on both seed lanes (three also through the literals head's check-cli) and held
   to its source's hash, to its frozen exit, stdout and stderr, and to the review of its exit and stdout that
   was written before the bytes were frozen. Five show that the seed crashes on a `main` that is itself a
-  lambda (`main-lambda-print`, `-continue`, `-halt`, `-let` and `-nolet`); six that its lanes part over a Case
-  on a request (`case-request-default-only`, `-binder`, `-emit-default`, `-both-arms`, `-emit-default-u32` and
-  `-halt-default-u32`); three (`catch-all-lone`, `-binder` and `-after-arm`) that both lanes run a catch-all on
+  lambda (`main-lambda-print`, `-continue`, `-halt`, `-let` and `-nolet`); six on a Case over a request, where
+  its lanes agree or part (`case-request-default-only`, `-binder`, `-emit-default`, `-both-arms`,
+  `-emit-default-u32` and `-halt-default-u32`); three (`catch-all-lone`, `-binder` and `-after-arm`) that both lanes run a catch-all on
   an algebraic type that the literals head refuses as `Unsupported check variable-pattern`. Three frozen
   refusals of the comparison (a source that drifted, a lane that drifted, a lane that contradicts its
   review) are held by three rule mutants. A witness is evidence for the text and never a VM expectation:

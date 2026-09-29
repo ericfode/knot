@@ -963,11 +963,10 @@ worktrees; the checks below are what the harnesses read from `check-spec.py`, SP
 2. **Six goldens with a request in a let, a field, an Emit or a capture (§8, §11, entry 32).**
    `let-dropped-request`, `let-live-request`, `field-request-returned`, `field-request-dropped`,
    `emit-field-request-dropped` and `capture-request-dropped` are Programs whose expected rows are the seed's
-   bytes (`live\n`, `live\n`, `boxed-then-returned\n`, `live\n`, `live\n`, `live\n`, basis `seed`). The reference
-   evaluation runs them in 12, 12, 9, 12, 13 and 13 entries with one host call each (not part of the expected
-   table, which compares the outcome and the bytes). The machine of round 11 already produces them: the dropped
-   request is built (debited) and never performed, and the loop performs the one request that a run returns. The
-   goldens are 108.
+   bytes (`live\n`, `live\n`, `boxed-then-returned\n`, `live\n`, `live\n`, `live\n`, basis `seed`). Their rows are
+   the outcome and the bytes, as every golden's is: no entry count is frozen for them (lockstep derives each
+   golden's exact count later, §12). The machine of round 11 already produces them: the dropped request is built
+   (debited) and never performed, and the loop performs the one request that a run returns. The goldens are 108.
 3. **Three run controls for a Case with a Default over a request (§6, §8, entry 33).**
    `program-case-request-emit-default`, `-halt-default` and `-default-only` stop `Unsupported vm effect` after 7
    entries with nothing written and `effects` 0, as `program-case-request`. A VM MUST NOT select the Default of a
@@ -1129,9 +1128,10 @@ worktrees; the checks below are what the harnesses read from `check-spec.py`, SP
    a request bound by a `let` (`dead : IO.OP<R> = IO.print("dead")(R, x => Halt{7, "unreached"})`, then a body):
    exit 1 on both lanes without output, Bun `TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is
    an instance of Object)`, native `bend: memory fault (machine stack overflow?)`. The let is innocent. The
-   reproducer below crashes on both lanes with the let deleted (witness `main-lambda-nolet`) and with any other
-   body of a bare-lambda `main` (`main-lambda-print`, `-continue` and `-halt`), and it runs once `main` is a
-   call, with the let intact (golden `let-dropped-request`, `live` on both lanes). The same requests held by a
+   reproducer below crashes on both lanes (witness `main-lambda-let`), crashes identically with the let deleted
+   (`main-lambda-nolet`) and with any other body of a bare-lambda `main` (`main-lambda-print`, `-continue` and
+   `-halt`), and runs once `main` is a call, with the let intact (golden `let-dropped-request`, `live` on both
+   lanes). The same requests held by a
    parameter (`keep`, `pick`) ran because their `main` was a call. §11 does not bind the VM to a crash: it is
    no value. The owner is the coordinator, if the seed pin moves, and whoever writes the compiler campaign's
    differential tests: a source whose `main` is a lambda has no seed value to compare with. It crashes:
