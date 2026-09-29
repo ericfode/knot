@@ -100,13 +100,14 @@ export async function traceVM({module, image, argv = [], limit = 1 << 20, stride
     if (n > limit) throw new Error(`heap of ${n} words exceeds the trace limit ${limit}`);
     return Array.from(new Uint32Array(x.memory.buffer, r.H0, n)).map(w => ` ${w}`).join('');
   };
+  const enter = r => {
+    const ops = Array.from({length: r.nops}, (_, i) => ` ${u(r.ops + 4 * i)}`).join('');
+    return r.tfn ? `N F ${offsets.indexOf(r.tgt)}${ops}` : `N W ${r.tgt}${ops}`;
+  };
   const control = (r, stopped) => {
     if (r.mode === 0) return `E ${r.node}`;
     if (r.mode === 1) return `R ${r.val}`;
-    if (r.mode === 2) {
-      const ops = Array.from({length: r.nops}, (_, i) => ` ${u(r.ops + 4 * i)}`).join('');
-      return r.tfn ? `N F ${offsets.indexOf(r.tgt)}${ops}` : `N W ${r.tgt}${ops}`;
-    }
+    if (r.mode === 2) return enter(r);
     const last = stdout.at(-1);
     if (r.outcome === 'Completed') {
       if (last?.startsWith('Evaluated\t')) {
@@ -116,7 +117,9 @@ export async function traceVM({module, image, argv = [], limit = 1 << 20, stride
       return 'H X';
     }
     if (r.outcome === 'Halted') return `H Z ${dieCode} ${codes(dieText).join(',')}`;
-    return `H S ${stopText(r, dieText ?? '')}@?`;
+    // At zero fuel the pending Enter's registers are kept (CORE.md choice 8): print them as the model's
+    // `Stopped` keeps its Enter. Any other stop keeps no control the registers can name.
+    return `H S ${stopText(r, dieText ?? '')}@${r.outcome === 'Exhausted' && r.cause === 'fuel' ? enter(r) : '?'}`;
   };
   const outputs = r => {
     const lines = r.mode === 3 && r.outcome === 'Completed' && stdout.at(-1)?.startsWith('Evaluated\t') ? stdout.slice(0, -1) : stdout;

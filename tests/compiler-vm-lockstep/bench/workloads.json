@@ -1,0 +1,63 @@
+{
+ "rule": "Frozen before any timing (D7). Each variant is the frozen workload of vm/bench with only its size constants replaced (string-scan: unchanged); its source, image and independent guard are pinned here, and a new size is a new workload. A run must print True{} (seed) or Evaluated<TAB>B<TAB>1<TAB>True{} (VM, B the index of Bool in the image).",
+ "workloads": [
+  {
+   "name": "deep-recursion-b",
+   "frozen_workload": "deep-recursion",
+   "source": "tests/compiler-vm-lockstep/bench/sources/deep-recursion-b.bend",
+   "source_sha256": "96ba949a7502ba8b06c5193257c0690c2cdd9e2db2295648d256f2359b61313d",
+   "image_sha256": "108d3a10f3412dd6143e0eee3e446d337c8f866a5fffcfce57f31feafe47df0e",
+   "guard": "closed form: 120 rounds * 250000 levels = 30000000",
+   "expected_stdout": "True{}\n",
+   "work": {
+    "levels": 30000000
+   },
+   "shape": "the frozen workload of the same name at a size the bump arena holds"
+  },
+  {
+   "name": "peano-b",
+   "frozen_workload": "peano",
+   "source": "tests/compiler-vm-lockstep/bench/sources/peano-b.bend",
+   "source_sha256": "ac06e68ed78dd1649513cc368bedb2553b103cb0e71647ec9c8c97bc34aaf465",
+   "image_sha256": "e25c7be2950c93c1b375024b36936464046351cdfd9521f43d022ac64cf31c14",
+   "guard": "closed form: 12 rounds * 1000 * 1000 = 12000000",
+   "expected_stdout": "True{}\n",
+   "work": {
+    "product_cells": 12000000
+   },
+   "shape": "the frozen workload of the same name at a size the bump arena holds"
+  },
+  {
+   "name": "list-fold-b",
+   "frozen_workload": "list-fold",
+   "source": "tests/compiler-vm-lockstep/bench/sources/list-fold-b.bend",
+   "source_sha256": "13bc478a0c349796cd36e13bfe46a84e5b8b7ffb566b4ec8289330523ae17870",
+   "image_sha256": "2533d2bddf15229468eca4c02a371917b229ff51f9e21d3702a779177d7a402c",
+   "guard": "closed form: 12 * (500000500000 mod 2^32 = 1784293664) mod 2^32 = 4231654784",
+   "expected_stdout": "True{}\n",
+   "work": {
+    "list_cells": 12000000
+   },
+   "shape": "the frozen workload of the same name at a size the bump arena holds"
+  },
+  {
+   "name": "string-scan",
+   "frozen_workload": "string-scan",
+   "source": "tests/compiler-vm-lockstep/bench/sources/string-scan.bend",
+   "source_sha256": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
+   "image_sha256": "004fe8c7df3bc038796b2b4d4de0a8c6a0449fe392b8500562c437de490a1ce0",
+   "guard": "closed form: every round compares equal strings: 900 hits (the frozen source, unchanged)",
+   "expected_stdout": "True{}\n",
+   "work": {
+    "characters": 9000000
+   },
+   "shape": "the frozen workload, unchanged"
+  }
+ ],
+ "null": {
+  "source": "tests/compiler-vm-lockstep/bench/sources/null.bend",
+  "source_sha256": "09158194ca9837d7a9f37fe7ddad715588253e9b8b438157e86cd9d76e0e5d6c",
+  "image_sha256": "fd15c232f81c4a293fb626e9c58100e4453ac3bf8d4b9bc269ed41c7979b1717",
+  "shape": "main() -> Bool returning True{}: the start-up of each lane"
+ }
+}

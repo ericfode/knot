@@ -234,8 +234,9 @@ def ctl_words(ctl: tuple) -> list:
 
 
 def outcome_diff(model: tuple, vm: tuple):
-    """A halting control: the outcome and its data. A stop's pending control is not
-    compared (the VM keeps only registers, not which control it could not advance)."""
+    """A halting control: the outcome and its data. A stop's pending control is compared only for the
+    fuel stop, where the VM keeps the pending Enter in its registers (`pending_diff`); any other stop
+    keeps no control the VM's registers can name."""
     if model[:2] != vm[:2]:
         return f'{model[:2]} against {vm[:2]}'
     if model[1] == 'S':
@@ -243,13 +244,40 @@ def outcome_diff(model: tuple, vm: tuple):
     return None if model == vm else f'{model} against {vm}'
 
 
-# Where a halting transition is not atomic in the VM. SPEC section 6 says an ill-typed word
-# halts "before the step changes any state", and the model's transitions are atomic, so it
-# keeps the state the step began in. The VM (vm/CORE.md choice 8) halts with the change
-# already made in two places, and no control observes it. Each relation is accepted only at
-# the halts it names, and every use is counted in the receipt.
-CHOICE_8 = 'choice 8: a Gather frame is popped before its operands are inspected'
-CHOICE_8_TOP = 'choice 8: the Activation is released before the final IO.OP is inspected'
+def pending_diff(model: tuple, vm: tuple, word):
+    """The Enter a fuel stop leaves pending: SPEC section 7 keeps it in the state and no effect happens."""
+    if model[:3] != ('H', 'S', 'E:1:fuel'):
+        return None
+    try:
+        m, v = parse_ctl(model[3]), parse_ctl(vm[3])
+    except (ValueError, IndexError):
+        return f'the pending control is {model[3]!r} (model) against {vm[3]!r} (VM)'
+    if m[:2] != v[:2] or m[:1] != ('N',) or len(m[3]) != len(v[3]):
+        return f'the pending Enter is {model[3]!r} (model) against {vm[3]!r} (VM)'
+    if m[1] == 'F' and m[2] != v[2]:
+        return f'the pending Enter targets function {m[2]} (model), {v[2]} (VM)'
+    for where, a, b in [('target', m[2], v[2])] * (m[1] == 'W') + [(f'operand {i}', a, b) for i, (a, b) in enumerate(zip(m[3], v[3]))]:
+        bad = word(a, b, f'pending {where}')
+        if bad:
+            return bad
+    return None
+
+
+# Where a halting transition is not atomic in the VM. SPEC section 6 says an ill-typed word halts
+# "before the step changes any state", and the model's transitions are atomic, so it keeps the
+# state the step began in. The VM halts with part of the step done, in two places:
+# - GATHER_POPPED: Completing a Construct or Intrinsic pops the Gather frame before its operands are
+#   inspected or Succ's NatRange is tested (vm/CORE.md choice 8 states this for an ill-typed operand;
+#   the NatRange stop has the same mechanism and is not named there).
+# - TOP_RELEASED: Return to Top drops `act` first, as SPEC section 6's transition table reads, and
+#   only then inspects the final IO.OP (section 8, phase 3). The table and the "before the step
+#   changes any state" sentence disagree here; CORE.md does not record it. The model follows the
+#   sentence.
+# No control observes either. Each relation is accepted only at the halts it names, and every use
+# is counted in the receipt and frozen in frozen.json.
+GATHER_POPPED = 'the VM pops a Gather frame before inspecting its operands or testing NatRange'
+TOP_RELEASED = 'the VM releases the Activation at Return to Top before inspecting the final IO.OP'
+CHOICE_8, CHOICE_8_TOP = GATHER_POPPED, TOP_RELEASED
 POPPED_BEFORE = ('F:image:ill-typed', 'E:2:NatRange')
 
 
@@ -323,6 +351,10 @@ def compare(model: State, vm: State, mode: str = 'auto', halting: str = 'strict'
         bad = layout_diff(model, vm) if strength == 'layout' else bad
         if bad:
             return d('heap', bad), strength
+    if model.halted() and 'outcome' not in ignore:
+        bad = pending_diff(model.ctl, vm.ctl, word)
+        if bad:
+            return d('outcome', bad, model.ctl, vm.ctl), strength
     if not model.halted():
         if model.ctl[0] == 'E' and model.ctl != vm.ctl:
             return d('control', 'Eval node differs', model.ctl, vm.ctl), strength
@@ -429,7 +461,7 @@ def lockstep(model_lines: list, vm_lines: list, mode: str = 'auto', halting: str
              ignore: frozenset = frozenset()) -> dict:
     """Compare the two traces state by state. The result names the first divergence."""
     res = {'steps': 0, 'strength': {'layout': 0, 'graph': 0, 'exact': 0}, 'divergence': None, 'final': None,
-           'notes': [], 'refused': None, 'states': 0, 'effects': []}
+           'notes': [], 'refused': None, 'states': 0, 'effects': [], 'fuel_stops': 0}
     vm_lines, _ = trailer(vm_lines)
     rm, rv = refusal_text(model_lines, 'model'), refusal_text(vm_lines, 'vm')
     if rm is not None or rv is not None:
@@ -460,5 +492,7 @@ def lockstep(model_lines: list, vm_lines: list, mode: str = 'auto', halting: str
             res['divergence'] = bad
             return res
         res['final'] = m.ctl
+        if m.ctl[:3] == ('H', 'S', 'E:1:fuel'):
+            res['fuel_stops'] += 1
     res['effect_class'] = classify_effects(res['effects'])
     return res

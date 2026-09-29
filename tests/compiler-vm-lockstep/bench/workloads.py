@@ -3,16 +3,23 @@
 vm/bench freezes six workloads and says (README, "The workloads need reclamation") that three of them
 allocate beyond a bump arena of 4 GiB, so that vm-lockstep's ratio gate cannot run on the whole set
 before vm-rc. The VM has no reclamation yet (vm/CORE.md choice 1), and no image encoder exists
-(`src/image.bend`, increment `image`), so a plan here is hand-lowered from the frozen source with the
-same functions, the same order of evaluation and the same operations. Frozen sources never change,
-and a new size is a new workload: each variant below keeps its frozen source's text except the
-constants that size it, and carries its own independent guard.
+(`src/image.bend`, increment `image`), so a plan here is a hand-lowered approximation of the frozen
+source: the same functions, the same calls in the same order, the same primitives through the same
+one-Intrinsic functions, checked only by its guard (`True{}`), never by the checker. It differs from
+the source where the plan language has no spelling for it:
+
+    string-scan   `Bool.pick(U32,c,1,0)` is a function `hit` with a Case on Bool
+    list-fold     Base's generic `List<&2,U32>` (an erased element type) is a user List with a U32 field
+    peano         none (`mul` duplicates `b` as the source does)
+
+Frozen sources never change, and a new size is a new workload: each variant keeps its frozen
+source's text except the constants that size it, and carries its own guard (workloads.json).
 
     peano-b, deep-recursion-b, list-fold-b   the frozen source at a smaller size
     string-scan                              the frozen source, unchanged: it fits (about 2 GiB of cells)
-    cps-choose, sha256-64k                   no image: closure churn over generic `choose` is not lowered here,
-                                             and SHA-256 needs U32.or and U32.xor, which the registry reserves
-                                             (ids 39 and 40) until vm-prims
+    cps-choose, sha256-64k                   no image: closure churn over the generic `choose` is not lowered
+                                             here, and SHA-256 needs U32.or and U32.xor, which the registry
+                                             reserves (ids 39 and 40) until vm-prims
 """
 from __future__ import annotations
 

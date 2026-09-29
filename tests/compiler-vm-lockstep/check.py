@@ -71,7 +71,7 @@ cc = R.load('check_core', HERE / 'check-core.py')
 codec = cs.codec
 REGISTRY = codec.registry()
 DIGEST = codec.base_digest(REGISTRY)
-EXPECTED = json.loads((LS / 'expectations.json').read_text())
+EXPECTED = json.loads((LS / 'frozen.json').read_text())
 VM_EXPECTED = json.loads((GOLDEN / 'vm-expected.json').read_text())
 
 
@@ -163,7 +163,7 @@ def observed(lines: list):
     if lines[0].startswith(('R ', '#')):
         return lines[0]
     last = lines[-1].split('|')
-    return (last[1], last[8])
+    return (last[1].split('@')[0], last[8])
 
 
 def lockstep_rows(base: Base, model_lines=None, vm_lines=None, ignore=frozenset(), same_refusal=None) -> list:
@@ -201,6 +201,7 @@ def summarize(rows: list) -> dict:
         for n in x['notes']:
             notes[n] = notes.get(n, 0) + 1
     return {'runs': len(rows), 'transitions': steps, 'states_compared': sum(x['states'] for _, x in rows),
+            'fuel_stops_with_pending_enter_compared': sum(x['fuel_stops'] for _, x in rows),
             'strength': strength, 'groups': groups, 'halting_relations': notes}
 
 
@@ -247,15 +248,35 @@ def long_runs(model: Path, wasm: Path) -> list:
 
 def exact_controls(base: Base) -> dict:
     """`exact` is identity of addresses, rc and free lists, which the VM will have once it reclaims
-    (vm-rc). Between the model and itself it holds everywhere; against the VM it fails where the
-    model first frees a cell, and a comparison that ignored the free lists would not see it."""
-    labelled = [r for r in base.runs if r.group == 'golden'][:20]
+    (vm-rc). Two corruptions only `exact` sees, one of rc and one of a free-list head, are passed by
+    `auto` and refused by `exact`, so that turning it on for VM against model is a tested claim; and
+    against the VM, `exact` fails where the model first frees a cell."""
+    lines = base.model_lines['recursion-map']
+    rc_step = next(i for i, l in enumerate(lines) if not L.parse(l, 'model').free and i >= 10)
+    free_step = next(i for i, l in enumerate(lines) if L.parse(l, 'model').free)
+    controls = []
+    m = L.parse(lines[rc_step], 'model')
+    boot = L.parse(lines[0], 'model').bump
+    # an rc-only change of a mortal cell
+    n = (boot - m.h0) // 4
+    heap = list(m.heap)
+    heap[n] += 1
+    rc = '|'.join([*lines[rc_step].split('|', 9)[:9], ''.join(f' {w}' for w in heap)])
+    # a free-list-head-only change
+    fields = lines[rc_step].split('|', 9)
+    fields[7] = ' 16842752' + ' 0' * 28
+    free = '|'.join(fields)
+    for name, line, step in (('rc-only', rc, rc_step), ('free-list-head-only', free, rc_step)):
+        v = L.parse(line, 'model')
+        auto, _ = L.compare(m, v, mode='auto', boot=boot)
+        exact, _ = L.compare(m, v, mode='exact', boot=boot)
+        require(auto is None, f'exact control {name}: auto refuses it: {auto}')
+        require(exact is not None and exact.field == 'heap', f'exact control {name}: exact passes it')
+        controls.append({'control': name, 'step': step, 'auto': 'passes', 'exact': f'refuses ({exact.field})'})
     own = 0
-    for r in labelled:
-        lines = base.model_lines[r.label]
-        for line in lines:
-            m = L.parse(line, 'model')
-            bad, _ = L.compare(m, L.parse(line, 'model'), mode='exact', boot=None)
+    for r in [r for r in base.runs if r.group == 'golden'][:20]:
+        for line in base.model_lines[r.label]:
+            bad, _ = L.compare(L.parse(line, 'model'), L.parse(line, 'model'), mode='exact')
             require(bad is None, f'exact: the model differs from itself in {r.label}: {bad}')
             own += 1
     first = {}
@@ -266,10 +287,10 @@ def exact_controls(base: Base) -> dict:
         if res['divergence']:
             first[r.label] = {'step': res['divergence'].step, 'field': res['divergence'].field}
     require(first, 'exact: the VM matches the model bit for bit (it reclaims, so the gate is stale)')
-    return {'model_against_itself_states': own, 'vm_against_model': {
-        'runs_with_an_exact_divergence': len(first),
+    return {'controls': controls, 'model_against_itself_states': own, 'vm_against_model': {
+        'goldens_with_an_exact_divergence': len(first),
         'first_divergence_of_recursion_map': first.get('recursion-map'),
-        'note': 'the VM has no reclamation (CORE.md choice 1); vm-rc turns `mode` to exact for VM against model'}}
+        'note': 'the VM has no reclamation (CORE.md choice 1); vm-rc turns exact on for VM against model'}}
 
 
 # ------------------------------------------------------------------ comparator controls
@@ -398,6 +419,10 @@ VM_MUTANTS = [
     ('gather-count-stale', 'a Gather frame counts its filled operands from one',
      [('(drop (call $frame (i32.const 1) (global.get $node) (i32.const 0) (local.get $n)))', '(drop (call $frame (i32.const 1) (global.get $node) (i32.const 1) (local.get $n)))')],
      'frames', False),
+    ('fuel-stop-drops-operands', 'a fuel stop forgets the operands of the Enter it leaves pending',
+     [('    (if (i32.eqz (global.get $fuel)) (then (call $exhaust (i32.const 1) (global.get $R_fuel))))',
+       '    (if (i32.eqz (global.get $fuel)) (then (global.set $nops (i32.const 0)) (call $exhaust (i32.const 1) (global.get $R_fuel))))')],
+     'outcome', True),
     ('closure-entry-free', 'entering a Closure costs nothing',
      [('(br_if $bad (i32.ne (global.get $nops) (local.get $live)))\n        (call $debit)', '(br_if $bad (i32.ne (global.get $nops) (local.get $live)))')],
      'fuel', False),
@@ -428,12 +453,27 @@ MODEL_MUTANTS = [
      'frames', False),
 ]
 
+# state-only mutants that vm-core's structural audit (harness.mjs, after every transition of every golden) must pass
+AUDITED = ('scope-slots-not-zeroed', 'call-frame-node', 'act-not-cleared')
+
 # (weakened dimension, the mutant it must let through, machine) -- a knob that hides no mutant is unused
 KNOBS = [
     ('calls', 'calls-counted-twice', 'vm'), ('act', 'act-not-cleared', 'vm'), ('quantum', 'quantum-counted-twice', 'vm'),
     ('frames', 'call-frame-node', 'vm'), ('heap', 'scope-slots-not-zeroed', 'vm'), ('outcome', 'describe-tag-off', 'vm'),
     ('top', 'scope-pop-off-by-one', 'model'), ('out', 'output-oldest-first', 'model'),
 ]
+
+
+def vm_core_audit(wasm: Path) -> dict:
+    """What vm-core's own state check sees of a build: `harness.mjs` audits the frame chain and every word
+    frames, the result and cells hold after each transition of every golden. A mutant it passes is one only
+    the lockstep catches."""
+    jobs = [{'id': n, 'wasm': str(wasm), 'files': {f'{n}.kimg': str(GOLDEN / f'{n}.kimg')},
+             'argv': [f'{n}.kimg', *c['argv'][1:]], 'trace': 'audit'} for n, c in VM_EXPECTED['cases'].items()]
+    p = subprocess.run(['node', str(HERE / 'harness.mjs')], input=json.dumps(jobs), capture_output=True, text=True, timeout=600 * SCALE)
+    require(p.returncode == 0, f'harness failed: {p.stderr[-800:]}')
+    got = [json.loads(l) for l in p.stdout.splitlines()]
+    return {'goldens': len(got), 'audited_states': sum(g['audited'] for g in got), 'broken': sorted(g['id'] for g in got if g['broken'])}
 
 
 def kill_record(rows: list) -> dict:
@@ -471,6 +511,9 @@ def mutant_lane(base: Base, rows_base: list) -> dict:
         require(record['killed_by_runs'] > 0, f'mutant {name} survives the lockstep')
         require(dimension in record['fields'], f'mutant {name} is killed in {record["fields"]}, not {dimension}')
         require(bool(differs) != state_only, f'mutant {name}: state_only={state_only} but {len(differs)} runs change what they show')
+        if name in AUDITED:
+            record['vm_core_audit'] = vm_core_audit(vm_wasm[name])
+            require(not record['vm_core_audit']['broken'], f'mutant {name} is caught by vm-core\'s audit: {record["vm_core_audit"]}')
         result[name], traces[name] = record, ('vm', lines)
     for name, breaks, section, edits, dimension, state_only in MODEL_MUTANTS:
         lines = dict(zip([r.label for r in base.runs],
@@ -638,7 +681,7 @@ def main(argv=()) -> int:
     record['pins'] = check_pins()
     record['inputs'] = {p: sha((HERE / p).read_bytes()) for p in ('vm.wat', 'vm.wasm', 'model-trace.bend', *MODEL_SOURCES)}
     record['inputs'].update({p: sha((LS / p).read_bytes()) for p in ('lockstep.py', 'runs.py', 'check.py', 'js/vm-trace.mjs',
-                                                                    'expectations.json', 'fixtures/long.plans.json')})
+                                                                    'frozen.json', 'fixtures/long.plans.json')})
     test_wasm = BUILD / 'vm-test.wasm'
     test_wasm.write_bytes(vm_build.assemble(vm_build.test_source((HERE / 'vm.wat').read_text())))
     require(sha(test_wasm.read_bytes()) == record['pins']['test_build_sha256'], 'the lockstep drives the pinned test build')
@@ -653,6 +696,8 @@ def main(argv=()) -> int:
     summary = summarize(rows)
     frozen = EXPECTED['halting_relations']
     require(summary['halting_relations'] == frozen, f'halting relations {summary["halting_relations"]} against the frozen {frozen}')
+    require(summary['fuel_stops_with_pending_enter_compared'] == EXPECTED['fuel_stops_with_pending_enter_compared'],
+            f"fuel stops compared: {summary['fuel_stops_with_pending_enter_compared']}, frozen {EXPECTED['fuel_stops_with_pending_enter_compared']}")
     record['lockstep'] = summary
 
     # outcomes of the runs that stop before their first entry
