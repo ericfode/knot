@@ -21,9 +21,11 @@ a promotion of a promotion (`++y`, `+ +y`, `++u = x`) and a let split across lin
 a line break and reads one `+` promotion, so these seed-accepted programs are
 Unsupported, never Invalid (D4). Only a term can follow an argument as another one
 (a name, or a `+` marker in a pattern), so `two(a = b)` and `two(a + b)` stay Invalid.
-An untyped let split before its `=` and a body on the next line at the `case` column
-are seed-accepted programs that stay open D4 gaps (`top-level-indentation`,
-`body-indentation`, pinned Invalid by the frontend gate), so they are no fixtures.
+An arm body on the line after its `case`, at the case's column or below it, is
+seed-accepted layout; only a body that starts with a name is Unsupported (an empty arm
+and a `def` after it are seed-rejected and stay Invalid). A def body at column 0 is
+seed-accepted too, but the frontend gate pins it Invalid, and an untyped `w` then `= x`
+reaches `top-level-indentation`: both stay open D4 gaps and are no fixtures.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -67,7 +69,8 @@ REVIEWED = {
         *GRID, 'rowplus-second-spaced', 'rowplus-second-plus-space-after', 'rowplus-ctor-spaced',
         'rowplus-nl-spaced', 'rowplus-wild-spaced', 'rowplus-three-cols-mid', 'rowplus-three-cols-last',
         'rowplus-three-cols-both', 'rowplus-plus-wild-spaced', 'rowplus-plus-plus',
-        'rowplus-repro-column', 'rowplus-repro-column-fields')},
+        'rowplus-repro-column', 'rowplus-repro-column-fields', 'rowplus-comment-newline',
+        'rowplus-comment-glued-newline', 'rowplus-comment-space-newline')},
     # Seed-accepted, and must stay accepted: a `+` glued to its binder, and a
     # promotion that starts a row, follows a comma or sits inside fields.
     'plus-row-control': {name: ACCEPTED for name in (
@@ -114,6 +117,16 @@ REVIEWED = {
     'repeated-promotion': {name: PROMOTION for name in (
         'plusplus-flat', 'plusplus-multi', 'plusplus-repro', 'plusplus-spaced-flat', 'plusplus-triple-flat',
         'plusplus-let', 'plusplus-spaced-let')},
+    # Seed-rejected: an erased marker wants a name, so `-+u` is no promotion of a promotion.
+    'repeated-promotion-control': {'plusplus-erased-let': invalid('binding-name')},
+    # Seed-accepted, Unsupported here: an arm body on the line after its `case`, at the case's
+    # column or below it (a def body at column 0 is the frontend gate's pinned Invalid).
+    'body-layout': {name: unsupported('body-indentation') for name in (
+        'bodycol-arm-flat', 'bodycol-arm-multi', 'bodycol-last-arm', 'bodycol-multi-var', 'bodycol-let',
+        'bodycol-below-flat', 'bodycol-below-col0')},
+    # Seed-rejected: no body at all (the next `case`, or a `def`, follows the colon).
+    'body-layout-control': {'bodycol-empty-arm': invalid('body-indentation'),
+                            'bodycol-empty-arm-dedent': invalid('body-indentation')},
     'let-break': {name: BREAK for name in (
         'letsplit-before-eq-flat', 'letsplit-before-eq-multi', 'letsplit-before-eq-marker',
         'letsplit-after-eq-flat', 'letsplit-after-eq-multi', 'letsplit-after-eq-untyped',
@@ -125,7 +138,8 @@ REVIEWED = {
     'unsupported-control': {'oos-destructuring-let-flat': unsupported('destructuring-binding'),
                             'oos-destructuring-let-multi': unsupported('destructuring-binding'),
                             'oos-generic-param-multi': unsupported('generic-datatype'),
-                            'oos-tilde-header': unsupported('template-binder')},
+                            'oos-tilde-header': unsupported('template-binder'),
+                            'bodycol-nested': unsupported('pattern-or-indentation')},
 }
 
 
