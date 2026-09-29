@@ -132,6 +132,14 @@ group('letop-shape', unsupported('operator'), None,
       ('letop-minus-break-dead2', dead2('v = x\n-\ny\nv')),
       ('letop-star-typed-single', single('v : Flag = x\n* y\nv')),
       ('letop-plus-arm-later-dead2', dead2('w = y\nv = x\n+ w\nv')))
+# The operator sits on the line of the let's value, or after a header's scrutinee: the same continuation.
+group('letop-site', unsupported('operator'), None,
+      ('letop-sameline-plus-dead2', dead2('v : Flag = x + y\nv')),
+      ('letop-sameline-minus-dead2', dead2('v : Flag = x - y\nv')),
+      ('letop-sameline-star-dead2', dead2('v : Flag = x * y\nv')),
+      ('letop-sameline-arrow-dead2', dead2('v : Flag = x -> y\nv')),
+      ('letop-header-plus-dead2', dead2('match x + y:\n  case _: On{}')),
+      ('letop-header-star-dead2', dead2('match x * y:\n  case _: On{}')))
 # The seed reads the same text in a live row or a flat body and rejects it for the operator's type.
 group('letop-live', unsupported('operator'), 'a type for this operator',
       ('letop-plus-live2', live2('v = x\n+ y\nv')),
@@ -322,30 +330,68 @@ def grid_cells():
 
 
 # --- Finding 4: a terminal default is copied into every remaining constructor arm of the core.
-def columns(width, ctors):
+def columns(width, ctors, heavy=False):
     """`width` columns of `ctors` constructors: a row that names the first constructor in one column, and a
-    catch-all row. The seed compiles the tree once; Knot's core grows as ctors^width."""
+    catch-all row. The seed compiles the tree once; Knot's core grows as ctors^width. A heavy body is a call
+    of three nodes, so that a core that counted only its cases and branches would fall under the budget."""
     names = ''.join(f'  Q{i}{{}}\n' for i in range(ctors))
     params = ', '.join(f'{chr(97 + i)}: Q' for i in range(width))
     scrutinees = ' '.join(chr(97 + i) for i in range(width))
+    body = lambda flag: f'pair({flag}, {flag})' if heavy else flag
     rows = ''
     for i in range(width):
         cells = ' '.join('Q0{}' if j == i else '_' for j in range(width))
-        rows += f'    case {cells}: {"On{}" if i % 2 == 0 else "Off{}"}\n'
-    rows += f'    case {" ".join("_" for _ in range(width))}: On{{}}\n'
+        rows += f'    case {cells}: {body("On{}" if i % 2 == 0 else "Off{}")}\n'
+    rows += f'    case {" ".join("_" for _ in range(width))}: {body("On{}")}\n'
     args = ', '.join('Q1{}' for _ in range(width))
-    return (f'type Flag is Data:\n  Off{{}}\n  On{{}}\n\ntype Q is Data:\n{names}\ndef f({params}) -> Flag:\n  match {scrutinees}:\n{rows}\n'
+    helper = 'def pair(a: Flag, b: Flag) -> Flag:\n  a\n\n' if heavy else ''
+    return (f'type Flag is Data:\n  Off{{}}\n  On{{}}\n\ntype Q is Data:\n{names}\n{helper}def f({params}) -> Flag:\n  match {scrutinees}:\n{rows}\n'
             f'def main() -> Flag:\n  f({args})\n')
 
 
 # `ddWxC` is W columns of C constructors. Accepted ones stay under the core budget (dd5x5's module is 34,434 bytes;
 # the seed's Bun lane computes it and then faults, which the gates classify as Exhausted (host)); the others exceed it.
-BUDGET = {'dd4x5': (4, 5, ACCEPTED), 'dd5x5': (5, 5, ACCEPTED), 'dd7x5': (7, 5, EXHAUSTED), 'dd9x5': (9, 5, EXHAUSTED),
-          'dd10x5': (10, 5, EXHAUSTED), 'dd10x3': (10, 3, EXHAUSTED)}
+BUDGET = {'dd4x5': (4, 5, ACCEPTED, False), 'dd5x5': (5, 5, ACCEPTED, False), 'dd7x5': (7, 5, EXHAUSTED, False),
+          'dd9x5': (9, 5, EXHAUSTED, False), 'dd10x5': (10, 5, EXHAUSTED, False), 'dd10x3': (10, 3, EXHAUSTED, False),
+          'dd7x4-heavy': (7, 4, EXHAUSTED, True)}
 for label, outcome in (('accepted', ACCEPTED), ('exhausted', EXHAUSTED)):
     group(f'default-{label}', outcome, None,
-          *[(f'default-{name}', columns(width, ctors)) for name, (width, ctors, expected) in BUDGET.items()
+          *[(f'default-{name}', columns(width, ctors, heavy)) for name, (width, ctors, expected, heavy) in BUDGET.items()
             if expected == outcome])
+
+
+# --- The round-12 reviewer's zoo: 64 forms of a discarded row's body (strings, chars, lists, tuples, lambdas, `!`, `~`,
+# `#`, `@`, `$`, fields, indexes, lets, nested matches, operators). A table like the grid: the seed's answer is
+# frozen, and a seed-accepted form is never `Invalid` in Knot.
+ZOO = {
+    'string': 'h("a", x)', 'char': "h('a', x)", 'nat': 'h(0n, x)', 'u32': 'h(7, x)', 'list': 'h([x], x)', 'tuple': 'h((x, y), x)',
+    'lambda': 'h(k => x, x)', 'lambda2': 'k => x', 'bang': '!x', 'tilde': '~x', 'hash': '#x', 'at': '@x', 'dollar': '$x',
+    'field': 'x.y', 'index': 'x[0]', 'ctor-call-newline': 'h(x,\n  y)', 'call-newline-paren': 'h\n(x, y)',
+    'let-tuple': '(a, b) = x\na', 'let-annot': 'v : Flag = x\nv', 'let-erased': '-v = x\nx', 'let-plus': '+v = x\nx',
+    'let-ctor': 'On{} = x\nx', 'if': 'if x: On{}', 'elif': 'x if y else x', 'match-nested': 'match x:\n  case _: y',
+    'match-nested2': 'match x y:\n  case _ _: x', 'fork': 'fork x: y', 'open': 'open x: y', 'with': 'with x: y',
+    'ask': 'ask v = x\nv', 'use': 'use v = x\nv', 'return': 'return x', 'lam-dup': 'λx x', 'unicode-lambda': 'λ x. x',
+    'double-colon': 'x::y', 'pipe': 'x |> k', 'range': 'x..y', 'dollar-call': 'k $ x', 'backslash': '\\x. x',
+    'paren-only': '(x)', 'paren-call': '(k)(x)', 'ann': '(x : Flag)', 'ann-nat': '(x + y : Nat)', 'trailing-comma': 'h(x, y,)',
+    'empty-call': 'k()', 'ctor-empty-fields': 'On{ }', 'ctor-space-brace': 'On {}', 'comment-inline': 'x # c',
+    'tab': 'x\t', 'semicolon': 'x; y', 'dot-call': 'x.k(y)', 'question': '?x', 'hole': '?', 'star': 'x * y',
+    'percent': 'x % y', 'eq': 'x == y', 'neq': 'x != y', 'lt': 'x < y', 'arrow': 'x -> y', 'and': 'x && y',
+    'or': 'x || y', 'shift': 'x << y', 'pp': 'x ++ y', 'diamond': 'x <> y',
+}
+
+
+def zoo_cells():
+    return [{'form': name, 'source': dead2(body)} for name, body in ZOO.items()]
+
+
+def observe_zoo(cell):
+    name = hashlib.sha256(cell['source'].encode()).hexdigest()[:16]
+    path = oracle.ROOT / '.local/compiler-nest/round13-grid' / f'{name}.bend'
+    oracle.publish(path, cell['source'])
+    result = oracle.run(['bun', oracle.SEED, str(path.relative_to(oracle.ROOT))])
+    assert result['exit'] in (0, 1), (cell['form'], result)
+    return {'form': cell['form'], 'sha256': hashlib.sha256(cell['source'].encode()).hexdigest(),
+            'seed': {'exit': result['exit'], 'stdout': result['stdout'] if result['exit'] == 0 else ''}}
 
 
 def cases():
@@ -425,6 +471,7 @@ def main():
     with ThreadPoolExecutor(6) as pool:
         observed = list(pool.map(lambda p: observe(p, table[p.stem][0], table[p.stem][2], table[p.stem][3]), files))
         grid = list(pool.map(observe_cell, grid_cells()))
+        zoo = list(pool.map(observe_zoo, zoo_cells()))
     for cell in grid:
         # a seed-accepted program is never Invalid and a seed-rejected one never Accepted: the class constraints
         expected = cell['knot']
@@ -437,7 +484,7 @@ def main():
     grid_result = {'basis': 'The reviewer\'s 720-cell class grid: 60 terms, three columns, one and two scrutinees, an arm body and '
                             'a statement after a let, in a discarded row. Cells are generated (round13_seed.grid_cells) and frozen '
                             'by source hash with the seed\'s answer; `knot` is the reviewed outcome where the ruling fixes one.',
-                   'seed': result['seed'], 'cells': grid}
+                   'seed': result['seed'], 'cells': grid, 'zoo': zoo}
     if options.write:
         MANIFEST.write_text(json.dumps(result, indent=2) + '\n')
         GRID.write_text(json.dumps(grid_result, indent=2) + '\n')
@@ -445,7 +492,7 @@ def main():
         assert result == json.loads(MANIFEST.read_text()), 'round-13 seed observations changed'
         assert grid_result == json.loads(GRID.read_text()), 'round-13 grid observations changed'
     print(f"Round-13 seed: {len(result['fixtures'])} fixtures, "
-          f"{sum(len(c['calls']) for c in result['fixtures'])} calls, {len(grid)} grid cells; no differences")
+          f"{sum(len(c['calls']) for c in result['fixtures'])} calls, {len(grid)} grid cells, {len(zoo)} zoo forms; no differences")
 
 
 if __name__ == '__main__':

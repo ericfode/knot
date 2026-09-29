@@ -3164,6 +3164,126 @@
       "finding": "default-accepted"
     },
     {
+      "name": "default-dd7x4-heavy",
+      "file": "tests/compiler-nest/round13-fixtures/default-dd7x4-heavy.bend",
+      "sha256": "6b18736c8ac282aa3174edbbc3448f5d08610700b52a181b6f72f58ea9461415",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/default-dd7x4-heavy.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "pair",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/default-dd7x4-heavy/pair-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round13-fixtures/default-dd7x4-heavy.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/default-dd7x4-heavy/pair-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round13-fixtures/default-dd7x4-heavy.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/default-dd7x4-heavy/pair-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round13-fixtures/default-dd7x4-heavy.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/default-dd7x4-heavy/pair-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round13-fixtures/default-dd7x4-heavy.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/default-dd7x4-heavy/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round13-fixtures/default-dd7x4-heavy.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 4,
+        "diagnostic": "Exhausted\tcheck\tbudget\t"
+      },
+      "finding": "default-exhausted"
+    },
+    {
       "name": "default-dd7x5",
       "file": "tests/compiler-nest/round13-fixtures/default-dd7x5.bend",
       "sha256": "b4d7362e64c208fcceeee6b9d2b3299312617f319f370437ffa16a85bf779b4a",
@@ -3744,6 +3864,50 @@
       },
       "calls": [],
       "finding": "letop",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      }
+    },
+    {
+      "name": "letop-header-plus-dead2",
+      "file": "tests/compiler-nest/round13-fixtures/letop-header-plus-dead2.bend",
+      "sha256": "0d49ca4cc0435519cd9def9473a28fc43788433ce9d7c03b0e9877a1958056be",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/letop-header-plus-dead2.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "letop-site",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      }
+    },
+    {
+      "name": "letop-header-star-dead2",
+      "file": "tests/compiler-nest/round13-fixtures/letop-header-star-dead2.bend",
+      "sha256": "3657ef7f7e2c582ed87bb6f35d95d4a4bf80ed9407aa6aeba5ddf8fa344f93c2",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/letop-header-star-dead2.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "letop-site",
       "knot": {
         "exit": 3,
         "diagnostic": "Unsupported\tparse\toperator\t"
@@ -4382,6 +4546,94 @@
       },
       "calls": [],
       "finding": "letop",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      }
+    },
+    {
+      "name": "letop-sameline-arrow-dead2",
+      "file": "tests/compiler-nest/round13-fixtures/letop-sameline-arrow-dead2.bend",
+      "sha256": "acc2d5337667168435c80dd5f0b6bd86376d26a11a6990e85e6124e9ff74bdc3",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/letop-sameline-arrow-dead2.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "letop-site",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      }
+    },
+    {
+      "name": "letop-sameline-minus-dead2",
+      "file": "tests/compiler-nest/round13-fixtures/letop-sameline-minus-dead2.bend",
+      "sha256": "46c0de38c736d678a03c0b88750074d6b717f6d1371202114346792bff67af34",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/letop-sameline-minus-dead2.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "letop-site",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      }
+    },
+    {
+      "name": "letop-sameline-plus-dead2",
+      "file": "tests/compiler-nest/round13-fixtures/letop-sameline-plus-dead2.bend",
+      "sha256": "d811a4da0c2937a78c51ddf1b7abb3e43a74bd89633716035c8284933b6afc01",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/letop-sameline-plus-dead2.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "letop-site",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      }
+    },
+    {
+      "name": "letop-sameline-star-dead2",
+      "file": "tests/compiler-nest/round13-fixtures/letop-sameline-star-dead2.bend",
+      "sha256": "511a4bedb55675be4897f5558f5fd70efe0fbfb109691f3934025fc827677b65",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/letop-sameline-star-dead2.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "letop-site",
       "knot": {
         "exit": 3,
         "diagnostic": "Unsupported\tparse\toperator\t"
