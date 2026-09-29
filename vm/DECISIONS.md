@@ -902,7 +902,7 @@ follows it (§5, §10, §11) without a new image header word.
      `control type-count-max: HostFailure image: constructor grouping` with the same 178 omissions and 136 kills as before. The gate
      asserts that its own peak memory stays under 4 GiB (`PEAK_RSS`), so that a later omission that sizes an allocation from a raw
      word fails on any host instead of passing where the memory exists. Measured after: `/usr/bin/time -l` 38.90 s and 1,094,483,968
-     bytes for the whole process tree (the seed's builds included), 430,030,848 bytes (410 MiB) in the gate's own process.
+     bytes for the largest process of the run (a seed build), 430,030,848 bytes (410 MiB) in the gate's own process.
      What the audit still cannot hold is the order of the check against the allocation in a codec that allocates first: that mutant
      would ask for 32 GiB, so the committed codec's order is held by running `type-count-max` against it, and by the assertion.
    - **Finding 2: D24's Default is unreachable from compiled programs.** D24's rationale (`docs/COMPILER-CAMPAIGN.md`: nest's pattern
@@ -935,7 +935,7 @@ follows it (§5, §10, §11) without a new image header word.
        `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and `case-request-nested-default-compiled`: `Unsupported vm
        effect` after 8 entries, nothing written, `effects` 0, the entries walked by hand before they ran), and the three goldens
        are described as hand-lowered witnesses of the plan-level rule. No frozen expectation of a golden moved. The four twins die by
-       `case-request-picks-arm` and `case-request-without-default-ill-typed`, and the two retested plans of finding 3 by
+       `case-request-picks-arm` and `case-request-without-default-ill-typed` (so does the Book's, of finding 3), and the two retested plans of finding 3 by
        `case-request-refused-with-default` and `case-request-ignores-default` (each measured alone against the control); no new
        mutant was needed.
      - *For the coordinator: not vm-spec's to edit.* `docs/COMPILER-CAMPAIGN.md`'s D24 row says that compiled programs will reach
@@ -957,7 +957,9 @@ follows it (§5, §10, §11) without a new image header word.
      `-book-both-plus-default` (`On{}`; the Bun lane prints its stuck term), each with its literal review written before
      `--freeze-new` observed the seed; the two sentences corrected. `-inner-default-only` is the review's p1e with the same constants
      as the nested witness: its plan equals the nested one's, so two sources, one plan and two native answers show that no rule of the
-     VM agrees with the seed on it. The Book's plan is the complete table that `book-print` already freezes. The gap closes by a
+     VM agrees with the seed on it. The Book's plan has its own control, `case-request-book-both-plus-default-compiled` (`got` names Emit and Halt and its dead
+     catch-all is dropped, `go` hands it the request: `Unsupported vm effect` after 6 entries, walked by hand before it ran), which
+     is not `book-print`'s: that `got` returns Emit's field and there is no `go`. The gap closes by a
      lowering that emits the retested shape, or by a §3 that admits a Default beside a complete table (with `redundant-default` and
      the canonical-order clause changed); both are the coordinator's call.
 
@@ -1162,16 +1164,17 @@ This list is the one to work from; the earlier lists remain the detail behind ea
    (`program-case-request` and the seven Book controls that hand `got` a request). A keys Case has a Default always, so it never
    refuses one: round 11's `inspect-request-keys` (a refusal after 6) is now `case-request-default-keys` (a run after 6). A VM must
    not read the request's payload, perform it, or take a row. Only a plan that holds a Default takes one, and a compiler's plan
-   does not (nest's checker expands a catch-all into a row for each remaining constructor): the four `-compiled` controls
-   refuse the request, `Unsupported vm effect` after 8 entries with nothing written, and the two `-retested` controls, whose
+   does not (nest's checker expands a catch-all into a row for each remaining constructor): the five `-compiled` controls
+   refuse the request, `Unsupported vm effect` with nothing written (four Programs after 8 entries, the Book after 6), and the two `-retested` controls, whose
    Default tests the slot again, take it (`3\n` after 13 entries, one effect); a VM follows the plan, not the source.
 3. **Frozen values that are new or moved since round 8 (re-freeze each; the outcome, `stdout` and `effects` are otherwise as before).**
    `book-print`, `-continuation-call`, `-twice`, `-non-scalar` and `book-args` refuse after 5 entries (were 4), `book-print-ill-typed`
    after 6 (was 5), `fuel-book-effect-exact` at fuel 5 (was 4), and the three `program-case-request-*` Default controls, which round 12
    froze as `Unsupported vm effect` after 7 entries, run to exit 0 after the same 7 (D24). New controls: the request controls of round 11 (fifteen) and round 12's `call-shaped`
-   goldens (six), the three D24 goldens, `case-request-default-at-flag`, and the six of review round 1: the four
-   `case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and
-   `case-request-nested-default-compiled`, and the two `case-request-both-plus-default-retested` and `-nested-default-retested`.
+   goldens (six), the three D24 goldens, `case-request-default-at-flag`, and the seven of review round 1: the four
+   Programs `case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and
+   `case-request-nested-default-compiled`, the Book `case-request-book-both-plus-default-compiled`, and the two
+   `case-request-both-plus-default-retested` and `-nested-default-retested`.
 4. **`stdout` and `effects` are compared on every run control that freezes them** (`effects` is the number of host calls the run
    made: the `knot_io` calls of vm-core's trace, the effects of vm-model's model), and `calls` at every stop (§7: a stop keeps its debit).
 5. **The loader refuses every image of `byte_controls` and `plan_controls`, and admits every admitted control (§2, §4).** Round 13
@@ -1183,8 +1186,8 @@ This list is the one to work from; the earlier lists remain the detail behind ea
    (§4 step 5: a loader with no encoder checks them one by one; `piecewise_rejected` is a model of it). Each refusal carries the
    reference's reason where the VM reports one.
 6. **The counts, which both harnesses read from SPEC.** §4 states `freezes 211 refusals (124 byte-level, 9 at the limits, 78
-   plan-level)` and §12 `110 admitted **run controls**` (41 effect controls); the sentence shapes are unchanged and the numbers
-   are new. Goldens 111; admitted controls 126 (7 code lists, 110 runs, 8 admitted plan controls, `arity-at-limit`); mutants
+   plan-level)` and §12 `111 admitted **run controls**` (42 effect controls); the sentence shapes are unchanged and the numbers
+   are new. Goldens 111; admitted controls 127 (7 code lists, 111 runs, 8 admitted plan controls, `arity-at-limit`); mutants
    137 codec, 4 source, 97 evaluator and 23 rule (261). vm-model reads the lists themselves.
 7. **Not obligations.** The 15 seed witnesses (`golden/witnesses.json`) and the codec's refusal accounting (`statement_audit`, finding
    12) are evidence for the text and for the reference; neither VM reads them.

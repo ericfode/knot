@@ -393,7 +393,7 @@ Cases on a `none` slot, among them `list-head-match`, three whose arms fit their
 Case, among them `first-code`, S's shapes, and two of names, a type named with each length of
 UTF-8 (U+0024, U+00A2, U+20AC, U+10348) and one named with every edge of a length (U+0080, U+07FF, U+0800, U+D7FF, U+E000,
 U+FFFF, U+10000, U+10FFFF)), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 110 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 111 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -834,7 +834,7 @@ and witnesses below; the native lane is the reference, and the VM follows it whe
 | names both Emit and Halt, no Default (witness `case-request-both-arms`; the seed's own test `tests/io/request_out_of_band.bend`) | fail-stop (`bend: runtime fail-stop`), exit 1 | fail-stop, exit 1 | `Unsupported vm effect` (`program-case-request`) |
 | names one constructor beside a catch-all (goldens `case-request-emit-default-u32` prints `2`, `-halt-default-u32` prints `4`, `case-request-emit-default` prints nothing) | takes the catch-all, exit 0 | fail-stop, exit 1 | takes the Default of a plan that holds one (D24); a compiled plan holds none (below) |
 | is only a catch-all or a binder (witnesses `case-request-default-only`, `-binder`) | exit 0, the request is never read | exit 0 | binds it as a value: no Case (D24) |
-| names every constructor and a catch-all beside them, or reaches the catch-all only through a field pattern (witnesses `case-request-both-plus-default` and `-nested-default` print `3`; the Book `case-request-book-both-plus-default` yields `On{}`) | takes the catch-all, exit 0 | fail-stop, exit 1 (the Book prints its stuck term) | `Unsupported vm effect`: a table that names every constructor has no Default (§3), and a request matches none of its rows (`case-request-emit-default-u32-compiled`, `case-request-nested-default-compiled`; `book-print` for a Book) |
+| names every constructor and a catch-all beside them, or reaches the catch-all only through a field pattern (witnesses `case-request-both-plus-default` and `-nested-default` print `3`; the Book `case-request-book-both-plus-default` yields `On{}`) | takes the catch-all, exit 0 | fail-stop, exit 1 (the Book prints its stuck term) | `Unsupported vm effect`: a table that names every constructor has no Default (§3), and a request matches none of its rows (`case-request-emit-default-u32-compiled` and `case-request-nested-default-compiled` for a Program, `case-request-book-both-plus-default-compiled` for the Book) |
 
 So "fail-stops in every lane" holds of the first row alone, and the Bun lane agrees with the native lane on the
 first and third rows. **D24 is the VM's rule for a plan that holds a Default.** A request matches no row, so a Case
@@ -853,7 +853,8 @@ this was measured on sources over a user type of IO.OP's shape; the merged head 
 lowers these shapes the same way, DECISIONS entry 37.) The second row's sources therefore lower to the complete tables of
 `case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled` and `case-request-emit-default-compiled`, a source
 of the fourth row's first shape is a complete table already, and the VM refuses each request where the seed's native lane
-takes the catch-all: four run controls, `Unsupported vm effect` after 8 entries with nothing written. That is a recorded capability gap (D4: Unsupported, never Invalid, never a bound), and no rule of the VM
+takes the catch-all: five run controls, `Unsupported vm effect` with nothing written, four Programs after 8 entries (three golden sources and
+the nested one) and the Book of `case-request-book-both-plus-default` after 6. That is a recorded capability gap (D4: Unsupported, never Invalid, never a bound), and no rule of the VM
 closes it, because a complete table has lost what the catch-all was for: the sources of `case-request-emit-default-u32`
 (`Emit: 1 / _: 2`, native `2`) and of `case-request-both-plus-default` (`Emit: 1 / Halt: 2 / _: 3`, native `3`) lower to
 one plan. So do those of `case-request-inner-default-only` (a native fail-stop) and of `case-request-nested-default`
@@ -1252,7 +1253,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 110 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 111 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1308,7 +1309,7 @@ lane and requires:
   control, and not each instance: the prim ids that no control names (U32 `mul` … `shrn`
   but `shln`, and Nat `mul` … `is_ge`) are vm-prims' to witness, one control per id and
   operand (§9), and the byte List and the operands of every foreign but `IO.print` are
-  vm-io's. Forty-one effect controls (`effect_controls`) freeze
+  vm-io's. Forty-two effect controls (`effect_controls`) freeze
   D23 (§8), D24 (§6.1), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`, which builds a
   request that `got` receives: `book-print`, `book-print-continuation-call` (`k` a function) and
@@ -1352,7 +1353,9 @@ lane and requires:
   `case-request-emit-default` (no output). Lowered as a compiler lowers those three sources and the fourth row's nested one
   (a row for each constructor, the catch-all's body copied, no Default), the same Cases refuse the request:
   `Unsupported vm effect` after 8 entries with nothing written and `effects` 0 (`case-request-emit-default-u32-compiled`,
-  `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and `case-request-nested-default-compiled`); and a
+  `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and `case-request-nested-default-compiled`), and so does
+  the Book of the fourth row (`case-request-book-both-plus-default-compiled`: `got` names Emit and Halt, `go` hands it the
+  request) after 6; and a
   Default that tests the slot again for the arms named after the catch-all takes the request as the native lane does,
   `3\n` after 13 entries and one effect (`case-request-both-plus-default-retested` and `-nested-default-retested`). The
   same Action prints under a
@@ -1477,7 +1480,7 @@ lane and requires:
   before it performs the effect (by `fuel-continuation-short`, `inspect-continuation-target`,
   `inspect-print-after-surrogate`, `inspect-request-print` and the four D20 goldens' `calls`); a Case
   without a Default that picks an arm of a request, or takes it for an ill-typed word (each by the seven Book
-  controls that hand `got` a request, `program-case-request` and the four `-compiled` twins); a request taken for an ill-typed word where a
+  controls that hand `got` a request, `program-case-request` and the five `-compiled` twins); a request taken for an ill-typed word where a
   String or a result is read (by `book-request-rendered`, `book-request-field` and `inspect-request-print`);
   D24's rule, that a Case takes its Default over a request: refused, as D23 refused it (by the three
   goldens of a Case with a Default, the three Default controls, `case-request-default-at-flag`,
@@ -1516,7 +1519,8 @@ lane and requires:
   `-inner-default-only` and the Book `-book-both-plus-default`): the native lane takes it, printing `3`, `3` and `On{}`,
   and fail-stops only where the catch-all is inside the Halt arm; the plan of the first is the complete table of
   `case-request-emit-default-u32-compiled`, and that of the second, where a checker accepts its source, the nested table of
-  `case-request-nested-default-compiled`, which is also the plan of the third (§8); the VM refuses both. Three frozen
+  `case-request-nested-default-compiled`, which is also the plan of the third (§8), and that of the fourth, a Book, is
+  `case-request-book-both-plus-default-compiled`; the VM refuses all three. Three frozen
   refusals of the comparison (a source that drifted, a lane that drifted, a lane that contradicts its
   review) are held by three rule mutants. A witness is evidence for the text and never a VM expectation:
   vm-model and vm-core do not read it;
