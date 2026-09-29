@@ -78,7 +78,8 @@ class CheckResult:
     reason: str = ''
     facts: dict = field(default_factory=dict)
     rules_run: list = field(default_factory=list)
-    rules_unavailable: dict = field(default_factory=dict)
+    rules_unavailable: dict = field(default_factory=dict)     # could not look: never a pass
+    rules_na: dict = field(default_factory=dict)              # nothing to look at in this tree or run: {rule: why}
     notes: list = field(default_factory=list)
 
     def finish(self):
@@ -92,6 +93,11 @@ class CheckResult:
             else:
                 self.outcome = 'pass'
         return self
+
+    def na(self, rules, reason: str) -> None:
+        """Say that these rules had nothing to look at (an absent input artifact, an empty diff), so they are neither run nor unavailable."""
+        for rule in ([rules] if isinstance(rules, str) else rules):
+            self.rules_na[rule] = reason
 
     @property
     def incomplete(self) -> bool:

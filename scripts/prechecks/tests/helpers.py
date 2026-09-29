@@ -9,6 +9,7 @@ from pathlib import Path
 
 from lib import context as context_mod
 from lib.gitx import Repo
+from lib.runner import UNREPORTED, account
 
 ID = ('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
       '-c', 'core.hooksPath=/dev/null')
@@ -84,8 +85,12 @@ class RepoTest(unittest.TestCase):
         self.addCleanup(self.fx.close)
 
     def conditions(self, check_module, **kw):
+        """Run one check as the runner does, accounting included. Every scenario of every check test therefore also asserts that
+        no documented rule is silent: each ran, could not run (unavailable) or had nothing to check (not applicable)."""
         ctx = self.fx.context(**kw)
-        result = check_module.CHECK.run(ctx).finish()
+        result = account(check_module.CHECK, check_module.CHECK.run(ctx).finish()).finish()
+        silent = sorted(rule for rule, why in result.rules_unavailable.items() if why == UNREPORTED)
+        self.assertEqual([], silent, f'{check_module.ID}: documented rule(s) that neither ran nor said why they did not')
         return ctx, result
 
     def ids(self, result):

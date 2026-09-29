@@ -31,6 +31,9 @@ from lib.model import CheckResult, Condition
 from lib.runner import Check
 
 ID = 'C3'
+RULES = ('out-of-scope-edit', 'shared-file-shape', 'frozen-edit', 'assertion-weakened', 'coverage-dropped', 'frozen-row-changed',
+         'freeze-order', 'generator-not-reproducible', 'normalized-comparison', 'history', 'red-tip')
+CENSUS_TRIGGER = ('src/', 'tools/census/', 'docs/compiler-campaign/inventory/')
 EXPECTATION_LIKE = re.compile(r'(?:^|/)(?:expectations?|cases|regressions|bounds|fixtures)[^/]*\.json$|\.plan\.json$|'
                               r'(?:^|/)model-controls[^/]*$')
 GATE_SCRIPT = re.compile(r'^(?:tests|research)/.+/(?:check[^/]*\.py|trust\.ts|host-check\.py)$|^scripts/gates/[^/]+\.py$')
@@ -663,7 +666,9 @@ def run(ctx) -> CheckResult:
         result.rules_unavailable['out-of-scope-edit'] = 'no `owns` declared in the increment manifest'
         rules = [r for r in rules if r[0] != 'out-of-scope-edit']
     if ctx.identity and not ctx.commits():
-        return CheckResult(outcome='pass', reason='identity: nothing changed since base', rules_run=[])
+        identity = CheckResult(outcome='pass', reason='identity: nothing changed since base')
+        identity.na(RULES, 'identity: nothing changed since base')
+        return identity
     for name, fn in rules:
         result.conditions += fn(ctx)
         result.rules_run.append(name)
@@ -673,8 +678,11 @@ def run(ctx) -> CheckResult:
         result.rules_unavailable['generator-not-reproducible'] = reason
     else:
         result.rules_run.append('generator-not-reproducible')
-    if ctx.options.get('census', True) and not ctx.identity and any(
-            p.startswith(('src/', 'tools/census/', 'docs/compiler-campaign/inventory/')) for p in ctx.changed_paths() + ctx.deleted_paths()):
+    if not ctx.options.get('census', True):
+        result.rules_unavailable['red-tip'] = 'not requested: the census option is off'
+    elif ctx.identity or not any(p.startswith(CENSUS_TRIGGER) for p in ctx.changed_paths() + ctx.deleted_paths()):
+        result.na('red-tip', "the diff touches none of src/, tools/census/ or the census inventory (the rule's trigger)")
+    else:
         found, reason = red_tip(ctx)
         result.conditions += found
         if reason:
@@ -684,4 +692,4 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'frozen-and-owned', 'frozen and owned artifacts and the history since the base', run, budget=25)
+CHECK = Check(ID, 'frozen-and-owned', 'frozen and owned artifacts and the history since the base', run, budget=25, rules=RULES)

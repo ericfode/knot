@@ -66,6 +66,19 @@ class C5Tests(RepoTest):
         self.assertEqual([], stub.calls)
         self.assertEqual([], result.conditions)
         self.assertIn('0 changed .bend targets', ' '.join(result.notes))
+        self.assertEqual(set(c5.PREFLIGHT_RULES), set(result.rules_na))           # every rule that needs a preflight run had nothing to check
+        self.assertEqual({'task-provenance', 'bend-hygiene', 'perch-identity-change'}, set(result.rules_run))
+        self.assertEqual('pass', result.outcome)
+
+    def test_a_head_preflight_without_a_report_leaves_every_rule_that_reads_it_unavailable(self):
+        self.start()
+        self.fx.commit('work', {'src/parse.bend': 'def parse(): 2\n'})
+        stub = Stub(head=None, base=report([]), head_manifest=report(groups=[group('parsing', 1000)]),
+                    base_manifest=report(groups=[group('parsing', 1000)]), head_error='the preflight crashed')
+        result = self.run5(stub)
+        self.assertIn('preflight-new-blocker', result.rules_unavailable)
+        self.assertIn('composition-budget', result.rules_unavailable)             # the sole-member rule reads the same run
+        self.assertNotIn('composition-budget', result.rules_run)
 
     def test_new_truncation_is_reported_and_old_truncation_is_not(self):
         self.start()

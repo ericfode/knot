@@ -53,6 +53,8 @@ class C6Tests(RepoTest):
         self.assertEqual([], result.conditions)
         self.assertEqual(2, result.facts['gate_count'])
         self.assertEqual({'fixtures': 33, 'mutants': 8}, result.facts['receipts']['perch-context']['lists'])
+        self.assertEqual(set(c6.RULES), set(result.rules_na))                     # nothing changed: every rule had nothing to judge
+        self.assertEqual({}, result.rules_unavailable)
 
     # ---- R1 -----------------------------------------------------------------
     def test_claim_matching_the_receipt_is_clean(self):

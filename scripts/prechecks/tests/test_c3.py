@@ -65,6 +65,19 @@ class C3Tests(RepoTest):
         self.fx.commit('main', {'scripts/gates/run.py': RUN_PY})
         self.assertEqual([], self.run3().conditions)
 
+    def test_an_identity_run_has_nothing_to_check_and_says_so_for_every_rule(self):
+        self.fx.commit('main', {'scripts/gates/run.py': RUN_PY})
+        result = self.run3()
+        self.assertEqual(set(c3.RULES), set(result.rules_na))
+        self.assertEqual(('pass', {}), (result.outcome, result.rules_unavailable))
+
+    def test_red_tip_runs_only_where_the_census_can_have_moved(self):
+        self.start({'scripts/gates/run.py': RUN_PY, 'scripts/gates/test_runner.py': TEST_RUNNER})
+        self.fx.commit('docs only', {'docs/a.md': 'a\n'})
+        result = self.run3(options={'census': True})
+        self.assertIn('the rule\'s trigger', result.rules_na['red-tip'])
+        self.assertIn('not requested', self.run3(options={'census': False}).rules_unavailable['red-tip'])
+
     def test_pure_additions_are_clean(self):
         self.start({'scripts/gates/run.py': RUN_PY, 'scripts/gates/test_runner.py': TEST_RUNNER, 'tests/compiler-x/check.py': CHECK_PY})
         self.fx.commit('work', {'tests/compiler-x/new.py': 'x = 1\n', 'src/new.bend': 'def f(): 1\n'})

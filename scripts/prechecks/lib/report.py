@@ -36,7 +36,8 @@ def to_json(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', stric
         'incomplete': incomplete(outcomes),
         'checks': [{'id': o.check.id, 'name': o.check.name, 'outcome': o.result.outcome, 'reason': o.result.reason,
                     'seconds': o.seconds, 'rules_run': o.result.rules_run,
-                    'rules_unavailable': o.result.rules_unavailable, 'notes': o.result.notes,
+                    'rules_unavailable': o.result.rules_unavailable, 'rules_not_applicable': o.result.rules_na,
+                    'notes': o.result.notes,
                     'conditions': [c.to_json() for c in o.result.conditions]} for o in outcomes],
     }
 
@@ -51,7 +52,8 @@ def facts_json(ctx: Context, outcomes: list[Outcome]) -> dict:
     # What ran and what did not: a reviewer must be able to tell a check that found nothing from one that could not look.
     facts['coverage'] = {o.check.id: {'outcome': o.result.outcome, 'reason': o.result.reason,
                                       'rules_run': sorted(set(o.result.rules_run)),
-                                      'rules_unavailable': dict(sorted(o.result.rules_unavailable.items()))}
+                                      'rules_unavailable': dict(sorted(o.result.rules_unavailable.items())),
+                                      'rules_not_applicable': dict(sorted(o.result.rules_na.items()))}
                          for o in outcomes}
     return facts
 
@@ -100,6 +102,10 @@ def markdown(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', stri
     known = [c for c in all_conditions(outcomes) if c.status == 'known']
     if known:
         out += ['', f'## Known conditions ({len(known)}, not findings)', '']
+    not_applicable = [(o.check.id, rule, reason) for o in outcomes for rule, reason in sorted(o.result.rules_na.items())]
+    if not_applicable:
+        out += ['', '## Rules with nothing to check in this run (neither run nor a gap)', '']
+        out += [f'- {check} `{rule}`: {cell(reason)}' for check, rule, reason in not_applicable]
     gaps = incomplete(outcomes)
     if gaps:
         out += ['', '## Checks and rules that did not run (never a pass)', '']
@@ -124,6 +130,8 @@ def text(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', *, verbo
         lines.append(head)
         for rule, reason in sorted(o.result.rules_unavailable.items()):
             lines.append(f'    not run  {rule}: {reason}')
+        if o.result.rules_na:
+            lines.append(f"    nothing to check: {', '.join(sorted(o.result.rules_na))} (reasons in report.json)")
         per_rule: dict[str, int] = {}
         for c in cs:
             if c.status == 'known' and not verbose:

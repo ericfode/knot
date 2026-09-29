@@ -16,6 +16,9 @@ from .context import Context, timeout_scale
 from .model import CheckResult, Condition, severity_rank
 
 
+UNREPORTED = 'not reported by the check: it neither ran nor said why it did not (a defect of the check)'
+
+
 @dataclass
 class Check:
     id: str
@@ -25,6 +28,24 @@ class Check:
     budget: float = 10.0            # soft budget in seconds (fast tier)
     needs: tuple = ()               # check ids that must finish first
     slow: bool = False              # only in the slow tier
+    rules: tuple = ()               # the documented rules: each ends a run in rules_run, rules_unavailable or rules_na
+    groups: dict = field(default_factory=dict)   # an alias that stands for several rules: {'family-l': (rule, ...)}
+
+
+def account(check: Check, result: CheckResult) -> CheckResult:
+    """Every documented rule of a check that ran ends in exactly one state: it ran, it could not (unavailable), or it had nothing
+    to look at (not applicable). A rule that the check did not report is made unavailable, so a rule that was forgotten, or
+    renamed away from its documented name, is a loud gap in the coverage table and never a silent pass."""
+    if result.outcome in ('unavailable', 'not-applicable', 'error'):
+        return result                                  # the whole check is the gap: its outcome and reason say so
+    seen = set(result.rules_run) | set(result.rules_unavailable) | set(result.rules_na)
+    for alias, members in check.groups.items():
+        if alias in seen:
+            seen.update(members)
+    for rule in check.rules:
+        if rule not in seen:
+            result.rules_unavailable[rule] = UNREPORTED
+    return result
 
 
 @dataclass
@@ -57,7 +78,7 @@ class CheckContext:
 
 def _call(check: Check, ctx: CheckContext, box: dict) -> None:
     try:
-        box['result'] = check.run(ctx).finish()
+        box['result'] = account(check, check.run(ctx).finish()).finish()
     except Exception as error:      # a bug in a check must be visible, never a silent pass
         box['result'] = CheckResult(outcome='error', reason=f'{type(error).__name__}: {error}',
                                     notes=[traceback.format_exc(limit=6)])

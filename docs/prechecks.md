@@ -61,6 +61,14 @@ npm run -s prechecks -- --list
   terminal summary lists every rule that did not run as `not run  <rule>: <reason>`, `report.md` lists them under "Checks
   and rules that did not run (never a pass)", and `facts.json` carries a `coverage` table (outcome, rules run, rules not run
   with reasons) for the reviewers.
+- **Coverage.** Each check declares its rules (`Check.rules`, the names its docstring documents; a unit test compares the two), and
+  every rule ends a run in exactly one of three states: it **ran**; it **could not** (`rules_unavailable`: a gap, with its reason);
+  or it had **nothing to check** (`rules_not_applicable`: an absent input artifact such as `oracles/manifest.json` or `vm/`, an
+  empty diff, a manifest that declares no siblings; not a gap, printed as "nothing to check" and listed with reasons in `report.md`
+  and the `coverage` table). A rule that the check did not report at all is made unavailable with the reason "not reported by the check",
+  so a forgotten or renamed rule is a loud gap; every check test asserts that none is silent. An undeclared input is unavailable
+  (no `merge_before`, no `upstream`, no `owns`), a declared empty one is not applicable. A group alias (`family-l`, `preflight`)
+  stands for its member rules. The gates lens keys on these names.
 - **Exit status.** 0: no new or changed *executor-actionable* condition at or above `--fail-on` (default `major`). 3: at least
   one. 1: a check crashed (never silent). 2: usage error. 4: only with `--strict`, when nothing else failed but some check or
   rule did not run. The default lets an implementer proceed on the rules that could run (until a manifest, a gate run and the
@@ -361,11 +369,14 @@ category selects nothing on a packet, so it is not a baseline.
 The receipt's inputs include the calibration packets (`tests/prechecks/perch-controls/**/*.md`), which the wiring test reads and a
 live calibration sends.
 
-**Cost.** The gate is the slowest of the ones this increment adds: 208 tests and 30 mutants took 137 s standalone at load average
-about 30 (129.6 s for the tests alone at about 40), 138.6 s inside one full run and 308.2 s inside another at load about 45. It cannot skip
-itself when its receipt inputs are unchanged: its end-to-end tests build the tree's own lanes from `src/` and run the pinned seed, so
-`src/` would have to be an input and would change in almost every increment. It is registered first in the GATES table (the scheduler
-starts gates in table order, with four workers), so that it overlaps the other long gates instead of running alone at the end.
+**Cost.** The gate is the slowest of the ones this increment adds: 223 tests and 32 mutants take 149 s standalone at load average about 35
+(129.6 s for the 208 tests before the accounting tests, at about 40). Inside three full gates runs it took 138.6 s, 308.2 s and 393.3 s
+as the host's load rose (27 to 45, from other sessions), and the wall time of those runs (251.7 s, 583.6 s, 638.9 s) followed the load, not
+the gate. It cannot skip itself when its receipt inputs are unchanged: its end-to-end tests build the tree's own lanes from `src/` and run
+the pinned seed, so `src/` would have to be an input and would change in almost every increment. Registering it first in the GATES table,
+so that it overlaps the other long gates, was tried and reverted: the wall time over the mean slot load (the gate seconds over four
+workers) was 1.22 in the run before the move (583.6 s) and 1.22 in the run after it (638.9 s), so the packing did not change, and
+GATES.md has each increment append its gate.
 
 `npm run -s prechecks:test` runs only the unit tests. **Historical controls** belong to a replay command, not to the registered tests,
 because the gate's export has no history:

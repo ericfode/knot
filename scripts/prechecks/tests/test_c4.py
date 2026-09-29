@@ -37,6 +37,18 @@ class C4Tests(RepoTest):
         _, result = self.conditions(c4)
         self.assertEqual([], result.conditions)
 
+    def test_the_rules_that_read_changed_receipts_have_nothing_to_check_when_none_changed(self):
+        self.branch_from({'packages/p/receipts/old.json': receipt(path='/Users/eric/x'), 'a.txt': 'a\n'})
+        self.fx.commit('unrelated', {'a.txt': 'b\n'})
+        _, result = self.conditions(c4)
+        for rule in c4.CHANGED_RULES:
+            self.assertIn('no receipt was added or changed', result.rules_na[rule])
+        self.assertTrue({'unowned-receipt-drift-predicted', 'corpus-glob-coupling'} <= set(result.rules_run))
+        self.fx.commit('a receipt', {'tests/compiler-x/receipts/x.json': receipt()})
+        _, changed = self.conditions(c4)
+        self.assertEqual({}, changed.rules_na)                     # once a receipt changes, all four rules run
+        self.assertTrue(set(c4.CHANGED_RULES) <= set(changed.rules_run))
+
     # ---- R1 host-path -----------------------------------------------------
     def test_host_path_in_new_receipt(self):
         self.branch_from({'a.txt': 'a\n'})

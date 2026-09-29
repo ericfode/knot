@@ -6,7 +6,7 @@ exercised reports `unavailable`, never a pass.
 
   R1 limit-unwitnessed    a declared limit lacks frozen controls at L-1, L and L+1 (or a required value list)
   R2 witness-missing      a declared coverage cell has no witness and is not allow-listed
-  R3-R5                   adapters: expectation-from-implementation, kill-credit, judge-accepts-forgery
+  R3-R5 adequacy-adapters adapters: expectation-from-implementation, kill-credit, judge-accepts-forgery
   R6 unscaled-timeout     a fixed timeout in a changed gate script that ignores KNOT_GATE_TIMEOUT_SCALE
   R6 gate-headroom        a gate's wall time in the matching gate run is too close to the runner's timeout
   R7 gate-wiring          a new check script or gate row that the runner registry and its self-test do not know
@@ -25,6 +25,7 @@ from lib.model import CheckResult, Condition
 from lib.runner import Check
 
 ID = 'C7'
+RULES = ('limit-unwitnessed', 'witness-missing', 'adequacy-adapters', 'unscaled-timeout', 'gate-wiring', 'gate-headroom')
 GATE_SCRIPT = re.compile(r'^(?:tests|research)/.+/(?:check[^/]*\.py|host-check\.py|regen\.py)$|^vm/check[^/]*\.py$')
 CHECK_SCRIPT = re.compile(r'^(?:tests|research)/[^/]+/check[^/]*\.py$|^vm/check-[^/]*\.py$')
 TIMEOUT = re.compile(r'\btimeout\s*=\s*(\d+(?:\.\d+)?)\b(?!\s*[*/.\w])')
@@ -221,8 +222,16 @@ def run(ctx) -> CheckResult:
         if not any(p.name[0] != '_' for p in (ADEQUACY_DIR.glob('*.py') if ADEQUACY_DIR.is_dir() else [])):
             result.rules_unavailable['adequacy-adapters'] = ('no adapter ships in this build: R3-R5 (expectation-from-implementation, '
                                                              'kill-credit, judge-accepts-forgery) need one per gate')
+        elif any(rule.startswith('adequacy:') for rule in result.rules_run):
+            result.rules_run.append('adequacy-adapters')
+        elif any(rule.startswith('adequacy:') for rule in result.rules_unavailable):
+            result.rules_unavailable['adequacy-adapters'] = 'an adapter could not run (see the adequacy:<gate> entries)'
+        else:
+            result.na('adequacy-adapters', "no shipped adapter's gate was touched by this diff")
+    else:
+        result.na(('unscaled-timeout', 'gate-wiring', 'adequacy-adapters'), 'identity: nothing changed since base')
     result.conditions += headroom(ctx, result)
     return result
 
 
-CHECK = Check(ID, 'gate-adequacy', "the gate's claims against its witnesses and verdict function", run, budget=20)
+CHECK = Check(ID, 'gate-adequacy', "the gate's claims against its witnesses and verdict function", run, budget=20, rules=RULES)

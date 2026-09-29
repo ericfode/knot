@@ -244,6 +244,23 @@ class LaneAvailabilityTests(RepoTest):
         self.assertEqual('partial', result.outcome)                                  # family V ran and found nothing: not a pass
         self.assertIn('family-l', result.rules_unavailable)
         self.assertIn('reference-crash', result.rules_run)
+        self.assertEqual({}, result.rules_na)                                        # family V had an input: nothing was skipped as absent
+
+    def test_a_tree_without_the_vm_codec_has_nothing_for_family_v_and_a_lane_less_tree_nothing_for_family_l(self):
+        files = {'vm/serializer.py': FAKE_CODEC, 'vm/registry.json': '{}\n', 'vm/golden/a.plan.json': plan()}
+        self.fx.commit('main', {'README.md': '# x\n', **files})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'README.md': '# y\n'})
+        result = self.conditions(c1, options={'registry': 'none'})[1]            # no lane sources: family L is not applicable
+        self.assertIn('family-l', result.rules_na)
+        self.assertIn('reference-crash', result.rules_run)
+        self.fx.checkout('main')
+        self.fx.git('rm', '-q', '-r', 'vm')
+        self.fx.commit('main drops the codec', {})
+        self.fx.branch('campaign/y')
+        self.fx.commit('work', {'README.md': '# z\n'})
+        bare = self.conditions(c1, options={'registry': 'none'})[1]
+        self.assertEqual('not-applicable', bare.outcome)                        # neither family has an input: the whole check is N/A
 
 
 FAKE_CODEC = """import json
@@ -357,6 +374,7 @@ class EndToEndTests(RepoTest):
         result = self.run1()
         self.assertEqual('partial', result.outcome)                       # nothing found, but two rules could not run: never `pass`
         self.assertEqual({'helper-divergence', 'incomplete-repair'}, set(result.rules_unavailable))
+        self.assertEqual(set(c1.FAMILY_V), set(result.rules_na))              # the tree has no vm/serializer.py: nothing for family V
         self.assertEqual(0, result.facts['counts']['new'])
         self.assertGreater(result.facts['counts']['programs'], 20)
 

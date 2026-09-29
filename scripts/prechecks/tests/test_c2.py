@@ -45,6 +45,30 @@ class C2Tests(RepoTest):
         self.assertEqual([], result.conditions)
         self.assertEqual(('clean', 1), (result.facts['merge_with_main'], result.facts['behind_main']))
 
+    def test_rules_that_need_declared_siblings_or_upstreams_say_why_they_did_not_run(self):
+        self.diverge({'docs/other.md': 'x\n'}, {'src/a.bend': 'a\n'})
+        undeclared = self.run2()
+        self.assertIn('does not declare merge_before', undeclared.rules_unavailable['sibling-conflict'])
+        self.assertEqual({'upstream-contract-unconsumed', 'brittle-upstream-coupling'}, set(undeclared.rules_unavailable) & set(c2.UPSTREAM_RULES))
+        self.assertIn('oracle-behind', undeclared.rules_na)                 # an absent input artifact: nothing to check
+        self.assertEqual('partial', undeclared.outcome)
+        declared = self.run2(manifest_path=self.manifest(merge_before=[], upstream=[]),       # a declaration of nothing is an answer
+                             options={'census_after_merge': True})
+        self.assertEqual({'sibling-conflict', 'upstream-contract-unconsumed', 'brittle-upstream-coupling', 'oracle-behind',
+                          'census-after-merge'}, set(declared.rules_na))                           # the merged tree has no tools/census
+        self.assertEqual({}, declared.rules_unavailable)
+        self.assertEqual('pass', declared.outcome)
+        self.assertEqual({'conflict', 'base-fix-missing', 'decision-drift'}, set(declared.rules_run) & {'conflict', 'base-fix-missing', 'decision-drift'})
+
+    def test_a_branch_in_line_with_main_has_no_trial_merge_to_run_the_census_on(self):
+        self.fx.commit('base', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'src/b.bend': 'b\n'})
+        result = self.run2(options={'census_after_merge': True})
+        self.assertIn('no trial merge', result.rules_na['census-after-merge'])
+        off = self.run2(options={'census_after_merge': False})
+        self.assertIn('not requested', off.rules_unavailable['census-after-merge'])
+
     # ---- R1 ------------------------------------------------------------------------
     def test_conflict_outside_the_registry_is_major(self):
         self.diverge({'src/parse.bend': 'main\n'}, {'src/parse.bend': 'branch\n'})

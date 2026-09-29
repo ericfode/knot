@@ -6,14 +6,16 @@ and reports only what the branch changed; absolute counts are not findings (25 t
 exist at every base).
 
   R1 preflight-new-blocker    a unit newly truncated at head
-  R2 composition-budget       a group's composition crossed the 48,000-byte cap, or headroom fell under 2%; a changed file in
-                              no group that composes over the cap alone (a file in a group is judged by its group)
+  R2 composition-budget       a changed file in no group that composes over the cap alone (a file in a group is judged by its group)
+  R2 composition-budget (groups)   a group's composition crossed the 48,000-byte cap, or headroom fell under 2% (reads the
+                              full-manifest run)
   R3 unit-cap                 the full manifest run exceeds the style unit cap
-  R4 manifest-membership      a new .bend outside every manifest group, or a group lost a file
+  R4 manifest-membership      a new .bend outside every manifest group, or a group lost a file (reads the full-manifest run)
   R5 task-provenance          a --task file that did not exist at base, or is over the size cap
   R6 bend-hygiene             a non-ASCII byte or a divider comment in an added .bend line
-  R7 facts                    the preflight numbers, for C6 and the reviewers
   R8 perch-identity-change    a parser profile, rubric or judge sentence changed without a review-log entry
+
+The preflight numbers are published as facts (`ctx.publish('preflight')`) for C6 and the reviewers; that is not a rule.
 """
 from __future__ import annotations
 
@@ -28,6 +30,8 @@ from lib.runner import Check
 ID = 'C5'
 COMPOSITION_CAP = 48000
 GROUP_RULES = ('composition-budget (groups)', 'manifest-membership')     # the rules that read the full-manifest preflight
+PREFLIGHT_RULES = ('preflight-new-blocker', 'composition-budget', *GROUP_RULES, 'unit-cap')      # everything that needs a preflight run
+RULES = (*PREFLIGHT_RULES, 'task-provenance', 'bend-hygiene', 'perch-identity-change')
 TASK_CAP = 16000
 MANIFESTS = ('docs/compiler-campaign/manifest.json', 'vm/perch-manifest.json')
 EXCLUDED_TARGETS = ('tests/**/fixtures/**', 'tests/**/generated/**', 'research/**/generated/**', 'packages/**')
@@ -269,6 +273,7 @@ def run(ctx) -> CheckResult:
     result.facts = {'preflight': facts}
     if not targets:
         result.notes.append('0 changed .bend targets: no declaration or composition review changed')
+        result.na(PREFLIGHT_RULES, 'no .bend target changed since the base: no declaration or composition review changed')
         return result
     if not ctx.head.has('scripts/perch-style.mjs'):
         result.rules_unavailable['preflight'] = 'no scripts/perch-style.mjs in this tree'
@@ -282,6 +287,7 @@ def run(ctx) -> CheckResult:
                                                          f'not preflighted: {", ".join(unparsed[:3])}' + (' ...' if len(unparsed) > 3 else ''))
     if head_report is None:
         result.rules_unavailable['preflight-new-blocker'] = head_error or 'preflight produced no report'
+        result.rules_unavailable['composition-budget'] = 'the head preflight produced no report'
     else:
         result.rules_run.append('preflight-new-blocker')
         head_units, base_units = truncated_units(head_report), truncated_units(base_report)
@@ -308,7 +314,7 @@ def run(ctx) -> CheckResult:
         result.rules_run.append('composition-budget')
     manifest_path = next((m for m in MANIFESTS if ctx.head.has(m)), None)
     if not manifest_path:
-        for rule in GROUP_RULES:
+        for rule in (*GROUP_RULES, 'unit-cap'):
             result.rules_unavailable[rule] = 'no Perch manifest in this tree'
     if manifest_path:
         head_m, head_error = preflight(ctx, ctx.head, [f'--manifest={manifest_path}'], 'head manifest', timeout=240)
@@ -318,6 +324,8 @@ def run(ctx) -> CheckResult:
             for rule in GROUP_RULES:                       # both need the manifest run that just did not complete
                 result.rules_unavailable[rule] = f"the full-manifest preflight did not complete: {(head_error or 'no report')[:120]}"
             cap = re.search(r'limited to (\d+) units', head_error or '')
+            if not cap:
+                result.rules_unavailable['unit-cap'] = f"the full-manifest preflight did not complete: {(head_error or 'no report')[:120]}"
             if cap:
                 result.conditions.append(Condition(ID, 'unit-cap', 'major', {'manifest': manifest_path},
                                                    value={'max_units': int(cap.group(1))},
@@ -329,7 +337,7 @@ def run(ctx) -> CheckResult:
                                                    expected='the full-manifest preflight completes',
                                                    observed=f'the full-manifest run aborted: {head_error}'))
         else:
-            result.rules_run += ['composition-budget', 'manifest-membership']
+            result.rules_run += [*GROUP_RULES, 'unit-cap']
             head_groups, base_groups = group_table(head_m), group_table(base_m)
             facts['groups'] = {n: {'bytes': g['bytes'], 'available': g['available']} for n, g in head_groups.items()}
             facts['manifest_units'] = head_m['summary']['units']
@@ -368,4 +376,5 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'preflight-delta', 'the offline style preflight at base and at head', run, budget=30)
+CHECK = Check(ID, 'preflight-delta', 'the offline style preflight at base and at head', run, budget=30, rules=RULES,
+              groups={'preflight': PREFLIGHT_RULES})

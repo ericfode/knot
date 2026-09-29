@@ -26,6 +26,9 @@ from lib.runner import Check
 from lib.tree import Tree
 
 ID = 'C2'
+RULES = ('conflict', 'sibling-conflict', 'base-fix-missing', 'decision-drift', 'upstream-contract-unconsumed',
+         'brittle-upstream-coupling', 'oracle-behind', 'census-after-merge')
+UPSTREAM_RULES = ('upstream-contract-unconsumed', 'brittle-upstream-coupling')
 REGISTRY = (
     ('docs/compiler-campaign/inventory/*.json', "take main's copy, then run `node tools/census/census.mjs`"),
     ('scripts/gates/run.py', "keep both sides' Gate(...) rows"),
@@ -88,6 +91,12 @@ def conflicts_rules(ctx, result: CheckResult) -> None:
 
 
 def siblings(ctx, result: CheckResult) -> None:
+    if not ctx.manifest.merge_before:
+        if 'merge_before' in ctx.manifest.raw:
+            result.na('sibling-conflict', 'the manifest declares no merge-order siblings')
+        else:
+            result.rules_unavailable['sibling-conflict'] = 'the increment manifest does not declare merge_before, so the siblings are unknown'
+        return
     for sibling in ctx.manifest.merge_before:
         ref = sibling if '/' in sibling else f'campaign/{sibling}'
         tip = ctx.repo.rev_parse(ref)
@@ -109,10 +118,12 @@ def siblings(ctx, result: CheckResult) -> None:
 def base_fixes(ctx, result: CheckResult) -> None:
     main_tip = ctx.repo.rev_parse(ctx.main_ref) if ctx.main_ref else None
     if not main_tip or not ctx.head_commit:
+        result.rules_unavailable['base-fix-missing'] = 'no main ref or no commit to compare with main'
         return
     watched = list(RUNNER_HOST) + [p for p in ctx.manifest.owns()] + ctx.changed_paths()
     watched = [w for w in watched if not any(c in w for c in '[]{}')][:400]
     if not watched:
+        result.na('base-fix-missing', 'no watched path: nothing is changed or owned')
         return
     text = ctx.repo.out('log', '--format=%H%x1f%s', main_tip, f'^{ctx.head_commit}', '--', *watched)
     result.rules_run.append('base-fix-missing')
@@ -130,6 +141,7 @@ def base_fixes(ctx, result: CheckResult) -> None:
 def decision_drift(ctx, result: CheckResult) -> None:
     main_tree = ctx.main_tree
     if main_tree is None or ctx.base is None:
+        result.rules_unavailable['decision-drift'] = 'no main tree or no base to compare the decision rows against'
         return
     path = 'docs/COMPILER-CAMPAIGN.md'
     rows = lambda tree: dict(DECISION.findall(tree.text(path) or '')) if tree.has(path) else {}
@@ -156,15 +168,26 @@ def decision_drift(ctx, result: CheckResult) -> None:
 
 
 def upstream_contracts(ctx, result: CheckResult) -> None:
+    if not ctx.manifest.upstream:
+        if 'upstream' in ctx.manifest.raw:
+            result.na(UPSTREAM_RULES, 'the increment is not stacked: it declares no upstream increment')
+        else:
+            for rule in UPSTREAM_RULES:
+                result.rules_unavailable[rule] = ('no upstream is declared (neither the increment manifest nor --upstream), so a stacked '
+                                                  'increment would be judged as if it stood alone')
+        return
     for upstream in ctx.manifest.upstream:
         tip = ctx.repo.rev_parse(upstream.get('tip') or upstream['ref'])
         if not tip or not ctx.head_commit:
-            result.rules_unavailable['upstream-contract-unconsumed'] = f"upstream {upstream['id']} is unavailable"
+            for rule in UPSTREAM_RULES:
+                result.rules_unavailable[rule] = f"upstream {upstream['id']} is unavailable"
             continue
         green = green_tip(ctx, upstream, tip)
         shared = ctx.repo.merge_base(ctx.head_commit, green)
         result.facts.setdefault('upstreams', {})[upstream['id']] = {'tip': tip, 'green': green, 'merge_base': shared}
         if not shared:
+            for rule in UPSTREAM_RULES:
+                result.rules_unavailable[rule] = f"upstream {upstream['id']} shares no history with the branch"
             continue
         old, new = Tree(ctx.repo, ctx.repo.tree_sha(shared)), Tree(ctx.repo, ctx.repo.tree_sha(green))
         merge_now = bool(upstream.get('merge'))
@@ -192,6 +215,7 @@ def upstream_contracts(ctx, result: CheckResult) -> None:
             if added:
                 result.facts.setdefault('merge_obligations', {})[upstream['id']] = [m[:120] for m in added[:20]]
         brittle_coupling(ctx, result, upstream)
+        result.rules_run.append('brittle-upstream-coupling')
 
 
 def green_tip(ctx, upstream: dict, tip: str) -> str:
@@ -240,10 +264,12 @@ def brittle_coupling(ctx, result: CheckResult, upstream: dict) -> None:
 def oracles(ctx, result: CheckResult) -> None:
     manifest = next((p for p in ctx.head.files() if p.endswith('oracles/manifest.json')), None)
     if not manifest:
+        result.na('oracle-behind', 'the tree has no oracles/manifest.json')
         return
     try:
         value = ctx.head.json(manifest)
     except ValueError:
+        result.rules_unavailable['oracle-behind'] = f'{manifest} is not valid JSON'
         return
     result.rules_run.append('oracle-behind')
     entries = value.get('pins', value) if isinstance(value, dict) else {}
@@ -266,10 +292,15 @@ def oracles(ctx, result: CheckResult) -> None:
 
 def census_after_merge(ctx, result: CheckResult) -> None:
     oid = getattr(result, 'merge_tree', None)
-    if not oid or not ctx.main_tree:
+    if not ctx.main_tree:
+        result.rules_unavailable['census-after-merge'] = 'no main tree to merge with'
+        return
+    if not oid:
+        result.na('census-after-merge', 'there is no trial merge: main and the branch lie in one line of history, or the merge produced no tree')
         return
     if ctx.identity or not any(p.startswith(('src/', 'tools/census/', 'docs/compiler-campaign/inventory/', 'scripts/gates/'))
                                for p in ctx.changed_paths() + ctx.deleted_paths()):
+        result.na('census-after-merge', 'the diff touches none of src/, tools/census/, the inventory or scripts/gates/')
         return
     try:
         merged = Tree(ctx.repo, oid, label='merge')
@@ -278,6 +309,7 @@ def census_after_merge(ctx, result: CheckResult) -> None:
         result.rules_unavailable['census-after-merge'] = f'cannot export the trial merge: {error}'
         return
     if not (export / 'tools/census/census.mjs').exists():
+        result.na('census-after-merge', 'the merged tree has no tools/census')
         return
     conflicted = set(getattr(result, 'merge_conflicts', []))
     if conflicted - {p for p in conflicted if registry_hint(p)}:
@@ -316,9 +348,11 @@ def run(ctx) -> CheckResult:
     oracles(ctx, result)
     if ctx.tier in ('slow', 'all') or ctx.options.get('census_after_merge', True):
         census_after_merge(ctx, result)
+    else:
+        result.rules_unavailable['census-after-merge'] = 'not requested: the census_after_merge option is off'
     if ctx.dirty:
         result.notes.append('uncommitted changes are not part of the trial merge')
     return result
 
 
-CHECK = Check(ID, 'merge-forecast', 'the branch against main, its upstreams and its siblings', run, budget=20)
+CHECK = Check(ID, 'merge-forecast', 'the branch against main, its upstreams and its siblings', run, budget=20, rules=RULES)

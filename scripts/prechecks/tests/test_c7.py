@@ -44,6 +44,12 @@ class C7Tests(RepoTest):
         self.fx.commit('main', {'scripts/gates/run.py': RUN_PY})
         self.assertEqual([], self.run7().conditions)
 
+    def test_an_identity_run_has_nothing_to_compare_for_the_rules_that_read_the_diff(self):
+        self.fx.commit('main', {'scripts/gates/run.py': RUN_PY})
+        result = self.run7()
+        self.assertEqual({'unscaled-timeout', 'gate-wiring', 'adequacy-adapters'}, set(result.rules_na))
+        self.assertEqual({'limit-unwitnessed', 'witness-missing', 'gate-headroom'}, set(result.rules_unavailable))
+
     def test_rules_without_a_declaration_or_an_adapter_are_unavailable_never_run(self):
         self.start()
         self.fx.commit('work', {'a.txt': 'a\n'})

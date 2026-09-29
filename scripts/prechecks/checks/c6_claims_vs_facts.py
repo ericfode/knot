@@ -7,7 +7,7 @@ sentence that predates the branch is never re-reported.
   R1 stale-count            a number paired with a counted noun disagrees with its fact
   R2 retired-term           a superseded literal outside its allowed context
   R3 missing-path / untracked-evidence
-  R4 report-missing / report-stale / report-gates
+  R4 report                 report-missing / report-stale / report-gates: the executor's report against the tree
   R5 hardcoded-count        a gate script writes a literal where it should measure
   R6 count-extraction-shape a generic receipt key the runner would mis-count
   R7 ground-law-general-name
@@ -27,6 +27,8 @@ from lib.model import CheckResult, Condition
 from lib.runner import Check
 
 ID = 'C6'
+RULES = ('stale-count', 'retired-term', 'missing-path', 'report', 'hardcoded-count', 'count-extraction-shape',
+         'ground-law-general-name', 'vestige')
 NOUNS = {r'mutants?': 'mutants', r'fixtures?': 'fixtures', r'controls?': 'controls', r'boundar(?:y|ies)': 'boundaries',
          r'budget probes?': 'budgets', r'rejection pairs?|rejects?': 'rejects', r'observations?': 'observations',
          r'goldens?': 'goldens', r'invocations?': 'invocations'}
@@ -310,7 +312,9 @@ def run(ctx) -> CheckResult:
     if ctx.base is not None:
         result.facts['base'] = {k: v for k, v in facts_lib.collect(ctx.base).items() if k in ('gate_count', 'gates')}
     if ctx.base is None or (ctx.identity and not ctx.commits()):
-        result.notes.append('identity: no changed paragraphs, lines or commits to judge')
+        reason = 'no base to compare against' if ctx.base is None else 'identity: no changed paragraphs, lines or commits to judge'
+        result.notes.append(reason)
+        result.na(RULES, reason)
         return result
     receipts = facts_lib.gate_receipts(ctx.head)
     rules = [('stale-count', lambda: stale_counts(ctx, now, receipts)), ('retired-term', lambda: retired_terms(ctx)),
@@ -326,4 +330,4 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'claims-vs-facts', 'prose, reports and names against measured facts', run, budget=20, needs=('C5',))
+CHECK = Check(ID, 'claims-vs-facts', 'prose, reports and names against measured facts', run, budget=20, needs=('C5',), rules=RULES)

@@ -6,9 +6,10 @@ whole tree: main already carries 52 legacy receipt and evidence files with host 
   R1 host-path                    a host-specific path in a changed receipt
   R2 stale-receipt-hash           a recorded input hash differs from the recomputed one (ratcheted against base)
   R2 decorative-hash              a newly recorded hash field that no code reads
-  R3 unowned-receipt-drift-predicted / corpus-glob-coupling
-  R4 unowned-receipt-drift / own-receipt-stale / gate-red   from the implementer's own gate run
-  R5 receipt-volatility / receipt-orphan / receipt-duplicate / receipt-flood
+  R3 unowned-receipt-drift-predicted   an unchanged receipt whose recorded inputs this branch changed (refreshed at merge)
+  R3 corpus-glob-coupling         an added .bend file that enters the bootstrap gate's corpus, so its receipt drifts
+  R4 gate-run                     unowned-receipt-drift / own-receipt-stale / gate-red, from the implementer's own gate run
+  R5 receipt-volatility           also receipt-orphan / receipt-duplicate / receipt-flood
   R6 receipt-date-only            a receipt commit whose normalized content is unchanged
 """
 from __future__ import annotations
@@ -27,6 +28,9 @@ from lib.model import CheckResult, Condition, not_applicable
 from lib.runner import Check
 
 ID = 'C4'
+RULES = ('host-path', 'stale-receipt-hash', 'decorative-hash', 'receipt-volatility', 'unowned-receipt-drift-predicted',
+         'corpus-glob-coupling', 'receipt-date-only', 'gate-run')
+CHANGED_RULES = RULES[:4]                     # the rules that read the receipts this diff added or changed
 HOST_PATH = re.compile(r'/Users/|/home/[^/\s"\']+/|/private/(?:tmp|var)|/var/folders|[.]claude/worktrees|'
                        r'[.]local/gates/run-|(?:[.][.]/){2,}[.]toolchain')
 MEASUREMENT_KEY = re.compile(r'(?:peak_)?rss(?:_bytes)?$|load_?avg|host_load|cpu_seconds|wall_seconds|wall_ms', re.I)
@@ -375,6 +379,8 @@ def run(ctx) -> CheckResult:
         result.conditions += decorative_hashes(ctx, changed)
         result.conditions += volatility(ctx, changed)
         result.rules_run += ['decorative-hash', 'receipt-volatility']
+    else:
+        result.na(CHANGED_RULES, 'no receipt was added or changed since the base')
     result.conditions += predicted_drift(ctx, {c.path for c in changed})
     result.conditions += corpus_coupling(ctx)
     result.rules_run += ['unowned-receipt-drift-predicted', 'corpus-glob-coupling']
@@ -391,7 +397,9 @@ def run(ctx) -> CheckResult:
             result.rules_unavailable['gate-run'] = reason
         else:
             result.rules_run.append('gate-run')
+    else:
+        result.rules_unavailable['gate-run'] = 'not requested: the use_gate_run option is off'
     return result
 
 
-CHECK = Check(ID, 'receipt-integrity', 'a committed receipt against the tree it describes', run, budget=15)
+CHECK = Check(ID, 'receipt-integrity', 'a committed receipt against the tree it describes', run, budget=15, rules=RULES)

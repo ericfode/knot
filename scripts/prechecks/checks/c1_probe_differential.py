@@ -24,12 +24,15 @@ same conditions. A program without a frozen verdict is counted and reported, nev
                          (counted as a fact), a minor condition that the ratchet does not raise when it does not.
   R6 diagnostic-shape    a non-Checked line is not `Class<TAB>phase<TAB>code<TAB>span`, or has a control character
   R7 incomplete-repair   a violation that exists at base, in a family the manifest lists in d4_targets
+  R8 helper-divergence   a helper lane against the primary lane (needs declared helpers: unavailable without them)
   lane-build             a lane's src/*-cli.bend builds at base and not at head
 
   R11 reference-crash    (family V) the tree's reference codec raises an undeclared exception on a plan
   R12 roundtrip          (family V) decode(encode(golden)) != golden
 
-R9/R10 (reference against the VM lanes) and R8 (helper lanes) need the VM binary and declared helpers; they report unavailable.
+R9/R10 (reference against the VM lanes) need the VM binary and a divergence table and report unavailable (`vm-lanes`).
+In the coverage table `family-l` stands for every rule above but R11 and R12 when the seed, bun or the lane sources are missing, and
+`family-v` for R11 and R12 when the codec probe fails; R11 and R12 have nothing to check in a tree without `vm/serializer.py`.
 """
 from __future__ import annotations
 
@@ -50,6 +53,10 @@ from lib.runner import Check
 from lib.seed import SEED_REVISION, Seed
 
 ID = 'C1'
+FAMILY_L = ('d4-invalid', 'unsound-accept', 'crash', 'value-disagreement', 'premature-unsupported', 'diagnostic-shape',
+            'incomplete-repair', 'helper-divergence', 'lane-build')
+FAMILY_V = ('reference-crash', 'roundtrip')
+RULES = (*FAMILY_L, *FAMILY_V)
 SLOW_LIMIT = 5000             # programs in the slow tier (its sample follows the changed sources; the fast tier's is fixed)
 MAX_CONDITIONS = 60           # conditions per (rule, lane); the rest are counted in the fact table
 MANIFESTS = ('tests/subsets/classification-cases.json', 'tests/subsets/frontend-cases.json', 'tests/compiler-checker/cases.json')
@@ -327,6 +334,7 @@ def family_v(ctx, result: CheckResult) -> None:
     machine-readable divergence table and are not implemented here.
     """
     if not ctx.head.has('vm/serializer.py') or not ctx.head.has('vm/registry.json'):
+        result.na(FAMILY_V, 'the tree has no vm/serializer.py and vm/registry.json')
         return
     plans = []
     for path in ctx.head.glob('vm/golden/*.plan.json'):
@@ -571,6 +579,8 @@ def run(ctx) -> CheckResult:
         merged.notes.append(f'family L {gap}: {reason}')
         if gap == 'unavailable':
             merged.rules_unavailable['family-l'] = reason
+        else:
+            merged.na('family-l', reason)
         family_v(ctx, merged)
         if not merged.rules_run and not merged.conditions and 'family-v' not in merged.rules_unavailable:
             return not_applicable(reason) if gap == 'not-applicable' else unavailable(reason)
@@ -579,4 +589,5 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'probe-differential', "the pinned seed against Knot's parse, check and eval lanes on a frozen corpus", run, budget=45)
+CHECK = Check(ID, 'probe-differential', "the pinned seed against Knot's parse, check and eval lanes on a frozen corpus", run, budget=45,
+              rules=RULES, groups={'family-l': FAMILY_L, 'family-v': FAMILY_V})

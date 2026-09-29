@@ -92,6 +92,11 @@ MUTANTS = [
     ('c3-note-every-counts-branch', 'checks.c3_frozen_and_owned', 'counts_branch_notes',
      "lambda base, head, added: ['every new branch']",
      'tests.test_c3.C3Tests.test_a_new_branch_that_runs_the_gates_own_module_is_a_minor_note_for_the_coordinator'),
+    ('runner-skips-rule-accounting', 'lib.runner', 'account', 'lambda check, result: result',
+     'tests.test_framework.RuleAccountingTests.test_a_rule_the_check_did_not_report_is_unavailable_never_silent'),
+    ('runner-accounts-only-rules-that-ran', 'lib.runner', 'account',
+     "lambda check, result: (result.rules_unavailable.update({r: 'x' for r in check.rules if r not in result.rules_run}) or result)",
+     'tests.test_framework.RuleAccountingTests.test_each_of_the_three_states_accounts_for_its_rule'),
 ]
 
 
