@@ -4645,8 +4645,8 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 482,
-        "compiler": 394,
+        "declarations": 490,
+        "compiler": 402,
         "packages": 14,
         "base": 74,
         "check": 0,
@@ -4660,43 +4660,43 @@
         "check": [
           {
             "feature": "types.base",
-            "declarations": 468
+            "declarations": 476
           },
           {
             "feature": "imports.base",
-            "declarations": 408
+            "declarations": 416
           },
           {
             "feature": "imports.local",
-            "declarations": 376
+            "declarations": 384
           },
           {
             "feature": "generics",
-            "declarations": 363
+            "declarations": 368
           },
           {
             "feature": "quantities.arguments",
-            "declarations": 351
+            "declarations": 356
           },
           {
             "feature": "literals.u32",
-            "declarations": 158
+            "declarations": 160
           },
           {
             "feature": "lambdas",
-            "declarations": 157
+            "declarations": 158
           },
           {
             "feature": "captures",
-            "declarations": 155
+            "declarations": 156
           },
           {
             "feature": "literals.string",
-            "declarations": 133
+            "declarations": 135
           },
           {
             "feature": "patterns.nested",
-            "declarations": 104
+            "declarations": 107
           },
           {
             "feature": "patterns.wildcard",
@@ -4728,7 +4728,7 @@
           },
           {
             "feature": "dependent",
-            "declarations": 23
+            "declarations": 24
           },
           {
             "feature": "calls.variable",
@@ -4770,47 +4770,47 @@
         "wasm": [
           {
             "feature": "types.base",
-            "declarations": 468
+            "declarations": 476
           },
           {
             "feature": "imports.base",
-            "declarations": 408
+            "declarations": 416
           },
           {
             "feature": "imports.local",
-            "declarations": 376
+            "declarations": 384
           },
           {
             "feature": "generics",
-            "declarations": 363
+            "declarations": 368
           },
           {
             "feature": "quantities.arguments",
-            "declarations": 351
+            "declarations": 356
           },
           {
             "feature": "literals.u32",
-            "declarations": 158
+            "declarations": 160
           },
           {
             "feature": "lambdas",
-            "declarations": 157
+            "declarations": 158
           },
           {
             "feature": "captures",
-            "declarations": 155
+            "declarations": 156
           },
           {
             "feature": "literals.string",
-            "declarations": 133
+            "declarations": 135
           },
           {
             "feature": "patterns.nested",
-            "declarations": 104
+            "declarations": 107
           },
           {
             "feature": "recursion",
-            "declarations": 100
+            "declarations": 104
           },
           {
             "feature": "patterns.wildcard",
@@ -4842,7 +4842,7 @@
           },
           {
             "feature": "dependent",
-            "declarations": 23
+            "declarations": 24
           },
           {
             "feature": "calls.variable",
@@ -4886,7 +4886,7 @@
         "check": [
           {
             "feature": "imports.local",
-            "declarations": 376
+            "declarations": 384
           },
           {
             "feature": "imports.package",
@@ -4912,7 +4912,7 @@
         "wasm": [
           {
             "feature": "imports.local",
-            "declarations": 376
+            "declarations": 384
           },
           {
             "feature": "imports.package",
@@ -16005,11 +16005,14 @@
           "boundary": "source",
           "features": [
             "calls",
+            "captures",
             "constructors",
             "fields",
             "generics",
             "imports.base",
             "imports.local",
+            "lambdas",
+            "literals.string",
             "matches",
             "patterns.variable",
             "quantities.affine",
@@ -16019,16 +16022,22 @@
           ],
           "missing": {
             "check": [
+              "captures",
               "generics",
               "imports.base",
               "imports.local",
+              "lambdas",
+              "literals.string",
               "quantities.arguments",
               "types.base"
             ],
             "wasm": [
+              "captures",
               "generics",
               "imports.base",
               "imports.local",
+              "lambdas",
+              "literals.string",
               "quantities.arguments",
               "types.base"
             ]
@@ -18154,6 +18163,54 @@
           }
         },
         {
+          "key": "src/image-plan.constructors_spelled",
+          "file": "src/image-plan.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "patterns.nested",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "patterns.nested",
+              "quantities.arguments",
+              "recursion",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/image-plan.count",
           "file": "src/image-plan.bend",
           "origin": "compiler",
@@ -18388,6 +18445,54 @@
           }
         },
         {
+          "key": "src/image-plan.functions_spelled",
+          "file": "src/image-plan.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "patterns.nested",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "patterns.nested",
+              "quantities.arguments",
+              "recursion",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/image-plan.image_words",
           "file": "src/image-plan.bend",
           "origin": "compiler",
@@ -18517,6 +18622,81 @@
           }
         },
         {
+          "key": "src/image-plan.name_byte",
+          "file": "src/image-plan.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "imports.base",
+            "imports.local",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "imports.base",
+              "imports.local",
+              "literals.u32",
+              "types.base"
+            ],
+            "wasm": [
+              "imports.base",
+              "imports.local",
+              "literals.u32",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/image-plan.name_bytes",
+          "file": "src/image-plan.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "imports.base",
+              "imports.local",
+              "types.base"
+            ],
+            "wasm": [
+              "imports.base",
+              "imports.local",
+              "recursion",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/image-plan.none",
           "file": "src/image-plan.bend",
           "origin": "compiler",
@@ -18538,6 +18718,45 @@
               "imports.base",
               "imports.local",
               "literals.u32",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/image-plan.plan_spelled",
+          "file": "src/image-plan.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "quantities.arguments",
               "types.base"
             ]
           },
@@ -18590,6 +18809,92 @@
               "patterns.wildcard",
               "quantities.arguments",
               "recursion",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/image-plan.shapes_spelled",
+          "file": "src/image-plan.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "patterns.nested",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "generics",
+              "imports.base",
+              "imports.local",
+              "patterns.nested",
+              "quantities.arguments",
+              "recursion",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/image-plan.spelled",
+          "file": "src/image-plan.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "imports.base",
+              "imports.local",
+              "types.base"
+            ],
+            "wasm": [
+              "imports.base",
+              "imports.local",
               "types.base"
             ]
           },
@@ -18660,6 +18965,57 @@
             "wasm": [
               "imports.base",
               "imports.local",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/image-plan.unsupported",
+          "file": "src/image-plan.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "types.base",
+            "types.type"
+          ],
+          "missing": {
+            "check": [
+              "dependent",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "literals.u32",
+              "quantities.arguments",
+              "types.base"
+            ],
+            "wasm": [
+              "dependent",
+              "generics",
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "literals.u32",
+              "quantities.arguments",
               "types.base"
             ]
           },
@@ -30766,8 +31122,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "c22936f3bea6216c3d15055b95b03e2781772cd9409b637db723c0969f4ba21d",
-    "docs/compiler-campaign/inventory/base-closure.json": "76c90e944a38c86d605e67142c9677bd3fa7b923fd04708c957833f36169a384",
-    "docs/compiler-campaign/inventory/accepted.json": "a88d13fc946489595ee4ae0de04818d82c1a2d1a80110823718d1da703ba6e2f"
+    "docs/compiler-campaign/inventory/implementation.json": "ffffab76bc9baaddf31c94e48e9cb54655f0ebfd2554b7495a3c14ca5dea0e18",
+    "docs/compiler-campaign/inventory/base-closure.json": "67216a956cb3e7d5394bd96fa755d223f6ea1d8aa270474b3dc6a98396de1581",
+    "docs/compiler-campaign/inventory/accepted.json": "42ceb1f5eb1df578f91bddc11a850e7d5f1b6c50553da7ceaa78bfe6d9f63d1e"
   }
 }

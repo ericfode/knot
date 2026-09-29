@@ -7,6 +7,7 @@ import ../../src/image-plan.bend as P
 import ../../src/image-layout.bend as Y
 import ../../src/image-decode.bend as X
 import ../../src/compile-cli.bend as CLI
+import ../../src/diagnostic.bend as G
 
 # Test driver for the image codec. It reads an image file, decodes it with `image.decode` and either
 # prints the plan in the gate's canonical text, or lays the plan out again and writes it, so the gate
@@ -15,6 +16,9 @@ import ../../src/compile-cli.bend as CLI
 #   image-cli recode IMAGE OUTPUT    encodes the decoded plan again and writes it through the chunked path
 #   image-cli plan SOURCE            prints erase_tokens of the checked book, in the same text
 #   image-cli roundtrip SOURCE       prints `Roundtrip<TAB>equal` when decode(encode(book)) and erase_tokens(book) print alike
+#   image-cli named NAME             encodes the one-function book whose datatype is called NAME and prints `Encoded<TAB>words`
+#   image-cli answers SOURCE         prints the outcome of erase_tokens and of recoded, `Done` or a diagnostic, one line each;
+#                                    SOURCE is read at the image profile's maximum budgets
 # The image file is read whole, up to one word past the 16 MiB image limit, so an oversize image is read as one.
 
 def numbers(values: List<&2,U32>) -> String:
@@ -153,21 +157,44 @@ def same_plans(left: Result<S.Error,P.Plan>, right: Result<S.Error,P.Plan>) -> I
 def compared(+book: C.Book) -> IO(Unit):
   same_plans(I.erase_tokens(1000000n,book),I.recoded(1000000n,book))
 
+def outcome(result: Result<S.Error,P.Plan>) -> String:
+  match result:
+    case Fail{e}: G.error(e)
+    case Done{plan}: "Done"
+
+def answered(+book: C.Book) -> IO(Unit):
+  IO.print(String.concat(["erase_tokens\t",outcome(I.erase_tokens(1000000n,book)),"\nrecoded\t",outcome(I.recoded(1000000n,book))]))
+
+def token(text: String) -> S.Token:
+  S.Token{text,S.At{0,0,0,0}}
+
+# The book of image-LAWS.bend `flag_book`, its datatype called `name`.
+def named_book(name: String) -> C.Book:
+  C.Book{[C.Datatype{token(name),True{},[C.Constructor{token("Off"),Nil{}},C.Constructor{token("On"),Nil{}}]}],
+    [C.Function{C.Signature{token("main"),Nil{},0},C.Value{token("On"),0,1}}]}
+
+def encoded_words(result: Result<S.Error,Y.Encoded>) -> IO(Unit):
+  match result:
+    case Fail{e}: D.fail(e)
+    case Done{Y.Encoded{records,words}}: IO.print(String.concat(["Encoded\t",U32.show(words)]))
+
 def source_limits() -> D.Limits:
   D.Limits{65536n,512n,512n}
 
 def usage() -> IO(Unit):
-  IO.die(Unit,5,"HostFailure\targuments\texpected decode IMAGE | recode IMAGE OUTPUT | plan SOURCE | roundtrip SOURCE")
+  IO.die(Unit,5,"HostFailure\targuments\texpected decode IMAGE | recode IMAGE OUTPUT | plan SOURCE | roundtrip SOURCE | named NAME | answers SOURCE")
 
-def chosen(decode: Bool, plan: Bool, roundtrip: Bool, path: String) -> IO(Unit):
-  match decode plan roundtrip:
-    case True{} _ _: IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(Print{},result))
-    case False{} True{} _: D.load(path,source_limits(),book => planned(book))
-    case False{} False{} True{}: D.load(path,source_limits(),book => compared(book))
-    case False{} False{} False{}: usage()
+def chosen(decode: Bool, plan: Bool, roundtrip: Bool, named: Bool, answers: Bool, path: String) -> IO(Unit):
+  match decode plan roundtrip named answers:
+    case True{} _ _ _ _: IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(Print{},result))
+    case False{} True{} _ _ _: D.load(path,source_limits(),book => planned(book))
+    case False{} False{} True{} _ _: D.load(path,source_limits(),book => compared(book))
+    case False{} False{} False{} True{} _: encoded_words(I.encode(1000000n,named_book(path)))
+    case False{} False{} False{} False{} True{}: CLI.image_load(path,D.Limits{4194304n,4096n,4096n},book => answered(book))
+    case False{} False{} False{} False{} False{}: usage()
 
 def command(+name: String, path: String) -> IO(Unit):
-  chosen(String.eq(name,"decode"),String.eq(name,"plan"),String.eq(name,"roundtrip"),path)
+  chosen(String.eq(name,"decode"),String.eq(name,"plan"),String.eq(name,"roundtrip"),String.eq(name,"named"),String.eq(name,"answers"),path)
 
 def arguments(args: List<String>) -> IO(Unit):
   match args:

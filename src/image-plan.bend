@@ -98,6 +98,41 @@ def same_words(xs: List<&2,U32>, ys: List<&2,U32>) -> Bool:
     case Con{+a,at} Con{+b,bt}: Bool.and(U32.is_eq(a,b),same_words(at,bt))
     case _ _: False{}
 
+# A name is an identifier: one Char or more, each a byte of 1..127 (the lexer admits no other). `layout`
+# refuses a plan that holds another name and `decode` reads no other, so an answer of `encode` decodes.
+def name_byte(+code: U32) -> Bool:
+  Bool.and(U32.is_gt(code,0),U32.is_lt(code,128))
+
+def name_bytes(text: String) -> Bool:
+  match text:
+    case SNil{}: True{}
+    case SCon{head,tail}: Bool.and(name_byte(Char.to_u32(head)),name_bytes(tail))
+
+def spelled(+text: String) -> Bool:
+  match text:
+    case SNil{}: False{}
+    case SCon{head,tail}: name_bytes(text)
+
+def constructors_spelled(constructors: List<&2,Constructor>) -> Bool:
+  match constructors:
+    case Nil{}: True{}
+    case Con{Constructor{name,fields},tail}: Bool.and(spelled(name),constructors_spelled(tail))
+
+def shapes_spelled(shapes: List<&2,Shape>) -> Bool:
+  match shapes:
+    case Nil{}: True{}
+    case Con{Algebraic{name,constructors},tail}: Bool.and(spelled(name),Bool.and(constructors_spelled(constructors),shapes_spelled(tail)))
+    case Con{Opaque{name},tail}: Bool.and(spelled(name),shapes_spelled(tail))
+    case Con{other,tail}: shapes_spelled(tail)
+
+def functions_spelled(functions: List<&2,Function>) -> Bool:
+  match functions:
+    case Nil{}: True{}
+    case Con{Function{name,parameters,result,slots,body},tail}: Bool.and(spelled(name),functions_spelled(tail))
+
+def plan_spelled(shapes: List<&2,Shape>, functions: List<&2,Function>) -> Bool:
+  Bool.and(shapes_spelled(shapes),functions_spelled(functions))
+
 def main_index(functions: List<&2,Function>, +index: U32) -> U32:
   match functions:
     case Nil{}: none()

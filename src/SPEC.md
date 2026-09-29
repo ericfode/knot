@@ -275,7 +275,7 @@ leaves an existing output untouched. `Built<TAB>bytes` is the success record.
 **Forms this base does not have.** The core of this base has no literal, intrinsic, default, closure,
 invoke or foreign term, no generic (positional `none`) type and no pattern matrix, so none is encoded and none
 is reachable. The codec already carries all thirteen opcodes, the constants pool and both Case modes, which
-the 102 golden images exercise, and `erase_tokens` is where the merge wave adds their arms: literals'
+the 111 golden images exercise, and `erase_tokens` is where the merge wave adds their arms: literals'
 Literal, Intrinsic and Default (with keys-mode Case, sorted keys and first-match arms), closures' Closure and
 Invoke (captures renamed to ascending slots, `site` numbering), the io branch's Foreign, generics' `none`
 types, nest's lowered matrix, and the header's representation words. A form still without an encoding must
@@ -285,16 +285,30 @@ be reported `Unsupported compile image-term`, never passed through.
 newest entries of a stack, so it is linear), and refuses a malformed image as `HostFailure image` with the
 reason of `serializer.py` (the size limit and the record limits as `Exhausted`). Scope, type and arity rules
 are the VM validator's, and `vm/serializer.py` `validate` is checked by the gate on every image written.
-Names are ASCII; a wider name is `Unsupported compile image-name`.
+A name is an identifier: one Char or more, each a byte of 1..127 (`P.spelled`; the lexer admits no other). `layout` refuses a
+plan that holds another name as `Unsupported compile image-name` (exit 3) before any word exists, so no image carries a name that
+`vm/serializer.py` refuses (an empty name, a zero byte, invalid UTF-8) or that `decode` cannot read; `decode` reads no other and
+refuses an empty name as `HostFailure image name length`, a zero byte as `name padding` and a wider byte as
+`Unsupported compile image-name`. A valid UTF-8 name that is not ASCII is admitted by the reference codec and unsupported here.
 
 **Round-trip law.** `image-LAWS.bend` states `decode(encode(b)) = erase_tokens(b)` on hand-written books,
 quantified over every source position, and on a plan that carries all thirteen forms, with erasure laws over
-every token, level, type and depth; `image-PROOF.bend` proves them and prints `All terms check.` The
-statement for every checked book is a **required law with an open proof obligation (D21)**: it is not weakened
-and has no induction proof yet. Its evidence is those ground laws, the byte-for-byte comparison of 96 books'
-images with an independent reference, the 102 golden images decoded and re-encoded, and mutants killed by
-wrong observations. The general statement is a real `law` in `src/image-OPEN.bend` (an open claim that the gate requires to type-check),
-reviewed in `tests/compiler-image/LAW_REVIEW.md`, and stays open until discharged.
+every token, level, type and depth; `image-PROOF.bend` proves them and prints `All terms check.` The statement
+for every book and fuel is a **required law with an open proof obligation (D21)**, and it is not weakened: whenever
+`encode` answers, decoding its words gives the plan that erasure gave at the same fuel,
+`encode(fuel,book) == Done(w) -> decode(w) == erase_tokens(fuel,book)` (`src/image-OPEN.bend`, a real `law` that the gate
+requires to type-check as exactly one open claim). It is the partial-correctness form because the first statement,
+`decode(encode(b)) = erase_tokens(b)` at every fuel, is false: `encode` gives layout the fuel that erasure has and layout
+needs more (`flag_book` at fuels 1 and 2, `mixed_book` at 13 to 18), and layout refuses what erasure accepts past the
+limits of vm/SPEC section 4 (an arity over 4,096, an image over 4,194,304 words) and for a name that is not an identifier.
+Those counterexamples are closed laws (`flag_refuted_at_1` and its siblings in `image-LAWS.bend`) and the gate's over-limit
+control. `encode` binds on `erase_tokens`, so an answer implies that erasure succeeded at that fuel. The corrected statement
+has no induction proof: it needs one through erasure, the two-pass layout and the stack decoder, and the seed's kernel does not
+reduce `U32` arithmetic on a variable. Its evidence is the ground laws, the gate's instantiation of the law at 13 fuels and books
+(including the four fuels where the first statement fails, with that statement and a wrong conclusion refused by the same
+machinery), the byte-for-byte comparison of 96 books' images with an independent reference, the 111 golden images decoded
+and re-encoded, and mutants killed by wrong observations. It is recorded in the trust inventory below and reviewed in
+`tests/compiler-image/LAW_REVIEW.md`, and stays open until discharged.
 
 The gate is `BEND_NO_TELEMETRY=1 python3 tests/compiler-image/check.py`; see its
 [report](../tests/compiler-image/REPORT.md).
@@ -373,6 +387,15 @@ The retained enum runtime represents only nullary enum values. Its evaluator val
 Data records used as an independent pure model; source quantities are checked
 before execution. This does not establish an owning heap for general affine
 resources, a parallel runtime, or source compilation to the existing GPU probe.
+
+## Trust inventory: open proof obligations
+
+Laws that stay required and are never weakened or dropped (coordinator decision D21). Until they are proved, they are open
+obligations in this trust inventory; the profile each belongs to rests on the evidence named here, not on a proof.
+
+| Law | Status | Witnessed by |
+| --- | --- | --- |
+| Image round trip: for every fuel and book, whenever `encode` answers, `decode` of its words is `erase_tokens` at the same fuel (`src/image-OPEN.bend`) | Unproved general law, in its partial-correctness form. It is true as stated: no counterexample is known, and layout now refuses every name that `decode` would not read. Its first statement, `recoded == erase_tokens` at every fuel and book, was false and is pinned as closed counterexamples: fuel (`flag_refuted_at_1`, `flag_refuted_at_2`, `mixed_refuted_at_13`, `mixed_refuted_at_18`), the limits of vm/SPEC section 4 (`wide_refuted`; the gate's over-limit control on a checked book) and names (`accent_refuted`). The proof would be an induction over `C.Term` through erasure, the two-pass layout and the stack decoder, which the seed's kernel cannot do while `U32` offsets are variables | The 24 closed laws of `src/image-LAWS.bend`; the gate's instantiation of the law at 13 fuels and books, with the first statement and a wrong conclusion refused at the same fuels; 96 accepted books byte-identical to an independent reference and round-tripped by Bend's own decoder; 111 golden images decoded and re-encoded; 21 mutants killed by wrong observations |
 
 ## Required evidence
 

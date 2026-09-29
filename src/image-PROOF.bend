@@ -25,6 +25,39 @@ def L.round_trip_any_value(at,type_id,tag):
 def L.round_trip_all_forms():
   {==}
 
+def L.flag_refuted_at_1(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.flag_refuted_at_2(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.mixed_refuted_at_13(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.mixed_refuted_at_18(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.wide_refuted(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.accent_refuted(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.empty_name_is_refused(at):
+  {==}
+
+def L.nul_name_is_refused(at):
+  {==}
+
+def L.wide_name_is_refused(at):
+  {==}
+
 def L.magic_spells_kimg():
   {==}
 

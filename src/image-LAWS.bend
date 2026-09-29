@@ -8,14 +8,15 @@ import ./image-decode.bend as X
 
 # The round-trip law of the image increment, on fixed books and plans, and the erasure laws it rests on.
 #
-#   round trip   decode(encode(b)) = erase_tokens(b)    for every checked book b     [open, D21]
+#   round trip   encode(b) = Done(w)  implies  decode(w) = erase_tokens(b)    for every book b and fuel   [open, D21]
 #
 # `erase_tokens` is a projection, not a rewriting of the book: tokens, quantity-0 binders, levels,
 # datatype kinds and Type/Data distinctions do not survive, and the result is a Plan (src/image-plan.bend),
-# the image's own tree. The law over every book is required and is not weakened; it has no induction
-# proof yet, so it stands as an open claim in src/image-OPEN.bend, where the gate checks it. It is an
+# the image's own tree. The law over every book and fuel is required and is not weakened; it has no induction
+# proof yet, so it stands as an open claim in src/image-OPEN.bend, where the gate checks it and instantiates it. It is an
 # open obligation of D21, recorded in src/SPEC.md and tests/compiler-image/LAW_REVIEW.md, and this file
-# is its evidence: the ground instances below, quantified over every source position.
+# is its evidence: the ground instances below, quantified over every source position, and the counterexamples
+# of the statement it replaced.
 #
 # The books here are fixed, as the literal review of `erase_tokens` is: the plans are written by hand
 # from vm/SPEC.md sections 1 and 3, before they were compared with the encoder's answer.
@@ -126,6 +127,73 @@ def all_forms_plan() -> P.Plan:
 
 law round_trip_all_forms:
   {I.decoded_image(Y.layout(64n,all_forms_plan())) == Done{all_forms_plan()} : Result<S.Error,P.Plan>}
+
+# The first statement of the round trip, `recoded == erase_tokens` at every fuel and book, is false: `encode` gives
+# layout the fuel that erasure has, and layout needs more; and layout refuses what erasure accepts (a name that is not
+# an identifier, an arity past SPEC section 4). Each law below is a counterexample, erasure answering and the image
+# refused. The corrected law (src/image-OPEN.bend) speaks of the fuels and books where encoding answers.
+def refusal(result: Result<S.Error,P.Plan>) -> Type:
+  match result:
+    case Fail{e}: Unit
+    case Done{plan}: Empty
+
+# The fuel windows: erasure answers from 1 (flag_book) and 13 (mixed_book), layout from 3 and 19.
+law flag_refuted_at_1:
+  for +at: S.At
+  {I.recoded(1n,flag_book(at)) != I.erase_tokens(1n,flag_book(at)) : Result<S.Error,P.Plan>}
+
+law flag_refuted_at_2:
+  for +at: S.At
+  {I.recoded(2n,flag_book(at)) != I.erase_tokens(2n,flag_book(at)) : Result<S.Error,P.Plan>}
+
+law mixed_refuted_at_13:
+  for +at: S.At
+  {I.recoded(13n,mixed_book(at)) != I.erase_tokens(13n,mixed_book(at)) : Result<S.Error,P.Plan>}
+
+law mixed_refuted_at_18:
+  for +at: S.At
+  {I.recoded(18n,mixed_book(at)) != I.erase_tokens(18n,mixed_book(at)) : Result<S.Error,P.Plan>}
+
+def live_parameters(n: Nat, +at: S.At) -> List<&2,C.Parameter>:
+  match n:
+    case 0n: Nil{}
+    case 1n+ +m: Con{C.Parameter{tok("x",at),1,0},live_parameters(m,at)}
+
+# One live parameter more than an image holds: 4,097 against 4,096. The size limit is the same class, observed by the gate.
+def wide_book(+at: S.At) -> C.Book:
+  C.Book{[flag_type(at)],[C.Function{C.Signature{tok("main",at),live_parameters(4097n,at),0},C.Value{tok("On",at),0,1}}]}
+
+law wide_refuted:
+  for +at: S.At
+  {I.recoded(64n,wide_book(at)) != I.erase_tokens(64n,wide_book(at)) : Result<S.Error,P.Plan>}
+
+# The book of flag_book, its datatype called `name`.
+def named_book(name: String, +at: S.At) -> C.Book:
+  C.Book{[C.Datatype{tok(name,at),True{},[C.Constructor{tok("Off",at),Nil{}},C.Constructor{tok("On",at),Nil{}}]}],
+    [C.Function{C.Signature{tok("main",at),Nil{},0},C.Value{tok("On",at),0,1}}]}
+
+def accent() -> String:
+  SCon{Char.from_u32(233),SNil{}}
+
+def nul() -> String:
+  SCon{Char.from_u32(0),SNil{}}
+
+law accent_refuted:
+  for +at: S.At
+  {I.recoded(64n,named_book(accent(),at)) != I.erase_tokens(64n,named_book(accent(),at)) : Result<S.Error,P.Plan>}
+
+# A name that decode does not read is refused by layout, before any word exists (P.spelled).
+law empty_name_is_refused:
+  for +at: S.At
+  {I.encode(64n,named_book("",at)) == P.unsupported(Y.Encoded,"image-name") : Result<S.Error,Y.Encoded>}
+
+law nul_name_is_refused:
+  for +at: S.At
+  {I.encode(64n,named_book(nul(),at)) == P.unsupported(Y.Encoded,"image-name") : Result<S.Error,Y.Encoded>}
+
+law wide_name_is_refused:
+  for +at: S.At
+  {I.encode(64n,named_book(accent(),at)) == P.unsupported(Y.Encoded,"image-name") : Result<S.Error,Y.Encoded>}
 
 # The words of a header spell KIMG, version 1, and an empty file is not an image.
 law magic_spells_kimg:

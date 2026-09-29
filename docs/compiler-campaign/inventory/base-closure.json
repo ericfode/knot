@@ -5730,7 +5730,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 482,
+          "declarations": 490,
           "base": 74,
           "base_intrinsics": 22,
           "foreign": 6
@@ -9497,11 +9497,15 @@
             "dependencies": [
               "Nat",
               "Result",
+              "String",
               "src/image-layout.Encoded",
               "src/image-layout.layout_tables",
               "src/image-layout.tables",
               "src/image-plan.Plan",
-              "src/syntax.Error"
+              "src/image-plan.plan_spelled",
+              "src/image-plan.unsupported",
+              "src/syntax.Error",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -10368,6 +10372,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.constructors_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.shapes_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Constructor",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.count",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.closure_node",
@@ -10454,6 +10474,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.functions_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.plan_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Function",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.image_words",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.pushed",
@@ -10497,6 +10533,38 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.name_byte",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.name_bytes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32",
+              "U32.is_gt",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.name_bytes",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "src/image-plan.name_byte"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.Node",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.Place",
@@ -10536,6 +10604,24 @@
               "U32",
               "src/image-plan.Function",
               "src/image-plan.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.plan_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-layout.layout",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Function",
+              "src/image-plan.Shape",
+              "src/image-plan.functions_spelled",
+              "src/image-plan.shapes_spelled"
             ],
             "dynamic_calls": []
           },
@@ -10584,6 +10670,37 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.shapes_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.plan_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Shape",
+              "src/image-plan.constructors_spelled",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.functions_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "src/image-plan.name_bytes"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.table_records",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.within_limits",
@@ -10605,6 +10722,22 @@
             "dependencies": [
               "U32",
               "src/image-plan.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.unsupported",
+            "file": "src/image-plan.bend",
+            "via": "src/image-layout.layout",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },
@@ -14512,7 +14645,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 482,
+          "declarations": 490,
           "base": 74,
           "base_intrinsics": 21,
           "foreign": 6
@@ -18279,11 +18412,15 @@
             "dependencies": [
               "Nat",
               "Result",
+              "String",
               "src/image-layout.Encoded",
               "src/image-layout.layout_tables",
               "src/image-layout.tables",
               "src/image-plan.Plan",
-              "src/syntax.Error"
+              "src/image-plan.plan_spelled",
+              "src/image-plan.unsupported",
+              "src/syntax.Error",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -19150,6 +19287,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.constructors_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.shapes_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Constructor",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.count",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.closure_node",
@@ -19236,6 +19389,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.functions_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.plan_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Function",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.image_words",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.pushed",
@@ -19279,6 +19448,38 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.name_byte",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.name_bytes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32",
+              "U32.is_gt",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.name_bytes",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "src/image-plan.name_byte"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.Node",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.Place",
@@ -19318,6 +19519,24 @@
               "U32",
               "src/image-plan.Function",
               "src/image-plan.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.plan_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-layout.layout",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Function",
+              "src/image-plan.Shape",
+              "src/image-plan.functions_spelled",
+              "src/image-plan.shapes_spelled"
             ],
             "dynamic_calls": []
           },
@@ -19366,6 +19585,37 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.shapes_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.plan_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Shape",
+              "src/image-plan.constructors_spelled",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.functions_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "src/image-plan.name_bytes"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.table_records",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.within_limits",
@@ -19387,6 +19637,22 @@
             "dependencies": [
               "U32",
               "src/image-plan.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.unsupported",
+            "file": "src/image-plan.bend",
+            "via": "src/image-layout.layout",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },
@@ -23294,7 +23560,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 409,
+          "declarations": 417,
           "base": 60,
           "base_intrinsics": 22,
           "foreign": 6
@@ -25623,7 +25889,10 @@
             "unsafe": false,
             "dependencies": [
               "src/image-layout.layout_tables",
-              "src/image-layout.tables"
+              "src/image-layout.tables",
+              "src/image-plan.plan_spelled",
+              "src/image-plan.unsupported",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -26168,6 +26437,19 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.constructors_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.shapes_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.count",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.closure_node",
@@ -26222,6 +26504,19 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.functions_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.plan_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.image_words",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.pushed",
@@ -26257,6 +26552,34 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.name_byte",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.name_bytes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "U32.is_gt",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.name_bytes",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Char.to_u32",
+              "src/image-plan.name_byte"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.none",
             "file": "src/image-plan.bend",
             "via": "src/image.undeclared",
@@ -26264,6 +26587,20 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.plan_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-layout.layout",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/image-plan.functions_spelled",
+              "src/image-plan.shapes_spelled"
+            ],
             "dynamic_calls": []
           },
           {
@@ -26276,6 +26613,32 @@
             "dependencies": [
               "Bool.and",
               "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.shapes_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.plan_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/image-plan.constructors_spelled",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.functions_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/image-plan.name_bytes"
             ],
             "dynamic_calls": []
           },
@@ -26293,6 +26656,16 @@
             "key": "src/image-plan.type_of",
             "file": "src/image-plan.bend",
             "via": "src/image.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.unsupported",
+            "file": "src/image-plan.bend",
+            "via": "src/image-layout.layout",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28925,7 +29298,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 522,
+          "declarations": 530,
           "base": 114,
           "base_intrinsics": 26,
           "foreign": 6
@@ -32765,7 +33138,10 @@
               "src/image-layout.layout_tables",
               "src/image-layout.tables",
               "src/image-plan.Plan",
-              "src/syntax.Error"
+              "src/image-plan.plan_spelled",
+              "src/image-plan.unsupported",
+              "src/syntax.Error",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -33625,6 +34001,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.constructors_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.shapes_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Constructor",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.count",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.closure_node",
@@ -33709,6 +34101,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.functions_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.plan_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Function",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.image_words",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.pushed",
@@ -33747,6 +34155,38 @@
               "src/image-plan.Function",
               "src/image-plan.none",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.name_byte",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.name_bytes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "U32",
+              "U32.is_gt",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.name_bytes",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char.to_u32",
+              "String",
+              "src/image-plan.name_byte"
             ],
             "dynamic_calls": []
           },
@@ -33790,6 +34230,24 @@
               "U32",
               "src/image-plan.Function",
               "src/image-plan.Shape"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.plan_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-layout.layout",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Function",
+              "src/image-plan.Shape",
+              "src/image-plan.functions_spelled",
+              "src/image-plan.shapes_spelled"
             ],
             "dynamic_calls": []
           },
@@ -33838,6 +34296,37 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/image-plan.shapes_spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.plan_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/image-plan.Shape",
+              "src/image-plan.constructors_spelled",
+              "src/image-plan.spelled"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.spelled",
+            "file": "src/image-plan.bend",
+            "via": "src/image-plan.functions_spelled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "src/image-plan.name_bytes"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/image-plan.table_records",
             "file": "src/image-plan.bend",
             "via": "src/image-layout.within_limits",
@@ -33859,6 +34348,21 @@
             "dependencies": [
               "U32",
               "src/image-plan.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/image-plan.unsupported",
+            "file": "src/image-plan.bend",
+            "via": "src/image-layout.layout",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/syntax.At",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },

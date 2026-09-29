@@ -82,13 +82,14 @@ def read_sections(fuel: Nat, offsets: List<&2,U32>, stage: Stage) -> Result<S.Er
         S.bind(Read,Gathered,section_read(words,at),read => read_sections(n,Nil{},Fetched{read,later,done})),u => malformed(Gathered,"section offset"))
     case 1n+ +n offsets Fetched{Read{items,rest,at},later,done}: read_sections(n,later,Fresh{rest,at,Con{items,done}})
 
-# Names hold identifiers: bytes 1..127. A wider name is refused as unsupported, never misread.
+# Names hold identifiers (P.name_byte). A zero byte is padding that a name cannot hold; a wider byte is
+# refused as unsupported, never misread.
 def ascii_text(bytes: List<&2,U32>, acc: String) -> Result<S.Error,String>:
   match bytes:
     case Nil{}: Done{String.reverse(acc)}
     case Con{+byte,+tail}:
-      S.choose(Result<S.Error,String>,U32.is_eq(byte,0),u => malformed(String,"name padding"),u =>
-        S.choose(Result<S.Error,String>,U32.is_lt(byte,128),u => ascii_text(tail,SCon{Char.from_u32(byte),acc}),u => P.unsupported(String,"image-name")))
+      S.choose(Result<S.Error,String>,P.name_byte(byte),u => ascii_text(tail,SCon{Char.from_u32(byte),acc}),u =>
+        S.choose(Result<S.Error,String>,U32.is_eq(byte,0),u => malformed(String,"name padding"),u => P.unsupported(String,"image-name")))
 
 def unpacked(words: List<&2,U32>) -> List<&2,U32>:
   match words:

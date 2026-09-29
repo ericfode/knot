@@ -432,11 +432,13 @@ def layout_tables(+fuel: Nat, grid: Tables, +entry: U32, +representation: List<&
       S.bind(Placed,Encoded,place(fuel,Many{bodies(functions)},Nodes{Nil{},0,Nil{},0,0,0}),trial =>
         layout_trial(fuel,trial,types,constructors,indices,names,entry,representation,functions))
 
-# The words of an image: header, then the six sections, as records that the writer streams in order.
+# The words of an image: header, then the six sections, as records that the writer streams in order. A name that
+# is not an identifier (P.spelled) is refused before any word exists: `decode` would not read it back.
 def layout(fuel: Nat, plan: P.Plan) -> Result<S.Error,Encoded>:
   match plan:
     case P.Plan{entry,representation,+shapes,+functions}:
-      layout_tables(fuel,tables(shapes,functions),entry,representation,functions)
+      S.choose(Result<S.Error,Encoded>,P.plan_spelled(shapes,functions),u =>
+        layout_tables(fuel,tables(shapes,functions),entry,representation,functions),u => P.unsupported(Encoded,"image-name"))
 
 # The image is written in chunks of at most 16,384 steps (a word or a record boundary), that is at
 # most 65,536 bytes, so the writer never holds the image as one byte list.
