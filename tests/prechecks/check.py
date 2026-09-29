@@ -87,6 +87,11 @@ MUTANTS = [
      'tests.test_c4.C4Tests.test_a_pre_implementation_freeze_section_is_history_not_staleness'),
     ('c5-measure-grouped-files-alone', 'checks.c5_preflight_delta', 'grouped_files', 'lambda ctx: set()',
      'tests.test_c5.C5Tests.test_a_file_that_a_group_lists_is_judged_by_its_group_not_alone'),
+    ('c3-never-note-gate-code-in-counts', 'checks.c3_frozen_and_owned', 'counts_branch_notes', 'lambda base, head, added: []',
+     'tests.test_c3.C3Tests.test_a_new_branch_that_runs_the_gates_own_module_is_a_minor_note_for_the_coordinator'),
+    ('c3-note-every-counts-branch', 'checks.c3_frozen_and_owned', 'counts_branch_notes',
+     "lambda base, head, added: ['every new branch']",
+     'tests.test_c3.C3Tests.test_a_new_branch_that_runs_the_gates_own_module_is_a_minor_note_for_the_coordinator'),
 ]
 
 
