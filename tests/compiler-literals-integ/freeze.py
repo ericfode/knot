@@ -67,6 +67,11 @@ SHADOW = oracle.unsupported(
     'parse', 'parameter-shadow',
     'Seed-invalid ("expected : Type"): a parameter\'s name shadows the type of that name in the annotations '
     'that follow. Whether such a name is a type parameter is beyond Knot, so it is unsupported (D4).')
+ANNOTATION = oracle.unsupported(
+    'parse', 'annotation-shadow',
+    'Seed-invalid ("expected : Type"): a binder in scope, a parameter, a let erased or live, or a pattern '
+    'variable, shadows the type of its name in the annotations below it. Whether the binder is a type-valued '
+    'variable is beyond Knot, so it is unsupported (D4).')
 ARITY = invalid(
     'check', 'pattern-arity',
     'Seed-invalid ("expected : N patterns (one per scrutinee)"): every row names one pattern per scrutinee.')
@@ -126,6 +131,12 @@ PLAN = {
     'parameter-shadows-result': ('parameter shadow', '`def f(Flag: Other) -> Flag`', [], SHADOW),
     'parameter-shadow-unused': ('parameter shadow', 'a parameter named like a type that no annotation reads',
                                 ['f', 'g'], oracle.AGREE),
+    'annotation-shadow-let': ('annotation shadow', '`Flag = x` then `y : Flag = x`', [], ANNOTATION),
+    'annotation-shadow-erased-let': ('annotation shadow', '`-Flag = x` then `y : Flag = x`', [], ANNOTATION),
+    'annotation-shadow-pattern': ('annotation shadow', '`case Flag:` then `y : Flag = x` in its body', [], ANNOTATION),
+    'annotation-shadow-parameter': ('annotation shadow', '`def f(Flag: Other, ..)` then `y : Flag = x`', [], ANNOTATION),
+    'annotation-shadow-unread': ('annotation shadow', 'binders named like types that no annotation below reads, '
+                                 'and a let\'s own annotation `Flag : Flag = x`', ['own', 'other', 'arm'], oracle.AGREE),
     'row-wide-nat': ('row width', '`case x y:` over one Nat scrutinee', [], ARITY),
     'row-wide-u32': ('row width', '`case _ _:` over one U32 scrutinee', [], ARITY),
     'row-narrow-literal': ('row width', '`case 0n:` in a two-scrutinee match', [], ARITY),

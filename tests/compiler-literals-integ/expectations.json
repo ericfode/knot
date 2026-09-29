@@ -8,6 +8,381 @@
   },
   "fixtures": [
     {
+      "name": "annotation-shadow-erased-let",
+      "file": "tests/compiler-literals-integ/fixtures/annotation-shadow-erased-let.bend",
+      "sha256": "e17c89bf9aa48ac3b94599dbcce73928cc56f4912edc26f8d9f28780ef11d564",
+      "behavior": "annotation shadow",
+      "covers": "`-Flag = x` then `y : Flag = x`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-erased-let.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- x    : Flag\n- Flag : Flag\nLocation: f\n7 |   -Flag = x\n8>|   y : Flag = x\n  |       ^^^^\n9 |   On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-erased-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- x    : Flag\n- Flag : Flag\nLocation: f\n7 |   -Flag = x\n8>|   y : Flag = x\n  |       ^^^^\n9 |   On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tannotation-shadow\t",
+        "justification": "Seed-invalid (\"expected : Type\"): a binder in scope, a parameter, a let erased or live, or a pattern variable, shadows the type of its name in the annotations below it. Whether the binder is a type-valued variable is beyond Knot, so it is unsupported (D4)."
+      }
+    },
+    {
+      "name": "annotation-shadow-let",
+      "file": "tests/compiler-literals-integ/fixtures/annotation-shadow-let.bend",
+      "sha256": "69333ce62bb0e3842205c4ecd42f789706ceb042eeb5dd4c4ba327ba208e0deb",
+      "behavior": "annotation shadow",
+      "covers": "`Flag = x` then `y : Flag = x`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-let.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- x    : Flag\n- Flag : Flag\nLocation: f\n 8 |   Flag = x\n 9>|   y : Flag = x\n   |       ^^^^\n10 |   On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- x    : Flag\n- Flag : Flag\nLocation: f\n 8 |   Flag = x\n 9>|   y : Flag = x\n   |       ^^^^\n10 |   On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tannotation-shadow\t",
+        "justification": "Seed-invalid (\"expected : Type\"): a binder in scope, a parameter, a let erased or live, or a pattern variable, shadows the type of its name in the annotations below it. Whether the binder is a type-valued variable is beyond Knot, so it is unsupported (D4)."
+      }
+    },
+    {
+      "name": "annotation-shadow-parameter",
+      "file": "tests/compiler-literals-integ/fixtures/annotation-shadow-parameter.bend",
+      "sha256": "4f54d9afae5d03b78be76457c722fd6d859623e504bc963a51614a2b4fddd2dc",
+      "behavior": "annotation shadow",
+      "covers": "`def f(Flag: Other, ..)` then `y : Flag = x`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ],
+        "Other": [
+          "O1"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-parameter.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Other\nContext:\n- Flag : Other\n- x    : Other\nLocation: f\n 9 | def f(Flag: Other, +x: Other) -> Other:\n10>|   y : Flag = x\n   |       ^^^^\n11 |   x\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-parameter.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Other\nContext:\n- Flag : Other\n- x    : Other\nLocation: f\n 9 | def f(Flag: Other, +x: Other) -> Other:\n10>|   y : Flag = x\n   |       ^^^^\n11 |   x\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tannotation-shadow\t",
+        "justification": "Seed-invalid (\"expected : Type\"): a binder in scope, a parameter, a let erased or live, or a pattern variable, shadows the type of its name in the annotations below it. Whether the binder is a type-valued variable is beyond Knot, so it is unsupported (D4)."
+      }
+    },
+    {
+      "name": "annotation-shadow-pattern",
+      "file": "tests/compiler-literals-integ/fixtures/annotation-shadow-pattern.bend",
+      "sha256": "548253291c11e770021893633bd41debee7cc4a6ca224a7c78a479bff9eabbba",
+      "behavior": "annotation shadow",
+      "covers": "`case Flag:` then `y : Flag = x` in its body",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag<> - Off{}\nContext:\n- x : Flag<> - Off{}\nLocation: f\n 9 |     case Flag:\n10>|       y : Flag = x\n   |           ^^^^\n11 |       On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag<> - Off{}\nContext:\n- x : Flag<> - Off{}\nLocation: f\n 9 |     case Flag:\n10>|       y : Flag = x\n   |           ^^^^\n11 |       On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tannotation-shadow\t",
+        "justification": "Seed-invalid (\"expected : Type\"): a binder in scope, a parameter, a let erased or live, or a pattern variable, shadows the type of its name in the annotations below it. Whether the binder is a type-valued variable is beyond Knot, so it is unsupported (D4)."
+      }
+    },
+    {
+      "name": "annotation-shadow-unread",
+      "file": "tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend",
+      "sha256": "6e5adefaa5004325260b58bccbc352df6a1285706c9deff7792b1cb10553f346",
+      "behavior": "annotation shadow",
+      "covers": "binders named like types that no annotation below reads, and a let's own annotation `Flag : Flag = x`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ],
+        "Other": [
+          "O1"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Flag",
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "own",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/annotation-shadow-unread-own-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend as F\n\ndef main() -> F.Flag:\n  F.own(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/annotation-shadow-unread-own-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "own",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/annotation-shadow-unread-own-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend as F\n\ndef main() -> F.Flag:\n  F.own(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/annotation-shadow-unread-own-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "other",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/annotation-shadow-unread-other-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend as F\n\ndef main() -> F.Flag:\n  F.other(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/annotation-shadow-unread-other-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "other",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/annotation-shadow-unread-other-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend as F\n\ndef main() -> F.Flag:\n  F.other(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/annotation-shadow-unread-other-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "arm",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/annotation-shadow-unread-arm-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend as F\n\ndef main() -> F.Flag:\n  F.arm(F.Off{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/annotation-shadow-unread-arm-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "arm",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/annotation-shadow-unread-arm-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.bend as F\n\ndef main() -> F.Flag:\n  F.arm(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/annotation-shadow-unread-arm-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/annotation-shadow-unread.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
       "name": "arguments-constructor-literals",
       "file": "tests/compiler-literals-integ/fixtures/arguments-constructor-literals.bend",
       "sha256": "2caa3d382b3eb812b72e452da13ee27a2a4eebfc366ca2371c264434c8ec22a4",
