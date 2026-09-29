@@ -159,7 +159,9 @@ group('letop-gap', invalid('detached-marker'), '- expected : a term',
       ('letop-gap-plus-typed-single', single('v = x\n+ u : Flag = x\nu')),
       ('letop-gap-plus-dead3', dead3('v = x\n+ u = y\nu')),
       ('letop-gap-plus-two-lets-dead2', dead2('v = x\nw = v\n+ u = w\nu')),
-      ('letop-gap-plus-typed-flat', flat('v = x\n+ u : Flag = y\nu')))
+      ('letop-gap-plus-typed-flat', flat('v = x\n+ u : Flag = y\nu')),
+      ('letop-gap-plus-break-dead2', dead2('v = x\n+\nu : Flag = y\nu')),
+      ('letop-gap-minus-break-dead2', dead2('v = x\n-\nu = y\nu')))
 # The seed rejects a second sign after the operator, since `-` followed by a space starts no term. The gap rule
 # reads only a name and its `=` or `:`, so these answer Unsupported: sound, if less precise than before.
 group('letop-doubled', unsupported('operator'), '- expected : a term',

@@ -3752,6 +3752,28 @@
       }
     },
     {
+      "name": "letop-gap-minus-break-dead2",
+      "file": "tests/compiler-nest/round13-fixtures/letop-gap-minus-break-dead2.bend",
+      "sha256": "f30dfb1b5d5f2e1b25ff1398dfa20721b653566715fb6657537c5bdcf9bec157",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/letop-gap-minus-break-dead2.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n16 |       -\n17>|       u = y\n   |         ^\n18 |       u\n"
+      },
+      "calls": [],
+      "finding": "letop-gap",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-marker\t"
+      }
+    },
+    {
       "name": "letop-gap-minus-typed-dead2",
       "file": "tests/compiler-nest/round13-fixtures/letop-gap-minus-typed-dead2.bend",
       "sha256": "cfe03193e7653bcaf6a6a12cecbfc8f21f9b3595a4e7f31e293002ad80e118a5",
@@ -3765,6 +3787,28 @@
         "exit": 1,
         "stdout": "",
         "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n15 |       v = x\n16>|       - u : Flag = y\n   |           ^\n17 |       v\n"
+      },
+      "calls": [],
+      "finding": "letop-gap",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-marker\t"
+      }
+    },
+    {
+      "name": "letop-gap-plus-break-dead2",
+      "file": "tests/compiler-nest/round13-fixtures/letop-gap-plus-break-dead2.bend",
+      "sha256": "0aad1174d6d5c5e2111535b0c4b23cac7cb5dc0de51b8f6cccf8031c875415f4",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round13-fixtures/letop-gap-plus-break-dead2.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n16 |       +\n17>|       u : Flag = y\n   |         ^\n18 |       u\n"
       },
       "calls": [],
       "finding": "letop-gap",
