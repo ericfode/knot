@@ -1487,6 +1487,47 @@
       }
     },
     {
+      "name": "earlier-constructor-binder",
+      "file": "tests/compiler-literals/regressions/earlier-constructor-binder.bend",
+      "sha256": "ead6f4e3ffdf8bec4f67cfbecc6ed775272e55025da0f8bcc6f382d29ccc2a61",
+      "finding": "constructor binder control",
+      "covers": "`case Box{Yes}` with the book's own earlier Yes",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/earlier-constructor-binder.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a braced constructor pattern (Yes is a constructor: write Yes{}, or rename the binder)\nLocation:\n12 |   match b:\n13>|     case Box{Yes}: No{}\n   |              ^^^\n14 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/earlier-constructor-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a braced constructor pattern (Yes is a constructor: write Yes{}, or rename the binder)\nLocation:\n12 |   match b:\n13>|     case Box{Yes}: No{}\n   |              ^^^\n14 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t",
+        "justification": "Seed-invalid (\"a braced constructor pattern\"): a constructor declared before a function is no name for a pattern binder in it."
+      }
+    },
+    {
       "name": "escape-brace",
       "file": "tests/compiler-literals/regressions/escape-brace.bend",
       "sha256": "34cdfb87d76fec86a819dc2ca991d583334fa2a9c1d69b14a1bfe9f3e036af0a",
@@ -2241,6 +2282,470 @@
         "artifact": false,
         "diagnostic_prefix": "Unsupported\tcheck\tnested-field-pattern\t",
         "justification": "Knot has no nested field patterns, and a literal inside a constructor pattern is one (D4); the seed also rejects this single-arm book as missing cases."
+      }
+    },
+    {
+      "name": "later-constructor-binder",
+      "file": "tests/compiler-literals/regressions/later-constructor-binder.bend",
+      "sha256": "fc8b88ae41f396374c2de48ee3033bd891ecc638b61ac1175bd5b934fec3cd77",
+      "finding": "constructor binder",
+      "covers": "default, promoted, field and offset pattern binders named like a constructor declared later",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Probe": [
+          "Low",
+          "High"
+        ],
+        "Later": [
+          "Late"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/later-constructor-binder.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/later-constructor-binder.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "binders",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/later-constructor-binder-binders-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/later-constructor-binder.bend as F\n\ndef main() -> F.Answer:\n  F.binders(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/later-constructor-binder-binders-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/later-constructor-binder.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "binders",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/later-constructor-binder-binders-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/later-constructor-binder.bend as F\n\ndef main() -> F.Answer:\n  F.binders(F.High{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/later-constructor-binder-binders-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/later-constructor-binder.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "layout-body-column",
+      "file": "tests/compiler-literals/regressions/layout-body-column.bend",
+      "sha256": "2caf83db1cf80c3e60a121cfc0104a22d93ee482a79c0f87d6dcd1cbe1b9a349",
+      "finding": "body column",
+      "covers": "arm bodies left of their `case`: on their own line, after a dedented offset tail and in column 0; let lines in other columns; a dedented match whose cases stand right of the enclosing `case`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Probe": [
+          "Low",
+          "High"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/layout-body-column.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/layout-body-column.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "bodies",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/layout-body-column-bodies-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/layout-body-column.bend as F\n\ndef main() -> F.Answer:\n  F.bodies(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/layout-body-column-bodies-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/layout-body-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "bodies",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/layout-body-column-bodies-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/layout-body-column.bend as F\n\ndef main() -> F.Answer:\n  F.bodies(F.High{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/layout-body-column-bodies-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/layout-body-column.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "layout-body-floor",
+      "file": "tests/compiler-literals/regressions/layout-body-floor.bend",
+      "sha256": "a0ffcfb4e22e0571324acd943f46438a8f37957b52fd9316c7be7cdab952de07",
+      "finding": "body column control",
+      "covers": "a dedented match whose cases stand in the enclosing `case`'s column",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/layout-body-floor.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for False, True\n- observed : \\{}\nLocation: f\n13 |     case Yes{}:\n14>|   match b:\n   |   ^^^^^^^^\n15 |     case False{}: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/layout-body-floor.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for False, True\n- observed : \\{}\nLocation: f\n13 |     case Yes{}:\n14>|   match b:\n   |   ^^^^^^^^\n15 |     case False{}: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
+        "justification": "Seed-invalid (\"cases for False, True\"): a match in a dedented arm body takes only the cases right of the enclosing `case`, so the seed reads it with no rows and `case False{}` as a row of the Answer match. Knot reads the same rows; its first defect there is a Bool pattern on an Answer scrutinee."
+      }
+    },
+    {
+      "name": "layout-list-newline",
+      "file": "tests/compiler-literals/regressions/layout-list-newline.bend",
+      "sha256": "df1fa08d6ff9883d9223a6b33e92b1ed85f4fb896fb38ec1aa990ff2e92798ca",
+      "finding": "layout",
+      "covers": "line breaks, a blank line and a comment line around the items of calls, a constructor value and pattern, parameter lists and a constructor's fields, with dedented closers",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Probe": [
+          "Low",
+          "High"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/layout-list-newline.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/layout-list-newline.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/layout-list-newline-probe-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/layout-list-newline.bend as F\n\ndef main() -> F.Answer:\n  F.probe(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/layout-list-newline-probe-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/layout-list-newline.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/layout-list-newline-probe-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/layout-list-newline.bend as F\n\ndef main() -> F.Answer:\n  F.probe(F.High{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/layout-list-newline-probe-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/layout-list-newline.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "layout-term-newline",
+      "file": "tests/compiler-literals/regressions/layout-term-newline.bend",
+      "sha256": "6d72f20128c263863b50777f22fa38672a7bceb90e64f6a9ce5d9fbbe426853f",
+      "finding": "layout",
+      "covers": "a line break after `case` (before a constructor and a promotion pattern), after `match` and after a let's `=` (with a blank line), and before the `:` of a case pattern and of a match scrutinee",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Probe": [
+          "Low",
+          "High"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/layout-term-newline.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/layout-term-newline.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "terms",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/layout-term-newline-terms-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/layout-term-newline.bend as F\n\ndef main() -> F.Answer:\n  F.terms(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/layout-term-newline-terms-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/layout-term-newline.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "terms",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/layout-term-newline-terms-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/layout-term-newline.bend as F\n\ndef main() -> F.Answer:\n  F.terms(F.High{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/layout-term-newline-terms-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/layout-term-newline.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
       }
     },
     {

@@ -126,6 +126,15 @@ LET_CONSTRUCTOR = invalid(
     'check', 'constructor-pattern-binder',
     'Seed-invalid ("a braced constructor pattern"): a constructor declared before a let is no name for its '
     'binder.')
+PATTERN_CONSTRUCTOR = invalid(
+    'check', 'constructor-pattern-binder',
+    'Seed-invalid ("a braced constructor pattern"): a constructor declared before a function is no name for '
+    'a pattern binder in it.')
+FLOOR = invalid(
+    'check', 'pattern-type',
+    'Seed-invalid ("cases for False, True"): a match in a dedented arm body takes only the cases right of the '
+    'enclosing `case`, so the seed reads it with no rows and `case False{}` as a row of the Answer match. Knot '
+    'reads the same rows; its first defect there is a Bool pattern on an Answer scrutinee.')
 
 # name -> (finding, covers, entries, Knot)
 PLAN = {
@@ -280,6 +289,21 @@ PLAN = {
     'binder-scope': ('binder scope control', 'a dotted parameter rebound by default, promoted, offset and field '
                      'patterns and by typed, promoted and plain lets; a later constructor, a parameter, a function '
                      'and a type naming binders', ['dotted', 'lets'], oracle.AGREE),
+    'layout-term-newline': ('layout', 'a line break after `case` (before a constructor and a promotion pattern), '
+                            'after `match` and after a let\'s `=` (with a blank line), and before the `:` of a case '
+                            'pattern and of a match scrutinee', ['terms'], oracle.AGREE),
+    'layout-list-newline': ('layout', 'line breaks, a blank line and a comment line around the items of calls, a '
+                            'constructor value and pattern, parameter lists and a constructor\'s fields, with '
+                            'dedented closers', ['probe'], oracle.AGREE),
+    'layout-body-column': ('body column', 'arm bodies left of their `case`: on their own line, after a dedented '
+                           'offset tail and in column 0; let lines in other columns; a dedented match whose cases '
+                           'stand right of the enclosing `case`', ['bodies'], oracle.AGREE),
+    'layout-body-floor': ('body column control', 'a dedented match whose cases stand in the enclosing `case`\'s '
+                          'column', [], FLOOR),
+    'later-constructor-binder': ('constructor binder', 'default, promoted, field and offset pattern binders named '
+                                 'like a constructor declared later', ['binders'], oracle.AGREE),
+    'earlier-constructor-binder': ('constructor binder control', '`case Box{Yes}` with the book\'s own earlier Yes',
+                                   [], PATTERN_CONSTRUCTOR),
 }
 
 
