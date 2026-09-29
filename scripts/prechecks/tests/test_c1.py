@@ -3,10 +3,13 @@ import os
 import shutil
 import unittest
 from pathlib import Path
+from unittest import mock
 
+import freeze
 from checks import c1_probe_differential as c1
 from lib import generate, oracle
 from lib.lanes import Outcome, classify
+from lib.seed import Seed
 from .helpers import RepoTest
 
 REAL = Path(__file__).resolve().parents[3]
@@ -48,16 +51,78 @@ class RuleTests(unittest.TestCase):
         control = c1.violations('x', {'parse': {'ok': False, 'beg': 1}}, {'parse': out('Invalid', 'Invalid\tparse\tbad\t3:4:1:1\x07', 3)})
         self.assertIn(('parse', 'diagnostic-shape'), control)
 
-    def test_value_disagreement_and_premature_unsupported(self):
+    def test_value_disagreement(self):
         seed = {'check': {'verdict': 'accept'}, 'run': {'verdict': 'accept', 'stdout': 'On{}\n'}}
         bad = c1.violations('x', seed, {'eval': out('Checked', stdout='Evaluated\t0\t0\tOff{}\n')})
         self.assertEqual({('eval', 'value-disagreement')}, set(bad))
         good = c1.violations('x', seed, {'eval': out('Checked', stdout='Evaluated\t0\t1\tOn{}\n')})
         self.assertEqual({}, good)
-        early = c1.violations('x', {'parse': {'ok': False, 'beg': 30}}, {'parse': out('Unsupported', 'Unsupported\tparse\tx\t10:11:1:1', 10)})
-        self.assertEqual({('parse', 'premature-unsupported')}, set(early))
-        late = c1.violations('x', {'parse': {'ok': False, 'beg': 30}}, {'parse': out('Unsupported', 'Unsupported\tparse\tx\t30:31:1:1', 30)})
-        self.assertEqual({}, late)
+
+    def test_premature_unsupported_is_the_recognized_token_being_the_rejected_token(self):
+        seed = {'parse': {'ok': False, 'beg': 30}}
+        at = c1.violations('x', seed, {'parse': out('Unsupported', 'Unsupported\tparse\ttemplate-binder\t30:31:1:1', 30)})
+        self.assertEqual({('parse', 'premature-unsupported')}, set(at))
+        self.assertNotIn('raise', at[('parse', 'premature-unsupported')])           # a regression: the ratchet raises it
+        # The clean controls: the same program reported Invalid, or Unsupported at a valid prefix that the SPEC lists.
+        self.assertEqual({}, c1.violations('x', seed, {'parse': out('Invalid', 'Invalid\tparse\tparameter\t30:31:1:1', 30)}))
+        prefix = out('Unsupported', 'Unsupported\tparse\ttype-application\t10:11:1:1', 10)
+        self.assertEqual({}, c1.violations('x', seed, {'parse': prefix}, frozenset({'type-application'})))
+
+    def test_a_valid_prefix_is_documented_policy_only_when_the_spec_lists_its_code(self):
+        seed = {'parse': {'ok': False, 'beg': 30}}
+        prefix = out('Unsupported', 'Unsupported\tparse\ttype-application\t10:11:1:1', 10)
+        found = c1.violations('x', seed, {'parse': prefix})                              # no SPEC table at all
+        self.assertEqual({('parse', 'premature-unsupported')}, set(found))
+        self.assertEqual(False, found[('parse', 'premature-unsupported')]['raise'])     # a documentation gap: minor, never raised
+        self.assertEqual({}, c1.violations('x', seed, {'parse': prefix}, frozenset({'type-application', 'import'})))
+        other = c1.violations('x', seed, {'parse': prefix}, frozenset({'import'}))         # the SPEC lists other codes only
+        self.assertEqual({('parse', 'premature-unsupported')}, set(other))
+
+    def test_a_span_after_the_seed_error_and_non_ascii_text_are_not_judged_by_offsets(self):
+        seed = {'parse': {'ok': False, 'beg': 30}}
+        after = out('Unsupported', 'Unsupported\tparse\ttype-application\t44:45:1:1', 44)   # the seed backtracked to 30
+        self.assertEqual({}, c1.violations('x', seed, {'parse': after}))
+        at = out('Unsupported', 'Unsupported\tparse\ttemplate-binder\t30:31:1:1', 30)
+        self.assertEqual({}, c1.violations('caf\u00e9', seed, {'parse': at}))
+        self.assertEqual({}, c1.violations('x', {'parse': {'ok': False, 'beg': None}}, {'parse': at}))
+
+    def test_a_probe_frozen_as_malformed_must_stay_invalid_whatever_the_offsets_say(self):
+        seed = {'parse': {'ok': False, 'beg': 118}, 'expect': {'parse': 'Invalid'}}
+        early = out('Unsupported', 'Unsupported\tparse\tdestructuring-binding\t116:117:9:14', 116)   # the `=>` after a constructor
+        found = c1.violations('x', seed, {'parse': early}, frozenset({'destructuring-binding'}))
+        self.assertEqual({('parse', 'premature-unsupported')}, set(found))
+        self.assertEqual({}, c1.violations('x', seed, {'parse': out('Invalid', 'Invalid\tparse\tend-of-body\t116:117:9:14', 116)}))
+        self.assertEqual({('parse', 'unsound-accept')}, set(c1.violations('x', seed, {'parse': out('Checked')})))
+
+    def test_the_confirmed_classify_regressions_are_flagged_from_the_registry(self):
+        """The reviewers' confirmed at-prefix programs, frozen in the registry: the tip's Unsupported must be flagged and
+        the base's Invalid must not (the tips' spans are the ones the reviewers recorded)."""
+        rows = {row['source']['cited']: row for row in c1.tool_rows()}
+        cases = {'.local/probes/template-second.bend': ('template-binder', 57), 'r1-return-lt.bend': ('type-application', 53),
+                 'r2b-annot-spaced-lt.bend': ('type-application', 65), 'd3_eqeq.bend': ('destructuring-binding', 66),
+                 'd11_ctor_lambda.bend': ('destructuring-binding', 116)}
+        for cited, (code, begin) in cases.items():
+            with self.subTest(program=cited):
+                row = rows[cited]
+                verdicts = {'parse': {'ok': False, 'beg': row['seed']['offset']}, 'expect': row['expect']}
+                tip = out('Unsupported', f'Unsupported\tparse\t{code}\t{begin}:{begin + 1}:1:1', begin)
+                base = out('Invalid', f'Invalid\tparse\tend-of-body\t{begin}:{begin + 1}:1:1', begin)
+                self.assertEqual({('parse', 'premature-unsupported')}, set(c1.violations(row['text'], verdicts, {'parse': tip}, frozenset({code}))))
+                self.assertEqual({}, c1.violations(row['text'], verdicts, {'parse': base}))
+
+    def test_the_spec_prefix_table_is_read_from_the_tree(self):
+        class Tree:
+            def __init__(self, text):
+                self.body = text
+
+            def text(self, path):
+                return self.body if path == 'src/SPEC.md' else None
+        table = ('The parser recognizes these prefixes.\n\n| Recognized form | Phase | Code |\n| --- | --- | --- |\n'
+                 '| Leading `~name:` in a parameter list | `parse` | `template-binder` |\n'
+                 '| `import ./...` or `import 0x.../...` | `parse` | `import` |\n\n')
+        self.assertEqual(frozenset({'template-binder', 'import'}), c1.prefix_codes(Tree(table + 'Recognition stops at that prefix.\n')))
+        self.assertEqual(frozenset(), c1.prefix_codes(Tree(table)))                     # not a prefix-only table
+        self.assertEqual(frozenset(), c1.prefix_codes(Tree('')))
 
     def test_inconclusive_seed_programs_are_never_flagged(self):
         self.assertEqual({}, c1.violations('x', {'parse': None, 'check': {'verdict': 'timeout'}},
@@ -89,6 +154,79 @@ class GeneratorTests(unittest.TestCase):
         subs = list(generate.literal_variants(text, 3, random.Random(1)))
         self.assertTrue(subs and all(t != text for _f, _k, t in subs))
         self.assertTrue(list(generate.layout_variants(text)))
+
+
+class FrozenCorpusTests(unittest.TestCase):
+    """The fast tier judges the same programs, with the same frozen seed verdicts, on every head, base and host."""
+
+    def test_the_frozen_verdicts_cover_exactly_the_generated_programs(self):
+        # No seed runs here: the sha256 of every generated program is looked up in tests/prechecks/registry/seed-verdicts.jsonl.
+        self.assertEqual([], freeze.verify())
+
+    def test_the_fast_corpus_is_a_function_of_the_registry_and_constants_only(self):
+        rows = c1.tool_rows()
+        plain = c1.build_corpus(rows, rows, [])
+        focused = c1.build_corpus(rows, rows, [], changed_sources=['src/parse.bend', 'src/check.bend'])
+        self.assertEqual(list(plain), list(focused))                       # the changed sources do not steer the fast sample
+        self.assertEqual(list(plain), list(c1.build_corpus(rows, rows, [])))
+        fixture = {'family': 'fixture', 'text': 'def only_here() -> U32:\n  1\n', 'seed': {'check': 'accept'}, 'source': 'tests/x.bend'}
+        with_fixture = c1.build_corpus(rows, rows, [fixture])
+        self.assertEqual(set(plain) | {c1.sha(fixture['text'])}, set(with_fixture))   # a tree's fixtures add themselves, nothing else
+        self.assertLessEqual(len(plain), len(rows) + generate.GRID_TOTAL + generate.OPERATOR_TOTAL)
+
+    def test_the_slow_corpus_is_larger_and_follows_the_changed_sources(self):
+        rows = c1.tool_rows()
+        slow = c1.build_corpus(rows, rows, [], slow=True, changed_sources=['src/parse.bend'])
+        self.assertGreater(len(slow), len(c1.build_corpus(rows, rows, [])))
+
+    def test_frozen_rows_name_the_pinned_seed_and_carry_a_verdict_for_every_parsed_program(self):
+        frozen = c1.load_frozen()
+        self.assertGreater(len(frozen), 500)
+        for digest, seed in frozen.items():
+            self.assertIn(seed['parse'], ('ok', 'reject', 'skipped'), digest)
+            if seed['parse'] == 'ok':
+                self.assertIn(seed['check'], ('accept', 'reject', 'crash', 'timeout'), digest)
+
+    def test_a_seed_revision_that_is_not_the_pinned_one_is_ignored(self):
+        import tempfile
+        rows = [{'sha256': 'a' * 64, 'seed_revision': 'not-the-pin', 'seed': {'parse': 'ok', 'check': 'accept'}},
+                {'sha256': 'b' * 64, 'seed_revision': c1.SEED_REVISION, 'seed': {'parse': 'ok', 'check': 'accept'}}]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'v.jsonl'
+            path.write_text(''.join(json.dumps(r) + '\n' for r in rows))
+            with mock.patch.object(c1, 'TOOL_VERDICTS', path):
+                self.assertEqual({'b' * 64}, set(c1.load_frozen()))
+
+
+class LaneAvailabilityTests(RepoTest):
+    """A check that cannot look never reports a pass: an unavailable family L is a named gap, not `not-applicable`."""
+
+    def start(self):
+        self.fx.commit('main', {'src/parse-cli.bend': 'def main() -> U32:\n  0\n', 'src/check-cli.bend': 'def main() -> U32:\n  0\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'README.md': '# x\n'})
+
+    def test_a_missing_seed_or_bun_is_unavailable_never_not_applicable(self):
+        self.start()
+        with mock.patch.object(Seed, 'available', return_value=False):
+            result = self.conditions(c1, options={'registry': 'none'})[1]
+        self.assertEqual('unavailable', result.outcome)
+        self.assertIn('seed', result.reason)
+        with mock.patch.object(Seed, 'available', return_value=True), mock.patch.object(c1.shutil, 'which', return_value=None):
+            result = self.conditions(c1, options={'registry': 'none'})[1]
+        self.assertEqual(('unavailable', True), (result.outcome, 'bun' in result.reason))
+
+    def test_an_unavailable_family_l_stays_a_named_gap_beside_family_v(self):
+        files = {'src/parse-cli.bend': 'def main() -> U32:\n  0\n', 'src/check-cli.bend': 'def main() -> U32:\n  0\n',
+                 'vm/serializer.py': FAKE_CODEC, 'vm/registry.json': '{}\n', 'vm/golden/a.plan.json': plan()}
+        self.fx.commit('main', files)
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'README.md': '# x\n'})
+        with mock.patch.object(Seed, 'available', return_value=False):
+            result = self.conditions(c1, options={'registry': 'none'})[1]
+        self.assertEqual('partial', result.outcome)                                  # family V ran and found nothing: not a pass
+        self.assertIn('family-l', result.rules_unavailable)
+        self.assertIn('reference-crash', result.rules_run)
 
 
 FAKE_CODEC = """import json
@@ -185,6 +323,7 @@ class EndToEndTests(RepoTest):
         files = {'.gitignore': '.toolchain\n'}
         for path in (REAL / 'src').glob('*.bend'):
             files[f'src/{path.name}'] = path.read_text()
+        files['src/SPEC.md'] = (REAL / 'src/SPEC.md').read_text()          # its prefix-only table names the documented recognizers
         for name in ('classification-cases.json',):
             files[f'tests/subsets/{name}'] = (REAL / 'tests/subsets' / name).read_text()
         for path in (REAL / 'tests/subsets/classification').glob('*.bend'):
@@ -199,7 +338,8 @@ class EndToEndTests(RepoTest):
     def test_unchanged_sources_yield_no_new_condition(self):
         self.fx.commit('doc only', {'README.md': '# x\n'})
         result = self.run1()
-        self.assertEqual('pass', result.outcome)
+        self.assertEqual('partial', result.outcome)                       # nothing found, but two rules could not run: never `pass`
+        self.assertEqual({'helper-divergence', 'incomplete-repair'}, set(result.rules_unavailable))
         self.assertEqual(0, result.facts['counts']['new'])
         self.assertGreater(result.facts['counts']['programs'], 20)
 
@@ -217,6 +357,60 @@ class EndToEndTests(RepoTest):
         self.assertTrue(any('parameter-type' in c.evidence['knot'] for c in fixture))
         again = self.run1(base=self.fx.git('rev-parse', 'HEAD'))           # against itself: the same violation is known, not new
         self.assertEqual([], [c for c in again.conditions if c.rule == 'd4-invalid'])
+
+    def test_a_mutant_that_reports_the_seeds_error_token_as_unsupported_is_a_regression(self):
+        """The classify regression: a non-leading `~x` (the seed's error is at the `~`) moves from Invalid to Unsupported."""
+        parse = (REAL / 'src/parse.bend').read_text()
+        before = 'Bool.and(parameters,starts(t,"~")),u =>\n              invalid(t,"parameter"),u =>'
+        after = 'Bool.and(parameters,starts(t,"~")),u =>\n              unsupported(t,"template-binder"),u =>'
+        self.assertEqual(1, parse.count(before))
+        self.fx.commit('report a tilde after an ordinary binder as a template binder', {'src/parse.bend': parse.replace(before, after)})
+        result = self.run1(options={'c1_limit': 400, 'registry': 'tool'})
+        found = [c for c in result.conditions if c.rule == 'premature-unsupported']
+        self.assertTrue(found, [c.line() for c in result.conditions][:5])
+        self.assertEqual({'major'}, {c.severity for c in found})           # minor, raised one step: base said Invalid
+        self.assertEqual({'executor'}, {c.actor for c in found})
+        frozen = [c for c in found if 'template-second.bend' in c.observed]
+        self.assertEqual(1, len(frozen), [c.line() for c in found])       # the reviewer's confirmed program, from the registry
+        self.assertIn("the seed's error token", ' '.join(c.observed for c in found if c not in frozen))     # and the grid programs
+        self.assertEqual({'d4-invalid', 'unsound-accept'} & {c.rule for c in result.conditions}, set())
+        again = self.run1(options={'c1_limit': 400, 'registry': 'tool'}, base=self.fx.git('rev-parse', 'HEAD'))
+        self.assertEqual([], [c for c in again.conditions if c.rule == 'premature-unsupported'])
+
+    def test_the_conditions_do_not_depend_on_the_commit_the_cache_or_a_documentation_only_change(self):
+        parse = (REAL / 'src/parse.bend').read_text()
+        before = 'unsupported(rest,"parameter-type")'
+        self.fx.commit('demote', {'src/parse.bend': parse.replace(before, 'invalid(rest,"parameter-type")')})
+
+        def fingerprints(result):
+            return sorted((c.fingerprint, c.severity) for c in result.conditions), result.facts['counts']['programs']
+
+        cold = fingerprints(self.run1())
+        warm = fingerprints(self.run1())                                   # same commit, warm caches
+        self.fx.commit('a different commit with the same sources', {'docs/note.md': 'changed\n'})
+        docs_only = fingerprints(self.run1())                              # another commit id, another whole tree, the same src
+        import shutil as _shutil
+        _shutil.rmtree(self.fx.scratch)                                      # a cold cache again
+        cold_again = fingerprints(self.run1())
+        self.assertTrue(cold[0])
+        self.assertEqual(cold, warm)
+        self.assertEqual(cold, docs_only)
+        self.assertEqual(cold, cold_again)
+
+    def test_a_head_whose_lane_does_not_build_is_a_condition_never_a_pass(self):
+        cli = (REAL / 'src/parse-cli.bend').read_text()
+        self.fx.commit('break the parse lane', {'src/parse-cli.bend': cli + '\ndef broken( -> :\n'})
+        result = self.run1()
+        self.assertEqual('conditions', result.outcome)
+        found = [c for c in result.conditions if c.rule == 'lane-build']
+        self.assertEqual(1, len(found))
+        self.assertEqual(('major', 'executor', {'lane': 'parse'}), (found[0].severity, found[0].actor, found[0].subject))
+        self.assertIn('family-l', result.rules_unavailable)
+        broken_base = self.fx.git('rev-parse', 'HEAD')
+        self.fx.commit('work on the broken lane', {'README.md': '# y\n'})
+        against_broken = self.run1(base=broken_base)                       # the base does not build either: nothing to blame
+        self.assertEqual([], [c for c in against_broken.conditions if c.rule == 'lane-build'])
+        self.assertEqual('unavailable', against_broken.outcome)
 
     def test_incomplete_repair_needs_the_declared_target_family(self):
         gap = 'type Flag is Data:\n  Off{}\n  On{}\n\ndef f?(x: Flag) -> Flag:\n  x\n\ndef main() -> Flag:\n  f(On{})\n'

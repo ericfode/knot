@@ -1,7 +1,8 @@
 """Deterministic program families for the seed differential (DESIGN 3.1, family L).
 
-Every program is plain text, generated from fixed grids and operators, so the same head always samples the same
-programs. Grids follow the classify-2 reviewer's grid (parameters, fields, tails after a constructor head, return
+Every program is plain text, generated from fixed grids and operators. The fast tier's corpus is a function of
+constants and of the tool's own registry only (`fixed_programs`): the same programs on every head, base and host, so
+the pinned seed's verdicts on them can be frozen in tests/prechecks/registry/seed-verdicts.jsonl. Grids follow the classify-2 reviewer's grid (parameters, fields, tails after a constructor head, return
 types, annotations) and add binder spellings, empty datatypes, let marks and literal forms. Operators perturb a
 seed-accepted text at token boundaries: a gap (space, tab, newline plus indent, comment plus newline, CRLF) before
 `{`, `->`, `+`/`-`, `<`, `>`, `&`, `|`, `:` and `=`, and literal substitutions (0x7F, 0x80, U+00A0, backslash-brace).
@@ -143,6 +144,24 @@ def layout_variants(text: str) -> Iterator[Program]:
             yield 'layout', f'move-type-{i}', '\n\n'.join(moved) + '\n'
             break
     yield 'layout', 'append-empty', text.rstrip('\n') + '\n\ntype Void is Data:\n'
+
+
+FIXED_SEED = 0x4B6E6F74          # 'Knot': never derived from a commit, a tree, a cache or the changed paths
+GRID_TOTAL = 560                 # grid programs in the fast corpus (each family gets an equal share)
+OPERATOR_TOTAL = 260             # operator variants of the frozen registry in the fast corpus
+
+
+def fixed_programs(registry_texts: list[str]) -> list[Program]:
+    """The generated part of the fast corpus: grids at equal quotas, plus operator variants of the accepted registry
+    programs, all sampled with FIXED_SEED. A function of its argument and constants: nothing about the checked branch."""
+    grid = grid_programs(quotas(GRID_TOTAL, []), FIXED_SEED)
+    rng = random.Random(FIXED_SEED)
+    operators: list[Program] = []
+    for text in registry_texts:
+        if len(text) > 4000:
+            continue
+        operators += list(gap_variants(text, 3, rng)) + list(literal_variants(text, 1, rng)) + list(layout_variants(text))[:1]
+    return grid + sample(operators, OPERATOR_TOTAL, FIXED_SEED + 1)
 
 
 def sample(programs: list[Program], limit: int, seed: int) -> list[Program]:
