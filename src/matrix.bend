@@ -36,16 +36,12 @@ def flat(value: S.Node, rows: List<&2,S.Node>) -> Bool:
     case S.Sequence{nodes}: False{}
     case _: flat_rows(rows,Nil{})
 
-def binder(+token: S.Token, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
-  S.choose(Result<S.Error,Unit>,G.constructor_before(types,token),u =>
-    C.invalid(Unit,"constructor-pattern-binder",token),u => Done{Unit{}})
-
 # Validate source patterns, including unreachable rows, before selecting bodies.
 def validate(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
   match fuel node:
     case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
-    case 1n+n S.Variable{token}: binder(token,types)
-    case 1n+n S.Promotion{token}: binder(token,types)
+    case 1n+n S.Variable{token}: G.binder(types,token,False{})
+    case 1n+n S.Promotion{token}: G.binder(types,token,True{})
     case 1n+ +n S.Constructor{+token,+args}:
       S.bind(G.ConstructorRef,Unit,G.pattern_constructor(types,token),reference =>
         S.bind(List<&2,C.Parameter>,Unit,G.field_signature(reference,types),params =>
@@ -57,21 +53,32 @@ def validate(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.E
       S.bind(Unit,Unit,validate(n,head,types),u => validate(n,S.Sequence{tail},types))
     case _ _: C.internal(Unit,"matrix-pattern")
 
-def prepare(fuel: Nat, rows: List<&2,S.Node>, +width: Nat, +types: List<&2,C.Datatype>) -> Result<S.Error,List<&2,S.Node>>:
-  match fuel rows:
+# The seed parses every row of every match, reachable or not. Each row has one
+# pattern per scrutinee and valid patterns, wherever it sits: a body the lowering
+# discards still holds matches whose rows are audited.
+def audit(fuel: Nat, node: S.Node, +width: Nat, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
+  match fuel node:
     case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
-    case 1n+n Nil{}: Done{Nil{}}
-    case 1n+ +n Con{S.Arm{+token,+pattern,+body},+tail}:
-      S.choose(Result<S.Error,List<&2,S.Node>>,Nat.is_eq(List.length(&2,S.Node,items(pattern)),width),u =>
-        S.bind(Unit,List<&2,S.Node>,validate(n,pattern,types),u =>
-          S.bind(List<&2,S.Node>,List<&2,S.Node>,prepare(n,tail,width,types),rest =>
-            Done{Con{S.Arm{token,S.Sequence{items(pattern)},body},rest}})),u =>
-        C.invalid(List<&2,S.Node>,"pattern-arity",token))
-    case _ _: C.internal(List<&2,S.Node>,"matrix-row")
+    case 1n+n S.Binding{token,q,annotation,value,body}: audit(n,body,width,types)
+    case 1n+n S.Match{token,value,arms}: audit(n,S.Sequence{arms},List.length(&2,S.Node,items(value)),types)
+    case 1n+n S.Sequence{Nil{}}: Done{Unit{}}
+    case 1n+ +n S.Sequence{Con{S.Arm{+token,+pattern,+body},+tail}}:
+      S.choose(Result<S.Error,Unit>,Nat.is_eq(List.length(&2,S.Node,items(pattern)),width),u =>
+        S.bind(Unit,Unit,validate(n,pattern,types),u =>
+          S.bind(Unit,Unit,audit(n,body,width,types),u => audit(n,S.Sequence{tail},width,types))),u =>
+        C.invalid(Unit,"pattern-arity",token))
+    case 1n+n S.Sequence{other}: C.internal(Unit,"matrix-row")
+    case 1n+n _: Done{Unit{}}
 
-def start(fuel: Nat, token: S.Token, +value: S.Node, rows: List<&2,S.Node>, types: List<&2,C.Datatype>) -> Result<S.Error,S.Node>:
-  S.bind(List<&2,S.Node>,S.Node,prepare(fuel,rows,List.length(&2,S.Node,items(value)),types),ready =>
-    Done{S.Matrix{token,items(value),ready,4096}})
+def sequenced(rows: List<&2,S.Node>) -> List<&2,S.Node>:
+  match rows:
+    case Nil{}: Nil{}
+    case Con{S.Arm{+token,+pattern,+body},+tail}: Con{S.Arm{token,S.Sequence{items(pattern)},body},sequenced(tail)}
+    case Con{head,tail}: Con{head,sequenced(tail)}
+
+def start(fuel: Nat, token: S.Token, +value: S.Node, +rows: List<&2,S.Node>, +types: List<&2,C.Datatype>) -> Result<S.Error,S.Node>:
+  S.bind(Unit,S.Node,audit(fuel,S.Sequence{rows},List.length(&2,S.Node,items(value)),types),u =>
+    Done{S.Matrix{token,items(value),sequenced(rows),4096}})
 
 # Pending aliases are installed in binder order at a leaf. Numeric targets keep
 # simultaneous columns distinct even when their names shadow one another.

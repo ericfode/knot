@@ -35,8 +35,8 @@ def fields(nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, +parent: U3
   match nodes parameters:
     case Nil{} Nil{}: Done{Fields{scope,Nil{},Nil{}}}
     case Con{node,+tail} Con{C.Parameter{name,+q,+type_id},+rest}:
-      binder(node,+token => mark =>
-        S.choose(Result<S.Error,Fields>,G.constructor_before(types,token),u => C.invalid(Fields,"constructor-pattern-binder",token),u =>
+      binder(node,+token => +mark =>
+        S.bind(Unit,Fields,G.binder(types,token,U32.is_eq(mark,2)),u =>
           add(scope,token,quantity(q,parent,mark),type_id,bound => binding => term =>
             S.bind(Fields,Fields,fields(tail,rest,parent,types,bound,origin),remaining => Done{prepend(binding,term,remaining)}))))
     case _ _: C.invalid(Fields,"pattern-arity",origin)

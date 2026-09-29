@@ -154,6 +154,11 @@ def ahead(ids: List<&2,U32>, +level: U32) -> List<&2,U32>:
     case Con{+head,tail}:
       S.choose(List<&2,U32>,U32.is_eq(head,level),u => Nil{},u => Con{head,ahead(tail,level)})
 
+def names(bindings: List<&2,C.Binding>) -> List<&2,S.Token>:
+  match bindings:
+    case Nil{}: Nil{}
+    case Con{C.Binding{token,level,q,type_id,param,known},tail}: Con{token,names(tail)}
+
 def levels(bindings: List<&2,C.Binding>) -> List<&2,U32>:
   match bindings:
     case Nil{}: Nil{}

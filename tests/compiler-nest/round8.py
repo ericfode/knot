@@ -25,12 +25,12 @@ KINDED = '''def kinded(result: Result<S.Error,E.Scope>, +level: U32, +types: Lis
       S.bind(Unit,E.Scope,P.bound([level],bindings,types),u => Done{E.Scope{bindings,next,open,live,smaller}})
 
 '''
-FIELD = '''      binder(node,+token => mark =>
-        S.choose(Result<S.Error,Fields>,G.constructor_before(types,token),u => C.invalid(Fields,"constructor-pattern-binder",token),u =>
+FIELD = '''      binder(node,+token => +mark =>
+        S.bind(Unit,Fields,G.binder(types,token,U32.is_eq(mark,2)),u =>
           add(scope,token,quantity(q,parent,mark),type_id,bound => binding => term =>
             S.bind(Fields,Fields,fields(tail,rest,parent,types,bound,origin),remaining => Done{prepend(binding,term,remaining)}))))'''
 FIELD_KINDED = '''      binder(node,+token => +mark =>
-        S.choose(Result<S.Error,Fields>,G.constructor_before(types,token),u => C.invalid(Fields,"constructor-pattern-binder",token),u =>
+        S.bind(Unit,Fields,G.binder(types,token,U32.is_eq(mark,2)),u =>
           S.bind(C.Datatype,Fields,G.type_at(types,type_id),definition =>
             S.bind(Unit,Fields,G.quantity(token,quantity(q,parent,mark),definition),u =>
               add(scope,token,quantity(q,parent,mark),type_id,bound => binding => term =>

@@ -215,10 +215,10 @@ def more_specific(a: S.Node, b: S.Node) -> Bool:
 # Each mutation changes a checked compiler, not the frozen source fixtures.
 MUTANTS = [
     {'name': 'last-row-wins', 'file': 'matrix.bend',
-     'old': 'prepare(fuel,rows,List.length', 'new': 'prepare(fuel,List.reverse(&2,S.Node,rows),List.length',
+     'old': 'sequenced(rows),4096', 'new': 'sequenced(List.reverse(&2,S.Node,rows)),4096',
      'witness': 'first-match-multi', 'phase': 'eval', 'export': 'rank', 'args': [1, 1], 'wrong_tag': 2},
     {'name': 'most-specific-row-wins', 'file': 'matrix.bend',
-     'old': 'prepare(fuel,rows,List.length', 'new': 'prepare(fuel,List.sort(~S.Node,~more_specific,rows),List.length',
+     'old': 'sequenced(rows),4096', 'new': 'sequenced(List.sort(~S.Node,~more_specific,rows)),4096',
      'prefix': SPECIFICITY, 'witness': 'first-match-nested', 'phase': 'eval', 'export': 'probe', 'args': [1, 1, 0, 1], 'wrong_tag': 2},
     {'name': 'drop-default-matrix', 'file': 'matrix.bend',
      'old': 'without(rows,ctor),work}', 'new': 'Nil{},work}',

@@ -33,11 +33,12 @@ def annotation_id(reference: G.TypeRef) -> Result<S.Error,Maybe<&2,U32>>:
   match reference:
     case G.TypeRef{index,definition}: Done{Some{index}}
 
-def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>) -> Result<S.Error,Maybe<&2,U32>>:
-  match token:
-    case None{}: Done{None{}}
-    case Some{name}:
-      S.bind(G.TypeRef,Maybe<&2,U32>,G.find_type(types,name,0),reference => annotation_id(reference))
+def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>, scope: E.Scope) -> Result<S.Error,Maybe<&2,U32>>:
+  match token scope:
+    case None{} _: Done{None{}}
+    case Some{+name} E.Scope{bindings,next,open,live,smaller}:
+      S.bind(G.TypeRef,Maybe<&2,U32>,G.find_type(types,name,0),reference =>
+        G.hidden(Maybe<&2,U32>,E.names(bindings),name,u => annotation_id(reference)))
 
 def constant(reference: G.ConstructorRef, +token: S.Token, wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
   match reference wanted:
@@ -261,10 +262,11 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{bindings,+next,from,live,smaller}:
       S.bind(E.Scope,C.Checked,P.close(scope,types),+scope =>
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => C.exhausted(C.Checked,token),u =>
-        S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann),target =>
+        S.bind(Unit,C.Checked,G.promotion(types,token,U32.is_eq(q,2)),u =>
+        S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann,scope),target =>
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
-              S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q)))))))
+              S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q))))))))
     case 1n+ +n Expression{S.Match{token,S.Remainder{name,level,tags},Nil{}},wanted} C.Catalog{types,sigs} _:
       empty_remainder(tags,token,level,types,scope,wanted)
     case 1n+ +n Expression{S.Decision{+token,+column,S.Constructor{+ctor,+args},+yes,+no},+wanted} C.Catalog{+types,sigs} _:
