@@ -19,7 +19,8 @@ expectation changed: the 90 earlier regression books are byte-identical in
 | `abda387` | Names read whole (`names`, `malformed`, `name_text`); dotted binders scoped to parameters (`binders`, `binder`, `parameter_named`); let binders tested against constructors (`qualify.bend`); seven laws; seven more mutants; SPEC and CONTRACT; census approved, inventories regenerated |
 | `ff8d4ef` | The gate's independent observations on four threads (not requested; see below) |
 | `74ceb20` | Census inventories follow the gate script's hash |
-| this commit | README, LAW_REVIEW, this section; the literals receipt from the run on the fix head |
+| `c2e17a5` | README, LAW_REVIEW and this section: findings, evidence, merge notes |
+| this commit | The gate lines below and the literals receipt, both from the full run on `c2e17a5` |
 
 | Finding | Disposition | Evidence |
 | --- | --- | --- |
@@ -118,15 +119,16 @@ agreeing control binder-scope (a dotted parameter rebound by default, promoted,
 offset and field patterns and by typed, promoted and plain lets; a later
 constructor, a parameter, a function and a type naming binders).
 
-Differentials, seed against Knot (all native lane; the Bun lane agrees on the
-frozen books and on byte-identical modules):
+Differentials, seed against Knot (native lane; the frozen books and the
+tracked-book comparison were also run in the Bun lane, with the same results and
+byte-identical modules):
 
 | Set | Result |
 | --- | --- |
 | Reviewer's r1a to r1e, r2a to r2c | all as the seed |
 | 29 further probes: constructor order c1 to c9, dotted parameters e1 to e7, lets and promotions l1 to l13 | accept/reject equal in all but c1 and c9 (below) |
 | Names matrix: 16 positions by 11 names (`x.`, `x..y`, `a.b.`, `X.`, `x.1`, `x.y`, `x.y.z`, `x.1a`, `True`, `_.`, `a1.b`), 176 generated books | 0 differences; the build before the fix differed on 61 of the 144 rows it was run on |
-| `check` over the 1026 tracked books, old against new | 1014 identical; the 12 changes are exactly the frozen books (10 Built to Invalid, offset-layout Invalid to Built, offset-layout-keyword Invalid to Unsupported) |
+| `check` over the 1026 tracked books, old against new, both lanes | 1014 identical in each lane; the 12 changes are exactly the frozen books (10 Built to Invalid, offset-layout Invalid to Built, offset-layout-keyword Invalid to Unsupported) |
 
 Laws (ground instances; eight, outside the 37 counted for the literals entries):
 `src/PROOF.bend` malformed_name, name_shapes, dotted_binder_needs_a_parameter,
@@ -194,7 +196,51 @@ order rejects the later-constructor let).
 
 ### Gates on the fix head
 
-The full `npm run -s gates` pass on this head and the literals receipt from it are recorded in the next commit.
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `c2e17a5` passed all 22 registered
+gates (exit 0) in 488.7 seconds (`run-8rmmrqg4`, four workers, load average about
+10 to 14), and `npm run -s gates:verify` passed 19 tests. `bootstrap` passed
+(65.8 s here; 46.9 s and 47.8 s in the two earlier passes). Counts are copied from
+the runner; categories overlap and are not summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1198; files=66 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=1038; mutants=54; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| io-abi-2 | case mode=insensitive; fixtures=43; host boundaries=25; mutants=5; mutants killed=5; parity=153; read observations=21; reference observations=64; seed exhausted=2; seed observations=61 |
+| selfhost | blocked=63; cases=65; d4 gaps=5; judge mutants=20; mutants=3; passed=2 |
+| literals | agree eval observations=946; agree fixtures=39; artifact preservation probes=210; boundary probes=16; byte identity pairs=39; check observations=288; compile observations=288; eval observations=1156; execution lanes=2; fixtures=144; invalid fixtures=60; mutant eval observations=9; mutant fault observations=1; mutant verdict observations=23; mutant wasm observations=8; no artifact probes=210; proof entries=3; proof laws=37; reference calls=511; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=36; trust audits=78; unsupported fixtures=45; wasm observations=946 |
+
+Receipt drift: identical=64; semantic=17; volatile-only=9. The 16 semantic drifts
+outside this gate are source-hash and derived-code changes in shared receipts
+(the three trust inventories, bootstrap progress and reference, checker,
+classification, fields, fields-wasm, modules, recursion, selfhost, structural,
+wasm, perch-context and frontend), left for the coordinator as before. This gate's
+receipt is the run's normalized output, copied after all 231 recorded input
+hashes were checked against the tree.
+
+Two earlier full passes on the same sources failed only on `census`, and both were
+stale approvals rather than code: the first ran before `census:approve` and the
+regeneration of the inventories (21 of 22; literals 481.6 s in sequence), the
+second after them but before the inventories followed the threaded gate script's
+hash (21 of 22; literals 206 s threaded). `74ceb20` regenerated them; no
+assertion was changed.
 
 ### Offline preflight
 
