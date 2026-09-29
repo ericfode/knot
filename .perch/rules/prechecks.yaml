@@ -72,12 +72,20 @@
   min: 80
   gate: false
   ensure: >
-    The change shown alters nothing that an invariance clause in this packet says is
-    unchanged, frozen, kept or forbidden, unless the clause itself lists that delta.
-    Compare each clause with the governed diff hunks. A changed behavior, an added
-    form, a widened profile or a moved emitter that a clause promises unchanged or
-    forbids breaks this rule. A hunk the packet does not show is missing evidence, not a
-    pass and not proof that nothing changed.
+    This rule concerns one invariance clause, from a contract, specification or README, that says something is
+    unchanged, kept, frozen, the only one of its kind, never done or forbidden, and the diff hunks the clause
+    governs. First name the subject the clause fixes (a behavior, a set of forms, an instruction or export list,
+    a count, a file) and what it promises about it. Then read each shown hunk for a change to that subject. The
+    rule is broken when a shown hunk changes what the clause promises, and the clause itself does not name that
+    change: it alters the behavior or value said to be unchanged or kept; adds a form, instruction, export,
+    function or dependency where the clause says only certain ones exist; does what the clause says never
+    happens; or removes or rewrites a pinned expectation the clause freezes. A clause quoted from the base
+    revision counts the same as one from the head: the branch rewording or removing the clause does not make the
+    change listed, so judge only whether the shown code or data changes what the clause promised. Hunks that
+    touch other subjects, hunks that add checks keeping the invariant, hunks that make exactly the change the
+    clause names, and a base clause the branch rewords while the shown hunks keep what it promised all hold.
+    Missing evidence is not a pass where a hunk that changes the clause's subject is shown cut off; a packet
+    whose hunks do not touch the subject holds.
 
 - name: expectation-independent
   where: ".local/prechecks/packets/**/expectation-independent/*.md"
@@ -85,14 +93,17 @@
   min: 80
   gate: false
   ensure: >
-    No expected value used to judge the implementation or its mutants is taken from
-    that implementation's own output, or adopted from Knot's evaluator without
-    comparison to the seed or an independent derivation. Compare the code that builds
-    the want, expected or baseline values with the sentence that names their source.
-    An expectation computed by the code under test, copied from its output, or labeled
-    independent while derived from it breaks this rule. An expectation frozen from the
-    pinned seed, or derived by a separate reference, satisfies it. Anything the packet
-    does not show is missing evidence, not a pass.
+    This rule concerns code that builds the expected values used to judge an implementation or its mutants
+    (want, expected, baseline, frozen rows) and the sentences that name their source. Trace each judging
+    expected value to where it comes from. The rule is broken when an expected value is the output of the
+    implementation under test, or of a build of it, and is then used to judge that implementation or its
+    mutants; when it is adopted from Knot's own evaluator or checker without first being compared with the
+    seed's observation or an independent derivation; or when a sentence calls an expectation independent, seed-
+    derived or reference-derived while the code takes it from the implementation. The rule holds when each
+    judging expectation is frozen from the pinned seed's observation, derived by a separate reference
+    implementation or codec, written as a reviewed literal, or taken from Knot's evaluator only after the code
+    compares it with the seed; the implementation's output may be recorded in a receipt without judging
+    anything. Missing evidence is not a pass where the code that builds a judging expectation is not shown.
 
 - name: kill-is-semantic
   where: ".local/prechecks/packets/**/kill-is-semantic/*.md"
