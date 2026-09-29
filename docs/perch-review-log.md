@@ -1321,3 +1321,155 @@ Prevention:
 - Every gate that rebuilds lanes per mutant scales with the mutant count:
   `nest-round10` takes 13 minutes under campaign load and 4 unloaded, so the
   runner's per-gate limit is now 1,800 s.
+
+## 2026-09-28 — Live review of the compiler-campaign backlog (`185b7d5..a6367eb9`)
+
+Date / scope / source revision: 2026-09-28 (receipts UTC 2026-09-29T04:50:55Z to
+05:17:21Z), all 490 Bend files changed on `main` since the campaign charter;
+main stayed at `a6367eb9f434d0123ea809e81f63a853012a9fe4` throughout. Live
+commands ran from the main checkout, no tracked file there was touched, no code
+was changed. Semantic: `npm run lint -- <file>` per file (every parsed
+declaration, all rules); style: rubric v8 through the manifest groups that select
+a changed file in full, explicit groups for research and harness files, and one
+group per fixture suite. Results, tables and per-declaration style rows:
+[campaign-backlog-2026-09-28](perch-execution/campaign-backlog-2026-09-28/README.md);
+every finding: [ledger](perch-execution/campaign-backlog-2026-09-28/findings-ledger.md).
+
+Evidence links and usage receipt IDs: 490 semantic and 28 style receipts, one id
+per run in [receipts.tsv](perch-execution/campaign-backlog-2026-09-28/receipts.tsv)
+(the ignored `.perch/usage/` files stay local).
+
+Waste or missed behavior / measured effort: none missed. 13,629 provider
+requests (9,074 semantic, 4,555 style), no authentication, quota or provider
+failure. First to last receipt 26 min 26 s of wall clock including adjudication
+pauses; time spent on deterministic evidence is not separated.
+
+Rule + hash / requested and resolved model: semantic `rules_sha256`
+`7879db5b57067b4f0237cd80da969cd1e79adbd61fda600351f6bfd6d45f0506` (13 source
+rules and the built-in questions), Bend parser
+`bend-2.0.29-574b6d3-observer-v3+law-template-arity`; style rubric v8
+`b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693`, endpoint sha
+`17abdbd0cf748030a25a6c7693461b98ac2889b23590f11c185652ec125830e9`. Requested
+`jev-latest`, resolved `jev-1.13.0` in every provider response of this run.
+
+Judgment: **confirmed defects 0.** 246 semantic findings: 219 false-positive,
+12 duplicate (9 `lint` mirrors of custom-rule breaks, 3 restatements), 12
+unresolved (advisory refactor observations, no behaviour claim), 3 confirmed as
+true positives on deliberately invalid fixtures whose label names the intended
+rejection (`wrong-type-arg.main` type_confusion, `rigid-domain-mismatch.compose`
+wrong_order, `result-missing-fail.opened` bend-effect-boundary); these are not
+defects. Precision over adjudicated findings for jev-1.13.0: custom
+`bend-machine-arithmetic` 0 confirmed of 46 deduplicated (p 0.81 to 0.86, floor
+0.80; a text check found no arithmetic in any flagged declaration; its question,
+unlike the other Bend rules, has no "if none, this rule holds" clause); built-in
+`does_not_do_what_it_claims` 0 confirmed of 81 false positives (2 duplicates,
+p 0.71 to 0.92, 53 on `{==}` law fills). Fill-class findings (74 in five proof
+entries) are refuted by the pinned seed: every entry prints `All terms check.`,
+every law has its fill, and one wrong law under the same fill is rejected in each
+entry. This repeats the `L.put_empty` false positive of 2026-09-27 (p .78) at
+scale despite the paired law being supplied. The two `integer_overflow` flags
+(`wasm.allocate`, data-lifetime `allocate`) are guarded (catalog cap of 256
+fields; explicit size/live/id guards, boundary probes and a mutant). The
+adaptive-runtime `offer`/`publish` flags disagree with 186 independent phase
+observations and 7 killed mutants. `count_ceiling_preserves_state` states only
+`Fail{3}`; the composed property holds (probe plus mutant), so the code is right
+and only the law name outruns its statement.
+
+Change and why: none to code, rules, floors or the rubric. Retain. The task
+forbade fixes, and repeated false positives are triggers for review, not
+automatic edits.
+
+Clean / broken / held-out evidence and deterministic checks: not a calibration
+run. Deterministic checks: seed proofs of the five changed proof entries, five
+wrong-law mutants, two scratch boundary probes with mutants, one composed probe
+with mutant, the adaptive-runtime CPU gate (8 laws, 62 commands, 186 phase
+observations, 7 mutants killed), read-only verify runs of eight fixture suites
+(identical to their frozen expectations) and `--check-only` on every flagged
+fixture (60 accepted, 36 rejected). Style: all 14 explicit compositions miss the
+payoff target (7 below, 7 uncertain) although 11 meet memetic; 29 of 101 changed
+compiler declarations meet all five role-scaled targets; 761 of 3,934 fixture
+declarations do. No rewrite and no pass is claimed. The payoff miss on
+`recursion-laws` (8%, seed-accepted proofs) is recorded once as an unresolved
+calibration observation, possibly tied to the interface-only rule against
+inferring proof execution.
+
+Remaining uncertainty / next trigger: 44 fixtures rejected by the pinned parser
+(seed also rejects) have zero coverage, and 7 datatype-only files have no
+executable declaration (semantic not applicable, style-rated on their datatypes); three
+generated stress fixtures (`deep-call`, `deep-stack`, `scale-catalog`) exceed a
+style context. `src/SPEC.md` (20,417 bytes) is over the 16 KB task cap, so
+Galaxy brain stays advisory in 10 of 17 manifest groups. Fixture suite gates
+for `tests/compiler-recursion` and `tests/subsets` were not re-run. Next
+maintenance review: (1) propose skipping built-in defect, refactor and docs
+questions for `{==}` law fills, or supplying the seed's acceptance as context;
+(2) append the "holds when no arithmetic" clause to `bend-machine-arithmetic`
+and re-check with clean/broken/held-out controls; consider excluding
+`tests/**/fixtures/**` from source rules; never raise a floor to hide noise.
+Prevention for the next backlog review: run law-fill files with a reviewed
+noise filter, and give the coordinator a fixture list up front so parse
+rejections are planned rather than discovered.
+
+## 2026-09-28 — `bend-machine-arithmetic`: applicability sentence, concrete shapes, floor 0.70
+
+Date / scope / source revision: 2026-09-28, branch `perch/arithmetic-rule`
+(stacked on `perch/backlog-review`, base `a6367eb9`). Follows the user's
+instruction that Perch rules may be edited to do a better job; one rule changed,
+no adapter or built-in change. Trigger: 46 adjudicated false positives in the
+[backlog review](perch-execution/campaign-backlog-2026-09-28/README.md), plus the
+2026-09-26 constructor-only `mixed-types.main` false positive at 0.81 and the
+earlier arithmetic-free "release wrapper" scores of 0.70 to 0.76.
+
+Evidence links and usage receipt IDs: [controls, labels and scores](../tests/perch-arithmetic/README.md)
+(`results-2026-09-28.json`); local receipts under the worktree's ignored
+`.perch/usage/` from 2026-09-29T05:2xZ to 05:5xZ.
+
+Waste or missed behavior / measured effort: the old question scored declarations
+with no arithmetic at 0.43 to 0.76 (constructor-only, match-only, string/IO
+`main`, type declarations, `{==}` fills) and real unguarded overflow at 0.31 to
+0.48, so it ranked them inverted and its floor of 0.80 was crossed only by the
+former. Effort not separately timed.
+
+Rule + hash / requested and resolved model: `bend-machine-arithmetic`; old rule
+set `7879db5b57067b4f0237cd80da969cd1e79adbd61fda600351f6bfd6d45f0506`, edited
+question at the old floor `b5ed452ac6007f98d3bd46d93a3b2b2158b53b0826214498dadb19fbe182eaad`,
+final (floor 0.70) `ccbc155dbc8f228cc73ee97966f27f46600e752faaa58f7ea4787970bd352a4c`.
+Requested `jev-latest`, resolved `jev-1.13.0`.
+
+Judgment: confirmed noisy rule (a recurrence, not a one-off). The other Bend
+rules already end with an "if none, this rule holds" applicability sentence; this
+one alone did not, which explains why only it inverted.
+
+Change and why: (1) the question now states its applicability (arithmetic or
+Nat/U32 conversion producing a size, bound, index, count, offset or source
+position; otherwise the rule holds, listing constructors, matches, string/IO calls,
+type and law declarations and law fills), names three violation shapes (unordered
+subtraction as a count, a sum or product compared against a limit, a masked index
+as a bounds check) and exempts guarded arithmetic; (2) the floor moves from 0.80
+to 0.70 because the controls now separate, not to hide noise. Rule stays advisory.
+`perch.yaml` ignores `tests/perch-arithmetic/**` so scans skip the deliberately
+broken controls. One wording, not iterated after scoring.
+
+Clean / broken / held-out evidence and deterministic checks: 9 broken and 14
+clean declarations (6 clean with arithmetic, 8 without, including two `{==}`
+fills), all seed-valid; the held-out file was written before the edited question
+was scored and scored once. Old question: broken 0.31 to 0.48 (none flagged),
+clean 0.43 to 0.76. Edited: broken 0.61 to 0.81 (6 of 9 at or above 0.70; `slot`,
+`row_offset`, `align_up` at 0.63 to 0.65 are missed), clean 0.05 to 0.17 (none
+flagged), gap at least 0.44. On the 46 production false positives: 0.81 to 0.85
+before, 0.05 to 0.12 after. On 218 declarations of `wasm`, `scope`, `check`,
+`patterns`, `parse`, data-lifetime `model` and adaptive `frontier`: at most 0.57,
+none at or above 0.60; the top scores are the guarded `allocate`/`alloc`
+declarations adjudicated as guarded earlier. Offline gates: 168 tests and the
+eight-rule wiring check pass; `perch rules list` shows the edited text.
+
+Remaining uncertainty / next trigger: 23 controls are not an accuracy claim; three
+broken shapes stay below the floor. Re-check on the next backlog review and look
+at any production declaration at or above 0.70 as a candidate, not a verdict.
+Deferred, not done: the 74 built-in `does_not_do_what_it_claims`, `dead_code` and
+`docs` flags on `{==}` law fills. A deterministic skip for `bend_law_fill` units
+belongs in the installer's check flow (`unit.part && ...`), but the 2026-09-27
+paired-law repair deliberately made built-in proof requests carry the law and its
+tests assert those requests, so the change needs its own decision, controls and
+cache-identity note rather than a rule edit. Prevention: give every source rule an
+explicit applicability sentence and include a no-arithmetic control before
+accepting its floor.
