@@ -125,7 +125,7 @@ constructor). Cost: 0.8 s and 96 MB peak on the native lane, 2.3 s wall under lo
   constructors as it goes, where the reference sizes them first), and it allocates nothing from the count; no encoder output can
   meet it.
 - **Constants and the representation table are empty on this base**, so no compiled book exercises them. They
-  are exercised through the golden images by the codec driver, not through the encoder.
+  are exercised through the golden images and the random plans by the codec driver, not through the encoder.
 - **The encoder depth budget** counts recursion steps of `lower` and `place`, several per source nesting level
   (a Case arm costs a step for each constructor before it). The profile's default and maximum are therefore
   1,048,576, not the default profile's 4,096.
@@ -145,20 +145,40 @@ constructor). Cost: 0.8 s and 96 MB peak on the native lane, 2.3 s wall under lo
 
 ## Verification of the branch
 
-`BEND_NO_TELEMETRY=1 npm run -s gates` on the committed tree (`ee4248dc`): exit 0, 22 gates passed in 250 s wall
-(four workers, under the campaign's shared load): checker, structural, structural-trust, owned-store, fields,
-fields-trust, frontend, flat-store, census, wasm, wasm-trust, lint:verify, perch-context, classification, recursion,
-io-host, bootstrap, fields-wasm, io-abi-2, vm-spec, selfhost and `image` (681 sources, 96 encoded, 19 goldens,
-198 codec images, 10 refusals, 25 default module hashes, 23 profile controls, a 5.2 MB and a 9 MB image in
-chunked writes, 8 exhaustiveness controls, 19 mutants, 15 laws). The baseline on the vm-spec tip (`60e80693`)
-passed its 21 gates the same way. The seed is `bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts`, every run sets
-`BEND_NO_TELEMETRY=1`, no `.env` was read and no provider was called.
+`BEND_NO_TELEMETRY=1 npm run -s gates` on the committed tree `a231ff8d` (the last commit that changes code; the commit after it
+changes this report only): exit 0, 22 gates passed in 13 minutes 15 seconds wall (four workers, under the campaign's shared
+load). Per-gate results:
 
-Receipt drift, not failure: fourteen tracked receipts (frontend, checker, structural, fields, wasm, fields-wasm,
-recursion, classification, selfhost, bootstrap and the three trust inventories) are classified `semantic` because
-they record hashes of `src/*.bend`, `SPEC.md` and `CONTRACT.json`, and of programs built from them; no fixture
-observation changed. The bootstrap receipt also lists the four new source files in its corpus. `gates:refresh`
-regenerates them; the image receipt is new and current.
+| Gate | Result |
+|---|---|
+| frontend | 14 fixtures, 4 mutants, 24 boundaries |
+| checker | 49 fixtures, 7 mutants, 10 budgets |
+| structural, structural-trust | 16 fixtures, 7 mutants; 2 entries, 0 holes |
+| fields, fields-trust | 40 fixtures, 9 mutants, 36 budgets; 4 entries, 0 holes |
+| wasm, wasm-trust | 25 fixtures, 7 mutants, 44 boundaries; 3 entries, 0 holes |
+| owned-store, flat-store | 3,532 cases, 6 mutants; 3,534 instances, 9 mutants |
+| recursion | 19 fixtures, 3 mutants |
+| fields-wasm | 8 fixtures, 4 mutants, 30 boundaries |
+| census | 37 files, 758 declarations, 41 classes |
+| perch-context | 33 controls, 8 mutants |
+| lint:verify | 168 tests, 8 law rules |
+| bootstrap | 934 corpus files, 8 stages, 54 mutants |
+| classification | 17 fixtures, 6 mutants |
+| io-host, io-abi-2 | 20 fixtures, 6 mutants; 43 fixtures, 5 mutants |
+| selfhost | 65 cases (2 passed, 63 blocked), 5 D4 gaps, 20 judge mutants |
+| vm-spec | 111 fixtures, 284 mutants, 255 boundaries |
+| `image` | 690 sources (96 encoded, 594 answering as a live `check-cli`, 17 recorded D4 gaps), 19 goldens, 207 codec images, 13 refusals, 25 default module hashes, 23 profile controls, a 5.2 MB and a 9 MB image in chunked writes, 8 exhaustiveness controls, 21 mutants, 28 laws |
+
+Also on that tree: `npm run -s gates:verify` (20 tests OK), `npm run census:check` (current), and every PROOF entry prints
+`All terms check.` (`PROOF`, `catalog-PROOF`, `check-PROOF`, `fields-PROOF`, `recursion-PROOF`, `runtime-PROOF`, `image-PROOF`). The
+seed is `bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts`, every run sets `BEND_NO_TELEMETRY=1`, no `.env` was read and no
+provider was called. An earlier run on `28af72b4` (before the plan fuzz and the window laws) also passed all 22 gates.
+
+Receipt drift, not failure: 15 tracked receipts (the three trust inventories, frontend, checker, structural, fields, wasm,
+fields-wasm, recursion, classification, selfhost, both bootstrap receipts and perch-context) are classified `semantic` because they
+record hashes of `src/*.bend`, `SPEC.md` and `CONTRACT.json`, and of programs built from them; no fixture observation changed.
+64 receipts are identical and 11 differ only in volatile fields. The image receipt is `volatile-only`: current. `gates:refresh`
+regenerates the 15.
 
 ## What the merge-wave follow-up must add
 
