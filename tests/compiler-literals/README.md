@@ -369,7 +369,9 @@ parameter`; checking an arm body's column again turns layout-body-column into
 `Invalid parse body-indentation`; dropping the enclosing `case` as a nested
 match's floor compiles the seed-invalid layout-body-floor to `Built`; and a
 checker that looks a default binder up among all constructors turns
-later-constructor-binder into `Invalid check constructor-pattern-binder`. The
+later-constructor-binder into `Invalid check constructor-pattern-binder` (it
+also rejects every ordinary default binder, through the lookup's own failure,
+so it is broader than the removed test). The
 exhaustion mutant offset-nat-add restores the `Nat.add(kn,t)` lowering of an
 expression offset (in the arm that now wraps the tail); `successor` in
 offset-expression-depth (frozen Yes) then

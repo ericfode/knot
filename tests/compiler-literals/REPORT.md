@@ -103,7 +103,10 @@ fail the named law ([LAW_REVIEW.md](LAW_REVIEW.md)).
 
 Mutants (42 in the gate, six new, all killed by verdict, pre-checked individually):
 case-line-kept, item-line-kept, parameter-line-kept, arm-column-checked, floorless-match
-(seed-invalid book to `Built`) and binder-looked-up.
+(seed-invalid book to `Built`) and binder-looked-up. The last looks every default binder up
+among the constructors, so it also rejects ordinary default binders through the lookup's
+own failure: broader than the removed catalog-wide test, and killed with the frozen verdict
+because later-constructor-binder's first binder is a constructor's name.
 
 ### Known limits (each Invalid where the seed accepts)
 
