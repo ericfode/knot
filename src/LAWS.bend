@@ -96,6 +96,24 @@ law joined_brace_witness:
       S.Token{"{",S.At{18,19,2,6}},S.Token{"}",S.At{19,20,2,7}},S.Token{":",S.At{20,21,2,8}}]))
     == Fail{S.Invalid{"parse","detached-brace",S.At{18,19,2,6}}} : Result<S.Error,P.Parsed>}
 
+# The seed reads `+` and `-` as a marker only where a name follows directly. A
+# `+` after a term opens another column only then; else the row ends there.
+law marks_witness:
+  {[S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"b",S.At{10,11,1,10}}),
+    S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"b",S.At{11,12,1,11}}),
+    S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"\n",S.At{10,11,1,10}}),
+    S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"1",S.At{10,11,1,10}})]
+    == [True{},False{},False{},False{}] : List<&2,Bool>}
+
+law detached_plus:
+  for +keyword: S.Token
+  for +pattern: S.Node
+  for +parent: U32
+  for +column: U32
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.RowTail{keyword,pattern,parent,column},Con{S.Token{"+",S.At{9,10,1,9}},Con{S.Token{"b",S.At{11,12,1,11}},rest}})
+    == Fail{S.Invalid{"parse","expected-:",S.At{9,10,1,9}}} : Result<S.Error,P.Parsed>}
+
 def indented(text: String) -> S.Token: S.Token{text,S.At{0,0,1,2}}
 
 law line_broken_scrutinees_witness:

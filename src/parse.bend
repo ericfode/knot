@@ -47,6 +47,12 @@ def scrutinee(ts: List<&2,S.Token>) -> Bool:
     case Nil{}: False{}
     case Con{head,tail}: S.identifier(head)
 
+# After a term, `a +b` opens another column and `a + b` is an operator.
+def promotes(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Con{+plus,Con{next,rest}}: Bool.and(S.matches(plus,"+"),S.marks(plus,next))
+    case _: False{}
+
 def then(result: Result<S.Error,Parsed>,
   next: S.Node -> List<&2,S.Token> -> Result<S.Error,Parsed>) -> Result<S.Error,Parsed>:
   match result:
@@ -348,7 +354,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,","),tail =>
           then(run(n,Term{True{}},tail),more => rest =>
             run(n,RowTail{keyword,columns(pattern,more),parent,column},rest))),u =>
-      S.choose(Result<S.Error,Parsed>,Bool.or(scrutinee(tokens),starts(tokens,"+")),u =>
+      S.choose(Result<S.Error,Parsed>,Bool.or(scrutinee(tokens),promotes(tokens)),u =>
         then(run(n,Term{True{}},tokens),more => rest =>
           run(n,RowTail{keyword,columns(pattern,more),parent,column},rest)),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),body =>
@@ -362,7 +368,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"case"),Bool.or(U32.is_eq(column,0),U32.is_eq(column,S.column(keyword)))),u =>
             then(run(n,Term{True{}},header(tail)),+pattern => +rest =>
-              S.choose(Result<S.Error,Parsed>,Bool.or(starts(rest,","),Bool.or(scrutinee(rest),starts(rest,"+"))),u =>
+              S.choose(Result<S.Error,Parsed>,Bool.or(starts(rest,","),Bool.or(scrutinee(rest),promotes(rest))),u =>
                 run(n,RowTail{keyword,pattern,parent,S.column(keyword)},rest),u =>
               S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
                 then(run(n,Body{S.column(keyword)},body),value => after =>

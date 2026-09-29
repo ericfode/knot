@@ -122,6 +122,11 @@ def identifier(t: Token) -> Bool:
 def binder(+t: Token) -> Bool:
   Bool.and(identifier(t),U32.is_eq(words(text(t),True{},0),1))
 
+# The seed reads `+` and `-` as a marker only where a name follows directly. A
+# space, comment or line break makes them an infix operator on the term before.
+def marks(t: Token, +next: Token) -> Bool:
+  Bool.and(touches(t,next),identifier(next))
+
 def skip_lines(ts: List<&2,Token>) -> List<&2,Token>:
   match ts:
     case Nil{}: Nil{}

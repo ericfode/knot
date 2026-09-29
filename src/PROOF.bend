@@ -74,6 +74,10 @@ def L.detached_brace(pattern,x,y,rest,gap):
 
 def L.joined_brace_witness(): {==}
 
+def L.marks_witness(): {==}
+
+def L.detached_plus(keyword,pattern,parent,column,rest): {==}
+
 def L.line_broken_scrutinees_witness(): {==}
 
 def L.dotted_pattern_binder(at,rest): {==}
