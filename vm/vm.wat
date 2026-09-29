@@ -14,6 +14,10 @@
 ;; - vm-core has no reclamation (SPEC §5's RC heap arrives in vm-rc): cells
 ;;   come from a bump arena, `$dup`/`$drop` mark the spec's substeps and do
 ;;   nothing yet, and image constants are immortal.
+;; - An Action applied to its continuation builds a request (class 5), a value
+;;   that only Top's loop performs (D23); a request is never inspected, but a
+;;   Case takes its Default (D24). A refusal changes no state (§6): every check
+;;   of a step comes before its first write.
 (module
   (import "knot_io" "args" (func $io_args (param i32)))
   (import "knot_io" "print" (func $io_print (param i32 i32)))
@@ -175,6 +179,7 @@
   (data (i32.const 3616) "internal")
   (data (i32.const 3640) "function-argument")
   (data (i32.const 3664) "slots")
+  (data (i32.const 3688) "effect")
 
   ;; §9 prim registry (ids 0..40): arity, input representations, output
   ;; representation; arity 0xff marks a reserved id. Representation ids follow
@@ -309,6 +314,7 @@
   (global $R_internal i32 (i32.const 3616))
   (global $R_function_argument i32 (i32.const 3640))
   (global $R_slots i32 (i32.const 3664))
+  (global $R_effect i32 (i32.const 3688))
 
   ;; ---------------------------------------------------------------- registers
   ;; image geometry: total words, section offsets and record counts (§2)
@@ -440,6 +446,10 @@
   ;; A malformed image or an ill-typed word (§4, §6): HostFailure image.
   (func $refuse (param $code i32)
     (call $stop (i32.const 3) (i32.const 5) (i32.const 128) (local.get $code)))
+
+  ;; A request that a read meets (§6, D23): Unsupported, never Invalid (D4). No state has changed.
+  (func $effect
+    (call $stop (i32.const 4) (i32.const 3) (i32.const 256) (global.get $R_effect)))
 
   ;; A broken VM invariant: InternalFailure, never exhaustion (§5).
   (func $internal
@@ -800,6 +810,10 @@
           (then
             (if (i64.ne (i64.extend_i32_u (call $w (i32.add (local.get $at) (i32.const 3)))) (local.get $expect))
               (then (call $refuse (global.get $R_constructor_grouping))))
+            ;; a count that the constructor table cannot hold sizes nothing (§4): refused before the name
+            (if (i64.gt_u (i64.extend_i32_u (call $w (i32.add (local.get $at) (i32.const 4))))
+                          (i64.sub (i64.extend_i32_u (global.get $nC)) (local.get $expect)))
+              (then (call $refuse (global.get $R_constructor_count))))
             (local.set $expect (i64.add (local.get $expect) (i64.extend_i32_u (call $w (i32.add (local.get $at) (i32.const 4))))))
             (if (i32.ge_u (call $w (i32.add (local.get $at) (i32.const 2))) (global.get $nM))
               (then (call $refuse (global.get $R_name_index))))))
@@ -1867,10 +1881,17 @@
         (return (local.get $c))))
     (i32.or (i32.shl (local.get $v) (i32.const 1)) (i32.const 1)))
 
-  ;; §6 inspection of a word read at U32, Nat or Char: immediate or Big
+  ;; a request (class 5): the inert IO.OP that an Action applied to its continuation builds (D23)
+  (func $request (param $x i32) (result i32)
+    (if (result i32) (i32.or (i32.and (local.get $x) (i32.const 1)) (i32.eqz (local.get $x)))
+      (then (i32.const 0))
+      (else (i32.eq (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7)) (i32.const 5)))))
+
+  ;; §6 inspection of a word read at U32, Nat or Char: immediate or Big. A request is read first, at every type: Unsupported
   (func $num (param $x i32) (result i32)
     (if (i32.and (local.get $x) (i32.const 1)) (then (return (i32.shr_u (local.get $x) (i32.const 1)))))
     (if (i32.eqz (local.get $x)) (then (call $internal)))
+    (if (call $request (local.get $x)) (then (call $effect)))
     (if (i32.ne (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7)) (i32.const 2))
       (then (call $refuse (global.get $R_ill_typed))))
     (i32.load offset=8 (local.get $x)))
@@ -1900,6 +1921,7 @@
           (then (call $refuse (global.get $R_ill_typed))))
         (return (local.get $tag))))
     (if (i32.eqz (local.get $x)) (then (call $internal)))
+    (if (call $request (local.get $x)) (then (call $effect)))
     (if (i32.or (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7))
                 (i32.ne (i32.load offset=8 (local.get $x)) (local.get $t)))
       (then (call $refuse (global.get $R_ill_typed))))
@@ -1916,6 +1938,7 @@
     (if (i32.eqz (local.get $s)) (then (call $internal)))
     ;; an immediate is no cell: refuse it before any load through it (Wasm evaluates both operands of an or)
     (if (i32.and (local.get $s) (i32.const 1)) (then (call $refuse (global.get $R_ill_typed))))
+    (if (call $request (local.get $s)) (then (call $effect)))
     (if (i32.or (i32.and (i32.load offset=4 (local.get $s)) (i32.const 7))
           (i32.or (i32.ne (i32.load offset=8 (local.get $s)) (global.get $rString))
                   (i32.ne (i32.load offset=12 (local.get $s)) (i32.const 1))))
@@ -2024,13 +2047,12 @@
     (if (i64.gt_u (local.get $p) (i64.const 0xffffffff)) (then (call $exhaust (i32.const 2) (global.get $R_nat_range))))
     (call $scalar (i32.wrap_i64 (local.get $p))))
 
-  ;; the prim's result from its gathered operands. Each operand is inspected
-  ;; over its §9 extent, in operand order, before anything is allocated: a
-  ;; scalar's word here, the move prims' included; a String whole in its prim.
-  (func $prim (param $id i32) (param $ops i32) (param $n i32) (result i32)
-    (local $a i32) (local $b i32) (local $x i32) (local $y i32)
-    (local.set $a (i32.load (local.get $ops)))
-    (if (i32.eq (local.get $n) (i32.const 2)) (then (local.set $b (i32.load offset=4 (local.get $ops)))))
+  ;; the prim's result from its operand words `a` and `b` (`n` of them). Each is
+  ;; inspected over its §9 extent, in operand order, before anything is
+  ;; allocated: a scalar's word here, the move prims' included; a String whole
+  ;; in its prim.
+  (func $prim (param $id i32) (param $a i32) (param $b i32) (param $n i32) (result i32)
+    (local $x i32) (local $y i32)
     (if (i32.lt_u (local.get $id) (i32.const 34))
       (then
         (local.set $x (call $num (local.get $a)))
@@ -2136,12 +2158,30 @@
       (then (i32.store (call $frame (i32.const 4) (i32.const 0) (i32.const 0) (i32.const 1)) (global.get $act))))
     (global.set $act (local.get $a)))
 
-  ;; §6 completing a gathered node whose n operands start at `ops`
+  ;; operand i of the node being completed, of `cnt` in all: the last is still the result register's, the Gather frame not yet holding it
+  (func $opnd (param $ops i32) (param $i i32) (param $cnt i32) (result i32)
+    (if (i32.ge_u (local.get $i) (local.get $cnt)) (then (return (i32.const 0))))
+    (if (i32.eq (local.get $i) (i32.sub (local.get $cnt) (i32.const 1))) (then (return (global.get $val))))
+    (i32.load (i32.add (local.get $ops) (i32.shl (local.get $i) (i32.const 2)))))
+
+  ;; the commit of a Gather step: the last operand into its slot, and the frame popped
+  (func $pop (param $ops i32) (param $cnt i32) (param $last i32)
+    (if (local.get $cnt)
+      (then (i32.store (i32.add (local.get $ops) (i32.shl (i32.sub (local.get $cnt) (i32.const 1)) (i32.const 2))) (local.get $last))))
+    (global.set $top (local.get $ops)))
+
+  ;; §6 completing a gathered node whose `cnt` operands start at `ops`. The last is still in `val`: the Gather frame is
+  ;; popped only when the step can no longer refuse (an operand's inspection, NatRange and the allocation of the result come
+  ;; first), so a refusal leaves the frame as it was (§6).
   (func $complete (param $n i32) (param $ops i32) (param $cnt i32)
-    (local $op i32) (local $t i32) (local $c i32) (local $j i32) (local $id i32) (local $v i32)
+    (local $op i32) (local $t i32) (local $c i32) (local $id i32) (local $v i32) (local $a i32) (local $b i32) (local $last i32)
     (local.set $op (call $w (i32.add (local.get $n) (i32.const 1))))
+    (local.set $last (global.get $val))
+    (local.set $a (call $opnd (local.get $ops) (i32.const 0) (local.get $cnt)))
+    (local.set $b (call $opnd (local.get $ops) (i32.const 1) (local.get $cnt)))
     (if (i32.eq (local.get $op) (i32.const 6))
       (then
+        (call $pop (local.get $ops) (local.get $cnt) (local.get $last))
         (global.set $tgt (call $w (i32.add (local.get $n) (i32.const 3))))
         (global.set $tfn (i32.const 1))
         (global.set $ops (local.get $ops))
@@ -2151,12 +2191,14 @@
     (if (i32.eq (local.get $op) (i32.const 1))
       (then
         (local.set $id (call $w (i32.add (local.get $n) (i32.const 3))))
-        (global.set $val (call $prim (local.get $id) (local.get $ops) (local.get $cnt)))
+        (local.set $c (call $prim (local.get $id) (local.get $a) (local.get $b) (local.get $cnt)))
+        (global.set $top (local.get $ops))
+        (global.set $val (local.get $c))
         (if (i32.or (i32.lt_u (local.get $id) (i32.const 16)) (i32.gt_u (local.get $id) (i32.const 19)))
           (then
-            (call $drop (i32.load (local.get $ops)))
+            (call $drop (local.get $a))
             (if (i32.and (i32.eq (local.get $cnt) (i32.const 2)) (i32.ne (local.get $id) (i32.const 35)))
-              (then (call $drop (i32.load offset=4 (local.get $ops)))))))
+              (then (call $drop (local.get $b))))))
         (global.set $mode (i32.const 1))
         (return)))
     (local.set $t (call $nodetype (local.get $n)))
@@ -2166,21 +2208,25 @@
         ;; Chr yields the word itself, a Big cell included (CORE.md choice 13)
         (if (i32.eq (local.get $t) (global.get $rNat))
           (then
-            (local.set $v (call $num (i32.load (local.get $ops))))
+            (local.set $v (call $num (local.get $a)))
             (if (i32.eq (local.get $v) (i32.const -1)) (then (call $exhaust (i32.const 2) (global.get $R_nat_range))))
-            (global.set $val (call $scalar (i32.add (local.get $v) (i32.const 1))))
-            (call $drop (i32.load (local.get $ops)))
+            (local.set $c (call $scalar (i32.add (local.get $v) (i32.const 1))))
+            (global.set $top (local.get $ops))
+            (global.set $val (local.get $c))
+            (call $drop (local.get $a))
             (global.set $mode (i32.const 1))
             (return)))
         (if (i32.eq (local.get $t) (global.get $rChar))
           (then
-            (drop (call $num (i32.load (local.get $ops))))
-            (global.set $val (i32.load (local.get $ops)))
+            (drop (call $num (local.get $a)))
+            (global.set $top (local.get $ops))
+            (global.set $val (local.get $a))
             (global.set $mode (i32.const 1))
             (return)))
         (local.set $c (call $alloc (i32.add (local.get $cnt) (i32.const 2)) (i32.const 0)))
         (i32.store offset=8 (local.get $c) (local.get $t))
         (i32.store offset=12 (local.get $c) (call $w (i32.add (local.get $n) (i32.const 3))))
+        (call $pop (local.get $ops) (local.get $cnt) (local.get $last))
         (memory.copy (i32.add (local.get $c) (i32.const 16)) (local.get $ops) (i32.shl (local.get $cnt) (i32.const 2)))
         (global.set $val (local.get $c))
         (global.set $mode (i32.const 1))
@@ -2188,6 +2234,7 @@
     ;; Foreign: an inert Action holding its operands (§8)
     (local.set $c (call $alloc (i32.add (local.get $cnt) (i32.const 1)) (i32.const 3)))
     (i32.store offset=8 (local.get $c) (call $w (i32.add (local.get $n) (i32.const 3))))
+    (call $pop (local.get $ops) (local.get $cnt) (local.get $last))
     (memory.copy (i32.add (local.get $c) (i32.const 12)) (local.get $ops) (i32.shl (local.get $cnt) (i32.const 2)))
     (global.set $val (local.get $c))
     (global.set $mode (i32.const 1)))
@@ -2202,6 +2249,13 @@
     (local.set $cnt (call $w (i32.add (local.get $n) (i32.const 6))))
     (local.set $x (i32.load offset=16 (i32.add (global.get $act) (i32.shl (local.get $s) (i32.const 2)))))
     (global.set $mode (i32.const 0))
+    ;; D24: a request matches no row, in either mode, so the Default takes it, unread and binding nothing; a Case without one refuses it
+    (if (call $request (local.get $x))
+      (then
+        (local.set $arm (call $w (i32.add (local.get $n) (i32.sub (call $w (local.get $n)) (i32.const 1)))))
+        (if (i32.eq (local.get $arm) (i32.const -1)) (then (call $effect)))
+        (global.set $node (call $w (i32.add (local.get $arm) (i32.const 3))))
+        (return)))
     (if (call $w (i32.add (local.get $n) (i32.const 5)))
       (then
         ;; keys: binary search over strictly increasing keys, else the default
@@ -2282,7 +2336,7 @@
   ;; A body gets an Activation [owner, depth, slot[capacity]] after §6.2.
   (func $enter
     (local $f i32) (local $x i32) (local $cn i32) (local $live i32) (local $ncap i32) (local $tail i32)
-    (local $a i32) (local $j i32) (local $v i32) (local $k i32) (local $r i32)
+    (local $a i32) (local $j i32) (local $v i32) (local $n i32) (local $r i32)
     (if (global.get $tfn)
       (then
         (local.set $f (global.get $tgt))
@@ -2299,6 +2353,8 @@
     (local.set $x (global.get $tgt))
     (if (i32.or (i32.and (local.get $x) (i32.const 1)) (i32.eqz (local.get $x)))
       (then (call $refuse (global.get $R_ill_typed))))
+    ;; a request is read first (§6): before the operand count and the debit, at fuel 0 too
+    (if (call $request (local.get $x)) (then (call $effect)))
     (block $bad
       (block $action
         (block $closure
@@ -2340,27 +2396,58 @@
         (global.set $node (call $w (i32.add (local.get $cn) (i32.sub (call $w (local.get $cn)) (i32.const 1)))))
         (global.set $mode (i32.const 0))
         (return))
-      ;; an Action: its erased R returns it; its continuation performs it once
+      ;; an Action: its erased R returns it; its continuation builds a request (D23): the Action's foreign word and operands, then
+      ;; k. Nothing is read, converted or performed: only Top's loop performs a request, and only the one a run returns to it (§8)
       (br_if $bad (i32.gt_u (global.get $nops) (i32.const 1)))
       (call $debit)
       (if (i32.eqz (global.get $nops))
         (then (global.set $val (local.get $x)) (global.set $mode (i32.const 1)) (return)))
-      (local.set $k (i32.load (global.get $ops)))
-      (local.set $r (call $perform (local.get $x)))
+      (local.set $n (i32.shr_u (i32.load offset=4 (local.get $x)) (i32.const 3)))
+      (local.set $r (call $alloc (i32.add (local.get $n) (i32.const 1)) (i32.const 5)))
+      (memory.copy (i32.add (local.get $r) (i32.const 8)) (i32.add (local.get $x) (i32.const 8)) (i32.shl (local.get $n) (i32.const 2)))
+      (local.set $j (i32.const 1))
+      (block $duped
+        (loop $dups
+          (br_if $duped (i32.ge_u (local.get $j) (local.get $n)))
+          (call $dup (i32.load (i32.add (local.get $x) (i32.add (i32.const 8) (i32.shl (local.get $j) (i32.const 2))))))
+          (local.set $j (i32.add (local.get $j) (i32.const 1)))
+          (br $dups)))
+      (i32.store (i32.add (local.get $r) (i32.add (i32.const 8) (i32.shl (local.get $n) (i32.const 2)))) (i32.load (global.get $ops)))
       (call $drop (local.get $x))
-      (i32.store (i32.const 32) (local.get $r))
-      (global.set $tgt (local.get $k))
-      (global.set $ops (i32.const 32))
+      (global.set $val (local.get $r))
+      (global.set $mode (i32.const 1))
       (return))
     (call $refuse (global.get $R_ill_typed)))
 
-  ;; §10, vm-core subset: IO.print. Other foreign ids are refused at load.
-  (func $perform (param $x i32) (result i32)
-    (local $n i32)
-    (if (i32.ne (i32.load offset=8 (local.get $x)) (i32.const 1)) (then (call $internal)))
-    (local.set $n (call $utf8out (i32.load offset=12 (local.get $x)) (global.get $bump)))
-    (call $io_print (i32.wrap_i64 (global.get $bump)) (local.get $n))
-    (i32.const 1))
+  ;; §8 phase 3, the loop, for the word `x` that a run returns to Top: a request is performed and its continuation entered (an
+  ;; Enter is pending, the phase stays 3), an IO.OP ends the run. Every refusal (a request or an ill-typed word that a read
+  ;; meets, D20's scalar check) comes before `act` is dropped and before anything is written, so it leaves the state as the step found it
+  ;; (§6). §10, vm-core subset: IO.print, whose one operand is read whole, then converted; other foreigns are refused at load. Returns 1
+  ;; while the run goes on.
+  (func $serve (param $x i32) (result i32)
+    (local $k i32) (local $n i32)
+    (if (call $request (local.get $x))
+      (then
+        (if (i32.ne (i32.load offset=8 (local.get $x)) (i32.const 1)) (then (call $internal)))
+        (local.set $n (call $utf8out (i32.load offset=12 (local.get $x)) (global.get $bump)))
+        (call $drop (global.get $act))
+        (global.set $act (i32.const 0))
+        (call $io_print (i32.wrap_i64 (global.get $bump)) (local.get $n))
+        ;; k is the request's last word; its reference moves out as the request is dropped
+        (local.set $k (i32.load (i32.add (i32.add (local.get $x) (i32.const 8))
+                                          (i32.shl (i32.sub (i32.shr_u (i32.load offset=4 (local.get $x)) (i32.const 3)) (i32.const 1)) (i32.const 2)))))
+        (call $dup (local.get $k))
+        (call $drop (local.get $x))
+        ;; IO.print answers Unit, the immediate of tag 0
+        (i32.store (i32.const 32) (i32.const 1))
+        (global.set $tgt (local.get $k))
+        (global.set $tfn (i32.const 0))
+        (global.set $ops (i32.const 32))
+        (global.set $nops (i32.const 1))
+        (global.set $mode (i32.const 2))
+        (return (i32.const 1))))
+    (call $finish (local.get $x))
+    (i32.const 0))
 
   ;; a String as canonical UTF-8 at `dst`, its length; only Unicode scalars cross
   ;; (§10). Growth covers 4 bytes per Char before any store (CORE.md choice 11).
@@ -2473,14 +2560,15 @@
               (drop (call $frame (i32.const 5) (global.get $node) (i32.const 0) (i32.const 0)))
               (global.set $node (i32.load offset=4108 (local.get $na)))
               (br $step))
-            ;; Return to Top: release the activation, then §8's phase
+            ;; Return to Top: §8's phase. The loop (phase 3) refuses before it releases the activation, so a refusal changes nothing
+            ;; (§6); §6's table releases first for a Book's answer, which describe then refuses
+            (local.set $aux (i32.load (i32.sub (global.get $top) (i32.const 8))))
+            (if (i32.eq (local.get $aux) (i32.const 3))
+              (then (if (call $serve (global.get $val)) (then (br $step))) (return (i32.const 0))))
             (call $drop (global.get $act))
             (global.set $act (i32.const 0))
-            (local.set $aux (i32.load (i32.sub (global.get $top) (i32.const 8))))
             (if (i32.eqz (local.get $aux))
               (then (call $describe (global.get $val)) (return (i32.const 0))))
-            (if (i32.eq (local.get $aux) (i32.const 3))
-              (then (call $finish (global.get $val)) (return (i32.const 0))))
             (i32.store (i32.sub (global.get $top) (i32.const 8)) (i32.add (local.get $aux) (i32.const 1)))
             (i32.store (i32.const 32) (global.get $terminal))
             (global.set $tgt (global.get $val))
@@ -2489,23 +2577,21 @@
             (global.set $nops (i32.sub (local.get $aux) (i32.const 1)))
             (global.set $mode (i32.const 2))
             (br $step))
-            ;; Return to Gather: fill the next operand; the last completes the node
+            ;; Return to Gather: fill the next operand; the last, still in `val`, completes the node, which pops the frame (§6)
             (local.set $h (i32.load (i32.sub (global.get $top) (i32.const 4))))
             (local.set $n (i32.shr_u (local.get $h) (i32.const 4)))
             (local.set $aux (i32.load (i32.sub (global.get $top) (i32.const 8))))
             (local.set $p (i32.sub (i32.sub (global.get $top) (i32.const 12)) (i32.shl (local.get $n) (i32.const 2))))
-            (i32.store (i32.add (local.get $p) (i32.shl (local.get $aux) (i32.const 2))) (global.get $val))
-            (local.set $aux (i32.add (local.get $aux) (i32.const 1)))
-            (if (i32.lt_u (local.get $aux) (local.get $n))
+            (if (i32.lt_u (i32.add (local.get $aux) (i32.const 1)) (local.get $n))
               (then
+                (i32.store (i32.add (local.get $p) (i32.shl (local.get $aux) (i32.const 2))) (global.get $val))
+                (local.set $aux (i32.add (local.get $aux) (i32.const 1)))
                 (i32.store (i32.sub (global.get $top) (i32.const 8)) (local.get $aux))
                 (global.set $node (i32.load offset=4116 (i32.shl (i32.add (i32.load (i32.sub (global.get $top) (i32.const 12)))
                                                                            (local.get $aux)) (i32.const 2))))
                 (global.set $mode (i32.const 0))
                 (br $step)))
-            (local.set $c (i32.load (i32.sub (global.get $top) (i32.const 12))))
-            (global.set $top (local.get $p))
-            (call $complete (local.get $c) (local.get $p) (local.get $n))
+            (call $complete (i32.load (i32.sub (global.get $top) (i32.const 12))) (local.get $p) (local.get $n))
             (br $step))
             ;; Return to Bind: the value takes slot `depth`; the body runs in a Scope
             (local.set $c (i32.load (i32.sub (global.get $top) (i32.const 12))))
@@ -2569,7 +2655,8 @@
       (br $next))
     (i32.const 0))
 
-  ;; §8 Program phase 3: Emit completes, Halt calls die
+  ;; §8 phase 3 for an IO.OP: Emit completes, Halt calls die. The word, a Halt's code, its message whole and D20's scalar check
+  ;; are refused first, with `w` and the activation still owned (§6, §8); then the activation and `w` are released.
   (func $finish (param $x i32)
     (local $code i32) (local $n i32)
     (if (i32.or (i32.and (local.get $x) (i32.const 1)) (i32.eqz (local.get $x)))
@@ -2579,12 +2666,16 @@
       (then (call $refuse (global.get $R_ill_typed))))
     (if (i32.eqz (i32.load offset=12 (local.get $x)))
       (then
+        (call $drop (global.get $act))
+        (global.set $act (i32.const 0))
         (call $drop (local.get $x))
         (global.set $oc (i32.const 1))
         (global.set $mode (i32.const 3))
         (return)))
     (local.set $code (call $num (i32.load offset=16 (local.get $x))))
     (local.set $n (call $utf8out (i32.load offset=20 (local.get $x)) (global.get $bump)))
+    (call $drop (global.get $act))
+    (global.set $act (i32.const 0))
     (call $drop (local.get $x))
     (global.set $oc (i32.const 2))
     (global.set $okind (local.get $code))
@@ -2646,7 +2737,7 @@
   (func $describe (param $x i32)
     (local $base i32) (local $sp i32) (local $visits i32) (local $w i32) (local $t i32)
     (local $rec i32) (local $name i32) (local $j i32) (local $v i32) (local $at i32)
-    (local $zero i32) (local $succ i32)
+    (local $zero i32) (local $succ i32) (local $tag i32)
     (global.set $out (global.get $bump))
     (global.set $len (i32.const 0))
     (global.set $cap (i32.const -1))
@@ -2692,9 +2783,11 @@
               (i32.store16 (local.get $at) (i32.const 0x7d7b))
               (memory.fill (i32.add (local.get $at) (i32.const 2)) (i32.const 125) (local.get $v))
               (br $rendered)))
+          ;; a word is inspected before its visit is charged: an ill-typed one is no constructor, so it is no visit (§6, §8)
+          (local.set $tag (call $tagof (local.get $w) (local.get $t)))
           (local.set $visits (i32.add (local.get $visits) (i32.const 1)))
           (if (i32.gt_u (local.get $visits) (i32.const 1048576)) (then (call $exhaust (i32.const 2) (global.get $R_display))))
-          (local.set $rec (call $ctor (local.get $t) (call $tagof (local.get $w) (local.get $t))))
+          (local.set $rec (call $ctor (local.get $t) (local.get $tag)))
           (local.set $name (call $w (i32.add (local.get $rec) (i32.const 3))))
           (call $emit (i32.add (i32.const 4096) (i32.shl (i32.add (local.get $name) (i32.const 2)) (i32.const 2)))
                       (call $w (i32.add (local.get $name) (i32.const 1))))
@@ -2926,8 +3019,10 @@
         (if (i32.eq (local.get $j) (i32.const 6))
           (then (call $wset (i32.add (local.get $at) (i32.const 3))
                   (call $tab (global.get $tF) (call $w (i32.add (local.get $at) (i32.const 3)))))))
+        ;; choice 2: a Program that names another foreign than IO.print is refused before any entry; a Book never performs (D22), so it loads
         (if (i32.eq (local.get $j) (i32.const 12))
-          (then (if (i32.ne (call $w (i32.add (local.get $at) (i32.const 3))) (i32.const 1))
+          (then (if (i32.and (i32.ne (call $w (i32.add (local.get $at) (i32.const 3))) (i32.const 1))
+                             (i32.eq (call $w (i32.const 3)) (i32.const 1)))
                   (then (call $stop (i32.const 4) (i32.const 3) (i32.const 256) (global.get $R_foreign))))))
         (local.set $at (i32.add (local.get $at) (call $w (local.get $at))))
         (local.set $i (i32.add (local.get $i) (i32.const 1)))

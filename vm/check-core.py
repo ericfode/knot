@@ -1436,10 +1436,10 @@ MUTANTS = [
      [('(local.set $p (i32.add (i32.const 4096) (i32.shl (i32.add (local.get $at) (i32.const 2)) (i32.const 2))))',
        '(local.set $p (i32.add (i32.const 4096) (i32.shl (i32.add (local.get $at) (i32.const 1)) (i32.const 2))))')],
      'controls'),
-    ('quantum-state-loss', 'a yield after an effect commits the Action as still pending',
-     [('(local.set $r (call $perform (local.get $x)))',
-       '(local.set $r (call $perform (local.get $x)))\n'
-       '      (if (i32.eq (global.get $quantum) (i32.const 65536)) (then (return)))')], 'quantum'),
+    ('quantum-state-loss', 'a yield after the Action\'s second application builds a request leaves the Enter pending, so it is entered again',
+     [('      (call $drop (local.get $x))\n      (global.set $val (local.get $r))\n      (global.set $mode (i32.const 1))\n      (return))',
+       '      (call $drop (local.get $x))\n      (global.set $val (local.get $r))\n'
+       '      (if (i32.eq (global.get $quantum) (i32.const 65536)) (then (return)))\n      (global.set $mode (i32.const 1))\n      (return))')], 'quantum'),
     ('nat-bound', 'Succ of 2^32-1 wraps instead of NatRange',
      [('(if (i32.eq (local.get $v) (i32.const -1)) (then (call $exhaust (i32.const 2) (global.get $R_nat_range))))', '')],
      'goldens'),
@@ -1513,7 +1513,7 @@ MUTANTS = [
        '(global.set $cap (i32.add (global.get $len) (i32.const 0xffffff)))')], 'runs'),
     # review round 3: Chr reads its operand as the reference evaluation's construct does
     ('chr-operand-unchecked', "Chr yields its operand's word without reading it",
-     [('            (drop (call $num (i32.load (local.get $ops))))\n', '')], 'reference'),
+     [('            (drop (call $num (local.get $a)))\n', '')], 'reference'),
     # review round 4: a cell or an append block may end exactly at 4 GiB (section 5). These three
     # readings change the outcome at the rows whose heap ends exactly at 4 GiB; `top-trap` below
     # restores the old trap itself
@@ -1681,10 +1681,12 @@ MUTANTS = [
     ('scell-loads-before-immediate-test', 'a String cell is tested for an immediate in the same `or` as the loads through it',
      [('    ;; an immediate is no cell: refuse it before any load through it (Wasm evaluates both operands of an or)\n'
        '    (if (i32.and (local.get $s) (i32.const 1)) (then (call $refuse (global.get $R_ill_typed))))\n'
+       '    (if (call $request (local.get $s)) (then (call $effect)))\n'
        '    (if (i32.or (i32.and (i32.load offset=4 (local.get $s)) (i32.const 7))\n'
        '          (i32.or (i32.ne (i32.load offset=8 (local.get $s)) (global.get $rString))\n'
        '                  (i32.ne (i32.load offset=12 (local.get $s)) (i32.const 1))))\n'
        '      (then (call $refuse (global.get $R_ill_typed))))',
+       '    (if (call $request (local.get $s)) (then (call $effect)))\n'
        '    (if (i32.or (i32.and (local.get $s) (i32.const 1))\n'
        '          (i32.or (i32.and (i32.load offset=4 (local.get $s)) (i32.const 7))\n'
        '            (i32.or (i32.ne (i32.load offset=8 (local.get $s)) (global.get $rString))\n'
@@ -1774,6 +1776,99 @@ MUTANTS = [
        '    (if (i32.gt_u (local.get $d) (global.get $vdeep)) (then (global.set $vdeep (local.get $d))))\n'
        '    (if (i32.and (i32.eqz (global.get $vbase)) (i32.gt_u (local.get $d) (call $w (i32.add (local.get $fn) (i32.const 4)))))\n'
        '      (then (call $refuse (global.get $R_function_slots))))\n')], 'scope'),
+    # round 7 (D22, D23, D24): a request is a value that only Top's loop performs, and a Case takes its Default
+    ('eager-effect', 'an Action applied to its continuation performs its effect there and enters k, as vm-spec\'s eager rule had it',
+     [('      (i32.store (i32.add (local.get $r) (i32.add (i32.const 8) (i32.shl (local.get $n) (i32.const 2)))) (i32.load (global.get $ops)))\n'
+       '      (call $drop (local.get $x))\n      (global.set $val (local.get $r))\n      (global.set $mode (i32.const 1))\n      (return))',
+       '      (local.set $j (call $utf8out (i32.load offset=12 (local.get $x)) (global.get $bump)))\n'
+       '      (call $io_print (i32.wrap_i64 (global.get $bump)) (local.get $j))\n'
+       '      (call $drop (local.get $x))\n      (i32.store (i32.const 32) (i32.const 1))\n'
+       '      (global.set $tgt (i32.load (global.get $ops)))\n      (global.set $ops (i32.const 32))\n      (return))')], 'goldens'),
+    ('scope-drop-performs', 'a request that a scope drops is performed, as if a dropped request had an effect',
+     [('                (call $drop (i32.load offset=16 (local.get $p)))\n                (i32.store offset=16 (local.get $p) (i32.const 0))',
+       '                (call $drop (i32.load offset=16 (local.get $p)))\n'
+       '                (if (call $request (i32.load offset=16 (local.get $p)))\n'
+       '                  (then (call $io_print (i32.wrap_i64 (global.get $bump))\n'
+       '                          (call $utf8out (i32.load offset=12 (i32.load offset=16 (local.get $p))) (global.get $bump)))))\n'
+       '                (i32.store offset=16 (local.get $p) (i32.const 0))')], 'goldens'),
+    ('loop-skips-effect', "Top's loop enters a request's continuation without performing it",
+     [('        (call $io_print (i32.wrap_i64 (global.get $bump)) (local.get $n))\n        ;; k is the request', '        ;; k is the request')], 'goldens'),
+    ('loop-performs-first-only', "Top's loop ends the run after the first request it performs",
+     [('        (return (i32.const 1))))\n    (call $finish (local.get $x))',
+       '        (global.set $oc (i32.const 1))\n        (global.set $mode (i32.const 3))\n        (return (i32.const 0))))\n    (call $finish (local.get $x))')], 'goldens'),
+    ('case-request-refused', 'a Case with a Default refuses a request as a Case without one does (D23 before D24)',
+     [('        (if (i32.eq (local.get $arm) (i32.const -1)) (then (call $effect)))\n        (global.set $node',
+       '        (call $effect)\n        (global.set $node')], 'runs'),
+    ('case-request-ill-typed', 'a Case without a Default meets a request as an ill-typed word, not Unsupported',
+     [('        (if (i32.eq (local.get $arm) (i32.const -1)) (then (call $effect)))\n        (global.set $node',
+       '        (if (i32.eq (local.get $arm) (i32.const -1)) (then (call $refuse (global.get $R_ill_typed))))\n        (global.set $node')], 'runs'),
+    ('num-request-ill-typed', 'a scalar read that meets a request takes it for an ill-typed word',
+     [('    (if (call $request (local.get $x)) (then (call $effect)))\n    (if (i32.ne (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7)) (i32.const 2))',
+       '    (if (call $request (local.get $x)) (then (call $refuse (global.get $R_ill_typed))))\n    (if (i32.ne (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7)) (i32.const 2))')], 'runs'),
+    ('tagof-request-ill-typed', 'the tag of a request, read at describe or by an Enter, is an ill-typed word',
+     [('    (if (call $request (local.get $x)) (then (call $effect)))\n    (if (i32.or (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7))\n'
+       '                (i32.ne (i32.load offset=8 (local.get $x)) (local.get $t)))',
+       '    (if (call $request (local.get $x)) (then (call $refuse (global.get $R_ill_typed))))\n    (if (i32.or (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7))\n'
+       '                (i32.ne (i32.load offset=8 (local.get $x)) (local.get $t)))')], 'runs'),
+    ('scell-request-ill-typed', 'a request in a String\'s tail is an ill-typed cell',
+     [('    (if (call $request (local.get $s)) (then (call $effect)))\n', '    (if (call $request (local.get $s)) (then (call $refuse (global.get $R_ill_typed))))\n')], 'runs'),
+    ('enter-request-unread', 'an Enter does not read a request as its target first',
+     [('    (if (call $request (local.get $x)) (then (call $effect)))\n    (block $bad', '    (block $bad')], 'runs'),
+    ('effect-as-host-failure', 'a request that a read meets stops the run as HostFailure, not Unsupported (D4)',
+     [('    (call $stop (i32.const 4) (i32.const 3) (i32.const 256) (global.get $R_effect)))',
+       '    (call $stop (i32.const 3) (i32.const 5) (i32.const 128) (global.get $R_effect)))')], 'runs'),
+    ('book-refuses-foreign', 'a Book that names another foreign than IO.print is refused at load, as a Program is (D22: it never performs)',
+     [('                             (i32.eq (call $w (i32.const 3)) (i32.const 1)))\n', '                             (i32.const 1))\n')], 'runs'),
+    ('type-count-unfitted', 'a type record\'s constructor count is not fitted to the constructor table before it sizes anything',
+     [('            (if (i64.gt_u (i64.extend_i32_u (call $w (i32.add (local.get $at) (i32.const 4))))\n'
+       '                          (i64.sub (i64.extend_i32_u (global.get $nC)) (local.get $expect)))\n'
+       '              (then (call $refuse (global.get $R_constructor_count))))\n', '')], 'controls'),
+    # round 7 (atomic stops, SPEC section 6): a refusal changes no state. Each restores a half-done step and dies at the last step of a refusing run
+    ('gather-popped-first', 'a Gather frame is popped, with its last operand stored, before the node completes and can refuse',
+     [('            (call $complete (i32.load (i32.sub (global.get $top) (i32.const 12))) (local.get $p) (local.get $n))\n',
+       '            (local.set $c (i32.load (i32.sub (global.get $top) (i32.const 12))))\n'
+       '            (i32.store (i32.add (local.get $p) (i32.shl (i32.sub (local.get $n) (i32.const 1)) (i32.const 2))) (global.get $val))\n'
+       '            (global.set $top (local.get $p))\n'
+       '            (call $complete (local.get $c) (local.get $p) (local.get $n))\n')], 'atomic'),
+    ('gather-slot-filled-first', 'a Gather frame keeps its place, but its last slot is filled before the node completes and can refuse',
+     [('            (call $complete (i32.load (i32.sub (global.get $top) (i32.const 12))) (local.get $p) (local.get $n))\n',
+       '            (i32.store (i32.add (local.get $p) (i32.shl (i32.sub (local.get $n) (i32.const 1)) (i32.const 2))) (global.get $val))\n'
+       '            (call $complete (i32.load (i32.sub (global.get $top) (i32.const 12))) (local.get $p) (local.get $n))\n')], 'atomic'),
+    ('succ-pops-before-natrange', 'Succ pops its Gather frame before it inspects its operand and tests NatRange',
+     [('            (local.set $v (call $num (local.get $a)))\n',
+       '            (global.set $top (local.get $ops))\n            (local.set $v (call $num (local.get $a)))\n')], 'atomic'),
+    ('prim-pops-before-inspection', 'an intrinsic pops its Gather frame before its operands are inspected',
+     [('        (local.set $c (call $prim (local.get $id) (local.get $a) (local.get $b) (local.get $cnt)))\n        (global.set $top (local.get $ops))\n',
+       '        (global.set $top (local.get $ops))\n        (local.set $c (call $prim (local.get $id) (local.get $a) (local.get $b) (local.get $cnt)))\n')], 'atomic'),
+    ('top-drops-act-first', 'Return to Top releases the Activation before the loop inspects what it returned, as SPEC section 6\'s table reads',
+     [('            (if (i32.eq (local.get $aux) (i32.const 3))\n              (then (if (call $serve',
+       '            (if (i32.eq (local.get $aux) (i32.const 3))\n              (then (call $drop (global.get $act)) (global.set $act (i32.const 0)) (if (call $serve')], 'atomic'),
+    ('serve-drops-act-first', "the loop releases the Activation before it reads a request's operand and makes D20's scalar check",
+     [('        (local.set $n (call $utf8out (i32.load offset=12 (local.get $x)) (global.get $bump)))\n        (call $drop (global.get $act))\n        (global.set $act (i32.const 0))\n',
+       '        (call $drop (global.get $act))\n        (global.set $act (i32.const 0))\n        (local.set $n (call $utf8out (i32.load offset=12 (local.get $x)) (global.get $bump)))\n')], 'atomic'),
+    ('halt-drops-act-first', "a Halt releases the Activation before its code and message are read and D20's check is made",
+     [('    (local.set $code (call $num (i32.load offset=16 (local.get $x))))\n    (local.set $n (call $utf8out (i32.load offset=20 (local.get $x)) (global.get $bump)))\n    (call $drop (global.get $act))\n    (global.set $act (i32.const 0))\n',
+       '    (call $drop (global.get $act))\n    (global.set $act (i32.const 0))\n    (local.set $code (call $num (i32.load offset=16 (local.get $x))))\n    (local.set $n (call $utf8out (i32.load offset=20 (local.get $x)) (global.get $bump)))\n')], 'atomic'),
+    ('finish-drops-act-first', 'the final IO.OP is checked after the Activation is released',
+     [('  (func $finish (param $x i32)\n    (local $code i32) (local $n i32)\n',
+       '  (func $finish (param $x i32)\n    (local $code i32) (local $n i32)\n    (call $drop (global.get $act))\n    (global.set $act (i32.const 0))\n')], 'atomic'),
+    # round 7, findings (a) and (b) of the review: section 8's describe domain and the order of an inspection and a visit's charge
+    ('describable-arrow', 'an arrow, live or erased, is inside the describe domain: only an opaque type is outside it',
+     [('        (if (call $kind (local.get $u)) (then (return (i32.const 0))))',
+       '        (if (i32.eq (call $kind (local.get $u)) (i32.const 3)) (then (return (i32.const 0))))')], 'describe-domain'),
+    ('describable-none', 'a `none`-typed field is skipped, not outside the describe domain',
+     [('        (if (i32.eq (local.get $u) (i32.const -1)) (then (return (i32.const 0))))',
+       '        (br_if $next (i32.eq (local.get $u) (i32.const -1)))')], 'describe-domain'),
+    ('result-type-host-failure', 'a result outside the describe domain is a HostFailure of the invocation, not Unsupported (D4)',
+     [('(call $stop (i32.const 4) (i32.const 3) (i32.const 224) (global.get $R_result_type))',
+       '(call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_result_type))')], 'describe-domain'),
+    ('describe-charges-before-inspection', 'a visit is charged before its word is inspected: an ill-typed word at the bound is Exhausted',
+     [('          (local.set $tag (call $tagof (local.get $w) (local.get $t)))\n'
+       '          (local.set $visits (i32.add (local.get $visits) (i32.const 1)))\n'
+       '          (if (i32.gt_u (local.get $visits) (i32.const 1048576)) (then (call $exhaust (i32.const 2) (global.get $R_display))))\n',
+       '          (local.set $visits (i32.add (local.get $visits) (i32.const 1)))\n'
+       '          (if (i32.gt_u (local.get $visits) (i32.const 1048576)) (then (call $exhaust (i32.const 2) (global.get $R_display))))\n'
+       '          (local.set $tag (call $tagof (local.get $w) (local.get $t)))\n')], 'describe-order'),
 ]
 
 
