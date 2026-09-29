@@ -10,14 +10,20 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import YAML from '../node_modules/yaml/dist/index.js';
 import { main } from '../node_modules/@lakeday/perch/dist/cli.mjs';
-import { CAP, PACKET_ROOT, execute, inWhere, plan, readHeader, separation, stageControls, unstageControls } from './prechecks-perch-run.mjs';
+import { CAP, PACKET_ROOT, SPLITS, execute, flaggedAt, inWhere, plan, readHeader, separation, stageControls, unstageControls } from './prechecks-perch-run.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const names = [
   'claim-holds-against-evidence', 'passages-agree', 'outcome-follows-d4', 'clause-vs-delta',
   'expectation-independent', 'kill-is-semantic', 'required-laws-met',
 ];
-const splits = ['broken', 'clean', 'held-out'];
+// A control's cell: its dev split, or held-out with its expected label. Every rule needs DEV_MIN dev controls of each label;
+// a held-out cell may instead be a documented gap.
+const cells = ['broken', 'clean', 'held-out/broken', 'held-out/clean'];
+const cellOf = c => (c.split === 'held-out' ? `held-out/${c.expected}` : c.split);
+const DEV_MIN = 3;
+// Every rule is uncalibrated (docs/perch-review-log.md, 2026-09-29): no dev gap reached the 0.10 margin, so each keeps 80.
+const FLOORS = Object.fromEntries(names.map(name => [name, 80]));
 const RULES_SET = new Set(names);
 const dir = await mkdtemp(join(tmpdir(), 'knot-prechecks-rules-'));
 const previous = process.cwd();
@@ -49,7 +55,7 @@ try {
   for (const rule of rules) {
     assert.equal(rule.each, 'file', rule.name);
     assert.equal(rule.gate, false, `${rule.name} must stay advisory until calibrated`);
-    assert.equal(rule.min, 80, rule.name);
+    assert.equal(rule.min, FLOORS[rule.name], `${rule.name}: its floor is pinned here; a calibrated floor edits this map with its evidence`);
     assert.equal(rule.where, `.local/prechecks/packets/**/${rule.name}/*.md`, rule.name);
     assert.match(rule.ensure, /missing\s+evidence(?:,|\s+is)?\s+not a pass/i, `${rule.name} must say that missing evidence is not a pass`);
   }
@@ -134,11 +140,27 @@ try {
   assert.equal(live.results.length, rows.length);
   assert.ok(live.results.every(r => r.status === (r.expected === 'broken' ? 'flagged' : 'clean')));
   assert.equal(separation(live.results).separates, true);
+  assert.ok(Object.values(separation(live.results).rules).every(rule => rule.separates), 'every rule separates on label-following verdicts');
   queue = null; verdict = 1;                   // a rule that never objects fails to flag any broken control
   const blind = await execute(rows, { root: dir, env: { PERCH_API_KEY: 'offline-wiring-only' }, live: true, requireMain: false, run: runPerch });
   const gap = separation(blind.results);
   assert.equal(gap.separates, false);
   assert.equal(gap.misclassified.length, cases.cases.filter(c => c.expected === 'broken').length);
+  // Perch flags strictly above the rule's floor, so a verdict exactly at the floor is not a flag.
+  assert.equal(flaggedAt({ probability_broken: 0.7, floor: 0.7 }), false);
+  assert.equal(flaggedAt({ probability_broken: 0.71, floor: 0.7 }), true);
+  const edge = separation([{ path: 'a', rule: 'r', expected: 'broken', probability_broken: 0.7, floor: 0.7 },
+                           { path: 'b', rule: 'r', expected: 'clean', probability_broken: 0.7, floor: 0.7 }]);
+  assert.deepEqual(edge.misclassified, ['a']);
+  assert.equal(edge.rules.r.separates, false);
+  // The dev split tunes a rule and the held-out split is asked once after its text is frozen: each plan asks only its own.
+  for (const [split, allowed] of Object.entries(SPLITS)) {
+    const chosen = (await plan({ root: dir, packets: staging, controls: true, controlsRoot: root, split })).rows;
+    assert.equal(chosen.length, cases.cases.filter(c => allowed.includes(c.split)).length, split);
+    assert.ok(chosen.every(r => allowed.includes(r.split)), split);
+  }
+  await assert.rejects(plan({ root: dir, packets: staging, controls: true, controlsRoot: root, split: 'test' }), /Unknown split/);
+  await assert.rejects(plan({ root: dir, split: 'dev' }), /add --controls/);
   await assert.rejects(stageControls(dir, join(dir, 'docs')), /Refusing to stage/);
   await assert.rejects(stageControls(dir, resolve(dir, '..')), /Refusing to stage/);
   await assert.rejects(unstageControls(dir, join(dir, 'docs')), /Refusing to stage/);
@@ -199,28 +221,33 @@ try {
   await assert.rejects(execute([{ path: 'docs/unrelated.md', rule: 'passages-agree' }],
     { root: dir, env: { PERCH_API_KEY: 'offline-wiring-only' }, live: true, requireMain: false, run: runPerch }), /Refusing docs\/unrelated\.md/);
 
-  // The calibration set: every rule has a broken control, every rule and split is present or a documented gap,
-  // labels follow the split, and every packet is self-contained, bounded and free of host paths.
-  assert.ok(cases.cases.length >= names.length * 2, 'controls present');
-  const gaps = new Set(cases.gaps.map(g => `${g.rule}/${g.split}`));
+  // The calibration set: every rule has DEV_MIN dev controls of each label, every held-out cell is present or a documented gap,
+  // dev labels follow the split, and every packet is self-contained, bounded and free of host paths.
+  const gaps = new Set(cases.gaps.map(g => `${g.rule}/${g.split === 'held-out' ? `held-out/${g.expected}` : g.split}`));
   for (const gap of cases.gaps) assert.ok(gap.reason.length > 40, `gap ${gap.rule}/${gap.split} needs a reason`);
   for (const name of names) {
-    for (const split of splits) {
-      const found = cases.cases.filter(c => c.rule === name && c.split === split);
-      assert.ok(found.length > 0 || gaps.has(`${name}/${split}`), `${name}/${split}: neither a control nor a documented gap`);
-      assert.ok(found.length === 0 || !gaps.has(`${name}/${split}`), `${name}/${split}: a control exists, so it is no gap`);
+    for (const cell of cells) {
+      const found = cases.cases.filter(c => c.rule === name && cellOf(c) === cell);
+      if (!cell.startsWith('held-out')) {
+        assert.ok(found.length >= DEV_MIN, `${name}/${cell}: ${found.length} dev controls, at least ${DEV_MIN} required`);
+        assert.ok(!gaps.has(`${name}/${cell}`), `${name}/${cell}: a dev cell is never a gap`);
+        continue;
+      }
+      assert.ok(found.length > 0 || gaps.has(`${name}/${cell}`), `${name}/${cell}: neither a control nor a documented gap`);
+      assert.ok(found.length === 0 || !gaps.has(`${name}/${cell}`), `${name}/${cell}: a control exists, so it is no gap`);
     }
-    assert.ok(cases.cases.some(c => c.rule === name && c.split === 'broken'), `${name} needs a broken control`);
   }
+  assert.equal(new Set(cases.cases.map(c => `${c.split}-${c.id}`)).size, cases.cases.length, 'control ids are unique');
   for (const item of cases.cases) {
-    assert.equal(item.expected, item.split === 'clean' ? 'clean' : 'broken', item.id);
+    assert.ok(['broken', 'clean', 'held-out'].includes(item.split), item.id);
+    assert.ok(item.split === 'held-out' ? ['broken', 'clean'].includes(item.expected) : item.expected === item.split, item.id);
     const text = await readFile(join(root, 'tests/prechecks/perch-controls', item.packet), 'utf8');
     assert.ok(text.length > 200 && text.length <= 48 * 1024, `${item.id}: packet size`);
     assert.match(text, /^<!-- prechecks packet v1; rule=[a-z0-9-]+; increment=/, item.id);
     for (const heading of ['# Claim', '# Evidence', '# Scope']) assert.ok(text.includes(`\n${heading}\n`), `${item.id}: ${heading}`);
     assert.ok(!/\/Users\/|\/private\/|\/home\/[a-z]/.test(text), `${item.id}: host path in a packet`);
   }
-  console.log(`PASS: seven advisory prechecks rules; ${cases.cases.length} calibration packets each select exactly their own rule; one request per packet; advisory finding exit 3; unrelated and unmatched packets select nothing; every rule and split has a control or a documented gap.`);
+  console.log(`PASS: seven advisory prechecks rules; ${cases.cases.length} calibration packets each select exactly their own rule; one request per packet; advisory finding exit 3; unrelated and unmatched packets select nothing; every rule has ${DEV_MIN} dev controls of each label and a held-out control or a documented gap of each.`);
   console.log('No provider contacted. This verifies wiring, not model accuracy or that any rule separates broken from clean.');
 } finally {
   globalThis.fetch = realFetch;

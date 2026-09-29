@@ -4,7 +4,7 @@
 //
 //   node scripts/prechecks-perch-run.mjs                  # dry run (the default): what would be asked, zero requests
 //   node scripts/prechecks-perch-run.mjs --controls       # dry run of the calibration set
-//   node scripts/prechecks-perch-run.mjs --live [--controls] [--rules a,b] [--packets DIR] [--cap 40] [--out FILE]
+//   node scripts/prechecks-perch-run.mjs --live [--controls [--split dev|held-out]] [--rules a,b] [--packets DIR] [--cap 40] [--out FILE]
 //
 // Live mode asks Perch one question per packet through the retained-receipt wrapper (scripts/perch-workflow.mjs), so
 // the run is recorded under .perch/usage/. It refuses to run in a linked worktree, stops on the first authentication
@@ -19,6 +19,11 @@
 // stops at (scripts/prechecks/packets/limits.json): a run that builds and asks with the defaults asks every packet, and
 // anything it skips is printed by rule. Staged calibration controls and staged copies are asked only by the run that
 // staged them; the controls are removed after a live calibration run.
+//
+// Calibration. `--split dev` asks only the dev controls (splits `broken` and `clean`), which tune a rule; `--split held-out`
+// asks only the held-out ones, once, after the rule text is frozen. A packet is flagged when its probability is strictly
+// above its rule's floor (`min` in the rules file, as Perch reports it), and a rule separates when every expected-broken
+// control is flagged and no expected-clean one is.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
@@ -33,7 +38,8 @@ export const RULES = [
 ];
 export const PACKET_ROOT = '.local/prechecks/packets';
 export const CAP = JSON.parse(readFileSync(join(ROOT, 'scripts/prechecks/packets/limits.json'), 'utf8')).packets_per_rule_per_head;
-const FLOOR = 0.8;
+const FLOOR = 0.8;                    // only when Perch reports no floor for a result
+export const SPLITS = { dev: ['broken', 'clean'], 'held-out': ['held-out'] };
 const HEADER = /^<!-- prechecks packet v\d+; rule=([a-z0-9-]+); increment=([^;]+); head=([^;]+);/;
 const SIDE_ROOTS = ['controls', 'staged'];
 
@@ -100,7 +106,9 @@ export async function unstageControls(root, target) {
  * under .local/prechecks/packets/staged/ and a `source`: execute() copies it there before asking. `skipped` counts the packets
  * over the cap by rule, and `staged` counts the packets that need copying.
  */
-export async function plan({ root = ROOT, packets = PACKET_ROOT, rules = RULES, cap = CAP, controls = false, controlsRoot = ROOT } = {}) {
+export async function plan({ root = ROOT, packets = PACKET_ROOT, rules = RULES, cap = CAP, controls = false, controlsRoot = ROOT, split = null } = {}) {
+  if (split && !SPLITS[split]) throw new Error(`Unknown split: ${split} (dev or held-out)`);
+  if (split && !controls) throw new Error('--split selects calibration controls; add --controls');
   const base = resolve(root, packets);
   const expected = controls ? await stageControls(root, base, controlsRoot) : null;
   const rows = [], counts = new Map(), skipped = {};
@@ -116,6 +124,7 @@ export async function plan({ root = ROOT, packets = PACKET_ROOT, rules = RULES, 
     counts.set(group, (counts.get(group) ?? 0) + 1);
     if (!controls && counts.get(group) > cap) { skipped[rule] = (skipped[rule] ?? 0) + 1; continue; }
     const label = controls ? expected.find(c => `${c.split}-${c.id}` === parts[0]) : null;
+    if (split && !SPLITS[split].includes(label?.split)) continue;
     let path = relative(root, file), source;
     if (!inWhere(path, rule)) {
       const tag = createHash('sha1').update(file).digest('hex').slice(0, 6);
@@ -133,11 +142,23 @@ function mainCheckout(root) {
   return resolve(root, git(['rev-parse', '--git-dir'])) === resolve(root, git(['rev-parse', '--git-common-dir']));
 }
 
+/** Perch flags a verdict strictly above the rule's floor (floorFor in Perch's CLI). */
+export const flaggedAt = r => r.probability_broken > (r.floor ?? FLOOR);
+
 export function separation(results) {
   const judged = results.filter(r => r.expected && typeof r.probability_broken === 'number');
   if (!judged.length) return null;
-  const wrong = judged.filter(r => (r.expected === 'broken') !== (r.probability_broken >= FLOOR));
-  return { floor: FLOOR, judged: judged.length, misclassified: wrong.map(r => r.path), separates: wrong.length === 0 };
+  const wrong = judged.filter(r => (r.expected === 'broken') !== flaggedAt(r));
+  const rules = {};
+  for (const r of judged) {
+    const rule = rules[r.rule] ??= { floor: r.floor ?? FLOOR, broken: [], clean: [] };
+    rule[r.expected].push(r.probability_broken);
+  }
+  for (const rule of Object.values(rules)) {
+    rule.broken.sort((a, b) => a - b); rule.clean.sort((a, b) => a - b);
+    rule.separates = rule.broken.every(p => p > rule.floor) && rule.clean.every(p => p <= rule.floor);
+  }
+  return { judged: judged.length, misclassified: wrong.map(r => r.path), separates: wrong.length === 0, rules };
 }
 
 /**
@@ -192,21 +213,29 @@ async function cli(argv) {
   if (bad.length) throw new Error(`Unknown rule: ${bad.join(', ')}`);
   const packets = value('--packets') ?? (controls ? `${PACKET_ROOT}/controls` : PACKET_ROOT);
   const cap = Number(value('--cap') ?? CAP);
-  const { rows, skipped, staged } = await plan({ root: ROOT, packets, rules, cap, controls });
-  console.log(`${live ? 'LIVE' : 'DRY RUN'}: ${rows.length} packet(s) across ${new Set(rows.map(r => r.rule)).size} rule(s) from ${packets}`);
+  const split = value('--split') ?? null;
+  const { rows, skipped, staged } = await plan({ root: ROOT, packets, rules, cap, controls, split });
+  console.log(`${live ? 'LIVE' : 'DRY RUN'}: ${rows.length} packet(s) across ${new Set(rows.map(r => r.rule)).size} rule(s) from ${packets}${split ? ` (${split} controls)` : ''}`);
   for (const rule of RULES) {
     const n = rows.filter(r => r.rule === rule).length;
     if (n || skipped[rule]) console.log(`  ${rule.padEnd(30)} ${String(n).padStart(4)}${skipped[rule] ? `  (${skipped[rule]} skipped over the cap of ${cap} per rule and head)` : ''}`);
   }
   if (staged) console.log(`  ${staged} packet(s) lie outside ${PACKET_ROOT}/**/<rule>/*.md and ${live ? 'are copied' : 'would be copied'} into ${PACKET_ROOT}/staged/ first`);
-  if (!live) { console.log('No request was made. Add --live to ask Perch (main checkout only).'); return 0; }
+  if (!live) {
+    if (controls) await unstageControls(ROOT, resolve(ROOT, packets));      // a dry run leaves nothing staged behind
+    console.log('No request was made. Add --live to ask Perch (main checkout only).');
+    return 0;
+  }
   try {
     const report = await execute(rows, { root: ROOT, live: true });
-    const summary = { ...report, skipped, separation: separation(report.results), at: new Date().toISOString() };
+    const summary = { ...report, split, skipped, separation: separation(report.results), at: new Date().toISOString() };
     const out = resolve(ROOT, value('--out') ?? `.local/prechecks/perch-run-${summary.at.replaceAll(':', '-')}.json`);
     await mkdir(dirname(out), { recursive: true });
     await writeFile(out, JSON.stringify(summary, null, 2) + '\n');
-    for (const r of report.results) console.log(`  ${String(r.status).padEnd(8)} ${r.probability_broken ?? '-'} ${r.path ?? r.error}`);
+    for (const r of report.results) console.log(`  ${String(r.status).padEnd(8)} ${r.probability_broken ?? '-'} ${r.expected ?? ''} ${r.path ?? r.error}`);
+    for (const [rule, s] of Object.entries(summary.separation?.rules ?? {})) {
+      console.log(`  ${rule.padEnd(30)} floor ${s.floor}: broken ${s.broken.join(' ') || '-'} | clean ${s.clean.join(' ') || '-'} | ${s.separates ? 'separates' : 'does not separate'}`);
+    }
     console.log(`Report: ${relative(ROOT, out)}. Verdicts are advisory; record calibration in docs/perch-review-log.md.`);
     return report.results.some(r => r.status === 'failed' || r.status === 'stopped') ? 1 : 0;
   } finally {

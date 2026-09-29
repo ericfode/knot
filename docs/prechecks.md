@@ -328,13 +328,14 @@ the plain commit and is byte-identical on every rebuild.
 
 ```sh
 node scripts/prechecks-perch-run.mjs --controls                 # dry run (the default): what would be asked, zero requests
-node scripts/prechecks-perch-run.mjs --controls --live          # calibration: one request per packet
+node scripts/prechecks-perch-run.mjs --controls --live --split dev       # tune: the dev controls only
+node scripts/prechecks-perch-run.mjs --controls --live --split held-out  # once, after the rule text is frozen
 node scripts/prechecks-perch-run.mjs --packets <dir>            # dry run: which packets of a built increment would be asked
 node scripts/prechecks-perch-run.mjs --live --packets <dir>     # ask about a built increment
 ```
 
 The runner uses the retained-receipt wrapper (`.perch/usage/`), refuses a linked worktree, and stops on the first
-authentication or quota failure. It has never been run live in this build. What it asks:
+authentication or quota failure. Its live calibration runs are recorded in `docs/perch-review-log.md` (2026-09-29). What it asks:
 
 - The cap is **per rule and per (increment, head)**, as each packet's own header names them (never by directory depth), and it is
   the number the builder stops at: `scripts/prechecks/packets/limits.json` (`packets_per_rule_per_head`, 40) is read by the
@@ -349,12 +350,30 @@ authentication or quota failure. It has never been run live in this build. What 
   calibration removes the controls when it ends.
 
 Calibration follows `docs/perch-maintenance.md`:
-run the [controls](../tests/prechecks/perch-controls/README.md), require every broken packet at or above the floor and every clean one
-below it, freeze the rule text, then run the held-out packets; keep `gate: false` until adjudicated production findings
-exist; a rule that does not separate is rewritten or narrowed, never floor-raised. The offline wiring test
-(`scripts/check-prechecks-rule-wiring.mjs`, stubbed provider) proves selection and plumbing only, including the cap, the staging and the
-controls' cleanup. The built-in `docs`
-category selects nothing on a packet, so it is not a baseline.
+- **Tune on dev.** Run the dev [controls](../tests/prechecks/perch-controls/README.md) and require every broken packet above its rule's floor and every clean one at or below it. Perch flags a verdict strictly above `max(0.5, min/100)`, and the runner reads each rule's floor from Perch's own report.
+- **Freeze, then held-out.** Freeze the rule text, then run the held-out packets once.
+- **Floor.** Set a floor only where the dev gap between the highest clean and the lowest broken clearly exceeds the re-run noise (about ±0.04 measured, so a gap of at least 0.10), and keep it only if held-out confirms it.
+- **Advisory.** Keep `gate: false` until adjudicated production findings exist.
+- **No floor-raising.** A rule that does not separate is rewritten or narrowed, never floor-raised.
+
+The offline wiring test (`scripts/check-prechecks-rule-wiring.mjs`, stubbed provider) proves selection and plumbing only, including the cap, the staging, the split filter, the strict floor and the controls' cleanup. The built-in `docs` category selects nothing on a packet, so it is not a baseline.
+
+**Rule status (2026-09-29).** Every rule is advisory and uncalibrated: `min: 80`, `gate: false`, no floor derived. The texts were narrowed (an applicability sentence, concrete violation shapes, exemptions, and a missing-evidence clause scoped to the deciding evidence) and frozen at `.perch/rules/prechecks.yaml` sha256 `151f266a…`.
+
+- *Rule hash* is the sha256 of the parsed rule object (first 12 hex).
+- *Dev* is the frozen text on 66 dev controls, and *held-out* is the frozen text asked once on 25.
+- B and C are the broken and clean probabilities, and the *gap* is the lowest broken minus the highest clean.
+- The runs, per-control probabilities and reasons are in the [review log](perch-review-log.md) and in [`results-2026-09-29.json`](../tests/prechecks/perch-controls/results-2026-09-29.json).
+
+| Rule | Rule hash | Dev (frozen text) | Held-out | Status |
+|---|---|---|---|---|
+| `claim-holds-against-evidence` | `abdde60729a1` | B .60–.84, C .10–.55, gap .05 | B .69, .89; C .23, .33 | ranks broken above clean everywhere; the dev gap is inside noise, so the next step is more dev controls |
+| `passages-agree` | `18f69f072e63` | B .24–.53, C .13–.29, AUC .94 | B .34; C .23, .33 | ranks, but its probabilities sit below Perch's 0.5 floor minimum |
+| `outcome-follows-d4` | `f9906937e0c4` | B .67–.83, C .09–.61, gap .06 | no broken; C .16, .28, .37 | separates on dev below the margin; one clean label (the D20 row not attached) awaits adjudication |
+| `clause-vs-delta` | `4e4fbf300b61` | B .45–.62, C .16–.54 | no broken; C .10, .25, .64, .67 | the "clause at base, reworded" header acts as a trigger |
+| `expectation-independent` | `874666971a9c` | B .56–.68, C .27–.55, gap .01 | B .51, .73; C .44, .58 | does not separate on held-out |
+| `kill-is-semantic` | `3f5388b351be` | B .51–.83, C .30–.55, AUC .96 | B .39, .85; C .38, .50 | one inversion on dev and held-out |
+| `required-laws-met` | `e62830b3907f` | B .58–.86, C .19–.70 | B .85; C .12, .76 | its same-evidence broken/clean pair never separated |
 
 ## How it is verified
 
@@ -479,8 +498,15 @@ These edits live in the campaign harness, outside the repository:
   misclassification by *form* rather than by position (`On{} => x`) is found only by the frozen `expect` probes, not by the grid.
 - **`partial` is the common state** until manifests, gate runs and adapters exist: nearly every run has a rule that could not run, and
   the report says which. It changes no exit code without `--strict`.
-- **Selection is lexical.** C8 packets and C1 samples are chosen by mechanical triggers, so recall is bounded: the calibration
-  set records two defects (vm-spec's section 6 and section 9 passages; vm-model's `inspection_runs`) that selection does not reach.
+- **Selection is lexical.** C8 packets and C1 samples are chosen by mechanical triggers, so recall is bounded.
+  - Where the builders miss the deciding lines, a calibration control is a verbatim excerpt: 9 of 66 dev and 7 of 25 held-out.
+  - The 2026-09-29 audit found these recall limits:
+    - the law regex drops laws whose binders span lines;
+    - obligations are read only from `src/SPEC.md` headings;
+    - the kill selector never attaches `run`, the kill predicate or the meaning of an exit code;
+    - the clause selector misses emitter hunks and JSON whitelists;
+    - the outcome builder attaches only the D4 and D16 rows, not every decision row a packet cites;
+    - the 12 KB cut removes deciding lines from many vm packets.
 - **Advisory Perch verdicts** are never findings until confirmed deterministically (AGENTS.md).
 - **Held-out discipline.** Rules were derived from dev-round instances. The design's held-out rounds (review started at or after
   2026-09-28T12:00Z) were not used for tuning: their probes sit in `.local/prechecks/quarantine/` (untracked, copied unread) until
@@ -488,6 +514,8 @@ These edits live in the campaign harness, outside the repository:
   exposures, both recorded in the [controls README](../tests/prechecks/perch-controls/README.md): vm-spec `5517f263` moved to dev
   when its passages were read to fix the P3 builder (DESIGN 1.4, rule 3), and one held-out literals finding was printed during
   orientation (nothing was derived from it).
+  - **The 2026-09-29 calibration held out the Perch rules the same way.** Its held-out controls were labelled after the rule texts were frozen, by labellers who saw no scores. They come from heads no dev control used, and each was asked once.
+  - **Its exposures are in the controls README.**
 
 ## Adding a check or a rule
 

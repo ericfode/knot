@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=expectation-independent; increment=vm-core; head=f54d97ad3397; base=0f511b06ba24; builder=scripts/prechecks/packets@40e325337e4a; sources: vm/check-core.py@f54d97ad sha256=a00f30eb545d00e7ebf1b31552e65dc23b5a6a9b0250cd2a1d46ff7b59e37c97 -->
+<!-- prechecks packet v1; rule=expectation-independent; increment=vm-core; head=f54d97ad3397; base=0f511b06ba24; builder=scripts/prechecks/packets@3a2ef420dff1; sources: vm/check-core.py@f54d97ad sha256=a00f30eb545d00e7ebf1b31552e65dc23b5a6a9b0250cd2a1d46ff7b59e37c97 -->
 # Claim
 Statements about where expected values come from:
 

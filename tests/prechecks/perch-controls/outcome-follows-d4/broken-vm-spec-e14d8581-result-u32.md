@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=outcome-follows-d4; increment=vm-spec; head=e14d8581dc12; base=454bf3059679; builder=scripts/prechecks/packets@40e325337e4a; sources: vm/SPEC.md@e14d8581 sha256=775b305468384b9e8ec07490db7b51716e2d159635be1d9b3e3ab584923842ac -->
+<!-- prechecks packet v1; rule=outcome-follows-d4; increment=vm-spec; head=e14d8581dc12; base=454bf3059679; builder=scripts/prechecks/packets@3a2ef420dff1; sources: vm/SPEC.md@e14d8581 sha256=775b305468384b9e8ec07490db7b51716e2d159635be1d9b3e3ab584923842ac -->
 # Claim
 Outcome claims this branch changed:
 
