@@ -1621,7 +1621,7 @@ def effect_controls(plans: dict) -> list:
         """main = λ@R. λk. body, k being slot 0 of the inner closure and `slots` its depth"""
         return image('program', ['closure', 7, 0, 0, [], ['closure', 6, 1, slots, [], body]], 0, *more)
     return [
-        ('book-print', image('book', bound(text('x'))), refused),
+        ('book-print', image('book', bound(text('x'))), {**unsupported, 'calls': 5}),
         ('book-print-continuation-call', image('book', bound(text('x'), calling)), refused),
         ('book-print-twice', image('book', ['let', 8, 0, bound(text('y')), bound(text('x'))], 1), refused),
         ('book-print-non-scalar', image('book', bound(['lit', 3, 'String', [0xD800]])), refused),
