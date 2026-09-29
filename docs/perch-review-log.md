@@ -1294,3 +1294,227 @@ Change: none in this entry.
 Next trigger: narrow the questions as the 2026-09-28 bend-machine-arithmetic repair did: an applicability sentence,
 concrete violation shapes and explicit exemptions. Add clean controls to every rule (at least 3 each) and a held-out
 clean set, rerun, and set floors only from separated controls. Retire passages-agree if a rewrite still cannot separate.
+
+## 2026-09-29 — prechecks rules: a rebuilt calibration set, narrowed questions, no floor yet
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, branch `perch/prechecks-calibration` from main `82d79f4a`.
+- Rules: the seven advisory rules of `.perch/rules/prechecks.yaml`. The file sha256 was `c2085179…` before this work and is `151f266a…` for the frozen texts.
+- Rule identity: each rule's identity is the sha256 of its parsed object (name, where, each, min, gate, ensure), first 12 hex, given per run in the tables below.
+- Calibration set: `tests/prechecks/perch-controls/`. Its `cases.json` sha256 was `778c7a7a…` when the held-out labels were committed (`afd38d23`).
+
+Evidence links and usage receipt IDs:
+- [`results-2026-09-29.json`](../tests/prechecks/perch-controls/results-2026-09-29.json) holds every run's identities (rule file, per-rule hashes, the receipts' combined `rules_sha256`) and per-control probabilities. The [controls README](../tests/prechecks/perch-controls/README.md) holds the labels and the retired controls.
+- Receipts: 212 `check` receipts in the main checkout's `.perch/usage/`, 2026-09-29T15:31Z to 16:1xZ. Every one completed with a verdict; none failed.
+- How the runs were made: each run was asked from the main checkout by overlaying this branch's rules, runner and controls. The script refused to overlay paths that were already modified, and after each run it restored the working copy and compared it with a status and HEAD snapshot (all nine matched). Nothing was committed there.
+
+Waste or missed behavior / measured effort: the first live calibration (22 controls) was partly measuring its own labels.
+- Reading every packet against its rule offline found 12 of 22 controls that could not carry their label:
+  - all four clause-vs-delta controls: the text anchors matched incidental words, and no packet shows a violating hunk;
+  - all three required-laws-met controls: their `required_laws` list has no verbatim source, since one item first appears in the commit that added the controls;
+  - the kill-is-semantic held-out excerpt, which shows no kill predicate;
+  - two outcome-follows-d4 controls whose stated defect is not in the packet;
+  - two claim-holds controls whose label rested on unshown evidence.
+- One control was relabelled. The kill-is-semantic "clean" vm-model `07e6db73` credits a crashed fuel control as a kill in `harness_runs`, and `KNOWN_EXITS` admits exit 7, HarnessBound. So the first entry's "kill-is-semantic separates (0.68/0.70 against 0.30)" rested on a mislabelled clean.
+- The first calibration's model was requested `jev-latest`, resolved `jev-1.13.0`; its receipts' `rules_sha256` is `5d18aced…`.
+- Effort: the live runs took about a minute of provider time in all. The audit and candidate search ran as read-only agents and was not separately timed.
+
+Rule + hash / requested and resolved model: requested `jev-latest`, resolved `jev-1.13.0` for all 212 requests; Perch 0.3.5. The per-rule hashes are in the tables.
+
+Judgment: unresolved (uncalibrated) for all seven rules. No rule reached the pre-committed dev margin, so every rule keeps `min: 80` and `gate: false`.
+
+Change and why:
+1. **Calibration set.**
+   - Now 66 dev controls (every rule has 4 or 5 broken and 4 to 6 clean) and 25 held-out.
+   - 12 controls are retired, with reasons, in `specs.json` and `cases.json`, and one is relabelled.
+   - The packets are the unmodified builders' output at real campaign commits, or verbatim excerpts where the builders miss the deciding lines: 9 of 66 dev and 7 of 25 held-out.
+   - Each label comes from the packet text alone: broken when the packet shows the violation, clean when it shows the property holding. Candidates that turned on unshown evidence or a judgment call were excluded.
+   - Read-only agents found the candidates in packet pools built from about 60 campaign heads, and each dev label was re-read before it was committed.
+2. **Questions.** Each rule now has an applicability sentence, concrete violation shapes, explicit exemptions, and a missing-evidence clause scoped to the evidence that decides an applicable claim.
+   - At most two rules were rewritten per iteration, each had at most one revision, and no identifier from a dev packet appears in a rule.
+   - outcome-follows-d4's exemptions are a class conflict that no exemption excuses, a bound that must itself be Exhausted, a divergence that a decision row documents, and a recorded upstream deviation.
+   - kill-is-semantic now asks for a trace of what a crash, timeout or harness limit records, and of whether the kill predicate would count it.
+3. **Runner and wiring test.**
+   - `prechecks-perch-run.mjs` uses each rule's own floor with Perch's strict `>` (it used a fixed 0.8 with `>=`), reports separation per rule, and adds `--split dev|held-out`. A `--controls` dry run no longer leaves staged controls.
+   - The wiring test allows a per-rule integer floor (still advisory). It requires at least 3 dev controls of each label per rule, and allows a held-out control of either label or a documented gap per cell.
+
+Pre-commitments, verbatim, written before any held-out packet was labelled:
+- "A floor is set only where the dev gap (lowest broken minus highest clean) is >= 0.10, placed at the integer percentage nearest the middle of the gap; confirmed only if held-out separates at that floor."
+- "Each rule freezes with its final rewrite, unless the original text rank-separated on the identical control set and the final does not; then the original freezes and both are logged."
+- "Uncalibrated rules keep min 80 (unchanged); the rewritten text is the deliverable."
+
+The 0.10 margin comes from measured noise: ten controls whose packet body did not change moved at most 0.04 between the first calibration and the baseline run.
+
+Clean / broken / held-out evidence and deterministic checks:
+- Summary per rule:
+  - Runs: the baseline is the original text on the dev set; the final is the frozen text on the dev set; the held-out run is asked once.
+  - B and C are the broken and clean ranges, and the gap is the lowest broken minus the highest clean.
+
+| rule | baseline dev | final dev | held-out |
+|---|---|---|---|
+| claim-holds-against-evidence | B .74–.88, C .14–.67, gap .07 | B .60–.84, C .10–.55, gap .05 | B .69, .89; C .23, .33 |
+| passages-agree | B .25–.65, C .12–.25, AUC .98 | B .24–.53, C .13–.29, AUC .94 | B .34; C .23, .33 |
+| outcome-follows-d4 | B .59–.90, C .39–.68, gap −.09 | B .67–.83, C .09–.61, gap .06 | no broken; C .16, .28, .37 |
+| clause-vs-delta | B .48–.71, C .20–.37 (9 controls) | B .45–.62, C .16–.54, gap −.09 | no broken; C .10, .25, .64, .67 |
+| expectation-independent | B .59–.69, C .23–.55, gap .04 | B .56–.68, C .27–.55, gap .01 | B .51, .73; C .44, .58 |
+| kill-is-semantic | B .27–.75, C .19–.36, AUC .90 | B .51–.83, C .30–.55, AUC .96 | B .39, .85; C .38, .50 |
+| required-laws-met | B .55–.92, C .13–.56 | B .58–.86, C .19–.70 | B .85; C .12, .76 |
+
+- **What held:**
+  - The narrowing clearly helped outcome-follows-d4, whose exemptions hold on every held-out clean (the D20 excerpt is at .16), and kill-is-semantic, whose tracing lifted the timeout and harness-limit controls from .29/.55 to .73/.83.
+  - claim-holds-against-evidence ranks every broken above every clean in the baseline, the final dev run and held-out, but its dev gaps (.07, .05) are within noise.
+- **What did not:**
+  - The other rewrites held or slipped within noise.
+  - passages-agree ranks well, but its probabilities sit below Perch's 0.5 floor minimum.
+  - clause-vs-delta treats the builder's "clause at base, reworded or removed by this branch" header as a trigger. Base-clause clean controls score .50–.67 on dev and held-out, whatever the text says.
+  - required-laws-met never separated its same-evidence pair (nest `5374d928`, broken/clean): .55/.55 at baseline, .35/.40 after the rewrite, .58/.68 after the revision. It still reads a recorded open obligation correctly (held-out clean .12).
+- **Offline gates:** `npm run -s prechecks:verify` and `npm run -s lint:verify` pass (see the PR).
+
+Per-control probabilities (dev columns are runs with the rule text named by its hash; empty means not asked):
+
+`claim-holds-against-evidence` (per-rule hash by run: base `881967a605a0`, r4 `abdde60729a1`, held-out `abdde60729a1`):
+
+| control | label | base | r4 | held-out |
+|---|---|---|---|---|
+| bootstrap-dc76dac3-eight-mutants | broken | 0.84 | 0.64 |  |
+| generics-19a534d3-all-17-erasure | broken | 0.87 | 0.84 |  |
+| vm-core-f54d97ad-unsupported-cause | broken | 0.88 | 0.79 |  |
+| vm-spec-d2fe0f20-bench | broken | 0.78 | 0.60 |  |
+| vm-spec-e14d8581-excused-bound | broken | 0.74 | 0.65 |  |
+| fields-wasm-3868b119-heap-sections | clean | 0.63 | 0.55 |  |
+| gpu-2-e485e6d2-wgsl-typecheck | clean | 0.67 | 0.45 |  |
+| harness-2-f53f937c-wasm-memories | clean | 0.14 | 0.10 |  |
+| io-host-963a7594-env-confined | clean | 0.30 | 0.21 |  |
+| modules-0111f133-case-alias | clean | 0.41 | 0.27 |  |
+| modules-bbff6371-binder-walk-bound | held-out broken |  |  | 0.89 |
+| nest-384acc6e-partitioned-matrix-budget | held-out broken |  |  | 0.69 |
+| literals-943104f8-census-feature-exception | held-out clean |  |  | 0.23 |
+| nest-99053a70-concrete-normalization-witnesses | held-out clean |  |  | 0.33 |
+
+`passages-agree` (per-rule hash by run: base `4f332b4a9724`, r1 `5b2e8e0119c2`, r1b `18f69f072e63`, held-out `18f69f072e63`):
+
+| control | label | base | r1 | r1b | held-out |
+|---|---|---|---|---|---|
+| descent-2-75e1ac69-other-parameter | broken | 0.62 | 0.67 | 0.50 |  |
+| generics-78c4942e-return-type-application | broken | 0.35 | 0.44 | 0.41 |  |
+| vm-core-a5e2ffa8-vm-expected-goldens | broken | 0.65 | 0.56 | 0.46 |  |
+| vm-spec-94bc3d57-d20 | broken | 0.25 | 0.25 | 0.24 |  |
+| vm-spec-d2fe0f20-drop-operands | broken | 0.32 | 0.29 | 0.53 |  |
+| opt-1-34d75984-non-tail | clean | 0.17 | 0.16 | 0.20 |  |
+| recursion-624228e5-other-parameter | clean | 0.13 | 0.13 | 0.13 |  |
+| vm-core-b2aab0f5-vm-expected-goldens | clean | 0.21 | 0.13 | 0.24 |  |
+| vm-spec-a0fd6e00-d20 | clean | 0.25 | 0.24 | 0.22 |  |
+| vm-spec-e14d8581-drop-operands | clean | 0.12 | 0.08 | 0.29 |  |
+| vm-core-6f78bd27-check-spec-run-control-count | held-out broken |  |  |  | 0.34 |
+| nest-384acc6e-parameter-type-code-retained | held-out clean |  |  |  | 0.23 |
+| vm-model-37e69a30-model-counts-match-spec | held-out clean |  |  |  | 0.33 |
+
+`outcome-follows-d4` (per-rule hash by run: base `64e52d37dbe3`, r2 `4b269fed1761`, r2b `f9906937e0c4`, held-out `f9906937e0c4`):
+
+| control | label | base | r2 | r2b | held-out |
+|---|---|---|---|---|---|
+| vm-spec-94bc3d57-image-size-frozen | broken | 0.59 | 0.17 | 0.79 |  |
+| vm-spec-d2fe0f20-scalar-result | broken | 0.83 | 0.61 | 0.72 |  |
+| vm-spec-e14d8581-expected-bound | broken | 0.90 | 0.74 | 0.83 |  |
+| vm-spec-e14d8581-result-u32 | broken | 0.76 | 0.57 | 0.67 |  |
+| generics-19a534d3-boundaries | clean | 0.68 | 0.31 | 0.28 |  |
+| literals-3246fa3d-resource-guards | clean | 0.48 | 0.25 | 0.25 |  |
+| opt-1-34d75984-deep-call-exhausted | clean | 0.52 | 0.19 | 0.21 |  |
+| vm-spec-63e63203 | clean | 0.57 | 0.47 | 0.61 |  |
+| vm-spec-63e63203-image-size-frozen | clean | 0.39 | 0.09 | 0.09 |  |
+| literals-943104f8-file-failures-and-path-identity | held-out clean |  |  |  | 0.28 |
+| nest-384acc6e-wasm-call-stack-arena-exhausted | held-out clean |  |  |  | 0.37 |
+| vm-spec-cea554ab-d20-non-scalar-output | held-out clean |  |  |  | 0.16 |
+
+`clause-vs-delta` (per-rule hash by run: base `03d308810615`, r3 `c7eb74706322`, r3b `4e4fbf300b61`, held-out `4e4fbf300b61`):
+
+| control | label | base | r3 | r3b | held-out |
+|---|---|---|---|---|---|
+| closures-a1d68911-only-allocator-appended | broken | 0.48 | 0.46 | 0.45 |  |
+| descent-2-75e1ac69-conservative-classification | broken | 0.57 | 0.44 | 0.45 |  |
+| generics-78c4942e-classify2-pins-unchanged | broken | 0.68 | 0.48 | 0.49 |  |
+| harness-2-364d427e-judge-reads-only-recorded | broken | 0.71 | 0.59 | 0.62 |  |
+| closures-a1d68911-dispatchers-appended | clean | 0.37 | 0.27 | 0.30 |  |
+| fields-wasm-3868b119-only-unreachable-guard | clean | 0.30 | 0.18 | 0.19 |  |
+| harness-2-364d427e-fixed-57-native | clean |  | 0.50 | 0.54 |  |
+| harness-2-364d427e-held-to-files | clean | 0.20 | 0.15 | 0.16 |  |
+| nest-eb15da85-empty-case-whitelist | clean | 0.36 | 0.25 | 0.24 |  |
+| vm-spec-a0fd6e00-unsupported-never-a-bound | clean | 0.28 | 0.21 | 0.20 |  |
+| generics-edfad8b9-parameter-mutant-anchor | held-out clean |  |  |  | 0.25 |
+| modules-7ac90164-census-sole-exception | held-out clean |  |  |  | 0.10 |
+| nest-384acc6e-base-mvp-reworded | held-out clean |  |  |  | 0.67 |
+| nest-47172493-base-guard-reworded | held-out clean |  |  |  | 0.64 |
+
+`expectation-independent` (per-rule hash by run: base `56169c0bdff7`, r3 `cd037a4c7e39`, r3b `874666971a9c`, held-out `874666971a9c`):
+
+| control | label | base | r3 | r3b | held-out |
+|---|---|---|---|---|---|
+| vm-core-a5e2ffa8-control-jobs | broken | 0.59 | 0.57 | 0.56 |  |
+| vm-core-b2aab0f5-control-jobs | broken | 0.65 | 0.57 | 0.58 |  |
+| vm-core-f54d97ad-control-jobs | broken | 0.69 | 0.69 | 0.68 |  |
+| vm-spec-d2fe0f20-vm-expectation | broken | 0.60 | 0.55 | 0.60 |  |
+| closures-a1d68911-seed-regression | clean | 0.23 | 0.25 | 0.27 |  |
+| vm-model-07e6db73-fuel-runs-literal | clean | 0.44 | 0.63 | 0.55 |  |
+| vm-model-07e6db73-sweep-reference-codec | clean | 0.41 | 0.40 | 0.38 |  |
+| vm-spec-e14d8581-vm-expectation-seed-compared | clean | 0.55 | 0.36 | 0.41 |  |
+| vm-core-6f78bd27-control-jobs-want | held-out broken |  |  |  | 0.51 |
+| vm-core-dcc7c095-limit-word-jobs-want | held-out broken |  |  |  | 0.73 |
+| vm-model-37e69a30-fuel-runs-literal | held-out clean |  |  |  | 0.44 |
+| vm-spec-cea554ab-vm-expectation | held-out clean |  |  |  | 0.58 |
+
+`kill-is-semantic` (per-rule hash by run: base `df529c2f4f3e`, r1 `d8d6442d3ae6`, r1b `3f5388b351be`, held-out `3f5388b351be`):
+
+| control | label | base | r1 | r1b | held-out |
+|---|---|---|---|---|---|
+| vm-model-07e6db73-harness-bound-kill | broken | 0.29 | 0.78 | 0.73 |  |
+| vm-model-07e6db73-kills | broken | 0.27 | 0.45 | 0.51 |  |
+| vm-spec-63e63203-source-mutants-timeout | broken | 0.55 | 0.80 | 0.83 |  |
+| vm-spec-97c1da13-source-mutants-raw-diff | broken | 0.75 | 0.62 | 0.67 |  |
+| vm-spec-d2fe0f20-source-mutants | broken | 0.64 | 0.72 | 0.77 |  |
+| classify-2-7b85b8aa-specific-wrong-classification | clean | 0.27 | 0.35 | 0.39 |  |
+| descent-2-75e1ac69-semantic-wrong-exit | clean | 0.23 | 0.22 | 0.30 |  |
+| fields-wasm-3868b119-wrong-enum-result | clean | 0.19 | 0.22 | 0.32 |  |
+| generics-78c4942e-exit-0-2-3 | clean | 0.25 | 0.56 | 0.55 |  |
+| recursion-624228e5-fixed-observation | clean | 0.36 | 0.36 | 0.35 |  |
+| vm-model-19cf7d8f-harness-fuel-ignored | held-out broken |  |  |  | 0.39 |
+| vm-spec-cea554ab-source-mutants | held-out broken |  |  |  | 0.85 |
+| vm-core-6f78bd27-wat-mutant-loop | held-out clean |  |  |  | 0.38 |
+| vm-spec-cea554ab-codec-mutants-helpers | held-out clean |  |  |  | 0.50 |
+
+`required-laws-met` (per-rule hash by run: base `566039591f0b`, r2 `2690e266a27d`, r2b `e62830b3907f`, held-out `e62830b3907f`):
+
+| control | label | base | r2 | r2b | held-out |
+|---|---|---|---|---|---|
+| nest-5374d928-unmet-laws | broken | 0.55 | 0.35 | 0.58 |  |
+| nest-c500d7d5-unmet-exhaustive | broken | 0.61 | 0.55 | 0.72 |  |
+| nest-eb15da85-unmet-laws | broken | 0.60 | 0.49 | 0.70 |  |
+| vm-model-07e6db73-symbolic-tail | broken | 0.92 | 0.90 | 0.86 |  |
+| closures-a1d68911-spec-laws | clean | 0.44 | 0.47 | 0.52 |  |
+| fields-wasm-3868b119-proof-boundary | clean | 0.13 | 0.21 | 0.30 |  |
+| generics-78c4942e-proof-boundary | clean | 0.56 | 0.53 | 0.70 |  |
+| nest-5374d928-proof-scope | clean | 0.55 | 0.40 | 0.68 |  |
+| nest-57a0c01d-principal-law | clean | 0.28 | 0.12 | 0.19 |  |
+| vm-model-19cf7d8f-proof-entries | held-out broken |  |  |  | 0.85 |
+| generics-edfad8b9-proof-boundary | held-out clean |  |  |  | 0.76 |
+| nest-384acc6e-unmet-laws-recorded | held-out clean |  |  |  | 0.12 |
+
+Remaining uncertainty / next trigger:
+- **claim-holds-against-evidence** is the nearest to a floor. It separates on the baseline dev run, the final dev run and held-out, and a floor in 57–59 separates both the final dev set and held-out. The dev margin is inside noise, though, so the next step is more dev controls, not a floor.
+- **outcome-follows-d4:** its dev gap is held open by one clean control, `vm-spec-63e63203`, at .61. That label depends on the decision-row exemption while the D20 row is not in the packet. Adjudicate it before the next run; excluding it now, after the scores, would be post hoc. The held-out labeller excluded all 127 vm-spec and vm-core outcome packets for the same reason. The builder should attach every decision row a packet cites.
+- **Held-out gaps:**
+  - clause-vs-delta has no held-out broken anywhere: a structural scan of 1,052 packets found none.
+  - outcome-follows-d4's only held-out broken candidate was excluded before scoring. An explicitly unmet case that reports Unsupported beside a frozen seed Invalid reads as broken under the frozen text but conforms to D4. The class-conflict clause needs an exemption for a recorded unmet target.
+- **passages-agree** is not retired, although the previous entry's trigger said to retire it if a rewrite could not separate. It ranks broken over clean on dev (AUC .94) and held-out; the binding constraint is Perch's 0.5 floor minimum, not the question.
+- **Held-out is thin.** 1 to 4 controls per rule, many of them excerpts, so these scores are exploratory. The kill-is-semantic and outcome-follows-d4 revisions were each motivated by single dev packets.
+- **Builder recall defects** found by the audit; they belong to a separate builder task, not this change:
+  - the law regex drops laws whose binders span lines;
+  - obligations are read only from `src/SPEC.md` headings;
+  - the kill selector never attaches `run`, `kills` or the meaning of an exit code;
+  - the clause selector misses emitter hunks and JSON whitelists;
+  - the outcome builder attaches only the D4 and D16 rows;
+  - the 12 KB cut removes deciding lines in many vm packets.
+- **Exposures:**
+  - The replay's held-out finding titles were printed while orienting; one held-out claim-holds control was seeded from such a pointer.
+  - An agent's `git grep` printed nest `99053a70` contract lines, so that head was excluded for clause-vs-delta and required-laws-met.
+  - Two agents printed held-out head names.
+  - Dev keeps the post-cutoff vm-spec tip `63e63203` and vm-model `07e6db73` (reviewed 18:37Z), as the design did.
+  - The two post-review tips `60e80693` and `2c1f3d70` were reserved for held-out before any search.
