@@ -1,15 +1,12 @@
-# Checker contract
+Excerpt of research/compiler-fields/SPEC.md: the paragraph of the structural contract that the checker states and proves.
 
-The checker maps a parsed book to a resolved core term or to one classified
-failure, and the pinned seed decides each verdict: Invalid where the seed
-rejects, Unsupported where Knot cannot check a form (never Invalid, never passed
-through unchecked), Exhausted at a resource bound.
-
-A datatype match is a flat match or a binary matrix of single-constructor
-decisions; a match on an installed primitive, or with a literal arm, takes the
-literal matrix. A body that is not a match closes the match frontier and judges
-its `+` kinds. Literals, Nat offsets and refined lets check against a known
-type. Checking is affine: a live occurrence is consumed once.
-
-Frozen expectations: tests/compiler-checker, tests/compiler-fields,
-tests/compiler-nest and tests/compiler-literals.
+Extend the monomorphic catalog with constructor arguments and ordered pattern
+matrices: multiple scrutinees, wildcard and variable rows, nested constructors
+and plain or `+` field binders. Rows preserve source order; the first matching
+row supplies the body. Shadowed bodies are discarded. Every constructor
+combination must be covered, with zero rows valid for an empty datatype.
+Source pattern names and arities are checked before selecting bodies;
+constructor columns remain strict under earlier catch-all rows.
+Every constructor argument is checked against its field type and demand;
+erased arguments are checked but not executed. Constructor expressions require
+an expected type. Structural recursion follows its separate descent contract.
