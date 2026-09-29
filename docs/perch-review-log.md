@@ -1306,6 +1306,7 @@ Evidence links and usage receipt IDs:
 - [`results-2026-09-29.json`](../tests/prechecks/perch-controls/results-2026-09-29.json) holds every run's identities (rule file, per-rule hashes, the receipts' combined `rules_sha256`) and per-control probabilities. The [controls README](../tests/prechecks/perch-controls/README.md) holds the labels and the retired controls.
 - Receipts: 212 `check` receipts in the main checkout's `.perch/usage/`, 2026-09-29T15:31Z to 16:1xZ. Every one completed with a verdict; none failed.
 - How the runs were made: each run was asked from the main checkout by overlaying this branch's rules, runner and controls. The script refused to overlay paths that were already modified, and after each run it restored the working copy and compared it with a status and HEAD snapshot (all nine matched). Nothing was committed there.
+- Main moved from `82d79f4a` to `c853cc5a` between run 8 and the held-out run (a gate-timeout change touching no Perch or prechecks file); each run's before and after snapshots matched.
 
 Waste or missed behavior / measured effort: the first live calibration (22 controls) was partly measuring its own labels.
 - Reading every packet against its rule offline found 12 of 22 controls that could not carry their label:
@@ -1367,7 +1368,10 @@ Clean / broken / held-out evidence and deterministic checks:
   - passages-agree ranks well, but its probabilities sit below Perch's 0.5 floor minimum.
   - clause-vs-delta treats the builder's "clause at base, reworded or removed by this branch" header as a trigger. Base-clause clean controls score .50–.67 on dev and held-out, whatever the text says.
   - required-laws-met never separated its same-evidence pair (nest `5374d928`, broken/clean): .55/.55 at baseline, .35/.40 after the rewrite, .58/.68 after the revision. It still reads a recorded open obligation correctly (held-out clean .12).
-- **Offline gates:** `npm run -s prechecks:verify` and `npm run -s lint:verify` pass (see the PR).
+- **Offline gates:**
+  - `npm run -s prechecks:verify` passes: 223 unit tests, 32 semantic mutants, and wiring for 7 rules and 91 packets. It ran with the main checkout's `.toolchain` symlinked into the worktree, as the campaign worktrees do; without it the C1 end-to-end tests skip, and the gate refuses the skipped pinning test.
+  - `npm run -s lint:verify` passes: 168 tests.
+  - `npm run -s census:check` passes.
 
 Per-control probabilities (dev columns are runs with the rule text named by its hash; empty means not asked):
 
