@@ -600,9 +600,12 @@ HEADED = '''def f(a: Flag, b: Flag) -> Flag:
 '''
 HEADS = {'plus': ('a + b', '_'), 'minus': ('a - b', '_'), 'numeral': ('a 10n', '_ _'), 'succ': ('a 1n+m b', '_ _ _'),
          'two-plus': ('a b + a', '_ _')}
-group('header-term', unsupported('term-form'), None,
-      *[(f'header-{name}-dead', PRE + HEADED.format(inner=f'match {head}:\n        case {row}: On{{}}') + '\n' + main_of('On{}, Off{}'))
-        for name, (head, row) in HEADS.items()])
+# An operator token after a scrutinee continues it: `operator`, the seed's sugar (round 13); a numeral is another term.
+OPERATORS = {'plus', 'minus', 'two-plus'}
+for code, names in (('operator', [n for n in HEADS if n in OPERATORS]), ('term-form', [n for n in HEADS if n not in OPERATORS])):
+    group('header-operator' if code == 'operator' else 'header-term', unsupported(code), None,
+          *[(f'header-{name}-dead', PRE + HEADED.format(inner=f'match {HEADS[name][0]}:\n        case {HEADS[name][1]}: On{{}}') + '\n' + main_of('On{}, Off{}'))
+            for name in names])
 # An application with a space, `a (b)`, is one call term in both.
 group('header-ok', ACCEPTED, None,
       ('header-call-dead', PRE + HEADED.format(inner='match a (b):\n        case _: On{}') + '\n' + main_of('On{}, Off{}')))
