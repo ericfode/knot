@@ -1,0 +1,813 @@
+{
+ "command": "scripts/bend-reference PATH --check-only",
+ "d4_gaps": [
+  "tests/compiler-closures/fixtures/closure-drop.bend",
+  "tests/compiler-closures/fixtures/closure-in-arm.bend",
+  "tests/compiler-closures/fixtures/curried-arities.bend",
+  "tests/compiler-closures/fixtures/defunc-sites.bend",
+  "tests/compiler-closures/fixtures/return-closure.bend",
+  "tests/compiler-selfhost/fixtures/layout-braces/main.bend",
+  "tests/compiler-selfhost/fixtures/layout-call-args/main.bend",
+  "tests/compiler-selfhost/fixtures/layout-comments/main.bend",
+  "tests/compiler-selfhost/fixtures/layout-dedent-close/main.bend",
+  "tests/compiler-selfhost/fixtures/layout-def-header/main.bend",
+  "tests/compiler-sugar/fixtures/parallel-let.bend",
+  "vm/golden/closure-capture-off.bend",
+  "vm/golden/closure-capture-on.bend",
+  "vm/golden/closure-captures.bend",
+  "vm/golden/closure-nested.bend",
+  "vm/golden/closure-return.bend",
+  "vm/golden/closure-shadow.bend"
+ ],
+ "invalid_sources": 100,
+ "listed_sources": 690,
+ "rows": {
+  "tests/compiler-checker/fixtures/branch-duplicate.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t133:138:8:16",
+   "diagnostic": "Error: | - expected : y | - observed : y (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "1d3cb783f5d51fe9ffd4b5b72affb486873a15f884a9758b82ee958efce44425"
+  },
+  "tests/compiler-checker/fixtures/call-arity.bend": {
+   "check_cli": "Invalid\tcheck\tcall-arity\t91:99:7:2",
+   "diagnostic": "Error: | - expected : Flag | - observed : @x:Flag -> Flag",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "02aee651f9db068d36ef57d95efe101ef40e916c5b9187c24099a536983a7c94"
+  },
+  "tests/compiler-checker/fixtures/data-affine-reuse.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t100:105:7:2",
+   "diagnostic": "Error: | - expected : x | - observed : x (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "31f01662702e4c65471bd86fd5143ec17a6209a93ea7cbbaea09e9200a01ddd1"
+  },
+  "tests/compiler-checker/fixtures/duplicate-constructor.bend": {
+   "check_cli": "Invalid\tcheck\tduplicate-constructor\t29:32:3:2",
+   "diagnostic": "Error: | - expected : a fresh constructor name (duplicate declaration: Off) | - observed : 'Off'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "14a7890d178f4241e3895612448e736d58c3aa0e2078fad0f0b7150488eb6ad4"
+  },
+  "tests/compiler-checker/fixtures/duplicate-global.bend": {
+   "check_cli": "Invalid\tcheck\tduplicate-global\t63:64:6:4",
+   "diagnostic": "Error: | - expected : a fresh name (duplicate declaration: f) | - observed : 'f'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "40fa03b65177ab33127d174b6dd45c5368cac55b4ef3e5c8e560a9d975861e7e"
+  },
+  "tests/compiler-checker/fixtures/erased-free-name.bend": {
+   "check_cli": "Invalid\tcheck\tfree-name\t101:108:7:7",
+   "diagnostic": "Error: | - expected : a defined name | - observed : missing",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "10fc5882fac28624cc195f3f8461c99c4bcda2cb1b9ce2d94197bfb07985b531"
+  },
+  "tests/compiler-checker/fixtures/erased-live-in-erased.bend": {
+   "check_cli": "Invalid\tcheck\terased-live\t110:111:8:9",
+   "diagnostic": "Error: | - expected : -x | - observed : x",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "30bc1155ebc8cb0a3fc39911d8cbb9c1c73b0dcb5dd0782863e4c7c0d0a2894a"
+  },
+  "tests/compiler-checker/fixtures/erased-type-live.bend": {
+   "check_cli": "Invalid\tcheck\terased-live\t109:110:8:2",
+   "diagnostic": "Error: | - expected : -y | - observed : y",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "4e4a79f49131870f5b5dd1826cba520d0de8f1534d99ae24ef8745f6b207d5a3"
+  },
+  "tests/compiler-checker/fixtures/erased-type-mismatch.bend": {
+   "check_cli": "Invalid\tcheck\ttype-mismatch\t134:142:9:7",
+   "diagnostic": "Error: | - expected : Flag | - observed : Other",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "35461fe8915be82fb3b18b0ada2896cb1a610edbb6eeeee8f2f6dec566d1aa6e"
+  },
+  "tests/compiler-checker/fixtures/local-reusable-type.bend": {
+   "check_cli": "Invalid\tcheck\treusable-type\t61:62:5:3",
+   "diagnostic": "Error: | - expected : Data | - observed : Type",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "c67f31d70ec6034c0e002c35565277db64369cbd1de115e9404cb6e46d1a561a"
+  },
+  "tests/compiler-checker/fixtures/local-shadow-call.bend": {
+   "check_cli": "Invalid\tcheck\tnot-callable\t90:92:7:2",
+   "diagnostic": "Error: | - expected : a function type | - observed : Flag",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "5bda36b3c9ed5a33e206ff67c540d8a693230426aad6fec5e1a334a9de41bd4b"
+  },
+  "tests/compiler-checker/fixtures/match-after-let.bend": {
+   "check_cli": "Invalid\tcheck\tunmatchable-binder\t86:87:7:8",
+   "diagnostic": "Error: | - message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "2c80c66d0811ac05fa02eda5bd182abba560c6645b136db2d1fed622baebf582"
+  },
+  "tests/compiler-checker/fixtures/match-again.bend": {
+   "check_cli": "Invalid\tcheck\talready-matched\t98:99:8:12",
+   "diagnostic": "Error: | - message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "984eb475db78740701f3114dd2e8794a7deceac7540d810196de8d66f4e228a5"
+  },
+  "tests/compiler-checker/fixtures/match-backwards.bend": {
+   "check_cli": "Invalid\tcheck\tunmatchable-binder\t107:108:8:12",
+   "diagnostic": "Error: | - message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "61b3385cc04e87597a741721cc216c5493bb9c216f47729e7bc98ffa525a331f"
+  },
+  "tests/compiler-checker/fixtures/overloaded-constructor.bend": {
+   "check_cli": "Invalid\tcheck\tduplicate-constructor\t56:58:5:2",
+   "diagnostic": "Error: | - expected : a fresh constructor name (duplicate declaration: On) | - observed : 'On'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "2144d70ce3e298b20382d174fbad2b2afa22462db33c98acd6a01c821f798a1c"
+  },
+  "tests/compiler-checker/fixtures/reusable-type.bend": {
+   "check_cli": "Invalid\tcheck\treusable-type\t41:42:4:7",
+   "diagnostic": "Error: | - expected : Data | - observed : Type",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "58ab03fa06b8231935b3ceae56dd99bba0deba6f4f36cacff48b860d5c64ebee"
+  },
+  "tests/compiler-checker/fixtures/unknown-type.bend": {
+   "check_cli": "Invalid\tcheck\tunknown-type\t43:50:4:9",
+   "diagnostic": "Error: | - expected : a defined name | - observed : Missing",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "184416e8d3e1ce1c61307ea4bb8fa4e4bf3c621b2fd1531c692824b977059a1a"
+  },
+  "tests/compiler-checker/fixtures/unused-affine-let.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t100:101:7:2",
+   "diagnostic": "Error: | - expected : x | - observed : x (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "84376de2ba091a0ec40e9cdcf5878f402f8e0fe6764f21f1e21203c805ff7242"
+  },
+  "tests/compiler-checker/fixtures/unused-bad-function.bend": {
+   "check_cli": "Invalid\tcheck\ttype-mismatch\t88:96:7:2",
+   "diagnostic": "Error: | - expected : Flag | - observed : Other",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "c3991b526141b75d2893a4ea6bec93a0194ddfc9f16dcf2c9c0314aa76563dd1"
+  },
+  "tests/compiler-checker/fixtures/unused-erased-use.bend": {
+   "check_cli": "Invalid\tcheck\terased-live\t109:114:7:6",
+   "diagnostic": "Error: | - expected : -ghost | - observed : ghost",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "8906cbfd42091b91a4e903248276d7a027959ab4d2dbdeccfe269b77709139ff"
+  },
+  "tests/compiler-checker/fixtures/used-affine-let.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t100:101:7:2",
+   "diagnostic": "Error: | - expected : x | - observed : x (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "e986cb82a8447f2214de2e762770aa633064cc6789773c730afa0a4723e9161a"
+  },
+  "tests/compiler-checker/fixtures/wrong-pattern-type.bend": {
+   "check_cli": "Invalid\tcheck\tpattern-type\t106:110:8:4",
+   "diagnostic": "Error: | - expected : a constructor of Flag (missing, or already matched) | - observed : \\{OtherTag: On{}}",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "b561673d06f79c7183c8ba710494e11a140a90f86b4ffc79c8174c6a8b574e98"
+  },
+  "tests/compiler-closures/fixtures/apply-non-function.bend": {
+   "check_cli": "Invalid\tcheck\tunknown-function\t128:129:7:2",
+   "diagnostic": "Error: | - expected : a function type | - observed : Flag",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "e58f5b7ddd4bffdd8e93fdd6221e7c8265db20f523361b5296cbf2d1fec56a63"
+  },
+  "tests/compiler-closures/fixtures/capture-then-use.bend": {
+   "check_cli": "Invalid\tparse\texpected-=\t257:258:12:11",
+   "diagnostic": "Error: | - expected : k | - observed : k (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "545b5ef41b9a9df00167820f62e77e60bf14190b034cde94c4b774d26d1ffe11"
+  },
+  "tests/compiler-closures/fixtures/closure-drop.bend": {
+   "check_cli": "Invalid\tparse\texpected-=\t371:372:17:11",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "6979f7d42a4df15866f546b7e1f12e6b35e62d556e789d32b9097fbae70876ac"
+  },
+  "tests/compiler-closures/fixtures/closure-in-arm.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t362:363:20:18",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "7adaf660339b580741b356ab304c53150455df906b71a1ac839b189fa8cda747"
+  },
+  "tests/compiler-closures/fixtures/closure-twice-data.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t214:215:11:19",
+   "diagnostic": "Error: | - expected : g | - observed : g (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "150efbdd283b72965d201554a5ab30b31aaf402879c5c1615386d885b78b1703"
+  },
+  "tests/compiler-closures/fixtures/curried-arities.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t233:234:11:18",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "0f58584af7b5717f955e1f4f51825efce9285f597d4300eec70674e3a4e88682"
+  },
+  "tests/compiler-closures/fixtures/defunc-sites.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t500:501:29:18",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "15aa7bdacab19f0081c2102bd9eef881a328037a56bc43ad43608038c7daf0b5"
+  },
+  "tests/compiler-closures/fixtures/erased-capture-live.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t99:100:6:19",
+   "diagnostic": "Error: | - expected : -w | - observed : w",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "7e369b8d378d6de3802aebbd58631412fd904999a8e4633b33776f7ca4a3e061"
+  },
+  "tests/compiler-closures/fixtures/lambda-matches-binder.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t145:146:6:18",
+   "diagnostic": "Error: | - message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "a07451563f48a00d95753ab8604cc1bb21f91989b301e22cc3d5d848c7d5ea98"
+  },
+  "tests/compiler-closures/fixtures/lambda-matches-capture.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t221:222:11:18",
+   "diagnostic": "Error: | - message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "34e792f5e8fae33a6037e913d4405847323d7b884eb19ff9ffb3801429dd7102"
+  },
+  "tests/compiler-closures/fixtures/return-closure.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t228:229:11:18",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "14fa385eaac038407c3b504743f8dab0f9836ab0b5c10a44f9914148d7fc7754"
+  },
+  "tests/compiler-closures/fixtures/unannotated-let-lambda.bend": {
+   "check_cli": "Invalid\tparse\texpected-\n\t245:246:12:8",
+   "diagnostic": "Error: | - expected : an annotated term (cannot infer) | - observed : y => both(y, k)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "e099dad3f446bacaf29ff760aecd9e9b153741998bb4b25a9ed190b84fa55950"
+  },
+  "tests/compiler-fields/fixtures/affine-field-reuse.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t173:178:11:6",
+   "diagnostic": "Error: | - expected : v | - observed : v (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "f98f7cb99901c31c2dc5c082f18d7c94bbbc127f3ae86f4bf5b124d15584c500"
+  },
+  "tests/compiler-fields/fixtures/constructor-affine-reuse.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t114:118:7:2",
+   "diagnostic": "Error: | - expected : x | - observed : x (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "8e7784a332bbb2e378d70e5552b3c3487e48cc81c0943b6267e360ed4e0eef3d"
+  },
+  "tests/compiler-fields/fixtures/constructor-arity.bend": {
+   "check_cli": "Invalid\tcheck\tconstructor-arity\t92:95:7:2",
+   "diagnostic": "Error: | - expected : Box with 1 field | - observed : Box{Off{}, On{}}",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "523c2d59dc8c145d5a2a419933c595db56c463b55ac04546db976caed4eb86d0"
+  },
+  "tests/compiler-fields/fixtures/constructor-name-binder.bend": {
+   "check_cli": "Invalid\tcheck\tconstructor-pattern-binder\t121:123:8:13",
+   "diagnostic": "Error: | - message  : a braced constructor pattern (On is a constructor: write On{}, or rename the binder) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "5d9e28128bd02b7d76c095203c1820b1b96a6f66ae5996ae6bdea9248210a937"
+  },
+  "tests/compiler-fields/fixtures/constructor-type.bend": {
+   "check_cli": "Invalid\tcheck\ttype-mismatch\t126:131:9:6",
+   "diagnostic": "Error: | - expected : Flag | - observed : Other",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "96826b1acb146f491e4fad535d4bd0efec55c146875d00ca8af7bd4b467452d3"
+  },
+  "tests/compiler-fields/fixtures/erased-field-live.bend": {
+   "check_cli": "Invalid\tcheck\terased-live\t132:133:9:6",
+   "diagnostic": "Error: | - expected : -v | - observed : v",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "2241ea37a40057d51187c21815007395c2a3bae3a205dc170345bb6ad8bbe34b"
+  },
+  "tests/compiler-fields/fixtures/erased-field-promote.bend": {
+   "check_cli": "Invalid\tcheck\terased-live\t181:182:11:12",
+   "diagnostic": "Error: | - expected : -v | - observed : v (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "6d9e9732604978d6b6ef673a45c23c0daeca921d5548f69294e34801a8be4ae2"
+  },
+  "tests/compiler-fields/fixtures/erased-field-typechecked.bend": {
+   "check_cli": "Invalid\tcheck\ttype-mismatch\t140:145:9:6",
+   "diagnostic": "Error: | - expected : Flag | - observed : Other",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "2ca7383880f190f1dfe7b4b49a9611b4a5eb4b85c194b8c274d739a69f9f2284"
+  },
+  "tests/compiler-fields/fixtures/field-let-closes-frontier.bend": {
+   "check_cli": "Invalid\tcheck\tunmatchable-binder\t159:160:10:12",
+   "diagnostic": "Error: | - message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "244ca27ec1619c5543b6141926443a9b2569941e457a38d4f71c4edfa2ddac00"
+  },
+  "tests/compiler-fields/fixtures/field-missing-arm.bend": {
+   "check_cli": "Invalid\tcheck\tmissing-arm\t115:120:8:2",
+   "diagnostic": "Error: | - expected : cases for Empty | - observed : \\{}",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "c3bc9945820e2fd69549c887b121f6c162c19c926f6188c41a8501a8dbbe00bb"
+  },
+  "tests/compiler-fields/fixtures/live-forward.bend": {
+   "check_cli": "Invalid\tcheck\tforward-live-call\t179:184:11:11",
+   "diagnostic": "Error: | - expected : a filled definition (an unfilled law is a dead claim: live code cannot use it) | - observed : later",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "3f42d87e63f738d4a8af2092fd1b739b2ff217ca16c6aea42bc8526a13873317"
+  },
+  "tests/compiler-fields/fixtures/owned-field-promotion.bend": {
+   "check_cli": "Invalid\tcheck\treusable-type\t122:123:8:14",
+   "diagnostic": "Error: | - expected : Data | - observed : Type",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "30e1418be8f3cab86188a61fc3b6aa589230c50a36131da210fce7fd2aff7728"
+  },
+  "tests/compiler-fields/fixtures/parameter-before-field.bend": {
+   "check_cli": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16",
+   "diagnostic": "Error: | - message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "1ecaae1f68cee65d900325e4f4b00954291e7ec1b9a4a5e13b8f14cc1b341eac"
+  },
+  "tests/compiler-fields/fixtures/parent-and-field.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t172:177:11:6",
+   "diagnostic": "Error: | - expected : v | - observed : v (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "c18afc481cb451662263a3f7176811e2294f9bbe0c9ab83f6bc62680439cdcfc"
+  },
+  "tests/compiler-fields/fixtures/parent-twice.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t169:174:11:6",
+   "diagnostic": "Error: | - expected : v | - observed : v (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "aba6dad90a5352cec590c650b42c3c6f8631cf0d05046695de836ad96d24ab5b"
+  },
+  "tests/compiler-fields/fixtures/pattern-arity.bend": {
+   "check_cli": "Invalid\tcheck\tpattern-arity\t117:120:8:9",
+   "diagnostic": "Error: | - message  : a Box pattern with 1 field | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "98c627776a72c4e43a4602d24fc3e8e8d62c9e8380fbddcb6de93c8244ba3f74"
+  },
+  "tests/compiler-fields/fixtures/sibling-reversed.bend": {
+   "check_cli": "Invalid\tcheck\tunmatchable-binder\t225:226:13:16",
+   "diagnostic": "Error: | - message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "3d73a47b9826d24cb5547c5fed634c738c2185c07c0f3f1678815392e1a9ff54"
+  },
+  "tests/compiler-recursion/fixtures/mutual.bend": {
+   "check_cli": "Invalid\tcheck\tforward-live-call\t77:78:5:2",
+   "diagnostic": "Error: | - expected : a filled definition (an unfilled law is a dead claim: live code cannot use it) | - observed : g",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "db229b6b80a0175af909d13dd4dfb6a7b2172aba03cb0494219c0c282144b1a4"
+  },
+  "tests/compiler-selfhost/fixtures/layout-braces-comma/main.bend": {
+   "check_cli": "Invalid\tparse\texpected-term\t231:232:11:16",
+   "diagnostic": "Error: | - expected : a term | - observed : ','",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "dcb5d0ba4c514a8bc7af3ac3661c3100d471ec23bf7f801f3e81f630c86af4ff"
+  },
+  "tests/compiler-selfhost/fixtures/layout-braces/main.bend": {
+   "check_cli": "Invalid\tparse\texpected-term\t454:455:19:18",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "0a5f4825f6446b9522a3cec2d3363bccf69351d16082a461b1b8bc17b69ac348"
+  },
+  "tests/compiler-selfhost/fixtures/layout-call-args-comma/main.bend": {
+   "check_cli": "Invalid\tparse\texpected-term\t374:375:17:26",
+   "diagnostic": "Error: | - expected : a term | - observed : ','",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "fb3610493559090464113bbf11211629e60454446d852d493db1052235361aef"
+  },
+  "tests/compiler-selfhost/fixtures/layout-call-args/main.bend": {
+   "check_cli": "Invalid\tparse\texpected-term\t527:528:23:26",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "0ec29b059f6c44b23b619f41693c676416331d907cacf178cc208717a0e00e08"
+  },
+  "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend": {
+   "check_cli": "Invalid\tparse\texpected-term\t399:400:20:9",
+   "diagnostic": "Error: | - expected : a term (the keyword 'def' cannot head one) | - observed : 'def'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "605532e690b0d29138fae3cfb51c115e05ae89295a02b8f48f26517074668e4b"
+  },
+  "tests/compiler-selfhost/fixtures/layout-comments/main.bend": {
+   "check_cli": "Invalid\tparse\texpected-term\t406:407:20:9",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "d19146f14af301c30df5814aeda4a46e1dd7c0cd923e5728f8bfa92a94adaecd"
+  },
+  "tests/compiler-selfhost/fixtures/layout-dedent-close-extra/main.bend": {
+   "check_cli": "Invalid\tparse\texpected-term\t272:273:12:7",
+   "diagnostic": "Error: | - expected : 'def', 'type' or 'law' | - observed : ')'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "01f8d829ad38f87e4eb6e840a9aeff5ae24a009e55389481aa6df68dd129c419"
+  },
+  "tests/compiler-selfhost/fixtures/layout-dedent-close/main.bend": {
+   "check_cli": "Invalid\tparse\texpected-term\t497:498:23:7",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "b90fcd3e6e47b370e9be66c9a36b9341e1b283512e715be61f9eb0a763913620"
+  },
+  "tests/compiler-selfhost/fixtures/layout-def-header-comma/main.bend": {
+   "check_cli": "Invalid\tparse\tparameter\t148:149:6:31",
+   "diagnostic": "Error: | - expected : a name | - observed : ','",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "63c30828b51330b3d51bf4f81212adca92bd4575dfe417201a684e86d17f7c60"
+  },
+  "tests/compiler-selfhost/fixtures/layout-def-header/main.bend": {
+   "check_cli": "Invalid\tparse\tparameter\t450:451:18:31",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "7b641585ae87da204f875ad91da8019538db66baeb40f199f4d7745d38acb38d"
+  },
+  "tests/compiler-selfhost/fixtures/nested-self-call-mistyped/main.bend": {
+   "check_cli": "Invalid\tcheck\ttype-mismatch\t424:428:19:48",
+   "diagnostic": "Error: | - expected : Bits | - observed : Tree",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "9601fe13b998c6a97c8b4bfea7368be9b1ed46530df4a9e89ecb07e84247cccd"
+  },
+  "tests/compiler-structural/fixtures/data-owns-type.bend": {
+   "check_cli": "Invalid\tcheck\tdata-field-kind\t92:93:7:6",
+   "diagnostic": "Error: | - expected : Data | - observed : Type",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "bad15c6ae2c30b1239d35d1786775cb1085d56b7e72e6d97c036605966bfb1ef"
+  },
+  "tests/compiler-structural/fixtures/duplicate-field.bend": {
+   "check_cli": "Invalid\tcheck\tduplicate-field\t67:68:5:15",
+   "diagnostic": "Error: | - expected : a fresh field name (duplicate declaration: x) | - observed : 'x'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "4da623b33ddd703abfd4a36d3dadee09a1485a4740a4bc9c146570f3cfe18a24"
+  },
+  "tests/compiler-structural/fixtures/many-owns-type.bend": {
+   "check_cli": "Invalid\tcheck\treusable-type\t93:94:7:7",
+   "diagnostic": "Error: | - expected : Data | - observed : Type",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "18a353b3c5faee5e95eface31813e722cdd810ddfd93788f85f498ff3cb49e6b"
+  },
+  "tests/compiler-structural/fixtures/nested-type-kind.bend": {
+   "check_cli": "Invalid\tcheck\tdata-field-kind\t132:133:9:8",
+   "diagnostic": "Error: | - expected : Data | - observed : Type",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "c7fb244217f50732dd17916dc5037654330d77f4273fd3d2935cd51727d50c6c"
+  },
+  "tests/compiler-structural/fixtures/unknown-field-type.bend": {
+   "check_cli": "Invalid\tcheck\tunknown-type\t61:68:5:9",
+   "diagnostic": "Error: | - expected : a defined name | - observed : Missing",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "55512dc7b80e94a2dd033b377c3c32a6183c78b9afde1941b95cc3320e9cdd54"
+  },
+  "tests/compiler-structural/fixtures/unused-invalid-fields.bend": {
+   "check_cli": "Invalid\tcheck\tdata-field-kind\t64:65:5:9",
+   "diagnostic": "Error: | - expected : Data | - observed : Type",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "22880245af9b1a57d71ce988b4d7caef89bbd407bcddd1065cd37237ecad6f08"
+  },
+  "tests/compiler-sugar/fixtures/destructure-typed.bend": {
+   "check_cli": "Invalid\tparse\tend-of-body\t219:220:14:18",
+   "diagnostic": "Error: | - message  : a name (a parallel or typed let binds names; destructure in its body) | Location:",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "5bc2bf72ae01a179bf6162af85303f272ab9ca0768b8b37f8d489145372f3997"
+  },
+  "tests/compiler-sugar/fixtures/parallel-let.bend": {
+   "check_cli": "Invalid\tparse\tend-of-body\t245:246:16:4",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "d2fe45f8b7f27ddbe7436f94bfb9124245a35d92a4d538362116db9ff13ed99a"
+  },
+  "tests/compiler-sugar/fixtures/template-late-binder.bend": {
+   "check_cli": "Invalid\tparse\tparameter\t126:127:10:18",
+   "diagnostic": "Error: | - expected : a plain binder (only leading binders take ~) | - observed : '~'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "0ea2a9e51fbc29181babb9a219dd984b40784096fc43fed0de6d9d98599c2f81"
+  },
+  "tests/subsets/classification/destructure-arrow-malformed.bend": {
+   "check_cli": "Invalid\tparse\tend-of-body\t116:117:9:14",
+   "diagnostic": "Error: | - expected : a lambda binder (one name: k => body) | - observed : '",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "5d053c09548fd7adc6be4e0263e3614fe5a504e280cac9c1ff70aa481371eff6"
+  },
+  "tests/subsets/classification/destructure-arrow.bend": {
+   "check_cli": "Invalid\tparse\tend-of-body\t116:117:9:14",
+   "diagnostic": "Error: | - expected : a lambda binder (one name: k => body) | - observed : ' '",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "eebecf75c69fcb1e07cb00063c818ac2e791e28969d571f8df0093cfe93e6f3c"
+  },
+  "tests/subsets/classification/destructure-equality-malformed.bend": {
+   "check_cli": "Invalid\tparse\tend-of-body\t116:117:9:14",
+   "diagnostic": "Error: | - expected : 'def', 'type' or 'law' | - observed : '='",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "f410c28a63657cc3b57b542db87cb8fcbd408da23cff727a781c2dc2da285fd9"
+  },
+  "tests/subsets/classification/destructure-equality.bend": {
+   "check_cli": "Invalid\tparse\tend-of-body\t116:117:9:14",
+   "diagnostic": "Error: | - expected : 'def', 'type' or 'law' | - observed : '='",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "9714c019351bc4acb95fa6208aaaa4f1d12e6d135f6396017995f19db5ae882e"
+  },
+  "tests/subsets/classification/destructure-malformed.bend": {
+   "check_cli": "Invalid\tparse\tend-of-body\t116:117:9:14",
+   "diagnostic": "Error: | - expected : '=' | - observed : 'v'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "4bb247c50405472be392515923fd093c7ac2fc08b8c7b2f6620d91504f8ac939"
+  },
+  "tests/subsets/classification/generic-malformed.bend": {
+   "check_cli": "Invalid\tparse\texpected-is\t9:10:1:9",
+   "diagnostic": "Error: | - expected : 'is' | - observed : '-'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "4bc35fbdc39211ae5e7cabf4e8a644a892d8e99b3765083a4fb327b0a7092595"
+  },
+  "tests/subsets/classification/hash-import-malformed.bend": {
+   "check_cli": "Invalid\tparse\tdeclaration-name\t8:42:1:8",
+   "diagnostic": "Error: | - expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's) | - observed : '=0x77a1a37baca5d86f62241cab956a1fb1/module.bend'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "2fc83ec12e41b629e98112de7199f26e049c3e6121b89b1867be48f5e17aa647"
+  },
+  "tests/subsets/classification/local-import-malformed.bend": {
+   "check_cli": "Invalid\tparse\tdeclaration-name\t7:8:2:0",
+   "diagnostic": "Error: | - expected : an import ('import Base', or 'import <path> as <Name>') | - observed : 'import'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "46f5c25928e82b9ea3804e7b05a29777b0b78a28792b8de7429c04e7d69c3dce"
+  },
+  "tests/subsets/classification/match-malformed.bend": {
+   "check_cli": "Invalid\tparse\texpected-:\t81:82:6:10",
+   "diagnostic": "Error: | - expected : a term | - observed : ')'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "4bb367ee201573cdce32f6eda69a46081113dd426cd084b8a1f5b43a1b25abdb"
+  },
+  "tests/subsets/classification/template-malformed.bend": {
+   "check_cli": "Invalid\tparse\tparameter\t48:49:5:13",
+   "diagnostic": "Error: | - expected : a name | - observed : ':'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "4ffd5c4a350d551931dab406adcbec585cdffb076a2ce4f4f04875a64e9044fb"
+  },
+  "tests/subsets/classification/template-nonleading-erased.bend": {
+   "check_cli": "Invalid\tparse\tparameter\t58:59:5:23",
+   "diagnostic": "Error: | - expected : a plain binder (only leading binders take ~) | - observed : '~'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "635dd5b4e54591af3cc5a70efef7d7811b13118cda04acc0e615c83f5b694906"
+  },
+  "tests/subsets/classification/template-nonleading-malformed.bend": {
+   "check_cli": "Invalid\tparse\tparameter\t57:58:5:22",
+   "diagnostic": "Error: | - expected : a plain binder (only leading binders take ~) | - observed : '~'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "5704f5c156763a19a4bbd30f1d29184b2013854adbcbe751a5f55bce74096c1b"
+  },
+  "tests/subsets/classification/template-nonleading-reusable.bend": {
+   "check_cli": "Invalid\tparse\tparameter\t58:59:5:23",
+   "diagnostic": "Error: | - expected : a plain binder (only leading binders take ~) | - observed : '~'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "2f690542b3a0fea4bacdde27f08facd400fdc496332e45be636a51856de09d70"
+  },
+  "tests/subsets/classification/template-nonleading.bend": {
+   "check_cli": "Invalid\tparse\tparameter\t57:58:5:22",
+   "diagnostic": "Error: | - expected : a plain binder (only leading binders take ~) | - observed : '~'",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "8a42cef188fcfdd9043e73cae88ad691de6ac4a016b4a5a33b1505ad30575a85"
+  },
+  "tests/subsets/s1/affine-reuse.bend": {
+   "check_cli": "Invalid\tcheck\taffine-reuse\t107:112:9:2",
+   "diagnostic": "Error: | - expected : x | - observed : x (consumed more than once)",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "10ca59993f373c7598a4962b82e46708c89c5bee222d52c4a8ee0e5d8ae46b6c"
+  },
+  "tests/subsets/s1/constructor-arity.bend": {
+   "check_cli": "Invalid\tcheck\tconstructor-arity\t57:60:6:2",
+   "diagnostic": "Error: | - expected : Off with 0 fields | - observed : Off{On{}}",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "8e004fc31333088b84bd9b72ea59d466d247afd1751698b17c2ff1fd4a07f9a4"
+  },
+  "tests/subsets/s1/constructor-mismatch.bend": {
+   "check_cli": "Invalid\tcheck\ttype-mismatch\t91:99:9:2",
+   "diagnostic": "Error: | - expected : Flag | - observed : Other",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "69c0a6495de5de23fb46f5f58fbad817c060f811f8f4300002f92f0ae65e71d5"
+  },
+  "tests/subsets/s1/erased-live.bend": {
+   "check_cli": "Invalid\tcheck\terased-scrutinee\t78:83:6:8",
+   "diagnostic": "Error: | - message  : a live scrutinee (a - scrutinee matches only in a dead region) | Location: observe",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "de551e3db9e82200ea5b409cce9e1b4099062026d2c4972ff6561eb46e54d03e"
+  },
+  "tests/subsets/s1/forward-call.bend": {
+   "check_cli": "Invalid\tcheck\tforward-live-call\t67:71:6:2",
+   "diagnostic": "Error: | - expected : a filled definition (an unfilled law is a dead claim: live code cannot use it) | - observed : flip",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "f46ecf0b6433eaee50ce2558855704abf752e1aa500ff4e5b8ffddf25baf213a"
+  },
+  "tests/subsets/s1/missing-arm.bend": {
+   "check_cli": "Invalid\tcheck\tmissing-arm\t64:69:6:2",
+   "diagnostic": "Error: | - expected : cases for On | - observed : \\{}",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "160b08f6ab6b1919b2003d1d1def7d17e8d81ba94e076b9b2c789acaa94db330"
+  },
+  "tests/subsets/s1/shadowing-type.bend": {
+   "check_cli": "Invalid\tcheck\ttype-mismatch\t170:171:13:11",
+   "diagnostic": "Error: | - expected : Flag | - observed : Other",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "2960eb8870b605fe8c1c91a18e3d2c4bdf862f2545cb828b978bf4ff6232264a"
+  },
+  "tests/subsets/s1/unannotated-constructor.bend": {
+   "check_cli": "Invalid\tcheck\tannotation-required\t61:63:6:6",
+   "diagnostic": "Error: | - expected : an annotated term (cannot infer) | - observed : On{}",
+   "exit": 1,
+   "seed": "rejects",
+   "sha256": "3d5d8eb5312c094c62ec594213e7e3a36f98435c280e86f146f83cde26797020"
+  },
+  "vm/golden/closure-capture-off.bend": {
+   "check_cli": "Invalid\tparse\texpected-=\t76:77:6:11",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "a2982f956e5d80d1f0a5948efedc3f259ea0cafb6e52ba6c6efda8d65950cfb4"
+  },
+  "vm/golden/closure-capture-on.bend": {
+   "check_cli": "Invalid\tparse\texpected-=\t76:77:6:11",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "e7de301bfaf92728ca87187f300d5bde3645af09d1fd2a53aeb99ddebcf814a0"
+  },
+  "vm/golden/closure-captures.bend": {
+   "check_cli": "Invalid\tparse\texpected-=\t134:135:9:11",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "c1562715236ee2ce37e471130b5ccc53d23f84c2fba3510d1021d92f79c5eb34"
+  },
+  "vm/golden/closure-nested.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t53:54:5:18",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "cbddd799d892dd0a490eb3e29a8ca528f5ba91df07d37d810a059e759b5e8887"
+  },
+  "vm/golden/closure-return.bend": {
+   "check_cli": "Invalid\tparse\tfunction-result\t53:54:5:18",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "3009d6615092c4b964f28538a8b61e7624d9687d5b16a16bab9f48cee2f32f3d"
+  },
+  "vm/golden/closure-shadow.bend": {
+   "check_cli": "Invalid\tparse\texpected-=\t85:86:7:11",
+   "diagnostic": "All terms check.",
+   "exit": 0,
+   "seed": "accepts",
+   "sha256": "133e4fe9da41e9d19e3939e51e0640e9c6bddb7ff948ffce97b5ced3258311ae"
+  }
+ },
+ "schema": "seed verdicts on the image gate's Invalid sources",
+ "seed_main_ts_sha256": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+ "seed_rejects": [
+  "tests/compiler-checker/fixtures/branch-duplicate.bend",
+  "tests/compiler-checker/fixtures/call-arity.bend",
+  "tests/compiler-checker/fixtures/data-affine-reuse.bend",
+  "tests/compiler-checker/fixtures/duplicate-constructor.bend",
+  "tests/compiler-checker/fixtures/duplicate-global.bend",
+  "tests/compiler-checker/fixtures/erased-free-name.bend",
+  "tests/compiler-checker/fixtures/erased-live-in-erased.bend",
+  "tests/compiler-checker/fixtures/erased-type-live.bend",
+  "tests/compiler-checker/fixtures/erased-type-mismatch.bend",
+  "tests/compiler-checker/fixtures/local-reusable-type.bend",
+  "tests/compiler-checker/fixtures/local-shadow-call.bend",
+  "tests/compiler-checker/fixtures/match-after-let.bend",
+  "tests/compiler-checker/fixtures/match-again.bend",
+  "tests/compiler-checker/fixtures/match-backwards.bend",
+  "tests/compiler-checker/fixtures/overloaded-constructor.bend",
+  "tests/compiler-checker/fixtures/reusable-type.bend",
+  "tests/compiler-checker/fixtures/unknown-type.bend",
+  "tests/compiler-checker/fixtures/unused-affine-let.bend",
+  "tests/compiler-checker/fixtures/unused-bad-function.bend",
+  "tests/compiler-checker/fixtures/unused-erased-use.bend",
+  "tests/compiler-checker/fixtures/used-affine-let.bend",
+  "tests/compiler-checker/fixtures/wrong-pattern-type.bend",
+  "tests/compiler-closures/fixtures/apply-non-function.bend",
+  "tests/compiler-closures/fixtures/capture-then-use.bend",
+  "tests/compiler-closures/fixtures/closure-twice-data.bend",
+  "tests/compiler-closures/fixtures/erased-capture-live.bend",
+  "tests/compiler-closures/fixtures/lambda-matches-binder.bend",
+  "tests/compiler-closures/fixtures/lambda-matches-capture.bend",
+  "tests/compiler-closures/fixtures/unannotated-let-lambda.bend",
+  "tests/compiler-fields/fixtures/affine-field-reuse.bend",
+  "tests/compiler-fields/fixtures/constructor-affine-reuse.bend",
+  "tests/compiler-fields/fixtures/constructor-arity.bend",
+  "tests/compiler-fields/fixtures/constructor-name-binder.bend",
+  "tests/compiler-fields/fixtures/constructor-type.bend",
+  "tests/compiler-fields/fixtures/erased-field-live.bend",
+  "tests/compiler-fields/fixtures/erased-field-promote.bend",
+  "tests/compiler-fields/fixtures/erased-field-typechecked.bend",
+  "tests/compiler-fields/fixtures/field-let-closes-frontier.bend",
+  "tests/compiler-fields/fixtures/field-missing-arm.bend",
+  "tests/compiler-fields/fixtures/live-forward.bend",
+  "tests/compiler-fields/fixtures/owned-field-promotion.bend",
+  "tests/compiler-fields/fixtures/parameter-before-field.bend",
+  "tests/compiler-fields/fixtures/parent-and-field.bend",
+  "tests/compiler-fields/fixtures/parent-twice.bend",
+  "tests/compiler-fields/fixtures/pattern-arity.bend",
+  "tests/compiler-fields/fixtures/sibling-reversed.bend",
+  "tests/compiler-recursion/fixtures/mutual.bend",
+  "tests/compiler-selfhost/fixtures/layout-braces-comma/main.bend",
+  "tests/compiler-selfhost/fixtures/layout-call-args-comma/main.bend",
+  "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend",
+  "tests/compiler-selfhost/fixtures/layout-dedent-close-extra/main.bend",
+  "tests/compiler-selfhost/fixtures/layout-def-header-comma/main.bend",
+  "tests/compiler-selfhost/fixtures/nested-self-call-mistyped/main.bend",
+  "tests/compiler-structural/fixtures/data-owns-type.bend",
+  "tests/compiler-structural/fixtures/duplicate-field.bend",
+  "tests/compiler-structural/fixtures/many-owns-type.bend",
+  "tests/compiler-structural/fixtures/nested-type-kind.bend",
+  "tests/compiler-structural/fixtures/unknown-field-type.bend",
+  "tests/compiler-structural/fixtures/unused-invalid-fields.bend",
+  "tests/compiler-sugar/fixtures/destructure-typed.bend",
+  "tests/compiler-sugar/fixtures/template-late-binder.bend",
+  "tests/subsets/classification/destructure-arrow-malformed.bend",
+  "tests/subsets/classification/destructure-arrow.bend",
+  "tests/subsets/classification/destructure-equality-malformed.bend",
+  "tests/subsets/classification/destructure-equality.bend",
+  "tests/subsets/classification/destructure-malformed.bend",
+  "tests/subsets/classification/generic-malformed.bend",
+  "tests/subsets/classification/hash-import-malformed.bend",
+  "tests/subsets/classification/local-import-malformed.bend",
+  "tests/subsets/classification/match-malformed.bend",
+  "tests/subsets/classification/template-malformed.bend",
+  "tests/subsets/classification/template-nonleading-erased.bend",
+  "tests/subsets/classification/template-nonleading-malformed.bend",
+  "tests/subsets/classification/template-nonleading-reusable.bend",
+  "tests/subsets/classification/template-nonleading.bend",
+  "tests/subsets/s1/affine-reuse.bend",
+  "tests/subsets/s1/constructor-arity.bend",
+  "tests/subsets/s1/constructor-mismatch.bend",
+  "tests/subsets/s1/erased-live.bend",
+  "tests/subsets/s1/forward-call.bend",
+  "tests/subsets/s1/missing-arm.bend",
+  "tests/subsets/s1/shadowing-type.bend",
+  "tests/subsets/s1/unannotated-constructor.bend"
+ ]
+}

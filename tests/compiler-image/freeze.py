@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
-"""Write expectations.json for the image gate, before src/image.bend exists (D7).
+"""Write expectations.json for the image gate (D7). Run: python3 tests/compiler-image/freeze.py CHECK_CLI OUTPUT.json
 
-Every entry comes from an independent lane: main's own `check-cli` (the checker's verdict and the
-core it displays) and reference.py (the bytes a checked book must encode to). The gate recomputes
-both and requires them equal to the frozen file, so the file cannot drift toward an
-implementation. Run: python3 tests/compiler-image/freeze.py CHECK_CLI OUTPUT.json
+Frozen, and from which lane:
+  * the explicit list of sources the gate judges. It is discovered here, once, and reviewed in the diff of the
+    file; the gate never globs, so a merge that adds a fixture or a golden changes nothing it judges;
+  * for each source that `check-cli` accepts, the sha256 and size of the image that reference.py derives from the
+    source text and the core `check-cli` displays. That lane shares no Bend code with the encoder, and the gate
+    recomputes it and requires it unchanged, so the file cannot drift toward an implementation;
+  * the committed golden images that the Bend codec must read, the profile's contract, the padded-source case and
+    the synthetic book.
+Not frozen: the verdict on any other source. The gate compares the image profile with a `check-cli` built from the
+same tree in the same run, so no expectation is a snapshot of Knot's own checker; the pinned seed's verdict on
+every Invalid source is recorded in seed-audit.json (audit.py), where a source the seed accepts is a D4 gap that
+this gate does not judge.
 """
 from __future__ import annotations
 
@@ -22,14 +30,18 @@ import synthetic as X  # noqa: E402
 ROOT = R.ROOT
 
 
-def sources() -> list:
-    """The frozen suites' sources: every suite fixture, the subset corpus, the golden sources and this
-    gate's witnesses."""
+def discover() -> list:
+    """The frozen suites' sources: every suite fixture, the subset corpus, the golden sources and this gate's
+    witnesses. Only a freeze calls this; the gate reads the list it wrote."""
     found = set()
     for pattern in ('tests/*/fixtures/**/*.bend', 'tests/subsets/**/*.bend', 'vm/golden/*.bend',
                     'tests/compiler-image/witnesses/*.bend'):
         found |= {p.relative_to(ROOT).as_posix() for p in ROOT.glob(pattern)}
     return sorted(found)
+
+
+def golden_images() -> list:
+    return sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / 'vm/golden').glob('*.kimg'))
 
 
 def sha(data: bytes) -> str:
@@ -42,29 +54,25 @@ def observe(check_cli: Path, path: str) -> dict:
     return {'exit': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr}
 
 
-def document(check_cli: Path) -> dict:
-    paths = sources()
+def observe_all(check_cli: Path, paths: list) -> dict:
     with ThreadPoolExecutor(max_workers=8) as pool:
-        seen = list(pool.map(lambda p: observe(check_cli, p), paths))
-    table = {}
-    for path, seen_one in zip(paths, seen):
-        text = (ROOT / path).read_text()
-        entry = {'sha256': sha(text.encode()), 'check': {'exit': seen_one['exit'], 'stderr': seen_one['stderr']}}
-        if seen_one['exit'] == 0:
-            image = R.image(text, seen_one['stdout'])
-            entry['image'] = {'sha256': sha(image), 'bytes': len(image)}
-            golden = (ROOT / path).with_suffix('.kimg')
-            if path.startswith('vm/golden/'):
-                assert golden.read_bytes() == image, f'{path}: reference differs from the committed golden image'
-                entry['golden'] = True
-        table[path] = entry
+        return dict(zip(paths, pool.map(lambda p: observe(check_cli, p), paths)))
+
+
+def reference_image(path: str, seen: dict) -> bytes:
+    """The bytes a source that `check-cli` accepts must encode to, from reference.py alone."""
+    return R.image((ROOT / path).read_text(), seen['stdout'])
+
+
+def contract() -> dict:
+    """The frozen document less its two lists: every part that no source and no check-cli verdict decides. The
+    gate recomputes this and requires it unchanged."""
     synthetic = R.codec.encode(X.plan(), R.DIGEST)
     baseline = json.loads((ROOT / 'tests/compiler-fields-wasm/enum-baseline.json').read_text())
-    frozen = {
-        'schema': 'knot image gate expectations',
-        'frozen': 'before src/image.bend existed; sources: main check-cli, images: tests/compiler-image/reference.py',
+    return {
+        'schema': 'knot image gate expectations 2',
+        'frozen': 'the source list and the images of the books check-cli accepts (reference.py); no verdict of check-cli',
         'base_sha256': R.REGISTRY['base']['sha256'],
-        'sources': table,
         'default_module_hashes': baseline,
         # Literal contract of the image profile, fixed before implementation. Words are 4 bytes; the
         # image ceiling is SPEC section 4's 4,194,304 words, so the output cap admits every valid image.
@@ -89,15 +97,32 @@ def document(check_cli: Path) -> dict:
                       'image_bytes': len(synthetic), 'image_sha256': sha(synthetic),
                       'minimum_image_bytes': 4 * 1024 * 1024},
     }
-    return frozen
+
+
+def document(check_cli: Path, paths: list) -> dict:
+    seen = observe_all(check_cli, paths)
+    table = {}
+    for path in paths:
+        text = (ROOT / path).read_text()
+        entry = {'sha256': sha(text.encode())}
+        if seen[path]['exit'] == 0:
+            image = reference_image(path, seen[path])
+            entry['image'] = {'sha256': sha(image), 'bytes': len(image)}
+            if path.startswith('vm/golden/'):
+                assert (ROOT / path).with_suffix('.kimg').read_bytes() == image, \
+                    f'{path}: reference differs from the committed golden image'
+                entry['golden'] = True
+        table[path] = entry
+    return {**contract(), 'sources': table, 'golden_images': golden_images()}
 
 
 def main(check_cli: Path, output: Path) -> None:
-    frozen = document(check_cli)
+    frozen = document(check_cli, discover())
     output.write_text(json.dumps(frozen, indent=1, sort_keys=True) + '\n')
     table = frozen['sources']
     accepted = sum(1 for e in table.values() if 'image' in e)
-    print(f'{len(table)} sources, {accepted} accepted, {sum(1 for e in table.values() if e.get("golden"))} golden')
+    print(f'{len(table)} sources, {accepted} accepted, {sum(1 for e in table.values() if e.get("golden"))} golden, '
+          f'{len(frozen["golden_images"])} golden images')
 
 
 if __name__ == '__main__':

@@ -111,22 +111,36 @@ The image increment adds gate `image` (`python3 -B tests/compiler-image/check.py
 [image encoder gate](../../tests/compiler-image/README.md) for `compile-cli --profile=knot-image-1`.
 
 - It builds `check-cli`, `compile-cli` and its own codec driver `image-cli` with the seed's native and
-  Bun lanes, recomputes the independent reference (`reference.py`) and requires `expectations.json`,
-  frozen before `src/image.bend` existed, unchanged.
-- It holds all 681 frozen sources to it: the 96 books that `check-cli` accepts encode to the reference
-  bytes on both lanes, validate and re-encode under `vm/serializer.py`, and the 585 others answer exactly as
-  `check-cli` does. The 19 golden sources the current core can express are byte-identical to their committed
+  Bun lanes, recomputes the independent reference (`reference.py`) and requires the frozen contract of
+  `expectations.json`, and the image of every book it lists as accepted, unchanged.
+- It holds all 690 listed sources to it. The list is explicit, so a merge that adds a fixture or a golden changes nothing
+  the gate judges. The 96 books that this run's own `check-cli` accepts encode to the reference bytes on both lanes,
+  validate and re-encode under `vm/serializer.py`, and every other source answers exactly as that live `check-cli`
+  does (same exit and stderr, nothing written): no verdict of Knot's own checker is frozen. A source that `check-cli`
+  starts to accept is judged by the live reference, and a book accepted at the freeze that it now refuses fails the gate.
+  `seed-audit.json` (`audit.py`) records the pinned seed's verdict on the 100 Invalid sources: 83 rejected, and 17 that the
+  seed accepts, D4 gaps that the gate records and does not judge; a source the seed rejects that `check-cli`
+  accepts fails. The 19 golden sources the current core can express are byte-identical to their committed
   images and run under `vm/evaluate.py` against the frozen VM expectations.
-- `image-cli` decodes each of 198 images (102 golden, 96 compiled) to the text of `serializer.decode` and
+- `image-cli` decodes each of 207 images (111 golden, 96 compiled) to the text of `serializer.decode` and
   re-encodes it byte for byte, on both lanes; on each of the 96 books its `erase_tokens` prints as `serializer.decode` of
-  the compiled image (both lanes) and `roundtrip` reports `equal` (native); ten crafted images refuse with the frozen reason.
+  the compiled image (both lanes) and `roundtrip` reports `equal` (native); thirteen crafted images refuse with the frozen
+  reason, three of them for a name.
 - The profile's budgets, its 4,194,304-character maximum, its caps and the untouched output after each
   failure have literal controls; the default profile's 25 module hashes are unchanged.
 - A 5.2 MB synthetic book (and, natively, a 9 MB one) is written in bounded chunks, observed from outside the program (a DYLD shim
-  for the native lane, a Bun preload for the JS lane); a larger one is `Exhausted` before the output opens.
-- Nineteen mutants of `src/image*.bend` are killed by wrong observations, and deleting any of the eight
-  `C.Term` arms fails the seed's check with a message naming it. `src/image-PROOF.bend` (fifteen laws) must print
-  `All terms check.`, and the general law in `src/image-OPEN.bend` must be exactly one open claim (D21).
+  for the native lane, a Bun preload for the JS lane); a larger one is `Exhausted` before the output opens, and
+  `image-cli answers` shows erasure answering on it: the size-limit counterexample of the round trip's first statement.
+- A name that is not an identifier is refused by layout as `Unsupported compile image-name` (`image-cli named`, both lanes).
+- 300 seeded programs (`fuzz.py`: erased and reusable fields, parameters and lets, nested matches, calls) run through the same
+  lanes: each one `check-cli` accepts must encode to the reference's bytes and print `Roundtrip equal` (12 of them on the Bun lane
+  too). Nine judging controls pin how the listed sources are judged: a frozen book, a gap that closes, a source that moves, a
+  checker that regresses or fails, a drifted reference, a missing source, and a source the seed rejects that `check-cli` accepts.
+- Twenty-one mutants of `src/image*.bend` are killed by wrong observations, and deleting any of the eight
+  `C.Term` arms fails the seed's check with a message naming it. `src/image-PROOF.bend` (twenty-four laws) must print
+  `All terms check.`. The general law in `src/image-OPEN.bend` must be exactly one open claim (D21), and the gate
+  instantiates it as written at 13 fuels and books, among them the fuels where its first statement (`recoded ==
+  erase_tokens` at every fuel) fails, and requires that first statement, and the law with a wrong conclusion, to be refused there.
 - It writes only `tests/compiler-image/receipts/image.json`.
 
 The prechecks suite's own verification (`npm run -s prechecks:verify`: its unit tests against synthetic clean and broken repositories, its semantic mutants and the Perch wiring test for its seven advisory rules, receipt `tests/prechecks/receipts/prechecks.json`) is deliberately not a registered gate: it takes 150 to 390 seconds, and every increment's full gate run would pay for it while only a change to `scripts/prechecks/` or `tests/prechecks/` can affect it. Run it whenever either changes; the coordinator runs it before merging such a change. The suite itself is not a gate either: `npm run -s prechecks` reports conditions for the
