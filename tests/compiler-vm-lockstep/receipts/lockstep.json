@@ -1,0 +1,1570 @@
+{
+ "gate": "vm-lockstep",
+ "date": "2026-09-29T05:58:03.736046+00:00",
+ "status": "passed",
+ "pins": {
+  "tool": "wat2wasm",
+  "version": "1.0.41",
+  "source_sha256": "1c7eb650994496d2983e3d25fd5ae57ff8064eabb61118fc2ff95a6aa00e4416",
+  "release_sha256": "9c483defc5c68545ff204b5bea2be94799e1640904f0ce01d15ef247e887817c",
+  "test_build_sha256": "78ee86bb36a579f84e3a82521d73a93970446d31cc19b94b4cfe363c00cc512a"
+ },
+ "inputs": {
+  "vm.wat": "1c7eb650994496d2983e3d25fd5ae57ff8064eabb61118fc2ff95a6aa00e4416",
+  "vm.wasm": "9c483defc5c68545ff204b5bea2be94799e1640904f0ce01d15ef247e887817c",
+  "model-trace.bend": "2be0cc5cfa89da52d2c617bc7a51b5570256beeb56534107cec8954a0bfd526b",
+  "model/word.bend": "4bec5f4d2f55b67758e1195c0bbf6d6d4d317ddd8cc0f0c5bda35973a2a6fabc",
+  "model/decode.bend": "fafae5ff52d8ce4d8de21423923961505ae0c6ca4b1e035ddc7d6fa0700f83a4",
+  "model/validate.bend": "4a95532418153b93475b3bcd37be9dd5f8f4aa8f30fc55c15699706937392b32",
+  "model/encode.bend": "ad0842c6168b8f1a4c8a96bff2e4503d820b3098c1425a96daf9b9ac5a75a4d4",
+  "model/memory.bend": "288c3bbefe6cf5d5b90ad12159de774d2cbfb12b22e78fd37aa1597a6a1997af",
+  "model/machine.bend": "da767af160d081b421977e44b09f192c1d7755e84316f3566ff8b0b7e9a87fb8",
+  "model/audit.bend": "e18ff95e1ae98dc8a6a4581453d891bfffcfdba6e1e6bc78198b2f0db3033947",
+  "model-cli.bend": "a963b9568a1fb8658a42eb362b26d76dc1d1f71db531b28598166baacaea20d1",
+  "lockstep.py": "9aa6d3645316d4838ca4693b6cf5ea6b13552f5a9b189d5d3fd949c6219ade77",
+  "runs.py": "a7638e36cbf5db9be7fa363f3af3373a78fda23188155a8e1e71e19e9d79d1a2",
+  "check.py": "ecfc47d57928bad3ebabd6badc788d5fefe262038dc219c3860ffa1b27dd4081",
+  "js/vm-trace.mjs": "cdea13b702fb1149e14f1ba2d1b8604ecebb4ee3ac5dc8f5cd59c4286ac5239a",
+  "expectations.json": "3e9837c638b4265b4d8ce37b5eeac5a09bfa72cf976125536246566988322a9f",
+  "fixtures/long.plans.json": "ee44b1a96e0e1b8f4ae1bc792643dd2893e080d732c4a9bfe98a9b9f2ec55dbd"
+ },
+ "untraced": {
+  "run:display-visits-at-bound": "answer of 1,048,576 visits",
+  "run:display-visits-beyond-bound": "answer past the visit bound",
+  "run:display-bytes-at-bound": "answer of 16 MiB of text",
+  "run:display-bytes-beyond-bound": "answer past the text bound",
+  "model:display-utf8-at-bound": "answer of 16 MiB of text",
+  "model:display-utf8-beyond-bound": "answer past the text bound"
+ },
+ "lockstep": {
+  "runs": 296,
+  "transitions": 2940,
+  "states_compared": 3196,
+  "strength": {
+   "layout": 1577,
+   "graph": 1619,
+   "exact": 0
+  },
+  "groups": {
+   "golden": {
+    "runs": 93,
+    "transitions": 1806,
+    "refused": 4
+   },
+   "invocation": {
+    "runs": 44,
+    "transitions": 50,
+    "refused": 36
+   },
+   "fuel": {
+    "runs": 90,
+    "transitions": 92,
+    "refused": 0
+   },
+   "admitted": {
+    "runs": 60,
+    "transitions": 877,
+    "refused": 0
+   },
+   "inspection": {
+    "runs": 6,
+    "transitions": 80,
+    "refused": 0
+   },
+   "argument": {
+    "runs": 3,
+    "transitions": 35,
+    "refused": 0
+   }
+  },
+  "halting_relations": {
+   "choice 8: a Gather frame is popped before its operands are inspected": 23,
+   "choice 8: the Activation is released before the final IO.OP is inspected": 2
+  }
+ },
+ "refusals": {
+  "runs": 82,
+  "by_group": {
+   "argument-refused": 10,
+   "refusal": 72
+  }
+ },
+ "d23": {
+  "frozen_by_literal_review": {
+   "golden:foreign-print": {
+    "class": "spine",
+    "effects": 1
+   },
+   "golden:io-bind": {
+    "class": "spine",
+    "effects": 2
+   },
+   "golden:non-scalar-code": {
+    "class": "spine",
+    "effects": 1
+   },
+   "golden:non-scalar-unprinted": {
+    "class": "spine",
+    "effects": 2
+   },
+   "golden:print-non-scalar": {
+    "class": "spine",
+    "effects": 1
+   },
+   "golden:print-non-scalar-mid": {
+    "class": "spine",
+    "effects": 1
+   },
+   "golden:print-non-scalar-wide": {
+    "class": "spine",
+    "effects": 1
+   },
+   "golden:print-non-scalar-second": {
+    "class": "spine",
+    "effects": 2
+   }
+  },
+  "observed_elsewhere": {
+   "admitted:run:fuel-program-exact": {
+    "class": "spine",
+    "effects": 1
+   },
+   "admitted:run:fuel-continuation-short": {
+    "class": "spine",
+    "effects": 1
+   },
+   "admitted:run:fuel-action-short": {
+    "class": "spine",
+    "effects": 1
+   },
+   "admitted:run:inspect-print-after-surrogate": {
+    "class": "spine",
+    "effects": 1
+   },
+   "argument:program-runs": {
+    "class": "spine",
+    "effects": 1
+   },
+   "argument:program-args": {
+    "class": "spine",
+    "effects": 1
+   }
+  },
+  "pending": []
+ },
+ "long": [
+  {
+   "name": "loop-tail",
+   "transitions": 350008,
+   "states_compared": 14,
+   "quantum_yields_at_step": [
+    327675
+   ],
+   "strength": {
+    "layout": 1,
+    "graph": 13,
+    "exact": 0
+   }
+  },
+  {
+   "name": "loop-deep",
+   "transitions": 440008,
+   "states_compared": 16,
+   "quantum_yields_at_step": [
+    367675
+   ],
+   "strength": {
+    "layout": 1,
+    "graph": 15,
+    "exact": 0
+   }
+  }
+ ],
+ "comparator_controls": [
+  {
+   "control": "control-node",
+   "run": "recursion-map",
+   "step": 3,
+   "names": "control"
+  },
+  {
+   "control": "control-kind",
+   "run": "recursion-map",
+   "step": 4,
+   "names": "control"
+  },
+  {
+   "control": "act",
+   "run": "recursion-map",
+   "step": 5,
+   "names": "act"
+  },
+  {
+   "control": "fuel",
+   "run": "recursion-map",
+   "step": 5,
+   "names": "fuel"
+  },
+  {
+   "control": "calls",
+   "run": "recursion-map",
+   "step": 5,
+   "names": "calls"
+  },
+  {
+   "control": "quantum",
+   "run": "recursion-map",
+   "step": 5,
+   "names": "quantum"
+  },
+  {
+   "control": "top",
+   "run": "recursion-map",
+   "step": 6,
+   "names": "top"
+  },
+  {
+   "control": "frame-aux",
+   "run": "recursion-map",
+   "step": 6,
+   "names": "frames"
+  },
+  {
+   "control": "output",
+   "run": "recursion-map",
+   "step": 5,
+   "names": "out"
+  },
+  {
+   "control": "heap-layout-cell",
+   "run": "recursion-map",
+   "step": 10,
+   "names": "heap",
+   "strength": "layout"
+  },
+  {
+   "control": "heap-graph-act-owner",
+   "run": "recursion-map",
+   "step": 13,
+   "names": "heap",
+   "strength": "graph"
+  },
+  {
+   "control": "heap-constant",
+   "run": "string-append",
+   "step": 14,
+   "names": "heap",
+   "strength": "graph"
+  },
+  {
+   "control": "outcome-tag",
+   "run": "value-on",
+   "step": 3,
+   "names": "outcome"
+  }
+ ],
+ "exact": {
+  "model_against_itself_states": 218,
+  "vm_against_model": {
+   "runs_with_an_exact_divergence": 86,
+   "first_divergence_of_recursion_map": {
+    "step": 13,
+    "field": "heap"
+   },
+   "note": "the VM has no reclamation (CORE.md choice 1); vm-rc turns `mode` to exact for VM against model"
+  }
+ },
+ "mutants": {
+  "scope-slots-not-zeroed": {
+   "killed_by_runs": 20,
+   "harness_faults": 0,
+   "fields": [
+    "heap"
+   ],
+   "first": {
+    "run": "admitted:run:u32-file-alias",
+    "step": 6,
+    "field": "heap",
+    "detail": "cell 16842752 word 4: model [0], VM [15]"
+   },
+   "machine": "vm",
+   "breaks": "a Scope pop drops its slots but leaves their words in the Activation",
+   "dimension": "heap",
+   "state_only": true,
+   "output_visible_runs": 0
+  },
+  "call-frame-node": {
+   "killed_by_runs": 78,
+   "harness_faults": 0,
+   "fields": [
+    "frames"
+   ],
+   "first": {
+    "run": "admitted:model:char-match",
+    "step": 6,
+    "field": "frames",
+    "detail": "frame 0 from the top: model (4, 0, 0, 1), VM (4, 7, 0, 1)"
+   },
+   "machine": "vm",
+   "breaks": "a Call frame's node word holds 7, which nothing reads",
+   "dimension": "frames",
+   "state_only": true,
+   "output_visible_runs": 0
+  },
+  "calls-counted-twice": {
+   "killed_by_runs": 165,
+   "harness_faults": 0,
+   "fields": [
+    "calls"
+   ],
+   "first": {
+    "run": "admitted:codes:lone-surrogate",
+    "step": 1,
+    "field": "calls",
+    "detail": "calls differs"
+   },
+   "machine": "vm",
+   "breaks": "each entry adds two to `calls`",
+   "dimension": "calls",
+   "state_only": true,
+   "output_visible_runs": 0
+  },
+  "fuel-charged-twice": {
+   "killed_by_runs": 165,
+   "harness_faults": 0,
+   "fields": [
+    "fuel"
+   ],
+   "first": {
+    "run": "admitted:codes:lone-surrogate",
+    "step": 1,
+    "field": "fuel",
+    "detail": "fuel differs"
+   },
+   "machine": "vm",
+   "breaks": "each entry takes two units of fuel",
+   "dimension": "fuel",
+   "state_only": false,
+   "output_visible_runs": 8
+  },
+  "quantum-counted-twice": {
+   "killed_by_runs": 165,
+   "harness_faults": 0,
+   "fields": [
+    "quantum"
+   ],
+   "first": {
+    "run": "admitted:codes:lone-surrogate",
+    "step": 1,
+    "field": "quantum",
+    "detail": "quantum differs"
+   },
+   "machine": "vm",
+   "breaks": "each entry adds two to the quantum",
+   "dimension": "quantum",
+   "state_only": true,
+   "output_visible_runs": 0
+  },
+  "act-not-cleared": {
+   "killed_by_runs": 134,
+   "harness_faults": 0,
+   "fields": [
+    "act"
+   ],
+   "first": {
+    "run": "admitted:limit:arity-at-limit",
+    "step": 3,
+    "field": "act",
+    "detail": "act: model word 0, VM word 16842752"
+   },
+   "machine": "vm",
+   "breaks": "Return to Top leaves `act` pointing at the released Activation",
+   "dimension": "act",
+   "state_only": true,
+   "output_visible_runs": 0
+  },
+  "describe-tag-off": {
+   "killed_by_runs": 104,
+   "harness_faults": 0,
+   "fields": [
+    "outcome"
+   ],
+   "first": {
+    "run": "admitted:limit:arity-at-limit",
+    "step": 3,
+    "field": "outcome",
+    "detail": "('H', 'D', 0, 1, (79, 110, 123, 125)) against ('H', 'D', 0, 2, (79, 110, 123, 125))"
+   },
+   "machine": "vm",
+   "breaks": "a Book's printed tag is one more than the answer's",
+   "dimension": "outcome",
+   "state_only": false,
+   "output_visible_runs": 104
+  },
+  "arm-mirrored": {
+   "killed_by_runs": 19,
+   "harness_faults": 0,
+   "fields": [
+    "control",
+    "heap"
+   ],
+   "first": {
+    "run": "invocation:invoke-args:real 1000000 0",
+    "step": 2,
+    "field": "control",
+    "detail": "Eval node differs"
+   },
+   "machine": "vm",
+   "breaks": "a tag Case takes the mirrored row",
+   "dimension": "control",
+   "state_only": false,
+   "output_visible_runs": 19
+  },
+  "reference-slot-below": {
+   "killed_by_runs": 133,
+   "harness_faults": 0,
+   "fields": [
+    "control"
+   ],
+   "first": {
+    "run": "argument:book-long-zeros",
+    "step": 3,
+    "field": "control",
+    "detail": "control result: model 3, VM 2"
+   },
+   "machine": "vm",
+   "breaks": "Eval Reference reads the slot below",
+   "dimension": "control",
+   "state_only": false,
+   "output_visible_runs": 118
+  },
+  "activation-depth-off": {
+   "killed_by_runs": 165,
+   "harness_faults": 0,
+   "fields": [
+    "heap"
+   ],
+   "first": {
+    "run": "admitted:codes:lone-surrogate",
+    "step": 1,
+    "field": "heap",
+    "detail": "cell 16842816 word 3: model [0], VM [1]"
+   },
+   "machine": "vm",
+   "breaks": "an entered body's Activation starts one slot deep",
+   "dimension": "heap",
+   "state_only": false,
+   "output_visible_runs": 23
+  },
+  "gather-count-stale": {
+   "killed_by_runs": 91,
+   "harness_faults": 61,
+   "fields": [
+    "frames"
+   ],
+   "first": {
+    "run": "admitted:codes:lone-surrogate",
+    "step": 2,
+    "field": "frames",
+    "detail": "frame 0 from the top: model (1, 130, 0, 2), VM (1, 130, 1, 2)"
+   },
+   "machine": "vm",
+   "breaks": "a Gather frame counts its filled operands from one",
+   "dimension": "frames",
+   "state_only": false,
+   "output_visible_runs": 151
+  },
+  "closure-entry-free": {
+   "killed_by_runs": 18,
+   "harness_faults": 0,
+   "fields": [
+    "fuel"
+   ],
+   "first": {
+    "run": "admitted:run:inspect-halt-code",
+    "step": 4,
+    "field": "fuel",
+    "detail": "fuel differs"
+   },
+   "machine": "vm",
+   "breaks": "entering a Closure costs nothing",
+   "dimension": "fuel",
+   "state_only": false,
+   "output_visible_runs": 1
+  },
+  "scope-pop-off-by-one": {
+   "killed_by_runs": 20,
+   "harness_faults": 0,
+   "fields": [
+    "top"
+   ],
+   "first": {
+    "run": "admitted:run:u32-file-alias",
+    "step": 6,
+    "field": "top",
+    "detail": "the frames occupy different numbers of words"
+   },
+   "machine": "model",
+   "breaks": "a popped Scope frame takes two words off `top`, not three",
+   "dimension": "top",
+   "state_only": true,
+   "output_visible_runs": 0
+  },
+  "reuse-keeps-padding": {
+   "killed_by_runs": 11,
+   "harness_faults": 0,
+   "fields": [
+    "heap"
+   ],
+   "first": {
+    "run": "golden:closure-id",
+    "step": 13,
+    "field": "heap",
+    "detail": "act: padding of model cell 16842784 is [3, 0, 0], of VM cell 16842816 is [0, 0, 0]"
+   },
+   "machine": "model",
+   "breaks": "a cell taken from a free list keeps the stale words of its padding",
+   "dimension": "heap",
+   "state_only": true,
+   "output_visible_runs": 0
+  },
+  "quantum-never-resets": {
+   "killed_by_runs": 0,
+   "harness_faults": 0,
+   "fields": [],
+   "first": null,
+   "machine": "model",
+   "breaks": "the quantum counts past 65,536 without a yield",
+   "dimension": "quantum",
+   "state_only": true,
+   "output_visible_runs": 0,
+   "killed_by_long_run": {
+    "run": "loop-tail",
+    "step": 327675,
+    "field": "quantum"
+   }
+  },
+  "output-oldest-first": {
+   "killed_by_runs": 2,
+   "harness_faults": 0,
+   "fields": [
+    "out"
+   ],
+   "first": {
+    "run": "golden:non-scalar-unprinted",
+    "step": 65,
+    "field": "out",
+    "detail": "out differs"
+   },
+   "machine": "model",
+   "breaks": "a printed line joins the output at the wrong end",
+   "dimension": "out",
+   "state_only": false,
+   "output_visible_runs": 2
+  },
+  "bind-slot-off-by-one": {
+   "killed_by_runs": 10,
+   "harness_faults": 0,
+   "fields": [
+    "heap"
+   ],
+   "first": {
+    "run": "admitted:run:nat-default-big",
+    "step": 4,
+    "field": "heap",
+    "detail": "cell 16842768 word 4: model [0], VM [16842752]"
+   },
+   "machine": "model",
+   "breaks": "a Let binds its value one slot above its depth",
+   "dimension": "heap",
+   "state_only": false,
+   "output_visible_runs": 7
+  },
+  "call-frame-caller-lost": {
+   "killed_by_runs": 78,
+   "harness_faults": 0,
+   "fields": [
+    "frames"
+   ],
+   "first": {
+    "run": "admitted:model:char-match",
+    "step": 6,
+    "field": "frames",
+    "detail": "frame 0 value 0: 0 against 16842752"
+   },
+   "machine": "model",
+   "breaks": "a Call frame keeps no caller",
+   "dimension": "frames",
+   "state_only": false,
+   "output_visible_runs": 9
+  }
+ },
+ "weakenings": [
+  {
+   "weakened": "calls",
+   "lets_through": "calls-counted-twice",
+   "machine": "vm"
+  },
+  {
+   "weakened": "act",
+   "lets_through": "act-not-cleared",
+   "machine": "vm"
+  },
+  {
+   "weakened": "quantum",
+   "lets_through": "quantum-counted-twice",
+   "machine": "vm"
+  },
+  {
+   "weakened": "frames",
+   "lets_through": "call-frame-node",
+   "machine": "vm"
+  },
+  {
+   "weakened": "heap",
+   "lets_through": "scope-slots-not-zeroed",
+   "machine": "vm"
+  },
+  {
+   "weakened": "outcome",
+   "lets_through": "describe-tag-off",
+   "machine": "vm"
+  },
+  {
+   "weakened": "top",
+   "lets_through": "scope-pop-off-by-one",
+   "machine": "model"
+  },
+  {
+   "weakened": "out",
+   "lets_through": "output-oldest-first",
+   "machine": "model"
+  }
+ ],
+ "value": {
+  "eval_commits": {
+   "literals": "2ea222e7a832445a764f6ab1852b85aeaad11820",
+   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
+  },
+  "fixtures": 137,
+  "buckets": {
+   "agree": 82,
+   "eval-unavailable": 4,
+   "excused": 3,
+   "vm-bound": 3,
+   "declared": 11,
+   "agree-refusal": 34
+  },
+  "rows": [
+   {
+    "fixture": "value-off",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "value-on",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "reference",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nested-call",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "let",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "shadow",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "erased-let",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "erased-argument",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "case-off",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "case-on",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "construct",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "unpack",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "pair",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "second",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "erased-field",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "closure-id",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "closure-capture-off",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "closure-capture-on",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "closure-return",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "closure-nested",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "closure-shadow",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-zero",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-big",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-wrap",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-unsigned",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-div-zero",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-rem-zero",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-shift",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-add",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "char-code",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-empty",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-eq",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-append",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-reverse",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "default-hit",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "default-miss",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-unpack",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "foreign-print",
+    "lane": "Invalid",
+    "basis": "seed",
+    "bucket": "eval-unavailable: eval-cli reports Invalid; the VM shows the seed value"
+   },
+   {
+    "fixture": "nat-sub-floor",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "char-space",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-show",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-length",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-not",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-shr",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-mul",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-show",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "char-eq",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-cmp",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "case-char",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "recursion-map",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "recursion-tail",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "erased-construct",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "closure-captures",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-big",
+    "lane": "Exhausted",
+    "basis": "seed",
+    "bucket": "excused: eval-cli exhausted a documented bound; the VM returns the seed value"
+   },
+   {
+    "fixture": "nat-range",
+    "lane": "Exhausted",
+    "basis": "bound",
+    "bucket": "vm-bound: the seed succeeds beyond a bound of the VM, which stops Exhausted (bounds.json)"
+   },
+   {
+    "fixture": "u32-ne",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-ne",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "char-ne",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-ne-order",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-ne-length",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-shr-32",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-shr-33",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-shl-33",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-sub-wrap",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-mul-wrap",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-and",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-lt-unsigned",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-cmp",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "u32-to-nat-big",
+    "lane": "Exhausted",
+    "basis": "seed",
+    "bucket": "excused: eval-cli exhausted a documented bound; the VM returns the seed value"
+   },
+   {
+    "fixture": "nat-pred",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-succ",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-succ-range",
+    "lane": "Exhausted",
+    "basis": "bound",
+    "bucket": "vm-bound: the seed succeeds beyond a bound of the VM, which stops Exhausted (bounds.json)"
+   },
+   {
+    "fixture": "nat-mul-range",
+    "lane": "Exhausted",
+    "basis": "bound",
+    "bucket": "vm-bound: the seed succeeds beyond a bound of the VM, which stops Exhausted (bounds.json)"
+   },
+   {
+    "fixture": "string-codes",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-show-codes",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-append-mortal",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "result-u32",
+    "lane": "InternalFailure",
+    "basis": "describe-domain",
+    "bucket": "declared: describe-domain"
+   },
+   {
+    "fixture": "io-bind",
+    "lane": "Invalid",
+    "basis": "seed",
+    "bucket": "eval-unavailable: eval-cli reports Invalid; the VM shows the seed value"
+   },
+   {
+    "fixture": "result-u32-field",
+    "lane": "InternalFailure",
+    "basis": "describe-domain",
+    "bucket": "declared: describe-domain"
+   },
+   {
+    "fixture": "result-char",
+    "lane": "InternalFailure",
+    "basis": "describe-domain",
+    "bucket": "declared: describe-domain"
+   },
+   {
+    "fixture": "result-string",
+    "lane": "InternalFailure",
+    "basis": "describe-domain",
+    "bucket": "declared: describe-domain"
+   },
+   {
+    "fixture": "print-non-scalar",
+    "lane": "Invalid",
+    "basis": "divergent-by-contract (non-scalar output)",
+    "bucket": "declared: divergent-by-contract (non-scalar output)"
+   },
+   {
+    "fixture": "print-non-scalar-mid",
+    "lane": "Invalid",
+    "basis": "divergent-by-contract (non-scalar output)",
+    "bucket": "declared: divergent-by-contract (non-scalar output)"
+   },
+   {
+    "fixture": "string-surrogate-pair",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "string-beyond-unicode",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "print-non-scalar-wide",
+    "lane": "Invalid",
+    "basis": "divergent-by-contract (non-scalar output)",
+    "bucket": "declared: divergent-by-contract (non-scalar output)"
+   },
+   {
+    "fixture": "non-scalar-code",
+    "lane": "Invalid",
+    "basis": "seed",
+    "bucket": "eval-unavailable: eval-cli reports Invalid; the VM shows the seed value"
+   },
+   {
+    "fixture": "non-scalar-unprinted",
+    "lane": "Invalid",
+    "basis": "seed",
+    "bucket": "eval-unavailable: eval-cli reports Invalid; the VM shows the seed value"
+   },
+   {
+    "fixture": "print-non-scalar-second",
+    "lane": "Invalid",
+    "basis": "divergent-by-contract (non-scalar output)",
+    "bucket": "declared: divergent-by-contract (non-scalar output)"
+   },
+   {
+    "fixture": "invoke-args",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "invoke-arrow",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "nat-case-big",
+    "lane": "Exhausted",
+    "basis": "seed",
+    "bucket": "excused: eval-cli exhausted a documented bound; the VM returns the seed value"
+   },
+   {
+    "fixture": "invoke-words",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "invoke-args:two 1000000 1 0",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "invoke-args:two 1000000 1",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:two 1000000 1 0 1",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:two 1000000 5",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:two 1000000 5 0 1",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:two 1000000 1 2",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:succ 1000000 0",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "invoke-args:succ 1000000 1",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:succ 1000000 1 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:succ 1000000 2",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:size 1000000 0",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "invoke-args:size 1000000 1",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:code 1000000 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:code 1000000 1",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:is_zero 1000000 0",
+    "lane": "agree",
+    "basis": "divergent-by-contract (opaque-parameter)",
+    "bucket": "declared: divergent-by-contract (opaque-parameter)"
+   },
+   {
+    "fixture": "invoke-args:is_zero 1000000 7",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:real 1000000 0",
+    "lane": "HostFailure",
+    "basis": "divergent-by-contract (erased-field)",
+    "bucket": "declared: divergent-by-contract (erased-field)"
+   },
+   {
+    "fixture": "invoke-args:real 1000000 1",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "invoke-args:real 1000000 2",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:text 1000000 1",
+    "lane": "InternalFailure",
+    "basis": "describe-domain",
+    "bucket": "declared: describe-domain"
+   },
+   {
+    "fixture": "invoke-args:text 1000000 2",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:absent 1000000",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-args:main 1000000 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-arrow:feed 1000000 1 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-arrow:feed 1000000 1 0 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-arrow:feed 1000000 1",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-arrow:feed 1000000 2 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-arrow:feed 1000000",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:absent 1000000 x",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:absent x",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 9 x",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 01 0",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 000000000001 0",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 4294967295 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 4294967296 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 4294967297 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 +1 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 -1 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000  1 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 1 ",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 \u0661 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 1000000 1_0 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 4294967296 1 0",
+    "lane": "HostFailure",
+    "basis": "eval-cli",
+    "bucket": "agree-refusal: the VM refuses as eval-cli does"
+   },
+   {
+    "fixture": "invoke-words:two 0001048576 1 0",
+    "lane": "agree",
+    "basis": "eval-cli",
+    "bucket": "agree: the VM equals eval-cli"
+   }
+  ]
+ },
+ "suites": [
+  {
+   "suite": "baseslice",
+   "directory": "tests/compiler-baseslice",
+   "admission": "requirement",
+   "fixtures": 40,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "checker",
+   "directory": "tests/compiler-checker",
+   "admission": "evidence",
+   "fixtures": 49,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "closures",
+   "directory": "tests/compiler-closures",
+   "admission": "requirement",
+   "fixtures": 42,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "fields",
+   "directory": "tests/compiler-fields",
+   "admission": "evidence",
+   "fixtures": 40,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "fields-wasm",
+   "directory": "tests/compiler-fields-wasm",
+   "admission": "evidence",
+   "fixtures": 8,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "generics",
+   "directory": "tests/compiler-generics",
+   "admission": "requirement",
+   "fixtures": 40,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "literals",
+   "directory": "tests/compiler-literals",
+   "admission": "requirement",
+   "fixtures": 40,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "recursion",
+   "directory": "tests/compiler-recursion",
+   "admission": "evidence",
+   "fixtures": 19,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "catalog",
+   "directory": "tests/compiler-structural",
+   "admission": "evidence",
+   "fixtures": 16,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "wasm",
+   "directory": "tests/compiler-wasm",
+   "admission": "evidence",
+   "fixtures": 25,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  },
+  {
+   "suite": "frontend",
+   "directory": "tests/subsets",
+   "admission": "evidence",
+   "fixtures": 14,
+   "image": "none: needs src/image.bend (the `image` increment)"
+  }
+ ],
+ "pending": [
+  "vm-rc: the VM does not reclaim (vm/CORE.md choice 1), the model does (SPEC section 5). rc, free lists and unreachable memory are outside the comparison until vm-rc; `exact` strength is implemented and controlled, and turns on for VM against model when the VM reclaims.",
+  "D23 (in flight on campaign/vm-spec, then vm-model and vm-core): IO requests become values performed at the Program's Top loop. Both machines here perform at application (the eager reading), so they agree with each other; a Program with an effect that is not on the spine is marked pending-D23 by the classifier and its expected observation changes with D23.",
+  "the image encoder (src/image.bend, increment `image`): the frozen suites of the repository have no images, so the value differential covers vm-spec's frozen fixtures, the goldens and their Book invocations.",
+  "vm-prims: sha256-64k needs the reserved prims 39 and 40 (U32.or, U32.xor).",
+  "vm-rc: peano, list-fold and deep-recursion allocate beyond a bump arena of 4 GiB (vm/bench/README.md), so their speed ratios cannot be measured before reclamation."
+ ],
+ "elapsed_seconds": 142.7
+}

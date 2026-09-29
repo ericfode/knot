@@ -1,0 +1,261 @@
+{
+ "loop-tail": {
+  "entry": "book",
+  "representation": {
+   "Nat": 0
+  },
+  "types": [
+   {
+    "kind": "data",
+    "name": "Nat",
+    "constructors": [
+     {
+      "name": "Zero",
+      "fields": []
+     },
+     {
+      "name": "Succ",
+      "fields": [
+       0
+      ]
+     }
+    ]
+   },
+   {
+    "kind": "data",
+    "name": "Flag",
+    "constructors": [
+     {
+      "name": "Off",
+      "fields": []
+     },
+     {
+      "name": "On",
+      "fields": []
+     }
+    ]
+   }
+  ],
+  "functions": [
+   {
+    "name": "count",
+    "parameters": [
+     0
+    ],
+    "result": 1,
+    "slots": 2,
+    "body": [
+     "case",
+     1,
+     0,
+     0,
+     "tags",
+     [
+      [
+       "branch",
+       0,
+       1,
+       0,
+       [
+        "value",
+        1,
+        1
+       ]
+      ],
+      [
+       "branch",
+       1,
+       1,
+       1,
+       [
+        "call",
+        1,
+        0,
+        [
+         [
+          "ref",
+          0,
+          1
+         ]
+        ]
+       ]
+      ]
+     ],
+     null
+    ]
+   },
+   {
+    "name": "main",
+    "parameters": [],
+    "result": 1,
+    "slots": 0,
+    "body": [
+     "call",
+     1,
+     0,
+     [
+      [
+       "lit",
+       0,
+       "Nat",
+       70000
+      ]
+     ]
+    ]
+   }
+  ]
+ },
+ "loop-deep": {
+  "entry": "book",
+  "representation": {
+   "Nat": 0
+  },
+  "types": [
+   {
+    "kind": "data",
+    "name": "Nat",
+    "constructors": [
+     {
+      "name": "Zero",
+      "fields": []
+     },
+     {
+      "name": "Succ",
+      "fields": [
+       0
+      ]
+     }
+    ]
+   },
+   {
+    "kind": "data",
+    "name": "Flag",
+    "constructors": [
+     {
+      "name": "Off",
+      "fields": []
+     },
+     {
+      "name": "On",
+      "fields": []
+     }
+    ]
+   }
+  ],
+  "functions": [
+   {
+    "name": "flip",
+    "parameters": [
+     1
+    ],
+    "result": 1,
+    "slots": 1,
+    "body": [
+     "case",
+     1,
+     0,
+     1,
+     "tags",
+     [
+      [
+       "branch",
+       0,
+       1,
+       0,
+       [
+        "value",
+        1,
+        1
+       ]
+      ],
+      [
+       "branch",
+       1,
+       1,
+       0,
+       [
+        "value",
+        1,
+        0
+       ]
+      ]
+     ],
+     null
+    ]
+   },
+   {
+    "name": "count",
+    "parameters": [
+     0
+    ],
+    "result": 1,
+    "slots": 2,
+    "body": [
+     "case",
+     1,
+     0,
+     0,
+     "tags",
+     [
+      [
+       "branch",
+       0,
+       1,
+       0,
+       [
+        "value",
+        1,
+        1
+       ]
+      ],
+      [
+       "branch",
+       1,
+       1,
+       1,
+       [
+        "call",
+        1,
+        0,
+        [
+         [
+          "call",
+          1,
+          1,
+          [
+           [
+            "ref",
+            0,
+            1
+           ]
+          ]
+         ]
+        ]
+       ]
+      ]
+     ],
+     null
+    ]
+   },
+   {
+    "name": "main",
+    "parameters": [],
+    "result": 1,
+    "slots": 0,
+    "body": [
+     "call",
+     1,
+     1,
+     [
+      [
+       "lit",
+       0,
+       "Nat",
+       40000
+      ]
+     ]
+    ]
+   }
+  ]
+ }
+}
