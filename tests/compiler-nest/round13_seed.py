@@ -330,10 +330,11 @@ def grid_cells():
 
 
 # --- Finding 4: a terminal default is copied into every remaining constructor arm of the core.
-def columns(width, ctors, heavy=False):
+def columns(width, ctors, heavy=False, first=False):
     """`width` columns of `ctors` constructors: a row that names the first constructor in one column, and a
-    catch-all row. The seed compiles the tree once; Knot's core grows as ctors^width. A heavy body is a call
-    of three nodes, so that a core that counted only its cases and branches would fall under the budget."""
+    catch-all row (`first`: the catch-all row leads, so the first row is irrefutable). The seed compiles the tree
+    once; Knot's core grows as ctors^width. A heavy body is a call of three nodes, so that a core that counted only
+    its cases and branches would fall under the budget."""
     names = ''.join(f'  Q{i}{{}}\n' for i in range(ctors))
     params = ', '.join(f'{chr(97 + i)}: Q' for i in range(width))
     scrutinees = ' '.join(chr(97 + i) for i in range(width))
@@ -342,7 +343,8 @@ def columns(width, ctors, heavy=False):
     for i in range(width):
         cells = ' '.join('Q0{}' if j == i else '_' for j in range(width))
         rows += f'    case {cells}: {body("On{}" if i % 2 == 0 else "Off{}")}\n'
-    rows += f'    case {" ".join("_" for _ in range(width))}: {body("On{}")}\n'
+    catch = f'    case {" ".join("_" for _ in range(width))}: {body("On{}")}\n'
+    rows = catch + rows if first else rows + catch
     args = ', '.join('Q1{}' for _ in range(width))
     helper = 'def pair(a: Flag, b: Flag) -> Flag:\n  a\n\n' if heavy else ''
     return (f'type Flag is Data:\n  Off{{}}\n  On{{}}\n\ntype Q is Data:\n{names}\n{helper}def f({params}) -> Flag:\n  match {scrutinees}:\n{rows}\n'
@@ -351,12 +353,14 @@ def columns(width, ctors, heavy=False):
 
 # `ddWxC` is W columns of C constructors. Accepted ones stay under the core budget (dd5x5's module is 34,434 bytes;
 # the seed's Bun lane computes it and then faults, which the gates classify as Exhausted (host)); the others exceed it.
-BUDGET = {'dd4x5': (4, 5, ACCEPTED, False), 'dd5x5': (5, 5, ACCEPTED, False), 'dd7x5': (7, 5, EXHAUSTED, False),
-          'dd9x5': (9, 5, EXHAUSTED, False), 'dd10x5': (10, 5, EXHAUSTED, False), 'dd10x3': (10, 3, EXHAUSTED, False),
-          'dd7x4-heavy': (7, 4, EXHAUSTED, True)}
+BUDGET = {'dd4x5': (4, 5, ACCEPTED, False, False), 'dd5x5': (5, 5, ACCEPTED, False, False),
+          'dd7x5': (7, 5, EXHAUSTED, False, False), 'dd9x5': (9, 5, EXHAUSTED, False, False),
+          'dd10x5': (10, 5, EXHAUSTED, False, False), 'dd10x3': (10, 3, EXHAUSTED, False, False),
+          'dd7x4-heavy': (7, 4, EXHAUSTED, True, False), 'dd9x5-first': (9, 5, EXHAUSTED, False, True),
+          'dd4x5-first': (4, 5, ACCEPTED, False, True)}
 for label, outcome in (('accepted', ACCEPTED), ('exhausted', EXHAUSTED)):
     group(f'default-{label}', outcome, None,
-          *[(f'default-{name}', columns(width, ctors, heavy)) for name, (width, ctors, expected, heavy) in BUDGET.items()
+          *[(f'default-{name}', columns(width, ctors, heavy, first)) for name, (width, ctors, expected, heavy, first) in BUDGET.items()
             if expected == outcome])
 
 
