@@ -18,12 +18,16 @@ Reading the table:
   output untouched, and no artifact appears (D4).
 - An Invalid claim is made only where the seed rejects. A spaced `+` after an argument is Unsupported,
   because `a ++ b` is valid and a parser that called it a missing comma would be Invalid on a valid book.
-- No book depends on the ruling on the contested constructs of `tests/compiler-literals/REPORT.md`
+- The books hold under any D4-safe ruling on the contested constructs of `tests/compiler-literals/REPORT.md`
   ("Integration with nest"). The nest tip answers `erased-dotted-let` and both `arm-body-*` books as the
   merged tree does; the literals tip answers differently (Invalid on the erased let, a false Invalid on a
   valid book; Unsupported term-form for a keyword body). The other three books use `import Base`, which
   the nest tip does not load, so no parent pins them. The contested constructs (dotted binders, layout, a
   spaced `+` in a body, malformed names, enum variable rows) stay in the suites that pin them.
+- One book fails under one reading of a contested rule, by design: nest's `argspace-operator-call` reads a
+  spaced `+` after an argument as `Invalid parse argument-separator`, and that reading is Invalid on
+  `spaced-plus-concat`, a book the seed accepts (the mutant `spaced-plus-is-a-missing-comma` is exactly
+  that reading). A ruling for nest's rule must keep `a ++ b` Unsupported.
 
 ## Gate
 

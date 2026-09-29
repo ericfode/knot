@@ -189,7 +189,9 @@ runner's own environment. No repository file is touched. All four pass:
 | `literals` | 145 of 150 | 970 Wasm, 1,174 evaluator, 204 artifact-preservation probes, 16 boundary probes, 5 result books (61 calls) | 36 of 42 |
 
 The same relaxed run on `4ea2d92`, after the adapter move, passes all four again (`literals` 245 s,
-`nest-round9` 291 s, `nest-round3` 303 s, `nest-round10` 558 s under load).
+`nest-round9` 291 s, `nest-round3` 303 s, `nest-round10` 558 s under load), with the same 19 survivors and
+no other: the 15 dead anchors, `rebound-promotion-invalid`, `rebound-let-invalid`,
+`line-break-before-any-name` and `inferred-let-literal`.
 
 So the claim "only the contested rows fail" now rests on the full gates, not on the pins alone: every
 other fixture in these four gates builds, evaluates and runs to the frozen value on the merged tree.
@@ -263,8 +265,12 @@ except one declaration.
   `literal-check.bend`: `intrinsic_type`, and `constructor` now takes the checked value, which absorbs
   `literal_constructor`. Behavior is unchanged: the 15 `PROOF` entries print `All terms check.`; the
   two `dead_arm` laws name `M.dead_arm`; the anchor scan is unchanged (the same 15 dead); the relaxed pin
-  gates pass their later stages on it (below). No other group changed; the largest is
-  `literal-source-machine` at 47,639.
+  gates pass their later stages on it (below). Two groups that select the receiving files grew and stay
+  under the cap (`literal-types` 33,857 to 34,103, `literal-patterns` 22,652 to 25,599); no other group
+  changed, and the largest is `literal-source-machine` at 47,639. With only `check.bend::run` exempted
+  from the state cap (a scratch copy of HEAD, both cap sites), the `perch-context` gate passes: 33
+  controls, 8 mutants, 36 compositions, 1,506 declarations covered, 0 blockers, 0 truncated, 0
+  role-limited. So `run` is the only Perch blocker on this tree.
 - **State of `check.bend::run`: 64,171 against 60,000, not fixed.** It is the only declaration of
   `check.bend` over the cap (the next are `functions` at 52,979 and `expected` at 52,865). At the floor
   (every callee already an interface) the state is: the declaration 11,565 bytes; the task 807; 113
@@ -339,8 +345,9 @@ except one declaration.
   `M.checked_case`, `M.checked_default`, `M.retained`) and `literal-check.bend` (`L.intrinsic_type`,
   `L.constructor`). A newer nest tip that edits `check.bend` names none of them; a modules merge that
   adds rows to `run` must keep `checking` under 48,000 (now 47,344, margin 656).
-- Re-run `tests/compiler-literals-integ` after any merge: its six books do not depend on the ruling.
-  Its gate is registered in `scripts/gates/run.py` and its self-test; `npm run census` regenerates
+- Re-run `tests/compiler-literals-integ` after any merge: its six books hold under any D4-safe ruling.
+  `spaced-plus-concat` fails, by design, under nest's Invalid reading of a spaced `+` after an argument
+  (`argspace-operator-call`), because that reading is Invalid on a book the seed accepts. Its gate is registered in `scripts/gates/run.py` and its self-test; `npm run census` regenerates
   `accepted.json` when the registry or the gate program changes.
 
 ### Remaining
