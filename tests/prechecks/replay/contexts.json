@@ -1,0 +1,305 @@
+{
+ "schema": 1,
+ "ledger": "proposed-ledger.json",
+ "contexts": [
+  {
+   "name": "classify",
+   "kind": "broken",
+   "inc": "classify",
+   "head": "5e5b2201bb34f1c2e9d8cec293d360e2f6148ec3",
+   "main_ref": "9ae6d819a12be87baeecff20895f153b0e070088",
+   "merged_as": "dcf7df7c560ce85c409429b51833b13741820bec",
+   "default": {
+    "exit": 3,
+    "executor_major": {
+     "C1.premature-unsupported": 6,
+     "C3.frozen-edit": 1
+    }
+   },
+   "with_ledger": {
+    "exit": 3,
+    "executor_major": {
+     "C1.premature-unsupported": 6,
+     "C3.frozen-edit": 1
+    }
+   },
+   "note": "The classify tip. Confirmed by the classify reviewers and fixed by classify-2: a non-leading ~ binder and == after a constructor moved from Invalid to Unsupported (found by the seed error offset), and => after a constructor (a frozen expect probe: its offsets equal those of the documented suffix policy). The additive 112-line edit of the frontend gate script tests/subsets/check_frontend.py is a C3 frozen-edit that no manifest authorizes; it stays reported, ledger or not."
+  },
+  {
+   "name": "classify-2",
+   "kind": "broken",
+   "inc": "classify-2",
+   "head": "7b85b8aa788218897bb756452df65fb3a7a2c121",
+   "main_ref": "d89de7fca8f426af2c6734da9377e8191775a221",
+   "merged_as": "152fcd5d060d477bd0e17719d833fb778686ebff",
+   "default": {
+    "exit": 3,
+    "executor_major": {
+     "C1.premature-unsupported": 9,
+     "C4.host-path": 2
+    }
+   },
+   "with_ledger": {
+    "exit": 3,
+    "executor_major": {
+     "C1.premature-unsupported": 9
+    }
+   },
+   "note": "The classify-2 tip. Confirmed by the classify-2 reviewers (wf_290b6024-8bd:semantics:0): Name< read as a type application where the seed reads less-than, in return types and annotations. Malformed-after-prefix forms (Flag<>, Flag<x>=, Flag<Flag>>) are the documented prefix policy and are not reported."
+  },
+  {
+   "name": "joint",
+   "kind": "broken",
+   "inc": "joint",
+   "head": "691b23b7a7d0ad99718bf78258af28aaf18fc6d3",
+   "main_ref": "f24c491d9bf0a39e336cef3da3d652daa45a2a79",
+   "base": "b926a3c379b87ab69c65e00cb3e5ccd61a5d6f94",
+   "default": {
+    "exit": 3,
+    "executor_major": {
+     "C3.red-tip": 1
+    }
+   },
+   "with_ledger": {
+    "exit": 3,
+    "executor_major": {
+     "C3.red-tip": 1
+    }
+   },
+   "note": "The joint tip is red: census --check fails on a plain export (a stale inventory), which the reviewer confirmed as a real red gate."
+  },
+  {
+   "name": "bootstrap",
+   "kind": "clean",
+   "inc": "bootstrap",
+   "head": "dc76dac378e0689f77b9fe19eeceb046cb8e3714",
+   "main_ref": "7c74398027f94f6eafcc9673816248fd52e479ff",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "Adds the bootstrap gate row and its counts() branch (the shape GATES.md asks of every new gate)."
+  },
+  {
+   "name": "census-2",
+   "kind": "clean",
+   "inc": "census-2",
+   "head": "0e8b2876ebeede0ed312d640b9f15ab4ae34caf8",
+   "main_ref": "5f16a4c8c250d0cdcefcf14042cf680e7ff9f6d5",
+   "default": {
+    "exit": 3,
+    "executor_major": {
+     "C4.host-path": 1
+    }
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "The round receipt cites an ignored run summary."
+  },
+  {
+   "name": "recursion",
+   "kind": "clean",
+   "inc": "recursion",
+   "head": "624228e56d8b5bfdc5dd3b3d3395d9b3c071ea71",
+   "main_ref": "dcf7df7c560ce85c409429b51833b13741820bec",
+   "merged_as": "ddb3599f77640e7e0977fb89be407e7d224fc212",
+   "default": {
+    "exit": 3,
+    "executor_major": {
+     "C4.host-path": 3
+    }
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "The own receipts carry worktree paths; the baseline_implementation freeze is history, not stale, and the law file outside every manifest group is a minor condition that names its helper closure."
+  },
+  {
+   "name": "poly",
+   "kind": "clean",
+   "inc": "poly",
+   "head": "6ffb8884c5b9207b5124f7f32b7190e582e44ae1",
+   "main_ref": "819bf170ffa9a74d4104483f3caa27c8ec7d3dcc",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   }
+  },
+  {
+   "name": "sugar",
+   "kind": "clean",
+   "inc": "sugar",
+   "head": "577d2b05d304903fb8e4c5b0fd0b3f876dfd0c33",
+   "main_ref": "6defec1cdc00d241a062317fc5ecc17452cbb521",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   }
+  },
+  {
+   "name": "io-abi-2",
+   "kind": "clean",
+   "inc": "io-abi-2",
+   "head": "de2217446330c11c4baf4fe40cba54b082c41181",
+   "main_ref": "9523c55c7691c07d9355674d24f273920fb8d4bb",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "Adds the io-abi-2 gate row and its counts() branch."
+  },
+  {
+   "name": "main-25b3a5b6",
+   "kind": "clean",
+   "inc": "none",
+   "head": "25b3a5b6253a88feda23c532e73c5b84f37fe398",
+   "main_ref": "2c664d370ed3c904569b4eaa11b3c3d0ec58910e",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "A single-parent commit on main against its parent (a policy edit, no gate row)."
+  },
+  {
+   "name": "perch-context",
+   "kind": "clean",
+   "inc": "perch-context",
+   "head": "ffab8be269062082446fc3f8ea9768f9f922da54",
+   "main_ref": "c1970acd81034e10e2f7721ecd05825024193cc1",
+   "merged_as": "7c74398027f94f6eafcc9673816248fd52e479ff",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "The accepted tip: a new suite with its receipt and the vendored parser observer (32 files)."
+  },
+  {
+   "name": "vm-model",
+   "kind": "clean",
+   "inc": "vm-model",
+   "head": "07e6db73307944eb688130e64284f1ec266f1515",
+   "main_ref": "a6367eb9f434d0123ea809e81f63a853012a9fe4",
+   "upstream": [
+    [
+     "vm-spec",
+     "cea554abc93f8091b28621aaf336d7acf6839866"
+    ]
+   ],
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "Accepted in its last round, not merged. Stacked on vm-spec: with the upstream declared the run judges only the increment's own diff, and without it the same run reports vm-spec's files as the increment's."
+  },
+  {
+   "name": "main-a6367eb9",
+   "kind": "clean",
+   "inc": "none",
+   "head": "a6367eb9f434d0123ea809e81f63a853012a9fe4",
+   "main_ref": "a6367eb9f434d0123ea809e81f63a853012a9fe4",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "Main against itself: nothing changed, so nothing is reported."
+  },
+  {
+   "name": "io-host",
+   "kind": "broken",
+   "inc": "io-host",
+   "head": "963a7594af1b5de4053394e903c105fe53dddbab",
+   "main_ref": "b926a3c379b87ab69c65e00cb3e5ccd61a5d6f94",
+   "merged_as": "0b9498bbd58c82a1caab6cb159caa7a295480bf2",
+   "default": {
+    "exit": 3,
+    "executor_major": {
+     "C3.red-tip": 1
+    }
+   },
+   "with_ledger": {
+    "exit": 3,
+    "executor_major": {
+     "C3.red-tip": 1
+    }
+   },
+   "note": "The accepted tip pins an older sha256 of tests/compiler-io/host-check.py in the census inventory than the file has, so census --check fails on a plain export (reproduced independently). No reviewer confirmed it: main repaired it afterwards in f84d83ef, \"Regenerate the census inventory after the io-host merge\"."
+  },
+  {
+   "name": "harness-2",
+   "kind": "clean",
+   "inc": "harness-2",
+   "head": "f53f937c970648c3e0c9f7efe24a533f95224dfa",
+   "main_ref": "8bd422697ebe8ad9fed2d6212f6be84f61ed41dc",
+   "manifest": {
+    "id": "harness-2",
+    "executor": "claude",
+    "owns": [
+     "tests/compiler-bootstrap/**"
+    ]
+   },
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "The accepted tip rewrites its own gate script tests/compiler-bootstrap/check.py. With no manifest that is a C3 blocking frozen-edit and an assertion-weakened (a selector widened from == to in); the manifest, reconstructed from the diff (every path but the regenerated inventory lies in tests/compiler-bootstrap), owns the suite, so the run is clean."
+  },
+  {
+   "name": "fields-wasm",
+   "kind": "clean",
+   "inc": "fields-wasm",
+   "head": "3868b119f8bae74b6cffbfe16f0f27488659ed64",
+   "main_ref": "ddb3599f77640e7e0977fb89be407e7d224fc212",
+   "merged_as": "9d3a8cf465c2f16a8fd3aeac525d2ed87207cabf",
+   "default": {
+    "exit": 3,
+    "executor_major": {
+     "C4.host-path": 2
+    }
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "Merged as reviewed. The own receipts fields-wasm.json and verification.json, written by the gate run in the worktree, carry host paths (ledgered, pinned to the hit counts)."
+  }
+ ]
+}

@@ -1,0 +1,133 @@
+{
+ "entries": [
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "dd69321f68f628625734",
+   "increment": "census-2",
+   "owner": "coordinator",
+   "reason": "census-2's round receipt cites the ignored run summary .local/gates/run-*/summary.json; accepted at merge, the coordinator refreshes receipts after integration",
+   "rule": "host-path",
+   "subject": {
+    "path": "tools/census/receipts/census-2-round-2.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 2
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "c08dc3b9f64fbc56096c",
+   "increment": "classify-2",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted classify-2 (merged as 152fcd5d) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh) and the reviewers rated them minor",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-classification/receipts/gates.stderr.txt"
+   },
+   "until": null,
+   "value": {
+    "hits": 1
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "6be2fdde53abad25d6f0",
+   "increment": "classify-2",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted classify-2 (merged as 152fcd5d) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh) and the reviewers rated them minor",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-classification/receipts/precision.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 130
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "2557a346887fe14dc23a",
+   "increment": "fields-wasm",
+   "owner": "coordinator",
+   "reason": "the coordinator merged fields-wasm as reviewed (9d3a8cf4) with its own receipts as the gate run in the worktree wrote them (host paths recorded); the entry is pinned to the measured hit count, so a receipt that gains host paths is reported as changed",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 1340
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "a1f96351c14c84d7bd49",
+   "increment": "fields-wasm",
+   "owner": "coordinator",
+   "reason": "the coordinator merged fields-wasm as reviewed (9d3a8cf4) with its own receipts as the gate run in the worktree wrote them (host paths recorded); the entry is pinned to the measured hit count, so a receipt that gains host paths is reported as changed",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-fields-wasm/receipts/verification.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 12
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "e625bd5595baf5266f40",
+   "increment": "recursion",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted recursion (merged as ddb3599f) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh)",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-recursion/receipts/recursion.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 706
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "85fbf71828b87e742d84",
+   "increment": "recursion",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted recursion (merged as ddb3599f) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh)",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-recursion/receipts/reference.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 76
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "c63a3bd84c8d84ede9a4",
+   "increment": "recursion",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted recursion (merged as ddb3599f) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh)",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-recursion/receipts/regressions.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 117
+   }
+  }
+ ],
+ "note": "REPLAY-ONLY, never read by the suite and not for adoption: `scripts/prechecks/replay.py` passes this file as `--ledger` so that the historical tips, whose base did not yet contain the accepted receipts, can be replayed as clean controls. On main, the base ratchet of C4 already suppresses host paths that the base has (a hit count at or below the base's is not a condition), so adopting an entry there would only silence the same path when it gains paths later; the ledger of record is docs/compiler-campaign/known-conditions.json on main, which the coordinator owns. Only C4 `host-path` entries are kept, each pinned to the measured hit count. No `frozen-edit`, `assertion-weakened` or `C1` condition is ever proposed: an entry for an edited frozen gate script would silence every later edit of that script (the fingerprint is the path)."
+}
