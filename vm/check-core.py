@@ -23,12 +23,19 @@ Checks, in order:
   (among them where a Nat Case's predecessor is made against its Scope push, describe's frame region at its
   exact fit, `append` at a lowered heap and an Action's cell); and Books whose frozen run the reference evaluation (vm/evaluate.py) must
   also give (Chr's operand, a Big predecessor);
+- the study rows (round 7; vm/core/fixtures.json, added for the survivors of the mutant study): a Closure that binds a slot after its
+  captures and its live argument (`closure-let`, whose run the reference evaluation gives too), the room of a Case's Scope, of a Call
+  frame, of a tail loop below a Call frame and of `U32.show`'s digits, each at its exact fit and one byte short (limited rows, whose
+  bump pointers section 5's model derives), a describe result whose second field is an arrow, an erased-arrow parameter and a name that
+  is no function's (checked against the codec's `arguments`), and the class and cause registers of the three usage refusals; and a
+  Closure's Activation that its captures fill, ending where memory does (`memory-end-closure`). Every clean run ends in control Halt
+  (mode 3), which `observed_wrong` requires of every row of every group;
 - the ceiling fixtures: Books and a Program whose bump pointer ends near or
   exactly at 4 GiB, described exactly or completed, or Exhausted kind 2 (heap)
   where a cell or the text would end beyond it. Each row's bump pointer and
   outcome are first derived from SPEC section 5's cell sizes over its plan
   (`ceiling_run`), independently of any VM;
-- the memory-end rows: Books whose last cell (an Object whose fields fill it, and an Action) ends exactly at 48 MiB,
+- the memory-end rows: Books whose last cell (an Object whose fields fill it, an Action, and a Closure's Activation that its captures fill) ends exactly at 48 MiB,
   where boot leaves the memory, so that a read or a write past a cell's end faults there; each bump pointer and
   line is first derived from SPEC section 5 (`ceiling_run`), and the calls from the reference evaluation;
 - the scope rows (`scope` in vm/core/fixtures.json, built by vm/scope.py): images whose validation needs far more scope
@@ -107,6 +114,7 @@ HOST = ROOT / 'scripts/run-wasm-io.mjs'
 HARNESS = HERE / 'harness.mjs'
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # hang guard only
 NONE = 0xFFFFFFFF
+HALT = 3  # the machine's mode register after a finished run or a stop: control `Halt(outcome)` (SPEC section 6)
 FUZZ_SEED, FUZZ_PER_IMAGE = 20260928, 40
 NEST = 200_000
 SMALL_STACK = '--stack-size=64'
@@ -344,7 +352,7 @@ def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[in
     here is its code count, since only sizes reach the heap. A Book's line is section 8's
     rendering, by the reference evaluation's `describe`; a Program's Emit has none. A heap
     lowered to `heap_bytes` (section 5's test limit) ends at H0 + heap_bytes instead."""
-    rep, fns = plan['representation'], plan['functions']
+    rep, fns = plan.get('representation', {}), plan['functions']  # a Book of constructors alone names no representation type
     big, scon = cell(1), cell(4)  # a Big scalar; a String cell (type, tag, Char, tail)
     end = 4096 + len(image)
     require(end % 65536, 'the image does not end on a 64 KiB boundary, where "next" reads two ways')
@@ -407,7 +415,8 @@ def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[in
             _, _, slot, t, mode, rows, default = node
             require((mode, default) == ('tags', None), 'the model cases by tag, without a Default')
             if t != rep.get('Nat'):  # an Object: selection allocates nothing, and a Branch binds its fields' words
-                _, _, tag, fields = env[slot]
+                word = env[slot]
+                tag, fields = (word, ()) if isinstance(word, int) else word[2:]  # a nullary constructor is its tag, an immediate
                 arm = rows[tag]
                 env[arm[2]:arm[2] + arm[3]] = fields[:arm[3]]
                 return value(arm[4], env, tail)
@@ -558,10 +567,12 @@ def atomic(label: str, out: dict):
 def observed_wrong(job: dict, out: dict) -> bool:
     """The run `out` differs from the row's frozen run (unless the row freezes none), its registers or its yields, or
     exceeds a bound the row states; or, on an `atomic` row, its refusal changed the machine (harness.mjs), or, on an
-    `audit` row, a state of the run broke a layout of SPEC sections 5 and 6 (`audit` in harness.mjs)."""
+    `audit` row, a state of the run broke a layout of SPEC sections 5 and 6 (`audit` in harness.mjs); or a run that ended
+    cleanly did not end in control Halt (SPEC section 6: `Halt(outcome)`, mode 3): every finished run, and every stop, does."""
     return ((job['want'] is not None and shown(out, job['want']) != job['want'])
             or (job.get('atomic') and bool((out.get('atomic') or {}).get('moved')))
             or (job.get('trace') == 'audit' and out.get('broken') is not None)
+            or (clean(out) and out.get('state') is not None and out['state']['mode'] != HALT)
             or any((out['yields'] if k == 'yields' else out['effects'] if k == 'effects' else out['state'][k]) != v
                    for k, v in job.get('dump', {}).items())
             or any(out['state'][k] > most for k, most in job.get('at_most', {}).items()))
@@ -1113,7 +1124,10 @@ GUARD = {'fixtures': 120_000, 'limited': 120_000, 'programs': 120_000, 'describe
          'trap': 600_000, 'growth': 600_000, 'refused': 600_000, 'scope': 10_000}  # ms a row may take before it is stopped, else 30,000
 
 
-BASELINE = ['keys', 'describe', 'tags', 'display', 'inspection', 'sweeps', 'writers', 'programs', 'hang', 'fuzz-admitted', 'dumps', 'scope', 'atomic']
+BASELINE = ['keys', 'describe', 'tags', 'display', 'inspection', 'sweeps', 'writers', 'programs', 'hang', 'fuzz-admitted', 'dumps', 'scope', 'atomic',
+            # the groups of frozen rows: `observed_wrong` also asks the state audit and control Halt of them, which the stages that froze them did not
+            'goldens', 'invocations', 'runs', 'fixtures', 'controls', 'limited', 'reference', 'witness', 'describe-domain', 'describe-order',
+            'image-limits', 'limit-words', 'fuel', 'quantum']
 
 
 def deadline(job: dict, group: str) -> int:
@@ -1122,8 +1136,9 @@ def deadline(job: dict, group: str) -> int:
 
 
 def check_baseline(groups: dict, test: Path):
-    """The groups of the lane, the mutated goldens and the dump rows are built apart from the checks that froze them, so
-    the unmutated test build must show nothing wrong on any of them: a group that kills every mutant, this one included,
+    """The groups of the lane, the mutated goldens and the dump rows are built apart from the checks that froze them, and the
+    others are judged by `observed_wrong`, which asks more than those checks did (the state audit, control Halt), so the
+    unmutated test build must show nothing wrong on any of them: a group that kills every mutant, this one included,
     kills none."""
     for group in BASELINE:
         jobs = groups[group]
@@ -1946,6 +1961,58 @@ MUTANTS = [
      [('    (call $emitdec (global.get $resT))\n    (call $emitc (i32.const 9))\n    (if (i32.eq (global.get $resT) (global.get $rNat))',
        '    (call $emitdec (global.get $resT))\n    (call $emitc (i32.const 9))\n    (call $io_print (i32.wrap_i64 (global.get $out)) (global.get $len))\n'
        '    (if (i32.eq (global.get $resT) (global.get $rNat))')], 'runs'),
+    # round 7, the study's survivors that new rows now kill (fixtures.json: `closure-let`, the frame-room and digit-count limited rows,
+    # `arrow-second-field`, the invocation rows and the usage refusals' registers): each is a study mutant, named for what it breaks
+    ('closure-depth-ignores-live', "a Closure's Activation starts its depth at its captures, not after its live argument, so a Let in the body binds over the argument",
+     [('        (i32.store offset=12 (local.get $a) (i32.add (local.get $ncap) (local.get $live)))\n',
+       '        (i32.store offset=12 (local.get $a) (local.get $ncap))\n')], 'reference'),
+    ('tail-only-below-top', 'an entry is a tail entry only below Top, so a callee that tail-calls under a Call frame pushes another Call frame',
+     [('    (if (i32.or (i32.eqz (local.get $k)) (i32.eq (local.get $k) (i32.const 4)))\n      (then (return (i32.const 1))))\n',
+       '    (if (i32.eqz (local.get $k))\n      (then (return (i32.const 1))))\n')], 'limited'),
+    ('scope-room-too-large', 'a Case whose Scope fits the frame region exactly is refused: the room asked for is one byte too many',
+     [('        (call $spare (i32.const 12))\n', '        (call $spare (i32.const 13))\n')], 'limited'),
+    ('scope-room-too-small', "a Case's Scope is judged to fit one byte short of its 12, so the predecessor is made before the push stops",
+     [('        (call $spare (i32.const 12))\n', '        (call $spare (i32.const 11))\n')], 'limited'),
+    ('call-room-too-large', 'a non-tail entry whose Call frame fits the region exactly is refused: the room asked for is one byte too many',
+     [('    (call $spare (i32.const 16))\n    (i32.const 0))', '    (call $spare (i32.const 17))\n    (i32.const 0))')], 'limited'),
+    ('call-room-too-small', "a non-tail entry's Call frame is judged to fit one byte short of its 16, so the Activation is made before the push stops",
+     [('    (call $spare (i32.const 16))\n    (i32.const 0))', '    (call $spare (i32.const 15))\n    (i32.const 0))')], 'limited'),
+    ('show-counts-base-nine', 'show counts its digits by dividing by 9, so the room for 9 is that of two digits',
+     [('      (local.set $d (i32.div_u (local.get $d) (i32.const 10)))\n', '      (local.set $d (i32.div_u (local.get $d) (i32.const 9)))\n')], 'limited'),
+    ('show-counts-base-eleven', 'show counts its digits by dividing by 11, so the room for 10 is that of one digit and a heap stop leaves the first cell',
+     [('      (local.set $d (i32.div_u (local.get $d) (i32.const 10)))\n', '      (local.set $d (i32.div_u (local.get $d) (i32.const 11)))\n')], 'limited'),
+    ('describable-skips-fields', 'the describe domain walks every second field of a constructor',
+     [('                (local.set $sp (i32.add (local.get $sp) (i32.const 4)))\n                (local.set $j (i32.add (local.get $j) (i32.const 1)))\n',
+       '                (local.set $sp (i32.add (local.get $sp) (i32.const 4)))\n                (local.set $j (i32.add (local.get $j) (i32.const 2)))\n')], 'describe-domain'),
+    ('describable-first-field-only', 'the describe domain walks only the first field of a constructor',
+     [('                (local.set $sp (i32.add (local.get $sp) (i32.const 4)))\n                (local.set $j (i32.add (local.get $j) (i32.const 1)))\n',
+       '                (local.set $sp (i32.add (local.get $sp) (i32.const 4)))\n                (local.set $j (i32.const -1))\n')], 'describe-domain'),
+    ('function-argument-arrow-only', 'only a live arrow is a function argument: an erased arrow is an ordinal out of range',
+     [('        (if (i32.lt_u (i32.sub (call $kind (local.get $p)) (i32.const 1)) (i32.const 2))',
+       '        (if (i32.lt_u (i32.sub (call $kind (local.get $p)) (i32.const 1)) (i32.const 1))')], 'fixtures'),
+    ('export-search-one-past', "the search for FN reads one entry past the function table, and takes a record found there for a function",
+     [('        (br_if $found (i32.ge_u (local.get $i) (global.get $nF)))\n        (local.set $name (call $tab (global.get $tM)',
+       '        (br_if $found (i32.gt_u (local.get $i) (global.get $nF)))\n        (local.set $name (call $tab (global.get $tM)')], 'fixtures'),
+    ('program-usage-unsupported', "a Program's missing FUEL and separator is an Unsupported, not a HostFailure",
+     [('      (then\n        (if (i32.lt_u (global.get $argc) (i32.const 3))\n          (then (call $stop (i32.const 3) (i32.const 5) (i32.const 192) (global.get $R_usage))))\n',
+       '      (then\n        (if (i32.lt_u (global.get $argc) (i32.const 3))\n          (then (call $stop (i32.const 4) (i32.const 5) (i32.const 192) (global.get $R_usage))))\n')], 'dumps'),
+    ('program-separator-unsupported', "a Program's word that is not `--` is an Unsupported, not a HostFailure",
+     [('        (if (i32.eqz (call $argis (i32.const 2) (i32.const 40) (i32.const 2)))\n          (then (call $stop (i32.const 3) (i32.const 5) (i32.const 192) (global.get $R_usage))))\n',
+       '        (if (i32.eqz (call $argis (i32.const 2) (i32.const 40) (i32.const 2)))\n          (then (call $stop (i32.const 4) (i32.const 5) (i32.const 192) (global.get $R_usage))))\n')], 'dumps'),
+    ('book-usage-unsupported', "a Book's missing FN and FUEL is an Unsupported, not a HostFailure",
+     [('        (return (call $tab (global.get $tF) (call $w (i32.const 4))))))\n    (if (i32.lt_u (global.get $argc) (i32.const 3))\n      (then (call $stop (i32.const 3) (i32.const 5) (i32.const 192) (global.get $R_usage))))\n',
+       '        (return (call $tab (global.get $tF) (call $w (i32.const 4))))))\n    (if (i32.lt_u (global.get $argc) (i32.const 3))\n      (then (call $stop (i32.const 4) (i32.const 5) (i32.const 192) (global.get $R_usage))))\n')], 'dumps'),
+    ('book-ends-in-enter', "a Book's description leaves the control at Enter, not Halt",
+     [('    (global.set $oc (i32.const 1))\n    (global.set $mode (i32.const 3))\n    (call $io_print (i32.wrap_i64 (global.get $out)) (global.get $len)))',
+       '    (global.set $oc (i32.const 1))\n    (global.set $mode (i32.const 2))\n    (call $io_print (i32.wrap_i64 (global.get $out)) (global.get $len)))')], 'goldens'),
+    ('emit-ends-in-enter', "a Program's Emit leaves the control at Enter, not Halt",
+     [('        (global.set $oc (i32.const 1))\n        (global.set $mode (i32.const 3))\n        (return)))',
+       '        (global.set $oc (i32.const 1))\n        (global.set $mode (i32.const 2))\n        (return)))')], 'goldens'),
+    ('halt-ends-in-enter', "a Program's Halt leaves the control at Enter, not Halt",
+     [('    (global.set $okind (local.get $code))\n    (global.set $mode (i32.const 3))\n',
+       '    (global.set $okind (local.get $code))\n    (global.set $mode (i32.const 2))\n')], 'writers'),
+    ('closure-captures-overrun', "a Closure's entry copies one capture too many, one word past the captures: past the Activation that they fill",
+     [('            (br_if $copied (i32.ge_u (local.get $j) (local.get $ncap)))\n', '            (br_if $copied (i32.gt_u (local.get $j) (local.get $ncap)))\n')], 'memory-end'),
 ]
 
 
@@ -2059,6 +2126,11 @@ def main(args: list) -> int:
     core = []
     for r, got in zip(runs, ran):
         require(got == r['expect'], f"fixture {r['name']}: {got} vs {r['expect']}")
+        if r['image'] and r['expect']['stderr'].startswith(('HostFailure\tinvoke\t', 'HostFailure\targuments\t')):
+            # a refusal of the words: the reference predicate (section 8, `serializer.arguments`) gives the frozen verdict, whatever the VM does
+            plan = json.loads((HERE / f"{r['image']}.plan.json").read_text())
+            require(codec.arguments(plan, r['argv']) == r['expect']['stderr'].strip().replace('\t', ' '),
+                    f"fixture {r['name']}: the codec says {codec.arguments(plan, r['argv'])!r}, frozen {r['expect']['stderr']!r}")
         core.append({'name': r['name'], 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode())})
     by_name = {r['name']: r for r in runs}
     jobs = [{'id': n, 'wasm': str(test), 'files': {staged(by_name[n]['image']): str(sandbox / staged(by_name[n]['image']))},

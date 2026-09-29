@@ -1,6 +1,6 @@
 {
  "schema": "vm-core fixtures",
- "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed. The memory-end rows state theirs: their fill counts, bump pointers and lines are derived by section 5's model and the reference evaluation, after a probe of the VM found the defects they catch. The describe rows state theirs: SPEC section 8's describe domain (no arrow, no `none`-typed field) and the order of an ill-typed word's inspection and its visit's charge, by literal review of sections 6 and 8, and check-core derives each again from the codec and from the reference evaluation (at a bound of eight visits, where it is fast). The witness rows state theirs: frames, `top` and `act` at a stop, derived by hand from sections 5 and 6 by DECISIONS entry 38 before any machine ran them. The round 14 limited rows state theirs: their bump pointers come from section 5's model (`ceiling_run`), and their `top` from the frames it lists.",
+ "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed. The memory-end rows state theirs: their fill counts, bump pointers and lines are derived by section 5's model and the reference evaluation, after a probe of the VM found the defects they catch. The describe rows state theirs: SPEC section 8's describe domain (no arrow, no `none`-typed field) and the order of an ill-typed word's inspection and its visit's charge, by literal review of sections 6 and 8, and check-core derives each again from the codec and from the reference evaluation (at a bound of eight visits, where it is fast). The witness rows state theirs: frames, `top` and `act` at a stop, derived by hand from sections 5 and 6 by DECISIONS entry 38 before any machine ran them. The round 14 limited rows state theirs: their bump pointers come from section 5's model (`ceiling_run`), and their `top` from the frames it lists. The study rows state theirs: rows added for the survivors of the round 7 mutant study (the closure, the frame-room and digit-count edges, a bad field after a good one, the erased-arrow parameter, the export search and the usage refusals' registers). Each value was derived by hand from sections 5 to 8 before any image was run; a probe of the VM then agreed on every one and none was changed after it. The gate derives each again: the bump pointers of the fit rows from section 5's model (`model`), `closure-let` from vm/evaluate.py, the describe row from the codec's `undescribable`, and the invocation rows from the codec's `arguments`.",
  "fuel": 1000000,
  "runs": [
   {
@@ -497,6 +497,49 @@
     "stderr": "HostFailure\timage\tunreadable\n"
    },
    "basis": "no such file"
+  },
+  {
+   "name": "erased-arrow-parameter",
+   "image": "core/invoke-names",
+   "argv": [
+    "f",
+    "1000000",
+    "0"
+   ],
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\tinvoke\tfunction-argument\n"
+   },
+   "basis": "f takes an erased arrow (type 1, R => Flag), a live parameter of a function type: SPEC 8 step 3 refuses it as function-argument whatever ordinal is named, as it refuses a live arrow. The codec's `invocation` says the same (`arrow` and `erased-arrow`)"
+  },
+  {
+   "name": "unknown-export-constructor",
+   "image": "core/invoke-names",
+   "argv": [
+    "Off",
+    "1000000"
+   ],
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\tinvoke\tunknown-export\n"
+   },
+   "basis": "Off is the name of a constructor, the second name record of the image (Flag, Off, On, f, main), and no function's: SPEC 8 step 2 looks FN up among the functions, so it is unknown-export. A search that read one entry past the function table would find a record there whose name is the image's second"
+  },
+  {
+   "name": "unknown-export-type",
+   "image": "core/invoke-names",
+   "argv": [
+    "Flag",
+    "1000000"
+   ],
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\tinvoke\tunknown-export\n"
+   },
+   "basis": "Flag names a type, the first name record of the image, and no function: unknown-export"
   }
  ],
  "dumps": {
@@ -563,6 +606,21 @@
   "bind-fuel-exact": {
    "outcome": "Completed",
    "calls": 21
+  },
+  "book-usage": {
+   "outcome": "HostFailure",
+   "cause": "usage",
+   "calls": 0
+  },
+  "program-usage": {
+   "outcome": "HostFailure",
+   "cause": "usage",
+   "calls": 0
+  },
+  "program-separator": {
+   "outcome": "HostFailure",
+   "cause": "usage",
+   "calls": 0
   }
  },
  "limited": [
@@ -903,6 +961,189 @@
     "bump": 16842784
    },
    "basis": "main = let x = f() in On{}. Boot pushes Top(0), 12 bytes; main's entry is a tail entry below it, and its Activation (owner, depth and 1 slot: payload 3, 5 words, so 8) is 32 bytes, bump = H0 + 32 = 16,842,784; Eval Let pushes Bind, 12 more, which fill a region of 24 bytes exactly. The value `f()` is an Application, whose entry is not a tail entry (a Bind lies between it and Top): section 7 step 3 pushes a Call frame, 16 bytes, which does not fit. The room for it is decided before f's Activation is allocated (section 6.3), so the step stops Exhausted kind 3 (frames) after its debit, 2 entries, with nothing else changed: top = F0 + 24 = 65,560 and bump = H0 + 32. An entry that allocated first would stop with the Activation built (bump H0 + 48)"
+  },
+  {
+   "name": "nat-pred-frames-fit",
+   "image": "core/nat-pred-big",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 36,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 1,
+    "top": 65548,
+    "bump": 16842816
+   },
+   "basis": "nat-pred-frames with room for the Case's Scope. The frames at the Case are Top (12 bytes), the Let's Scope (12: its Bind is popped) and the Case's own Scope (12): 36 bytes, which a region of exactly 36 holds (a push that fits is made, section 6). The predecessor 2^31 is a Big cell made after that room was judged, so the run completes: On{} after the one entry, with bump H0 + 64 (the pool's Big 2^31 + 1 16 B, main's Activation 32, the predecessor 16, which section 5's model gives too) and the Top frame alone left (top F0 + 12 = 65,548)",
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOn{}\n",
+    "stderr": ""
+   },
+   "model": true
+  },
+  {
+   "name": "nat-pred-frames-11",
+   "image": "core/nat-pred-big",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 35,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames",
+    "calls": 1,
+    "top": 65560,
+    "bump": 16842800
+   },
+   "basis": "the same region one byte short of 36: 11 bytes are free at the Case and its Scope needs 12, so the step stops Exhausted kind 3 (frames) before the predecessor is made, with the top (F0 + 24) and the bump (H0 + 48) of the 24-byte row. A room judged at 11 bytes would make the predecessor's Big first and stop with bump H0 + 64"
+  },
+  {
+   "name": "call-frames-fit",
+   "image": "core/call-frames",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 40,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 2,
+    "top": 65548,
+    "bump": 16842800
+   },
+   "basis": "call-frames with room for the Call frame. Top (12) and Bind (12) leave 16 bytes of a region of 40, which the Call frame of f's entry (section 7 step 3: 16 bytes) fills exactly. f returns On{}, the frame is popped and the Let's body is On{}: On{} after 2 entries, with bump H0 + 48 (main's Activation 32, f's with no slots 16, which section 5's model gives too) and the Top frame alone left",
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": ""
+   },
+   "model": true
+  },
+  {
+   "name": "call-frames-15",
+   "image": "core/call-frames",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 39,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames",
+    "calls": 2,
+    "top": 65560,
+    "bump": 16842784
+   },
+   "basis": "the same region one byte short of 40: 15 bytes are free and the Call frame needs 16, so the step stops Exhausted kind 3 (frames) after its debit, 2 entries, before f's Activation is made: top F0 + 24 and bump H0 + 32, as the 24-byte row. A room judged at 15 bytes would make f's 16-byte Activation first and stop with bump H0 + 48"
+  },
+  {
+   "name": "tail-call-fit",
+   "image": "core/tail-call-loop",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 68,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 12,
+    "top": 65548,
+    "bump": 16843136
+   },
+   "basis": "main = let x = countdown(10n) in On{}, with countdown as in tail-loop. main's entry is a tail entry below Top: no Call frame. Eval Let pushes Bind, and the call countdown(10n), whose entry has a Bind between it and Top, is not a tail entry: it pushes a Call frame (section 7 step 3). Top 12 + Bind 12 + Call 16 = 40 bytes stay while countdown runs. Each Succ Branch pushes its Scope (12: 52) and evaluates the call countdown(m), whose Application pushes a Gather of one operand (16: 68), the peak. That entry is a tail entry, since only a Scope lies between the top and the nearest Call frame (section 6.2), so it pops the Scope, releases the caller and pushes no Call frame: the frames fall back to 40 for the next Case. A region of exactly 68 holds the 10 iterations and the Zero entry: On{} after 12 entries (main, then countdown at 10, 9, ..., 0), with bump H0 + 384 (main's Activation 32 and 11 of countdown's, 2 slots, 32 each: section 5's model gives it too) and the Top frame alone left. A machine that took a Call frame for a tail entry below a Call frame would need 16 bytes more per iteration",
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOn{}\n",
+    "stderr": ""
+   },
+   "model": true
+  },
+  {
+   "name": "tail-call-short",
+   "image": "core/tail-call-loop",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 67,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames",
+    "calls": 2,
+    "top": 65588,
+    "bump": 16842816
+   },
+   "basis": "one byte short of 68: the first Succ Branch's Scope brings the frames to 52 bytes and the Gather of the call in its body (16) does not fit in 67, so the step stops Exhausted kind 3 (frames) after 2 entries (main and countdown(10n)), with the Scope and all below it as the step found them: top F0 + 52 = 65,588, bump H0 + 64 (main's Activation and countdown's first, 32 each)"
+  },
+  {
+   "name": "show-9-fit",
+   "image": "core/show-9",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 96
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 2,
+    "top": 65548,
+    "bump": 16842848
+   },
+   "basis": "show-heap-fit with U32.show(9), one digit: main's Activation (1 slot) and U32.show's 32 bytes each and the digit's cell 32: 96 bytes, which section 5's model gives too. A heap of exactly 96 completes. A count that reads 9 as two digits would ask for 64 bytes of cells and stop",
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": ""
+   },
+   "model": true
+  },
+  {
+   "name": "show-10-short",
+   "image": "core/show-10",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 96
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "heap",
+    "calls": 2,
+    "bump": 16842816
+   },
+   "basis": "U32.show(10) has two digits, 64 bytes of cells above the 64 of the two Activations: a heap of 96 lacks 32, so the room for both cells is decided before the first (show-heap-short's rule) and the step stops Exhausted kind 2 (heap) with bump H0 + 64, after 2 entries. A count that reads 10 as one digit would make the first cell (bump H0 + 96) and stop at the second"
   }
  ],
  "admitted": {
@@ -1450,7 +1691,7 @@
   ]
  },
  "memory-end": {
-  "rule": "A cell that ends exactly at the end of the memory in use. Boot grows memory once, to 48 MiB (the arguments sit at 0x2010000, CORE.md), and the heap grows it only when a cell would end beyond it, to the next 16 MiB boundary at or above the cell's end (CORE.md choice 15), so memory ends exactly where a cell does whenever that cell ends at such a boundary. A VM that reads or writes a word past a cell's end faults only there: anywhere else the access lands in the cell's padding or in free heap above the bump pointer, which `$alloc` zeroes before any cell holds it. Each row fills the heap from H0 with fill(k, B0{}), one 32-byte Activation and one 32-byte B1 cell per step, so that its last cell ends at 48 MiB. Section 5's model (check-core's `ceiling_run`) gives the fill count k, the pool constants that align the last cell, the bump pointer and the line; the reference evaluation of the same plan with k = 3 gives the line again and the calls, each further step being one entry of fill. The gate derives all of it again. `grows` is literal review of choice 15: boot's one grow, and one more for describe's text, which starts at the bump pointer, the memory's end. A probe of the VM (.local/vm-core/probe/r9/, review round 6's closing session) showed that three of the study's survivors trap on these Books and on no other row, before they were frozen.",
+  "rule": "A cell that ends exactly at the end of the memory in use. Boot grows memory once, to 48 MiB (the arguments sit at 0x2010000, CORE.md), and the heap grows it only when a cell would end beyond it, to the next 16 MiB boundary at or above the cell's end (CORE.md choice 15), so memory ends exactly where a cell does whenever that cell ends at such a boundary. A VM that reads or writes a word past a cell's end faults only there: anywhere else the access lands in the cell's padding or in free heap above the bump pointer, which `$alloc` zeroes before any cell holds it. Each row fills the heap from H0 with fill(k, B0{}), one 32-byte Activation and one 32-byte B1 cell per step, so that its last cell ends at 48 MiB. Section 5's model (check-core's `ceiling_run`) gives the fill count k, the pool constants that align the last cell, the bump pointer and the line; the reference evaluation of the same plan with k = 3 gives the line again and the calls, each further step being one entry of fill. The gate derives all of it again. `grows` is literal review of choice 15: boot's one grow, and one more for describe's text, which starts at the bump pointer, the memory's end. A probe of the VM (.local/vm-core/probe/r9/, review round 6's closing session) showed that three of the study's survivors trap on these Books and on no other row, before they were frozen. The third row, `memory-end-closure`, was added in round 7 for a fourth: the capture loop of a Closure's entry that runs one time too many writes one word past an Activation that the captures fill (4 of them: 32 bytes, full), which is the last cell only here. Its fill count, bump pointer and line are derived by the same model, and the mutant is killed by its trap.",
   "rows": [
    {
     "name": "memory-end-object",
@@ -1493,6 +1734,27 @@
      "grows": 2
     },
     "basis": "main = let a = fill(523261n, B0{}) in let b = 2147483648 in let c = \"y\" in let d = IO.print(\"x\") in On{}: the Action is built and never applied (section 8). The image ends at byte 5,644, so H0 = 16,842,752. The pool holds \"x\" and \"y\" (a 32-byte SCon each) and the Big 2^31 (16 bytes): 80 bytes, which align the Action. main's Activation (4 slots) and IO.print's (1 slot) are 32 bytes each, fill's k + 1 Activations and k B1 cells 32 each, and the Action, a cell of its foreign id and its one operand (2 words, 4 with the header), 16. So the Action ends at H0 + 192 + 64k = 50,331,648 = 48 MiB exactly. describe writes `On{}` from 48 MiB, which grows memory once. 523,264 entries: main, fill k + 1 times and IO.print"
+   },
+   {
+    "name": "memory-end-closure",
+    "image": "core/memory-end-closure",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "fill": 523261,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t2\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 523264,
+     "bump": 50331648,
+     "grows": 2
+    },
+    "basis": "main = let a = fill(523261n, B0{}) in let u0 = 2^31 in let u1 = 2^31 + 1 in let f1 = On{} in ... let f4 = On{} in an erased closure over f1..f4 (live 0, slots 4) that cases on each in turn and answers On{}. The image ends at byte 1,680, so H0 = 16,842,752. The pool holds the two Big constants (16 bytes each, which align the last cell); main's Activation (7 slots: payload 9, 11 words, so 16) is 64 bytes; each of fill's k + 1 entries takes an Activation of 3 slots (32 bytes) and each of its k steps a B1 (32 bytes); the Closure (payload 5: 32 bytes) and, when it is invoked, its Activation (owner, depth and the 4 captures: payload 6, 8 words, 32 bytes, full) follow. So the Activation ends at H0 + 192 + 64k = 50,331,648 = 48 MiB exactly and is the last cell: the body allocates nothing, since a Case on a Flag makes no cell and a Branch binds nothing. describe writes `On{}` from 48 MiB, which grows memory once. 523,264 entries: main, fill k + 1 times and the Closure"
    }
   ]
  },
@@ -1572,6 +1834,24 @@
      "calls": 1
     },
     "basis": "vm-spec D17's shape: main = let n = 2^31 + 1 in case n: Zero -> Off{}, Succ{p} -> On{} (Nat is type 0, Flag type 1, representation Nat 0). Section 6.1 selects Succ and binds the predecessor 2^31, a Big; the arm is On{} after the one entry of main. The control for the two limited rows nat-pred-frames and nat-pred-heap"
+   },
+   {
+    "name": "closure-let",
+    "image": "core/closure-let",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tSucc{Succ{Zero{}}}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "main = let c = 1n in invoke (x => let y = Nat.add(x, c) in y) 1n. Section 7 step 2 fills the Closure's Activation with its capture c (slot 0) and its live argument x (slot 1), and step 3 gives it a depth equal to that count, 2, so the Let binds y at slot 2 (section 6: slot = depth; the closure's `slots` are 3). y = 1 + 1 = 2n, which describe renders Succ{Succ{Zero{}}} (Nat is type 0, tag 1), after 2 entries: main and the Closure. A depth that left out the live argument would bind y over x and read slot 2 as 0"
    }
   ]
  },
@@ -2879,6 +3159,25 @@
      "calls": 0
     },
     "basis": "main returns Nil of a List whose Con has a `none`-typed field 0 (check-spec's list-of-flags): SPEC 8 step 5 puts a `none` field outside the describe domain, whatever the value"
+   },
+   {
+    "name": "arrow-second-field",
+    "image": "core/describe-second",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 3,
+     "stdout": "",
+     "stderr": "Unsupported\tinvoke\tresult-type\n"
+    },
+    "dump": {
+     "outcome": "Unsupported",
+     "cause": "result-type",
+     "calls": 0
+    },
+    "basis": "main returns Pair{On, x => x}, a constructor whose field 0 is a Flag and whose field 1 is an arrow: SPEC 8 step 5 walks every live field of every constructor in turn, so the arrow after a describable field is outside the domain too. A walk that skipped the odd fields, or stopped after the first, would run the Book"
    }
   ],
   "order": {

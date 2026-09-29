@@ -502,9 +502,11 @@ adopt them or record its own, so that lockstep compares like with like.
 
 ## Evidence (gate `vm-core`)
 
-- **Goldens.** All 93 through the real host, equal to `vm-expected.json`. The
+- **Goldens.** All 111 through the real host, equal to `vm-expected.json`. The
   test build confirms every Exhausted, Unsupported and HostFailure cause in the
-  VM's own outcome registers, and audits the state at all 1,806 transitions.
+  VM's own outcome registers, and audits the state at all 2,683 transitions. Every
+  run that ends cleanly, here and in every row below, ends in control `Halt`
+  (mode 3), which the gate's `observed_wrong` requires of every row of every group.
   For D20's `print-non-scalar`, `print-non-scalar-mid`,
   `print-non-scalar-wide` and `print-non-scalar-second`, the registers show
   that the VM refused before its
@@ -518,8 +520,12 @@ adopt them or record its own, so that lockstep compares like with like.
   the real host: each refusal equals its frozen verdict (`usage` before the
   lookup and before a Program's FUEL, `expected-u32`, and a bad magic word
   refused whatever the words), and each admitted one runs as the reference
-  evaluation runs it, a 4,401-character ordinal of leading zeros among them.
-- **Admitted controls.** vm-spec's six admitted plan controls, its admitted
+  evaluation runs it, a 4,401-character ordinal of leading zeros among them. The
+  host shows only the refusal's line, so the three fixture runs of the `usage`
+  refusal (`book-usage`, `program-usage`, `program-separator`) also freeze the VM's
+  own class and cause registers (`dumps`: HostFailure, `usage`, no entry): a
+  refusal reported as another class would print the same line.
+- **Admitted controls.** vm-spec's eight admitted plan controls, its admitted
   limit control and seven code-list controls load. They run as `fixtures.json`
   froze them by literal review, and vm-spec's reference evaluation
   (`evaluate.book`) gives each the same run and `calls`:
@@ -529,10 +535,18 @@ adopt them or record its own, so that lockstep compares like with like.
   - the two `case-none-*` controls fail `ill-typed` after boot;
   - `first-code`, `first-code-none-case` and `key-arms-none`, whose arms fit
     their Case (§3), print `True{}` after 3 calls;
+  - the two name controls (a type named with each length of UTF-8, and with every
+    edge of a length) print `On{}` after 1 call;
   - every code list compares `False{}`.
-- **Run controls.** All 41 that check-spec.py freezes (`run_controls`), as
+- **Run controls.** All 138 that check-spec.py freezes (`run_controls`), as
   many as SPEC §12 states, load, and each runs to its frozen exit, output,
-  outcome and `calls`:
+  outcome, `calls` and, where it freezes them, host calls (`effects`). The families
+  below are the first 41; later rounds added the D22 to D24 controls (a request is
+  built by an Action's second application and performed only by Top's loop, so a
+  dropped or stored request has no effect, a Case takes its Default over one and
+  otherwise stops `Unsupported vm effect`, and a Book stops there where a read
+  meets one) and the atomic controls of SPEC §6.3, whose stops the harness replays
+  to their last step (below):
   - `arrow-through-identity` prints `On{}` after 3 calls;
   - `u32-file-alias` prints `Off{}` after 1;
   - five others fail `ill-typed` at §7's operand check;
@@ -602,7 +616,7 @@ adopt them or record its own, so that lockstep compares like with like.
     operand that is a large scalar's immediate word, and an Action laundered to a
     String whose type index is its foreign id.
 - **Differential lane ([lane.py](lane.py), [core/lane.json](core/lane.json)).**
-  2,746 rows from a fixed SplitMix64 stream (seed 20260929, integer arithmetic
+  2,768 rows from a fixed SplitMix64 stream (seed 20260929, integer arithmetic
   only, so no row depends on the Python version): 2,000 random programs over small
   data types, closures, Nat recursion, U32 key Cases and every U32 and Nat prim,
   emitted as Bend and as a plan (every second one *laundered*: its values pass
@@ -622,13 +636,15 @@ adopt them or record its own, so that lockstep compares like with like.
   stand in for what the reference evaluation does not model, both this VM's
   documented behaviour: an image with a foreign leaf other than IO.print is
   `Unsupported vm foreign` before any entry (choice 2), and a Halt message with a
-  non-scalar Char is refused as `io abi` (open item below). No row applies an
-  Action to a continuation in a Book or drops a request (D22, D23).
-- **Inspection matrix (lane family `inspection`, 272 rows).** Every kind of word at
+  non-scalar Char is refused as `io abi` (open item below). The inspection matrix
+  below puts a request (an Action applied to its continuation) at every place a
+  word is read, and the golden and run controls of D22 to D24 build, store, drop
+  and perform requests.
+- **Inspection matrix (lane family `inspection`, 294 rows).** Every kind of word at
   every place section 6 inspects one, each Book or Program passing a producer's
   word through `id: none -> none` to a consumer. Producers: scalars (small, the
   largest immediate, Big), nullary constructors, an Object of another type, a
-  Closure, an Action, the empty String, a String cell and a Nat. Consumers: a
+  Closure, an Action, a request, the empty String, a String cell and a Nat. Consumers: a
   scalar, Char and String prim operand, a String's head, tail and second operand,
   a Case by tag (Nat, a dense ADT, one with a Default) and by key, the operand of
   Succ and of Chr, describe of a result and of a field, an Invoke's target (never an
@@ -669,6 +685,34 @@ adopt them or record its own, so that lockstep compares like with like.
     §5's cell rule and §6's 3-word frames; `ceiling_run` checks the heap row's
     bump, while both `top` values and the frames row's bump rest on that
     hand derivation (80bd5cf).
+- **Study rows (round 7).** The mutant study (below) left survivors that were holes in the rows, not
+  equal mutants. Each is now a frozen row, derived by hand from §5 to §8 before its image was run (a probe
+  of the VM then agreed on every value, and none was changed), and derived again by the gate:
+  - `closure-let` (a `reference` row): a Closure whose body binds a slot after its capture and its live
+    argument. §7 gives the Activation a depth equal to the bound count, so the Let binds slot 2; a depth
+    that left out the live argument reads the slot back as 0. `Succ{Succ{Zero{}}}` after 2 entries, which
+    the reference evaluation gives too;
+  - the room of a step at its exact fit and one byte short (`limited` rows; section 5's model gives the
+    bump pointer of each fit row, and the frames listed give its `top`): a Case's Scope
+    (`nat-pred-frames-fit` at 36 bytes, `nat-pred-frames-11` at 35), a Call frame (`call-frames-fit` at 40,
+    `call-frames-15` at 39), a tail loop entered below a Call frame (`tail-call-fit` at 68, which a machine
+    that took a Call frame per tail entry would overflow by 16 bytes an iteration, and `tail-call-short`
+    at 67), and `U32.show`'s digits (`show-9-fit`: one digit, where a count in base 9 asks for two;
+    `show-10-short`: two, where a count in base 11 asks for one and stops after making it);
+  - `arrow-second-field` (describe `domain`): a Pair whose second field is an arrow, which a walk that
+    skips or stops at a field misses (the codec's `undescribable` says it is outside the domain);
+  - `erased-arrow-parameter`, `unknown-export-constructor` and `unknown-export-type` (`runs`, checked
+    against the codec's `arguments`): an erased arrow is a function argument like a live one, and the
+    name of a constructor or a type is no function's. A search that reads one entry past the function
+    table finds there, for an image without constants, the record of the image's second name, so it
+    takes `Off` for a function;
+  - the class and cause registers of `book-usage`, `program-usage` and `program-separator` (`dumps`);
+  - `memory-end-closure` (group `memory-end`): the 32-byte Activation of a Closure that its four
+    captures fill, with no slot beside them, is the last cell and ends at 48 MiB. A capture loop that runs
+    one time too many writes one word past it, and traps only there.
+
+  Two changes of the gate came with them: `ceiling_run`, the section 5 model, no longer needs a
+  `representation` table (a Book of constructors alone names none) and cases on a nullary immediate.
 - **Ceiling.** Ten images whose bump pointer ends near or exactly at 4 GiB, at
   most two at a time. Each dump pins the bump pointer, which keeps the image in
   its band:
@@ -779,14 +823,18 @@ adopt them or record its own, so that lockstep compares like with like.
   memory ends exactly where a cell does whenever that cell ends on such a
   boundary, and only there does a read or a write past a cell's end fault:
   anywhere else it lands in the cell's padding or in free heap above the bump
-  pointer, which `$alloc` zeroes before any cell holds it. Two Books fill the
+  pointer, which `$alloc` zeroes before any cell holds it. Three Books fill the
   heap with `fill(k, B0{})` (a 32-byte Activation and a 32-byte `B1` a step) so
   that their last cell ends at 48 MiB:
   - `memory-end-object` (k = 523,262): `T4{1, 2, 3, 4}`, whose four fields fill
     its 32-byte cell, then a Case that binds them; `On{}` after 523,264 entries;
   - `memory-end-action` (k = 523,261, with the pool constants `"y"` and 2^31
     aligning it): the 16-byte Action of an `IO.print` that is never applied;
-    `On{}` after 523,264 entries.
+    `On{}` after 523,264 entries;
+  - `memory-end-closure` (k = 523,261, with two Big pool constants aligning it; round 7): an
+    erased Closure over four Flags (live 0, `slots` 4) whose body cases on each and answers
+    `On{}`. Its Activation (owner, depth and the 4 captures: 32 bytes, full) is the last cell
+    and allocates nothing after it; `On{}` after 523,264 entries.
 
   Section 5's model (`ceiling_run`, which now also binds a Branch's fields) gives
   each fill count, bump pointer and line; the reference evaluation of the same
@@ -810,8 +858,8 @@ adopt them or record its own, so that lockstep compares like with like.
   reference codec: 1,674 counts that the remaining words cannot hold (it read
   `record-length`), 468 `limits` and 48 Closure `closure-slots`
   (.local/vm-core/logs/r6-limit-words-prefix.log).
-- **Mutants.** Eighty-six, each killed by a wrong observation in a named group
-  (six by a trap and one by a hang, below):
+- **Mutants.** One hundred and thirty-eight, each killed by a wrong observation in a named group
+  (seven by a trap and one by a hang, below; the 87 that came before round 7 are listed first):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
@@ -909,14 +957,50 @@ adopt them or record its own, so that lockstep compares like with like.
     `$scell` and `$finish` as the VM of `2e0c9b1` had them. Its defect is the trap
     (like `top-trap`): the mutant is killed when a row of the inspection matrix
     traps where the frozen run is a refusal, and every other row stays right.
-  - past a cell's end (group `memory-end`, three, from the study's survivors):
+  - past a cell's end (group `memory-end`, four, from the study's survivors):
     an Object's operands copied 8 bytes each (past its cell at 3, 4, 7 to 12 or 15
     to 28 fields), an Action's operand copied 8 bytes (past IO.print's 16-byte
-    cell), and a Branch that binds one word more than its constructor's fields
-    (past a cell the fields fill: 4, 12 or 28 of them). Everywhere else the copy
+    cell), a Branch that binds one word more than its constructor's fields
+    (past a cell the fields fill: 4, 12 or 28 of them), and a Closure's entry that
+    copies one capture too many (past an Activation that the captures fill: 4, 12
+    or 28 of them, and no other slot; round 7's `memory-end-closure`). Everywhere else the copy
     or read lands in padding or in free heap and changes nothing; each traps on
-    its own memory-end row, and is killed there only while the other row stays
+    its own memory-end row, and is killed there only while the other rows stay
     right.
+
+  Round 7 adds 51 more:
+  - D22 to D24 (twelve, groups `goldens`, `runs`, `quantum`): the eager rule (an Action's second
+    application performs its effect and enters `k`), a request that a scope drops performed, Top's loop
+    that enters `k` without performing, or ends the run after its first request, a Case with a
+    Default that refuses a request (D23 before D24), a Case without one, a scalar read, a tag read, a
+    String's tail and an Enter's target that meet a request as an ill-typed word or unread, a
+    request that stops the run as a HostFailure and not an Unsupported (D4), and a Book that
+    refuses every foreign but IO.print at load; and, for vm-spec's round 13 loader controls, a type
+    record's constructor count that is not fitted to the constructor table before it sizes
+    anything (`type-count-unfitted`, group `controls`);
+  - atomic stops (SPEC §6.3; fourteen, groups `atomic` and `limited`): a Gather frame popped, or
+    its last slot filled, before its node completes and can refuse; Succ and an intrinsic that pop
+    before they inspect; Return to Top, the loop, a Halt, the final IO.OP and a Book's answer that
+    drop `act` before their checks; a tail entry that pops and releases before its Activation is
+    judged to fit; a non-tail entry that does not decide the room for its Call frame, and an
+    InvokeFunction that pops before the room for the frame that replaces it; `reverse` and `show`
+    that allocate cell by cell. The harness's `atomic` replay plays each run that ends in
+    a stop to its last step and names what the step changed, so each mutant dies by the row
+    whose last step it makes half-done (the two Nat Case mutants, before or after the Scope's
+    room, are earlier);
+  - the describe domain and the order of a word's inspection and its visit (the round 6
+    review's findings a and b, fixed in round 7; five): an arrow (live or erased) or a `none`-typed field inside the domain,
+    a result outside it that stops as a HostFailure and not an Unsupported, a visit charged
+    before its word is inspected, killed at the 1,048,577th visit (`describe-order`), and a Book's
+    description that writes its head before its result is inspected (group `runs`);
+  - the study's survivors that new rows now kill (nineteen, from the round 7 study): a Closure
+    whose depth leaves out its live argument (`closure-let`); a tail entry taken only below Top
+    (`tail-call-fit`); the room of a Scope and of a Call frame one byte too large or too small
+    (the four `-fit` and `-11` and `-15` rows); `show` counting its digits in base 9 or 11;
+    a describe walk that takes every second field, or only the first; an arrow-only function
+    argument and a search for FN that reads one entry past the function table (the invocation
+    rows); the class of each of the three usage refusals; a Book, an Emit and a Halt that end in
+    control Enter (the mode every clean run must end in); and the closure capture loop above.
 
   **Group `hang`.** The reviewer's `mid+1 -> mid` steps the key search to the
   middle instead of past it: on a miss above a key `lo` never moves, and the search

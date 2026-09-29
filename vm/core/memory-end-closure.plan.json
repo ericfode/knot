@@ -1,0 +1,347 @@
+{
+ "entry": "book",
+ "representation": {
+  "Nat": 0,
+  "U32": 4
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "Nat",
+   "constructors": [
+    {
+     "name": "Zero",
+     "fields": []
+    },
+    {
+     "name": "Succ",
+     "fields": [
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Box",
+   "constructors": [
+    {
+     "name": "B0",
+     "fields": []
+    },
+    {
+     "name": "B1",
+     "fields": [
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Flag",
+   "constructors": [
+    {
+     "name": "Off",
+     "fields": []
+    },
+    {
+     "name": "On",
+     "fields": []
+    }
+   ]
+  },
+  {
+   "kind": "erased-arrow",
+   "domain": null,
+   "result": 2
+  },
+  {
+   "kind": "opaque",
+   "name": "U32"
+  }
+ ],
+ "functions": [
+  {
+   "name": "fill",
+   "parameters": [
+    0,
+    1
+   ],
+   "result": 1,
+   "slots": 3,
+   "body": [
+    "case",
+    1,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "ref",
+       1,
+       1
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       1,
+       0,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "con",
+         1,
+         1,
+         [
+          [
+           "ref",
+           1,
+           1
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 2,
+   "slots": 7,
+   "body": [
+    "let",
+    2,
+    0,
+    [
+     "call",
+     1,
+     0,
+     [
+      [
+       "lit",
+       0,
+       "Nat",
+       523261
+      ],
+      [
+       "value",
+       1,
+       0
+      ]
+     ]
+    ],
+    [
+     "let",
+     2,
+     1,
+     [
+      "lit",
+      4,
+      "U32",
+      2147483648
+     ],
+     [
+      "let",
+      2,
+      2,
+      [
+       "lit",
+       4,
+       "U32",
+       2147483649
+      ],
+      [
+       "let",
+       2,
+       3,
+       [
+        "value",
+        2,
+        1
+       ],
+       [
+        "let",
+        2,
+        4,
+        [
+         "value",
+         2,
+         1
+        ],
+        [
+         "let",
+         2,
+         5,
+         [
+          "value",
+          2,
+          1
+         ],
+         [
+          "let",
+          2,
+          6,
+          [
+           "value",
+           2,
+           1
+          ],
+          [
+           "invoke",
+           2,
+           [
+            "closure",
+            3,
+            0,
+            4,
+            [
+             3,
+             4,
+             5,
+             6
+            ],
+            [
+             "case",
+             2,
+             0,
+             2,
+             "tags",
+             [
+              [
+               "branch",
+               0,
+               4,
+               0,
+               [
+                "value",
+                2,
+                0
+               ]
+              ],
+              [
+               "branch",
+               1,
+               4,
+               0,
+               [
+                "case",
+                2,
+                1,
+                2,
+                "tags",
+                [
+                 [
+                  "branch",
+                  0,
+                  4,
+                  0,
+                  [
+                   "value",
+                   2,
+                   0
+                  ]
+                 ],
+                 [
+                  "branch",
+                  1,
+                  4,
+                  0,
+                  [
+                   "case",
+                   2,
+                   2,
+                   2,
+                   "tags",
+                   [
+                    [
+                     "branch",
+                     0,
+                     4,
+                     0,
+                     [
+                      "value",
+                      2,
+                      0
+                     ]
+                    ],
+                    [
+                     "branch",
+                     1,
+                     4,
+                     0,
+                     [
+                      "case",
+                      2,
+                      3,
+                      2,
+                      "tags",
+                      [
+                       [
+                        "branch",
+                        0,
+                        4,
+                        0,
+                        [
+                         "value",
+                         2,
+                         0
+                        ]
+                       ],
+                       [
+                        "branch",
+                        1,
+                        4,
+                        0,
+                        [
+                         "value",
+                         2,
+                         1
+                        ]
+                       ]
+                      ],
+                      null
+                     ]
+                    ]
+                   ],
+                   null
+                  ]
+                 ]
+                ],
+                null
+               ]
+              ]
+             ],
+             null
+            ]
+           ],
+           []
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ]
+   ]
+  }
+ ]
+}

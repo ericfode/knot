@@ -112,16 +112,29 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - The pinned `wat2wasm` reassembles `vm/vm.wasm` byte for byte. The module's
   imports, exports and 65,536-page memory are as the spec requires, and its call
   graph has no cycle.
-- All 93 golden images run through `scripts/run-wasm-io.mjs` with their
+- All 111 golden images run through `scripts/run-wasm-io.mjs` with their
   `vm-expected.json` outputs. So do its 44 frozen Book invocations. The test
   build confirms each exhaustion cause and audits the state after every
-  transition.
+  transition. Every run that ends cleanly, in every row below too, ends in
+  control `Halt` (mode 3).
+- Atomic stops (SPEC section 6.3, D25): the harness plays every run that ends in a
+  stop (a `HostFailure`, an `Unsupported` or an `Exhausted` of any kind) again to its
+  last step, and that step may change no register, frame word or cell but the debit
+  of an Enter. Its `witness` rows pin by hand the frames and `act` a stop leaves.
+  Requests are values (D22 to D24): an Action's second application builds one, and
+  only Top's loop performs it.
 - `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and
   lowered limits, including the 250,000-deep non-tail recursion, where a
   Nat Case makes its predecessor against its Scope push (vm-spec D17), a
   describe that needs exactly 132 bytes of frame region (12 bytes an open
   Object) and stops one byte short, an `append` block that ends exactly at a
-  lowered heap and one 16 bytes past it, and the cell of an Action.
+  lowered heap and one 16 bytes past it, and the cell of an Action. Rows added
+  for the survivors of the mutant study (round 7) pin the room of a Case's
+  Scope, of a Call frame, of a tail loop below a Call frame and of `U32.show`'s
+  digits at their exact fit and one byte short, a Closure that binds a slot after
+  its captures and its live argument, a describe result whose second field is an
+  arrow, an erased-arrow parameter, a name that is no function's and the class
+  of the usage refusals.
 - 24 seeded rows (`vm/core/seeded.json`) whose expected results the pinned seed's
   native lane fixed before any VM ran them: U32 and Char key Cases of 3 and 5
   keys queried below, at, between and above their keys (with keys and computed
@@ -131,20 +144,21 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   The gate runs the seed again and requires its frozen bytes; the reference
   evaluation and the VM, on the real host and the test build, must give the
   same run.
-- A differential lane (`vm/lane.py`; seed and sizes in `vm/core/lane.json`): 2,746
+- A differential lane (`vm/lane.py`; seed and sizes in `vm/core/lane.json`): 2,768
   rows (2,000 generated programs, every second one laundered through `none`
   types; 200 random key Cases; 76 prim sweeps; the print, Halt, digit and Nat
-  writers' boundaries; two rows at the display bound; and 272 rows that put every
+  writers' boundaries; two rows at the display bound; and 294 rows that put every
   kind of word at every place section 6 inspects one, which found a String cell
   and a Program's final word trapping on a scalar of about 2^25 or more instead of
   halting `ill-typed`, now fixed in `vm.wat`). Each runs through the test
   build and the production module and through `vm/evaluate.py`, which must
   agree on stdout, exit, stderr, outcome, cause and calls; an 84-row sample also
   runs through the seed's native lane with its bytes frozen. Every admitted
-  golden, invocation, control and fuzz image (511) is compared with the reference
+  golden, invocation, control and fuzz image (751) is compared with the reference
   evaluation too. `python3 vm/check-core.py --freeze` rewrites the two frozen
   files from the seed.
-- Three Books on Chr's operand and one with a Big predecessor (`reference`
+- Three Books on Chr's operand, one with a Big predecessor and one with a Closure
+  that binds a slot after its capture and its live argument (`reference`
   rows) run as literal review froze them. vm-spec's reference evaluation (`vm/evaluate.py`) must give the same
   run and call count.
 - Ten images (nine Books and a Program) whose bump pointer ends near or
@@ -155,10 +169,11 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   at 4 GiB and a control 16 bytes above, took their fill counts from the
   derivation alone. A cell may end exactly at 4 GiB, where the pre-fix VM
   trapped.
-- Two memory-end rows: Books whose last cell ends exactly at 48 MiB, where
+- Three memory-end rows: Books whose last cell ends exactly at 48 MiB, where
   boot leaves the memory (CORE.md choice 15), so that the memory ends where
   the cell does. One is an Object whose four fields fill its cell, which a Case
-  then binds; the other is the Action of an `IO.print` that is never applied.
+  then binds; one is the Action of an `IO.print` that is never applied; the third
+  is the full Activation of a Closure over four captures.
   A read or a write past a cell's end lands in padding or in free heap
   everywhere else, and faults only here. Section 5's model derives each fill
   count, bump pointer and line, and the reference evaluation at a fill of 3
@@ -191,22 +206,23 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   `Exhausted`, at the cap). Growing memory one page at a time fails the first by
   its count and the second by its wall time (22 minutes on V8).
 - A 200,000-deep nested expression runs on a 64 KiB host stack.
-- The 71 refusal controls, a seeded fuzz corpus of 3,720 mutated goldens and
-  7,741 goldens that each set one limit word (a record count, an arity or a
+- The 211 refusal controls, a seeded fuzz corpus of 4,440 mutated goldens and
+  9,810 goldens that each set one limit word (a record count, an arity or a
   `slots`) around its limit are refused with the reference codec's first
   defect, and none traps. A crash of the reference codec on any of those
   images fails the gate. Nine of the controls sit on either side of SPEC
   section 4's resource limits: past a limit the VM stops `Exhausted` kind 2
   with the limit as its cause, and the gate compares that with the reference's
   `Exhausted 2 <limit>`, in the VM's own outcome registers too.
-- The 55 controls vm-spec admits load:
-  - 14 run as literal review froze them, and as the reference evaluation
-    runs them, `arity-at-limit` (a function of exactly 4,096 parameters)
-    among them;
-  - all 41 run controls, as many as SPEC section 12 states, run to the outcome
-    and call count that `check-spec.py` freezes: the eleven fuel controls at
-    their frozen fuel, the others also on exactly that much fuel. Eighteen of
-    them are inspection points (SPEC section 6 and section 9's extents).
+- The 154 controls vm-spec admits load:
+  - 16 (eight plan controls, `arity-at-limit` and seven code lists) run as literal
+    review froze them, and as the reference evaluation runs them;
+  - all 138 run controls, as many as SPEC section 12 states, run to the outcome,
+    call count and host calls (`effects`) that `check-spec.py` freezes: the eleven
+    fuel controls at their frozen fuel, the others also on exactly that much fuel.
+    Eighteen of them are inspection points (SPEC section 6 and section 9's
+    extents), and the rest include D22 to D24's requests and the atomic controls
+    of section 6.3.
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
