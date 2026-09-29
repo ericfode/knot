@@ -92,7 +92,7 @@ MUTANTS = [
      'new': 'scrutinee_kind(value,arms,types,scope)',
      'fixture': 'row-wide-nat', 'verdict': (6, 'InternalFailure\tcheck\tpattern-node')},
     {'name': 'declaration-order-by-offset', 'file': 'check.bend',
-     'old': 'function_body(signature,body,G.before(catalog,seen),index,depth)',
+     'old': 'function_body(signature,body,placed,index,depth)',
      'new': 'function_body(signature,body,catalog,index,depth)',
      'fixture': 'qualified-order-lib-first', 'verdict': (2, 'Invalid\tcheck\tunknown-constructor\t')},
 ]

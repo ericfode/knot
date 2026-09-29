@@ -12,15 +12,18 @@ import ./literal-offset.bend as N
 import ./matrix.bend as X
 
 type Mode is Data:
-  PrimitiveMatch{token: S.Token, value: S.Node, arms: List<&2,S.Node>, wanted: Maybe<&2,U32>}
   Matrix{plan: M.Plan, expected: U32, dead: Bool}
   MatrixArms{plans: List<&2,M.Plan>, expected: U32, dead: Bool}
   MatrixLeaves{plans: List<&2,M.Plan>, expected: U32}
-  Expression{node: S.Node, expected: Maybe<&2,U32>}
+  PrimitiveMatch{token: S.Token, value: S.Node, arms: List<&2,S.Node>, wanted: Maybe<&2,U32>}
   Arguments{nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, token: S.Token}
   Arms{nodes: List<&2,S.Node>, token: S.Token, level: U32, expected: Maybe<&2,U32>}
   Rebuild{term: C.Term}
   RebuildArguments{terms: List<&2,C.Term>, parameters: List<&2,C.Parameter>, token: S.Token}
+  Expression{node: S.Node, expected: Maybe<&2,U32>}
+
+def then(result: Result<S.Error,C.Checked>, next: C.Checked -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+  S.bind(C.Checked,C.Checked,result,next)
 
 # A let without an annotation infers its value, and a constructor term has no
 # inferred type: not a literal, and not a binder refined to one.
@@ -67,7 +70,7 @@ def constructor(+reference: G.ConstructorRef, +args: List<&2,S.Node>, +token: S.
     case Nil{} Nil{}: constant(reference,token,wanted)
     case _ _:
       S.choose(Result<S.Error,C.Checked>,Nat.is_eq(List.length(&2,S.Node,args),List.length(&2,C.Parameter,params)),u =>
-        S.bind(C.Checked,C.Checked,next(Unit{}),value => constructor_result(reference,token,wanted,params,value)),u => C.invalid(C.Checked,"constructor-arity",token))
+        then(next(Unit{}),value => constructor_result(reference,token,wanted,params,value)),u => C.invalid(C.Checked,"constructor-arity",token))
 
 def variable(+binding: C.Binding, +token: S.Token, +scope: E.Scope, next: C.Term -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match binding:
@@ -115,8 +118,7 @@ def pattern(node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,G.Const
   match node:
     case S.Constructor{+token,+args}:
       S.bind(G.ConstructorRef,G.ConstructorRef,G.pattern_constructor(types,token),+reference =>
-        S.bind(List<&2,C.Parameter>,G.ConstructorRef,G.field_signature(reference,types),params =>
-          S.bind(Unit,G.ConstructorRef,G.promotions(args,types),u => pattern_arity(reference,args,token,params))))
+        S.bind(List<&2,C.Parameter>,G.ConstructorRef,G.field_signature(reference,types),params => pattern_arity(reference,args,token,params)))
     case S.Variable{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
     case S.Promotion{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
     case S.Call{token,args}: C.invalid(G.ConstructorRef,"pattern-form",token)
@@ -174,23 +176,22 @@ def case_result(branches: C.Checked, inspected: C.Checked, +token: S.Token, leve
 def call_body(reference: G.FunctionRef, +token: S.Token, +wanted: Maybe<&2,U32>, current: U32, scope: E.Scope, next: List<&2,C.Parameter> -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match reference:
     case G.FunctionRef{+index,C.Signature{name,params,+result}}:
-      S.bind(C.Checked,C.Checked,next(params),value =>
-        S.bind(C.Checked,C.Checked,call_result(value,token,index,result,current,scope),checked => expected(token,wanted,checked)))
+      then(next(params),value =>
+        then(call_result(value,token,index,result,current,scope),checked => expected(token,wanted,checked)))
 
-def binding_body(initial: C.Checked, +token: S.Token, +q: U32, +types: List<&2,C.Datatype>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+def binding_body(initial: C.Checked, +token: S.Token, +q: U32, types: List<&2,C.Datatype>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match initial:
     case C.Checked{term,+type_id,uses}:
       S.bind(C.Datatype,C.Checked,enum_at(types,type_id),definition =>
-        S.bind(Unit,C.Checked,G.quantity(token,q,definition),u =>
-          S.bind(Unit,C.Checked,G.marked(types,token,q),u => next(E.extend(scope,token,q,type_id)))))
+        S.bind(Unit,C.Checked,G.quantity(token,q,definition),u => next(E.extend(scope,token,q,type_id))))
 
 def match_body(binding: C.Binding, +token: S.Token, +arms: List<&2,S.Node>, +types: List<&2,C.Datatype>, +scope: E.Scope, +wanted: Maybe<&2,U32>, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match binding wanted:
     case C.Binding{+name,+level,+q,+type_id,+param,+known} Some{target}:
       S.bind(Unit,C.Checked,P.advance(scope,level,types),u =>
       S.bind(Unit,C.Checked,patterns(arms,types,type_id,Nil{},token,E.dead(scope,types,level)),u =>
-        S.bind(C.Checked,C.Checked,E.reference(C.Binding{name,level,q,type_id,param,known},token,scope),inspected =>
-          S.bind(C.Checked,C.Checked,next(level),branches => case_result(branches,inspected,token,level,wanted)))))
+        then(E.reference(C.Binding{name,level,q,type_id,param,known},token,scope),inspected =>
+          then(next(level),branches => case_result(branches,inspected,token,level,wanted)))))
     case _ None{}: C.invalid(C.Checked,"annotation-required",token)
 
 def arm_body(reference: G.ConstructorRef, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
@@ -210,7 +211,7 @@ def rebuilt(value: C.Checked, token: S.Token, +type_id: U32, tag: U32, params: L
 def offset(inner: C.Checked, +count: U32, reference: G.ConstructorRef, +token: S.Token, +target: U32, params: List<&2,C.Parameter>) -> Result<S.Error,C.Checked>:
   match inner reference:
     case C.Checked{term,typ,uses} G.ConstructorRef{+type_id,tag}:
-      S.choose(Result<S.Error,C.Checked>,U32.is_gt(count,4096),u => C.exhausted(C.Checked,token),u =>
+      S.choose(Result<S.Error,C.Checked>,U32.is_gt(count,4096),u => Fail{S.Exhausted{"check",S.at(token)}},u =>
         expected(token,Some{target},C.Checked{N.successors(U32.to_nat(count),term,token,type_id,tag,params),type_id,uses}))
 
 # Literals, Nat offsets and literal matches check against a known type; the
@@ -265,8 +266,8 @@ def decision_body(+binding: C.Binding, +token: S.Token, +column: S.Node, +ctor: 
         S.bind(U32,C.Checked,pattern_id(reference,type_id,Nil{},ctor),+tag =>
           S.bind(C.Datatype,C.Checked,G.type_at(types,type_id),definition =>
             +tags = X.remaining(X.available(column,definition),ctor)
-            S.bind(C.Checked,C.Checked,E.reference(binding,token,scope),inspected =>
-              S.bind(C.Checked,C.Checked,next(level,tag,tags),branches => case_result(branches,inspected,token,level,wanted))))))
+            then(E.reference(binding,token,scope),inspected =>
+              then(next(level,tag,tags),branches => case_result(branches,inspected,token,level,wanted))))))
 
 def residual_constructors(tags: List<&2,S.Token>) -> List<&2,C.Constructor>:
   match tags:
@@ -279,11 +280,12 @@ def empty_remainder(+tags: List<&2,S.Token>, +token: S.Token, +level: U32, types
       S.bind(Unit,C.Checked,S.choose(Result<S.Error,Unit>,E.dead(scope,types,level),u => Done{Unit{}},u =>
         complete_arms(C.Datatype{token,False{},residual_constructors(tags)},Nil{},token)),u =>
         S.bind(C.Binding,C.Checked,E.find_level(bindings,level),residual =>
-          S.bind(C.Checked,C.Checked,E.reference(residual,token,scope),inspected =>
+          then(E.reference(residual,token,scope),inspected =>
             case_result(C.Checked{C.Sequence{Nil{}},0,Nil{}},inspected,token,level,wanted))))
 
 # A body that is not a match binds every binder left on the match frontier, as
-# in the seed: each leaf form first closes the frontier, judging `+` kinds.
+# in the seed: each leaf form first closes the frontier, judging `+` kinds. Rows
+# follow `Mode`: the matrix walk, argument and arm lists and rebuilds, then the forms.
 def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Scope) -> Result<S.Error,C.Checked>:
   match fuel mode catalog scope:
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
@@ -294,55 +296,86 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Matrix{M.MLeaves{Con{live,rest}},target,True{}} _ _:
       M.dead_arm(run(n,MatrixLeaves{rest,target},catalog,current,scope))
     case 1n+ +n Matrix{M.MCase{+column,arms},+target,dead} _ _:
-      S.bind(C.Checked,C.Checked,run(n,MatrixArms{arms,target,dead},catalog,current,scope),value => M.checked_case(value,column,target))
+      then(run(n,MatrixArms{arms,target,dead},catalog,current,scope),value => M.checked_case(value,column,target))
     case 1n+ +n Matrix{plan,target,dead} _ _: C.internal(C.Checked,"matrix-plan")
     case 1n+ +n MatrixArms{Nil{},target,dead} _ _: Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
     case 1n+ +n MatrixArms{Con{M.MBranch{+tag,+fields,body},+tail},+target,+dead} _ _:
-      S.bind(C.Checked,C.Checked,run(n,Matrix{body,target,dead},catalog,current,scope),head =>
-        S.bind(C.Checked,C.Checked,run(n,MatrixArms{tail,target,dead},catalog,current,scope),rest => prepend_arm(tag,fields,head,rest)))
+      then(run(n,Matrix{body,target,dead},catalog,current,scope),head =>
+        then(run(n,MatrixArms{tail,target,dead},catalog,current,scope),rest => prepend_arm(tag,fields,head,rest)))
     case 1n+ +n MatrixArms{Con{M.MDefault{body},Nil{}},target,dead} _ _:
-      S.bind(C.Checked,C.Checked,run(n,Matrix{body,target,dead},catalog,current,scope),M.checked_default)
+      then(run(n,Matrix{body,target,dead},catalog,current,scope),M.checked_default)
     case 1n+ +n MatrixArms{plans,target,dead} _ _: C.internal(C.Checked,"matrix-arm")
     case 1n+ +n MatrixLeaves{Nil{},target} _ _: Done{C.Checked{C.Sequence{Nil{}},target,Nil{}}}
     case 1n+ +n MatrixLeaves{Con{head,+tail},+target} _ _:
-      S.bind(C.Checked,C.Checked,run(n,Matrix{head,target,False{}},catalog,current,scope),first =>
-        S.bind(C.Checked,C.Checked,run(n,MatrixLeaves{tail,target},catalog,current,scope),rest => M.retained(first,rest)))
+      then(run(n,Matrix{head,target,False{}},catalog,current,scope),first =>
+        then(run(n,MatrixLeaves{tail,target},catalog,current,scope),rest => M.retained(first,rest)))
     case 1n+ +n PrimitiveMatch{+token,value,+arms,+wanted} C.Catalog{+types,sigs} _:
       S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),+binding =>
         S.choose(Result<S.Error,C.Checked>,M.enabled(types,binding),u =>
           annotated(wanted,token,+target =>
             S.bind(M.Plan,C.Checked,M.compile(4096n,binding,arms,types,scope),+plan =>
-              S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>
-                S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>
+              then(run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>
+                then(run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>
                   M.inspect(body,binding,scope))))),u =>
           match_body(binding,token,arms,types,scope,wanted,level =>
             run(n,Arms{arms,token,level,wanted},catalog,current,scope))))
+    case 1n+ +n Arguments{Nil{},Nil{},token} _ _:
+      Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
+    case 1n+ +n Arguments{Con{head,+tail},Con{C.Parameter{name,q,type_id},+rest},+token} _ _:
+      then(run(n,Expression{head,Some{type_id}},catalog,current,E.live_scope(scope,q)),checked =>
+        then(run(n,Arguments{tail,rest,token},catalog,current,scope),remaining => prepend_argument(checked,remaining,token)))
+    case 1n+ +n Arguments{nodes,params,token} _ _: C.invalid(C.Checked,"call-arity",token)
+    case 1n+ +n Arms{Nil{},token,level,wanted} _ _:
+      Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
+    case 1n+ +n Arms{Con{S.Arm{arm,+pat,+body},+tail},+token,+level,+wanted} C.Catalog{+types,sigs} _:
+      S.bind(G.ConstructorRef,C.Checked,pattern(pat,types),+reference =>
+        arm_body(reference,+tag =>
+          S.bind(P.Fields,C.Checked,P.branch(scope,level,reference,pat,types),opened =>
+            arm_scope(opened,bound => +fields =>
+              then(run(n,Expression{body,wanted},catalog,current,bound),checked =>
+                then(run(n,Arms{tail,token,level,wanted},catalog,current,scope),remaining => prepend_arm(tag,fields,checked,remaining)))))))
+    case 1n+ +n Arms{nodes,token,level,wanted} _ _: C.internal(C.Checked,"arm-node")
+    case 1n+ +n Rebuild{C.Value{token,+type_id,tag}} _ _:
+      Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
+    case 1n+ +n Rebuild{C.Reference{+token,level,type_id}} _ E.Scope{bindings,next,open,live,smaller}:
+      S.bind(C.Binding,C.Checked,E.find_level(bindings,level),binding =>
+        variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)))
+    case 1n+ +n Rebuild{C.Construct{+token,+type_id,+tag,+params,args}} _ _:
+      then(run(n,RebuildArguments{args,params,token},catalog,current,scope),value => rebuilt(value,token,type_id,tag,params))
+    case 1n+ +n Rebuild{other} _ _: C.internal(C.Checked,"refinement-node")
+    case 1n+ +n RebuildArguments{Nil{},Nil{},token} _ _:
+      Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
+    case 1n+ +n RebuildArguments{Con{head,+tail},Con{C.Parameter{name,q,type_id},+rest},+token} _ _:
+      then(run(n,Rebuild{head},catalog,current,E.live_scope(scope,q)),checked =>
+        then(run(n,RebuildArguments{tail,rest,token},catalog,current,scope),remaining => prepend_argument(checked,remaining,token)))
+    case 1n+ +n RebuildArguments{terms,params,token} _ _: C.internal(C.Checked,"refinement-arity")
+
     case 1n+ +n Expression{S.Literal{+token,+kind,+number,+text},+wanted} C.Catalog{+types,sigs} _:
       S.bind(E.Scope,C.Checked,P.close(scope,types),+scope =>
-      S.bind(C.Checked,C.Checked,L.literal(token,kind,number,text,types,wanted,M.literal(S.Literal{token,kind,number,text})),value => annotated(wanted,token,target => expected(token,Some{target},value))))
+      then(L.literal(token,kind,number,text,types,wanted,M.literal(S.Literal{token,kind,number,text})),value => annotated(wanted,token,target => expected(token,Some{target},value))))
     case 1n+ +n Expression{S.Offset{+token,+count,+tail},wanted} C.Catalog{+types,sigs} _:
       +spelled = M.literal(S.Offset{token,count,tail})
       annotated(wanted,token,+target =>
         S.bind(U32,C.Checked,L.primitive_type(types,1,token,Some{target},spelled),id =>
           S.bind(G.ConstructorRef,C.Checked,M.lookup(types,M.retoken("Succ",token)),+reference =>
             S.bind(List<&2,C.Parameter>,C.Checked,G.field_signature(reference,types),params =>
-              S.bind(C.Checked,C.Checked,run(n,Expression{M.literal(tail),Some{id}},catalog,current,scope),inner =>
+              then(run(n,Expression{M.literal(tail),Some{id}},catalog,current,scope),inner =>
                 offset(inner,count,reference,M.retoken("Succ",token),target,params))))))
     case 1n+ +n Expression{S.Intrinsic{+token,+op,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.TypeRef,C.Checked,G.find_type(types,LB.token(O.output(op)),0),reference =>
         L.intrinsic_type(reference,+id =>
           S.bind(List<&2,C.Parameter>,C.Checked,L.arguments(op,types),params =>
-            S.bind(C.Checked,C.Checked,run(n,Arguments{args,params,token},catalog,current,scope),arguments =>
-              S.bind(C.Checked,C.Checked,L.result(arguments,token,id,op),value => expected(token,wanted,value))))))
+            then(run(n,Arguments{args,params,token},catalog,current,scope),arguments =>
+              then(L.result(arguments,token,id,op),value => expected(token,wanted,value))))))
     case 1n+ +n Expression{S.Variable{+token},+wanted} C.Catalog{types,sigs} _:
       S.bind(E.Scope,C.Checked,P.close(scope,types),+scope =>
       S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>
-        S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value))))
+        then(variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value))))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(E.Scope,C.Checked,P.close(scope,types),+scope =>
       S.bind(G.ConstructorRef,C.Checked,M.lookup(types,token),+reference =>
         S.bind(List<&2,C.Parameter>,C.Checked,G.field_signature(reference,types),+params =>
-          S.bind(C.Checked,C.Checked,constructor(reference,args,token,wanted,params,u => run(n,Arguments{args,params,token},catalog,current,scope)),value => L.constructor(value,types)))))
+          then(constructor(reference,args,token,wanted,params,u => run(n,Arguments{args,params,token},catalog,current,scope)),value => L.constructor(value,types)))))
     case 1n+ +n Expression{S.Call{+token,+args},+wanted} C.Catalog{types,sigs} _:
       S.bind(E.Scope,C.Checked,P.close(scope,types),+scope =>
       S.bind(G.FunctionRef,C.Checked,G.find_function(sigs,token,0),reference =>
@@ -350,11 +383,11 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
           call_body(call,token,wanted,current,scope,params => run(n,Arguments{args,params,token},catalog,current,scope)))))
     case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{bindings,+next,from,live,smaller}:
       S.bind(E.Scope,C.Checked,P.close(scope,types),+scope =>
-      S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => C.exhausted(C.Checked,token),u =>
+      S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => Fail{S.Exhausted{"check",S.at(token)}},u =>
         S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann),target =>
-          S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
+          then(run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
-              S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q)))))))
+              then(run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q)))))))
     case 1n+ +n Expression{S.Match{token,S.Remainder{name,level,tags},Nil{}},wanted} C.Catalog{types,sigs} _:
       empty_remainder(tags,token,level,types,scope,wanted)
     case 1n+ +n Expression{S.Decision{+token,+column,S.Constructor{+ctor,+args},+yes,+no},+wanted} C.Catalog{+types,sigs} _:
@@ -364,8 +397,8 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
           S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,ctor,0),reference =>
           S.bind(P.Fields,C.Checked,P.branch(scope,level,reference,pat,types),opened =>
             arm_scope(opened,bound => +fields =>
-              S.bind(C.Checked,C.Checked,run(n,Expression{yes,wanted},catalog,current,bound),positive =>
-                S.bind(C.Checked,C.Checked,run(n,Expression{no,wanted},catalog,current,E.residual(scope,binding,List.is_empty(&2,S.Token,tags))),negative =>
+              then(run(n,Expression{yes,wanted},catalog,current,bound),positive =>
+                then(run(n,Expression{no,wanted},catalog,current,E.residual(scope,binding,List.is_empty(&2,S.Token,tags))),negative =>
                   decision_arms(positive,negative,tag,fields,tags,level,types,scope))))))))
     case 1n+ +n Expression{S.Match{+token,+value,+arms},+wanted} C.Catalog{+types,sigs} _:
       S.choose(Result<S.Error,C.Checked>,M.primitive_match(value,arms,types,scope),u =>
@@ -383,37 +416,6 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
       S.bind(E.Scope,C.Checked,X.alias(scope,token,level,mark),bound =>
         run(n,Expression{body,wanted},catalog,current,bound))
     case 1n+ +n Expression{node,wanted} _ _: C.internal(C.Checked,"expression-node")
-    case 1n+ +n Arguments{Nil{},Nil{},token} _ _:
-      Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
-    case 1n+ +n Arguments{Con{head,+tail},Con{C.Parameter{name,q,type_id},+rest},+token} _ _:
-      S.bind(C.Checked,C.Checked,run(n,Expression{head,Some{type_id}},catalog,current,E.live_scope(scope,q)),checked =>
-        S.bind(C.Checked,C.Checked,run(n,Arguments{tail,rest,token},catalog,current,scope),remaining => prepend_argument(checked,remaining,token)))
-    case 1n+ +n Arguments{nodes,params,token} _ _: C.invalid(C.Checked,"call-arity",token)
-    case 1n+ +n Arms{Nil{},token,level,wanted} _ _:
-      Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
-    case 1n+ +n Arms{Con{S.Arm{arm,+pat,+body},+tail},+token,+level,+wanted} C.Catalog{+types,sigs} _:
-      S.bind(G.ConstructorRef,C.Checked,pattern(pat,types),+reference =>
-        arm_body(reference,+tag =>
-          S.bind(P.Fields,C.Checked,P.branch(scope,level,reference,pat,types),opened =>
-            arm_scope(opened,bound => +fields =>
-              S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,bound),checked =>
-                S.bind(C.Checked,C.Checked,run(n,Arms{tail,token,level,wanted},catalog,current,scope),remaining => prepend_arm(tag,fields,checked,remaining)))))))
-    case 1n+ +n Arms{nodes,token,level,wanted} _ _: C.internal(C.Checked,"arm-node")
-    case 1n+ +n Rebuild{C.Value{token,+type_id,tag}} _ _:
-      Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
-    case 1n+ +n Rebuild{C.Reference{+token,level,type_id}} _ E.Scope{bindings,next,open,live,smaller}:
-      S.bind(C.Binding,C.Checked,E.find_level(bindings,level),binding =>
-        variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)))
-    case 1n+ +n Rebuild{C.Construct{+token,+type_id,+tag,+params,args}} _ _:
-      S.bind(C.Checked,C.Checked,run(n,RebuildArguments{args,params,token},catalog,current,scope),value => rebuilt(value,token,type_id,tag,params))
-    case 1n+ +n Rebuild{other} _ _: C.internal(C.Checked,"refinement-node")
-    case 1n+ +n RebuildArguments{Nil{},Nil{},token} _ _:
-      Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
-    case 1n+ +n RebuildArguments{Con{head,+tail},Con{C.Parameter{name,q,type_id},+rest},+token} _ _:
-      S.bind(C.Checked,C.Checked,run(n,Rebuild{head},catalog,current,E.live_scope(scope,q)),checked =>
-        S.bind(C.Checked,C.Checked,run(n,RebuildArguments{tail,rest,token},catalog,current,scope),remaining => prepend_argument(checked,remaining,token)))
-    case 1n+ +n RebuildArguments{terms,params,token} _ _: C.internal(C.Checked,"refinement-arity")
-
 def checked_function(signature: C.Signature, checked: C.Checked) -> C.Function:
   match checked:
     case C.Checked{term,type_id,uses}: C.Function{signature,term}
@@ -432,8 +434,10 @@ def functions(nodes: List<&2,S.Node>, +sigs: List<&2,C.Signature>, +catalog: C.C
       match sigs:
         case Nil{}: C.internal(List<&2,C.Function>,"signature-alignment")
         case Con{signature,+rest}:
-          S.bind(C.Function,List<&2,C.Function>,function_body(signature,body,G.before(catalog,seen),index,depth),head =>
-            S.bind(List<&2,C.Function>,List<&2,C.Function>,functions(tail,rest,catalog,U32.add(index,1),depth,seen),remaining => Done{Con{head,remaining}}))
+          +placed = G.before(catalog,seen)
+          S.bind(Unit,List<&2,C.Function>,G.promotions(body,placed),u =>
+            S.bind(C.Function,List<&2,C.Function>,function_body(signature,body,placed,index,depth),head =>
+              S.bind(List<&2,C.Function>,List<&2,C.Function>,functions(tail,rest,catalog,U32.add(index,1),depth,seen),remaining => Done{Con{head,remaining}})))
     case _: C.internal(List<&2,C.Function>,"function-node")
 
 # The enum emitter gates its whole book here until owned field storage lands.

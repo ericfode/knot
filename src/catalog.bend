@@ -148,11 +148,27 @@ def promotion(+types: List<&2,C.Datatype>, +name: S.Token) -> Result<S.Error,Uni
 def marked(+types: List<&2,C.Datatype>, +name: S.Token, +q: U32) -> Result<S.Error,Unit>:
   S.choose(Result<S.Error,Unit>,U32.is_eq(q,2),u => promotion(types,name),u => Done{Unit{}})
 
-def promotions(args: List<&2,S.Node>, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
-  match args:
-    case Nil{}: Done{Unit{}}
-    case Con{S.Promotion{+token},+tail}: S.bind(Unit,Unit,promotion(types,token),u => promotions(tail,types))
-    case Con{head,tail}: promotions(tail,types)
+# A promoted binder is judged once per body, before the body is checked: every `+` binder of its
+# patterns (also in fields) and its lets, against the datatypes declared before the body.
+def promoted(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
+  match fuel node:
+    case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
+    case 1n+n S.Promotion{+token}: promotion(types,token)
+    case 1n+n S.Constructor{token,args}: promoted(n,S.Sequence{args},types)
+    case 1n+n S.Offset{token,count,tail}: promoted(n,tail,types)
+    case 1n+ +n S.Binding{+token,+q,ann,value,body}:
+      S.bind(Unit,Unit,marked(types,token,q),u => promoted(n,body,types))
+    case 1n+n S.Match{token,value,arms}: promoted(n,S.Sequence{arms},types)
+    case 1n+ +n S.Arm{token,pattern,body}:
+      S.bind(Unit,Unit,promoted(n,pattern,types),u => promoted(n,body,types))
+    case 1n+n S.Sequence{Nil{}}: Done{Unit{}}
+    case 1n+ +n S.Sequence{Con{+head,tail}}:
+      S.bind(Unit,Unit,promoted(n,head,types),u => promoted(n,S.Sequence{tail},types))
+    case 1n+n _: Done{Unit{}}
+
+def promotions(body: S.Node, catalog: C.Catalog) -> Result<S.Error,Unit>:
+  match catalog:
+    case C.Catalog{types,sigs}: promoted(65536n,body,types)
 
 def pattern_constructor(+types: List<&2,C.Datatype>, +name: S.Token) -> Result<S.Error,ConstructorRef>:
   S.choose(Result<S.Error,ConstructorRef>,constructor_before(types,name),u => find_constructor(types,name,0),u =>

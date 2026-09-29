@@ -335,9 +335,9 @@ MUTANTS = [
      'fixture': 'dead-arm-u32-duplicate', 'verdict': (2, 'Invalid\tcheck\ttype-mismatch\t')},
     {'name': 'dead-before-live', 'file': 'check.bend',
      'old': '''run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>
-                S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>''',
+                then(run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>''',
      'new': '''run(n,Matrix{plan,target,True{}},catalog,current,scope),u =>
-                S.bind(C.Checked,C.Checked,run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>''',
+                then(run(n,Matrix{plan,target,False{}},catalog,current,scope),body =>''',
      'fixture': 'live-arm-u32-default', 'verdict': (3, 'Unsupported\tcheck\tdead-arm\t')},
     {'name': 'invalid-own-primitive', 'file': 'literal-check.bend',
      'old': 'C.unsupported(U32,"literal-base-type",token)', 'new': 'C.invalid(U32,"literal-base-type",token)',
@@ -353,7 +353,7 @@ MUTANTS = [
     {'name': 'offset-nat-add', 'file': 'check.bend', 'import': 'import ./primitive-op.bend as R\n',
      'old': '''S.bind(G.ConstructorRef,C.Checked,M.lookup(types,M.retoken("Succ",token)),+reference =>
             S.bind(List<&2,C.Parameter>,C.Checked,G.field_signature(reference,types),params =>
-              S.bind(C.Checked,C.Checked,run(n,Expression{M.literal(tail),Some{id}},catalog,current,scope),inner =>
+              then(run(n,Expression{M.literal(tail),Some{id}},catalog,current,scope),inner =>
                 offset(inner,count,reference,M.retoken("Succ",token),target,params))))))''',
      'new': 'run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},Some{target}},'
             'catalog,current,scope)))',

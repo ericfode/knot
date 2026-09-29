@@ -64,7 +64,7 @@ def normalize(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>, +type_id: U3
       S.choose(Result<S.Error,S.Node>,L.is_kind(types,type_id,2),u => C.unsupported(S.Node,"char-constructor-pattern",token),u =>
         S.bind(G.ConstructorRef,S.Node,lookup(types,token),reference => constructor(reference,type_id,token,args,types)))
     case 1n+n S.Variable{token}: Done{S.Variable{token}}
-    case 1n+n S.Promotion{+token}: S.bind(Unit,S.Node,G.promotion(types,token),u => Done{S.Promotion{token}})
+    case 1n+n S.Promotion{token}: Done{S.Promotion{token}}
     case 1n+n S.Call{token,args}: C.invalid(S.Node,"pattern-form",token)
     case 1n+n _: C.internal(S.Node,"pattern-node")
 
