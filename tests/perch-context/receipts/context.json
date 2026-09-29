@@ -25,6 +25,9 @@
     "default package store follows BEND_LIB or home and still verifies all bytes",
     "bare relative imports close locally while long hash imports remain explicitly unsupported",
     "apostrophe parameter types and body punctuation cannot crash manifest preflight",
+    "encoded-state budget past the interface tier keeps names, fits the real cap and leaves task and primary intact",
+    "a primary source over the state cap still fails with the names-only error",
+    "states that fit are byte-identical to the hashes taken before the names-only tier existed",
     "datatype closure follows imports beyond one file and terminates cycles",
     "datatype byte exhaustion retains an explicit truncation marker",
     "published hash uses actual sorted closure bytes in explicit and repository stores",
@@ -44,7 +47,11 @@
     "dependent signature dependencies enter the interface closure",
     "package identity and composition state are independent of checkout and store location",
     "package provenance is the verified membership in either store layout",
-    "default candidate store verifies BEND_LIB without an explicit option"
+    "default candidate store verifies BEND_LIB without an explicit option",
+    "names-only tier fits a state the interface tier cannot and marks every cut",
+    "names-only tier never shortens the primary source or the task",
+    "names-only cuts follow largest saving, then path, then name",
+    "names-only tier also cuts a body the interface tier kept, adding its row"
   ],
   "groups": [
     {
@@ -1586,14 +1593,14 @@
     "perch-style.json": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
     "scripts/perch-bend-context.mjs": "0858899b02dd657ab3a0d82d630cd7c08d39fa2277223ec3816a3b8c6dd02a61",
     "scripts/perch-bend.mjs": "2b68a1aad0485870d16f531dcb919a6c0e4a35b62a3e55678fab5a218ca5ceef",
-    "scripts/perch-context-interfaces.mjs": "dd4153156575e81cd5c30ef02142783b42aebcbe3debcdadf2509d23080d498c",
+    "scripts/perch-context-interfaces.mjs": "c11e524e202e26b9856152dcd2e3bad842e4a484692d6c46409c2f867ebb4c74",
     "scripts/perch-style.mjs": "e52d0a4dac2958e93825c8dd236cba71ec694399f9d450e592eaa0a3186e977f",
-    "tests/perch-context-integration.test.mjs": "ff7ca21368beaa11c9d0de69958066da30d184860c0d2ea009213f17511b51ab",
-    "tests/perch-context-mutants.test.mjs": "de3f7b8e6cf756eafd46b4c0ac0a10021902e0d8f79c9ae962b6f2eaea55e32a",
-    "tests/perch-context.test.mjs": "a6443576c8c61a4b615818df89a3ad307be8176bf6f413f3f5a7ddc4dcae360d",
-    "tests/perch-context/CONTRACT.md": "9f9ed95813fa146f5a25ae2ca4f842be6a65d3d1be3054cdfab54161ed2cdb30",
+    "tests/perch-context-integration.test.mjs": "bfa31ec732728ee0d4f2b1e8d42ae65cc4a5fc19257c4c2294dadcbde04fba72",
+    "tests/perch-context-mutants.test.mjs": "07e578fd58eeca512dee9a6f2779d5d3e796ac77332e5782814155514e27aa64",
+    "tests/perch-context.test.mjs": "60227b685919b16e589106ef02dd905d1fb26535e76c7746bf4aeb21afbb92d8",
+    "tests/perch-context/CONTRACT.md": "a6825c2cf89e2d4c74cb596d75ea50e8698fa0c048a62b84060c3a90a7a626f5",
     "tests/perch-context/check.py": "9c2199dd7dbce69e792bb4ce52ebc6e19a34325cca4a0755e85b87ff9759ed2d",
-    "tests/perch-context/expectations.json": "ac88fc763a3eb95929e72227cb68c191b068703c64864518acf75fc4a62ac51b",
+    "tests/perch-context/expectations.json": "723403bcf2f2ac3abc6c23712548e623cf6a3d10c37e48ff05d472fbcba92025",
     "tests/perch-context/fixtures/signatures.bend": "1298f9f2ea019c70c9b5ab5e1f9729381671ac3f1c3a4c3147c290a8457aca16",
     "tests/perch-context/review-expectations.json": "06bba9ae39894cfcaaf0cba44b3c829b3faa4344ccb33a31b796fd9e7d0511ee",
     "vendor/bend-parser/bend.mts": "34064e6eeea3e61243a0f8c2833c2cdcf2108edc108462a819662e26a8456145"
@@ -1606,7 +1613,12 @@
     "store-path-in-identity",
     "anti-anchoring-omitted",
     "binder-colon-truncates-head",
-    "default-store-omitted"
+    "default-store-omitted",
+    "names-only-marker-dropped",
+    "primary-source-shortened",
+    "names-only-tier-skipped",
+    "names-only-order-nondeterministic",
+    "names-only-row-not-recorded"
   ],
   "seed_signature_fixture": "All terms check.",
   "status": "pass",
@@ -1619,5 +1631,5 @@
     "truncated_units": 0,
     "units": 957
   },
-  "tests": 41
+  "tests": 53
 }
