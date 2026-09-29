@@ -128,6 +128,8 @@ def L.parameter_type_application(at,rest):
 def L.return_type_application(at,rest):
   {==}
 
+def L.split_arrow(at,rest): {==}
+
 def L.binding_type_application(at,rest):
   {==}
 

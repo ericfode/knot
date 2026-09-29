@@ -242,8 +242,16 @@ law return_type_application:
   for +at: S.At
   for +rest: List<&2,S.Token>
   {P.run(1n,P.FunctionTail{S.Token{"main",at},S.Sequence{Nil{}}},
-    Con{S.Token{"-",at},Con{S.Token{">",at},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
+    Con{S.Token{"-",S.At{15,16,1,15}},Con{S.Token{">",S.At{16,17,1,16}},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
     == Fail{S.Unsupported{"parse","type-application",at}} : Result<S.Error,P.Parsed>}
+
+# A return arrow is one lexeme: split into `-` and `>` the seed rejects it.
+law split_arrow:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.FunctionTail{S.Token{"main",at},S.Sequence{Nil{}}},
+    Con{S.Token{"-",S.At{15,16,1,15}},Con{S.Token{">",S.At{17,18,1,17}},Con{S.Token{"F",at},Con{S.Token{":",at},rest}}}})
+    == Fail{S.Invalid{"parse","function-result",S.At{15,16,1,15}}} : Result<S.Error,P.Parsed>}
 
 law binding_type_application:
   for +at: S.At

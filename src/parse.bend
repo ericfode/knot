@@ -307,7 +307,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{+name,S.Sequence{+params}}:
       match tokens:
         case Con{+dash,Con{+arrow,Con{+typ,Con{+colon,+body}}}}:
-          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),S.identifier(typ))),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),Bool.and(S.touches(dash,arrow),S.identifier(typ)))),u =>
             S.choose(Result<S.Error,Parsed>,S.matches(colon,"<"),u =>
               unsupported(Con{colon,body},"type-application"),u =>
             S.choose(Result<S.Error,Parsed>,S.matches(colon,":"),u =>
