@@ -177,6 +177,7 @@ FORMS = {
     'index': ('a[0n]', 'a defined name'),
     'bang': ('h!(a)', None),
     'plus0': ('+x0', 'a bound variable'),
+    'plus0-paren': ('+(a)', 'a bound variable'),
     'lam': ('a => a', 'expected : Flag'),
 }
 MORE = {
