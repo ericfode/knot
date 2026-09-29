@@ -1,0 +1,1638 @@
+{
+ "schema": 1,
+ "date": "2026-09-29",
+ "perch": "0.3.5",
+ "requested_model": "jev-latest",
+ "resolved_model": "jev-1.13.0",
+ "note": "Live calibration of .perch/rules/prechecks.yaml from the main checkout (scripts/prechecks-perch-run.mjs --live --controls). probability is Perch's probability that the rule is broken; a packet is flagged strictly above its rule's floor (min 80 for every rule). rules_file is the sha256 of .perch/rules/prechecks.yaml; rule_hashes are sha256 of each parsed rule object (name, where, each, min, gate, ensure), first 12 hex; receipts_rules_sha256 is the combined rule-set hash the usage receipts record. Control ids are cases.json ids.",
+ "runs": [
+  {
+   "run": "run1-baseline",
+   "what": "original texts, all seven rules",
+   "at": "2026-09-29T15:31:20.272Z",
+   "split": "dev",
+   "requests": 65,
+   "rules_file": "c2085179a50a7b64e7e141107a062ee7d467b7b601f08af2811e8a1023ab5279",
+   "receipts_rules_sha256": "5d18acedadeefbed",
+   "rule_hashes": {
+    "claim-holds-against-evidence": "881967a605a0",
+    "clause-vs-delta": "03d308810615",
+    "expectation-independent": "56169c0bdff7",
+    "kill-is-semantic": "df529c2f4f3e",
+    "outcome-follows-d4": "64e52d37dbe3",
+    "passages-agree": "4f332b4a9724",
+    "required-laws-met": "566039591f0b"
+   },
+   "results": [
+    {
+     "id": "vm-spec-e14d8581-excused-bound",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.74
+    },
+    {
+     "id": "vm-spec-d2fe0f20-bench",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.78
+    },
+    {
+     "id": "bootstrap-dc76dac3-eight-mutants",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.84
+    },
+    {
+     "id": "generics-19a534d3-all-17-erasure",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.87
+    },
+    {
+     "id": "vm-core-f54d97ad-unsupported-cause",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.88
+    },
+    {
+     "id": "harness-2-f53f937c-wasm-memories",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.14
+    },
+    {
+     "id": "io-host-963a7594-env-confined",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.3
+    },
+    {
+     "id": "modules-0111f133-case-alias",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.41
+    },
+    {
+     "id": "fields-wasm-3868b119-heap-sections",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.63
+    },
+    {
+     "id": "gpu-2-e485e6d2-wgsl-typecheck",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.67
+    },
+    {
+     "id": "closures-a1d68911-only-allocator-appended",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.48
+    },
+    {
+     "id": "descent-2-75e1ac69-conservative-classification",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.57
+    },
+    {
+     "id": "generics-78c4942e-classify2-pins-unchanged",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.68
+    },
+    {
+     "id": "harness-2-364d427e-judge-reads-only-recorded",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.71
+    },
+    {
+     "id": "harness-2-364d427e-held-to-files",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.2
+    },
+    {
+     "id": "vm-spec-a0fd6e00-unsupported-never-a-bound",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.28
+    },
+    {
+     "id": "fields-wasm-3868b119-only-unreachable-guard",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.3
+    },
+    {
+     "id": "nest-eb15da85-empty-case-whitelist",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.36
+    },
+    {
+     "id": "closures-a1d68911-dispatchers-appended",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.37
+    },
+    {
+     "id": "vm-core-a5e2ffa8-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.59
+    },
+    {
+     "id": "vm-spec-d2fe0f20-vm-expectation",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.6
+    },
+    {
+     "id": "vm-core-b2aab0f5-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.65
+    },
+    {
+     "id": "vm-core-f54d97ad-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.69
+    },
+    {
+     "id": "closures-a1d68911-seed-regression",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.23
+    },
+    {
+     "id": "vm-model-07e6db73-sweep-reference-codec",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.41
+    },
+    {
+     "id": "vm-model-07e6db73-fuel-runs-literal",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.44
+    },
+    {
+     "id": "vm-spec-e14d8581-vm-expectation-seed-compared",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.55
+    },
+    {
+     "id": "vm-model-07e6db73-kills",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.27
+    },
+    {
+     "id": "vm-model-07e6db73-harness-bound-kill",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.29
+    },
+    {
+     "id": "vm-spec-63e63203-source-mutants-timeout",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.55
+    },
+    {
+     "id": "vm-spec-d2fe0f20-source-mutants",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.64
+    },
+    {
+     "id": "vm-spec-97c1da13-source-mutants-raw-diff",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.75
+    },
+    {
+     "id": "fields-wasm-3868b119-wrong-enum-result",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.19
+    },
+    {
+     "id": "descent-2-75e1ac69-semantic-wrong-exit",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.23
+    },
+    {
+     "id": "generics-78c4942e-exit-0-2-3",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.25
+    },
+    {
+     "id": "classify-2-7b85b8aa-specific-wrong-classification",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.27
+    },
+    {
+     "id": "recursion-624228e5-fixed-observation",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.36
+    },
+    {
+     "id": "vm-spec-94bc3d57-image-size-frozen",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.59
+    },
+    {
+     "id": "vm-spec-e14d8581-result-u32",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.76
+    },
+    {
+     "id": "vm-spec-d2fe0f20-scalar-result",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.83
+    },
+    {
+     "id": "vm-spec-e14d8581-expected-bound",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.9
+    },
+    {
+     "id": "vm-spec-63e63203-image-size-frozen",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.39
+    },
+    {
+     "id": "literals-3246fa3d-resource-guards",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.48
+    },
+    {
+     "id": "opt-1-34d75984-deep-call-exhausted",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.52
+    },
+    {
+     "id": "vm-spec-63e63203",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.57
+    },
+    {
+     "id": "generics-19a534d3-boundaries",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.68
+    },
+    {
+     "id": "vm-spec-94bc3d57-d20",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.25
+    },
+    {
+     "id": "vm-spec-d2fe0f20-drop-operands",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.32
+    },
+    {
+     "id": "generics-78c4942e-return-type-application",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.35
+    },
+    {
+     "id": "descent-2-75e1ac69-other-parameter",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.62
+    },
+    {
+     "id": "vm-core-a5e2ffa8-vm-expected-goldens",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.65
+    },
+    {
+     "id": "vm-spec-e14d8581-drop-operands",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.12
+    },
+    {
+     "id": "recursion-624228e5-other-parameter",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.13
+    },
+    {
+     "id": "opt-1-34d75984-non-tail",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.17
+    },
+    {
+     "id": "vm-core-b2aab0f5-vm-expected-goldens",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.21
+    },
+    {
+     "id": "vm-spec-a0fd6e00-d20",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.25
+    },
+    {
+     "id": "nest-5374d928-unmet-laws",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.55
+    },
+    {
+     "id": "nest-eb15da85-unmet-laws",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.6
+    },
+    {
+     "id": "nest-c500d7d5-unmet-exhaustive",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.61
+    },
+    {
+     "id": "vm-model-07e6db73-symbolic-tail",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.92
+    },
+    {
+     "id": "fields-wasm-3868b119-proof-boundary",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.13
+    },
+    {
+     "id": "nest-57a0c01d-principal-law",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.28
+    },
+    {
+     "id": "closures-a1d68911-spec-laws",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.44
+    },
+    {
+     "id": "nest-5374d928-proof-scope",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.55
+    },
+    {
+     "id": "generics-78c4942e-proof-boundary",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.56
+    }
+   ]
+  },
+  {
+   "run": "run2-iter1",
+   "what": "iteration 1: passages-agree, kill-is-semantic rewritten",
+   "at": "2026-09-29T15:35:10.905Z",
+   "split": "dev",
+   "requests": 20,
+   "rules_file": "ea0c92b3d0ee7a804289a4969b82550a7f48d3547b317852a6f8a8352279f538",
+   "receipts_rules_sha256": "4decd68ce0dd8222",
+   "rule_hashes": {
+    "kill-is-semantic": "d8d6442d3ae6",
+    "passages-agree": "5b2e8e0119c2"
+   },
+   "results": [
+    {
+     "id": "vm-model-07e6db73-kills",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.45
+    },
+    {
+     "id": "vm-spec-97c1da13-source-mutants-raw-diff",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.62
+    },
+    {
+     "id": "vm-spec-d2fe0f20-source-mutants",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.72
+    },
+    {
+     "id": "vm-model-07e6db73-harness-bound-kill",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.78
+    },
+    {
+     "id": "vm-spec-63e63203-source-mutants-timeout",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.8
+    },
+    {
+     "id": "descent-2-75e1ac69-semantic-wrong-exit",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.22
+    },
+    {
+     "id": "fields-wasm-3868b119-wrong-enum-result",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.22
+    },
+    {
+     "id": "classify-2-7b85b8aa-specific-wrong-classification",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.35
+    },
+    {
+     "id": "recursion-624228e5-fixed-observation",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.36
+    },
+    {
+     "id": "generics-78c4942e-exit-0-2-3",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.56
+    },
+    {
+     "id": "vm-spec-94bc3d57-d20",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.25
+    },
+    {
+     "id": "vm-spec-d2fe0f20-drop-operands",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.29
+    },
+    {
+     "id": "generics-78c4942e-return-type-application",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.44
+    },
+    {
+     "id": "vm-core-a5e2ffa8-vm-expected-goldens",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.56
+    },
+    {
+     "id": "descent-2-75e1ac69-other-parameter",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.67
+    },
+    {
+     "id": "vm-spec-e14d8581-drop-operands",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.08
+    },
+    {
+     "id": "recursion-624228e5-other-parameter",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.13
+    },
+    {
+     "id": "vm-core-b2aab0f5-vm-expected-goldens",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.13
+    },
+    {
+     "id": "opt-1-34d75984-non-tail",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.16
+    },
+    {
+     "id": "vm-spec-a0fd6e00-d20",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.24
+    }
+   ]
+  },
+  {
+   "run": "run3-iter1b",
+   "what": "iteration 1b: the same two, revised once",
+   "at": "2026-09-29T15:36:17.931Z",
+   "split": "dev",
+   "requests": 20,
+   "rules_file": "a180441c0252f8f6a8302c215c32860f5e567648c28273a4792a7eff4f5bc888",
+   "receipts_rules_sha256": "c630f3a71d707a3f",
+   "rule_hashes": {
+    "kill-is-semantic": "3f5388b351be",
+    "passages-agree": "18f69f072e63"
+   },
+   "results": [
+    {
+     "id": "vm-model-07e6db73-kills",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.51
+    },
+    {
+     "id": "vm-spec-97c1da13-source-mutants-raw-diff",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.67
+    },
+    {
+     "id": "vm-model-07e6db73-harness-bound-kill",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.73
+    },
+    {
+     "id": "vm-spec-d2fe0f20-source-mutants",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.77
+    },
+    {
+     "id": "vm-spec-63e63203-source-mutants-timeout",
+     "rule": "kill-is-semantic",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.83
+    },
+    {
+     "id": "descent-2-75e1ac69-semantic-wrong-exit",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.3
+    },
+    {
+     "id": "fields-wasm-3868b119-wrong-enum-result",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.32
+    },
+    {
+     "id": "recursion-624228e5-fixed-observation",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.35
+    },
+    {
+     "id": "classify-2-7b85b8aa-specific-wrong-classification",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.39
+    },
+    {
+     "id": "generics-78c4942e-exit-0-2-3",
+     "rule": "kill-is-semantic",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.55
+    },
+    {
+     "id": "vm-spec-94bc3d57-d20",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.24
+    },
+    {
+     "id": "generics-78c4942e-return-type-application",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.41
+    },
+    {
+     "id": "vm-core-a5e2ffa8-vm-expected-goldens",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.46
+    },
+    {
+     "id": "descent-2-75e1ac69-other-parameter",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.5
+    },
+    {
+     "id": "vm-spec-d2fe0f20-drop-operands",
+     "rule": "passages-agree",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.53
+    },
+    {
+     "id": "recursion-624228e5-other-parameter",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.13
+    },
+    {
+     "id": "opt-1-34d75984-non-tail",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.2
+    },
+    {
+     "id": "vm-spec-a0fd6e00-d20",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.22
+    },
+    {
+     "id": "vm-core-b2aab0f5-vm-expected-goldens",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.24
+    },
+    {
+     "id": "vm-spec-e14d8581-drop-operands",
+     "rule": "passages-agree",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.29
+    }
+   ]
+  },
+  {
+   "run": "run4-iter2",
+   "what": "iteration 2: outcome-follows-d4, required-laws-met rewritten",
+   "at": "2026-09-29T15:39:58.107Z",
+   "split": "dev",
+   "requests": 18,
+   "rules_file": "68a7b28b34633196be0708d4cabbd84b10b05ccf868bf6db36e0fa365b5aaa3c",
+   "receipts_rules_sha256": "8b2bf33dc07635b6",
+   "rule_hashes": {
+    "outcome-follows-d4": "4b269fed1761",
+    "required-laws-met": "2690e266a27d"
+   },
+   "results": [
+    {
+     "id": "vm-spec-94bc3d57-image-size-frozen",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.17
+    },
+    {
+     "id": "vm-spec-e14d8581-result-u32",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.57
+    },
+    {
+     "id": "vm-spec-d2fe0f20-scalar-result",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.61
+    },
+    {
+     "id": "vm-spec-e14d8581-expected-bound",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.74
+    },
+    {
+     "id": "vm-spec-63e63203-image-size-frozen",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.09
+    },
+    {
+     "id": "opt-1-34d75984-deep-call-exhausted",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.19
+    },
+    {
+     "id": "literals-3246fa3d-resource-guards",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.25
+    },
+    {
+     "id": "generics-19a534d3-boundaries",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.31
+    },
+    {
+     "id": "vm-spec-63e63203",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.47
+    },
+    {
+     "id": "nest-5374d928-unmet-laws",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.35
+    },
+    {
+     "id": "nest-eb15da85-unmet-laws",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.49
+    },
+    {
+     "id": "nest-c500d7d5-unmet-exhaustive",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.55
+    },
+    {
+     "id": "vm-model-07e6db73-symbolic-tail",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.9
+    },
+    {
+     "id": "nest-57a0c01d-principal-law",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.12
+    },
+    {
+     "id": "fields-wasm-3868b119-proof-boundary",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.21
+    },
+    {
+     "id": "nest-5374d928-proof-scope",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.4
+    },
+    {
+     "id": "closures-a1d68911-spec-laws",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.47
+    },
+    {
+     "id": "generics-78c4942e-proof-boundary",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.53
+    }
+   ]
+  },
+  {
+   "run": "run5-iter2b",
+   "what": "iteration 2b: the same two, revised once",
+   "at": "2026-09-29T15:40:40.834Z",
+   "split": "dev",
+   "requests": 18,
+   "rules_file": "dfd643d360aed673035f262704f1bb8213a1843218466340e5f85b6543189eca",
+   "receipts_rules_sha256": "0f08f826c7f5dec3",
+   "rule_hashes": {
+    "outcome-follows-d4": "f9906937e0c4",
+    "required-laws-met": "e62830b3907f"
+   },
+   "results": [
+    {
+     "id": "vm-spec-e14d8581-result-u32",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.67
+    },
+    {
+     "id": "vm-spec-d2fe0f20-scalar-result",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.72
+    },
+    {
+     "id": "vm-spec-94bc3d57-image-size-frozen",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.79
+    },
+    {
+     "id": "vm-spec-e14d8581-expected-bound",
+     "rule": "outcome-follows-d4",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.83
+    },
+    {
+     "id": "vm-spec-63e63203-image-size-frozen",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.09
+    },
+    {
+     "id": "opt-1-34d75984-deep-call-exhausted",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.21
+    },
+    {
+     "id": "literals-3246fa3d-resource-guards",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.25
+    },
+    {
+     "id": "generics-19a534d3-boundaries",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.28
+    },
+    {
+     "id": "vm-spec-63e63203",
+     "rule": "outcome-follows-d4",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.61
+    },
+    {
+     "id": "nest-5374d928-unmet-laws",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.58
+    },
+    {
+     "id": "nest-eb15da85-unmet-laws",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.7
+    },
+    {
+     "id": "nest-c500d7d5-unmet-exhaustive",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.72
+    },
+    {
+     "id": "vm-model-07e6db73-symbolic-tail",
+     "rule": "required-laws-met",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.86
+    },
+    {
+     "id": "nest-57a0c01d-principal-law",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.19
+    },
+    {
+     "id": "fields-wasm-3868b119-proof-boundary",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.3
+    },
+    {
+     "id": "closures-a1d68911-spec-laws",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.52
+    },
+    {
+     "id": "nest-5374d928-proof-scope",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.68
+    },
+    {
+     "id": "generics-78c4942e-proof-boundary",
+     "rule": "required-laws-met",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.7
+    }
+   ]
+  },
+  {
+   "run": "run6-iter3",
+   "what": "iteration 3: clause-vs-delta, expectation-independent rewritten",
+   "at": "2026-09-29T15:45:00.250Z",
+   "split": "dev",
+   "requests": 18,
+   "rules_file": "477dfe23d208c6df7b14978ad2d7c38022975ed714336957ecc6eeb1f70cdeee",
+   "receipts_rules_sha256": "d10006f05654011f",
+   "rule_hashes": {
+    "clause-vs-delta": "c7eb74706322",
+    "expectation-independent": "cd037a4c7e39"
+   },
+   "results": [
+    {
+     "id": "descent-2-75e1ac69-conservative-classification",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.44
+    },
+    {
+     "id": "closures-a1d68911-only-allocator-appended",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.46
+    },
+    {
+     "id": "generics-78c4942e-classify2-pins-unchanged",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.48
+    },
+    {
+     "id": "harness-2-364d427e-judge-reads-only-recorded",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.59
+    },
+    {
+     "id": "harness-2-364d427e-held-to-files",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.15
+    },
+    {
+     "id": "fields-wasm-3868b119-only-unreachable-guard",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.18
+    },
+    {
+     "id": "vm-spec-a0fd6e00-unsupported-never-a-bound",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.21
+    },
+    {
+     "id": "nest-eb15da85-empty-case-whitelist",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.25
+    },
+    {
+     "id": "closures-a1d68911-dispatchers-appended",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.27
+    },
+    {
+     "id": "harness-2-364d427e-fixed-57-native",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.5
+    },
+    {
+     "id": "vm-spec-d2fe0f20-vm-expectation",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.55
+    },
+    {
+     "id": "vm-core-a5e2ffa8-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.57
+    },
+    {
+     "id": "vm-core-b2aab0f5-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.57
+    },
+    {
+     "id": "vm-core-f54d97ad-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.69
+    },
+    {
+     "id": "closures-a1d68911-seed-regression",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.25
+    },
+    {
+     "id": "vm-spec-e14d8581-vm-expectation-seed-compared",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.36
+    },
+    {
+     "id": "vm-model-07e6db73-sweep-reference-codec",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.4
+    },
+    {
+     "id": "vm-model-07e6db73-fuel-runs-literal",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.63
+    }
+   ]
+  },
+  {
+   "run": "run7-iter3b",
+   "what": "iteration 3b: the same two, revised once",
+   "at": "2026-09-29T15:45:46.343Z",
+   "split": "dev",
+   "requests": 18,
+   "rules_file": "1912cd5a41dc924aeea39e2d8151c734115d1e217c7cf52925172ff363fff90f",
+   "receipts_rules_sha256": "a812a7f458bfaa03",
+   "rule_hashes": {
+    "clause-vs-delta": "4e4fbf300b61",
+    "expectation-independent": "874666971a9c"
+   },
+   "results": [
+    {
+     "id": "closures-a1d68911-only-allocator-appended",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.45
+    },
+    {
+     "id": "descent-2-75e1ac69-conservative-classification",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.45
+    },
+    {
+     "id": "generics-78c4942e-classify2-pins-unchanged",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.49
+    },
+    {
+     "id": "harness-2-364d427e-judge-reads-only-recorded",
+     "rule": "clause-vs-delta",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.62
+    },
+    {
+     "id": "harness-2-364d427e-held-to-files",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.16
+    },
+    {
+     "id": "fields-wasm-3868b119-only-unreachable-guard",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.19
+    },
+    {
+     "id": "vm-spec-a0fd6e00-unsupported-never-a-bound",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.2
+    },
+    {
+     "id": "nest-eb15da85-empty-case-whitelist",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.24
+    },
+    {
+     "id": "closures-a1d68911-dispatchers-appended",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.3
+    },
+    {
+     "id": "harness-2-364d427e-fixed-57-native",
+     "rule": "clause-vs-delta",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.54
+    },
+    {
+     "id": "vm-core-a5e2ffa8-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.56
+    },
+    {
+     "id": "vm-core-b2aab0f5-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.58
+    },
+    {
+     "id": "vm-spec-d2fe0f20-vm-expectation",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.6
+    },
+    {
+     "id": "vm-core-f54d97ad-control-jobs",
+     "rule": "expectation-independent",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.68
+    },
+    {
+     "id": "closures-a1d68911-seed-regression",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.27
+    },
+    {
+     "id": "vm-model-07e6db73-sweep-reference-codec",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.38
+    },
+    {
+     "id": "vm-spec-e14d8581-vm-expectation-seed-compared",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.41
+    },
+    {
+     "id": "vm-model-07e6db73-fuel-runs-literal",
+     "rule": "expectation-independent",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.55
+    }
+   ]
+  },
+  {
+   "run": "run8-iter4",
+   "what": "iteration 4: claim-holds-against-evidence rewritten (frozen text)",
+   "at": "2026-09-29T15:48:43.429Z",
+   "split": "dev",
+   "requests": 10,
+   "rules_file": "151f266a1fc43c938845c40ee4c8408096df3125937fe27956a54ae00d5020cf",
+   "receipts_rules_sha256": "6e2eda82d2d201b0",
+   "rule_hashes": {
+    "claim-holds-against-evidence": "abdde60729a1"
+   },
+   "results": [
+    {
+     "id": "vm-spec-d2fe0f20-bench",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.6
+    },
+    {
+     "id": "bootstrap-dc76dac3-eight-mutants",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.64
+    },
+    {
+     "id": "vm-spec-e14d8581-excused-bound",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.65
+    },
+    {
+     "id": "vm-core-f54d97ad-unsupported-cause",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.79
+    },
+    {
+     "id": "generics-19a534d3-all-17-erasure",
+     "rule": "claim-holds-against-evidence",
+     "split": "broken",
+     "expected": "broken",
+     "probability": 0.84
+    },
+    {
+     "id": "harness-2-f53f937c-wasm-memories",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.1
+    },
+    {
+     "id": "io-host-963a7594-env-confined",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.21
+    },
+    {
+     "id": "modules-0111f133-case-alias",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.27
+    },
+    {
+     "id": "gpu-2-e485e6d2-wgsl-typecheck",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.45
+    },
+    {
+     "id": "fields-wasm-3868b119-heap-sections",
+     "rule": "claim-holds-against-evidence",
+     "split": "clean",
+     "expected": "clean",
+     "probability": 0.55
+    }
+   ]
+  },
+  {
+   "run": "run9-heldout",
+   "what": "held-out, frozen texts, asked once",
+   "at": "2026-09-29T16:26:55.924Z",
+   "split": "held-out",
+   "requests": 25,
+   "rules_file": "151f266a1fc43c938845c40ee4c8408096df3125937fe27956a54ae00d5020cf",
+   "receipts_rules_sha256": "6e2eda82d2d201b0",
+   "rule_hashes": {
+    "claim-holds-against-evidence": "abdde60729a1",
+    "clause-vs-delta": "4e4fbf300b61",
+    "expectation-independent": "874666971a9c",
+    "kill-is-semantic": "3f5388b351be",
+    "outcome-follows-d4": "f9906937e0c4",
+    "passages-agree": "18f69f072e63",
+    "required-laws-met": "e62830b3907f"
+   },
+   "results": [
+    {
+     "id": "nest-384acc6e-partitioned-matrix-budget",
+     "rule": "claim-holds-against-evidence",
+     "split": "held-out",
+     "expected": "broken",
+     "probability": 0.69
+    },
+    {
+     "id": "modules-bbff6371-binder-walk-bound",
+     "rule": "claim-holds-against-evidence",
+     "split": "held-out",
+     "expected": "broken",
+     "probability": 0.89
+    },
+    {
+     "id": "literals-943104f8-census-feature-exception",
+     "rule": "claim-holds-against-evidence",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.23
+    },
+    {
+     "id": "nest-99053a70-concrete-normalization-witnesses",
+     "rule": "claim-holds-against-evidence",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.33
+    },
+    {
+     "id": "modules-7ac90164-census-sole-exception",
+     "rule": "clause-vs-delta",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.1
+    },
+    {
+     "id": "generics-edfad8b9-parameter-mutant-anchor",
+     "rule": "clause-vs-delta",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.25
+    },
+    {
+     "id": "nest-47172493-base-guard-reworded",
+     "rule": "clause-vs-delta",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.64
+    },
+    {
+     "id": "nest-384acc6e-base-mvp-reworded",
+     "rule": "clause-vs-delta",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.67
+    },
+    {
+     "id": "vm-core-6f78bd27-control-jobs-want",
+     "rule": "expectation-independent",
+     "split": "held-out",
+     "expected": "broken",
+     "probability": 0.51
+    },
+    {
+     "id": "vm-core-dcc7c095-limit-word-jobs-want",
+     "rule": "expectation-independent",
+     "split": "held-out",
+     "expected": "broken",
+     "probability": 0.73
+    },
+    {
+     "id": "vm-model-37e69a30-fuel-runs-literal",
+     "rule": "expectation-independent",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.44
+    },
+    {
+     "id": "vm-spec-cea554ab-vm-expectation",
+     "rule": "expectation-independent",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.58
+    },
+    {
+     "id": "vm-model-19cf7d8f-harness-fuel-ignored",
+     "rule": "kill-is-semantic",
+     "split": "held-out",
+     "expected": "broken",
+     "probability": 0.39
+    },
+    {
+     "id": "vm-spec-cea554ab-source-mutants",
+     "rule": "kill-is-semantic",
+     "split": "held-out",
+     "expected": "broken",
+     "probability": 0.85
+    },
+    {
+     "id": "vm-core-6f78bd27-wat-mutant-loop",
+     "rule": "kill-is-semantic",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.38
+    },
+    {
+     "id": "vm-spec-cea554ab-codec-mutants-helpers",
+     "rule": "kill-is-semantic",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.5
+    },
+    {
+     "id": "vm-spec-cea554ab-d20-non-scalar-output",
+     "rule": "outcome-follows-d4",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.16
+    },
+    {
+     "id": "literals-943104f8-file-failures-and-path-identity",
+     "rule": "outcome-follows-d4",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.28
+    },
+    {
+     "id": "nest-384acc6e-wasm-call-stack-arena-exhausted",
+     "rule": "outcome-follows-d4",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.37
+    },
+    {
+     "id": "vm-core-6f78bd27-check-spec-run-control-count",
+     "rule": "passages-agree",
+     "split": "held-out",
+     "expected": "broken",
+     "probability": 0.34
+    },
+    {
+     "id": "nest-384acc6e-parameter-type-code-retained",
+     "rule": "passages-agree",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.23
+    },
+    {
+     "id": "vm-model-37e69a30-model-counts-match-spec",
+     "rule": "passages-agree",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.33
+    },
+    {
+     "id": "vm-model-19cf7d8f-proof-entries",
+     "rule": "required-laws-met",
+     "split": "held-out",
+     "expected": "broken",
+     "probability": 0.85
+    },
+    {
+     "id": "nest-384acc6e-unmet-laws-recorded",
+     "rule": "required-laws-met",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.12
+    },
+    {
+     "id": "generics-edfad8b9-proof-boundary",
+     "rule": "required-laws-met",
+     "split": "held-out",
+     "expected": "clean",
+     "probability": 0.76
+    }
+   ]
+  }
+ ]
+}

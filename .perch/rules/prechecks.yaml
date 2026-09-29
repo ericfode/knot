@@ -1,0 +1,159 @@
+# Advisory pre-review coherence rules (docs/prechecks.md). Uncalibrated: `gate: false` until clean,
+# broken and held-out packets separate live and adjudicated production findings exist
+# (docs/perch-maintenance.md step 8). Each rule reads only its own packet directory, so one packet
+# selects exactly one rule and no `npm run lint -- <src file>` picks these up:
+#   .local/prechecks/packets/<increment>/<head8>/<rule-name>/<n>.md
+# Packets are self-contained Markdown (Claim, Evidence, Scope) built offline by
+# `npm run -s prechecks:packets`. Missing evidence is never a pass, and a stub probability is never
+# calibration. The live run belongs to the coordinator, from the main checkout.
+- name: claim-holds-against-evidence
+  where: ".local/prechecks/packets/**/claim-holds-against-evidence/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    This rule concerns documentation sentences in the Claim section that state what code does, checks, requires,
+    keeps, counts or bounds, judged against the code in the Evidence section. For each such sentence, find the
+    shown code that decides it. The rule is broken when the shown code contradicts a sentence: a requirement or
+    check the sentence states that the code does not perform (the value is only recorded, or checked for some
+    cases and not others); an exemption, skip or fallback wider than the cases the sentence names; a
+    normalization (stripping, case folding, substring or membership tests) that hides a difference the sentence
+    says is compared; a counter or size the sentence says is bounded that nothing bounds; a count or list in the
+    sentence that differs from what the code shows; or an absolute word (only, exactly, every, all, never,
+    always, unchanged, identical) that a shown line contradicts. It is also broken when a sentence states a
+    requirement or check and the code that would perform it is not shown: missing evidence is not a pass. The
+    rule holds when every such sentence is realized by the shown code; a detail that follows directly from shown
+    code needs no separate line, and sentences about history, rationale or plans make no claim about the code
+    and need no evidence. Do not use knowledge of files the packet does not show.
+
+- name: passages-agree
+  where: ".local/prechecks/packets/**/passages-agree/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Two passages disagree when they cannot both be true of the same case. Compare each passage in the Claim
+    section with every other passage shown, in the Claim and the Evidence, on the facts they share about the
+    named term: a number, count or limit; an outcome class or diagnostic; the criterion that decides a
+    classification; what an operation does with each of its operands (dropped, copied, moved into the result,
+    kept); and whether a change is made or only proposed, pending or awaiting a decision. The rule is broken
+    when any such pair cannot both be true: one passage decides a classification by a criterion that another
+    passage says does not decide it; one says every operand is dropped where another says an operand is moved
+    into the result or kept; one states a change as made where another says it still awaits a decision; two give
+    the same case different numbers, classes or diagnostics; or one keeps a superseded value beside the current
+    one. Passages about different cases, added detail consistent with the others, and text marked as history
+    hold, and a term that appears in only one passage holds. Judge only the passages shown. Missing evidence is
+    not a pass where a passage's meaning depends on text the packet does not show; passages that do not overlap
+    are not missing evidence.
+
+- name: outcome-follows-d4
+  where: ".local/prechecks/packets/**/outcome-follows-d4/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    This rule concerns the outcome class (Invalid, Unsupported, Exhausted, HostFailure, InternalFailure) that
+    the packet's sources assign to the same case: decision rows, limit tables, outcome sentences, frozen
+    expectation rows and the code that freezes them. First, for each case or limit that two or more sources
+    mention, take the class each assigns, reading a frozen expectation by the class it records (its leading
+    outcome word), not by words in its reason: a limit that one source calls Exhausted and another freezes as
+    HostFailure has two classes. Two sources that give the same case different classes break the rule, and no
+    exemption below excuses that. The rule is also broken when a form the implementation cannot handle yet, and
+    that the seed accepts, is refused as Invalid or HostFailure instead of Unsupported; when a resource limit is
+    refused as anything other than Exhausted with that limit as its cause; or when the seed succeeds and the
+    implementation refuses and the case is none of a documented bound, an Unsupported capability gap, or a
+    divergence that a decision row itself documents. A documented bound is a resource limit and is itself
+    Exhausted with its cause; a refusal of any other class that is listed or frozen as a bound is not excused.
+    Refusing a well-formed program or its result because the implementation cannot handle it yet is a capability
+    gap, even when phrased as a host or invoke failure. Where every source agrees, these hold: HostFailure for
+    malformed input or a failure outside the program's meaning, Invalid for a program the seed also rejects, and
+    a passage that records another component's observed deviation as a known defect without adopting it as this
+    increment's outcome. Judge only the sources shown; a case that only one of them mentions holds, and missing
+    evidence is not a pass for a case whose class the shown sources leave undecided.
+
+- name: clause-vs-delta
+  where: ".local/prechecks/packets/**/clause-vs-delta/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    This rule concerns one invariance clause, from a contract, specification or README, that says something is
+    unchanged, kept, frozen, the only one of its kind, never done or forbidden, and the diff hunks the clause
+    governs. First name the subject the clause fixes (a behavior, a set of forms, an instruction or export list,
+    a count, a file) and what it promises about it. Then read each shown hunk for a change to that subject. The
+    rule is broken when a shown hunk changes what the clause promises, and the clause itself does not name that
+    change: it alters the behavior or value said to be unchanged or kept; adds a form, instruction, export,
+    function or dependency where the clause says only certain ones exist; does what the clause says never
+    happens; or removes or rewrites a pinned expectation the clause freezes. Judge the shown code and data
+    against what the clause promised, whatever revision the clause is quoted from: rewording the clause in the
+    same change neither excuses a change to its subject nor makes an unchanged subject a violation. Hunks that
+    touch other subjects, hunks that add checks keeping the invariant, and hunks that make exactly the change
+    the clause names hold. Missing evidence is not a pass where a hunk that changes the clause's subject is
+    shown cut off; a packet whose hunks do not touch the subject holds.
+
+- name: expectation-independent
+  where: ".local/prechecks/packets/**/expectation-independent/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    This rule concerns code that builds the expected values used to judge an implementation or its mutants
+    (want, expected, baseline, frozen rows) and the sentences that name their source. Trace each judging
+    expected value to where it comes from. The rule is broken when an expected value is the output of the
+    implementation under test, or of a build of it, and is then used to judge that implementation or its
+    mutants; when it is adopted from Knot's own evaluator or checker without first being compared with the
+    seed's observation or an independent derivation; or when a sentence calls an expectation independent, seed-
+    derived or reference-derived while the code takes it from the implementation. The rule holds when each
+    judging expectation is frozen from the pinned seed's observation, derived by a separate reference
+    implementation or codec, written as a reviewed literal, or taken from Knot's evaluator only after the code
+    compares it with the seed; the implementation's output may be recorded in a receipt without judging
+    anything. A literal written in the code is its own source. Missing evidence is not a pass where the packet
+    shows neither the code that produces a judging value nor a sentence naming its source.
+
+- name: kill-is-semantic
+  where: ".local/prechecks/packets/**/kill-is-semantic/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    This rule concerns code that decides whether a mutant is killed: the kill predicate and the code that runs
+    mutants and records their observations. A kill must come from a semantic observation: the mutant runs to a
+    well-formed answer and that answer differs from a reference or frozen expectation. A run that merely fails
+    to agree with its expectation is not yet a wrong answer. For each outcome that must never count as a kill (a
+    crash or signal, a timeout, a harness or tool limit, a host or infrastructure failure, a torn or truncated
+    read, a text-only match), trace what the shown code records for it and whether the kill predicate would then
+    count the mutant as killed. The rule is broken when a disagreement is counted as a kill without first
+    establishing that the run ended in a well-formed answer, even if the killed set is later compared with an
+    expected list; when a predicate counts any difference between observations and one of those outcomes yields
+    a differing observation (for example an empty result on timeout); when a set of exits or outcomes accepted
+    as a well-formed answer includes one the packet defines as a harness limit, crash, host failure or timeout;
+    when a fault filter removes only some of those outcomes before kills are counted; or when a kill is credited
+    because a name or substring appears in text output rather than because a value differs from its reference. A
+    predicate that first requires the run to succeed, or pins its observation to a well-formed outcome (a fixed
+    set of verdict exits, an exact registered diagnostic, a completed status), and only then compares it with
+    the frozen expectation holds, even when a failed comparison is caught as the kill; so does a fault that
+    fails the gate instead of counting, and an equivalent mutant reported separately with a reason. An exact
+    outcome the mutant is registered to produce is a semantic observation whatever its class. If the packet
+    shows no code that decides kills and its Claim says nothing about what counts as a kill, the rule holds; if
+    the Claim says what counts as a kill but the code that decides it is not shown, missing evidence is not a
+    pass.
+
+- name: required-laws-met
+  where: ".local/prechecks/packets/**/required-laws-met/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    This rule compares the required laws listed in the Claim with the operation-to-law matrix and the recorded
+    obligations in the Evidence. A required law is established only by a law whose own statement, read alone, is
+    the required property in the generality it states (all, any, arbitrary, for every value), with binders above
+    zero; the packet shows statements, not proofs, so several narrower laws that might be combined do not
+    establish it. Read the for-binder count of each candidate: a law with 0 binders is one fixed instance (a
+    ground witness) whatever its name, and a law about one step, one case or a fixed size is narrower than a
+    requirement about the whole process or every case. The rule is broken when a required law is matched only by
+    ground witnesses, only by narrower laws, or by no law at all, and no recorded obligation names it as open
+    with its evidence. The rule holds when each required law has such a law, or a recorded open obligation; a
+    requirement that itself asks for helper, step or instance laws is met by them. Ground witnesses and other
+    laws that no requirement asks for are not violations, and a clause of a requirement that states a limit or
+    disclaimer rather than a property needs no law. Missing evidence is not a pass: a required law with no
+    matching law in the matrix breaks the rule.

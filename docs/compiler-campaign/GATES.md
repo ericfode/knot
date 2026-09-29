@@ -29,6 +29,14 @@ The wrapper runs the resolved compiler and supplies the SDK when it is missing,
 which keeps those paths off the shim. `test_runner` pins it with a trimmed
 environment.
 
+The same message also appears under heavy host load with the real compiler on
+PATH: the seed's `spawnSync` probe returns nothing. It is a host fault, not an
+assertion, so the runner reruns a gate once when the gate failed and its output
+contains `bend needs clang`. The result records the first attempt under
+`retried` (its logs keep the `.retry` suffix on the second attempt), and the
+normalized summary leaves `retried` out, so a retried pass normalizes like a
+clean one. A gate that fails twice stays failed. Other failures are never retried.
+
 Harness wall-clock guards inside the gate scripts (the seed-build and CLI
 `run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
 unless the caller sets it. These guards only catch hangs; no passing receipt
@@ -101,6 +109,11 @@ The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/
 - The gate writes only `tests/compiler-selfhost/receipts/selfhost.json`.
 - An increment that lands a need flips it in `expectations.json`, and the gate
   then holds that increment to its cases.
+
+The prechecks suite's own verification (`npm run -s prechecks:verify`: its unit tests against synthetic clean and broken repositories, its semantic mutants and the Perch wiring test for its seven advisory rules, receipt `tests/prechecks/receipts/prechecks.json`) is deliberately not a registered gate: it takes 150 to 390 seconds, and every increment's full gate run would pay for it while only a change to `scripts/prechecks/` or `tests/prechecks/` can affect it. Run it whenever either changes; the coordinator runs it before merging such a change. The suite itself is not a gate either: `npm run -s prechecks` reports conditions for the
+implementer and the reviewers and is not part of `npm run gates`. Its historical controls (accepted tips as clean controls, confirmed
+regressions as broken ones) run with `python3 scripts/prechecks/replay.py` in a checkout that has the campaign history, because the
+gate's export has none.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.

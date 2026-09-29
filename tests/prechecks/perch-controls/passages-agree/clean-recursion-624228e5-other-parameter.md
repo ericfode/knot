@@ -1,0 +1,14 @@
+<!-- prechecks packet v1; rule=passages-agree; increment=recursion; head=624228e56d8b; base=185b7d5ffad5; builder=scripts/prechecks/packets@3a2ef420dff1; sources: tests/compiler-recursion/LAW_REVIEW.md@624228e5 sha256=28a255ee3d6cc0f0765607c4f7036514a1172b93b445b3e712f0d2167f213e55; tests/compiler-recursion/README.md@624228e5 sha256=f8b18eed1ea1031e21fd75edd65cb34dbffa6ab1502e1b6b8ffeac85d1494f54 -->
+# Claim
+Term `other-parameter`. Passages this branch changed or added:
+
+- tests/compiler-recursion/LAW_REVIEW.md:15 (section: Descent rule review): | Obligation | Law or proof boundary | Independent witness / mutant | | --- | --- | --- | | Parameter-0 fields enter the descendant set | `root_fields_are_smaller`, `opening_root_records_descent` | `direct`; stop-propagating-fields | | Descendant fields also enter it | `descendant_fields_are_smaller`, `opening_descendant_records_descent` | `even`; stop-nested-propagation | | Other parameters confer no descent | `unrelated_fields_stay_unmarked` | `other-parameter`, paired with `first-parameter` | | First Reference must be marked | `marked_reference_descends`, `root_reference_does_not_descend`, `later_argument_cannot_establish_descent`, `empty_call_does_not_descend` | `same-parameter`, `second-descent`; admit-any-self-call | | Reconstruction and calls are not References | `rebuilt_argument_does_not_descend`, `computed_argument_does_not_descend` | `rebuilt-parent`, `rebuilt-constructor`, `computed`, paired with `direct` | | Fresh lets do not inherit provenance | `local_binding_preserves_descent` | `shadow-let` / `after-let`, plus `shadow-field` | | Descending calls retain arguments, result and usage | `descending_self_call_is_checked` | even/add/mirror/length seed ⇔ native evaluator ⇔ Bun evaluator | | Missing descent stays Unsupported, including erased context | `nondecreasing_self_call_is_unsupported` | seven Unsupported fixture outcomes, both CLI lanes | | Earlier calls need no descent; later live calls remain invalid | `earlier_call_needs_no_descent`; unchanged declaration-order rule | `ordered-calls` / `mutual`, existing forward/erased-forward corpus | | Fuel exhaustion is a runtime outcome | `recursive_evaluation_exhaustion` | `deep` / `deep-input` at 600 transitions, both lanes |
+- tests/compiler-recursion/README.md:67 (section: Fixtures and mutants): At 600, construction still succeeds and recursion reports `Exhausted eval budget`. - `same-parameter`, `other-parameter`, `rebuilt-parent`, `rebuilt-constructor`, `computed`, `shadow-let`, `second-descent`: `Unsupported check recursive-call`. - `mutual`: `Invalid check forward-live-call`, unchanged from the earlier rule.
+
+# Evidence
+Other passages that mention the term:
+
+(none)
+
+# Scope
+Only the text above is evidence. Anything not shown is missing evidence, not a pass.
