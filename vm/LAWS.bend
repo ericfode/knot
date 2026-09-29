@@ -428,6 +428,21 @@ law cell_past_memory:
   for memory: W.Store
   {H.allocate(H.Heap{memory,1073741824,H.zeros(29n)},1,0,[1]) == Fail{W.Exhausted{2,"heap"}} : Result<W.Stop,H.Cell>}
 
+# SPEC §7: the debit of an Enter stands when its steps 2 and 3 stop, and nothing else does. A non-tail entry whose
+# Call frame does not fit the full region stops Exhausted kind 3 with fuel 1 spent, one call and one quantum
+# counted, its target and operands pending and everything else as it was.
+law entry_past_region_keeps_its_debit:
+  for code: H.Code
+  for f: U32
+  for ops: List<&2,U32>
+  for act: U32
+  for node: U32
+  for frames: List<&2,H.Frame>
+  for heap: H.Heap
+  for calls: U32
+  for out: List<&2,List<&2,U32>>
+  {M.entered(code,M.Callee{f},ops,H.Stack{act,Con{H.Bind{node},frames},4194304},heap,M.Meter{1,calls,0},out) == Done{M.Machine{M.Finished{M.Stopped{W.Exhausted{3,"frames"},M.Enter{M.Callee{f},ops}}},H.Stack{act,Con{H.Bind{node},frames},4194304},heap,M.Meter{0,U32.add(calls,1),1},out}} : Result<W.Stop,M.Machine>}
+
 # Succ{4294967295} completes at the Gather of `succ`'s body, under the Call of `succ` and the Gather of
 # Nat.is_gt's operands, which Top holds: kinds 1, 4, 1, 0 in SPEC §6's numbering.
 law nat_range_keeps_its_gather:

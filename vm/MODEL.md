@@ -46,7 +46,7 @@ on transitions: a harness limit, never VM exhaustion.
 
 ## Laws
 
-[LAWS.bend](LAWS.bend) states 44 laws, proved by [PROOF.bend](PROOF.bend):
+[LAWS.bend](LAWS.bend) states 45 laws, proved by [PROOF.bend](PROOF.bend):
 - the codec round trip, on a hand-written plan and on five golden images;
 - four refusal reasons, and bounded validator soundness: every single-word
   mutation of `value-on`'s function, constant and node sections is refused or
@@ -75,7 +75,9 @@ on transitions: a harness limit, never VM exhaustion.
   in a Book that writes nothing, as does describing a Book whose answer is a request;
 - atomic stops, the coordinator's ruling on SPEC §6: a refused step leaves the
   machine as it was, and only an Enter's debit stands (symbolic laws over `settled`
-  and `paid`); a frame that does not fit the region is `Exhausted` kind 3, and a
+  and `paid`, and one over `entered`: a non-tail entry whose Call frame does not fit
+  the full region stops `Exhausted` kind 3 with fuel 1 spent, one call and one quantum
+  counted); a frame that does not fit the region is `Exhausted` kind 3, and a
   cell past the declared memory kind 2, before anything is written; and a stopped
   run holds what the step could not advance: `Succ{4294967295}` its Gather frame
   under `succ`'s Call and `Nat.is_gt`'s Gather, a refused Halt or print its `act`
@@ -158,7 +160,11 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   and `cell_past_memory` pin the two limits, refused before anything is written). No
   audited run reaches either stop, since each needs a full frame region or heap
   (vm-core's rows `nat-pred-frames` and `nat-pred-heap` are the images that do), so the
-  `atomic` check does not witness them: the laws do.
+  `atomic` check does not witness them: the laws do. The same holds for the debit of an
+  Enter whose steps 2 and 3 stop (SPEC §7): since D23 the print refusals that reached
+  `paid` in review round 3 belong to Top's loop, which is no entry, and every remaining
+  stop there is a full region or heap. `entry_past_region_keeps_its_debit` states the
+  debit for the region, and the mutant `debit-refunded` is refuted by that law alone.
 - A stopped machine keeps the control it could not advance, so the words of a
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
@@ -202,7 +208,7 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   argument controls) once, before any run: a temporary file, made read-only and
   renamed into place. A refusal as `length`, `magic`, `total` or `noncanonical`
   of an image the reference codec admits is a harness fault, never a kill, and
-  fails the gate. A harness control runs every staged run three at once on the
+  fails the gate. A harness control runs every staged run eight at once on the
   unmutated model, as the mutant pool does, and requires every row to agree; it
   also checks that a torn image (empty, or a prefix of `value-on`) is such a
   fault. Before review round 3 the inspection images were rewritten on every
@@ -212,4 +218,4 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   about 190 s of CPU, most of it in the audited runs (the laws of requests run
   their plans with `run_words_final`, balanced after the last step alone, which
   costs a fifth of auditing each step). A law mutant is proved on a proof cut to
-  the one law that must refute it, not on all 44.
+  the one law that must refute it, not on all 45.

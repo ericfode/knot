@@ -131,15 +131,20 @@ allocation state and output as they were, and its meters too but for an Enter's 
 a Book's description included); the bounded soundness sweep, every single-word
 mutation of every golden refused exactly when the reference codec refuses it, for the
 same reason, and otherwise run soundly and atomically; `vm/PROOF.bend` printing `All
-terms check.` (44 laws); 61 model mutants killed by a wrong observation, never a crash
-or a harness fault, 20 of them also refuted by the law named, on a proof cut to that law
-(the unmutated model proves every law); and the harness mutant `fuel-ignored` killed by
+terms check.` (45 laws); 61 model mutants, 60 killed by a wrong observation, never a
+crash or a harness fault, and `debit-refunded` refuted by its law alone (D23 left no run
+that reaches a stop after an Enter's debit, so the gate requires that every run agrees
+with the model), 21 of them refuted by the law named, on a proof cut to that law (the
+unmutated model proves every law); and the harness mutant `fuel-ignored` killed by
 exactly the fuel controls. A mutant's audit binary is built only when its model runs
 leave it alive. Every image its runs share is staged once, read-only, before any run; a
 refusal of an image the reference codec admits as `length`, `magic`, `total` or
 `noncanonical` is a harness fault that fails the gate, and a harness control runs every
-staged run three at once on the unmutated model and requires every row to agree. It
-writes only `vm/receipts/model.json`.
+staged run eight at once on the unmutated model, as the mutant pool does (eight mutants at
+a time: the gate is 2,300 CPU-seconds, most of them builds, so its wall time is the
+CPU-seconds over the threads that it keeps runnable; on a busy host three workers took
+35 minutes, past the runner's 30), and requires every row to agree. It writes only
+`vm/receipts/model.json`.
 
 The prechecks suite's own verification (`npm run -s prechecks:verify`: its unit tests against synthetic clean and broken repositories, its semantic mutants and the Perch wiring test for its seven advisory rules, receipt `tests/prechecks/receipts/prechecks.json`) is deliberately not a registered gate: it takes 150 to 390 seconds, and every increment's full gate run would pay for it while only a change to `scripts/prechecks/` or `tests/prechecks/` can affect it. Run it whenever either changes; the coordinator runs it before merging such a change. The suite itself is not a gate either: `npm run -s prechecks` reports conditions for the
 implementer and the reviewers and is not part of `npm run gates`. Its historical controls (accepted tips as clean controls, confirmed

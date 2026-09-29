@@ -50,11 +50,12 @@ seed's native lane and requires:
 - vm/PROOF.bend to print 'All terms check.';
 - every model mutant killed by a wrong observation of those checks, never by a
   crash or a timeout, and those in LAW_MUTANTS also refuted by the law named, on
-  a PROOF.bend cut to that law;
+  a PROOF.bend cut to that law; the one in LAW_KILLED, whose stop no run reaches,
+  is refuted by its law alone and must survive every observation;
 - the images its runs share staged once, read-only, before any run; a refusal as
   `length`, `magic`, `total` or `noncanonical` of an image the reference codec
   admits is a harness fault, never a kill, and fails the gate; and the harness
-  control: three workers run every staged run at once on the unmutated model and
+  control: WORKERS workers run every staged run at once on the unmutated model and
   every row agrees, and a torn image is such a fault.
 It writes only vm/receipts/model.json, beside its builds in .local/vm-model/gate.
 """
@@ -86,6 +87,7 @@ SOURCES = tuple(f'model/{s}.bend' for s in SECTIONS) + (
 ENTRIES = {'model': 'model-cli.bend', 'audit': 'model-audit.bend', 'sweep': 'model-sweep.bend', 'lanes': 'model-lanes.bend'}
 BUILT = tuple(f'model/{s}.bend' for s in SECTIONS) + ('model-cli.bend', 'model-audit.bend', 'model-sweep.bend')  # the natively built model
 SWEEP_FUEL = '256'  # every golden completes within 256 entries; mutants that loop stop early
+WORKERS = 8  # mutants observed at once, and staged runs at once in the harness control; each is a build, then runs
 
 
 def load_check_spec():
@@ -874,11 +876,11 @@ def staged_runs(bins: dict, shared: dict) -> dict:
 
 
 def harness_controls(bins: dict, shared: dict) -> dict:
-    """The mutant pool's reading of staged images, on the unmutated model: three workers run
+    """The mutant pool's reading of staged images, on the unmutated model: WORKERS workers run
     every staged run at once and every row agrees. A torn image (empty, a short prefix, a
     word-aligned prefix of value-on) is a harness fault that `kills` never credits."""
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        rounds = list(pool.map(lambda _: staged_runs(bins, shared), range(3)))
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        rounds = list(pool.map(lambda _: staged_runs(bins, shared), range(WORKERS)))
     differ = sorted({f'{check}:{name}' for got in rounds for check, rows in got.items()
                      for name, row in rows.items() if not row['agrees']})
     require(not differ, f'harness control: concurrent staged runs disagree at {differ[:8]}')
@@ -889,7 +891,7 @@ def harness_controls(bins: dict, shared: dict) -> dict:
     faults = harness_faults(torn)
     require(len(faults) == len(paths) and not kills({'torn': {label: {'agrees': True} for label in paths}}, torn),
             f'harness control: torn images {torn}')
-    return {'concurrent': {'workers': 3, 'rows': sum(len(rows) for rows in rounds[0].values()), 'disagreements': 0},
+    return {'concurrent': {'workers': WORKERS, 'rows': sum(len(rows) for rows in rounds[0].values()), 'disagreements': 0},
             'torn': {label: model_refusal(row['result']) for label, row in torn['torn'].items()}}
 
 
@@ -1147,7 +1149,14 @@ LAW_MUTANTS = {
     'request-as-ill-typed': 'request_is_never_rendered',
     'top-drops-act-first': 'refused_halt_keeps_its_activation', 'gather-popped-first': 'nat_range_keeps_its_gather',
     'describe-after-drop': 'request_is_never_rendered',
+    'debit-refunded': 'entry_past_region_keeps_its_debit',
 }
+
+# SPEC section 7: a stop of an Enter's steps 2 and 3 keeps the debit. Since D23 the only such stops are a frame
+# region (kind 3) or a heap (kind 2) that is full, or an overflowing count, and no run in the reference
+# evaluation's reach fills any of them (section 6.3), so every run of these mutants agrees with the model and
+# only the law refutes them. A run that kills one makes its entry stale.
+LAW_KILLED = ('debit-refunded',)
 
 
 def law_blocks(text: str) -> list:
@@ -1193,6 +1202,7 @@ def kills(base: dict, mutant: dict) -> list:
 
 
 def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
+    require(set(LAW_KILLED) <= set(LAW_MUTANTS), f'LAW_KILLED names a mutant with no law: {set(LAW_KILLED) - set(LAW_MUTANTS)}')
     trees = {name: build_tree(f'mutants/{name}', section, mutation) for name, section, mutation, _ in MUTANTS}
 
     def one(entry):
@@ -1220,7 +1230,7 @@ def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
         return kills(base, observed), crashes, harness_faults(observed)
     # PROOF.bend runs single-threaded for minutes, so the law kills run beside the
     # observations instead of after each one.
-    with ThreadPoolExecutor(max_workers=3) as proofs, ThreadPoolExecutor(max_workers=3) as pool:
+    with ThreadPoolExecutor(max_workers=3) as proofs, ThreadPoolExecutor(max_workers=WORKERS) as pool:
         proving = {name: proofs.submit(law_kill, trees[name], law) for name, law in LAW_MUTANTS.items()}
         observed = list(pool.map(one, MUTANTS))
         laws = {name: future.result() for name, future in proving.items()}
@@ -1229,7 +1239,10 @@ def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
         require(not faults, f'mutant {name}: harness faults, not kills, at {faults[:8]}')
         require(name not in LAW_MUTANTS or laws[name] == LAW_MUTANTS[name],
                 f'mutant {name}: PROOF.bend failed at {laws.get(name)}, not at the law {LAW_MUTANTS.get(name)}')
-        out.append({'mutant': name, 'breaks': meaning, 'killed': bool(killed), 'by': killed[:8],
+        by_law = name in LAW_KILLED
+        require(not (by_law and killed), f'mutant {name}: runs kill it ({killed[:8]}), so its law is no longer alone')
+        out.append({'mutant': name, 'breaks': meaning, 'killed': bool(killed) or by_law,
+                    'by': [f'law:{laws[name]}'] if by_law else killed[:8],
                     'kills': len(killed), 'law': laws.get(name), 'crashes': len(crashes), 'crashed': crashes[:8]})
     return out
 
@@ -1310,7 +1323,8 @@ def main() -> int:
           f"({', '.join(f'{n} {k}' for k, n in kinds(base['admitted']).items())}), "
           f"{len(base['audit'])} audited runs, "
           f"{swept_total} swept mutations of {len(swept)} images, {proven['laws']} laws, "
-          f"{len(mutants)} killed mutants, {len(harness)} killed harness mutant; {RECEIPT.relative_to(ROOT)}")
+          f"{len(mutants)} killed mutants ({len(LAW_KILLED)} by its law alone), {len(harness)} killed harness mutant; "
+          f"{RECEIPT.relative_to(ROOT)}")
     return 0
 
 

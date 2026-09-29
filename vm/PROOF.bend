@@ -42,6 +42,7 @@ def L.stop_changes_no_state(control,stack,heap,meter,out,stop): {==}
 def L.paid_stop_keeps_the_debit(control,stack,heap,meter,out,stop): {==}
 def L.frame_past_region(act,frames): {==}
 def L.cell_past_memory(memory): {==}
+def L.entry_past_region_keeps_its_debit(code,f,ops,act,node,frames,heap,calls,out): {==}
 def L.nat_range_keeps_its_gather(): {==}
 def L.refused_halt_keeps_its_activation(): {==}
 def L.refused_print_keeps_its_activation(): {==}
