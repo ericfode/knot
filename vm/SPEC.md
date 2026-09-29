@@ -1480,7 +1480,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 137 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 97 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 119 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1607,7 +1607,19 @@ lane and requires:
   `inspect-halt-after-surrogate` alone) or before the code
   (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
   and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused print
-  whose debit is refunded (by the D20 goldens' `calls`);
+  whose debit is refunded (by the D20 goldens' `calls`). Twenty-two more (round 14, §6.3) mutate before they refuse, and each
+  dies by a changed observation: eight spend an entry at a refusal (a `NatRange`, an ill-typed word, a Case over a request, a read of a
+  request, D20's check, a display bound, and an Enter that pays its debit before it checks its operands or its request); six test
+  fuel before a refusal that no fuel test precedes (the same sites but the Enter's); five change the output or the effects before their
+  check (an effect counted before D20's check or before the String is inspected, a scalar prefix written before the refusal, a description
+  whose head is written before its words are inspected, and a visit charged before its word is inspected); and three undo or defer (a
+  stop that discards what earlier steps wrote, and a `NatRange` or an ill-typed word that is reported at the next entry). Eight survive
+  every golden and every earlier run control and die by the atomic controls alone: the three `nat-range-` mutants, `ill-typed-tests-fuel`,
+  `d20-refusal-tests-fuel`, `display-refusal-tests-fuel`, `effect-counted-before-scalar-check` and `describe-charges-before-inspecting` (by
+  `atomic-display-leaf-ill-typed` alone). The other fourteen die by earlier controls that freeze `calls`, `stdout` or `effects` as well, and four of
+  them by no atomic control (`request-read-spends-entry`, `request-read-tests-fuel`, `enter-request-target-after-debit`, killed by the earlier
+  request controls, and `effect-writes-before-scalar-check`, by the golden `print-non-scalar-mid`); DECISIONS entry 38 lists the
+  kills of each, as measured;
 - 15 **seed witnesses** (`golden/witnesses.json`, `check-spec.py witness_controls`): sources that §8 cites
   and no golden can carry, each re-run on both seed lanes (three also through the literals head's check-cli) and held
   to its source's hash, to its frozen exit, stdout and stderr, and to the review of its exit and stdout that

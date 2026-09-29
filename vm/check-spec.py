@@ -3347,6 +3347,37 @@ LOOP = '            w = m.apply(w[3], [m.effect(w)])'
 ENTRY = ("        self.rep = plan.get('representation', {})\n",
          "        self.rep, self.entry = plan.get('representation', {}), plan['entry']\n")
 
+# The refusal sites of evaluate.py that section 6.3's mutants edit, and what they insert before the `raise Halt` that ends a site. A stop
+# changes nothing, so a refusal that first spends an entry (`debit()`, which is also refused at fuel 0), tests fuel, counts or writes
+# is a mutant that mutates before it refuses; the atomic controls (`atomic_controls`) run each stop at exactly the fuel it has spent.
+SITE_NAT = "            raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'NatRange'})"
+SITE_WORD = "        if not isinstance(w, int):\n            raise Halt(ILL_TYPED)\n        return w"
+SITE_VIEW = "            return w[2], w[3]\n        raise Halt(ILL_TYPED)\n"
+SITE_READ = "        if isinstance(w, tuple) and w[0] == 'request':\n            raise Halt(UNSUPPORTED)\n        return w"
+SITE_CASE = "            if default is None:\n                raise Halt(UNSUPPORTED)\n            arm, fields = default, ()\n"
+SITE_DISPLAY = "                raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'display'})"
+SITE_D20 = "            raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})\n"
+DEBIT = "        self.fuel -= 1\n        self.calls += 1\n"
+FUEL_STOP = "raise Halt({'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel'})"
+LATE = "        if getattr(self, 'late', None):\n            raise self.late\n"
+
+
+def before_raise(site: str, code: str) -> tuple:
+    """(site, site with `code` placed before its `raise Halt`, at that line's indent)"""
+    lines = site.split('\n')
+    at = next(i for i, line in enumerate(lines) if 'raise Halt' in line)
+    pad = lines[at][:len(lines[at]) - len(lines[at].lstrip())]
+    return site, '\n'.join([*lines[:at], *(pad + c for c in code.split('\n')), *lines[at:]])
+
+
+def spends(site: str) -> tuple:
+    return before_raise(site, 'self.debit()')
+
+
+def tests_fuel(site: str) -> tuple:
+    return before_raise(site, f'if self.fuel == 0:\n    {FUEL_STOP}')
+
+
 # Semantic mutants of the reference evaluation: each must change a golden expectation, a Book
 # value or a run control, or be refused by the rule; a crash is never a kill.
 EVALUATOR_MUTANTS = [
@@ -3632,6 +3663,57 @@ EVALUATOR_MUTANTS = [
                                     '                if tag == 0:\n                    break\n'
                                     "                message.append(m.view(parts[0], m.rep['Char'])[1][0])\n"
                                     '                cells = parts[1]\n')]),
+    # Section 6.3 (atomic_controls): a step that stops changes nothing, so a stopped run reports what it held before the refusing step.
+    # Each mutant below mutates before it refuses. It spends an entry at its refusal, which shows as one call more, or as fuel 0 at the
+    # twin that is given exactly the fuel it has spent; or it tests fuel before a refusal that no fuel test precedes, which only that twin
+    # meets; or it counts an effect or writes a byte before its check, or discards what earlier steps wrote; or it reports the refusal
+    # at the next entry, as a machine does that pops a Gather frame and goes on.
+    ('nat-range-spends-entry', [spends(SITE_NAT)]),
+    ('ill-typed-spends-entry', [spends(SITE_WORD), spends(SITE_VIEW)]),
+    ('case-request-spends-entry', [spends(SITE_CASE)]),
+    ('request-read-spends-entry', [spends(SITE_READ)]),
+    ('d20-refusal-spends-entry', [spends(SITE_D20)]),
+    ('display-refusal-spends-entry', [spends(SITE_DISPLAY)]),
+    # An Enter is refused before its debit (section 7): the existing `fuel-before-operand-check` and `fuel-test-before-request-check` fire
+    # only at fuel 0, and these two pay the debit whatever the fuel.
+    ('enter-operand-check-after-debit', [("        if kind not in takes or not takes[kind]():\n            raise Halt(ILL_TYPED)\n        self.debit()\n",
+                                          "        self.debit()\n        if kind not in takes or not takes[kind]():\n            raise Halt(ILL_TYPED)\n")]),
+    ('enter-request-target-after-debit', [("        self.read(f)\n        kind = f[0]",
+                                           "        if isinstance(f, tuple) and f[0] == 'request':\n            self.debit()\n"
+                                           "        self.read(f)\n        kind = f[0]")]),
+    ('nat-range-tests-fuel', [tests_fuel(SITE_NAT)]),
+    ('ill-typed-tests-fuel', [tests_fuel(SITE_WORD), tests_fuel(SITE_VIEW)]),
+    ('case-request-tests-fuel', [tests_fuel(SITE_CASE)]),
+    ('request-read-tests-fuel', [tests_fuel(SITE_READ)]),
+    ('d20-refusal-tests-fuel', [tests_fuel(SITE_D20)]),
+    ('display-refusal-tests-fuel', [tests_fuel(SITE_DISPLAY)]),
+    # The loop counts a host call where the call is made, after every refusal of section 10, and writes nothing of a refused String.
+    ('effect-counted-before-scalar-check', [("        self.outgoing(codes)\n        self.effects += 1              # the host call, after every refusal of section 10\n",
+                                             "        self.effects += 1\n        self.outgoing(codes)\n")]),
+    ('effect-counted-before-inspection', [("        codes = self.codes(operands[0])\n        self.prints.append(codes)\n",
+                                           "        self.effects += 1\n        codes = self.codes(operands[0])\n        self.prints.append(codes)\n"),
+                                          ("        self.effects += 1              # the host call, after every refusal of section 10\n", "")]),
+    ('effect-writes-before-scalar-check',
+     [("        self.outgoing(codes)\n",
+       "        bad = next((i for i, c in enumerate(codes) if not scalar(c)), None)\n"
+       "        if self.policy == 'vm' and bad is not None:\n            self.stdout += b''.join(map(utf8, codes[:bad]))\n"
+       "        self.outgoing(codes)\n")]),
+    # A description is written whole, after its checks: one that streams its head leaves it behind at a stop; and a word is inspected
+    # before it is charged, so the visit that a word would be is no visit when it is ill-typed.
+    ('describe-writes-header-before-stop',
+     [("        head = self.view(w, t)[0]\n", "        head = self.view(w, t)[0]\n        self.stdout += f'Evaluated\\t{t}\\t{head}\\t'.encode()\n"),
+      ("        return f'Evaluated\\t{t}\\t{head}\\t{\"\".join(out)}\\n'", "        return f'{\"\".join(out)}\\n'")]),
+    ('describe-charges-before-inspecting',
+     [("            v, u = item\n            tag, fields = self.view(v, u)\n",
+       "            v, u = item\n            if u != nat and cost[0] + 1 > DISPLAY_VISITS:\n"
+       "                raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'display'})\n            tag, fields = self.view(v, u)\n")]),
+    # A stop keeps what the completed steps wrote; and a refusal is reported by the step that makes it, not by the next entry.
+    ('stop-discards-output', [("    except Halt as h:\n        outcome = h.outcome\n    return {**outcome, 'stdout': bytes(m.stdout)",
+                               "    except Halt as h:\n        outcome = h.outcome\n        m.stdout.clear()\n    return {**outcome, 'stdout': bytes(m.stdout)")]),
+    ('nat-range-deferred', [(SITE_NAT, "            self.late = Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'NatRange'})\n            return 0"),
+                            (DEBIT, DEBIT + LATE)]),
+    ('ill-typed-deferred', [(SITE_WORD, SITE_WORD.replace('raise Halt(ILL_TYPED)', 'self.late = Halt(ILL_TYPED)\n            return 0')),
+                            (DEBIT, DEBIT + LATE)]),
 ]
 
 

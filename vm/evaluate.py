@@ -16,6 +16,12 @@ and a Book never reaches the loop. A request is never inspected: every read of a
 first and stops with `Unsupported vm effect` (section 6), except that a Case matches no row of a request,
 in either mode, so it takes its Default, and only a Case without one refuses (section 6.1, D24).
 A Python exception other than `Halt` is a harness failure, never an outcome.
+
+A stop is atomic (section 6.3). The state of this evaluation is its meters (`fuel`, `calls`), its output (`stdout`) and `effects`,
+and a refusal is decided before its step changes any of them, so a stopped run reports what it held before the refusing step; the
+one change that a stop leaves is an Enter's debit, paid before its callee runs. `prints` is the harness's record of every String
+the loop was handed, the refused one included, and is no machine state. Frames, `act` and cells do not exist here: the lockstep
+holds them (section 6.3).
 """
 from __future__ import annotations
 
