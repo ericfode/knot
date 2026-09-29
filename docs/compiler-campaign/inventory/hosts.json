@@ -645,6 +645,7 @@
           "U32.is_gt",
           "U32.is_le",
           "U32.is_lt",
+          "U32.is_ne",
           "U32.mul",
           "U32.sub",
           "U32.to_nat"
@@ -668,6 +669,7 @@
           "U32.is_gt",
           "U32.is_le",
           "U32.is_lt",
+          "U32.is_ne",
           "U32.mul",
           "U32.sub",
           "U32.to_nat"
@@ -776,7 +778,7 @@
   "knot_emitted_wasm": {
     "profile": "knot-enum-1",
     "contract": "src/CONTRACT.json",
-    "contract_sha256": "03272fef98a1f7f456350712a6530c3915c3b60d2d562259823e2ed1f85c1be1",
+    "contract_sha256": "2249d3f29ba724527ecb0c3cc779ae5f6e2f79ae40520f2f5cb1292caea651f3",
     "host": {
       "engine": "Node",
       "version": "22.22.3",
@@ -810,7 +812,8 @@
       "simd": false,
       "threads": false,
       "gc": false,
-      "gpu": false
+      "gpu": false,
+      "empty_matches": "i32.const 0 in a region with no domain-valid execution; remains inside the eight-instruction knot-enum-1 whitelist"
     },
     "gate": "tests/compiler-wasm/check.py",
     "boundary": "Native Wasm engine executes enum ordinals; no imports, linear memory, IO or GPU. This is separate from the seed-built compiler host."

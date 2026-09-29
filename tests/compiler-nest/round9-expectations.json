@@ -1,0 +1,3946 @@
+{
+  "basis": "Reviewer let-of-binder repros verbatim (11 sites in four let forms, the multi-scrutinee, default, nested and flat programs, the twins and eight fuzz hits), rebound dotted-binder probes (the modules review's three verbatim) and line-break probes (the reviewer's seven verbatim), frozen with the pinned seed before the repairs.",
+  "seed": {
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "sha256": {
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b"
+    }
+  },
+  "fixtures": [
+    {
+      "name": "fuzz-q1040",
+      "file": "tests/compiler-nest/round9-fixtures/fuzz-q1040.bend",
+      "sha256": "e422df81497b9d135f2c2188fee8bf613f0c351b959e7e006ede7f3bb3c0e202",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/fuzz-q1040.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : W{v3, _14}\nContext:\n- x   : Pair\n- v3  : C3\n- _14 : C3<> - A{}\n- z   : C3\nLocation: f\n50 |     case _:\n51>|       v4 = y\n   |            ^\n52 |       B{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "fuzz-q1062",
+      "file": "tests/compiler-nest/round9-fixtures/fuzz-q1062.bend",
+      "sha256": "98a5e3ec04248601bc44b67e7e07e211e6f9fe4965ea076c8e05c6bd1e4de45b",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/fuzz-q1062.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : C{}\nContext:\n- x : Pair\n- y : T\nLocation: f\n49 |     case v0 C{}:\n50>|       v1 = z\n   |            ^\n51 |       pick(z, z)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "fuzz-q1208",
+      "file": "tests/compiler-nest/round9-fixtures/fuzz-q1208.bend",
+      "sha256": "f4b3157d28639b1b28416a367e7a2635eab9cf3db9956a259e0af4e0bc79fdfe",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/fuzz-q1208.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nContext:\n- x : Pair\n- y : T\nLocation: f\n49 |     case B{}:\n50>|       v7 = z\n   |            ^\n51 |       z\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "fuzz-q1600",
+      "file": "tests/compiler-nest/round9-fixtures/fuzz-q1600.bend",
+      "sha256": "a9c148829e0b2a47bb6bd15381a0776a5f9681bf86027e543fd9368f389f233d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/fuzz-q1600.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : L{}\nContext:\n- x : Pair\n- z : C3\nLocation: f\n51 |         case v0:\n52>|           v1 = y\n   |                ^\n53 |           gT(v1)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "fuzz-q1671",
+      "file": "tests/compiler-nest/round9-fixtures/fuzz-q1671.bend",
+      "sha256": "8e62b23657ae728adce34a10389b327388cd5c4c049d4d8c5241223576c618ea",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/fuzz-q1671.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : W{B{}, _12}\nContext:\n- x   : Pair\n- _12 : C3<> - B{}\n- z   : C3\nLocation: f\n50 |     case _:\n51>|       v0 = y\n   |            ^\n52 |       B{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "fuzz-q1815",
+      "file": "tests/compiler-nest/round9-fixtures/fuzz-q1815.bend",
+      "sha256": "64f6ead68dae78029c3f95f47211fd243dca5dcf6a5ffa9c106e59c8cd976193",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/fuzz-q1815.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nContext:\n- x : Pair\n- y : T\nLocation: f\n49 |     case _:\n50>|       v0 = z\n   |            ^\n51 |       v1 = v0\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "fuzz-q2411",
+      "file": "tests/compiler-nest/round9-fixtures/fuzz-q2411.bend",
+      "sha256": "7e08e564575cb106aae8f4691836b425338a50e1ccbd2eb4014881db8b3a4f74",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/fuzz-q2411.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : W{C{}, A{}}\nContext:\n- v0 : T\n- z  : C3\nLocation: f\n49 |     case P{v0, B{}} W{C{}, A{}}:\n50>|       v1 = y\n   |            ^\n51 |       z\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "fuzz-q2495",
+      "file": "tests/compiler-nest/round9-fixtures/fuzz-q2495.bend",
+      "sha256": "1ac567cd02ee322963fef1efa9bb9b89086ead0fa99bb248d3db052b41ecaa30",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/fuzz-q2495.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : U{v0}\nContext:\n- x  : Pair\n- v0 : C3\n- z  : C3\nLocation: f\n51 |     case U{v0}:\n52>|       v1 = y\n   |            ^\n53 |       gT(v1)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "hd-b1-body-empty-brace-newline",
+      "file": "tests/compiler-nest/round9-fixtures/hd-b1-body-empty-brace-newline.bend",
+      "sha256": "25a5d21a6351d46d3e534a470e5726beaacc9d7b4cc512e7d35173c2f78b40b5",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/hd-b1-body-empty-brace-newline.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-b1-body-empty-brace-newline/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-b1-body-empty-brace-newline.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-b1-body-empty-brace-newline/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-b1-body-empty-brace-newline.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      },
+      "finding": "layout-stopgap"
+    },
+    {
+      "name": "hd-b2-body-open-brace-newline",
+      "file": "tests/compiler-nest/round9-fixtures/hd-b2-body-open-brace-newline.bend",
+      "sha256": "ce2d48157408d8b71f2f2ff4ff8751a634086fd96957f613762f08c48195a68e",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/hd-b2-body-open-brace-newline.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-b2-body-open-brace-newline/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-b2-body-open-brace-newline.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-b2-body-open-brace-newline/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-b2-body-open-brace-newline.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      },
+      "finding": "layout-stopgap"
+    },
+    {
+      "name": "hd-b3-body-comma-newline",
+      "file": "tests/compiler-nest/round9-fixtures/hd-b3-body-comma-newline.bend",
+      "sha256": "21ca68f8af81a4dd1a65bae5d276170f13a2c52b626b8bc329e538e1f2cf9ef4",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/hd-b3-body-comma-newline.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-b3-body-comma-newline/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-b3-body-comma-newline.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-b3-body-comma-newline/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-b3-body-comma-newline.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      },
+      "finding": "layout-stopgap"
+    },
+    {
+      "name": "hd-b4-body-top-level-ctor-newline",
+      "file": "tests/compiler-nest/round9-fixtures/hd-b4-body-top-level-ctor-newline.bend",
+      "sha256": "4d2bfc5f13936ebdb409c862cc5c9d7ea4d678cab0a1a5eff9f888f69c95eb7b",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/hd-b4-body-top-level-ctor-newline.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      },
+      "finding": "layout-stopgap"
+    },
+    {
+      "name": "hd-b5-call-args-newline",
+      "file": "tests/compiler-nest/round9-fixtures/hd-b5-call-args-newline.bend",
+      "sha256": "0137f875b482c5bcbf48539e5943df3759007b07708171f452cb04ad08ca4eb9",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/hd-b5-call-args-newline.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-b5-call-args-newline/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-b5-call-args-newline.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-b5-call-args-newline/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-b5-call-args-newline.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      },
+      "finding": "layout-stopgap"
+    },
+    {
+      "name": "hd-h15-ctr-body-newline",
+      "file": "tests/compiler-nest/round9-fixtures/hd-h15-ctr-body-newline.bend",
+      "sha256": "a36abcef9e77c2a7dd1c5b772ecb825fb5c6ce83e3debe38840b92453f552803",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/hd-h15-ctr-body-newline.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      },
+      "finding": "layout-stopgap"
+    },
+    {
+      "name": "hd-h25-two-cases-one-line",
+      "file": "tests/compiler-nest/round9-fixtures/hd-h25-two-cases-one-line.bend",
+      "sha256": "fe7fc1e4fd6e5b60d8cf16f517dcc98044d7efcfdb0fad4ac023f9f3d0019623",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/hd-h25-two-cases-one-line.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-h25-two-cases-one-line/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-h25-two-cases-one-line.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/hd-h25-two-cases-one-line/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/hd-h25-two-cases-one-line.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tsame-line-arm\t"
+      },
+      "finding": "layout-stopgap"
+    },
+    {
+      "name": "letm-annotated",
+      "file": "tests/compiler-nest/round9-fixtures/letm-annotated.bend",
+      "sha256": "a9e1e9cf873c2154976f20887dd58c10422b2de9a609f260402fe13fcd5732c6",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-annotated.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-annotated/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-annotated.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-annotated/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-annotated.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-annotated/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-annotated.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-annotated/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-annotated.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-annotated/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-annotated.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letm-default",
+      "file": "tests/compiler-nest/round9-fixtures/letm-default.bend",
+      "sha256": "ab3c71448be4bd9b7dda218766df9a06bab0798ba5047cadba89153696a74884",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-default.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nContext:\n- y : C3<> - A{}\nLocation: f\n 9 |     case _ B{}:\n10>|       v = z\n   |           ^\n11 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letm-flat",
+      "file": "tests/compiler-nest/round9-fixtures/letm-flat.bend",
+      "sha256": "9d90aa194f9b442f2b20416a100084aee89a70f7b66515391c8fb4b1ff2ff3d5",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-flat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n7 |     case A{}:\n8>|       v = z\n  |           ^\n9 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letm-flatfield",
+      "file": "tests/compiler-nest/round9-fixtures/letm-flatfield.bend",
+      "sha256": "15c0fee20dc88efddb169d97723d8fa3141cf718ef7800c018d391c6886f3f0d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-flatfield.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : K{c}\nContext:\n- c : C3\nLocation: f\n14 |     case K{c}:\n15>|       v = x\n   |           ^\n16 |       g(v)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letm-flatunused",
+      "file": "tests/compiler-nest/round9-fixtures/letm-flatunused.bend",
+      "sha256": "d18c8ce13bdf6a2b576b35451fc3f32783a4b36ce1f9791c69969dce9d6dcf53",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-flatunused.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n7 |     case A{}:\n8>|       v = z\n  |           ^\n9 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letm-literal",
+      "file": "tests/compiler-nest/round9-fixtures/letm-literal.bend",
+      "sha256": "5ca5dd5dfa33238977fc3101caaee4c589181dd0790ae85dce0eea48e9b6eb23",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-literal.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nContext:\n- z : C3\nLocation: f\n5 | def f(z: C3) -> C3:\n6>|   v = A{}\n  |       ^^^\n7 |   v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "literal-control"
+    },
+    {
+      "name": "letm-multi",
+      "file": "tests/compiler-nest/round9-fixtures/letm-multi.bend",
+      "sha256": "8ba7eec67a9b3d96ec2a6207eeb3f2fffa84ad2eeeeb9facaeef70f88b763e5b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-multi.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n7 |     case A{} A{}:\n8>|       v = z\n  |           ^\n9 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letm-nested",
+      "file": "tests/compiler-nest/round9-fixtures/letm-nested.bend",
+      "sha256": "ad25ee471147b247ac7e9f1aae1374dbcc9f785de081ceaf34a056a50769bc10",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-nested.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : K{A{}}\nLocation: f\n14 |     case K{A{}}:\n15>|       v = x\n   |           ^\n16 |       g(v)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letm-wildrow",
+      "file": "tests/compiler-nest/round9-fixtures/letm-wildrow.bend",
+      "sha256": "3faa6ee9c9b9925420c0c8afa7e6f540c3e8846302a6a0d44dcbfe04e9bc8925",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letm-wildrow.bend"
+        ],
+        "exit": 0,
+        "stdout": "B{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-wildrow/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-wildrow.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-wildrow/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-wildrow.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-wildrow/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-wildrow.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-wildrow/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-wildrow.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letm-wildrow/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letm-wildrow.B{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-default-col-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-default-col-annot.bend",
+      "sha256": "5cdc6c97ff1ff676f5f1a77188bef4576b326153d18287fddce9213f3060b92a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-default-col-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            2
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-A-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-B-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            0
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-C-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            1
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-C-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            2
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/f-C-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-col-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-col-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-default-col-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-default-col-erased.bend",
+      "sha256": "92900b2ae83fe9e0ebe85997007cd1149bf0749c598eae448151cd20347e5ced",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-default-col-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nContext:\n- y : C3\nLocation: f\n19 |     case B{} _:\n20>|       -v = z\n   |            ^\n21 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-default-col-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-default-col-plain.bend",
+      "sha256": "8368aa5d7be0f411613d32f3f63711f3436a16cb62f11bcf6e00dc20b5a003a1",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-default-col-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nContext:\n- y : C3\nLocation: f\n19 |     case B{} _:\n20>|       v = z\n   |           ^\n21 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-default-col-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-default-col-promo.bend",
+      "sha256": "0411cd772548dde069e9a7b6f7f9664893cb1469161515a0c375f83a946dd6ad",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-default-col-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nContext:\n- y : C3\nLocation: f\n19 |     case B{} _:\n20>|       +v = z\n   |            ^\n21 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-default-resid-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-default-resid-annot.bend",
+      "sha256": "b4c4813f68b718469e088573c954ba0a807df94ea354cd500d5b65400e5db5d2",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-default-resid-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            2
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-A-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            2
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-B-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            0
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-C-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            1
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-C-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            2
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/f-C-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-default-resid-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-default-resid-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-default-resid-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-default-resid-erased.bend",
+      "sha256": "e0e62377ccf0b584c5203ac6a6993a8dab942f7b4c0853ff470d1d822ec9d674",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-default-resid-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n19 |     case _ B{}:\n20>|       -v = z\n   |            ^\n21 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-default-resid-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-default-resid-plain.bend",
+      "sha256": "778784b6df7cb797668348b8094731d5aa6162b2576f3192b5c6ae4d249d82d4",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-default-resid-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n19 |     case _ B{}:\n20>|       v = z\n   |           ^\n21 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-default-resid-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-default-resid-promo.bend",
+      "sha256": "4c84a65967959edf9b5f6503e532bc0c37688b3da33de56be33d2cd5d88a4ace",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-default-resid-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n19 |     case _ B{}:\n20>|       +v = z\n   |            ^\n21 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-flat-param-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-flat-param-annot.bend",
+      "sha256": "63d16964786be3863e312694b9b74db1a1686505d4723b23b57d5e15891ab0b1",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-flat-param-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-A-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-B-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-C-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-C-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/f-C-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-flat-param-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-flat-param-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-flat-param-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-flat-param-erased.bend",
+      "sha256": "da9fcfd8a53b06c53ecd11a2899efade49ed8fae976cd343efb538e93af9dd0b",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-flat-param-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nContext:\n- y : C3\nLocation: f\n18 |     case A{}:\n19>|       -v = z\n   |            ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-flat-param-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-flat-param-plain.bend",
+      "sha256": "5c73b646e388e127f6b359f1517fc521316367c84aa4f11b9a6225174495d6a5",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-flat-param-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nContext:\n- y : C3\nLocation: f\n18 |     case A{}:\n19>|       v = z\n   |           ^\n20 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-flat-param-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-flat-param-promo.bend",
+      "sha256": "2c95fe91963134586aa128dfeadbd20e1750cf7a4e3e56cfa0ec0ff987b795c6",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-flat-param-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nContext:\n- y : C3\nLocation: f\n18 |     case A{}:\n19>|       +v = z\n   |            ^\n20 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-inline-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-inline-annot.bend",
+      "sha256": "d09ea917dd83bb0654309024ceaf59075c7a8f0ed47a77f919bd71267f0b21b0",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-inline-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-inline-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-inline-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-inline-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-inline-erased.bend",
+      "sha256": "a8e39058e278844f9ebe66274aac6abcb34a85d7622793e3eed9b4da3cc6d245",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-inline-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n20 |         case A{}:\n21>|           -v = c\n   |                ^\n22 |           A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-inline-outer-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-inline-outer-annot.bend",
+      "sha256": "3cb54973376a5c51d4ffe4cef47cc7f9bf04dd827fd19bec4690831862102516",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-inline-outer-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-inline-outer-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-inline-outer-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-inline-outer-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-inline-outer-erased.bend",
+      "sha256": "b00445e0340ab32971d6592fecd3e382e65b85bb16ae8c7585315ea3c89ca2fd",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-inline-outer-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : K{A{}}\nLocation: f\n20 |         case A{}:\n21>|           -v = x\n   |                ^\n22 |           A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-inline-outer-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-inline-outer-plain.bend",
+      "sha256": "5303d324962eea1a6b93b87a2ee8f025dce178b8d166ad1d11e7b00ea6790e5f",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-inline-outer-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : K{A{}}\nLocation: f\n20 |         case A{}:\n21>|           v = x\n   |               ^\n22 |           g(v)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-inline-outer-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-inline-outer-promo.bend",
+      "sha256": "c66823ca3bcef4d3865512b3a0d24e5cea687cf4312563e3333926c15beaf6a6",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-inline-outer-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : K{A{}}\nLocation: f\n20 |         case A{}:\n21>|           +v = x\n   |                ^\n22 |           g(v)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-inline-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-inline-plain.bend",
+      "sha256": "d08f61b5533274b8a703f3f50e9e3698df3fcd5ab185244c363a3afa1ce04549",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-inline-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n20 |         case A{}:\n21>|           v = c\n   |               ^\n22 |           v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-inline-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-inline-promo.bend",
+      "sha256": "b433e7261aa54e116919d2eb52c8ba6557d450bb41a3b0ca6053b0827b777c8e",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-inline-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n20 |         case A{}:\n21>|           +v = c\n   |                ^\n22 |           v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-multi-col1-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.bend",
+      "sha256": "8b946aab9ed4e4dc87a4782b694f681e7d7b739ea270904d09bc9c3a2dd1d122",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-A-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-B-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-C-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-C-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/f-C-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col1-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col1-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-multi-col1-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-multi-col1-erased.bend",
+      "sha256": "a80732f8ae6d02e607c7da3f158bb478ed451dbc5349f9c7dfb193af6445ce98",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-multi-col1-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nContext:\n- y : C3\nLocation: f\n18 |     case A{} _:\n19>|       -v = z\n   |            ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-multi-col1-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-multi-col1-plain.bend",
+      "sha256": "9d7327c6c77987eb6639c38457a2d034b2aa5d293a3f9b7ec0e9589dd3ea4f86",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-multi-col1-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nContext:\n- y : C3\nLocation: f\n18 |     case A{} _:\n19>|       v = z\n   |           ^\n20 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-multi-col1-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-multi-col1-promo.bend",
+      "sha256": "3ba1b20a192867ce24e01243a9b5b9964c7b7ee4e62334424b4bf9bd24a995c0",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-multi-col1-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nContext:\n- y : C3\nLocation: f\n18 |     case A{} _:\n19>|       +v = z\n   |            ^\n20 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-multi-col2-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.bend",
+      "sha256": "d9800ed0009e08975f488e7beae80f8791451a61a8d17280ac354eefb7c8b722",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-A-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-B-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-C-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-C-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/f-C-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-multi-col2-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-multi-col2-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-multi-col2-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-multi-col2-erased.bend",
+      "sha256": "58e9d0163abe373c37182a9dfefdf4c8aac970fa02e1fbb92b625ad656ec4032",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-multi-col2-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nLocation: f\n18 |     case A{} B{}:\n19>|       -v = z\n   |            ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-multi-col2-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-multi-col2-plain.bend",
+      "sha256": "0bc4a597acccace7ce8284775b85eb5cea5358064e2b2a6d343152a81acde552",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-multi-col2-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nLocation: f\n18 |     case A{} B{}:\n19>|       v = z\n   |           ^\n20 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-multi-col2-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-multi-col2-promo.bend",
+      "sha256": "83b49bd35070e51dbd78ab49da2b971f6eea07fd3d1f91510c990434ebc8559e",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-multi-col2-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : B{}\nLocation: f\n18 |     case A{} B{}:\n19>|       +v = z\n   |            ^\n20 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-field-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-field-annot.bend",
+      "sha256": "e9c5fcde6826db33287ecda36c6d8f80d121a83f68adb868545f5316c32cf9c7",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-field-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-nested-field-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-nested-field-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-nested-field-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-field-erased.bend",
+      "sha256": "e4996338cfea41860f1d02bb0b4f8369472c6fa660eb94fd9e1da481aba862dd",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-field-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : T{A{}, K{B{}}}\nLocation: f\n18 |     case T{A{}, K{B{}}}:\n19>|       -v = x\n   |            ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-field-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-field-plain.bend",
+      "sha256": "3392d68af107caef35e26faf1e54e45f363b6613dc0fed2d600b798f4d1102b8",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-field-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : T{A{}, K{B{}}}\nLocation: f\n18 |     case T{A{}, K{B{}}}:\n19>|       v = x\n   |           ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-field-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-field-promo.bend",
+      "sha256": "9a50174ff3711e089a50febe46dd2ee056fb70370fc8fd155fe2301abb2c8a1d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-field-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : T{A{}, K{B{}}}\nLocation: f\n18 |     case T{A{}, K{B{}}}:\n19>|       +v = x\n   |            ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-inner-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-inner-annot.bend",
+      "sha256": "7750285213b7f707592e9301e0f4a834cfacaf02b5d5ccd59a2e7e42e7fdeb6c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-inner-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-nested-inner-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-nested-inner-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-nested-inner-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-inner-erased.bend",
+      "sha256": "f6c62a15276617b5676aeef0d0cf844a90d9745bd3d3f2a80930df45a24427f4",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-inner-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : T{A{}, K{b}}\nContext:\n- b : C3\nLocation: f\n18 |     case T{A{}, K{b}}:\n19>|       -v = x\n   |            ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-inner-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-inner-plain.bend",
+      "sha256": "1375e8253a03604da8ea951d2196e248d73f1e8e08028363a0f003657dec7d2b",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-inner-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : T{A{}, K{b}}\nContext:\n- b : C3\nLocation: f\n18 |     case T{A{}, K{b}}:\n19>|       v = x\n   |           ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-inner-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-inner-promo.bend",
+      "sha256": "a00d98cf6bc101cb6275248cedd1d0d6e76bb4b42c7de94e0f4449cba0640b06",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-inner-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : T{A{}, K{b}}\nContext:\n- b : C3\nLocation: f\n18 |     case T{A{}, K{b}}:\n19>|       +v = x\n   |            ^\n20 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-sub-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-sub-annot.bend",
+      "sha256": "62c99de7914f875ff23d958ab89c4b69e05b7d94e4a069a1d4fd869474a84c39",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-sub-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-nested-sub-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-nested-sub-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-nested-sub-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-sub-erased.bend",
+      "sha256": "07e5399dbbb43d6e61ddd40820fc171a29eb82c4db083329909eae7b14c10b41",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-sub-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : K{_10}\nContext:\n- _10 : C3<> - B{}\nLocation: f\n19 |     case T{a, k}:\n20>|       -v = k\n   |            ^\n21 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-sub-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-sub-plain.bend",
+      "sha256": "19cedb5b4313783107dcfe6876f35b6db694267dd3e5dd5445e79dd5b30bdace",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-sub-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : K{_12}\nContext:\n- _12 : C3<> - B{}\nLocation: f\n19 |     case T{a, k}:\n20>|       v = k\n   |           ^\n21 |       g(v)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-nested-sub-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-nested-sub-promo.bend",
+      "sha256": "4efeb3638045ef6e8959af7c8608382fc64cc4866bdf9ec4e19eb82bb6cb72ef",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-nested-sub-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : K{_12}\nContext:\n- _12 : C3<> - B{}\nLocation: f\n19 |     case T{a, k}:\n20>|       +v = k\n   |            ^\n21 |       g(v)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-var-row-alias-annot",
+      "file": "tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.bend",
+      "sha256": "faae19e622ac3914e307034e59a26750e021e9640d0e86223c0df8fbc3f53275",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            2
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-A-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            2
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-B-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            0
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-C-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            1
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-C-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            2,
+            2
+          ],
+          "type_id": 0,
+          "tag": 2,
+          "result": "C",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/f-C-C.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.C{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/letx-var-row-alias-annot/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/letx-var-row-alias-annot.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "letx-var-row-alias-erased",
+      "file": "tests/compiler-nest/round9-fixtures/letx-var-row-alias-erased.bend",
+      "sha256": "595ac14d34a2ff169dbe322e81ec4bc460e959862c7f1333085a5bba37fd32c7",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-var-row-alias-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n19 |     case w B{}:\n20>|       -v = w\n   |            ^\n21 |       A{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-var-row-alias-plain",
+      "file": "tests/compiler-nest/round9-fixtures/letx-var-row-alias-plain.bend",
+      "sha256": "9ca49531c26ebf21d9545fba05438538e8291108a48ce90094bdce86dacf7d1a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-var-row-alias-plain.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n19 |     case w B{}:\n20>|       v = w\n   |           ^\n21 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "letx-var-row-alias-promo",
+      "file": "tests/compiler-nest/round9-fixtures/letx-var-row-alias-promo.bend",
+      "sha256": "301f4dba0558a988b9e1b6a2f6ea9d7cbbbd9cf40872cd0cc0868e7d636d8a65",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/letx-var-row-alias-promo.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : A{}\nLocation: f\n19 |     case w B{}:\n20>|       +v = w\n   |            ^\n21 |       v\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "rebound-erased-let",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-erased-let.bend",
+      "sha256": "51f18087d647b1418de12917dba2e12f3fc016bd72f1b5a8d46b01169bde9622",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-erased-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-erased-let/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-erased-let.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-field",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-field.bend",
+      "sha256": "c5a85788fced34e421927d0b0976d73fc1a4592ba3d35446a008cfc25cc0621d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-field.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-field/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-field.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-let",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-let.bend",
+      "sha256": "4681b8fbb456f5ac40a3b45b9cfe1b2bcd31af62b9b8ee359c4ac338306d994f",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-let/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-let.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-multi",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-multi.bend",
+      "sha256": "2eaa93bf637cb9690c86c9b5366e5246d13f8f247eb1bc8a4975762161291fd9",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-multi.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-multi/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-multi.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-nested",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-nested.bend",
+      "sha256": "c60599ea15299932a47a592f931f55fcffa424e1949087626ff8c9b5e61ea5f9",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-nested.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-nested/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-nested.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-promotion",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-promotion.bend",
+      "sha256": "9bf1019a4b31cb2f432852453ad3e2f8452ecc7d923b70fc496121607fa70378",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-promotion.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-promotion/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-promotion.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-row",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-row.bend",
+      "sha256": "f7b07f26cf4980000b51a8823de374e19cc6edda47378a0659821b00c0bdf0d3",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-row/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-row.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-typed-let",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-typed-let.bend",
+      "sha256": "2037044e87286c515be4cc90a851b2d69dcfa6207d962f4da251f448908cce0c",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-typed-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-typed-let/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-typed-let.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "twin-call-rebuilt",
+      "file": "tests/compiler-nest/round9-fixtures/twin-call-rebuilt.bend",
+      "sha256": "8f1f2741a51fab954446af152fda1706fa4f56e9f65f77abe08777cd09113f3c",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/twin-call-rebuilt.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "g",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-call-rebuilt/g-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-call-rebuilt.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-call-rebuilt/g-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-call-rebuilt.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-call-rebuilt/f-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-call-rebuilt.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-call-rebuilt/f-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-call-rebuilt.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-call-rebuilt/f-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-call-rebuilt.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-call-rebuilt/f-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-call-rebuilt.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-call-rebuilt/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-call-rebuilt.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "twin-field-unsplit",
+      "file": "tests/compiler-nest/round9-fixtures/twin-field-unsplit.bend",
+      "sha256": "c57dcb64b17d10710a6051f4208c633cec2e7d49190928b1f6092f2357bf3892",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/twin-field-unsplit.bend"
+        ],
+        "exit": 0,
+        "stdout": "A{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-field-unsplit/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-field-unsplit.A{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "twin-later-param",
+      "file": "tests/compiler-nest/round9-fixtures/twin-later-param.bend",
+      "sha256": "66591c3a52b7f53f05e03d6826ab957962d398cd6f58563d9f2ee82ab4d50f7e",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/twin-later-param.bend"
+        ],
+        "exit": 0,
+        "stdout": "B{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "A",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/f-A-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.A{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/f-A-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/f-A-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/f-A-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/f-B-A-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/f-B-A-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/f-B-B-A.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/f-B-B-B.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.B{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-later-param/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-later-param.B{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    },
+    {
+      "name": "twin-nested-field-binder",
+      "file": "tests/compiler-nest/round9-fixtures/twin-nested-field-binder.bend",
+      "sha256": "b16908c1742d0227bd258fe683cc7420d085f55c0e02567a8acf8d87fbc97d8d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/twin-nested-field-binder.bend"
+        ],
+        "exit": 0,
+        "stdout": "B{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "B",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/twin-nested-field-binder/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/twin-nested-field-binder.B{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "inferable-control"
+    }
+  ]
+}

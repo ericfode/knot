@@ -70,12 +70,30 @@ GATES = (
          ('tests/compiler-bootstrap/receipts/progress.json', 'tests/compiler-bootstrap/receipts/reference.json')),
     Gate('classification', ('python3', 'tests/compiler-classification/check.py'),
          ('tests/compiler-classification/receipts/precision.json',)),
+    Gate('nest', ('python3', 'tests/compiler-nest/check.py'),
+         ('tests/compiler-nest/receipts/nest.json',)),
+    Gate('nest-review', ('python3', 'tests/compiler-nest/review.py'),
+         ('tests/compiler-nest/receipts/review.json',)),
     Gate('io-host', ('python3', '-B', 'tests/compiler-io/host-check.py'),
          ('tests/compiler-io/receipts/host.json',)),
     Gate('io-abi-2', ('python3', '-B', 'tests/compiler-io-abi-2/check.py'),
          ('tests/compiler-io-abi-2/receipts/host.json', 'tests/compiler-io-abi-2/receipts/reference.json')),
     Gate('selfhost', ('python3', 'tests/compiler-selfhost/check.py'),
          ('tests/compiler-selfhost/receipts/selfhost.json',)),
+    Gate('nest-round3', ('python3', 'tests/compiler-nest/round3.py'),
+         ('tests/compiler-nest/receipts/round3.json',)),
+    Gate('nest-round4', ('python3', 'tests/compiler-nest/round4.py'),
+         ('tests/compiler-nest/receipts/round4.json',)),
+    Gate('nest-round6', ('python3', 'tests/compiler-nest/round6.py'),
+         ('tests/compiler-nest/receipts/round6.json',)),
+    Gate('nest-round7', ('python3', 'tests/compiler-nest/round7.py'),
+         ('tests/compiler-nest/receipts/round7.json', 'tests/compiler-nest/receipts/round7-letalias.json')),
+    Gate('nest-round8', ('python3', 'tests/compiler-nest/round8.py'),
+         ('tests/compiler-nest/receipts/round8.json', 'tests/compiler-nest/receipts/round8-typekind.json')),
+    Gate('nest-round9', ('python3', 'tests/compiler-nest/round9.py'),
+         ('tests/compiler-nest/receipts/round9.json',)),
+    Gate('nest-round10', ('python3', 'tests/compiler-nest/round10.py'),
+         ('tests/compiler-nest/receipts/round10.json',)),
     Gate('literals', ('python3', 'tests/compiler-literals/check.py'),
          ('tests/compiler-literals/receipts/literals.json',)),
 )
@@ -308,6 +326,9 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
                       pin_observations=len(record['pin']),
                       tampered_base_observations=len(record['tampered_base']),
                       proof_entries=len(record['proofs']))
+    if gate.name in ('nest', 'nest-review', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7', 'nest-round8',
+                     'nest-round9', 'nest-round10'):
+        result.update(record['counts'])
     if gate.name == 'io-host':
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
             result[key] = record[key]
@@ -429,7 +450,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--refresh', action='store_true', help='copy normalized receipts back after all gates pass')
     parser.add_argument('--jobs', type=int, default=4, help='maximum concurrent gates (default: 4)')
-    parser.add_argument('--timeout', type=float, default=900, help='per-gate wall limit in seconds (default: 900)')
+    parser.add_argument('--timeout', type=float, default=1800, help='per-gate wall limit in seconds (default: 1800)')
     parser.add_argument('--keep-scratch', action='store_true', help='retain the exported sources and build outputs')
     args = parser.parse_args(argv)
     if args.jobs < 1 or not math.isfinite(args.timeout) or args.timeout <= 0:

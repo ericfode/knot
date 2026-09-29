@@ -31,3 +31,9 @@ law field_capability_is_not_acceptance:
   for tail: List<&2,C.Parameter>
   for rest: List<&2,C.Constructor>
   {K.enum_constructors(Con{C.Constructor{token,Con{head,tail}},rest}) == Fail{S.Unsupported{"check","constructor-fields",S.at(token)}} : Result<S.Error,Unit>}
+
+# An empty datatype is a valid catalog entry; no source value inhabits it.
+law empty_datatype:
+  for +name: S.Token
+  for +data: Bool
+  {G.datatype(Nil{},name,data) == Done{C.Datatype{name,data,Nil{}}} : Result<S.Error,C.Datatype>}

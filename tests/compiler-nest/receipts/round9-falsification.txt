@@ -1,0 +1,64 @@
+# Round-9 law falsification and mutant characterization (nest review round 9)
+# Base: e7a9d7e. Each mutation is one replacement in a copy of src/ (or two, where noted).
+# Law check: bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts <copy>/<entry>, the entry in brackets.
+# The seed stops at the first failing term, and each mutation is chosen so that term is the named law.
+
+drop-value-row (check.bend): falsified check-LAWS.refined_value_needs_annotation  [check-PROOF.bend]
+drop-construct-row (check.bend): falsified check-LAWS.refined_construct_needs_annotation  [check-PROOF.bend]
+reject-reference (check.bend): falsified check-LAWS.unrefined_binder_is_inferable  [check-PROOF.bend]
+reject-annotated-value (check.bend): falsified check-LAWS.annotation_admits_constructor  [check-PROOF.bend]
+refine-nothing-at-a-branch (scope.bend): falsified matrix-LAWS.refined_flat_let_witness  [matrix-PROOF.bend]
+run-matrix-branch-unrefined (check.bend): falsified matrix-LAWS.refined_matrix_let_witness  [matrix-PROOF.bend]
+refine-residual-as-value (scope.bend): falsified matrix-LAWS.residual_let_witness  [matrix-PROOF.bend]
+ignore-annotation (check.bend): falsified matrix-LAWS.annotated_let_witness  [matrix-PROOF.bend]
+dotted-pattern-as-invalid (parse.bend): falsified LAWS.dotted_pattern_binder  [PROOF.bend]
+dotted-promotion-as-invalid (parse.bend): falsified LAWS.dotted_promotion_binder  [PROOF.bend]
+dotted-let-as-invalid (parse.bend): falsified LAWS.dotted_let_binder  [PROOF.bend]
+dotted-let-as-invalid (without dotted_let_binder) (parse.bend, LAWS.bend, PROOF.bend): falsified LAWS.dotted_typed_let_binder  [PROOF.bend]
+line-break-in-arguments-as-invalid (parse.bend): falsified LAWS.line_break_in_arguments  [PROOF.bend]
+line-break-after-element-as-invalid (parse.bend): falsified LAWS.line_break_after_element  [PROOF.bend]
+same-line-arm-as-invalid (parse.bend): falsified LAWS.same_line_arm  [PROOF.bend]
+body-does-not-end-at-line-break (parse.bend): falsified LAWS.body_ends_at_line_break  [PROOF.bend]
+every-name-unsupported (parse.bend): falsified LAWS.unnamed_binder_is_invalid  [PROOF.bend]
+  (dotted-let-as-invalid and its "without dotted_let_binder" twin share one code site: the second copy also
+   deletes dotted_let_binder and its fill, so the seed reaches dotted_typed_let_binder.)
+
+# Behaviour of the gate mutations on the 80 frozen fixtures and the 3,000-program fuzz generator
+# (native checker built from the mutated copy; wrong = fixtures whose reviewed outcome changes;
+#  the unmutated checker reports 0 wrong fixtures, 0 false acceptances and 0 false Invalid)
+ignore-refinement (check.bend): witness letm-multi
+  wrong fixtures (47): fuzz-q1040, fuzz-q1062, fuzz-q1208, fuzz-q1600, fuzz-q1671, fuzz-q1815, fuzz-q2411, fuzz-q2495, letm-default, letm-flat, letm-flatfield, letm-flatunused, letm-multi, letm-nested, letx-default-col-erased, letx-default-col-plain, letx-default-col-promo, letx-default-resid-erased, letx-default-resid-plain, letx-default-resid-promo, letx-flat-param-erased, letx-flat-param-plain, letx-flat-param-promo, letx-inline-erased, letx-inline-outer-erased, letx-inline-outer-plain, letx-inline-outer-promo, letx-inline-plain, letx-inline-promo, letx-multi-col1-erased, letx-multi-col1-plain, letx-multi-col1-promo, letx-multi-col2-erased, letx-multi-col2-plain, letx-multi-col2-promo, letx-nested-field-erased, letx-nested-field-plain, letx-nested-field-promo, letx-nested-inner-erased, letx-nested-inner-plain, letx-nested-inner-promo, letx-nested-sub-erased, letx-nested-sub-plain, letx-nested-sub-promo, letx-var-row-alias-erased, letx-var-row-alias-plain, letx-var-row-alias-promo
+  generator: knot {'Invalid': 2375, 'Accepted': 276, 'Unsupported': 349}, false acceptances 36, false Invalid 0
+ignore-refined-value (check.bend): witness letm-flat
+  wrong fixtures (29): fuzz-q1062, fuzz-q1208, fuzz-q1600, fuzz-q1815, letm-default, letm-flat, letm-flatunused, letm-multi, letx-default-col-erased, letx-default-col-plain, letx-default-col-promo, letx-default-resid-erased, letx-default-resid-plain, letx-default-resid-promo, letx-flat-param-erased, letx-flat-param-plain, letx-flat-param-promo, letx-inline-erased, letx-inline-plain, letx-inline-promo, letx-multi-col1-erased, letx-multi-col1-plain, letx-multi-col1-promo, letx-multi-col2-erased, letx-multi-col2-plain, letx-multi-col2-promo, letx-var-row-alias-erased, letx-var-row-alias-plain, letx-var-row-alias-promo
+  generator: knot {'Invalid': 2383, 'Accepted': 268, 'Unsupported': 349}, false acceptances 28, false Invalid 0
+ignore-refined-constructor (check.bend): witness letm-flatfield
+  wrong fixtures (18): fuzz-q1040, fuzz-q1671, fuzz-q2411, fuzz-q2495, letm-flatfield, letm-nested, letx-inline-outer-erased, letx-inline-outer-plain, letx-inline-outer-promo, letx-nested-field-erased, letx-nested-field-plain, letx-nested-field-promo, letx-nested-inner-erased, letx-nested-inner-plain, letx-nested-inner-promo, letx-nested-sub-erased, letx-nested-sub-plain, letx-nested-sub-promo
+  generator: knot {'Invalid': 2403, 'Accepted': 248, 'Unsupported': 349}, false acceptances 8, false Invalid 0
+infer-annotated-let (check.bend): witness letx-flat-param-annot
+  wrong fixtures (9): letm-annotated, letx-default-col-annot, letx-default-resid-annot, letx-flat-param-annot, letx-inline-annot, letx-multi-col1-annot, letx-multi-col2-annot, letx-var-row-alias-annot, twin-call-rebuilt
+  generator: knot {'Invalid': 2441, 'Accepted': 210, 'Unsupported': 349}, false acceptances 0, false Invalid 30
+refine-residual-binder (scope.bend): witness letm-wildrow
+  wrong fixtures (1): letm-wildrow
+  generator: knot {'Invalid': 2407, 'Accepted': 244, 'Unsupported': 349}, false acceptances 7, false Invalid 3
+refine-unsplit-field (patterns.bend): witness twin-field-unsplit
+  wrong fixtures (27): fuzz-q1040, fuzz-q1671, fuzz-q2411, fuzz-q2495, letm-nested, letx-inline-annot, letx-inline-erased, letx-inline-outer-annot, letx-inline-outer-erased, letx-inline-outer-plain, letx-inline-outer-promo, letx-inline-plain, letx-inline-promo, letx-nested-field-annot, letx-nested-field-erased, letx-nested-field-plain, letx-nested-field-promo, letx-nested-inner-annot, letx-nested-inner-erased, letx-nested-inner-plain, letx-nested-inner-promo, letx-nested-sub-annot, letx-nested-sub-erased, letx-nested-sub-plain, letx-nested-sub-promo, twin-field-unsplit, twin-nested-field-binder
+  generator: knot {'Invalid': 2449, 'Accepted': 202, 'Unsupported': 349}, false acceptances 0, false Invalid 38
+rebound-pattern-invalid (parse.bend): witness rebound-field
+  wrong fixtures (4): rebound-field, rebound-multi, rebound-nested, rebound-row
+  generator: knot {'Invalid': 2669, 'Accepted': 240, 'Unsupported': 91}, false acceptances 0, false Invalid 0
+rebound-promotion-invalid (parse.bend): witness rebound-promotion
+  wrong fixtures (1): rebound-promotion
+  generator: knot {'Invalid': 2502, 'Accepted': 240, 'Unsupported': 258}, false acceptances 0, false Invalid 0
+rebound-let-invalid (parse.bend): witness rebound-let
+  wrong fixtures (2): rebound-let, rebound-typed-let
+  generator: knot {'Invalid': 2411, 'Accepted': 240, 'Unsupported': 349}, false acceptances 0, false Invalid 0
+list-break-invalid-in-arguments (parse.bend): witness hd-b2-body-open-brace-newline
+  wrong fixtures (5): hd-b1-body-empty-brace-newline, hd-b2-body-open-brace-newline, hd-b3-body-comma-newline, hd-b4-body-top-level-ctor-newline, hd-h15-ctr-body-newline
+  generator: knot {'Invalid': 2411, 'Accepted': 240, 'Unsupported': 349}, false acceptances 0, false Invalid 0
+list-break-invalid-after-element (parse.bend): witness hd-b5-call-args-newline
+  wrong fixtures (1): hd-b5-call-args-newline
+  generator: knot {'Invalid': 2411, 'Accepted': 240, 'Unsupported': 349}, false acceptances 0, false Invalid 0
+same-line-arm-invalid (parse.bend): witness hd-h25-two-cases-one-line
+  wrong fixtures (1): hd-h25-two-cases-one-line
+  generator: knot {'Invalid': 2411, 'Accepted': 240, 'Unsupported': 349}, false acceptances 0, false Invalid 0

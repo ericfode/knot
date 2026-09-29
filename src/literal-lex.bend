@@ -10,11 +10,12 @@ def quoted_mode(mode: L.Mode) -> Bool:
     case L.Comment{}: False{}
     case _: True{}
 
-def flush(state: L.State) -> L.State:
+def flush(state: L.State) -> Result<S.Error,L.State>:
   match state:
     case L.State{+off,line,col,L.Word{start,first_line,first_col,rev},tokens}:
-      L.State{off,line,col,L.Space{},Con{S.Token{String.reverse(rev),S.At{start,off,first_line,first_col}},tokens}}
-    case _: state
+      S.bind(S.Token,L.State,L.lexeme(String.reverse(rev),S.At{start,off,first_line,first_col}),token =>
+        Done{L.State{off,line,col,L.Space{},Con{token,tokens}}})
+    case _: Done{state}
 
 def advance(raw: String, state: L.State) -> L.State:
   match raw state:
@@ -34,12 +35,13 @@ def accepted(value: Q.Quoted, +state: L.State, +fuel: Nat,
     case Q.Quoted{text,rest,+raw} L.State{+off,line,col,mode,tokens}:
       +size = String.length(raw)
       S.choose(Result<S.Error,List<&2,S.Token>>,Bool.and(Nat.is_le(size,fuel),Nat.is_le(size,U32.to_nat(U32.sub(65536,off)))),u =>
-        next(Nat.sub(fuel,size),rest,emit(raw,advance(raw,flush(state)),state)),u =>
+        S.bind(L.State,List<&2,S.Token>,flush(state),flushed =>
+          next(Nat.sub(fuel,size),rest,emit(raw,advance(raw,flushed),state))),u =>
         Fail{S.Exhausted{"lex",S.At{off,off,line,col}}})
 
 def scan(fuel: Nat, +budget: Nat, input: String, +state: L.State) -> Result<S.Error,List<&2,S.Token>>:
   match fuel input state:
-    case _ SNil{} _: Q.floats(L.finish(state))
+    case _ SNil{} _: S.bind(List<&2,S.Token>,List<&2,S.Token>,L.finish(state),tokens => Q.floats(tokens))
     case 0n _ L.State{+off,line,col,mode,tokens}:
       Fail{S.Exhausted{"lex",S.At{off,off,line,col}}}
     case 1n+ +n SCon{+c,+tail} L.State{+off,+line,+col,mode,tokens}:

@@ -253,6 +253,7 @@ def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound:
     case 1n+ +n S.Sequence{Con{+head,+tail}}:
       then(walk_in(n,head,position,names,bound,ctors),h => binders =>
         then(walk_in(n,S.Sequence{tail},position,following(position,head,names),bound,ctors),t => more => prepend(h,binders,t,more)))
+    case 1n+ n _: Fail{S.Internal{"load","lowering-node"}}
 
 def walk(fuel: Nat, node: S.Node, position: Position, names: Names, bound: List<&2,String>) -> Result<S.Error,Qualified>:
   walk_in(fuel,node,position,names,bound,Nil{})

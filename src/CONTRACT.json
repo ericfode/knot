@@ -100,7 +100,8 @@
     "simd": false,
     "threads": false,
     "gc": false,
-    "gpu": false
+    "gpu": false,
+    "empty_matches": "i32.const 0 in a region with no domain-valid execution; remains inside the eight-instruction knot-enum-1 whitelist"
   },
   "exit_codes": {
     "success": 0,
@@ -126,7 +127,6 @@
   "trust_inventory": "research/compiler-wasm/TRUST.md",
   "later_milestones": [
     "owned field storage and reclamation (R3/R7)",
-    "recursive Wasm lowering",
     "broader recursion beyond first-parameter field descent",
     "GPU source lowering",
     "full self-hosting"
@@ -137,10 +137,12 @@
     "evidence": "tests/compiler-recursion/receipts/recursion.json",
     "checker": true,
     "independent_evaluator": true,
-    "wasm": false,
-    "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0; matches propagate descendant levels.",
+    "wasm": true,
+    "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0, or a rebuilt Value/Construct that denotes one (its refinement unfolded layer by layer: same types, tags and field levels in order); matches propagate descendant levels.",
+    "contract_note": "This rule supersedes two sentences of tests/compiler-recursion/SPEC.md: that reconstructed constructors do not satisfy the rule, and that reconstruction of a strict descendant does not qualify once its checked term is no longer a Reference. Since nest round 4 (3a35051) a rebuilt Value/Construct that denotes a strict descendant qualifies; rebuilt parents and rebuilt non-descendants still report Unsupported check recursive-call. The recursion SPEC belongs to another increment and is unamended here; the amendment is left to the coordinator and the campaign/descent-2 integration.",
     "other_self_calls": "Unsupported check recursive-call",
-    "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call."
+    "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call.",
+    "wasm_evidence": "tests/compiler-nest/receipts/nest.json"
   },
   "structural_terms": {
     "profile": "knot-structural-terms-1",
@@ -150,10 +152,11 @@
     "independent_evaluator": true,
     "wasm": false,
     "owned_heap": false,
-    "patterns": "flat constructors with plain or + field binders",
+    "patterns": "ordered binary first-match matrices over multiple scrutinees, wildcard/variable rows and nested constructors; optional comma separators; plain/+ binders share lexical identities; _ is anonymous; all-variable columns on the latest let binder alias without inspection; erased fields stay erased",
     "observation": "Live-field projection, declaration order; erased fields omitted",
     "inspection_work": 4096,
-    "inspection_characters": 65536
+    "inspection_characters": 65536,
+    "matrix_steps_per_source_match": 4096
   },
   "fields_wasm": {
     "profile": "knot-fields-wasm-1",
@@ -190,7 +193,7 @@
       "maximum_pages": 1,
       "bytes": 65536,
       "initial_bump": 0,
-      "guard": "unsigned size > 65536 - bump; only unreachable in the profile",
+      "guard": "unsigned size > 65536 - bump; the only unreachable in the profile",
       "allocation": "Arguments saved before allocation; stores after bounded pointer advance",
       "lifetime": "Instance lifetime; immutable initialized cells; no free, reset, growth or reclamation"
     },
@@ -222,7 +225,7 @@
       "unreachable"
     ],
     "imports": [],
-    "recursion": false,
+    "recursion": "first-parameter structural descent, including nested pattern fields",
     "owned_storage_reclamation": false,
     "unmet_runtime_requirements": [
       "R3",
@@ -232,7 +235,51 @@
     "frozen_expectations": "tests/compiler-fields-wasm/expectations.json",
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
-    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py",
+    "additional_evidence": "tests/compiler-nest/receipts/nest.json",
+    "empty_matches": "i32.const 0; no domain-valid execution reaches the empty branch"
+  },
+  "pattern_matrix": {
+    "module": "src/matrix.bend",
+    "contract": "tests/compiler-nest/SPEC.md",
+    "evidence": "tests/compiler-nest/receipts/nest.json",
+    "proof": "src/matrix-PROOF.bend",
+    "lowering_law": "src/lowering-LAWS.bend::irrefutable_first_row_selected, filled in src/lowering-PROOF.bend and imported by the matrix proof entry",
+    "frozen_expectations": "tests/compiler-nest/expectations.json",
+    "core": "Binary Decision with live Remainder scopes, checked then coalesced into exhaustive core Case; Matrix, Decision, Remainder and Alias never enter runtime core",
+    "bounds": "4096 residual-matrix visits per expanded source match, including leaves and empty remainders; Expansion threads the unused total through both branches without division. Each separately reached source match starts a new budget; checker/expansion depth and lexical-level limits remain.",
+    "unmet": [
+      "rec-swapped-args: Unsupported check recursive-call, frozen Invalid expectation unchanged",
+      "rec-alias: Unsupported check recursive-call, frozen Invalid expectation unchanged",
+      "General law: every exhaustive matrix lowers without a missing branch (only helper laws and exhaustive_matrix_witness are proved; open obligation, D21)",
+      "General law in its total form: a matrix whose first row is irrefutable lowers to that row's body (only its partial-correctness part is proved; open obligation, D21). The total form is false at the fixed 4096-visit quota: the frozen control tests/compiler-nest/controls/matrix-work.bend (13 columns, first row all _, body On{}; the seed prints On{}) reports Exhausted check budget, because column_step splits on any constructor head even when the first row is irrefutable (T(n+1)=2+2T(n), 24,574 visits). It is dischargeable only relative to sufficient work, or once expansion stops splitting a matrix whose first row is irrefutable, a change to that frozen control that needs coordinator review"
+    ],
+    "defaults": "The negative branch excludes one constructor and retains the live unrefined lexical binding. A variable row is checked even when its remainder is empty. A missing arm is dead code only when a live binder outside the pending suffix of the match frontier (which starts at the scrutinee) has an empty constructor set: an emptied residual or a zero-constructor datatype. Dead code never bypasses body checking.",
+    "names": "Names are words joined by dots (Invalid lex name otherwise). A dotted pattern or live let binder repeats a parameter of the same function and is otherwise Invalid parse pattern-binder or binding-name, and an erased let's name is a name however it is spelled (src/LAWS.bend::dotted_binder_needs_a_parameter, dotted_binder_repeats_a_parameter, dotted_reference_binds_nothing, erased_dotted_let_binds_a_name, live_dotted_let_needs_a_parameter, unnamed_binder_is_invalid). Match and case headers join lines up to their colon. A constructor's { must touch its name in patterns and bodies (Invalid parse detached-brace otherwise); joined header tokens keep their offsets, so a line break never bridges that gap.",
+    "unsupported": "A new source match on a residual binding reports Unsupported check default-scrutinee until source-level residual constructor sets are carried through nested matches. A second case arm on an arm's line reports Unsupported parse same-line-arm; the seed accepts it, and it refines a former Invalid parse outcome (src/LAWS.bend::same_line_arm, body_ends_at_line_break). Arguments separated by whitespace alone (`two(a b)`, `Pr{a b}`; a name, or in a pattern a marking `+`, after an argument) report Unsupported parse argument-whitespace, a spaced `+` after an argument in a body operator (the seed reads `a ++ b` as a concatenation), a promotion of a promotion (`++y`, `+ +y`, `++u = x`) repeated-promotion, and a line break in a let before its `=` or between its marker and its name line-break; the seed accepts them all (src/LAWS.bend::spaced_plus_after_argument). Line breaks around the items of a list, after `case`, `match` and a let's `=`, and arm bodies at any column follow the seed (src/LAWS.bend::list_across_lines, arm_across_lines, cases_right_of_parent); an arm body that starts with `case` or `def` at or below its case's column reports Invalid parse body-indentation (src/LAWS.bend::keyword_is_no_arm_body). An unindented def body (the frontend gate pins it Invalid, though the seed accepts it) and an untyped let split before its `=` (top-level-indentation) keep open D4 gaps. A literal in a row of several columns reports Unsupported check literal-column.",
+    "review_evidence": "tests/compiler-nest/receipts/review.json",
+    "review_fixtures": "tests/compiler-nest/review-expectations.json",
+    "round3_evidence": "tests/compiler-nest/receipts/round3.json",
+    "round3_fixtures": "tests/compiler-nest/round3-expectations.json",
+    "round4_evidence": "tests/compiler-nest/receipts/round4.json",
+    "round4_fixtures": "tests/compiler-nest/round4-expectations.json",
+    "round6_evidence": "tests/compiler-nest/receipts/round6.json",
+    "round6_fixtures": "tests/compiler-nest/round6-expectations.json",
+    "round7_evidence": "tests/compiler-nest/receipts/round7.json",
+    "round7_fixtures": "tests/compiler-nest/round7-expectations.json",
+    "promotion": "A + row makes a lambda-case binder (a parameter or field) reusable with every alias of its level; a let binder and its aliases keep the let's declared quantity under any row (src/matrix-LAWS.bend::parameter_alias_promotes, let_alias_keeps_quantity). A + mark may raise a frontier binder past its type's kind; as in the seed, the kind is judged only where the match frontier binds the binder: leaving it undestructured, ahead of a later matched binder (flat match, matrix split or zero-row match) or at a body that is not a match, a let included (src/patterns.bend::advance and close; src/matrix-LAWS.bend::destructured_promotion_is_unbound, later_match_binds_promotion, leaf_binds_promotion). A promoted Type-kind binder destructured first is never bound; its fields carry the promoted quantity.",
+    "let_inference": "An unannotated let infers its value, and a checked Value or Construct term has no inferred type: a binder that a positive branch refined to a constructor, flat or in a matrix, through an alias, a nested field level or an enclosing match, needs an annotation (Invalid check annotation-required, as a literal constructor does). A residual or default-row binder, a field never split, a later parameter, a call and an annotated let stay inferable (src/check.bend::expected; src/check-LAWS.bend::refined_value_needs_annotation, refined_construct_needs_annotation, unrefined_binder_is_inferable, annotation_admits_constructor; src/matrix-LAWS.bend::refined_flat_let_witness, refined_matrix_let_witness, residual_let_witness, annotated_let_witness).",
+    "glue": "The seed reads `+` and `-` as a marker only where a name follows directly, and a return arrow as the literal `->` (src/syntax.bend::marks; src/parse.bend::promotes). After a term in a pattern row a `+` that does not touch its binder ends the row (Invalid parse expected-:), so `a + b` is rejected while `a +b`, a promotion that starts a row or follows a comma, and one inside fields stay accepted. After a let, a marker apart from its name is Invalid parse detached-marker; first in a body, and in a parameter list, it may be spaced (src/LAWS.bend::marks_witness, detached_plus, detached_marker, first_marker). A split arrow is Invalid parse function-result (src/LAWS.bend::split_arrow).",
+    "open_obligations": [
+      "Irrefutable first row (D21): unproved general law in its total form, which includes that the lowering succeeds; the partial-correctness part is proved by src/lowering-LAWS.bend::irrefutable_first_row_selected; witnessed by irrefutable_lowering_witness, irrefutable_first_row_witness, the first-match, wildcard and variable fixtures and the 3,000-program seed fuzz. Counterexample to the total form at the implemented quota: the frozen control matrix-work (a 13-column matrix whose first row is 13 _ with body On{}, accepted by the seed with On{}) exhausts the fixed 4096-visit quota (Exhausted check budget), because expansion splits on a constructor head in any row even when the first row is irrefutable (24,574 visits). The control's Exhausted is Knot's cost model applied to a seed-accepted program (a D4 resource limit, not an Invalid). So the total obligation holds only relative to sufficient work (a quota at least the expansion's visits) and stays undischargeable as stated until expansion selects an irrefutable first row without splitting, which changes the frozen control and needs coordinator review",
+      "Exhaustive matrix (D21): unproved general law that an exhaustive matrix lowers to a tree with no missing branch; witnessed by exhaustive_matrix_witness, the remainder helper laws, the multi, nested, rec-nested and empty fixtures and the 3,000-program seed fuzz"
+    ],
+    "round8_evidence": "tests/compiler-nest/receipts/round8.json",
+    "round8_fixtures": "tests/compiler-nest/round8-expectations.json",
+    "round9_evidence": "tests/compiler-nest/receipts/round9.json",
+    "round9_fixtures": "tests/compiler-nest/round9-expectations.json",
+    "round10_evidence": "tests/compiler-nest/receipts/round10.json",
+    "round10_fixtures": "tests/compiler-nest/round10-expectations.json"
   },
   "module_loading": {
     "profile": "knot-modules-1",

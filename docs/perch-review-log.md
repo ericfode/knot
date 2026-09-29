@@ -1095,6 +1095,24 @@ merging context manifests, retaining bounded selected mechanisms and interface
 collaborators. The full manifest then has zero offline structural blockers;
 this is not a live semantic/style verdict.
 
+## 2026-09-27 — nest review round 2: default regions and profile coverage
+
+Confirmed: the first nest gate missed affine reuse in unrefined defaults and
+unresolved bodies after an empty remainder; its nested-alias mutant exercised
+a different region. It also omitted the enum instruction whitelist for its own
+new modules. The branch's divided quota rejected linear-size matches, and two
+checked ground witnesses had general-law names. See the
+[round-2 packet](../tests/compiler-nest/receipts/LAW_REVIEW.md) and
+[dispositions](../tests/compiler-nest/receipts/REVIEW-2.md).
+
+Prevention: freeze positive and ill-formed bodies in positive, default and empty
+remainder regions; apply each selected profile's whitelist to every added module;
+pair expansion-resource negatives with deep/wide linear controls; distinguish
+quantified laws from normalization witnesses by name and recorded obligations.
+The repair gate adds the reviewer fixtures, seven semantic mutants and a fixed
+3,000-program seed comparison. Earlier failures remain evidence. Offline
+preflight reports context blockers; no provider result or style pass is claimed.
+
 ## 2026-09-27 — IO host review 2: sandbox aliases, empty effects and oracle faults
 
 The coordinator's three confirmed findings against `6051e37` are repaired;
@@ -1298,3 +1316,249 @@ before writing the ground instance, and if the counter is a machine word,
 carry it as a Nat where a law must range over it. A draft rule could flag a
 `law` whose statement fixes a numeral that a neighbouring comment or SPEC
 sentence generalizes; none is added here.
+
+## 2026-09-28 — nest review round 3: binder grammar, ordered empty binders, header layout
+
+Confirmed: the round-2 matrix paths accepted dotted pattern binders the seed
+rejects, and the lexer accepted malformed names (`x.`, `a..b`, `a.1`) that the
+seed rejects everywhere. Missing arms under a live empty-typed binder became
+Invalid where the seed's check-efq accepts them, in multi-column, flat and field
+positions. Line-broken match and case headers became Invalid. See the
+[round-3 dispositions](../tests/compiler-nest/receipts/REVIEW-3.md).
+
+Prevention: derive name and binder rules from the seed's lexeme and pattern
+grammar, including the positions where it keeps dotted names (parameters,
+fields, erased lets). Model dead code by the seed's context order, which is the
+match frontier, not lexical level: a level-order rule accepts
+`f(p: P2, v: V)` with a missing arm on a field of `p`, which the seed rejects.
+Give the fuzzer atoms for every lexical and typing edge the change touches;
+the round-3 corpus reproduces all three defects on the pre-fix compiler
+(76 false acceptances, 32 false Invalid) and none after the repair.
+
+## 2026-09-28 — nest review round 4: dead split helpers, rebuilt-descendant recursion
+
+Confirmed:
+- The round-2 binary split left the round-1 n-ary helpers (`has_default`,
+  `signature`) and three laws over them in place. The laws were cited as
+  exhaustiveness evidence for a split that no longer calls them.
+- A recursive call on a variable-row field binder was Unsupported after an
+  earlier row nested into that field. The checker rebuilds a matched binder
+  from its fields, and the first-parameter descent rule accepted only a
+  reference. The seed accepts these calls; its comparison is structural.
+
+See the [round-4 dispositions](../tests/compiler-nest/receipts/REVIEW-4.md).
+
+Prevention:
+- When an algorithm is replaced, remove the superseded helpers and their laws
+  in the same change. Grep each law's subject for live callers before citing
+  the law as evidence.
+- When a lowering changes how a binder is represented (a reference against a
+  rebuilt constructor), rerun every rule that inspects checked terms. The
+  descent rule is one of them. Freeze a recursive fixture for each path by
+  which a variable row can reach its body: through the negative branch (a
+  reference) and through a positive branch (a rebuild).
+
+## 2026-09-28 — nest review round 5: general matrix laws left as ground witnesses
+
+Confirmed:
+- Two of the three requested matrix laws were proved only as ground
+  normalizations over one Flag catalog. The gap was disclosed, but it carried
+  over from round 1 through round 4.
+
+See the [round-5 dispositions](../tests/compiler-nest/receipts/REVIEW-5.md).
+The irrefutable-first-row law is now general
+(`src/lowering-LAWS.bend::irrefutable_first_row_selected`); the exhaustive law
+remains unmet, and its typing obstacle is recorded.
+
+Prevention:
+- Attempt a requested general law before substituting a witness. The general
+  proof needed three Bend idioms.
+  - A Data-kinded invariant (`Sigma<&2,&2,...>`, or a record type indexed by
+    values) lets a proof serve both branches of a split; `A & B` is affine.
+  - Continuations are passed explicitly to generic bind lemmas, because a
+    match cannot scrutinize a computed value.
+  - The induction hypothesis is passed as a function when the proof would
+    otherwise need mutually recursive definitions.
+- When a law's proof grows a module past the 48 KB composition bound, give it
+  its own LAWS/PROOF pair and manifest group. Import that pair from the gated
+  proof entry, so the existing gate still checks it.
+
+## 2026-09-28 — nest review round 6: detached constructor brace accepted
+
+Confirmed:
+- Knot accepted a space, comment or line break between a constructor name and
+  its `{`, which the seed rejects in patterns and bodies. The flat, body and
+  outer-pattern forms were already accepted on main. The round-3 header join
+  turned the line-break form into a regression and carried the gap into
+  nested and multi-scrutinee rows, which main had reported Unsupported. The
+  round-5 probes observed the defect, but REVIEW-5.md did not disposition it.
+
+See the [round-6 dispositions](../tests/compiler-nest/receipts/REVIEW-6.md).
+One offset predicate (`S.touches`) closes every position; the header join keeps
+offsets, so it can no longer bridge the gap.
+
+Prevention:
+- Before a change that joins, drops or reorders layout tokens lands, freeze
+  seed controls across the joined boundary for each token pair: pairs whose
+  spacing the seed distinguishes (a name and its `{`) and pairs whose spacing
+  it ignores (`f (x)`, `+ v`).
+- Adjacency is a property of offsets, not of neighbouring tokens. State it as
+  a predicate over spans, so that a later token rewrite cannot erase it.
+- Give each layout-sensitive token pair a spaced, commented and line-broken
+  fuzz atom, and disposition every probe observation in the round's report,
+  including observations outside the round's finding.
+
+## 2026-09-28 — nest review round 7: a `+` row made an affine let reusable
+
+Confirmed:
+- A `+` row on an alias of an affine let binder raised the let to reusable, so
+  `k = a; match k: case +y: both(y, y)` checked and ran where the seed reports
+  `consumed more than once`. `eb15da8` admitted the latest let as a
+  variable-only column, and that path reached a quantity rule written for
+  parameters. The same promotion also turned a `+` row on a let of a
+  `Type`-kind value into a false `Invalid check reusable-type`.
+
+See the [round-7 dispositions](../tests/compiler-nest/receipts/REVIEW-7.md).
+`alias_bound`, the quantity site both promotion paths reach, now passes a row's
+mark only to a lambda-case binder; `let_alias_keeps_quantity` and
+`parameter_alias_promotes` state the rule from both sides.
+
+Prevention:
+- When a change admits a new binder kind to an existing rule (here a let
+  binder to the variable-column alias path), state a law for that kind at the
+  rule's quantity or identity site in the same commit, with a companion law
+  for the old kind so an over-correction also fails.
+- Give each new binder kind a small seeded generator over its quantity and
+  row marks (the reviewer's let/alias generator found 63 programs in 1,500)
+  and run it against the parent commit to confirm it bites.
+- Freeze a `Type`-kind companion for every quantity rule: the reusable-kind
+  check is a second observable of the same promotion.
+
+## 2026-09-28 — nest review round 8: a `+` binder's kind was judged too early
+
+Confirmed:
+- A `+` row on a `Type`-kind binder that is destructured before any variable
+  use reported `Invalid check reusable-type`, while the seed accepts: a D4
+  false Invalid. It was present from the implementation commit `57a0c01`
+  through every review round, and round 7 froze the seed-rejected side (t2)
+  without its destructured twin. The seed judges the kind only where its
+  `match_flatten` turns a pending binder into a lambda. Knot judged it at the
+  promotion and at a field's binding.
+
+See the [round-8 dispositions](../tests/compiler-nest/receipts/REVIEW-8.md).
+The kind is now judged where the match frontier binds the binder: ahead of a
+matched level (`P.advance`) or at a leaf (`P.close`). Five whole-checker
+witnesses pin the binding sites.
+
+Prevention:
+- When a check mirrors a seed judgement, locate the seed's judgement site
+  first (here `match_flatten`'s `Lam` formation), and state the Knot rule at
+  the same site. Do not state it at the nearest convenient one.
+- Freeze each seed-rejected control with its seed-accepted twin that differs
+  by one step. `case +y: y` needs `case +y: match y: ...` beside it.
+- Draw kinds in the seeded generators: a `Data`-only generator (round 7's
+  let/alias) cannot see a kind rule.
+- A law's style interface is its whole statement, so a law that calls a
+  shared helper such as `token` enters that helper's caller context in full.
+  The round's first witnesses spelled raw tokens and overflowed the
+  perch-context budget for `token` (one extra commit). Build ground programs
+  from small named definitions, and run `tests/perch-context/check.py` before
+  committing new laws.
+
+## 2026-09-28 — nest review round 9: a let of a refined binder was accepted
+
+Confirmed:
+- An unannotated let of a binder that a positive branch had refined to a
+  constructor (`match z: case A{}: v = z; v`) was Checked, flat and in a
+  matrix, while the seed rejects it ("an annotated term (cannot infer)"): an
+  unsound acceptance. The flat form was already on main. The seed substitutes a
+  matched binder by its constructor term and has no inference rule for one;
+  Knot rejected only a literal constructor. The reviewer's fuzz found eight
+  programs in 3,534.
+- Commit `2ae8dca3` over-corrected: it rejected every dotted binder as
+  Invalid, but the seed accepts one that rebinds a name in scope, so seven
+  programs were a D4 false Invalid. A stopgap now reports every dotted binder
+  as Unsupported until the modules round brings the scope-aware rule.
+- Seven main-era probes with a line break inside call or constructor arguments,
+  or a second arm on an arm's line, were Invalid parse; they are Unsupported now.
+
+See the [round-9 dispositions](../tests/compiler-nest/receipts/REVIEW-9.md).
+`expected` rejects a checked `Value` or `Construct` when no annotation gives
+the type, which covers the literal and the refined binder with one rule.
+
+Prevention:
+- The fuzz generator drew a binder only as a bare body term or a scrutinee,
+  so a let of a matched binder was outside its vocabulary in every round.
+  When a rule names a syntactic position (a let's value), give the generator
+  that position for each binder kind (scrutinee, parameter, pattern binder)
+  and each form, and run it against the parent commit to see it bite: the
+  extended generator reports 36 false acceptances against `93579bb`.
+- State the term a rule depends on, not the surface form. The refinement
+  elaborates to a constructor term, so the rule belongs where a checked term
+  meets a missing annotation, not at each binder use.
+- When a change turns a false accept into a rejection (`2ae8dca3`), freeze the
+  seed-accepted twin in the same commit, as round 3 froze seed-rejected
+  controls. The twin of a dotted binder is the rebound one.
+- A round's SPEC is the Perch task text of the pattern-matrix groups. A
+  2.6 KB paragraph pushed the context of `src/matrix-LAWS.bend::flag` past the
+  60,000-byte state bound, which the perch-context gate found. Keep the SPEC
+  addition to what a reader needs (about 700 bytes) and put the evidence in
+  the round's review record. About 300 bytes of headroom remain.
+- Measure a classification change against the neighbouring gates before
+  widening it. The first line-break repair also closed all five of the
+  selfhost suite's reviewed D4 gaps and left four of its twenty judge controls
+  with nothing to run on. Confining it to the requested body arguments
+  restored all twenty.
+
+## 2026-09-28 — nest review round 10: a detached `+` between row columns was accepted
+
+Confirmed:
+- A `+` after a term in a pattern row that does not touch its binder
+  (`case a + b:`) was read as another column; the seed reads it as an infix
+  operator, so `a + b` is one term with too few patterns, and rejects it. The
+  same operator loop rejects a spaced marker after a let (`+ u : F = ..`), and
+  a return arrow split as `- >` is rejected too. Knot Checked, compiled and ran
+  all three: 57 of the 60 frozen seed-rejected programs, and 14 more in the
+  reviewer's edit grids. The first is branch-introduced (main stopped at
+  Unsupported match-scrutinees for multi-column rows, and the branch parses
+  through them); the other two were on main.
+- The same parse now reached seven main-era whitespace shapes (arguments
+  separated by whitespace, `++y`, a let split across lines, an arm body at its
+  case column) that the seed accepts and Knot reported Invalid: a D4 regression
+  in multi-scrutinee matches. They are Unsupported now.
+- The nest gates ignored KNOT_GATE_TIMEOUT_SCALE, so two failed with a harness
+  timeout under load 50 to 80.
+
+See the [round-10 dispositions](../tests/compiler-nest/receipts/REVIEW-10.md).
+
+Prevention:
+- State an adjacency rule once, for every token pair the seed reads as a unit,
+  and grep the parser for each. Round 6 froze `{` glued to a constructor name;
+  the same reading of `+`, `-` and `->` (`S.marks`, `S.touches`) waited for the
+  reviewer's one-character edit grids. `starts(tokens,"+")` and two separate
+  `-` and `>` tokens were the places it hid. Run such a grid as a gate: the
+  extended fuzz now reports 68 false acceptances against `5ef36ae6`.
+- A generator's atoms and separators must include the spaced form of every
+  glued token: `+ v` at a non-first column and ` + ` between columns were
+  outside the vocabulary in every round.
+- A rule that lives in one dispatcher and is re-tested in the next (Arms, then
+  RowTail) leaves the first test unobservable: its mutant cannot be killed.
+  Gate the mutant that can, and say so.
+- Edits to a registered gate script or to the runner stale
+  `docs/compiler-campaign/inventory/accepted.json` (it records their hashes):
+  run `census --check` before every commit that touches one, not only after the
+  last source edit. It failed the first full run of the round.
+- A mutant that edits a shared predicate changes all its users: the round-6
+  `touch-past-one` shifted `touches`, which now also decides the arrow, so it
+  dies at every def header. Prefer mutants at a call site, and re-run the older
+  mutants after widening a shared helper.
+- Put a classification's test where the rule lives. The first line-break
+  stopgap sat in `term_failure`, which every parse failure reaches, and moved
+  two round-3 mutant outcomes; in a helper for the let's `=` it moved none.
+- A context-bounded law group is a design constraint. Laws over positions with a
+  hypothesis and a cong proof cost two to three times a ground witness;
+  frontend-laws stands at 47,916 of 48,000 bytes and the five stopgap sites got
+  no laws. The next parser round needs a law file of its own.
+- Every gate that rebuilds lanes per mutant scales with the mutant count:
+  `nest-round10` takes 13 minutes under campaign load and 4 unloaded, so the
+  runner's per-gate limit is now 1,800 s.

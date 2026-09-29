@@ -1,0 +1,1939 @@
+{
+  "basis": "Reviewer repros verbatim, further gap positions and seed-accepted spacing controls, frozen with the pinned seed before the repair.",
+  "seed": {
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "sha256": {
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b"
+    }
+  },
+  "fixtures": [
+    {
+      "name": "gap-argument",
+      "file": "tests/compiler-nest/round6-fixtures/gap-argument.bend",
+      "sha256": "14922c6c6605fa8d69dfd3bc2608f65b9a8be50d9fdadae13108ebb201e722e7",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/gap-argument.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 | def main() -> Flag:\n 9>|   id(On {})\n   |          ^\n10 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "gap-constructor-argument",
+      "file": "tests/compiler-nest/round6-fixtures/gap-constructor-argument.bend",
+      "sha256": "99d17768a24e4f5801ea57492034ac516449ebf67ebe7e65b8e8b375e3ae0dce",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/gap-constructor-argument.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n12 | def main() -> Flag:\n13>|   first(P{On {}, Off{}})\n   |               ^\n14 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "gap-let",
+      "file": "tests/compiler-nest/round6-fixtures/gap-let.bend",
+      "sha256": "0ca1f20ffcea26b7b1d25e796bc69124d5b727d4f8a0b7514b72419b18a116bf",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/gap-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n5 | def main() -> Flag:\n6>|   x : Flag = On {}\n  |                  ^\n7 |   x\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "gap-multi-comment-nested",
+      "file": "tests/compiler-nest/round6-fixtures/gap-multi-comment-nested.bend",
+      "sha256": "8758a361b9e5292906003aff076c5525f1063ba0f60bfeaa93a1e0ce28c29462",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/gap-multi-comment-nested.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n10 |     case P{x, On # c\n11>|       {}} v: v\n   |        ^\n12 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "joined-line"
+    },
+    {
+      "name": "gap-nested-newline",
+      "file": "tests/compiler-nest/round6-fixtures/gap-nested-newline.bend",
+      "sha256": "9f3050a7134f83adcfc90f7c2597773e1f6518987f883eee40d1db85f23843b2",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/gap-nested-newline.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n10 |     case P{On\n11>|       {}, y}: y\n   |        ^\n12 |     case P{x, y}: x\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "joined-line"
+    },
+    {
+      "name": "k1-header-newline-brace",
+      "file": "tests/compiler-nest/round6-fixtures/k1-header-newline-brace.bend",
+      "sha256": "7ab76e7a8a4675c20a2b7edc41d4370a5e877f466c453c475e1a9a261a17bc5a",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/k1-header-newline-brace.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 |     case On\n 9>|       {} v: v\n   |        ^\n10 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "joined-line"
+    },
+    {
+      "name": "k2-comment-between-name-brace",
+      "file": "tests/compiler-nest/round6-fixtures/k2-comment-between-name-brace.bend",
+      "sha256": "19213b64d5c2488103fd3b6a4aaf180f4427ee39175a7a5feec6b899155b9dea",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/k2-comment-between-name-brace.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 |     case On # c\n 9>|       {} v: v\n   |        ^\n10 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "joined-line"
+    },
+    {
+      "name": "k3-tab-before-brace",
+      "file": "tests/compiler-nest/round6-fixtures/k3-tab-before-brace.bend",
+      "sha256": "0248b3955948cda79dd5c0a3e7b50c692b6c424d912a928e4fe0ebaee7e571ab",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/k3-tab-before-brace.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n7 |   match x y:\n8>|     case On\t{} v: v\n  |            \t ^\n9 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tlex\twhitespace\t"
+      },
+      "finding": "tab"
+    },
+    {
+      "name": "touch-body-inner-space",
+      "file": "tests/compiler-nest/round6-fixtures/touch-body-inner-space.bend",
+      "sha256": "2559d07b12bfcbfe93ea80e0f2fdea8392b60a1422c475ef7ff7eef793056479",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/touch-body-inner-space.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-body-inner-space/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-body-inner-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-body-inner-space/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-body-inner-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-body-inner-space/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-body-inner-space.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "touch-brace-newline",
+      "file": "tests/compiler-nest/round6-fixtures/touch-brace-newline.bend",
+      "sha256": "f0ddfd0164baed58bfc52f17069d84f7696ffe0682572b52a1674d9e3cf4c964",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/touch-brace-newline.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "g",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-brace-newline/g-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-brace-newline.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-brace-newline/g-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-brace-newline.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-brace-newline/g-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-brace-newline.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-brace-newline/g-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-brace-newline.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-brace-newline/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-brace-newline.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "touch-declaration-space",
+      "file": "tests/compiler-nest/round6-fixtures/touch-declaration-space.bend",
+      "sha256": "4d4118322da9ff39fcc230daa3f04674fec096f05777ba47712a4cb2b87e8959",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/touch-declaration-space.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-declaration-space/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-declaration-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-declaration-space/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-declaration-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-declaration-space/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-declaration-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-declaration-space/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-declaration-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-declaration-space/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-declaration-space.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "touch-inner-newline",
+      "file": "tests/compiler-nest/round6-fixtures/touch-inner-newline.bend",
+      "sha256": "3cf14119655424460edfd1f78f42a5a34def2e4a4608e56fcfb4912353c4692c",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/touch-inner-newline.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-inner-newline/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-inner-newline.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-inner-newline/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-inner-newline.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-inner-newline/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-inner-newline.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "touch-inner-space-row",
+      "file": "tests/compiler-nest/round6-fixtures/touch-inner-space-row.bend",
+      "sha256": "a21251e89f8811de218d4c5b2dd1070d7a286034d0699c9266227e695bfcadf5",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/touch-inner-space-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-inner-space-row/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-inner-space-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-inner-space-row/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-inner-space-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-inner-space-row/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-inner-space-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-inner-space-row/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-inner-space-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-inner-space-row/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-inner-space-row.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "touch-multi-next-line",
+      "file": "tests/compiler-nest/round6-fixtures/touch-multi-next-line.bend",
+      "sha256": "8467a8bfef8575ea47dc1d53a13b5d0269a63c3ca394fbab30f0b1a3996083dc",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/touch-multi-next-line.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-multi-next-line/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-multi-next-line.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-multi-next-line/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-multi-next-line.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-multi-next-line/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-multi-next-line.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-multi-next-line/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-multi-next-line.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-multi-next-line/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-multi-next-line.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "touch-pattern-inner-space",
+      "file": "tests/compiler-nest/round6-fixtures/touch-pattern-inner-space.bend",
+      "sha256": "70bcc5fe647bce7e9e98eed1e5bb92abfd91cd4e49b292071a93c0d19b01c532",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/touch-pattern-inner-space.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-pattern-inner-space/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-pattern-inner-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-pattern-inner-space/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-pattern-inner-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/touch-pattern-inner-space/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/touch-pattern-inner-space.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "v1-call-space",
+      "file": "tests/compiler-nest/round6-fixtures/v1-call-space.bend",
+      "sha256": "9dde1e6508e8f0f13bb9e483a08a1b4be9afa325d92a54402eddd0c61ed94865",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/v1-call-space.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "not",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v1-call-space/not-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v1-call-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "not",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v1-call-space/not-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v1-call-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v1-call-space/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v1-call-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v1-call-space/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v1-call-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v1-call-space/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v1-call-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v1-call-space/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v1-call-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v1-call-space/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v1-call-space.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "v2-promo-space",
+      "file": "tests/compiler-nest/round6-fixtures/v2-promo-space.bend",
+      "sha256": "98d9c4d9d5d8587505020692f8c0d619f8104b4a9b605b25948ada2564c96295",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/v2-promo-space.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "not",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v2-promo-space/not-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v2-promo-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "not",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v2-promo-space/not-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v2-promo-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v2-promo-space/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v2-promo-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v2-promo-space/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v2-promo-space.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v2-promo-space/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v2-promo-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v2-promo-space/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v2-promo-space.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v2-promo-space/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v2-promo-space.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "v3-call-space-in-row",
+      "file": "tests/compiler-nest/round6-fixtures/v3-call-space-in-row.bend",
+      "sha256": "bdb504219a7bb7ea24003e150cfdae4cc12ae30bd651ef26c2ce983250c85577",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/v3-call-space-in-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "not",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v3-call-space-in-row/not-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v3-call-space-in-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "not",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v3-call-space-in-row/not-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v3-call-space-in-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v3-call-space-in-row/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v3-call-space-in-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v3-call-space-in-row/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v3-call-space-in-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v3-call-space-in-row/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v3-call-space-in-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v3-call-space-in-row/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v3-call-space-in-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/v3-call-space-in-row/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/v3-call-space-in-row.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "w1-flat-space",
+      "file": "tests/compiler-nest/round6-fixtures/w1-flat-space.bend",
+      "sha256": "f64d3b716b0b41ad5df36e43eccda25dacd7b3732171aba5078a6dd0524dab10",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/w1-flat-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 9 |   match x:\n10>|     case On {}: Off{}\n   |              ^\n11 |     case Off{}: On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "w2-flat-newline",
+      "file": "tests/compiler-nest/round6-fixtures/w2-flat-newline.bend",
+      "sha256": "2b6a5bd93db7d7fabf0076338f8dcf7849ef2f9b4ff460d949948b31cb47c959",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/w2-flat-newline.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n10 |     case On\n11>|       {}: Off{}\n   |        ^\n12 |     case Off{}: On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "joined-line"
+    },
+    {
+      "name": "w3-nested-space",
+      "file": "tests/compiler-nest/round6-fixtures/w3-nested-space.bend",
+      "sha256": "46a50896be1145f55ff3e985c84b8eab12f100440c8835c73977af4abb835fdd",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/w3-nested-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 9 |   match p:\n10>|     case P{On {}, y}: y\n   |                ^\n11 |     case P{x, y}: x\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "new-row"
+    },
+    {
+      "name": "w4-multi-space",
+      "file": "tests/compiler-nest/round6-fixtures/w4-multi-space.bend",
+      "sha256": "ed896fe2a871af0bb0b138bdd48f0f833a71ad0feb72a820298049446c069f1a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/w4-multi-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 9 |   match x y:\n10>|     case On {} v: v\n   |              ^\n11 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "new-row"
+    },
+    {
+      "name": "w5-body-space",
+      "file": "tests/compiler-nest/round6-fixtures/w5-body-space.bend",
+      "sha256": "a67356a93a3f7496ea7b3cc7494940eaa2a02c8af409d87a040745041810f395",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/w5-body-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n 9 |   match x:\n10>|     case On{}: On {}\n   |                   ^\n11 |     case Off{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "w6-outer-space",
+      "file": "tests/compiler-nest/round6-fixtures/w6-outer-space.bend",
+      "sha256": "6ea3ccf8946a594f6c5127fcd5fc11135a7a0a3bf772d6726cfe576227aaa5b9",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/w6-outer-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n 9 |   match p:\n10>|     case P {x, y}: x\n   |              ^\n11 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "w7-main-space",
+      "file": "tests/compiler-nest/round6-fixtures/w7-main-space.bend",
+      "sha256": "1ba7e513ceb70013e82b979bfe01dedfd468798757bbac604ca96c5d4e2894c4",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/w7-main-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n 8 | def main() -> Flag:\n 9>|   On {}\n   |      ^\n10 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "y6-comment-in-row",
+      "file": "tests/compiler-nest/round6-fixtures/y6-comment-in-row.bend",
+      "sha256": "5530fbf68a118a11c46ee6d7761a3bf3641f755d6f5f60187db53eaa5e276a17",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/y6-comment-in-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/f-Off-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/f-Off-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/f-Off-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/f-Off-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/f-On-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/f-On-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/f-On-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/f-On-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y6-comment-in-row/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round6-fixtures/y6-comment-in-row.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "control"
+    },
+    {
+      "name": "y8-space-in-braces",
+      "file": "tests/compiler-nest/round6-fixtures/y8-space-in-braces.bend",
+      "sha256": "99dc19b3bd883f296d29ce46a453d61f086b902703888c8a9e544e6cdbdf5d73",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/y8-space-in-braces.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n11 |     case P{ On{} , y }: y\n12>|     case P { x, _ }: x\n   |               ^\n13 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "new-row"
+    },
+    {
+      "name": "z1-flat-space",
+      "file": "tests/compiler-nest/round6-fixtures/z1-flat-space.bend",
+      "sha256": "fa11f0eaeceeba3a89805c4df7f8496ff0e8e8f8a5d14dbb20e96524d7c2d287",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/z1-flat-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n10 |   match p:\n11>|     case P {x, y}: x\n   |              ^\n12 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "z2-nested-space",
+      "file": "tests/compiler-nest/round6-fixtures/z2-nested-space.bend",
+      "sha256": "4c8aa2fd0787d6591eb842d37cde1d188f0f9e50f6256b9e65c79100407be959",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/z2-nested-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n10 |   match p:\n11>|     case P{On {}, y}: y\n   |                ^\n12 |     case P{x, y}: x\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "new-row"
+    },
+    {
+      "name": "z3-nullary-space-single",
+      "file": "tests/compiler-nest/round6-fixtures/z3-nullary-space-single.bend",
+      "sha256": "0c201e5350515aa20eb36265f17d2a87ca3110128dd6f31f5d5d68f184bd796c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/z3-nullary-space-single.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n10 |   match a:\n11>|     case On {}: b\n   |              ^\n12 |     case Off {}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "z4-nullary-space-multi",
+      "file": "tests/compiler-nest/round6-fixtures/z4-nullary-space-multi.bend",
+      "sha256": "35235c4c6781de3f5e13d00f75b553fb0731c3e1ab7faca06cf233c2c5c84231",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/z4-nullary-space-multi.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n10 |   match a b:\n11>|     case On {} x: x\n   |              ^\n12 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "new-row"
+    },
+    {
+      "name": "z5-body-space",
+      "file": "tests/compiler-nest/round6-fixtures/z5-body-space.bend",
+      "sha256": "4655066b3a2c7bde30bf69dc41e7d21380af1edda43dcf5ed0e93cf41eab40ab",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/z5-body-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n10 |   match a:\n11>|     case On{}: On {}\n   |                   ^\n12 |     case Off{}: b\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "z6-flat-space-two",
+      "file": "tests/compiler-nest/round6-fixtures/z6-flat-space-two.bend",
+      "sha256": "1f9e5097bc8bd85d7dcea7ea3d3113177da22ff6c7c773db6d131adf8a21e98b",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/z6-flat-space-two.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n10 |   match p:\n11>|     case P { x, y }: y\n   |               ^\n12 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "main-era"
+    },
+    {
+      "name": "z7-multi-ctor-space",
+      "file": "tests/compiler-nest/round6-fixtures/z7-multi-ctor-space.bend",
+      "sha256": "fc80be9830642b1e31466449a0cf956aa85f196a07e65ab56b9041664202b2d9",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/z7-multi-ctor-space.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n10 |   match a b:\n11>|     case On {} On {}: On{}\n   |              ^\n12 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "new-row"
+    },
+    {
+      "name": "z8-single-nullary-space-default",
+      "file": "tests/compiler-nest/round6-fixtures/z8-single-nullary-space-default.bend",
+      "sha256": "241be84647d358eea85ebfa5c9ecdb6455c3dc11d94655566c7c9abe875a9203",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round6-fixtures/z8-single-nullary-space-default.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n10 |   match a:\n11>|     case On {}: b\n   |              ^\n12 |     case _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdetached-brace\t"
+      },
+      "finding": "new-row"
+    }
+  ]
+}

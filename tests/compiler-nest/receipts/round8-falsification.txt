@@ -1,0 +1,48 @@
+# Round-8 law falsification and mutant characterization (nest review round 8)
+# Base: b87a971. Each mutation is one replacement in a copy of src/.
+# Law check: bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts <copy>/matrix-PROOF.bend
+# The seed stops at the first failing term.
+
+judge-kind-at-promotion (matrix.bend): falsified lowering-PROOF.expanded
+judge-field-kind-at-binding (patterns.bend): falsified matrix-LAWS.destructured_field_promotion_witness
+skip-leaf-binding (patterns.bend): falsified matrix-LAWS.leaf_binds_promotion
+skip-split-binding (patterns.bend): falsified matrix-LAWS.split_binds_promotion_witness
+skip-empty-match-binding (check.bend): falsified matrix-LAWS.empty_match_binds_promotion_witness
+ahead-includes-level (scope.bend): falsified matrix-LAWS.destructured_promotion_is_unbound
+advance-binds-frontier (patterns.bend): falsified matrix-LAWS.destructured_promotion_is_unbound
+advance-binds-nothing (patterns.bend): falsified matrix-LAWS.later_match_binds_promotion
+close-keeps-frontier (patterns.bend): falsified matrix-LAWS.leaf_closes_frontier
+judge-kind-at-check-alias (check.bend): falsified matrix-LAWS.destructured_promotion_witness
+  (judge-kind-at-promotion: proof shape only; lowering-PROOF.expanded mirrors expand's alias case.
+   judge-kind-at-check-alias is its semantic twin at check.run's alias.)
+
+# Behaviour of the gate mutations on the 37 frozen fixtures and the 3,000-program generator
+# (native checker built from the mutated copy; wrong = fixtures whose reviewed outcome changes)
+judge-kind-at-promotion (matrix.bend): 'S.bind(E.Scope,Expansion,alias(scope,token,level,mark),bound =>' -> 'S.bind(E.Scope,Expansion,kinded(alias(scope,token,level,mark),level,types),bound =>'
+  wrong fixtures (17): k1-param-promote-destructure, k10-promote-nested-rows, k11-promote-rebuild-reuse, k12-promote-field-binder-rebuild, k13-generated-a01432, k14-generated-a02809, k15-generated-a02883, k16-inherited-field-destructure, k2-promote-destructure-field-reuse, k3-promote-destructure-rebuild-twice, k4-multi-promote-destructure, k5-promote-nested-destructure, k7-generated-a02852, k8-promote-destructure-both-names, k9-promote-destructure-param-name, x1-empty-type-promote-empty-match, y1-promote-residual-destructure-type
+  generator: knot {'Invalid': 1818, 'Accepted': 1143, 'Unsupported': 39}, false acceptances 0, false Invalid 5
+judge-field-kind-at-binding (patterns.bend): '      binder(node,+token => mark =>         S.choose(Result<S.Error,Fields>,G.constructor_before(types,token),' -> '      binder(node,+token => +mark =>         S.choose(Result<S.Error,Fields>,G.constructor_before(types,token)'
+  wrong fixtures (3): k16-inherited-field-destructure, k6-field-promote-destructure, k7-generated-a02852
+  generator: knot {'Invalid': 1798, 'Accepted': 1147, 'Unsupported': 55}, false acceptances 0, false Invalid 1
+skip-leaf-binding (patterns.bend): 'S.bind(Unit,E.Scope,bound(open,bindings,types),u =>' -> 'S.bind(Unit,E.Scope,Done{Unit{}},u =>'
+  wrong fixtures (11): c1-promote-default-row, c2-promote-no-match, c3-ctor-then-promote-row, c4-promote-direct-reuse, c5-ctor-then-promote-use, c6-field-promote-direct, c7-promote-wildcard-row, c8-empty-type-promote-leaf, n1-promote-then-let, n2-inherited-field-reused, n3-inherited-field-bound
+  generator: knot {'Invalid': 1660, 'Accepted': 1278, 'Unsupported': 62}, false acceptances 130, false Invalid 0
+skip-split-binding (patterns.bend): 'S.bind(Unit,Fields,advance(scope,level,types),u =>' -> 'S.bind(Unit,Fields,Done{Unit{}},u =>'
+  wrong fixtures (1): n6-promote-column-then-split
+  generator: knot {'Invalid': 1796, 'Accepted': 1148, 'Unsupported': 56}, false acceptances 0, false Invalid 0
+skip-empty-match-binding (check.bend): 'S.bind(Unit,C.Checked,P.advance(scope,level,types),u =>' -> 'S.bind(Unit,C.Checked,Done{Unit{}},u =>'
+  wrong fixtures (1): n5-promote-then-empty-match-later
+  generator: knot {'Invalid': 1796, 'Accepted': 1148, 'Unsupported': 56}, false acceptances 0, false Invalid 0
+advance-binds-nothing (patterns.bend): 'bound(E.ahead(open,level),bindings,types)' -> 'bound(Nil{},bindings,types)'
+  wrong fixtures (3): n4-promote-then-match-later, n5-promote-then-empty-match-later, n6-promote-column-then-split
+  generator: knot {'Invalid': 1796, 'Accepted': 1148, 'Unsupported': 56}, false acceptances 0, false Invalid 0
+
+judge-kind-at-promotion restores the finding exactly: the 16 destructured-promotion
+fixtures other than k6 (whose promotion is a field binder, not an alias) and y1, 17 in
+all, are Invalid reusable-type again, and the generator reports the reviewer's five programs
+(a00196, a01432, a02809, a02852, a02883). judge-field-kind-at-binding is the field half of
+the same early judgement (k6, k16 and the generated k7). skip-leaf-binding is the
+over-acceptance: eleven kind-at-binding fixtures are Checked and the generator reports 130
+false acceptances. skip-split-binding and skip-empty-match-binding each let one later
+binding site through (n6, n5); the generator cannot see either, so the fixtures carry them.
+advance-binds-nothing drops both sites and the flat one (n4, n5, n6).

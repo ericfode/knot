@@ -250,6 +250,7 @@ def references(depth: Nat, node: S.Node, +scope: List<&2,String>) -> Result<S.Er
       S.bind(List<&2,Use>,List<&2,Use>,references(n,head,scope),first =>
         S.bind(List<&2,Use>,List<&2,Use>,references(n,S.Sequence{tail},scope),rest =>
           Done{List.append(&2,Use,first,rest)}))
+    case 1n+n _: Fail{S.Internal{"load","lowering-node"}}
 
 def base_error(error: S.Error) -> S.Error:
   match error:

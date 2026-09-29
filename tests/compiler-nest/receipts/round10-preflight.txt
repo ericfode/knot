@@ -1,0 +1,72 @@
+# Round-10 offline style preflight (0 provider requests) on the tree at b614b58 (the round-10 source is fixed there).
+# The task for the parser and law selections is tests/compiler-nest/SPEC.md (14,727 bytes; about 50 bytes of headroom
+# remain under the perch-context bound). The manifest's task for the frontend groups, src/SPEC.md, is 29,831 bytes and
+# was 28,374 at the round-9 tip: past the 16,000-byte style task limit (`task_byte_limit`) before this round.
+# A selection outside its manifest group cannot resolve every collaborator, so exit 3 with `collaborator-not-in-group`
+# says the composition needs the group; the group and manifest runs at the end are what tests/perch-context/check.py
+# runs: 20 groups, every composition available, 0 truncated, 0 role-limited, 0 structural blockers.
+# The frontend-laws group composes from its five files (syntax, LAWS, lex, parse, PROOF): 47,916 of 48,000 bytes, 43,781
+# before the round. The whole-file selection below truncates 7 contexts against 5 at 5ef36ae6 (the same five types and
+# helpers): the two new ones are laws that call `P.run` (`no_parser_budget`, `line_broken_scrutinees_witness`), which
+# crossed the helper limit as `run` grew. Neither is truncated in the group or manifest runs.
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/parse.bend::promotes src/parse.bend::broken src/parse.bend::assign src/parse.bend::binder_failure src/syntax.bend::marks
+Style preflight (offline, 0 provider requests): 5 declarations in 2 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (14727 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 0 {}.
+Supporting role impossible (incomplete role context): 0 {}.
+Composition (required always): available; 27727/48000 bytes; unresolved {}.
+(exit 0)
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/LAWS.bend::marks_witness src/LAWS.bend::detached_plus src/LAWS.bend::detached_marker src/LAWS.bend::first_marker src/LAWS.bend::split_arrow src/LAWS.bend::return_type_application
+Style preflight (offline, 0 provider requests): 6 declarations in 1 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (14727 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 0 {}.
+Supporting role impossible (incomplete role context): 0 {}.
+Composition (required always): unavailable [unresolved_composition_context]; 39674/48000 bytes; unresolved {"collaborator-not-in-group":4}.
+(exit 3)
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/parse.bend src/syntax.bend src/LAWS.bend src/PROOF.bend
+Style preflight (offline, 0 provider requests): 131 declarations in 4 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (14727 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 7 {"caller-or-byte-limit":3,"context-file-limit":2,"context-helper-limit":2}.
+Supporting role impossible (incomplete role context): 7 {"context-file-limit":2,"context-helper-limit":2,"truncated-context":7}.
+Composition (required always): available; 47916/48000 bytes; unresolved {}.
+truncated: src/parse.bend::Parsed context-file-limit
+truncated: src/parse.bend::Mode context-file-limit
+truncated: src/parse.bend::invalid caller-or-byte-limit
+truncated: src/parse.bend::unsupported caller-or-byte-limit
+truncated: src/syntax.bend::Token caller-or-byte-limit
+truncated: src/LAWS.bend::no_parser_budget context-helper-limit
+truncated: src/LAWS.bend::line_broken_scrutinees_witness context-helper-limit
+(exit 3)
+
+# node scripts/perch-style.mjs --preflight --manifest=docs/compiler-campaign/manifest.json --group=frontend-laws
+frontend-laws: 140 declarations; 0 truncated; 0 role-limited; composition available (47916/48000 bytes).
+Manifest preflight: 1 groups; 0 structural blockers; 0 provider requests.
+(exit 0)
+
+# node scripts/perch-style.mjs --preflight --manifest=docs/compiler-campaign/manifest.json
+syntax-core: 38 declarations; 0 truncated; 0 role-limited; composition available (6872/48000 bytes).
+frontend-lexing: 33 declarations; 0 truncated; 0 role-limited; composition available (9124/48000 bytes).
+frontend-parsing: 52 declarations; 0 truncated; 0 role-limited; composition available (27727/48000 bytes).
+diagnostics: 50 declarations; 0 truncated; 0 role-limited; composition available (13343/48000 bytes).
+catalog: 74 declarations; 0 truncated; 0 role-limited; composition available (20457/48000 bytes).
+scope-patterns: 125 declarations; 0 truncated; 0 role-limited; composition available (38697/48000 bytes).
+checking: 43 declarations; 0 truncated; 0 role-limited; composition available (34893/48000 bytes).
+evaluation: 68 declarations; 0 truncated; 0 role-limited; composition available (19779/48000 bytes).
+wasm-codec: 35 declarations; 0 truncated; 0 role-limited; composition available (8033/48000 bytes).
+wasm-emission: 94 declarations; 0 truncated; 0 role-limited; composition available (29529/48000 bytes).
+driver-pipeline: 51 declarations; 0 truncated; 0 role-limited; composition available (23950/48000 bytes).
+frontend-laws: 140 declarations; 0 truncated; 0 role-limited; composition available (47916/48000 bytes).
+checker-laws: 59 declarations; 0 truncated; 0 role-limited; composition available (24042/48000 bytes).
+runtime-laws: 55 declarations; 0 truncated; 0 role-limited; composition available (25821/48000 bytes).
+catalog-laws: 48 declarations; 0 truncated; 0 role-limited; composition available (25953/48000 bytes).
+fields-laws: 36 declarations; 0 truncated; 0 role-limited; composition available (21668/48000 bytes).
+recursion-laws: 32 declarations; 0 truncated; 0 role-limited; composition available (18023/48000 bytes).
+pattern-matrix: 89 declarations; 0 truncated; 0 role-limited; composition available (39442/48000 bytes).
+pattern-matrix-laws: 137 declarations; 0 truncated; 0 role-limited; composition available (45449/48000 bytes).
+lowering-laws: 37 declarations; 0 truncated; 0 role-limited; composition available (35765/48000 bytes).
+Manifest preflight: 20 groups; 0 structural blockers; 0 provider requests.
+(exit 0)
+

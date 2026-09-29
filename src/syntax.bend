@@ -16,6 +16,7 @@ type Token is Data:
 
 # The parser has a single recursive tree. Declaration/sequence variants never
 # appear in checked expressions; the resolver validates that invariant.
+# Matrix, Decision, Remainder and Alias are internal lowering states.
 type Node is Data:
   Variable{token: Token}
   Literal{token: Token, kind: U32, number: U32, text: List<&2,U32>}
@@ -27,6 +28,10 @@ type Node is Data:
   Binding{token: Token, quantity: U32, annotation: Maybe<&2,Token>, value: Node, body: Node}
   Match{token: Token, value: Node, arms: List<&2,Node>}
   Arm{token: Token, pattern: Node, body: Node}
+  Matrix{token: Token, columns: List<&2,Node>, rows: List<&2,Node>, work: U32}
+  Decision{token: Token, column: Node, pattern: Node, yes: Node, no: Node}
+  Remainder{token: Token, level: U32, constructors: List<&2,Token>}
+  Alias{token: Token, level: U32, mark: U32, body: Node}
   Parameter{token: Token, quantity: U32, type_name: Token}
   Datatype{token: Token, reusable: Bool, constructors: List<&2,Node>}
   Function{token: Token, parameters: List<&2,Node>, result: Token, body: Node}
@@ -47,6 +52,11 @@ def column(t: Token) -> U32:
 def line(t: Token) -> U32:
   match t:
     case Token{s,At{lo,hi,line,col}}: line
+
+# Spans are half-open: [a,b) and [c,d) touch when b == c.
+def touches(name: Token, open: Token) -> Bool:
+  match name open:
+    case Token{s,At{a,b,i,j}} Token{t,At{c,d,k,l}}: U32.is_eq(b,c)
 
 def here(ts: List<&2,Token>) -> At:
   match ts:
@@ -87,6 +97,23 @@ def bind(-A: Data, -B: Data, result: Result<Error,A>, next: A -> Result<Error,B>
     case Fail{e}: Fail{e}
     case Done{x}: next(x)
 
+# A name is words joined by dots, each word alpha (alpha | digit)*. words
+# counts them from a word start, and is 0 when s is not a name.
+def words(+s: String, +open: Bool, +count: U32) -> U32:
+  match s:
+    case SNil{}: Bool.pick(U32,open,0,count)
+    case SCon{c,tail}:
+      +code = Char.to_u32(c)
+      choose(U32,alpha(code),u => words(tail,False{},Bool.pick(U32,open,U32.add(count,1),count)),u =>
+      choose(U32,Bool.and(Bool.not(open),Bool.or(digit(code),U32.is_eq(code,46))),u =>
+        words(tail,U32.is_eq(code,46),count),u => 0))
+
+# The seed reads every word that opens with alpha as a name.
+def malformed(+s: String) -> Bool:
+  match s:
+    case SNil{}: False{}
+    case SCon{c,tail}: Bool.and(alpha(Char.to_u32(c)),U32.is_eq(words(s,True{},0),0))
+
 def identifier_text(+s: String) -> Bool:
   match s:
     case SNil{}: False{}
@@ -94,6 +121,11 @@ def identifier_text(+s: String) -> Bool:
 
 def identifier(t: Token) -> Bool:
   identifier_text(text(t))
+
+# The seed reads `+` and `-` as a marker only where a name follows directly. A
+# space, comment or line break makes them an infix operator on the term before.
+def marks(t: Token, +next: Token) -> Bool:
+  Bool.and(touches(t,next),identifier(next))
 
 def skip_lines(ts: List<&2,Token>) -> List<&2,Token>:
   match ts:

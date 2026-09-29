@@ -15,12 +15,13 @@ type Mode is Data:
   LiteralTail{node: S.Node, pattern: Bool}
   Body{parent: U32}
   StartBody{parent: U32}
-  BodyAt{parent: U32}
+  BodyAt{parent: U32, first: Bool}
   Arms{parent: U32, column: U32}
   Header{keyword: S.Token, name: S.Token}
   TypeKind{name: S.Token}
   FunctionTail{token: S.Token, parameters: S.Node}
   MatchTail{token: S.Token, value: S.Node, column: U32}
+  RowTail{token: S.Token, pattern: S.Node, parent: U32, column: U32}
   BindingStart{quantity: U32, parent: U32}
   AnnotatedBinding{token: S.Token, quantity: U32, parent: U32}
   BindingTail{token: S.Token, quantity: U32, annotation: Maybe<&2,S.Token>, value: S.Node, parent: U32}
@@ -50,6 +51,23 @@ def scrutinee(ts: List<&2,S.Token>) -> Bool:
   match ts:
     case Nil{}: False{}
     case Con{head,tail}: S.identifier(head)
+
+# After a term, `a +b` opens another column and `a + b` is an operator.
+def promotes(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Con{+plus,Con{next,rest}}: Bool.and(S.matches(plus,"+"),S.marks(plus,next))
+    case _: False{}
+
+# A line break, then a name: whitespace to the seed.
+def broken(+ts: List<&2,S.Token>) -> Bool:
+  Bool.and(starts(ts,"\n"),scrutinee(S.skip_lines(ts)))
+
+# The seed accepts a repeated promotion, `++y`, and a name after a line break,
+# which the parser cannot tell: each is unsupported; other unbindable names are invalid.
+def binder_failure(+ts: List<&2,S.Token>, +name: S.Token, code: String, promoted: Bool) -> Result<S.Error,Parsed>:
+  S.choose(Result<S.Error,Parsed>,Bool.and(promoted,S.matches(name,"+")),u => unsupported(ts,"repeated-promotion"),u =>
+  S.choose(Result<S.Error,Parsed>,broken(ts),u => unsupported(ts,"line-break"),u =>
+    invalid(ts,code)))
 
 def then(result: Result<S.Error,Parsed>,
   next: S.Node -> List<&2,S.Token> -> Result<S.Error,Parsed>) -> Result<S.Error,Parsed>:
@@ -91,10 +109,10 @@ def constructor_named(params: List<&2,S.Node>, +name: String) -> Bool:
 
 # A binder is judged against the declarations in scope, `params`: parameters, and constructors
 # once registered. The seed reads a dotted name as a global unless a parameter binds that exact
-# name, so only a parameter's name may be dotted where a let or a pattern binds; and a
-# registered constructor is no binder at all.
-def binder(+code: String, +name: S.Token, +params: List<&2,S.Node>) -> Result<S.Error,Unit>:
-  S.choose(Result<S.Error,Unit>,Bool.and(String.contains(S.text(name),"."),Bool.not(parameter_named(params,S.text(name)))),u =>
+# name, so only a parameter's name may be dotted where a pattern or a live let binds; an erased
+# let's name is a name, however it is spelled; and a registered constructor is no binder at all.
+def binder(+code: String, +name: S.Token, +erased: Bool, +params: List<&2,S.Node>) -> Result<S.Error,Unit>:
+  S.choose(Result<S.Error,Unit>,Bool.and(Bool.and(String.contains(S.text(name),"."),Bool.not(parameter_named(params,S.text(name)))),Bool.not(erased)),u =>
     Fail{S.Invalid{"parse",code,S.at(name)}},u =>
   S.choose(Result<S.Error,Unit>,constructor_named(params,S.text(name)),u =>
     Fail{S.Invalid{"check","constructor-pattern-binder",S.at(name)}},u => Done{Unit{}}))
@@ -103,13 +121,13 @@ def binder(+code: String, +name: S.Token, +params: List<&2,S.Node>) -> Result<S.
 def binders(fuel: Nat, node: S.Node, +pattern: Bool, +params: List<&2,S.Node>) -> Result<S.Error,Unit>:
   match fuel node:
     case 0n _: Fail{S.Exhausted{"parse",S.At{0,0,0,0}}}
-    case 1n+n S.Promotion{token}: binder("pattern-binder",token,params)
+    case 1n+n S.Promotion{token}: binder("pattern-binder",token,False{},params)
     case 1n+ +n S.Variable{+token}:
-      S.choose(Result<S.Error,Unit>,pattern,u => binder("pattern-binder",token,params),u => Done{Unit{}})
+      S.choose(Result<S.Error,Unit>,pattern,u => binder("pattern-binder",token,False{},params),u => Done{Unit{}})
     case 1n+n S.Offset{token,count,tail}: binders(n,tail,pattern,params)
     case 1n+n S.Constructor{token,args}: binders(n,S.Sequence{args},pattern,params)
-    case 1n+ +n S.Binding{+token,q,ann,value,body}:
-      S.bind(Unit,Unit,binder("binding-name",token,params),u => binders(n,body,False{},params))
+    case 1n+ +n S.Binding{+token,+q,ann,value,body}:
+      S.bind(Unit,Unit,binder("binding-name",token,U32.is_eq(q,0),params),u => binders(n,body,False{},params))
     case 1n+n S.Match{token,value,arms}: binders(n,S.Sequence{arms},False{},params)
     case 1n+ +n S.Arm{token,head,body}:
       S.bind(Unit,Unit,binders(n,head,True{},params),u => binders(n,body,False{},params))
@@ -135,6 +153,12 @@ def wrap_function(token: S.Token, params: S.Node, result: S.Token,
       S.bind(Unit,Parsed,binders(65536n,body,False{},items),u => Done{Parsed{S.Function{token,items,result,body},rest}})
     case _: Fail{S.Internal{"parse","expected-parameters"}}
 
+# A singleton keeps the original parser observation; further columns append.
+def columns(head: S.Node, +tail: S.Node) -> S.Node:
+  match head:
+    case S.Sequence{items}: S.Sequence{List.append(&2,S.Node,items,[tail])}
+    case _: S.Sequence{[head,tail]}
+
 def wrap_match(token: S.Token, value: S.Node, arms: S.Node,
   rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match arms:
@@ -146,8 +170,12 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
     case Nil{}: Fail{S.Invalid{"parse","unexpected-end",S.here(ts)}}
     case Con{+h,+t}:
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
-        S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,"+"),u => Fail{S.Unsupported{"parse","operator",S.at(h)}},u =>
-          Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}}))
+        Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
+
+# A line break before a let's `=` is whitespace to the seed, which the parser cannot tell apart.
+def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
+  S.choose(Result<S.Error,List<&2,S.Token>>,Bool.and(starts(ts,"\n"),starts(S.skip_lines(ts),"=")),u =>
+    Fail{S.Unsupported{"parse","line-break",S.here(ts)}},u => expect(ts,"="))
 
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match rest:
@@ -181,11 +209,15 @@ def template_parameter(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
         unsupported(ts,"template-binder"),u => invalid(ts,"parameter"))
     case _: invalid(ts,"parameter")
 
+# The seed reads a second arm on the line of an arm's body as the next arm.
 def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{h,t}:
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")),u =>
-        Done{Parsed{value,ts}},u => S.choose(Result<S.Error,Parsed>,S.matches(h,"+"),u => unsupported(ts,"operator"),u => invalid(ts,"end-of-body")))
+        Done{Parsed{value,ts}},u =>
+      S.choose(Result<S.Error,Parsed>,S.matches(h,"case"),u => unsupported(ts,"same-line-arm"),u =>
+      S.choose(Result<S.Error,Parsed>,S.matches(h,"+"),u => unsupported(ts,"operator"),u =>
+        invalid(ts,"end-of-body"))))
     case _: invalid(ts,"unexpected-end")
 
 def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -213,6 +245,16 @@ def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
         Bool.or(S.matches(h,":"),Bool.or(S.matches(h,","),Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")))))),u =>
           invalid(ts,"expected-term"),u => S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(h,"("),operator_tail(ts)),u => unsupported(ts,"operator"),u => unsupported(ts,"term-form")))
     case _: invalid(ts,"unexpected-end")
+
+# A match or case header runs to its colon; its line breaks separate no
+# columns, as in the seed. Joined tokens keep their offsets, so a brace on the
+# next line never touches a name. Tokens after the colon keep their layout.
+def header(ts: List<&2,S.Token>) -> List<&2,S.Token>:
+  match ts:
+    case Nil{}: Nil{}
+    case Con{+h,+t}:
+      S.choose(List<&2,S.Token>,S.matches(h,":"),u => Con{h,t},u =>
+        S.choose(List<&2,S.Token>,S.matches(h,"\n"),u => header(t),u => Con{h,header(t)}))
 
 # One recursive dispatcher makes the parser's depth budget explicit and avoids
 # unchecked mutual recursion. Every recursive invocation decreases fuel.
@@ -274,18 +316,23 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(t,"~")),u =>
               invalid(t,"parameter"),u =>
               then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),S.skip_lines(t)),more => rest => prepend(head,more,rest))),u =>
-            S.choose(Result<S.Error,Parsed>,S.matches(h,"+"),u => unsupported(tokens,"operator"),u => invalid(tokens,"argument-separator"))))
+            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.and(pattern,promotes(tokens)))),u => unsupported(tokens,"argument-whitespace"),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(pattern),Bool.and(S.matches(h,"+"),Bool.not(promotes(tokens)))),u => unsupported(tokens,"operator"),u =>
+              invalid(tokens,"argument-separator")))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{+pattern}:
       match tokens:
         case Con{+name,Con{+open,+tail}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(pattern,S.matches(name,"+")),u =>
-            S.choose(Result<S.Error,Parsed>,S.identifier(open),u => Done{Parsed{S.Promotion{open},tail}},u => invalid(tokens,"pattern-binder")),u =>
+            S.choose(Result<S.Error,Parsed>,S.identifier(open),u => Done{Parsed{S.Promotion{open},tail}},u => binder_failure(tokens,open,"pattern-binder",True{})),u =>
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
             then(run(n,Arguments{")",pattern},S.skip_lines(tail)),args => rest => wrap_call(name,False{},args,rest)),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
-            then(run(n,Arguments{"}",pattern},S.skip_lines(tail)),args => rest => wrap_call(name,True{},args,rest)),u =>
+            # Fields open at a brace touching the name, as in the seed.
+            S.choose(Result<S.Error,Parsed>,S.touches(name,open),u =>
+              then(run(n,Arguments{"}",pattern},S.skip_lines(tail)),args => rest => wrap_call(name,True{},args,rest)),u =>
+              invalid(Con{open,tail},"detached-brace")),u =>
             Done{Parsed{S.Variable{name},Con{open,tail}}})),u =>
             S.choose(Result<S.Error,Parsed>,Q.starts(S.text(name)),u =>
               S.bind(S.Node,Parsed,Q.parse(name),node => run(n,LiteralTail{node,pattern},Con{open,tail})),u => term_failure(tokens))))
@@ -306,17 +353,22 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n StartBody{+parent}:
       match tokens:
         case Con{+h,t}:
+          S.choose(Result<S.Error,Parsed>,Bool.and(Bool.or(S.matches(h,"case"),S.matches(h,"def")),U32.is_le(S.column(h),parent)),u =>
+            invalid(tokens,"body-indentation"),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(U32.is_gt(parent,0),U32.is_gt(S.column(h),0)),u =>
-            run(n,BodyAt{parent},tokens),u => invalid(tokens,"body-indentation"))
+            run(n,BodyAt{parent,True{}},tokens),u => invalid(tokens,"body-indentation")))
         case _: invalid(tokens,"body")
-    case 1n+ +n BodyAt{+parent}:
+    case 1n+ +n BodyAt{+parent,+first}:
       match tokens:
         case Con{+h,Con{+second,+tail}}:
           S.choose(Result<S.Error,Parsed>,S.matches(h,"match"),u =>
-            then(run(n,Term{False{}},S.skip_lines(Con{second,tail})),value => rest =>
-              run(n,MatchTail{h,value,U32.max(S.column(h),parent)},S.skip_lines(rest))),u =>
+            then(run(n,Term{False{}},header(Con{second,tail})),value => rest =>
+              run(n,MatchTail{h,value,U32.max(S.column(h),parent)},rest)),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"+"),S.matches(h,"-")),u =>
-            run(n,BindingStart{Bool.pick(U32,S.matches(h,"+"),2,0),parent},Con{second,tail}),u =>
+            # After a let, the seed reads a spaced marker as an operator on its value.
+            S.choose(Result<S.Error,Parsed>,Bool.or(first,S.marks(h,second)),u =>
+              run(n,BindingStart{Bool.pick(U32,S.matches(h,"+"),2,0),parent},Con{second,tail}),u =>
+              invalid(tokens,"detached-marker")),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(second,"="),S.matches(second,":")),u =>
             run(n,BindingStart{1,parent},tokens),u =>
             then(run(n,Term{False{}},tokens),value => rest => reply(value,rest)))))
@@ -346,7 +398,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{+name,S.Sequence{+params}}:
       match tokens:
         case Con{+dash,Con{+arrow,Con{+typ,Con{+colon,+body}}}}:
-          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),S.identifier(typ))),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),Bool.and(S.touches(dash,arrow),S.identifier(typ)))),u =>
             S.choose(Result<S.Error,Parsed>,S.matches(colon,"<"),u =>
               unsupported(Con{colon,body},"type-application"),u =>
             S.choose(Result<S.Error,Parsed>,S.matches(colon,":"),u =>
@@ -357,19 +409,24 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{token,other}:
       Fail{S.Internal{"parse","declaration-mode"}}
     case 1n+ +n MatchTail{+token,+value,+column}:
+      S.choose(Result<S.Error,Parsed>,starts(tokens,","),u =>
+        S.bind(List<&2,S.Token>,Parsed,expect(tokens,","),tail =>
+          then(run(n,Term{False{}},tail),item => after =>
+            run(n,MatchTail{token,columns(value,item),column},after))),u =>
       S.choose(Result<S.Error,Parsed>,scrutinee(tokens),u =>
-        unsupported(tokens,"match-scrutinees"),u =>
+        then(run(n,Term{False{}},tokens),more => rest =>
+          run(n,MatchTail{token,columns(value,more),column},rest)),u =>
       S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),arms =>
-        then(run(n,Arms{column,0},S.skip_lines(arms)),items => rest => wrap_match(token,value,items,rest))))
+        then(run(n,Arms{column,0},S.skip_lines(arms)),items => rest => wrap_match(token,value,items,rest)))))
     case 1n+ +n BindingStart{+quantity,+parent}:
       match tokens:
         case Con{+name,Con{+separator,+tail}}:
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(separator,":"),u =>
             run(n,AnnotatedBinding{name,quantity,parent},tail),u =>
-            S.bind(List<&2,S.Token>,Parsed,expect(Con{separator,tail},"="),rhs =>
+            S.bind(List<&2,S.Token>,Parsed,assign(Con{separator,tail}),rhs =>
               then(run(n,Term{False{}},S.skip_lines(rhs)),value => rest => run(n,BindingTail{name,quantity,None{},value,parent},rest)))),u =>
-            invalid(tokens,"binding-name"))
+            binder_failure(tokens,name,"binding-name",U32.is_ne(quantity,0)))
         case _: invalid(tokens,"binding")
     case 1n+ +n AnnotatedBinding{+name,+quantity,+parent}:
       match tokens:
@@ -377,54 +434,41 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.identifier(typ),u =>
             S.choose(Result<S.Error,Parsed>,starts(tail,"<"),u =>
               unsupported(tail,"type-application"),u =>
-            S.bind(List<&2,S.Token>,Parsed,expect(tail,"="),rhs =>
+            S.bind(List<&2,S.Token>,Parsed,assign(tail),rhs =>
               then(run(n,Term{False{}},S.skip_lines(rhs)),value => rest => run(n,BindingTail{name,quantity,Some{typ},value,parent},rest)))),u =>
             unsupported(tokens,"binding-type"))
         case _: invalid(tokens,"binding-type")
     case 1n+ +n BindingTail{+token,+quantity,+annotation,+value,+parent}:
       S.bind(List<&2,S.Token>,Parsed,expect(tokens,"\n"),body =>
-        then(run(n,BodyAt{parent},S.skip_lines(body)),next => rest =>
+        then(run(n,BodyAt{parent,False{}},S.skip_lines(body)),next => rest =>
           Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}}))
+    case 1n+ +n RowTail{+keyword,+pattern,+parent,+column}:
+      S.choose(Result<S.Error,Parsed>,starts(tokens,","),u =>
+        S.bind(List<&2,S.Token>,Parsed,expect(tokens,","),tail =>
+          then(run(n,Term{True{}},tail),more => rest =>
+            run(n,RowTail{keyword,columns(pattern,more),parent,column},rest))),u =>
+      S.choose(Result<S.Error,Parsed>,Bool.or(scrutinee(tokens),promotes(tokens)),u =>
+        then(run(n,Term{True{}},tokens),more => rest =>
+          run(n,RowTail{keyword,columns(pattern,more),parent,column},rest)),u =>
+        S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),body =>
+          then(run(n,Body{S.column(keyword)},body),value => after =>
+            then(run(n,Arms{parent,column},S.skip_lines(after)),more => end =>
+              prepend(S.Arm{keyword,pattern,value},more,end))))))
     case 1n+ +n Arms{+parent,+column}:
       match tokens:
         case Con{+keyword,+tail}:
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(keyword,"<eof>"),U32.is_le(S.column(keyword),parent)),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"case"),Bool.or(U32.is_eq(column,0),U32.is_eq(column,S.column(keyword)))),u =>
-            then(run(n,Term{True{}},S.skip_lines(tail)),pattern => rest =>
-              S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(rest),":"),body =>
+            then(run(n,Term{True{}},header(tail)),+pattern => +rest =>
+              S.choose(Result<S.Error,Parsed>,Bool.or(starts(rest,","),Bool.or(scrutinee(rest),promotes(rest))),u =>
+                run(n,RowTail{keyword,pattern,parent,S.column(keyword)},rest),u =>
+              S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
                 then(run(n,Body{S.column(keyword)},body),value => after =>
                   then(run(n,Arms{parent,S.column(keyword)},S.skip_lines(after)),more => end =>
-                    prepend(S.Arm{keyword,pattern,value},more,end))))),u =>
+                    prepend(S.Arm{keyword,pattern,value},more,end)))))),u =>
             unsupported(tokens,"pattern-or-indentation")))
         case _: invalid(tokens,"unexpected-end")
 
-# The seed reads a name as words joined by single dots, each a letter or `_` and then word
-# characters; `head` marks a word start, where a dot cannot stand and a digit cannot begin.
-def name_text(s: String, +head: Bool) -> Bool:
-  match s:
-    case SNil{}: Bool.not(head)
-    case SCon{+c,+tail}:
-      S.choose(Bool,Char.is_eq(c,'.'),u =>
-        S.choose(Bool,head,u => False{},u => name_text(tail,True{})),u =>
-        S.choose(Bool,Bool.or(Bool.not(head),S.alpha(Char.to_u32(c))),u => name_text(tail,False{}),u => False{}))
-
-def word_start(s: String) -> Bool:
-  match s:
-    case SNil{}: False{}
-    case SCon{c,tail}: S.alpha(Char.to_u32(c))
-
-# A token that starts like a name is one, and the seed rejects a malformed one wherever it stands.
-def malformed(+s: String) -> Bool:
-  S.choose(Bool,word_start(s),u => Bool.not(name_text(s,True{})),u => False{})
-
-def names(tokens: List<&2,S.Token>) -> Result<S.Error,Unit>:
-  match tokens:
-    case Nil{}: Done{Unit{}}
-    case Con{+h,+t}:
-      S.choose(Result<S.Error,Unit>,malformed(S.text(h)),u => Fail{S.Invalid{"parse","name",S.at(h)}},u => names(t))
-
-def parse(+depth: Nat, +tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
-  match depth:
-    case 0n: run(0n,Book{},tokens)
-    case 1n+n: S.bind(Unit,Parsed,names(tokens),u => run(1n+n,Book{},tokens))
+def parse(depth: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  run(depth,Book{},tokens)

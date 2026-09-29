@@ -1,0 +1,42 @@
+# Round-7 law falsification and mutant characterization (nest review round 7)
+# Base: 7281182. Each mutation is one replacement in a copy of src/matrix.bend.
+# Law check: bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts <copy>/matrix-PROOF.bend
+# The seed stops at the first failing term.
+
+## revert-to-row: '+mark = S.choose(U32,param,u => row,u => 1)' -> '+mark = row'
+  exit 1 at matrix-LAWS.let_alias_keeps_quantity
+  falsified: the let and its alias take the symbolic row mark (P.quantity(1,1,mark)), not 1
+## promote-let-alias: 'u => row,u => 1)' -> 'u => row,u => row)'
+  exit 1 at matrix-LAWS.let_alias_keeps_quantity
+  falsified, as above
+## never-promote: 'u => row,u => 1)' -> 'u => 1,u => 1)'
+  exit 1 at matrix-LAWS.parameter_alias_promotes
+  falsified: the parameter and its alias stay at 1 under a `+` row
+## promote-every-variable-column: 'promote(name,level,mark(rows),S.Matrix' -> 'promote(name,level,2,S.Matrix'
+  exit 1 at lowering-PROOF.aliased_variable
+  proof shape only: that proof mirrors alias_column; M.alias is unchanged, so both round-7 laws still hold
+
+# Behaviour of the same mutations on the 35 frozen fixtures and the 1,500-program generator
+# (native checker built from the mutated copy; wrong = fixtures whose reviewed outcome changes)
+promote-let-alias: 'u => row,u => 1)' -> 'u => row,u => row)'
+  wrong fixtures (13): l7-var-match-latest-promote-row, m13-let-of-let-promote, m2-let-call-promote-row, m4-let-annot-promote-row, m5-let-ctor-promote-row, m9-let-promote-row-multi, own1-color-let-call-promote, t1-type-let-promote-row, y1-let-alias-nested-promote, y2-let-of-reusable-param-promote, y3-let-promote-row-shadowing-let, z2-let-promote-alias-and-let, z3-let-of-field-promote
+  generator: knot {'Accepted': 843, 'Invalid': 657}, false acceptances 63, false Invalid 0
+promote-every-variable-column: 'promote(name,level,mark(rows),S.Matrix' -> 'promote(name,level,2,S.Matrix'
+  wrong fixtures (2): p1-param-alias-reuse, p2-param-alias-and-param
+  generator: knot {'Accepted': 780, 'Invalid': 720}, false acceptances 0, false Invalid 0
+promote-always: 'S.choose(S.Node,U32.is_eq(q,2),' -> 'S.choose(S.Node,True{},'
+  wrong fixtures (2): p1-param-alias-reuse, p2-param-alias-and-param
+  generator: knot {'Accepted': 780, 'Invalid': 720}, false acceptances 0, false Invalid 0
+never-promote: 'u => row,u => 1)' -> 'u => 1,u => 1)'
+  wrong fixtures (9): m11-nested-alias-promote, m12-field-nested-alias-promote, m6-field-var-match-promote, m7-type-field-var-match-promote, m8-param-after-use-promote, t2-type-param-promote-row, z1-param-promote-alias-and-param, z4-param-promote-alias-multi-and-param, z5-promote-alias-then-rebuilt-parent
+  generator: knot {'Accepted': 780, 'Invalid': 720}, false acceptances 0, false Invalid 0
+
+promote-let-alias restores the finding exactly: the 12 let-promotion fixtures are Checked,
+t1 is Invalid reusable-type again and the generator reports the reviewer's 63 programs.
+promote-every-variable-column and promote-always (promote's is_eq(q,2) -> True{}) cannot
+re-enable let promotion: every let fixture and generated program keeps its outcome, because the
+quantity site withholds the mark from every let. Each is a distinct parameter unsoundness
+(p1, p2: an affine parameter aliased without a `+` row becomes reusable); nest-round7 kills
+promote-every-variable-column on p1. never-promote is the over-correction: eight parameter or
+field promotion controls report affine-reuse and t2 is accepted; the generator cannot see it,
+since it matches only lets. nest-round7 kills it on z1.

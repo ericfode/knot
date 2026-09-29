@@ -1,0 +1,2927 @@
+{
+  "basis": "Reviewer repros and seed-derived controls, frozen with the pinned seed before each repair.",
+  "seed": {
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "sha256": {
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b"
+    }
+  },
+  "fixtures": [
+    {
+      "name": "dot-anonymous",
+      "file": "tests/compiler-nest/round3-fixtures/dot-anonymous.bend",
+      "sha256": "8499fd260857daf81c8c2ebdc8d97c5597b240919d89d3ed9215d238a24cab4f",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-anonymous.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : _.x\nLocation:\n6 |   match x:\n7>|     case _.x: On{}\n  |          ^^^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-constructor-name",
+      "file": "tests/compiler-nest/round3-fixtures/dot-constructor-name.bend",
+      "sha256": "bd8564898b594d7b307b6ecd1964339a9f260d95784d512c148e40e4d1a75df3",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-constructor-name.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : On.x\nLocation:\n6 |   match x:\n7>|     case On.x: On{}\n  |          ^^^^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-definition",
+      "file": "tests/compiler-nest/round3-fixtures/dot-definition.bend",
+      "sha256": "a9f0eb765054877b19ebe809eb0d1cdc2663aa9752683e2626ee354de37c3926",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-definition.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-definition/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-definition.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-erased-let",
+      "file": "tests/compiler-nest/round3-fixtures/dot-erased-let.bend",
+      "sha256": "820b6b2716e25d795578599b0ccf9d4910eac8f07b16eccfd62bdd92efe941ba",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-erased-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-erased-let/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-erased-let.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-erased-let/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-erased-let.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-erased-let/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-erased-let.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-field-declaration",
+      "file": "tests/compiler-nest/round3-fixtures/dot-field-declaration.bend",
+      "sha256": "03ee135f093338e95151d0ac42384919f82a4e755754cf599ac5be658fbc83da",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-field-declaration.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-field-declaration/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-field-declaration.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-flat-field",
+      "file": "tests/compiler-nest/round3-fixtures/dot-flat-field.bend",
+      "sha256": "b48a174014ca9b5dc8417805ef5ff0ac33324168f6ce681570e37d8b892c477a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-flat-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n 9 |   match p:\n10>|     case P{a.b, c}: a.b\n   |            ^^^\n11 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-let-reusable",
+      "file": "tests/compiler-nest/round3-fixtures/dot-let-reusable.bend",
+      "sha256": "de31c4e0bc5574d132fd777ea1abe2fcfff37061f3a3719d3ab864c265f91378",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-let-reusable.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : '='\nLocation:\n5 | def f(+x: Flag) -> Flag:\n6>|   +a.b = x\n  |        ^\n7 |   a.b\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-let-typed",
+      "file": "tests/compiler-nest/round3-fixtures/dot-let-typed.bend",
+      "sha256": "83dd8be3039254a46264a6a5cc48aa0ea90d895e812489b863fd99c617069487",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-let-typed.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   a.b : Flag = x\n  |   ^^^\n7 |   a.b\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-let",
+      "file": "tests/compiler-nest/round3-fixtures/dot-let.bend",
+      "sha256": "e2b46449cf4e58457093c3c4a1aa71e52ad9d27b6f6b947f4a5b02d96ed25c00",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   a.b = x\n  |   ^^^\n7 |   a.b\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-multi-column",
+      "file": "tests/compiler-nest/round3-fixtures/dot-multi-column.bend",
+      "sha256": "8583b8be9bce45eb8cc71edfa9e1d1f0a12c1ca8a2949386ace911ff665a931b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-multi-column.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n6 |   match x y:\n7>|     case a.b On{}: a.b\n  |          ^^^\n8 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-nested-field",
+      "file": "tests/compiler-nest/round3-fixtures/dot-nested-field.bend",
+      "sha256": "6781b51bfe43588e7dfb21a4f7eb2a821f369fefd9465e05722b1f5d750663c8",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-nested-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n 9 |   match p:\n10>|     case P{a.b, On{}}: a.b\n   |            ^^^\n11 |     case _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-parameter",
+      "file": "tests/compiler-nest/round3-fixtures/dot-parameter.bend",
+      "sha256": "223014e057dcd89f37f10964033bdbea33ed569ee08f39480d2077de182101be",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-parameter.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/dot-parameter/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/dot-parameter.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-promotion",
+      "file": "tests/compiler-nest/round3-fixtures/dot-promotion.bend",
+      "sha256": "208259baa753a903cf33b4b867c5b75f41d45e775ff9cb768a2c62f91dc59770",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-promotion.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n6 |   match x:\n7>|     case +a.b: a.b\n  |              ^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "dot-variable-row",
+      "file": "tests/compiler-nest/round3-fixtures/dot-variable-row.bend",
+      "sha256": "a01f1c3362845568747d2e60d9961aabc72df937373287de7f438eb16ad94f8b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/dot-variable-row.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n6 |   match x:\n7>|     case a.b: a.b\n  |          ^^^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "empty-after-control",
+      "file": "tests/compiler-nest/round3-fixtures/empty-after-control.bend",
+      "sha256": "ca3476fbae70dabd89208d897c7c80b51e307a68d47c08300b77a598c10461cc",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-after-control.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n7 | def f(y: Flag, x: V) -> Flag:\n8>|   match y x:\n  |   ^^^^^^^^^^\n9 |     case On{} _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-after-flat",
+      "file": "tests/compiler-nest/round3-fixtures/empty-after-flat.bend",
+      "sha256": "ed4cd864cc5986bc43249ee2d67592a3b8c8c4133ec9f3fa7e1abde1537e4bce",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-after-flat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n10 | def f(y: Flag, x: V) -> Flag:\n11>|   match y:\n   |   ^^^^^^^^\n12 |     case On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-after-multi",
+      "file": "tests/compiler-nest/round3-fixtures/empty-after-multi.bend",
+      "sha256": "86754f8cf59b4e44d1468af2644e709fa70694c51c7e162bf6e38f214feaa61a",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-after-multi.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n7 | def f(x: Flag, v: V) -> Flag:\n8>|   match x v:\n  |   ^^^^^^^^^^\n9 |     case On{} _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-alias-erased",
+      "file": "tests/compiler-nest/round3-fixtures/empty-alias-erased.bend",
+      "sha256": "2a910b3512b502d4eac31cae5e387e21e8ea2522af0b88b56832c9b24ca3d2ee",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-alias-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- x : V\nLocation: f\n10 | def f(-x: V, y: Flag) -> Flag:\n11>|   match x y:\n   |   ^^^^^^^^^^\n12 |     case z On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-data",
+      "file": "tests/compiler-nest/round3-fixtures/empty-data.bend",
+      "sha256": "86aa977bb262a922492f6ab1c36b3b591289de37e925042bd08dbd8a73abe416",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-data.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-data/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-data.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-erased-control",
+      "file": "tests/compiler-nest/round3-fixtures/empty-erased-control.bend",
+      "sha256": "81361e088bd48bf178f5f9dc89fb467967b36880295250a1b3be3dc5bac7e2bf",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-erased-control.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- x : V\nLocation: f\n7 | def f(-x: V, y: Flag) -> Flag:\n8>|   match y:\n  |   ^^^^^^^^\n9 |     case On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-after-flat",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-after-flat.bend",
+      "sha256": "cb47fb14a2bf21c9e58354117b9ab90e3f5c6aaf92aef8c2f66d1604602d4733",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-after-flat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n12 |     case P{a, v}:\n13>|       match a:\n   |       ^^^^^^^^\n14 |         case On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-after-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-after-nested.bend",
+      "sha256": "bcf5c580975fd34df4c3f3db48894bec780d219a19f234aba6093025aeb19778",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-after-nested.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n13 | def f(q: Q) -> Flag:\n14>|   match q:\n   |   ^^^^^^^^\n15 |     case Q{P2{On{}, _}, _}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-after",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-after.bend",
+      "sha256": "e7849bb2784c36e5f57129017c46359baf7a4a6404d1d35619816cbb76d14415",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-after.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nLocation: f\n10 | def f(p: P) -> Flag:\n11>|   match p:\n   |   ^^^^^^^^\n12 |     case P{On{}, _}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-before-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-before-nested.bend",
+      "sha256": "11a8e4012e66758e71a5d726725ca9b39f69727fc6f62de51aedc380b2d47d9b",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-before-nested.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-field-before-nested/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-field-before-nested.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-binder",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-binder.bend",
+      "sha256": "490341dd47ebcb7deb4a737c31b9066ecf0728f4378d18bd7918fd115c4d7863",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-binder.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-field-binder/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-field-binder.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-erased",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-erased.bend",
+      "sha256": "912987ece81909d9226382685f480acb2470ba16b7ccd49ffe2d1a5b8b328cec",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- v : V\nLocation: f\n10 | def f(p: Q) -> Flag:\n11>|   match p:\n   |   ^^^^^^^^\n12 |     case Q{v, On{}}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-flat",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-flat.bend",
+      "sha256": "568d5b6879d194abfa36cccd39d6bb77df9ac129d4af39ba3569f635f82af507",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-flat.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-field-flat/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-field-flat.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-field-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-field-nested.bend",
+      "sha256": "d3a6523fe6d61869ed1a31e3d0d5bd7aefee8c2727db42c90ef437633e597008",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-field-nested.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-field-nested/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-field-nested.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-flat-zero-row",
+      "file": "tests/compiler-nest/round3-fixtures/empty-flat-zero-row.bend",
+      "sha256": "f648e757bdaeb8f5a1095c32b9c20a24ce8d756656fa6bbe8b0200b695f89b41",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-flat-zero-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-flat-zero-row/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-flat-zero-row.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-flat",
+      "file": "tests/compiler-nest/round3-fixtures/empty-flat.bend",
+      "sha256": "3b7203a72cdd50bfd9ba8abdea1a1265e2a9ea4c63a131550e84b7161d4a657d",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-flat.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-flat/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-flat.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi-alias",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi-alias.bend",
+      "sha256": "96722baf018a29e60e8637d70d7a945f3f378f65944176dac6a76812072295d2",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi-alias.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi-alias/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi-alias.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi-first",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi-first.bend",
+      "sha256": "2aba72f68baa01a03af2e96912836c1ed5ed51d5b0c2758d9722505a1cd6981e",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi-first.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi-first/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi-first.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi-middle",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi-middle.bend",
+      "sha256": "a57ea57320d2ab4e94ae78207287d6ddeaaddb4cfc06ff4937d2bb4a22c5f8ba",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi-middle.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi-middle/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi-middle.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi-skip",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi-skip.bend",
+      "sha256": "019e7cfa148cee6ddf136daf7d9c5e8be8a82315837b78044e704b2120cf662c",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi-skip.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi-skip/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi-skip.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-multi",
+      "file": "tests/compiler-nest/round3-fixtures/empty-multi.bend",
+      "sha256": "6ca9fd5e0721b596dd128262ab61c3eb839fe25f19b42b727e255ed4cba9c21c",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-multi.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-multi/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-multi.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-param-after-field",
+      "file": "tests/compiler-nest/round3-fixtures/empty-param-after-field.bend",
+      "sha256": "83ca5229e0c5cf92311c2eccf52d7f707fca2c1730a862fd17d63884a71ea97c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-param-after-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- a : Flag\nLocation: f\n12 |     case P2{a, b}:\n13>|       match b:\n   |       ^^^^^^^^\n14 |         case On{}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-param-after-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-param-after-nested.bend",
+      "sha256": "bba2e3a18eedd2d45f50ac59959e0f31db0bc3839a1ac6a57894028051d55e5f",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-param-after-nested.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Off\n- observed : \\{}\nContext:\n- _ : Flag\nLocation: f\n10 | def f(p: P2, v: V) -> Flag:\n11>|   match p:\n   |   ^^^^^^^^\n12 |     case P2{_, On{}}: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-param-before-field",
+      "file": "tests/compiler-nest/round3-fixtures/empty-param-before-field.bend",
+      "sha256": "78aa5979ca675f03864cbbdeaecb0a3a0c4da952862b9114913898fbe907f158",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-param-before-field.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-param-before-field/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-param-before-field.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "empty-param-before-nested",
+      "file": "tests/compiler-nest/round3-fixtures/empty-param-before-nested.bend",
+      "sha256": "4b5e401a6b6801061a2512890511a275fa85104d8a9f3d8e2ac0096a26cad587",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/empty-param-before-nested.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/empty-param-before-nested/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/empty-param-before-nested.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "empty-binding"
+    },
+    {
+      "name": "line-case-single",
+      "file": "tests/compiler-nest/round3-fixtures/line-case-single.bend",
+      "sha256": "f09c92dbe8dbe27274d383dfedde8be39e30856f45ca00d691ad69932d7be907",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-case-single.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case-single/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case-single.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case-single/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case-single.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case-single/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case-single.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case-single/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case-single.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case-single/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case-single.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-case",
+      "file": "tests/compiler-nest/round3-fixtures/line-case.bend",
+      "sha256": "6ed419cbb8fa40359699e116341550e44eb7ed8fd9c103d021cb55c81690bfe4",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-case.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-case/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-case.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-colon",
+      "file": "tests/compiler-nest/round3-fixtures/line-colon.bend",
+      "sha256": "d7d0a9e9a635aaa4ea228adab0a1add2f426aff44843916c1fbdf243d572d7a7",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-colon.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-colon/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-colon.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-colon/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-colon.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-colon/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-colon.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-colon/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-colon.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-colon/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-colon.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-comment",
+      "file": "tests/compiler-nest/round3-fixtures/line-comment.bend",
+      "sha256": "3791c17c1165c2b1bd16dfbd7b5520d26a9e33ddfe29e3d43968a80da9a5fc29",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-comment/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-comment.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-comment/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-comment.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-comment/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-comment.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-comment/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-comment.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-comment/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-comment.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-match",
+      "file": "tests/compiler-nest/round3-fixtures/line-match.bend",
+      "sha256": "6daefc6854e8fbde4d50e2192e676d6e203ad368396fb6279c6e3e82bafe27b3",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-match.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-match/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-match.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-match/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-match.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-match/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-match.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-match/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-match.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-match/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-match.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-missing-colon",
+      "file": "tests/compiler-nest/round3-fixtures/line-missing-colon.bend",
+      "sha256": "24eeeba9871545ba55d8862c35c2f56a15616b3359382042580ef8e3df27676d",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-missing-colon.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a match heading this case (this case is orphaned)\n- observed : 'case'\nLocation:\n7 |     case On{}\n8>|     case Off{}: Off{}\n  |     ^^^^\n9 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-:\t"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-pattern-braces",
+      "file": "tests/compiler-nest/round3-fixtures/line-pattern-braces.bend",
+      "sha256": "e5098847aae9e6507c10d2b6c4979b0c01cd2799008b5a2237506a78f4ca1989",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-pattern-braces.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-pattern-braces/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-pattern-braces.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-promotion",
+      "file": "tests/compiler-nest/round3-fixtures/line-promotion.bend",
+      "sha256": "22b0df3b1397fa40505a90bcc6984ac58fc9eb7eb7246bcbd8fbcf43f92f2740",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-promotion.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-promotion/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-promotion.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-promotion/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-promotion.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-promotion/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-promotion.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-row-comma",
+      "file": "tests/compiler-nest/round3-fixtures/line-row-comma.bend",
+      "sha256": "8da6b8f5c63391f550c0c59c2437eb3cdac679826c195ace4ebfb4df2c96fcaf",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-row-comma.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-comma/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-comma/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-comma/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-comma/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-comma.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-comma/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-comma.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-row-last-comma",
+      "file": "tests/compiler-nest/round3-fixtures/line-row-last-comma.bend",
+      "sha256": "a10fa5ce4061a48247516d09c43217ecb66f9e3156c2bfdfb9126cb8660425e7",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-row-last-comma.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last-comma/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last-comma/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last-comma/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last-comma/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last-comma.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last-comma/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last-comma.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-row-last",
+      "file": "tests/compiler-nest/round3-fixtures/line-row-last.bend",
+      "sha256": "30512fb67935f50d141e2a4f33707457b4cd9f28c0a6c4b1d2b7d318c471a07a",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-row-last.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row-last/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row-last.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-row",
+      "file": "tests/compiler-nest/round3-fixtures/line-row.bend",
+      "sha256": "00e656194c8865056c728b863fd1ef4610a8bd4a9bd7f6d2aac1a68846f5a1e4",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-row/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-row.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-scrutinee-comma",
+      "file": "tests/compiler-nest/round3-fixtures/line-scrutinee-comma.bend",
+      "sha256": "54e940b9c636430cca5dd05abe241ec68fb881aef8ed817e55b6db25536f8178",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-scrutinee-comma.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee-comma/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee-comma/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee-comma/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee-comma.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee-comma/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee-comma.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee-comma/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee-comma.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-scrutinee-missing-colon",
+      "file": "tests/compiler-nest/round3-fixtures/line-scrutinee-missing-colon.bend",
+      "sha256": "08ab07d01ee28e40f1481055751850427865fe9d9b7f19e46187a757571fe597",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-scrutinee-missing-colon.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a match heading this case (this case is orphaned)\n- observed : 'case'\nLocation:\n7 |     y\n8>|     case On{} On{}: On{}\n  |     ^^^^\n9 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-:\t"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-scrutinee",
+      "file": "tests/compiler-nest/round3-fixtures/line-scrutinee.bend",
+      "sha256": "d0a071b61f0236d4b186146d4e54a5d5293dd3eff17ec3c6befad1be7aa3bfca",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-scrutinee.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/line-scrutinee/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/line-scrutinee.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "line-trailing-comma",
+      "file": "tests/compiler-nest/round3-fixtures/line-trailing-comma.bend",
+      "sha256": "b123a3759c9b929253047b2e21145d26df92fd6b220434301066895645833c69",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/line-trailing-comma.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n7 |     case On{},\n8>|       : On{}\n  |       ^\n9 |     case _ _: Off{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-term\t"
+      },
+      "finding": "line-broken-header"
+    },
+    {
+      "name": "name-comment",
+      "file": "tests/compiler-nest/round3-fixtures/name-comment.bend",
+      "sha256": "7e308aaeff722e070860d5015b8402369203ea52c6273a65af4aa0482cce130e",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/name-comment/f-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/name-comment.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/name-comment/f-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/name-comment.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/name-comment/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round3-fixtures/name-comment.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-digit-segment",
+      "file": "tests/compiler-nest/round3-fixtures/name-digit-segment.bend",
+      "sha256": "fa0b35fc673a93142228958605795d1bfc39075bdf31bbe5d153ddac6da37245",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-digit-segment.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'a.1')\n- observed : 'a.1'\nLocation:\n6 |   match x:\n7>|     case a.1: On{}\n  |          ^^^\n8 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-double-dot",
+      "file": "tests/compiler-nest/round3-fixtures/name-double-dot.bend",
+      "sha256": "f5e8c0fe0082aa36a3231471d85d89f4e0f4e6d7bddadad2375d2cf56d02915b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-double-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'a..b')\n- observed : 'a..b'\nLocation:\n4 | \n5>| def f(a..b: Flag) -> Flag:\n  |       ^^^^\n6 |   On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-field-double-dot",
+      "file": "tests/compiler-nest/round3-fixtures/name-field-double-dot.bend",
+      "sha256": "36c7212a5496e21089589644dc77249c8410fb8f85af393744b14e7a36c3fc91",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-field-double-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'a..b')\n- observed : 'a..b'\nLocation:\n5 | type Pair is Type:\n6>|   P{a..b: Flag}\n  |     ^^^^\n7 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-trailing-dot",
+      "file": "tests/compiler-nest/round3-fixtures/name-trailing-dot.bend",
+      "sha256": "f69beb695aaf0080f78afe62fe2281326d051056eb0bca0153c57b7dec19ec2d",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-trailing-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'x.')\n- observed : 'x.'\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   x.\n  |   ^^\n7 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    },
+    {
+      "name": "name-type-double-dot",
+      "file": "tests/compiler-nest/round3-fixtures/name-type-double-dot.bend",
+      "sha256": "113f4ed3529764bbae32d4e299dfcfb928a811f3f677cf300db14517fe361700",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round3-fixtures/name-type-double-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'P..Q')\n- observed : 'P..Q'\nLocation:\n4 | \n5>| type P..Q is Type:\n  |      ^^^^\n6 |   PQ{a: Flag}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tlex\tname\t"
+      },
+      "finding": "dotted-binder"
+    }
+  ]
+}
