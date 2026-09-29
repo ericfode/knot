@@ -48,8 +48,9 @@ Checks, in order:
   2^30, 2^31 and 2^32-1; constructors of 3, 5 and 9 fields, flat and inside a wider one; tag Cases whose Default
   is reached by an immediate and by an Object; and, by literal review, the edges of section 6.1's inspection;
 - the differential lane (vm/lane.py, parameters and seed frozen in vm/core/lane.json): a seeded corpus of
-  generated programs (every second one laundered through `none`), random key Cases, prim sweeps and the
-  print, Halt, digit and Nat writers' boundaries, each run through vm.wasm (test build and production module) and
+  generated programs (every second one laundered through `none`), random key Cases, prim sweeps, the
+  print, Halt, digit and Nat writers' boundaries and a matrix of every kind of word at every place section 6
+  inspects one, each run through vm.wasm (test build and production module) and
   through vm/evaluate.py, which must agree on stdout, exit, stderr, outcome, cause and calls; a fixed
   sample of it also through the seed's native lane, with the seed's bytes frozen; and every admitted golden,
   control and fuzz image through both;
@@ -1410,6 +1411,30 @@ MUTANTS = [
      [('(if (i32.eq (local.get $j) (i32.sub (i32.shr_u (i32.load offset=4 (local.get $w)) (i32.const 3)) (i32.const 2)))',
        '(if (i32.or (i32.eq (local.get $j) (i32.sub (i32.shr_u (i32.load offset=4 (local.get $w)) (i32.const 3)) (i32.const 2)))'
        ' (i32.eq (local.get $j) (i32.const 2)))')], 'describe'),
+    # review round 6, the inspection matrix: an immediate word must be refused before any load through it. Wasm evaluates
+    # both operands of an `or`, so the fault of the VM of 2e0c9b1 was a trap where section 6 gives `HostFailure image`
+    ('scell-loads-before-immediate-test', 'a String cell is tested for an immediate in the same `or` as the loads through it',
+     [('    ;; an immediate is no cell: refuse it before any load through it (Wasm evaluates both operands of an or)\n'
+       '    (if (i32.and (local.get $s) (i32.const 1)) (then (call $refuse (global.get $R_ill_typed))))\n'
+       '    (if (i32.or (i32.and (i32.load offset=4 (local.get $s)) (i32.const 7))\n'
+       '          (i32.or (i32.ne (i32.load offset=8 (local.get $s)) (global.get $rString))\n'
+       '                  (i32.ne (i32.load offset=12 (local.get $s)) (i32.const 1))))\n'
+       '      (then (call $refuse (global.get $R_ill_typed))))',
+       '    (if (i32.or (i32.and (local.get $s) (i32.const 1))\n'
+       '          (i32.or (i32.and (i32.load offset=4 (local.get $s)) (i32.const 7))\n'
+       '            (i32.or (i32.ne (i32.load offset=8 (local.get $s)) (global.get $rString))\n'
+       '                    (i32.ne (i32.load offset=12 (local.get $s)) (i32.const 1)))))\n'
+       '      (then (call $refuse (global.get $R_ill_typed))))')], 'traps'),
+    ('finish-loads-before-immediate-test', "a Program's final word is tested for an immediate in the same `or` as the loads through it",
+     [('    (if (i32.or (i32.and (local.get $x) (i32.const 1)) (i32.eqz (local.get $x)))\n'
+       '      (then (call $refuse (global.get $R_ill_typed))))\n'
+       '    (if (i32.or (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7))\n'
+       '                (i32.ne (i32.load offset=8 (local.get $x)) (global.get $rIoop)))\n'
+       '      (then (call $refuse (global.get $R_ill_typed))))',
+       '    (if (i32.or (i32.or (i32.and (local.get $x) (i32.const 1)) (i32.eqz (local.get $x)))\n'
+       '          (i32.or (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7))\n'
+       '                  (i32.ne (i32.load offset=8 (local.get $x)) (global.get $rIoop))))\n'
+       '      (then (call $refuse (global.get $R_ill_typed))))')], 'traps'),
     # describe's own bounds (section 8): a Nat then constructors near 1,048,576 visits, and the frame region its worklist
     # shares (12 bytes an open Object). The visit and frame checks were pinned only where nothing followed or opened
     ('nat-visits-undercount', 'a Nat word adds n visits to the running count, not n + 1',
@@ -1892,6 +1917,7 @@ def main(args: list) -> int:
               'growth': [j for j in growth if j['at_most']], 'refused': [j for j in growth if j['dump']['outcome'] is None]}
     require(all(groups[g] for g in ('growth', 'refused')), 'the growth rows have a bounded count and a refusal')
     groups.update(lane_groups(lane_all, BUILD / 'lane'))
+    groups['traps'] = groups['inspection']  # the same rows: a fault where the frozen run is a refusal is the wrong observation
     groups['dumps'] = [{'id': f'dump:{n}', 'files': {staged(by_name[n]['image']): str(sandbox / staged(by_name[n]['image']))},
                         'argv': [staged(by_name[n]['image']), *by_name[n]['argv']], 'trace': 'yields', 'want': None, 'dump': want}
                        for n, want in fixtures['dumps'].items()]
@@ -1931,6 +1957,11 @@ def main(args: list) -> int:
                                                           clean(out[j['id']]) or out[j['id']]['status'] in ('Timeout', 'Skipped') and group == 'hang')]
         if group == 'hang':  # the frozen outcome always ends: a row that outlives its deadline is the wrong observation
             wrong = [j['id'] for j in groups[group] if out[j['id']]['status'] == 'Timeout']
+        elif group == 'traps':  # no frozen run is a trap: a row that traps is the wrong observation, and every other row stays right
+            wrong = [j['id'] for j in groups[group] if out[j['id']]['status'] == 'Trap']
+            askew = [j['id'] for j in groups[group] if out[j['id']]['status'] != 'Trap'
+                     and not (clean(out[j['id']]) and not observed_wrong(j, out[j['id']]))]
+            require(not askew, f'mutant {name}: rows that do not trap are wrong too: {askew[:5]}')
         elif group == 'trap':  # the frozen outcome is never a trap, so a trap is the wrong observation
             wrong = [j['id'] for j in full_heap if out[j['id']]['status'] == 'Trap']
             right = [j['id'] for j in groups[group] if j not in full_heap

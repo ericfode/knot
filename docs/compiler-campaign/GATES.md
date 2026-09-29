@@ -102,7 +102,7 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   describe that needs exactly 132 bytes of frame region (12 bytes an open
   Object) and stops one byte short, an `append` block that ends exactly at a
   lowered heap and one 16 bytes past it, and the cell of an Action.
-- 22 seeded rows (`vm/core/seeded.json`) whose expected results the pinned seed's
+- 24 seeded rows (`vm/core/seeded.json`) whose expected results the pinned seed's
   native lane fixed before any VM ran them: U32 and Char key Cases of 3 and 5
   keys queried below, at, between and above their keys (with keys and computed
   scrutinees at 2^30, 2^31 and 2^32-1), constructors of 3, 5 and 9 fields flat and
@@ -111,10 +111,13 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   The gate runs the seed again and requires its frozen bytes; the reference
   evaluation and the VM, on the real host and the test build, must give the
   same run.
-- A differential lane (`vm/lane.py`; seed and sizes in `vm/core/lane.json`): 2,472
-  generated rows (2,000 programs, every second one laundered through `none`
+- A differential lane (`vm/lane.py`; seed and sizes in `vm/core/lane.json`): 2,746
+  rows (2,000 generated programs, every second one laundered through `none`
   types; 200 random key Cases; 76 prim sweeps; the print, Halt, digit and Nat
-  writers' boundaries; two rows at the display bound). Each runs through the test
+  writers' boundaries; two rows at the display bound; and 272 rows that put every
+  kind of word at every place section 6 inspects one, which found a String cell
+  and a Program's final word trapping on a scalar of about 2^25 or more instead of
+  halting `ill-typed`, now fixed in `vm.wat`). Each runs through the test
   build and the production module and through `vm/evaluate.py`, which must
   agree on stdout, exit, stderr, outcome, cause and calls; an 84-row sample also
   runs through the seed's native lane with its bytes frozen. Every admitted
@@ -159,11 +162,12 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Seventy-four WAT mutants are each killed by a wrong observation. One restores the
+- Seventy-six WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
-  ceiling row stays right; one steps the key search to the middle, not past it,
-  and is killed by the hang it makes (a row that outlives its deadline, in
-  group `hang`). Twenty-two came with review round 6: the key search, tag
+  ceiling row stays right; two restore the immediate tests that trapped
+  (group `traps`); one steps the key search to the middle, not past it, and is
+  killed by the hang it makes (a row that outlives its deadline, in group
+  `hang`). Twenty-four came with review round 6: the key search, tag
   Defaults and range, describe's separators, closing brace, visit and frame
   bounds, `append` at a lowered heap, an Action's cell, and a scalar read of an
   Action. Four read less than an inspection extent (`append`'s

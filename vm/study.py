@@ -63,39 +63,38 @@ def apply(text: str, mutant: tuple) -> str:
 # The survivors of the gate's rows, each with why no run can tell it from vm/vm.wat (CORE.md, "Mutant study"). A name
 # carries its line, so an edit to vm.wat that moves a survivor, or kills one, shows as an unexplained or a stale entry.
 _WHY = [
-    ('Nat.sub at x = y is 0 by either arm of the select', ['$prim:2050:i32.gt_u->i32.ge_u@39']),
-    ('the key differs from the word at this point (equality returned above), so `<` and `<=` agree', ['$select:2198:i32.lt_u->i32.le_u@17']),
-    ('a flag that is only tested for truth', ['$select:2212:const 1->2@34', '$complete:2124:const 1->2@25']),
+    ('Nat.sub at x = y is 0 by either arm of the select', ['$prim:2051:i32.gt_u->i32.ge_u@39']),
+    ('the key differs from the word at this point (equality returned above), so `<` and `<=` agree', ['$select:2199:i32.lt_u->i32.le_u@17']),
+    ('a flag that is only tested for truth', ['$select:2213:const 1->2@34', '$complete:2125:const 1->2@25']),
     ("the class mask lets a Closure past the class test, but its word at offset 8 is a node's word offset, which exceeds every "
      "type index (each type record is 5 words and precedes the nodes), so the type test refuses it as before",
-     ['$select:2215:const 7->6@70', '$tagof:1882:const 7->6@60', '$scell:1897:const 7->6@62']),
-    ("the class test reads only the payload's parity: a wrong-class word passes only if its offset-8 word is the String type "
-     "index and its next word is 1, an Action whose foreign id is that index holding the empty String (constructible, not pinned)",
-     ['$scell:1897:const 7->8@62']),
-    ("a redundant guard: an immediate dereferenced at its word + 4 reads the low VM area, never a String cell, and the "
-     "later checks refuse it", ['$scell:1896:const 1->2@40', '$scell:1896:const 1->0@40']),
+     ['$select:2216:const 7->6@70', '$tagof:1882:const 7->6@60', '$scell:1898:const 7->6@60']),
+    ("the class test reads only the payload's parity: a wrong-class word passes it, then the type word and the tag word, only "
+     "if it is an Action whose foreign id is the String type index and whose operand is the word 1; the mutant then reads "
+     "past the Action's 16-byte cell, and what follows it decides the outcome (`ill-string-action` builds that Action and "
+     "still refuses by the words it finds, not by its class)", ['$scell:1898:const 7->8@60']),
     ('which operands a prim or a completion drops is unobservable while `$drop` is empty (CORE.md choice 1); vm-rc makes it observable',
-     ['$complete:2133:i32.lt_u->i32.le_u@21', '$complete:2133:i32.gt_u->i32.ge_u@63', '$complete:2133:const 16->17@46',
-      '$complete:2133:const 16->15@46', '$complete:2133:const 19->20@88', '$complete:2133:const 19->18@88',
-      '$complete:2136:i32.eq->i32.ne@26', '$complete:2136:i32.ne->i32.eq@66', '$complete:2136:i32.and->i32.or@17',
-      '$complete:2136:const 2->3@50', '$complete:2136:const 2->1@50', '$complete:2136:const 35->36@89', '$complete:2136:const 35->34@89']),
+     ['$complete:2134:i32.lt_u->i32.le_u@21', '$complete:2134:i32.gt_u->i32.ge_u@63', '$complete:2134:const 16->17@46',
+      '$complete:2134:const 16->15@46', '$complete:2134:const 19->20@88', '$complete:2134:const 19->18@88',
+      '$complete:2137:i32.eq->i32.ne@26', '$complete:2137:i32.ne->i32.eq@66', '$complete:2137:i32.and->i32.or@17',
+      '$complete:2137:const 2->3@50', '$complete:2137:const 2->1@50', '$complete:2137:const 35->36@89', '$complete:2137:const 35->34@89']),
     ("binds one field past the Branch's: it reads a word past the Object and writes the slot after the Branch's, padding of "
-     "the Activation or the reference count of the next cell, both unread until vm-rc", ['$select:2247:i32.ge_u->i32.gt_u@31']),
+     "the Activation or the reference count of the next cell, both unread until vm-rc", ['$select:2248:i32.ge_u->i32.gt_u@31']),
     ("the reference count of an append cell, unread until vm-rc",
-     ['$append:1966:const 1->2@34', '$append:1966:const 1->0@34']),
+     ['$append:1967:const 1->2@34', '$append:1967:const 1->0@34']),
     ("copies 4 bytes more for each operand, into padding or free heap above the bump pointer, which `$alloc` zeroes when it "
      "reuses it; it differs only where a copy leaves memory, an Object of three fields or an Action ending exactly at 4 GiB, "
-     "which no ceiling row builds", ['$complete:2162:const 2->3@104', '$complete:2169:const 2->3@100']),
+     "which no ceiling row builds", ['$complete:2163:const 2->3@104', '$complete:2170:const 2->3@100']),
     ("clears half of the append block first: every word a cell reads is then written, so only padding words differ",
-     ['$append:1962:const 5->4@73']),
+     ['$append:1963:const 5->4@73']),
     ("the payload count in the header of an Action, which stays a 16-byte cell for 0 to 2 words; only the state audit reads it",
-     ['$complete:2167:i32.add->i32.sub@32', '$complete:2167:const 1->0@57']),
+     ['$complete:2168:i32.add->i32.sub@32', '$complete:2168:const 1->0@57']),
     ("the payload count in the header of a String or Big cell, whose size class it leaves unchanged",
-     ['$scon:1917:const 4->5@31', '$scon:1917:const 4->3@31', '$scalar:1844:const 1->2@35', '$scalar:1844:const 1->0@35']),
-    ("the Action's foreign id is never read: vm-core performs only IO.print (CORE.md choice 2); vm-io reads it",
-     ['$complete:2168:const 3->4@72']),
+     ['$scon:1918:const 4->5@31', '$scon:1918:const 4->3@31', '$scalar:1844:const 1->2@35', '$scalar:1844:const 1->0@35']),
+    ("stores the Foreign node's operand count where the Action's foreign id belongs: for IO.print, the only foreign vm-core "
+     "admits (choice 2), both are 1", ['$complete:2169:const 3->4@72']),
     ("the mode register after a finished run: `$run` returns at once (vm.wat line 2459) and no observation reads the register",
-     ['$describe:2704:const 3->4@22', '$describe:2704:const 3->2@22']),
+     ['$describe:2706:const 3->4@22', '$describe:2706:const 3->2@22']),
 ]
 EQUIVALENT: dict[str, str] = {m: why for why, names in _WHY for m in names}
 assert sum(len(names) for _, names in _WHY) == len(EQUIVALENT), 'a survivor is explained twice'
