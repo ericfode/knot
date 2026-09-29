@@ -811,7 +811,8 @@ adopt them or record its own, so that lockstep compares like with like.
   each of the three traps there and nowhere else, and the gate registers them
   (group `memory-end`).
 
-  The 33 survivors, by why no run can tell them apart:
+  The 33 survivors, by why no run tells them apart: 32 are argued equal on every
+  input or unobservable until vm-rc, and one is reachable by a layout no row builds.
   - *unobservable until vm-rc* (15): 13 change which operands a prim or a completion
     drops (`$drop` is empty, choice 1), and two change the reference count of an
     append cell;
@@ -825,11 +826,12 @@ adopt them or record its own, so that lockstep compares like with like.
     (1), every word of which that is read is written after it; the `tfn` flag (1)
     and the `imm` flag (1), tested only for truth; and the mode register after a
     finished run (2, `$describe:2706`: `$run` returns at once);
-  - *a guard another check makes redundant* (4): three class masks (`7 -> 6`), where
+  - *a guard another check makes redundant* (3): three class masks (`7 -> 6`), where
     a Closure passes the class test and the type test refuses it, since its word at
     offset 8 is a node's word offset and every node follows every type record;
-    and one class mask (`7 -> 8`) that only an Action whose foreign id is the String
-    type index and whose operand is the word 1 passes, after which it reads past the
-    Action's 16-byte cell and what follows decides the outcome
-    (`ill-string-action` builds that Action and still refuses by the words it finds;
-    one that ended where memory does would trap, which no row builds).
+  - *reachable, but by no row* (1): a class mask (`7 -> 8`) that only an Action whose
+    foreign id is the String type index and whose operand is the word 1 passes,
+    after which it reads past the Action's 16-byte cell, so the words of the next
+    cell decide the outcome. `ill-string-action` builds that Action and still
+    refuses by the words it finds; another layout after it could read as a String,
+    and one ending where memory does would trap. No row builds either.
