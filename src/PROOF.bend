@@ -156,3 +156,19 @@ def L.same_line_witness(): {==}
 def L.paren_on_a_later_line_is_no_call(): {==}
 
 def L.parenthesis_opens_a_column(): {==}
+
+def L.suffix_witness(): {==}
+
+def L.continues_witness(): {==}
+
+def L.lambda_witness(): {==}
+
+def L.promoted_term_witness(): {==}
+
+def L.suffix_ends_a_body(at,value,rest): {==}
+
+def L.marker_ends_no_body(at,rest): {==}
+
+def L.suffix_ends_a_let(at,rest): {==}
+
+def L.promoted_term_is_unsupported(): {==}

@@ -56,6 +56,46 @@ def promotes(ts: List<&2,S.Token>) -> Bool:
 def opens(+ts: List<&2,S.Token>) -> Bool:
   Bool.or(scrutinee(ts),Bool.or(numeral(ts),Bool.or(starts(ts,"("),promotes(ts))))
 
+# After a term the seed reads an infix operator, a call, an index, an offload `!(` or, after a name, a
+# lambda. A body the lowering discards holds any of them unchecked and a live one needs a target the
+# program defines, so the parser leaves each unread: it is unsupported wherever a term ends.
+# A `+` or `-` that touches a name is a marker; `.` opens only `.|.`, `.^.` and `.&.`.
+def marker(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Con{+sign,Con{next,rest}}: Bool.and(Bool.or(S.matches(sign,"+"),S.matches(sign,"-")),S.marks(sign,next))
+    case _: False{}
+
+def operator(+ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{+h,+t}:
+      S.choose(Bool,S.matches(h,"."),u => Bool.or(starts(t,"|"),Bool.or(starts(t,"^"),starts(t,"&"))),u =>
+        Bool.or(S.infix(h),Bool.and(Bool.or(S.matches(h,"+"),S.matches(h,"-")),Bool.not(marker(Con{h,t})))))
+
+def bang(+ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Con{+h,+t}: Bool.and(S.matches(h,"!"),starts(t,"("))
+    case _: False{}
+
+def suffix(+ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Con{+h,+t}: Bool.or(Bool.or(S.matches(h,"("),S.matches(h,"[")),Bool.or(bang(Con{h,t}),operator(Con{h,t})))
+    case _: False{}
+
+def arrow(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Con{+eq,Con{+gt,rest}}: Bool.and(S.matches(eq,"="),Bool.and(S.matches(gt,">"),S.touches(eq,gt)))
+    case _: False{}
+
+def lambda(value: S.Node, ts: List<&2,S.Token>) -> Bool:
+  match value:
+    case S.Variable{name}: arrow(ts)
+    case _: False{}
+
+# A line that starts with an operator, `!(` or `=>` continues the term before it; one with `(` or `[` does not.
+def continues(+ts: List<&2,S.Token>) -> Bool:
+  Bool.or(operator(ts),Bool.or(bang(ts),arrow(ts)))
+
 # A line break, then a name: whitespace to the seed.
 def broken(+ts: List<&2,S.Token>) -> Bool:
   Bool.and(starts(ts,"\n"),scrutinee(S.skip_lines(ts)))
@@ -123,6 +163,10 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
 def split(+ts: List<&2,S.Token>) -> Bool:
   Bool.and(starts(ts,"\n"),Bool.or(starts(S.skip_lines(ts),"="),starts(S.skip_lines(ts),":")))
 
+# The seed reads `+name` that starts no let as a promoted term, which an operator may continue.
+def promoted_term(+quantity: U32, +ts: List<&2,S.Token>) -> Bool:
+  Bool.and(U32.is_eq(quantity,2),Bool.or(Bool.and(Bool.or(starts(ts,"\n"),starts(ts,"<eof>")),Bool.not(split(ts))),operator(ts)))
+
 # So is one before its value.
 def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
   S.choose(Result<S.Error,List<&2,S.Token>>,split(ts),u =>
@@ -136,7 +180,9 @@ def line_end(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
   match ts:
     case Con{+h,t}:
       S.choose(Result<S.Error,List<&2,S.Token>>,S.statement(h),u =>
-        Fail{S.Unsupported{"parse","same-line-statement",S.at(h)}},u => expect(ts,"\n"))
+        Fail{S.Unsupported{"parse","same-line-statement",S.at(h)}},u =>
+      S.choose(Result<S.Error,List<&2,S.Token>>,suffix(ts),u =>
+        Fail{S.Unsupported{"parse","term-form",S.at(h)}},u => expect(ts,"\n")))
     case Nil{}: expect(ts,"\n")
 
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -182,7 +228,7 @@ def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
         invalid(ts,"end-of-body"))))
     case _: invalid(ts,"unexpected-end")
 
-def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+def terminated(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match value:
     case S.Constructor{token,items}:
       match ts:
@@ -192,6 +238,9 @@ def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
               body_end(value,ts),u => unsupported(ts,"destructuring-binding")),u => body_end(value,ts))
         case Nil{}: body_end(value,ts)
     case _: body_end(value,ts)
+
+def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  S.choose(Result<S.Error,Parsed>,suffix(ts),u => unsupported(ts,"term-form"),u => terminated(value,ts))
 
 def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
@@ -234,7 +283,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             then(run(n,Header{head,name},tail),value => rest =>
               then(run(n,Book{},rest),more => end => prepend(value,more,end))),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(head,"def"),S.matches(head,"type")),u =>
-            unsupported(tokens,"top-level-indentation"),u => invalid(tokens,"top-level-indentation")))))
+            unsupported(tokens,"top-level-indentation"),u =>
+          S.choose(Result<S.Error,Parsed>,continues(tokens),u =>
+            unsupported(tokens,"term-form"),u => invalid(tokens,"top-level-indentation"))))))
         case Con{+head,Nil{}}:
           S.choose(Result<S.Error,Parsed>,S.matches(head,"<eof>"),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u => invalid(tokens,"unexpected-end"))
@@ -284,7 +335,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
               then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
             S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.or(numeral(tokens),Bool.or(starts(tokens,"("),Bool.and(pattern,promotes(tokens)))))),u => unsupported(tokens,"argument-whitespace"),u =>
             S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),S.matches(h,"\n")),u => unsupported(tokens,"line-break"),u =>
-              invalid(tokens,"argument-separator")))))
+            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(Bool.or(parameters,pattern)),Bool.or(suffix(tokens),lambda(head,tokens))),u => unsupported(tokens,"term-form"),u =>
+              invalid(tokens,"argument-separator"))))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{+pattern}:
       match tokens:
@@ -330,9 +382,11 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(h),split(Con{second,tail})),u =>
             unsupported(Con{second,tail},"line-break"),u =>
             then(run(n,Term{False{}},tokens),value => rest => reply(value,rest)))))),u =>
-          # The seed checks no column for a statement.
+          # The seed checks no column for a statement, and an operator continues the term before it.
           S.choose(Result<S.Error,Parsed>,S.statement(h),u =>
-            unsupported(tokens,"body-indentation"),u => invalid(tokens,"body-indentation")))
+            unsupported(tokens,"body-indentation"),u =>
+          S.choose(Result<S.Error,Parsed>,continues(tokens),u =>
+            unsupported(tokens,"term-form"),u => invalid(tokens,"body-indentation"))))
         case _: invalid(tokens,"body")
     case 1n+ +n Header{+keyword,+name}:
       S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"import"),Bool.and(starts(tokens,"/"),
@@ -347,7 +401,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       S.choose(Result<S.Error,Parsed>,S.matches(keyword,"def"),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,"("),args =>
           then(run(n,Parameters{")"},args),params => rest => run(n,FunctionTail{name,params},rest))),u =>
-        unsupported(Con{keyword,tokens},"declaration-form"))),u => invalid(tokens,"declaration-name")))
+        unsupported(Con{keyword,tokens},"declaration-form"))),u =>
+      S.choose(Result<S.Error,Parsed>,continues(Con{keyword,Con{name,tokens}}),u =>
+        unsupported(Con{keyword,Con{name,tokens}},"term-form"),u => invalid(tokens,"declaration-name"))))
     case 1n+ +n TypeKind{+name}:
       match tokens:
         case Con{+kind,+tail}:
@@ -386,8 +442,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(name),Bool.or(U32.is_eq(quantity,0),S.binder(name))),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(separator,":"),u =>
             run(n,AnnotatedBinding{name,quantity,column},tail),u =>
+          S.choose(Result<S.Error,Parsed>,promoted_term(quantity,Con{separator,tail}),u =>
+            unsupported(tokens,"term-form"),u =>
             S.bind(List<&2,S.Token>,Parsed,assign(Con{separator,tail}),rhs =>
-              then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest)))),u =>
+              then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest))))),u =>
             binder_failure(tokens,name,"binding-name",U32.is_ne(quantity,0)))
         case _: invalid(tokens,"binding")
     case 1n+ +n AnnotatedBinding{+name,+quantity,+column}:
@@ -401,9 +459,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"binding-type"))
         case _: invalid(tokens,"binding-type")
     case 1n+ +n BindingTail{+token,+quantity,+annotation,+value,+column}:
+      S.choose(Result<S.Error,Parsed>,lambda(value,tokens),u => unsupported(tokens,"term-form"),u =>
       S.bind(List<&2,S.Token>,Parsed,line_end(tokens),body =>
         then(run(n,BodyAt{column,False{}},S.skip_lines(body)),next => rest =>
-          Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}}))
+          Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}})))
     case 1n+ +n RowTail{+keyword,+pattern,+parent,+column}:
       S.choose(Result<S.Error,Parsed>,starts(tokens,","),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,","),tail =>

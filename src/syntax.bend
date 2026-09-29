@@ -136,6 +136,11 @@ def closes(+t: Token) -> Bool:
 def statement(+t: Token) -> Bool:
   Bool.or(identifier(t),Bool.or(matches(t,"match"),Bool.or(matches(t,"+"),matches(t,"-"))))
 
+# The seed's infix operators, `+` and `-` aside, begin with one of these tokens.
+def infix(+t: Token) -> Bool:
+  Bool.or(matches(t,"*"),Bool.or(matches(t,"/"),Bool.or(matches(t,"%"),Bool.or(matches(t,"<"),
+    Bool.or(matches(t,">"),Bool.or(matches(t,"&"),matches(t,"|")))))))
+
 # A pattern binds one word; a dotted name refers to a declaration.
 def binder(+t: Token) -> Bool:
   Bool.and(identifier(t),U32.is_eq(words(text(t),True{},0),1))

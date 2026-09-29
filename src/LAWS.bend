@@ -313,3 +313,51 @@ law paren_on_a_later_line_is_no_call:
 
 law parenthesis_opens_a_column:
   {[P.opens([S.Token{"(",S.At{9,10,1,9}}]),P.opens([S.Token{":",S.At{9,10,1,9}}])] == [True{},False{}] : List<&2,Bool>}
+
+# After a complete term the seed reads an infix operator, a call, an index, an offload or (after a
+# name) a lambda, and a body it discards holds them unchecked: they are unsupported wherever a term
+# ends. A `+` or `-` that touches a name is a marker and `.` opens only `.|.`, `.^.` and `.&.`.
+def tok(text: String, +at: U32) -> S.Token: S.Token{text,S.At{at,U32.add(at,1),1,at}}
+
+law suffix_witness:
+  {[P.suffix([tok("|",9),tok("|",10),tok("a",12)]),P.suffix([tok("(",9),tok("a",10)]),P.suffix([tok("[",9),tok("a",10)]),
+    P.suffix([tok("!",9),tok("(",10)]),P.suffix([tok("-",9),tok(">",10)]),P.suffix([tok("+",9),tok("a",11)]),
+    P.suffix([tok(".",9),tok("|",10)]),P.suffix([tok("+",9),tok("a",10)]),P.suffix([tok("=",9),tok("=",10)]),
+    P.suffix([tok(".",9),tok("a",11)]),P.suffix([tok("!",9),tok("a",10)]),P.suffix([tok("\n",9),tok("|",10)])] ==
+    [True{},True{},True{},True{},True{},True{},True{},False{},False{},False{},False{},False{}] : List<&2,Bool>}
+
+law continues_witness:
+  {[P.continues([tok("|",9),tok("a",10)]),P.continues([tok("!",9),tok("(",10)]),P.continues([tok("=",9),tok(">",10)]),
+    P.continues([tok("=",9),tok(">",11)]),P.continues([tok("(",9),tok("a",10)]),P.continues([tok("a",9),tok("b",11)])] ==
+    [True{},True{},True{},False{},False{},False{}] : List<&2,Bool>}
+
+law lambda_witness:
+  {[P.lambda(S.Variable{tok("a",5)},[tok("=",9),tok(">",10)]),P.lambda(S.Variable{tok("a",5)},[tok("=",9),tok(">",11)]),
+    P.lambda(S.Constructor{tok("On",5),Nil{}},[tok("=",9),tok(">",10)])] == [True{},False{},False{}] : List<&2,Bool>}
+
+law promoted_term_witness:
+  {[P.promoted_term(2,[tok("\n",9),tok("a",10),tok("<eof>",11)]),P.promoted_term(2,[tok("|",9),tok("a",10)]),
+    P.promoted_term(2,[tok("(",9),tok("a",10)]),P.promoted_term(0,[tok("\n",9),tok("a",10),tok("<eof>",11)]),
+    P.promoted_term(2,[tok("\n",9),tok(":",10),tok("<eof>",11)]),P.promoted_term(2,[tok("y",10),tok("\n",11)])] ==
+    [True{},True{},False{},False{},False{},False{}] : List<&2,Bool>}
+
+law suffix_ends_a_body:
+  for +at: S.At
+  for +value: S.Node
+  for +rest: List<&2,S.Token>
+  {P.reply(value,Con{S.Token{"|",at},rest}) == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,P.Parsed>}
+
+law marker_ends_no_body:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.reply(S.Variable{tok("a",5)},[tok("+",9),tok("x",10),tok("<eof>",11)]) ==
+    Fail{S.Invalid{"parse","end-of-body",S.At{9,10,1,9}}} : Result<S.Error,P.Parsed>}
+
+law suffix_ends_a_let:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.line_end(Con{S.Token{"|",at},rest}) == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,List<&2,S.Token>>}
+
+law promoted_term_is_unsupported:
+  {P.run(1n,P.BindingStart{2,0},[tok("x0",5),tok("\n",7),tok("<eof>",8)]) ==
+    Fail{S.Unsupported{"parse","term-form",S.At{5,6,1,5}}} : Result<S.Error,P.Parsed>}
