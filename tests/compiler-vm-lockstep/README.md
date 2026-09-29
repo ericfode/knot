@@ -70,7 +70,7 @@ prints `DIVERGENCE at transition N, in FIELD` with both machines' state around i
 | `lockstep.py` | parser, the two strengths, the halting relations, the D23 classifier, drivers |
 | `runs.py` | the runs, taken from the sets `vm/check-model.py` already enumerates |
 | `check.py` | the gate |
-| `frozen.json` | D7 expectations: the D23 classes, the relation counts, the fuel-stop count |
+| `frozen.json` | recorded expectations: the D23 classes, the relation counts, the fuel-stop and suite-lane counts |
 | `fixtures/long.plans.json` | two long runs across the 65,536-entry quantum |
 | `lockstep-cli.py` | one image, first-divergence report |
 | `bench/` | frozen bump-sized variants of `vm/bench`, the runner and its results |

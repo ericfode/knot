@@ -24,7 +24,7 @@ memory) one transition at a time, then requires:
   the live eval-cli and each frozen suite's expectation on every call of the wasm, fields-wasm, recursion and
   fields suites whose oracle core display lowers to an image (the others have no image until `image`);
 - every Program's effects are classified as eager and D23 give one trace (`spine`) or as pending D23,
-  against the classes frozen by literal review;
+  against the classes recorded in frozen.json;
 - VM mutants, model mutants and harness weakenings, each killed at a named state through a wrong
   observation (a side that produced no trace is a harness fault, never a kill); the state-only ones first shown
   to leave every final control and output unchanged, and the frame and heap ones to pass vm-core's own audit.

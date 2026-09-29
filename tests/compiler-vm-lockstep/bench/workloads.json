@@ -1,5 +1,5 @@
 {
- "rule": "Frozen before any timing (D7). Each variant is the frozen workload of vm/bench with only its size constants replaced (string-scan: unchanged); its source, image and independent guard are pinned here, and a new size is a new workload. A run must print True{} (seed) or Evaluated<TAB>B<TAB>1<TAB>True{} (VM, B the index of Bool in the image).",
+ "rule": "Pinned before the timed runs recorded in results.json, not before every run: the sizes were fixed in workloads.py first, and one run of the encoded plans on the VM, to check their guards, preceded this file. Each variant is the frozen workload of vm/bench with only its size constants replaced (string-scan: the seed source unchanged; its VM plan is the hand-lowered approximation); its source, image and independent guard are pinned here, and a new size is a new workload. A run must print True{} (seed) or Evaluated<TAB>B<TAB>1<TAB>True{} (VM, B the index of Bool in the image).",
  "workloads": [
   {
    "name": "deep-recursion-b",

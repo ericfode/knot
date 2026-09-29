@@ -204,7 +204,7 @@ for the model, `vm/model-trace.bend`, and requires:
   eval-cli and each suite's frozen expectation to agree on every call of the frozen wasm, fields-wasm,
   recursion and fields suites whose oracle core display lowers to an image (60 programs, 143 calls, counts
   frozen; the other suites have no image until `image` and count as nothing);
-- the D23 class of each Program (spine or pending) to equal the classes frozen by literal review;
+- the D23 class of each Program (spine or pending) to equal the classes recorded in `frozen.json`;
 - nineteen mutants (thirteen of the VM, six of the model) killed at a named state through a wrong observation,
   the state-only ones first shown to leave every final control and output unchanged, and eight weakened
   comparisons each shown to let one of them through.
