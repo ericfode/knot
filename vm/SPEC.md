@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 102 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 108 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden and frozen Book invocation, derived by the rules of §8 and §11 |
 | [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
@@ -254,8 +254,8 @@ stack. The validator checks every function, reachable or not:
    (`image-size`), even when it is also malformed. Then length, magic, version,
    total, entry kind, reserved word and registry digest.
 2. Section offsets, adjacency, counts and the limits below, record lengths, name
-   UTF-8, padding and uniqueness; constructor grouping; known type, constant and
-   node tags.
+   UTF-8, padding and uniqueness; constructor grouping and count (below); known
+   type, constant and node tags.
 3. Every index and child offset is in range and names a record of the right
    table; every child precedes its parent; each node has exactly one parent or is
    exactly one function's root.
@@ -281,13 +281,24 @@ malformed record, an inexact `slots` and every later rule:
 | live arity 4,096 | a larger arity in a function record whose length holds it (`arity`) | a length that does not (`function record`) |
 | `slots` 65,536, a function's or a Closure's | a larger `slots` (`slots`), even when inexact | none: every word is a count; exactness is step 4 |
 
-`check-spec.py` freezes 87 refusals (22 byte-level, 9 at the limits, 56 plan-level), and
+**A type record's constructor count** is a count that the structure bounds, and it is refused before it
+sizes or governs anything. A data type's record names its first constructor, which must be the table's
+next (`constructor grouping`), and its count, which must fit what the constructor table still holds
+(`constructor count`); the counts of all data types then sum to the table's size, and a shortfall is
+`constructor count` too. The order within a record is the first constructor, then the count, then the name.
+A loader that sized a list from the count before this check would ask for 32 GiB at `0xFFFFFFFF`, and
+on a smaller host would trap or exhaust instead of reporting `HostFailure image`; the control
+`type-count-max` refuses it, as `type-grouping` refuses a first constructor that is not the table's next
+and `type-count-short` a sum that falls short.
+
+`check-spec.py` freezes 90 refusals (25 byte-level, 9 at the limits, 56 plan-level), and
 vm-model and vm-core MUST each refuse every one of them, with the frozen refusal: `Exhausted`
 kind 2 for a limit, `HostFailure image` for the rest, and the reference codec's own reason where
 the VM reports one (vm-model spells it, vm-core maps it to a code of its own). A plan-level
 control breaks exactly one rule of §2–§4 in a golden's plan, and its message is the validator's
 first, so a loader that omits the rule admits it: a name with a NUL, or with a nonzero unused
-final byte (byte-level); two functions of one name; a call to a function beyond the table; a
+final byte, a first constructor that is not the table's next, a constructor count of
+`0xFFFFFFFF`, and a sum of counts short of the table (byte-level); two functions of one name; a call to a function beyond the table; a
 Case on a slot at or above the depth; a construct tag, or field type, that does not fit; a tag
 row keyed for another tag; a key Branch that binds a field; a closure whose arrow kind or result
 does not fit; an Invoke that does not fit; a Let, or a function, whose body has another type;
@@ -1083,7 +1094,7 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a tags-mode Case on Char, a Program, a boxed
   scalar constant and a `none`-typed node covered;
-- all 87 refusals of §4 with their frozen reasons, each resource limit
+- all 90 refusals of §4 with their frozen reasons, each resource limit
   `Exhausted` kind 2 on one side and malformed or invalid on the other, its six
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
@@ -1192,7 +1203,7 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 86 codec mutants and 4 source mutants killed through a changed image, a decode
+- 89 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe, invocation or argument verdict or a changed observation, and 92 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
@@ -1208,10 +1219,15 @@ lane and requires:
   closure result, that does not fit; an Invoke that does not fit; and a function body of another
   type. Each survives every golden and dies by the control that breaks its rule, three of them (a
   nonzero padding byte, U32 not opaque and the Invoke) by another refusal that the next check gives
-  instead of the frozen one, the rest by an admission. The other 34 `raise` and `fail` statements
-  of the codec that the review's audit removed one at a time are pinned by no control: for 12 of them
-  the audit found only images on which the codec then crashes, which §11 does not count as a kill, and
-  for 22 no image at all (DECISIONS, finding 12). Ten rule mutants of
+  instead of the frozen one, the rest by an admission. Three more, of a type record's constructors
+  (round 12, review finding 3), are a count refused where it exactly fills the constructor table (by
+  `opcode` and every other control of a valid image), the first-constructor check removed (by
+  `type-grouping`, which the next check refuses as `noncanonical` instead) and the sum of the counts
+  removed (by `type-count-short`, which a constructor's tag refuses instead). No mutant restores the late
+  size check: it would allocate 32 GiB at `type-count-max`, and a crash is no kill. The other 33 `raise` and
+  `fail` statements of the codec that the review's audit removed one at a time are pinned by no control: for
+  13 of them the audit found only images on which the codec then crashes, which §11 does not count as a
+  kill, and for 20 no image at all (DECISIONS, finding 12). Ten rule mutants of
   `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
   `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
   bound whose budget it does not pass; display steps counted as visits;

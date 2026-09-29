@@ -1116,6 +1116,10 @@ def byte_controls(images: dict, digest: bytes) -> list:
     # second's name records: `Flag` (its data word at names_at + 3) and `On` plus two padding bytes (names_at + 12).
     require((word(second, names_at + 3), word(second, names_at + 12)) ==
             (int.from_bytes(b'Flag', 'little'), int.from_bytes(b'On\0\0', 'little')), 'second: name records')
+    # second's type records are [5, kind, name, first constructor, count]: Flag (data, 0, 2), then Pair (data, 2, 1).
+    type_at = word(second, 5) + 1
+    require([word(second, type_at + i) for i in (0, 1, 3, 4)] == [5, 0, 0, 2], 'second: Flag record')
+    require([word(second, type_at + 5 + i) for i in (0, 1, 3, 4)] == [5, 0, 2, 1], 'second: Pair record')
     out = [
         ('truncated', second[:-4], 'total'),
         ('bad-magic', word_patch(second, 0, 0x474D494C), 'magic'),
@@ -1133,6 +1137,11 @@ def byte_controls(images: dict, digest: bytes) -> list:
         # Section 2: a name has no NUL and its unused final bytes are zero.
         ('name-nul', word_patch(second, names_at + 3, int.from_bytes(b'F\0ag', 'little')), 'name padding'),
         ('name-padding', word_patch(second, names_at + 12, int.from_bytes(b'On\0\1', 'little')), 'name padding'),
+        # Section 4 step 2: a type's first constructor is the table's next, its count must fit the constructor
+        # table before it sizes anything (a list of 0xFFFFFFFF would take 32 GiB), and the counts sum to the table.
+        ('type-grouping', word_patch(second, type_at + 3, 1), 'constructor grouping'),
+        ('type-count-max', word_patch(second, type_at + 4, 0xFFFFFFFF), 'constructor count'),
+        ('type-count-short', word_patch(second, type_at + 5 + 4, 0), 'constructor count'),
         ('function-root-shared', word_patch(capture, swap + 8 + 5, body), 'function root'),
         ('child-not-record', word_patch(capture, body + 4, word(capture, body + 4) + 1), 'child offset'),
         ('child-after-parent', word_patch(capture, body + 4, body + 6), 'child after parent'),
@@ -2236,6 +2245,14 @@ CODEC_MUTANTS = [
     ('validator-ignores-closure-result-type', [("                fail(where, 'closure result type')\n", "                pass\n")]),
     ('validator-ignores-invoke-types', [("                fail(where, 'invoke types')\n", "                pass\n")]),
     ('validator-ignores-body-type', [("            fail(f['name'], 'body type')\n", "            pass\n")]),
+    # Review of round 11, finding 3: a type record's constructor count is checked against the constructor table
+    # before it sizes a list. The late check would allocate from `type-count-max`'s 0xFFFFFFFF, so no mutant
+    # restores it (a crash is no kill); these three change a verdict: a count refused where it exactly fills the
+    # table (every valid image), and the first-constructor check, or the sum of the counts, removed (each refusal
+    # is then another one, `noncanonical` or a constructor's tag).
+    ('constructor-count-exclusive', [("            if r[3] > len(ctors) - expect:", "            if r[3] >= len(ctors) - expect:")]),
+    ('constructor-grouping-unchecked', [("            if r[2] != expect:\n                raise Malformed('constructor grouping')\n", "")]),
+    ('constructor-count-sum-unchecked', [("    if expect != len(ctors):\n        raise Malformed('constructor count')\n", "")]),
 ]
 
 

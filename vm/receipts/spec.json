@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T06:15:12.074247+00:00",
+ "date": "2026-09-29T06:21:21.940821+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -8,7 +8,7 @@
  },
  "inputs": {
   "vm/DECISIONS.md": "bca8072c1c62c5c062bcf1fd938422fe96f364bc920bb37a33cd1c47480e368a",
-  "vm/SPEC.md": "4dc0b62b4fbd52d976bbfe73af0f9770ba77f7c4af28f77a1970a4a8704fa145",
+  "vm/SPEC.md": "2e2882f41467dbf72298690aae8ba3bccffae203de54e6dd180046b189f456df",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "940d99291cd79786031d42230432480b3d2a4e0f1f1d53d33b337b53a2390f9c",
+  "vm/check-spec.py": "0d19521963d9ca09ffad6d9018bfb5524eb9a48c8e51e5a5273e8c89cdb65271",
   "vm/evaluate.py": "0e8de3f917bd614b9778059a94c477eff4bfe39fdbdbf4bb1ae6884ad330c74b",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
@@ -349,13 +349,13 @@
   "vm/golden/value-on.bend": "68f9c5675b153f1f72913e68254caa4779bb383a63e7b8b477e3f65500847ce3",
   "vm/golden/value-on.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
   "vm/golden/value-on.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
-  "vm/golden/vm-expected.json": "1ccf998f1f35f0159e849269117c8fd0e0c5356cb8ed899d8f745a2f4404cc86",
+  "vm/golden/vm-expected.json": "ffd534e2ff68fea87bc1dde83afef16548730b24e6cf7dd14b3af46f95ae9cbb",
   "vm/golden/write-sources.py": "e2632c0f73731e6e3ef52cc6c319cea1c38c218c5c7c0042da3a8c2594cb7623",
   "vm/oracles/closures.json.gz": "de15465bd281b9bcb9cdd582581eb5c6755de58c8a92e133d4d04b8989b7fcab",
   "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
   "vm/oracles/manifest.json": "99d769399af7220e6fb6cc76b8bd15f8051716ded4694b371728bd4e096b15e8",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
-  "vm/serializer.py": "f28aef2493968d3729388c75909037dc4a3a56fc63a9b1bca885a1ff825279db"
+  "vm/serializer.py": "ee58068136241cb0662eb3a444becd65b9b4cc2cc7122478be4960e3185790d8"
  },
  "registry": {
   "prims": 41,
@@ -3558,6 +3558,18 @@
    "refused": "HostFailure image: name padding"
   },
   {
+   "control": "type-grouping",
+   "refused": "HostFailure image: constructor grouping"
+  },
+  {
+   "control": "type-count-max",
+   "refused": "HostFailure image: constructor count"
+  },
+  {
+   "control": "type-count-short",
+   "refused": "HostFailure image: constructor count"
+  },
+  {
    "control": "function-root-shared",
    "refused": "HostFailure image: function root"
   },
@@ -5726,6 +5738,21 @@
    "mutant": "validator-ignores-body-type",
    "killed": true,
    "by": "control plan:body-type: None"
+  },
+  {
+   "mutant": "constructor-count-exclusive",
+   "killed": true,
+   "by": "control opcode: HostFailure image: constructor count"
+  },
+  {
+   "mutant": "constructor-grouping-unchecked",
+   "killed": true,
+   "by": "control type-grouping: HostFailure image: noncanonical"
+  },
+  {
+   "mutant": "constructor-count-sum-unchecked",
+   "killed": true,
+   "by": "control type-count-short: HostFailure image: constructor tag"
   },
   {
    "mutant": "source:case-on",
