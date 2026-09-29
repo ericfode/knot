@@ -188,25 +188,28 @@ at a field's binding (the finding), and dropping the leaf, split and zero-row
 binding sites. `typekind.py` replays the reviewer's Type-kind generator over
 random seeds 0 to 2,999, requires seed and Knot agreement on acceptance, and
 evaluates one seeded probe call of every agreed acceptance that promotes a
-`Type`-kind binder. In `src/matrix-LAWS.bend`,
-`destructured_promotion_is_unbound`, `later_match_binds_promotion`,
-`leaf_binds_promotion` and `leaf_closes_frontier` state the rule on the
-frontier, and five whole-checker witnesses pin each site: a destructured
-promoted parameter and field check, and returning the binder, a later matrix
-split and a later zero-row match are each rejected.
+`Type`-kind binder. Four laws and five whole-checker witnesses in
+`src/matrix-LAWS.bend` state the rule and pin each site.
 
 `round9-expectations.json` freezes 80 round-9 programs and 111 seed calls before
-the repairs. The seed cannot infer a constructor, and in a positive branch it
-substitutes a matched binder by its constructor. An unannotated let of a
-refined binder (flat or in a matrix, through an alias, a nested field or an
-enclosing match; `v =`, `+v =`, `-v =`) is `Invalid check annotation-required`;
-a residual, unsplit, later or annotated binder and a call stay inferable. Every
-dotted binder, including a rebound one that the seed accepts, is `Unsupported
-parse dotted-binder`; a line break in call or constructor arguments is
-`Unsupported parse line-break` and a second arm on an arm's line `same-line-arm`.
+the repairs. The seed cannot infer a constructor, so an unannotated let of a
+binder that a positive branch refined to one (`v =`, `+v =`, `-v =`, flat or in
+a matrix) is `Invalid check annotation-required`; a residual, unsplit, later or
+annotated binder and a call stay inferable. Every dotted binder is
+`Unsupported parse dotted-binder`, a line break in call or constructor
+arguments `line-break`, a second arm on an arm's line `same-line-arm`.
 `round9.py` checks both lanes, evaluator and Wasm agreement, rejection in every
-phase and twelve mutants. `fuzz.py` draws lets of matched binders: 36 false
-acceptances before the repair, 0 after.
+phase and twelve mutants; `fuzz.py` draws lets of matched binders.
+
+`round10-expectations.json` freezes 138 round-10 programs and 560 seed calls before
+the repairs. The seed reads `+` and `-` as a marker only where a name follows
+directly, and `->` as one lexeme. A `+` after a term in a row (`a + b`), a marker
+after a let (`+ u = ..`) and a split arrow are `Invalid parse` (`expected-:`,
+`detached-marker`, `function-result`); a glued marker, a promotion that starts a
+row or follows a comma, and a spaced marker first in a body are accepted.
+Whitespace-separated arguments, `++y` and a let split across lines are
+`Unsupported`. `round10.py` checks both lanes, evaluator and Wasm agreement,
+rejection in every phase and eighteen mutants; `fuzz.py` draws spaced `+` atoms.
 
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual

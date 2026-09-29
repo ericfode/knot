@@ -399,7 +399,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 98,
+          "declarations": 100,
           "base": 40,
           "base_intrinsics": 9,
           "foreign": 0
@@ -844,12 +844,14 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose",
-              "src/syntax.identifier"
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -873,6 +875,25 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.broken",
+            "file": "src/parse.bend",
+            "via": "src/parse.binder_failure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.Token",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -908,6 +929,28 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.expect_line",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -1157,6 +1200,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -1257,6 +1301,7 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -2024,7 +2069,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 98,
+          "declarations": 100,
           "base": 40,
           "base_intrinsics": 8,
           "foreign": 0
@@ -2469,12 +2514,14 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose",
-              "src/syntax.identifier"
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -2498,6 +2545,25 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.broken",
+            "file": "src/parse.bend",
+            "via": "src/parse.binder_failure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.Token",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -2533,6 +2599,28 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.expect_line",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -2782,6 +2870,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -2882,6 +2971,7 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -3649,7 +3739,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 78,
+          "declarations": 80,
           "base": 28,
           "base_intrinsics": 9,
           "foreign": 0
@@ -3887,10 +3977,12 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.choose",
-              "src/syntax.identifier"
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -3907,6 +3999,21 @@
               "src/parse.unsupported",
               "src/syntax.choose",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.broken",
+            "file": "src/parse.bend",
+            "via": "src/parse.binder_failure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -3935,6 +4042,23 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.expect_line",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -4087,6 +4211,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -4167,6 +4292,7 @@
             "unsafe": false,
             "dependencies": [
               "Bool.or",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.choose",
@@ -4698,7 +4824,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 112,
+          "declarations": 114,
           "base": 54,
           "base_intrinsics": 9,
           "foreign": 0
@@ -5218,12 +5344,14 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose",
-              "src/syntax.identifier"
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -5246,6 +5374,24 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.broken",
+            "file": "src/parse.bend",
+            "via": "src/parse.binder_failure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.Token",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -5281,6 +5427,28 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.expect_line",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -5521,6 +5689,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -5619,6 +5788,7 @@
               "List",
               "Result",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -6514,7 +6684,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 404,
+          "declarations": 406,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -10542,12 +10712,14 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose",
-              "src/syntax.identifier"
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -10571,6 +10743,25 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.broken",
+            "file": "src/parse.bend",
+            "via": "src/parse.binder_failure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.Token",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -10606,6 +10797,28 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.expect_line",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -10855,6 +11068,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -10955,6 +11169,7 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -14061,7 +14276,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 404,
+          "declarations": 406,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -18089,12 +18304,14 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose",
-              "src/syntax.identifier"
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -18118,6 +18335,25 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.broken",
+            "file": "src/parse.bend",
+            "via": "src/parse.binder_failure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.Token",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -18153,6 +18389,28 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.expect_line",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -18402,6 +18660,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -18502,6 +18761,7 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -21608,7 +21868,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 355,
+          "declarations": 357,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -24123,10 +24383,12 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.choose",
-              "src/syntax.identifier"
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -24143,6 +24405,21 @@
               "src/parse.unsupported",
               "src/syntax.choose",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.broken",
+            "file": "src/parse.bend",
+            "via": "src/parse.binder_failure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -24171,6 +24448,23 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.expect_line",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -24323,6 +24617,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -24403,6 +24698,7 @@
             "unsafe": false,
             "dependencies": [
               "Bool.or",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.choose",
@@ -26578,7 +26874,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 442,
+          "declarations": 444,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -30683,12 +30979,14 @@
               "Result",
               "String",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose",
-              "src/syntax.identifier"
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -30711,6 +31009,24 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.broken",
+            "file": "src/parse.bend",
+            "via": "src/parse.binder_failure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.Token",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -30746,6 +31062,28 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.expect_line",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -30986,6 +31324,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -31084,6 +31423,7 @@
               "List",
               "Result",
               "src/parse.Parsed",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",

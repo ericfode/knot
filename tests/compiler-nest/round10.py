@@ -25,7 +25,11 @@ ARROW = 'Bool.and(S.touches(dash,arrow),S.identifier(typ))'
 # observed). The third accepts a marker before a line break; the fourth touches a
 # leading promotion, which the seed allows apart. The next three do the same for a
 # let marker, and the last two for the return arrow: ignore the gap, and demand more
-# than the seed.
+# than the seed. The stopgaps for whitespace the seed accepts follow: each site reports its
+# error again (argument whitespace, a repeated promotion, a line break before a marker's
+# name, before `=` at both its sites, and before a value), then the two that would answer
+# Unsupported where the seed rejects (a promotion as a call argument, a line break with
+# no name or `=` after it).
 MUTANTS = [
     {'name': 'ignore-plus-gap', 'file': 'parse.bend',
      'old': 'Bool.and(S.matches(plus,"+"),S.marks(plus,next))', 'new': 'S.matches(plus,"+")',
@@ -35,7 +39,8 @@ MUTANTS = [
      'witness': 'rowplus-three-cols-last', 'phase': 'check', 'wrong': ACCEPTED},
     {'name': 'mark-a-line-break', 'file': 'syntax.bend',
      'old': 'Bool.and(touches(t,next),identifier(next))', 'new': 'touches(t,next)',
-     'witness': 'marker-plus-newline', 'phase': 'check', 'wrong': invalid('binding-name')},
+     'witness': 'marker-plus-newline', 'phase': 'check',
+     'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}},
     {'name': 'touch-leading-promotion', 'file': 'parse.bend',
      'old': 'Bool.and(pattern,S.matches(name,"+"))',
      'new': 'Bool.and(pattern,Bool.and(S.matches(name,"+"),S.marks(name,open)))',
@@ -56,6 +61,38 @@ MUTANTS = [
     {'name': 'touch-arrow-type', 'file': 'parse.bend',
      'old': ARROW, 'new': 'Bool.and(S.touches(dash,arrow),Bool.and(S.touches(arrow,typ),S.identifier(typ)))',
      'witness': 'arrow-glued', 'phase': 'check', 'wrong': invalid('function-result')},
+    {'name': 'argument-whitespace-invalid', 'file': 'parse.bend',
+     'old': 'Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.and(pattern,promotes(tokens))))', 'new': 'False{}',
+     'witness': 'argspace-call-flat', 'phase': 'check', 'wrong': invalid('argument-separator')},
+    {'name': 'repeated-promotion-invalid', 'file': 'parse.bend',
+     'old': 'S.matches(name,"+"),u => unsupported(ts,"repeated-promotion")', 'new': 'False{},u => unsupported(ts,"repeated-promotion")',
+     'witness': 'plusplus-flat', 'phase': 'check', 'wrong': invalid('pattern-binder')},
+    {'name': 'marker-line-break-invalid', 'file': 'parse.bend',
+     'old': 'broken(ts),u => unsupported(ts,"line-break"),u =>\n    invalid(ts,code)',
+     'new': 'False{},u => unsupported(ts,"line-break"),u =>\n    invalid(ts,code)',
+     'witness': 'letsplit-marker-flat', 'phase': 'check', 'wrong': invalid('binding-name')},
+    {'name': 'value-line-break-invalid', 'file': 'parse.bend',
+     'old': 'broken(ts),u => unsupported(ts,"line-break"),u =>\n      S.choose(',
+     'new': 'False{},u => unsupported(ts,"line-break"),u =>\n      S.choose(',
+     'witness': 'letsplit-after-eq-flat', 'phase': 'check', 'wrong': invalid('expected-term')},
+    {'name': 'typed-equals-line-break-invalid', 'file': 'parse.bend',
+     'old': 'expect_line(tail,"=")', 'new': 'expect(tail,"=")',
+     'witness': 'letsplit-before-eq-flat', 'phase': 'check', 'wrong': invalid('expected-=')},
+    {'name': 'marker-equals-line-break-invalid', 'file': 'parse.bend',
+     'old': 'expect_line(Con{separator,tail},"=")', 'new': 'expect(Con{separator,tail},"=")',
+     'witness': 'letsplit-before-eq-marker', 'phase': 'check', 'wrong': invalid('expected-=')},
+    {'name': 'promoted-call-argument', 'file': 'parse.bend',
+     'old': 'Bool.and(pattern,promotes(tokens))', 'new': 'promotes(tokens)',
+     'witness': 'argspace-promoted-call', 'phase': 'check',
+     'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\targument-whitespace\t'}},
+    {'name': 'line-break-before-any-name', 'file': 'parse.bend',
+     'old': 'Bool.and(starts(ts,"\\n"),scrutinee(S.skip_lines(ts)))', 'new': 'starts(ts,"\\n")',
+     'witness': 'letsplit-after-eq-junk', 'phase': 'check',
+     'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}},
+    {'name': 'line-break-before-any-token', 'file': 'parse.bend',
+     'old': 'Bool.and(starts(ts,"\\n"),starts(S.skip_lines(ts),word))', 'new': 'starts(ts,"\\n")',
+     'witness': 'letsplit-before-eq-junk', 'phase': 'check',
+     'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}},
 ]
 
 

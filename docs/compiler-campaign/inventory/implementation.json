@@ -125,16 +125,16 @@
   "totals": {
     "compiler": {
       "files": 35,
-      "declarations": 745,
-      "unique_declarations": 607,
-      "definitions": 429,
+      "declarations": 747,
+      "unique_declarations": 609,
+      "definitions": 431,
       "classes": 41
     },
     "frontend_files": {
       "files": 3,
-      "declarations": 59,
-      "unique_declarations": 59,
-      "definitions": 51,
+      "declarations": 61,
+      "unique_declarations": 61,
+      "definitions": 53,
       "classes": 31
     },
     "packages": {
@@ -69775,7 +69775,7 @@
     },
     {
       "file": "src/parse.bend",
-      "sha256": "8268dc1281a34a04259916d87825616ea8b9f5fdaf4765f3f805738ccb0912bf",
+      "sha256": "1899da2bf26db5a955cbfd4110a64a7d91cc44b6bce713a34367340b56d01f93",
       "imports": [
         {
           "module": "Base",
@@ -70001,81 +70001,13 @@
           }
         },
         {
-          "id": "src/parse.bend::binder_failure:definition",
-          "name": "binder_failure",
-          "key": "src/parse.binder_failure",
-          "kind": "definition",
-          "lines": [
-            37,
-            38
-          ],
-          "features": [
-            "calls",
-            "captures",
-            "generics",
-            "lambdas",
-            "literals.string",
-            "quantities.affine",
-            "quantities.arguments",
-            "quantities.reusable",
-            "types.base"
-          ],
-          "references": [
-            "List",
-            "Result",
-            "String",
-            "src/parse.Parsed",
-            "src/parse.invalid",
-            "src/parse.unsupported",
-            "src/syntax.Error",
-            "src/syntax.Token",
-            "src/syntax.choose",
-            "src/syntax.identifier"
-          ],
-          "type_references": [
-            "List",
-            "Result",
-            "String",
-            "src/parse.Parsed",
-            "src/syntax.Error",
-            "src/syntax.Token"
-          ],
-          "captures": [
-            {
-              "offset": 1524,
-              "names": [
-                "ts"
-              ]
-            },
-            {
-              "offset": 1561,
-              "names": [
-                "code",
-                "ts"
-              ]
-            }
-          ],
-          "execution": {
-            "references": [
-              "src/parse.invalid",
-              "src/parse.unsupported",
-              "src/syntax.choose",
-              "src/syntax.identifier"
-            ],
-            "types": [
-              "String"
-            ],
-            "dynamic_calls": []
-          }
-        },
-        {
           "id": "src/parse.bend::starts:definition",
           "name": "starts",
           "key": "src/parse.starts",
           "kind": "definition",
           "lines": [
-            40,
-            43
+            34,
+            37
           ],
           "features": [
             "calls",
@@ -70123,8 +70055,8 @@
           "key": "src/parse.scrutinee",
           "kind": "definition",
           "lines": [
-            45,
-            48
+            39,
+            42
           ],
           "features": [
             "calls",
@@ -70170,8 +70102,8 @@
           "key": "src/parse.promotes",
           "kind": "definition",
           "lines": [
-            51,
-            54
+            45,
+            48
           ],
           "features": [
             "calls",
@@ -70219,13 +70151,157 @@
           }
         },
         {
+          "id": "src/parse.bend::broken:definition",
+          "name": "broken",
+          "key": "src/parse.broken",
+          "kind": "definition",
+          "lines": [
+            51,
+            52
+          ],
+          "features": [
+            "calls",
+            "generics",
+            "literals.string",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "List",
+            "src/parse.scrutinee",
+            "src/parse.starts",
+            "src/syntax.Token",
+            "src/syntax.skip_lines"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/syntax.skip_lines"
+            ],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/parse.bend::binder_failure:definition",
+          "name": "binder_failure",
+          "key": "src/parse.binder_failure",
+          "kind": "definition",
+          "lines": [
+            58,
+            62
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Result",
+            "String",
+            "src/parse.Parsed",
+            "src/parse.broken",
+            "src/parse.invalid",
+            "src/parse.unsupported",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.choose",
+            "src/syntax.identifier",
+            "src/syntax.matches"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "src/parse.Parsed",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 2294,
+              "names": [
+                "ts"
+              ]
+            },
+            {
+              "offset": 2331,
+              "names": [
+                "code",
+                "name",
+                "ts"
+              ]
+            },
+            {
+              "offset": 2390,
+              "names": [
+                "ts"
+              ]
+            },
+            {
+              "offset": 2432,
+              "names": [
+                "code",
+                "ts"
+              ]
+            },
+            {
+              "offset": 2482,
+              "names": [
+                "ts"
+              ]
+            },
+            {
+              "offset": 2516,
+              "names": [
+                "code",
+                "ts"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/parse.broken",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/parse.bend::then:definition",
           "name": "then",
           "key": "src/parse.then",
           "kind": "definition",
           "lines": [
-            56,
-            60
+            64,
+            68
           ],
           "features": [
             "calls",
@@ -70278,8 +70354,8 @@
           "key": "src/parse.prepend",
           "kind": "definition",
           "lines": [
-            62,
-            65
+            70,
+            73
           ],
           "features": [
             "constructors",
@@ -70335,8 +70411,8 @@
           "key": "src/parse.wrap_call",
           "kind": "definition",
           "lines": [
-            67,
-            74
+            75,
+            82
           ],
           "features": [
             "calls",
@@ -70381,7 +70457,7 @@
           ],
           "captures": [
             {
-              "offset": 2761,
+              "offset": 3223,
               "names": [
                 "items",
                 "rest",
@@ -70389,7 +70465,7 @@
               ]
             },
             {
-              "offset": 2820,
+              "offset": 3282,
               "names": [
                 "items",
                 "rest",
@@ -70420,8 +70496,8 @@
           "key": "src/parse.wrap_type",
           "kind": "definition",
           "lines": [
-            76,
-            80
+            84,
+            88
           ],
           "features": [
             "constructors",
@@ -70479,8 +70555,8 @@
           "key": "src/parse.wrap_function",
           "kind": "definition",
           "lines": [
-            82,
-            86
+            90,
+            94
           ],
           "features": [
             "constructors",
@@ -70536,8 +70612,8 @@
           "key": "src/parse.columns",
           "kind": "definition",
           "lines": [
-            89,
-            92
+            97,
+            100
           ],
           "features": [
             "calls",
@@ -70580,8 +70656,8 @@
           "key": "src/parse.wrap_match",
           "kind": "definition",
           "lines": [
-            94,
-            98
+            102,
+            106
           ],
           "features": [
             "constructors",
@@ -70637,8 +70713,8 @@
           "key": "src/parse.expect",
           "kind": "definition",
           "lines": [
-            100,
-            105
+            108,
+            113
           ],
           "features": [
             "calls",
@@ -70681,13 +70757,13 @@
           ],
           "captures": [
             {
-              "offset": 4265,
+              "offset": 4727,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 4278,
+              "offset": 4740,
               "names": [
                 "h",
                 "word"
@@ -70714,13 +70790,89 @@
           }
         },
         {
+          "id": "src/parse.bend::expect_line:definition",
+          "name": "expect_line",
+          "key": "src/parse.expect_line",
+          "kind": "definition",
+          "lines": [
+            116,
+            118
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool.and",
+            "Fail",
+            "List",
+            "Result",
+            "String",
+            "src/parse.expect",
+            "src/parse.starts",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.Unsupported",
+            "src/syntax.choose",
+            "src/syntax.here",
+            "src/syntax.skip_lines"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 5079,
+              "names": [
+                "ts"
+              ]
+            },
+            {
+              "offset": 5141,
+              "names": [
+                "ts",
+                "word"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "types": [
+              "Fail",
+              "String",
+              "src/syntax.Unsupported"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/parse.bend::parameter_end:definition",
           "name": "parameter_end",
           "key": "src/parse.parameter_end",
           "kind": "definition",
           "lines": [
-            107,
-            112
+            120,
+            125
           ],
           "features": [
             "calls",
@@ -70764,13 +70916,13 @@
           ],
           "captures": [
             {
-              "offset": 4615,
+              "offset": 5421,
               "names": [
                 "rest"
               ]
             },
             {
-              "offset": 4663,
+              "offset": 5469,
               "names": [
                 "name",
                 "quantity",
@@ -70804,8 +70956,8 @@
           "key": "src/parse.parameter_parts",
           "kind": "definition",
           "lines": [
-            114,
-            122
+            127,
+            135
           ],
           "features": [
             "calls",
@@ -70851,13 +71003,13 @@
           ],
           "captures": [
             {
-              "offset": 5027,
+              "offset": 5833,
               "names": [
                 "ts"
               ]
             },
             {
-              "offset": 5078,
+              "offset": 5884,
               "names": [
                 "colon",
                 "name",
@@ -70868,7 +71020,7 @@
               ]
             },
             {
-              "offset": 5171,
+              "offset": 5977,
               "names": [
                 "name",
                 "quantity",
@@ -70877,7 +71029,7 @@
               ]
             },
             {
-              "offset": 5234,
+              "offset": 6040,
               "names": [
                 "name",
                 "quantity",
@@ -70886,14 +71038,14 @@
               ]
             },
             {
-              "offset": 5277,
+              "offset": 6083,
               "names": [
                 "rest",
                 "typ"
               ]
             },
             {
-              "offset": 5337,
+              "offset": 6143,
               "names": [
                 "ts"
               ]
@@ -70923,8 +71075,8 @@
           "key": "src/parse.parameter",
           "kind": "definition",
           "lines": [
-            124,
-            130
+            137,
+            143
           ],
           "features": [
             "calls",
@@ -70964,13 +71116,13 @@
           ],
           "captures": [
             {
-              "offset": 5557,
+              "offset": 6363,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 5583,
+              "offset": 6389,
               "names": [
                 "h",
                 "t",
@@ -70978,13 +71130,13 @@
               ]
             },
             {
-              "offset": 5643,
+              "offset": 6449,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 5669,
+              "offset": 6475,
               "names": [
                 "ts"
               ]
@@ -71011,8 +71163,8 @@
           "key": "src/parse.template_parameter",
           "kind": "definition",
           "lines": [
-            132,
-            137
+            145,
+            150
           ],
           "features": [
             "calls",
@@ -71054,13 +71206,13 @@
           ],
           "captures": [
             {
-              "offset": 5966,
+              "offset": 6772,
               "names": [
                 "ts"
               ]
             },
             {
-              "offset": 6013,
+              "offset": 6819,
               "names": [
                 "ts"
               ]
@@ -71088,8 +71240,8 @@
           "key": "src/parse.body_end",
           "kind": "definition",
           "lines": [
-            140,
-            147
+            153,
+            160
           ],
           "features": [
             "calls",
@@ -71132,27 +71284,27 @@
           ],
           "captures": [
             {
-              "offset": 6351,
+              "offset": 7157,
               "names": [
                 "ts",
                 "value"
               ]
             },
             {
-              "offset": 6387,
+              "offset": 7193,
               "names": [
                 "h",
                 "ts"
               ]
             },
             {
-              "offset": 6450,
+              "offset": 7256,
               "names": [
                 "ts"
               ]
             },
             {
-              "offset": 6487,
+              "offset": 7293,
               "names": [
                 "ts"
               ]
@@ -71181,8 +71333,8 @@
           "key": "src/parse.reply",
           "kind": "definition",
           "lines": [
-            149,
-            158
+            162,
+            171
           ],
           "features": [
             "calls",
@@ -71227,7 +71379,7 @@
           ],
           "captures": [
             {
-              "offset": 6807,
+              "offset": 7613,
               "names": [
                 "tail",
                 "ts",
@@ -71235,20 +71387,20 @@
               ]
             },
             {
-              "offset": 6899,
+              "offset": 7705,
               "names": [
                 "ts",
                 "value"
               ]
             },
             {
-              "offset": 6937,
+              "offset": 7743,
               "names": [
                 "ts"
               ]
             },
             {
-              "offset": 6983,
+              "offset": 7789,
               "names": [
                 "ts",
                 "value"
@@ -71279,8 +71431,8 @@
           "key": "src/parse.term_failure",
           "kind": "definition",
           "lines": [
-            160,
-            166
+            173,
+            180
           ],
           "features": [
             "calls",
@@ -71304,6 +71456,7 @@
             "List",
             "Result",
             "src/parse.Parsed",
+            "src/parse.broken",
             "src/parse.invalid",
             "src/parse.unsupported",
             "src/syntax.Error",
@@ -71320,13 +71473,26 @@
           ],
           "captures": [
             {
-              "offset": 7377,
+              "offset": 8033,
               "names": [
                 "ts"
               ]
             },
             {
-              "offset": 7420,
+              "offset": 8067,
+              "names": [
+                "h",
+                "ts"
+              ]
+            },
+            {
+              "offset": 8271,
+              "names": [
+                "ts"
+              ]
+            },
+            {
+              "offset": 8314,
               "names": [
                 "ts"
               ]
@@ -71335,6 +71501,7 @@
           "execution": {
             "references": [
               "Bool.or",
+              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.choose",
@@ -71353,8 +71520,8 @@
           "key": "src/parse.header",
           "kind": "definition",
           "lines": [
-            171,
-            176
+            185,
+            190
           ],
           "features": [
             "calls",
@@ -71387,27 +71554,27 @@
           ],
           "captures": [
             {
-              "offset": 7881,
+              "offset": 8776,
               "names": [
                 "h",
                 "t"
               ]
             },
             {
-              "offset": 7895,
+              "offset": 8790,
               "names": [
                 "h",
                 "t"
               ]
             },
             {
-              "offset": 7952,
+              "offset": 8847,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 7967,
+              "offset": 8862,
               "names": [
                 "h",
                 "t"
@@ -71434,8 +71601,8 @@
           "key": "src/parse.run",
           "kind": "definition",
           "lines": [
-            180,
-            381
+            194,
+            396
           ],
           "features": [
             "calls",
@@ -71507,6 +71674,7 @@
             "src/parse.body_end",
             "src/parse.columns",
             "src/parse.expect",
+            "src/parse.expect_line",
             "src/parse.header",
             "src/parse.invalid",
             "src/parse.parameter",
@@ -71556,13 +71724,13 @@
           ],
           "captures": [
             {
-              "offset": 8536,
+              "offset": 9431,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 8592,
+              "offset": 9487,
               "names": [
                 "head",
                 "n",
@@ -71572,7 +71740,7 @@
               ]
             },
             {
-              "offset": 8667,
+              "offset": 9562,
               "names": [
                 "head",
                 "n",
@@ -71581,57 +71749,57 @@
               ]
             },
             {
-              "offset": 8719,
+              "offset": 9614,
               "names": [
                 "n"
               ]
             },
             {
-              "offset": 8728,
+              "offset": 9623,
               "names": [
                 "n",
                 "value"
               ]
             },
             {
-              "offset": 8774,
+              "offset": 9669,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 8782,
+              "offset": 9677,
               "names": [
                 "more",
                 "value"
               ]
             },
             {
-              "offset": 8815,
+              "offset": 9710,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 8971,
+              "offset": 9866,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 9027,
+              "offset": 9922,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 9369,
+              "offset": 10264,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 9425,
+              "offset": 10320,
               "names": [
                 "column",
                 "n",
@@ -71642,7 +71810,7 @@
               ]
             },
             {
-              "offset": 9563,
+              "offset": 10458,
               "names": [
                 "n",
                 "name",
@@ -71651,7 +71819,7 @@
               ]
             },
             {
-              "offset": 9628,
+              "offset": 10523,
               "names": [
                 "n",
                 "name",
@@ -71659,7 +71827,7 @@
               ]
             },
             {
-              "offset": 9683,
+              "offset": 10578,
               "names": [
                 "n",
                 "name",
@@ -71667,7 +71835,7 @@
               ]
             },
             {
-              "offset": 9693,
+              "offset": 10588,
               "names": [
                 "fields",
                 "n",
@@ -71676,7 +71844,7 @@
               ]
             },
             {
-              "offset": 9761,
+              "offset": 10656,
               "names": [
                 "n",
                 "name",
@@ -71684,7 +71852,7 @@
               ]
             },
             {
-              "offset": 9770,
+              "offset": 10665,
               "names": [
                 "n",
                 "name",
@@ -71693,7 +71861,7 @@
               ]
             },
             {
-              "offset": 9820,
+              "offset": 10715,
               "names": [
                 "n",
                 "name",
@@ -71701,7 +71869,7 @@
               ]
             },
             {
-              "offset": 9828,
+              "offset": 10723,
               "names": [
                 "ctor",
                 "n",
@@ -71710,32 +71878,32 @@
               ]
             },
             {
-              "offset": 9925,
+              "offset": 10820,
               "names": [
                 "ctor"
               ]
             },
             {
-              "offset": 9933,
+              "offset": 10828,
               "names": [
                 "ctor",
                 "more"
               ]
             },
             {
-              "offset": 9968,
+              "offset": 10863,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 10234,
+              "offset": 11129,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 10285,
+              "offset": 11180,
               "names": [
                 "close",
                 "h",
@@ -71744,13 +71912,13 @@
               ]
             },
             {
-              "offset": 10380,
+              "offset": 11275,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 10424,
+              "offset": 11319,
               "names": [
                 "close",
                 "n",
@@ -71758,14 +71926,14 @@
               ]
             },
             {
-              "offset": 10464,
+              "offset": 11359,
               "names": [
                 "close",
                 "n"
               ]
             },
             {
-              "offset": 10469,
+              "offset": 11364,
               "names": [
                 "close",
                 "n",
@@ -71773,13 +71941,13 @@
               ]
             },
             {
-              "offset": 10724,
+              "offset": 11619,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 10775,
+              "offset": 11670,
               "names": [
                 "close",
                 "h",
@@ -71789,13 +71957,13 @@
               ]
             },
             {
-              "offset": 11007,
+              "offset": 11902,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 11045,
+              "offset": 11940,
               "names": [
                 "close",
                 "n",
@@ -71804,7 +71972,7 @@
               ]
             },
             {
-              "offset": 11095,
+              "offset": 11990,
               "names": [
                 "close",
                 "n",
@@ -71812,7 +71980,7 @@
               ]
             },
             {
-              "offset": 11102,
+              "offset": 11997,
               "names": [
                 "arg",
                 "close",
@@ -71821,14 +71989,14 @@
               ]
             },
             {
-              "offset": 11377,
+              "offset": 12272,
               "names": [
                 "head",
                 "t"
               ]
             },
             {
-              "offset": 11438,
+              "offset": 12333,
               "names": [
                 "close",
                 "h",
@@ -71841,7 +72009,7 @@
               ]
             },
             {
-              "offset": 11502,
+              "offset": 12397,
               "names": [
                 "close",
                 "head",
@@ -71852,13 +72020,13 @@
               ]
             },
             {
-              "offset": 11661,
+              "offset": 12556,
               "names": [
                 "t"
               ]
             },
             {
-              "offset": 11703,
+              "offset": 12598,
               "names": [
                 "close",
                 "head",
@@ -71869,20 +72037,35 @@
               ]
             },
             {
-              "offset": 11806,
+              "offset": 12701,
               "names": [
                 "head"
               ]
             },
             {
-              "offset": 11814,
+              "offset": 12709,
               "names": [
                 "head",
                 "more"
               ]
             },
             {
-              "offset": 11848,
+              "offset": 12743,
+              "names": [
+                "h",
+                "parameters",
+                "pattern",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 12885,
+              "names": [
+                "tokens"
+              ]
+            },
+            {
+              "offset": 12932,
               "names": [
                 "h",
                 "parameters",
@@ -71890,19 +72073,19 @@
               ]
             },
             {
-              "offset": 11946,
+              "offset": 13030,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 11984,
+              "offset": 13068,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 12266,
+              "offset": 13351,
               "names": [
                 "open",
                 "tail",
@@ -71910,32 +72093,21 @@
               ]
             },
             {
-              "offset": 12330,
+              "offset": 13415,
               "names": [
                 "open",
                 "tail"
               ]
             },
             {
-              "offset": 12372,
+              "offset": 13457,
               "names": [
                 "open",
                 "tokens"
               ]
             },
             {
-              "offset": 12423,
-              "names": [
-                "n",
-                "name",
-                "open",
-                "pattern",
-                "tail",
-                "tokens"
-              ]
-            },
-            {
-              "offset": 12489,
+              "offset": 13508,
               "names": [
                 "n",
                 "name",
@@ -71946,7 +72118,18 @@
               ]
             },
             {
-              "offset": 12556,
+              "offset": 13574,
+              "names": [
+                "n",
+                "name",
+                "open",
+                "pattern",
+                "tail",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 13641,
               "names": [
                 "n",
                 "name",
@@ -71955,20 +72138,20 @@
               ]
             },
             {
-              "offset": 12613,
+              "offset": 13698,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 12621,
+              "offset": 13706,
               "names": [
                 "args",
                 "name"
               ]
             },
             {
-              "offset": 12664,
+              "offset": 13749,
               "names": [
                 "n",
                 "name",
@@ -71979,7 +72162,7 @@
               ]
             },
             {
-              "offset": 12731,
+              "offset": 13816,
               "names": [
                 "n",
                 "name",
@@ -71989,7 +72172,7 @@
               ]
             },
             {
-              "offset": 12873,
+              "offset": 13958,
               "names": [
                 "n",
                 "name",
@@ -71998,27 +72181,27 @@
               ]
             },
             {
-              "offset": 12932,
+              "offset": 14017,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 12940,
+              "offset": 14025,
               "names": [
                 "args",
                 "name"
               ]
             },
             {
-              "offset": 12982,
+              "offset": 14067,
               "names": [
                 "open",
                 "tail"
               ]
             },
             {
-              "offset": 13043,
+              "offset": 14128,
               "names": [
                 "name",
                 "open",
@@ -72028,7 +72211,7 @@
               ]
             },
             {
-              "offset": 13132,
+              "offset": 14217,
               "names": [
                 "name",
                 "open",
@@ -72036,149 +72219,149 @@
               ]
             },
             {
-              "offset": 13195,
+              "offset": 14280,
               "names": [
                 "name",
                 "tokens"
               ]
             },
             {
-              "offset": 13248,
+              "offset": 14333,
               "names": [
-                "tokens"
-              ]
-            },
-            {
-              "offset": 13562,
-              "names": [
-                "h",
-                "n",
-                "tokens"
-              ]
-            },
-            {
-              "offset": 13620,
-              "names": [
-                "tokens"
-              ]
-            },
-            {
-              "offset": 13873,
-              "names": [
-                "first",
-                "h",
-                "n",
-                "second",
-                "tail",
-                "tokens"
-              ]
-            },
-            {
-              "offset": 13941,
-              "names": [
-                "h",
-                "n",
-                "second",
-                "tail"
-              ]
-            },
-            {
-              "offset": 14009,
-              "names": [
-                "h",
-                "n"
-              ]
-            },
-            {
-              "offset": 14018,
-              "names": [
-                "h",
-                "n",
-                "value"
-              ]
-            },
-            {
-              "offset": 14070,
-              "names": [
-                "first",
-                "h",
-                "n",
-                "second",
-                "tail",
-                "tokens"
-              ]
-            },
-            {
-              "offset": 14160,
-              "names": [
-                "first",
-                "h",
-                "n",
-                "second",
-                "tail",
-                "tokens"
-              ]
-            },
-            {
-              "offset": 14329,
-              "names": [
-                "h",
-                "n",
-                "second",
-                "tail"
-              ]
-            },
-            {
-              "offset": 14434,
-              "names": [
-                "tokens"
-              ]
-            },
-            {
-              "offset": 14488,
-              "names": [
-                "h",
-                "n",
-                "second",
-                "tokens"
-              ]
-            },
-            {
-              "offset": 14588,
-              "names": [
-                "h",
-                "n",
                 "tokens"
               ]
             },
             {
               "offset": 14647,
               "names": [
+                "h",
                 "n",
                 "tokens"
               ]
             },
             {
-              "offset": 14706,
+              "offset": 14705,
+              "names": [
+                "tokens"
+              ]
+            },
+            {
+              "offset": 14958,
+              "names": [
+                "first",
+                "h",
+                "n",
+                "second",
+                "tail",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 15026,
+              "names": [
+                "h",
+                "n",
+                "second",
+                "tail"
+              ]
+            },
+            {
+              "offset": 15094,
+              "names": [
+                "h",
+                "n"
+              ]
+            },
+            {
+              "offset": 15103,
+              "names": [
+                "h",
+                "n",
+                "value"
+              ]
+            },
+            {
+              "offset": 15155,
+              "names": [
+                "first",
+                "h",
+                "n",
+                "second",
+                "tail",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 15245,
+              "names": [
+                "first",
+                "h",
+                "n",
+                "second",
+                "tail",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 15414,
+              "names": [
+                "h",
+                "n",
+                "second",
+                "tail"
+              ]
+            },
+            {
+              "offset": 15519,
+              "names": [
+                "tokens"
+              ]
+            },
+            {
+              "offset": 15573,
+              "names": [
+                "h",
+                "n",
+                "second",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 15673,
+              "names": [
+                "h",
+                "n",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 15732,
+              "names": [
+                "n",
+                "tokens"
+              ]
+            },
+            {
+              "offset": 15791,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 14736,
+              "offset": 15821,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 15049,
+              "offset": 16134,
               "names": [
                 "name",
                 "tokens"
               ]
             },
             {
-              "offset": 15101,
+              "offset": 16186,
               "names": [
                 "keyword",
                 "n",
@@ -72187,7 +72370,7 @@
               ]
             },
             {
-              "offset": 15163,
+              "offset": 16248,
               "names": [
                 "keyword",
                 "n",
@@ -72196,7 +72379,7 @@
               ]
             },
             {
-              "offset": 15232,
+              "offset": 16317,
               "names": [
                 "n",
                 "name",
@@ -72204,13 +72387,13 @@
               ]
             },
             {
-              "offset": 15294,
+              "offset": 16379,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 15346,
+              "offset": 16431,
               "names": [
                 "n",
                 "name",
@@ -72218,14 +72401,14 @@
               ]
             },
             {
-              "offset": 15410,
+              "offset": 16495,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 15457,
+              "offset": 16542,
               "names": [
                 "keyword",
                 "n",
@@ -72234,7 +72417,7 @@
               ]
             },
             {
-              "offset": 15525,
+              "offset": 16610,
               "names": [
                 "n",
                 "name",
@@ -72242,21 +72425,21 @@
               ]
             },
             {
-              "offset": 15588,
+              "offset": 16673,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 15639,
+              "offset": 16724,
               "names": [
                 "n",
                 "name"
               ]
             },
             {
-              "offset": 15649,
+              "offset": 16734,
               "names": [
                 "n",
                 "name",
@@ -72264,20 +72447,20 @@
               ]
             },
             {
-              "offset": 15697,
+              "offset": 16782,
               "names": [
                 "keyword",
                 "tokens"
               ]
             },
             {
-              "offset": 15764,
+              "offset": 16849,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 15987,
+              "offset": 17072,
               "names": [
                 "kind",
                 "n",
@@ -72286,7 +72469,7 @@
               ]
             },
             {
-              "offset": 16052,
+              "offset": 17137,
               "names": [
                 "kind",
                 "n",
@@ -72294,14 +72477,14 @@
               ]
             },
             {
-              "offset": 16123,
+              "offset": 17208,
               "names": [
                 "kind",
                 "name"
               ]
             },
             {
-              "offset": 16132,
+              "offset": 17217,
               "names": [
                 "ctors",
                 "kind",
@@ -72309,13 +72492,13 @@
               ]
             },
             {
-              "offset": 16192,
+              "offset": 17277,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 16571,
+              "offset": 17656,
               "names": [
                 "body",
                 "colon",
@@ -72327,14 +72510,14 @@
               ]
             },
             {
-              "offset": 16641,
+              "offset": 17726,
               "names": [
                 "body",
                 "colon"
               ]
             },
             {
-              "offset": 16708,
+              "offset": 17793,
               "names": [
                 "body",
                 "colon",
@@ -72346,7 +72529,7 @@
               ]
             },
             {
-              "offset": 16778,
+              "offset": 17863,
               "names": [
                 "body",
                 "n",
@@ -72356,7 +72539,7 @@
               ]
             },
             {
-              "offset": 16822,
+              "offset": 17907,
               "names": [
                 "name",
                 "params",
@@ -72364,7 +72547,7 @@
               ]
             },
             {
-              "offset": 16831,
+              "offset": 17916,
               "names": [
                 "name",
                 "params",
@@ -72373,19 +72556,19 @@
               ]
             },
             {
-              "offset": 16894,
+              "offset": 17979,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 16949,
+              "offset": 18034,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 17252,
+              "offset": 18337,
               "names": [
                 "column",
                 "n",
@@ -72395,7 +72578,7 @@
               ]
             },
             {
-              "offset": 17315,
+              "offset": 18400,
               "names": [
                 "column",
                 "n",
@@ -72404,7 +72587,7 @@
               ]
             },
             {
-              "offset": 17364,
+              "offset": 18449,
               "names": [
                 "column",
                 "n",
@@ -72413,7 +72596,7 @@
               ]
             },
             {
-              "offset": 17372,
+              "offset": 18457,
               "names": [
                 "column",
                 "item",
@@ -72423,7 +72606,7 @@
               ]
             },
             {
-              "offset": 17452,
+              "offset": 18537,
               "names": [
                 "column",
                 "n",
@@ -72433,7 +72616,7 @@
               ]
             },
             {
-              "offset": 17513,
+              "offset": 18598,
               "names": [
                 "column",
                 "n",
@@ -72443,7 +72626,7 @@
               ]
             },
             {
-              "offset": 17559,
+              "offset": 18644,
               "names": [
                 "column",
                 "n",
@@ -72452,7 +72635,7 @@
               ]
             },
             {
-              "offset": 17567,
+              "offset": 18652,
               "names": [
                 "column",
                 "more",
@@ -72462,7 +72645,7 @@
               ]
             },
             {
-              "offset": 17642,
+              "offset": 18727,
               "names": [
                 "column",
                 "n",
@@ -72472,7 +72655,7 @@
               ]
             },
             {
-              "offset": 17703,
+              "offset": 18788,
               "names": [
                 "column",
                 "n",
@@ -72481,14 +72664,14 @@
               ]
             },
             {
-              "offset": 17765,
+              "offset": 18850,
               "names": [
                 "token",
                 "value"
               ]
             },
             {
-              "offset": 17774,
+              "offset": 18859,
               "names": [
                 "items",
                 "token",
@@ -72496,7 +72679,7 @@
               ]
             },
             {
-              "offset": 18137,
+              "offset": 19222,
               "names": [
                 "column",
                 "n",
@@ -72507,7 +72690,7 @@
               ]
             },
             {
-              "offset": 18209,
+              "offset": 19294,
               "names": [
                 "column",
                 "n",
@@ -72517,7 +72700,7 @@
               ]
             },
             {
-              "offset": 18277,
+              "offset": 19362,
               "names": [
                 "column",
                 "n",
@@ -72528,7 +72711,7 @@
               ]
             },
             {
-              "offset": 18357,
+              "offset": 19447,
               "names": [
                 "column",
                 "n",
@@ -72537,7 +72720,7 @@
               ]
             },
             {
-              "offset": 18408,
+              "offset": 19498,
               "names": [
                 "column",
                 "n",
@@ -72546,7 +72729,7 @@
               ]
             },
             {
-              "offset": 18417,
+              "offset": 19507,
               "names": [
                 "column",
                 "n",
@@ -72556,14 +72739,14 @@
               ]
             },
             {
-              "offset": 18487,
+              "offset": 19577,
               "names": [
                 "name",
                 "tokens"
               ]
             },
             {
-              "offset": 18759,
+              "offset": 19849,
               "names": [
                 "column",
                 "n",
@@ -72574,13 +72757,13 @@
               ]
             },
             {
-              "offset": 18825,
+              "offset": 19915,
               "names": [
                 "tail"
               ]
             },
             {
-              "offset": 18881,
+              "offset": 19971,
               "names": [
                 "column",
                 "n",
@@ -72591,7 +72774,7 @@
               ]
             },
             {
-              "offset": 18946,
+              "offset": 20041,
               "names": [
                 "column",
                 "n",
@@ -72601,7 +72784,7 @@
               ]
             },
             {
-              "offset": 18997,
+              "offset": 20092,
               "names": [
                 "column",
                 "n",
@@ -72611,7 +72794,7 @@
               ]
             },
             {
-              "offset": 19006,
+              "offset": 20101,
               "names": [
                 "column",
                 "n",
@@ -72622,13 +72805,13 @@
               ]
             },
             {
-              "offset": 19079,
+              "offset": 20174,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 19310,
+              "offset": 20405,
               "names": [
                 "annotation",
                 "column",
@@ -72639,7 +72822,7 @@
               ]
             },
             {
-              "offset": 19380,
+              "offset": 20475,
               "names": [
                 "annotation",
                 "quantity",
@@ -72648,7 +72831,7 @@
               ]
             },
             {
-              "offset": 19388,
+              "offset": 20483,
               "names": [
                 "annotation",
                 "next",
@@ -72658,7 +72841,7 @@
               ]
             },
             {
-              "offset": 19592,
+              "offset": 20687,
               "names": [
                 "column",
                 "keyword",
@@ -72669,7 +72852,7 @@
               ]
             },
             {
-              "offset": 19655,
+              "offset": 20750,
               "names": [
                 "column",
                 "keyword",
@@ -72679,7 +72862,7 @@
               ]
             },
             {
-              "offset": 19703,
+              "offset": 20798,
               "names": [
                 "column",
                 "keyword",
@@ -72689,7 +72872,7 @@
               ]
             },
             {
-              "offset": 19711,
+              "offset": 20806,
               "names": [
                 "column",
                 "keyword",
@@ -72700,7 +72883,7 @@
               ]
             },
             {
-              "offset": 19798,
+              "offset": 20893,
               "names": [
                 "column",
                 "keyword",
@@ -72711,7 +72894,7 @@
               ]
             },
             {
-              "offset": 19885,
+              "offset": 20980,
               "names": [
                 "column",
                 "keyword",
@@ -72722,7 +72905,7 @@
               ]
             },
             {
-              "offset": 19930,
+              "offset": 21025,
               "names": [
                 "column",
                 "keyword",
@@ -72732,7 +72915,7 @@
               ]
             },
             {
-              "offset": 19938,
+              "offset": 21033,
               "names": [
                 "column",
                 "keyword",
@@ -72743,7 +72926,7 @@
               ]
             },
             {
-              "offset": 20022,
+              "offset": 21117,
               "names": [
                 "column",
                 "keyword",
@@ -72754,7 +72937,7 @@
               ]
             },
             {
-              "offset": 20085,
+              "offset": 21180,
               "names": [
                 "column",
                 "keyword",
@@ -72764,7 +72947,7 @@
               ]
             },
             {
-              "offset": 20144,
+              "offset": 21239,
               "names": [
                 "column",
                 "keyword",
@@ -72774,7 +72957,7 @@
               ]
             },
             {
-              "offset": 20153,
+              "offset": 21248,
               "names": [
                 "column",
                 "keyword",
@@ -72785,7 +72968,7 @@
               ]
             },
             {
-              "offset": 20226,
+              "offset": 21321,
               "names": [
                 "keyword",
                 "pattern",
@@ -72793,7 +72976,7 @@
               ]
             },
             {
-              "offset": 20234,
+              "offset": 21329,
               "names": [
                 "keyword",
                 "more",
@@ -72802,13 +72985,13 @@
               ]
             },
             {
-              "offset": 20514,
+              "offset": 21609,
               "names": [
                 "tokens"
               ]
             },
             {
-              "offset": 20570,
+              "offset": 21665,
               "names": [
                 "column",
                 "keyword",
@@ -72819,7 +73002,7 @@
               ]
             },
             {
-              "offset": 20718,
+              "offset": 21813,
               "names": [
                 "keyword",
                 "n",
@@ -72828,7 +73011,7 @@
               ]
             },
             {
-              "offset": 20773,
+              "offset": 21868,
               "names": [
                 "keyword",
                 "n",
@@ -72836,7 +73019,7 @@
               ]
             },
             {
-              "offset": 20785,
+              "offset": 21880,
               "names": [
                 "keyword",
                 "n",
@@ -72845,7 +73028,7 @@
               ]
             },
             {
-              "offset": 20906,
+              "offset": 22001,
               "names": [
                 "keyword",
                 "n",
@@ -72855,7 +73038,7 @@
               ]
             },
             {
-              "offset": 20989,
+              "offset": 22084,
               "names": [
                 "keyword",
                 "n",
@@ -72865,7 +73048,7 @@
               ]
             },
             {
-              "offset": 21056,
+              "offset": 22151,
               "names": [
                 "keyword",
                 "n",
@@ -72874,7 +73057,7 @@
               ]
             },
             {
-              "offset": 21121,
+              "offset": 22216,
               "names": [
                 "keyword",
                 "n",
@@ -72883,7 +73066,7 @@
               ]
             },
             {
-              "offset": 21130,
+              "offset": 22225,
               "names": [
                 "keyword",
                 "n",
@@ -72893,7 +73076,7 @@
               ]
             },
             {
-              "offset": 21220,
+              "offset": 22315,
               "names": [
                 "keyword",
                 "pattern",
@@ -72901,7 +73084,7 @@
               ]
             },
             {
-              "offset": 21228,
+              "offset": 22323,
               "names": [
                 "keyword",
                 "more",
@@ -72910,7 +73093,7 @@
               ]
             },
             {
-              "offset": 21307,
+              "offset": 22402,
               "names": [
                 "tokens"
               ]
@@ -72931,6 +73114,7 @@
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
+              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -73010,8 +73194,8 @@
           "key": "src/parse.parse",
           "kind": "definition",
           "lines": [
-            383,
-            384
+            398,
+            399
           ],
           "features": [
             "calls",

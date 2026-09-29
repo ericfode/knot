@@ -43,6 +43,8 @@ digits, underscores or dots. Keywords cannot be identifiers.
 - Top-level functions with explicit parameter and result types. A parameter
   has quantity erased (`-x`), affine (`x`), or reusable (`+x`). A reusable
   parameter must have a `Data` type. Dropping an affine parameter is allowed.
+  The return arrow is `->`: split into `-` and `>` it reports `Invalid parse
+  function-result`, as the seed rejects it.
 - Variables, constructor applications and fully applied top-level calls.
   Datatypes and constructor expressions may precede their declarations.
   Constructor patterns resolve at their source declaration event. A function must be
@@ -59,6 +61,10 @@ digits, underscores or dots. Keywords cannot be identifiers.
   type from an already known declaration: a residual or default-row binder
   (the seed types it `Flag<> - Off{}`), a field never split, a later parameter
   and a call on a rebuilt binder.
+  After another statement a marker touches its name: the seed reads `+ u` there
+  as an operator on the previous value, so it reports `Invalid parse
+  detached-marker`. First in a body, and in a parameter list, a marker may be
+  spaced.
   A binding is visible in the remainder of its body, not in its own initializer.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
@@ -68,7 +74,11 @@ digits, underscores or dots. Keywords cannot be identifiers.
   and bodies a constructor's `{` touches its name, as in `On{}`. A space,
   comment or line break between them reports `Invalid parse detached-brace`,
   as the seed rejects it; a joined header keeps each token's offset, so its
-  line breaks never bridge that gap. Spaces inside the braces, before a
+  line breaks never bridge that gap. After a term in a row, a `+` opens another
+  column only where it touches its binder (`a +b`); the seed reads `a + b` as
+  one operator term, so the row ends at the `+` (`Invalid parse expected-:`). A
+  `+` that starts a row or follows a comma stays a promotion, spaced or not.
+  Spaces inside the braces, before a
   call's `(` and in a type declaration's `Off {}` remain accepted. Rows contain
   constructor, wildcard or variable patterns, with nested constructor fields in
   the structural profile. The first matching row wins, including duplicate rows;
@@ -155,12 +165,18 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
 | A line break where call or constructor arguments expect an element, a separator or their closer | `parse` | `line-break` |
 | A second `case` arm on the line of an arm's body | `parse` | `same-line-arm` |
+| A line break in a let before its `=`, before its value or between its marker and name | `parse` | `line-break` |
+| A name (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
+| A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
 
-The seed reads a line break inside call or constructor arguments as whitespace,
-and a second arm on an arm's line as the next arm; Knot ends a term at a line
-break, so the last two forms are unsupported, never invalid. A def header's
-parameters and a type's fields have the same gap, which stays open (the selfhost
-suite's `layout` need). Recognition stops at that prefix; it neither validates
+The seed reads a line break inside call or constructor arguments and inside a let
+as whitespace, arguments separated by whitespace alone as arguments, and a second
+arm on an arm's line as the next arm; Knot ends a term at a line break and takes
+a comma between arguments, so these forms are unsupported, never invalid. A def
+header's parameters and a type's fields have the same gap, which stays open (the
+selfhost suite's `layout` need), as do a body on the line after its `case` at the
+case's column and an untyped let split before its `=`: the frontend gate pins the
+first family Invalid for an unindented def body that the seed accepts. Recognition stops at that prefix; it neither validates
 the suffix nor loads a module. Malformed supported syntax still reports `Invalid`. The reviewed
 [classification fixtures](../tests/subsets/classification-cases.json) retain six
 seed-accepted programs (local and hash imports separately) and six nearby

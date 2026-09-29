@@ -59,8 +59,10 @@ arguments, or a second arm on an arm's line, is Unsupported), and
 `nest-round10` the round-10 glue rules (a `+` or `-` marker and a return arrow
 are read touching what follows: a spaced `+` between row columns, a spaced
 marker after a let and a split `->` are rejected, while a marker first in a body
-and a promotion that starts a row or follows a comma stay spaced), each in both
-compiler lanes with its own semantic mutants. The nest gates scale their
+and a promotion that starts a row or follows a comma stay spaced) and the
+whitespace stopgaps (arguments separated by whitespace alone, `++y` and a let
+split across lines are Unsupported), each in both compiler lanes with its own
+semantic mutants. The nest gates scale their
 harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
