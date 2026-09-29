@@ -1390,5 +1390,1200 @@
     "basis": "vm-spec D17's shape: main = let n = 2^31 + 1 in case n: Zero -> Off{}, Succ{p} -> On{} (Nat is type 0, Flag type 1, representation Nat 0). Section 6.1 selects Succ and binds the predecessor 2^31, a Big; the arm is On{} after the one entry of main. The control for the two limited rows nat-pred-frames and nat-pred-heap"
    }
   ]
+ },
+ "scope": {
+  "rule": "Images whose validation needs more scope indices than the tables' first size, W + 4200 for an image of W words (vm.wat `$validate`): a slot sits at the sum of the depths of the Closures around it, and a Branch binds every field of a constructor whose one record serves every Case that matches it (vm/scope.py). vm/scope.py builds each row's image from `family` and `args`; the gate requires its words, its `need` (the indices validation holds, derived from the plan alone) and its SHA-256 as frozen here. The verdicts and runs are the reference codec's and the reference evaluation's, fixed before the VM changed (D7): a valid image is admitted and its Book's `main` answers `On{}` (`Evaluated 1 1 On{}`, one call); a refused one is refused with the reference codec's first defect. `tables` and `edge` place an `edge-` row: its `need` is `edge` past the tables' size after `tables` doublings, (W + 4200) * 2^tables, so edge 0 fills them exactly and edge 1 makes the next doubling by one index (`unit`, `delta` do the same for a `nest-` row: the tables' first size is `delta` past the enclosing unit's depth, where the Closure's capture sits). `at_most` bounds the test build's memory.grow count at boot's one: the tables' successive sizes, at 5 bytes an index, sum to under 10 times their last, under 20 * need, and the loader's other tables take under 64 bytes a word of image, so the scratch of these rows is under 20 * need + 64 * W + 64 KiB, about 2 MB, and the 48 MiB that boot leaves holds it; tables that grow by one index at a time take gigabytes. Each `-past` row has a `-wrong` twin that declares the last slot at another type. Types are typed (K's fields cycle K, A, B, C) so that a slot read after a doubling shows whether its type was carried over. The first four rows are the reviewer's saved images, byte for byte (review round 1 of round 6), refused or trapped by the tables of W + 4200 indices that never grew. Rows `excess-` are no scope rows: a unit deeper than its `slots` and a defect after that depth are reported as the defect, since the reference codec checks a unit's `slots` when the unit ends, so a validator that refused at the first depth beyond `slots` gives another reason.",
+  "corpus": {
+   "seed": 20260930,
+   "images": 300
+  },
+  "rows": [
+   {
+    "name": "valid-nest-1000-60-60",
+    "family": "nest",
+    "args": {
+     "nf": 1000,
+     "m": 60,
+     "L": 60
+    },
+    "words": 59536,
+    "need": 3600060,
+    "sha256": "b6168517793117e42520d67f6c8cfc665a27b5631e1ff50758cac6a07a4e8a8b",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "basis": "60 nested erased Closures, each the body of the last, each unit 60 nested Cases over one constructor of 1,000 fields: its `slots` is 60,001, within the 65,536 limit, and exact, and the reference codec admits it. Its indices sum to 3,600,060, 56 times the first size 63,736. The tables that never grew refused it as `capture-use`."
+   },
+   {
+    "name": "valid-nest-20000-3-200",
+    "family": "nest",
+    "args": {
+     "nf": 20000,
+     "m": 3,
+     "L": 200
+    },
+    "words": 32496,
+    "need": 12000200,
+    "sha256": "e3592a8145cd752a04214b97c07432a2d28433e8676c296e55ed61381e20888f",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "basis": "200 units of 3 Cases over one constructor of 20,000 fields (`slots` 60,001, exact; admitted by the reference codec): 12,000,200 indices against a first size of 36,696. The tables that never grew ran past the memory the module had grown to and trapped (`HostFailure io trap`)."
+   },
+   {
+    "name": "falseaccept-100-60",
+    "family": "chain",
+    "args": {
+     "nf": 100,
+     "m": 60,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       5394,
+       1
+      ]
+     ]
+    },
+    "words": 1194,
+    "need": 6001,
+    "sha256": "4c1eea0ce6b55a841b7c635bc479b53ac0f14a2be23199a2ea8ae2491b47d9d0",
+    "reference": "HostFailure image: validator: f: reference type",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\treference-type\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "reference-type"
+    },
+    "basis": "One function of 60 nested Cases over a constructor of 100 fields (`slots` 6,001), then a Pair of the parameter (a K) and slot 5,394 declared Flag. Slot 5,394 is the last field of the last Case, a K, so the reference codec refuses `reference type`. 5,394 = W + 4200 with W = 1,194: the first index past the tables that never grew, which fell on the use marks, where the mark the first Reference had just set made it read as a Flag: the image was accepted and run."
+   },
+   {
+    "name": "control-100-60-target-5395",
+    "family": "chain",
+    "args": {
+     "nf": 100,
+     "m": 60,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       5395,
+       1
+      ]
+     ]
+    },
+    "words": 1194,
+    "need": 6001,
+    "sha256": "f56e42dd6c66eeadced49369ce401ce73804a81be2a688d2c2d322e2a0115a2d",
+    "reference": "HostFailure image: validator: f: reference type",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\treference-type\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "reference-type"
+    },
+    "basis": "The same image with slot 5,395 declared Flag, also a K: refused `reference type` by the reference codec, and by the tables that never grew, whose index fell on other marks."
+   },
+   {
+    "name": "edge-t0-below",
+    "family": "chain",
+    "args": {
+     "nf": 60,
+     "m": 120,
+     "typed": true,
+     "pad": 800,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       7199,
+       4
+      ],
+      [
+       7200,
+       5
+      ]
+     ]
+    },
+    "tables": 0,
+    "edge": -1,
+    "words": 3002,
+    "need": 7201,
+    "sha256": "1c7ff704a9846fedc7961785fccaef7584b22956ae8be7ab1a989ec3cde8ff10",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "120 nested Cases over a typed constructor of 60 fields, then 0 Lets, then a Construct of 6 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 3,002 (pad 800), so the tables begin at 7,202 indices and double 0 times to 7,202; need = 7,201 is one short of that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t0-exact",
+    "family": "chain",
+    "args": {
+     "nf": 60,
+     "m": 120,
+     "typed": true,
+     "pad": 799,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       7199,
+       4
+      ],
+      [
+       7200,
+       5
+      ]
+     ]
+    },
+    "tables": 0,
+    "edge": 0,
+    "words": 3001,
+    "need": 7201,
+    "sha256": "43f58dfb67a3c4ad78f8d3df0254a2f872f9ce6058a887457e6349e722f0b29f",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "120 nested Cases over a typed constructor of 60 fields, then 0 Lets, then a Construct of 6 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 3,001 (pad 799), so the tables begin at 7,201 indices and double 0 times to 7,201; need = 7,201 is exactly that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t0-past",
+    "family": "chain",
+    "args": {
+     "nf": 60,
+     "m": 120,
+     "typed": true,
+     "pad": 798,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       7199,
+       4
+      ],
+      [
+       7200,
+       5
+      ]
+     ]
+    },
+    "tables": 0,
+    "edge": 1,
+    "words": 3000,
+    "need": 7201,
+    "sha256": "b6c560ad0da8cca30d26a8c50222b5eb0935cf11b3d0edfdc64346b06baa4afa",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "120 nested Cases over a typed constructor of 60 fields, then 0 Lets, then a Construct of 6 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 3,000 (pad 798), so the tables begin at 7,200 indices and double 0 times to 7,200; need = 7,201 is one past that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t0-past-wrong",
+    "family": "chain",
+    "args": {
+     "nf": 60,
+     "m": 120,
+     "typed": true,
+     "pad": 798,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       7199,
+       4
+      ],
+      [
+       7200,
+       1
+      ]
+     ]
+    },
+    "tables": 0,
+    "edge": 1,
+    "words": 3000,
+    "need": 7201,
+    "sha256": "913ceca981f2129657fb78c536b95876553539cfbdcd4d2bc234f2ef6588deee",
+    "reference": "HostFailure image: validator: f: reference type",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\treference-type\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "reference-type"
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "120 nested Cases over a typed constructor of 60 fields, then 0 Lets, then a Construct of 6 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 3,000 (pad 798), so the tables begin at 7,200 indices and double 0 times to 7,200; need = 7,201 is one past that size. The last reference, the deepest slot, is declared at another type than the slot has."
+   },
+   {
+    "name": "edge-t1-exact",
+    "family": "chain",
+    "args": {
+     "nf": 100,
+     "m": 200,
+     "typed": true,
+     "pad": 2251,
+     "lets": 1,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       10000,
+       5
+      ],
+      [
+       10001,
+       0
+      ],
+      [
+       10002,
+       3
+      ],
+      [
+       20000,
+       5
+      ],
+      [
+       20001,
+       1
+      ]
+     ]
+    },
+    "tables": 1,
+    "edge": 0,
+    "words": 5801,
+    "need": 20002,
+    "sha256": "49f5ddab81fb10540329012a0989ab486b498929cc9c7f5b25a3274f8d5b4784",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "200 nested Cases over a typed constructor of 100 fields, then 1 Lets, then a Construct of 9 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 5,801 (pad 2,251), so the tables begin at 10,001 indices and double 1 times to 20,002; need = 20,002 is exactly that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t1-past",
+    "family": "chain",
+    "args": {
+     "nf": 100,
+     "m": 200,
+     "typed": true,
+     "pad": 2260,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       9999,
+       4
+      ],
+      [
+       10000,
+       5
+      ],
+      [
+       10001,
+       0
+      ],
+      [
+       19999,
+       4
+      ],
+      [
+       20000,
+       5
+      ]
+     ]
+    },
+    "tables": 1,
+    "edge": 1,
+    "words": 5800,
+    "need": 20001,
+    "sha256": "c0182c487c125fc041c7f929ed5ba4ddf88ee19b6f82f8a8175c65b3d2209eef",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "200 nested Cases over a typed constructor of 100 fields, then 0 Lets, then a Construct of 9 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 5,800 (pad 2,260), so the tables begin at 10,000 indices and double 1 times to 20,000; need = 20,001 is one past that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t1-past-wrong",
+    "family": "chain",
+    "args": {
+     "nf": 100,
+     "m": 200,
+     "typed": true,
+     "pad": 2260,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       9999,
+       4
+      ],
+      [
+       10000,
+       5
+      ],
+      [
+       10001,
+       0
+      ],
+      [
+       19999,
+       4
+      ],
+      [
+       20000,
+       1
+      ]
+     ]
+    },
+    "tables": 1,
+    "edge": 1,
+    "words": 5800,
+    "need": 20001,
+    "sha256": "accb27d6a2922789c1c315443357366576fa4cd904a6f76a97751ddfa74d69c8",
+    "reference": "HostFailure image: validator: f: reference type",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\treference-type\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "reference-type"
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "200 nested Cases over a typed constructor of 100 fields, then 0 Lets, then a Construct of 9 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 5,800 (pad 2,260), so the tables begin at 10,000 indices and double 1 times to 20,000; need = 20,001 is one past that size. The last reference, the deepest slot, is declared at another type than the slot has."
+   },
+   {
+    "name": "edge-t2-exact",
+    "family": "chain",
+    "args": {
+     "nf": 200,
+     "m": 320,
+     "typed": true,
+     "pad": 6193,
+     "lets": 3,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       16000,
+       5
+      ],
+      [
+       16001,
+       0
+      ],
+      [
+       16002,
+       3
+      ],
+      [
+       32001,
+       0
+      ],
+      [
+       32002,
+       3
+      ],
+      [
+       32003,
+       4
+      ],
+      [
+       64002,
+       1
+      ],
+      [
+       64003,
+       1
+      ]
+     ]
+    },
+    "tables": 2,
+    "edge": 0,
+    "words": 11801,
+    "need": 64004,
+    "sha256": "8f57ee1ee70c0323449124037a1228445f3b337eb9aa49e56e1944ce60ba6c02",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "320 nested Cases over a typed constructor of 200 fields, then 3 Lets, then a Construct of 12 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 11,801 (pad 6,193), so the tables begin at 16,001 indices and double 2 times to 64,004; need = 64,004 is exactly that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t2-past",
+    "family": "chain",
+    "args": {
+     "nf": 200,
+     "m": 320,
+     "typed": true,
+     "pad": 6222,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       15999,
+       4
+      ],
+      [
+       16000,
+       5
+      ],
+      [
+       16001,
+       0
+      ],
+      [
+       31999,
+       4
+      ],
+      [
+       32000,
+       5
+      ],
+      [
+       32001,
+       0
+      ],
+      [
+       63999,
+       4
+      ],
+      [
+       64000,
+       5
+      ]
+     ]
+    },
+    "tables": 2,
+    "edge": 1,
+    "words": 11800,
+    "need": 64001,
+    "sha256": "98885886dfa4590736b3213d0e22ee4c55bc0e1d2f729e676ad47dfa0cc2bcf1",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "320 nested Cases over a typed constructor of 200 fields, then 0 Lets, then a Construct of 12 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 11,800 (pad 6,222), so the tables begin at 16,000 indices and double 2 times to 64,000; need = 64,001 is one past that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t2-past-wrong",
+    "family": "chain",
+    "args": {
+     "nf": 200,
+     "m": 320,
+     "typed": true,
+     "pad": 6222,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       15999,
+       4
+      ],
+      [
+       16000,
+       5
+      ],
+      [
+       16001,
+       0
+      ],
+      [
+       31999,
+       4
+      ],
+      [
+       32000,
+       5
+      ],
+      [
+       32001,
+       0
+      ],
+      [
+       63999,
+       4
+      ],
+      [
+       64000,
+       1
+      ]
+     ]
+    },
+    "tables": 2,
+    "edge": 1,
+    "words": 11800,
+    "need": 64001,
+    "sha256": "819939fd6ab82fa920794c576237ad65a2de7180c1cecd57512f1146fc0a68a7",
+    "reference": "HostFailure image: validator: f: reference type",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\treference-type\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "reference-type"
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "320 nested Cases over a typed constructor of 200 fields, then 0 Lets, then a Construct of 12 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 11,800 (pad 6,222), so the tables begin at 16,000 indices and double 2 times to 64,000; need = 64,001 is one past that size. The last reference, the deepest slot, is declared at another type than the slot has."
+   },
+   {
+    "name": "edge-t3-exact",
+    "family": "chain",
+    "args": {
+     "nf": 500,
+     "m": 130,
+     "typed": true,
+     "pad": 1000,
+     "lets": 7,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       8125,
+       0
+      ],
+      [
+       8126,
+       3
+      ],
+      [
+       8127,
+       4
+      ],
+      [
+       16251,
+       4
+      ],
+      [
+       16252,
+       5
+      ],
+      [
+       16253,
+       0
+      ],
+      [
+       32503,
+       4
+      ],
+      [
+       32504,
+       5
+      ],
+      [
+       32505,
+       0
+      ],
+      [
+       65006,
+       1
+      ],
+      [
+       65007,
+       1
+      ]
+     ]
+    },
+    "tables": 3,
+    "edge": 0,
+    "words": 3926,
+    "need": 65008,
+    "sha256": "0003e083a7452b1779e92ea79e5dfead715fa60421c6e81d696c5aa531900985",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "130 nested Cases over a typed constructor of 500 fields, then 7 Lets, then a Construct of 15 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 3,926 (pad 1,000), so the tables begin at 8,126 indices and double 3 times to 65,008; need = 65,008 is exactly that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t3-past",
+    "family": "chain",
+    "args": {
+     "nf": 500,
+     "m": 130,
+     "typed": true,
+     "pad": 1069,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       8124,
+       5
+      ],
+      [
+       8125,
+       0
+      ],
+      [
+       8126,
+       3
+      ],
+      [
+       16249,
+       0
+      ],
+      [
+       16250,
+       3
+      ],
+      [
+       16251,
+       4
+      ],
+      [
+       32499,
+       4
+      ],
+      [
+       32500,
+       5
+      ],
+      [
+       32501,
+       0
+      ],
+      [
+       64999,
+       4
+      ],
+      [
+       65000,
+       5
+      ]
+     ]
+    },
+    "tables": 3,
+    "edge": 1,
+    "words": 3925,
+    "need": 65001,
+    "sha256": "6c4c1d523d987d18832f9c022bad6b077c24306f528fdb3591a13734072e9c61",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "130 nested Cases over a typed constructor of 500 fields, then 0 Lets, then a Construct of 15 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 3,925 (pad 1,069), so the tables begin at 8,125 indices and double 3 times to 65,000; need = 65,001 is one past that size. Every reference is declared at its slot's type."
+   },
+   {
+    "name": "edge-t3-past-wrong",
+    "family": "chain",
+    "args": {
+     "nf": 500,
+     "m": 130,
+     "typed": true,
+     "pad": 1069,
+     "lets": 0,
+     "refs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       8124,
+       5
+      ],
+      [
+       8125,
+       0
+      ],
+      [
+       8126,
+       3
+      ],
+      [
+       16249,
+       0
+      ],
+      [
+       16250,
+       3
+      ],
+      [
+       16251,
+       4
+      ],
+      [
+       32499,
+       4
+      ],
+      [
+       32500,
+       5
+      ],
+      [
+       32501,
+       0
+      ],
+      [
+       64999,
+       4
+      ],
+      [
+       65000,
+       1
+      ]
+     ]
+    },
+    "tables": 3,
+    "edge": 1,
+    "words": 3925,
+    "need": 65001,
+    "sha256": "1542d20e38453da7f58174991d3cdfbfb8d7da28e46c3babb517012ee7cc6e6d",
+    "reference": "HostFailure image: validator: f: reference type",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\treference-type\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "reference-type"
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "130 nested Cases over a typed constructor of 500 fields, then 0 Lets, then a Construct of 15 references at the parameter, the first slots, the last two and the slots below, at and above each table size. W = 3,925 (pad 1,069), so the tables begin at 8,125 indices and double 3 times to 65,000; need = 65,001 is one past that size. The last reference, the deepest slot, is declared at another type than the slot has."
+   },
+   {
+    "name": "nest-mark",
+    "family": "nest",
+    "args": {
+     "nf": 150,
+     "m": 60,
+     "L": 2,
+     "caps": 1,
+     "pad": 2592
+    },
+    "unit": 9001,
+    "delta": 1,
+    "words": 4802,
+    "need": 18002,
+    "sha256": "efb98ffc2d345e2e0102af9a7323a09d5dbcac14dd04f24807f7a337cccff8a9",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "Two units of 60 Cases over a constructor of 150 fields; the Closure's base is the first unit's depth 9,001, where its capture sits, and the tables' first size 9,002 is 1 past it: the growth comes at the capture's own slot (1 = 0) or at the first slot after the capture's use mark (1 = 1). The Closure has one capture, which the unit uses."
+   },
+   {
+    "name": "nest-capture",
+    "family": "nest",
+    "args": {
+     "nf": 150,
+     "m": 60,
+     "L": 2,
+     "caps": 1,
+     "pad": 2591
+    },
+    "unit": 9001,
+    "delta": 0,
+    "words": 4801,
+    "need": 18002,
+    "sha256": "634a9db4b81b5da3283ac2e7adbf35e3175389d78e3932d8bfadd7f111f2fe03",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "Two units of 60 Cases over a constructor of 150 fields; the Closure's base is the first unit's depth 9,001, where its capture sits, and the tables' first size 9,001 is 0 past it: the growth comes at the capture's own slot (0 = 0) or at the first slot after the capture's use mark (0 = 1). The Closure has one capture, which the unit uses."
+   },
+   {
+    "name": "nest-unused",
+    "family": "nest",
+    "args": {
+     "nf": 150,
+     "m": 60,
+     "L": 2,
+     "caps": 2,
+     "pad": 2591
+    },
+    "unit": 9001,
+    "delta": 1,
+    "words": 4802,
+    "need": 18003,
+    "sha256": "bb38ca5f5b84e9c0f1790ce5ad5244e0619ac7d37dcfc1a16d3a16a2a1547f31",
+    "reference": "HostFailure image: validator: f: captures are not exactly the free slots of the body",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\tcapture-use\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "capture-use"
+    },
+    "at_most": {
+     "grows": 1
+    },
+    "basis": "Two units of 60 Cases over a constructor of 150 fields; the Closure's base is the first unit's depth 9,001, where its capture sits, and the tables' first size 9,002 is 1 past it: the growth comes at the capture's own slot (1 = 0) or at the first slot after the capture's use mark (1 = 1). The Closure has two captures, the second used by nothing, so the reference codec refuses `capture-use`."
+   },
+   {
+    "name": "excess-function",
+    "family": "excess",
+    "args": {
+     "kind": "function"
+    },
+    "words": 119,
+    "need": 1,
+    "sha256": "db588a2036f1e15c003b838ae628e22bdfcebd3af668274032084e0046acece5",
+    "reference": "HostFailure image: validator: f: slot 5 beyond depth 1",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\tslot-depth\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "slot-depth"
+    },
+    "basis": "f has `slots` 0 and a body of a Let (depth 1) and a Reference to slot 5. The reference codec checks the body before `slots`: `slot 5 beyond depth 1`."
+   },
+   {
+    "name": "excess-closure",
+    "family": "excess",
+    "args": {
+     "kind": "closure"
+    },
+    "words": 132,
+    "need": 1,
+    "sha256": "a3552f9c69a3034e34c4e2fb28abd12894a3f48ca040213198efc693a9fad77f",
+    "reference": "HostFailure image: validator: f/closure: slot 5 beyond depth 1",
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\tslot-depth\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "slot-depth"
+    },
+    "basis": "f invokes an erased Closure of `slots` 0 whose body is a Let (depth 1) and a Reference to slot 5. The reference codec reports `slot 5 beyond depth 1` in the closure, not `closure slots 0, reached 1`, which it checks when the closure ends."
+   }
+  ]
  }
 }

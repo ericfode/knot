@@ -24,6 +24,14 @@ Checks, in order:
 - the memory-end rows: Books whose last cell (an Object whose fields fill it, and an Action) ends exactly at 48 MiB,
   where boot leaves the memory, so that a read or a write past a cell's end faults there; each bump pointer and
   line is first derived from SPEC section 5 (`ceiling_run`), and the calls from the reference evaluation;
+- the scope rows (`scope` in vm/core/fixtures.json, built by vm/scope.py): images whose validation needs far more scope
+  indices than the tables' first size, W + 4200 for W words: the reviewer's four saved images (two valid, two not), rows
+  one short of, at and one past that size and after each of three doublings (K's fields typed, so that a slot read after a
+  doubling shows its type was carried over), a Closure whose capture sits where the tables must grow, and a unit deeper
+  than its `slots` with a defect after that depth (the reference codec reports the defect). Each image's words, `need`
+  (derived from its plan) and SHA-256 are frozen, and its verdict and run are the reference codec's and the reference
+  evaluation's, fixed before the VM changed (D7); then a seeded corpus of such images, most with one small change,
+  which the VM must judge as the reference codec does: the same first defect or the same run, and no trap;
 - the growth rows: a Book whose every entry allocates a 16-byte Activation stops at a lowered
   heap (with a bounded `memory.grow` count in the test build), at the full 4 GiB through the
   real host within its 120 s guard, and, where the host refuses growth beyond 4,700 pages
@@ -80,6 +88,7 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -105,6 +114,7 @@ def load(name: str, path: Path):
 build = load('vm_build', HERE / 'build.py')
 spec = load('check_spec', HERE / 'check-spec.py')
 lane = load('vm_lane', HERE / 'lane.py')
+scope = load('vm_scope', HERE / 'scope.py')
 study = load('vm_study', HERE / 'study.py')
 codec = spec.codec
 reference = spec.reference
@@ -1030,13 +1040,13 @@ def lane_groups(rows: list, where: Path) -> dict:
 
 STUDY = HERE / 'receipts/study.json'
 STUDY_ORDER = ['keys', 'describe', 'tags', 'display', 'inspection', 'goldens', 'invocations', 'runs', 'reference', 'sweeps', 'writers',
-               'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'memory-end', 'controls']  # cheap and telling first
+               'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'memory-end', 'scope', 'controls']  # cheap and telling first
 HEAVY = ['ceiling']  # about 4 GiB a row: only a study's survivors run them (`--heavy`)
 GUARD = {'fixtures': 120_000, 'limited': 120_000, 'programs': 120_000, 'ceiling': 600_000, 'full-heap': 600_000,
-         'trap': 600_000, 'growth': 600_000, 'refused': 600_000}  # ms a row may take before it is stopped, else 30,000
+         'trap': 600_000, 'growth': 600_000, 'refused': 600_000, 'scope': 5_000}  # ms a row may take before it is stopped, else 30,000
 
 
-BASELINE = ['keys', 'describe', 'tags', 'display', 'inspection', 'sweeps', 'writers', 'programs', 'hang', 'fuzz-admitted', 'dumps']
+BASELINE = ['keys', 'describe', 'tags', 'display', 'inspection', 'sweeps', 'writers', 'programs', 'hang', 'fuzz-admitted', 'dumps', 'scope']
 
 
 def deadline(job: dict, group: str) -> int:
@@ -1168,6 +1178,130 @@ def freeze() -> int:
     LANE.write_text(json.dumps(cfg, indent=1) + '\n')
     print(f'froze {len(seeded)} seeded rows ({sum(1 for s in seeded if s["seed"])} with seed bytes) and a sample of {len(sample)}')
     return 0
+
+
+# ------------------------------------------------------------------ the validator's scope tables
+SCOPE_STACK = 1 << 29  # bytes of host stack, and (below) the recursion limit, for the reference codec on images 20,000 Closures deep
+
+
+def deep(fn):
+    """`fn()` on a thread with a large stack and recursion limit: the plan builders, the encoder and the reference codec
+    recurse once per node, and the scope images nest tens of thousands of Closures inside one another."""
+    out = {}
+
+    def run():
+        try:
+            out['value'] = fn()
+        except BaseException as error:  # noqa: BLE001 -- handed back to the caller's thread
+            out['error'] = error
+    limit, size = sys.getrecursionlimit(), threading.stack_size()
+    sys.setrecursionlimit(2_000_000)
+    threading.stack_size(SCOPE_STACK)
+    try:
+        thread = threading.Thread(target=run)
+        thread.start()
+        thread.join()
+    finally:
+        sys.setrecursionlimit(limit)
+        threading.stack_size(size)
+    if 'error' in out:
+        raise out['error']
+    return out['value']
+
+
+def scope_expected(reference: str | None, plan: dict) -> tuple[dict, dict]:
+    """(host run, outcome registers) of an image the reference codec judged `reference`: its Book's run under the reference
+    evaluation when it admits it, else the refusal, or for a limit of section 4 the exhaustion, that names its first defect."""
+    if reference is None:
+        return reference_run(plan, 1000)
+    code = expected_reason(reference)
+    case = {'outcome': 'Exhausted', 'kind': 2, 'cause': code} if code.startswith('Exhausted 2 ') else {'outcome': 'HostFailure', 'cause': f'image {code}'}
+    return expected_run(case), refusal_dump(code)
+
+
+def check_scope(section: dict, module: Path, test: Path, where: Path, reg: dict, digest: bytes) -> tuple[dict, list]:
+    """The validator's scope tables at the depths where they grow (CORE.md choice 16; vm/scope.py). The frozen rows: each image
+    is rebuilt, and its words, `need` and SHA-256 must be the frozen ones, the reference codec's verdict and the reference
+    evaluation's run the frozen ones (fixed before the VM changed, D7), and the VM, on the real host and in the test build, must
+    show them. Then a seeded corpus of such images, most with one small change, where the VM must judge each as the reference
+    codec does: the same first defect, or the same run, and no trap. Returns the receipt's record and the rows for the mutant
+    group `scope`."""
+    where.mkdir()
+    words = lambda plan: len(codec.encode(plan, digest)) // 4
+    cfg = section['corpus']
+
+    def judged(plan, label):
+        image = codec.encode(plan, digest)
+        reference = verdict(image, label, reg, digest)
+        return image, reference, scope_expected(reference, plan)
+
+    def prepare():
+        frozen = [(row, plan, *judged(plan, f"scope {row['name']}")) for row in section['rows'] for plan in [scope.build(row)]]
+        made = [(name, plan, change, *judged(plan, f'scope corpus {name}'))
+                for name, plan, change in scope.corpus(cfg['seed'], cfg['images'], words, lane.Rng)]
+        return frozen, made
+    frozen, made = deep(prepare)
+    failures = []
+    for row, plan, image, reference, expected in frozen:
+        name = row['name']
+        got = {'words': len(image) // 4, 'need': scope.need(plan), 'sha256': sha(image)}
+        if 'tables' in row:
+            got['edge'] = got['need'] - (got['words'] + scope.CAPACITY) * (1 << row['tables'])
+        elif 'unit' in row:
+            got['delta'] = got['words'] + scope.CAPACITY - row['unit']
+        failures += [f'{name}: the generator gives {k} {v}, frozen {row[k]}' for k, v in got.items() if row[k] != v]
+        if reference != row['reference']:
+            failures.append(f"{name}: the reference codec gives {reference!r}, frozen {row['reference']!r}")
+        elif expected != (row['expect'], row['dump']):
+            failures.append(f"{name}: frozen {row['expect']} {row['dump']}, the reference gives {expected}")
+        (where / f'{name}.kimg').write_bytes(image)
+    argv = lambda name: [f'{name}.kimg', 'main', '1000']
+    job = lambda name, wasm, trace=None: {'id': name, 'wasm': str(wasm), 'files': {f'{name}.kimg': str(where / f'{name}.kimg')},
+                                          'argv': argv(name), **({'trace': trace} if trace else {})}
+    ran = pool(lambda r: host(module, where, argv(r[0]['name'])), frozen)
+    traced = harness([job(r[0]['name'], test, 'audit') for r in frozen], timeout=600)
+    rows = []
+    for (row, plan, image, reference, expected), on_host in zip(frozen, ran):
+        out = traced[row['name']]
+        seen = {k: out['state'][k] for k in row['dump']}
+        seen_more = {k: out['state'][k] for k in row.get('at_most', {})}
+        if seen_more and any(v > row['at_most'][k] for k, v in seen_more.items()):
+            failures.append(f"{row['name']}: the test build's {seen_more} exceeds the frozen bound {row['at_most']}")
+        if on_host != row['expect'] or not clean(out) or shown(out, row['expect']) != row['expect'] or seen != row['dump'] or out['broken'] is not None:
+            failures.append(f"{row['name']}: the real host shows {(on_host['exit'], on_host['stdout'][:40], on_host['stderr'].strip())}, the test build "
+                            f"{(out['exit'], out['stdout'][:40], out['stderr'].strip(), seen, out['broken'])}; frozen {row['expect']} {row['dump']}")
+        rows.append({'name': row['name'], 'words': len(image) // 4, 'need': scope.need(plan), 'sha256': sha(image),
+                     'reference': 'admitted' if reference is None else expected_reason(reference), 'exit': on_host['exit']})
+    require(not failures, f'{len(failures)} of {len(frozen)} frozen scope rows differ: ' + '; '.join(failures[:30]))
+
+    corpus, reasons, grown = [], {}, 0
+    for name, plan, change, image, reference, expected in made:
+        (where / f'{name}.kimg').write_bytes(image)
+        corpus.append({'label': name, 'sha256': sha(image), 'reference': reference, 'argv': argv(name), 'plan': plan, 'expected': expected})
+        grown += scope.need(plan) > len(image) // 4 + scope.CAPACITY
+        reason = 'admitted' if reference is None else expected_reason(reference)
+        reasons[reason] = reasons.get(reason, 0) + 1
+    seen = harness([job(r['label'], test, 'yields') for r in corpus], timeout=900)
+    in_module = harness([job(r['label'], module) for r in corpus], timeout=900)
+    tally = compare('scope corpus', corpus, seen)
+    for r in corpus:
+        g, prod = seen[r['label']], in_module[r['label']]
+        require((prod['exit'], prod['stdout'], prod['stderr']) == (g['exit'], g['stdout'], g['stderr']),
+                f"scope corpus {r['label']}: vm.wasm ran {(prod['exit'], prod['stderr'])}, the test build {(g['exit'], g['stderr'])}")
+        run, dump = r['expected']
+        require(shown(g, run) == run and all(g['state'][k] == v for k, v in dump.items()),
+                f"scope corpus {r['label']}: the VM ran {shown(g, run)} {g['state']}, the reference codec and evaluation give {run} {dump}")
+    require(grown >= len(corpus) // 4 and tally['accepted'] >= len(corpus) // 10 and len(reasons) >= 6,
+            f'the corpus is too uniform: {grown} of {len(corpus)} images grow the tables, {tally["accepted"]} are admitted, reasons {reasons}')
+    record = {'rows': rows, 'corpus': {'seed': cfg['seed'], 'images': len(corpus), 'changed': sum(change != 'none' for _, _, change, *_ in made),
+                                       'grow_the_tables': grown, 'corpus_sha256': sha(json.dumps([r['sha256'] for r in corpus]).encode()),
+                                       'reasons': dict(sorted(reasons.items())), **tally}}
+    costs = {row['name']: scope.need(plan) for row, plan, *_ in frozen} | {r['label']: scope.need(r['plan']) for r in corpus}
+    jobs = [{'id': f"scope:{row['name']}", 'files': job(row['name'], test)['files'], 'argv': argv(row['name']), 'want': row['expect'],
+             'dump': row['dump'], **({'at_most': row['at_most']} if 'at_most' in row else {})} for row, *_ in frozen]
+    jobs += [{'id': f"scope:{r['label']}", 'files': job(r['label'], test)['files'], 'argv': r['argv'], 'want': r['expected'][0], 'dump': r['expected'][1]}
+             for r in corpus]
+    return record, sorted(jobs, key=lambda j: costs[j['id'].removeprefix('scope:')])  # the deepest last: a mutant that stalls on them is stopped there
 
 
 # ------------------------------------------------------------------ mutants
@@ -1525,7 +1659,7 @@ def main(args: list) -> int:
               'scope': 'knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10',
               'inputs': {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in sorted(
                   [HERE / 'vm.wat', HERE / 'vm.wasm', HERE / 'build.json', HERE / 'build.py', HERE / 'harness.mjs',
-                   HERE / 'check-core.py', HERE / 'lane.py', HERE / 'study.py', HERE / 'SPEC.md', HERE / 'serializer.py',
+                   HERE / 'check-core.py', HERE / 'lane.py', HERE / 'scope.py', HERE / 'study.py', HERE / 'SPEC.md', HERE / 'serializer.py',
                    HERE / 'registry.json', HOST, HERE / 'check-spec.py', HERE / 'evaluate.py', HERE / 'golden/vm-expected.json',
                    *(HERE / 'core').glob('*')])}, 'stages': []}
     clock = [time.monotonic()]
@@ -1899,6 +2033,10 @@ def main(args: list) -> int:
     record['arguments'] = [{'control': r['label'], 'verdict': r['verdict'], 'exit': r['want']['exit']} for r in word_rows]
     stage('controls')
 
+    # the validator's scope tables at the depths where they grow: fixtures.json's `scope` rows, then a seeded corpus
+    record['scope'], scope_jobs = check_scope(fixtures['scope'], module, test, BUILD / 'scope', reg, digest)
+    stage('scope tables')
+
     fuzz = BUILD / 'fuzz'
     fuzz.mkdir()
     corpus = fuzz_corpus(images, reg, digest, fuzz)
@@ -1976,6 +2114,9 @@ def main(args: list) -> int:
               'growth': [j for j in growth if j['at_most']], 'refused': [j for j in growth if j['dump']['outcome'] is None]}
     require(all(groups[g] for g in ('growth', 'refused')), 'the growth rows have a bounded count and a refusal')
     groups.update(lane_groups(lane_all, BUILD / 'lane'))
+    groups['scope'] = scope_jobs  # the scope rows and corpus: a refusal, or a run, other than the reference codec's
+    # the rows that bound their memory.grow count: tables that grow by one index a slot take gigabytes, and the rows that show it are few
+    groups['scope-growth'] = [j for j in scope_jobs if j['id'] in ('scope:nest-mark', 'scope:edge-t1-past')]
     groups['traps'] = groups['inspection']  # the same rows: a fault where the frozen run is a refusal is the wrong observation
     groups['memory-end'] = edge_jobs  # a fault where the frozen run completes, at a cell that ends where memory does
     groups['dumps'] = [{'id': f'dump:{n}', 'files': {staged(by_name[n]['image']): str(sandbox / staged(by_name[n]['image']))},
@@ -2011,7 +2152,7 @@ def main(args: list) -> int:
         if group in ('ceiling', 'full-heap', 'trap'):  # about 4 GiB each: one process per run
             out = run_group(batch, group)
         else:
-            out = harness(batch, node_flags=next(iter(groups[group]), {}).get('flags', ()), max_timeouts=1 if group == 'hang' else None)
+            out = harness(batch, node_flags=next(iter(groups[group]), {}).get('flags', ()), max_timeouts=1 if group in ('hang', 'scope') else None)
         refusal = group == 'refused'  # the frozen outcome is the host's refusal: a trap, whose registers are the observation
         crashed = [j['id'] for j in groups[group] if not (out[j['id']]['status'] == 'Trap' if refusal else
                                                           clean(out[j['id']]) or out[j['id']]['status'] in ('Timeout', 'Skipped') and group == 'hang')]
@@ -2044,6 +2185,7 @@ def main(args: list) -> int:
           f"{record['lane']['sample']['rows']} run again through the seed), {sum(record['both'].values())} admitted images "
           f"through both, {len(high)} ceiling runs, {len(ends)} memory-end runs, {len(growth)} growth runs, {len(stack)} small-stack runs, "
           f"{len(refused)} refused and {len(admissions)} admitted controls, "
+          f"{len(record['scope']['rows'])} scope rows and {record['scope']['corpus']['images']} scope images, "
           f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted), "
