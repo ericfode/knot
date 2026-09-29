@@ -6084,6 +6084,50 @@
       "finding": "suffix-continues-index"
     },
     {
+      "name": "suffix-ctl-let-break-closer",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-ctl-let-break-closer.bend",
+      "sha256": "c684c481fd914838e6292ae17b8297779cb97e316125184701627ffe3e8b1708",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-ctl-let-break-closer.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n15 |       u : Flag =\n16>|        )\n   |        ^\n17 |       On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-term\t"
+      },
+      "finding": "suffix-let-break-closed"
+    },
+    {
+      "name": "suffix-ctl-let-break-colon",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-ctl-let-break-colon.bend",
+      "sha256": "0962e19216e790ca5014263751121f3ee21fc6388604bd007b90625086259c92",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-ctl-let-break-colon.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n15 |       u : Flag =\n16>|        :\n   |        ^\n17 |       On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-term\t"
+      },
+      "finding": "suffix-let-break-closed"
+    },
+    {
       "name": "suffix-ctl-marker-minus",
       "file": "tests/compiler-nest/round12-fixtures/suffix-ctl-marker-minus.bend",
       "sha256": "be94cd10ff7597b60d415fe482360df9b0845b02cc2c1bea0b73c7a5c1afdeb1",
@@ -7123,6 +7167,182 @@
       "knot": {
         "diagnostic": "Unsupported\tparse\tterm-form\t",
         "exit": 3
+      }
+    },
+    {
+      "name": "suffix-let-break-comment",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-let-break-comment.bend",
+      "sha256": "e45f4dcd349d6e8b494736d78806605eb354f26e8b4b8a43363bbddc9d0474fb",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-let-break-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-let-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      }
+    },
+    {
+      "name": "suffix-let-break-list",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-let-break-list.bend",
+      "sha256": "20414b1c3124baac0401ce596009e70d2c66b56fa27ece698dafe0b2ae0f8e6d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-let-break-list.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-let-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      }
+    },
+    {
+      "name": "suffix-let-break-live",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-let-break-live.bend",
+      "sha256": "541ae2b55110815e77fd9e12368676cba8c1fdbc318d89044d049b0ee30103ba",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-let-break-live.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-let-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      }
+    },
+    {
+      "name": "suffix-let-break-name",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-let-break-name.bend",
+      "sha256": "e7414424ccc3b525161a84467a6cfd39ce97f5226088fe12b33315ad7d798115",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-let-break-name.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-let-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      }
+    },
+    {
+      "name": "suffix-let-break-numeral",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-let-break-numeral.bend",
+      "sha256": "961a8c690e851821e61e32651a29f3ac83c900f54066e5b3b97d5a678537153a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-let-break-numeral.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-let-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      }
+    },
+    {
+      "name": "suffix-let-break-paren",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-let-break-paren.bend",
+      "sha256": "12a1649582fab9f115ed28c344d8efbe036cd60fc91367160211740de4460960",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-let-break-paren.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-let-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      }
+    },
+    {
+      "name": "suffix-let-break-plus",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-let-break-plus.bend",
+      "sha256": "d358da7449d4f755bd678aa5d86229d2c1b5df1c9b351b3b0d34c5ae0d2ec9b0",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-let-break-plus.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-let-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
+      }
+    },
+    {
+      "name": "suffix-let-break-untyped",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-let-break-untyped.bend",
+      "sha256": "0f77d8f26e78f216621635705e0a360ee09654f791dfd9a4235349ee0be55919",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-let-break-untyped.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-let-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tline-break\t"
       }
     },
     {

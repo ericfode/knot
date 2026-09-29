@@ -313,6 +313,20 @@ group('suffix-marker-break-plus', unsupported('repeated-promotion'), None, ('suf
 group('suffix-marker-break-erased', invalid('binding-name'), 'expected : a name',
       ('suffix-ctl-minus-break-paren', continues('case Off{} Off{}:\n      -\n      (a)\n')),
       ('suffix-ctl-minus-inline-paren', continues('case Off{} Off{}: - (a)\n')))
+# A let's value on the line after its `=` starts at any term, not only a name: the seed skips the break (a live let
+# too: `u : Flag =`, then `(a)`); a token that starts no term (a closer, a colon, a keyword) is rejected there.
+LET_BREAKS = {
+    'let-break-plus': 'u : Flag =\n       +x0\n      On{}', 'let-break-paren': 'u : Flag =\n       (a)\n      On{}',
+    'let-break-numeral': 'u : Flag =\n       0n\n      On{}', 'let-break-comment': 'u : Flag = # c\n       +x0\n      On{}',
+    'let-break-untyped': 'u =\n       +x0\n      On{}', 'let-break-list': 'u : Flag =\n       [a]\n      On{}',
+    'let-break-name': 'u : Flag =\n       a\n      On{}',
+}
+group('suffix-let-break', unsupported('line-break'), None,
+      *[(f'suffix-{name}', continues(f'case Off{{}} Off{{}}:\n      {body}\n')) for name, body in LET_BREAKS.items()],
+      ('suffix-let-break-live', TERM_PRE + 'def f(a: Flag) -> Flag:\n  u : Flag =\n    (a)\n  u\n\ndef main() -> Flag:\n  f(On{})\n'))
+group('suffix-let-break-closed', invalid('expected-term'), 'expected : a term',
+      *[(f'suffix-ctl-let-break-{name}', continues(f'case Off{{}} Off{{}}:\n      u : Flag =\n       {token}\n      On{{}}\n'))
+        for name, token in (('closer', ')'), ('colon', ':'))])
 group('suffix-plain', ACCEPTED, None, ('suffix-ctl-plain', term('dead', 'On{}')), ('suffix-ctl-variable', term('dead', 'a')),
       ('suffix-ctl-call', term('dead', 'h(a)')))
 
