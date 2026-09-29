@@ -134,3 +134,7 @@ def L.discarded_unknown_constructor_witness(): {==}
 def L.discarded_valid_row_witness(): {==}
 def L.short_row_witness(): {==}
 def L.extra_field_witness(): {==}
+def L.leading_witness(): {==}
+def L.marked_witness(): {==}
+def L.first_row_marks_witness(): {==}
+def L.unmarked_first_row_witness(): {==}

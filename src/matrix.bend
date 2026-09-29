@@ -113,6 +113,20 @@ def fresh(params: List<&2,C.Parameter>, +level: U32, +at: S.At) -> List<&2,S.Nod
     case Con{head,tail}:
       Con{S.Variable{S.Token{String.append("$matrix",U32.show(level)),at}},fresh(tail,U32.add(level,1),at)}
 
+# A split's field binders are those of the first row that starts a constructor: a `+` on one
+# of them marks that field in every row below the split, as in the seed.
+def leading(rows: List<&2,S.Node>) -> List<&2,S.Node>:
+  match rows:
+    case Nil{}: Nil{}
+    case Con{S.Arm{arm,S.Sequence{Con{S.Constructor{token,args},rest}},body},tail}: args
+    case Con{head,tail}: leading(tail)
+
+def marked(fields: List<&2,S.Node>, first: List<&2,S.Node>) -> List<&2,S.Node>:
+  match fields first:
+    case Con{S.Variable{name},rest} Con{S.Promotion{binder},more}: Con{S.Promotion{name},marked(rest,more)}
+    case Con{head,rest} Con{other,more}: Con{head,marked(rest,more)}
+    case _ _: fields
+
 def specialize(rows: List<&2,S.Node>, +ctor: S.Token, +fields: List<&2,S.Node>, +level: U32) -> List<&2,S.Node>:
   match rows:
     case Nil{}: Nil{}
@@ -184,7 +198,7 @@ def split(tags: List<&2,S.Token>, binding: C.Binding, +token: S.Token, +column: 
         S.bind(G.ConstructorRef,S.Node,G.find_constructor(types,ctor,0),reference =>
           S.bind(List<&2,C.Parameter>,S.Node,G.field_signature(reference,types),params =>
             +fields = fresh(params,next,S.at(token))
-            Done{promote(name,level,mark(rows),S.Decision{token,column,S.Constructor{ctor,fields},
+            Done{promote(name,level,mark(rows),S.Decision{token,column,S.Constructor{ctor,marked(fields,leading(rows))},
               S.Matrix{token,List.append(&2,S.Node,fields,columns),specialize(rows,ctor,fields,level),work},
               S.Matrix{token,Con{S.Remainder{name,level,rest},columns},without(rows,ctor),work}})})))
 

@@ -100,7 +100,7 @@ def fresh_irrefutable(params: List<&2,C.Parameter>, +level: U32, +at: S.At, +col
 # A split mirrors M.split: the promoted binary decision on one constructor.
 def split_node(+token: S.Token, +column: S.Node, +ctor: S.Token, +name: S.Token, +level: U32, +next: U32, +columns: List<&2,S.Node>,
   +rows: List<&2,S.Node>, +work: U32, +tags: List<&2,S.Token>, +params: List<&2,C.Parameter>) -> S.Node:
-  S.Decision{token,column,S.Constructor{ctor,M.fresh(params,next,S.at(token))},
+  S.Decision{token,column,S.Constructor{ctor,M.marked(M.fresh(params,next,S.at(token)),M.leading(rows))},
     S.Matrix{token,List.append(&2,S.Node,M.fresh(params,next,S.at(token)),columns),M.specialize(rows,ctor,M.fresh(params,next,S.at(token)),level),work},
     S.Matrix{token,Con{S.Remainder{name,level,tags},columns},M.without(rows,ctor),work}}
 
