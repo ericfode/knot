@@ -34,7 +34,7 @@ MUTANTS = [
     {'name': 'touch-call-parenthesis', 'file': 'parse.bend',
      'old': 'Bool.and(S.matches(open,"("),S.same_line(name,open)),u =>', 'new': 'Bool.and(S.matches(open,"("),S.touches(name,open)),u =>',
      'witness': 'v1-call-space', 'phase': 'check',
-     'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\tend-of-body\t'}},
+     'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tterm-form\t'}},
 ]
 
 

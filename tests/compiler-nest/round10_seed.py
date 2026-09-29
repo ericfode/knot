@@ -20,7 +20,10 @@ a promotion of a promotion (`++y`, `+ +y`, `++u = x`) and a let split across lin
 (a marker, then its name, then `=`, then the value) as ordinary. Knot ends a term at
 a line break and reads one `+` promotion, so these seed-accepted programs are
 Unsupported, never Invalid (D4). Only a term can follow an argument as another one
-(a name, or a `+` marker in a pattern), so `two(a = b)` and `two(a + b)` stay Invalid.
+(a name, or a `+` marker in a pattern), so `two(a = b)` stays Invalid. An operator after an
+argument is a term suffix: the seed parses `two(a + b)` in a row it discards and, in a live row, rejects
+it for its type (`a type for this operator`), a reason the parser cannot see, so round 12 amended it to
+Unsupported.
 An arm body on the line after its `case`, at the case's column or below it, is
 seed-accepted layout; only a body that starts with a name is Unsupported (an empty arm
 and a `def` after it are seed-rejected and stay Invalid). A def body at column 0 is
@@ -56,7 +59,7 @@ ARGUMENTS, PROMOTION, BREAK = (unsupported('argument-whitespace'), unsupported('
                                unsupported('line-break'))
 # What the seed says about each rejected group, so a fixture cannot be rejected for another reason.
 REASON = {'plus-row-gap': 'patterns (one per scrutinee)', 'marker-gap': '- expected : a term',
-          'arrow-gap': "- expected : '->'"}
+          'arrow-gap': "- expected : '->'", 'argument-operator': 'a type for this operator'}
 GRID = [f'rowtok-{sep}-{left}-{right}' for sep in ('spaced', 'after', 'newline')
         for left in ('a', 'wild', 'ctor', 'promo', 'a1') for right in ('b', 'wild')]
 
@@ -108,12 +111,14 @@ REVIEWED = {
     'argument-whitespace': {name: ARGUMENTS for name in (
         'argspace-call-flat', 'argspace-call-multi', 'argspace-fields-flat', 'argspace-fields-multi',
         'argspace-repro-call', 'argspace-repro-fields', 'argspace-nested-call', 'argspace-promoted-fields')},
-    # Seed-rejected: what follows the argument is no term, or an operator; a promotion is no
+    # Seed-rejected: what follows the argument is no term, or an operator in a pattern; a promotion is no
     # argument of a call.
     'argument-control': {'argspace-equals-call': invalid('argument-separator'),
-                         'argspace-operator-call': invalid('argument-separator'),
                          'argspace-operator-fields': invalid('argument-separator'),
                          'argspace-promoted-call': invalid('argument-separator')},
+    # Round 12: the seed rejects this operator for its type, in a live row; the same text is accepted in a
+    # row the lowering discards (round12 `suffix-*-dead-arg`), so the parser reports it unsupported.
+    'argument-operator': {'argspace-operator-call': unsupported('term-form')},
     'repeated-promotion': {name: PROMOTION for name in (
         'plusplus-flat', 'plusplus-multi', 'plusplus-repro', 'plusplus-spaced-flat', 'plusplus-triple-flat',
         'plusplus-let', 'plusplus-spaced-let')},
@@ -151,7 +156,8 @@ def observe(path, finding, knot):
     case = review_seed.observe(path)
     case['finding'] = finding
     accepted = case['seed']['exit'] == 0
-    assert accepted == (knot['exit'] != 2), (path.name, 'seed acceptance and reviewed Knot outcome differ')
+    # An Unsupported fixture is seed-accepted, unless its group states the seed's reason for rejecting it.
+    assert accepted == (knot['exit'] != 2) or (knot['exit'] == 3 and finding in REASON), (path.name, 'seed acceptance and reviewed Knot outcome differ')
     if finding in REASON:
         assert REASON[finding] in case['seed']['stderr'], (path.name, 'seed rejects for another reason')
     case['knot'] = knot
