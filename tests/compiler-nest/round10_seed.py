@@ -23,7 +23,8 @@ Unsupported, never Invalid (D4). Only a term can follow an argument as another o
 (a name, or a `+` marker in a pattern), so `two(a = b)` stays Invalid. An operator after an
 argument is a term suffix: the seed parses `two(a + b)` in a row it discards and, in a live row, rejects
 it for its type (`a type for this operator`), a reason the parser cannot see, so round 12 amended it to
-Unsupported.
+Unsupported. A `+name` after an argument is a term too: the seed rejects `two(a +b)` live for its scope
+and accepts it in a discarded row, so round 13 amended it to Unsupported as well.
 An arm body on the line after its `case`, at the case's column or below it, is
 seed-accepted layout; only a body that starts with a name is Unsupported (an empty arm
 and a `def` after it are seed-rejected and stay Invalid). A def body at column 0 is
@@ -59,7 +60,9 @@ ARGUMENTS, PROMOTION, BREAK = (unsupported('argument-whitespace'), unsupported('
                                unsupported('line-break'))
 # What the seed says about each rejected group, so a fixture cannot be rejected for another reason.
 REASON = {'plus-row-gap': 'patterns (one per scrutinee)', 'marker-gap': '- expected : a term',
-          'arrow-gap': "- expected : '->'", 'argument-operator': 'a type for this operator'}
+          'arrow-gap': "- expected : '->'", 'argument-operator': 'a type for this operator',
+          'argument-control': '- expected : a term', 'argument-pattern': 'a Pr pattern with 2 fields',
+          'argument-promotion': '- expected : a bound variable'}
 GRID = [f'rowtok-{sep}-{left}-{right}' for sep in ('spaced', 'after', 'newline')
         for left in ('a', 'wild', 'ctor', 'promo', 'a1') for right in ('b', 'wild')]
 
@@ -111,11 +114,14 @@ REVIEWED = {
     'argument-whitespace': {name: ARGUMENTS for name in (
         'argspace-call-flat', 'argspace-call-multi', 'argspace-fields-flat', 'argspace-fields-multi',
         'argspace-repro-call', 'argspace-repro-fields', 'argspace-nested-call', 'argspace-promoted-fields')},
-    # Seed-rejected: what follows the argument is no term, or an operator in a pattern; a promotion is no
-    # argument of a call.
-    'argument-control': {'argspace-equals-call': invalid('argument-separator'),
-                         'argspace-operator-fields': invalid('argument-separator'),
-                         'argspace-promoted-call': invalid('argument-separator')},
+    # Seed-rejected for a syntactic reason that the diagnostic names: what follows the argument is no term,
+    # or an operator stands in a pattern's fields, which the seed always validates.
+    'argument-control': {'argspace-equals-call': invalid('argument-separator')},
+    'argument-pattern': {'argspace-operator-fields': invalid('argument-separator')},
+    # Round 13: a `+name` after an argument is a term the seed reads and Knot does not. The seed rejects
+    # this live body only for its scope (`expected : a bound variable`) and accepts the same text in a row
+    # the lowering discards (round13 `argterm-promo-dead2`), so the parser reports it unsupported.
+    'argument-promotion': {'argspace-promoted-call': unsupported('term-form')},
     # Round 12: the seed rejects this operator for its type, in a live row; the same text is accepted in a
     # row the lowering discards (round12 `suffix-*-dead-arg`), so the parser reports it unsupported.
     'argument-operator': {'argspace-operator-call': unsupported('term-form')},
