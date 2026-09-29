@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-29T08:42:46.328364+00:00",
+  "date": "2026-09-29T09:47:32.998197+00:00",
   "fixtures": [
     "tests.test_c1.EndToEndTests.test_a_head_whose_lane_does_not_build_is_a_condition_never_a_pass",
     "tests.test_c1.EndToEndTests.test_a_mutant_that_reports_the_seeds_error_token_as_unsupported_is_a_regression",
@@ -52,6 +52,7 @@
     "tests.test_c2.C2Tests.test_unconsumed_upstream_control",
     "tests.test_c2.C2Tests.test_up_to_date_branch_is_clean",
     "tests.test_c3.C3Tests.test_a_branch_selecting_several_new_gates_is_accepted_only_when_all_are_new",
+    "tests.test_c3.C3Tests.test_a_new_branch_that_runs_the_gates_own_module_is_a_minor_note_for_the_coordinator",
     "tests.test_c3.C3Tests.test_a_new_gates_branch_beside_other_edits_outside_counts_is_still_flagged",
     "tests.test_c3.C3Tests.test_a_new_gates_counts_branch_is_the_registration_that_gates_md_asks_for",
     "tests.test_c3.C3Tests.test_bound_widened",
@@ -109,9 +110,11 @@
     "tests.test_c4.C4Tests.test_the_slow_tier_runs_the_gates_itself_but_the_fast_tier_never_does",
     "tests.test_c4.C4Tests.test_untouched_legacy_host_paths_do_not_fire",
     "tests.test_c4.C4Tests.test_worktree_and_toolchain_symlink_paths",
+    "tests.test_c5.C5Tests.test_a_completed_manifest_run_leaves_the_group_rules_running",
     "tests.test_c5.C5Tests.test_a_file_that_a_group_lists_is_judged_by_its_group_not_alone",
     "tests.test_c5.C5Tests.test_a_small_file_outside_every_group_whose_helper_closure_is_large_is_minor_and_names_the_closure",
     "tests.test_c5.C5Tests.test_a_target_that_does_not_parse_is_dropped_and_named_not_a_blind_spot",
+    "tests.test_c5.C5Tests.test_an_aborted_manifest_run_is_a_blocker_and_names_the_rules_that_did_not_run",
     "tests.test_c5.C5Tests.test_bend_hygiene",
     "tests.test_c5.C5Tests.test_dropping_a_judge_sentence_is_major",
     "tests.test_c5.C5Tests.test_identity_changes_need_a_log_entry",
@@ -194,12 +197,18 @@
     "tests.test_packets.PacketTests.test_the_builders_limit_and_the_runners_cap_are_one_number",
     "tests.test_replay.ControlTableTests.test_clean_controls_end_clean_with_the_ledger_and_broken_controls_never_do",
     "tests.test_replay.ControlTableTests.test_every_context_names_full_commits_and_both_expectations",
+    "tests.test_replay.ControlTableTests.test_no_proposed_entry_can_silence_an_edit_of_a_frozen_path",
     "tests.test_replay.ControlTableTests.test_the_confirmed_defects_are_never_ledgered",
     "tests.test_replay.ControlTableTests.test_the_proposed_ledger_is_well_formed_and_pinned_to_measured_values",
     "tests.test_replay.ControlTableTests.test_the_suite_never_reads_the_proposed_ledger_by_itself",
     "tests.test_replay.ReplayCliTests.test_a_context_whose_commits_are_absent_is_skipped_and_reported",
+    "tests.test_replay.ReplayCliTests.test_a_context_whose_upstream_commit_is_absent_is_skipped",
     "tests.test_replay.ReplayLogicTests.test_compare_names_every_difference",
-    "tests.test_replay.ReplayLogicTests.test_residual_counts_only_unacknowledged_executor_majors"
+    "tests.test_replay.ReplayLogicTests.test_residual_counts_only_unacknowledged_executor_majors",
+    "tests.test_replay.UpstreamTests.test_a_reconstructed_manifest_is_written_and_passed_to_the_suite",
+    "tests.test_replay.UpstreamTests.test_a_stacked_context_declares_its_upstream_to_the_suite",
+    "tests.test_replay.UpstreamTests.test_the_manifest_of_the_harness_2_context_owns_only_its_own_suite",
+    "tests.test_replay.UpstreamTests.test_the_vm_model_context_is_stacked_on_a_declared_upstream"
   ],
   "inputs": {
     ".perch/rules/prechecks.yaml": "c2085179a50a7b64e7e141107a062ee7d467b7b601f08af2811e8a1023ab5279",
@@ -208,9 +217,9 @@
     "scripts/prechecks/checks/__init__.py": "c6dacfd40ae04fa32f846560b0e47e70493915e3af5d7d78a4d4fd796738fc7e",
     "scripts/prechecks/checks/c1_probe_differential.py": "a8deb7d34f2fd7f65d65970e1bf7a1952f7f906390364d00a9860c03bf51c07b",
     "scripts/prechecks/checks/c2_merge_forecast.py": "a52a9e3c5028d5a38d3356ddf2e3c8651b1f1274b29d5eb4813ae0fddc01481e",
-    "scripts/prechecks/checks/c3_frozen_and_owned.py": "05b94465c06c03971d8c9ff5f187711e1a2d19efecd6a95752f543643c4871e7",
+    "scripts/prechecks/checks/c3_frozen_and_owned.py": "b28f9d77f0ba11b2b3297814907e3337c83ac998810c0713e292cfcc7b357f36",
     "scripts/prechecks/checks/c4_receipt_integrity.py": "9f8a78fd4c81b62bf04753aa68d069db4b92697fb8c8c31b75b016209cf53658",
-    "scripts/prechecks/checks/c5_preflight_delta.py": "9098e1f9f41ff1d997d62a9995683b0baccb557ed0e58657083ba3f5120af769",
+    "scripts/prechecks/checks/c5_preflight_delta.py": "bba65fd4f8166a7674920ccbb953616e766d143af99f9e181b3f2048d706c1b3",
     "scripts/prechecks/checks/c6_claims_vs_facts.py": "f1c29dfb55cf10ac1e34f817b9626f1d46774cf6748b5e2eac606dd684b08442",
     "scripts/prechecks/checks/c7_gate_adequacy.py": "d9bb3899704a75d49c416bd1506d60565ca2b507cfac8f1fe63d69614e9fabd5",
     "scripts/prechecks/checks/c8_perch_coherence.py": "cb2c42910a2cd138e55371c0086efdf1c765dd6874693bbb0a0dd6f885784967",
@@ -247,23 +256,23 @@
     "scripts/prechecks/packets/builders.py": "4616ce46784247d4b37ebe8a492ffc1ca62f7b321fe2e62521eba8ed18fe7229",
     "scripts/prechecks/packets/common.py": "70b61f9d3fe0d1dee20cb6fb7fd397f6cf55b6bf6b00d29b34d2da9489200db8",
     "scripts/prechecks/packets/limits.json": "7f2ae8f60f93830ab239283353f0b5445c01f43ac3336ef13ee81b7559eadb0a",
-    "scripts/prechecks/replay.py": "e86b120adbdbd54c65732ec8c3d0b7a7ee9d1da5b8c9590f1baf5ab00869641f",
+    "scripts/prechecks/replay.py": "62fc5719fcd4a3aedc681dcac27e11a55e1fee3dbe4fbed75900286e33bf3047",
     "scripts/prechecks/run.py": "31f03eae7f27f30ff6123997db254aecbf9d6594fe5d05ba977fad5cc9ef87ae",
     "scripts/prechecks/seedparse.ts": "74147c5ee34ce883f94b483e5ebed4aaa7ff5860110b7835a18bf8258307a78d",
     "scripts/prechecks/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "scripts/prechecks/tests/helpers.py": "bc16d731dd6e234af1f8db653e002b19a198334b14f9627113f9c3e7f2c9a45c",
     "scripts/prechecks/tests/test_c1.py": "4d1a7a66494b539d77c8eb38e3a9bae29cb971c3916095d504d2b177b07786a2",
     "scripts/prechecks/tests/test_c2.py": "3272c60434b757baec5d193d26b99a9ba8e7fb83b0a43f066988e1045786dcb6",
-    "scripts/prechecks/tests/test_c3.py": "45d49224f425976884dcbab65779bd6bb840b0b41a1fffdfcd58ed32dbe20e64",
+    "scripts/prechecks/tests/test_c3.py": "bdbae6b216fc5a3723f4b90255c69ec70b14278c8683e0c7e35926ca5bd2b97a",
     "scripts/prechecks/tests/test_c4.py": "544d942c30de397825451fac1e40757ed1adce40d077d9f210d36ecae1dd50f9",
-    "scripts/prechecks/tests/test_c5.py": "e696615d0e0bdd001695e257dba966a2161704c1a8a97cb9d1a8796a31221cb5",
+    "scripts/prechecks/tests/test_c5.py": "7324c163ad52930e811fb6027382972abd4198aa9fb346f1910f4200a648f7a5",
     "scripts/prechecks/tests/test_c6.py": "b1b9aedbd26c70888f3ba4b3f648049561db9ef6a91058a5e64cc3b1da35eb50",
     "scripts/prechecks/tests/test_c7.py": "ebe76d7def903463f4023d39bc130d5b30112697e9cc91f232c6feb3e1647361",
     "scripts/prechecks/tests/test_cli.py": "4814e2eb45c68efd11651caf917ad7d69b493008b8ae03f6b8f871da47cc19e9",
     "scripts/prechecks/tests/test_framework.py": "d38edecf6437210fc82938590f6fd6ae4e25f26eea731152c8e0b40f883dfbd8",
     "scripts/prechecks/tests/test_packets.py": "88db13c252b28fdd3ef890292c59e8f3e0276f5640b1899f998f9faa4df36080",
-    "scripts/prechecks/tests/test_replay.py": "d2ba136a517fd54c693f4c988341caed98218b50cebe1182c5e346de8fc7d3c1",
-    "tests/prechecks/check.py": "75ad7e2f3f7da8b6e3484b4c1a29c586949d91398584c608601f5095d3f0af80",
+    "scripts/prechecks/tests/test_replay.py": "b83b15e5efe6f30e0b19d655de48aa0113bd0b934723987359b524252b597cf2",
+    "tests/prechecks/check.py": "ca7fc217a4a4f2d26c62b7632b02598738f2af4ca8e0d50ff506de0be1cd0034",
     "tests/prechecks/perch-controls/cases.json": "f37972a5c7ba770d78d533e096e3f8062e0f532086ab19a2d0ceff8a98f1e011",
     "tests/prechecks/perch-controls/claim-holds-against-evidence/broken-nest-acbdfb2e-partition.md": "9b3be6fcdb32ee9610b3f6f757117e3c454903de8e9c89f51f74969151425f97",
     "tests/prechecks/perch-controls/claim-holds-against-evidence/broken-vm-spec-d2fe0f20-bench.md": "b1cec951dd8bc0f0d7446908b48b23072176466dfb77110e9cb59b9f76aa9c01",
@@ -291,8 +300,8 @@
     "tests/prechecks/registry/lang.jsonl": "ce90373137572b4d772891bf26a0d09c84bb61c52f4ae028e940e5624733e446",
     "tests/prechecks/registry/seed-verdicts.jsonl": "8e3cc74093f6aa4945967a607cbe4d481523696c70c0f42966892559d36304b8",
     "tests/prechecks/registry/vm.jsonl": "a83da51878bb1a5714fe34baa92a1716c264eaf664a55b60ee9a6181d9edad9f",
-    "tests/prechecks/replay/contexts.json": "956632860f0edfb698a3dd62eafdfe680064213d0bde3830a451137755a609e0",
-    "tests/prechecks/replay/proposed-ledger.json": "b9c7da97765f02052ad475e21cdd3776ed675eeff69a03f311a447d37f58446f"
+    "tests/prechecks/replay/contexts.json": "a072bf5718391accc26ffb57a045819235c94e865aa804249b7eb6ea1aa5bd79",
+    "tests/prechecks/replay/proposed-ledger.json": "b1c62c779efdfe2eafd08206566eac7ba3f31bdbd4385f95b12edfc7f6f9240a"
   },
   "mutants": [
     {
@@ -462,6 +471,18 @@
       "name": "c5-measure-grouped-files-alone",
       "outcome": "semantic-kill",
       "target": "checks.c5_preflight_delta.grouped_files"
+    },
+    {
+      "killed_by": "tests.test_c3.C3Tests.test_a_new_branch_that_runs_the_gates_own_module_is_a_minor_note_for_the_coordinator",
+      "name": "c3-never-note-gate-code-in-counts",
+      "outcome": "semantic-kill",
+      "target": "checks.c3_frozen_and_owned.counts_branch_notes"
+    },
+    {
+      "killed_by": "tests.test_c3.C3Tests.test_a_new_branch_that_runs_the_gates_own_module_is_a_minor_note_for_the_coordinator",
+      "name": "c3-note-every-counts-branch",
+      "outcome": "semantic-kill",
+      "target": "checks.c3_frozen_and_owned.counts_branch_notes"
     }
   ],
   "perch": {
