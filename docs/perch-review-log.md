@@ -1604,3 +1604,30 @@ Prevention:
   the 39 pins fail" into four passing gates and a list of 19 unkillable mutants.
 - When two suites guard the same term shape, list the mutants that delete one of the
   guards: each becomes equivalent once both are present.
+
+## 2026-09-29 — literals-integ: the Perch state cap counts reach, not size
+
+After the composition of `checking` was fixed (`4ea2d92`, 47,344 of 48,000), `check.bend::run` stayed
+the only declaration over the 60,000-byte state cap: 64,171 at the floor, where every callee is
+already an interface. Every other declaration of the file fits (the next are `functions` 52,979
+and `expected` 52,865). Confirmed with `attrib.mjs` (scratch, which records the helper that first
+reached each declaration):
+- The measure is the closure of `run`, not its size. Perch expands only the first 48 helpers in
+  the order `run` first names them; the 61 direct references cost 20,105 bytes with their notes and
+  the bodies of the expanded 48 add 52 more declarations (about 16 KB), 113 in all (95 and 92 in the
+  parents). A helper extracted from a row adds an expanded declaration and removes none, so the
+  measure rewards a fat dispatcher and penalizes decomposition. Rows moved by group changed it by
+  minus 0.4 to plus 2.6 KB; only a hill climb reaches minus 3.6 KB, and it still fails.
+- Seven of `run`'s row texts are byte-pinned by frozen mutant anchors, among them the two literals
+  mutants that pin the leaf walk, so the redesign that would remove the matrix rows from `run`
+  needs those mutants re-witnessed first.
+- The duplicates the merge could have left (`bound`, `primitive_type`, the two `parameters`) are
+  not: each pair means something different. Two identical declarations exist in the literals files
+  (`kind_name`, `installed`) and would save one declaration each.
+
+Prevention:
+- Do not fold declarations to move a reach measure: the folds that keep the anchors reach 2.2 KB of
+  4.2 KB and trade the house idiom of one named unpacker per continuation for nested matches in
+  lambdas. The cap for a dispatcher is a decision, not a refactor.
+- Add a gate or a suite together with `npm run census` (its `accepted.json` pins the gate registry
+  and each gate program): the first full run after the integration books failed only `census`.
