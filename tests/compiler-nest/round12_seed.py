@@ -121,6 +121,7 @@ ROWS = {
     'trip-first': ('trip', 'T3{+a, On{}, On{}}: a', 'T3{a, b, c}: both(a, both(a, b))', 'T3{_, _, _}: Off{}'),
     'trip-middle': ('trip', 'T3{On{}, +b, On{}}: b', 'T3{a, b, c}: both(b, both(b, c))', 'T3{_, _, _}: Off{}'),
     'trip-last': ('trip', 'T3{On{}, On{}, +c}: c', 'T3{a, b, c}: both(c, both(c, a))', 'T3{_, _, _}: Off{}'),
+    'trip-two-marks': ('trip', 'T3{On{}, +b, +c}: both(b, c)', 'T3{Off{}, b, c}: both(both(b, b), both(c, c))', 'T3{_, _, _}: Off{}'),
     'wide': ('pair', 'P{On{}, +v}: v', 'P{Off{}, w}: both(w, w)', 'P{On{}, x}: both(x, x)', 'P{Off{}, y}: y'),
     'columns': ('pair2', 'P{On{}, +v} _: v', 'P{Off{}, v} _: both(v, v)'),
     'columns-second': ('pair2', 'P{On{}, +v} On{}: v', 'P{Off{}, v} On{}: both(v, v)', 'P{_, w} Off{}: both(w, w)'),
