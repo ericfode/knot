@@ -120,12 +120,23 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
         Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
 
 # A line break before a let's `=` or `:`, or before its value, is whitespace to the seed.
+def split(+ts: List<&2,S.Token>) -> Bool:
+  Bool.and(starts(ts,"\n"),Bool.or(starts(S.skip_lines(ts),"="),starts(S.skip_lines(ts),":")))
+
 def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
-  S.choose(Result<S.Error,List<&2,S.Token>>,Bool.and(starts(ts,"\n"),Bool.or(starts(S.skip_lines(ts),"="),starts(S.skip_lines(ts),":"))),u =>
+  S.choose(Result<S.Error,List<&2,S.Token>>,split(ts),u =>
     Fail{S.Unsupported{"parse","line-break",S.here(ts)}},u =>
   S.bind(List<&2,S.Token>,List<&2,S.Token>,expect(ts,"="),+rhs =>
     S.choose(Result<S.Error,List<&2,S.Token>>,broken(rhs),u =>
       Fail{S.Unsupported{"parse","line-break",S.here(rhs)}},u => Done{rhs})))
+
+# The seed reads the next statement on the line of a let's value.
+def line_end(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
+  match ts:
+    case Con{+h,t}:
+      S.choose(Result<S.Error,List<&2,S.Token>>,S.statement(h),u =>
+        Fail{S.Unsupported{"parse","same-line-statement",S.at(h)}},u => expect(ts,"\n"))
+    case Nil{}: expect(ts,"\n")
 
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match rest:
@@ -159,14 +170,15 @@ def template_parameter(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
         unsupported(ts,"template-binder"),u => invalid(ts,"parameter"))
     case _: invalid(ts,"parameter")
 
-# The seed reads a second arm on the line of an arm's body as the next arm.
+# The seed reads a second arm, or the next declaration, on the line of a body's end.
 def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
-    case Con{h,t}:
+    case Con{+h,t}:
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")),u =>
         Done{Parsed{value,ts}},u =>
       S.choose(Result<S.Error,Parsed>,S.matches(h,"case"),u => unsupported(ts,"same-line-arm"),u =>
-        invalid(ts,"end-of-body")))
+      S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"def"),S.matches(h,"type")),u => unsupported(ts,"same-line-declaration"),u =>
+        invalid(ts,"end-of-body"))))
     case _: invalid(ts,"unexpected-end")
 
 def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -210,12 +222,14 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+head,Con{+name,+tail}}:
           S.choose(Result<S.Error,Parsed>,S.matches(head,"<eof>"),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
+          # The seed reads a case left of its match's column as a row of that match, and a declaration at any column.
+          S.choose(Result<S.Error,Parsed>,S.matches(head,"case"),u =>
+            unsupported(tokens,"pattern-or-indentation"),u =>
           S.choose(Result<S.Error,Parsed>,U32.is_eq(S.column(head),0),u =>
             then(run(n,Header{head,name},tail),value => rest =>
               then(run(n,Book{},rest),more => end => prepend(value,more,end))),u =>
-          # The seed reads a case left of its match's column as a row of that match.
-          S.choose(Result<S.Error,Parsed>,S.matches(head,"case"),u =>
-            unsupported(tokens,"pattern-or-indentation"),u => invalid(tokens,"top-level-indentation"))))
+          S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(head,"def"),S.matches(head,"type")),u =>
+            unsupported(tokens,"top-level-indentation"),u => invalid(tokens,"top-level-indentation")))))
         case Con{+head,Nil{}}:
           S.choose(Result<S.Error,Parsed>,S.matches(head,"<eof>"),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u => invalid(tokens,"unexpected-end"))
@@ -308,7 +322,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
               invalid(tokens,"detached-marker")),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(second,"="),S.matches(second,":")),u =>
             run(n,BindingStart{1,S.column(h)},tokens),u =>
-            then(run(n,Term{False{}},tokens),value => rest => reply(value,rest))))),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(h),split(Con{second,tail})),u =>
+            unsupported(Con{second,tail},"line-break"),u =>
+            then(run(n,Term{False{}},tokens),value => rest => reply(value,rest)))))),u =>
           # The seed checks no column for a statement.
           S.choose(Result<S.Error,Parsed>,S.statement(h),u =>
             unsupported(tokens,"body-indentation"),u => invalid(tokens,"body-indentation")))
@@ -380,7 +396,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"binding-type"))
         case _: invalid(tokens,"binding-type")
     case 1n+ +n BindingTail{+token,+quantity,+annotation,+value,+column}:
-      S.bind(List<&2,S.Token>,Parsed,expect(tokens,"\n"),body =>
+      S.bind(List<&2,S.Token>,Parsed,line_end(tokens),body =>
         then(run(n,BodyAt{column,False{}},S.skip_lines(body)),next => rest =>
           Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}}))
     case 1n+ +n RowTail{+keyword,+pattern,+parent,+column}:

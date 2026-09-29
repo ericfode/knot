@@ -59,7 +59,8 @@ def validate(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.E
 def audit(fuel: Nat, node: S.Node, +width: Nat, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
   match fuel node:
     case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
-    case 1n+n S.Binding{token,q,annotation,value,body}: audit(n,body,width,types)
+    case 1n+n S.Binding{+token,+q,annotation,value,body}:
+      S.bind(Unit,Unit,G.promotion(types,token,U32.is_eq(q,2)),u => audit(n,body,width,types))
     case 1n+n S.Match{token,value,arms}: audit(n,S.Sequence{arms},List.length(&2,S.Node,items(value)),types)
     case 1n+n S.Sequence{Nil{}}: Done{Unit{}}
     case 1n+ +n S.Sequence{Con{S.Arm{+token,+pattern,+body},+tail}}:
