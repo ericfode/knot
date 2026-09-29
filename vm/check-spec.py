@@ -1559,8 +1559,8 @@ def effect_controls(plans: dict) -> list:
         {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]},
         {'name': 'k', 'parameters': [0], 'result': 4, 'slots': 1, 'body': ['con', 4, 0, [['value', 8, 1]]]}]
 
-    def image(entry, body, slots=0, *more):
-        result = 7 if entry == 'program' else 8
+    def image(entry, body, slots=0, *more, result=None):
+        result = result or (7 if entry == 'program' else 8)
         return {'entry': entry, 'representation': fp['representation'], 'types': types,
                 'functions': [*functions, *more, {'name': 'main', 'parameters': [], 'result': result, 'slots': slots, 'body': body}]}
 
@@ -1600,6 +1600,26 @@ def effect_controls(plans: dict) -> list:
         return plan
     # The canonical UTF-8 examples, and each length's boundary; Python's own encoder is the literal review.
     lengths, edges = [0x24, 0xA2, 0x20AC, 0x10348], [0x7F, 0x80, 0x7FF, 0x800, 0xD7FF, 0xE000, 0xFFFF, 0x10000, 0x10FFFF]
+    # D23, by literal review of sections 6, 7, 8 and 10: the Action's second application builds a request and is
+    # debited, nothing reads the request or its operands until the Top loop performs it, and a run that returns
+    # no request to the loop performs nothing. `request` is IO.print("x")(R)(k): main, IO.print, R and the
+    # Action applied to k are 4 entries, and each further call is one more. A Program's main is
+    # λ@R. λk. body, entered as main, phase 1's R and phase 2's closure (3 entries) with k as slot 0.
+    keep = {'name': 'keep', 'parameters': [4, 4], 'result': 4, 'slots': 2, 'body': ['ref', 4, 1]}    # keep(x, y) = y
+    add = {'name': 'U32.add', 'parameters': [1, 1], 'result': 1, 'slots': 2,
+           'body': ['prim', 1, 0, [['ref', 1, 0], ['ref', 1, 1]]]}
+    pick = {'name': 'pick', 'parameters': [None], 'result': 8, 'slots': 1, 'body': [
+        'case', 8, 0, 1, 'keys', [['branch', 7, 1, 0, ['value', 8, 1]]], ['default', ['value', 8, 0]]]}
+    pair = {'kind': 'data', 'name': 'Pair', 'constructors': [{'name': 'Pair', 'fields': [8, 8]}]}      # type 10
+    request, k_ref = printing(text('x')), ['ref', 5, 0]
+    unsupported = {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0}
+
+    def through_id(node, t):
+        return ['call', t, ident, [node]]
+
+    def entered(body, slots=1, *more):
+        """main = λ@R. λk. body, k being slot 0 of the inner closure and `slots` its depth"""
+        return image('program', ['closure', 7, 0, 0, [], ['closure', 6, 1, slots, [], body]], 0, *more)
     return [
         ('book-print', image('book', bound(text('x'))), refused),
         ('book-print-continuation-call', image('book', bound(text('x'), calling)), refused),
@@ -1625,6 +1645,45 @@ def effect_controls(plans: dict) -> list:
          {'halt': 1, 'message': [0x78, 0x1F600], 'stdout': '', 'calls': 3}),
         ('print-utf8-lengths', printing_codes(lengths), {'exit': 0, 'stdout': ''.join(map(chr, lengths)) + '\n', 'calls': 5}),
         ('print-utf8-boundaries', printing_codes(edges), {'exit': 0, 'stdout': ''.join(map(chr, edges)) + '\n', 'calls': 5}),
+        # A request built and dropped is no effect and no error, whatever holds it: a Book's let (4 entries),
+        # an Emit's field (6), a Program's let (the dead request is 3 of 10 entries, the live one prints) and
+        # an argument of a call that answers the other request (keep-swapped's plan, 12 entries).
+        ('book-request-dropped', image('book', ['let', 8, 0, request, ['value', 8, 1]], 1),
+         {'exit': 0, 'stdout': on, 'effects': 0, 'calls': 4}),
+        ('program-request-in-emit', entered(['con', 4, 0, [request]]), {'exit': 0, 'stdout': '', 'effects': 0, 'calls': 6}),
+        ('program-request-dropped-let',
+         entered(['let', 4, 1, printing(text('dead')), printing(text('live'), k_ref)], 2),
+         {'exit': 0, 'stdout': 'live\n', 'effects': 1, 'calls': 10}),
+        ('program-request-dropped-argument', plans['keep-swapped'], {'exit': 0, 'stdout': 'kept\n', 'effects': 1, 'calls': 12}),
+        # The loop reads a request's operands only when it performs it, so a dropped request may hold an ill-typed
+        # String (laundered: 12 entries, `kept\n`), as the seed's dropped non-scalar print is no D20 refusal.
+        ('program-request-dropped-ill-typed',
+         entered(['call', 4, 4, [printing(laundered), printing(text('kept'), k_ref)]], 1, keep),
+         {'exit': 0, 'stdout': 'kept\n', 'effects': 1, 'calls': 12}),
+        # A request is never inspected: a Case over it (the seed fail-stops, request_out_of_band.bend), a
+        # rendered root or field, an operand, a key and an Enter's target each stop `Unsupported vm effect`,
+        # before any ill-typed check and, for the Enter, before the debit.
+        ('program-case-request', entered(['con', 4, 0, [['call', 8, got, [printing(text('x'), k_ref)]]]]),
+         {**unsupported, 'calls': 7}),
+        ('book-request-rendered', image('book', through_id(request, 8)), {**unsupported, 'calls': 5}),
+        ('book-request-field',
+         {**image('book', ['con', 10, 0, [['value', 8, 1], through_id(request, 8)]], 0, result=10), 'types': [*types, pair]},
+         {**unsupported, 'calls': 5}),
+        ('inspect-request-chr', image('book', ['let', 8, 0, ['con', 2, 0, [through_id(request, 1)]], ['value', 8, 1]], 1),
+         {**unsupported, 'calls': 5}),
+        ('inspect-request-prim',
+         image('book', ['let', 8, 0, ['call', 1, 4, [through_id(request, 1), ['lit', 1, 'U32', 1]]], ['value', 8, 1]], 1, add),
+         {**unsupported, 'calls': 6}),
+        ('inspect-request-keys', image('book', ['call', 8, 4, [through_id(request, None)]], 0, pick), {**unsupported, 'calls': 6}),
+        ('inspect-request-print',
+         entered(printing(['con', 3, 1, [['lit', 2, 'Char', 97], through_id(printing(text('y')), 3)]], k_ref)),
+         {**unsupported, 'calls': 10}),
+        ('enter-request-target', image('book', ['invoke', 8, through_id(request, 9), [['value', 8, 1]]]),
+         {**unsupported, 'calls': 5}),
+        # The Action's application is debited, and the loop's k after it: at fuel 4 book-print's got is entered
+        # with fuel 0, after the 4 entries that built the request.
+        ('fuel-book-request-short', image('book', bound(text('x'))),
+         {'fuel': 4, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 4}),
     ]
 
 
