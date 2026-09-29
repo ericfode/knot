@@ -119,6 +119,26 @@ def binder(+code: String, +name: S.Token, +erased: Bool, +params: List<&2,S.Node
   S.choose(Result<S.Error,Unit>,constructor_named(params,S.text(name)),u =>
     Fail{S.Invalid{"check","constructor-pattern-binder",S.at(name)}},u => Done{Unit{}}))
 
+# The seed reads an annotation that spells a binder in scope as that variable, not as the type.
+def shaded(annotation: Maybe<&2,S.Token>, params: List<&2,S.Node>) -> Result<S.Error,Unit>:
+  match annotation:
+    case None{}: Done{Unit{}}
+    case Some{+typ}:
+      S.choose(Result<S.Error,Unit>,parameter_named(params,S.text(typ)),u =>
+        Fail{S.Unsupported{"parse","annotation-shadow",S.at(typ)}},u => Done{Unit{}})
+
+# The variables a pattern binds are in scope in its arm's body.
+def bound(fuel: Nat, node: S.Node) -> List<&2,S.Node>:
+  match fuel node:
+    case 0n _: Nil{}
+    case 1n+n S.Variable{+token}: [S.Parameter{token,1,token}]
+    case 1n+n S.Promotion{+token}: [S.Parameter{token,2,token}]
+    case 1n+n S.Offset{token,count,tail}: bound(n,tail)
+    case 1n+n S.Constructor{token,args}: bound(n,S.Sequence{args})
+    case 1n+n S.Sequence{Nil{}}: Nil{}
+    case 1n+ +n S.Sequence{Con{head,tail}}: List.append(&2,S.Node,bound(n,head),bound(n,S.Sequence{tail}))
+    case 1n+n _: Nil{}
+
 # The binders of a body in source order: a let name, or a variable at a pattern position.
 def binders(fuel: Nat, node: S.Node, +pattern: Bool, +params: List<&2,S.Node>) -> Result<S.Error,Unit>:
   match fuel node:
@@ -129,11 +149,12 @@ def binders(fuel: Nat, node: S.Node, +pattern: Bool, +params: List<&2,S.Node>) -
     case 1n+n S.Offset{token,count,tail}: binders(n,tail,pattern,params)
     case 1n+n S.Constructor{token,args}: binders(n,S.Sequence{args},pattern,params)
     case 1n+ +n S.Binding{+token,+q,ann,value,body}:
-      S.bind(Unit,Unit,binder("binding-name",token,U32.is_eq(q,0),params),u =>
-        binders(n,body,False{},Con{S.Parameter{token,q,token},params}))
+      S.bind(Unit,Unit,shaded(ann,params),u =>
+        S.bind(Unit,Unit,binder("binding-name",token,U32.is_eq(q,0),params),u =>
+          binders(n,body,False{},Con{S.Parameter{token,q,token},params})))
     case 1n+n S.Match{token,value,arms}: binders(n,S.Sequence{arms},False{},params)
-    case 1n+ +n S.Arm{token,head,body}:
-      S.bind(Unit,Unit,binders(n,head,True{},params),u => binders(n,body,False{},params))
+    case 1n+ +n S.Arm{token,+head,body}:
+      S.bind(Unit,Unit,binders(n,head,True{},params),u => binders(n,body,False{},List.append(&2,S.Node,bound(n,head),params)))
     case 1n+n S.Sequence{Nil{}}: Done{Unit{}}
     case 1n+ +n S.Sequence{Con{head,tail}}:
       S.bind(Unit,Unit,binders(n,head,pattern,params),u => binders(n,S.Sequence{tail},pattern,params))

@@ -276,6 +276,23 @@ law erased_dotted_let_binds_only_itself:
       S.Binding{S.Token{"x.z",at},1,None{},S.Variable{S.Token{"v",at}},S.Variable{S.Token{"v",at}}}},False{},Nil{})
     == Fail{S.Invalid{"parse","binding-name",at}} : Result<S.Error,Unit>}
 
+# A binder in scope shadows the type of its name: an annotation that spells it reads the variable.
+# A pattern's variables are in scope in its arm's body.
+law annotation_reads_a_binder:
+  for +at: S.At
+  {P.shaded(Some{S.Token{"Flag",at}},[S.Parameter{S.Token{"Flag",at},1,S.Token{"Other",at}}])
+    == Fail{S.Unsupported{"parse","annotation-shadow",at}} : Result<S.Error,Unit>}
+
+law annotation_reads_a_type:
+  for +at: S.At
+  {P.shaded(Some{S.Token{"Flag",at}},[S.Parameter{S.Token{"x",at},1,S.Token{"Other",at}}])
+    == Done{Unit{}} : Result<S.Error,Unit>}
+
+law pattern_binds_its_variables:
+  for +at: S.At
+  {P.bound(6n,S.Constructor{S.Token{"Box",at},[S.Variable{S.Token{"v",at}},S.Promotion{S.Token{"w",at}}]})
+    == [S.Parameter{S.Token{"v",at},1,S.Token{"v",at}},S.Parameter{S.Token{"w",at},2,S.Token{"w",at}}] : List<&2,S.Node>}
+
 # A let's value ends at its line. A `+` after it is an operator, which Knot does not check;
 # any other token is no line end.
 law let_value_ends_at_its_line:

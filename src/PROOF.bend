@@ -141,6 +141,12 @@ def L.erased_dotted_let_binds_below(at): {==}
 
 def L.erased_dotted_let_binds_only_itself(at): {==}
 
+def L.annotation_reads_a_binder(at): {==}
+
+def L.annotation_reads_a_type(at): {==}
+
+def L.pattern_binds_its_variables(at): {==}
+
 def L.let_value_ends_at_its_line(at,rest): {==}
 
 def L.operator_after_let_value(at,rest): {==}
