@@ -1,5 +1,5 @@
 {
-  "basis": "Seed observations that vm/SPEC.md section 8 cites and no golden can carry: the seed fails, its two lanes disagree, or it succeeds where D23 refuses. Each source runs on both lanes; the native lane is the reference. The review of each lane's exit and stdout is fixed before observation, from the review of round 11; the lanes' bytes are frozen by `check-spec.py --freeze-new`. A witness is evidence for the text and never a VM expectation.",
+  "basis": "Seed observations that vm/SPEC.md section 8 cites and no golden can carry: the seed fails, its two lanes disagree, or it succeeds where D23 refuses, or Knot cannot lower the form (the `head` lane is the pinned literals head's check-cli). Each source runs on both seed lanes; the native lane is the reference. The exit and stdout of each lane were reviewed from the probes of the round-11 review and of round 12 before `check-spec.py --freeze-new` froze the bytes. A witness is evidence for the text and never a VM expectation.",
   "witnesses": [
     {
       "name": "main-lambda-print",
@@ -285,6 +285,111 @@
         "exit": 1,
         "stdout": "",
         "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "catch-all-lone",
+      "source": "vm/golden/witness/catch-all-lone.bend",
+      "note": "a lone `case _:` over a Flag: the seed runs it, the pinned literals head answers Unsupported check variable-pattern.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "head": {
+          "exit": 3,
+          "stdout": ""
+        }
+      },
+      "sha256": "3f4aa580f3aa9d4b61d7e26d6632dabe9d48a8c97300c924a12cdf0202552a47",
+      "native": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "head": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tcheck\tvariable-pattern\t81:82:9:9\n"
+      }
+    },
+    {
+      "name": "catch-all-binder",
+      "source": "vm/golden/witness/catch-all-binder.bend",
+      "note": "a lone binder `case y:` over a Flag: the same.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "Off{}\n"
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "Off{}\n"
+        },
+        "head": {
+          "exit": 3,
+          "stdout": ""
+        }
+      },
+      "sha256": "3f011e9b08e68fd7083737cf12919aba8a7ec97ca202d03aa3e4337e48445eb5",
+      "native": {
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "head": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tcheck\tvariable-pattern\t81:82:9:9\n"
+      }
+    },
+    {
+      "name": "catch-all-after-arm",
+      "source": "vm/golden/witness/catch-all-after-arm.bend",
+      "note": "`case _:` after a constructor arm over a Flag: the same, so no compiled program holds a Case with a Default over an algebraic type, an IO.OP included.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "head": {
+          "exit": 3,
+          "stdout": ""
+        }
+      },
+      "sha256": "9ace690e3db2eb6a26d9a1e07913151db0afb74a547bf08be8e72803254a9515",
+      "native": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "head": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tcheck\tvariable-pattern\t102:103:10:9\n"
       }
     }
   ]

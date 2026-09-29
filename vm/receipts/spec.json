@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T06:32:10.203907+00:00",
+ "date": "2026-09-29T06:36:14.778581+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "998edc9da03de0c1e0af0ea2e43546c51070198b4a2361a5a56415512fc88cfe",
+  "vm/check-spec.py": "f1ebc75ea838fe2ed8270282fa031ff95e59dcd541294372de46e5a71ace18d4",
   "vm/evaluate.py": "0e8de3f917bd614b9778059a94c477eff4bfe39fdbdbf4bb1ae6884ad330c74b",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
@@ -350,7 +350,7 @@
   "vm/golden/value-on.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
   "vm/golden/value-on.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
   "vm/golden/vm-expected.json": "ffd534e2ff68fea87bc1dde83afef16548730b24e6cf7dd14b3af46f95ae9cbb",
-  "vm/golden/witnesses.json": "4b2765d0846b6156aa2cf43f3c238f334679a7c41294a7162d8fd148f6f48941",
+  "vm/golden/witnesses.json": "6b5613f2c935292be59b3f228f73d30a8733fed058567cf2ef0df1b06fb73d50",
   "vm/golden/write-sources.py": "e2632c0f73731e6e3ef52cc6c319cea1c38c218c5c7c0042da3a8c2594cb7623",
   "vm/oracles/closures.json.gz": "de15465bd281b9bcb9cdd582581eb5c6755de58c8a92e133d4d04b8989b7fcab",
   "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
@@ -4034,6 +4034,57 @@
     "exit": 1,
     "stdout": "",
     "stderr": "bend: runtime fail-stop\n"
+   }
+  },
+  "catch-all-lone": {
+   "native": {
+    "exit": 0,
+    "stdout": "On{}\n",
+    "stderr": ""
+   },
+   "bun": {
+    "exit": 0,
+    "stdout": "On{}\n",
+    "stderr": ""
+   },
+   "head": {
+    "exit": 3,
+    "stdout": "",
+    "stderr": "Unsupported\tcheck\tvariable-pattern\t81:82:9:9\n"
+   }
+  },
+  "catch-all-binder": {
+   "native": {
+    "exit": 0,
+    "stdout": "Off{}\n",
+    "stderr": ""
+   },
+   "bun": {
+    "exit": 0,
+    "stdout": "Off{}\n",
+    "stderr": ""
+   },
+   "head": {
+    "exit": 3,
+    "stdout": "",
+    "stderr": "Unsupported\tcheck\tvariable-pattern\t81:82:9:9\n"
+   }
+  },
+  "catch-all-after-arm": {
+   "native": {
+    "exit": 0,
+    "stdout": "On{}\n",
+    "stderr": ""
+   },
+   "bun": {
+    "exit": 0,
+    "stdout": "On{}\n",
+    "stderr": ""
+   },
+   "head": {
+    "exit": 3,
+    "stdout": "",
+    "stderr": "Unsupported\tcheck\tvariable-pattern\t102:103:10:9\n"
    }
   }
  },

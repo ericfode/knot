@@ -2840,30 +2840,35 @@ def bench_controls(built: dict) -> list:
 
 # ------------------------------------------------------------------ main
 
-def witness_lanes(entry) -> dict:
-    """Both seed lanes on a witness source: the native lane is the reference, the Bun lane a cross-check."""
+def witness_lanes(entry, built) -> dict:
+    """The lanes a witness's review names: both seed lanes (the native lane is the reference, the Bun lane a
+    cross-check) and, where it names `head`, the literals head's check-cli on the source."""
     case = {'name': f"witness-{entry['name']}", 'source': entry['source'], 'seed_lane': 'native'}
-    return {'native': observed(seed_observation(case)), 'bun': observed(run([SEED, entry['source']], 120))}
+    lanes_ = {'native': lambda: observed(seed_observation(case)),
+              'bun': lambda: observed(run([SEED, entry['source']], 120)),
+              'head': lambda: observed(run([built['literals']['check'], '--bundle', '.', entry['source']], 120))}
+    return {lane: lanes_[lane]() for lane in entry['review']}
 
 
 def check_witness(entry, got, source_sha):
     """One witness against its frozen row: the source's hash, each lane's bytes and the literal review."""
     name = entry['name']
     require(source_sha == entry['sha256'], f'witness {name}: source hash')
-    for lane in ('native', 'bun'):
+    for lane in entry['review']:
         require(got[lane] == entry[lane], f'witness {name}: {lane} lane {got[lane]}, frozen {entry[lane]}')
         seen = {k: entry[lane][k] for k in entry['review'][lane]}
         require(seen == entry['review'][lane], f"witness {name}: literal review {entry['review'][lane]}, {lane} lane {seen}")
 
 
-def witness_controls() -> dict:
-    """The seed's lanes on the sources that section 8 cites and no golden can carry, because the seed fails,
-    or its lanes disagree, or it succeeds where D23 refuses. Each source's hash, and both lanes' exit, stdout
-    and stderr, are re-observed and must equal `witnesses.json`; the literal review of each lane's exit and
-    stdout was written before the observation. A witness is evidence for SPEC's text and never a VM expectation."""
+def witness_controls(built) -> dict:
+    """The seed's lanes, and where a witness asks it the literals head, on the sources that section 8 cites and no
+    golden can carry, because the seed fails, or its lanes disagree, or it succeeds where D23 refuses, or Knot cannot
+    lower the form. Each source's hash, and each lane's exit, stdout and stderr, are re-observed and must equal
+    `witnesses.json`; the literal review of each lane's exit and stdout was written before the bytes were frozen. A
+    witness is evidence for SPEC's text and never a VM expectation."""
     frozen = json.loads(WITNESSES.read_text())['witnesses']
     with ThreadPoolExecutor(max_workers=4) as pool:
-        fresh = list(pool.map(witness_lanes, frozen))
+        fresh = list(pool.map(lambda entry: witness_lanes(entry, built), frozen))
     rows = {}
     for entry, got in zip(frozen, fresh):
         check_witness(entry, got, sha((ROOT / entry['source']).read_bytes()))
@@ -2875,7 +2880,7 @@ def witness_refusals() -> list:
     """Frozen refusals of `check_witness`: a source that drifted, a lane that drifted, and a frozen lane
     that contradicts its literal review. Each is refused by name, so a check that is dropped admits one."""
     entry = next(w for w in json.loads(WITNESSES.read_text())['witnesses'] if w['name'] == 'case-request-emit-default-u32')
-    got = {lane: entry[lane] for lane in ('native', 'bun')}
+    got = {lane: entry[lane] for lane in entry['review']}
     other = {**got['native'], 'stdout': '1\n'}
     out = []
     for label, frozen, seen, source_sha in [('source-drift', entry, got, '0' * 64),
@@ -2890,13 +2895,14 @@ def witness_refusals() -> list:
     return out
 
 
-def freeze_witnesses():
-    """Observe the witnesses that have no frozen lanes yet. Never rewrites a frozen row."""
+def freeze_witnesses(built):
+    """Observe the lanes that a witness's review names and that have no frozen row yet. Never rewrites one."""
     data = json.loads(WITNESSES.read_text())
     for entry in data['witnesses']:
-        if 'native' not in entry:
-            entry['sha256'] = sha((ROOT / entry['source']).read_bytes())
-            entry.update(witness_lanes(entry))
+        if not all(lane in entry for lane in entry['review']):
+            entry.setdefault('sha256', sha((ROOT / entry['source']).read_bytes()))
+            for lane, row in witness_lanes(entry, built).items():
+                entry.setdefault(lane, row)
     WITNESSES.write_text(json.dumps(data, indent=2) + '\n')
 
 
@@ -2915,7 +2921,7 @@ def freeze(built):
         row.update(got)
         frozen['cases'].append(row)
     path.write_text(json.dumps(frozen, indent=2) + '\n')
-    freeze_witnesses()
+    freeze_witnesses(built)
 
 
 def main() -> int:
@@ -3088,7 +3094,7 @@ def main() -> int:
 
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
-    witnessed = witness_controls()
+    witnessed = witness_controls(built)
     boundaries += witness_refusals()
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries, excused=excused, witnesses=witnessed,
                   admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts,
