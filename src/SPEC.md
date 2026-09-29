@@ -170,6 +170,7 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | A name or a literal (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
 | A `+` after a let's value on its line (`c = a ++ b`) | `parse` | `operator` |
 | A parameter named like the type of itself, of a later parameter or of the result | `parse` | `parameter-shadow` |
+| A let's annotation spelled like a binder in scope | `parse` | `annotation-shadow` |
 | A `+` binder spelled like a datatype that the checker cannot place | `check` | `promoted-type` |
 | A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
 
@@ -301,7 +302,10 @@ a binder the checker cannot place is `Unsupported check promoted-type`: an impor
 spelled with its module and its binder's module is unknown here, and Base's datatypes outside the
 reachable slice are not in the book, so a capitalized name that no datatype or constructor of the
 book spells counts too. A parameter named like the type of itself, of a later parameter or of the
-result shadows that type in the annotation: `Unsupported parse parameter-shadow`.
+result shadows that type in the annotation: `Unsupported parse parameter-shadow`. The seed also reads
+a let's annotation that spells a binder in scope (a parameter, a let above it, erased or live, or a
+variable of its arm's pattern) as that variable: `Unsupported parse annotation-shadow` (`shaded`). A
+let's own name binds below it, so `Flag : Flag = x` reads the type.
 
 A body meets the datatypes declared before it, as the seed registers them. The book lists them in
 load order, imported files first, so `functions` counts those before each body and `G.before`
@@ -320,9 +324,13 @@ a match with no rows. Known imprecisions, each Invalid where the seed accepts: a
 first line must leave column 0 (`Invalid parse body-indentation`, pinned by the frontend
 gate); a function body's match must put its cases right of `match`; a line break inside a
 parameter, in a function header outside its parentheses, after a promotion's `+` or before a
-let's `=` or `:`. A name or a literal after a list item without its comma is `Unsupported parse
-argument-whitespace`; another token there is `Invalid parse argument-separator`. A `+` after a
-let's value is `Unsupported parse operator`; any other token there is `Invalid parse expected-newline`.
+let's `=` or `:`; a parameter or a declared field without its comma (`Invalid parse
+argument-separator`); a datatype declaration laid out otherwise than a header line that ends at its
+`:` and then one whole constructor per line (a line break before `is` or the `:`, a constructor on the
+header line or two on one line). In arguments, constructor values and patterns, a name or a literal
+after an item without its comma is `Unsupported parse argument-whitespace`; another token there is
+`Invalid parse argument-separator`. A `+` after a let's value is `Unsupported parse operator`; any
+other token there is `Invalid parse expected-newline`, also the `;` with which the seed may end a let.
 
 Resolved occurrences use lexical levels within a function environment, never
 display-name lookup. New bindings append a level; shadowing resolves to the

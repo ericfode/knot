@@ -96,11 +96,13 @@ The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/
 The literals increment adds `literals`, the frozen U32, Nat, Char and String surface
 in both compiler lanes ([README](../../tests/compiler-literals/README.md)). The
 `literals-integ` increment appends `literals-integ`: the
-[integration books](../../tests/compiler-literals-integ/README.md), six programs
+[integration books](../../tests/compiler-literals-integ/README.md), 53 programs
 frozen from the seed that the merge of nest into the literals line decides and no
-parent suite pins, compared in both lanes, and six one-rule mutants of the merged
-parser and matrix. It writes only
-`tests/compiler-literals-integ/receipts/literals-integ.json`.
+parent suite pins (six from the merge, 47 from its review round 1), compared in
+both lanes; a metamorphic stage (a comment before any module of the modules
+fixtures changes no verdict, 84 pairs); the selfhost suite's arity twin in bundle
+mode; and 19 one-rule mutants of the merged parser, checker and matrix. It writes
+only `tests/compiler-literals-integ/receipts/literals-integ.json`.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
