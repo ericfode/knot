@@ -195,11 +195,15 @@ def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
 
 def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
-    case Con{+h,t}:
-      S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,")"),Bool.or(S.matches(h,"}"),
-        Bool.or(S.matches(h,":"),Bool.or(S.matches(h,","),Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")))))),u =>
-          invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
+    case Con{+h,t}: S.choose(Result<S.Error,Parsed>,S.closes(h),u => invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
     case _: invalid(ts,"unexpected-end")
+
+# The seed reads any term after a scrutinee, unchecked in a discarded match: a header
+# ends only at a closer, a separator or a keyword.
+def term_start(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{+h,t}: Bool.not(Bool.or(S.closes(h),S.reserved(S.text(h))))
 
 # A match or case header runs to its colon; its line breaks separate no
 # columns, as in the seed. Joined tokens keep their offsets, so a brace on the
@@ -278,7 +282,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(t,"~")),u =>
               invalid(t,"parameter"),u =>
               then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
-            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.and(pattern,promotes(tokens)))),u => unsupported(tokens,"argument-whitespace"),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.or(numeral(tokens),Bool.and(pattern,promotes(tokens))))),u => unsupported(tokens,"argument-whitespace"),u =>
             S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),S.matches(h,"\n")),u => unsupported(tokens,"line-break"),u =>
               invalid(tokens,"argument-separator")))))
         case _: invalid(tokens,"unexpected-end")
@@ -370,7 +374,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,","),tail =>
           then(run(n,Term{False{}},tail),item => after =>
             run(n,MatchTail{token,columns(value,item),column},after))),u =>
-      S.choose(Result<S.Error,Parsed>,scrutinee(tokens),u =>
+      S.choose(Result<S.Error,Parsed>,term_start(tokens),u =>
         then(run(n,Term{False{}},tokens),more => rest =>
           run(n,MatchTail{token,columns(value,more),column},rest)),u =>
       S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),arms =>

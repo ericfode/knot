@@ -63,7 +63,7 @@ MUTANTS = [
      'old': ARROW, 'new': 'Bool.and(S.touches(dash,arrow),Bool.and(S.touches(arrow,typ),S.identifier(typ)))',
      'witness': 'arrow-glued', 'phase': 'check', 'wrong': invalid('function-result')},
     {'name': 'argument-whitespace-invalid', 'file': 'parse.bend',
-     'old': 'Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.and(pattern,promotes(tokens))))', 'new': 'False{}',
+     'old': 'Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.or(numeral(tokens),Bool.and(pattern,promotes(tokens)))))', 'new': 'False{}',
      'witness': 'argspace-call-flat', 'phase': 'check', 'wrong': invalid('argument-separator')},
     {'name': 'repeated-promotion-invalid', 'file': 'parse.bend',
      'old': 'Bool.and(promoted,S.matches(name,"+"))', 'new': 'False{}',

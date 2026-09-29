@@ -124,6 +124,10 @@ def numeral(+s: String) -> Bool:
     case SNil{}: False{}
     case SCon{c,tail}: digit(Char.to_u32(c))
 
+# A closer or a separator opens no term.
+def closes(+t: Token) -> Bool:
+  Bool.or(matches(t,")"),Bool.or(matches(t,"}"),Bool.or(matches(t,":"),Bool.or(matches(t,","),Bool.or(matches(t,"\n"),matches(t,"<eof>"))))))
+
 # The seed reads a name, `match` or a marker at a line's start as a statement.
 def statement(+t: Token) -> Bool:
   Bool.or(identifier(t),Bool.or(matches(t,"match"),Bool.or(matches(t,"+"),matches(t,"-"))))

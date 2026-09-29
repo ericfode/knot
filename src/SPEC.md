@@ -175,11 +175,11 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | A second `case` arm on the line of an arm's body | `parse` | `same-line-arm` |
 | A line break in a let before its `=` or `:`, before its value or between its marker and name | `parse` | `line-break` |
 | A statement on the line of a let's value | `parse` | `same-line-statement` |
-| A numeral opening a later column of a row (a Nat literal pattern) | `parse` | `term-form` |
+| A numeral opening a later column of a row (a Nat literal pattern), or a term after a header's scrutinee that is no closer, separator or keyword | `parse` | `term-form` |
 | A case at, left of, or at the margin of its match's column | `parse` | `pattern-or-indentation` |
 | A `def` or `type` at another column | `parse` | `top-level-indentation` |
 | A `def` or `type` on the line of a body's end | `parse` | `same-line-declaration` |
-| A name (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
+| A name or a numeral (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
 | A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
 | An arm body that starts with a name, `+`, `-` or `match` on the line after its `case`, at the case's column or below it; a later statement at another column | `parse` | `body-indentation` |
 
@@ -192,7 +192,9 @@ selfhost suite's `layout` need), as do an unindented def body (the frontend gate
 pins it Invalid, though the seed accepts it), a call with fewer arguments than
 parameters that the seed reads as an unused partial application (`Invalid check
 call-arity`), a global function used as a value (`Invalid check free-name`) and a
-Nat literal pattern as a let binder at another column. An arm body that starts
+Nat literal pattern as a let binder at another column, a constructor line of a type declaration at another
+column, and a term suffix after a complete term (an infix operator, a chained call, an index; the seed parses it
+in a discarded body without checking it, `Invalid parse end-of-body`). An arm body that starts
 with a name, `+`, `-` or `match` and sits at or below its `case` column, and a
 later statement at another column, are `Unsupported parse body-indentation`; an
 empty arm stays invalid. Recognition stops at that prefix; it neither validates

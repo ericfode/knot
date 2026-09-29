@@ -192,23 +192,27 @@ def dead_row(d, flag):
 
 def lax(d, pad):
     """A statement or two the seed never reads in a discarded body."""
-    return d.pick(['', '', f'{pad}zzz : Nope = Nope{{}}\n', f'{pad}-w : Flag = On{{}}\n', f'{pad}u = q\n',
-                   f'{pad}{d.pick(["+", "", "-"])}{d.pick(LETTABLE)} = h(a)\n'])
+    return d.pick([''] * 8 + [f'{pad}zzz : Nope = Nope{{}}\n', f'{pad}-w : Flag = On{{}}\n', f'{pad}u = q\n',
+                   f'{pad}{d.pick(["+", "", "-"])}{d.pick(LETTABLE)} = h(a)\n',
+                   f'{pad}u = h(On{{}} {d.pick(["10n", "1n+m", "0n", "u"])})\n'])
 
 
 def nested(d, depth, scrutinee, flag, kinds, pad, dead):
     """A nested match with one to three rows, each good or bad, on `scrutinee`; `dead` allows unchecked lets."""
+    # the seed reads any term after the scrutinee, so a discarded header may carry more columns
+    extra, more = d.pick([('', 0)] * 95 + [(' + b', 0), (' - b', 0), (' (a)', 0), (' 10n', 1), (' 1n+m', 1)])
+    rest = ' _' * more
     rows = []
     for _ in range(d.pick([1, 2, 2, 3])):
         state, what, pattern = dead_row(d, flag)
         kinds.append(f'{state}-{what}')
         if depth > 1 and d.chance(2):
-            rows.append(f'{pad}    case {pattern}:\n' + nested(d, depth - 1, scrutinee, flag, kinds, pad + '    ', dead))
+            rows.append(f'{pad}    case {pattern}{rest}:\n' + nested(d, depth - 1, scrutinee, flag, kinds, pad + '    ', dead))
         else:
-            rows.append(f'{pad}    case {pattern}: On{{}}\n')
+            rows.append(f'{pad}    case {pattern}{rest}: On{{}}\n')
     if d.chance(2):
-        rows.append(f'{pad}    case _: Off{{}}\n')
-    return f'{pad}  match {scrutinee}:\n' + ''.join(rows)
+        rows.append(f'{pad}    case _{rest}: Off{{}}\n')
+    return f'{pad}  match {scrutinee}{extra}:\n' + ''.join(rows)
 
 
 def wide_program(d):
