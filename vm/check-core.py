@@ -979,6 +979,15 @@ MUTANTS = [
     ('record-fit-one-word', 'a record takes one word of the words that remain, not two',
      [('(i32.shr_u (i32.sub (global.get $W) (local.get $at)) (i32.const 1)))', '(i32.sub (global.get $W) (local.get $at)))')],
      'limit-words'),
+    # review round 1, finding 2: growth in 16 MiB steps (CORE.md choice 15). Both keep every outcome; the first is
+    # the VM of dcc7c09 and costs time only, so its kill is the test build's memory.grow count, never a timeout
+    ('grow-per-page', 'memory grows to exactly the 64 KiB pages a cell needs, one grow per page (the VM of dcc7c09)',
+     [('(i64.add (local.get $end) (i64.const 0xffffff)) (i64.const -16777216)',
+       '(i64.add (local.get $end) (i64.const 0xffff)) (i64.const -65536)')], 'growth'),
+    ('step-refusal-traps', 'a host that refuses the 16 MiB step traps instead of being asked for the size the cell needs',
+     [('        (drop (memory.grow (i32.wrap_i64 (i64.shr_u (i64.sub (local.get $to) (local.get $have)) (i64.const 16)))))\n',
+       '        (if (i32.lt_s (memory.grow (i32.wrap_i64 (i64.shr_u (i64.sub (local.get $to) (local.get $have)) (i64.const 16)))) (i32.const 0))\n'
+       '          (then unreachable))\n')], 'refused'),
 ]
 
 
@@ -1362,10 +1371,13 @@ def main() -> int:
               'quantum': [j for j in fixture_jobs if 'quantum' in j['id']], 'ceiling': ceiling_mutant_jobs,
               'full-heap': full_heap, 'trap': ceiling_mutant_jobs,
               'invocations': invocation_jobs, 'runs': run_jobs, 'reference': reference_jobs, 'limited': limited_jobs,
-              'image-limits': image_limits, 'limit-words': word_jobs}
+              'image-limits': image_limits, 'limit-words': word_jobs,
+              'growth': [j for j in growth if j['at_most']], 'refused': [j for j in growth if j['dump']['outcome'] is None]}
+    require(all(groups[g] for g in ('growth', 'refused')), 'the growth rows have a bounded count and a refusal')
 
     def observed_wrong(job, out):
-        return shown(out, job['want']) != job['want'] or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
+        return (shown(out, job['want']) != job['want'] or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
+                or any(out['state'][k] > most for k, most in job.get('at_most', {}).items()))
 
     killed = []
     for name, breaks, edits, group in MUTANTS:
@@ -1386,8 +1398,9 @@ def main() -> int:
         if group in ('ceiling', 'full-heap', 'trap'):  # about 4 GiB each: one process per run
             out = {k: v for part in pool(lambda j: harness([j]), batch, workers=2) for k, v in part.items()}
         else:
-            out = harness(batch)
-        crashed = [j['id'] for j in groups[group] if not clean(out[j['id']])]
+            out = harness(batch, node_flags=next(iter(groups[group]), {}).get('flags', ()))
+        refusal = group == 'refused'  # the frozen outcome is the host's refusal: a trap, whose registers are the observation
+        crashed = [j['id'] for j in groups[group] if not (out[j['id']]['status'] == 'Trap' if refusal else clean(out[j['id']]))]
         if group == 'trap':  # the frozen outcome is never a trap, so a trap is the wrong observation
             wrong = [j['id'] for j in full_heap if out[j['id']]['status'] == 'Trap']
             right = [j['id'] for j in groups[group] if j not in full_heap
@@ -1395,7 +1408,7 @@ def main() -> int:
             require(len(wrong) == len(full_heap) and len(right) == len(groups[group]) - len(full_heap),
                     f'mutant {name}: traps {wrong}, right {right}')
         else:
-            wrong = [j['id'] for j in groups[group] if clean(out[j['id']]) and observed_wrong(j, out[j['id']])]
+            wrong = [j['id'] for j in groups[group] if (refusal or clean(out[j['id']])) and observed_wrong(j, out[j['id']])]
         require(wrong, f'mutant {name} survives group {group} (crashes: {crashed[:5]})')
         killed.append({'mutant': name, 'breaks': breaks, 'group': group, 'killed_by': wrong[:5],
                        'wrong_observations': len(wrong), 'crashes': len(crashed)})
