@@ -172,6 +172,25 @@ of the first row is still `reusable-type`. The D21 proof mirrors the new pattern
   first row, another column, another field, none: `affine-reuse`; a `+` on a `Type` field: `reusable-type`). 15 of the 19
   accepted programs failed on the round-11 checker (the other four reach the mark through variable columns). The 229 seed calls
   agree with the evaluator and Wasm in both lanes.
+- **The reviewer's 15 repro files** (`r12-sem/.local/probe/repros`: eight seed-accepted programs and seven controls) and the
+  fixtures that stand for them. Thirteen fixtures carry the same case rows as the reviewer's file (up to the name of one type), in the shared
+  prelude of `round12_seed.py`: `plus-first-row-pair` is `plusfirst-pair`, `-second-uses-once` is `plusfirst-second-once`, `-var-row-after` is
+  `plusfirst-var-row-after`, `-three-rows` is `plusfirst-three-rows`, `-two-levels` is `plusfirst-two-levels`,
+  `plus-underscore-first-row` is `plusfirst-underscore`, `plus-underscore-x-first-row` is `plusfirst-underscore-name`,
+  `plus-first-row-data-parent` is `plusfirst-data-parent` (a `Data` parent `D2`), `ctl-plus-in-later-row` is
+  `plusfirst-ctl-later-row`, `ctl-other-constructor` is `plusfirst-ctl-other-constructor`, `ctl-type-kind-first` and
+  `ctl-type-kind-later` are `plusfirst-ctl-type-first` and `plusfirst-ctl-type-later` (`reusable-type`), and `ctl-flat-single-row`
+  is `plusfirst-ctl-flat`. The two controls with two flat `Flag` columns (`ctl-second-column`, `ctl-plus-underscore-flat`) are
+  frozen in a `Pair`-then-`Flag` form, `plusfirst-ctl-second-column` and `plusfirst-ctl-underscore-flat`; their flat form is
+  drawn by the plus family of `fuzz12.py` (a `Flag` column is one of its nine column types) but not frozen as a fixture. All 15
+  files, verbatim, were also run through the seed and the final build outside the gate: the nine accepted ones (the eight
+  programs and the flat control) are Accepted by both, evaluate to the seed's `On{}` in both lanes and compile through the
+  `knot-fields-wasm-1` profile to a module whose `main` returns 1; the six rejecting controls are Invalid in both. The reviewer's
+  three random programs (`sfz/s3/c548`, `c1429`, `c2111`) check and evaluate to `On{}`, and the verifier's own two corpora
+  (`myfuzz-7`, 12,000 programs, and `myfuzz-20260929`, 3,000) show 0 discrepancies against the seed. The finding-1 probe programs
+  of the reviewer and the verifier (48 files: the eight forms in a dead row, their single-scrutinee twins, controls, three
+  scrutinees, a dead row after exhaustive rows, and the live-row controls) are never Invalid where the seed accepts: 12 Accepted,
+  34 `Unsupported`, and the two live-row controls the seed rejects are `Unsupported`.
 - **Mutants, 5:** `split-ignores-first-row-marks`, `leading-takes-second-row`, `leading-takes-last-row`,
   `marked-promotes-every-field`, `marked-ignores-later-fields`.
 
