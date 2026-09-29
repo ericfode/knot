@@ -229,8 +229,7 @@ def compare(seed, path, check, evaluate):
         arguments = random.Random(seed).choice(tuples)
         fixture = {'name': path.stem, 'file': str(path.relative_to(gate.ROOT))}
         wpath, text, call, prefix = oracle.wrapper(fixture, 'probe', list(arguments), 'Flag')
-        (gate.ROOT / wpath).parent.mkdir(parents=True, exist_ok=True)
-        (gate.ROOT / wpath).write_text(text)
+        oracle.publish(gate.ROOT / wpath, text)
         observed = gate.run([*gate.SEED, gate.ROOT / wpath], timeout=240*gate.TIMEOUT_SCALE)
         name = oracle.decode(observed['stdout'], prefix, enums['Flag'])
         gate.require(observed['exit'] == 0 and not observed['stderr'] and name is not None, observed)

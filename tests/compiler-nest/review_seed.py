@@ -31,9 +31,7 @@ def observe(path):
                 continue
             for args in itertools.product(*(enums[t] for t in sig['parameters'])):
                 wpath, text, call, prefix = oracle.wrapper(case, export, list(args), sig['result'])
-                target = oracle.ROOT / wpath
-                target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_text(text)
+                oracle.publish(oracle.ROOT / wpath, text)
                 result = oracle.run(['bun', oracle.SEED, wpath])
                 name = oracle.decode(result['stdout'], prefix, enums[sig['result']])
                 assert result['exit'] == 0 and not result['stderr'] and name is not None, result

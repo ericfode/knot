@@ -25,6 +25,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import threading
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -54,6 +55,18 @@ def run(argv):
         return {'exit': p.returncode, 'stdout': p.stdout, 'stderr': p.stderr}
     except subprocess.TimeoutExpired:
         return {'exit': None, 'stdout': '', 'stderr': 'harness-timeout'}
+
+
+def publish(target, text):
+    """Write `text` to `target` by rename. Gates that replay one fixture write the same wrapper path at
+    once; a reader must find the whole file, never a truncation between another writer's open and write."""
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temporary = target.with_name(f'.{target.name}.{os.getpid()}.{threading.get_ident()}.tmp')
+    try:
+        temporary.write_text(text)
+        os.replace(temporary, target)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def declarations(source):
@@ -132,8 +145,7 @@ def observe(fixture):
                 continue
             for arguments in itertools.product(*(enums[t] for t in sig['parameters'])):
                 wpath, wsource, call, prefix = wrapper(fixture, export, list(arguments), sig['result'])
-                (ROOT / wpath).parent.mkdir(parents=True, exist_ok=True)
-                (ROOT / wpath).write_text(wsource)
+                publish(ROOT / wpath, wsource)
                 argv = ['bun', SEED, wpath]
                 obs = run(argv)
                 name = decode(obs['stdout'], prefix, enums[sig['result']]) if obs['exit'] == 0 else None

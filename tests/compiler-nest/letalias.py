@@ -91,8 +91,7 @@ def compare(seed, path, check, evaluate):
         for arguments in itertools.product(*(enums[t] for t in entries['f']['parameters'])):
             fixture = {'name': path.stem, 'file': str(path.relative_to(gate.ROOT))}
             wpath, text, call, prefix = oracle.wrapper(fixture, 'f', list(arguments), 'Flag')
-            (gate.ROOT / wpath).parent.mkdir(parents=True, exist_ok=True)
-            (gate.ROOT / wpath).write_text(text)
+            oracle.publish(gate.ROOT / wpath, text)
             observed = gate.run([*gate.SEED, gate.ROOT / wpath])
             name = oracle.decode(observed['stdout'], prefix, enums['Flag'])
             gate.require(observed['exit'] == 0 and not observed['stderr'] and name is not None, observed)
