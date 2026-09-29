@@ -31,6 +31,12 @@ HOST_PATH = re.compile(r'/Users/|/home/[^/\s"\']+/|/private/(?:tmp|var)|/var/fol
                        r'[.]local/gates/run-|(?:[.][.]/){2,}[.]toolchain')
 MEASUREMENT_KEY = re.compile(r'(?:peak_)?rss(?:_bytes)?$|load_?avg|host_load|cpu_seconds|wall_seconds|wall_ms', re.I)
 DOC_INPUTS = re.compile(r'(?:^|/)(?:README|REPORT|HANDOFF|FIXTURES|GATES|CLASSIFICATION)\.md$|^docs/')
+# A hash map under a section with one of these names records the past on purpose: the tree before the implementation
+# (`baseline_implementation`, written once under `require(not receipt.exists(), 'the freeze is immutable')`), a freeze,
+# a snapshot, an audit, a candidate or an earlier run. No gate re-verifies it against head, so head differing from it is
+# not staleness, and regenerating it would break the freeze (D7).
+PROVENANCE = re.compile(r'(?i)baseline|(?:^|[_-])freeze|frozen_?at|at_?freeze|snapshot|histor|prior|previous|original|audit|candidate|'
+                        r'latest_target|pre_?implementation')
 runner_excluded = gaterun.runner_excluded
 
 
@@ -68,8 +74,24 @@ def host_paths(ctx, changed) -> list[Condition]:
     return found
 
 
-def stale_hashes(ctx, changed) -> list[Condition]:
-    found = []
+def is_provenance(pointer: str) -> bool:
+    """True when a hash claim sits under a section that records the past (the pointer minus its own last segment)."""
+    sections = [part.replace('~1', '/').replace('~0', '~') for part in pointer.split('/')[1:-1]]
+    return any(PROVENANCE.search(section) for section in sections)
+
+
+def registered_outputs(ctx) -> list[str]:
+    """Receipts that a gate regenerates and the runner drift-checks, plus those the manifest declares as the increment's."""
+    outputs = [o for g in gates_lib.parse_gates(ctx.head.text(gates_lib.RUN_PY)) for o in g.outputs]
+    return outputs + list(ctx.manifest.get('receipts', []) or [])
+
+
+def stale_hashes(ctx, changed) -> tuple[list[Condition], int]:
+    """R2: (conditions, hash claims skipped as history). Only current-input maps are judged. Severity is major for a
+    registered gate output (the gate regenerates it, so a stale hash there is a receipt nobody refreshed) and minor for
+    any other receipt, which nothing regenerates or re-verifies."""
+    found, historical = [], 0
+    registered = registered_outputs(ctx)
     for change in changed:
         if not change.path.endswith('.json'):
             continue
@@ -88,19 +110,26 @@ def stale_hashes(ctx, changed) -> list[Condition]:
             actual = ctx.head.sha256(path)
             if actual is None or actual == recorded or path.endswith('.gz'):
                 continue
+            if is_provenance(pointer):
+                historical += 1
+                continue
             if old_claims.get((pointer, claimed)) == recorded and ctx.base is not None and \
                     ctx.base.sha256(path) not in (None, recorded):
                 continue                                # was already stale at base, with the same recorded hash
             stale.append(path)
         if stale:
             own = is_own(ctx, change.path, change.status)
+            regenerated = any(globs.match(pattern, change.path) for pattern in registered)
             found.append(Condition(
-                ID, 'stale-receipt-hash', 'major' if own else 'minor', {'path': change.path}, value={'stale': len(stale)},
-                actor='executor' if own else 'coordinator',
-                expected='every recorded input hash equals the sha256 of that file at head',
-                observed=f'{len(stale)} recorded input hash(es) differ from head, e.g. {sorted(stale)[:3]}',
-                evidence={'inputs': sorted(stale)[:12]}, fix_hint='Regenerate the receipt (or its gate) after the last source edit.'))
-    return found
+                ID, 'stale-receipt-hash', 'major' if own and regenerated else 'minor', {'path': change.path},
+                value={'stale': len(stale)}, actor='executor' if own else 'coordinator',
+                expected='every recorded current-input hash equals the sha256 of that file at head',
+                observed=f'{len(stale)} recorded input hash(es) differ from head, e.g. {sorted(stale)[:3]}'
+                         + ('' if regenerated else ' (no gate regenerates this receipt)'),
+                evidence={'inputs': sorted(stale)[:12]},
+                fix_hint="Regenerate the receipt's current-input sections (or its gate) after the last source edit; "
+                         'never a baseline or freeze section, which is immutable by design.'))
+    return found, historical
 
 
 def decorative_hashes(ctx, changed) -> list[Condition]:
@@ -335,11 +364,13 @@ def run(ctx) -> CheckResult:
     if ctx.base is None:
         return not_applicable('no base to compare against')
     changed = [c for c in ctx.changes() if c.status in 'AMRC' and R.is_receipt(c.path)]
-    result.facts = {'receipts_in_scope': len(changed)}
+    result.facts['receipts_in_scope'] = len(changed)
     if changed:
         result.conditions += host_paths(ctx, changed)
         result.rules_run.append('host-path')
-        result.conditions += stale_hashes(ctx, changed)
+        found, historical = stale_hashes(ctx, changed)
+        result.conditions += found
+        result.facts['historical_hash_claims'] = historical
         result.rules_run.append('stale-receipt-hash')
         result.conditions += decorative_hashes(ctx, changed)
         result.conditions += volatility(ctx, changed)

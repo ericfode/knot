@@ -86,6 +86,53 @@ class C4Tests(RepoTest):
         _, result = self.conditions(c4)
         self.assertEqual([], self.rules(result, 'stale-receipt-hash'))
 
+    RUN_PY = "GATES = (\n    Gate('x', ('python3', 'tests/compiler-x/check.py'), ('tests/compiler-x/receipts/x.json',)),\n)\n"
+
+    def stale_receipt(self, receipt_text, extra=None):
+        src = 'def f():\n  1\n'
+        self.branch_from({'src/a.bend': src, 'src/b.bend': 'def g():\n  1\n', **(extra or {})})
+        self.fx.commit('edit both sources and add the receipt', {'src/a.bend': 'def f():\n  2\n', 'src/b.bend': 'def g():\n  2\n',
+                                                                 'tests/compiler-x/receipts/x.json': receipt_text})
+        return self.conditions(c4)[1]
+
+    def test_a_pre_implementation_freeze_section_is_history_not_staleness(self):
+        """recursion's reference.json: `baseline_implementation` is written once, before the implementation, under
+        `require(not receipt.exists(), 'the freeze is immutable')`; regenerating it would break the freeze."""
+        old = {'src/a.bend': sha('def f():\n  1\n'), 'src/b.bend': sha('def g():\n  1\n')}
+        now = {'src/a.bend': sha('def f():\n  2\n'), 'src/b.bend': sha('def g():\n  2\n')}
+        result = self.stale_receipt(receipt(baseline_implementation=old, frozen_inputs=now, inputs=now), {'scripts/gates/run.py': self.RUN_PY})
+        self.assertEqual([], self.rules(result, 'stale-receipt-hash'))
+        self.assertEqual(2, result.facts['historical_hash_claims'])
+
+    def test_a_stale_current_input_section_of_a_registered_output_is_major(self):
+        registered = self.stale_receipt(receipt(inputs={'src/a.bend': sha('def f():\n  1\n')}), {'scripts/gates/run.py': self.RUN_PY})
+        found = self.rules(registered, 'stale-receipt-hash')
+        self.assertEqual(('major', 'executor'), (found[0].severity, found[0].actor))
+        self.assertNotIn('no gate regenerates', found[0].observed)
+        self.assertIn('never a baseline or freeze section', found[0].fix_hint)
+
+    def test_a_stale_current_input_section_of_a_receipt_no_gate_regenerates_is_minor(self):
+        unregistered = self.stale_receipt(receipt(inputs={'src/a.bend': sha('def f():\n  1\n')}))
+        found = self.rules(unregistered, 'stale-receipt-hash')
+        self.assertEqual(('minor', 'executor'), (found[0].severity, found[0].actor))
+        self.assertIn('no gate regenerates this receipt', found[0].observed)
+
+    def test_a_freeze_beside_a_stale_current_section_reports_only_the_current_one(self):
+        old = {'src/a.bend': sha('def f():\n  1\n'), 'src/b.bend': sha('def g():\n  1\n')}
+        result = self.stale_receipt(receipt(baseline_implementation=old, inputs={'src/a.bend': sha('def f():\n  1\n')}),
+                                    {'scripts/gates/run.py': self.RUN_PY})
+        found = self.rules(result, 'stale-receipt-hash')
+        self.assertEqual(['src/a.bend'], found[0].evidence['inputs'])
+        self.assertEqual(2, result.facts['historical_hash_claims'])
+
+    def test_provenance_sections_are_recognized_by_name(self):
+        for pointer, expected in (('/baseline_implementation/src~1a.bend', True), ('/x_at_freeze/p', True), ('/audit/inputs/p', True),
+                                  ('/candidate-wasm/p', True), ('/latest_target_hashes/p', True), ('/prior_project_baseline/p', True),
+                                  ('/inputs/src~1a.bend', False), ('/frozen_inputs/p', False), ('/files/0/sha256', False),
+                                  ('/source_hashes/p', False), ('/checked_inputs_sha256/p', False)):
+            with self.subTest(pointer=pointer):
+                self.assertEqual(expected, c4.is_provenance(pointer))
+
     def test_hash_already_stale_at_base_is_not_re_reported(self):
         self.branch_from({'src/a.bend': 'v2\n', 'tests/compiler-x/receipts/x.json': receipt(inputs={'src/a.bend': sha('v1\n')})})
         self.fx.commit('unrelated edit', {'tests/compiler-x/receipts/x.json':
