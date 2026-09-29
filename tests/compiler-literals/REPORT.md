@@ -8,9 +8,10 @@ The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed 
 
 Branch `campaign/literals-integ`, from `campaign/literals-layout` (`e673b43`), merges `campaign/nest`
 (`c9b073f`) by the campaign's rule: merge, never rewrite history, no rebase. **Status after review round 1:
-all 32 registered gates pass on `13c0672`.** The full run (`npm run -s gates`, 48 minutes under a load
-average near 50) passed 31 gates and reported `nest-round10` as exhausted at the runner's 1,800-second
-limit, a harness timeout; alone with the limit raised to 3,600 seconds it passed in 578 seconds. The run before it (23
+`npm run -s gates` exits 0 on `34038c6`, all 32 registered gates passed** (51 minutes, with the runner's
+documented load knobs; see "Gates on the final head"). The earlier full run on `13c0672` (48 minutes under a
+load average near 50) passed 31 gates and had `nest-round10` exhaust the runner's 1,800-second limit, a
+harness timeout; alone with the limit raised to 3,600 seconds it passed in 578 seconds. The run before that (23
 minutes, on `9f98fb0`, which lacked the last two source fixes) passed 30 and failed `frontend` and
 `modules` on collateral of two repairs (an inline mutation anchor of the frontend gate, and the witness of a
 modules mutant), fixed in `bdbad49`. What is left is coordinator-owned (Remaining): the ruling on the
@@ -32,22 +33,83 @@ drift, because their inputs changed; 9 volatile-only; 65 identical).
 | `1145016`, `69851f3` | Binders that shadow the type a later annotation reads: books, then the rule |
 | `a9e740d`, `9f98fb0` | The integration gate's README and the selfhost twin; the census approval (43 new declarations, 4 widened, 0 gone) |
 | `bdbad49`, `13c0672` | Collateral fixed after the first full run (`expect` verbatim, `spells`); the census for it (1 widened, 1 gone) |
-| the two after | The receipt of `literals-integ` from the final run, and this section |
+| `70f9724`, `bf10504`, `9d3910a` | The receipt of `literals-integ` from the run on `13c0672`, and the report of the round |
+| `ac170e0`, `34038c6` | Second session: the `annotation-shadow` rule and the inherited gaps stated in the SPEC and the contract, the stale false-acceptance line corrected, GATES.md's counts; the census for the contract |
+| the one after | The receipt of `literals-integ` from the final run on `34038c6`, this section and the review log |
 
 ### Gates on the final head
 
-`npm run -s gates` on `13c0672` (clean tree), 32 gates, 48 minutes: no gate failed. 31 passed and one
-exhausted its wall limit under load and passed when run alone (the exit code is 1 for that timeout):
+`BEND_NO_TELEMETRY=1 KNOT_GATE_TIMEOUT_SCALE=30 npm run -s gates -- --timeout 7200` on `34038c6` (clean
+tree), run `run-imogzrwj`: exit 0, status `passed`, 32 of 32 gates, 3,053 s. The load average was 62 at the
+start and 19 at the end. Receipts: 65 identical, 9 volatile-only and 28 semantic, because their inputs changed.
+The shared ones are the coordinator's; the one of `literals-integ` moves only by the hashes of `src/SPEC.md`
+and `src/CONTRACT.json`, and is refreshed from this run. Both knobs are the runner's documented caller knobs
+(GATES.md): the scale multiplies only the gate scripts' hang guards, and `--timeout` is the per-gate wall
+limit. Three attempts before it were stopped:
 
-| Result | Gates |
-| --- | --- |
-| passed (31) | `frontend` (14 fixtures, 4 mutants), `checker` (49, 7), `structural` (16, 7), `fields` (40, 9), `wasm` (25, 7), `wasm-trust`, `fields-trust`, `structural-trust`, `owned-store`, `flat-store`, `recursion` (19, 3), `fields-wasm` (8, 4), `modules` (63, 14), `census` (1,548 declarations), `perch-context` (33 controls, 8 mutants), `lint:verify`, `bootstrap` (1,593 corpus files, 54 mutants), `classification` (17, 6), `nest` (38 fixtures, 386 evaluator and 386 Wasm values, 6 mutants), `nest-review` (29 fixtures, the 3,000-program fuzz with 0 false acceptances and 0 false Invalid, 7 mutants), `io-host`, `io-abi-2`, `selfhost` (65 cases), `nest-round3` (61 fixtures, 164 values, 11 mutants), `nest-round4` (14, 64, 4), `nest-round6` (35, 118, 5), `nest-round7` (35, the 1,500-program generator, 3 mutants), `nest-round8` (37, the 3,000-program generator, 5), `nest-round9` (80 fixtures, 218 evaluator and 218 Wasm values, 12 mutants), `literals` (150 fixtures, 525 reference calls, 42 mutants), `literals-integ` (53 fixtures, 74 reference calls, 19 mutants, 84 metamorphic pairs) |
-| `nest-round10` | exhausted at 1,800 s in the full run; alone (`--timeout 3600`): passed in 578 s: 153 fixtures, 846 evaluator and 846 Wasm values, 22 mutants |
+- `run-2z428bge` at the defaults (scale 4) and `run-zu4fnlfv` at scale 10 with `--timeout 3600`, both at load
+  averages of 84 to 105. The frontend gate's seed build of a CLI exceeded its hang guard (120 s, then 300 s).
+- `run-7rxjko6s` on `ac170e0`, stopped because `34038c6` then changed the SPEC and the contract, which gates read.
+
+| Gate | Result | Counts (the runner's) | Seconds |
+| --- | --- | --- | --- |
+| `frontend` | passed | 14 fixtures, 4 mutants | 172 |
+| `checker` | passed | 49 fixtures, 7 mutants | 72 |
+| `structural` | passed | 16 fixtures, 7 mutants | 89 |
+| `fields` | passed | 40 fixtures, 9 mutants | 173 |
+| `wasm` | passed | 25 fixtures, 90 reference calls, 7 mutants | 125 |
+| `wasm-trust`, `fields-trust`, `structural-trust` | passed | 3, 4 and 2 entries, 0 proof holes | 1 each |
+| `owned-store` | passed | 3,532 cases, 6 mutants | 8 |
+| `flat-store` | passed | 3,534 instances per lane, 9 mutants | 22 |
+| `recursion` | passed | 19 fixtures, 3 mutants | 113 |
+| `fields-wasm` | passed | 8 fixtures, 4 mutants | 173 |
+| `modules` | passed | 63 fixtures, 71 reference calls, 14 mutants | 197 |
+| `census` | passed | 1,548 declarations, 42 classes, 71 files | 5 |
+| `perch-context` | passed | 33 controls, 8 mutants | 55 |
+| `lint:verify` | passed | 168 tests, 8 law rules | 9 |
+| `bootstrap` | passed | 1,593 corpus files, 8 stages, 54 mutants | 83 |
+| `classification` | passed | 17 fixtures, 6 mutants | 9 |
+| `nest` | passed | 38 fixtures, 386 evaluator and 386 Wasm values, 6 mutants | 437 |
+| `nest-review` | passed | 29 fixtures, the 3,000-program fuzz with 0 false acceptances and 0 false Invalid, 7 mutants | 744 |
+| `io-host` | passed | 20 fixtures, 6 mutants | 16 |
+| `io-abi-2` | passed | 43 fixtures, 5 mutants | 54 |
+| `selfhost` | passed | 65 cases (2 passed, 63 blocked, 0 D4 gaps), 3 mutants | 442 |
+| `nest-round3` | passed | 61 fixtures, 164 evaluator and 164 Wasm values, 11 mutants | 1,293 |
+| `nest-round4` | passed | 14 fixtures, 64 evaluator values, 4 mutants | 951 |
+| `nest-round6` | passed | 35 fixtures, 118 evaluator values, 5 mutants | 1,023 |
+| `nest-round7` | passed | 35 fixtures, the 1,500-program generator (0 false acceptances, 0 false Invalid), 3 mutants | 768 |
+| `nest-round8` | passed | 37 fixtures, the 3,000-program generator (0 false acceptances, 0 false Invalid), 5 mutants | 872 |
+| `nest-round9` | passed | 80 fixtures, 218 evaluator and 218 Wasm values, 12 mutants | 1,048 |
+| `nest-round10` | passed | 153 fixtures, 846 evaluator and 846 Wasm values, 22 mutants | 1,199 |
+| `literals` | passed | 150 fixtures, 525 reference calls, 42 mutants | 747 |
+| `literals-integ` | passed | 53 fixtures, 19 mutants (and the metamorphic stage and the selfhost twin) | 104 |
 
 `gates:verify` (20 tests), `tests/perch-style-manifest.test.mjs` (20 tests), `census:check`, the 15
-`src/*PROOF.bend` entries (`All terms check.`), the manifest preflight (exit 0) and `tests/perch-context/check.py`
-pass on the same tree; the two gates that failed the run before it, `frontend` and `modules`, pass in the
-final run (159 s and 252 s, under load).
+`src/*PROOF.bend` entries (`All terms check.`) and the manifest preflight (exit 0) pass on the same source.
+
+### Second session: the round checked on its own final build
+
+A later session rebuilt `check`, `eval` and `compile` from the final source (natively, and `check` in the
+Bun lane) and ran them against the review's own corpora, whose seed verdicts the review recorded:
+
+| Corpus | Result |
+| --- | --- |
+| The 924 dotted-binder programs of findings 1 and 7 (215 seed-accepted) | 0 false Invalid, 0 false acceptances; single-file and bundle agree |
+| The 20 repros of finding 1 (`v1`..`v10`, `w1`..`w7`, `c1`..`c3`) | each seed acceptance Checked, each rejection Invalid, single-file and bundle alike |
+| The 13 final repros of the other findings (`F1`..`F7b`, `F6`, `F6pad`) | each seed acceptance Checked (`F2`, `F6`, `F6pad` evaluate to the seed's value) or Unsupported, each rejection Invalid or Unsupported; the review's two inherited repros (a `;` after a let, a line break in a `type` header) stay Invalid and are now named in the SPEC |
+| 15,832 cached programs (the review's fuzz, mutation and edit grids) | 0 false acceptances, 0 crashes, 0 single/bundle disagreements. Of 19,563 (program, mode) verdicts that can be compared with `4f1fa9f`, 19,536 are unchanged and 27 moved, all by the round's rules (a literal column or juxtaposed literals Invalid to Unsupported, InternalFailure to `pattern-arity` or `literal-column`, codes of seed-rejected programs). False Invalid remains only on inherited layout forms, each identical in class to a parent |
+| The 7,718 of them that the seed accepts and Knot checks | the evaluator's value equals the seed's in every one |
+| Diagnostic positions | of 8,377 comparable diagnostics, 4 moved (`expected-:` later in a row, since a literal continues it); none cites a placed offset (no `4294967295`, no new `0:0`) |
+| 2,668 grid programs with no recorded seed verdict (seed run here) | 0 false acceptances (one seed stack overflow, a resource limit), 0 crashes, 0 value differences; 44 false-Invalid observations in 30 programs, all identical in class to both parents: `a && b`, `a \|\| b`, `f!(x)` and a `;` after a let (the message of `34038c6` says 22 programs; it is 30) |
+
+The same session found the SPEC and the contract behind the rules. `69851f3` added `annotation-shadow`
+after `fe59aa4` had written them, so the SPEC's table of unsupported forms lacked the row and the contract
+still stated "a let binder named like a type that a later annotation reads is accepted, where the seed rejects
+it", which the probe of the built CLI refutes (`Unsupported parse annotation-shadow`). `ac170e0` states the
+rule and corrects the line, and with `34038c6` names the inherited gaps above; GATES.md now counts the
+integration gate's 53 books and 19 mutants. The 15 `src/*PROOF.bend` entries print `All terms check.`, and
+`gates:verify` (20), the manifest test (20), `census:check` and the manifest preflight (exit 0: 36 groups,
+2,713 units, 0 truncated, 0 blockers, `check.bend::run` 59,941) pass on the final source.
 
 ### Review round 1
 
@@ -69,7 +131,7 @@ fallback was taken, with the evidence.
 | 8 | A `+` binder spelled like a datatype is accepted | **Fixed** where the checker can place the type (`Invalid check promoted-type`); **Unsupported** where it cannot (imported, spelled with its module; Base's types outside the reachable slice). A parameter named like an annotation after it, and (an extension) a binder in scope that a later annotation spells, are `Unsupported`, as the seed reads the variable | `623afef`, `8ea6faf`, `69851f3` |
 | 9, 11 | Nest's harness accepts any foreign-def list | **Fixed.** `successful` and `proved` compare the note exactly with the entry the modules suite pins for that CLI. **Owner sign-off pending** | `ea3577a` |
 | 10 | `checking.md` is authored prose; two other tasks drop most of their SPEC | **Disputed, under the finding's own fallback** ("if an excerpt is unavoidable"). `checking.md` is now a verbatim excerpt with the siblings' header. The original tasks do not fit, measured on this tree: with `research/compiler-fields/SPEC.md`, `check.bend::run` is 65,368 (69,092 before the fit of the Perch section); with `tests/compiler-modules/SPEC.md`, `load.bend::body` is 62,856; with `tests/compiler-nest/SPEC.md`, `matrix-LAWS.bend::flag` is 67,870, `ctor` 67,478, `named` 65,835 and `modes` 65,646. **Owner sign-off pending** for all three excerpts | `84c24df`, `8ea6faf` |
-| 12 | Lone-target preflight has 136 blockers | **Reported.** That mode is unavailable for these files (its composition is the import closure); the manifest preflight governs and exits 0. On the 25 changed files the lone-target form now has 138 blockers, 137 truncated units and no composition | (this section) |
+| 12 | Lone-target preflight has 136 blockers | **Reported.** That mode is unavailable for these files (its composition is the import closure); the manifest preflight governs and exits 0. On the 25 changed files the lone-target form has 137 blockers, 136 truncated units and no composition (final source) | (this section) |
 | 13 | A literal in a later column is `Invalid parse expected-:` | **Fixed.** A literal starts a term as a name does, so it reaches `Unsupported check literal-column`; juxtaposed literals in arguments, fields and patterns are `Unsupported parse argument-whitespace` | `623afef` |
 | 14 | InternalFailure for a row of the wrong width | **Fixed.** A match takes the literal matrix only with one scrutinee and rows of one pattern; every other width is `Invalid check pattern-arity`. The selfhost twin is run in bundle mode by the gate | `623afef`, `a9e740d` |
 | 15 | `++` in a let's right side is `Invalid parse expected-` | **Fixed.** A `+` after a let's value is `Unsupported parse operator`; any other token is `Invalid parse expected-newline` (no raw line break in the code) | `623afef` |
@@ -164,9 +226,10 @@ controls, 8 mutants, 36 compositions, 0 blockers). The compositions closest to t
 `literal-source-machine` 47,639, `checking` 47,243 (757 to spare), `pattern-matrix-proofs` 46,848 and
 `literal-emission` 46,834; the largest states are `check.bend::run` 59,941 (cap 60,000) and 59,950 for
 `driver-pipeline` and `module-loading`. On the 25 changed files the lone-target form (a `.bend` path with no
-manifest) has 138 structural blockers, 137 truncated units and no composition (its composition is the whole
-import closure); that mode was already unavailable at both parents and is no acceptance check here, so the
-counts are reported, not fixed (finding 12).
+manifest) has 137 structural blockers, 136 truncated units and no composition, measured on the final source
+(an earlier measurement of the round gave 138 and 137); its composition is the whole import closure. That
+mode was already unavailable at both parents and is no acceptance check here, so the counts are reported, not
+fixed (finding 12).
 
 **`check.bend::run` fits the state cap by search, with a 59-byte margin.** The measure counts the declarations
 `run` reaches (about 320 bytes each with their notes: the first 48 helpers `run` names are expanded, and their
@@ -382,10 +445,12 @@ Not done here, and why (everything an executor may do is done; these need someon
   they did at `4f1fa9f`.
 - **Owner sign-off** of the nest harness edit (`eb9b1e5`, `ea3577a`), of the three excerpt tasks and the
   `pattern-matrix-proofs` split, and of the adapter move.
-- **The per-gate limit.** `nest-round10` takes 578 to 737 s alone or under moderate load and exhausted the
-  runner's 1,800 s limit once, in a full run under a load average near 50 (the other gates were slower by a
-  factor of 1.5 to 2 in the same run). The limit is `--timeout` of `scripts/gates/run.py`; raise it for a
-  loaded machine or run the gate alone.
+- **The per-gate limit and the hang guards.** `nest-round10` takes 578 to 737 s alone or under moderate load and
+  exhausted the runner's 1,800 s limit once, in a full run under a load average near 50 (the other gates were
+  slower by a factor of 1.5 to 2 in the same run). At load averages of 84 to 105 the frontend gate's seed build
+  of a CLI also exceeded its hang guard at `KNOT_GATE_TIMEOUT_SCALE=4` (120 s) and at 10 (300 s). Both are
+  documented caller knobs (`--timeout` of `scripts/gates/run.py`, and the scale the runner sets to 4 unless the
+  caller does); the final run passes them (see "Gates on the final head").
 - **Live Perch** (semantic and style review of the changed declarations), and refreshing the shared receipts,
   which the gate runs classify but leave to the coordinator. The `perch-context` state cap is met by 59 bytes
   (above).
@@ -395,8 +460,11 @@ Not done here, and why (everything an executor may do is done; these need someon
   parameter or binder named like a type that a later annotation reads is Unsupported also where it is a
   type parameter; a bare `+` is Unsupported where the seed rejects it for want of an annotation; the layout gaps
   of the previous rounds (a function body in column 0, a line break in a header or before a let's `=`) stay
-  Invalid where the seed accepts. None of these accepts a book the seed rejects, and none is known to: the
-  enumerations and fuzz gates above report 0 false acceptances.
+  Invalid where the seed accepts, and so do these inherited ones, now named in the SPEC and the contract: a
+  parameter or a declared field without its comma, a datatype declaration not laid out as one header line and
+  one constructor per line, a `;` after a let's value, `a && b` and `a || b`, and a call written `f!(x)`. None of
+  these accepts a book the seed rejects, and none is known to: the enumerations and fuzz gates above report 0
+  false acceptances.
 
 ## Layout and binder order
 

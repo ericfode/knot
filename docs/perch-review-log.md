@@ -1665,3 +1665,27 @@ Prevention:
   the frontend tuples), not only the `MUTANTS` lists.
 - A repair that adds a rejection can invalidate another suite's mutant: list the mutants whose witnesses the
   new rule now answers before running the full gates.
+
+## 2026-09-29 — literals-integ review round 1, second session: a stale contract line and the gate harness under load
+
+Two kinds of waste, neither a Perch rule:
+- A rule added after the SPEC and contract commit left them behind. `fe59aa4` wrote the contract's known
+  imprecisions, including "a let binder named like a type that a later annotation reads is accepted, where the
+  seed rejects it"; `69851f3` then made that form `Unsupported parse annotation-shadow` and touched neither
+  file, so the contract claimed a D4 false acceptance that no longer existed and the SPEC's table of
+  unsupported forms had no `annotation-shadow` row. A two-line probe on the built CLI settled it (`ac170e0`).
+- The full gate run failed twice on hang guards, not on assertions. At load averages of 84 to 105 (four
+  concurrent `scripts/gates/run.py` from other sessions, plus dozens of `clang -O3` compiles), the frontend
+  gate's seed build of `compile-cli.bend` exceeded its guard at `KNOT_GATE_TIMEOUT_SCALE=4` (120 s) and at 10
+  (300 s); the previous session's run had `nest-round10` exhaust the runner's 1,800 s. My own CLI builds,
+  started at the same moment as the first run, made it worse.
+
+Prevention:
+- After the last repair of a round, grep the SPEC's unsupported table and the contract's `known_imprecisions`
+  for every diagnostic code the round added or removed, and probe each imprecision the contract states on the
+  final build; a stated false acceptance is a finding in itself.
+- Before a full run read `uptime` and count the running `scripts/gates/run.py`; above a load average of about
+  40, pass the documented knobs (`KNOT_GATE_TIMEOUT_SCALE=30`, `--timeout 7200`) instead of retrying the default,
+  and start no builds of your own while the first gates build their lanes. Batch every edit before the one final
+  run: a documentation edit of `src/SPEC.md` or `src/CONTRACT.json` changes gate inputs (and the census pins the
+  contract's sha256), so it needs the run again.
