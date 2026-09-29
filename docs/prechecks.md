@@ -361,6 +361,12 @@ category selects nothing on a packet, so it is not a baseline.
 The receipt's inputs include the calibration packets (`tests/prechecks/perch-controls/**/*.md`), which the wiring test reads and a
 live calibration sends.
 
+**Cost.** The gate is the slowest of the ones this increment adds: 208 tests and 30 mutants took 137 s standalone at load average
+about 30 (129.6 s for the tests alone at about 40), 138.6 s inside one full run and 308.2 s inside another at load about 45. It cannot skip
+itself when its receipt inputs are unchanged: its end-to-end tests build the tree's own lanes from `src/` and run the pinned seed, so
+`src/` would have to be an input and would change in almost every increment. It is registered first in the GATES table (the scheduler
+starts gates in table order, with four workers), so that it overlaps the other long gates instead of running alone at the end.
+
 `npm run -s prechecks:test` runs only the unit tests. **Historical controls** belong to a replay command, not to the registered tests,
 because the gate's export has no history:
 
