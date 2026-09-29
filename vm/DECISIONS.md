@@ -800,12 +800,14 @@ follows it (§5, §10, §11) without a new image header word.
    `second`: `type-grouping` (`constructor grouping`), `type-count-max` (0xFFFFFFFF, `constructor count`) and
    `type-count-short` (the counts sum to 2 of 3, `constructor count`), and three codec mutants die by verdict:
    `constructor-count-exclusive`, `constructor-grouping-unchecked` and `constructor-count-sum-unchecked`. No mutant
-   restores the late check, which would allocate 32 GiB at `type-count-max`; a crash is no kill (§11), so
-   the ordering of the check against the allocation is held by that control against the committed codec, and by the two
-   VMs' gates. The audit of the rest of `decode` found no other count that sizes anything before the structure
-   holds it: section counts are checked against the words left, records against their lengths, closure and Case
-   lengths before their arrays, and arities and `slots` against §4's limits. Measured: 0xFFFFFFFF in every
-   data type record of four goldens refuses in under a millisecond at a 22 MB process peak.
+   restores the late check as it was: sized from the raw count it would allocate 32 GiB at `type-count-max`, which is a
+   host's memory and no verdict, and a crash is no kill (§11). *(Corrected in round 13, entry 37: the clause-level audit of
+   entry 36 did omit the check, and the gate held 35 GB for it; that omission now sizes the list by the constructor table.)*
+   The ordering of the check against the allocation is held by that control against the committed codec, by the gate's
+   assertion that its own peak memory stays under 4 GiB, and by the two VMs' gates. The audit of the rest of `decode` found
+   no other count that sizes anything before the structure holds it: section counts are checked against the words left,
+   records against their lengths, closure and Case lengths before their arrays, and arities and `slots` against §4's limits.
+   Measured: 0xFFFFFFFF in every data type record of four goldens refuses in under a millisecond at a 22 MB process peak.
 
 35. **D24: a request matches no row, so a Case takes its Default (round 13).** The coordinator
    chose option b of finding 14 (main `51ca324b`): the seed's native lane takes the catch-all on every shape measured in
@@ -881,6 +883,24 @@ follows it (§5, §10, §11) without a new image header word.
      held and has a codec mutant that models the omission without the raise. The count of refusals, controls and mutants moves
      again whenever a rule does; SPEC §4 and §12 state today's, and `vm-core`'s harness reads the two sentence shapes that carry the
      refusal and run-control counts.
+
+37. **Round 13, review round 1: three confirmed findings (the audit's memory; D24 and compiled programs; a fourth row of §8).**
+   The coordinator's review of the tip `3b43fca4` confirmed three findings, all measured and reproduced by a verifier. This
+   entry records each; the fixes are separate commits, and no frozen expectation moved for finding 1.
+   - **Finding 1: the gate held 35 GB.** The clause-level audit of entry 36 omits every refusal of the reference codec, and its
+     omission of `decode`'s `constructor count` guard is exactly the late size check that entry 34 said no mutant restores: without
+     it `type-count-max` (0xFFFFFFFF) sized `[None] * r[3]`, a list of 32 GiB. The gate passed on a host with the memory
+     (`/usr/bin/time -l`: 103.86 s, a maximum resident set of 34,793,570,304 bytes, in the gate's own process) because the
+     allocation succeeds and the refusal then changes to `constructor grouping`, which counts as a kill; on a host without it
+     the allocation raises MemoryError, which is a crash and no kill, and the audit would fail with a misleading message. SPEC
+     §12, `check-spec.py` and entry 34 all said the opposite. Fixed as the review proposed: that one omission now also sizes its
+     list by the constructor table (`BOUNDED`, `min(r[3], len(ctors))`), `expect += r[3]` stays, and the omission is killed by
+     `control type-count-max: HostFailure image: constructor grouping` with the same 178 omissions and 136 kills as before. The gate
+     asserts that its own peak memory stays under 4 GiB (`PEAK_RSS`), so that a later omission that sizes an allocation from a raw
+     word fails on any host instead of passing where the memory exists. Measured after: `/usr/bin/time -l` 38.90 s and 1,094,483,968
+     bytes for the whole process tree (the seed's builds included), 430,030,848 bytes (410 MiB) in the gate's own process.
+     What the audit still cannot hold is the order of the check against the allocation in a codec that allocates first: that mutant
+     would ask for 32 GiB, so the committed codec's order is held by running `type-count-max` against it, and by the assertion.
 
 ## What vm-model and vm-core must now follow (round 9)
 

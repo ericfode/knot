@@ -1364,7 +1364,10 @@ lane and requires:
   `opcode` and every other control of a valid image), the first-constructor check removed (by
   `type-grouping`, which the next check refuses as `noncanonical` instead) and the sum of the counts
   removed (by `type-count-short`, which a constructor's tag refuses instead). No mutant restores the late
-  size check: it would allocate 32 GiB at `type-count-max`, and a crash is no kill. Forty-eight more (round 13, review
+  size check as it was, sizing the list from the raw count: it would allocate 32 GiB at `type-count-max`, which is a host's
+  memory and no verdict, and a crash is no kill. The audit below omits the check with the list sized by the constructor table,
+  so that control is refused as `constructor grouping` instead; and the gate holds its own peak memory under 4 GiB (a host with
+  the memory would otherwise pass while holding 35 GB). Forty-eight more (round 13, review
   findings 1 to 3) each omit one clause that no control had pinned, and each dies by the control that breaks that clause
   alone: a keys row may repeat, a Construct may be nullary, an Invoke's operand count is unchecked (any, for a live arrow
   alone, for an erased one alone), a Case's slot may be any type, captures may repeat, a tags Case on any type, a keys
@@ -1380,7 +1383,8 @@ lane and requires:
   kind modulo the table, so that the refusal changes (`decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4`).
   **Every refusal of the decoder and the validator, and every clause of its test, is accounted for** (`statement_audit`):
   the gate omits each of the codec's 100 `raise` statements, `fail` calls and `limit` calls in turn, as above, and each
-  operand of the `or` in the 78 tests that have one (178 omissions), and requires that a frozen image, refusal or verdict
+  operand of the `or` in the 78 tests that have one (178 omissions; the omission of the constructor-count guard also sizes
+  its list by the constructor table, so that no run asks for 32 GiB), and requires that a frozen image, refusal or verdict
   changes (136 do) or that the omission is listed with what holds it: 33 make the reference raise on the control that pins
   them (four refusals, `name index`, `child offset`, `node record` and `constant index`, and twenty-nine clauses, each a
   bound that keeps an index or a key inside its table; §11 does not count a raise as a kill, so the gate requires the raise

@@ -26,6 +26,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import random
 import re
+import resource
 import shlex
 import subprocess
 import sys
@@ -66,6 +67,17 @@ sys.setrecursionlimit(20_000)  # the reference evaluation recurses on the plan's
 def require(condition, detail):
     if not condition:
         raise AssertionError(detail)
+
+
+# The gate holds a few hundred MB. A mutant of the codec that sized a list from a raw count word would ask for 32 GiB, which a
+# host with the memory passes and one without cannot, so the peak is a checked property of the run, not a host's luck.
+PEAK_RSS = 4 << 30
+
+
+def peak_rss() -> int:
+    """This process's peak resident set in bytes (`ru_maxrss` is bytes on macOS and KiB elsewhere)."""
+    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return peak if sys.platform == 'darwin' else peak * 1024
 
 
 def sha(data: bytes) -> str:
@@ -2837,10 +2849,11 @@ CODEC_MUTANTS = [
     ('validator-ignores-invoke-types', [("                fail(where, 'invoke types')\n", "                pass\n")]),
     ('validator-ignores-body-type', [("            fail(f['name'], 'body type')\n", "            pass\n")]),
     # Review of round 11, finding 3: a type record's constructor count is checked against the constructor table
-    # before it sizes a list. The late check would allocate from `type-count-max`'s 0xFFFFFFFF, so no mutant
-    # restores it (a crash is no kill); these three change a verdict: a count refused where it exactly fills the
-    # table (every valid image), and the first-constructor check, or the sum of the counts, removed (each refusal
-    # is then another one, `noncanonical` or a constructor's tag).
+    # before it sizes a list. No mutant restores the late check as it was: it would size a list of 32 GiB at
+    # `type-count-max`'s 0xFFFFFFFF, which is a host's memory and no verdict (a crash is no kill), and the audit's omission
+    # of the check sizes the list by the table instead (`BOUNDED`). These three change a verdict: a count refused where it
+    # exactly fills the table (every valid image), and the first-constructor check, or the sum of the counts, removed (each
+    # refusal is then another one, `noncanonical` or a constructor's tag).
     ('constructor-count-exclusive', [("            if r[3] > len(ctors) - expect:", "            if r[3] >= len(ctors) - expect:")]),
     ('constructor-grouping-unchecked', [("            if r[2] != expect:\n                raise Malformed('constructor grouping')\n", "")]),
     ('constructor-count-sum-unchecked', [("    if expect != len(ctors):\n        raise Malformed('constructor count')\n", "")]),
@@ -3105,6 +3118,12 @@ EXCUSED = {
     "u32_list:f'constant data is not a list of u32 words: {values!r}'/1": "the same check, its second clause",
     "encode:f'unknown plan node {op!r}'": "the encoder's input check: no decoded plan holds a form outside the table",
 }
+# An omission that stands between a raw count word and an allocation runs with one more edit that sizes by the table instead.
+# `decode`'s `constructor count` guard precedes `[None] * r[3]`: without it, `type-count-max`'s 0xFFFFFFFF asks for a list of
+# 32 GiB, which is a host's memory and no verdict (a MemoryError is a crash, section 11, and on a host with the memory the
+# gate would pass by holding 35 GB). The list is sized by the constructor table, and `expect += r[3]` stays, so the next type's
+# first constructor no longer matches it and the omission is killed by that control's changed refusal, `constructor grouping`.
+BOUNDED = {"decode:'constructor count'": [("'constructors': [None] * r[3]", "'constructors': [None] * min(r[3], len(ctors))")]}
 
 
 # Round 12's reviewer removed each of these bounds whole: the reference then raises on the control that pins the bound (the
@@ -3136,12 +3155,15 @@ def statement_audit(plans, images, controls, admitted, describing, reg, digest, 
     """Omit each refusal of the reference codec, and each clause of its test, in turn (`refusal_mutants`) and account for it:
     killed by a frozen image, refusal or verdict, or listed above with what holds it. A refusal that a new statement adds and no
     control pins fails here, and so does a listed one that a control has come to kill, or that no longer raises where it is
-    said to."""
+    said to. No omission sizes anything from a raw count word (`BOUNDED`), and the gate's peak memory is checked at its end."""
     source, killed, held, other = CODEC.read_text(), [], {}, {}
     frozen = {label: reason + message for label, _, reason, message in controls}
-    for name, edits in refusal_mutants(source):
-        by, crashed = codec_kill(edited_codec(name, edits, source), plans, images, controls, admitted, describing, reg, digest,
-                                 invoking, arguing)
+    omissions = refusal_mutants(source)
+    stale = set(BOUNDED) - {name for name, _ in omissions}
+    require(not stale, f'bounded omissions that the codec no longer has: {sorted(stale)}')
+    for name, edits in omissions:
+        by, crashed = codec_kill(edited_codec(name, edits + BOUNDED.get(name, []), source), plans, images, controls, admitted,
+                                 describing, reg, digest, invoking, arguing)
         if by:
             require(name not in CRASH_HELD and name not in UNREACHABLE and name not in EXCUSED,
                     f'refusal {name} is listed as held, but {by} kills its removal')
@@ -3925,6 +3947,8 @@ def main() -> int:
         rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest, displays)
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
+    require(peak_rss() < PEAK_RSS, f'the gate reached {peak_rss() >> 20} MiB (limit {PEAK_RSS >> 20}): a mutant sized an allocation '
+                                   'from a raw word of an image')
 
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
