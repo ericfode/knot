@@ -2,8 +2,10 @@ import contextlib
 import io
 import json
 import re
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import replay
 from lib import ledger as ledger_mod
@@ -40,12 +42,16 @@ class ControlTableTests(unittest.TestCase):
     def test_every_context_names_full_commits_and_both_expectations(self):
         names = [c['name'] for c in TABLE['contexts']]
         self.assertEqual(len(names), len(set(names)))
-        self.assertEqual({'classify', 'classify-2', 'joint', 'bootstrap', 'census-2', 'recursion', 'poly', 'sugar', 'io-abi-2'},
-                         set(names) - {'main-25b3a5b6'})
+        self.assertEqual({'classify', 'classify-2', 'joint', 'bootstrap', 'census-2', 'recursion', 'poly', 'sugar', 'io-abi-2',
+                          'perch-context', 'vm-model', 'io-host'},
+                         set(names) - {'main-25b3a5b6', 'main-a6367eb9'})
         for context in TABLE['contexts']:
             with self.subTest(context['name']):
                 for key in ('head', 'main_ref') + (('base',) if context.get('base') else ()):
                     self.assertRegex(context[key], r'^[0-9a-f]{40}$')
+                for name, sha in context.get('upstream', []):
+                    self.assertRegex(name, r'^[a-z][a-z0-9-]*$')
+                    self.assertRegex(sha, r'^[0-9a-f]{40}$')
                 self.assertIn(context['kind'], ('clean', 'broken'))
                 for policy in ('default', 'with_ledger'):
                     self.assertIn(context[policy]['exit'], (0, 3))
@@ -63,6 +69,17 @@ class ControlTableTests(unittest.TestCase):
                 self.assertTrue(context['with_ledger']['executor_major'], context['name'])
         rules = {(e['check'], e['rule']) for e in LEDGER['entries']}
         self.assertFalse({r for r in rules if r[0] == 'C1'}, 'a regression that the reviewers confirmed must not be acknowledged')
+
+    def test_no_proposed_entry_can_silence_an_edit_of_a_frozen_path(self):
+        """A frozen-edit or assertion-weakened entry has the path as its fingerprint, so it would acknowledge every later edit of
+        that gate script forever; only entries pinned to a measured quantity (host-path hit counts) are proposed at all."""
+        self.assertEqual({('C4', 'host-path')}, {(e['check'], e['rule']) for e in LEDGER['entries']})
+        for entry in LEDGER['entries']:
+            self.assertIn('hits', entry['value'])
+        self.assertIn('REPLAY-ONLY', LEDGER['note'])
+        self.assertIn('not for adoption', LEDGER['note'])
+        classify = next(c for c in TABLE['contexts'] if c['name'] == 'classify')
+        self.assertIn('C3.frozen-edit', classify['with_ledger']['executor_major'])       # the additive gate-script edit stays reported
 
     def test_the_proposed_ledger_is_well_formed_and_pinned_to_measured_values(self):
         self.assertIn('never read by the suite', LEDGER['note'])
@@ -82,7 +99,47 @@ class ControlTableTests(unittest.TestCase):
         self.assertEqual('docs/compiler-campaign/known-conditions.json', ledger_mod.LEDGER_PATH)
 
 
+class UpstreamTests(unittest.TestCase):
+    def test_a_stacked_context_declares_its_upstream_to_the_suite(self):
+        seen = []
+
+        class Proc:
+            returncode = 0
+            stdout = json.dumps({'exit': 0, 'checks': []})
+            stderr = ''
+
+        def fake(command, **kwargs):
+            seen.append(command)
+            return Proc()
+
+        context = {'name': 'x', 'head': 'h', 'main_ref': 'm', 'inc': 'vm-model', 'upstream': [['vm-spec', 'abc'], ['vm-core', 'def']]}
+        with mock.patch.object(replay.subprocess, 'run', fake):
+            self.assertEqual({'exit': 0, 'executor_major': {}}, replay.run_suite(Path('.'), context, None))
+        command = seen[0]
+        given = [command[i + 1] for i, word in enumerate(command) if word == '--upstream']
+        self.assertEqual(['vm-spec=abc', 'vm-core=def'], given)
+
+    def test_the_vm_model_context_is_stacked_on_a_declared_upstream(self):
+        stacked = next(c for c in TABLE['contexts'] if c['name'] == 'vm-model')
+        self.assertEqual('vm-spec', stacked['upstream'][0][0])
+        self.assertEqual('clean', stacked['kind'])
+
+
 class ReplayCliTests(RepoTest):
+    def test_a_context_whose_upstream_commit_is_absent_is_skipped(self):
+        head = self.fx.commit('main', {'a.txt': 'a\n'})
+        table = {'schema': 1, 'contexts': [{'name': 'stacked', 'kind': 'clean', 'inc': 'x', 'head': head, 'main_ref': head,
+                                            'upstream': [['other', 'f' * 40]],
+                                            'default': {'exit': 0, 'executor_major': {}}, 'with_ledger': {'exit': 0, 'executor_major': {}}}]}
+        with tempfile.TemporaryDirectory() as scratch:
+            path = Path(scratch) / 'table.json'
+            path.write_text(json.dumps(table), encoding='utf-8')
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = replay.main(['--repo', str(self.fx.root), '--table', str(path)])
+        self.assertEqual(0, code)
+        self.assertIn('skipped: the campaign history is not in this repository', out.getvalue())
+
     def test_a_context_whose_commits_are_absent_is_skipped_and_reported(self):
         self.fx.commit('main', {'a.txt': 'a\n'})
         out = io.StringIO()

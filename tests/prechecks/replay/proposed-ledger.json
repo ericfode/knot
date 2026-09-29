@@ -18,22 +18,6 @@
   },
   {
    "added": "2026-09-29",
-   "check": "C3",
-   "fingerprint": "0e4cf4252a837aa62567",
-   "increment": "classify",
-   "owner": "coordinator",
-   "reason": "the coordinator accepted classify (merged as dcf7df7c) with its additive 112-line classification section in the frontend gate script tests/subsets/check_frontend.py; no manifest recorded the authorization",
-   "rule": "frozen-edit",
-   "subject": {
-    "path": "tests/subsets/check_frontend.py"
-   },
-   "until": null,
-   "value": {
-    "status": "M"
-   }
-  },
-  {
-   "added": "2026-09-29",
    "check": "C4",
    "fingerprint": "c08dc3b9f64fbc56096c",
    "increment": "classify-2",
@@ -113,5 +97,5 @@
    }
   }
  ],
- "note": "PROPOSED, never read by the suite: authority stays on main (docs/compiler-campaign/known-conditions.json). These are the executor conditions of major or higher that the suite reports on tips the coordinator accepted and merged; the coordinator adopts the entries it accepts. Each entry is pinned to the measured value, so a receipt that gains host paths later is reported as `changed`, not silenced."
+ "note": "REPLAY-ONLY, never read by the suite and not for adoption: `scripts/prechecks/replay.py` passes this file as `--ledger` so that the historical tips, whose base did not yet contain the accepted receipts, can be replayed as clean controls. On main, the base ratchet of C4 already suppresses host paths that the base has (a hit count at or below the base's is not a condition), so adopting an entry there would only silence the same path when it gains paths later; the ledger of record is docs/compiler-campaign/known-conditions.json on main, which the coordinator owns. Only C4 `host-path` entries are kept, each pinned to the measured hit count. No `frozen-edit`, `assertion-weakened` or `C1` condition is ever proposed: an entry for an edited frozen gate script would silence every later edit of that script (the fingerprint is the path)."
 }

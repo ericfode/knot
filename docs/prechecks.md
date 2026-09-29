@@ -222,7 +222,10 @@ tier adds `census:test`, which takes about 25 s on this host and is not a regist
 
 The diffs of io-abi-2 `de221744`, joint `691b23b7` and bootstrap `dc76dac3`, which the earlier line-based `shared-file-shape` reported as
 major on three accepted tips and three landing merges, are the clean controls of the counts() rule; editing or removing an existing
-gate's branch, a branch for a gate the diff does not add, a loose statement and an `else` arm are its broken controls.
+gate's branch, a branch for a gate the diff does not add, a loose statement and an `else` arm are its broken controls. A new gate's
+branch that loads and runs the gate's own module (generics `f39ba7e8`: `module.coverage(record)` through importlib, which four reviewers
+filed as minor) is a minor condition for the coordinator (`counts-runs-gate-code`), not a blocking one: it is the registration
+GATES.md asks for, and the runner extension is the coordinator's to accept.
 
 Motivated by: generics deleting three classification mutants and shrinking coverage; nest's Wasm rejection pairs 64 to 62 and
 fuzz count 426 to 242; a control comparator loosened from `observed[k]` to `observed.get(k)`; modules' `census:test` red at 78
@@ -242,8 +245,9 @@ volatility (measurements, README inputs, orphans, duplicates, more than three pr
 (a receipt commit that changes nothing after normalization), and, from the implementer's own gate run (the newest
 `.local/gates/run-*/summary.json` whose snapshot equals this tree): `gate-red`, `own-receipt-stale`, `unowned-receipt-drift`. If no
 run matches, that rule is `unavailable`; the slow tier runs the gates itself. `host-path` on a receipt that the coordinator accepted
-is ledger material, not a defect of the rule: the accepted tips' own receipts carry worktree paths that the merge refreshes
-(`npm run gates:refresh`), and the proposed ledger records them.
+is not a defect of the rule: the accepted tips' own receipts carry worktree paths that the merge refreshes
+(`npm run gates:refresh`); on main the base ratchet suppresses a path count the base already has, and the replay-only ledger below
+lets the historical tips be replayed as clean controls.
 
 Motivated by: opt-1's 12,276 host paths; perch-context sending a home path to the judge; generics' 12 stale hashes; gpu-2's
 README in a receipt's source hash; the six unowned-drift and six sign-off majors that were merge conditions, not executor rework.
@@ -326,8 +330,9 @@ authentication or quota failure. It has never been run live in this build. What 
 - The cap is **per rule and per (increment, head)**, as each packet's own header names them (never by directory depth), and it is
   the number the builder stops at: `scripts/prechecks/packets/limits.json` (`packets_per_rule_per_head`, 40) is read by the
   builder's `--limit` and the runner's `--cap`. A run that builds and asks with the defaults asks every packet; anything skipped is
-  printed by rule. (Before this was fixed, a default plan over the replay's 7,949 packets asked only `claim-holds-against-evidence` on
-  63 of 71 heads and dropped 65%.)
+  printed by rule. Measured with dry runs (zero requests): vm-spec `d2fe0f20` builds 130 packets in six rules, of which the previous runner
+  planned 40, all `claim-holds-against-evidence`, and this one plans all 130 (40, 33, 14, 40, 2 and 1 by rule); over the replay's 7,949
+  packets for 71 heads (previously 65% dropped, and only `claim-holds-against-evidence` asked on 63 heads) it plans all 7,949.
 - The rules read only `.local/prechecks/packets/**/<rule>/*.md` of the checking checkout. A packet directory built anywhere else
   (`--out <dir>`, a worktree's) is copied into `.local/prechecks/packets/staged/` before it is asked (the dry run says how many, and
   copies nothing), and a packet that no rule can read is refused up front.
@@ -359,28 +364,60 @@ live calibration sends.
 because the gate's export has no history:
 
 ```sh
-python3 scripts/prechecks/replay.py [--only classify,recursion]     # needs a checkout with the campaign branches' commits
+npm run -s prechecks:replay -- [--only classify,recursion]     # needs a checkout with the campaign branches' commits
 ```
 
-`tests/prechecks/replay/contexts.json` is the table: each accepted, merged tip is a **clean control**, each tip that carried a defect the
-reviewers confirmed is a **broken control**, and each context records the executor conditions of major or higher that the suite must report
-with the default policy and with the proposed ledger (`tests/prechecks/replay/proposed-ledger.json`). Measured on this tree
-(`python3 scripts/prechecks/replay.py`, all ten contexts ok):
+`tests/prechecks/replay/contexts.json` is the table: each accepted tip is a **clean control**, each tip that carried a defect the
+reviewers confirmed (or that main's own history repaired: io-host's stale census pin) is a **broken control**, and each context records the
+executor conditions of major or higher that the suite must report with the default policy and with a replay-only ledger
+(`tests/prechecks/replay/proposed-ledger.json`). A stacked increment names its `upstream`, which the replay passes as `--upstream`. Measured
+on this tree (`python3 scripts/prechecks/replay.py`, all fourteen contexts ok):
 
 | Context | Kind | Exit | With the ledger | What remains |
 |---|---|---|---|---|
 | bootstrap `dc76dac3` | clean | 0 | 0 | none: its `counts()` branch is the registration GATES.md asks for |
 | io-abi-2 `de221744` | clean | 0 | 0 | none |
 | poly `6ffb8884`, sugar `577d2b05` | clean | 0 | 0 | none |
-| main landing `25b3a5b6` | clean | 0 | 0 | none |
+| perch-context `ffab8be2` | clean | 0 | 0 | none |
+| vm-model `07e6db73` (upstream vm-spec `cea554ab`) | clean | 0 | 0 | none: without the declared upstream the run reports vm-spec's files as its own |
+| main commit `25b3a5b6`, main `a6367eb9` against itself | clean | 0 | 0 | none |
 | census-2 `0e8b2876` | clean | 3 | 0 | 1 `host-path`: the round receipt cites an ignored run summary (ledgered) |
 | recursion `624228e5` | clean | 3 | 0 | 3 `host-path`: own receipts with worktree paths (ledgered); the `baseline_implementation` freeze is history, and the law file outside every manifest group is minor |
-| classify `5e5b2201` | broken | 3 | 3 | six confirmed at-token regressions; the additive edit of the frontend gate script is ledgered |
+| classify `5e5b2201` | broken | 3 | 3 | six confirmed at-token regressions, and a C3 `frozen-edit`: the additive 112-line edit of the frontend gate script, which no manifest authorizes (it is not ledgered) |
 | classify-2 `7b85b8aa` | broken | 3 | 3 | nine confirmed less-than readings; two `host-path` receipts are ledgered |
 | joint `691b23b7` | broken | 3 | 3 | a real red gate: `census --check` fails on a plain export of the tip |
+| io-host `963a7594` | broken | 3 | 3 | `red-tip`: the census inventory pins an older hash of `tests/compiler-io/host-check.py` than the file has (main repaired it in `f84d83ef`) |
 
-The proposed ledger is **never read by the suite**: authority stays on main (`docs/compiler-campaign/known-conditions.json`), where the
-coordinator adopts the entries it accepts. Each entry is pinned to the measured value, and no `C1` condition is ever ledgered.
+The ledger file is **replay-only**: the suite never reads it by itself, `replay.py` passes it as `--ledger`, and it is not for adoption. It holds
+six C4 `host-path` entries, each pinned to the measured hit count, because the historical tips' base did not yet contain the receipts that the
+merge accepted and refreshed; on main the base ratchet already suppresses a path count that the base has, so adopting an entry there would only
+silence the same path later. It never holds a `frozen-edit`, an `assertion-weakened` or a `C1` entry: the fingerprint of the first two is the
+path, so an entry would acknowledge every later edit of that gate script, and the third is a defect the reviewers confirmed (unit tests).
+The ledger of record is `docs/compiler-campaign/known-conditions.json` on main, which the coordinator owns.
+
+**Replayed, not controls.** Eight more accepted or landed revisions were replayed with the same command and are left out of the table, each
+for a stated reason. Six end with exit 3: the harness-2 tip `f53f937c` and its landing `f8f50370` (a C3 `frozen-edit` and an
+`assertion-weakened` on `tests/compiler-bootstrap/check.py`, the increment's own harness; a manifest that owns `tests/compiler-bootstrap/**`
+makes the run exit 0, and the second condition is the line-level reading of a selector widened from `== 'blocked'` to `in ('blocked', *DIVERGENT)`),
+fields-wasm `3868b119` (two `host-path` conditions in its own receipts; the coordinator dispositioned the review), the classify-2 landing
+`152fcd5d` (the confirmed less-than defect, landed), the io-host landing `0b9498bb` (the stale inventory above, until `f84d83ef`) and the io-abi-2
+landing `2e93d582` (a receipt that records the previous hash of `scripts/run-wasm-io.mjs`). Two end with exit 0 only because `red-tip` did not
+run: the perch-context landing `7c743980` and the joint landing `ef3081f6` fail `census --check` on a plain export (a stale inventory, which
+the coordinator regenerates after a merge), but the diff of neither touches `src/`, `tools/census/` or the inventory, the rule's trigger. A trigger
+that also fires on a changed gate program would run the census on 7 of the 76 distinct revisions replayed and report four landing merges and no
+tip, so it is left as it is and the registered `census` gate covers the rest.
+
+**Recall against the first delivery.** The fix round changed what C3, C4 and C5 report, so the change was measured. The 60 replay
+contexts on which the first delivery (`e0ecc0c7`) reported an executor condition of major or higher in those checks were run again with
+this tree's tool. Of those 817 conditions (154 C4 `host-path`, 140 C3 `frozen-edit`, 39 C3 `shared-file-shape`, 30 C3
+`frozen-row-changed`, 94 C5 `composition-budget`, 353 C4 `stale-receipt-hash`, five `assertion-weakened`, two `unit-cap`), 365 are still major
+or blocking, 78 are gone and 374 are minor, each for one stated reason: 37 `shared-file-shape` conditions were a new gate's `counts()`
+branch, which GATES.md asks for; 38 `composition-budget` conditions were on files whose manifest group fits the cap; 3
+`stale-receipt-hash` conditions were `baseline_implementation` freeze hashes, which are history; 328 `stale-receipt-hash` conditions are on
+receipts that are neither a registered gate output nor a manifest receipt (historic `preflight-*`, `handoff` and `closed` receipts); 46
+`composition-budget` conditions are on files that exceed the cap only through their helper closure. No `host-path`, `frozen-edit`,
+`frozen-row-changed`, `assertion-weakened` or `unit-cap` condition was lost or lowered, and the defects the reviewers labelled in C4 and C5
+(generics `78c4942e`'s `generics.json`, vm-model `e38afc32`'s `vm/model.bend`) are still major.
 
 ## Pipeline integration (for the coordinator)
 
@@ -398,7 +435,7 @@ These edits live in the campaign harness, outside the repository:
   rule ran (C4's `gate-run` needs the implementer's own gate run; C5's `preflight-new-blocker` may be unavailable), and spot-checks one
   fact from `facts.json`. **The preamble** takes the executor trailer and the gate count from the tree, not from prose.
 - **Ledger and manifests:** seed `known-conditions.json` (the Digest blocker, the six closure-golden rows in the bootstrap corpus,
-  the dotted-binder and empty-datatype rulings, and the entries of `tests/prechecks/replay/proposed-ledger.json` that you accept) and write a manifest
+  the dotted-binder and empty-datatype rulings; not `tests/prechecks/replay/proposed-ledger.json`, which is replay-only) and write a manifest
   at each launch; until a manifest declares `owns`, `d4_targets`, `limits` and `coverage`, the rules that need them are reported unavailable.
 
 ## Limits and what is not built

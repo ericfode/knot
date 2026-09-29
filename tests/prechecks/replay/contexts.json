@@ -19,10 +19,11 @@
    "with_ledger": {
     "exit": 3,
     "executor_major": {
-     "C1.premature-unsupported": 6
+     "C1.premature-unsupported": 6,
+     "C3.frozen-edit": 1
     }
    },
-   "note": "The classify tip. Confirmed by the classify reviewers and fixed by classify-2: a non-leading ~ binder and == after a constructor moved from Invalid to Unsupported (found by the seed error offset), and => after a constructor (a frozen expect probe: its offsets equal those of the documented suffix policy). The additive edit of the frontend gate script is accepted debt."
+   "note": "The classify tip. Confirmed by the classify reviewers and fixed by classify-2: a non-leading ~ binder and == after a constructor moved from Invalid to Unsupported (found by the seed error offset), and => after a constructor (a frozen expect probe: its offsets equal those of the documented suffix policy). The additive 112-line edit of the frontend gate script tests/subsets/check_frontend.py is a C3 frozen-edit that no manifest authorizes; it stays reported, ledger or not."
   },
   {
    "name": "classify-2",
@@ -180,7 +181,83 @@
     "exit": 0,
     "executor_major": {}
    },
-   "note": "A merge commit on main against its first parent."
+   "note": "A single-parent commit on main against its parent (a policy edit, no gate row)."
+  },
+  {
+   "name": "perch-context",
+   "kind": "clean",
+   "inc": "perch-context",
+   "head": "ffab8be269062082446fc3f8ea9768f9f922da54",
+   "main_ref": "c1970acd81034e10e2f7721ecd05825024193cc1",
+   "merged_as": "7c74398027f94f6eafcc9673816248fd52e479ff",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "The accepted tip: a new suite with its receipt and the vendored parser observer (32 files)."
+  },
+  {
+   "name": "vm-model",
+   "kind": "clean",
+   "inc": "vm-model",
+   "head": "07e6db73307944eb688130e64284f1ec266f1515",
+   "main_ref": "a6367eb9f434d0123ea809e81f63a853012a9fe4",
+   "upstream": [
+    [
+     "vm-spec",
+     "cea554abc93f8091b28621aaf336d7acf6839866"
+    ]
+   ],
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "Accepted in its last round, not merged. Stacked on vm-spec: with the upstream declared the run judges only the increment's own diff, and without it the same run reports vm-spec's files as the increment's."
+  },
+  {
+   "name": "main-a6367eb9",
+   "kind": "clean",
+   "inc": "none",
+   "head": "a6367eb9f434d0123ea809e81f63a853012a9fe4",
+   "main_ref": "a6367eb9f434d0123ea809e81f63a853012a9fe4",
+   "default": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "with_ledger": {
+    "exit": 0,
+    "executor_major": {}
+   },
+   "note": "Main against itself: nothing changed, so nothing is reported."
+  },
+  {
+   "name": "io-host",
+   "kind": "broken",
+   "inc": "io-host",
+   "head": "963a7594af1b5de4053394e903c105fe53dddbab",
+   "main_ref": "b926a3c379b87ab69c65e00cb3e5ccd61a5d6f94",
+   "merged_as": "0b9498bbd58c82a1caab6cb159caa7a295480bf2",
+   "default": {
+    "exit": 3,
+    "executor_major": {
+     "C3.red-tip": 1
+    }
+   },
+   "with_ledger": {
+    "exit": 3,
+    "executor_major": {
+     "C3.red-tip": 1
+    }
+   },
+   "note": "The accepted tip pins an older sha256 of tests/compiler-io/host-check.py in the census inventory than the file has, so census --check fails on a plain export (reproduced independently). No reviewer confirmed it: main repaired it afterwards in f84d83ef, \"Regenerate the census inventory after the io-host merge\"."
   }
  ]
 }

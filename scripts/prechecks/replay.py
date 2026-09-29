@@ -53,6 +53,8 @@ def run_suite(repo: Path, context: dict, ledger: Path | None) -> dict:
                '--inc', context['inc'], '--json', '--no-write']
     if context.get('base'):
         command += ['--base', context['base']]
+    for name, sha in context.get('upstream', []):      # a stacked increment declares what it sits on
+        command += ['--upstream', f'{name}={sha}']
     if ledger is not None:
         command += ['--ledger', str(ledger)]
     proc = subprocess.run(command, capture_output=True, text=True)
@@ -82,7 +84,8 @@ def main(argv=None) -> int:
         if only and context['name'] not in only:
             continue
         row = {'name': context['name'], 'kind': context['kind']}
-        needed = [context['head'], context['main_ref']] + ([context['base']] if context.get('base') else [])
+        needed = [context['head'], context['main_ref']] + ([context['base']] if context.get('base') else []) \
+            + [sha for _, sha in context.get('upstream', [])]
         if not all(has_commit(repo, sha) for sha in needed):
             row['status'] = 'skipped: the campaign history is not in this repository'
         else:
