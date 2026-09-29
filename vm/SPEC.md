@@ -393,7 +393,7 @@ Cases on a `none` slot, among them `list-head-match`, three whose arms fit their
 Case, among them `first-code`, S's shapes, and two of names, a type named with each length of
 UTF-8 (U+0024, U+00A2, U+20AC, U+10348) and one named with every edge of a length (U+0080, U+07FF, U+0800, U+D7FF, U+E000,
 U+FFFF, U+10000, U+10FFFF)), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 138 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 150 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -679,6 +679,15 @@ ill-typed before `act` is dropped), the `NatRange` goldens `nat-succ-range`, `na
 (`atomic-fuel-book`, `-action` and `-continuation`), and the lockstep already compares its pending Enter, target and operands. An image past a limit of §4 is refused at load, before there is a state to keep (§4's limit
 controls). The heap and the frame region (kinds 2 and 3), `RCOverflow` and a release's worklist are out of the reference evaluation's reach;
 vm-core's frame-region and heap-limit rows, which freeze `calls`, `top` and the bump pointer beside the outcome, and the lockstep hold them.
+
+**What holds the order.** The reference evaluation reads in the order above, so it shows which of two stops a step names, and §12's twelve
+order controls (`order-*`) freeze it. Each hands one prim a closure, which no type admits, and a request at the two reads that a pair
+names, once each way round: the run that meets the closure first is `HostFailure image` (`ill-typed`) and the run that meets the request
+first is `Unsupported vm effect`, each after 7 entries with nothing written and no host call. The pairs are the operands of a word prim, of
+`Char.is_eq` and of a Nat prim; the two Strings of `String.eq` and of `String.append`, `a` whole and then `b`; and the reads inside one
+String, each SCon cell and then its Char word, head to tail. A machine that reads the second operand first, or takes every cell of a String
+before any Char word, names the other stop on one of them. A request before a type at one word is held by the request controls of §12
+(`inspect-request-*`, `book-request-*`).
 
 ## 7. Entry, fuel and quantum (D16)
 
@@ -1337,7 +1346,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 138 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 150 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1481,14 +1490,24 @@ lane and requires:
   inspection before its charge (§8): `Pair{n, w}` with the Nat word n = 1,048,574 has charged 1 + 1,048,575 visits, the whole
   bound, when it reaches `w`, so a Flag there is the 1,048,577th visit (`atomic-display-leaf-charged`, `display` after 1) and a
   closure that the identity hands there as a Flag is refused as `ill-typed` first (`atomic-display-leaf-ill-typed`, after 2), for a
-  word that is not inspected is no visit;
+  word that is not inspected is no visit. Twelve **order controls** (`order_controls`, review round 1 of round 14) pin §6.3's order of reads
+  where the reference evaluation makes it: a step that reads two words that would each stop the machine is stopped by the earlier one, in
+  operand order, and a word's request is met before its type. The identity hands a prim a closure and a request at the two reads that a
+  pair names, once each way round, in a Book at fuel 1,000,000: the run that meets the closure first is `HostFailure image` (`ill-typed`)
+  and the run that meets the request first is `Unsupported vm effect`, each after 7 entries (main and the prim's Base function, the
+  identity of each bad word, and the three that build the request `IO.print("x")(R)(k)`), with `stdout` empty and `effects` 0. The six
+  pairs are the operands of `U32.add`, a word prim, of `Char.is_eq` and of `Nat.add`, a Nat prim (`order-u32-add-*`, `order-char-is-eq-*`,
+  `order-nat-add-*`); the Strings of `String.eq` and of `String.append`, `a` whole and then `b`, each `SCon('a', w)` with the bad word as its
+  tail (`order-string-eq-*`, `order-string-append-*`); and the reads inside one String, each SCon cell and then its Char word, head to
+  tail, in `String.reverse` of an SCon whose Char word and tail are the two bad words (`order-string-char-tail-*`). A pair is
+  `order-<pair>-closure-then-request` and `order-<pair>-request-then-closure`;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
 - 137 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 120 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 128 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1560,7 +1579,8 @@ lane and requires:
   predecessor narrowed to 31 bits dies only by `nat-case-big`. Eighteen read less
   than their inspection extent, and exactly as much on a well-typed word, so they
   survive every golden and each dies by the inspection controls of its own point and by
-  no other (a Halt's message unread also by the two Halt controls that carry one): Chr passing its operand through; Succ passing an Object, or
+  no other (a Halt's message unread also by the two Halt controls that carry one, and `reverse` and `eq` unread also by the
+  order controls of their prim): Chr passing its operand through; Succ passing an Object, or
   a Closure; each move prim returning its operand unread; `append` moving `b`
   unread, or copying `a`'s Char words unread; `length` and `reverse` leaving the
   Char words unread; `is_empty` reading one cell; `eq` stopping at the first
@@ -1579,11 +1599,11 @@ lane and requires:
   continuation; and a last word that is no IO.OP taken for `Emit`. Four more, of §10's UTF-8 of a scalar (the one-byte edge, the two-byte
   lead, and the edges of two and three bytes), die by the two print controls. Thirty-three more,
   of D23 and D24, a Halt's message, keys and the debit, die
-  by the controls above: the eager rule of round 10, performing at the Action's application (by ten goldens,
+  by the controls above: the eager rule of round 10, performing at the Action's application (by thirteen goldens,
   `keep-swapped`, `keep-first`, `run2-flag`, `keep-non-scalar`, `book-drop`, `let-dropped-request`,
-  `let-live-request`, `field-request-dropped`, `emit-field-request-dropped` and `capture-request-dropped`, and
-  twenty-four run controls); a request performed although it is dropped, by the function that received it (by
-  nine goldens, those but `field-request-dropped`, whose function receives the Box and not the request, and
+  `let-live-request`, `field-request-dropped`, `emit-field-request-dropped`, `capture-request-dropped` and D24's three
+  (`case-request-emit-default-u32`, `-halt-default-u32` and `case-request-emit-default`), and forty-six run controls); a
+  request performed although it is dropped, by the function that received it (by nine goldens, those but `field-request-dropped`, whose function receives the Box and not the request, and
   `program-request-dropped-argument`, `program-request-dropped-ill-typed` and `book-request-dropped`) or by the
   let that bound it (by `let-dropped-request`, `let-live-request`, `program-request-dropped-let` and
   `book-request-dropped`); a loop that enters `k`
@@ -1591,14 +1611,16 @@ lane and requires:
   `inspect-print-after-surrogate`, `inspect-request-print` and the four D20 goldens' `calls`); a Case
   without a Default that picks an arm of a request, or takes it for an ill-typed word (each by the seven Book
   controls that hand `got` a request, `program-case-request` and the five `-compiled` twins); a request taken for an ill-typed word where a
-  String or a result is read (by `book-request-rendered`, `book-request-field` and `inspect-request-print`);
+  String or a result is read (by `book-request-rendered`, `book-request-field` and `inspect-request-print`, and by the request-first
+  order controls of the String prims and of a String's own reads);
   D24's rule, that a Case takes its Default over a request: refused, as D23 refused it (by the three
   goldens of a Case with a Default, the three Default controls, `case-request-default-at-flag`,
   `case-request-default-keys` and the two `-retested` plans), picking a row and not the Default (by the goldens
   `case-request-emit-default-u32` and `-halt-default-u32`, which print 1 and 3 for 2 and 4, by those two controls and by the
   two `-retested` plans), taken only at IO.OP (by those two
   controls) or not by a keys Case (by `case-request-default-keys` alone); a request taken for an ill-typed word at a
-  scalar (by `inspect-request-chr` and `-prim` alone) or at an
+  scalar (by `inspect-request-chr` and `-prim`, and by the request-first order controls of a word prim, `Char.is_eq` and a Nat prim, and
+  by no other) or at an
   Enter's target (by `enter-request-target` and `fuel-zero-request-target`); an Enter that tests fuel before it
   reads a request (by `fuel-zero-request-target` alone); a rendered field that admits a request (by
   `book-request-field` alone); a request's operands read when it is built (by `book-print-ill-typed` and
@@ -1607,7 +1629,7 @@ lane and requires:
   only the first (by `spine`, `io-bind`, `non-scalar-unprinted` and `print-non-scalar-second`) or performs the
   request that an Emit holds (by `program-request-in-emit` alone); a Book that runs the loop (by
   `book-request-rendered` alone), refuses where it builds the request, D22's rule of round 9 (by `book-drop`
-  and the Book controls that build one), enters `k` without the effect (by fourteen Book run controls that build a request, not by `book-drop` or
+  and the Book controls that build one), enters `k` without the effect (by thirty Book run controls that build a request, not by `book-drop` or
   `fuel-book-request-short`),
   or refuses where it builds the Action or applies it to its erased `R` (by `book-drop`, `book-action-dropped`
   and `book-action-erased`); a Halt message never checked (by `halt-surrogate` alone), refused whatever it holds
@@ -1627,7 +1649,13 @@ lane and requires:
   every golden and every run control outside that set and die by it alone: the three `nat-range-` mutants, `ill-typed-tests-fuel`,
   `request-read-tests-fuel`, `d20-refusal-tests-fuel`, `display-refusal-tests-fuel`, `effect-counted-before-scalar-check` and
   `describe-charges-before-inspecting` (by `atomic-display-leaf-ill-typed` alone). The other fourteen die by earlier controls that freeze
-  `calls`, `stdout` or `effects` as well, and DECISIONS entry 38 lists the kills of each, as measured;
+  `calls`, `stdout` or `effects` as well, and DECISIONS entry 38 lists the kills of each, as measured. Eight more (review round 1 of
+  round 14) read the second of two words first, and read exactly as much on a well-typed word, so they survive every golden: a word prim, a
+  Nat prim, `Char.is_eq`, `String.eq` and `String.append` (`prim-words-`, `prim-nat-`, `prim-char-eq-`, `prim-string-eq-` and
+  `prim-string-append-read-second-first`, and `prim-string-read-second-first`, which does both String prims at once), and a String read with
+  every cell before any Char word (`string-chars-after-cells`) or with the next cell before a Char word (`string-tail-cell-before-char`). Each
+  dies by the order controls of its own pair and by no other control, four for the mutant that does both String prims and two for each of the
+  rest, and the gate requires that at least one `order-*` control changes under each (`ORDER_MUTANTS`, and `order` in the receipt row);
 - 15 **seed witnesses** (`golden/witnesses.json`, `check-spec.py witness_controls`): sources that §8 cites
   and no golden can carry, each re-run on both seed lanes (three also through the literals head's check-cli) and held
   to its source's hash, to its frozen exit, stdout and stderr, and to the review of its exit and stdout that

@@ -89,17 +89,18 @@ whose review declares the line. It also checks the frozen VM expectation table; 
 78 plan-level, and nine on either side of the resource limits that are `Exhausted` kind 2); 27
 expectation, seven invocation, two seed-display, three display-lane and two bench
 controls; two excused eval-bound controls; eight admitted plan controls (two of them names in every length of UTF-8),
-one admitted limit control, seven admitted code-list controls and 138 run controls with their frozen
+one admitted limit control, seven admitted code-list controls and 150 run controls with their frozen
 fuel, calls and outcomes (among them D23's requests: built by the Action's second application,
 performed only by the Program's Top loop, dropped without effect and refused as
 `Unsupported vm effect` wherever a read meets one, except a Case, whose Default takes it (D24; nest's lowering of a source
 catch-all emits none, so its five compiled twins are refused, and two plans that test the slot again take the request as the native lane does), with the
-bytes and host calls a Book makes, which are none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar; and 27 atomic controls
+bytes and host calls a Book makes, which are none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar; 27 atomic controls
 (section 6.3): each stop reports the meters, output and effects that the run held before the step, and a stop that is not a fuel stop is reached with exactly
-the fuel the run has spent); nine describe-domain controls; 13 argument controls;
+the fuel the run has spent; and twelve order controls (section 6.3): a closure and a request handed to the two reads of one prim, once each way round, so that
+each run is stopped by the read that comes first, in operand order); nine describe-domain controls; 13 argument controls;
 the lowering of two hand-written displays; 15 seed witnesses (sources whose two seed lanes, and for
 three the literals head, it re-executes and compares with frozen bytes and a literal review, with three
-frozen refusals of that comparison); 137 codec, 4 source, 120 evaluator and twenty-three
+frozen refusals of that comparison); 137 codec, 4 source, 128 evaluator and twenty-three
 rule mutants of `check-spec.py` itself (ten of them delete one clause of the canonicality clauses that the gate holds
 against re-encoding on 5,797 images); the accounting of all 178 omissions of a refusal of the reference codec or of a clause of its test, each killed,
 held by a raise or unreached; and the bench freeze: sources, guards, outputs and the seed-native

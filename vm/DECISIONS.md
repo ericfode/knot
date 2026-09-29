@@ -1021,15 +1021,15 @@ follows it (§5, §10, §11) without a new image header word.
      at least one control of the atomic set (the 27 `atomic-*` controls and the three `fuel-zero-*` controls of a refused Enter, the same twin)
      must change under each, since a mutant that only a golden or another run control kills is not held by the controls of the rule that it
      violates (`ATOMIC_MUTANTS`, `SPENT_FUEL_TWINS`, and `atomic` in each mutant's receipt row; with the controls of three of them removed, the gate
-     reports those three as survivors). Measured on the tree, each against the 111 goldens, the 108 run controls outside the atomic set and the 30
+     reports those three as survivors). Measured on the tree, each against the 111 goldens, the 120 run controls outside the atomic set (twelve of them the order controls of entry 39) and the 30
      inside it (a count is the controls that kill it):
 
      | Mutant | goldens | run controls outside the atomic set | atomic set |
      |---|---:|---:|---:|
      | `nat-range-spends-entry` | 0 | 0 | 4 |
-     | `ill-typed-spends-entry` | 0 | 40 | 11 |
+     | `ill-typed-spends-entry` | 0 | 46 | 11 |
      | `case-request-spends-entry` | 0 | 13 | 1 |
-     | `request-read-spends-entry` | 0 | 6 | 2 |
+     | `request-read-spends-entry` | 0 | 12 | 2 |
      | `d20-refusal-spends-entry` | 4 | 1 | 4 |
      | `display-refusal-spends-entry` | 0 | 2 | 2 |
      | `fuel-stop-spends-entry` | 0 | 8 | 3 |
@@ -1048,7 +1048,7 @@ follows it (§5, §10, §11) without a new image header word.
      | `describe-charges-before-inspecting` | 0 | 0 | 1 |
      | `stop-discards-output` | 1 | 2 | 5 |
      | `nat-range-deferred` | 0 | 0 | 4 |
-     | `ill-typed-deferred` | 0 | 20 | 4 |
+     | `ill-typed-deferred` | 0 | 23 | 4 |
 
      Nine survive every golden and every run control outside the atomic set (the three `nat-range-` mutants, `ill-typed-tests-fuel`,
      `request-read-tests-fuel`, `d20-refusal-tests-fuel`, `display-refusal-tests-fuel`, `effect-counted-before-scalar-check` and
@@ -1056,7 +1056,7 @@ follows it (§5, §10, §11) without a new image header word.
      twins added after review (`atomic-print-non-scalar-mid`, `atomic-request-rendered`) and the three `fuel-zero-*` controls counted by name,
      four of the 22 (`request-read-spends-entry`, `request-read-tests-fuel`, `enter-request-target-after-debit` and
      `effect-writes-before-scalar-check`) were killed by no atomic control and only by earlier ones; the requirement above is what closes that.
-     Evaluator mutants 97 to 120, 284 in all.
+     Evaluator mutants 97 to 120, 284 in all (entry 39 adds eight: 128, and 292 in all).
    - **What this does not claim.** That a machine leaves its frames, `act`, `top`, cells and free lists as it found them: no vm-spec control
      sees them, and the text above says who does. That the release worklist and the tail entry's release-then-allocate can be made atomic
      cheaply: SPEC states the requirement and the fit rule (as if the release had happened), and a reclaiming VM (vm-rc) must size the release
@@ -1070,6 +1070,47 @@ follows it (§5, §10, §11) without a new image header word.
      operands or tested NatRange, and that SPEC §6's table dropped `act` before Return to Top refused an ill-typed IO.OP, while the model and the
      sentence above the table were atomic. One rule for both machines makes a halted state comparable, and removes the lockstep's two named halting
      relations. |"
+39. **Review round 1 of round 14: the order of two reads (the review's major finding).** SPEC §6.3 says that where two checks of one step would both
+   stop the machine, the earlier names the stop, and that the words a step reads come first, "in the order of §6 and §9 (operand order), each with its
+   request first (`Unsupported vm effect`) and then its type (`ill-typed`)". §6's Intrinsic row and §9 had said the operand order since `31aeaf25` ("inspect
+   every operand over its §9 extent, in operand order"; `String.eq` and `String.append` read "`a` whole, then `b` whole"), and no golden or run control
+   pinned it: the review's three one-edit mutants of `evaluate.py` that read a prim's second operand, or its second String, before its first
+   (`prim-words-`, `prim-nat-` and `prim-string-read-second-first`) survived all 111 goldens and all 138 run controls. Its witnesses hand a prim a closure and
+   a request as the two operands: the closure first is `HostFailure image` (`ill-typed`), the request first `Unsupported vm effect`, after 7 entries either
+   way, and each plan validates and round-trips through the codec. The orders next to it were held (a request before a type at one word, a Halt's code
+   before its message and before D20's check, an inspection before a charge), so the gap was the order between two words. The repair pins the order and
+   keeps the text: narrowing §6.3 to the orders that were held would have weakened §6 and §9 to fit the gate.
+   - **The probe.** Before any change the tree at `54b52a84` let five more one-edit mutants of the same rule survive every golden and run control:
+     `Char.is_eq` alone (its own line in `prim`), `String.eq` alone and `String.append` alone (the review's String mutant edits both, so a pair for `append`
+     alone would have killed it and left `eq`), and a String read with every cell before any Char word, or with the next cell before a Char word (`codes`;
+     §9: "each SCon cell and its Char word, head to tail"). Each is the same finding in another place, so each place has its pair.
+   - **The controls (12, D7).** `order_controls`, run controls 139 to 150, after the atomic controls in `run_controls`. A pair for each of `U32.add` (the one line
+     of every word prim), `Char.is_eq`, `Nat.add` (every Nat prim), `String.eq`, `String.append` and a String's own reads (`String.reverse` of an SCon whose Char
+     word and tail are the two bad words): `order-<pair>-closure-then-request` and `order-<pair>-request-then-closure`. The expected values were written by
+     literal review before the first run: the closure first is `HostFailure image` (`ill-typed`), the request first `Unsupported vm effect`, each with `stdout`
+     empty, `effects` 0 and `calls` 7 (main and the Base function 2, the identity of each bad word 2, the request's three entries) at fuel 1,000,000, and the
+     reference evaluation reproduced all twelve on its first run with the unchanged evaluate.py. They are Book controls, so no host is called, and no seed
+     claim, like the other controls that hand a request to a read.
+   - **The mutants (8).** `ORDER_MUTANTS`: the review's three, with its edits verbatim; `prim-char-eq-`, `prim-string-eq-` and `prim-string-append-read-second-first`,
+     one site each; and `string-chars-after-cells` and `string-tail-cell-before-char`. Each survives every golden and dies by the two order controls of its own
+     pair and by no other control (four for the review's String mutant, which does both String prims). As for the atomic mutants, the gate requires more than a
+     kill: at least one `order-*` control must change under each (`order` in the receipt row). Evaluator mutants 128, 292 in all (137 codec, 4 source, 128
+     evaluator, 23 rule).
+   - **What else the twelve kill, and what moved.** Sixteen earlier mutants also die by them: six of a request built and dropped or entered (`debit-at-perform`,
+     `eager-effect`, `book-refuses-request-build`, `book-enters-k-without-effect`, `book-refuses-action-build`, `book-refuses-erased-application`, each by all
+     twelve, since each builds a request), `word-request-as-ill-typed` and `view-request-as-ill-typed` (by the three request-first controls of the word prims and of
+     the String reads), five that read less than their extent (`u32-arith-`, `char-prim-` and `nat-prim-first-unread`, `reverse-chars-unread` and
+     `eq-reads-a-one-past-b`, by the pair of their prim), and three atomic mutants (`ill-typed-spends-entry`, `request-read-spends-entry`, `ill-typed-deferred`).
+     Three rows of entry 38's table moved (40 to 46, 6 to 12 and 20 to 23), and the nine that die by the atomic set alone did not. SPEC §12's sentence that
+     named `inspect-request-chr` and `-prim` as the only killers of a request taken for an ill-typed scalar, and its counts of the killers of the eager rule (ten
+     goldens and twenty-four run controls, which round 13's three goldens and later controls had already outgrown) and of `book-enters-k-without-effect`
+     (fourteen Book run controls), were re-measured on the tree: thirteen goldens and forty-six run controls, and thirty.
+   - **Two survivors of the review that are no mutants.** `construct-nat-limit-first` (a Succ that tests the range before it inspects its word: an int always passes
+     the inspection, and a non-int never reaches the range test) and `book-stop-discards-effects` (a Book's `effects` is always 0). Neither changes anything that
+     the reference evaluation reports, so neither is added; the review's own other mutants (`view-type-before-request`, `word-type-before-request`,
+     `halt-outgoing-before-code`, `effect-count-after-k`, `stop-discards-effects`, `stop-refunds-a-call`, `stop-keeps-quantum-of-fuel-only`) are killed today.
+   - **What this does not claim.** That the order holds where the reference evaluation cannot show it: what a machine's frames hold when it names the stop is the
+     lockstep's, and the operands of a foreign but `IO.print` and the byte List's whole extent are vm-io's, as before.
 
 ## What vm-model and vm-core must now follow (round 9)
 
@@ -1303,15 +1344,17 @@ This list is the one to work from; the earlier lists remain the detail behind ea
 ## What vm-model and vm-core must now follow (round 14)
 
 Round 13's list stands in full (D22, D23 and D24, the loader controls and the counts it states move as item 6 below says). Round 14 adds one rule, and
-**the atomic stops of SPEC §6.3 (entry 38)**, which vm-core and vm-model follow together with D22, D23 and D24. `check-spec.py`'s `run_controls` is the
-shared harness, so merging this branch brings the 27 new controls.
+**the atomic stops of SPEC §6.3 (entry 38)**, with the order of its checks (entry 39), which vm-core and vm-model follow together with D22, D23 and D24.
+`check-spec.py`'s `run_controls` is the shared harness, so merging this branch brings the 39 new controls (27 atomic, 12 order).
 
 1. **A step that stops changes nothing (§6.3).** The machine keeps the state in which the step began: control pending, `act`, frames and `top`, every cell,
    the free lists and the bump pointer, the meters and everything written or called; the one change a stop leaves is the debit of an Enter whose step 2 or 3
-   stopped. Every check is decided before the step's first change: a request, then a word's type, then the limits in the order of the row's substeps.
+   stopped. Every check is decided before the step's first change, and where two of them would stop the machine the earlier names the stop: the words that the
+   step reads, in operand order (§6 and §9: a prim's operands from first to last, a String cell by cell, each SCon cell and then its Char word, head to tail), each
+   with its request first and then its type; then the limits, in the order of the row's substeps. The order controls (item 5) freeze the words.
 2. **vm-core.**
-   - Gather completion (Construct's Succ and Chr, an Intrinsic): inspect every operand, test `NatRange` and decide the room for the result **before** popping
-     the Gather frame. This retires CORE.md choice 8's "stated limit" and the lockstep's `GATHER_POPPED` (23 runs).
+   - Gather completion (Construct's Succ and Chr, an Intrinsic): inspect every operand, in operand order, test `NatRange` and decide the room for the result
+     **before** popping the Gather frame. This retires CORE.md choice 8's "stated limit" and the lockstep's `GATHER_POPPED` (23 runs).
    - Return to Top, at phase 0 as well as phase 3: the refusals of §8 (a Book's description: each word inspected and then charged, and the room for the text; a
      request's operands, D20's check and the room for the conversion; an IO.OP, a Halt's code and message and D20's check of it) come **before** `act` is
      dropped and before any output or host call. This retires `TOP_RELEASED` (`inspect-halt-code`, `inspect-halt-message`).
@@ -1323,19 +1366,22 @@ shared harness, so merging this branch brings the 27 new controls.
    - Describe inspects a word **before** it charges the visit (round-7 finding 2); `atomic-display-leaf-ill-typed` is the reference outcome of that ordering
      (the Nat word `1,048,574` and `Pair`: 1,048,576 visits, so an ill-typed `w` is refused, and a Flag `w` is `display`: `atomic-display-leaf-charged`).
    - §5's allocation-room rule holds for prims (`append`'s block) as it does at the ceiling rows.
-3. **vm-model.** Its steps are atomic already: run the 27 controls (they are run controls, at the fuel frozen with each), and check the three places where the text
+3. **vm-model.** Its steps are atomic already: run the 27 atomic controls and the 12 order controls (they are run controls, at the fuel frozen with each), and check the three places where the text
    moved: a Book's description is part of the Return-to-Top step (the lockstep's trace folds it in, `advanced`; the model's own `run` ends at `Answered` after `act`
    is dropped, and a stop of the description must keep `act`), §6.1's stop leaves no Scope, and a tail entry's stop restores its Scopes and `act` (`body_entered` is
    atomic because a failure discards the whole transition).
 4. **vm-lockstep.** Delete `GATHER_POPPED`, `TOP_RELEASED` and their counts (`halting_relations` in `frozen.json`, 23 and 2); compare a halt as any state, frames, `top`,
    `act` and heap included. Say which stops compare the pending control: today only the fuel stop's pending Enter is compared (95 fuel stops), because vm-core's
    registers cannot name any other. The display controls are `untraced`; the 27 controls and the `inspect-render-*` runs are witnesses for the description's
-   stop once they are traced.
+   stop once they are traced, and the 12 order controls are witnesses for the order in which a Gather completion inspects its operands.
 5. **New expectations.** Twenty-seven run controls (§12): the 20 twins (fuel = `calls`; `stdout` and `effects` frozen, the three of a fuel stop among them), the five that
    stop after an effect, and the two of the display order. Both harnesses compare `stdout` and `effects` on every run control that freezes them and `calls` at every stop, as round 13's item 4 says.
-6. **Counts (§12, GATES.md).** 138 admitted run controls, 154 admitted controls in the gate line (7 code lists, 138 runs, 8 admitted plan controls, `arity-at-limit`);
-   211 refusals (unchanged: 124 byte-level, 9 at the limits, 78 plan-level), 111 goldens, 15 seed witnesses; mutants 137 codec, 4 source, 120 evaluator and 23 rule
-   (284). The two sentence shapes that vm-core reads (`N admitted **run controls**`, `freezes N refusals (...)`) are unchanged in form.
+   Then twelve order controls (`order-*`, §12, entry 39): a closure and a request handed to the two reads of one prim, once each way round, each after 7 entries with
+   `stdout` empty and `effects` 0, and each stopped by the read that comes first, `ill-typed` when it is the closure and `Unsupported vm effect` when it is the
+   request. The reads are the operands of a word prim, of `Char.is_eq` and of a Nat prim, the two Strings of `String.eq` and of `String.append`, and one String's cells.
+6. **Counts (§12, GATES.md).** 150 admitted run controls, 166 admitted controls in the gate line (7 code lists, 150 runs, 8 admitted plan controls, `arity-at-limit`);
+   211 refusals (unchanged: 124 byte-level, 9 at the limits, 78 plan-level), 111 goldens, 15 seed witnesses; mutants 137 codec, 4 source, 128 evaluator and 23 rule
+   (292). The two sentence shapes that vm-core reads (`N admitted **run controls**`, `freezes N refusals (...)`) are unchanged in form.
 7. **Witness states, by hand from §5 and §6 (not run on any machine: confirm them on the first run, D7).** At `nat-succ-range` the `NatRange` stop
    happens with four frames on the region: Top(0) (3 words), the Gather of `Nat.is_gt` (5), the Call frame of `succ`'s entry (4; the entry is not a tail entry,
    since a Gather lies between it and Top) and the Gather of the Succ with its operand (4), so `top` = F0 + 64 = 65,600 for this 696-byte image (F0 = 65,536).

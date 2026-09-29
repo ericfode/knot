@@ -2043,7 +2043,7 @@ def run_controls(plans: dict) -> list:
     ]
     listed = [*controls, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in controls}}),
               *inspection_controls(plans), *effect_controls(plans), *key_controls(plans)]
-    return [*listed, *atomic_controls(plans, {label: (plan, frozen) for label, plan, frozen in listed})]
+    return [*listed, *atomic_controls(plans, {label: (plan, frozen) for label, plan, frozen in listed}), *order_controls(plans)]
 
 
 def effect_controls(plans: dict) -> list:
@@ -2659,6 +2659,63 @@ def atomic_controls(plans: dict, known: dict) -> list:
         ('atomic-display-leaf-ill-typed', second(['call', 1, 0, [['closure', 3, 1, 1, [], ['ref', 1, 0]]]]),
          {'fuel': 2, **ILL_TYPED, 'calls': 2, **quiet}),
     ]
+
+
+def order_controls(plans: dict) -> list:
+    """Section 6.3's order of reads, by literal review of sections 6 and 9, with the values written before the first run (D7). A step
+    that reads two words that would each stop the machine is stopped by the earlier one, in operand order, and a word's request is met
+    before its type (`Unsupported vm effect`, then `ill-typed`). The identity hands a prim a closure, which no type admits, and a request,
+    at the two reads that a pair names, once each way round: the prim that meets the closure first is `ill-typed` (`HostFailure image`), and
+    the prim that meets the request first is `Unsupported vm effect`. Every run is 7 entries whichever word comes first, a Book that
+    writes nothing and calls no host: main and the prim's Base function are 2, the identity of each bad word 2, and the request
+    `IO.print("x")(R)(k)` builds 3 (IO.print, the erased R and the Action applied to k); the stop is the prim's, after all seven.
+    One pair for each place where the reference evaluation orders two reads:
+    - the operands of a word prim (`U32.add`), of `Char.is_eq` and of a Nat prim (`Nat.add`), each one word;
+    - the two Strings of `String.eq` and of `String.append`, `a` whole and then `b` whole: each String is `SCon('a', w)`, so its bad
+      word is the tail cell where reading it ends;
+    - the reads inside one String, each SCon cell and then its Char word, head to tail (`String.reverse`): the Char word of the first
+      cell and its tail cell are the two bad words, so a reading that takes every cell before any Char word meets the tail first."""
+    fp, flag = plans['foreign-print'], plans['value-on']['types'][0]
+    print_, ident, base = 0, 1, 2
+    types = [*fp['types'], flag, {'kind': 'arrow', 'domain': 8, 'result': 8},      # 8 Flag, 9 Flag -> Flag
+             {'kind': 'data', 'name': 'Nat', 'constructors': [{'name': 'Zero', 'fields': []}, {'name': 'Succ', 'fields': [10]}]},
+             plans['string-eq']['types'][0]]                                       # 10 Nat, 11 Bool
+    rep = {**fp['representation'], 'Nat': 10, 'Bool': 11}
+    prims = {p['id']: p for p in codec.registry()['prims']}
+    functions = [
+        {'name': 'IO.print', 'parameters': [3], 'result': 7, 'slots': 1, 'body': ['foreign', 7, 1, [['ref', 3, 0]]]},
+        {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]}]
+    closure = ['closure', 9, 1, 1, [], ['ref', 8, 0]]
+    request = ['invoke', 4, ['invoke', 6, ['call', 7, print_, [['lit', 3, 'String', [120]]]], []],
+               [['closure', 5, 1, 1, [], ['con', 4, 0, [['value', 8, 1]]]]]]
+
+    def handed(bad, t):
+        """the closure or the request, handed through the identity to a position of type `t`"""
+        return ['call', t, ident, [closure if bad == 'closure' else request]]
+
+    def ending(bad):
+        """SCon('a', bad): a String whose reading ends at the bad word, its tail"""
+        return ['con', 3, 1, [['lit', 2, 'Char', 97], handed(bad, 3)]]
+    families = [
+        ('u32-add', 0, lambda a, b: [handed(a, 1), handed(b, 1)]),
+        ('char-is-eq', 20, lambda a, b: [handed(a, 2), handed(b, 2)]),
+        ('nat-add', 22, lambda a, b: [handed(a, 10), handed(b, 10)]),
+        ('string-eq', 34, lambda a, b: [ending(a), ending(b)]),
+        ('string-append', 35, lambda a, b: [ending(a), ending(b)]),
+        ('string-char-tail', 36, lambda a, b: [['con', 3, 1, [handed(a, 2), handed(b, 3)]]])]
+    unsupported = {'outcome': 'Unsupported', 'cause': 'vm effect'}
+    controls = []
+    for name, p, operands in families:
+        row = prims[p]
+        ins, out = [rep[n] for n in row['inputs']], rep[row['output']]
+        function = {'name': row['name'], 'parameters': ins, 'result': out, 'slots': len(ins),
+                    'body': ['prim', out, p, [['ref', t, i] for i, t in enumerate(ins)]]}
+        for first, second, stop in (('closure', 'request', ILL_TYPED), ('request', 'closure', unsupported)):
+            main = ['let', 8, 0, ['call', out, base, operands(first, second)], ['value', 8, 1]]
+            plan = {'entry': 'book', 'representation': rep, 'types': types,
+                    'functions': [*functions, function, {'name': 'main', 'parameters': [], 'result': 8, 'slots': 1, 'body': main}]}
+            controls.append((f'order-{name}-{first}-then-{second}', plan, {**stop, 'stdout': '', 'effects': 0, 'calls': 7}))
+    return controls
 
 
 def display_controls() -> list:
@@ -3729,12 +3786,52 @@ ATOMIC_MUTANTS = [
     ('ill-typed-deferred', [(SITE_WORD, SITE_WORD.replace('raise Halt(ILL_TYPED)', 'self.late = Halt(ILL_TYPED)\n            return 0')),
                             (DEBIT, DEBIT + LATE)]),
 ]
-EVALUATOR_MUTANTS = [*EVALUATOR_MUTANTS, *ATOMIC_MUTANTS]
+
+# Section 6.3's order of reads (order_controls): where two words that a step reads would each stop the machine, the earlier in operand order
+# names the stop, and a String is read cell by cell, each SCon cell and then its Char word. Each mutant reads the second of two words first,
+# is exact on words that are well typed, and so changes no golden; the first three are the review's, the rest pin each place alone.
+ORDER_MUTANTS = [
+    ('prim-words-read-second-first',
+     [("            x, y = self.word(a[0]), self.word(a[-1])\n",
+       "            y = self.word(a[-1])\n            x = self.word(a[0])\n")]),
+    ('prim-nat-read-second-first',
+     [("            x, y = self.word(a[0]), self.word(a[1])\n            return [lambda: self.nat(x + y)",
+       "            y = self.word(a[1])\n            x = self.word(a[0])\n            return [lambda: self.nat(x + y)")]),
+    ('prim-string-read-second-first',
+     [("        s = self.codes(a[0])\n        if p == 34:\n            return int(s == self.codes(a[1]))\n"
+       "        if p == 35:\n            return self.string(s + self.codes(a[1]))\n",
+       "        if p == 34:\n            t = self.codes(a[1])\n            s = self.codes(a[0])\n            return int(s == t)\n"
+       "        if p == 35:\n            t = self.codes(a[1])\n            s = self.codes(a[0])\n            return self.string(s + t)\n"
+       "        s = self.codes(a[0])\n")]),
+    ('prim-char-eq-read-second-first',
+     [("            x = self.word(a[0])\n            return int(x == self.word(a[1])) if p == 20 else int(9 <= x <= 13 or x == 32)\n",
+       "            y = self.word(a[1]) if p == 20 else None\n            x = self.word(a[0])\n"
+       "            return int(x == y) if p == 20 else int(9 <= x <= 13 or x == 32)\n")]),
+    ('prim-string-eq-read-second-first',
+     [("        s = self.codes(a[0])\n        if p == 34:\n",
+       "        if p == 34:\n            t = self.codes(a[1])\n            return int(self.codes(a[0]) == t)\n        s = self.codes(a[0])\n"
+       "        if p == 34:\n")]),
+    ('prim-string-append-read-second-first',
+     [("        s = self.codes(a[0])\n        if p == 34:\n",
+       "        if p == 35:\n            t = self.codes(a[1])\n            return self.string(self.codes(a[0]) + t)\n"
+       "        s = self.codes(a[0])\n        if p == 34:\n")]),
+    ('string-chars-after-cells',
+     [("        out = []\n        while True:\n            tag, fields = self.view(s, self.rep['String'])\n            if tag == 0:\n"
+       "                return out\n            out.append(self.view(fields[0], self.rep['Char'])[1][0])\n            s = fields[1]\n",
+       "        words = []\n        while True:\n            tag, fields = self.view(s, self.rep['String'])\n            if tag == 0:\n"
+       "                return [self.view(w, self.rep['Char'])[1][0] for w in words]\n            words.append(fields[0])\n            s = fields[1]\n")]),
+    ('string-tail-cell-before-char',
+     [("            out.append(self.view(fields[0], self.rep['Char'])[1][0])\n            s = fields[1]\n",
+       "            s, head = fields[1], fields[0]\n            self.view(s, self.rep['String'])\n"
+       "            out.append(self.view(head, self.rep['Char'])[1][0])\n")]),
+]
+EVALUATOR_MUTANTS = [*EVALUATOR_MUTANTS, *ATOMIC_MUTANTS, *ORDER_MUTANTS]
 ATOMIC_NAMES = {name for name, _ in ATOMIC_MUTANTS}
+ORDER_NAMES = {name for name, _ in ORDER_MUTANTS}
 # The controls that hold section 6.3 at the reference evaluation: the `atomic-*` run controls, and the three earlier fuel controls that
 # are the same twin of a refused Enter (the operand check and the class check precede the fuel test, so a run given exactly the fuel it
-# has spent reaches the same stop). Each mutant above must change at least one of them: a mutant that only a golden or another run
-# control kills is not held by the controls of the rule that it violates.
+# has spent reaches the same stop). Each atomic mutant must change at least one of them, and each order mutant at least one `order-*`
+# control: a mutant that only a golden or another run control kills is not held by the controls of the rule that it violates.
 SPENT_FUEL_TWINS = ('fuel-zero-ill-typed-invoke', 'fuel-zero-ill-typed-phase', 'fuel-zero-request-target')
 
 
@@ -3742,7 +3839,8 @@ def evaluator_mutants(cases, plans, bounds, sources, table, runs) -> list:
     """Each mutant re-derives every golden expectation, Book value and run control."""
     source = EVALUATOR.read_text()
     results = []
-    atomic = [c for c in runs if c[0].startswith('atomic-') or c[0] in SPENT_FUEL_TWINS]
+    holders = {**dict.fromkeys(ATOMIC_NAMES, [c for c in runs if c[0].startswith('atomic-') or c[0] in SPENT_FUEL_TWINS]),
+               **dict.fromkeys(ORDER_NAMES, [c for c in runs if c[0].startswith('order-')])}
     for name, edits in EVALUATOR_MUTANTS:
         text = source
         for old, new in edits:
@@ -3770,7 +3868,7 @@ def evaluator_mutants(cases, plans, bounds, sources, table, runs) -> list:
             if killed_by:
                 break
         held = None
-        for label, plan, frozen in atomic if name in ATOMIC_NAMES else []:
+        for label, plan, frozen in holders.get(name, []):
             try:
                 changed = ran(plan, frozen, mutant) != frozen
             except Exception:
@@ -3778,8 +3876,9 @@ def evaluator_mutants(cases, plans, bounds, sources, table, runs) -> list:
             if changed:
                 held = label
                 break
-        results.append({'mutant': f'evaluator:{name}', 'killed': killed_by is not None and (name not in ATOMIC_NAMES or held is not None),
-                        'by': killed_by, **({'atomic': held} if name in ATOMIC_NAMES else {})})
+        results.append({'mutant': f'evaluator:{name}', 'killed': killed_by is not None and (name not in holders or held is not None),
+                        'by': killed_by, **({'atomic': held} if name in ATOMIC_NAMES else {}),
+                        **({'order': held} if name in ORDER_NAMES else {})})
     return results
 
 
