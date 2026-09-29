@@ -122,95 +122,13 @@ differential checks remain separate evidence.
 Live Perch review belongs to the coordinator; this increment records offline
 preflight without claiming style ratings or automatic qualification.
 
-`review-expectations.json` freezes 29 copied reviewer programs and 49 seed calls
-before repairs. `review.py` checks both compiler lanes, evaluator/Wasm agreement,
-rejection in both profiles, preserved output artifacts, the enum whitelist and
-seven additional type-correct semantic mutants. `fuzz.py` generates exactly
-3,000 programs with random seed 1313166164. Seed and Knot verdicts are compared
-independently; accepted inputs also run through the Bend evaluator. Host/internal
-failures are gate failures, never language rejection. The gate rejects any false
-acceptance or seed-valid program classified Invalid.
-
-`round4-expectations.json` freezes 14 round-4 programs and 32 seed calls before
-the rebuilt-descent repair. `round4.py` checks both compiler lanes, evaluator
-and fields-profile Wasm agreement, rejection in every phase, and four
-type-correct semantic mutants. Each mutant disables the recognizer or drops
-one of its conditions: strict descent, the constant's type, or its fields. The
-six seed-rejected controls stay `Unsupported check recursive-call`.
-
-`round6-expectations.json` freezes 35 round-6 programs and 59 seed calls
-before the detached-brace repair. A constructor's `{` must touch its name in
-patterns and bodies: 23 seed-rejected gaps (a space, comment or line break,
-including through joined headers, nested fields and multi-scrutinee rows)
-report `Invalid parse detached-brace`, and a tab stays `Unsupported lex
-whitespace`. Eleven seed-accepted controls keep spaces inside braces, before a
-call's parenthesis, after a promotion's `+`, in a type declaration and between
-joined columns. `round6.py` checks both compiler lanes, evaluator and Wasm
-agreement, rejection in every phase, the frontend and matrix proof entries and
-five type-correct semantic mutants: ignoring the gap, comparing lines instead
-of offsets, shifting the offset by one, confining the rule to patterns and
-extending it to a call's parenthesis. `touches_witness`, `touching_brace`,
-`detached_brace` and `joined_brace_witness` in `src/LAWS.bend` state the rule;
-the fuzz draws the three gap forms as rare pattern, opener and body atoms.
-
-`round7-expectations.json` freezes 35 round-7 programs and 134 seed calls
-before the let-promotion repair. A `+` row re-quantifies only a lambda-case
-binder: 12 seed-rejected reuses of a `+` alias of an affine let (through calls,
-annotations, constructors, lets of lets, nested aliases, shadowing and
-fields) and two reused aliases of an affine parameter without a `+` row report
-`Invalid check affine-reuse`, and a `+` row on a `Type`-kind parameter stays
-`Invalid check reusable-type`. A `+` row on a let of a `Type`-kind value and
-19 other seed-accepted controls (parameter and field promotion, reusable,
-erased and shadowing lets) are accepted. `round7.py` checks both compiler
-lanes, evaluator and Wasm agreement, rejection in every phase, the matrix
-proof entry and three type-correct semantic mutants: promoting let aliases at
-the quantity site, promoting every variable column at the promote site and
-withholding the mark from parameters. `letalias.py` replays the reviewer's
-let/alias generator over random seeds 0 to 1,499 and requires seed and Knot
-agreement on acceptance and on every evaluated call. `parameter_alias_promotes`
-and `let_alias_keeps_quantity` in `src/matrix-LAWS.bend` state the rule.
-
-`round8-expectations.json` freezes 37 round-8 programs and 150 seed calls
-before the Type-kind promotion repair. The seed judges a `+` binder's kind only
-where the match frontier binds it. Seventeen seed-accepted programs promote a
-`Type`-kind parameter or field and destructure it first (with field reuse,
-rebuilt parents, nested and multi-column matches, an inherited field, an empty
-datatype and four reviewer generator hits) and are accepted. Fourteen
-seed-rejected programs let the frontier bind a promoted `Type` binder: at a
-leaf, a default or wildcard row, a let, an inherited field used directly, and
-ahead of a later flat match, zero-row match or matrix split; they report
-`Invalid check reusable-type`. Two destructurings inside a default region stay
-`Unsupported check default-scrutinee`, and four `Data`-kind twins are
-accepted. `round8.py` checks both compiler lanes, evaluator and Wasm
-agreement, rejection in every phase, the matrix and lowering proof entries
-and five type-correct semantic mutants: judging the kind at the promotion and
-at a field's binding (the finding), and dropping the leaf, split and zero-row
-binding sites. `typekind.py` replays the reviewer's Type-kind generator over
-random seeds 0 to 2,999, requires seed and Knot agreement on acceptance, and
-evaluates one seeded probe call of every agreed acceptance that promotes a
-`Type`-kind binder. Four laws and five whole-checker witnesses in
-`src/matrix-LAWS.bend` state the rule and pin each site.
-
-`round9-expectations.json` freezes 80 round-9 programs and 111 seed calls before
-the repairs. The seed cannot infer a constructor, so an unannotated let of a
-binder that a positive branch refined to one (`v =`, `+v =`, `-v =`, flat or in
-a matrix) is `Invalid check annotation-required`; a residual, unsplit, later or
-annotated binder and a call stay inferable. Every dotted binder is
-`Unsupported parse dotted-binder`, a line break in call or constructor
-arguments `line-break`, a second arm on an arm's line `same-line-arm`.
-`round9.py` checks both lanes, evaluator and Wasm agreement, rejection in every
-phase and twelve mutants; `fuzz.py` draws lets of matched binders.
-
-`round10-expectations.json` freezes 152 round-10 programs and 624 seed calls before
-the repairs. The seed reads `+` and `-` as a marker only where a name follows
-directly, and `->` as one lexeme. A `+` after a term in a row (`a + b`), a marker
-after a let (`+ u = ..`) and a split arrow are `Invalid parse` (`expected-:`,
-`detached-marker`, `function-result`); a glued marker, a promotion that starts a
-row or follows a comma, and a spaced marker first in a body are accepted.
-Whitespace-separated arguments, `++y`, a let split across lines and an arm body
-at its `case` column are `Unsupported`. `round10.py` checks both lanes, evaluator
-and Wasm agreement, rejection in every phase and 22 mutants; `fuzz.py` draws
-spaced `+` atoms.
+Every row of every match is audited, reachable or not. The seed reads the whole book before
+checking any body, so each row has one pattern per scrutinee and valid patterns wherever it
+sits, in a discarded body too: a declared constructor, its field count, no constructor as a
+bare binder, no call, no `+` before a datatype declared earlier in the file. Bodies the lowering
+drops are not type-, scope- or scrutinee-checked. A binder hides a datatype of its name from
+the types written after it: an annotation, a later parameter type, the result, a later field
+type. What each gate froze, with its mutants, is in [ROUNDS.md](ROUNDS.md).
 
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual
