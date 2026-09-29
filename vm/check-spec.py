@@ -15,6 +15,7 @@ Book expectation and run control.
 from __future__ import annotations
 
 import argparse
+import ast
 import datetime
 import gzip
 import hashlib
@@ -2966,6 +2967,117 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest, in
     return results
 
 
+def refusal_statements(source: str) -> list:
+    """(id, [(old, new)]) for each refusal of the reference codec, as a mutant that omits it. A refusal is a `raise`, or a call
+    of `fail` or `limit`, as a statement. The mutant turns it into `pass`, so whatever follows it in its block (a `return`
+    or a `continue`) stays, as a loader that forgot the check would go on; a refusal that opens an `if` is replaced
+    inside its guard. An id names the function and the message of the refusal, and counts repeats in source order."""
+    starts, at = [], 0
+    for line in source.split('\n'):
+        starts.append(at)
+        at += len(line) + 1                                   # the codec is ASCII: a column is a character
+
+    def span(node):
+        return starts[node.lineno - 1] + node.col_offset, starts[node.end_lineno - 1] + node.end_col_offset
+
+    def refuses(stmt):
+        return isinstance(stmt, ast.Raise) or (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                                               and getattr(stmt.value.func, 'id', None) in ('fail', 'limit'))
+
+    def message(stmt):
+        call = stmt.exc if isinstance(stmt, ast.Raise) else stmt.value
+        return ast.get_source_segment(source, call.args[1] if isinstance(stmt, ast.Expr) else call.args[0])
+    out, seen = [], {}
+    for fn in (n for n in ast.parse(source).body if isinstance(n, ast.FunctionDef)):
+        guards = {id(n.body[0]): n for n in ast.walk(fn) if isinstance(n, ast.If) and n.body and refuses(n.body[0])}
+        for stmt in sorted((n for n in ast.walk(fn) if refuses(n)), key=lambda n: (n.lineno, n.col_offset)):
+            key = f'{fn.name}:{message(stmt)}'
+            seen[key] = seen.get(key, 0) + 1
+            (a, _), (sa, sb) = span(guards.get(id(stmt), stmt)), span(stmt)
+            out.append((key if seen[key] == 1 else f'{key}#{seen[key]}', [(source[a:sb], source[a:sa] + 'pass')]))
+    return out
+
+
+# The refusals that no frozen image makes a mutant admit or refuse differently, and why they hold anyway. Removing one
+# of the first kind makes the reference raise (an IndexError) on the control that pins it, which is no kill (section 11)
+# but shows that a loader without the check has nothing to read; nothing reaches the second kind; the third is the
+# encoder's own input check, which `text_spelling` holds and whose removal makes `encode` raise another error.
+CRASH_HELD = {
+    "decode:'name index'": 'name-index-beyond',
+    "decode:'child offset'": 'child-not-record',
+    "decode:'node record'": 'node-record-short',
+    "decode:'constant index'": 'constant-index-beyond',
+}
+UNREACHABLE = {
+    "decode:'constructor order'": "every constructor record has a tag below its type's count and no tag repeats "
+                                  "(`constructor tag`), and the counts sum to the table (`constructor count`), so the "
+                                  "records fill every slot",
+    "validate:f'standalone {op}'": "`decode` refuses a Branch or a Default that no Case holds (`standalone arm`), so "
+                                   "`check` is handed none",
+    "validate:'type index'": "`decode` refuses a type word beyond the table (`type index`) before `validate` reads it",
+    "decode:'opcode'": "`node record` refuses an opcode beyond the table, and every opcode within it has its own case above",
+    "validate:f'unknown node {op}'": "`decode` yields only the thirteen forms of the table, each with its own case above",
+}
+EXCUSED = {
+    "u32_list:f'constant data is not a list of u32 words: {values!r}'":
+        "the encoder's input check: `text_spelling` holds it, and without it `encode` fails on the text with another error",
+    "encode:f'unknown plan node {op!r}'": "the encoder's input check: no decoded plan holds a form outside the table",
+}
+
+
+# Round 12's reviewer removed each of these bounds whole: the reference then raises on the control that pins the bound (the
+# entry kind and the constant kind index a table; the block of `tag case on a non-data type` takes its `return` with it,
+# so `types[t]['constructors']` raises on every type that has none). That is no kill (section 11), so `crash_held` requires
+# what holds them instead: the mutant changes nothing that the gate freezes, and it raises on the named control. The
+# modelled omissions that do not raise are the codec mutants `decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4`
+# and `validator-tag-case-on-any-type`.
+CRASH_HELD_MUTANTS = [
+    ('decoder-entry-kind-unbounded', [("if w[3] >= len(ENTRIES) or w[11] != 0:", "if w[11] != 0:")], 'entry-kind'),
+    ('decoder-constant-kind-unbounded', [("if len(r) < 2 or r[0] >= len(CONSTANT_KINDS) or len(r) != 2 + r[1]:",
+                                          "if len(r) < 2 or len(r) != 2 + r[1]:")], 'constant-kind-unknown'),
+    ('validator-tag-case-block-removed', [("                if kind(scrutinee) != 'data':\n                    fail(where, 'tag case on a non-data type')\n"
+                                           "                    return depth\n", "")], 'plan:tag-case-on-opaque'),
+]
+
+
+def crash_held(plans, images, controls, admitted, describing, reg, digest, invoking, arguing) -> dict:
+    source, held = CODEC.read_text(), {}
+    for name, edits, control in CRASH_HELD_MUTANTS:
+        by, crashed = codec_kill(edited_codec(name, edits, source), plans, images, controls, admitted, describing, reg, digest,
+                                 invoking, arguing)
+        require(by is None and control in crashed, f'{name}: killed by {by}, or does not raise on {control} ({crashed})')
+        held[name] = control
+    return held
+
+
+def statement_audit(plans, images, controls, admitted, describing, reg, digest, invoking, arguing) -> dict:
+    """Omit each refusal of the reference codec in turn (`refusal_statements`) and account for it: killed by a frozen image,
+    refusal or verdict, or listed above with what holds it. A refusal that a new statement adds and no control pins fails
+    here, and so does a listed one that a control has come to kill, or that no longer crashes where it is said to."""
+    source, killed, held, other = CODEC.read_text(), [], {}, {}
+    frozen = {label: reason for label, _, reason, _ in controls}
+    for name, edits in refusal_statements(source):
+        by, crashed = codec_kill(edited_codec(name, edits, source), plans, images, controls, admitted, describing, reg, digest,
+                                 invoking, arguing)
+        if by:
+            require(name not in CRASH_HELD and name not in UNREACHABLE and name not in EXCUSED,
+                    f'refusal {name} is listed as held, but {by} kills its removal')
+            killed.append(name)
+        elif name in CRASH_HELD:
+            require(CRASH_HELD[name] in crashed, f'refusal {name}: its removal no longer raises on {CRASH_HELD[name]}')
+            require(frozen[CRASH_HELD[name]].endswith(name.split(':', 1)[1].strip("'")),
+                    f'refusal {name}: {CRASH_HELD[name]} does not freeze it')
+            held[name] = CRASH_HELD[name]
+        elif name in UNREACHABLE or name in EXCUSED:
+            require(not crashed, f'refusal {name}: its removal raises on {crashed}, so it is not unreached')
+            other[name] = UNREACHABLE.get(name) or EXCUSED[name]
+        else:
+            raise AssertionError(f'refusal {name}: no frozen control makes its removal admit an image or refuse another way')
+    listed = set(CRASH_HELD) | set(UNREACHABLE) | set(EXCUSED)
+    require(listed <= set(held) | set(other), f'refusals listed as held that the codec no longer holds: {sorted(listed - set(held) - set(other))}')
+    return {'refusals': len(killed) + len(held) + len(other), 'killed': len(killed), 'held_by_crash': held, 'unreached': other}
+
+
 # Lines of evaluate.py that several mutants replace: the Top loop's step, and the attribute that a Book
 # mutant reads to tell a Book from a Program (D23 needs no such distinction).
 LOOP = '            w = m.apply(w[3], [m.effect(w)])'
@@ -3720,6 +3832,10 @@ def main() -> int:
         got = argument_verdict(data, argv, reg, digest)
         require(got == verdict, f'argument control {label}: {got!r}, frozen {verdict!r}')
     canonical = canonical_differential(images, controls, admitted, reg, digest)
+    held = crash_held({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
+                      controls, admitted, describing, reg, digest, invoking, arguing)
+    audit = statement_audit({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
+                            controls, admitted, describing, reg, digest, invoking, arguing)
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
                             controls, admitted, describing, reg, digest, invoking, arguing) + source_mutants(cases, built) + \
         evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans)) + \
@@ -3734,7 +3850,7 @@ def main() -> int:
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries, excused=excused, witnesses=witnessed,
                   admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts,
                   arguments={label: {'argv': ['IMAGE', *argv], 'verdict': verdict} for label, _, argv, verdict in arguing},
-                  mutants=mutants, canonical=canonical,
+                  mutants=mutants, canonical=canonical, refusal_audit={**audit, 'omitted_bounds_that_raise': held},
                   code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
@@ -3744,7 +3860,9 @@ def main() -> int:
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
           f"{len(admitted)} admitted controls ({len(coded)} code lists, {len(runs)} runs), "
           f"{len(verdicts)} describe controls, {len(arguing)} argument controls, {len(excused)} excused controls, "
-          f"{len(witnessed)} seed witnesses, {len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
+          f"{len(witnessed)} seed witnesses, {len(mutants)} killed mutants, {audit['refusals']} codec refusals accounted for "
+          f"({audit['killed']} killed when omitted, {len(held)} of the reviewer's bounds and {len(audit['held_by_crash'])} refusals "
+          f"held by a raise, {len(audit['unreached'])} unreached or excused); {RECEIPT.relative_to(ROOT)}")
     return 0
 
 
