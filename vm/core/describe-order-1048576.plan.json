@@ -1,0 +1,152 @@
+{
+ "entry": "book",
+ "representation": {
+  "Nat": 0,
+  "U32": 1
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "Nat",
+   "constructors": [
+    {
+     "name": "Zero",
+     "fields": []
+    },
+    {
+     "name": "Succ",
+     "fields": [
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "opaque",
+   "name": "U32"
+  },
+  {
+   "kind": "data",
+   "name": "Chain",
+   "constructors": [
+    {
+     "name": "Nil",
+     "fields": []
+    },
+    {
+     "name": "Link",
+     "fields": [
+      2
+     ]
+    }
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "coerce",
+   "parameters": [
+    null
+   ],
+   "result": null,
+   "slots": 1,
+   "body": [
+    "ref",
+    null,
+    0
+   ]
+  },
+  {
+   "name": "build",
+   "parameters": [
+    0,
+    2
+   ],
+   "result": 2,
+   "slots": 3,
+   "body": [
+    "case",
+    2,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "ref",
+       2,
+       1
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       2,
+       1,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "con",
+         2,
+         1,
+         [
+          [
+           "ref",
+           2,
+           1
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 2,
+   "slots": 0,
+   "body": [
+    "call",
+    2,
+    1,
+    [
+     [
+      "lit",
+      0,
+      "Nat",
+      1048576
+     ],
+     [
+      "call",
+      2,
+      0,
+      [
+       [
+        "lit",
+        1,
+        "U32",
+        7
+       ]
+      ]
+     ]
+    ]
+   ]
+  }
+ ]
+}

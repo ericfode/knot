@@ -1185,11 +1185,12 @@ def ill_string_action() -> dict:
 def inspection_items() -> list:
     """Every kind of word at every place section 6 inspects one: a Book whose `main` passes a producer's word through
     `id: none -> none` to a consumer. The producers are scalars (small, the largest immediate, Big), nullary constructors,
-    an Object of another type, a Closure, an Action, the empty String, a String cell and a Nat. The consumers are a
+    an Object of another type, a Closure, an Action, a request (an Action applied to its continuation), the empty String, a
+    String cell and a Nat. The consumers are a
     scalar, Char and String prim operand, a Case by tag (Nat, a dense ADT and one with a Default) and by key, the
     operand of Succ and of Chr, a result and the field of a result at describe, and an Invoke's target. Whether a
     word is admitted is the reference evaluation's answer; the VM must give it and never trap on a word it refuses.
-    An Action is never an Invoke's target here: applying it would perform its effect in a Book (D22)."""
+    A request is inert (D23): every read refuses it as `Unsupported vm effect` but a Case's Default, which takes it (D24)."""
     def data(name, *constructors):
         return {'kind': 'data', 'name': name, 'constructors': [{'name': n, 'fields': f} for n, f in constructors]}
     types = [data('Flag', ('Off', []), ('On', [])), data('Tri', ('A', []), ('B', []), ('C', [])), data('Box', ('Box', [0])),
@@ -1244,6 +1245,8 @@ def inspection_items() -> list:
         'big': ['lit', 3, 'U32', 2 ** 31], 'big-max': ['lit', 3, 'U32', 2 ** 32 - 1], 'tri-1': ['value', 1, 1], 'tri-2': ['value', 1, 2],
         'object': ['con', 2, 0, [['value', 0, 1]]], 'closure': ['closure', 13, 1, 1, [], ['ref', 0, 0]],
         'action': ['call', 11, 1, [['value', 5, 0]]], 'snil': ['value', 5, 0],
+        'request': ['invoke', 8, ['invoke', 10, ['call', 11, 1, [['value', 5, 0]]], []],
+                    [['closure', 9, 1, 1, [], ['con', 8, 0, [['value', 7, 0]]]]]],
         'string': ['con', 5, 1, [['con', 4, 0, [['lit', 3, 'U32', 97]]], ['value', 5, 0]]], 'nat': ['lit', 6, 'Nat', 3]}
     # a Program's ends: its final word, a Halt's code and message, and the String an IO.print performs
     ends = {
@@ -1254,8 +1257,6 @@ def inspection_items() -> list:
     rows = []
     for consumer, (result, build) in consumers.items():
         for producer, word in producers.items():
-            if (producer, consumer) == ('action', 'invoke'):
-                continue
             main = {'name': 'main', 'parameters': [], 'result': result, 'slots': 0, 'body': build(word)}
             plan = {'entry': 'book', 'representation': rep, 'types': types, 'functions': [*functions, main]}
             rows.append(item(f'inspect-{consumer}-{producer}', 'inspection', plan))

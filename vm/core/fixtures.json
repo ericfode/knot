@@ -1,6 +1,6 @@
 {
  "schema": "vm-core fixtures",
- "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed. The memory-end rows state theirs: their fill counts, bump pointers and lines are derived by section 5's model and the reference evaluation, after a probe of the VM found the defects they catch.",
+ "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed. The memory-end rows state theirs: their fill counts, bump pointers and lines are derived by section 5's model and the reference evaluation, after a probe of the VM found the defects they catch. The describe rows state theirs: SPEC section 8's describe domain (no arrow, no `none`-typed field) and the order of an ill-typed word's inspection and its visit's charge, by literal review of sections 6 and 8, and check-core derives each again from the codec and from the reference evaluation (at a bound of eight visits, where it is fast).",
  "fuel": 1000000,
  "runs": [
   {
@@ -997,6 +997,40 @@
      "calls": 1
     },
     "basis": "value-on beside an unused function `wide` of 4,096 parameters, all Flag: SPEC section 4 bounds a live arity by 4,096 inclusive, so this image loads. Its main is value-on's, so the run is value-on's: On{} (Flag is type 0, On tag 1) after the one entry of main; `wide` is never entered"
+   },
+   {
+    "control": "plan:name-utf8-lengths",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "basis": "a Flag-shaped type named with one scalar of each length of UTF-8 (U+0024, U+00A2, U+20AC, U+10348): the loader admits every scalar, and main returns On{} after its one entry; the type name is never printed"
+   },
+   {
+    "control": "plan:name-utf8-edges",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "basis": "a Flag-shaped type named with the edges of every length (U+0080, U+07FF, U+0800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF): admitted, and main returns On{} after its one entry"
    }
   ]
  },
@@ -2633,5 +2667,136 @@
     "basis": "f invokes an erased Closure of `slots` 0 whose body is a Let (depth 1) and a Reference to slot 5. The reference codec reports `slot 5 beyond depth 1` in the closure, not `closure slots 0, reached 1`, which it checks when the closure ends."
    }
   ]
+ },
+ "describe": {
+  "rule": "Books at section 8's describe. `domain`: a result that has no describe spelling (an arrow, or an algebraic type with a `none`-typed field) is `Unsupported invoke result-type` before any entry, not `HostFailure` and not a run (D4: a form Knot cannot handle is Unsupported). `order`: an ill-typed word is inspected before its visit is charged, so a chain of N Links around an ill-typed leaf is `HostFailure image ill-typed` while the leaf is the last visit within the bound or the first beyond it, and `Exhausted` (display) once a Link is: the rows are N = 1,048,575 (leaf at visit 1,048,576), 1,048,576 (leaf at 1,048,577: within the bound only if it were charged) and 1,048,577 (a Link at 1,048,577). Each takes N + 3 entries: main, coerce and N + 1 calls of build.",
+  "domain": [
+   {
+    "name": "arrow-keep-off",
+    "image": "golden/closure-return",
+    "argv": [
+     "keep",
+     "1000000",
+     "0"
+    ],
+    "expect": {
+     "exit": 3,
+     "stdout": "",
+     "stderr": "Unsupported\tinvoke\tresult-type\n"
+    },
+    "dump": {
+     "outcome": "Unsupported",
+     "cause": "result-type",
+     "calls": 0
+    },
+    "basis": "keep(Flag) returns an arrow (Flag -> Flag): SPEC 8 step 5 puts an arrow outside the describe domain, so the invocation is Unsupported before any entry"
+   },
+   {
+    "name": "arrow-keep-on",
+    "image": "golden/closure-return",
+    "argv": [
+     "keep",
+     "1000000",
+     "1"
+    ],
+    "expect": {
+     "exit": 3,
+     "stdout": "",
+     "stderr": "Unsupported\tinvoke\tresult-type\n"
+    },
+    "dump": {
+     "outcome": "Unsupported",
+     "cause": "result-type",
+     "calls": 0
+    },
+    "basis": "the same result type, the other ordinal: the classification does not depend on the argument"
+   },
+   {
+    "name": "none-field-list",
+    "image": "core/describe-none",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 3,
+     "stdout": "",
+     "stderr": "Unsupported\tinvoke\tresult-type\n"
+    },
+    "dump": {
+     "outcome": "Unsupported",
+     "cause": "result-type",
+     "calls": 0
+    },
+    "basis": "main returns Nil of a List whose Con has a `none`-typed field 0 (check-spec's list-of-flags): SPEC 8 step 5 puts a `none` field outside the describe domain, whatever the value"
+   }
+  ],
+  "order": {
+   "bound": 8,
+   "visits": 1048576,
+   "rows": [
+    {
+     "name": "describe-order-1048575",
+     "image": "core/describe-order-1048575",
+     "n": 1048575,
+     "argv": [
+      "main",
+      "4294967295"
+     ],
+     "expect": {
+      "exit": 5,
+      "stdout": "",
+      "stderr": "HostFailure\timage\till-typed\n"
+     },
+     "dump": {
+      "outcome": "HostFailure",
+      "cause": "ill-typed",
+      "calls": 1048578
+     },
+     "basis": "1,048,575 Links, then the leaf as the 1,048,576th visit: inside the bound, so it is inspected and is ill-typed"
+    },
+    {
+     "name": "describe-order-1048576",
+     "image": "core/describe-order-1048576",
+     "n": 1048576,
+     "argv": [
+      "main",
+      "4294967295"
+     ],
+     "expect": {
+      "exit": 5,
+      "stdout": "",
+      "stderr": "HostFailure\timage\till-typed\n"
+     },
+     "dump": {
+      "outcome": "HostFailure",
+      "cause": "ill-typed",
+      "calls": 1048579
+     },
+     "basis": "1,048,576 Links use the whole bound; the leaf is no constructor, so it costs no visit: it is inspected first and is ill-typed, not Exhausted"
+    },
+    {
+     "name": "describe-order-1048577",
+     "image": "core/describe-order-1048577",
+     "n": 1048577,
+     "argv": [
+      "main",
+      "4294967295"
+     ],
+     "expect": {
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tio\tmemory\n"
+     },
+     "dump": {
+      "outcome": "Exhausted",
+      "kind": 2,
+      "cause": "display",
+      "calls": 1048580
+     },
+     "basis": "the 1,048,577th Link is a rendered constructor beyond the bound: Exhausted kind 2 (display), before the leaf is reached"
+    }
+   ]
+  }
  }
 }

@@ -6,7 +6,12 @@
 // acceptance runs of the production module go through the real host.
 //
 // Batch mode: a JSON array of jobs on stdin, one JSON result per line.
-//   {id, wasm, files: {name: path}, argv, limits?: {frames, heap}, trace?: 'yields' | 'audit', deadline?: ms}
+//   {id, wasm, files: {name: path}, argv, limits?: {frames, heap}, trace?: 'yields' | 'audit', deadline?: ms, atomic?: true}
+// An `atomic` job is traced, and when it ends in a refusal of the kinds that SPEC section 6 says change no state (an
+// ill-typed word, a request that a read meets, NatRange, D20's `io abi`) the run is played again to its last step and the
+// result's `atomic` names the registers and memory that step changed (`moved`, empty when it left the machine as it found it).
+// The step that returns a Book's result to Top is exempt: SPEC section 6's table drops `act` before section 8 describes.
+// A result reports `effects`: the host calls the run made for requests (every `print`, less the one a completed Book's result is described with).
 // A traced result says whether vm_boot returned (`booted`): an image refusal
 // happens before, a run-time failure after. A job with a `deadline` that outlives it is stopped and
 // reported as status `Timeout` (a run that does not end is a defect only where the row promises an
@@ -51,7 +56,7 @@ export function audit(x) {
   const cells = new Map();
   for (let p = r.H0; p < r.bump;) {
     const hdr = u(p + 4), payload = hdr >>> 3, cls = hdr & 7;
-    if (cls > 4) return `class ${cls} at ${p}`;
+    if (cls > 5) return `class ${cls} at ${p}`;
     const size = 4 * Math.max(4, 2 ** Math.ceil(Math.log2(payload + 2)));
     cells.set(p, {cls, payload});
     p += size;
@@ -75,7 +80,7 @@ export function audit(x) {
   if (r.act && cells.get(r.act)?.cls !== 4) return 'act is not an Activation';
   for (const [p, {cls, payload}] of cells) {
     const edges = cls === 0 ? [p + 16, payload - 2] : cls === 1 ? [p + 12, payload - 1]
-      : cls === 3 ? [p + 12, payload - 1] : cls === 4 ? [p + 16, payload - 2] : [p, 0];
+      : cls === 3 || cls === 5 ? [p + 12, payload - 1] : cls === 4 ? [p + 16, payload - 2] : [p, 0];
     for (let i = 0; i < edges[1]; i++) {
       const bad = word(u(edges[0] + 4 * i), `cell ${p}`);
       if (bad) return bad;
@@ -85,9 +90,34 @@ export function audit(x) {
   return null;
 }
 
-export async function runVM({module, files = {}, argv = [], limits = null, trace = null, deadline = null}) {
+// The machine as a step sees it: its registers but the outcome's, the frame region below Top and the cells of the heap.
+function snapshot(x) {
+  const r = registers(x), bytes = new Uint8Array(x.memory.buffer);
+  return {r, frames: Buffer.from(bytes.subarray(r.F0, r.top)), heap: Buffer.from(bytes.subarray(r.H0, r.bump))};
+}
+
+// What one step changed. Its debit (one unit of fuel for one call and one quantum) is the step's own (SPEC section 7).
+function moved(before, after) {
+  const names = ['node', 'val', 'tgt', 'tfn', 'ops', 'nops', 'act', 'top', 'bump'].filter(k => before.r[k] !== after.r[k]);
+  const debit = before.r.fuel - after.r.fuel === 1 && after.r.calls - before.r.calls === 1 && after.r.quantum - before.r.quantum === 1;
+  if (!debit) names.push(...['fuel', 'calls', 'quantum'].filter(k => before.r[k] !== after.r[k]));
+  const kept = Math.min(before.r.top, after.r.top) - before.r.F0;
+  if (!before.frames.subarray(0, kept).equals(after.frames.subarray(0, kept))) names.push('frames');
+  if (!before.heap.equals(after.heap)) names.push('heap');
+  return names;
+}
+
+// The step that returns a Book's result to its Top frame (phase 0) is not held to atomicity: section 6's table drops `act` first.
+function booksAnswer(before) {
+  const f = before.frames, n = f.length;
+  return before.r.mode === 1 && n >= 12 && (f.readUInt32LE(n - 4) & 15) === 0 && f.readUInt32LE(n - 8) === 0;
+}
+
+const ATOMIC = new Set(['ill-typed', 'effect', 'NatRange', 'abi']);
+
+export async function runVM({module, files = {}, argv = [], limits = null, trace = null, deadline = null, atomicAt = null}) {
   const stdout = [], stderr = [], handles = new Map(), yields = [];
-  let instance, next = 1, steps = 0, audited = 0, broken = null, booted = null;
+  let instance, next = 1, steps = 0, audited = 0, broken = null, booted = null, prints = 0, entry = null, atomic = null;
   const mem = () => new Uint8Array(instance.exports.memory.buffer);
   // the VM passes u32 addresses and lengths, which arrive as signed numbers. As the real host: text that
   // is not scalar UTF-8 is an ABI fault, in a print, a Halt message or a name alike.
@@ -119,6 +149,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
     },
     print(p, n) {
       stdout.push(Buffer.from(text(p, n) + '\n'));
+      prints++;
     },
     die(code, p, n) {
       stderr.push(Buffer.from(text(p, n) + '\n'));
@@ -127,6 +158,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
     open(p, n, m, count, out) {
       const name = text(p, n), mode = text(m, count);
       if (mode !== 'r' || !Object.hasOwn(files, name)) return result(out, 2, 0, Buffer.from('No such file or directory'));
+      entry ??= files[name].length >= 16 ? files[name].readUInt32LE(12) : null;  // the image's entry kind: 0 Book, 1 Program
       handles.set(next, {data: files[name], at: 0});
       result(out, 0, next++);
     },
@@ -159,7 +191,13 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
             broken = audit(x);
             audited++;
           }
-          const r = x.vm_step();
+          let r;
+          if (steps === atomicAt) {  // the last step of a run that stops: what it changed
+            const before = snapshot(x);
+            try { r = x.vm_step(); } finally {
+              atomic = booksAnswer(before) ? {exempt: true, moved: []} : {exempt: false, moved: moved(before, snapshot(x))};
+            }
+          } else r = x.vm_step();
           steps++;
           if (r === 1) yields.push(registers(x).calls);
           if (r === 0) break;
@@ -181,7 +219,9 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
   } else execute();
   const state = x.vm_dump ? registers(x) : null;
   return {status, exit, stdout: Buffer.concat(stdout).toString(), stderr: Buffer.concat(stderr).toString(),
-    state, steps, yields, audited, broken, booted};
+    state, steps, yields, audited, broken, booted, atomic,
+    // host calls made for requests: every `print`, less the one a completed Book's result is described with
+    effects: prints - (entry === 0 && status === 'Completed' ? 1 : 0)};
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -195,7 +235,12 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     }
     if (!modules.has(job.wasm)) modules.set(job.wasm, await WebAssembly.compile(fs.readFileSync(job.wasm)));
     const files = Object.fromEntries(Object.entries(job.files ?? {}).map(([k, p]) => [k, fs.readFileSync(p)]));
-    const got = await runVM({...job, module: modules.get(job.wasm), files});
+    let got = await runVM({...job, module: modules.get(job.wasm), files, trace: job.atomic ? job.trace ?? 'yields' : job.trace});
+    if (job.atomic) {
+      const stop = got.booted && got.state && ATOMIC.has(got.state.cause) && ['HostFailure', 'Unsupported', 'Exhausted'].includes(got.state.outcome);
+      const again = stop ? await runVM({...job, module: modules.get(job.wasm), files, trace: 'yields', atomicAt: got.steps}) : null;
+      got = {...got, atomic: again ? again.atomic : null};
+    }
     timeouts += got.status === 'Timeout';
     process.stdout.write(JSON.stringify({id: job.id, ...got}) + '\n');
   }
