@@ -96,6 +96,8 @@ GATES = (
          ('tests/compiler-nest/receipts/round10.json',)),
     Gate('literals', ('python3', 'tests/compiler-literals/check.py'),
          ('tests/compiler-literals/receipts/literals.json',)),
+    Gate('literals-integ', ('python3', 'tests/compiler-literals-integ/check.py'),
+         ('tests/compiler-literals-integ/receipts/literals-integ.json',)),
 )
 
 

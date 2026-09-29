@@ -93,6 +93,15 @@ The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/
 - An increment that lands a need flips it in `expectations.json`, and the gate
   then holds that increment to its cases.
 
+The literals increment adds `literals`, the frozen U32, Nat, Char and String surface
+in both compiler lanes ([README](../../tests/compiler-literals/README.md)). The
+`literals-integ` increment appends `literals-integ`: the
+[integration books](../../tests/compiler-literals-integ/README.md), six programs
+frozen from the seed that the merge of nest into the literals line decides and no
+parent suite pins, compared in both lanes, and six one-rule mutants of the merged
+parser and matrix. It writes only
+`tests/compiler-literals-integ/receipts/literals-integ.json`.
+
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
 

@@ -1,0 +1,132 @@
+"""Freeze or verify the integration books against the pinned seed.
+
+    python3 tests/compiler-literals-integ/freeze.py          # verify (default)
+    python3 tests/compiler-literals-integ/freeze.py --write  # never after the behavior is checked
+
+Each book is a program whose classification the merge of `campaign/nest` into the literals line
+decides, and that neither parent suite pins. Expectations come only from the seed and from the
+reviewed literals in PLAN; nothing here runs or reads Knot.
+"""
+import json
+import re
+import sys
+from itertools import product
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / 'compiler-literals'))
+import regen as oracle  # noqa: E402  the seed oracle of the literals suite
+
+ROOT = oracle.ROOT
+FIXTURES = HERE / 'fixtures'
+DEST = HERE / 'expectations.json'
+CALLS = ROOT / '.local/compiler-literals-integ/calls'
+
+
+def invalid(phase, code, why):
+    return {'outcome': 'Invalid', 'exit': 2, 'artifact': False,
+            'diagnostic_prefix': f'Invalid\t{phase}\t{code}\t', 'justification': why}
+
+
+KEYWORD = invalid(
+    'parse', 'body-indentation',
+    'Seed-invalid (an orphaned `case`; "the keyword \'def\' cannot head" a term): the keywords `case` '
+    'and `def` head no arm body, so a keyword in body position at or left of its arm is no body.')
+CONCAT = oracle.unsupported(
+    'parse', 'operator',
+    'Seed-valid: `++` is the String concatenation operator, so a spaced `+` after an argument may be '
+    'an operator. Knot does not check operator sugar, and reading it as a missing comma would be '
+    'Invalid on a valid book (D4).')
+COLUMN = oracle.unsupported(
+    'check', 'literal-column',
+    'Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in '
+    'a single-column match, and claims nothing about the rest (D4).')
+
+# name -> (behavior, covers, entries, Knot)
+PLAN = {
+    'erased-dotted-let': ('erased dotted let', '`-a.b : Flag = x` and `-a.b = x` with no parameter a.b',
+                          ['typed', 'plain'], oracle.AGREE),
+    'arm-body-case': ('keyword arm body', 'a `case` in the arm column right after `case Off{}:`', [], KEYWORD),
+    'arm-body-def': ('keyword arm body', 'a `def` in column 0 right after `case Off{}:`', [], KEYWORD),
+    'spaced-plus-concat': ('spaced plus after an argument', 'two(a ++ b, "ab") on String variables',
+                           [], CONCAT),
+    'literal-column-u32': ('literal column', '`case 0 No{}` in a two-column match', [], COLUMN),
+    'literal-column-offset': ('literal column', '`case 1n+p No{}` in a two-column match', [], COLUMN),
+}
+
+
+def call(name, fn, args, kinds, sigs):
+    params, out = sigs[fn]
+    assert out in kinds and all(t in kinds for t in params), (name, fn)
+    record = {'export': fn, 'arguments': [kinds[t].index(a) for t, a in zip(params, args)],
+              'argument_constructors': list(args), 'type': out}
+    if fn == 'main':
+        prefix, observed = '', oracle.seed([f'tests/compiler-literals-integ/fixtures/{name}.bend'])
+    else:
+        prefix = f'../../../tests/compiler-literals-integ/fixtures/{name}.'
+        wrapper = CALLS / f'{name}-{fn}-{"-".join(args) or "0"}.bend'
+        source = (f'import {prefix}bend as F\n\ndef main() -> F.{out}:\n'
+                  f'  F.{fn}({", ".join(f"F.{a}{{}}" for a in args)})\n')
+        wrapper.write_text(source)
+        record['wrapper'] = {'path': str(wrapper.relative_to(ROOT)), 'source': source}
+        observed = oracle.seed([record['wrapper']['path']])
+    value = re.fullmatch(re.escape(prefix) + r'(\w+)\{\}\n', observed['stdout'])
+    assert observed['exit'] == 0 and observed['stderr'] == '' and value, observed
+    assert value.group(1) in kinds[out], observed
+    record['constructor'] = value.group(1)
+    record['tag'] = kinds[out].index(value.group(1))
+    record['seed'] = observed
+    return record
+
+
+def fixture(name):
+    behavior, covers, entries, knot = PLAN[name]
+    path = FIXTURES / f'{name}.bend'
+    source = path.read_text()
+    kinds, sigs = oracle.enums(source), oracle.signatures(source)
+    entry = {'name': name, 'file': str(path.relative_to(ROOT)), 'sha256': oracle.sha256(path),
+             'behavior': behavior, 'covers': covers, 'enums': kinds}
+    entry['seed_check'] = oracle.seed([entry['file'], '--check-only'])
+    if entry['seed_check']['exit'] == 0:
+        assert entry['seed_check']['stdout'] == 'All terms check.\n', entry['seed_check']
+        assert knot is oracle.AGREE or knot['outcome'] == 'Unsupported', name
+        entry['calls'] = [call(name, 'main', [], kinds, sigs)]
+        for fn in entries:
+            for args in product(*(kinds[t] for t in sigs[fn][0])):
+                entry['calls'].append(call(name, fn, args, kinds, sigs))
+        if knot is oracle.AGREE:
+            assert len({c['constructor'] for c in entry['calls']}) > 1, f'{name} is constant'
+    else:
+        assert entry['seed_check']['exit'] == 1 and not entries, (name, entry['seed_check'])
+        assert knot['outcome'] in ('Invalid', 'Unsupported'), name
+        entry['seed_run'] = oracle.seed([entry['file']])
+        assert entry['seed_run']['exit'] == 1, entry['seed_run']
+    entry['knot' if knot is oracle.AGREE else 'knot_expected'] = knot
+    return entry
+
+
+def build():
+    names = sorted(p.stem for p in FIXTURES.glob('*.bend'))
+    assert names == sorted(PLAN), ('fixtures and PLAN differ', names)
+    CALLS.mkdir(parents=True, exist_ok=True)
+    return {'purpose': 'D7 freeze of the merge behaviors of nest into literals that no parent suite pins.',
+            'generator': 'python3 tests/compiler-literals-integ/freeze.py --write',
+            'seed_sha256': {f: oracle.sha256(ROOT / oracle.SEED_DIR / f) for f in oracle.SEED_FILES},
+            'fixtures': [fixture(n) for n in names]}
+
+
+def main():
+    text = oracle.render(build())
+    if sys.argv[1:] == ['--write']:
+        assert oracle.render(build()) == text, 'two seed passes disagree; nothing written'
+        DEST.write_text(text)
+    else:
+        assert not sys.argv[1:], __doc__
+        assert DEST.read_text() == text, 'integration seed observations changed'
+    doc = json.loads(text)
+    calls = sum(len(f.get('calls', [])) for f in doc['fixtures'])
+    print(f'integration books match the seed: {len(doc["fixtures"])} fixtures, {calls} calls')
+
+
+if __name__ == '__main__':
+    main()

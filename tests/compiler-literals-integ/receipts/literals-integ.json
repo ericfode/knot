@@ -1,0 +1,1744 @@
+{
+  "builds": [
+    {
+      "lane": "native",
+      "phase": "check",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/check"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "sha256": "05d092552ff9d3054473b1b6feb3c3fc92f1c01927057e2d7810a4485aa0ff8d"
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/eval-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/eval"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "sha256": "3fe92fe69e4d66aa7f58d770e94251ad0d28e9a655bb56e893c1037c73c1b034"
+    },
+    {
+      "lane": "native",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/compile-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/compile"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "sha256": "77da1ec18242975c220a6546123ccc6aa73cffb9af94276539538ceb3c71ba30"
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/check.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "sha256": "022c08282562b156b97e117d5692bb26bd5ebc0fb05ee511c6a2c4c303c50b73"
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/eval-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/eval.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "sha256": "9bd9020c285e910ac232bff1a7d48b8e34cb706f01ef6c43ea0b3e5ba9b2a405"
+    },
+    {
+      "lane": "bun",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/compile-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/compile.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "sha256": "86f9fd1ed7392fde4fb82ab1cf99f51c3e92432e78ad224e1e91ee756f573e5d"
+    }
+  ],
+  "counts": {
+    "agree_fixtures": 1,
+    "artifact_preservation_probes": 10,
+    "byte_identity_pairs": 1,
+    "check_observations": 12,
+    "compile_observations": 12,
+    "eval_observations": 20,
+    "execution_lanes": 2,
+    "fixtures": 6,
+    "invalid_fixtures": 2,
+    "mutant_verdict_observations": 6,
+    "no_artifact_probes": 10,
+    "reference_calls": 8,
+    "semantic_mutants": 6,
+    "unsupported_fixtures": 3,
+    "wasm_observations": 10
+  },
+  "date": "<normalized-date>",
+  "fixtures": [
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tbody-indentation\t",
+        "exit": 2,
+        "justification": "Seed-invalid (an orphaned `case`; \"the keyword 'def' cannot head\" a term): the keywords `case` and `def` head no arm body, so a keyword in body position at or left of its arm is no body.",
+        "outcome": "Invalid"
+      },
+      "file": "tests/compiler-literals-integ/fixtures/arm-body-case.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t225:229:10:4\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/arm-body-case-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t225:229:10:4\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tparse\tbody-indentation\t225:229:10:4\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/arm-body-case-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t225:229:10:4\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t225:229:10:4\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/arm-body-case-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t225:229:10:4\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tparse\tbody-indentation\t225:229:10:4\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/arm-body-case-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t225:229:10:4\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "arm-body-case",
+      "reference_calls": 0
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tbody-indentation\t",
+        "exit": 2,
+        "justification": "Seed-invalid (an orphaned `case`; \"the keyword 'def' cannot head\" a term): the keywords `case` and `def` head no arm body, so a keyword in body position at or left of its arm is no body.",
+        "outcome": "Invalid"
+      },
+      "file": "tests/compiler-literals-integ/fixtures/arm-body-def.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t157:160:9:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/arm-body-def-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t157:160:9:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tparse\tbody-indentation\t157:160:9:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/arm-body-def-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t157:160:9:0\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t157:160:9:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/arm-body-def-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t157:160:9:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 2,
+                "outcome": "Invalid",
+                "stderr": "Invalid\tparse\tbody-indentation\t157:160:9:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/arm-body-def-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "Invalid",
+            "stderr": "Invalid\tparse\tbody-indentation\t157:160:9:0\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "arm-body-def",
+      "reference_calls": 0
+    },
+    {
+      "byte_identical": true,
+      "expected": {
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag",
+        "outcome": "agree"
+      },
+      "file": "tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\ntyped(1:0)->0=let0 $1:0=$0:0 in $0:0\nplain(1:0)->0=let0 $1:0=$0:0 in $0:0\nmain()->0=call1(call0(v0.1))\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-bun.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t79\n"
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "export": "typed",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "typed",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "export": "typed",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "typed",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "export": "plain",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "plain",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "export": "plain",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "plain",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              }
+            }
+          ],
+          "sha256": "701b88037c5cad4f2edffa6a9dd85ccd7d594413f72aab803f2abfee2abeb377",
+          "wasm": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":79}\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "export": "typed",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-bun.wasm",
+                  "typed",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"typed\",\"arguments\":[0],\"result\":0,\"bytes\":79}\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "export": "typed",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-bun.wasm",
+                  "typed",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"typed\",\"arguments\":[1],\"result\":1,\"bytes\":79}\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "export": "plain",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-bun.wasm",
+                  "plain",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"plain\",\"arguments\":[0],\"result\":0,\"bytes\":79}\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "export": "plain",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-bun.wasm",
+                  "plain",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"plain\",\"arguments\":[1],\"result\":1,\"bytes\":79}\n"
+              }
+            }
+          ]
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\ntyped(1:0)->0=let0 $1:0=$0:0 in $0:0\nplain(1:0)->0=let0 $1:0=$0:0 in $0:0\nmain()->0=call1(call0(v0.1))\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-native.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t79\n"
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "export": "typed",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "typed",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "export": "typed",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "typed",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "export": "plain",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "plain",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "export": "plain",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend",
+                  "plain",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              }
+            }
+          ],
+          "sha256": "701b88037c5cad4f2edffa6a9dd85ccd7d594413f72aab803f2abfee2abeb377",
+          "wasm": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":79}\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "export": "typed",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-native.wasm",
+                  "typed",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"typed\",\"arguments\":[0],\"result\":0,\"bytes\":79}\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "export": "typed",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-native.wasm",
+                  "typed",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"typed\",\"arguments\":[1],\"result\":1,\"bytes\":79}\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_tag": 0,
+              "export": "plain",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-native.wasm",
+                  "plain",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"plain\",\"arguments\":[0],\"result\":0,\"bytes\":79}\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_tag": 1,
+              "export": "plain",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-literals-wasm-1",
+                  "$ROOT/.local/compiler-literals-integ/gate/erased-dotted-let-native.wasm",
+                  "plain",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"plain\",\"arguments\":[1],\"result\":1,\"bytes\":79}\n"
+              }
+            }
+          ]
+        }
+      },
+      "name": "erased-dotted-let",
+      "reference_calls": 5
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "exit": 3,
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-offset.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t166:168:10:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/literal-column-offset-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t166:168:10:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tliteral-column\t166:168:10:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/literal-column-offset-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t166:168:10:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t166:168:10:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/literal-column-offset-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t166:168:10:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tliteral-column\t166:168:10:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/literal-column-offset-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t166:168:10:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "literal-column-offset",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "exit": 3,
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-u32.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t178:179:10:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/literal-column-u32-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t178:179:10:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tliteral-column\t178:179:10:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/literal-column-u32-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t178:179:10:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t178:179:10:9\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/literal-column-u32-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t178:179:10:9\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tcheck\tliteral-column\t178:179:10:9\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/literal-column-u32-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tcheck\tliteral-column\t178:179:10:9\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "literal-column-u32",
+      "reference_calls": 1
+    },
+    {
+      "expected": {
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "exit": 3,
+        "justification": "Seed-valid: `++` is the String concatenation operator, so a spaced `+` after an argument may be an operator. Knot does not check operator sugar, and reading it as a missing comma would be Invalid on a valid book (D4).",
+        "outcome": "Unsupported"
+      },
+      "file": "tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tparse\toperator\t422:423:18:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/spaced-plus-concat-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tparse\toperator\t422:423:18:8\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals-integ/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tparse\toperator\t422:423:18:8\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals-integ/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/spaced-plus-concat-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tparse\toperator\t422:423:18:8\n",
+            "stdout": ""
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tparse\toperator\t422:423:18:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/spaced-plus-concat-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tparse\toperator\t422:423:18:8\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals-integ/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 3,
+                "outcome": "Unsupported",
+                "stderr": "Unsupported\tparse\toperator\t422:423:18:8\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "no_artifact": {
+            "argv": [
+              "$ROOT/.local/compiler-literals-integ/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend",
+              "$ROOT/.local/compiler-literals-integ/gate/spaced-plus-concat-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "Unsupported",
+            "stderr": "Unsupported\tparse\toperator\t422:423:18:8\n",
+            "stdout": ""
+          },
+          "wasm": []
+        }
+      },
+      "name": "spaced-plus-concat",
+      "reference_calls": 1
+    }
+  ],
+  "inputs": {
+    "scripts/run-wasm.mjs": "e83f1bc5c97caed7106f794921fe073aabd824cb702d9cf6de2df1e234522117",
+    "src/CONTRACT.json": "2249d3f29ba724527ecb0c3cc779ae5f6e2f79ae40520f2f5cb1292caea651f3",
+    "src/LAWS.bend": "9a32f56b72e158ec6af12827239a1cb376671e05c289592e56a5fd2cc6bdb861",
+    "src/PROOF.bend": "8e2ca8e55a40e3e521ffda72634754bb377d18fc55901c4e364b25b5161356db",
+    "src/SPEC.md": "67f92dba8184c0f7ec0a6ca1f9ea231d4e90849aed4494c8aa54839bb908ba5d",
+    "src/base-load-LAWS.bend": "bc474ba56a21d9bba54c413d6543325e6596f2ae7469b426adcf02af0810a009",
+    "src/base-load-PROOF.bend": "ee43281f8668b287cab6b7eb415f748533392fe98e40c30c94433529c55031df",
+    "src/base-load.bend": "980b2caac32f61593d7d39cb9f83cf21303d88fb40e048380128130070016b8b",
+    "src/base-pin-LAWS.bend": "ded60e2d77e229559df6f5db2b95eaeca90933f3f0ac7ed212ce05c6d2362465",
+    "src/base-pin-PROOF.bend": "eeaf454f5623a6252f5ff9afcd857f5802e6f1a725a995e9ace367f2462096a3",
+    "src/base-pin.bend": "3ec5617dfc03bf5d9f45d6511eaf017a39263eee48df547ed293d76ebc7f8f2b",
+    "src/catalog-LAWS.bend": "b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3",
+    "src/catalog-PROOF.bend": "fda25129e3061fc6e2e7e905a95d4cc6d406d985da10316800e011fcd1d07c71",
+    "src/catalog.bend": "a3780885933343a6ab3ac8fc04f8d7e01d1dbd40f69866ce48b5eb49130655f8",
+    "src/check-LAWS.bend": "69e23771cf875b603ed668682c119812d0e1600d29b650121e3c0887b8a8b274",
+    "src/check-PROOF.bend": "e5a090745387e7409adf64c633c5961a90a64c5891d08f02ac6a7c2c0b1dbf2b",
+    "src/check-cli.bend": "8ef374bae94bb2b18144e569e6564b9195f0b93e0c24b87b1c7cf527aef6b77b",
+    "src/check.bend": "194ba9f7e335424e90a3b55f02d275c24c1bf802c7667cbfb5550dbc95227af6",
+    "src/checked-display.bend": "50b064e3551ef13193c5e29e4a4f45613c764382778fe94f033f3d8e5ea50c06",
+    "src/compile-cli.bend": "55b0b8a85db27ab54390b3e05104ff34dee1ef7d2f55c7ef89c051ae3859ee64",
+    "src/core.bend": "08fced0cb1d5b053895e84fe4375868074a8e6fa186be828267c3cb404399115",
+    "src/diagnostic.bend": "3b8cc34bd4ed0943b67b48b91d204ecf3e308a2cd3f93da247371aef97dbb2e5",
+    "src/driver.bend": "2e5d3f1bc4f14f5e32d9e68e27aa75a314532de202a4c9be42ef7c2fd56b3a4a",
+    "src/eval-cli.bend": "f839345cf6f9459905e813b535c32875cbc38e396a5d3ab2fed500e42267e94b",
+    "src/eval.bend": "ec23013d576af51d687cff600dacbe725c4674797434c6d8fd8b9ed0708558e3",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
+    "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2",
+    "src/imports.bend": "830dbdf122e0af757229052ae066c96f61da0167d13302f126cd95d850efb3e2",
+    "src/lex.bend": "af8aabae27a1662be09c3e417e4e0fbdae36bb6d586c742a1147c8c6711d67c4",
+    "src/literal-LAWS.bend": "3861b00a16a579621b46639aaf890d24263ede7285daeb14399a06af5cad9dc7",
+    "src/literal-PROOF.bend": "5742bf8c20ae438731b86a0c952e0561bc9f9fef89c316aaed40b9b62ffcc1c2",
+    "src/literal-base.bend": "d7ceb9e4c9be90fc726c83eaf9786e19e348f8d3819208065f232b47256a9290",
+    "src/literal-check.bend": "0e6ec5d1e68161de8b5184614da8feb801e50cb82b9505eee563433b9860403c",
+    "src/literal-core-LAWS.bend": "81d05b88f8555fd4d5421da4d807e0386da9178f3d9caa7177a502f1d78ac880",
+    "src/literal-core-PROOF.bend": "5a4824537d93291344dd9595437d421826c64a560e7dc376d4fc82bef49f3a73",
+    "src/literal-lex.bend": "520c27841fc3c1ff83ed64b18ef9d305d661e9f0642d3699d520dbf513ba1e0e",
+    "src/literal-matrix-LAWS.bend": "30386f554a2102f39a100c7b0bb7f9c610f7bd67783f3c8aeb9f2031c9dcec8e",
+    "src/literal-matrix-PROOF.bend": "a85e761553556127fd1f6c385076c9df7107f78fd81ffd5145ca42b3ce6df536",
+    "src/literal-matrix.bend": "b5c42d4955453a479fa2fd19765af7d2624bfc90cf51891483a2387586c9dee7",
+    "src/literal-offset.bend": "929583dad4ec38756dbcb7ed585190952359d9ae97cb33ddb1b0bfebd97894aa",
+    "src/literal-types.bend": "e492aba848839892a940e1b19f53a05449669bd26cabed781483e31aeb74b613",
+    "src/literal-wasm.bend": "778692b61dbcc8a5d250458caf874efe5d830bff5023d8d9bdaaac5f01203a31",
+    "src/literal.bend": "73722df7f04cbd88c0667b15bbf9a45f4896917cdc85dc591d14eff6e619cfd5",
+    "src/load-LAWS.bend": "933219d33bf7be3e99b4df26921be47b1e55c86e51fd1f9631dfa510400df4f1",
+    "src/load-PROOF.bend": "3438774c25a32823bbc162e8edde4419068830987aecf6c4fad2e3c81b5cd94e",
+    "src/load.bend": "a7cd02e76afcf174826d5db4cc219253c8182e92a0f7665dd950eb5ecd7af328",
+    "src/lowering-LAWS.bend": "21faaa4cc6d9854e650251e6360e98b17f04a399d948d7c17b25bf25cb0a03d2",
+    "src/lowering-PROOF.bend": "8b504877587dcb2319497d9f0f4bc8151d28cfa2f78c83b455c48b90effa9586",
+    "src/machine-code.bend": "ab94a7fc51d2a7cc0ac4fd8e7732db68ea316325dea5a25c6e3dd482c2482c99",
+    "src/machine-lower.bend": "527cc707a1ce21b31400e93528bb27917418d355f19cb532b27e2fdcb837b880",
+    "src/machine-runtime.bend": "321474b13cfdec40d70a50a87da4826b5b7674cf718a2d404511e8c81ae180dd",
+    "src/machine-vm.bend": "3ee70d98d5ecb9ba66ec4af688648a03841f41a0e82cc7b0a9f2e8dffb74c9cb",
+    "src/matrix-LAWS.bend": "dcdac0244f54a3b49328bfe2c47b2cfb10dc367f42dc4e3a724afa3f1445674b",
+    "src/matrix-PROOF.bend": "6bb881f59591bcf8d9df86c042d913bc1200d9d3169495ecda4eaad21fb84588",
+    "src/matrix.bend": "1ba04cea88bb4f88f45b4252f4a9c0eb9b7800b38dfeeca7330aa18954ac6b0d",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "30c78d589b25a39587cd7c56a83601d6ef04a0d4d77d31b31bfe0e11df44f22f",
+    "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
+    "src/patterns.bend": "245140f92da7cebfa081c2718360f5620ff9a502588272c9442ff6c84d4dd236",
+    "src/primitive-eval.bend": "38cbf74f3933332d66529abf752de44b50baa8639e6f80d17efc273aa188be0e",
+    "src/primitive-op.bend": "1d4df1e7ad163619b61f5d62082c3681e0b95e3e6e56b27b001194a7f0ddde76",
+    "src/primitive-wasm.bend": "7bfdba3f01f065bcd93fb392bcab5d2837c5db12a8d4549b9b73628d6f20303c",
+    "src/primitive.bend": "c8accc564240eeb0efe3acbf4ec27b245b4e50fb391369b00599ed6bce7e8cca",
+    "src/qualify-LAWS.bend": "8b10a6d688450b12b1f7e5b53d625957dcfb9fe37e66ad457557a5eed06ee914",
+    "src/qualify-PROOF.bend": "9e87e1a546cd7b61d47f68ccbdf9c727245789927ae72fa0a24b7329d24578ec",
+    "src/qualify.bend": "403356e0045bea2ebeb347f54d4ca859ea03c349d6576a50d1f7ff8119d2350e",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "31a9ab5d1cd1123f8ff03889245896ebff471214e8ba4cf060ef2652187ea100",
+    "src/syntax.bend": "195edd189a46a9fd0a9ed1b501c4cd62474750e6b49323005c1eab8b33d4515b",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "92bdbe0c45e76bacd9fb0e84d8ea50630f87692739162a7f6b0b8895f2f12aad",
+    "tests/compiler-literals-integ/README.md": "af6f49ce11aece66301ce2896ab3fd69188a1495551424e4f1db79797552932a",
+    "tests/compiler-literals-integ/check.py": "e32cbe9904acd4f4ed20467dda8dc45fcb36adee2587282e1d7cc24f5b9e9d9b",
+    "tests/compiler-literals-integ/expectations.json": "5cefef021285b9f1a5fc589730dabb8c7ec08cc1a5c4f6cc3a6eb66efed4f3f7",
+    "tests/compiler-literals-integ/fixtures/arm-body-case.bend": "083e10be8c34b85d8c517e5bdd90cb906166da86d2dd602126c034f5c59dba91",
+    "tests/compiler-literals-integ/fixtures/arm-body-def.bend": "456e4cac695ccbf2f5aa6dd0122fccc667dfb7abfe0ce0f85ea4c7195d8b5367",
+    "tests/compiler-literals-integ/fixtures/erased-dotted-let.bend": "a34121eb8afe5af186ab82f5e7deaa2539281b4d592822125a407bfc3c16b2fa",
+    "tests/compiler-literals-integ/fixtures/literal-column-offset.bend": "231bd206603bc5cd34e84962c473b8d87b635ab3f9d4967badab054d8a93d1a7",
+    "tests/compiler-literals-integ/fixtures/literal-column-u32.bend": "691004354a698aad45c8d16a748b74c294789b2acbafd30d731f0ff73ff04d71",
+    "tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend": "6d22745171fdd365cd44e6252d35ffd3551f88443437583d5d624fd532c0801b",
+    "tests/compiler-literals-integ/freeze.py": "7295a1e25a847ee585ed5af86b79bd5c5642b4d61488904c8be7a867260a13ac",
+    "tests/compiler-literals/regen.py": "327fad5b28666dc83c95d87b090a0967479d6cb621555345e453bf8b77c31b0a",
+    "tests/compiler-modules/host-check-expectations.json": "72c9204257fc3c78729a6c0a68a9ea8e193fa4327671b84ab2494b7af16376e2"
+  },
+  "mutants": [
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/erased-let-dotted/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/erased-let-dotted/check.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_exit": 0,
+      "file": "parse.bend",
+      "fixture": "erased-dotted-let",
+      "killed": true,
+      "name": "erased-let-dotted",
+      "new": "Bool.and(Bool.and(String.contains(S.text(name),\".\"),Bool.not(parameter_named(params,S.text(name)))),True{}),u =>",
+      "old": "Bool.and(Bool.and(String.contains(S.text(name),\".\"),Bool.not(parameter_named(params,S.text(name)))),Bool.not(erased)),u =>",
+      "sha256": "6b1650de734a2273a06cf28eda7d3ed9217dc639dfc95d751bacb6131b460809",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/erased-let-dotted/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        2,
+        "Invalid\tparse\tbinding-name\t"
+      ],
+      "witness": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/erased-let-dotted/check.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals-integ/fixtures/erased-dotted-let.bend"
+        ],
+        "exit": 2,
+        "outcome": "Invalid",
+        "stderr": "Invalid\tparse\tbinding-name\t225:228:8:3\n",
+        "stdout": ""
+      }
+    },
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/case-heads-a-body/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/case-heads-a-body/check.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_exit": 2,
+      "file": "parse.bend",
+      "fixture": "arm-body-case",
+      "killed": true,
+      "name": "case-heads-a-body",
+      "new": "Bool.and(S.matches(h,\"def\"),U32.is_le(S.column(h),parent)),u =>",
+      "old": "Bool.and(Bool.or(S.matches(h,\"case\"),S.matches(h,\"def\")),U32.is_le(S.column(h),parent)),u =>",
+      "sha256": "95b2d18836911c0cb0e58ca1670fbf902908529328d818715266bee78fcd7483",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/case-heads-a-body/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        3,
+        "Unsupported\tparse\tterm-form\t"
+      ],
+      "witness": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/case-heads-a-body/check.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-case.bend"
+        ],
+        "exit": 3,
+        "outcome": "Unsupported",
+        "stderr": "Unsupported\tparse\tterm-form\t225:229:10:4\n",
+        "stdout": ""
+      }
+    },
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/def-heads-a-body/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/def-heads-a-body/check.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_exit": 2,
+      "file": "parse.bend",
+      "fixture": "arm-body-def",
+      "killed": true,
+      "name": "def-heads-a-body",
+      "new": "Bool.and(S.matches(h,\"case\"),U32.is_le(S.column(h),parent)),u =>",
+      "old": "Bool.and(Bool.or(S.matches(h,\"case\"),S.matches(h,\"def\")),U32.is_le(S.column(h),parent)),u =>",
+      "sha256": "d6ca7f104677292a903c67235b948c28d945ba06bb06f40add485bf16bae3ed4",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/def-heads-a-body/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        3,
+        "Unsupported\tparse\tterm-form\t"
+      ],
+      "witness": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/def-heads-a-body/check.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals-integ/fixtures/arm-body-def.bend"
+        ],
+        "exit": 3,
+        "outcome": "Unsupported",
+        "stderr": "Unsupported\tparse\tterm-form\t157:160:9:0\n",
+        "stdout": ""
+      }
+    },
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/spaced-plus-is-a-missing-comma/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/spaced-plus-is-a-missing-comma/check.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_exit": 3,
+      "file": "parse.bend",
+      "fixture": "spaced-plus-concat",
+      "killed": true,
+      "name": "spaced-plus-is-a-missing-comma",
+      "new": "Bool.and(Bool.not(pattern),Bool.and(S.matches(h,\"+\"),Bool.not(promotes(tokens)))),u => invalid(tokens,\"argument-separator\"),u =>",
+      "old": "Bool.and(Bool.not(pattern),Bool.and(S.matches(h,\"+\"),Bool.not(promotes(tokens)))),u => unsupported(tokens,\"operator\"),u =>",
+      "sha256": "9a0bc4aefe57b5e244067cdeed1e0d1a1b99251612fb4c3d12db4dfdfc89d55a",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/spaced-plus-is-a-missing-comma/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        2,
+        "Invalid\tparse\targument-separator\t"
+      ],
+      "witness": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/spaced-plus-is-a-missing-comma/check.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals-integ/fixtures/spaced-plus-concat.bend"
+        ],
+        "exit": 2,
+        "outcome": "Invalid",
+        "stderr": "Invalid\tparse\targument-separator\t422:423:18:8\n",
+        "stdout": ""
+      }
+    },
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/literal-column-checked/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/literal-column-checked/check.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_exit": 3,
+      "file": "matrix.bend",
+      "fixture": "literal-column-u32",
+      "killed": true,
+      "name": "literal-column-checked",
+      "new": "case 1n+n S.Literal{token,kind,number,text}: Done{Unit{}}",
+      "old": "case 1n+n S.Literal{token,kind,number,text}: C.unsupported(Unit,\"literal-column\",token)",
+      "sha256": "17d50f7f53e152f8b0df90e4e9dcf7acfc8beb619e3d4e0f6bd386a44443724b",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/literal-column-checked/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        0,
+        "Checked\n"
+      ],
+      "witness": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/literal-column-checked/check.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-u32.bend"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "Checked\nf(1:0,1:1)->1=v1.0\nmain()->1=call0(v0.0;v1.0)\n\n"
+      }
+    },
+    {
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/offset-column-checked/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/offset-column-checked/check.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_exit": 3,
+      "file": "matrix.bend",
+      "fixture": "literal-column-offset",
+      "killed": true,
+      "name": "offset-column-checked",
+      "new": "case 1n+n S.Offset{token,count,tail}: Done{Unit{}}",
+      "old": "case 1n+n S.Offset{token,count,tail}: C.unsupported(Unit,\"literal-column\",token)",
+      "sha256": "861e48014ab49e0bcb37ef4e04ce2ba7d993425c579ccfc117c482ff4a2bc62c",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/offset-column-checked/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "verdict": [
+        0,
+        "Checked\n"
+      ],
+      "witness": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals-integ/gate/mutants/offset-column-checked/check.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals-integ/fixtures/literal-column-offset.bend"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "Checked\nf(1:0,1:1)->1=v1.0\nmain()->1=call0(3n;v1.0)\n\n"
+      }
+    }
+  ],
+  "status": "passed",
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "python3": "Python 3.14.3"
+  },
+  "verification": {
+    "argv": [
+      "python3",
+      "$ROOT/tests/compiler-literals-integ/freeze.py"
+    ],
+    "exit": 0,
+    "outcome": "success",
+    "stderr": "",
+    "stdout": "integration books match the seed: 6 fixtures, 8 calls\n"
+  }
+}
