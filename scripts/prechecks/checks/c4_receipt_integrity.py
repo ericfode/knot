@@ -13,11 +13,11 @@ whole tree: main already carries about twenty legacy package receipts with host 
 """
 from __future__ import annotations
 
-import glob as _glob
 import json
 import re
 from pathlib import Path
 
+from lib import gaterun
 from lib import gates as gates_lib
 from lib import globs
 from lib import receipts as R
@@ -29,13 +29,7 @@ HOST_PATH = re.compile(r'/Users/|/home/[^/\s"\']+/|/private/(?:tmp|var)|/var/fol
                        r'[.]local/gates/run-|(?:[.][.]/){2,}[.]toolchain')
 MEASUREMENT_KEY = re.compile(r'(?:peak_)?rss(?:_bytes)?$|load_?avg|host_load|cpu_seconds|wall_seconds|wall_ms', re.I)
 DOC_INPUTS = re.compile(r'(?:^|/)(?:README|REPORT|HANDOFF|FIXTURES|GATES|CLASSIFICATION)\.md$|^docs/')
-RUNNER_TOP_EXCLUDED = ('.toolchain', 'node_modules', '.local', 'build')
-
-
-def runner_excluded(name: str) -> bool:
-    parts = name.split('/')
-    return (any(p.lower() == '.env' or p.lower().startswith('.env.') or p == '.git' for p in parts)
-            or parts[0] in RUNNER_TOP_EXCLUDED)
+runner_excluded = gaterun.runner_excluded
 
 
 def is_own(ctx, path: str, status: str) -> bool:
@@ -266,28 +260,10 @@ def date_only(ctx, receipts_touched) -> tuple[list[Condition], str]:
 
 def gate_run(ctx) -> tuple[list[Condition], str]:
     """R4: read the implementer's newest gate run whose snapshot equals this head."""
-    root = ctx.root / '.local/gates'
-    summaries = sorted(_glob.glob(str(root / 'run-*/summary.json')), key=lambda p: Path(p).stat().st_mtime, reverse=True)
-    if not summaries:
-        return [], 'no .local/gates/run-*/summary.json (run `npm run -s gates` first)'
-    names = [n for n in ctx.head.files() if not runner_excluded(n)]
-    wanted = {n: ctx.head.sha256(n) for n in names}
-    diff_note = ''
-    for index, path in enumerate(summaries[:6]):
-        snap_path = Path(path).with_name('snapshot.json')
-        if not snap_path.is_file():
-            continue
-        snapshot = json.loads(snap_path.read_text())
-        have = {n: (v or {}).get('sha256') for n, v in snapshot.items() if isinstance(v, dict) and 'sha256' in v}
-        links = {n for n, v in snapshot.items() if isinstance(v, dict) and 'link' in v}
-        have_names = {n for n in have if n not in links}
-        if have_names == set(wanted) and all(have[n] == wanted[n] for n in wanted):
-            summary = json.loads(Path(path).read_text())
-            return _read_summary(ctx, summary, path), ''
-        if index == 0:
-            differing = sorted({n for n in set(have) | set(wanted) if have.get(n) != wanted.get(n)})
-            diff_note = f'newest gate run predates this tree ({len(differing)} file(s) differ, e.g. {differing[:3]})'
-    return [], diff_note or 'no gate run matches this tree'
+    summary, path, reason = gaterun.find(ctx)
+    if summary is None:
+        return [], reason
+    return _read_summary(ctx, summary, path), ''
 
 
 def _read_summary(ctx, summary: dict, path: str) -> list[Condition]:
