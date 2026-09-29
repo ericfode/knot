@@ -205,17 +205,22 @@ def run(ctx) -> CheckResult:
     result = CheckResult()
     if ctx.base is None:
         return CheckResult(outcome='not-applicable', reason='no base to compare against')
-    declared = ctx.manifest.get('limits') or ctx.manifest.get('coverage')
-    for name, fn in (('limit-unwitnessed', limits), ('witness-missing', coverage)):
-        result.conditions += fn(ctx)
-        result.rules_run.append(name)
-    if not declared:
-        result.notes.append('the manifest declares no limits or coverage cells: R1 and R2 have nothing to compare')
+    # R1 and R2 compare a declaration with the tree: with no declaration there is nothing to compare, which is a rule that
+    # could not run (unavailable), not a rule that ran and found nothing.
+    for name, key, fn in (('limit-unwitnessed', 'limits', limits), ('witness-missing', 'coverage', coverage)):
+        if ctx.manifest.get(key):
+            result.conditions += fn(ctx)
+            result.rules_run.append(name)
+        else:
+            result.rules_unavailable[name] = f'the manifest declares no {key}: there is nothing to compare'
     if not ctx.identity:
         result.conditions += unscaled_timeouts(ctx)
         result.conditions += wiring(ctx)
         result.rules_run += ['unscaled-timeout', 'gate-wiring']
         result.conditions += adapters(ctx, result)
+        if not any(p.name[0] != '_' for p in (ADEQUACY_DIR.glob('*.py') if ADEQUACY_DIR.is_dir() else [])):
+            result.rules_unavailable['adequacy-adapters'] = ('no adapter ships in this build: R3-R5 (expectation-from-implementation, '
+                                                             'kill-credit, judge-accepts-forgery) need one per gate')
     result.conditions += headroom(ctx, result)
     return result
 

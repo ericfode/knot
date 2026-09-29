@@ -44,6 +44,17 @@ class C7Tests(RepoTest):
         self.fx.commit('main', {'scripts/gates/run.py': RUN_PY})
         self.assertEqual([], self.run7().conditions)
 
+    def test_rules_without_a_declaration_or_an_adapter_are_unavailable_never_run(self):
+        self.start()
+        self.fx.commit('work', {'a.txt': 'a\n'})
+        result = self.run7()
+        self.assertEqual({'limit-unwitnessed', 'witness-missing', 'adequacy-adapters', 'gate-headroom'}, set(result.rules_unavailable))
+        self.assertEqual({'unscaled-timeout', 'gate-wiring'}, set(result.rules_run))     # only what could compare something ran
+        self.assertEqual('partial', result.finish().outcome)                               # nothing found, and never a pass
+        declared = self.run7(manifest_path=self.manifest(limits=[{'name': 'image-words', 'value': 100, 'controls': []}], coverage=[]))
+        self.assertIn('limit-unwitnessed', declared.rules_run)                             # a declared limit is compared
+        self.assertIn('witness-missing', declared.rules_unavailable)                       # an empty coverage list is no declaration
+
     # ---- R1 -----------------------------------------------------------------------
     def test_limit_needs_controls_at_l_minus_one_l_and_l_plus_one(self):
         self.start({'tests/x/bounds.json': controls(99, 100, 101)})

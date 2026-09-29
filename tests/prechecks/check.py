@@ -46,7 +46,7 @@ MUTANTS = [
      'tests.test_c3.C3Tests.test_history_lints'),
     ('c4-ignore-host-paths', 'checks.c4_receipt_integrity', 'host_paths', 'lambda ctx, changed: []',
      'tests.test_c4.C4Tests.test_host_path_in_new_receipt'),
-    ('c4-ignore-stale-hashes', 'checks.c4_receipt_integrity', 'stale_hashes', 'lambda ctx, changed: []',
+    ('c4-ignore-stale-hashes', 'checks.c4_receipt_integrity', 'stale_hashes', 'lambda ctx, changed: ([], 0)',
      'tests.test_c4.C4Tests.test_stale_hash_fires_and_fresh_hash_is_clean'),
     ('c5-ignore-judge-text', 'checks.c5_preflight_delta', 'identity', EMPTY1,
      'tests.test_c5.C5Tests.test_dropping_a_judge_sentence_is_major'),
@@ -71,6 +71,22 @@ MUTANTS = [
     ('c7-ignore-limits', 'checks.c7_gate_adequacy', 'limits', EMPTY1,
      'tests.test_c7.C7Tests.test_limit_needs_controls_at_l_minus_one_l_and_l_plus_one'),
     ('c7-ignore-wiring', 'checks.c7_gate_adequacy', 'wiring', EMPTY1, 'tests.test_c7.C7Tests.test_gate_wiring'),
+    ('c1-any-unsupported-is-fine', 'checks.c1_probe_differential', 'premature', 'lambda text, parse, p, documented: None',
+     'tests.test_c1.RuleTests.test_premature_unsupported_is_the_recognized_token_being_the_rejected_token'),
+    ('c1-every-prefix-is-premature', 'checks.c1_probe_differential', 'premature',
+     "lambda text, parse, p, documented: {'seed_offset': 0, 'knot': p.line, 'at': 'a prefix'}",
+     'tests.test_c1.RuleTests.test_a_valid_prefix_is_documented_policy_only_when_the_spec_lists_its_code'),
+    ('c1-no-spec-table', 'checks.c1_probe_differential', 'prefix_codes', 'lambda tree: frozenset()',
+     'tests.test_c1.EndToEndTests.test_a_mutant_that_reports_the_seeds_error_token_as_unsupported_is_a_regression'),
+    ('c3-forbid-new-gate-branches', 'checks.c3_frozen_and_owned', 'run_py_problems',
+     "lambda base, head, added: ['counts() gained a statement other than a branch for a new gate']",
+     'tests.test_c3.C3Tests.test_a_new_gates_counts_branch_is_the_registration_that_gates_md_asks_for'),
+    ('c3-allow-any-counts-edit', 'checks.c3_frozen_and_owned', 'run_py_problems', 'lambda base, head, added: []',
+     'tests.test_c3.C3Tests.test_editing_or_removing_an_existing_gates_count_branch_is_still_flagged'),
+    ('c4-judge-baseline-sections', 'checks.c4_receipt_integrity', 'is_provenance', 'lambda pointer: False',
+     'tests.test_c4.C4Tests.test_a_pre_implementation_freeze_section_is_history_not_staleness'),
+    ('c5-measure-grouped-files-alone', 'checks.c5_preflight_delta', 'grouped_files', 'lambda ctx: set()',
+     'tests.test_c5.C5Tests.test_a_file_that_a_group_lists_is_judged_by_its_group_not_alone'),
 ]
 
 
@@ -103,8 +119,11 @@ def main():
     sys.path.insert(0, str(PACKAGE))
     sys.dont_write_bytecode = True
     inputs = sorted(p for p in PACKAGE.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix in ('.py', '.ts', '.json'))
+    # Documents are not inputs, except the calibration packets: the wiring test reads and asserts every one of them and a live
+    # calibration sends them, so editing one must leave a stale input hash.
     inputs += sorted(p for p in (ROOT / 'tests/prechecks').rglob('*') if p.is_file() and p != RECEIPT and p != Path(__file__)
-                     and '__pycache__' not in p.parts and 'receipts' not in p.parts and p.suffix != '.md')  # docs are not inputs
+                     and '__pycache__' not in p.parts and 'receipts' not in p.parts
+                     and (p.suffix != '.md' or ('perch-controls' in p.parts and p.name != 'README.md')))
     inputs += [ROOT / '.perch/rules/prechecks.yaml', ROOT / 'scripts/check-prechecks-rule-wiring.mjs',
                ROOT / 'scripts/prechecks-perch-run.mjs', Path(__file__)]
     record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in inputs}
@@ -115,14 +134,15 @@ def main():
         result = run_suite(suite)
         require(result.wasSuccessful(), '\n'.join(text for _test, text in result.failures + result.errors)[:4000])
         require(result.testsRun == len(record['fixtures']), 'every discovered test ran')
+        # The whole suite has just run: a test that is neither skipped nor failed passed unmutated, so no mutant re-runs it.
+        skipped = {test.id() for test, _reason in result.skipped}
+        passed = set(record['fixtures']) - skipped
 
         for name, module, function, replacement, test in MUTANTS:
             imported = __import__(module, fromlist=['*'])
             table = re.match(r"(\w+)\['([\w-]+)'\]$", function)                # a dispatch table entry, e.g. BUILDERS['name']
             require(hasattr(imported, table.group(1) if table else function), f'{name}: {module}.{function} is missing')
-            control = run_suite(loader.loadTestsFromName(test))
-            require(control.wasSuccessful() and control.testsRun == 1 and not control.skipped,
-                    f'{name}: its pinning test must pass unmutated, and not be skipped: {test}')
+            require(test in passed, f'{name}: its pinning test must exist, pass unmutated and not be skipped: {test}')
             patch = (mock.patch.dict(getattr(imported, table.group(1)), {table.group(2): eval(replacement)}) if table
                      else mock.patch.object(imported, function, eval(replacement)))
             with patch:

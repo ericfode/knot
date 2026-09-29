@@ -318,6 +318,9 @@ def run(ctx) -> CheckResult:
              ('hardcoded-count', lambda: hardcoded_counts(ctx)), ('count-extraction-shape', lambda: extraction_shape(ctx)),
              ('ground-law-general-name', lambda: ground_laws(ctx)), ('vestige', lambda: vestiges(ctx))]
     for name, fn in rules:
+        if name == 'report' and not ctx.inc:
+            result.rules_unavailable['report'] = 'no increment id: the executor report (.local/<id>/HANDOFF.md) cannot be located'
+            continue
         result.conditions += fn()
         result.rules_run.append(name)
     return result

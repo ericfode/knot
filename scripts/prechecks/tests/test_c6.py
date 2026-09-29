@@ -111,6 +111,15 @@ class C6Tests(RepoTest):
                          sorted(c.subject['cited'] for c in self.rules(result, 'untracked-evidence')))
 
     # ---- R4 -----------------------------------------------------------------
+    def test_the_report_rule_is_unavailable_without_an_increment_id(self):
+        self.start({})
+        self.fx.commit('work', {'a.txt': 'a\n'})
+        result = self.run6()                                   # the branch is campaign/x: the report can be located
+        self.assertIn('report', result.rules_run)
+        anonymous = self.run6(inc='none')                      # a replay without an increment cannot find `.local/<id>/HANDOFF.md`
+        self.assertNotIn('report', anonymous.rules_run)
+        self.assertIn('no increment id', anonymous.rules_unavailable['report'])
+
     def test_report_rules(self):
         self.start({})
         self.fx.commit('work', {'src/a.bend': 'def f(): 1\n'})
