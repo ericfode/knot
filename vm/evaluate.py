@@ -57,7 +57,7 @@ class Machine:
         self.types, self.functions = plan['types'], plan['functions']
         self.rep, self.entry = plan.get('representation', {}), plan['entry']
         self.fuel, self.calls, self.policy = fuel, 0, policy
-        self.stdout, self.prints = bytearray(), []
+        self.stdout, self.prints, self.effects = bytearray(), [], 0
 
     # ---------------------------------------------------------------- inspection (section 6)
 
@@ -197,6 +197,7 @@ class Machine:
         codes = self.codes(operands[0])
         self.prints.append(codes)
         self.outgoing(codes)
+        self.effects += 1              # the host call, after every refusal of section 10
         self.stdout += b''.join(map(utf8, codes)) + b'\n'
         return 0
 
@@ -235,9 +236,9 @@ class Machine:
         """`Evaluated<TAB>type<TAB>tag<TAB>tree<LF>`, rendered iteratively within section 8's
         bounds. A visit is one rendered constructor, so a Nat word n costs n + 1; the tree's
         bytes, separators included, are its text. Both bounds are inclusive, and each charge
-        is checked before its text is built."""
+        is checked before its text is built. The result's own tag is that of its first visit."""
         nat = self.rep.get('Nat')
-        out, cost, work = [], [0, 0], [(w, t)]
+        out, cost, work, root = [], [0, 0], [(w, t)], []
 
         def charge(visits: int, size: int):
             cost[0] += visits
@@ -252,6 +253,7 @@ class Machine:
                 continue
             v, u = item
             tag, fields = self.view(v, u)
+            root = root or [tag]
             if u == nat:
                 zero, succ = (c['name'] for c in self.types[nat]['constructors'])
                 charge(v + 1, v * (len(succ.encode()) + 2) + len(zero.encode()) + 2)
@@ -262,27 +264,31 @@ class Machine:
             out.append(ctor['name'] + '{')
             parts = [p for i, f in enumerate(zip(fields, ctor['fields'])) for p in ((',',) if i else ()) + (f,)]
             work += ['}'] + parts[::-1]
-        return f'Evaluated\t{t}\t{self.view(w, t)[0]}\t{"".join(out)}\n'
+        return f'Evaluated\t{t}\t{root[0]}\t{"".join(out)}\n'
 
 
 def book(plan: dict, name: str, ordinals: list, fuel: int) -> dict:
     """A Book invocation whose section 8 checks passed: the ordinals are the live arguments.
     `stdout` is all that the run writes, as text: what an effect wrote, which under D22 is
     nothing whether the run ends or stops, and on success the describe line after it. A Halt
-    reports it too, so a stop that had written something first is not the stop D22 freezes."""
+    reports it too, so a stop that had written something first is not the stop D22 freezes.
+    `effects` counts the host calls made, which under D22 is 0 even for a foreign that writes
+    nothing (`IO.args`), so a stop that had called the host first is not that stop either."""
     m = Machine(plan, fuel)
     index = next(i for i, f in enumerate(plan['functions']) if f['name'] == name)
     try:
         w = m.call(index, list(ordinals))
-        return {'exit': 0, 'stdout': m.written() + m.describe(w, plan['functions'][index]['result']), 'calls': m.calls}
+        line = m.describe(w, plan['functions'][index]['result'])
+        return {'exit': 0, 'stdout': m.written() + line, 'effects': m.effects, 'calls': m.calls}
     except Halt as h:
-        return {**h.outcome, 'stdout': m.written(), 'calls': m.calls}
+        return {**h.outcome, 'stdout': m.written(), 'effects': m.effects, 'calls': m.calls}
 
 
 def program(plan: dict, fuel: int, policy: str = 'vm') -> dict:
     """Section 8's Program phases; `stdout` holds the bytes written, `prints` every String
-    passed to IO.print (the refused one included). A Halt's message is an outgoing String, so
-    one holding a non-scalar Char is refused like a print's, after both words are inspected."""
+    passed to IO.print (the refused one included), `effects` the host calls made (a refused one
+    is none). A Halt's message is an outgoing String, so one holding a non-scalar Char is
+    refused like a print's, after both words are inspected."""
     m = Machine(plan, fuel, policy)
     try:
         w = m.call(next(i for i, f in enumerate(plan['functions']) if f['name'] == 'main'), [])
@@ -297,4 +303,4 @@ def program(plan: dict, fuel: int, policy: str = 'vm') -> dict:
             outcome = {'halt': code, 'message': message}
     except Halt as h:
         outcome = h.outcome
-    return {**outcome, 'stdout': bytes(m.stdout), 'prints': m.prints, 'calls': m.calls}
+    return {**outcome, 'stdout': bytes(m.stdout), 'prints': m.prints, 'effects': m.effects, 'calls': m.calls}

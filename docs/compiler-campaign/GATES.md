@@ -85,7 +85,7 @@ limit control, seven admitted code-list controls and 85 run controls with their 
 fuel, calls and outcomes (among them the D22 refusal of an effect under a Book entry
 and the bytes it writes, D20 on a Halt's message, the inspection points of section 6 and
 the UTF-8 of a scalar); nine describe-domain controls; 13 argument controls;
-the lowering of two hand-written displays; 86 codec, 4 source, 83 evaluator and ten
+the lowering of two hand-written displays; 86 codec, 4 source, 85 evaluator and ten
 rule mutants of `check-spec.py` itself; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.

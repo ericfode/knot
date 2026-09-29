@@ -1062,7 +1062,7 @@ def ran(plan: dict, frozen: dict, evaluator=None) -> dict:
     got = ev.book(plan, 'main', [], fuel) if plan['entry'] == 'book' else ev.program(plan, fuel)
     got['fuel'] = fuel
     if isinstance(got.get('stdout'), bytes):
-        # A Program's written bytes; every run control writes ASCII.
+        # A Program's written bytes: ASCII, but for the two UTF-8 controls, whose text is Python's own.
         got['stdout'] = got['stdout'].decode('utf-8', 'replace')
     if 'stdout' in got:
         # A display control freezes its multi-megabyte line by digest.
@@ -2408,8 +2408,9 @@ EVALUATOR_MUTANTS = [
      [("            return self.string(show(self.word(a[0])))",
        "            return self.string(show(a[0] if isinstance(a[0], int) else 0))")]),
     ('describe-closure-word-admitted',
-     [("            tag, fields = self.view(v, u)\n            if u == nat:",
-       "            tag, fields = (0, ()) if isinstance(v, tuple) and v[0] == 'closure' else self.view(v, u)\n            if u == nat:")]),
+     [("            tag, fields = self.view(v, u)\n            root = root or [tag]\n            if u == nat:",
+       "            tag, fields = (0, ()) if isinstance(v, tuple) and v[0] == 'closure' else self.view(v, u)\n"
+       "            root = root or [tag]\n            if u == nat:")]),
     ('enter-immediate-target-as-action',
      [("        kind = f[0] if isinstance(f, tuple) else None\n", "        kind = f[0] if isinstance(f, tuple) else 'action'\n")]),
     ('enter-object-target-admitted',
@@ -2462,6 +2463,11 @@ EVALUATOR_MUTANTS = [
                                    "        if kind == 'action' and operands and self.entry != 'program' and self.fuel == 0:\n"
                                    "            self.stdout += b'x\\n'\n"
                                    "        self.debit()\n        if kind == 'closure':")]),
+    # No host call (`effects` 0 on every Book control that stops at an Action): a stop that called the
+    # host first, or did so for the foreign that writes nothing, is not D22's stop.
+    ('book-calls-host-then-refuses', [(BOOK_GUARD, BOOK_GUARD.replace('            raise', '            self.effects += 1\n            raise'))]),
+    ('book-args-calls-host', [(BOOK_GUARD, BOOK_GUARD.replace(
+        '            raise', '            if action[1] != 1:\n                self.effects += 1\n            raise'))]),
     ('book-refuses-action-build', [("        if op == 'foreign':\n            return ('action', node[2], tuple(operands))\n",
                                     "        if op == 'foreign':\n            if self.entry != 'program':\n"
                                     "                raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"

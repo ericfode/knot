@@ -559,28 +559,36 @@ follows it (§5, §10, §11) without a new image header word.
    mutant. This executor's own D22 mutants (a Book that performs the effect, one that drops
    it) died because they change the outcome, while what D22 exists for, no host call and no
    output, was the unfrozen observable. The eight Book controls that stop at an Action now
-   freeze `stdout` empty (`689934c8`, before the change): `book-print`,
-   `book-print-continuation-call`, `book-print-twice`, `book-print-non-scalar`,
+   freeze `stdout` empty (`689934c8`, before the change) and `effects` 0 (`4b9b7aff`, likewise):
+   `book-print`, `book-print-continuation-call`, `book-print-twice`, `book-print-non-scalar`,
    `book-print-ill-typed`, `book-args`, `fuel-book-effect-exact` and, since its Action meets
    fuel 0 and writes nothing either, `fuel-book-effect-short`. `evaluate.book` reports the
    bytes the run wrote on every outcome, a Halt included, and on success ahead of the describe
    line, so a Book that performed an effect would show it there as well. Two evaluator
    mutants die: `book-writes-then-refuses` by every `book-print*` control, and
    `book-writes-at-fuel-zero` (a write as the Action meets fuel 0) by `fuel-book-effect-short`
-   alone. §8 says that the key is frozen and that a harness must compare it, and that a
-   harness with a host must also require a host trace with no call: `IO.args` writes nothing,
-   so a cause alone cannot tell a refusal from a call followed by one. Read from their
-   branches, vm-core's `expected_run` already carries `case.get('stdout', '')` for every
-   outcome and vm-model's `agrees` requires an empty stdout of an Unsupported run, so neither
-   changes for the key; neither compares a host trace for `book-args` today (vm-core
-   refuses every foreign but IO.print at load, round-9 item 1 below).
+   alone. That left "no host call" frozen for a print only through its write: `IO.args` writes
+   nothing, so `book-args`, whose control froze the cause, could not tell a refusal from a
+   call followed by one. `Machine.effects` now counts the host calls that the reference
+   evaluation makes, where the call would be (after D22's guard and D20's check, just before the
+   write), and `book` and `program` report it. Two more mutants die: `book-calls-host-then-refuses`
+   by the `effects` of the seven controls that enter their Action (`fuel-book-effect-short`
+   meets fuel 0 first), and `book-args-calls-host`, a call made only for a foreign that writes
+   nothing, by `book-args` alone, which only this key can kill. §8 says that both keys are frozen
+   and that a harness must compare them: `stdout` against what its host wrote, `effects` against
+   the host calls the run made (vm-core's `knot_io` trace, the effects that vm-model performs). Read from their branches, vm-core's `expected_run` carries `case.get('stdout', '')`
+   for every outcome and vm-model's `agrees` requires an empty stdout of an Unsupported run,
+   so neither changes for `stdout`; neither reads `effects`, an unknown key today, and both
+   must (vm-core refuses every foreign but IO.print at load, round-9 item 1 below).
 
 29. **Every kind of inspection point has a control, and the UTF-8 of a scalar has two.**
    Review of the round-9 branch instrumented the reference evaluation's `word`, `view`
    and `apply` and found 13 of its 22 inspection call sites never refusing in any golden
    or run control: a Case scrutinee in tag and in key mode, the Action's continuation,
    U32 arithmetic, the two Char prims, the Nat prims, `show`, a rendered root and a rendered
-   field, and the run's last word. Twelve reviewer-written mutants that read less than
+   field, and the run's last word (the twenty-second, the root's tag in `describe`'s header, viewed a
+   word that the loop had just read, so it could not refuse; it now takes the tag of that first
+   visit, and every remaining site refuses in some control). Twelve reviewer-written mutants that read less than
    §6 requires, and are exact on every well-typed word, survived all 96 goldens and 60 run
    controls. Entries 9 and 18 had implied otherwise (9 that a Case's reading of an erased
    position admits "no new unsoundness", 18 that eighteen controls froze the points of
@@ -601,7 +609,7 @@ follows it (§5, §10, §11) without a new image header word.
    goldens leave unwitnessed (they write ASCII beside the codes the native lane truncates): the
    expected text is Python's own, and the pinned seed writes the same 11 and 26 bytes for
    the same String constants on both lanes. Twenty inspection mutants and four UTF-8 mutants
-   (83 evaluator mutants in all) are killed, each by the controls of its own point; the
+   (85 evaluator mutants in all, with entry 28's four) are killed, each by the controls of its own point; the
    reviewer's `utf8-two-byte-wrong-lead` was a survivor too. What stays unwitnessed, and is
    named in §12: the prim ids that no control names (U32 `mul`, `div`, `mod`, `not`, `and`,
    `cmp`, the six comparisons and `shrn`, and Nat `mul` … `is_ge`), which vm-prims owes one
@@ -703,11 +711,13 @@ reason. What changes is what they are held to, all by the harnesses that read `c
    plan-level).** vm-core's gate reads both from SPEC §12 and §4 (`run_control_count`,
    `refusal_counts`); the sentence shapes are unchanged and the numbers are new. vm-model reads
    the lists themselves.
-2. **`stdout` is compared on every Book control that stops at an Action (§8, entry 28).** The eight
-   controls freeze it empty. vm-core's `expected_run` and vm-model's `agrees` already carry it. A
-   harness with a host must also require an empty host trace: vm-core's for `book-args`, whose
-   `IO.args` writes nothing (it refuses that foreign at load today, so the control is the D22 item
-   of round 9).
+2. **`stdout` and `effects` are compared on every Book control that stops at an Action (§8, entry
+   28).** The eight controls freeze `stdout` empty and `effects` 0. vm-core's `expected_run` and
+   vm-model's `agrees` already carry `stdout`; neither reads `effects`, which is the number of host
+   calls the run made. vm-core compares it with the `knot_io` calls of its host trace, and vm-model
+   with the effects its model performs, so that `book-args`, whose `IO.args` writes nothing, is
+   checked as well (vm-core refuses that foreign at load today, so the control is the D22 item of
+   round 9).
 3. **`program-print-through-id` replaces `program-print-in-value`.** It is `x\n`, exit 0, after 9
    entries, and the seed prints `x` for its source on both lanes (entry 27). The shape that the seed
    refuses stays unfrozen; §7 still governs it (finding 11).

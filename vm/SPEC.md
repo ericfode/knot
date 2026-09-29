@@ -685,12 +685,14 @@ The pure `got(k(Unit{}))` evaluates after 3 entries, an Action built and dropped
 and one applied to its erased `R` after 3.
 
 **No host call and no write are frozen.** Every Book control that stops at an Action freezes
-`stdout` empty beside its cause and `calls`, and the reference evaluation reports the bytes
-written on every Book outcome, a Halt included (§12). A VM's harness MUST compare them: for
-`IO.print` a host call is a write, so an empty `stdout` is what shows that none was made;
-`IO.args` writes nothing, so a harness with a host MUST also require that its trace holds no
-`knot_io` call for the run, the cause alone not telling a refusal from a call followed by
-one. A stop that had written or called first is not D22's stop, whatever its cause.
+`stdout` empty and `effects` 0 beside its cause and `calls`. The reference evaluation reports
+both on every Book outcome, a Halt included (§12): `stdout` is the bytes written, and `effects`
+the host calls made, counted where the call would be, after D22's guard and after D20's check
+and just before the write. A VM's harness MUST compare both: `stdout` against what its host
+wrote, and `effects` against the host calls that the run made (the `knot_io` calls of vm-core's
+host trace, the effects that vm-model's model performs), which is the only observable of a call
+that writes nothing (`IO.args`, whose control freezes no `stdout` that could differ). A stop
+that had written or called first is not D22's stop, whatever its cause.
 
 ## 9. Primitives and numeric bounds (D15)
 
@@ -1077,7 +1079,7 @@ lane and requires:
   `book-print`, `book-print-continuation-call` (`k` a function) and
   `book-print-twice` (the reviewers' bookio-1, bk-print and bookio-2) stop
   `Unsupported vm effect` after 4 calls, writing nothing (each of these Book controls freezes
-  `stdout` empty, `fuel-book-effect-short` too); `book-print-non-scalar` (a
+  `stdout` empty and `effects` 0, `fuel-book-effect-short` too); `book-print-non-scalar` (a
   surrogate) too, so D22 precedes D20; `book-print-ill-typed` (`"a"` then `id(λ)`)
   stops the same way after 5, so it precedes the inspection, and `book-args`
   (`IO.args`, foreign 0, of type `IO(List)`) after 4, so it precedes the check of the
@@ -1106,7 +1108,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 86 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 83 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 85 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1156,12 +1158,14 @@ lane and requires:
   takes an immediate for an Action, or an Object for its target; an Action's continuation read before
   its effect, or left unread and taken for the terminal continuation; and a last word that is no
   IO.OP taken for `Emit`. Four more, of §10's UTF-8 of a scalar (the one-byte edge, the two-byte
-  lead, and the edges of two and three bytes), die by the two print controls. Twenty more,
+  lead, and the edges of two and three bytes), die by the two print controls. Twenty-two more,
   of D22, a Halt's message, keys and the debit, die
   by the controls above: a Book that performs the effect and one that drops it silently
   (by every `book-print*` control); one that writes and then refuses (by every `book-print*`
   control's empty `stdout`) or writes as its Action meets fuel 0 (by `fuel-book-effect-short`
-  alone); one that refuses before the debit (by every Book
+  alone); one that calls the host and then refuses (by the `effects` 0 of the seven Book controls whose
+  Action is entered, `fuel-book-effect-short`'s meeting fuel 0 first) or does so for a foreign that
+  writes nothing (by `book-args` alone); one that refuses before the debit (by every Book
   print control and both fuel controls) or when the fuel is 0 (by `fuel-book-effect-short`
   alone); one that names the foreign it refuses, as vm-model
   answered `Unsupported vm foreign 0` (by `book-args` alone); one that refuses only

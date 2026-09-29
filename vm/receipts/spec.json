@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T00:31:44.123731+00:00",
+ "date": "2026-09-29T00:45:26.210425+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "1016398397aa32028df45ec314db7ea910a9089c01ad77f52c525d84914a49d7",
-  "vm/SPEC.md": "de467939418486694142a6f0eb8bdcf61ca3ba09ecaea49c3f8530bfa5df04ff",
+  "vm/DECISIONS.md": "1e6ccbe9135c21ea567b0c5068c07994603d3feffb635182a00997cbe0748105",
+  "vm/SPEC.md": "23aa1ebd7718b463bdc8d940b6d75d368fc131e864f7b2f2361240b2f5e78e83",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,8 +20,8 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "65e8eb02b24d96bb80c673ae58b1d7832387605367a1851fe5dd65d94069a31a",
-  "vm/evaluate.py": "65442bdca8e422411249f83334739c4592c96d14974a9f409bfeb0c8436b6690",
+  "vm/check-spec.py": "4be76fe2aa14f4e38963957f4a3cf9b1b4d93fcca0b78978d0d3ad66dc116057",
+  "vm/evaluate.py": "30582025b24f0bbe0090e2345f86bfd9ee1a9c458cd56dbd17b94d902730fa6c",
   "vm/golden/bounds.json": "acaea7544a23ce7d1502dc42dfec108e799f0c909bbc29cabcc6c7ba4fc47500",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
   "vm/golden/case-char.kimg": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
@@ -4347,6 +4347,7 @@
    "outcome": "Unsupported",
    "cause": "vm effect",
    "stdout": "",
+   "effects": 0,
    "calls": 4,
    "image_sha256": "8267508641dc925d35a0a8f985f15137f9214ee9280f4795ee2c97ffcdeb86a9"
   },
@@ -4359,6 +4360,7 @@
    "outcome": "Unsupported",
    "cause": "vm effect",
    "stdout": "",
+   "effects": 0,
    "calls": 4,
    "image_sha256": "9318299605750bf9731695648de9e63e1fe04776db67c6b41f54b24d376b3d4b"
   },
@@ -4371,6 +4373,7 @@
    "outcome": "Unsupported",
    "cause": "vm effect",
    "stdout": "",
+   "effects": 0,
    "calls": 4,
    "image_sha256": "b11dc9dae8e64776e605d61c7c545b228a02bf07f8a8f85f0de208f6d84436a2"
   },
@@ -4383,6 +4386,7 @@
    "outcome": "Unsupported",
    "cause": "vm effect",
    "stdout": "",
+   "effects": 0,
    "calls": 4,
    "image_sha256": "4f56c89386a615720601a44217e451dcf7f1562802fb8ebb6ed547a7866b554a"
   },
@@ -4395,6 +4399,7 @@
    "outcome": "Unsupported",
    "cause": "vm effect",
    "stdout": "",
+   "effects": 0,
    "calls": 5,
    "image_sha256": "37e83355776cfbb2cc796499e4a37828e9f0fccc8b0d388c3145d37d17c5ceb5"
   },
@@ -4407,6 +4412,7 @@
    "outcome": "Unsupported",
    "cause": "vm effect",
    "stdout": "",
+   "effects": 0,
    "calls": 4,
    "image_sha256": "ec6c1e0a0a84738ff6d47a32c7a8f3f90485de4630fe868791a424609adde433"
   },
@@ -4420,6 +4426,7 @@
    "outcome": "Unsupported",
    "cause": "vm effect",
    "stdout": "",
+   "effects": 0,
    "calls": 4,
    "image_sha256": "8267508641dc925d35a0a8f985f15137f9214ee9280f4795ee2c97ffcdeb86a9"
   },
@@ -4434,6 +4441,7 @@
    "kind": 1,
    "cause": "fuel",
    "stdout": "",
+   "effects": 0,
    "calls": 3,
    "image_sha256": "8267508641dc925d35a0a8f985f15137f9214ee9280f4795ee2c97ffcdeb86a9"
   },
@@ -5197,22 +5205,22 @@
   {
    "mutant": "evaluator:nat-case-binds-n",
    "killed": true,
-   "by": "nat-pred: nat-pred: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t1\\tSucc{Succ{Succ{Zero{}}}}\\n', 'calls': 2}"
+   "by": "nat-pred: nat-pred: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t1\\tSucc{Succ{Succ{Zero{}}}}\\n', 'effects': 0, 'calls': 2}"
   },
   {
    "mutant": "evaluator:nat-predecessor-narrowed",
    "killed": true,
-   "by": "nat-case-big: nat-case-big: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'calls': 4}"
+   "by": "nat-case-big: nat-case-big: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'effects': 0, 'calls': 4}"
   },
   {
    "mutant": "evaluator:string-literal-reversed",
    "killed": true,
-   "by": "string-reverse: string-reverse: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'calls': 3}"
+   "by": "string-reverse: string-reverse: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'effects': 0, 'calls': 3}"
   },
   {
    "mutant": "evaluator:captures-reversed",
    "killed": true,
-   "by": "closure-captures: closure-captures: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t1\\t0\\tPair{Off{},On{}}\\n', 'calls': 3}"
+   "by": "closure-captures: closure-captures: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t1\\t0\\tPair{Off{},On{}}\\n', 'effects': 0, 'calls': 3}"
   },
   {
    "mutant": "evaluator:closure-arity-unchecked",
@@ -5227,7 +5235,7 @@
   {
    "mutant": "evaluator:u32-sub-saturates",
    "killed": true,
-   "by": "u32-sub-wrap: u32-sub-wrap: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'calls': 3}"
+   "by": "u32-sub-wrap: u32-sub-wrap: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'effects': 0, 'calls': 3}"
   },
   {
    "mutant": "evaluator:display-visits-exclusive",
@@ -5467,7 +5475,7 @@
   {
    "mutant": "evaluator:describe-closure-word-admitted",
    "killed": true,
-   "by": "run control inspect-render-field: {'outcome': None, 'cause': None, 'calls': 2}"
+   "by": "run control inspect-render-closure: {'outcome': None, 'cause': None, 'calls': 2}"
   },
   {
    "mutant": "evaluator:enter-immediate-target-as-action",
@@ -5502,12 +5510,12 @@
   {
    "mutant": "evaluator:book-performs-effect",
    "killed": true,
-   "by": "run control book-print: {'outcome': None, 'cause': None, 'stdout': 'x\\nEvaluated\\t8\\t1\\tOn{}\\n', 'calls': 6}"
+   "by": "run control book-print: {'outcome': None, 'cause': None, 'stdout': 'x\\nEvaluated\\t8\\t1\\tOn{}\\n', 'effects': 1, 'calls': 6}"
   },
   {
    "mutant": "evaluator:book-drops-effect",
    "killed": true,
-   "by": "run control book-print: {'outcome': None, 'cause': None, 'stdout': 'Evaluated\\t8\\t1\\tOn{}\\n', 'calls': 6}"
+   "by": "run control book-print: {'outcome': None, 'cause': None, 'stdout': 'Evaluated\\t8\\t1\\tOn{}\\n', 'effects': 0, 'calls': 6}"
   },
   {
    "mutant": "evaluator:program-refuses-effect",
@@ -5517,47 +5525,57 @@
   {
    "mutant": "evaluator:book-refuses-at-fuel-zero",
    "killed": true,
-   "by": "run control fuel-book-effect-short: {'fuel': 3, 'outcome': 'Unsupported', 'kind': None, 'cause': 'vm effect', 'stdout': '', 'calls': 3}"
+   "by": "run control fuel-book-effect-short: {'fuel': 3, 'outcome': 'Unsupported', 'kind': None, 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 3}"
   },
   {
    "mutant": "evaluator:book-refuses-before-debit",
    "killed": true,
-   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'calls': 3}"
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 3}"
   },
   {
    "mutant": "evaluator:book-names-the-foreign",
    "killed": true,
-   "by": "run control book-args: {'outcome': 'Unsupported', 'cause': 'vm foreign 0', 'stdout': '', 'calls': 4}"
+   "by": "run control book-args: {'outcome': 'Unsupported', 'cause': 'vm foreign 0', 'stdout': '', 'effects': 0, 'calls': 4}"
   },
   {
    "mutant": "evaluator:book-refuses-after-inspection",
    "killed": true,
-   "by": "run control book-print-ill-typed: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'stdout': '', 'calls': 5}"
+   "by": "run control book-print-ill-typed: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'stdout': '', 'effects': 0, 'calls': 5}"
   },
   {
    "mutant": "evaluator:book-refuses-after-scalar-check",
    "killed": true,
-   "by": "run control book-print-non-scalar: {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'calls': 4}"
+   "by": "run control book-print-non-scalar: {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'effects': 0, 'calls': 4}"
   },
   {
    "mutant": "evaluator:book-writes-then-refuses",
    "killed": true,
-   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': 'x\\n', 'calls': 4}"
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': 'x\\n', 'effects': 0, 'calls': 4}"
   },
   {
    "mutant": "evaluator:book-writes-at-fuel-zero",
    "killed": true,
-   "by": "run control fuel-book-effect-short: {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': 'x\\n', 'calls': 3}"
+   "by": "run control fuel-book-effect-short: {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': 'x\\n', 'effects': 0, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:book-calls-host-then-refuses",
+   "killed": true,
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 1, 'calls': 4}"
+  },
+  {
+   "mutant": "evaluator:book-args-calls-host",
+   "killed": true,
+   "by": "run control book-args: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 1, 'calls': 4}"
   },
   {
    "mutant": "evaluator:book-refuses-action-build",
    "killed": true,
-   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'calls': 2}"
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 2}"
   },
   {
    "mutant": "evaluator:book-refuses-erased-application",
    "killed": true,
-   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'calls': 3}"
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 3}"
   },
   {
    "mutant": "evaluator:halt-message-unchecked",
