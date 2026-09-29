@@ -307,9 +307,9 @@ stack. The validator checks every function, reachable or not:
 - **Function**: its body has its result type (`body-type`), and its `slots` are the body's exact depth
   (`function-slots`).
 
-**Step 5, clause by clause.** An image is canonical exactly when these ten hold, and a decoded plan does not keep the
-words that they are about, so no earlier step can refuse a breach: a layout may differ from the canonical one and
-decode to the same plan. `canonical_violations` reads each clause from the image's words and never by encoding it
+**Step 5, clause by clause.** An image that passes steps 1 to 4 is canonical exactly when these ten hold, and a decoded
+plan does not keep the words that they are about, so no earlier step can refuse a breach: a layout may differ from the
+canonical one and decode to the same plan. `canonical_violations` reads each clause from the image's words and never by encoding it
 again, and the gate holds it against re-encoding (§12). One frozen control breaks each clause alone, and the image
 passes every other step.
 1. **Main word.** Header word 4 is the index of the function named `main`, or `none` if there is none
@@ -358,8 +358,11 @@ and `type-count-short` a sum that falls short.
 vm-model and vm-core MUST each refuse every one of them, with the frozen refusal: `Exhausted`
 kind 2 for a limit, `HostFailure image` for the rest, and the reference codec's own reason where
 the VM reports one (vm-model spells it, vm-core maps it to a code of its own). A control breaks exactly one
-rule of §2–§4 in a golden's image or plan, and its refusal is the first that any loader gives, so a loader that
-omits the rule admits it. Byte-level, on a valid golden's records laid out again: every malformed form of a name
+rule of §2–§4 in a golden's image or plan, and the reference's refusal names that rule alone. A loader that omits the
+rule admits the image or, where it decides canonicality by encoding the decoded plan again, refuses it as `noncanonical`
+instead (a changed reason: an opaque type's payload word, a named arrow, a scalar of two words and a repeated name are
+words that a plan does not keep, so they are refused by their own rule or, failing that, by canonicality). Byte-level, on a valid
+golden's records laid out again: every malformed form of a name
 (each of the overlong forms, a surrogate, a code beyond U+10FFFF, a lead of `F5`, a sequence cut short inside or before
 an ASCII byte, a stray continuation), a NUL inside a name and each nonzero unused byte (the first and both, not
 only the last), an empty name, a name whose length word does not match its bytes, a repeated name, a name

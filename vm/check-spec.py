@@ -1327,8 +1327,9 @@ def packed(text: bytes) -> list:
 def structure_controls(images: dict) -> list:
     """(label, bytes, frozen refusal, '') for a golden's image with one record changed so that it breaks one clause of
     SPEC section 2 or 4 (round 13, review findings 1 to 3). Every control changes one record of a valid image and
-    breaks no second clause, so its refusal is the first that any loader gives. Where a loader that omits the clause
-    misses the image (a name of no bytes), the image is otherwise valid and canonical; the canonicality controls
+    breaks one clause, so the reference's refusal names it. A loader that omits the clause admits the image (a name of
+    no bytes leaves it valid and canonical) or, where it decides canonicality by encoding the plan again, refuses it as
+    `noncanonical` instead (an opaque type with a payload word: a plan does not keep it); the canonicality controls
     break one clause of section 4 step 5 each (`canonical_violations`)."""
     second = images['second']
 
