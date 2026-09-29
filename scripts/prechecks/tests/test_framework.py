@@ -235,14 +235,19 @@ class IncrementIdTests(RepoTest):
 
 
 class SnapshotTests(RepoTest):
-    def test_shared_symlinks_and_generated_directories_do_not_make_a_worktree_dirty(self):
-        self.fx.commit('main', {'a.txt': 'a\n'})
-        head_tree = self.fx.git('rev-parse', 'HEAD^{tree}')
-        (self.fx.root.parent / 'shared').mkdir()
+    def shared(self):
+        (self.fx.root.parent / 'shared').mkdir(exist_ok=True)
         for name in ('.toolchain', 'node_modules'):
             (self.fx.root / name).symlink_to(self.fx.root.parent / 'shared')          # GATES.md: worktrees share these as links
         self.fx.write('.local/x/y.txt', 'scratch\n')
         self.fx.write('build/out.txt', 'generated\n')
+        self.fx.write('.env', 'SYNTHETIC_ONLY=1\n')
+        self.fx.write('.env.local', 'SYNTHETIC_ONLY=2\n')
+
+    def test_shared_symlinks_and_generated_directories_do_not_make_a_worktree_dirty(self):
+        self.fx.commit('main', {'a.txt': 'a\n'})
+        head_tree = self.fx.git('rev-parse', 'HEAD^{tree}')
+        self.shared()
         repo = self.fx.repo()
         self.assertFalse(repo.worktree_dirty())
         self.assertEqual(head_tree, repo.snapshot_worktree())
@@ -250,6 +255,27 @@ class SnapshotTests(RepoTest):
         self.fx.write('b.txt', 'new\n')                                             # a real change still counts
         self.assertTrue(repo.worktree_dirty())
         self.assertNotEqual(head_tree, repo.snapshot_worktree())
+
+    def test_the_snapshot_works_when_the_excluded_names_are_ignored_and_exist(self):
+        """`git add -A -- . ':(exclude).env'` fails when `.env` exists and is ignored (a main checkout; `.local` in every
+        worktree): the exclusions are wildcard globs, never named paths, and nothing excluded is staged or read."""
+        self.fx.commit('main', {'a.txt': 'a\n', '.gitignore': '.env\n.env.*\n.toolchain/\nnode_modules/\n.local/\nbuild/\n'})
+        head_tree = self.fx.git('rev-parse', 'HEAD^{tree}')
+        self.shared()
+        self.fx.write('sub/.env', 'SYNTHETIC_ONLY=3\n')
+        repo = self.fx.repo()
+        self.assertEqual(head_tree, repo.snapshot_worktree())
+        self.assertFalse(repo.worktree_dirty())
+        self.fx.write('b.txt', 'new\n')
+        tree = repo.snapshot_worktree()
+        self.assertEqual(['a.txt', 'b.txt'], sorted(p for p in repo.ls_tree(tree) if not p.startswith('.gitignore')))
+        self.assertNotIn('.env', repo.ls_tree(tree))
+
+    def test_a_nested_directory_named_build_is_not_excluded(self):
+        self.fx.commit('main', {'tests/x/build/keep.txt': 'v1\n'})
+        self.fx.write('tests/x/build/keep.txt', 'v2\n')
+        self.assertTrue(self.fx.repo().worktree_dirty())
+        self.assertNotEqual(self.fx.git('rev-parse', 'HEAD^{tree}'), self.fx.repo().snapshot_worktree())
 
 
 if __name__ == '__main__':

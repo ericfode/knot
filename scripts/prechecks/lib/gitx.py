@@ -12,11 +12,20 @@ import threading
 from dataclasses import dataclass
 from pathlib import Path
 
-ENV_EXCLUDES = (':(exclude).env', ':(exclude).env.*', ':(glob,exclude)**/.env', ':(glob,exclude)**/.env.*')
+def _root_glob(name: str) -> str:
+    """An exclude pathspec for a top-level name. `git add -A -- . ':(exclude)<ignored name>'` refuses ("The following paths
+    are ignored") when that ignored path exists, which is the normal state of `.env` in a main checkout and of `.local` in
+    every worktree; a glob with a wildcard is never treated as naming a path. Bracketing the last character keeps the pattern
+    anchored at the root, and the second form excludes what is inside a real directory."""
+    pattern = f'{name[:-1]}[{name[-1]}]'
+    return f':(glob,exclude){pattern}', f':(glob,exclude){pattern}/**'
+
+
+ENV_EXCLUDES = (':(glob,exclude)**/.env', ':(glob,exclude)**/.env.*')
 # Directories every campaign worktree shares or generates. GATES.md links `.toolchain` and `node_modules` as symlinks, and
 # `.gitignore`'s `node_modules/` and `.toolchain/` match directories only, so without these pathspecs a snapshot would stage
 # the two symlinks and every worktree would look dirty. The gate runner excludes the same four names (run.py `excluded`).
-SHARED_EXCLUDES = (':(exclude).toolchain', ':(exclude)node_modules', ':(exclude).local', ':(exclude)build')
+SHARED_EXCLUDES = tuple(p for name in ('.toolchain', 'node_modules', '.local', 'build') for p in _root_glob(name))
 SNAPSHOT_EXCLUDES = ENV_EXCLUDES + SHARED_EXCLUDES
 
 
