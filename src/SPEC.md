@@ -187,10 +187,11 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
 | An arm body that starts with a name, `+`, `-` or `match` on the line after its `case`, at the case's column or below it; a later statement at another column | `parse` | `body-indentation` |
 | A term suffix where a term ends (a body, a let's value, an expression argument): an infix operator, a call, an index, an offload `!(`, a lambda after a name; a `+name` term; a line that starts with an operator, `!(` or `=>` | `parse` | `term-form` |
+| A let's value that starts on the line after its `=` with any term (a name was already covered) | `parse` | `line-break` |
 
 After a term the seed reads an infix operator (each of its table: `->`, `&`, `|`, `||`, `&&`, comparisons, `<>`, `++`,
 `<&>`, `.|.`, `.^.`, `.&.`, shifts, arithmetic), a call, an index, an offload `!(` and, after a name, a lambda `=>`;
-`+name` is a promoted variable, and a line that starts with an operator, `!(` or `=>` continues the term before it.
+`+name` and `+(name)` are a promoted variable, also across the line break after the `+`, and a line that starts with an operator, `!(` or `=>` continues the term before it.
 A body the lowering discards is parsed and never checked, and a live one needs a target the program defines (`def
 Bool.or`, `def Pair`), so the parser leaves each unread: `Unsupported parse term-form`, never Invalid. It keeps
 `Invalid` where the seed rejects everywhere: a closer, `==`, `=>` after a constructor, a `+` or `-` touching a name
@@ -207,8 +208,8 @@ parameters that the seed reads as an unused partial application (`Invalid check
 call-arity`), a global function used as a value (`Invalid check free-name`) and a
 Nat literal pattern as a let binder at another column, a constructor line of a type declaration at another
 column, a spaced `+` or `-` that starts the line after a let's value (the seed continues the value with an
-operator; round 10's `detached_marker` law pins `Invalid parse detached-marker`) and a hole or a `+` marker as the next
-argument after whitespace. An arm body that starts
+operator; round 10's `detached_marker` law pins `Invalid parse detached-marker`) and a term that starts with `?`, `@` or `\`, or a `+`
+marker, as the next argument after whitespace. An arm body that starts
 with a name, `+`, `-` or `match` and sits at or below its `case` column, and a
 later statement at another column, are `Unsupported parse body-indentation`; an
 empty arm stays invalid. Recognition stops at that prefix; it neither validates

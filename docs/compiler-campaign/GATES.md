@@ -70,7 +70,7 @@ mutants and `fuzz11.py`, 6,100 fixed-seed programs compared with the seed, each 
 both compiler lanes with its own semantic mutants, and `nest-round12` the round-12 first-row marks (a `+` on a field of
 the first row that starts a constructor marks that field in every row below its split), the term suffixes (an operator,
 a call, an index, an offload, a lambda after a term, and `+name` as a term, are Unsupported wherever a term ends) and
-the oracle's atomic wrapper writes, with 22 semantic mutants and `fuzz12.py`, 3,000 fixed-seed programs compared with
+the oracle's atomic wrapper writes, with 26 semantic mutants and `fuzz12.py`, 3,000 fixed-seed programs compared with
 the seed. The nest gates scale their
 harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs

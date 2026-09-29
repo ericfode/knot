@@ -318,7 +318,7 @@ reports the same `Invalid` for a program with one scrutinee.
 
 - **A def header's parameters and a type's fields with a line break or extra whitespace** (the literals-layout
   increment's `layout-def-header`). 72 of the 115 programs below.
-- **Term suffixes the term parser lacks.** An infix operator (`On{} || Off{}`, `On{} -> Off{}`, `a & b`,
+- **Term suffixes the term parser lacks (fixed in round 12: `Unsupported parse term-form`).** An infix operator (`On{} || Off{}`, `On{} -> Off{}`, `a & b`,
   `a <> b`), a chained call `g(a)(a)`, an index `a[0n]` and `g!(a)` after a complete term. In a discarded body
   or let the seed parses and never checks them; a live one needs a target the program defines (`def Pair`,
   `def Bool.and`, a `Con` constructor). Knot answers `Invalid parse end-of-body` (`expected-` at a let's line
@@ -331,7 +331,7 @@ reports the same `Invalid` for a program with one scrutinee.
 - **A global function used as a value** (`-v = main`; `Invalid check free-name`; the closures increment).
 - **A Nat literal pattern as a let binder at another column** (`0n+v : Flag = ..`; `Invalid parse
   body-indentation`).
-- **A `+x0` term in a discarded row** (`case _: +x0`; `Invalid parse expected-=`): the parser reads a
+- **A `+x0` term in a discarded row** (`case _: +x0`; `Invalid parse expected-=`; fixed in round 12): the parser reads a
   statement. 2 programs below.
 - **A constructor line of a type declaration at another column**, found by the last fuzz runs.
 - **A lone `+` marker line before another marker** (`+`, break, `+ w : F = x`; `Invalid parse binding-name`): the seed
@@ -342,6 +342,10 @@ reports the same `Invalid` for a program with one scrutinee.
   (now `Unsupported`) were such artefacts, and an infix operator in a discarded row of a two-scrutinee match
   is the one seed-accepted program of the reviewers' probe roots that the merge base answered
   `Unsupported` and this branch answers `Invalid` (`mrun2/m19150`, `fl_Bx->(x0)`).
+  **Correction (round 12, [REVIEW-12.md](REVIEW-12.md)): it is a class, not one program.** Every term suffix (an
+  infix operator, a chained call, an index, an offload) and every `+name` term after a complete term was `Invalid`
+  in a discarded row of a two-scrutinee match, where the merge base answered `Unsupported`; the probe roots held one
+  program of the class. Round 12 answers `Unsupported parse term-form` at every site a term ends.
 
 **The reviewers' probe roots, all 48,517 programs without an import line** (`receipts/round11-probescan.json`;
 each program is classified by the seed and by three checkers: the round-10 tip, the merge base and this tree):
