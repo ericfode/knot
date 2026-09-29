@@ -141,6 +141,19 @@ class C3Tests(RepoTest):
             'def counts(root, gate, stdout):', 'def counts(root, gate):'), {'new'}))
         self.assertEqual([], c3.run_py_problems(RUN_PY, self.registered(), {'new'}))           # the clean control
 
+    def test_a_new_branch_that_runs_the_gates_own_module_is_a_minor_note_for_the_coordinator(self):
+        """generics f39ba7e8: `if gate.name == 'generics':` loads tests/compiler-generics/check.py and calls its coverage(): four
+        reviewers filed it. It is the registration GATES.md asks for, so it is never blocking, but the runner now runs gate code."""
+        branch = ("    if gate.name == 'new':\n        import importlib.util\n        spec = importlib.util.spec_from_file_location('g', root / 'n.py')\n"
+                  "        module = importlib.util.module_from_spec(spec)\n        spec.loader.exec_module(module)\n        module.coverage(result)\n")
+        self.start({'scripts/gates/run.py': RUN_PY, 'scripts/gates/test_runner.py': TEST_RUNNER})
+        self.fx.commit('register a gate whose counts run its own module', {'scripts/gates/run.py': self.registered(branch)})
+        found = self.rules(self.run3(), 'shared-file-shape')
+        self.assertEqual([('minor', 'coordinator', 'counts-runs-gate-code')], [(c.severity, c.actor, c.subject['kind']) for c in found])
+        self.assertIn("runs the gate's own module", found[0].observed)
+        self.assertEqual([], c3.run_py_problems(RUN_PY, self.registered(branch), {'new'}))      # and it is not a problem of the shape
+        self.assertEqual([], c3.counts_branch_notes(RUN_PY, self.registered(), {'new'}))        # the plain registration raises no note
+
     def test_a_branch_selecting_several_new_gates_is_accepted_only_when_all_are_new(self):
         both = RUN_PY.replace("    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n", self.NEW_ROW.replace(
             "Gate('new'", "Gate('other', ('python3', 'o.py'), ('r/o.json',)),\n    Gate('new'"))

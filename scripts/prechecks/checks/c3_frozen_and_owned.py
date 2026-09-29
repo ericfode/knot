@@ -187,6 +187,31 @@ def run_py_problems(base_text: str, head_text: str, added: set[str]) -> list[str
     return problems
 
 
+RUNS_GATE_CODE = re.compile(r'spec_from_file_location|importlib|exec_module|__import__|\bexec\(|\beval\(|runpy')
+
+
+def counts_branch_notes(base_text: str, head_text: str, added: set[str]) -> list[str]:
+    """The added counts() branches of new gates that load and run the gate's own module. GATES.md asks for the branch, so it is
+    never a problem, but a gate that certifies its own counts through code it executes in the shared runner (generics'
+    `module.coverage(record)`) is a runner extension the coordinator should accept explicitly."""
+    try:
+        base_mod, head_mod = ast.parse(base_text), ast.parse(head_text)
+    except SyntaxError:
+        return []
+    base_counts, head_counts = _counts_function(base_mod), _counts_function(head_mod)
+    if base_counts is None or head_counts is None:
+        return []
+    parameter = head_counts.args.args[1].arg if len(head_counts.args.args) > 1 else 'gate'
+    known = {ast.get_source_segment(base_text, node) for node in base_counts.body}
+    notes = []
+    for node in head_counts.body:
+        text = ast.get_source_segment(head_text, node) or ''
+        names = _selected_gates(node, parameter)
+        if text not in known and names and names <= added and RUNS_GATE_CODE.search(text):
+            notes.append(f"the branch for {sorted(names)[0]} runs the gate's own module inside the shared runner")
+    return notes
+
+
 def shared_shape(ctx) -> list[Condition]:
     found = []
     for path, shape in ctx.manifest.appends().items():
@@ -205,6 +230,13 @@ def shared_shape(ctx) -> list[Condition]:
                     problems.append(f'gate {name} changed')
             if not _authorized(ctx, path, 'counts'):
                 problems += run_py_problems(base_text, head_text, set(after) - set(before))
+                for note in counts_branch_notes(base_text, head_text, set(after) - set(before)):
+                    found.append(Condition(ID, 'shared-file-shape', 'minor', {'path': path, 'shape': shape, 'kind': 'counts-runs-gate-code'},
+                                           actor='coordinator', value={'branches': 1},
+                                           expected='a new gate\'s counts() branch reads its receipt; it does not execute the gate\'s module',
+                                           observed=note, evidence={'problems': [note]},
+                                           fix_hint='Accept the runner extension explicitly (GATES.md), or have the gate write a receipt shape '
+                                                    'that the generic counts already understand.'))
         elif shape == 'required-name':
             removed = gates_lib.required_names(base_text) - gates_lib.required_names(head_text)
             if removed:
