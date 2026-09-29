@@ -1561,11 +1561,14 @@ def effect_controls(plans: dict) -> list:
       refuses the shape that a Case reads the answer of (`got(IO.print("x")(R)(k))`, its own
       test request_out_of_band.bend), and D23 refuses it as well: `program-case-request`, and the
       reads that a request meets in a Book (`inspect-request-*`, `book-request-rendered`, `-field`
-      and `enter-request-target`), each `Unsupported vm effect` and never ill-typed. A Case with a Default
-      beside an Emit row, a Halt row or no row is refused the same (`program-case-request-emit-default`,
-      `-halt-default`, `-default-only`): the native lane takes the Default and the Bun lane fail-stops on a
-      constructor row (witnesses case-request-*), and Knot cannot lower such a source, so it is a recorded
-      capability gap and not a value that the VM owes (SPEC section 8).
+      and `enter-request-target`), each `Unsupported vm effect` and never ill-typed. A tags-mode Case with a
+      Default takes it (D24), as the seed's native lane does: beside an Emit row, a Halt row or no row
+      (`program-case-request-emit-default`, `-halt-default`, `-default-only`), each ends exit 0 after the same 7
+      entries with nothing written and no effect, since the request is never read or performed; at any scrutinee
+      type (`case-request-default-at-flag`, a Book). The goldens `case-request-emit-default-u32` (`2`),
+      `case-request-halt-default-u32` (`4`) and `case-request-emit-default` freeze the seed's values. A Case
+      without a Default (`program-case-request`) and a key-mode Case (`inspect-request-keys`, a scalar read, not
+      a constructor row) still refuse the request.
     - A scalar String is written as canonical UTF-8 (section 10): `foreign-print`'s plan prints the four
       examples of each length (U+0024, U+00A2, U+20AC, U+10348) and the edges of every length
       (U+007F, U+0080, U+07FF, U+0800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF), after 5 entries.
@@ -1645,6 +1648,9 @@ def effect_controls(plans: dict) -> list:
     default_only = defaulted('got-default-only', [None, None], 1)
     request, k_ref = printing(text('x')), ['ref', 5, 0]
     unsupported = {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0}
+    quiet = {'exit': 0, 'stdout': '', 'effects': 0}
+    pick_default = {'name': 'pick-default', 'parameters': [None], 'result': 8, 'slots': 1, 'body': [
+        'case', 8, 0, 8, 'tags', [None, ['branch', 1, 1, 0, ['value', 8, 1]]], ['default', ['value', 8, 0]]]}
 
     def through_id(node, t):
         return ['call', t, ident, [node]]
@@ -1699,18 +1705,23 @@ def effect_controls(plans: dict) -> list:
         # before any ill-typed check and, for the Enter, before the debit.
         ('program-case-request', entered(['con', 4, 0, [['call', 8, got, [printing(text('x'), k_ref)]]]]),
          {**unsupported, 'calls': 7}),
-        # A Case over a request is refused whatever rows it has, a Default included: an Emit row or a Halt row
-        # beside a Default, or no row at all (the same 7 entries: main, IO.print, R, the Action, k, `got-*`). The
-        # pinned literals head reports `Unsupported check variable-pattern` for every catch-all on an algebraic
-        # type, so no Knot source lowers to these plans. The seed's native lane takes the Default of the first
-        # two and both lanes run the third without reading the request, and the Bun lane fail-stops on a
-        # constructor row (the witnesses case-request-*): a recorded capability gap (section 8), never an arm.
+        # D24: a request matches no constructor row, so a Case with a Default takes the Default, whatever rows it
+        # has: an Emit row or a Halt row beside it, or no row at all (the same 7 entries: main, IO.print, R, the
+        # Action, k, `got-*`; the Default's Flag goes into an Emit, whose field is unread, so the run ends exit 0
+        # with nothing written and no effect: the request is never read or performed). The seed's native lane
+        # takes the Default of the first two and both lanes run the third without reading the request; the Bun lane
+        # fail-stops on a constructor row (the goldens case-request-*, which freeze the values `2` and `4`).
         ('program-case-request-emit-default',
-         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, emit_default), {**unsupported, 'calls': 7}),
+         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, emit_default), {**quiet, 'calls': 7}),
         ('program-case-request-halt-default',
-         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, halt_default), {**unsupported, 'calls': 7}),
+         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, halt_default), {**quiet, 'calls': 7}),
         ('program-case-request-default-only',
-         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, default_only), {**unsupported, 'calls': 7}),
+         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, default_only), {**quiet, 'calls': 7}),
+        # The Default is taken at any tags-mode scrutinee type: `pick_default` names Flag for the `none` word that
+        # `id` hands it, a request, and answers Off{} from its Default (6 entries: main, IO.print, R, the Action, id,
+        # pick_default), where the key-mode Case of `inspect-request-keys` below still refuses.
+        ('case-request-default-at-flag', image('book', ['call', 8, 4, [through_id(request, None)]], 0, pick_default),
+         {'exit': 0, 'stdout': 'Evaluated\t8\t0\tOff{}\n', 'effects': 0, 'calls': 6}),
         ('book-request-rendered', image('book', through_id(request, 8)), {**unsupported, 'calls': 5}),
         ('book-request-field',
          {**image('book', ['con', 10, 0, [['value', 8, 1], through_id(request, 8)]], 0, result=10), 'types': [*types, pair]},
