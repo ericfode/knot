@@ -115,7 +115,8 @@ def pattern(node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,G.Const
   match node:
     case S.Constructor{+token,+args}:
       S.bind(G.ConstructorRef,G.ConstructorRef,G.pattern_constructor(types,token),+reference =>
-        S.bind(List<&2,C.Parameter>,G.ConstructorRef,G.field_signature(reference,types),params => pattern_arity(reference,args,token,params)))
+        S.bind(List<&2,C.Parameter>,G.ConstructorRef,G.field_signature(reference,types),params =>
+          S.bind(Unit,G.ConstructorRef,G.promotions(args,types),u => pattern_arity(reference,args,token,params))))
     case S.Variable{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
     case S.Promotion{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
     case S.Call{token,args}: C.invalid(G.ConstructorRef,"pattern-form",token)

@@ -148,6 +148,12 @@ def promotion(+types: List<&2,C.Datatype>, +name: S.Token) -> Result<S.Error,Uni
 def marked(+types: List<&2,C.Datatype>, +name: S.Token, +q: U32) -> Result<S.Error,Unit>:
   S.choose(Result<S.Error,Unit>,U32.is_eq(q,2),u => promotion(types,name),u => Done{Unit{}})
 
+def promotions(args: List<&2,S.Node>, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
+  match args:
+    case Nil{}: Done{Unit{}}
+    case Con{S.Promotion{+token},+tail}: S.bind(Unit,Unit,promotion(types,token),u => promotions(tail,types))
+    case Con{head,tail}: promotions(tail,types)
+
 def pattern_constructor(+types: List<&2,C.Datatype>, +name: S.Token) -> Result<S.Error,ConstructorRef>:
   S.choose(Result<S.Error,ConstructorRef>,constructor_before(types,name),u => find_constructor(types,name,0),u =>
     C.invalid(ConstructorRef,"unknown-constructor",name))
