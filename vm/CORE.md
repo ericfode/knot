@@ -13,7 +13,7 @@ BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FN 
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FUEL -- [ARGS...]
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py --freeze         # rewrite core/seeded.json and core/lane.json from the seed
-BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 993 systematic mutants (2,783 s at a load of about 35)
+BEND_NO_TELEMETRY=1 KNOT_GATE_TIMEOUT_SCALE=2 python3 vm/check-core.py --study --heavy --jobs 10  # the 993 systematic mutants (2,783 s at a load of about 35)
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --only NAME,NAME  # the mutants whose names contain one of these (no receipt)
 ```
 
@@ -1029,37 +1029,39 @@ adopt them or record its own, so that lockstep compares like with like.
   NAME,NAME` runs the mutants whose names contain any of those words and writes no receipt.
 
   *Result*, on `vm.wat` sha256 `96bc6c90…` (round 7; 2,783 s on 10 workers, a load of about 35; the
-  receipt's `KNOT_GATE_TIMEOUT_SCALE` was 2, so that load could not turn a slow row into a hang): of the
-  993 mutants, **880 show a wrong observation** (4 only on a ceiling row), **14 are killed only by a
-  hang** (`$select`'s search, `$ctor`'s walk, and loops of `$enter`, `$serve`, `$describable` and
-  `$entry` that never end) and **27 only by a trap** (an out-of-bounds store or load: `append`'s block,
-  describe's worklist arithmetic, the String cells' immediate tests, the loads of a large scalar in
-  `$enter` and `$finish`, the walks of the describe domain and of the invocation's arguments, and the
-  copies and reads past a cell's end that only the four memory-end rows reach), and **72 survive**, each
-  explained in `study.EQUIVALENT`, which the study checks against its survivors both ways. The gate's
-  rule for its own mutants counts a trap or a hang only in the groups whose defect it is, but installed
-  as `vm.wat` each of the 921 fails the gate: a frozen run is never a trap, and a hang outlives the
-  gate's own timeouts. So the gate detects **921 of the 993 (92.7%)**: 880 by a wrong observation, 14 by
-  a hang, 27 by a trap (round 6's 541 of 582, 93%). The groups run cheapest first, and `by_group` in the
-  receipt counts each result by the group of its first wrong observation, hang or trap: the 880 were
-  first killed by keys 259, inspection 160, goldens 138, invocations 58, tags 52, display 47, runs 47,
-  describe-domain 24, fixtures 23, limited 23, sweeps 20, dumps 6, ceiling 4, programs 4, scope 3,
-  witness 3, describe 2, memory-end 2, writers 2, describe-order 1, fuzz-admitted 1, reference 1; the
-  hangs by keys 8, describe-domain 2, inspection 2, goldens 1, tags 1; the traps by keys 7, goldens 5,
-  inspection 4, memory-end 4, display 3, tags 2, ceiling 1, describe-domain 1.
+  run's `KNOT_GATE_TIMEOUT_SCALE` was 2, which the receipt does not record, so that load could not turn
+  a slow row into a hang): of the 993 mutants, **880 show a wrong observation** (4 only on a ceiling
+  row), **14 are killed only by a hang** (`$select`'s search, `$ctor`'s walk, and loops of `$enter`,
+  `$serve`, `$describable` and `$entry` that never end) and **27 only by a trap** (an out-of-bounds
+  store or load: `append`'s block, describe's worklist arithmetic, the String cells' immediate tests,
+  the loads of a large scalar in `$enter` and `$finish`, the walks of the describe domain and of the
+  invocation's arguments, and the copies and reads past a cell's end that only the four memory-end rows
+  reach), and **72 survive**, each explained in `study.EQUIVALENT`, which the study checks against its
+  survivors both ways. The gate's rule for its own mutants counts a trap or a hang only in the groups
+  whose defect it is, but installed as `vm.wat` each of the 921 fails the gate: a frozen run is never a
+  trap, and a hang outlives the gate's own timeouts. So the gate detects **921 of the 993 (92.7%)**: 880
+  by a wrong observation, 14 by a hang, 27 by a trap (round 6's 541 of 582, 93%). The groups run
+  cheapest first, and `by_group` in the receipt counts each result by the group of its first wrong
+  observation, hang or trap: the 880 were first killed by keys 259, inspection 160, goldens 138,
+  invocations 58, tags 52, display 47, runs 47, describe-domain 24, fixtures 23, limited 23, sweeps 20,
+  dumps 6, ceiling 4, programs 4, scope 3, witness 3, describe 2, memory-end 2, writers 2,
+  describe-order 1, fuzz-admitted 1, reference 1; the hangs by keys 8, describe-domain 2, inspection 2,
+  goldens 1, tags 1; the traps by keys 7, goldens 5, inspection 4, memory-end 4, display 3, tags 2,
+  ceiling 1, describe-domain 1.
 
   That reading is the study's, and installing mutants confirms it: a scratch copy of the branch whose
   `vm.wat` carries one mutant, re-pinned (`python3 vm/build.py --write`), makes the whole gate exit 1.
   Round 6's closing session did it for five of its 541 (three memory-end mutants, a golden that traps, a
-  golden that outlives the host's timeout). Round 7 did it for five the study finds by other means than a
-  wrong observation (`.local/vm-core/probe/r12/accept7.py`): `$enter:2409:i32.ge_u->i32.gt_u@28`, the trap of
-  `memory-end-closure` (exit 1 after 17 s); `$room:2735:i64.gt_u->i64.ge_u@9`, found only by a ceiling row
-  (164 s, at `ceiling-top`); `$entry:2954:const 1->0@46`, a hang (243 s, the real host's 120 s timeout);
-  `$describable:2914:const 1->0@63`, a trap (123 s); and `$finish:2690:const 1->2@40`, a trap that a lane row
+  golden that outlives the host's timeout). Round 7 did it for five the study finds by other means than
+  a wrong observation (`.local/vm-core/probe/r12/accept7.py`): `$enter:2409:i32.ge_u->i32.gt_u@28`, the
+  trap of `memory-end-closure` (exit 1 after 17 s); `$room:2735:i64.gt_u->i64.ge_u@9`, found only by a
+  ceiling row (164 s, at `ceiling-top`); `$entry:2954:const 1->0@46`, a hang (243 s, the real host's 120
+  s timeout); `$describable:2914:const 1->0@63`, a trap in the study and a hang on the real host (a
+  golden outlived its 120 s timeout: 123 s); and `$finish:2690:const 1->2@40`, a trap that a lane row
   reports (59 s). Earlier results: on round 6's source (`f206e6e3…`, after the scope-table fix) the same
-  study ran 582 mutants of 23 functions in 3,057 s at a load of about 45: 515 by a wrong observation, 8 by a
-  hang, 18 by a trap and 41 survivors (541 detected, 93%); the reviewer's study of gate `2e0c9b1` had found
-  426 of its 567 by a frozen row, 67 more only by its own corpora, 12 hangs and 62 survivors.
+  study ran 582 mutants of 23 functions in 3,057 s at a load of about 45: 515 by a wrong observation, 8
+  by a hang, 18 by a trap and 41 survivors (541 detected, 93%); the reviewer's study of gate `2e0c9b1`
+  had found 426 of its 567 by a frozen row, 67 more only by its own corpora, 12 hangs and 62 survivors.
 
   How round 7 used it. The first run on the VM that follows D22 to D24 and SPEC §6.3 (993 mutants) left
   109 survivors and one crash (a `$serve` mutant that repeated a print without end filled the process;
@@ -1101,7 +1103,8 @@ adopt them or record its own, so that lockstep compares like with like.
     into its request, which no foreign of the registry (two operands at most) overflows; the four loads
     of `$opnd` for an operand that no completion reads; six sizes of `$describable`'s scratch tables,
     which have slack; and two of `$entry`: a Program's first test at argc 2, which the second test (it
-    reads argument 2 past the table, where scratch's first bytes give length 0) makes in its place, and
+    reads argument 2 past the table, where scratch's first bytes give length 0) makes in its place (the real host's
+    production module prints the same `usage` line on both argc-2 controls), and
     the walk over the ordinals, which starts at the FUEL that `$u32must` read a line above;
   - *no state is read* (6): the header payload count of a String cell (2), a Big cell (2) or the
     terminal continuation's `Emit{x}` (1), which leaves the cell's size class unchanged and is read only
