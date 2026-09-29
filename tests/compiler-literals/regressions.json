@@ -3788,8 +3788,8 @@
         "outcome": "Invalid",
         "exit": 2,
         "artifact": false,
-        "diagnostic_prefix": "Invalid\tparse\tname\t",
-        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot reads every name whole before any structure."
+        "diagnostic_prefix": "Invalid\tlex\tname\t",
+        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot's lexer reads every name whole before any structure."
       }
     },
     {
@@ -3829,8 +3829,8 @@
         "outcome": "Invalid",
         "exit": 2,
         "artifact": false,
-        "diagnostic_prefix": "Invalid\tparse\tname\t",
-        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot reads every name whole before any structure."
+        "diagnostic_prefix": "Invalid\tlex\tname\t",
+        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot's lexer reads every name whole before any structure."
       }
     },
     {
@@ -3870,8 +3870,8 @@
         "outcome": "Invalid",
         "exit": 2,
         "artifact": false,
-        "diagnostic_prefix": "Invalid\tparse\tname\t",
-        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot reads every name whole before any structure."
+        "diagnostic_prefix": "Invalid\tlex\tname\t",
+        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot's lexer reads every name whole before any structure."
       }
     },
     {
@@ -3911,8 +3911,8 @@
         "outcome": "Invalid",
         "exit": 2,
         "artifact": false,
-        "diagnostic_prefix": "Invalid\tparse\tname\t",
-        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot reads every name whole before any structure."
+        "diagnostic_prefix": "Invalid\tlex\tname\t",
+        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot's lexer reads every name whole before any structure."
       }
     },
     {
@@ -6368,14 +6368,64 @@
             "stdout": "Yes{}\n",
             "stderr": ""
           }
+        },
+        {
+          "export": "inspect",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "No"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/pattern-offset-zero-on-enum-inspect-No.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/pattern-offset-zero-on-enum.bend as F\n\ndef main() -> F.Answer:\n  F.inspect(F.No{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/pattern-offset-zero-on-enum-inspect-No.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/pattern-offset-zero-on-enum.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "inspect",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Yes"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/pattern-offset-zero-on-enum-inspect-Yes.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/pattern-offset-zero-on-enum.bend as F\n\ndef main() -> F.Answer:\n  F.inspect(F.Yes{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/pattern-offset-zero-on-enum-inspect-Yes.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/pattern-offset-zero-on-enum.Yes{}\n",
+            "stderr": ""
+          }
         }
       ],
-      "knot_expected": {
-        "outcome": "Unsupported",
-        "exit": 3,
-        "artifact": false,
-        "diagnostic_prefix": "Unsupported\tcheck\tvariable-pattern\t",
-        "justification": "Seed-valid: `0n+p` reads as the binder p, and Knot does not check a binder arm over a datatype (D4)."
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
       }
     },
     {

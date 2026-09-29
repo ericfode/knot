@@ -53,10 +53,6 @@ NESTED = oracle.unsupported(
     'check', 'nested-field-pattern',
     'Knot has no nested field patterns, and a literal inside a constructor pattern is one '
     '(D4); the seed also rejects this single-arm book as missing cases.')
-BINDER = oracle.unsupported(
-    'check', 'variable-pattern',
-    'Seed-valid: `0n+p` reads as the binder p, and Knot does not check a binder arm over a '
-    'datatype (D4).')
 ESCAPE = invalid(
     'lex', 'escape',
     'Seed-invalid ("an escape"): `\\q` is no escape; a following `{` opens a code point only '
@@ -111,9 +107,9 @@ LAYOUT_KEYWORD = oracle.unsupported(
     'Seed-invalid ("a term (the keyword \'def\' cannot head one)"): a newline after an offset\'s `+` is '
     'skipped like a space, so a keyword on the next line is no tail; Knot does not read it as a term (D4).')
 MALFORMED = invalid(
-    'parse', 'name',
+    'lex', 'name',
     'Seed-invalid ("a name (words joined by dots)"): a name is words joined by single dots, each starting '
-    'with a letter or `_`, wherever it stands. Knot reads every name whole before any structure.')
+    'with a letter or `_`, wherever it stands. Knot\'s lexer reads every name whole before any structure.')
 DOTTED_PATTERN = invalid(
     'parse', 'pattern-binder',
     'Seed-invalid ("a pattern (a binder or a constructor)"): a dotted name that no parameter binds is a '
@@ -195,7 +191,7 @@ PLAN = {
                     ['inferred', 'checked', 'scrutinee', 'nat_binder', 'u32_binder', 'string_binder'],
                     oracle.AGREE),
     'let-offset-zero-literal': ('zero offset', 'n = 0n+3n reads as n = 3n', [], ANNOTATION),
-    'pattern-offset-zero-on-enum': ('zero offset', 'case 0n+p on Answer is the binder p', [], BINDER),
+    'pattern-offset-zero-on-enum': ('zero offset', 'case 0n+p on Answer is the binder p', ['inspect'], oracle.AGREE),
     'field-pattern-u32': ('literal field pattern', 'case Box{3}', [], NESTED),
     'field-pattern-offset': ('literal field pattern', 'case Cell{1n+p}', [], NESTED),
     'escape-brace': ('escape before a brace', 'the seven escapes before `{`, plus `\\n}`, `ab{`, '

@@ -6,9 +6,15 @@ acceptance. A seed-rejected fixture must name its Knot diagnostic, and a
 seed-accepted fixture can never be Invalid (D4).
 
 Amended in review round 9: the seed accepts a dotted binder that rebinds a name
-in scope, and the parser does not resolve scopes yet, so every dotted binder
-(a pattern, a `+` promotion, a let, a typed let) is Unsupported parse
+in scope, and the parser did not resolve scopes yet, so every dotted binder
+(a pattern, a `+` promotion, a let, a typed let) was Unsupported parse
 dotted-binder, never Invalid (D4). The seed observations are unchanged.
+
+Amended in the integration of the literals line (review round 1): the parser scopes a
+dotted binder to the names in scope (parameters and the lets above it), so a rebinding is
+accepted, as the seed accepts it, and a dotted binder that binds nothing is Invalid, as the
+seed rejects it: `pattern-binder` in a pattern, `binding-name` in a let. The ten fixtures
+below are all seed-rejected; only their reviewed Knot outcome changes.
 """
 import argparse
 import json
@@ -33,10 +39,10 @@ def unsupported(phase, code):
 # Finding -> fixture -> reviewed Knot outcome for a seed rejection.
 REJECTED = {
     'dotted-binder': {
-        **{name: unsupported('parse', 'dotted-binder') for name in (
+        **{name: invalid('parse', 'pattern-binder') for name in (
             'dot-multi-column', 'dot-variable-row', 'dot-nested-field', 'dot-flat-field',
-            'dot-promotion', 'dot-anonymous', 'dot-constructor-name',
-            'dot-let', 'dot-let-reusable', 'dot-let-typed')},
+            'dot-promotion', 'dot-anonymous', 'dot-constructor-name')},
+        **{name: invalid('parse', 'binding-name') for name in ('dot-let', 'dot-let-reusable', 'dot-let-typed')},
         **{name: invalid('lex', 'name') for name in (
             'name-trailing-dot', 'name-double-dot', 'name-digit-segment',
             'name-type-double-dot', 'name-field-double-dot')},

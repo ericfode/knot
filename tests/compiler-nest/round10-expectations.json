@@ -978,8 +978,8 @@
       },
       "calls": [],
       "knot": {
-        "exit": 2,
-        "diagnostic": "Invalid\tparse\targument-separator\t"
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
       },
       "finding": "argument-control"
     },
@@ -2346,8 +2346,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tbody-indentation\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "body-layout"
     },
@@ -2546,8 +2546,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tbody-indentation\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "body-layout"
     },
@@ -2704,8 +2704,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tbody-indentation\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "body-layout"
     },
@@ -2862,8 +2862,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tbody-indentation\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "body-layout"
     },
@@ -3064,8 +3064,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tbody-indentation\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "body-layout"
     },
@@ -3222,8 +3222,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tbody-indentation\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "body-layout"
     },
@@ -3422,8 +3422,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tbody-indentation\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "body-layout"
     },
@@ -3822,8 +3822,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tline-break\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "let-break"
     },
@@ -4044,8 +4044,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tline-break\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "let-break"
     },
@@ -4202,8 +4202,8 @@
         }
       ],
       "knot": {
-        "exit": 3,
-        "diagnostic": "Unsupported\tparse\tline-break\t"
+        "exit": 0,
+        "outcome": "Accepted"
       },
       "finding": "let-break"
     },
@@ -5344,6 +5344,28 @@
         "diagnostic": "Unsupported\tparse\tline-break\t"
       },
       "finding": "let-break"
+    },
+    {
+      "name": "letsplit-marker-junk",
+      "file": "tests/compiler-nest/round10-fixtures/letsplit-marker-junk.bend",
+      "sha256": "f77a308f0b40be517b3df8b13b113716560d70581c94abdeb71f3706aec176c1",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round10-fixtures/letsplit-marker-junk.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n13 |       +\n14>|       )\n   |       ^\n15 |       two(x, x)\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tbinding-name\t"
+      },
+      "finding": "let-break-control"
     },
     {
       "name": "letsplit-marker-multi",

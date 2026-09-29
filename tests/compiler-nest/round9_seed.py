@@ -10,15 +10,21 @@ refined stays inferable: a residual or default row (the seed types it
 `C3<> - A{}`), a field that was never split, a call, a later parameter, and an
 annotated let.
 
-The seed also accepts a dotted binder that rebinds a name in scope, which Knot
-does not resolve yet: every dotted binder, in a let, a typed let or a pattern,
-is Unsupported (coordinator decision, round 9), never Invalid (D4).
+The seed also accepts a dotted binder that rebinds a name in scope, which Knot did
+not resolve: every dotted binder, in a let, a typed let or a pattern, was Unsupported
+(coordinator decision, round 9), never Invalid (D4).
 
 The seed reads a line break inside call or constructor arguments as whitespace,
-and a second arm on the line of an arm's body as the next arm. Knot ends a term
-at a line break, so these seed-accepted programs are Unsupported, never Invalid.
-A def header's parameters and a type's fields have the same gap; it stays open
-(it is the selfhost suite's `layout` need).
+and a second arm on the line of an arm's body as the next arm. Knot ended a term
+at a line break, so the first of these seed-accepted programs were Unsupported, never
+Invalid. A def header's parameters and a type's fields had the same gap.
+
+Amended in the integration of the literals line (review round 1): the parser scopes a
+dotted binder to the names in scope, so the seven rebinding books are accepted (the
+seed accepts them), and it reads line breaks inside call and constructor arguments as
+whitespace, so the six line-break books are accepted too. A second arm on an arm's
+line stays Unsupported. Only the reviewed Knot outcomes change; the seed observations,
+and so the values every accepted book must agree on, come from the seed.
 """
 import argparse
 import json
@@ -32,8 +38,6 @@ MANIFEST = HERE / 'round9-expectations.json'
 FIXTURES = HERE / 'round9-fixtures'
 INFER = {'exit': 2, 'diagnostic': 'Invalid\tcheck\tannotation-required\t'}
 ACCEPTED = {'exit': 0, 'outcome': 'Accepted'}
-DOTTED = {'exit': 3, 'diagnostic': 'Unsupported\tparse\tdotted-binder\t'}
-BREAK = {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}
 ARM = {'exit': 3, 'diagnostic': 'Unsupported\tparse\tsame-line-arm\t'}
 SITES = ('default-col', 'default-resid', 'flat-param', 'inline', 'inline-outer', 'multi-col1',
          'multi-col2', 'nested-field', 'nested-inner', 'nested-sub', 'var-row-alias')
@@ -60,13 +64,14 @@ REVIEWED = {
         *letx(('annot',)), 'letm-annotated', 'letm-wildrow',
         'twin-call-rebuilt', 'twin-field-unsplit', 'twin-later-param', 'twin-nested-field-binder')},
     # A rebound dotted binder is accepted by the seed: the modules review's three
-    # probes (a let, a typed let, a field) and the other binder sites. Unsupported
-    # is non-accepting. An erased let's dotted name is a name and stays accepted.
-    'dotted-binder-stopgap': {**{name: DOTTED for name in (
+    # probes (a let, a typed let, a field) and the other binder sites. An erased
+    # let's dotted name is a name and is accepted too.
+    'dotted-binder-scope': {name: ACCEPTED for name in (
         'rebound-let', 'rebound-typed-let', 'rebound-field', 'rebound-promotion',
-        'rebound-row', 'rebound-multi', 'rebound-nested')}, 'rebound-erased-let': ACCEPTED},
-    # The reviewer's seven main-era probes (sem-r7-probes/hd).
-    'layout-stopgap': {**{name: BREAK for name in (
+        'rebound-row', 'rebound-multi', 'rebound-nested', 'rebound-erased-let')},
+    # The reviewer's seven main-era probes (sem-r7-probes/hd): a line break inside call and
+    # constructor arguments is whitespace, and a second arm on an arm's line is Unsupported.
+    'layout-scope': {**{name: ACCEPTED for name in (
         'hd-b1-body-empty-brace-newline', 'hd-b2-body-open-brace-newline', 'hd-b3-body-comma-newline',
         'hd-b4-body-top-level-ctor-newline', 'hd-b5-call-args-newline', 'hd-h15-ctr-body-newline')},
         'hd-h25-two-cases-one-line': ARM},

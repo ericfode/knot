@@ -22,10 +22,20 @@ a line break and reads one `+` promotion, so these seed-accepted programs are
 Unsupported, never Invalid (D4). Only a term can follow an argument as another one
 (a name, or a `+` marker in a pattern), so `two(a = b)` and `two(a + b)` stay Invalid.
 An arm body on the line after its `case`, at the case's column or below it, is
-seed-accepted layout; only a body that starts with a name is Unsupported (an empty arm
-and a `def` after it are seed-rejected and stay Invalid). A def body at column 0 is
-seed-accepted too, but the frontend gate pins it Invalid, and an untyped `w` then `= x`
-reaches `top-level-indentation`: both stay open D4 gaps and are no fixtures.
+seed-accepted layout (an empty arm and a `def` after it are seed-rejected and stay
+Invalid). A def body at column 0 is seed-accepted too, but the frontend gate pins it
+Invalid, and an untyped `w` then `= x` reaches `top-level-indentation`: both stay open D4
+gaps and are no fixtures.
+
+Amended in the integration of the literals line (review round 1): the parser reads an arm
+body wherever it stands and a line break after a let's `=` as whitespace, so the seven body
+books and the three after-`=` books are accepted, as the seed accepts them; a line break
+before `=` or between a marker and its name stays Unsupported. A bare `+` after an argument
+is an operator, which Knot does not check: the seed rejects `two(a + b)` for want of the
+annotation an operator demands ("write (a + b : Nat)"), a rule of operator sugar that Knot
+does not model, and the same operator with its annotation is valid, so the fixture is
+Unsupported, never Invalid (D4). Only the reviewed Knot outcomes change; the seed
+observations come from the seed.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -111,7 +121,7 @@ REVIEWED = {
     # Seed-rejected: what follows the argument is no term, or an operator; a promotion is no
     # argument of a call.
     'argument-control': {'argspace-equals-call': invalid('argument-separator'),
-                         'argspace-operator-call': invalid('argument-separator'),
+                         'argspace-operator-call': unsupported('operator'),
                          'argspace-operator-fields': invalid('argument-separator'),
                          'argspace-promoted-call': invalid('argument-separator')},
     'repeated-promotion': {name: PROMOTION for name in (
@@ -119,21 +129,23 @@ REVIEWED = {
         'plusplus-let', 'plusplus-spaced-let')},
     # Seed-rejected: an erased marker wants a name, so `-+u` is no promotion of a promotion.
     'repeated-promotion-control': {'plusplus-erased-let': invalid('binding-name')},
-    # Seed-accepted, Unsupported here: an arm body on the line after its `case`, at the case's
-    # column or below it (a def body at column 0 is the frontend gate's pinned Invalid).
-    'body-layout': {name: unsupported('body-indentation') for name in (
+    # Seed-accepted: an arm body on the line after its `case`, at the case's column or below it
+    # (a def body at column 0 is the frontend gate's pinned Invalid).
+    'body-layout': {name: ACCEPTED for name in (
         'bodycol-arm-flat', 'bodycol-arm-multi', 'bodycol-last-arm', 'bodycol-multi-var', 'bodycol-let',
         'bodycol-below-flat', 'bodycol-below-col0')},
     # Seed-rejected: no body at all (the next `case`, or a `def`, follows the colon).
     'body-layout-control': {'bodycol-empty-arm': invalid('body-indentation'),
                             'bodycol-empty-arm-dedent': invalid('body-indentation')},
-    'let-break': {name: BREAK for name in (
+    'let-break': {**{name: BREAK for name in (
         'letsplit-before-eq-flat', 'letsplit-before-eq-multi', 'letsplit-before-eq-marker',
-        'letsplit-after-eq-flat', 'letsplit-after-eq-multi', 'letsplit-after-eq-untyped',
         'letsplit-marker-flat', 'letsplit-marker-multi', 'letsplit-marker-arm', 'letsplit-erased-marker')},
+        **{name: ACCEPTED for name in (
+            'letsplit-after-eq-flat', 'letsplit-after-eq-multi', 'letsplit-after-eq-untyped')}},
     # Seed-rejected: nothing that can continue the let follows the line break.
     'let-break-control': {'letsplit-before-eq-junk': invalid('expected-='),
-                          'letsplit-after-eq-junk': invalid('expected-term')},
+                          'letsplit-after-eq-junk': invalid('expected-term'),
+                          'letsplit-marker-junk': invalid('binding-name')},
     # Seed-accepted forms the parser already reports as unsupported, in a multi-scrutinee row.
     'unsupported-control': {'oos-destructuring-let-flat': unsupported('destructuring-binding'),
                             'oos-destructuring-let-multi': unsupported('destructuring-binding'),
@@ -151,7 +163,9 @@ def observe(path, finding, knot):
     case = review_seed.observe(path)
     case['finding'] = finding
     accepted = case['seed']['exit'] == 0
-    assert accepted == (knot['exit'] != 2), (path.name, 'seed acceptance and reviewed Knot outcome differ')
+    # Seed-accepted: never Invalid. Seed-rejected: never accepted, and Unsupported only for an operator.
+    assert accepted == (knot['exit'] != 2) or (knot == unsupported('operator') and not accepted), (
+        path.name, 'seed acceptance and reviewed Knot outcome differ')
     if finding in REASON:
         assert REASON[finding] in case['seed']['stderr'], (path.name, 'seed rejects for another reason')
     case['knot'] = knot
