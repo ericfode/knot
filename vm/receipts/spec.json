@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T10:30:37.840683+00:00",
+ "date": "2026-09-29T10:52:18.605253+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "c5235f2a1c088b336b3d88ecd3220cb9b69e7d804fc14ac3dc3dfa1d7fe3c287",
-  "vm/SPEC.md": "01faac2e54e4e4780a4cf7aef9aa112b8df04125273d74ffc504eed6455c30e1",
+  "vm/DECISIONS.md": "5cbb5e82cccc3f57697687cb48628301b91cade6f148aae6ec97e758273f129e",
+  "vm/SPEC.md": "7e5bedb70847e13a792aaf583bf1bba5cf2680fab8788a941e5d217b16b27f76",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "2bcc9bbfa5407b305590abf9e08dbaad8fd77bb5314e143cae36a514a64bce3e",
+  "vm/check-spec.py": "5adf25884c15dcf7a146c152a2bd4511e711bf4c0866fa20d50bc001741e5235",
   "vm/evaluate.py": "b76d03c5fec0c185a1ee11357a0b940ea35eea0c1314fe85a9386f26449d4772",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
@@ -3896,6 +3896,14 @@
    "refused": "HostFailure image: let length"
   },
   {
+   "control": "con-record-short",
+   "refused": "HostFailure image: con length"
+  },
+  {
+   "control": "closure-record-short",
+   "refused": "HostFailure image: closure length"
+  },
+  {
    "control": "con-count-word",
    "refused": "HostFailure image: con length"
   },
@@ -3944,6 +3952,10 @@
    "refused": "HostFailure image: case key"
   },
   {
+   "control": "case-key-row-not-branch",
+   "refused": "HostFailure image: case key"
+  },
+  {
    "control": "case-default-not-default",
    "refused": "HostFailure image: case arm kind"
   },
@@ -3957,6 +3969,10 @@
   },
   {
    "control": "function-record-short",
+   "refused": "HostFailure image: function record"
+  },
+  {
+   "control": "function-record-tiny",
    "refused": "HostFailure image: function record"
   },
   {
@@ -4066,6 +4082,14 @@
   {
    "control": "length-short-header",
    "refused": "HostFailure image: length"
+  },
+  {
+   "control": "names-count-beyond-image",
+   "refused": "HostFailure image: section 5 record length"
+  },
+  {
+   "control": "record-overruns-image",
+   "refused": "HostFailure image: section 5 record length"
   },
   {
    "control": "main-index-beyond",
@@ -4374,6 +4398,54 @@
   {
    "control": "plan:tag-table-not-dense",
    "refused": "HostFailure image: validator: flip: tag table is not dense"
+  },
+  {
+   "control": "plan:tag-table-too-long",
+   "refused": "HostFailure image: validator: flip: tag table is not dense"
+  },
+  {
+   "control": "plan:representation-of-arrow",
+   "refused": "HostFailure image: validator: representation: Bool shape"
+  },
+  {
+   "control": "plan:program-without-main",
+   "refused": "HostFailure image: validator: program: main must exist with no live parameters"
+  },
+  {
+   "control": "plan:value-tag-beyond",
+   "refused": "HostFailure image: validator: main: value is not a nullary constructor"
+  },
+  {
+   "control": "plan:value-of-opaque",
+   "refused": "HostFailure image: validator: select: value is not a nullary constructor"
+  },
+  {
+   "control": "plan:construct-of-arrow",
+   "refused": "HostFailure image: validator: main: construct tag"
+  },
+  {
+   "control": "plan:call-operand-type",
+   "refused": "HostFailure image: validator: run2/closure/closure: call types"
+  },
+  {
+   "control": "plan:invoke-argument-type",
+   "refused": "HostFailure image: validator: apply: invoke types"
+  },
+  {
+   "control": "plan:capture-beyond-depth",
+   "refused": "HostFailure image: validator: swap: captures must increase strictly below depth"
+  },
+  {
+   "control": "plan:key-branch-first-slot",
+   "refused": "HostFailure image: validator: select: key branch binds nothing"
+  },
+  {
+   "control": "plan:closure-erased-at-data-type",
+   "refused": "HostFailure image: validator: main: closure arrow"
+  },
+  {
+   "control": "plan:invoke-non-arrow-without-argument",
+   "refused": "HostFailure image: validator: apply: invoke arity"
   },
   {
    "control": "bench:remeasured-baselines",
@@ -6538,6 +6610,26 @@
    "by": "control plan:tag-table-not-dense: None"
   },
   {
+   "mutant": "validator-program-without-main-ok",
+   "killed": true,
+   "by": "control plan:program-without-main: None"
+  },
+  {
+   "mutant": "validator-call-operand-types-unchecked",
+   "killed": true,
+   "by": "control plan:call-operand-type: None"
+  },
+  {
+   "mutant": "validator-invoke-argument-type-unchecked",
+   "killed": true,
+   "by": "control plan:invoke-argument-type: None"
+  },
+  {
+   "mutant": "validator-key-branch-first-slot-unchecked",
+   "killed": true,
+   "by": "control plan:key-branch-first-slot: None"
+  },
+  {
    "mutant": "decoder-empty-name-ok",
    "killed": true,
    "by": "control name-empty: None"
@@ -7365,7 +7457,7 @@
   }
  ],
  "canonical": {
-  "corpus": 5779,
+  "corpus": 5797,
   "noncanonical": 527,
   "admitted": 534,
   "controls_by_clause": {
@@ -7406,16 +7498,47 @@
   }
  },
  "refusal_audit": {
-  "refusals": 100,
-  "killed": 89,
+  "omissions": 178,
+  "killed": 136,
   "held_by_crash": {
+   "decode:'length'/0": "length-misaligned",
+   "decode:'header'/0": "entry-kind",
+   "decode:f'section {s} record length'/0": "names-count-beyond-image",
    "decode:'name index'": "name-index-beyond",
+   "decode:'type record'/1": "type-kind-unknown",
+   "decode:'constructor record'/0": "constructor-record-short",
+   "decode:'constructor record'/2": "constructor-type-beyond",
+   "decode:'constructor tag'/0": "constructor-of-arrow",
+   "decode:'constructor tag'/1": "constructor-tag-beyond",
+   "decode:'constant record'/0": "constant-record-short",
+   "decode:'constant record'/1": "constant-kind-unknown",
    "decode:'child offset'": "child-not-record",
    "decode:'node record'": "node-record-short",
-   "decode:'constant index'": "constant-index-beyond"
+   "decode:'node record'/0": "node-record-short",
+   "decode:'node record'/1": "opcode",
+   "decode:f'{op} length'#2/0": "con-record-short",
+   "decode:'closure length'/0": "closure-record-short",
+   "decode:'constant index'": "constant-index-beyond",
+   "decode:'case arm kind'/1": "case-default-not-default",
+   "decode:'function record'/0": "function-record-tiny",
+   "decode:'function root'/0": "function-root-not-node",
+   "validate:f'{r} shape'/0": "plan:representation-of-arrow",
+   "validate:'main must exist with no live parameters'/0": "plan:program-without-main",
+   "validate:'value is not a nullary constructor'/0": "plan:value-of-opaque",
+   "validate:'value is not a nullary constructor'/1": "plan:value-tag-beyond",
+   "validate:'construct tag'/0": "plan:construct-of-arrow",
+   "validate:'construct tag'/1": "plan:construct-tag",
+   "validate:f'unknown {op} id {node[2]}'/0": "plan:prim-unknown",
+   "validate:f'{op} operand is not the pinned {name}'/0": "plan:prim-on-flags",
+   "validate:'branch key'/1": "plan:tag-table-too-long",
+   "validate:'closure arrow'/0": "plan:closure-erased-at-data-type",
+   "validate:'captures must increase strictly below depth'/1": "plan:capture-beyond-depth",
+   "validate:'invoke arity'/0": "plan:invoke-non-arrow-without-argument"
   },
   "unreached": {
    "u32_list:f'constant data is not a list of u32 words: {values!r}'": "the encoder's input check: `text_spelling` holds it, and without it `encode` fails on the text with another error",
+   "u32_list:f'constant data is not a list of u32 words: {values!r}'/0": "the same check, its first clause",
+   "u32_list:f'constant data is not a list of u32 words: {values!r}'/1": "the same check, its second clause",
    "encode:f'unknown plan node {op!r}'": "the encoder's input check: no decoded plan holds a form outside the table",
    "decode:'constructor order'": "every constructor record has a tag below its type's count and no tag repeats (`constructor tag`), and the counts sum to the table (`constructor count`), so the records fill every slot",
    "decode:'opcode'": "`node record` refuses an opcode beyond the table, and every opcode within it has its own case above",
