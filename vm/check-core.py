@@ -301,7 +301,7 @@ def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[in
     Closure its cell, a U32 result at or above 2^31 a Big cell, `append` one String cell
     per code of its first operand as one block (CORE.md choice 4), and the terminal
     continuation `Emit{x}`. Nothing is freed (choice 1), so the bump pointer is the sum.
-    A cell may end exactly at 4 GiB; one that would end beyond raises `Beyond`. A String
+    An Action (a Foreign node) is a cell of its foreign id and operands. A cell may end exactly at 4 GiB; one that would end beyond raises `Beyond`. A String
     here is its code count, since only sizes reach the heap. A Book's line is section 8's
     rendering, by the reference evaluation's `describe`; a Program's Emit has none. A heap
     lowered to `heap_bytes` (section 5's test limit) ends at H0 + heap_bytes instead."""
@@ -385,6 +385,9 @@ def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[in
         if op == 'con' and node[1] not in (rep['Nat'], rep['Char']):
             take(cell(2 + len(ops)))
             return ('obj', node[1], node[2], tuple(ops))
+        if op == 'foreign':  # an inert Action: the foreign id and its operands, no type or tag word
+            take(cell(1 + len(ops)))
+            return ('action', node[2], tuple(ops))
         if op == 'prim' and node[2] == 0:  # U32.add
             r = (ops[0] + ops[1]) & NONE
             take(big * (r >= 2 ** 31))
@@ -482,8 +485,10 @@ def clean(result: dict) -> bool:
 
 
 def observed_wrong(job: dict, out: dict) -> bool:
-    """The run `out` differs from the row's frozen run, its registers, or exceeds a bound the row states."""
-    return (shown(out, job['want']) != job['want'] or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
+    """The run `out` differs from the row's frozen run (unless the row freezes none), its registers or its yields, or
+    exceeds a bound the row states."""
+    return ((job['want'] is not None and shown(out, job['want']) != job['want'])
+            or any((out['state'][k] if k in out['state'] else out[k]) != v for k, v in job.get('dump', {}).items())
             or any(out['state'][k] > most for k, most in job.get('at_most', {}).items()))
 
 
@@ -889,7 +894,7 @@ def lane_rows(cfg: dict) -> list:
     frozen = [*lane.seeded(), *lane.ill_typed()]
     for r in frozen:
         r['frozen'] = True
-    rows = [*frozen, *lane.sweep_items(), *lane.print_items(), *lane.digit_items(),
+    rows = [*frozen, *lane.sweep_items(), *lane.print_items(), *lane.digit_items(), *lane.display_items(),
             *(lane.random_keys(i, cfg['seed']) for i in range(cfg['keys'])),
             *(lane.program(i, cfg['seed']) for i in range(cfg['programs']))]
     names = [r['name'] for r in rows]
@@ -997,6 +1002,7 @@ def lane_groups(rows: list, where: Path) -> dict:
     fixed = [r for r in keys if r.get('frozen')]
     return {'keys': [job(r) for r in fixed + [r for r in keys if not r.get('frozen')][:24]],
             'describe': [job(r) for r in rows if r['family'] == 'wide'],
+            'display': [job(r) for r in rows if r['family'] == 'display'],
             'tags': [job(r) for r in rows if r['family'] in ('tags', 'ill-typed')],
             'sweeps': [job(r) for r in rows if r['family'] == 'sweep'],
             'writers': [job(r) for r in rows if r['family'] in ('print', 'halt', 'digits', 'nat')],
@@ -1005,8 +1011,8 @@ def lane_groups(rows: list, where: Path) -> dict:
 
 
 STUDY = HERE / 'receipts/study.json'
-STUDY_ORDER = ['keys', 'describe', 'tags', 'goldens', 'invocations', 'runs', 'reference', 'sweeps', 'writers',
-               'fuzz-admitted', 'programs', 'fixtures', 'limited', 'controls']  # cheap and telling first
+STUDY_ORDER = ['keys', 'describe', 'tags', 'display', 'goldens', 'invocations', 'runs', 'reference', 'sweeps', 'writers',
+               'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'controls']  # cheap and telling first
 GUARD = {'fixtures': 120_000, 'limited': 120_000, 'programs': 120_000, 'ceiling': 600_000, 'full-heap': 600_000,
          'trap': 600_000, 'growth': 600_000, 'refused': 600_000}  # ms a row may take before it is stopped, else 30,000
 
@@ -1366,6 +1372,47 @@ MUTANTS = [
      [('(if (i32.eq (local.get $j) (i32.sub (i32.shr_u (i32.load offset=4 (local.get $w)) (i32.const 3)) (i32.const 2)))',
        '(if (i32.or (i32.eq (local.get $j) (i32.sub (i32.shr_u (i32.load offset=4 (local.get $w)) (i32.const 3)) (i32.const 2)))'
        ' (i32.eq (local.get $j) (i32.const 2)))')], 'describe'),
+    # describe's own bounds (section 8): a Nat then constructors near 1,048,576 visits, and the frame region its worklist
+    # shares (12 bytes an open Object). The visit and frame checks were pinned only where nothing followed or opened
+    ('nat-visits-undercount', 'a Nat word adds n visits to the running count, not n + 1',
+     [('(local.set $visits (i32.add (i32.add (local.get $visits) (local.get $v)) (i32.const 1)))',
+       '(local.set $visits (i32.add (i32.add (local.get $visits) (local.get $v)) (i32.const 0)))')], 'display'),
+    ('nat-visits-overcount', 'a Nat word adds n + 2 visits to the running count',
+     [('(local.set $visits (i32.add (i32.add (local.get $visits) (local.get $v)) (i32.const 1)))',
+       '(local.set $visits (i32.add (i32.add (local.get $visits) (local.get $v)) (i32.const 2)))')], 'display'),
+    ('object-visits-twice', 'a constructor costs two visits',
+     [('(local.set $visits (i32.add (local.get $visits) (i32.const 1)))\n', '(local.set $visits (i32.add (local.get $visits) (i32.const 2)))\n')], 'display'),
+    ('visits-bound-inclusive', 'a result of exactly 1,048,576 visits is past the bound',
+     [('(if (i32.gt_u (local.get $visits) (i32.const 1048576)) (then (call $exhaust (i32.const 2) (global.get $R_display))))',
+       '(if (i32.ge_u (local.get $visits) (i32.const 1048576)) (then (call $exhaust (i32.const 2) (global.get $R_display))))')], 'display'),
+    ('worklist-frames-inclusive', "a worklist triple that ends exactly at the frame region's end does not fit",
+     [('(if (i32.gt_u (i32.add (local.get $sp) (i32.const 12)) (global.get $FL))', '(if (i32.ge_u (i32.add (local.get $sp) (i32.const 12)) (global.get $FL))')], 'limited'),
+    ('worklist-triple-13', 'the worklist checks room for a 13-byte triple',
+     [('(if (i32.gt_u (i32.add (local.get $sp) (i32.const 12)) (global.get $FL))', '(if (i32.gt_u (i32.add (local.get $sp) (i32.const 13)) (global.get $FL))')], 'limited'),
+    ('worklist-triple-11', 'the worklist checks room for an 11-byte triple',
+     [('(if (i32.gt_u (i32.add (local.get $sp) (i32.const 12)) (global.get $FL))', '(if (i32.gt_u (i32.add (local.get $sp) (i32.const 11)) (global.get $FL))')], 'limited'),
+    ('worklist-frames-unchecked', 'the worklist never runs out of frames',
+     [('(if (i32.gt_u (i32.add (local.get $sp) (i32.const 12)) (global.get $FL))', '(if (i32.gt_u (i32.sub (local.get $sp) (i32.const 12)) (global.get $FL))')], 'limited'),
+    ('worklist-frames-kind', 'a worklist that does not fit stops as a heap exhaustion',
+     [('(if (i32.gt_u (i32.add (local.get $sp) (i32.const 12)) (global.get $FL))\n            (then (call $exhaust (i32.const 3) (global.get $R_frames))))',
+       '(if (i32.gt_u (i32.add (local.get $sp) (i32.const 12)) (global.get $FL))\n            (then (call $exhaust (i32.const 2) (global.get $R_frames))))')], 'limited'),
+    # a lowered heap: append's block is checked where it is made, the same edits as `top-block-exhausted` at the edge of 4 GiB
+    ('append-block-fits-heap', 'an append block ending exactly at a lowered heap limit is Exhausted',
+     [('    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (call $grow (local.get $end))',
+       '    (if (i64.ge_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (call $grow (local.get $end))')], 'limited'),
+    ('append-heap-kind', 'an append block that does not fit the heap stops as a frame exhaustion',
+     [('    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (call $grow (local.get $end))',
+       '    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 3) (global.get $R_heap))))\n    (call $grow (local.get $end))')], 'limited'),
+    ('action-cell-oversize', 'an Action takes one payload word more than its id and operands',
+     [('(local.set $c (call $alloc (i32.add (local.get $cnt) (i32.const 1)) (i32.const 3)))',
+       '(local.set $c (call $alloc (i32.add (local.get $cnt) (i32.const 2)) (i32.const 3)))')], 'limited'),
+    # inspection (section 6): a class check that lets class 3 pass as a Big cell, and a tag range that lets a tag equal to the count through
+    ('scalar-reads-action', 'a scalar operand that is an Action (class 3) passes as a Big cell',
+     [('    (if (i32.ne (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7)) (i32.const 2))\n      (then (call $refuse (global.get $R_ill_typed))))\n    (i32.load offset=8 (local.get $x)))',
+       '    (if (i32.ne (i32.and (i32.load offset=4 (local.get $x)) (i32.const 6)) (i32.const 2))\n      (then (call $refuse (global.get $R_ill_typed))))\n    (i32.load offset=8 (local.get $x)))')], 'tags'),
+    ('describe-tag-at-count', "a result whose tag equals its type's constructor count is in range",
+     [('        (if (i32.ge_u (local.get $tag) (call $ty (local.get $t) (i32.const 3)))\n          (then (call $refuse (global.get $R_ill_typed))))',
+       '        (if (i32.gt_u (local.get $tag) (call $ty (local.get $t) (i32.const 3)))\n          (then (call $refuse (global.get $R_ill_typed))))')], 'tags'),
 ]
 
 
@@ -1483,14 +1530,16 @@ def main(args: list) -> int:
              'argv': [staged(by_name[n]['image']), *by_name[n]['argv']], 'trace': 'yields'} for n in fixtures['dumps']]
     jobs += [{'id': l['name'], 'wasm': str(test), 'files': {staged(l['image']): str(sandbox / staged(l['image']))},
               'argv': [staged(l['image']), *l['argv']], 'limits': l['limits']} for l in fixtures['limited']]
-    for l in fixtures['limited']:  # a pinned bump under a lowered heap: section 5's model stops there too
-        if l['dump'].get('cause') == 'heap' and 'bump' in l['dump']:
+    for l in fixtures['limited']:  # a pinned bump under a lowered heap: section 5's model stops (or ends) there too
+        if (l['dump'].get('cause') == 'heap' or l.get('model')) and 'bump' in l['dump']:
             plan, image = json.loads((HERE / f"{l['image']}.plan.json").read_text()), (HERE / f"{l['image']}.kimg").read_bytes()
+            require(codec.encode(plan, digest) == image, f"limited {l['name']}: the image is its plan's encoding")
             try:
-                stop = ceiling_run(plan, image, l['limits']['heap'])
+                stop = ceiling_run(plan, image, l['limits']['heap'])[0]
             except Beyond as beyond:
                 stop = beyond.bump
             require(stop == l['dump']['bump'], f"limited {l['name']}: frozen bump {l['dump']['bump']}, section 5 gives {stop}")
+    limited_expect = {l['name']: l['expect'] for l in fixtures['limited'] if 'expect' in l}
     dumped = harness(jobs)
     dumps = []
     for name, want in [*fixtures['dumps'].items(), *((l['name'], l['dump']) for l in fixtures['limited'])]:
@@ -1498,6 +1547,8 @@ def main(args: list) -> int:
         seen = {'outcome': state['outcome'], 'kind': state['kind'], 'cause': state['cause'],
                 'calls': state['calls'], 'yields': got['yields'], 'top': state['top'], 'bump': state['bump']}
         require(all(seen[k] == v for k, v in want.items()), f'dump {name}: {seen} vs {want}')
+        if name in limited_expect:  # a limited row that completes also freezes the run it writes
+            require(shown(got, limited_expect[name]) == limited_expect[name], f'dump {name}: {shown(got, limited_expect[name])} vs {limited_expect[name]}')
         dumps.append({'name': name, **{k: seen[k] for k in want}})
     record['fixtures'] = {'runs': core, 'dumps': dumps}
     stage('fixtures')
@@ -1780,7 +1831,7 @@ def main(args: list) -> int:
     run_jobs = [{'id': r['label'], 'files': {r['argv'][0]: str(loaded / r['argv'][0])}, 'argv': r['argv'],
                  'want': r['want'], 'dump': r['dump']} for r in run_rows]
     limited_jobs = [{'id': f"limited:{l['name']}", 'files': {staged(l['image']): str(sandbox / staged(l['image']))},
-                     'argv': [staged(l['image']), *l['argv']], 'limits': l['limits'], 'want': expected_run(l['dump']),
+                     'argv': [staged(l['image']), *l['argv']], 'limits': l['limits'], 'want': l.get('expect') or expected_run(l['dump']),
                      'dump': {k: v for k, v in l['dump'].items() if k != 'yields'}} for l in fixtures['limited']]
     ceiling_mutant_jobs = [{**j, 'id': f"ceiling:{r['name']}", 'want': r['expect'], 'dump': r['dump']}
                            for j, r in zip(ceiling_jobs, ceiling)]
@@ -1803,6 +1854,9 @@ def main(args: list) -> int:
               'growth': [j for j in growth if j['at_most']], 'refused': [j for j in growth if j['dump']['outcome'] is None]}
     require(all(groups[g] for g in ('growth', 'refused')), 'the growth rows have a bounded count and a refusal')
     groups.update(lane_groups(lane_all, BUILD / 'lane'))
+    groups['dumps'] = [{'id': f'dump:{n}', 'files': {staged(by_name[n]['image']): str(sandbox / staged(by_name[n]['image']))},
+                        'argv': [staged(by_name[n]['image']), *by_name[n]['argv']], 'trace': 'yields', 'want': None, 'dump': want}
+                       for n, want in fixtures['dumps'].items()]
     groups['fuzz-admitted'] = [{'id': f"fuzz:{r['label']}", 'files': {r['argv'][0]: str(fuzz / r['argv'][0])}, 'argv': r['argv'],
                                 'want': reference_result(plan, r['argv'][1:])[0], 'dump': reference_result(plan, r['argv'][1:])[1]}
                                for r, plan in fuzz_plans]

@@ -1,0 +1,125 @@
+{
+ "entry": "book",
+ "representation": {
+  "String": 1,
+  "Char": 2,
+  "U32": 3
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "Flag",
+   "constructors": [
+    {
+     "name": "Off",
+     "fields": []
+    },
+    {
+     "name": "On",
+     "fields": []
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "String",
+   "constructors": [
+    {
+     "name": "SNil",
+     "fields": []
+    },
+    {
+     "name": "SCon",
+     "fields": [
+      2,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Char",
+   "constructors": [
+    {
+     "name": "Chr",
+     "fields": [
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "opaque",
+   "name": "U32"
+  }
+ ],
+ "functions": [
+  {
+   "name": "String.append",
+   "parameters": [
+    1,
+    1
+   ],
+   "result": 1,
+   "slots": 2,
+   "body": [
+    "prim",
+    1,
+    35,
+    [
+     [
+      "ref",
+      1,
+      0
+     ],
+     [
+      "ref",
+      1,
+      1
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 0,
+   "slots": 1,
+   "body": [
+    "let",
+    0,
+    0,
+    [
+     "call",
+     1,
+     0,
+     [
+      [
+       "lit",
+       1,
+       "String",
+       [
+        97,
+        98
+       ]
+      ],
+      [
+       "lit",
+       1,
+       "String",
+       [
+        99
+       ]
+      ]
+     ]
+    ],
+    [
+     "value",
+     0,
+     1
+    ]
+   ]
+  }
+ ]
+}

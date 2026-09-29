@@ -1,0 +1,126 @@
+{
+ "entry": "book",
+ "representation": {
+  "Nat": 1
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "T",
+   "constructors": [
+    {
+     "name": "Leaf",
+     "fields": []
+    },
+    {
+     "name": "Node",
+     "fields": [
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Nat",
+   "constructors": [
+    {
+     "name": "Zero",
+     "fields": []
+    },
+    {
+     "name": "Succ",
+     "fields": [
+      1
+     ]
+    }
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "build",
+   "parameters": [
+    1,
+    0
+   ],
+   "result": 0,
+   "slots": 3,
+   "body": [
+    "case",
+    0,
+    0,
+    1,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "ref",
+       0,
+       1
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       0,
+       0,
+       [
+        [
+         "ref",
+         1,
+         2
+        ],
+        [
+         "con",
+         0,
+         1,
+         [
+          [
+           "ref",
+           0,
+           1
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 0,
+   "slots": 0,
+   "body": [
+    "call",
+    0,
+    0,
+    [
+     [
+      "lit",
+      1,
+      "Nat",
+      10
+     ],
+     [
+      "value",
+      0,
+      0
+     ]
+    ]
+   ]
+  }
+ ]
+}

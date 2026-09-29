@@ -643,6 +643,116 @@
     "bump": 16842800
    },
    "basis": "Section 5: the image ends at byte 4,664, so F0 = 65,536 and H0 = F0 + 16 MiB = 16,842,752. A cell is 2 header words plus its payload, rounded to a power of two of at least 4 words (check-core's `cell`). Boot pushes Top(0) (3 words, section 6), so top = F0 + 12, and materializes the pool's Big 2^31 + 1 (payload 1: 16 B). main's entry is a tail entry below Top (section 6.2): no Call frame; its Activation (owner, depth and 2 slots: payload 4, 6 words, so 8) is 32 B, so bump = H0 + 48. Eval Let pushes Bind (top F0 + 24); its Return pops it and pushes Scope (F0 + 24). Eval Case selects Succ (section 6.1: selection allocates nothing), pushes Scope(depth), and only then allocates the predecessor 2^31, a Big of 16 B (vm-spec D17: the allocation follows the push). Completed, the run ends at H0 + 64, which check-core's section 5 model (`ceiling_run`) also gives for this plan. With a 48-byte heap the pool Big and the Activation fill it (a cell may end at HL); the Case's Scope is pushed (top = F0 + 36 = 65,572), and the predecessor's 16 B are Exhausted kind 2 (heap) with bump = H0 + 48 = 16,842,800, as the section 5 model stopped at the heap limit gives. A VM that made the predecessor before the push would stop with top F0 + 24. Provenance: a first draft of this row left out the cells' 2 header words (an Activation of 16 B, and a 32-byte heap); a run of the pre-fix VM, before the row was committed, exposed the slip. Every value here was then rederived from section 5's cell rule (check-core's `cell`) and section 6's 3-word frames; in the gate, `ceiling_run` under the lowered heap checks the heap row's bump, and both `top` values and the frames row's bump rest on this hand derivation. The pins that tell the two orders apart differ from the pre-fix VM's (80bd5cf)"
+  },
+  {
+   "name": "describe-frames-fit",
+   "image": "core/describe-deep",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 132,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 12
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tNode{Node{Node{Node{Node{Node{Node{Node{Node{Node{Leaf{}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "basis": "main = build(10n, Leaf{}), with build(n, acc) = case n of Zero -> acc | Succ{p} -> build(p, Node{acc}): a tail loop, so its frames stay a few dozen bytes (an Application's Gather, the Case's Scope) while it makes 10 Node Objects, and 12 entries in all (main and build 11 times). Describe then renders `Node{` ten deep. Boot pushes Top(0), 3 words (section 6), which is all that remains, so 12 bytes; CORE.md's describe worklist takes one 12-byte (cell, record, next field) triple per open Object (the innermost Leaf{} is an immediate and opens none): 12 + 10 * 12 = 132 bytes, so a region of exactly 132 holds the result and it prints"
+  },
+  {
+   "name": "describe-frames-short",
+   "image": "core/describe-deep",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 131,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames",
+    "calls": 12
+   },
+   "basis": "the same result in a region one byte short of 132: the tenth triple does not fit, so describe stops Exhausted kind 3 (frames) before it writes anything (a push that does not fit is Exhausted kind 3, section 6), after the same 12 entries"
+  },
+  {
+   "name": "append-heap-fit",
+   "image": "core/append-let",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 224
+   },
+   "model": true,
+   "dump": {
+    "outcome": "Completed",
+    "calls": 2,
+    "bump": 16842976
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": ""
+   },
+   "basis": "main = let s = String.append(\"ab\", \"c\") in On{}: from H0 = 16,842,752 the pool takes 96 bytes (3 SCon cells of 32), main's Activation (1 slot) and String.append's (2 slots) 32 each, and append's block of 2 cells 64: 224 bytes, which the section 5 model (`ceiling_run`) gives too. A heap of exactly 224 bytes ends the block exactly at its limit, which section 5 allows, so the Book completes with bump 16,842,976"
+  },
+  {
+   "name": "append-heap-short",
+   "image": "core/append-let",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 208
+   },
+   "model": true,
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "heap",
+    "calls": 2,
+    "bump": 16842912
+   },
+   "basis": "the same Book with 16 bytes less heap: append's block would end 16 bytes beyond it, so append stops Exhausted kind 2 (heap) before it writes, with the bump pointer where the block would have begun (16,842,912), after 2 entries"
+  },
+  {
+   "name": "action-cell",
+   "image": "core/action-cell",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 4294967296
+   },
+   "model": true,
+   "dump": {
+    "outcome": "Completed",
+    "calls": 2,
+    "bump": 16842864
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t8\t1\tOn{}\n",
+    "stderr": ""
+   },
+   "basis": "main = let a = IO.print(\"x\") in On{} builds an Action and never applies it (no effect, section 8). From H0 = 16,842,752 the pool takes 32 bytes (one SCon), main's and IO.print's Activations 32 each, and the Action, a cell of its foreign id and its one operand (2 words, 4 with the header), 16: 112 bytes, which `ceiling_run` gives too. A cell one payload word larger would reach the next size"
   }
  ],
  "admitted": {

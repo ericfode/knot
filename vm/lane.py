@@ -1105,9 +1105,58 @@ def seeded() -> list:
     return rows
 
 
+def ill_scalar_action() -> dict:
+    """U32.is_eq(id(IO.print("a")), 0): the prim reads an Action (class 3, built and never applied) at U32. Section 6
+    inspects a scalar as an immediate or a Big cell, so it is ill-typed after main, print, id and is_eq (4 entries)."""
+    types = out_types() + [{'kind': 'data', 'name': 'Bool', 'constructors': [{'name': 'False', 'fields': []}, {'name': 'True', 'fields': []}]}]
+    functions = [{'name': 'IO.print', 'parameters': [3], 'result': 7, 'slots': 1, 'body': ['foreign', 7, 1, [['ref', 3, 0]]]},
+                 {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]},
+                 {'name': 'U32.is_eq', 'parameters': [1, 1], 'result': 8, 'slots': 2,
+                  'body': ['prim', 8, PRIM['U32.is_eq']['id'], [['ref', 1, 0], ['ref', 1, 1]]]},
+                 {'name': 'main', 'parameters': [], 'result': 8, 'slots': 0, 'body': ['call', 8, 2, [
+                     ['call', None, 1, [['call', 7, 0, [['lit', 3, 'String', [97]]]]]], ['lit', 1, 'U32', 0]]]}]
+    plan = {'entry': 'book', 'representation': {**OUT_REPRESENTATION, 'Bool': 8}, 'types': types, 'functions': functions}
+    return item('ill-scalar-action', 'ill-typed', plan, refusal={'outcome': 'HostFailure', 'cause': 'image ill-typed'}, calls=4,
+                basis='a prim operand that is an Action (class 3) is ill-typed at U32: a class check that let class 3 pass as a Big cell would compute')
+
+
+def ill_describe_at_count() -> dict:
+    """A Book whose result is Tri's C{} (an immediate of tag 2) laundered to Flag, which has two constructors: describe
+    inspects the result, so it is ill-typed after main, id and cast (3 entries). Solo follows Flag's constructors, so
+    a tag range that let 2 through would read Solo's nullary record and print `Solo{}`."""
+    types = [{'kind': 'data', 'name': 'Tri', 'constructors': [{'name': n, 'fields': []} for n in 'ABC']},
+             {'kind': 'data', 'name': 'Flag', 'constructors': [{'name': 'Off', 'fields': []}, {'name': 'On', 'fields': []}]},
+             {'kind': 'data', 'name': 'Solo', 'constructors': [{'name': 'Solo', 'fields': []}]}]
+    functions = [{'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]},
+                 {'name': 'cast', 'parameters': [None], 'result': 1, 'slots': 1, 'body': ['ref', None, 0]},
+                 {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0, 'body': ['call', 1, 1, [['call', None, 0, [['value', 0, 2]]]]]}]
+    return item('ill-describe-at-count', 'ill-typed', {'entry': 'book', 'types': types, 'functions': functions},
+                refusal={'outcome': 'HostFailure', 'cause': 'image ill-typed'}, calls=3,
+                basis="a Book's result word is read at its type: Tri's C{} (tag 2) at Flag (2 constructors) is ill-typed, not the next record's name")
+
+
 def ill_typed() -> list:
-    return [ill_typed_program(f'ill-{name}', name) for name in
-            ('at-count', 'at-count-default', 'past-count', 'fielded-branch', 'fielded-default', 'nullary')]
+    return [*(ill_typed_program(f'ill-{name}', name) for name in
+              ('at-count', 'at-count-default', 'past-count', 'fielded-branch', 'fielded-default', 'nullary')),
+            ill_scalar_action(), ill_describe_at_count()]
+
+
+def display_bound(name: str, n: int) -> dict:
+    """P{Nat n, Q{On, Off}}: section 8 counts one visit per constructor and n + 1 for a Nat, so 1 + (n + 1) + 3 = n + 5
+    visits. n = 1,048,571 ends exactly at the bound of 1,048,576 and prints; one more is Exhausted (display). The
+    constructors after the Nat are the ones whose visits an undercounted or overcounted Nat would shift."""
+    types = [{'kind': 'data', 'name': 'Flag', 'constructors': [{'name': 'Off', 'fields': []}, {'name': 'On', 'fields': []}]},
+             {'kind': 'data', 'name': 'Nat', 'constructors': [{'name': 'Zero', 'fields': []}, {'name': 'Succ', 'fields': [1]}]},
+             {'kind': 'data', 'name': 'Q', 'constructors': [{'name': 'Q', 'fields': [0, 0]}]},
+             {'kind': 'data', 'name': 'P', 'constructors': [{'name': 'P', 'fields': [1, 2]}]}]
+    body = ['con', 3, 0, [['lit', 1, 'Nat', n], ['con', 2, 0, [['value', 0, 1], ['value', 0, 0]]]]]
+    plan = {'entry': 'book', 'representation': {'Nat': 1}, 'types': types,
+            'functions': [{'name': 'main', 'parameters': [], 'result': 3, 'slots': 0, 'body': body}]}
+    return item(name, 'display', plan, basis=f'P{{Nat {n}, Q{{On, Off}}}} is {n + 5:,} visits against the bound of 1,048,576')
+
+
+def display_items() -> list:
+    return [display_bound('display-at-bound', 1_048_571), display_bound('display-over-bound', 1_048_572)]
 
 
 def random_keys(index: int, seed: int) -> dict:
