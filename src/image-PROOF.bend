@@ -3,6 +3,9 @@ import ./image-LAWS.bend as L
 import ./syntax.bend as S
 import ./core.bend as C
 import ./image.bend as I
+import ./image-plan.bend as P
+import ./image-layout.bend as Y
+import ./image-decode.bend as X
 
 def L.erase_flag_book(at):
   {==}

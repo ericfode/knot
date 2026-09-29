@@ -4,6 +4,7 @@ import ./core.bend as C
 import ./driver.bend as D
 import ./wasm.bend as W
 import ./image.bend as I
+import ./image-layout.bend as Y
 
 type Options is Data:
   Options{input: D.Limits, depth: Nat, bytes: U32}
@@ -76,37 +77,37 @@ def image_failed(file: File, code: U32, message: String) -> IO(Unit):
 # Each chunk costs three steps of the fuel: an image has at most 4,194,304 words, so a million steps
 # cover every image the profile can write. The file handle is affine, so the modes are a Type.
 type Write is Type:
-  Next{file: File, step: I.Step, count: U32}
-  Pair{pair: File & Result<&1,&1,U32 & String,Unit>, rest: I.Cursor, count: U32}
-  Sent{file: File, result: Result<&1,&1,U32 & String,Unit>, rest: I.Cursor, count: U32}
+  Next{file: File, step: Y.Step, count: U32}
+  Pair{pair: File & Result<&1,&1,U32 & String,Unit>, rest: Y.Cursor, count: U32}
+  Sent{file: File, result: Result<&1,&1,U32 & String,Unit>, rest: Y.Cursor, count: U32}
 
 def image_write(fuel: Nat, mode: Write) -> IO(Unit):
   match fuel mode:
     case 0n _: IO.die(Unit,6,"InternalFailure\tcompile\timage-chunks")
-    case 1n+ +n Next{file,I.End{},+count}: image_closed(file,count)
-    case 1n+ +n Next{file,I.Chunk{bytes,rest},count}:
+    case 1n+ +n Next{file,Y.End{},+count}: image_closed(file,count)
+    case 1n+ +n Next{file,Y.Chunk{bytes,rest},count}:
       IO.bind(File & Result<&1,&1,U32 & String,Unit>,Unit,File.write_bytes(file,bytes),pair => image_write(n,Pair{pair,rest,count}))
     case 1n+ +n Pair{pair,rest,count}:
       (file,result) = pair
       image_write(n,Sent{file,result,rest,count})
     case 1n+ +n Sent{file,Fail{(code,message)},rest,count}: image_failed(file,code,message)
-    case 1n+ +n Sent{file,Done{u},rest,count}: image_write(n,Next{file,I.pull(rest),count})
+    case 1n+ +n Sent{file,Done{u},rest,count}: image_write(n,Next{file,Y.pull(rest),count})
 
-def image_opened(result: Result<&1,&1,U32 & String,File>, encoded: I.Encoded, +count: U32) -> IO(Unit):
+def image_opened(result: Result<&1,&1,U32 & String,File>, encoded: Y.Encoded, +count: U32) -> IO(Unit):
   match result:
     case Fail{(code,message)}: IO.die(Unit,5,String.concat(["HostFailure\toutput-open\t",U32.show(code),"\t",message]))
-    case Done{file}: image_write(1000000n,Next{file,I.pull(I.start(encoded)),count})
+    case Done{file}: image_write(1000000n,Next{file,Y.pull(Y.start(encoded)),count})
 
-def image_written(path: String, encoded: I.Encoded, +count: U32) -> IO(Unit):
+def image_written(path: String, encoded: Y.Encoded, +count: U32) -> IO(Unit):
   IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"w"),result => image_opened(result,encoded,count))
 
 # The size is checked in words before it is multiplied: the output budget is at most 16,777,216 bytes.
-def image_sized(path: String, encoded: I.Encoded, +cap: U32) -> IO(Unit):
+def image_sized(path: String, encoded: Y.Encoded, +cap: U32) -> IO(Unit):
   match encoded:
-    case I.Encoded{records,+words}:
-      S.choose(IO(Unit),U32.is_le(words,U32.shrn(cap,2n)),u => image_written(path,I.Encoded{records,words},U32.mul(words,4)),u => D.fail(S.Exhausted{"compile",S.At{0,0,0,0}}))
+    case Y.Encoded{records,+words}:
+      S.choose(IO(Unit),U32.is_le(words,U32.shrn(cap,2n)),u => image_written(path,Y.Encoded{records,words},U32.mul(words,4)),u => D.fail(S.Exhausted{"compile",S.At{0,0,0,0}}))
 
-def image_emitted(path: String, result: Result<S.Error,I.Encoded>, +cap: U32) -> IO(Unit):
+def image_emitted(path: String, result: Result<S.Error,Y.Encoded>, +cap: U32) -> IO(Unit):
   match result:
     case Fail{e}: D.fail(e)
     case Done{encoded}: image_sized(path,encoded,cap)

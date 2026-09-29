@@ -107,7 +107,7 @@ The image increment adds gate `image` (`python3 -B tests/compiler-image/check.py
   failure have literal controls; the default profile's 25 module hashes are unchanged.
 - A 5.2 MB synthetic book is written in bounded chunks, observed from outside the program (a DYLD shim
   for the native lane, a Bun preload for the JS lane); a larger one is `Exhausted` before the output opens.
-- Nineteen mutants of `src/image.bend` are killed by wrong observations, and deleting any of the eight
+- Nineteen mutants of `src/image*.bend` are killed by wrong observations, and deleting any of the eight
   `C.Term` arms fails the seed's check. `src/image-PROOF.bend` (fifteen laws) must print `All terms check.`
 - It writes only `tests/compiler-image/receipts/image.json`.
 

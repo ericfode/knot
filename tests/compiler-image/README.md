@@ -1,7 +1,7 @@
 # knot-image-1 encoder gate
 
-`src/image.bend` encodes a checked core book to a `knot-image-1` image (contract: [vm/SPEC.md](../../vm/SPEC.md))
-and decodes one back. `compile-cli --profile=knot-image-1` selects it. Run the gate with
+`src/image.bend` (with `image-plan`, `image-layout` and `image-decode`) encodes a checked core book to a
+`knot-image-1` image (contract: [vm/SPEC.md](../../vm/SPEC.md)) and decodes one back. `compile-cli --profile=knot-image-1` selects it. Run the gate with
 
 ```sh
 BEND_NO_TELEMETRY=1 python3 -B tests/compiler-image/check.py

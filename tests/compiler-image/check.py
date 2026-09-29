@@ -10,7 +10,7 @@ Every claim is checked against a lane that does not share Bend code with the enc
   * `image-cli`, whose decoder is checked against serializer.decode's plan (rendered by render.py) and
     whose re-encoding must reproduce every committed golden image byte for byte.
 The write pattern of the chunked path is observed from outside (a DYLD shim for the native lane, a Bun
-preload for the JS lane). Mutants of src/image.bend are killed by a wrong observation, never a crash.
+preload for the JS lane). Mutants of src/image*.bend are killed by a wrong observation, never a crash.
 """
 from __future__ import annotations
 
@@ -438,51 +438,53 @@ def deep_reference(spec_tree: Path) -> dict:
     return {'functions': 3, 'source_bytes': len(source)}
 
 
-# ---------------------------------------------------------------- mutants of src/image.bend
+# ---------------------------------------------------------------- mutants of src/image*.bend
 
-# (name, [(old, new)], driver, witnesses). A driver is `compile` (witness: a source), `recode` (a
-# committed image) or `refuse` (a crafted image), or `writes` (the synthetic book).
+# (name, file, [(old, new)], driver, witnesses). A driver is `compile` (witness: a source), `recode` (a
+# committed image), `refuse` (a crafted image) or `writes` (the synthetic book). The file is the module
+# of src/ that holds the mutation site: the plan (image-plan), the encoder (image), the layout
+# (image-layout) or the decoder (image-decode).
 MUTANTS = [
-    ('wrong-construct-tag', [('placed => counted(placed,4,type_id,tag))', 'placed => counted(placed,4,type_id,U32.add(tag,1)))')],
+    ('wrong-construct-tag', 'image-layout', [('placed => counted(placed,4,type_id,tag))', 'placed => counted(placed,4,type_id,U32.add(tag,1)))')],
      'compile', ['vm/golden/construct.bend']),
-    ('swapped-let-fields', [('pushed(state,7,type_id,[slot,initial,result])', 'pushed(state,7,type_id,[initial,slot,result])')],
+    ('swapped-let-fields', 'image-layout', [('pushed(state,7,type_id,[slot,initial,result])', 'pushed(state,7,type_id,[initial,slot,result])')],
      'compile', ['vm/golden/let.bend']),
-    ('let-typed-by-value', [('Lowered{Con{initial,Nil{}},Nil{},+a} Lowered{Con{+result,Nil{}},Nil{},+b}:\n      Done{one(Let{type_of(result),slot,initial,result},max_depth(a,b))}',
-                             'Lowered{Con{+initial,Nil{}},Nil{},+a} Lowered{Con{+result,Nil{}},Nil{},+b}:\n      Done{one(Let{type_of(initial),slot,initial,result},max_depth(a,b))}')],
+    ('let-typed-by-value', 'image', [('Lowered{Con{initial,Nil{}},Nil{},+a} Lowered{Con{+result,Nil{}},Nil{},+b}:\n      Done{one(P.Let{P.type_of(result),slot,initial,result},max_depth(a,b))}',
+                                     'Lowered{Con{+initial,Nil{}},Nil{},+a} Lowered{Con{+result,Nil{}},Nil{},+b}:\n      Done{one(P.Let{P.type_of(initial),slot,initial,result},max_depth(a,b))}')],
      'compile', ['tests/compiler-image/witnesses/let-changes-type.bend']),
-    ('erased-operand-kept', [('S.choose(Result<S.Error,Lowered>,U32.is_eq(q,0),u => lower(n,Operands{tail,rest}', 'S.choose(Result<S.Error,Lowered>,U32.is_eq(q,4294967295),u => lower(n,Operands{tail,rest}')],
+    ('erased-operand-kept', 'image', [('S.choose(Result<S.Error,Lowered>,U32.is_eq(q,0),u => lower(n,Operands{tail,rest}', 'S.choose(Result<S.Error,Lowered>,U32.is_eq(q,4294967295),u => lower(n,Operands{tail,rest}')],
      'compile', ['vm/golden/erased-argument.bend', 'vm/golden/erased-construct.bend']),
-    ('erased-constructor-not-a-value', [('case Lowered{Nil{},rows,deepest}: Done{one(Value{type_id,tag},deepest)}', 'case Lowered{Nil{},rows,deepest}: Done{one(Construct{type_id,tag,Nil{}},deepest)}')],
+    ('erased-constructor-not-a-value', 'image', [('case Lowered{Nil{},rows,deepest}: Done{one(P.Value{type_id,tag},deepest)}', 'case Lowered{Nil{},rows,deepest}: Done{one(P.Construct{type_id,tag,Nil{}},deepest)}')],
      'compile', ['tests/compiler-fields/fixtures/all-erased-return.bend']),
-    ('arms-not-in-tag-order', [('S.choose(Maybe<&2,C.Term>,U32.is_eq(pattern,tag),u => Some{head}', 'S.choose(Maybe<&2,C.Term>,True{},u => Some{head}')],
+    ('arms-not-in-tag-order', 'image', [('S.choose(Maybe<&2,C.Term>,U32.is_eq(pattern,tag),u => Some{head}', 'S.choose(Maybe<&2,C.Term>,True{},u => Some{head}')],
      'compile', ['tests/compiler-image/witnesses/reordered-arms.bend']),
-    ('slots-not-maximal', [('Bool.pick(U32,U32.is_ge(a,b),a,b)', 'Bool.pick(U32,U32.is_ge(a,b),b,a)')],
+    ('slots-not-maximal', 'image', [('Bool.pick(U32,U32.is_ge(a,b),a,b)', 'Bool.pick(U32,U32.is_ge(a,b),b,a)')],
      'compile', ['tests/compiler-image/witnesses/many-slots.bend', 'vm/golden/recursion-map.bend']),
-    ('names-not-shared', [('S.choose(Maybe<&2,U32>,String.eq(head,text),u => Some{top}', 'S.choose(Maybe<&2,U32>,Bool.and(False{},String.eq(head,text)),u => Some{top}')],
+    ('names-not-shared', 'image-layout', [('S.choose(Maybe<&2,U32>,String.eq(head,text),u => Some{top}', 'S.choose(Maybe<&2,U32>,Bool.and(False{},String.eq(head,text)),u => Some{top}')],
      'compile', ['tests/compiler-image/witnesses/shared-name.bend', 'vm/golden/unpack.bend']),
-    ('section-count-off-by-one', [('Con{[count_records(rows,0)],List.append(&2,List<&2,U32>,rows,tail)}', 'Con{[U32.add(1,count_records(rows,0))],List.append(&2,List<&2,U32>,rows,tail)}')],
+    ('section-count-off-by-one', 'image-layout', [('Con{[count_records(rows,0)],List.append(&2,List<&2,U32>,rows,tail)}', 'Con{[U32.add(1,count_records(rows,0))],List.append(&2,List<&2,U32>,rows,tail)}')],
      'compile', ['vm/golden/unpack.bend']),
-    ('node-offsets-shifted', [('Nodes{Nil{},U32.add(off_nodes,1),Nil{},0,0,0}', 'Nodes{Nil{},off_nodes,Nil{},0,0,0}')],
+    ('node-offsets-shifted', 'image-layout', [('Nodes{Nil{},U32.add(off_nodes,1),Nil{},0,0,0}', 'Nodes{Nil{},off_nodes,Nil{},0,0,0}')],
      'compile', ['vm/golden/unpack.bend']),
-    ('digest-word', [('[967372322,1597628945,', '[967372323,1597628945,')], 'compile', ['vm/golden/let.bend']),
-    ('constant-dropped', [('    case Con{head,tail}: constant_records(tail,Con{constant_record(head),acc})', '    case Con{head,tail}: constant_records(tail,acc)')],
+    ('digest-word', 'image-plan', [('[967372322,1597628945,', '[967372323,1597628945,')], 'compile', ['vm/golden/let.bend']),
+    ('constant-dropped', 'image-layout', [('    case Con{head,tail}: constant_records(tail,Con{constant_record(head),acc})', '    case Con{head,tail}: constant_records(tail,acc)')],
      'recode', ['vm/golden/default-hit.kimg', 'vm/golden/string-append.kimg']),
-    ('key-row-swapped', [('Con{key,Con{at,Nil{}}}),state}', 'Con{at,Con{key,Nil{}}}),state}')], 'recode', ['vm/golden/default-hit.kimg']),
-    ('closure-sites-not-numbered', [('pushed(Nodes{records,next,pool,pooled,U32.add(sites,1),nodes},10,type_id,Con{sites,', 'pushed(Nodes{records,next,pool,pooled,U32.add(sites,1),nodes},10,type_id,Con{0,')],
+    ('key-row-swapped', 'image-layout', [('Con{key,Con{at,Nil{}}}),state}', 'Con{at,Con{key,Nil{}}}),state}')], 'recode', ['vm/golden/default-hit.kimg']),
+    ('closure-sites-not-numbered', 'image-layout', [('pushed(Nodes{records,next,pool,pooled,U32.add(sites,1),nodes},10,type_id,Con{sites,', 'pushed(Nodes{records,next,pool,pooled,U32.add(sites,1),nodes},10,type_id,Con{0,')],
      'recode', ['vm/golden/closure-nested.kimg']),
-    ('decode-default-count', [('Bool.pick(U32,U32.is_eq(default,none()),0,1)', 'Bool.pick(U32,U32.is_eq(default,none()),1,0)')],
+    ('decode-default-count', 'image-decode', [('Bool.pick(U32,U32.is_eq(default,P.none()),0,1)', 'Bool.pick(U32,U32.is_eq(default,P.none()),1,0)')],
      'recode', ['vm/golden/recursion-map.kimg', 'vm/golden/default-hit.kimg']),
-    ('decode-case-key-unchecked', [('Bool.and(U32.is_eq(at,w),U32.is_eq(k,key))', 'U32.is_eq(at,w)')], 'refuse', ['case-key']),
-    ('decode-function-root-unchecked', [('S.choose(Result<S.Error,List<&2,Function>>,U32.is_eq(at,root),u =>', 'S.choose(Result<S.Error,List<&2,Function>>,True{},u =>')], 'refuse', ['function-root']),
-    ('decode-digest-unchecked', [('same_words([d0,d1,d2,d3,d4,d5,d6,d7],digest())', 'True{}')], 'refuse', ['registry-digest']),
-    ('unchunked-write', [('def chunk_steps() -> Nat:\n  16384n', 'def chunk_steps() -> Nat:\n  100000000n')], 'writes', ['synthetic']),
+    ('decode-case-key-unchecked', 'image-decode', [('Bool.and(U32.is_eq(at,w),U32.is_eq(k,key))', 'U32.is_eq(at,w)')], 'refuse', ['case-key']),
+    ('decode-function-root-unchecked', 'image-decode', [('S.choose(Result<S.Error,List<&2,P.Function>>,U32.is_eq(at,root),u =>', 'S.choose(Result<S.Error,List<&2,P.Function>>,True{},u =>')], 'refuse', ['function-root']),
+    ('decode-digest-unchecked', 'image-decode', [('P.same_words([d0,d1,d2,d3,d4,d5,d6,d7],P.digest())', 'True{}')], 'refuse', ['registry-digest']),
+    ('unchunked-write', 'image-layout', [('def chunk_steps() -> Nat:\n  16384n', 'def chunk_steps() -> Nat:\n  100000000n')], 'writes', ['synthetic']),
 ]
 
 # The exhaustive match over C.Term: deleting any of its eight forms must fail the seed's own check.
 FORMS = ('Value', 'Construct', 'Reference', 'Application', 'Let', 'Case', 'Branch', 'Sequence')
 
 
-def mutant_tree(name, replacements):
+def mutant_tree(name, module, replacements):
     tree = BUILD / 'mutants' / name
     if tree.exists():
         shutil.rmtree(tree)
@@ -491,7 +493,7 @@ def mutant_tree(name, replacements):
     for source in (ROOT / 'src').glob('*.bend'):
         shutil.copy2(source, tree / 'src' / source.name)
     shutil.copy2(HERE / 'image-cli.bend', tree / 'tests/compiler-image/image-cli.bend')
-    target = tree / 'src/image.bend'
+    target = tree / f'src/{module}.bend'
     text = target.read_text()
     for old, new in replacements:
         require(text.count(old) == 1, (name, 'the mutation site must be unique', old[:60]))
@@ -501,8 +503,8 @@ def mutant_tree(name, replacements):
 
 
 def mutant_case(expectations, crafted_images, item):
-    name, replacements, driver, witnesses = item
-    tree = mutant_tree(name, replacements)
+    name, module, replacements, driver, witnesses = item
+    tree = mutant_tree(name, module, replacements)
     checked = run([SEED, tree / 'src/image.bend', '--check-only'], 300)
     require(checked['exit'] == 0 and checked['stdout'].strip() == b'All terms check.', (name, 'a mutant must type-check', shown(checked)))
     wanted = {'compile': ('compile-cli', 'compile'), 'recode': ('image-cli', 'image'), 'refuse': ('image-cli', 'image'),
@@ -541,7 +543,7 @@ def mutant_case(expectations, crafted_images, item):
         outcomes.append({'witness': witness, 'exit': result['exit'], 'outcome': 'semantic-kill'})
     # The laws are a second, independent way to kill it: does the seed's checker still accept the proofs?
     proved = run([SEED, tree / 'src/image-PROOF.bend'], 300)
-    return {'name': name, 'driver': driver, 'replacements': len(replacements), 'witnesses': outcomes,
+    return {'name': name, 'module': module, 'driver': driver, 'replacements': len(replacements), 'witnesses': outcomes,
             'laws_refuse': not (proved['exit'] == 0 and proved['stdout'].strip() == b'All terms check.')}
 
 
@@ -567,7 +569,8 @@ def proof() -> dict:
     result = run([SEED, ROOT / 'src/image-PROOF.bend'], 300)
     require(result['exit'] == 0 and result['stdout'].strip() == b'All terms check.', ('proof', shown(result)))
     laws = (ROOT / 'src/image-LAWS.bend').read_text().count('\nlaw ')
-    for entry in ('src/image.bend', 'src/compile-cli.bend', 'tests/compiler-image/image-cli.bend'):
+    for entry in ('src/image-plan.bend', 'src/image-layout.bend', 'src/image-decode.bend', 'src/image.bend',
+                  'src/compile-cli.bend', 'tests/compiler-image/image-cli.bend'):
         checked = run([SEED, ROOT / entry, '--check-only'], 300)
         require(checked['exit'] == 0 and checked['stdout'].strip() == b'All terms check.', (entry, shown(checked)))
     return {'laws': laws}

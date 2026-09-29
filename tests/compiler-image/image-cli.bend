@@ -1,7 +1,9 @@
 import Base
 import ../../src/syntax.bend as S
 import ../../src/driver.bend as D
-import ../../src/image.bend as I
+import ../../src/image-plan.bend as P
+import ../../src/image-layout.bend as Y
+import ../../src/image-decode.bend as X
 import ../../src/compile-cli.bend as CLI
 
 # Test driver for the image codec. It reads an image file, decodes it with `image.decode` and either
@@ -24,88 +26,88 @@ def joined(parts: List<String>) -> String:
     case Con{head,tail}: String.concat([head,";",joined(tail)])
 
 type Show is Data:
-  Node{node: I.Node}
-  Nodes{nodes: List<&2,I.Node>}
-  Rows{rows: List<&2,I.Row>}
-  Default{default: Maybe<&2,I.Node>}
+  Node{node: P.Node}
+  Nodes{nodes: List<&2,P.Node>}
+  Rows{rows: List<&2,P.Row>}
+  Default{default: Maybe<&2,P.Node>}
 
 # The notation is prefix and bracketed: `con[type,tag](operand;operand)`, a Case
 # `case[type,slot,scrutinee,mode](row;row|default)` and a row `-` or `branch[key,first,fields](body)`.
 def show(fuel: Nat, mode: Show) -> String:
   match fuel mode:
     case 0n _: "!"
-    case 1n+ +n Node{I.Literal{+t,I.Constant{+k,+d}}}: String.concat(["lit[",U32.show(t),",",U32.show(k),",",numbers(d),"]"])
-    case 1n+ +n Node{I.Intrinsic{+t,+p,+operands}}: String.concat(["prim[",U32.show(t),",",U32.show(p),"](",show(n,Nodes{operands}),")"])
-    case 1n+ +n Node{I.Value{+t,+tag}}: String.concat(["value[",U32.show(t),",",U32.show(tag),"]"])
-    case 1n+ +n Node{I.Construct{+t,+tag,+operands}}: String.concat(["con[",U32.show(t),",",U32.show(tag),"](",show(n,Nodes{operands}),")"])
-    case 1n+ +n Node{I.Reference{+t,+slot}}: String.concat(["ref[",U32.show(t),",",U32.show(slot),"]"])
-    case 1n+ +n Node{I.Application{+t,+f,+operands}}: String.concat(["call[",U32.show(t),",",U32.show(f),"](",show(n,Nodes{operands}),")"])
-    case 1n+ +n Node{I.Let{+t,+slot,+value,+body}}:
+    case 1n+ +n Node{P.Literal{+t,P.Constant{+k,+d}}}: String.concat(["lit[",U32.show(t),",",U32.show(k),",",numbers(d),"]"])
+    case 1n+ +n Node{P.Intrinsic{+t,+p,+operands}}: String.concat(["prim[",U32.show(t),",",U32.show(p),"](",show(n,Nodes{operands}),")"])
+    case 1n+ +n Node{P.Value{+t,+tag}}: String.concat(["value[",U32.show(t),",",U32.show(tag),"]"])
+    case 1n+ +n Node{P.Construct{+t,+tag,+operands}}: String.concat(["con[",U32.show(t),",",U32.show(tag),"](",show(n,Nodes{operands}),")"])
+    case 1n+ +n Node{P.Reference{+t,+slot}}: String.concat(["ref[",U32.show(t),",",U32.show(slot),"]"])
+    case 1n+ +n Node{P.Application{+t,+f,+operands}}: String.concat(["call[",U32.show(t),",",U32.show(f),"](",show(n,Nodes{operands}),")"])
+    case 1n+ +n Node{P.Let{+t,+slot,+value,+body}}:
       String.concat(["let[",U32.show(t),",",U32.show(slot),"](",show(n,Node{value}),";",show(n,Node{body}),")"])
-    case 1n+ +n Node{I.Case{+t,+slot,+scrutinee,+m,+rows,+default}}:
+    case 1n+ +n Node{P.Case{+t,+slot,+scrutinee,+m,+rows,+default}}:
       String.concat(["case[",U32.show(t),",",U32.show(slot),",",U32.show(scrutinee),",",U32.show(m),"](",show(n,Rows{rows}),"|",show(n,Default{default}),")"])
-    case 1n+ +n Node{I.Closure{+t,+live,+slots,+captures,+body}}:
+    case 1n+ +n Node{P.Closure{+t,+live,+slots,+captures,+body}}:
       String.concat(["closure[",U32.show(t),",",U32.show(live),",",U32.show(slots),",",numbers(captures),"](",show(n,Node{body}),")"])
-    case 1n+ +n Node{I.Invoke{+t,+function,Nil{}}}: String.concat(["invoke[",U32.show(t),"](",show(n,Node{function}),")"])
-    case 1n+ +n Node{I.Invoke{+t,+function,+arguments}}:
+    case 1n+ +n Node{P.Invoke{+t,+function,Nil{}}}: String.concat(["invoke[",U32.show(t),"](",show(n,Node{function}),")"])
+    case 1n+ +n Node{P.Invoke{+t,+function,+arguments}}:
       String.concat(["invoke[",U32.show(t),"](",show(n,Node{function}),";",show(n,Nodes{arguments}),")"])
-    case 1n+ +n Node{I.Foreign{+t,+f,+operands}}: String.concat(["foreign[",U32.show(t),",",U32.show(f),"](",show(n,Nodes{operands}),")"])
+    case 1n+ +n Node{P.Foreign{+t,+f,+operands}}: String.concat(["foreign[",U32.show(t),",",U32.show(f),"](",show(n,Nodes{operands}),")"])
     case 1n+ +n Nodes{Nil{}}: ""
     case 1n+ +n Nodes{Con{head,Nil{}}}: show(n,Node{head})
     case 1n+ +n Nodes{Con{head,tail}}: String.concat([show(n,Node{head}),";",show(n,Nodes{tail})])
     case 1n+ +n Rows{Nil{}}: ""
-    case 1n+ +n Rows{Con{I.Missing{},Nil{}}}: "-"
-    case 1n+ +n Rows{Con{I.Missing{},tail}}: String.concat(["-;",show(n,Rows{tail})])
-    case 1n+ +n Rows{Con{I.Branch{+key,+first,+fields,+body},Nil{}}}:
+    case 1n+ +n Rows{Con{P.Missing{},Nil{}}}: "-"
+    case 1n+ +n Rows{Con{P.Missing{},tail}}: String.concat(["-;",show(n,Rows{tail})])
+    case 1n+ +n Rows{Con{P.Branch{+key,+first,+fields,+body},Nil{}}}:
       String.concat(["branch[",U32.show(key),",",U32.show(first),",",U32.show(fields),"](",show(n,Node{body}),")"])
-    case 1n+ +n Rows{Con{I.Branch{+key,+first,+fields,+body},tail}}:
+    case 1n+ +n Rows{Con{P.Branch{+key,+first,+fields,+body},tail}}:
       String.concat(["branch[",U32.show(key),",",U32.show(first),",",U32.show(fields),"](",show(n,Node{body}),");",show(n,Rows{tail})])
     case 1n+ +n Default{None{}}: "-"
     case 1n+ +n Default{Some{node}}: show(n,Node{node})
 
-def constructor_line(constructors: List<&2,I.Constructor>) -> String:
+def constructor_line(constructors: List<&2,P.Constructor>) -> String:
   match constructors:
     case Nil{}: ""
-    case Con{I.Constructor{name,fields},Nil{}}: String.concat([name,"(",numbers(fields),")"])
-    case Con{I.Constructor{name,fields},tail}: String.concat([name,"(",numbers(fields),") ",constructor_line(tail)])
+    case Con{P.Constructor{name,fields},Nil{}}: String.concat([name,"(",numbers(fields),")"])
+    case Con{P.Constructor{name,fields},tail}: String.concat([name,"(",numbers(fields),") ",constructor_line(tail)])
 
-def shape_line(index: U32, shape: I.Shape) -> String:
+def shape_line(index: U32, shape: P.Shape) -> String:
   match shape:
-    case I.Algebraic{name,constructors}: String.concat(["type ",U32.show(index)," algebraic ",name," ",constructor_line(constructors)])
-    case I.Arrow{domain,result}: String.concat(["type ",U32.show(index)," arrow ",U32.show(domain)," ",U32.show(result)])
-    case I.Erased{domain,result}: String.concat(["type ",U32.show(index)," erased ",U32.show(domain)," ",U32.show(result)])
-    case I.Opaque{name}: String.concat(["type ",U32.show(index)," opaque ",name])
+    case P.Algebraic{name,constructors}: String.concat(["type ",U32.show(index)," algebraic ",name," ",constructor_line(constructors)])
+    case P.Arrow{domain,result}: String.concat(["type ",U32.show(index)," arrow ",U32.show(domain)," ",U32.show(result)])
+    case P.Erased{domain,result}: String.concat(["type ",U32.show(index)," erased ",U32.show(domain)," ",U32.show(result)])
+    case P.Opaque{name}: String.concat(["type ",U32.show(index)," opaque ",name])
 
-def shape_lines(shapes: List<&2,I.Shape>, +index: U32) -> String:
+def shape_lines(shapes: List<&2,P.Shape>, +index: U32) -> String:
   match shapes:
     case Nil{}: ""
     case Con{head,tail}: String.concat([shape_line(index,head),"\n",shape_lines(tail,U32.add(index,1))])
 
-def function_lines(functions: List<&2,I.Function>, +index: U32) -> String:
+def function_lines(functions: List<&2,P.Function>, +index: U32) -> String:
   match functions:
     case Nil{}: ""
-    case Con{I.Function{name,parameters,result,slots,body},tail}:
+    case Con{P.Function{name,parameters,result,slots,body},tail}:
       String.concat(["function ",U32.show(index)," ",name," (",numbers(parameters),") ",U32.show(result)," ",U32.show(slots)," ",show(1000000n,Node{body}),"\n",function_lines(tail,U32.add(index,1))])
 
-def plan_text(plan: I.Plan) -> String:
+def plan_text(plan: P.Plan) -> String:
   match plan:
-    case I.Plan{entry,representation,shapes,functions}:
+    case P.Plan{entry,representation,shapes,functions}:
       String.concat(["entry ",U32.show(entry),"\nrepresentation ",numbers(representation),"\n",shape_lines(shapes,0),function_lines(functions,0)])
 
-def printed(result: Result<S.Error,I.Plan>) -> IO(Unit):
+def printed(result: Result<S.Error,P.Plan>) -> IO(Unit):
   match result:
     case Fail{e}: D.fail(e)
     case Done{plan}: IO.print(plan_text(plan))
 
-def recoded_layout(path: String, result: Result<S.Error,I.Encoded>) -> IO(Unit):
+def recoded_layout(path: String, result: Result<S.Error,Y.Encoded>) -> IO(Unit):
   match result:
     case Fail{e}: D.fail(e)
     case Done{encoded}: CLI.image_sized(path,encoded,16777216)
 
-def recoded(path: String, result: Result<S.Error,I.Plan>) -> IO(Unit):
+def recoded(path: String, result: Result<S.Error,P.Plan>) -> IO(Unit):
   match result:
     case Fail{e}: D.fail(e)
-    case Done{plan}: recoded_layout(path,I.layout(1000000n,plan))
+    case Done{plan}: recoded_layout(path,Y.layout(1000000n,plan))
 
 type Then is Type:
   Print{}
@@ -115,13 +117,13 @@ def decoded(mode: Then, result: Result<S.Error,List<&2,U32>>) -> IO(Unit):
   match mode result:
     case Print{} Fail{e}: D.fail(e)
     case Recode{path} Fail{e}: D.fail(e)
-    case Print{} Done{words}: printed(I.decode(words))
-    case Recode{path} Done{words}: recoded(path,I.decode(words))
+    case Print{} Done{words}: printed(X.decode(words))
+    case Recode{path} Done{words}: recoded(path,X.decode(words))
 
 def bytes_read(mode: Then, result: Result<&1,&1,U32 & String,List<&2,U32>>) -> IO(Unit):
   match result:
     case Fail{(code,message)}: IO.die(Unit,5,String.concat(["HostFailure\tread\t",U32.show(code),"\t",message]))
-    case Done{bytes}: decoded(mode,I.words_of(bytes))
+    case Done{bytes}: decoded(mode,X.words_of(bytes))
 
 def pair_read(mode: Then, pair: File & Result<&1,&1,U32 & String,List<&2,U32>>) -> IO(Unit):
   (file,result) = pair

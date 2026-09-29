@@ -220,7 +220,7 @@
     "contract": "vm/SPEC.md",
     "selection": "Explicit only: compile-cli --profile=knot-image-1. The default profile and its arguments are unchanged; any other --profile= value is HostFailure arguments unknown-profile.",
     "entry": "src/compile-cli.bend",
-    "encoder": "src/image.bend",
+    "encoder": "src/image.bend (erasure and the entry), src/image-plan.bend (the plan and shared limits), src/image-layout.bend (words and the chunk stream), src/image-decode.bend (the decoder)",
     "arguments": "--profile=knot-image-1 source output [characters parser-depth checker-depth emitter-depth output-bytes]",
     "defaults": {
       "characters": 1048576,
@@ -267,7 +267,7 @@
       "pattern-matrix lowering (nest)",
       "representation words and the constants pool (modules and literals)"
     ],
-    "codec": "image.decode inverts image.layout over all thirteen opcodes; image-cli decode|recode is the test driver.",
+    "codec": "image-decode.decode inverts image-layout.layout over all thirteen opcodes; tests/compiler-image/image-cli.bend decode|recode is the test driver.",
     "gate": "python3 tests/compiler-image/check.py",
     "evidence": "tests/compiler-image/receipts/image.json",
     "frozen_expectations": "tests/compiler-image/expectations.json",

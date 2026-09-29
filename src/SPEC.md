@@ -246,8 +246,10 @@ alone (`CONTRACT.json` `knot_image`): 1,048,576 characters by default and 4,194,
 cap moved from 65,536 to 4,194,304 with it; the default profile's fuel stops it at 65,536 first, so its
 behaviour is identical.
 
-**The encoder** is `src/image.bend`. `erase_tokens` projects a checked `C.Book` into a `Plan`, the image's
-own tree of records; `layout` writes a plan as words; `decode` inverts `layout`. Erasure drops tokens,
+**The encoder** is four files: `src/image.bend` (erasure and the entry), `src/image-plan.bend` (the plan and the
+limits every part shares), `src/image-layout.bend` (words and the chunk stream) and `src/image-decode.bend`.
+`erase_tokens` projects a checked `C.Book` into a `Plan`, the image's own tree of records; `layout` writes a
+plan as words; `decode` inverts `layout`. Erasure drops tokens,
 every quantity-0 parameter, field, let, argument and binder, the level numbering, datatype kinds and the
 Type/Data split, and renumbers the surviving binders as frame slots: a function's live parameters are
 slots `0..arity-1`, a live `Let` and each live branch field take the next slot, and `slots` is the exact

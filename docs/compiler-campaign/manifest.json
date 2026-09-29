@@ -134,7 +134,11 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/wasm.bend"
+        "src/wasm.bend",
+        "src/image.bend",
+        "src/image-plan.bend",
+        "src/image-layout.bend",
+        "src/image-decode.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through checking to evaluation or Wasm, including all CLI entries; phase implementations enter as interfaces.",
@@ -304,6 +308,76 @@
       "selected_files": [
         "src/recursion-LAWS.bend",
         "src/recursion-PROOF.bend"
+      ]
+    },
+    {
+      "name": "image-plan",
+      "files": [
+        "src/syntax.bend",
+        "src/image-plan.bend"
+      ],
+      "task": "vm/SPEC.md",
+      "notes": "The image plan, the shared limits, the pinned digest and the words every part of the codec shares."
+    },
+    {
+      "name": "image-encoding",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/image-plan.bend",
+        "src/image-layout.bend",
+        "src/image-decode.bend",
+        "src/image.bend"
+      ],
+      "task": "vm/SPEC.md",
+      "notes": "Erasure of the checked core to the image plan: slots, operand filtering, positional types and the exhaustive match over the core terms; layout and decoding enter as interfaces.",
+      "selected_files": [
+        "src/image.bend"
+      ]
+    },
+    {
+      "name": "image-layout",
+      "files": [
+        "src/syntax.bend",
+        "src/image-plan.bend",
+        "src/image-layout.bend"
+      ],
+      "task": "vm/SPEC.md",
+      "notes": "A plan as words: interned names, tables, nodes with absolute offsets, the header, and the chunked byte stream.",
+      "selected_files": [
+        "src/image-layout.bend"
+      ]
+    },
+    {
+      "name": "image-decode",
+      "files": [
+        "src/syntax.bend",
+        "src/image-plan.bend",
+        "src/image-decode.bend"
+      ],
+      "task": "vm/SPEC.md",
+      "notes": "The words of an image back to its plan: sections, names, shapes and the node stack.",
+      "selected_files": [
+        "src/image-decode.bend"
+      ]
+    },
+    {
+      "name": "image-laws",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/image-plan.bend",
+        "src/image-layout.bend",
+        "src/image-decode.bend",
+        "src/image.bend",
+        "src/image-LAWS.bend",
+        "src/image-PROOF.bend"
+      ],
+      "task": "vm/SPEC.md",
+      "notes": "The round-trip law and the erasure laws of the image codec, with their proofs.",
+      "selected_files": [
+        "src/image-LAWS.bend",
+        "src/image-PROOF.bend"
       ]
     }
   ],
