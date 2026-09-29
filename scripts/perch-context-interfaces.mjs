@@ -154,8 +154,9 @@ export function buildInterface(path, file, names = null) {
       .sort((a, b) => a.line - b.line).map(d => declarationInterface(file.source, d)), ''].join('\n');
 }
 
-const largestSavingFirst = (a, b) => b.saving - a.saving
-  || a.item.path.localeCompare(b.item.path) || a.item.name.localeCompare(b.item.name);
+// The names tier orders ties by code point, so its choice never depends on the process locale.
+const byCode = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+const largestSavingByCode = (a, b) => b.saving - a.saving || byCode(a.item.path, b.item.path) || byCode(a.item.name, b.item.name);
 const encoded = value => Buffer.byteLength(JSON.stringify(value));
 const NAMES_ONLY = 'names-only', NAMES_ONLY_REASON = 'context-state-names-only';
 const NAMES_ONLY_NOTE = 'Cut to qualified names by the encoded-state cap: an entry marked names-only shows no signature and no body. Do not infer its type, contract or behavior from the name.';
@@ -173,7 +174,7 @@ function tooLarge(prefix, { seen }, maxBytes) {
  * Preserve the source cap and the independent encoded-state cap (task included). Two tiers,
  * each taking the largest saving first, then path, then name: a full body becomes an interface
  * summary, and an interface summary becomes its qualified name. The primary source, the task,
- * datatypes and laws are never shortened.
+ * datatypes and laws are never shortened. The interface tier's tie-break is unchanged.
  */
 export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 60000) {
   const size = () => Buffer.byteLength(JSON.stringify({ ...prefix, ...context.seen }));
@@ -185,7 +186,7 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
     const source = declarationInterface(file.source, decl);
     options.push({ item, source, saving: Buffer.byteLength(item.source) - Buffer.byteLength(source) });
   }
-  options.sort(largestSavingFirst);
+  options.sort((a, b) => b.saving - a.saving || a.item.path.localeCompare(b.item.path) || a.item.name.localeCompare(b.item.name));
   for (const { item, source, saving } of options) {
     if (saving <= 0) continue;
     item.source = source; item.representation = 'interface';
@@ -207,7 +208,7 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
     const saving = encoded(item) - encoded(cut) - (old ? encoded(row) - encoded(old) : encoded(row) + 1);
     if (saving > 0) cuts.push({ item, saving });
   }
-  cuts.sort(largestSavingFirst);
+  cuts.sort(largestSavingByCode);
   for (const { item } of cuts) {
     context.provenance.source_bytes -= Buffer.byteLength(item.source);
     notes.source_bytes = context.provenance.source_bytes;

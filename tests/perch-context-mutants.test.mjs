@@ -33,7 +33,7 @@ const mutants = [
   { name: 'names-only-tier-skipped', witness: 'fits a state the interface tier cannot',
     from: 'for (const { item } of cuts) {', to: 'for (const { item } of []) {' },
   { name: 'names-only-order-nondeterministic', witness: 'largest saving, then path, then name',
-    from: 'cuts.sort(largestSavingFirst);', to: 'cuts.sort((a, b) => b.saving - a.saving);' },
+    from: 'cuts.sort(largestSavingByCode);', to: 'cuts.sort((a, b) => b.saving - a.saving);' },
   { name: 'names-only-row-not-recorded', witness: 'also cuts a body the interface tier kept',
     from: 'if (row) row.reason = NAMES_ONLY_REASON; else summarized.push({ path: item.path, name: item.name, reason: NAMES_ONLY_REASON });',
     to: 'void row;' },

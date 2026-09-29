@@ -325,12 +325,13 @@ function afterCuts(state, order, count, note) {
   if (count) notes.names_only = { count, note };
   return expected;
 }
-// Two files, equal-size heads in both, and a main that names them out of size, path and name order.
+// Two files, equal-size heads in both (Pa and pa differ only in case), and a main that names them out of size,
+// path and name order. Code-point order puts Pa before pa; the collation of most locales puts pa first.
 const cutFiles = {
-  'a.bend': `import Base\ndef pa(x: U32) -> U32: x\ndef pb(x: U32) -> U32: x\n`,
+  'a.bend': `import Base\ndef pa(x: U32) -> U32: x\ndef pb(x: U32) -> U32: x\ndef Pa(x: U32) -> U32: x\n`,
   'b.bend': `import Base\ndef pa(x: U32) -> U32: x\ndef big(x: U32, y: U32, z: U32) -> U32: x\n`,
   'main.bend': 'import Base\nimport ./a.bend as A\nimport ./b.bend as B\ndef small(x: U32) -> U32: x\n'
-    + 'def main(x: U32) -> U32: A.pb(B.pa(small(A.pa(B.big(x, x, x)))))\n',
+    + 'def main(x: U32) -> U32: A.pb(B.pa(small(A.pa(A.Pa(B.big(x, x, x))))))\n',
 };
 test('names-only tier fits a state the interface tier cannot and marks every cut', async t => {
   const wide = ['ha', 'hb', 'hc', 'hd', 'he'];
@@ -388,12 +389,12 @@ test('names-only cuts follow largest saving, then path, then name', async t => {
   assert.equal(typeof note, 'string');
   const target = await reviewed(root, 'main', { helpers: 0 });
   const before = structuredClone(stateOf(target)), order = ranked(before);
-  assert.deepEqual(order.map(e => label(e.item)), ['b.bend::big', 'main.bend::small', 'a.bend::pa', 'a.bend::pb', 'b.bend::pa']);
-  assert.deepEqual(before.calls.filter(e => e.name.startsWith('p')).map(label), ['a.bend::pb', 'b.bend::pa', 'a.bend::pa'],
+  assert.deepEqual(order.map(e => label(e.item)), ['b.bend::big', 'main.bend::small', 'a.bend::Pa', 'a.bend::pa', 'a.bend::pb', 'b.bend::pa']);
+  assert.deepEqual(before.calls.filter(e => /^p/i.test(e.name)).map(label), ['a.bend::pb', 'b.bend::pa', 'a.bend::pa', 'a.bend::Pa'],
     'the equal-size entries were filled in an order that is neither path nor name order');
-  assert.equal(order[2].saving, order[4].saving, 'three equal savings, cut two of them');
-  const expected = afterCuts(before, order, 4, note), cap = enc(expected);
-  assert.ok(enc(afterCuts(before, order, 3, note)) > cap);
+  assert.equal(order[2].saving, order[5].saving, 'four equal savings, cut only the first of them');
+  const expected = afterCuts(before, order, 3, note), cap = enc(expected);
+  assert.ok(enc(afterCuts(before, order, 2, note)) > cap);
   await assert.doesNotReject(fitInterfaceContext(target.context, target.snapshot, target.prefix, cap));
   assert.deepEqual(stateOf(target), expected);
   assert.equal(JSON.stringify(stateOf(target)), JSON.stringify(expected));
