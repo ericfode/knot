@@ -286,6 +286,18 @@ def metamorphic(check):
     return {'entries': len(entries), 'pairs': pairs}
 
 
+def selfhost_twin(check):
+    """The selfhost suite pins one row of the wrong width as `Invalid check pattern-arity`; it runs Knot
+    single-file, where the book stops earlier at `Unsupported lex literal`, so the bundle entry is checked here."""
+    expectations = json.loads((ROOT / 'tests/compiler-selfhost/expectations.json').read_text())
+    name = 'fuel-string-columns-arity'
+    pin = next(c for c in expectations['cases'] if c['name'] == name)['knot']
+    require(pin['require'] == 'reject' and pin['exit'] == 2, pin)
+    result = run([*check, ROOT / f'tests/compiler-selfhost/fixtures/{name}/main.bend'])
+    reject(result, pin['exit'], pin['diagnostic'])
+    return {'name': name, 'pin': pin['diagnostic'], 'result': result}
+
+
 def mutant(m, by_name):
     folder = BUILD / 'mutants' / m['name']
     folder.mkdir(parents=True, exist_ok=True)
@@ -332,6 +344,7 @@ def main():
             by_name = {f['name']: f for f in manifest['fixtures']}
             record['mutants'] = list(pool.map(lambda m: mutant(m, by_name), MUTANTS))
         record['metamorphic'] = metamorphic(lanes['native']['check'])
+        record['selfhost_twin'] = selfhost_twin(lanes['native']['check'])
         require(all(digest(ROOT / path) == h for path, h in record['inputs'].items()),
                 'Inputs changed during the integration gate')
         fs = record['fixtures']
@@ -347,7 +360,7 @@ def main():
             'byte_identity_pairs': sum(f.get('byte_identical', False) for f in fs),
             'artifact_preservation_probes': sum(l.get('artifact_preserved', False) for l in ls),
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
-            'metamorphic_pairs': len(record['metamorphic']['pairs']),
+            'metamorphic_pairs': len(record['metamorphic']['pairs']), 'selfhost_twins': 1,
             'semantic_mutants': len(record['mutants']),
             'mutant_verdict_observations': sum('witness' in m for m in record['mutants']),
         }
