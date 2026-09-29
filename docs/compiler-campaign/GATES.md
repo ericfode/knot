@@ -86,7 +86,9 @@ fuel, calls and outcomes (among them D23's requests: built by the Action's secon
 performed only by the Program's Top loop, dropped without effect and refused as
 `Unsupported vm effect` wherever a read meets one, with the bytes and host calls a Book makes, which are
 none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar); nine describe-domain controls; 13 argument controls;
-the lowering of two hand-written displays; 89 codec, 4 source, 93 evaluator and thirteen
+the lowering of two hand-written displays; 14 seed witnesses (sources whose two seed lanes, and for
+three the literals head, it re-executes and compares with frozen bytes and a literal review, with three
+frozen refusals of that comparison); 89 codec, 4 source, 93 evaluator and thirteen
 rule mutants of `check-spec.py` itself; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.

@@ -2,7 +2,8 @@
 """Gate vm-spec: frozen golden images against the pinned seed and eval-cli.
 
 Re-executes the oracle lanes on every golden source and compares the frozen
-observations byte for byte; re-derives the prim registry; checks that every
+observations byte for byte, and does the same for each seed witness (sources that
+SPEC section 8 cites and no golden can carry); re-derives the prim registry; checks that every
 committed image equals its plan's encoding, decodes back to that plan, passes
 the validator and agrees with the oracle checker's own core display; freezes
 the VM expectation table under the Exhausted-lane rule; checks the bench
@@ -1548,7 +1549,11 @@ def effect_controls(plans: dict) -> list:
       (`fuel-book-request-short`); and at fuel 3 the Action's second application does, after 3.
     - A request is dropped, and no effect follows, wherever it is held: a Book's let, an Emit's field, a
       Program's let, an argument of a call (keep-swapped's plan) and a String that the loop never reads.
-      The Program that returns the other request performs it: `kept\n` or `live\n`, effects 1.
+      The Program that returns the other request performs it: `kept\n` or `live\n`, effects 1. The controls
+      built by `entered` and `halting` have `main` = `λ@R. λk. body`, a form on which the seed crashes (the
+      witnesses main-lambda-*): they are literal review and no seed claim. Their seed-witnessed analogues have a
+      call-shaped `main` and are goldens: let-dropped-request, emit-field-request-dropped, keep-non-scalar and
+      keep-swapped, whose plan is `program-request-dropped-argument`.
     - Under a Program the same Action prints, and where it meets `k` may lie in an argument of a
       call: `run(m) = λ@R. λk. id(m(R)(k))` passes the answer of `IO.print("x")(R)(k)` through
       `id`. The pinned seed writes `x` for that source on both lanes; main, IO.print, run, R,
@@ -1556,7 +1561,11 @@ def effect_controls(plans: dict) -> list:
       refuses the shape that a Case reads the answer of (`got(IO.print("x")(R)(k))`, its own
       test request_out_of_band.bend), and D23 refuses it as well: `program-case-request`, and the
       reads that a request meets in a Book (`inspect-request-*`, `book-request-rendered`, `-field`
-      and `enter-request-target`), each `Unsupported vm effect` and never ill-typed.
+      and `enter-request-target`), each `Unsupported vm effect` and never ill-typed. A Case with a Default
+      beside an Emit row, a Halt row or no row is refused the same (`program-case-request-emit-default`,
+      `-halt-default`, `-default-only`): the native lane takes the Default and the Bun lane fail-stops on a
+      constructor row (witnesses case-request-*), and Knot cannot lower such a source, so it is a recorded
+      capability gap and not a value that the VM owes (SPEC section 8).
     - A scalar String is written as canonical UTF-8 (section 10): `foreign-print`'s plan prints the four
       examples of each length (U+0024, U+00A2, U+20AC, U+10348) and the edges of every length
       (U+007F, U+0080, U+07FF, U+0800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF), after 5 entries.

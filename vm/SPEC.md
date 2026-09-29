@@ -483,12 +483,15 @@ so D4 refuses it: it is not ill-typed, and it is never `Invalid`. The request's 
 are not words that any of these points reads. Nothing reads them until Top's loop performs the
 request (§8), and a Let, a Reference, a Construct, a Foreign, a Closure's captures and an Enter's
 operands move or share a request unread, so a request can be stored, captured, passed and dropped.
-Dropping one releases it (§5) and has no effect.
+Dropping one releases it (§5) and has no effect. A Case refuses a request whatever rows it has: a Default
+beside an Emit row, a Halt row or no row at all is refused all the same (§8 says where the seed's native
+lane differs).
 
 ### 6.1 Case selection
 
 The scrutinee is borrowed from its slot and inspected (§6) against the Case's
-scrutinee type, whether its slot is typed so or `none`. Selection reads a tag and
+scrutinee type, whether its slot is typed so or `none`, and whether the Case has rows or only a Default:
+a request is refused there, before any Default is chosen. Selection reads a tag and
 allocates nothing: an Object's tag is in its payload, an immediate of an algebraic
 type is tag `v`, a Nat word `n` is Zero (tag 0) when `n = 0` and otherwise Succ
 (tag 1), and a Char word is Chr (tag 0). In key mode the scalar's value is
@@ -704,7 +707,13 @@ request is built and dropped. Goldens `keep-swapped` (`keep(-R,x,y) = y`: the re
 `m1(R, x => Halt{7,"unreached"})` is dropped, and the run prints `kept`), `keep-first`, `run2-flag`
 (`pick` over a user Flag) and `book-drop` (a Book) freeze that on both seed lanes, and `spine`
 (`R => k => m1(R, x => m2(R, k))`, IO.bind's shape) freezes the requests that do reach the
-loop. Run control `program-print-through-id` applies the Action to its continuation inside an argument
+loop. Six goldens freeze the same for each place a request can be held, every one with a call-shaped
+`main` (`main = run(IO.print(..), ..)`, since the seed crashes on a `main` that is itself a lambda, below):
+`let-dropped-request` and `let-live-request` (bound by a let, dropped, and the live one returned),
+`field-request-returned` and `field-request-dropped` (a field of a user `Box`, unboxed by a match and
+returned, or dropped), `emit-field-request-dropped` (an Emit's field) and `capture-request-dropped` (a
+closure's capture). Each prints its `live\n` (or `boxed-then-returned\n`) on both seed lanes, and the dropped
+request of each is built and never performed. Run control `program-print-through-id` applies the Action to its continuation inside an argument
 of a call (`run(m) = λ@R. λk. id(m(R)(k))`, whose answer only passes through `id`) and writes `x`
 after 9 entries, and the pinned seed writes `x` for that source on both of its lanes.
 
@@ -721,23 +730,46 @@ its entry (`book-request-dropped`, `program-request-dropped-let`), and performin
 (`program-request-dropped-argument`), and `inspect-continuation-target` writes `x` before the
 loop reads a `k` that is an immediate.
 
-**Where the seed refuses, and the VM with it.** The seed's boundary is the loop, and it is not
-only a Case over the answer. An effect fires only where the pure evaluator answers its request to
-the loop, so a request that is dropped never fires, and one that reaches a read is refused. A Case
-over the IO.OP that an applied effect answers, such as `got(IO.print("x")(R)(k))` with `got` matching
-`Emit` and `Halt`, fail-stops in every lane (`bend: runtime fail-stop`, no output, exit 1) and never
-fires the effect: the request is one that only the event loop decodes (the seed's own test,
-`tests/io/request_out_of_band.bend`). D23 gives the VM that boundary, and D4 its refusal: a request
-that a Case inspects, that a Book renders or that any other read of §6 meets is `Unsupported vm
-effect` (§6), where the seed fail-stops or has no such value, and it is never performed. Run controls
-freeze the refusals, and no golden agrees with the seed there, because the seed does not succeed
-(`program-case-request` is that Case in a Program, `book-request-rendered` and `book-request-field`
-the render of a root and of a field, and `inspect-request-chr`, `inspect-request-prim`,
-`inspect-request-keys`, `inspect-request-print` and `enter-request-target` each other kind of read, §12).
-The seed also crashes on a request bound by a `let`, used or dropped, in both lanes (Bun `TypeError:
-s.fun is not a function`, native `memory fault`, exit 1), which no VM rule can agree with: a `let` moves a
-request unread, and `program-request-dropped-let` freezes that shape by literal review, with no claim of
-seed agreement.
+**Where the seed refuses, and the VM with it.** The seed's boundary is the loop: an effect fires only
+where the pure evaluator answers its request to the loop, so a request that is dropped never fires. A
+request that a read meets is where the seed's two lanes part, and they do not fail-stop alike (the
+witnesses of `golden/witnesses.json`, §12; the native lane is the reference):
+
+| A Case over a request that | seed native | seed Bun |
+|---|---|---|
+| names both Emit and Halt (`case-request-both-arms`; the seed's own test `tests/io/request_out_of_band.bend`) | fail-stop (`bend: runtime fail-stop`), exit 1 | fail-stop, exit 1 |
+| names one constructor beside a catch-all (`case-request-emit-default`; `-emit-default-u32` prints `2` and `-halt-default-u32` prints `4`, the catch-all's value) | takes the catch-all, exit 0 | fail-stop, exit 1 |
+| is only a catch-all or a binder (`case-request-default-only`, `-binder`) | exit 0, the request is never read | exit 0 |
+
+So "fail-stops in every lane" holds of the first row alone. D23 gives the VM the boundary of the loop and
+D4 its refusal: a request that a Case inspects, that a Book renders or that any other read of §6 meets
+is `Unsupported vm effect` (§6), whatever rows the Case has, a Default included, and it is never
+performed. For the first row that is the seed's own answer. For the other two, where the native lane
+runs the Case, §11's rule would owe its value, and the VM refuses instead: a recorded capability gap,
+because Knot cannot lower such a source. The pinned literals head reports `Unsupported check
+variable-pattern` for every catch-all on an algebraic type (`_` alone, a binder, and `_` after a
+constructor arm, each tried on a Flag: the witnesses `catch-all-lone`, `-binder` and `-after-arm`, which the
+seed runs), while a `_` after key arms on a U32 or a Char is accepted (`default-hit`, `case-char`). No image
+of a compiled program therefore holds a Case with a Default over an IO.OP; such plans are hand-written, and
+`program-case-request-emit-default`, `-halt-default` and `-default-only` freeze the refusal. Whether a
+request should instead select no row and fall to the Default, as the native lane does, is the coordinator's
+decision (DECISIONS finding 14); D23 as decided is the refusal. The other reads freeze their refusals too,
+and no golden agrees with the seed there: `program-case-request` is a Case in a Program,
+`book-request-rendered` and `book-request-field` the render of a root and of a field, and
+`inspect-request-chr`, `inspect-request-prim`, `inspect-request-keys`, `inspect-request-print` and
+`enter-request-target` each other kind of read (§12).
+
+**The seed's crash is `main`'s form, not a let.** The seed crashes on a Program whose `main` is itself
+`R => k => ...`, whatever the body: both lanes exit 1 with no output, native `bend: memory fault
+(machine stack overflow?)` and Bun a TypeError (the witnesses `main-lambda-print`, `-continue`, `-halt`,
+`-let` and `-nolet`, whose bodies print, continue, halt, hold a let and hold none). A request bound by a
+let, held by a field, held by an Emit or captured runs on both lanes and agrees with D23 once `main` is a
+call: the six goldens above freeze it, and `let-dropped-request` is `main-lambda-let` with the lambda moved
+from `main` into a helper. No VM rule can agree with a crash of `main`'s form, none is owed one, and it is no
+value. The plan-level run controls that build `main` as `λ@R. λk. body` (`program-request-dropped-let`,
+`program-request-in-emit`, `program-case-request` and most of the D23 and D20 controls) freeze §7 and §8 by
+literal review and make no claim about the seed; the call-shaped goldens are the seed-witnessed twins of
+those that hold a request in a let, an Emit or a dropped argument.
 
 **A Book entry never reaches the loop (D22, D23).** A Book invocation has no loop: its Top frame is
 phase 0, which describes the result and halts. No request is performed under it, whatever it holds,
@@ -758,7 +790,8 @@ erased `R` after 3, and a request built and dropped after 4.
 `stdout` empty and `effects` 0 beside its cause and `calls`, and so does `book-request-dropped`,
 which builds one and ends. D23's Program controls freeze `effects` too: 1 where the loop performs the
 one request that a run returns (`program-request-dropped-let`, `-argument`, `-ill-typed`), 0 where it
-returns none (`program-request-in-emit`) or a refused one (`program-case-request`, `inspect-request-print`). The reference evaluation reports
+returns none (`program-request-in-emit`) or a refused one (`program-case-request` and its three Default
+variants, `inspect-request-print`). The reference evaluation reports
 both on every Book outcome, a Halt included (§12): `stdout` is the bytes written, and `effects`
 the host calls made, counted where the call would be, at the loop after D20's check and just
 before the write. A VM's harness MUST compare both: `stdout` against what its host
@@ -944,7 +977,9 @@ exhaustion never excuses the VM. A VM that exhausts early, corrupts a result or
 reports an engine trap as a budget fails. Unsupported, timeout, unknown failure
 and a missing lane are neither Exhausted nor agreement. An Unsupported outcome is
 D4's refusal of a form Knot does not handle: a recorded capability gap, never a
-bound. Expected values are never regenerated from a candidate VM.
+bound. D23 records one that a hand-written plan may hold and Knot cannot lower: a Case with a Default over
+a request, where the seed's native lane picks the Default (§8). Expected values are never regenerated
+from a candidate VM.
 
 **Non-scalar output (D20).** The program's own value decides it, never a seed
 lane. The reference evaluation of the plan ([evaluate.py](evaluate.py), §6–§10 on
@@ -998,13 +1033,14 @@ reports the `InternalFailure eval result-tag` defect recorded in DECISIONS.md
 each time), derived from the
 image's type table and never listed as a bound; the seed's stdout for the Programs
 `foreign-print`, `io-bind`, `non-scalar-code`, `non-scalar-unprinted`, and D23's `keep-swapped`, `keep-first`,
-`run2-flag`, `spine` and `keep-non-scalar` (§8); and D20's
+`run2-flag`, `spine` and `keep-non-scalar`, and the six of round 12 with a request in a let, a field, an
+Emit or a capture (§8); and D20's
 refusal for `print-non-scalar`, `print-non-scalar-mid` and `print-non-scalar-wide`,
 with no output, and for `print-non-scalar-second` after `a\n`. For the Programs before D23
 the eval lane is not excused but unavailable: both literals `eval-cli`
 and `check-cli` report `Invalid parse function-result` for
 `def main() -> IO(Unit)`, a program the seed runs. Under D4 that should be Unsupported; it is recorded as observed, not
-relabelled, and their plans follow §1 by hand. The five of D23 declare helpers with an `IO(Unit)` or
+relabelled, and their plans follow §1 by hand. The eleven of D23 declare helpers with an `IO(Unit)` or
 `IO.OP<R>` parameter, which both heads answer `Unsupported parse parameter-type` (D4's own answer), and
 follow §1 by hand as well. `io-bind`, `non-scalar-unprinted`
 and `print-non-scalar-second` keep Base's `IO.bind` (and `IO.pure`) unspecialized,
@@ -1176,10 +1212,15 @@ lane and requires:
   alone (`program-request-dropped-let`, `live\n`, `effects` 1, after 10, the dead one's three entries
   paid); by an argument of a call (`program-request-dropped-argument`, `keep-swapped`'s plan, `kept\n`,
   `effects` 1, after 12); or holding an ill-typed String, which the loop never reads
-  (`program-request-dropped-ill-typed`, a closure tail, `kept\n`, `effects` 1, after 12). A request that
+  (`program-request-dropped-ill-typed`, a closure tail, `kept\n`, `effects` 1, after 12).
+  `program-request-in-emit`, `-dropped-let` and `-dropped-ill-typed` build `main` as `λ@R. λk. body`, a form
+  that crashes the seed (§8): they are literal review with no seed claim, and the call-shaped goldens
+  `emit-field-request-dropped`, `let-dropped-request` and `keep-non-scalar` witness that the same holds. A request that
   any read meets stops `Unsupported vm effect` (§6), whatever the type and before an ill-typed
   test: a Case over the answer in a Program (`program-case-request`, `Emit{got(IO.print("x")(R)(k))}`,
-  after 7, nothing written); a Book's result and a field of it, rendered (`book-request-rendered`,
+  after 7, nothing written), and the same Case with a Default beside an Emit row, a Halt row or no row
+  (`program-case-request-emit-default`, `-halt-default` and `-default-only`, each after 7, nothing written; §8);
+  a Book's result and a field of it, rendered (`book-request-rendered`,
   `book-request-field`, after 5); a request handed through `id` to a Chr operand (`inspect-request-chr`,
   after 5), a prim operand (`inspect-request-prim`, `U32.add`, after 6), a key-mode Case
   (`inspect-request-keys`, after 6) and an Enter's target (`enter-request-target`, after 5, the Enter
@@ -1263,18 +1304,22 @@ lane and requires:
   takes an immediate for an Action, or an Object for its target; a request's continuation read when the
   request is built, or by the loop before its effect, or left unread and taken for the terminal
   continuation; and a last word that is no IO.OP taken for `Emit`. Four more, of §10's UTF-8 of a scalar (the one-byte edge, the two-byte
-  lead, and the edges of two and three bytes), die by the two print controls. Twenty-eight more,
+  lead, and the edges of two and three bytes), die by the two print controls. Twenty-nine more,
   of D23, a Halt's message, keys and the debit, die
-  by the controls above: the eager rule of round 10, performing at the Action's application (by the goldens
-  `keep-swapped`, `keep-first`, `run2-flag`, `keep-non-scalar` and `book-drop`, and twenty run controls); a
-  request performed although it is dropped, by the function that received it (by those five goldens and
+  by the controls above: the eager rule of round 10, performing at the Action's application (by ten goldens,
+  `keep-swapped`, `keep-first`, `run2-flag`, `keep-non-scalar`, `book-drop`, `let-dropped-request`,
+  `let-live-request`, `field-request-dropped`, `emit-field-request-dropped` and `capture-request-dropped`, and
+  twenty-four run controls); a request performed although it is dropped, by the function that received it (by
+  nine goldens, those but `field-request-dropped`, whose function receives the Box and not the request, and
   `program-request-dropped-argument`, `program-request-dropped-ill-typed` and `book-request-dropped`) or by the
-  let that bound it (by `program-request-dropped-let` and `book-request-dropped`); a loop that enters `k`
+  let that bound it (by `let-dropped-request`, `let-live-request`, `program-request-dropped-let` and
+  `book-request-dropped`); a loop that enters `k`
   before it performs the effect (by `fuel-continuation-short`, `inspect-continuation-target`,
   `inspect-print-after-surrogate`, `inspect-request-print` and the four D20 goldens' `calls`); a Case that
   picks an arm of a request, and a request taken for an ill-typed word at a Case (each by the seven Book
-  controls that hand `got` a request, `program-case-request`, `book-request-rendered`, `book-request-field` and
-  `inspect-request-print`), at a scalar (by `inspect-request-chr`, `-prim` and `-keys` alone) or at an
+  controls that hand `got` a request, `program-case-request` and its three Default variants,
+  `book-request-rendered`, `book-request-field` and `inspect-request-print`), a Case with a Default that takes
+  the Default of a request, as the native lane does (by those three variants alone), at a scalar (by `inspect-request-chr`, `-prim` and `-keys` alone) or at an
   Enter's target (by `enter-request-target` and `fuel-zero-request-target`); an Enter that tests fuel before it
   reads a request (by `fuel-zero-request-target` alone); a rendered field that admits a request (by
   `book-request-field` alone); a request's operands read when it is built (by `book-print-ill-typed` and
@@ -1292,6 +1337,17 @@ lane and requires:
   (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
   and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused print
   whose debit is refunded (by the D20 goldens' `calls`);
+- 14 **seed witnesses** (`golden/witnesses.json`, `check-spec.py witness_controls`): sources that §8 cites
+  and no golden can carry, each re-run on both seed lanes (three also through the literals head's check-cli) and held
+  to its source's hash, to its frozen exit, stdout and stderr, and to the review of its exit and stdout that
+  was written before the bytes were frozen. Five show that the seed crashes on a `main` that is itself a
+  lambda (`main-lambda-print`, `-continue`, `-halt`, `-let` and `-nolet`); six that its lanes part over a Case
+  on a request (`case-request-default-only`, `-binder`, `-emit-default`, `-both-arms`, `-emit-default-u32` and
+  `-halt-default-u32`); three (`catch-all-lone`, `-binder` and `-after-arm`) that both lanes run a catch-all on
+  an algebraic type that the literals head refuses as `Unsupported check variable-pattern`. Three frozen
+  refusals of the comparison (a source that drifted, a lane that drifted, a lane that contradicts its
+  review) are held by three rule mutants. A witness is evidence for the text and never a VM expectation:
+  vm-model and vm-core do not read it;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).
