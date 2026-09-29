@@ -12,15 +12,19 @@ BUILD = gate.ROOT / '.local/compiler-nest/round3'
 RECEIPT = HERE / 'receipts/round3.json'
 
 MUTANTS = [
+    # The three dotted-binder mutants undo one site of `binders` each: a pattern binder, a live let and
+    # an erased let (integration of the literals line: the sites moved from nest's stopgap into the
+    # scope-aware walker, and their witnesses now pin its answers).
     {'name': 'dotted-pattern-binder', 'file': 'parse.bend',
-     'old': 'Bool.or(Bool.not(pattern),S.binder(name))', 'new': 'Bool.or(Bool.not(pattern),S.identifier(name))',
+     'old': 'u => binder("pattern-binder",token,False{},params),u => Done{Unit{}})',
+     'new': 'u => binder("pattern-binder",token,True{},params),u => Done{Unit{}})',
      'witness': 'dot-multi-column', 'phase': 'check', 'wrong': {'exit': 0}},
     {'name': 'dotted-live-let', 'file': 'parse.bend',
-     'old': 'Bool.or(U32.is_eq(quantity,0),S.binder(name))', 'new': 'Bool.or(U32.is_eq(quantity,0),S.identifier(name))',
+     'old': 'binder("binding-name",token,U32.is_eq(q,0),params)', 'new': 'binder("binding-name",token,True{},params)',
      'witness': 'dot-let', 'phase': 'check', 'wrong': {'exit': 0}},
     {'name': 'erased-let-as-pattern', 'file': 'parse.bend',
-     'old': 'Bool.or(U32.is_eq(quantity,0),S.binder(name))', 'new': 'Bool.or(False{},S.binder(name))',
-     'witness': 'dot-erased-let', 'phase': 'check', 'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tdotted-binder\t'}},
+     'old': 'binder("binding-name",token,U32.is_eq(q,0),params)', 'new': 'binder("binding-name",token,False{},params)',
+     'witness': 'dot-erased-let', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\tbinding-name\t'}},
     {'name': 'accept-malformed-name', 'file': 'lex.bend',
      'old': 'S.malformed(text),u => Fail', 'new': 'False{},u => Fail',
      'witness': 'name-double-dot', 'phase': 'check', 'wrong': {'exit': 0}},

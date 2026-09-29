@@ -26,7 +26,7 @@ CONSTRUCT = '''    case None{} C.Checked{C.Construct{origin,typ,tag,params,args}
 '''
 # The first three ignore the refinement, wholly or by constructor form. The next
 # three over-reject: an annotated let, a residual binder and a field never split.
-# The next three report a dotted binder as Invalid at one binder site each; the
+# The next three report a rebound dotted binder as Invalid at one binder site each; the
 # last three report a line break in arguments, or a same-line arm, as Invalid again.
 MUTANTS = [
     {'name': 'ignore-refinement', 'file': 'check.bend', 'old': VALUE + CONSTRUCT, 'new': '',
@@ -46,25 +46,28 @@ MUTANTS = [
      'old': '+binding : C.Binding = C.Binding{token,level,q,type_id,True{},None{}}',
      'new': '+binding : C.Binding = C.Binding{token,level,q,type_id,True{},Some{C.Value{token,type_id,0}}}',
      'witness': 'twin-field-unsplit', 'phase': 'check', 'wrong': INFER},
+    # Each of the next three loses the scope of the names above at one binder site of `binders`
+    # (a pattern variable, a promotion, a let): a rebound dotted name is judged as a fresh one.
     {'name': 'rebound-pattern-invalid', 'file': 'parse.bend',
-     'old': 'u => binder_failure(tokens,name,"pattern-binder",True{})))),u =>',
-     'new': 'u => invalid(tokens,"pattern-binder")))),u =>',
+     'old': 'u => binder("pattern-binder",token,False{},params),u => Done{Unit{}})',
+     'new': 'u => binder("pattern-binder",token,False{},Nil{}),u => Done{Unit{}})',
      'witness': 'rebound-field', 'phase': 'check', 'wrong': invalid('pattern-binder')},
     {'name': 'rebound-promotion-invalid', 'file': 'parse.bend',
-     'old': 'u => binder_failure(tokens,open,"pattern-binder",True{})),u =>',
-     'new': 'u => invalid(tokens,"pattern-binder")),u =>',
+     'old': 'case 1n+n S.Promotion{token}: binder("pattern-binder",token,False{},params)',
+     'new': 'case 1n+n S.Promotion{token}: binder("pattern-binder",token,False{},Nil{})',
      'witness': 'rebound-promotion', 'phase': 'check', 'wrong': invalid('pattern-binder')},
     {'name': 'rebound-let-invalid', 'file': 'parse.bend',
-     'old': '            binder_failure(tokens,name,"binding-name",U32.is_ne(quantity,0)))',
-     'new': '            invalid(tokens,"binding-name"))',
+     'old': 'binder("binding-name",token,U32.is_eq(q,0),params)',
+     'new': 'binder("binding-name",token,U32.is_eq(q,0),Nil{})',
      'witness': 'rebound-let', 'phase': 'check', 'wrong': invalid('binding-name')},
+    # The next two end a line break in a list as an error again: before the first item and after one.
     {'name': 'list-break-invalid-in-arguments', 'file': 'parse.bend',
-     'old': 'u => unsupported(tokens,"line-break"),u =>\n            then(run(n,Term{pattern},tokens)',
-     'new': 'u => invalid(tokens,"expected-term"),u =>\n            then(run(n,Term{pattern},tokens)',
+     'old': 'then(run(n,Arguments{"}",pattern},S.skip_lines(tail)),args => rest => wrap_call(name,True{},args,rest))',
+     'new': 'then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest))',
      'witness': 'hd-b2-body-open-brace-newline', 'phase': 'check', 'wrong': invalid('expected-term')},
     {'name': 'list-break-invalid-after-element', 'file': 'parse.bend',
-     'old': 'u => unsupported(tokens,"line-break"),u =>\n              invalid(tokens,"argument-separator")',
-     'new': 'u => invalid(tokens,"argument-separator"),u =>\n              invalid(tokens,"argument-separator")',
+     'old': 'run(n,ListTail{close,arg,False{},pattern},S.skip_lines(rest))',
+     'new': 'run(n,ListTail{close,arg,False{},pattern},rest)',
      'witness': 'hd-b5-call-args-newline', 'phase': 'check', 'wrong': invalid('argument-separator')},
     {'name': 'same-line-arm-invalid', 'file': 'parse.bend',
      'old': 'u => unsupported(ts,"same-line-arm"),u =>', 'new': 'u => invalid(ts,"end-of-body"),u =>',
