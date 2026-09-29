@@ -78,8 +78,8 @@ on transitions: a harness limit, never VM exhaustion.
   and `paid`); a frame that does not fit the region is `Exhausted` kind 3, and a
   cell past the declared memory kind 2, before anything is written; and a stopped
   run holds what the step could not advance: `Succ{4294967295}` its Gather frame
-  under `succ`'s Call and `Nat.is_gt`'s Gather, and a refused Halt or print its
-  `act` under Top.
+  under `succ`'s Call and `Nat.is_gt`'s Gather, a refused Halt or print its `act`
+  under Top, and a Book whose description is refused its `act` too.
 
 These are bounded computed equations, not a refinement proof. The gate
 evaluates the same predicates natively on more images: the audit on every
@@ -141,24 +141,28 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   mid-way by an allocation. The one exception is SPEC §7's debit: an Enter that
   stops after its target check keeps its fuel and call spent (`paid`). The audit
   checks this at every stop of every audited run (`atomic`), and laws pin it. This
-  follows the coordinator's ruling on vm-lockstep's findings 1 and 2 (Return to Top
-  refuses an ill-typed IO.OP, or a request it cannot perform, before it drops `act`;
-  no Gather frame is popped before its operands are inspected or NatRange is
-  tested). SPEC §6's transition table still says Return to Top drops `act` first,
-  and where it differs the model follows the ruling.
+  follows the coordinator's ruling on vm-lockstep's findings 1 and 2, as SPEC §6.3
+  now states it (Return to Top refuses an ill-typed IO.OP, or a request it cannot
+  perform, before it drops `act`; no Gather frame is popped before its operands are
+  inspected or NatRange is tested). A Book's description is part of Return to Top(0):
+  the machine halts `Answered` with `act` still current, and `concluded` describes
+  the answer, then drops `act` and the answer, so a description that stops (a display
+  bound, an ill-typed word, a request) leaves `act` owned. The audit compares a
+  stopped description with the machine before the Return (`Audit.prior`).
 - A stopped machine keeps the control it could not advance, so the words of a
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
   model's differential covers the 111 goldens, their 44 frozen Book invocations,
   vm-spec's admitted plan, limit, code-list and run controls (counted from
-  `check-spec.py`: 6, 1, 7 and 41 at vm-spec ec96ae8, each run control at the fuel
-  frozen with it), its 13 argument controls, the model's own eight controls in
+  `check-spec.py`: 6, 1, 7 and 138 at vm-spec 54b52a84, each run control at the fuel
+  frozen with it, and compared on `stdout`, `calls` and `effects`), its 13 argument
+  controls, the model's own eight controls in
   [model-controls/](model-controls/) (a tags-mode Case on Char, immediate and
   Big, and key-mode Cases on U32 and Char at the key 0xffffffff), two display
   controls with multibyte constructor names at and beyond the byte bound, and
   seven inspection controls (`append`'s whole `b` among them), each against the
-  reference evaluation's outcome and call count (`vm/evaluate.py`) and, for the
-  seed-derived eight, the seed.
+  reference evaluation's outcome, call count and host-call count (`vm/evaluate.py`)
+  and, for the seed-derived eight, the seed.
 - The seed's native lane misreads a U32 comparison against a nullary call or a
   call with constant arguments when it is an operand of Base's `Bool.or` or
   `Bool.xor`: the comparison reads as True whatever its value. Either operand

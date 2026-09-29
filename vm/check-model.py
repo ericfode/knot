@@ -304,10 +304,9 @@ KNOWN_EXITS = {0, 3, 4, 5, 6, 7}
 
 def well_formed(row: dict) -> bool:
     """A model answer, not a crash, trap or timeout: those never count as a kill. A Program's Halt ends
-    the run through the host's `die` with the Halt's own code, so a control that freezes one may exit
-    with any status."""
+    the run through the host's `die` with the Halt's own code, so a Program may exit with any status."""
     result = row['result']
-    return result['exit'] in (range(256) if row.get('died') else KNOWN_EXITS) and 'bend:' not in result['stderr']
+    return result['exit'] in (range(256) if row.get('program') else KNOWN_EXITS) and 'bend:' not in result['stderr']
 
 
 def argv_of(model: Path, name: str, argv: list) -> list:
@@ -342,10 +341,11 @@ def agrees(case: dict, got: dict) -> bool:
 
 
 def golden_runs(model: Path, expected: dict) -> dict:
-    cases = expected['cases']
+    cases, plans = expected['cases'], golden_plans()
     with ThreadPoolExecutor(max_workers=8) as pool:
         got = dict(zip(cases, pool.map(lambda n: run(argv_of(model, n, cases[n]['argv']), 120), cases)))
-    return {n: {'result': got[n], 'agrees': agrees(cases[n], got[n]), 'admitted': True} for n in cases}
+    return {n: {'result': got[n], 'agrees': agrees(cases[n], got[n]), 'admitted': True, 'program': plans[n]['entry'] == 'program'}
+            for n in cases}
 
 
 def invocation_runs(model: Path, audit: Path | None, expected: dict) -> dict:
@@ -547,7 +547,7 @@ def admitted_runs(model: Path, audit: Path | None, listed: list, argv=control_ar
         balanced = audit is None or (bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and (
             'exit' not in want or m.group(4) == '0') and (int(m.group(5)), int(m.group(6))) == (calls, effects))
         # A kill is judged on the observation that went wrong.
-        return label, {'result': audited if audited and agrees(want, result) else result, 'admitted': True, 'died': 'halt' in want,
+        return label, {'result': audited if audited and agrees(want, result) else result, 'admitted': True, 'program': plan['entry'] == 'program',
                        'agrees': agrees(want, result) and balanced, 'calls': int(m.group(5)) if m else None,
                        'effects': int(m.group(6)) if m else None}
     with ThreadPoolExecutor(max_workers=8) as pool:
@@ -1098,24 +1098,30 @@ MUTANTS = [
     # The coordinator's atomic-stops ruling on SPEC section 6: a refusal changes no state. Each mutant keeps
     # the state of a step that had begun, as vm-lockstep's findings 1 and 2 describe the WAT machine doing.
     ('top-drops-act-first', 'machine', [
-        ('# The Return transitions of SPEC §6, by the top frame.\n',
+        ('def returned(+code: H.Code, +w: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:\n',
          'def act_dropped(result: Result<W.Stop,Next>, +w: U32, +phase: U32, rest: List<&2,H.Frame>, +top: U32, heap: H.Heap) -> Result<W.Stop,Next>:\n'
          '  match result:\n'
          '    case Fail{stop}: Done{Next{Finished{Stopped{stop,Return{w}}},H.Stack{0,Con{H.Top{phase},rest},top},heap}}\n'
          '    case Done{next}: Done{next}\n\n'
-         '# The Return transitions of SPEC §6, by the top frame.\n'),
+         'def returned(+code: H.Code, +w: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:\n'),
         ('heap => topped(code,phase,w,rest,top,heap))', '+heap => act_dropped(topped(code,phase,w,rest,top,heap),w,phase,rest,top,heap))')],
      'Return to Top drops `act` before it refuses an ill-typed IO.OP'),
     ('gather-popped-first', 'machine', [
-        ('# The Return transitions of SPEC §6, by the top frame.\n',
+        ('def returned(+code: H.Code, +w: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:\n',
          'def gather_popped(result: Result<W.Stop,Next>, +w: U32, +act: U32, rest: List<&2,H.Frame>, +top: U32, heap: H.Heap) -> Result<W.Stop,Next>:\n'
          '  match result:\n'
          '    case Fail{stop}: Done{Next{Finished{Stopped{stop,Return{w}}},H.Stack{act,rest,top},heap}}\n'
          '    case Done{next}: Done{next}\n\n'
-         '# The Return transitions of SPEC §6, by the top frame.\n'),
+         'def returned(+code: H.Code, +w: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:\n'),
         ('        u => completed(code,node,List.reverse(&2,U32,have),H.Stack{act,rest,U32.sub(top,U32.add(need,3))},heap))',
          '        u => gather_popped(completed(code,node,List.reverse(&2,U32,have),H.Stack{act,rest,U32.sub(top,U32.add(need,3))},heap),w,act,rest,U32.sub(top,U32.add(need,3)),heap))')],
      "a Gather's operand check and NatRange test run after its frame is popped"),
+    # Round 14: a Book's description is the rest of Return to Top(0), so its stop keeps `act`.
+    ('describe-after-drop', 'machine', [(
+        '    case H.Stack{act,Con{H.Top{0},rest},top}: to(Finished{Answered{w}},stack,heap)',
+        '    case H.Stack{act,Con{H.Top{0},rest},top}:\n'
+        '      H.bind(H.Heap,Next,H.drop(heap,H.room(stack),act),heap => to(Finished{Answered{w}},H.with_act(stack,0),heap))')],
+     "Return to Top(0) drops `act` before the Book's answer is described"),
 ]
 
 
@@ -1133,6 +1139,7 @@ LAW_MUTANTS = {
     'eager-effect': 'dropped_request_writes_nothing', 'default-refused': 'case_takes_default_over_request',
     'request-as-ill-typed': 'request_is_never_rendered',
     'top-drops-act-first': 'refused_halt_keeps_its_activation', 'gather-popped-first': 'nat_range_keeps_its_gather',
+    'describe-after-drop': 'request_is_never_rendered',
 }
 
 
