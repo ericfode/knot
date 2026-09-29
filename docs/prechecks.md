@@ -264,7 +264,8 @@ measured alone, a new law file of an existing group composed 52,838 bytes while 
 byte or a divider comment in an added `.bend` line) and `perch-identity-change` (a parser profile or rubric change with no
 review-log entry, or a judge-facing sentence that disappeared). A changed target that does not parse under the Perch parser aborts a
 batch preflight; it is dropped, the rest are preflighted again and the dropped ones are named as the unavailable rule
-`preflight-targets`. Absolute blocker counts are never findings: 25 to 137 exist at every base.
+`preflight-targets`. When the full-manifest run does not complete (`unit-cap`, an abort, or no manifest), the two rules that read it, the group
+`composition-budget` and `manifest-membership`, are named as not run. Absolute blocker counts are never findings: 25 to 137 exist at every base.
 
 Replayed: recursion `624228e5` newly truncates `src/scope.bend::contains`; vm-model `e38afc32` composes 144,319 bytes in one
 file and adds section dividers and `§` characters that put its files into Knot's non-ASCII lexer class.
@@ -370,8 +371,9 @@ npm run -s prechecks:replay -- [--only classify,recursion]     # needs a checkou
 `tests/prechecks/replay/contexts.json` is the table: each accepted tip is a **clean control**, each tip that carried a defect the
 reviewers confirmed (or that main's own history repaired: io-host's stale census pin) is a **broken control**, and each context records the
 executor conditions of major or higher that the suite must report with the default policy and with a replay-only ledger
-(`tests/prechecks/replay/proposed-ledger.json`). A stacked increment names its `upstream`, which the replay passes as `--upstream`. Measured
-on this tree (`python3 scripts/prechecks/replay.py`, all fourteen contexts ok):
+(`tests/prechecks/replay/proposed-ledger.json`). A stacked increment names its `upstream` (passed as `--upstream`), and a context may carry a
+manifest reconstructed from the diff, because the campaign wrote none then. Measured
+on this tree (`python3 scripts/prechecks/replay.py`, all sixteen contexts ok):
 
 | Context | Kind | Exit | With the ledger | What remains |
 |---|---|---|---|---|
@@ -379,8 +381,10 @@ on this tree (`python3 scripts/prechecks/replay.py`, all fourteen contexts ok):
 | io-abi-2 `de221744` | clean | 0 | 0 | none |
 | poly `6ffb8884`, sugar `577d2b05` | clean | 0 | 0 | none |
 | perch-context `ffab8be2` | clean | 0 | 0 | none |
+| harness-2 `f53f937c` (manifest owns `tests/compiler-bootstrap/**`) | clean | 0 | 0 | none: without the manifest its own gate script is a C3 `frozen-edit` and an `assertion-weakened` (a selector widened from `==` to `in`) |
 | vm-model `07e6db73` (upstream vm-spec `cea554ab`) | clean | 0 | 0 | none: without the declared upstream the run reports vm-spec's files as its own |
 | main commit `25b3a5b6`, main `a6367eb9` against itself | clean | 0 | 0 | none |
+| fields-wasm `3868b119` | clean | 3 | 0 | 2 `host-path`: its own receipts, as the gate run in the worktree wrote them (ledgered) |
 | census-2 `0e8b2876` | clean | 3 | 0 | 1 `host-path`: the round receipt cites an ignored run summary (ledgered) |
 | recursion `624228e5` | clean | 3 | 0 | 3 `host-path`: own receipts with worktree paths (ledgered); the `baseline_implementation` freeze is history, and the law file outside every manifest group is minor |
 | classify `5e5b2201` | broken | 3 | 3 | six confirmed at-token regressions, and a C3 `frozen-edit`: the additive 112-line edit of the frontend gate script, which no manifest authorizes (it is not ledgered) |
@@ -389,35 +393,36 @@ on this tree (`python3 scripts/prechecks/replay.py`, all fourteen contexts ok):
 | io-host `963a7594` | broken | 3 | 3 | `red-tip`: the census inventory pins an older hash of `tests/compiler-io/host-check.py` than the file has (main repaired it in `f84d83ef`) |
 
 The ledger file is **replay-only**: the suite never reads it by itself, `replay.py` passes it as `--ledger`, and it is not for adoption. It holds
-six C4 `host-path` entries, each pinned to the measured hit count, because the historical tips' base did not yet contain the receipts that the
+eight C4 `host-path` entries, each pinned to the measured hit count, because the historical tips' base did not yet contain the receipts that the
 merge accepted and refreshed; on main the base ratchet already suppresses a path count that the base has, so adopting an entry there would only
 silence the same path later. It never holds a `frozen-edit`, an `assertion-weakened` or a `C1` entry: the fingerprint of the first two is the
 path, so an entry would acknowledge every later edit of that gate script, and the third is a defect the reviewers confirmed (unit tests).
 The ledger of record is `docs/compiler-campaign/known-conditions.json` on main, which the coordinator owns.
 
-**Replayed, not controls.** Eight more accepted or landed revisions were replayed with the same command and are left out of the table, each
-for a stated reason. Six end with exit 3: the harness-2 tip `f53f937c` and its landing `f8f50370` (a C3 `frozen-edit` and an
-`assertion-weakened` on `tests/compiler-bootstrap/check.py`, the increment's own harness; a manifest that owns `tests/compiler-bootstrap/**`
-makes the run exit 0, and the second condition is the line-level reading of a selector widened from `== 'blocked'` to `in ('blocked', *DIVERGENT)`),
-fields-wasm `3868b119` (two `host-path` conditions in its own receipts; the coordinator dispositioned the review), the classify-2 landing
-`152fcd5d` (the confirmed less-than defect, landed), the io-host landing `0b9498bb` (the stale inventory above, until `f84d83ef`) and the io-abi-2
-landing `2e93d582` (a receipt that records the previous hash of `scripts/run-wasm-io.mjs`). Two end with exit 0 only because `red-tip` did not
-run: the perch-context landing `7c743980` and the joint landing `ef3081f6` fail `census --check` on a plain export (a stale inventory, which
-the coordinator regenerates after a merge), but the diff of neither touches `src/`, `tools/census/` or the inventory, the rule's trigger. A trigger
+**Replayed, not controls.** Six more landed revisions were replayed with the same command and are left out of the table, each for a stated
+reason. Four end with exit 3: the harness-2 landing `f8f50370` (the C3 pair above, without the manifest), the classify-2 landing `152fcd5d`
+(the confirmed less-than defect, landed), the io-host landing `0b9498bb` (the stale inventory above, until `f84d83ef`) and the io-abi-2 landing
+`2e93d582` (a receipt that records the previous hash of `scripts/run-wasm-io.mjs`). Two end with exit 0 only because `red-tip` did not run: the
+perch-context landing `7c743980` and the joint landing `ef3081f6` fail `census --check` on a plain export (a stale inventory, which the
+coordinator regenerates after a merge), but the diff of neither touches `src/`, `tools/census/` or the inventory, the rule's trigger. A trigger
 that also fires on a changed gate program would run the census on 7 of the 76 distinct revisions replayed and report four landing merges and no
 tip, so it is left as it is and the registered `census` gate covers the rest.
 
 **Recall against the first delivery.** The fix round changed what C3, C4 and C5 report, so the change was measured. The 60 replay
 contexts on which the first delivery (`e0ecc0c7`) reported an executor condition of major or higher in those checks were run again with
-this tree's tool. Of those 817 conditions (154 C4 `host-path`, 140 C3 `frozen-edit`, 39 C3 `shared-file-shape`, 30 C3
+this tree's tool (at `3445f778`; the later commits add a minor coordinator note and name rules that did not run, and change no major
+condition). Of those 817 conditions (154 C4 `host-path`, 140 C3 `frozen-edit`, 39 C3 `shared-file-shape`, 30 C3
 `frozen-row-changed`, 94 C5 `composition-budget`, 353 C4 `stale-receipt-hash`, five `assertion-weakened`, two `unit-cap`), 365 are still major
-or blocking, 78 are gone and 374 are minor, each for one stated reason: 37 `shared-file-shape` conditions were a new gate's `counts()`
-branch, which GATES.md asks for; 38 `composition-budget` conditions were on files whose manifest group fits the cap; 3
-`stale-receipt-hash` conditions were `baseline_implementation` freeze hashes, which are history; 328 `stale-receipt-hash` conditions are on
-receipts that are neither a registered gate output nor a manifest receipt (historic `preflight-*`, `handoff` and `closed` receipts); 46
-`composition-budget` conditions are on files that exceed the cap only through their helper closure. No `host-path`, `frozen-edit`,
-`frozen-row-changed`, `assertion-weakened` or `unit-cap` condition was lost or lowered, and the defects the reviewers labelled in C4 and C5
-(generics `78c4942e`'s `generics.json`, vm-model `e38afc32`'s `vm/model.bend`) are still major.
+or blocking, 78 are gone and 374 are minor, each for one stated reason. Gone: 37 `shared-file-shape` conditions were a new gate's `counts()`
+branch, which GATES.md asks for; 3 `stale-receipt-hash` conditions were `baseline_implementation` freeze hashes, which are history; 38
+file-level `composition-budget` conditions were on files that a manifest group lists, which the group check now judges (23 sit in groups that
+all fit the cap, 9 reappear once as their group's own major condition, and 6 sit in two contexts where the full-manifest run aborts at the
+unit cap, so the `unit-cap` major stays and the group rules are named as not run). Minor: 328 `stale-receipt-hash` conditions are on
+receipts that are neither a registered gate output nor a manifest receipt (for example historic preflight, handoff and closed receipts), and
+46 `composition-budget` conditions are on files in no group that exceed the cap only through their helper closure (all 46 name it; the files' own
+bytes range from 123 to 33,676, all under the cap). No `host-path`, `frozen-edit`, `frozen-row-changed`, `assertion-weakened` or `unit-cap`
+condition was lost or lowered, and the defects the reviewers labelled in C4 and C5 (generics `78c4942e`'s `generics.json`, vm-model
+`e38afc32`'s `vm/model.bend`) are still major.
 
 ## Pipeline integration (for the coordinator)
 

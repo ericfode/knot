@@ -43,7 +43,7 @@ class ControlTableTests(unittest.TestCase):
         names = [c['name'] for c in TABLE['contexts']]
         self.assertEqual(len(names), len(set(names)))
         self.assertEqual({'classify', 'classify-2', 'joint', 'bootstrap', 'census-2', 'recursion', 'poly', 'sugar', 'io-abi-2',
-                          'perch-context', 'vm-model', 'io-host'},
+                          'perch-context', 'vm-model', 'io-host', 'harness-2', 'fields-wasm'},
                          set(names) - {'main-25b3a5b6', 'main-a6367eb9'})
         for context in TABLE['contexts']:
             with self.subTest(context['name']):
@@ -118,6 +118,33 @@ class UpstreamTests(unittest.TestCase):
         command = seen[0]
         given = [command[i + 1] for i, word in enumerate(command) if word == '--upstream']
         self.assertEqual(['vm-spec=abc', 'vm-core=def'], given)
+
+    def test_a_reconstructed_manifest_is_written_and_passed_to_the_suite(self):
+        seen = {}
+
+        class Proc:
+            returncode = 0
+            stdout = json.dumps({'exit': 0, 'checks': []})
+            stderr = ''
+
+        def fake(command, **kwargs):
+            path = Path(command[command.index('--manifest') + 1])
+            seen['manifest'] = json.loads(path.read_text(encoding='utf-8'))      # it exists while the suite runs
+            seen['path'] = path
+            return Proc()
+
+        manifest = {'id': 'harness-2', 'executor': 'claude', 'owns': ['tests/compiler-bootstrap/**']}
+        context = {'name': 'x', 'head': 'h', 'main_ref': 'm', 'inc': 'harness-2', 'manifest': manifest}
+        with mock.patch.object(replay.subprocess, 'run', fake):
+            replay.run_suite(Path('.'), context, None)
+        self.assertEqual(manifest, seen['manifest'])
+        self.assertFalse(seen['path'].exists(), 'the temporary manifest is removed afterwards')
+
+    def test_the_manifest_of_the_harness_2_context_owns_only_its_own_suite(self):
+        context = next(c for c in TABLE['contexts'] if c['name'] == 'harness-2')
+        self.assertEqual(['tests/compiler-bootstrap/**'], context['manifest']['owns'])
+        self.assertEqual('harness-2', context['manifest']['id'])
+        self.assertEqual('clean', context['kind'])
 
     def test_the_vm_model_context_is_stacked_on_a_declared_upstream(self):
         stacked = next(c for c in TABLE['contexts'] if c['name'] == 'vm-model')

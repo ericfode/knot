@@ -8,6 +8,9 @@ ledger (tests/prechecks/replay/proposed-ledger.json), and compares the executor 
 with the table. A clean control (an accepted, merged tip) must end with none once its accepted debt is ledgered; a broken
 control (a tip that carried a defect the reviewers confirmed) must keep exactly the conditions that report it, ledger or not.
 
+A context may name the increments it is stacked on (`upstream`: [[id, sha]], passed as --upstream) and carry a reconstructed `manifest`
+(the campaign wrote none then; it declares what the increment owns, as a launch would have).
+
 It needs the campaign history: a checkout of the repository that has the campaign branches' commits, not the gate's export.
 A context whose commit is absent is skipped and reported. The proposed ledger is never read by the suite: authority stays
 on main (docs/compiler-campaign/known-conditions.json), where the coordinator adopts entries it accepts.
@@ -19,6 +22,7 @@ import collections
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -57,7 +61,12 @@ def run_suite(repo: Path, context: dict, ledger: Path | None) -> dict:
         command += ['--upstream', f'{name}={sha}']
     if ledger is not None:
         command += ['--ledger', str(ledger)]
-    proc = subprocess.run(command, capture_output=True, text=True)
+    with tempfile.TemporaryDirectory(prefix='prechecks-replay-') as scratch:
+        if context.get('manifest'):                     # the campaign wrote no manifests then: the table holds a reconstruction
+            path = Path(scratch) / f"{context['inc']}.json"
+            path.write_text(json.dumps(context['manifest']), encoding='utf-8')
+            command += ['--manifest', str(path)]
+        proc = subprocess.run(command, capture_output=True, text=True)
     if proc.returncode not in (0, 3):
         raise RuntimeError(f"{context['name']}: the suite exited {proc.returncode}: {proc.stderr.strip()[-300:]}")
     report = json.loads(proc.stdout)
