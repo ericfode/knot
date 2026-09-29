@@ -244,6 +244,17 @@ class Repo:
         except Exception:
             pass
 
+    def grep(self, treeish: str, token: str, pathspecs: list[str]) -> list[tuple[str, int, str]]:
+        """(path, line, text) of whole-word literal matches of `token` in a tree, without a checkout."""
+        proc = self.git('grep', '-n', '-w', '-F', '-I', '--no-color', '-e', token, treeish, '--', *pathspecs,
+                        check=False, ok=(0, 1))
+        rows = []
+        for line in proc.stdout.decode('utf-8', 'replace').split('\n'):
+            parts = line.split(':', 3)
+            if len(parts) == 4 and parts[2].isdigit():
+                rows.append((parts[1], int(parts[2]), parts[3]))
+        return rows
+
     # ---- the working tree as a tree object -------------------------------
     def snapshot_worktree(self) -> str:
         """Tree sha of HEAD plus the working copy, through a private index; `.env*` is never staged."""

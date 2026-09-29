@@ -1,0 +1,101 @@
+# Advisory pre-review coherence rules (docs/prechecks.md). Uncalibrated: `gate: false` until clean,
+# broken and held-out packets separate live and adjudicated production findings exist
+# (docs/perch-maintenance.md step 8). Each rule reads only its own packet directory, so one packet
+# selects exactly one rule and no `npm run lint -- <src file>` picks these up:
+#   .local/prechecks/packets/<increment>/<head8>/<rule-name>/<n>.md
+# Packets are self-contained Markdown (Claim, Evidence, Scope) built offline by
+# `npm run -s prechecks:packets`. Missing evidence is never a pass, and a stub probability is never
+# calibration. The live run belongs to the coordinator, from the main checkout.
+- name: claim-holds-against-evidence
+  where: ".local/prechecks/packets/**/claim-holds-against-evidence/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect the Claim and Evidence sections of this packet. Every claim in the Claim
+    section holds given only the Evidence section. A clause the code does not enforce,
+    an exemption wider than the named cases, a normalization that hides a difference,
+    an unbounded counter, an absolute word (only, exactly, every, all, never, always,
+    unchanged, identical) contradicted by a changed line, or evidence missing from the
+    packet breaks this rule. Missing evidence is not a pass: if the Evidence section
+    does not show the code or diff needed to establish the claim, the rule is broken.
+    Do not use knowledge of files the packet does not show.
+
+- name: passages-agree
+  where: ".local/prechecks/packets/**/passages-agree/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    The passages in this packet all describe one term or decision. They neither
+    contradict each other nor claim more than the mechanism described in another
+    passage allows. A number, limit, outcome class or rule that differs between two
+    passages, a passage that promises what another passage says is not provided, or a
+    passage that repeats a superseded value beside the current one breaks this rule.
+    A term that appears in only one passage is not a violation. Do not use knowledge of
+    passages the packet does not show.
+
+- name: outcome-follows-d4
+  where: ".local/prechecks/packets/**/outcome-follows-d4/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Compare the decision rows, the limit table, the outcome sentences and the frozen
+    expectation rows in this packet. Every refusal of a form Knot cannot handle yet is
+    reported Unsupported and never Invalid; every resource limit is Exhausted with its
+    stated cause; and every case where the seed succeeds but Knot refuses is a
+    documented lane bound. An outcome class that differs between two of these sources,
+    or a seed-succeeds and Knot-refuses row with no documented bound, breaks this rule.
+
+- name: clause-vs-delta
+  where: ".local/prechecks/packets/**/clause-vs-delta/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    The change shown alters nothing that an invariance clause in this packet says is
+    unchanged, frozen, kept or forbidden, unless the clause itself lists that delta.
+    Compare each clause with the governed diff hunks. A changed behavior, an added
+    form, a widened profile or a moved emitter that a clause promises unchanged or
+    forbids breaks this rule. A hunk the packet does not show is missing evidence, not
+    proof that nothing changed.
+
+- name: expectation-independent
+  where: ".local/prechecks/packets/**/expectation-independent/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    No expected value used to judge the implementation or its mutants is taken from
+    that implementation's own output, or adopted from Knot's evaluator without
+    comparison to the seed or an independent derivation. Compare the code that builds
+    the want, expected or baseline values with the sentence that names their source.
+    An expectation computed by the code under test, copied from its output, or labeled
+    independent while derived from it breaks this rule. An expectation frozen from the
+    pinned seed, or derived by a separate reference, satisfies it.
+
+- name: kill-is-semantic
+  where: ".local/prechecks/packets/**/kill-is-semantic/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    A mutant counts as killed only by a semantic observation of the mutated behavior.
+    Inspect the kill predicate and the code that runs it. A crash, a timeout, a harness
+    bound, a host failure, a torn or truncated read, or a text-only match must never be
+    credited as a kill. Any path in the code shown that credits one of those as a kill
+    breaks this rule. Equivalent mutants are reported separately with a reason.
+
+- name: required-laws-met
+  where: ".local/prechecks/packets/**/required-laws-met/*.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Each required law listed in this packet exists as a universally quantified law (its
+    binder count is above zero) or is recorded as an open proof obligation with its
+    evidence. A ground witness under a general law name does not satisfy a required
+    law. Compare the required-law list with the operation-to-law matrix and the recorded
+    obligations. A required law that is missing, ground-only, or silently narrowed
+    breaks this rule.
