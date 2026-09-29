@@ -6,22 +6,16 @@ import ./image-plan.bend as P
 import ./image-layout.bend as Y
 import ./image-decode.bend as X
 
-# The round-trip law of the image increment, and the erasure laws it rests on.
+# The round-trip law of the image increment, on fixed books and plans, and the erasure laws it rests on.
 #
-#   round trip   decode(encode(b)) = erase_tokens(b)    for every checked book b        [open, D21]
+#   round trip   decode(encode(b)) = erase_tokens(b)    for every checked book b     [open, D21]
 #
 # `erase_tokens` is a projection, not a rewriting of the book: tokens, quantity-0 binders, levels,
 # datatype kinds and Type/Data distinctions do not survive, and the result is a Plan (src/image-plan.bend),
-# the image's own tree. The general law is required and is not weakened. It has no induction proof
-# yet, so it is recorded as an open obligation in src/SPEC.md and the increment's LAW_REVIEW, with its
-# evidence: the ground instances below, quantified over every source position, the golden-image and
-# frozen-suite gates, and mutants. An open law would fail this file's gate, so the general statement
-# stays in this comment:
-#
-#   law round_trip:
-#     for fuel: Nat
-#     for book: C.Book
-#     {I.recoded(fuel,book) == I.erase_tokens(fuel,book) : Result<S.Error,P.Plan>}
+# the image's own tree. The law over every book is required and is not weakened; it has no induction
+# proof yet, so it stands as an open claim in src/image-OPEN.bend, where the gate checks it. It is an
+# open obligation of D21, recorded in src/SPEC.md and tests/compiler-image/LAW_REVIEW.md, and this file
+# is its evidence: the ground instances below, quantified over every source position.
 #
 # The books here are fixed, as the literal review of `erase_tokens` is: the plans are written by hand
 # from vm/SPEC.md sections 1 and 3, before they were compared with the encoder's answer.

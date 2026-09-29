@@ -1,6 +1,8 @@
 import Base
 import ../../src/syntax.bend as S
+import ../../src/core.bend as C
 import ../../src/driver.bend as D
+import ../../src/image.bend as I
 import ../../src/image-plan.bend as P
 import ../../src/image-layout.bend as Y
 import ../../src/image-decode.bend as X
@@ -11,6 +13,8 @@ import ../../src/compile-cli.bend as CLI
 # can compare both with vm/serializer.py:
 #   image-cli decode IMAGE           prints the plan; the gate renders serializer.decode the same way
 #   image-cli recode IMAGE OUTPUT    encodes the decoded plan again and writes it through the chunked path
+#   image-cli plan SOURCE            prints erase_tokens of the checked book, in the same text
+#   image-cli roundtrip SOURCE       prints `Roundtrip<TAB>equal` when decode(encode(book)) and erase_tokens(book) print alike
 # The image file is read whole, up to one word past the 16 MiB image limit, so an oversize image is read as one.
 
 def numbers(values: List<&2,U32>) -> String:
@@ -136,17 +140,42 @@ def opened(mode: Then, result: Result<&1,&1,U32 & String,File>) -> IO(Unit):
     case Fail{(code,message)}: IO.die(Unit,5,String.concat(["HostFailure\topen\t",U32.show(code),"\t",message]))
     case Done{file}: IO.bind(File & Result<&1,&1,U32 & String,List<&2,U32>>,Unit,File.read_bytes(file,16777220),pair => pair_read(mode,pair))
 
+def planned(+book: C.Book) -> IO(Unit):
+  printed(I.erase_tokens(1000000n,book))
+
+def same_plans(left: Result<S.Error,P.Plan>, right: Result<S.Error,P.Plan>) -> IO(Unit):
+  match left right:
+    case Fail{e} _: D.fail(e)
+    case _ Fail{e}: D.fail(e)
+    case Done{p} Done{q}:
+      S.choose(IO(Unit),String.eq(plan_text(p),plan_text(q)),u => IO.print("Roundtrip\tequal"),u => IO.die(Unit,6,"InternalFailure\timage\troundtrip-differs"))
+
+def compared(+book: C.Book) -> IO(Unit):
+  same_plans(I.erase_tokens(1000000n,book),I.recoded(1000000n,book))
+
+def source_limits() -> D.Limits:
+  D.Limits{65536n,512n,512n}
+
+def usage() -> IO(Unit):
+  IO.die(Unit,5,"HostFailure\targuments\texpected decode IMAGE | recode IMAGE OUTPUT | plan SOURCE | roundtrip SOURCE")
+
+def chosen(decode: Bool, plan: Bool, roundtrip: Bool, path: String) -> IO(Unit):
+  match decode plan roundtrip:
+    case True{} _ _: IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(Print{},result))
+    case False{} True{} _: D.load(path,source_limits(),book => planned(book))
+    case False{} False{} True{}: D.load(path,source_limits(),book => compared(book))
+    case False{} False{} False{}: usage()
+
+def command(+name: String, path: String) -> IO(Unit):
+  chosen(String.eq(name,"decode"),String.eq(name,"plan"),String.eq(name,"roundtrip"),path)
+
 def arguments(args: List<String>) -> IO(Unit):
   match args:
-    case Con{command,Con{path,Nil{}}}:
-      S.choose(IO(Unit),String.eq(command,"decode"),u =>
-        IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(Print{},result)),u =>
-        IO.die(Unit,5,"HostFailure\targuments\texpected decode IMAGE | recode IMAGE OUTPUT"))
-    case Con{command,Con{path,Con{output,Nil{}}}}:
-      S.choose(IO(Unit),String.eq(command,"recode"),u =>
-        IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(Recode{output},result)),u =>
-        IO.die(Unit,5,"HostFailure\targuments\texpected decode IMAGE | recode IMAGE OUTPUT"))
-    case _: IO.die(Unit,5,"HostFailure\targuments\texpected decode IMAGE | recode IMAGE OUTPUT")
+    case Con{command_name,Con{path,Nil{}}}: command(command_name,path)
+    case Con{command_name,Con{path,Con{output,Nil{}}}}:
+      S.choose(IO(Unit),String.eq(command_name,"recode"),u =>
+        IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(Recode{output},result)),u => usage())
+    case _: usage()
 
 def main() -> IO(Unit):
   IO.bind(List<String>,Unit,IO.args(),arguments)

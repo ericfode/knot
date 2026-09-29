@@ -11,7 +11,7 @@ Increment row: VM-DESIGN.md `image`. Nothing was pushed or merged.
 | The plan and the limits and words every part shares | [src/image-plan.bend](../../src/image-plan.bend) |
 | Layout as words, and the chunk stream | [src/image-layout.bend](../../src/image-layout.bend) |
 | The decoder | [src/image-decode.bend](../../src/image-decode.bend) |
-| Round-trip laws and their proofs | [src/image-LAWS.bend](../../src/image-LAWS.bend), [src/image-PROOF.bend](../../src/image-PROOF.bend) |
+| Round-trip laws, their proofs, the open general law and its review | [src/image-LAWS.bend](../../src/image-LAWS.bend), [src/image-PROOF.bend](../../src/image-PROOF.bend), [src/image-OPEN.bend](../../src/image-OPEN.bend), [LAW_REVIEW.md](LAW_REVIEW.md) |
 | `--profile=knot-image-1`, chunked writer, budgets | [src/compile-cli.bend](../../src/compile-cli.bend) |
 | Lexer offset cap 65,536 -> 4,194,304 (the profile's character ceiling) | [src/lex.bend](../../src/lex.bend) |
 | Gate `image`, registered in the runner | [check.py](check.py), `scripts/gates/run.py`, `test_runner.py`, GATES.md |
@@ -48,9 +48,13 @@ still answers with the old usage text.
 
 ## Evidence
 
-Frozen before `src/image.bend` (then a single file) existed (commit `1aca8df3`): the 681 sources, `check-cli`'s verdict on each, the
-reference image of each accepted book, the profile's contract, the padded-source case and the synthetic book.
-The witnesses, the boundary controls and the codec driver were written after, from that contract. Run
+Freeze history (D7). Frozen before any Bend of the encoder existed (commit `1aca8df3`): 676 sources, `check-cli`'s
+verdict on each, the reference image of each accepted book (91), the profile's contract, the padded-source case and
+the synthetic book. Changed afterwards, and recorded in the commit messages: the profile's emitter depth, 4,096 to
+1,048,576 (`62657beb`, after measuring that each source nesting level costs several steps of the encoder's fuel); the
+five witness books (5 more accepted, 681 sources), whose reference images come from `reference.py`, not from the
+encoder (`81f9077e`). The boundary controls, the codec driver and the laws were written with or after the encoder,
+from that contract. Run
 `BEND_NO_TELEMETRY=1 python3 -B tests/compiler-image/check.py`:
 
 | Claim | Independent lane | Result |
@@ -58,14 +62,15 @@ The witnesses, the boundary controls and the codec driver were written after, fr
 | Every frozen-suite book the checker accepts encodes to the right bytes | `reference.py`: declarations read from source text + the core `check-cli` displays + `check-spec.py` projection + `serializer.py` layout | 96 of 681 sources (91 suite fixtures plus 5 witnesses), byte-identical on the native and Bun lanes; `serializer.validate` empty and re-encoding canonical for each |
 | The other books are not misreported | `check-cli` | 585 sources answer with the same exit and stderr, nothing written |
 | Golden sources the core can express | committed `.kimg` files and `vm/evaluate.py` against `vm-expected.json` | 19 byte-identical to their golden images; each run under the reference evaluation, `invoke-words`' invocations included |
+| `decode(encode(b)) = erase_tokens(b)` on each book | Bend's `erase_tokens` printed by `image-cli plan`, against `serializer.decode` of the compiled image | all 96 accepted books: the two texts are equal on both lanes, and `image-cli roundtrip` (Bend's own decode of its own encoding against its own `erase_tokens`) prints `equal` on the native lane (on the Bun lane it overflows the machine stack for the deepest fixtures, the seed's documented bound) |
 | The Bend decoder and re-encoder | `serializer.decode` rendered by `render.py` | 198 images (102 golden, 96 compiled): same plan text, and `recode` reproduces every byte, on both lanes; all thirteen opcodes, keys mode, defaults, closures, foreign and the constants pool have real witnesses |
 | Decoder refusals | crafted images | 10, each with its frozen reason (`magic`, `registry digest`, `total`, `length`, `section offset`, `child offset`, `function root`, `case key` twice, image size `Exhausted`) |
 | Default profile unchanged | `enum-baseline.json` | 25 module hashes on both lanes; usage text and caps as before |
 | Budgets and outputs | literal controls | 23: each maximum and its successor, the 67,190-character book (default profile `Exhausted lex`, image profile `Built` with the unpadded image), the 4,194,304-character ceiling and one past it, and untouched output after Invalid, Unsupported and Exhausted |
-| Chunked path | a DYLD write shim (native), a Bun `fs.writeSync` preload | a 5,170,376-byte synthetic image (sha256 equal to the frozen one) reaches the file in 95 writes, the largest 55,108 bytes, on both lanes; a 4,842,844-word book is `Exhausted compile budget` before the output opens |
-| A missing arm is a checker error | the seed's `--check-only` | deleting any of the eight `C.Term` arms fails it |
-| Mutants | wrong observations | 19 mutants of `src/image*.bend`, each a type-correct edit, each with a named witness, none a crash; 13 are also refused by the laws |
-| Laws | the seed's checker | 15 laws, `All terms check.` |
+| Chunked path | a DYLD write shim (native), a Bun `fs.writeSync` preload | a 5,170,376-byte synthetic image (sha256 equal to the frozen one) reaches the file in 95 writes, the largest 55,108 bytes, on both lanes; a 9,043,376-byte image, 166 writes (LETS = 6, native only: Bun would need about 2 GB) reaches the file through the same chunks, so the output cap admits at least 8 MiB by observation; a 4,842,844-word book is `Exhausted compile budget` before the output opens |
+| A missing arm is a checker error | the seed's `--check-only` | deleting any of the eight `C.Term` arms fails with the seed's message `cases for core.<Form>` |
+| Mutants | wrong observations | 19 mutants of `src/image*.bend`, each a type-correct edit with a named witness; each ends as the compiler's own outcome (exit 0 with other bytes, or a categorized failure), never a seed fail-stop or a signal; 13 are also refused by the laws |
+| Laws | the seed's checker | 15 laws, `All terms check.`; the general law in `src/image-OPEN.bend` type-checks and is exactly one open claim |
 
 The synthetic book is 538 KB of source: 250 functions, each with three affine 256-field lets and a final one, so
 node offsets pass 2^20 words. Its plan is generated with the source and checked against the checker's core on a
@@ -76,9 +81,10 @@ constructor). Cost: 0.8 s and 96 MB peak on the native lane, 2.3 s wall under lo
 
 - **The general round-trip law is an open obligation (D21).** The 15 laws are ground: two hand-written books
   and an all-forms plan, quantified over every source position, type, tag and slot where the words are only
-  moved, plus erasure laws over every token, level, type and depth. The statement over all books is written in
-  `src/image-LAWS.bend` (a comment: an open law would fail the gate) and in `src/SPEC.md`. Its evidence is
-  the above.
+  moved, plus erasure laws over every token, level, type and depth. The statement over all books is a real `law`
+  in `src/image-OPEN.bend`, which the gate requires to type-check and be exactly one open claim, and it is
+  reviewed in [LAW_REVIEW.md](LAW_REVIEW.md) and `src/SPEC.md`. Its evidence is the table above: per book, the
+  observed equality on all 96 accepted books, not a proof.
 - **`Unsupported compile image-term` is unreachable here.** This base's core has no term the image cannot
   express, so there is nothing to report; the exhaustive match is the D4 mechanism for the forms that arrive.
 - **Decoding is structural.** Scope, type and arity rules stay with the VM validator and `serializer.validate`
@@ -94,7 +100,7 @@ constructor). Cost: 0.8 s and 96 MB peak on the native lane, 2.3 s wall under lo
 - **The write observation is macOS-specific** (DYLD interposition) for the native lane; the Bun lane's preload is
   portable. The gate needs clang to build the shim.
 - **No live Perch call was made** (none was allowed); `lint:verify`, the offline half, ran in the full gates.
-  Style and semantic review of `src/image.bend` remain the coordinator's.
+  Style and semantic review of the four image files remain the coordinator's.
 - `npm ci` was not run: `node_modules` already held the pinned install.
 
 ## What the merge-wave follow-up must add

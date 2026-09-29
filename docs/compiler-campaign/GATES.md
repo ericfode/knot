@@ -102,13 +102,15 @@ The image increment adds gate `image` (`python3 -B tests/compiler-image/check.py
   `check-cli` does. The 19 golden sources the current core can express are byte-identical to their committed
   images and run under `vm/evaluate.py` against the frozen VM expectations.
 - `image-cli` decodes each of 198 images (102 golden, 96 compiled) to the text of `serializer.decode` and
-  re-encodes it byte for byte, on both lanes; ten crafted images refuse with the frozen reason.
+  re-encodes it byte for byte, on both lanes; on each of the 96 books its `erase_tokens` prints as `serializer.decode` of
+  the compiled image (both lanes) and `roundtrip` reports `equal` (native); ten crafted images refuse with the frozen reason.
 - The profile's budgets, its 4,194,304-character maximum, its caps and the untouched output after each
   failure have literal controls; the default profile's 25 module hashes are unchanged.
-- A 5.2 MB synthetic book is written in bounded chunks, observed from outside the program (a DYLD shim
+- A 5.2 MB synthetic book (and, natively, a 9 MB one) is written in bounded chunks, observed from outside the program (a DYLD shim
   for the native lane, a Bun preload for the JS lane); a larger one is `Exhausted` before the output opens.
 - Nineteen mutants of `src/image*.bend` are killed by wrong observations, and deleting any of the eight
-  `C.Term` arms fails the seed's check. `src/image-PROOF.bend` (fifteen laws) must print `All terms check.`
+  `C.Term` arms fails the seed's check with a message naming it. `src/image-PROOF.bend` (fifteen laws) must print
+  `All terms check.`, and the general law in `src/image-OPEN.bend` must be exactly one open claim (D21).
 - It writes only `tests/compiler-image/receipts/image.json`.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not

@@ -3,8 +3,10 @@
 
 Every claim is checked against a lane that does not share Bend code with the encoder:
   * the reference (reference.py): the declarations read from source text, the core that main's own
-    `check-cli` displays, and vm/serializer.py's layout. Its bytes were frozen in expectations.json
-    before src/image.bend existed, and this gate recomputes them and requires the file unchanged;
+    `check-cli` displays, and vm/serializer.py's layout. Its bytes for 676 sources were frozen in
+    expectations.json before src/image.bend existed (commit 1aca8df3); five witness books and the
+    profile's emitter depth were added after (see REPORT.md). This gate recomputes the reference and
+    requires the file unchanged;
   * vm/serializer.py: `decode`, `validate` and canonical re-encoding of every image the compiler writes;
   * vm/evaluate.py: the golden sources' frozen expectations, run on the compiler's own images;
   * `image-cli`, whose decoder is checked against serializer.decode's plan (rendered by render.py) and
@@ -199,6 +201,23 @@ def codec_case(tools, path: Path):
         require(result['exit'] == 0 and again.exists() and again.read_bytes() == data
                 and result['stdout'] == f'Built\t{len(data)}\n'.encode(), (str(path), lane, 'recode', shown(result)))
     return path.name
+
+
+def book_case(tools, frozen, path):
+    """decode(encode(b)) = erase_tokens(b), observed on one book: the Bend `erase_tokens` of the checked book
+    prints as serializer.decode of the image the compiler wrote (both lanes), and `roundtrip` compares Bend's own
+    decode-of-encode with its erase_tokens (native lane)."""
+    image = (BUILD / 'images' / (path.replace('/', '__') + '.kimg')).read_bytes()
+    require(sha(image) == frozen['sources'][path]['image']['sha256'], (path, 'image'))
+    want = (render.render(codec.decode(image, reference.DIGEST)) + '\n').encode()
+    for lane, command in (('native', [tools['image']]), ('bun', ['bun', tools['image-js']])):
+        plan = run([*command, 'plan', ROOT / path])
+        require(plan['exit'] == 0 and plan['stdout'] == want, (path, lane, 'plan', shown(plan)))
+    # `roundtrip` renders two plans and decodes one; on the Bun lane that overflows the machine stack for the
+    # deepest fixtures (the seed's documented bound), so the native lane, the reference, observes it.
+    trip = run([tools['image'], 'roundtrip', ROOT / path])
+    require(trip['exit'] == 0 and trip['stdout'] == b'Roundtrip\tequal\n', (path, 'roundtrip', shown(trip)))
+    return path
 
 
 # ---------------------------------------------------------------- refusals of the decoder
@@ -408,6 +427,23 @@ def chunk_evidence(tools, spec) -> dict:
         require(result['exit'] == 4 and result['stderr'] == b'Exhausted\tcompile\tbudget\t0:0:0:0\n' and stale.read_bytes() == b'stale',
                 (lane, 'over the image ceiling', shown(result)))
     record['over_limit_words'] = words
+    # The output cap admits at least 8 MiB: an image of that size is observed through the chunked path
+    # (native lane; Bun would need about 2 GB for it).
+    saved = synthetic.LETS
+    synthetic.LETS = 6
+    try:
+        big = BUILD / 'eight-mib.bend'
+        big.write_text(synthetic.source())
+        expected = codec.encode(synthetic.plan(), reference.DIGEST)
+    finally:
+        synthetic.LETS = saved
+    require(len(expected) >= 8 * 1024 * 1024, ('eight-MiB book', len(expected)))
+    out = BUILD / 'eight-mib.kimg'
+    result, writes = write_log([tools['compile']], big, out, ['4194304', *budgets[1:]], {'DYLD_INSERT_LIBRARIES': str(shim)})
+    require(result['exit'] == 0 and out.read_bytes() == expected and result['stdout'] == f'Built\t{len(expected)}\n'.encode(), ('eight MiB', shown(result)))
+    sizes = [done for _, done in writes]
+    require(len(sizes) > 2 and sum(sizes) == len(expected) and max(sizes) <= 65536, ('eight MiB chunks', len(sizes)))
+    record['eight_mib'] = {'bytes': len(expected), 'writes': len(sizes), 'largest': max(sizes)}
     return record
 
 
@@ -502,6 +538,15 @@ def mutant_tree(name, module, replacements):
     return tree
 
 
+def categorized(result) -> bool:
+    """A run that ended as the compiler's own outcome: exit 0, or one of the five failure exits with its
+    category on stderr. A seed fail-stop (exit 1) or a signal is a crash, and never a kill."""
+    if result['exit'] == 0:
+        return True
+    prefix = {2: 'Invalid\t', 3: 'Unsupported\t', 4: 'Exhausted\t', 5: 'HostFailure\t', 6: 'InternalFailure\t'}.get(result['exit'])
+    return prefix is not None and result['stderr'].decode('utf-8', 'replace').startswith(prefix)
+
+
 def mutant_case(expectations, crafted_images, item):
     name, module, replacements, driver, witnesses = item
     tree = mutant_tree(name, module, replacements)
@@ -538,7 +583,7 @@ def mutant_case(expectations, crafted_images, item):
             result, writes = write_log([binary], sample, out, ['1048576', '4096', '4096', '1048576', '16777216'],
                                        {'DYLD_INSERT_LIBRARIES': str(shim)})
             killed = not (len(writes) >= 2 and max(n for _, n in writes) <= 65536)
-        require(result['exit'] is not None and result['exit'] >= 0, (name, witness, 'a mutant crashed instead of misbehaving', shown(result)))
+        require(categorized(result), (name, witness, 'a mutant crashed instead of misbehaving', shown(result)))
         require(killed, (name, witness, 'mutant survived', shown(result)))
         outcomes.append({'witness': witness, 'exit': result['exit'], 'outcome': 'semantic-kill'})
     # The laws are a second, independent way to kill it: does the seed's checker still accept the proofs?
@@ -559,7 +604,8 @@ def exhaustive_case(form):
         shutil.copy2(source, tree / 'src' / source.name)
     (tree / 'src/image.bend').write_text(text[:start] + text[end:])
     result = run([SEED, tree / 'src/image.bend', '--check-only'], 120)
-    require(result['exit'] != 0 and b'All terms check.' not in result['stdout'], (form, 'a missing arm must fail the check', shown(result)))
+    # The seed names the missing constructor: the failure is the match, not a broken edit.
+    require(result['exit'] != 0 and f'cases for core.{form}'.encode() in result['stdout'] + result['stderr'], (form, 'a missing arm must fail the check', shown(result)))
     return form
 
 
@@ -569,11 +615,16 @@ def proof() -> dict:
     result = run([SEED, ROOT / 'src/image-PROOF.bend'], 300)
     require(result['exit'] == 0 and result['stdout'].strip() == b'All terms check.', ('proof', shown(result)))
     laws = (ROOT / 'src/image-LAWS.bend').read_text().count('\nlaw ')
+    # The law over every book stays required and open (D21): it must type-check and be exactly one open claim.
+    open_law = run([SEED, ROOT / 'src/image-OPEN.bend', '--check-only'], 300)
+    seen = (open_law['stdout'] + open_law['stderr']).decode()
+    require(open_law['exit'] != 0 and seen.startswith('Error: 1 TODO found.'), ('the general law must be one open claim', seen[:300]))
+    require((ROOT / 'src/image-OPEN.bend').read_text().count('\nlaw ') == 1, 'one law in image-OPEN.bend')
     for entry in ('src/image-plan.bend', 'src/image-layout.bend', 'src/image-decode.bend', 'src/image.bend',
                   'src/compile-cli.bend', 'tests/compiler-image/image-cli.bend'):
         checked = run([SEED, ROOT / entry, '--check-only'], 300)
         require(checked['exit'] == 0 and checked['stdout'].strip() == b'All terms check.', (entry, shown(checked)))
-    return {'laws': laws}
+    return {'laws': laws, 'open_obligations': 1}
 
 
 # ---------------------------------------------------------------- main
@@ -624,6 +675,7 @@ def main():
         record['codec'] = {'images': len(codec_inputs), 'golden': len(committed), 'compiled': len(accepted)}
         pmap(lambda p: codec_case(tools, p), codec_inputs)
         refusals = crafted()
+        record['round_trip_books'] = len(pmap(lambda p: book_case(tools, frozen, p), sorted(p for p, e in table.items() if 'image' in e)))
         crafted_images = {name: (data, message) for name, data, message in refusals}
         record['refusals'] = pmap(lambda r: refusal_case(tools, *r), refusals)
 
@@ -642,12 +694,14 @@ def main():
         RECEIPT.write_text(json.dumps(record, indent=2, default=str) + '\n')
     print(f"Image gate passed: {record['sources']['frozen']} frozen sources ({record['sources']['accepted']} encoded and matched "
           f"to the independent reference, the rest answering as check-cli does), {len(record['goldens'])} golden images "
-          f"byte-identical and evaluated, {record['codec']['images']} images through the Bend codec in 2 lanes, "
+          f"byte-identical and evaluated, {record['round_trip_books']} books with decode(encode(b)) = erase_tokens(b) observed, "
+          f"{record['codec']['images']} images through the Bend codec in 2 lanes, "
           f"{len(record['refusals'])} decoder refusals, {record['default_profile_modules']} default module hashes unchanged, "
           f"{len(record['profile'])} profile controls, synthetic {record['synthetic']['native']['bytes']}-byte image in "
-          f"{record['synthetic']['native']['writes']} chunked writes, {len(record['exhaustive'])} exhaustiveness controls, "
+          f"{record['synthetic']['native']['writes']} chunked writes, a {record['synthetic']['eight_mib']['bytes']}-byte image in "
+          f"{record['synthetic']['eight_mib']['writes']}, {len(record['exhaustive'])} exhaustiveness controls, "
           f"{len(record['mutants'])} mutants killed ({sum(m['laws_refuse'] for m in record['mutants'])} also refused by the laws); "
-          f"{record['proof']['laws']} checked laws. {RECEIPT}")
+          f"{record['proof']['laws']} checked laws and {record['proof']['open_obligations']} open D21 obligation. {RECEIPT}")
 
 
 if __name__ == '__main__':

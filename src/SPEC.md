@@ -293,7 +293,8 @@ every token, level, type and depth; `image-PROOF.bend` proves them and prints `A
 statement for every checked book is a **required law with an open proof obligation (D21)**: it is not weakened
 and has no induction proof yet. Its evidence is those ground laws, the byte-for-byte comparison of 96 books'
 images with an independent reference, the 102 golden images decoded and re-encoded, and mutants killed by
-wrong observations. The obligation stays here and in `tests/compiler-image/REPORT.md` until discharged.
+wrong observations. The general statement is a real `law` in `src/image-OPEN.bend` (an open claim that the gate requires to type-check),
+reviewed in `tests/compiler-image/LAW_REVIEW.md`, and stays open until discharged.
 
 The gate is `BEND_NO_TELEMETRY=1 python3 tests/compiler-image/check.py`; see its
 [report](../tests/compiler-image/REPORT.md).

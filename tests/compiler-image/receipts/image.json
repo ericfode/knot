@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-29T05:59:55.650939+00:00",
+  "date": "2026-09-29T06:13:12.762000+00:00",
   "status": "passed",
   "inputs": {
     "src/LAWS.bend": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
@@ -20,7 +20,8 @@
     "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
     "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
     "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
-    "src/image-LAWS.bend": "a2fd06e4ec216ef65a3b7a982942c3735b5966ce93cf60b5944ab54ab9a55c62",
+    "src/image-LAWS.bend": "7a3107a3d474893bcadfcd0f7011f345540ce5f604b8815fd12335cd694ddef0",
+    "src/image-OPEN.bend": "87b883d09500dc89b05b87940e7dd3c5fdc5c996716f4e7e4f541c0469c7e9e8",
     "src/image-PROOF.bend": "291a73f5fb93ad732b01c37f673fb07cdfa3bf6f41e6182633a010e0253c8080",
     "src/image-decode.bend": "cb1b892cd3c7fb560c5197e1d317b523da1f87050ae9d4726279b36a0fed0c77",
     "src/image-layout.bend": "ce5713601fdc46bfaae4adce4aded9b3b8f5e9b7435d47f9761b09b32ae73d1e",
@@ -38,14 +39,14 @@
     "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
     "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
     "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
-    "src/SPEC.md": "dc3125080f09c90c5c1d98048c3f9d4bf5571a61b8ced9bac81de5629530a884",
-    "src/CONTRACT.json": "ac36d2371ce9f379792b2b58b3158504a2dc27d3a98a47591eb9d3b725703b47",
-    "tests/compiler-image/check.py": "f8fa3504cc124e4f92f22f231a1966b68f68bffb80483621238f7481165f36b8",
+    "src/SPEC.md": "60ec3e5a56eeeb2d0621c6c76446584e3f58f819ab0643ae3b71209bcaa804b3",
+    "src/CONTRACT.json": "bfb605517ff88ed76d5376512b740c15ffc1e5b263e07d3c85840b8c79fcda0d",
+    "tests/compiler-image/check.py": "350108a9d2e08e3565e46561bc3dfe7896d5f1c35b8bf66b1262ef29d25cea1a",
     "tests/compiler-image/freeze.py": "9f12a803a539a3c00e2ca8a7f4657905b9fa583d476b465b5989fc8dc707f871",
     "tests/compiler-image/reference.py": "68492e3fbb07a3345331d0e8c6e6dfab3bb4643b54fe623e41cd91ec5bc86b79",
     "tests/compiler-image/render.py": "bb05dccbbe1497b1bbde175bc72e98fd6cc3e07f7c704a3b881bacae5907e28b",
     "tests/compiler-image/synthetic.py": "ad50cc4d8a252e3e54e08b16c76c149748a951af660a8fcc7799f8de7ecce808",
-    "tests/compiler-image/image-cli.bend": "f3d014a04162fffa1fe32ee116a78832d9228e9bb34d771863a38c4a06429f57",
+    "tests/compiler-image/image-cli.bend": "5ad1a92bb68b87c288d6c1c5a2588ddb82a395b2c551306d0fb6b6bf98049afb",
     "tests/compiler-image/expectations.json": "395e1899cb60d20842dde2cd19cd909ceb461a346d23a8a5a469c0376bf86d90",
     "tests/compiler-image/writes.c": "fb08af3ce2e739fa56a5c4de00f83551fdc72830f4118c5c87072d59e157b599",
     "tests/compiler-image/writes.js": "75ceafa3be7858040f6eb4ac869100bba34929f8ede4c4f1c320c9d3a15dc360",
@@ -71,7 +72,8 @@
     "python3": "Python 3.14.3"
   },
   "proof": {
-    "laws": 15
+    "laws": 15,
+    "open_obligations": 1
   },
   "builds": [
     {
@@ -84,11 +86,11 @@
     },
     {
       "entry": "tests/compiler-image/image-cli.bend",
-      "sha256": "d1aedf35d9360f16f5c42d091fc7c2b1d4937200a500df98c50f73093ee88648"
+      "sha256": "8fe1df2c5b141c8148790578c40f5808908a9540467dbe1fad0d935ada5ac49b"
     },
     {
       "entry": "tests/compiler-image/image-cli.bend",
-      "sha256": "8b97edcbc9d429ea8b937673f686fd5036d4aca74aec9ab79f0f6f319b8a289a"
+      "sha256": "cbc00eeaa5098dae59fe9b2d21ae076f5617cee44770bf73e38696d04d0dc000"
     },
     {
       "entry": "src/check-cli.bend",
@@ -182,6 +184,7 @@
     "golden": 102,
     "compiled": 96
   },
+  "round_trip_books": 96,
   "refusals": [
     "magic",
     "registry-digest",
@@ -231,7 +234,12 @@
       "largest": 55108,
       "bytes": 5170376
     },
-    "over_limit_words": 4842844
+    "over_limit_words": 4842844,
+    "eight_mib": {
+      "bytes": 9043376,
+      "writes": 166,
+      "largest": 55108
+    }
   },
   "synthetic_plan": {
     "functions": 3,
