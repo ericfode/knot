@@ -120,12 +120,13 @@ def calls_of(m: M.Machine) -> U32:
 
 # The audit line: whether every transition balanced and a completed run
 # released every mortal cell, the transitions audited, the outcome, the
-# mortal cells still live and the entries paid for (SPEC §7's `calls`).
+# mortal cells still live, the entries paid for (SPEC §7's `calls`) and the
+# host calls made (SPEC §8's `effects`).
 def audit_report(+code: H.Code, +m: M.Machine, +steps: U32, balanced: Bool) -> IO(Unit):
   +outcome = machine_outcome(m)
   +live = A.leaked(code,m)
   +passed = Bool.and(Bool.and(balanced,A.balanced(code,m)),W.or(Bool.not(completes(outcome)),U32.is_eq(live,0)))
-  +line = String.concat(["audit\t",Bool.pick(String,passed,"passed","failed"),"\t",U32.show(steps),"\t",outcome_name(outcome),"\t",U32.show(live),"\t",U32.show(calls_of(m))])
+  +line = String.concat(["audit\t",Bool.pick(String,passed,"passed","failed"),"\t",U32.show(steps),"\t",outcome_name(outcome),"\t",U32.show(live),"\t",U32.show(calls_of(m)),"\t",U32.show(M.effects(m))])
   W.choose(IO(Unit),passed,u => IO.print(line),u => IO.die(Unit,6,line))
 
 def audit_settled(+code: H.Code, result: Result<W.Stop,M.Machine>, +steps: U32, balanced: Bool) -> IO(Unit):

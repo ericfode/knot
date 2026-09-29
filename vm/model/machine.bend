@@ -34,7 +34,7 @@ type Meter is Data:
 type Machine is Data:
   Machine{control: Control, stack: H.Stack, heap: H.Heap, meter: Meter, out: List<&2,List<&2,U32>>}
 
-# A transition's control, frames and heap; fuel and output change only on Enter.
+# A frame transition's control, frames and heap; fuel and output change only at an Enter and at Top's loop.
 type Next is Data:
   Next{control: Control, stack: H.Stack, heap: H.Heap}
 
@@ -66,7 +66,7 @@ def completed(+code: H.Code, +node: U32, +ops: List<&2,U32>, +stack: H.Stack, +h
   W.choose(Result<W.Stop,Next>,U32.is_eq(H.code_word(code,U32.add(node,1)),6),u => to(Enter{Callee{id},ops},stack,heap),u =>
   W.choose(Result<W.Stop,Next>,U32.is_eq(H.code_word(code,U32.add(node,1)),12),u => H.with_cell(Next,H.alloc(heap,3,Con{id,ops}),heap => w => to(Return{w},stack,heap)),u =>
   W.choose(Result<W.Stop,Next>,U32.is_eq(H.code_word(code,U32.add(node,1)),1),
-    u => W.choose(Result<W.Stop,Next>,Bool.not(H.all_admitted(code,heap,ops,H.primitive_inputs(V.primitive_at(V.prims(),id)))),u => H.ill_typed(Next),u =>
+    u => H.operands_read(Next,code,heap,ops,H.primitive_inputs(V.primitive_at(V.prims(),id)),u =>
            H.with_cell(Next,H.compute(id,code,heap,a,W.nth(ops,1)),heap => w =>
              H.bind(H.Heap,Next,H.drops(H.dropped_operands(id,ops,0),heap,H.room(stack)),heap => to(Return{w},stack,heap)))),u =>
   W.choose(Result<W.Stop,Next>,H.is_rep(code,t,0),
@@ -128,13 +128,20 @@ def entered_arm(+code: H.Code, +arm: U32, +t: U32, +w: U32, +stack: H.Stack, +he
   W.choose(Result<W.Stop,Next>,U32.is_eq(op,9),u => branch_entered(code,arm,H.operand(code,arm,2),t,w,stack,heap),u =>
     Fail{W.Internal{"case arm"}}))
 
+# D24: a request matches no row, in either mode, so the Default takes it unread and binds nothing;
+# a Case without a Default refuses it (SPEC §6.1).
+def defaulted(+code: H.Code, +node: U32, +t: U32, +w: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
+  +arm = H.node_last(code,node)
+  W.choose(Result<W.Stop,Next>,W.is_none(arm),u => H.unsupported(Next),u => entered_arm(code,arm,t,w,stack,heap))
+
 def selected(+code: H.Code, +node: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
   +t = H.operand(code,node,1)
   +w = H.slot(heap,H.act_of(stack),H.operand(code,node,0))
+  W.choose(Result<W.Stop,Next>,H.is_request(heap,w),u => defaulted(code,node,t,w,stack,heap),u =>
   H.inspected_at(Next,code,heap,t,w,u =>
     entered_arm(code,W.choose(U32,U32.is_eq(H.operand(code,node,2),0),
       u => row_arm(code,node,H.tag_of(code,heap,t,w)),
-      u => key_arm(U32.to_nat(H.operand(code,node,3)),code,node,H.scalar(heap,w),0)),t,w,stack,heap))
+      u => key_arm(U32.to_nat(H.operand(code,node,3)),code,node,H.scalar(heap,w),0)),t,w,stack,heap)))
 
 def closed(+code: H.Code, +node: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
   +captured = slots_of(heap,H.act_of(stack),operands_of(code,node,U32.to_nat(H.operand(code,node,3)),4))
@@ -163,6 +170,17 @@ def unwound(n: Nat, +heap: H.Heap, +act: U32, +i: U32, +room: U32) -> Result<W.S
     case 0n: Done{heap}
     case 1n+m: H.bind(H.Heap,H.Heap,H.drop(heap,room,H.slot(heap,act,i)),heap => unwound(m,H.bound(heap,act,i,0),act,U32.sub(i,1),room))
 
+def is_scalar_text(codes: List<&2,U32>) -> Bool:
+  match codes:
+    case Nil{}: True{}
+    case Con{+c,rest}: Bool.and(Bool.and(U32.is_le(c,1114111),Bool.not(W.within(c,55296,57343))),is_scalar_text(rest))
+
+# An outgoing String (SPEC §10, D20): read whole, and refused before any host call if a Char is not a Unicode scalar.
+def outgoing(+code: H.Code, +heap: H.Heap, +w: U32) -> Result<W.Stop,List<&2,U32>>:
+  H.bind(List<&2,U32>,List<&2,U32>,H.string_of(code,heap,w),+line =>
+    W.choose(Result<W.Stop,List<&2,U32>>,Bool.not(is_scalar_text(H.scalars_of(line,heap))),u => Fail{W.Refused{"io","abi"}},u =>
+      Done{H.scalars_of(line,heap)}))
+
 def topped(+code: H.Code, +phase: U32, +w: U32, +rest: List<&2,H.Frame>, +top: U32, +heap: H.Heap) -> Result<W.Stop,Next>:
   W.choose(Result<W.Stop,Next>,U32.is_eq(phase,0),u => to(Finished{Answered{w}},H.Stack{0,Con{H.Top{0},rest},top},heap),u =>
   W.choose(Result<W.Stop,Next>,U32.is_eq(phase,1),u => to(Enter{Held{w},Nil{}},H.Stack{0,Con{H.Top{2},rest},top},heap),u =>
@@ -171,9 +189,9 @@ def topped(+code: H.Code, +phase: U32, +w: U32, +rest: List<&2,H.Frame>, +top: U
       W.choose(Result<W.Stop,Next>,U32.is_eq(H.load_word(heap,w,3),0),
         u => H.bind(H.Heap,Next,H.drop(heap,H.room(H.Stack{0,rest,top}),w),heap => to(Finished{Emitted{}},H.Stack{0,Con{H.Top{3},rest},top},heap)),
         u => H.inspected_at(Next,code,heap,H.rep(code,1),H.load_word(heap,w,4),u =>
-               H.bind(List<&2,U32>,Next,H.string_of(code,heap,H.load_word(heap,w,5)),message =>
+               H.bind(List<&2,U32>,Next,outgoing(code,heap,H.load_word(heap,w,5)),message =>
                H.bind(H.Heap,Next,H.drop(heap,H.room(H.Stack{0,rest,top}),w),heap2 =>
-                 to(Finished{Died{H.scalar(heap,H.load_word(heap,w,4)),H.scalars_of(message,heap)}},H.Stack{0,Con{H.Top{3},rest},top},heap2)))))))))
+                 to(Finished{Died{H.scalar(heap,H.load_word(heap,w,4)),message}},H.Stack{0,Con{H.Top{3},rest},top},heap2)))))))))
 
 # The Return transitions of SPEC §6, by the top frame.
 def returned(+code: H.Code, +w: U32, stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
@@ -276,20 +294,23 @@ def admissible(+code: H.Code, +heap: H.Heap, target: Target, +ops: List<&2,U32>)
           u => U32.is_eq(W.count(U32,ops),W.choose(U32,W.is_none(node),u => 1,u => H.operand(code,node,1))),
           u => False{})))
 
-def is_scalar_text(codes: List<&2,U32>) -> Bool:
-  match codes:
-    case Nil{}: True{}
-    case Con{+c,rest}: Bool.and(Bool.and(U32.is_le(c,1114111),Bool.not(W.within(c,55296,57343))),is_scalar_text(rest))
-
-# Applying an Action to its continuation performs its one effect. Only
-# IO.print is modelled here; other foreign leaves are refused, never faked.
+# The effect of `w`, an Action or a Request (each holds `foreign, operand…`), then `k` entered with the
+# result (SPEC §8, §10): the operand is read whole and D20-checked before the host writes.
+# Only IO.print is modelled; another foreign is refused, never faked.
 def performed(+code: H.Code, +w: U32, +k: U32, +stack: H.Stack, +heap: H.Heap, meter: Meter, out: List<&2,List<&2,U32>>) -> Result<W.Stop,Machine>:
   W.choose(Result<W.Stop,Machine>,Bool.not(U32.is_eq(H.load_word(heap,w,2),1)),
     u => Fail{W.Unsupported{"vm",String.append("foreign ",U32.show(H.load_word(heap,w,2)))}},
-    u => H.bind(List<&2,U32>,Machine,H.string_of(code,heap,H.load_word(heap,w,3)),+line =>
-      W.choose(Result<W.Stop,Machine>,Bool.not(is_scalar_text(H.scalars_of(line,heap))),u => Fail{W.Refused{"io","abi"}},u =>
-        H.bind(H.Heap,Machine,H.drop(heap,H.room(stack),w),heap2 =>
-          Done{Machine{Enter{Held{k},[H.immediate(0)]},stack,heap2,meter,Con{H.scalars_of(line,heap),out}}}))))
+    u => H.bind(List<&2,U32>,Machine,outgoing(code,heap,H.load_word(heap,w,3)),line =>
+      H.bind(H.Heap,Machine,H.drop(heap,H.room(stack),w),heap =>
+        Done{Machine{Enter{Held{k},[H.immediate(0)]},stack,heap,meter,Con{line,out}}})))
+
+# Enter(Action, [k]) builds a Request (SPEC §7, D23): the Action's foreign word and duplicated
+# operands, then `k`, whose reference moves in. Nothing is read or performed.
+def requested(+w: U32, +k: U32, +stack: H.Stack, +heap: H.Heap, meter: Meter, out: List<&2,List<&2,U32>>) -> Result<W.Stop,Machine>:
+  +operands = H.edges(heap,w)
+  H.bind(H.Heap,Machine,H.dups(operands,heap),+heap =>
+    H.with_cell(Machine,H.alloc(heap,5,Con{H.load_word(heap,w,2),List.append(&2,U32,operands,[k])}),heap => r =>
+      H.bind(H.Heap,Machine,H.drop(heap,H.room(stack),w),heap => Done{Machine{Return{r},stack,heap,meter,out}})))
 
 def held_entered(+code: H.Code, +w: U32, +ops: List<&2,U32>, +stack: H.Stack, +heap: H.Heap, +meter: Meter, +out: List<&2,List<&2,U32>>) -> Result<W.Stop,Machine>:
   +node = H.load_word(heap,w,2)
@@ -297,7 +318,7 @@ def held_entered(+code: H.Code, +w: U32, +ops: List<&2,U32>, +stack: H.Stack, +h
   W.choose(Result<W.Stop,Machine>,U32.is_eq(H.cell_class(heap,w),3),
     u => W.choose(Result<W.Stop,Machine>,U32.is_eq(W.count(U32,ops),0),
       u => Done{Machine{Return{w},stack,heap,meter,out}},
-      u => performed(code,w,W.nth(ops,0),stack,heap,meter,out)),
+      u => requested(w,W.nth(ops,0),stack,heap,meter,out)),
     u => W.choose(Result<W.Stop,Machine>,W.is_none(node),
       u => machine_of(H.with_cell(Next,H.alloc(heap,0,[H.rep(code,10),0,W.nth(ops,0)]),heap => e => to(Return{e},stack,heap)),meter,out),
       u => machine_of(body_entered(code,node,H.operand(code,node,2),U32.add(W.count(U32,captures),W.count(U32,ops)),
@@ -322,16 +343,34 @@ def paid(result: Result<W.Stop,Machine>, m: Machine) -> Result<W.Stop,Machine>:
     case Fail{stop}: Done{halted(m,stop)}
     case Done{next}: Done{next}
 
-# Enter (SPEC §7): check the target, pay one fuel, then run the target.
+def targets_request(+heap: H.Heap, target: Target) -> Bool:
+  match target:
+    case Callee{f}: False{}
+    case Held{+w}: H.is_request(heap,w)
+
+# Enter (SPEC §7): check the target, a request first, pay one fuel, then run the target.
 def entered(+code: H.Code, +target: Target, +ops: List<&2,U32>, +stack: H.Stack, +heap: H.Heap, +meter: Meter, +out: List<&2,List<&2,U32>>) -> Result<W.Stop,Machine>:
+  W.choose(Result<W.Stop,Machine>,targets_request(heap,target),u => H.unsupported(Machine),u =>
   W.choose(Result<W.Stop,Machine>,Bool.not(admissible(code,heap,target,ops)),u => H.ill_typed(Machine),u =>
   W.choose(Result<W.Stop,Machine>,U32.is_eq(fuel_of(meter),0),u => Fail{W.Exhausted{1,"fuel"}},u =>
-    paid(target_entered(code,target,ops,stack,heap,charged(meter),out),Machine{Enter{target,ops},stack,heap,charged(meter),out})))
+    paid(target_entered(code,target,ops,stack,heap,charged(meter),out),Machine{Enter{target,ops},stack,heap,charged(meter),out}))))
+
+# Top's phase 3 is a loop (SPEC §8, D23): the request that a run returns there is performed and its
+# continuation entered, in one step that is no entry, with the phase unchanged. Any other Return is a frame's.
+def looped(+code: H.Code, +w: U32, +stack: H.Stack, +heap: H.Heap, +meter: Meter, +out: List<&2,List<&2,U32>>) -> Result<W.Stop,Machine>:
+  match stack:
+    case H.Stack{+act,Con{H.Top{3},+rest},+top}:
+      W.choose(Result<W.Stop,Machine>,H.is_request(heap,w),
+        u => H.bind(H.Heap,Machine,H.drop(heap,H.room(H.Stack{act,rest,top}),act),+heap =>
+               H.bind(H.Heap,Machine,H.dup(heap,H.continuation(heap,w)),+heap =>
+                 performed(code,w,H.continuation(heap,w),H.Stack{0,Con{H.Top{3},rest},top},heap,meter,out))),
+        u => machine_of(returned(code,w,stack,heap),meter,out))
+    case _: machine_of(returned(code,w,stack,heap),meter,out)
 
 def step(+code: H.Code, m: Machine) -> Result<W.Stop,Machine>:
   match m:
     case Machine{Eval{+node},stack,heap,meter,out}: machine_of(evaluated(H.node_op(code,node),code,node,stack,heap),meter,out)
-    case Machine{Return{w},stack,heap,meter,out}: machine_of(returned(code,w,stack,heap),meter,out)
+    case Machine{Return{w},stack,heap,meter,out}: looped(code,w,stack,heap,meter,out)
     case Machine{Enter{target,ops},stack,heap,meter,out}: entered(code,target,ops,stack,heap,meter,out)
     case Machine{Finished{outcome},stack,heap,meter,out}: Done{Machine{Finished{outcome},stack,heap,meter,out}}
 
@@ -345,6 +384,11 @@ def is_finished(m: Machine) -> Bool:
   match m:
     case Machine{Finished{o},stack,heap,meter,out}: True{}
     case _: False{}
+
+# The host calls made (SPEC §8's `effects`). Only IO.print is modelled, so each is one line of `out`.
+def effects(m: Machine) -> U32:
+  match m:
+    case Machine{control,stack,heap,meter,out}: W.count(List<&2,U32>,out)
 
 # Transitions until the machine finishes. The Nat bound is the model's own
 # harness limit, reported as `Bound`, never as VM exhaustion.

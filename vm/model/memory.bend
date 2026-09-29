@@ -26,7 +26,7 @@ def memory_words() -> U32:
 def heap_base(+total: U32) -> U32:
   U32.add(U32.mul(U32.div(U32.add(U32.add(4096,U32.mul(4,total)),65535),65536),16384),region_words())
 
-# Cell classes: 0 Object, 1 Closure, 2 Big, 3 Action, 4 Activation.
+# Cell classes: 0 Object, 1 Closure, 2 Big, 3 Action, 4 Activation, 5 Request.
 # free[k] heads the LIFO list of free cells of 4 << k words.
 type Heap is Data:
   Heap{memory: W.Store, bump: U32, free: List<&2,U32>}
@@ -125,7 +125,7 @@ def edges(+heap: Heap, +q: U32) -> List<&2,U32>:
   +header = load_word(heap,q,1)
   +length = U32.shrn(header,3n)
   +class = U32.and(header,7)
-  +skip = Bool.pick(U32,W.or(U32.is_eq(class,1),U32.is_eq(class,3)),1,Bool.pick(U32,U32.is_eq(class,2),length,2))
+  +skip = Bool.pick(U32,W.or(U32.is_eq(class,1),W.or(U32.is_eq(class,3),U32.is_eq(class,5))),1,Bool.pick(U32,U32.is_eq(class,2),length,2))
   W.slice(U32.to_nat(U32.sub(length,Bool.pick(U32,U32.is_gt(skip,length),length,skip))),memory_of(heap),U32.add(U32.shrn(q,2n),U32.add(2,skip)))
 
 def freed(+heap: Heap, +q: U32) -> Heap:
@@ -309,6 +309,13 @@ def binds(words: List<&2,U32>, heap: Heap, +act: U32, +i: U32) -> Heap:
 def cell_class(+heap: Heap, +w: U32) -> U32:
   U32.and(load_word(heap,w,1),7)
 
+# A Request is an inert value that only Top's loop reads (SPEC §5, D23); its `k` is its last payload word.
+def is_request(+heap: Heap, +w: U32) -> Bool:
+  Bool.and(is_pointer(w),U32.is_eq(cell_class(heap,w),5))
+
+def continuation(+heap: Heap, +w: U32) -> U32:
+  load_word(heap,w,U32.add(U32.shrn(load_word(heap,w,1),3n),1))
+
 # The word read at type t is of that type (SPEC §6): Nat, U32 and Char admit an
 # immediate or a Big cell, File an immediate, and an algebraic type a nullary
 # tag or an Object of its own type whose tag has fields.
@@ -326,8 +333,13 @@ def admits(+code: Code, +heap: Heap, +t: U32, +w: U32) -> Bool:
 def ill_typed(-A: Data) -> Result<W.Stop,A>:
   Fail{W.Refused{"image","ill-typed"}}
 
+def unsupported(-A: Data) -> Result<W.Stop,A>:
+  Fail{W.Unsupported{"vm","effect"}}
+
+# The class is read first: a Request is refused whatever type the word is read at (SPEC §6, D23).
 def inspected_at(-A: Data, +code: Code, +heap: Heap, +t: U32, +w: U32, next: Unit -> Result<W.Stop,A>) -> Result<W.Stop,A>:
-  W.choose(Result<W.Stop,A>,admits(code,heap,t,w),next,u => ill_typed(A))
+  W.choose(Result<W.Stop,A>,is_request(heap,w),u => unsupported(A),u =>
+  W.choose(Result<W.Stop,A>,admits(code,heap,t,w),next,u => ill_typed(A)))
 
 # The value of a Nat, U32 or Char word, and the canonical word of a value.
 def scalar(+heap: Heap, +w: U32) -> U32:
@@ -472,10 +484,14 @@ def dropped_operands(+id: U32, words: List<&2,U32>, +i: U32) -> List<&2,U32>:
     case Nil{}: Nil{}
     case Con{+w,+rest}: W.choose(List<&2,U32>,moved(id,i),u => dropped_operands(id,rest,U32.add(i,1)),u => Con{w,dropped_operands(id,rest,U32.add(i,1))})
 
-def all_admitted(+code: Code, +heap: Heap, words: List<&2,U32>, inputs: List<&2,U32>) -> Bool:
+# A String operand is read whole by the prim itself, in operand order (SPEC §9): no prim takes one beside another representation.
+def operand_read(+code: Code, +heap: Heap, +w: U32, +r: U32) -> Result<W.Stop,Unit>:
+  W.choose(Result<W.Stop,Unit>,U32.is_eq(r,3),u => Done{Unit{}},u => inspected_at(Unit,code,heap,rep(code,r),w,u => Done{Unit{}}))
+
+def operands_read(-A: Data, +code: Code, +heap: Heap, words: List<&2,U32>, inputs: List<&2,U32>, next: Unit -> Result<W.Stop,A>) -> Result<W.Stop,A>:
   match words inputs:
-    case Con{w,ws} Con{r,rs}: Bool.and(admits(code,heap,rep(code,r),w),all_admitted(code,heap,ws,rs))
-    case _ _: True{}
+    case Con{w,ws} Con{r,rs}: bind(Unit,A,operand_read(code,heap,w,r),u => operands_read(A,code,heap,ws,rs,next))
+    case _ _: next(Unit{})
 
 def primitive_inputs(entry: Maybe<&2,V.Primitive>) -> List<&2,U32>:
   match entry:

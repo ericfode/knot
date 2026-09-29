@@ -317,6 +317,10 @@ def written(case: dict, got: dict) -> bool:
 
 
 def agrees(case: dict, got: dict) -> bool:
+    if 'halt' in case:
+        # A Program's Halt, as the host's `die` ends it (IO-ABI.md): exit `halt mod 256`, the message and LF on stderr.
+        message = ''.join(map(chr, case['message']))
+        return (got['exit'], got['stderr']) == (case['halt'] % 256, message + '\n') and written(case, got)
     if 'outcome' not in case:
         return (got['exit'], got['stderr']) == (case['exit'], case.get('stderr', '')) and written(case, got)
     fields = got['stderr'].rstrip('\n').split('\t')
@@ -350,8 +354,8 @@ def invocation_runs(model: Path, audit: Path, expected: dict) -> dict:
         if good and row.get('exit') == 0:
             audited = run(argv_of(audit, n, row['argv']), 300)
             m = AUDIT.match(audited['stdout'].strip())
-            calls = reference_calls(plans[n], row['argv'])
-            good = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and int(m.group(5)) == calls
+            counts = reference_counts(plans[n], row['argv'])
+            good = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and (int(m.group(5)), int(m.group(6))) == counts
             result = result if good else audited
         return label, {'result': result, 'agrees': good, 'admitted': True}
     with ThreadPoolExecutor(max_workers=8) as pool:
@@ -445,7 +449,7 @@ def argument_runs(model: Path, audit: Path, listed: list) -> dict:
         audited = run([audit, '--', path, *words], 300)
         m = AUDIT.match(audited['stdout'].strip())
         good = agrees(expected_run(got), result)
-        balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and int(m.group(5)) == got['calls']
+        balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and (int(m.group(5)), int(m.group(6))) == (got['calls'], got['effects'])
         return label, {'result': audited if good else result, 'agrees': good and balanced, 'admitted': admitted}
     with ThreadPoolExecutor(max_workers=8) as pool:
         return dict(pool.map(one, listed))
@@ -486,8 +490,8 @@ def reference_run(plan: dict, fuel: int) -> dict:
 
 
 def admitted_controls() -> list:
-    """(label, path, plan, fuel, run, calls) for images the validator MUST admit and the VM MUST
-    run at `fuel` to `run` after `calls` entries (SPEC sections 4 and 7): check-spec's
+    """(label, path, plan, fuel, run, calls, effects) for images the validator MUST admit and the VM MUST
+    run at `fuel` to `run` after `calls` entries and `effects` host calls (SPEC sections 4, 7 and 8): check-spec's
     admitted plan controls, its admitted limit control, its code-list controls, its frozen
     run controls and the model's own frozen controls, seed-derived and display. A run control
     runs at the fuel frozen with it, every other control at SPEC section 7's 1,000,000; the
@@ -514,7 +518,7 @@ def admitted_controls() -> list:
         require(observed == frozen, f'{label}: the reference evaluation gives {observed}')
         got = reference_run(plan, fuel)
         want = {k: v for k, v in frozen.items() if k not in ('fuel', 'calls')} or expected_run(got)
-        out.append((label, plan, fuel, want, frozen.get('calls', got['calls'])))
+        out.append((label, plan, fuel, want, frozen.get('calls', got['calls']), frozen.get('effects', got['effects'])))
     paths = staged('admitted', [(label, codec.encode(plan, DIGEST)) for label, plan, *_ in out])
     return [(label, paths[label], *rest) for label, *rest in out]
 
@@ -525,17 +529,18 @@ def control_argv(binary: Path, path: Path, plan: dict, fuel: int) -> list:
 
 
 def admitted_runs(model: Path, audit: Path, listed: list, argv=control_argv) -> dict:
-    """Each admitted control's run at its fuel, its RC audit and its entries paid for."""
+    """Each admitted control's run at its fuel, its RC audit, its entries paid for and its host calls."""
     def one(item):
-        label, path, plan, fuel, want, calls = item
+        label, path, plan, fuel, want, calls, effects = item
         result = run(argv(model, path, plan, fuel), 120)
         audited = run(argv(audit, path, plan, fuel), 300)
         m = AUDIT.match(audited['stdout'].strip())
         balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and (
-            'exit' not in want or m.group(4) == '0') and int(m.group(5)) == calls
+            'exit' not in want or m.group(4) == '0') and (int(m.group(5)), int(m.group(6))) == (calls, effects)
         # A kill is judged on the observation that went wrong.
         return label, {'result': audited if agrees(want, result) else result, 'admitted': True,
-                       'agrees': agrees(want, result) and balanced, 'calls': int(m.group(5)) if m else None}
+                       'agrees': agrees(want, result) and balanced, 'calls': int(m.group(5)) if m else None,
+                       'effects': int(m.group(6)) if m else None}
     with ThreadPoolExecutor(max_workers=8) as pool:
         return dict(pool.map(one, listed))
 
@@ -551,7 +556,7 @@ def harness_runs(model: Path, audit: Path, admitted: list, base: dict) -> list:
     run differs from the reference evaluation's at 1,000,000 must kill it, never a harness
     fault."""
     runs = [a for a in admitted if a[0].startswith('run:')]
-    killers = sorted(label for label, path, plan, fuel, want, calls in runs
+    killers = sorted(label for label, path, plan, fuel, want, calls, effects in runs
                      if fuel != cs.VM_FUEL and cs.ran(plan, {**want, 'calls': calls}) != {**want, 'calls': calls})
     got = admitted_runs(model, audit, runs, fuel_ignored)
     faults = harness_faults({'admitted': got})
@@ -561,14 +566,16 @@ def harness_runs(model: Path, audit: Path, admitted: list, base: dict) -> list:
     return [{'mutant': 'fuel-ignored', 'breaks': 'each run control runs at 1,000,000, not its frozen fuel', 'by': killed}]
 
 
-AUDIT = re.compile(r'^audit\t(passed|failed)\t(\d+)\t(\w+)\t(\d+)\t(\d+)$')
+AUDIT = re.compile(r'^audit\t(passed|failed)\t(\d+)\t(\w+)\t(\d+)\t(\d+)\t(\d+)$')  # steps, outcome, live, calls, effects
 
 
-def reference_calls(plan: dict, argv: list) -> int:
-    """Entries the reference evaluation pays for on a golden's command line (SPEC section 7)."""
+def reference_counts(plan: dict, argv: list) -> tuple:
+    """(entries, host calls) the reference evaluation makes on a golden's command line (SPEC sections 7 and 8)."""
     if plan['entry'] == 'program':
-        return reference.program(plan, codec.decimal(argv[1]))['calls']
-    return reference.book(plan, argv[1], [codec.decimal(x) for x in argv[3:]], codec.decimal(argv[2]))['calls']
+        got = reference.program(plan, codec.decimal(argv[1]))
+    else:
+        got = reference.book(plan, argv[1], [codec.decimal(x) for x in argv[3:]], codec.decimal(argv[2]))
+    return got['calls'], got['effects']
 
 
 def audit_runs(audit: Path, expected: dict) -> dict:
@@ -578,7 +585,7 @@ def audit_runs(audit: Path, expected: dict) -> dict:
     refused before any transition."""
     cases = {n: c for n, c in expected['cases'].items() if c.get('outcome') != 'Unsupported'}
     plans = golden_plans()
-    calls = {n: reference_calls(plans[n], cases[n]['argv']) for n in cases}
+    counts = {n: reference_counts(plans[n], cases[n]['argv']) for n in cases}
     with ThreadPoolExecutor(max_workers=8) as pool:
         got = dict(zip(cases, pool.map(lambda n: run(argv_of(audit, n, cases[n]['argv']), 300), cases)))
     out = {}
@@ -586,9 +593,10 @@ def audit_runs(audit: Path, expected: dict) -> dict:
         m = AUDIT.match(result['stdout'].strip() or result['stderr'].strip())
         outcome = cases[n].get('outcome') or ('Described' if cases[n]['argv'][1] == 'main' else 'Emitted')
         good = bool(m) and result['exit'] == 0 and m.group(1) == 'passed' and m.group(3) == outcome and (
-            outcome in ('Exhausted', 'HostFailure') or m.group(4) == '0') and int(m.group(5)) == calls[n]
+            outcome in ('Exhausted', 'HostFailure') or m.group(4) == '0') and (int(m.group(5)), int(m.group(6))) == counts[n]
         out[n] = {'result': result, 'agrees': good, 'admitted': True, 'transitions': int(m.group(2)) if m else None,
-                  'live': int(m.group(4)) if m else None, 'calls': int(m.group(5)) if m else None}
+                  'live': int(m.group(4)) if m else None, 'calls': int(m.group(5)) if m else None,
+                  'effects': int(m.group(6)) if m else None}
     return out
 
 
@@ -933,9 +941,9 @@ MUTANTS = [
     ('debit-refunded', 'machine', [('    case Fail{stop}: Done{halted(m,stop)}',
        '    case Fail{stop}: Fail{stop}')],
      'a target that stops the machine refunds its entry'),
-    ('non-scalar-printed', 'machine', [('W.choose(Result<W.Stop,Machine>,Bool.not(is_scalar_text(H.scalars_of(line,heap))),u => Fail{W.Refused{"io","abi"}},u =>',
-       'W.choose(Result<W.Stop,Machine>,False{},u => Fail{W.Refused{"io","abi"}},u =>')],
-     'a non-scalar Char is printed (D20)'),
+    ('non-scalar-printed', 'machine', [('W.choose(Result<W.Stop,List<&2,U32>>,Bool.not(is_scalar_text(H.scalars_of(line,heap))),u => Fail{W.Refused{"io","abi"}},u =>',
+       'W.choose(Result<W.Stop,List<&2,U32>>,False{},u => Fail{W.Refused{"io","abi"}},u =>')],
+     'a non-scalar Char is printed or halted with (D20)'),
     ('enter-arity', 'machine', [('u => U32.is_eq(W.count(U32,ops),W.choose(U32,W.is_none(node),u => 1,u => H.operand(code,node,1))),',
        'u => U32.is_le(W.count(U32,ops),1),')],
      'a closure takes either operand count'),
