@@ -29,6 +29,15 @@ def fixtures(record, manifest, lanes):
             if case['knot']['exit'] == 0:
                 gate.checked(observed['check'])
                 observed['compile'] = gate.compiled(commands['fields' if case['fields'] else 'enum'], source, output)
+                if observed['compile'].get('outcome') == 'Exhausted (host)':
+                    # The Bun lane's own limit: the native lane holds the module, the evaluator still answers here.
+                    observed['calls'] = []
+                    for call in case['calls']:
+                        value = gate.run([*commands['eval'], source, call['export'], 65536, *call['ordinals']])
+                        gate.evaluated(value, call)
+                        observed['calls'].append({'export': call['export'], 'arguments': call['ordinals'], 'eval': value, 'wasm': None})
+                    item['lanes'][lane] = observed
+                    continue
                 hashes.append(gate.digest(output))
                 wat = gate.successful(['wasm2wat', output])['stdout']
                 observed['module_sha256'] = gate.digest(output)

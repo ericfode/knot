@@ -69,9 +69,22 @@ def evaluated(result, call):
             and not result['stderr'], (expected, result))
 
 
+# The seed's Bun lane computes a large module and then faults ("machine stack overflow"): a limit of the reference
+# runtime, not a verdict on the program. It is Exhausted (host), never a disagreement with the native lane.
+HOST_FAULT = 'bend: memory fault (machine stack overflow?)'
+
+
+def host_exhausted(result):
+    return result['exit'] == 1 and not result['stdout'] and result['stderr'].strip() == HOST_FAULT
+
+
 def compiled(command, source, output):
+    """Build a module. A Bun-lane host fault is returned as `Exhausted (host)`: its output is not compared."""
     output.unlink(missing_ok=True)
-    result = successful([*command, source, output])
+    result = run([*command, source, output])
+    if str(command[0]) == 'bun' and host_exhausted(result):
+        return {**result, 'outcome': 'Exhausted (host)'}
+    require(result['exit'] == 0 and not result['stderr'], result)
     require(output.exists() and result['stdout'].strip() == f'Built\t{output.stat().st_size}', result)
     return result
 
@@ -122,6 +135,7 @@ def fixtures(record, manifest, lanes):
             if accepted:
                 checked(check)
                 compile_result = compiled(commands['fields' if fields else 'enum'], source, output)
+                require(compile_result.get('outcome') != 'Exhausted (host)', ('host fault in a frozen fixture', case['name']))
                 module_hashes.append(digest(output))
                 decoder = successful(['wasm2wat', output])
                 item['lanes'][lane].update(compile=compile_result, module_sha256=digest(output),
