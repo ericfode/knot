@@ -2141,6 +2141,28 @@ CODEC_MUTANTS = [
                                         "        if kind == 'String' and max(r[2:], default=0) > 0x10FFFF:\n"
                                         "            raise Malformed('string code beyond plan text')\n"
                                         "        constants.append((kind, list(r[2:]) if kind == 'String' else r[2]))\n")]),
+    # Review of round 9, finding 4: each check of serializer.py that a frozen control must pin, removed
+    # (its statement becomes `pass`; the `return` or `continue` after it stays). Each survives every golden.
+    ('decoder-allows-nul-in-name', [("        if any(raw[size:]) or 0 in raw[:size]:\n            raise Malformed('name padding')\n",
+                                     "        if any(raw[size:]):\n            raise Malformed('name padding')\n")]),
+    ('decoder-allows-nonzero-name-padding', [("        if any(raw[size:]) or 0 in raw[:size]:\n            raise Malformed('name padding')\n",
+                                              "        if 0 in raw[:size]:\n            raise Malformed('name padding')\n")]),
+    ('validator-u32-may-be-data', [("            if types[t]['kind'] != 'opaque':\n                fail('representation', f'{r} must be opaque')\n",
+                                    "            if types[t]['kind'] != 'opaque' and r != 'U32':\n                fail('representation', f'{r} must be opaque')\n")]),
+    ('validator-file-may-be-data', [("            if types[t]['kind'] != 'opaque':\n                fail('representation', f'{r} must be opaque')\n",
+                                     "            if types[t]['kind'] != 'opaque' and r != 'File':\n                fail('representation', f'{r} must be opaque')\n")]),
+    ('validator-allows-duplicate-function-name', [("        fail('functions', 'duplicate function name')\n", "        pass\n")]),
+    ('validator-ignores-function-index', [("                fail(where, 'function index')\n", "                pass\n")]),
+    ('validator-ignores-construct-tag', [("                fail(where, 'construct tag')\n", "                pass\n")]),
+    ('validator-ignores-construct-field-type', [("                    fail(where, 'construct field type')\n", "                    pass\n")]),
+    ('validator-ignores-let-body-type', [("                fail(where, 'let body type')\n", "                pass\n")]),
+    ('validator-ignores-case-slot-depth', [("                fail(where, 'case slot beyond depth')\n", "                pass\n")]),
+    ('validator-ignores-branch-key', [("                        fail(where, 'branch key')\n", "                        pass\n")]),
+    ('validator-key-branch-may-bind', [("                        fail(where, 'key branch binds nothing')\n", "                        pass\n")]),
+    ('validator-ignores-closure-arrow', [("                fail(where, 'closure arrow')\n", "                pass\n")]),
+    ('validator-ignores-closure-result-type', [("                fail(where, 'closure result type')\n", "                pass\n")]),
+    ('validator-ignores-invoke-types', [("                fail(where, 'invoke types')\n", "                pass\n")]),
+    ('validator-ignores-body-type', [("            fail(f['name'], 'body type')\n", "            pass\n")]),
 ]
 
 

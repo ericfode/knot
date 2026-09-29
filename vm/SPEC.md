@@ -260,8 +260,10 @@ stack. The validator checks every function, reachable or not:
    table; every child precedes its parent; each node has exactly one parent or is
    exactly one function's root.
 4. The scope, arity and type rules of §2–§3, including representation field
-   types, acyclic arrows, `IO(Unit)` for a Program's `main`, literal kinds, prim and foreign ids and arities (a reserved id is refused, never
-   run as a Base body), arrow kinds, captures and exact `slots`.
+   types, acyclic arrows, `IO(Unit)` for a Program's `main`, distinct function names
+   (`FN` is found by name, §8, and `main` is one of them), literal kinds, prim and foreign ids and
+   arities (a reserved id is refused, never run as a Base body), arrow kinds, captures and exact
+   `slots`.
 5. Canonicality as defined in §2.
 
 A refused image is `HostFailure image` with a reason, except past a **resource
@@ -279,7 +281,18 @@ malformed record, an inexact `slots` and every later rule:
 | live arity 4,096 | a larger arity in a function record whose length holds it (`arity`) | a length that does not (`function record`) |
 | `slots` 65,536, a function's or a Closure's | a larger `slots` (`slots`), even when inexact | none: every word is a count; exactness is step 4 |
 
-`check-spec.py` freezes 71 refusals (20 byte-level, 9 at the limits, 42 plan-level).
+`check-spec.py` freezes 87 refusals (22 byte-level, 9 at the limits, 56 plan-level), and
+vm-model and vm-core MUST each refuse every one of them, with the frozen refusal: `Exhausted`
+kind 2 for a limit, `HostFailure image` for the rest, and the reference codec's own reason where
+the VM reports one (vm-model spells it, vm-core maps it to a code of its own). A plan-level
+control breaks exactly one rule of §2–§4 in a golden's plan, and its message is the validator's
+first, so a loader that omits the rule admits it: a name with a NUL, or with a nonzero unused
+final byte (byte-level); two functions of one name; a call to a function beyond the table; a
+Case on a slot at or above the depth; a construct tag, or field type, that does not fit; a tag
+row keyed for another tag; a key Branch that binds a field; a closure whose arrow kind or result
+does not fit; an Invoke that does not fit; a Let, or a function, whose body has another type;
+U32 or File declared as a data type; and the rules of earlier rounds. Which control kills which
+codec mutant is `check-spec.py`'s (§12).
 At the limits: the record, arity and `slots` limits passed by one (a function's
 `slots` and a Closure's), a record count beyond the image and an arity beyond its
 record, an image of exactly 16 MiB (`total`), 2^20 records whose first zero word is
@@ -997,7 +1010,7 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a tags-mode Case on Char, a Program, a boxed
   scalar constant and a `none`-typed node covered;
-- all 71 refusals of §4 with their frozen reasons, each resource limit
+- all 87 refusals of §4 with their frozen reasons, each resource limit
   `Exhausted` kind 2 on one side and malformed or invalid on the other, its six
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
@@ -1091,14 +1104,26 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 70 codec mutants and 4 source mutants killed through a changed image, a decode
+- 86 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe, invocation or argument verdict or a changed observation, and 83 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
   record's length, and no limit on a Closure's `slots`; and a decoder that drops a keys
-  row at 0xffffffff, which only `key-max` refuses. Ten rule mutants of
+  row at 0xffffffff, which `key-max`, `key-max-miss` and `char-key-max` each refuse. Sixteen more remove one check of the reference
+  codec (the statement of a `raise` or `fail` becomes `pass`, and the `return` or `continue` after
+  it stays): a NUL in a name, or a nonzero unused final byte; U32, or File, declared as a data type;
+  two functions of one name; a function index beyond the table; a construct tag, or a construct
+  field type, that does not fit; a Let whose body has another type; a Case slot at or above the
+  depth; a tag row keyed for another tag; a key Branch that binds a field; a closure arrow, or a
+  closure result, that does not fit; an Invoke that does not fit; and a function body of another
+  type. Each survives every golden and dies by the control that breaks its rule, three of them (a
+  nonzero padding byte, U32 not opaque and the Invoke) by another refusal that the next check gives
+  instead of the frozen one, the rest by an admission. The other 34 `raise` and `fail` statements
+  of the codec that the review's audit removed one at a time are pinned by no control: for 12 of them
+  the audit found only images on which the codec then crashes, which §11 does not count as a kill, and
+  for 22 no image at all (DECISIONS, finding 12). Ten rule mutants of
   `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
   `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
   bound whose budget it does not pass; display steps counted as visits;

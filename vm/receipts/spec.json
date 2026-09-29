@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T21:54:59.906375+00:00",
+ "date": "2026-09-29T00:31:44.123731+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "baa621c844bef3a8370024f4337e8832f28c4bfac34ef37736e2086eb8f4c026",
-  "vm/SPEC.md": "9d65a6ae4cdd8b78181ff8846add9e6415c935f46dc2362d74aab6459815caed",
+  "vm/DECISIONS.md": "1016398397aa32028df45ec314db7ea910a9089c01ad77f52c525d84914a49d7",
+  "vm/SPEC.md": "de467939418486694142a6f0eb8bdcf61ca3ba09ecaea49c3f8530bfa5df04ff",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,8 +20,8 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "016a7b2a0bef5180a5818283874301c693b056bfd9e03d98cb614e1d0a13f511",
-  "vm/evaluate.py": "0b4a7ed65d73ae63878d934eef3523427aa439b4ae8b6c6ff3ceca02901a08b3",
+  "vm/check-spec.py": "65e8eb02b24d96bb80c673ae58b1d7832387605367a1851fe5dd65d94069a31a",
+  "vm/evaluate.py": "65442bdca8e422411249f83334739c4592c96d14974a9f409bfeb0c8436b6690",
   "vm/golden/bounds.json": "acaea7544a23ce7d1502dc42dfec108e799f0c909bbc29cabcc6c7ba4fc47500",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
   "vm/golden/case-char.kimg": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
@@ -3152,6 +3152,14 @@
    "refused": "HostFailure image: name utf-8"
   },
   {
+   "control": "name-nul",
+   "refused": "HostFailure image: name padding"
+  },
+  {
+   "control": "name-padding",
+   "refused": "HostFailure image: name padding"
+  },
+  {
    "control": "function-root-shared",
    "refused": "HostFailure image: function root"
   },
@@ -3384,6 +3392,62 @@
    "refused": "HostFailure image: validator: types: arrow cycle"
   },
   {
+   "control": "plan:function-index",
+   "refused": "HostFailure image: validator: main: function index"
+  },
+  {
+   "control": "plan:case-slot-beyond-depth",
+   "refused": "HostFailure image: validator: flip: case slot beyond depth"
+  },
+  {
+   "control": "plan:construct-tag",
+   "refused": "HostFailure image: validator: main: construct tag"
+  },
+  {
+   "control": "plan:construct-field-type",
+   "refused": "HostFailure image: validator: main: construct field type"
+  },
+  {
+   "control": "plan:branch-key",
+   "refused": "HostFailure image: validator: flip: branch key"
+  },
+  {
+   "control": "plan:key-branch-binds-field",
+   "refused": "HostFailure image: validator: vowel: key branch binds nothing"
+  },
+  {
+   "control": "plan:closure-arrow",
+   "refused": "HostFailure image: validator: main: closure arrow"
+  },
+  {
+   "control": "plan:invoke-types",
+   "refused": "HostFailure image: validator: apply: invoke types"
+  },
+  {
+   "control": "plan:closure-result-type",
+   "refused": "HostFailure image: validator: keep/closure: closure result type"
+  },
+  {
+   "control": "plan:let-body-type",
+   "refused": "HostFailure image: validator: main: let body type"
+  },
+  {
+   "control": "plan:body-type",
+   "refused": "HostFailure image: validator: main: body type"
+  },
+  {
+   "control": "plan:u32-not-opaque",
+   "refused": "HostFailure image: validator: representation: U32 must be opaque"
+  },
+  {
+   "control": "plan:file-not-opaque",
+   "refused": "HostFailure image: validator: representation: File must be opaque"
+  },
+  {
+   "control": "plan:duplicate-function-name",
+   "refused": "HostFailure image: validator: functions: duplicate function name"
+  },
+  {
    "control": "bench:remeasured-baselines",
    "refused": "bench measurement vm/bench/baselines.json differs from its pin"
   },
@@ -3467,6 +3531,29 @@
   "run:inspect-halt-after-surrogate",
   "run:inspect-halt-code-first",
   "run:inspect-print-after-surrogate",
+  "run:inspect-case-closure-scrutinee",
+  "run:inspect-case-nat-closure",
+  "run:inspect-case-char-closure",
+  "run:inspect-case-object-of-another-type",
+  "run:inspect-case-tag-out-of-range",
+  "run:inspect-case-keys-closure",
+  "run:inspect-case-char-keys-closure",
+  "run:inspect-u32-add",
+  "run:inspect-u32-sub-second",
+  "run:inspect-u32-shln-amount",
+  "run:inspect-char-is-space",
+  "run:inspect-char-is-eq-second",
+  "run:inspect-nat-add",
+  "run:inspect-nat-sub-second",
+  "run:inspect-u32-show",
+  "run:inspect-nat-show",
+  "run:enter-immediate-target",
+  "run:enter-object-target",
+  "run:inspect-continuation-target",
+  "run:inspect-io-op-closure",
+  "run:inspect-io-op-immediate",
+  "run:inspect-render-closure",
+  "run:inspect-render-field",
   "run:book-print",
   "run:book-print-continuation-call",
   "run:book-print-twice",
@@ -3478,9 +3565,11 @@
   "run:book-continuation-called",
   "run:book-action-dropped",
   "run:book-action-erased",
-  "run:program-print-in-value",
+  "run:program-print-through-id",
   "run:halt-surrogate",
   "run:halt-scalar",
+  "run:print-utf8-lengths",
+  "run:print-utf8-boundaries",
   "run:key-max",
   "run:key-max-miss",
   "run:char-key-max",
@@ -3993,6 +4082,262 @@
    "calls": 5,
    "image_sha256": "fd7eb4353d3253ca5eefd7d3f5114be510c16b7f6bf77bbe76f353286376ba3b"
   },
+  "inspect-case-closure-scrutinee": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "a6dc4a94ae2c12c8f7aee889cdb54d44e40eb34f149a818f6173f990055162e5"
+  },
+  "inspect-case-nat-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "c89c86761f70f38a7515d71c5d3ce7bb418ba18b1e2a2c9c45b8eaff23423178"
+  },
+  "inspect-case-char-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "00d9cf6d4391be2d2d03bf574b602fc70577ce35be4a2a2a3798b4dd42b9c739"
+  },
+  "inspect-case-object-of-another-type": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "c17eb3854291176c9aa7895acc093232c7e1211ac6e9c54ffa5212509a381df8"
+  },
+  "inspect-case-tag-out-of-range": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "ab2e2b70ae76b792812064af68db7c68ff623b1d2bc68894bdaf6b2d00276116"
+  },
+  "inspect-case-keys-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "d9f22cee36a8e75b94114d4206996c89f325e82b88ac6ac7204eb90c9656010e"
+  },
+  "inspect-case-char-keys-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "bdb092b1a7ff3fcc6ca95ff0ef4104456edd6cf86a18fd197584b36c56e17385"
+  },
+  "inspect-u32-add": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "562635317c93282e04d9116a46762bfe7f69f687cde8d3e125c79ca1744ccedc"
+  },
+  "inspect-u32-sub-second": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "b344b4f6988a71e31c16a3ca84568750498c2d40b605366d966e1322711d9511"
+  },
+  "inspect-u32-shln-amount": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "1d4fc804fed2e1e44f577aa8e7e6275a5b655a728e23f8ca60896b73ced0c80e"
+  },
+  "inspect-char-is-space": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "ed9eada7cd0f9c8d753d7609e7dea40aa30f7b9edb55e4fb38918e0655b078de"
+  },
+  "inspect-char-is-eq-second": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "4783c7cde0e2c99eed8151d71d6dbb6a98621c112eb9a8a1d4fb7fddc4aa2acc"
+  },
+  "inspect-nat-add": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "614ac2cef6e7bb2568b712ae28146f452bf274d248e4c2e6b904d647beef8ff1"
+  },
+  "inspect-nat-sub-second": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "4f9b9c282c04656b8a67058f0787cc976436dbbce52be45c55be9df622f5b1c6"
+  },
+  "inspect-u32-show": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "b143ec0841e73c823d058067031401cb018b1ac4ce48962e608626423a778fc2"
+  },
+  "inspect-nat-show": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 3,
+   "image_sha256": "15d2c7563e20b7b95dd2beb2a5b7ea4637593823a42ffd3dd7f67a8a283e934e"
+  },
+  "enter-immediate-target": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 2,
+   "image_sha256": "ffcb37ce6d9f5ce3a3cf383b13fea9931954299166d93bece82b66a33f39f7d4"
+  },
+  "enter-object-target": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 2,
+   "image_sha256": "ce431da0024a1bed2eea65313924a7ca15113b94edb8dc1cfde00f875f6ace24"
+  },
+  "inspect-continuation-target": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "x\n",
+   "calls": 7,
+   "image_sha256": "04d9dc94d2b7c872534af14d9784837a5d8f21cd61633dc93d5ef17cfaa635de"
+  },
+  "inspect-io-op-closure": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "calls": 4,
+   "image_sha256": "78d3cace2290ca97dd253f86a9271a5d720d8b8b70d9bc58bfae2620ef5a6cd0"
+  },
+  "inspect-io-op-immediate": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "calls": 4,
+   "image_sha256": "132be6649354065aa0e6323527616000a9bbe472312c7e75701d1647f4a8d3a7"
+  },
+  "inspect-render-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 2,
+   "image_sha256": "68fe7d3663e1b87639fef21b38ebbd91500d0e023d92dba770395c513cde867f"
+  },
+  "inspect-render-field": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 2,
+   "image_sha256": "3b74484ee7ddd7bdf3a686116b0038c7447c3e7616b4a03af7c5b9c81cadd6fb"
+  },
   "book-print": {
    "argv": [
     "IMAGE",
@@ -4001,6 +4346,7 @@
    ],
    "outcome": "Unsupported",
    "cause": "vm effect",
+   "stdout": "",
    "calls": 4,
    "image_sha256": "8267508641dc925d35a0a8f985f15137f9214ee9280f4795ee2c97ffcdeb86a9"
   },
@@ -4012,6 +4358,7 @@
    ],
    "outcome": "Unsupported",
    "cause": "vm effect",
+   "stdout": "",
    "calls": 4,
    "image_sha256": "9318299605750bf9731695648de9e63e1fe04776db67c6b41f54b24d376b3d4b"
   },
@@ -4023,6 +4370,7 @@
    ],
    "outcome": "Unsupported",
    "cause": "vm effect",
+   "stdout": "",
    "calls": 4,
    "image_sha256": "b11dc9dae8e64776e605d61c7c545b228a02bf07f8a8f85f0de208f6d84436a2"
   },
@@ -4034,6 +4382,7 @@
    ],
    "outcome": "Unsupported",
    "cause": "vm effect",
+   "stdout": "",
    "calls": 4,
    "image_sha256": "4f56c89386a615720601a44217e451dcf7f1562802fb8ebb6ed547a7866b554a"
   },
@@ -4045,6 +4394,7 @@
    ],
    "outcome": "Unsupported",
    "cause": "vm effect",
+   "stdout": "",
    "calls": 5,
    "image_sha256": "37e83355776cfbb2cc796499e4a37828e9f0fccc8b0d388c3145d37d17c5ceb5"
   },
@@ -4056,6 +4406,7 @@
    ],
    "outcome": "Unsupported",
    "cause": "vm effect",
+   "stdout": "",
    "calls": 4,
    "image_sha256": "ec6c1e0a0a84738ff6d47a32c7a8f3f90485de4630fe868791a424609adde433"
   },
@@ -4068,6 +4419,7 @@
    "fuel": 4,
    "outcome": "Unsupported",
    "cause": "vm effect",
+   "stdout": "",
    "calls": 4,
    "image_sha256": "8267508641dc925d35a0a8f985f15137f9214ee9280f4795ee2c97ffcdeb86a9"
   },
@@ -4081,6 +4433,7 @@
    "outcome": "Exhausted",
    "kind": 1,
    "cause": "fuel",
+   "stdout": "",
    "calls": 3,
    "image_sha256": "8267508641dc925d35a0a8f985f15137f9214ee9280f4795ee2c97ffcdeb86a9"
   },
@@ -4117,16 +4470,16 @@
    "calls": 3,
    "image_sha256": "d9dce7c8c578d8f1e5dd8e9ce7c9f1cbb5c36aabf7577a24eafbed20c3db2292"
   },
-  "program-print-in-value": {
+  "program-print-through-id": {
    "argv": [
     "IMAGE",
     "1000000",
     "--"
    ],
    "exit": 0,
-   "stdout": "x\nt\n",
-   "calls": 11,
-   "image_sha256": "22d696af30b3f3e8877bc765bbab8b5ec31b9e1de270c982749155167764e58d"
+   "stdout": "x\n",
+   "calls": 9,
+   "image_sha256": "1d42b47f7b7fe1cd86e3e27519eaae191e473dd3d874cae6862e2e7b459dc3c9"
   },
   "halt-surrogate": {
    "argv": [
@@ -4154,6 +4507,28 @@
    "stdout": "",
    "calls": 3,
    "image_sha256": "c1b604e1944f399cb1505365caf56d16f6fc620482e9d47a47a52e4cafaa509a"
+  },
+  "print-utf8-lengths": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "$\u00a2\u20ac\ud800\udf48\n",
+   "calls": 5,
+   "image_sha256": "a5679f8dafd91ebd4ac296e7fc83754db6accb90836ecebf7e7cafc5412b3833"
+  },
+  "print-utf8-boundaries": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "\u007f\u0080\u07ff\u0800\ud7ff\ue000\uffff\ud800\udc00\udbff\udfff\n",
+   "calls": 5,
+   "image_sha256": "c40dd21815c30b2fcc738ad8060f08e1a5c1f8e9c343eb136ec9f323ae750dd6"
   },
   "key-max": {
    "argv": [
@@ -4659,6 +5034,86 @@
    "by": "admitted control codes:u110000: HostFailure image: string code beyond plan text"
   },
   {
+   "mutant": "decoder-allows-nul-in-name",
+   "killed": true,
+   "by": "control name-nul: None"
+  },
+  {
+   "mutant": "decoder-allows-nonzero-name-padding",
+   "killed": true,
+   "by": "control name-padding: HostFailure image: noncanonical"
+  },
+  {
+   "mutant": "validator-u32-may-be-data",
+   "killed": true,
+   "by": "control plan:u32-not-opaque: HostFailure image: validator: U32.is_eq: prim operand is not the pinned U32"
+  },
+  {
+   "mutant": "validator-file-may-be-data",
+   "killed": true,
+   "by": "control plan:file-not-opaque: None"
+  },
+  {
+   "mutant": "validator-allows-duplicate-function-name",
+   "killed": true,
+   "by": "control plan:duplicate-function-name: None"
+  },
+  {
+   "mutant": "validator-ignores-function-index",
+   "killed": true,
+   "by": "control plan:function-index: None"
+  },
+  {
+   "mutant": "validator-ignores-construct-tag",
+   "killed": true,
+   "by": "control plan:construct-tag: None"
+  },
+  {
+   "mutant": "validator-ignores-construct-field-type",
+   "killed": true,
+   "by": "control plan:construct-field-type: None"
+  },
+  {
+   "mutant": "validator-ignores-let-body-type",
+   "killed": true,
+   "by": "control plan:let-body-type: None"
+  },
+  {
+   "mutant": "validator-ignores-case-slot-depth",
+   "killed": true,
+   "by": "control plan:case-slot-beyond-depth: None"
+  },
+  {
+   "mutant": "validator-ignores-branch-key",
+   "killed": true,
+   "by": "control plan:branch-key: None"
+  },
+  {
+   "mutant": "validator-key-branch-may-bind",
+   "killed": true,
+   "by": "control plan:key-branch-binds-field: None"
+  },
+  {
+   "mutant": "validator-ignores-closure-arrow",
+   "killed": true,
+   "by": "control plan:closure-arrow: None"
+  },
+  {
+   "mutant": "validator-ignores-closure-result-type",
+   "killed": true,
+   "by": "control plan:closure-result-type: None"
+  },
+  {
+   "mutant": "validator-ignores-invoke-types",
+   "killed": true,
+   "by": "control plan:invoke-types: HostFailure image: validator: apply: body type"
+  },
+  {
+   "mutant": "validator-ignores-body-type",
+   "killed": true,
+   "by": "control plan:body-type: None"
+  },
+  {
    "mutant": "source:case-on",
    "killed": true,
    "seed": {
@@ -4777,12 +5232,12 @@
   {
    "mutant": "evaluator:display-visits-exclusive",
    "killed": true,
-   "by": "run control display-visits-at-bound: {'exit': None, 'stdout_sha256': None, 'calls': 1}"
+   "by": "run control display-visits-at-bound: {'exit': None, 'stdout_sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'calls': 1}"
   },
   {
    "mutant": "evaluator:display-bytes-exclusive",
    "killed": true,
-   "by": "run control display-bytes-at-bound: {'exit': None, 'stdout_sha256': None, 'calls': 1}"
+   "by": "run control display-bytes-at-bound: {'exit': None, 'stdout_sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'calls': 1}"
   },
   {
    "mutant": "evaluator:display-nat-one-visit",
@@ -4817,7 +5272,7 @@
   {
    "mutant": "evaluator:fuel-exhausts-early",
    "killed": true,
-   "by": "run control fuel-book-exact: {'fuel': 6, 'exit': None, 'stdout': None, 'calls': 5}"
+   "by": "run control fuel-book-exact: {'fuel': 6, 'exit': None, 'stdout': '', 'calls': 5}"
   },
   {
    "mutant": "evaluator:effect-before-debit",
@@ -4920,6 +5375,126 @@
    "by": "run control inspect-halt-message: {'outcome': None, 'cause': None, 'calls': 4}"
   },
   {
+   "mutant": "evaluator:utf8-one-byte-threshold",
+   "killed": true,
+   "by": "run control print-utf8-boundaries: {'exit': 0, 'stdout': '\ufffd\ufffd\\x80\u07ff\u0800\\ud7ff\\ue000\\uffff\ud800\udc00\\U0010ffff\\n', 'calls': 5}"
+  },
+  {
+   "mutant": "evaluator:utf8-two-byte-wrong-lead",
+   "killed": true,
+   "by": "run control print-utf8-lengths: {'exit': 0, 'stdout': '$\ufffd\ufffd\u20ac\ud800\udf48\\n', 'calls': 5}"
+  },
+  {
+   "mutant": "evaluator:utf8-two-byte-threshold",
+   "killed": true,
+   "by": "run control print-utf8-boundaries: {'exit': 0, 'stdout': '\\x7f\\x80\u07ff\ufffd\ufffd\\ud7ff\\ue000\\uffff\ud800\udc00\\U0010ffff\\n', 'calls': 5}"
+  },
+  {
+   "mutant": "evaluator:utf8-three-byte-threshold",
+   "killed": true,
+   "by": "run control print-utf8-boundaries: {'exit': 0, 'stdout': '\\x7f\\x80\u07ff\u0800\\ud7ff\\ue000\\uffff\ufffd\ufffd\ufffd\\U0010ffff\\n', 'calls': 5}"
+  },
+  {
+   "mutant": "evaluator:case-tags-closure-scrutinee-admitted",
+   "killed": true,
+   "by": "run control inspect-case-closure-scrutinee: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:case-char-scrutinee-unread",
+   "killed": true,
+   "by": "run control inspect-case-char-closure: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:view-object-type-unchecked",
+   "killed": true,
+   "by": "run control inspect-case-object-of-another-type: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:view-nat-non-word-as-zero",
+   "killed": true,
+   "by": "run control inspect-case-nat-closure: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:view-immediate-tag-out-of-range-as-zero",
+   "killed": true,
+   "by": "run control inspect-case-tag-out-of-range: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:keys-case-scrutinee-uninspected",
+   "killed": true,
+   "by": "run control inspect-case-keys-closure: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:keys-case-char-scrutinee-unread",
+   "killed": true,
+   "by": "run control inspect-case-char-keys-closure: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:u32-arith-first-unread",
+   "killed": true,
+   "by": "run control inspect-u32-add: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:u32-arith-second-unread",
+   "killed": true,
+   "by": "run control inspect-u32-sub-second: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:char-prim-first-unread",
+   "killed": true,
+   "by": "run control inspect-char-is-space: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:char-eq-second-unread",
+   "killed": true,
+   "by": "run control inspect-char-is-eq-second: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:nat-prim-first-unread",
+   "killed": true,
+   "by": "run control inspect-nat-add: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:nat-prim-second-unread",
+   "killed": true,
+   "by": "run control inspect-nat-sub-second: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:show-operand-unread",
+   "killed": true,
+   "by": "run control inspect-u32-show: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:describe-closure-word-admitted",
+   "killed": true,
+   "by": "run control inspect-render-field: {'outcome': None, 'cause': None, 'calls': 2}"
+  },
+  {
+   "mutant": "evaluator:enter-immediate-target-as-action",
+   "killed": true,
+   "by": "run control enter-immediate-target: {'outcome': 'Unsupported', 'cause': 'vm effect', 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:enter-object-target-admitted",
+   "killed": true,
+   "by": "run control enter-object-target: {'outcome': 'Unsupported', 'cause': 'vm effect', 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:continuation-read-before-effect",
+   "killed": true,
+   "by": "run control inspect-continuation-target: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'stdout': '', 'calls': 7}"
+  },
+  {
+   "mutant": "evaluator:continuation-unread-as-terminal",
+   "killed": true,
+   "by": "run control inspect-continuation-target: {'outcome': None, 'cause': None, 'stdout': 'x\\n', 'calls': 7}"
+  },
+  {
+   "mutant": "evaluator:final-word-unread-as-emit",
+   "killed": true,
+   "by": "run control inspect-io-op-closure: {'outcome': None, 'cause': None, 'stdout': '', 'calls': 4}"
+  },
+  {
    "mutant": "evaluator:print-checks-while-reading",
    "killed": true,
    "by": "run control inspect-print-after-surrogate: {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'calls': 5}"
@@ -4927,12 +5502,12 @@
   {
    "mutant": "evaluator:book-performs-effect",
    "killed": true,
-   "by": "run control book-print: {'outcome': None, 'cause': None, 'calls': 6}"
+   "by": "run control book-print: {'outcome': None, 'cause': None, 'stdout': 'x\\nEvaluated\\t8\\t1\\tOn{}\\n', 'calls': 6}"
   },
   {
    "mutant": "evaluator:book-drops-effect",
    "killed": true,
-   "by": "run control book-print: {'outcome': None, 'cause': None, 'calls': 6}"
+   "by": "run control book-print: {'outcome': None, 'cause': None, 'stdout': 'Evaluated\\t8\\t1\\tOn{}\\n', 'calls': 6}"
   },
   {
    "mutant": "evaluator:program-refuses-effect",
@@ -4942,37 +5517,47 @@
   {
    "mutant": "evaluator:book-refuses-at-fuel-zero",
    "killed": true,
-   "by": "run control fuel-book-effect-short: {'fuel': 3, 'outcome': 'Unsupported', 'kind': None, 'cause': 'vm effect', 'calls': 3}"
+   "by": "run control fuel-book-effect-short: {'fuel': 3, 'outcome': 'Unsupported', 'kind': None, 'cause': 'vm effect', 'stdout': '', 'calls': 3}"
   },
   {
    "mutant": "evaluator:book-refuses-before-debit",
    "killed": true,
-   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'calls': 3}"
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'calls': 3}"
   },
   {
    "mutant": "evaluator:book-names-the-foreign",
    "killed": true,
-   "by": "run control book-args: {'outcome': 'Unsupported', 'cause': 'vm foreign 0', 'calls': 4}"
+   "by": "run control book-args: {'outcome': 'Unsupported', 'cause': 'vm foreign 0', 'stdout': '', 'calls': 4}"
   },
   {
    "mutant": "evaluator:book-refuses-after-inspection",
    "killed": true,
-   "by": "run control book-print-ill-typed: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'calls': 5}"
+   "by": "run control book-print-ill-typed: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'stdout': '', 'calls': 5}"
   },
   {
    "mutant": "evaluator:book-refuses-after-scalar-check",
    "killed": true,
-   "by": "run control book-print-non-scalar: {'outcome': 'HostFailure', 'cause': 'io abi', 'calls': 4}"
+   "by": "run control book-print-non-scalar: {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'calls': 4}"
+  },
+  {
+   "mutant": "evaluator:book-writes-then-refuses",
+   "killed": true,
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': 'x\\n', 'calls': 4}"
+  },
+  {
+   "mutant": "evaluator:book-writes-at-fuel-zero",
+   "killed": true,
+   "by": "run control fuel-book-effect-short: {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': 'x\\n', 'calls': 3}"
   },
   {
    "mutant": "evaluator:book-refuses-action-build",
    "killed": true,
-   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'calls': 2}"
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'calls': 2}"
   },
   {
    "mutant": "evaluator:book-refuses-erased-application",
    "killed": true,
-   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'calls': 3}"
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'calls': 3}"
   },
   {
    "mutant": "evaluator:halt-message-unchecked",

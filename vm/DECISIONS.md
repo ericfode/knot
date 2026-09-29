@@ -223,7 +223,8 @@ follows it (§5, §10, §11) without a new image header word.
    and a Program at fuel 0, and two ill-typed Enters that meet fuel 0. Five
    evaluator mutants (fuel that never runs out or runs out early, the effect
    before the debit, the fuel test before the operand check, a free terminal
-   continuation) survive with those controls withheld and each dies by one. Run
+   continuation) survive with those controls withheld and each dies by one (round 10:
+   the free terminal continuation now also dies by the print controls, which count that entry). Run
    controls now carry their fuel, and the receipt records each one's argv. No
    golden or expectation changed.
 16. **Book arguments are decimal u32 words, read before FN.** The same re-review
@@ -608,6 +609,36 @@ follows it (§5, §10, §11) without a new image header word.
    `IO.print`, which vm-io owes. The reviewer's builds of vm-core (`dcc7c095`) and vm-model
    (`07e6db73`) agree with all 25 new controls, so neither has to change for them.
 
+30. **Every rule that §2-§4 state and that the gate froze partly has a refusal.** Review of the
+   round-9 branch replaced each `raise Malformed(...)` and `fail(...)` statement of
+   `serializer.py` by `pass` (93 mutants): 48 survived the 112 refusals, 74 admitted controls, 60
+   run controls and 141 mutants, and for 13 of them, and for `duplicate function name`, a corrupted
+   golden exists that the committed codec refuses and the mutant admits. Each is a rule that
+   §2-§4 state: a name has no NUL and its unused final bytes are zero, and U32 and File are
+   opaque (§2); an index is in range (a function's), a Case reads a slot below the depth, a
+   construct's tag and field types fit, a tag row has its own key, a key Branch binds nothing, a
+   closure's arrow kind and result fit, an Invoke fits, and a Let and its body, and a function and
+   its body, have types that fit (§3, §4). vm-core's production wasm refused all of them (the
+   reviewer's measurement, repeated here), so this was a hole in the gate and in §4, which bound
+   only vm-core to the refusals, and vm-model to none, though `check-model.py` already refuses each
+   with the reference's exact reason; §4 now binds both. Sixteen controls were frozen first
+   (`6025e059`): two byte-level, on `second`, one for each clause of the name rule, and fourteen
+   plan-level. The reviewer's byte patches found the rules; each plan edit breaks one rule of a
+   golden's plan so that its message is the validator's first, which states the rule more
+   readably, and the image is what a VM reads either way. The refusals rise from 71 to 87 (22
+   byte-level, 9 at the limits, 56 plan-level). Sixteen codec mutants remove one check each (the two
+   clauses of the name rule, U32 and File not opaque, and twelve validator statements): each
+   survives every golden and dies by the control that breaks its rule, three by another
+   refusal that the next check gives, the rest by an admission. `duplicate function name`,
+   enforced by the reference codec and by vm-core (`duplicate-function`) and spelled by
+   vm-model, was stated by neither SPEC nor a control; it joins §4 step 4 (`FN` is found by name),
+   so both VMs are bound. The reviewer also offered the generator that produced the 93 mutants
+   as a gate step. It is not added: it would demand a killing control for each of the other 34
+   statements, which finding 12 records, and §11 does not count the crash that removing 12 of
+   them causes as a kill. Measured on the reviewer's builds of vm-core (`dcc7c095`) and vm-model
+   (`07e6db73`): both refuse every one of the 81 non-oversize refusal controls, the 16 new among
+   them, so neither VM changes for them.
+
 ## What vm-model and vm-core must now follow (round 9)
 
 Each item names the SPEC text and the controls that freeze it; `check-spec.py`'s
@@ -657,8 +688,37 @@ branch brings all of them.
    Char, immediate and Big), `list-head-match` and `nat-transitions`, each owing the
    seed's `Evaluated 0 1 True{}`. Their vm-expected.json rows carry `eval_unavailable`
    or `eval_bound` beside `basis` `seed`; harnesses that read rows by key are
-   unaffected. The counts are 96 goldens and 60 run controls, which vm-core's gate reads
+   unaffected. The counts are 96 goldens and 60 run controls (85 after round 10, below), which vm-core's gate reads
    from SPEC §12.
+
+## What vm-model and vm-core must now follow (round 10)
+
+The review of round 9 changed no behaviour of the machine, so neither VM has to change for a
+frozen control. Measured on the reviewer's builds, vm-core `dcc7c095` and vm-model `07e6db73`
+(which still predate D22, entries 21 and 28): both agree with the 25 new inspection, UTF-8 and
+`program-print-through-id` run controls and refuse the 16 new refusal controls with the frozen
+reason. What changes is what they are held to, all by the harnesses that read `check-spec.py`:
+
+1. **The run-control count is 85, the refusal count 87 (22 byte-level, 9 at the limits, 56
+   plan-level).** vm-core's gate reads both from SPEC §12 and §4 (`run_control_count`,
+   `refusal_counts`); the sentence shapes are unchanged and the numbers are new. vm-model reads
+   the lists themselves.
+2. **`stdout` is compared on every Book control that stops at an Action (§8, entry 28).** The eight
+   controls freeze it empty. vm-core's `expected_run` and vm-model's `agrees` already carry it. A
+   harness with a host must also require an empty host trace: vm-core's for `book-args`, whose
+   `IO.args` writes nothing (it refuses that foreign at load today, so the control is the D22 item
+   of round 9).
+3. **`program-print-through-id` replaces `program-print-in-value`.** It is `x\n`, exit 0, after 9
+   entries, and the seed prints `x` for its source on both lanes (entry 27). The shape that the seed
+   refuses stays unfrozen; §7 still governs it (finding 11).
+4. **vm-model is bound to every §4 refusal (§4, entry 30).** It already refuses them with the
+   reference's reason. It must also refuse two functions of one name, which its validator spells.
+5. **The inspection points of §6 are frozen more widely (entry 29).** Each of the 43 inspection
+   controls halts `HostFailure image` (`ill-typed`) after 2, 3, 4, 5 or 7 entries, the last with `x`
+   already written; both VMs agree today. vm-prims owes the prim ids that no control names, one
+   control per id and operand, and vm-io the byte List and the other foreigns' operands.
+6. **A scalar String is written as canonical UTF-8.** `print-utf8-lengths` and
+   `print-utf8-boundaries` freeze it after 5 entries; both VMs agree today.
 
 ## Findings that need an owner
 
@@ -777,3 +837,20 @@ branch brings all of them.
    runs) and recording a divergence by contract against D22's "one reading" rationale. The
    first needs a decision-table entry that this executor does not edit. Until then §8 states
    the gap.
+12. **34 refusal statements of `serializer.py` are pinned by no control.** The review's audit removed each
+   `raise` and `fail` of the codec once (93) and searched random byte-level and plan-level corruptions
+   of the goldens and run controls (two runs of tens of thousands) for an image that the committed
+   codec refuses and the mutant admits. Besides entry 30's 14 statements, none was found for 34. For 12 of
+   them, removal crashes the decoder on some image (`node record`, `{what} index`, `name index`, `constructor tag`,
+   `type record`, `child offset`, `constant index`, `constructor record`, `constant record`, and the
+   `length` of a record of a fixed-size node, of a Case and of a Closure), which §11 does not count as a
+   kill. For the other 22 it found no such image at all: `length`, `name length`, `duplicate name`,
+   `constructor grouping`, `opaque type`, `arrow name`, `constructor count`, `constructor order`,
+   `scalar constant width`, `shared node`, the `length` of a call-like node, `standalone arm`,
+   `case key`, `case arm kind`, `opcode`, `unreachable node`, `standalone {op}`, `type index`,
+   `tag case on a non-data type`, `tag table is not dense`, `key case on a non-scalar type` and
+   `unknown node`. Some are defences that a later check makes unreachable; the rest may have no
+   witness in a random corpus. Most are rules of §4 steps 2 and 3 that vm-core and vm-model enforce.
+   The coordinator decides whether a crash on a frozen refusal control is a kill for a codec mutant
+   (§11 says it is not), and whether the generator (`auto.py` of the review) becomes a gate step;
+   until then those statements are held by the two VMs' gates, not by this one.
