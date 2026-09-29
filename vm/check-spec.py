@@ -2085,7 +2085,13 @@ def effect_controls(plans: dict) -> list:
       Case has a Default always). The goldens `case-request-emit-default-u32` (`2`),
       `case-request-halt-default-u32` (`4`) and `case-request-emit-default` freeze the seed's values. A Case
       without a Default, a tags Case whose every row names a constructor (`program-case-request`), still refuses
-      the request.
+      the request. A compiler does not emit that Default: nest's checker copies a catch-all's body into a row for each
+      constructor that the source names no arm for, so its Case is a complete table and refuses the request where the
+      native lane takes the catch-all (the four `case-request-*-compiled` controls, each after 8 entries; the seed's
+      values are the witnesses `case-request-both-plus-default`, `-nested-default`, `-inner-default-only` and
+      `-book-both-plus-default`). A Default that tests the slot again for the arms named after the catch-all is a plan
+      that takes the request as the native lane does (`case-request-both-plus-default-retested` and
+      `-nested-default-retested`, `3` after 13 entries): the image can express the answer, and no lowering emits it.
     - A scalar String is written as canonical UTF-8 (section 10): `foreign-print`'s plan prints the four
       examples of each length (U+0024, U+00A2, U+20AC, U+10348) and the edges of every length
       (U+007F, U+0080, U+07FF, U+0800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF), after 5 entries.
@@ -2163,6 +2169,17 @@ def effect_controls(plans: dict) -> list:
     emit_default = defaulted('got-emit-default', [['branch', 0, 1, 1, ['value', 8, 1]], None], 2)
     halt_default = defaulted('got-halt-default', [None, ['branch', 1, 1, 2, ['value', 8, 1]]], 3)
     default_only = defaulted('got-default-only', [None, None], 1)
+
+    def lowered(name, rows, slots, default=None, t=1):
+        """Golden `name` with its `got` replaced by a hand-lowering of another source of the same shape: `got`'s Case over
+        slot 0, the IO.OP parameter, with these rows and this Default."""
+        plan = json.loads(json.dumps(plans[name]))
+        fn = next(f for f in plan['functions'] if f['name'] == 'got')
+        fn['body'], fn['slots'] = ['case', t, 0, 4, 'tags', rows, default], slots
+        return plan
+
+    def u32(n):
+        return ['lit', 1, 'U32', n]
     request, k_ref = printing(text('x')), ['ref', 5, 0]
     unsupported = {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0}
     quiet = {'exit': 0, 'stdout': '', 'effects': 0}
@@ -2234,6 +2251,41 @@ def effect_controls(plans: dict) -> list:
          entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, halt_default), {**quiet, 'calls': 7}),
         ('program-case-request-default-only',
          entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, default_only), {**quiet, 'calls': 7}),
+        # Review round 1 of round 13: the same three sources, and a fourth, as a compiler lowers them. The Case has a row for
+        # every constructor and no Default, so a request matches nothing and is refused where the seed's native lane takes the
+        # catch-all: after 8 entries (main, IO.print, `run`, the erased R, the closure, the erased R of the Action, the
+        # Action applied to the continuation, which builds the request, and `got`, whose Case refuses it), nothing written. The
+        # first is also the plan of the witness `case-request-both-plus-default` (a row for Halt beside the catch-all, which the
+        # encoder drops: its native value is 3 where the golden's is 2), and the last that of `case-request-nested-default`.
+        ('case-request-emit-default-u32-compiled',
+         lowered('case-request-emit-default-u32', [['branch', 0, 2, 1, u32(1)], ['branch', 1, 2, 2, u32(2)]], 4),
+         {**unsupported, 'calls': 8}),
+        ('case-request-halt-default-u32-compiled',
+         lowered('case-request-halt-default-u32', [['branch', 0, 1, 1, u32(4)], ['branch', 1, 1, 2, u32(3)]], 3),
+         {**unsupported, 'calls': 8}),
+        ('case-request-emit-default-compiled',
+         lowered('case-request-emit-default', [['branch', 0, 2, 1, ['ref', 0, 1]], ['branch', 1, 2, 2, ['ref', 0, 1]]], 4, t=0),
+         {**unsupported, 'calls': 8}),
+        ('case-request-nested-default-compiled',
+         lowered('case-request-emit-default-u32',
+                 [['branch', 0, 2, 1, u32(1)],
+                  ['branch', 1, 2, 2, ['case', 1, 2, 1, 'keys', [['branch', 0, 4, 0, u32(2)]], ['default', u32(3)]]]], 4),
+         {**unsupported, 'calls': 8}),
+        # The image can express the seed's answer for those two witnesses, where no lowering of nest's emits it: the catch-all
+        # stays a Default, and the arm that the source names after it is tested inside it, on the same slot. A request matches no
+        # row of either Case and takes the Default of each, so the answer is the native lane's, `3` (the witnesses
+        # `case-request-both-plus-default` and `-nested-default`): 13 entries, as the goldens' 13 (8 to the end of `got`, then
+        # U32.show, IO.print, the erased R of its Action, the Action applied to k, which the loop performs, and k), one effect.
+        ('case-request-both-plus-default-retested',
+         lowered('case-request-emit-default-u32', [['branch', 0, 2, 1, u32(1)], None], 4,
+                 ['default', ['case', 1, 0, 4, 'tags', [None, ['branch', 1, 2, 2, u32(2)]], ['default', u32(3)]]]),
+         {'exit': 0, 'stdout': '3\n', 'effects': 1, 'calls': 13}),
+        ('case-request-nested-default-retested',
+         lowered('case-request-emit-default-u32', [['branch', 0, 2, 1, u32(1)], None], 4,
+                 ['default', ['case', 1, 0, 4, 'tags',
+                              [None, ['branch', 1, 2, 2, ['case', 1, 2, 1, 'keys', [['branch', 0, 4, 0, u32(2)]],
+                                                          ['default', u32(3)]]]], ['default', u32(3)]]]),
+         {'exit': 0, 'stdout': '3\n', 'effects': 1, 'calls': 13}),
         # The Default is taken at any scrutinee type: `pick_default` names Flag for the `none` word that
         # `id` hands it, a request, and answers Off{} from its Default (6 entries: main, IO.print, R, the Action, id,
         # pick_default); the keys Case of `case-request-default-keys` below takes its Default too (a keys Case has one).

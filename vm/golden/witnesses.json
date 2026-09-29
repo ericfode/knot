@@ -1,5 +1,5 @@
 {
-  "basis": "Seed observations that vm/SPEC.md section 8 cites and no golden can carry: the seed fails, its two lanes agree on a form that binds a request as a value and holds no Case, or Knot cannot lower the form (the `head` lane is the pinned literals head's check-cli). Each source runs on both seed lanes; the native lane is the reference. The exit and stdout of each lane were reviewed from the probes of the round-11 review and of round 12 before `check-spec.py --freeze-new` froze the bytes. Round 13 (D24) promoted the three witnesses of a Case with a Default beside a constructor row over a request to goldens, `case-request-emit-default-u32`, `case-request-halt-default-u32` and `case-request-emit-default`, which the VM must match. A witness is evidence for the text and never a VM expectation.",
+  "basis": "Seed observations that vm/SPEC.md section 8 cites and no golden can carry: the seed fails, its two lanes agree on a form that binds a request as a value and holds no Case, Knot cannot lower the form (the `head` lane is the pinned literals head's check-cli), or the seed's native lane takes a catch-all for which the image has no place (round 13, review round 1: a catch-all beside a table that names every constructor, or reached only through a field pattern; section 3 keeps a Default only where a row is absent, so a compiled plan is a complete table and the VM refuses the request). Each source runs on both seed lanes; the native lane is the reference. The exit and stdout of each lane were reviewed from the probes of the round-11 review, of round 12 and of round 13's review round 1 before `check-spec.py --freeze-new` froze the bytes. Round 13 (D24) promoted the three witnesses of a Case with a Default beside a constructor row over a request to goldens, `case-request-emit-default-u32`, `case-request-halt-default-u32` and `case-request-emit-default`, which the VM must match. A witness is evidence for the text and never a VM expectation.",
   "witnesses": [
     {
       "name": "main-lambda-print",
@@ -312,6 +312,110 @@
         "exit": 3,
         "stdout": "",
         "stderr": "Unsupported\tcheck\tvariable-pattern\t102:103:10:9\n"
+      }
+    },
+    {
+      "name": "case-request-both-plus-default",
+      "source": "vm/golden/witness/case-request-both-plus-default.bend",
+      "note": "arms for Emit and Halt and a catch-all over a request, printed as a U32: the catch-all is dead for every constructor and live only for a request, so the native lane takes it (`3`) and the Bun lane fail-stops. Section 3 keeps a Default only where a row is absent, so the plan of this source is the table of its two arms, equal to the compiled twin of the golden `case-request-emit-default-u32` (`case-request-emit-default-u32-compiled`), which the VM refuses; that golden's source prints `2`. A recorded gap (SPEC section 8), never a VM expectation.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "3\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "bb79c34104b745d58336428c06606718f597169665648d7a32cff03c105234fc",
+      "native": {
+        "exit": 0,
+        "stdout": "3\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-nested-default",
+      "source": "vm/golden/witness/case-request-nested-default.bend",
+      "note": "arms for Emit and for Halt whose code is matched against 0, and a catch-all: the outer table names every constructor, so the catch-all is reached only through the field pattern and the native lane takes it for a request (`3`); the Bun lane fail-stops. The plan is Emit and Halt rows, the Halt row a keys Case on its code with the catch-all as its Default, and no Default at the outer table (`case-request-nested-default-compiled`), which the VM refuses; `case-request-inner-default-only` has the same plan and a native fail-stop. A recorded gap (SPEC section 8).",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "3\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "84c4d4a4a832adef5ddf6d6736329767b21f87fd38f48b1a5db2308993cbccf5",
+      "native": {
+        "exit": 0,
+        "stdout": "3\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-inner-default-only",
+      "source": "vm/golden/witness/case-request-inner-default-only.bend",
+      "note": "the catch-all only inside the Halt arm, as the default of a match on its code, and no outer catch-all: a request matches no arm of the outer Case, so both lanes fail-stop. Its plan is the plan of `case-request-nested-default` (Emit and Halt rows, the Halt row a keys Case on its code with Default 3, no Default at the outer table), whose native value is `3`: two sources, one plan, two native answers, so no rule of the VM can agree with the seed on that plan (`case-request-nested-default-compiled`, SPEC section 8).",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "28e1526d42531bef14e6ea7d052ef2793d01de1831cdcdec0293155432f8e53a",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-book-both-plus-default",
+      "source": "vm/golden/witness/case-request-book-both-plus-default.bend",
+      "note": "the same shape as a Book over a Flag: the native lane takes the catch-all (`On{}`) and the Bun lane prints the unreduced term, a `got` that never reduces. Its plan is a complete table with no Default, which the VM refuses as it refuses `book-print`. A recorded gap (SPEC section 8).",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "got(Flag, IO.print(\"x\", Flag, u => Emit{On{}}))\n"
+        }
+      },
+      "sha256": "c415bbbfc14ff68e6dde6d583aee8c75043f4c633c88f23614a94c358de83554",
+      "native": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "got(Flag, IO.print(\"x\", Flag, u => Emit{On{}}))\n",
+        "stderr": ""
       }
     }
   ]
