@@ -57,8 +57,10 @@ npm run -s prechecks -- --list
   into a failure, by design (an executor cannot merge or rebase).
 - **Hang guards.** Each check has a budget that is multiplied by `KNOT_GATE_TIMEOUT_SCALE` (default 4): C1 180 s, C2 80 s, C3 100 s,
   C4 60 s, C5 120 s, C6 80 s, C7 80 s, C8 80 s. A check that overruns is reported `unavailable` with the reason `timeout after Ns`,
-  never a pass. The guards are hang detectors, not expected times: on a host at load average 50 to 90, a 20 s guard on C4 tripped
-  on a 581-file increment (literals `3246fa3d`) that takes about 9 s alone, and the guards were raised for that reason.
+  never a pass. The guards are hang detectors, not expected times. In the loaded sweep above, four replays reported `unavailable`
+  (generics C2 and C5, harness-2 C2, literals C4; the reasons were not recorded, and C4's old guard of 20 s was the tightest);
+  after the guards were raised each of the four produced a result. C4 alone on the 581-file literals increment (`3246fa3d`)
+  takes about 9 to 11 s.
 - **Output.** A terminal summary (twelve conditions per rule; the rest are in JSON), and in `.local/prechecks/<head8>/`:
   `report.json`, `report.md`, `facts.json` (the measured facts), `known.txt` (lines for the review harness's `known`
   argument). `--emit-ledger` prints ledger entries that would acknowledge every new condition.
@@ -66,7 +68,10 @@ npm run -s prechecks -- --list
   branch, working copy against main): 26 s on the first run after a source change (C1 builds the head lanes and runs the
   corpus) and 10.9 s on the immediately repeated run (lanes, seed verdicts and base outcomes cached by tree and program
   hash). Main against main (`--head 43a394a4 --base 43a394a4`) took 28 s on a cold cache, with C2 and C3 skipping as an
-  identity. The dominant check is C1; replays of historical increments took 4 to 32 s each.
+  identity. The dominant check is C1. A robustness sweep of the whole suite on one historical dev head per increment (20
+  increments, host load average 40 to 90) took 2.9 to 153.6 s per replay (median 43 s); five of them rerun after the fixes it
+  found took 5.8 to 32.6 s with warm caches. "Well under a minute" therefore holds on the branch at moderate load, not on a
+  loaded host running four checks at once.
 
 ### Conditions, fingerprints and the ledger
 
@@ -143,7 +148,8 @@ broken codecs of `FamilyVTests`.
 Trial merges (`git merge-tree`, no checkout touched) with main and each sibling in `merge_before`. Conflicts in the
 generated-file registry (`inventory/*.json`, `run.py`, `test_runner.py`, `GATES.md`, the review log, `package.json`,
 shared receipts) become known merge conditions with their mechanical resolution; any other conflict is `conflict` (major,
-coordinator). Also: `base-fix-missing` (a main commit to the runner, host or owned paths that the branch lacks), `decision-drift`
+coordinator). Also: `base-fix-missing` (a main commit to the runner, host or owned paths that the branch lacks; a merge commit on main counts by the
+paths it resolved itself, those that differ from every parent), `decision-drift`
 (a decision row changed on main; its superseded literals found in the branch's normative docs), `upstream-contract-unconsumed`
 (a control that the upstream's green tip newly exports and no consumer references; the green tip is the newest first-parent
 commit whose committed receipt says passed with input hashes that still match), `brittle-upstream-coupling`, `oracle-behind`,

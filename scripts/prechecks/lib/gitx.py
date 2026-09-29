@@ -154,10 +154,12 @@ class Repo:
         return self.git(*args).stdout.decode('utf-8', 'replace')
 
     def commit_files(self, sha: str) -> list[Change]:
-        """Files a commit changed; a merge is diffed against its first parent (plain diff-tree shows a merge as empty)."""
+        """Files a commit changed. A merge lists only the paths that differ from every parent (its own resolution): the
+        side's commits are listed on their own, and plain diff-tree shows a merge as empty."""
         parents = self.out('rev-list', '--parents', '-n', '1', sha).split()[1:]
         if len(parents) > 1:
-            return self.name_status(parents[0], sha)
+            raw = self.git('diff-tree', '-c', '-r', '-z', '--name-only', '--no-commit-id', sha).stdout.split(b'\0')
+            return [Change('M', path.decode('utf-8', 'surrogateescape')) for path in raw if path]
         raw = self.git('diff-tree', '-r', '-z', '--name-status', '--no-commit-id', '-M', '--root', sha).stdout.split(b'\0')
         out, i = [], 0
         while i < len(raw) and raw[i]:

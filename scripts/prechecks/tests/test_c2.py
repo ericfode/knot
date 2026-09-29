@@ -91,7 +91,7 @@ class C2Tests(RepoTest):
         found = self.rules(self.run2(), 'base-fix-missing')
         self.assertEqual(['minor'], [c.severity for c in found])
 
-    def test_a_conflict_resolving_merge_on_main_is_listed_by_its_first_parent_diff(self):
+    def test_a_conflict_resolving_merge_on_main_is_listed_by_the_paths_it_resolved(self):
         """`git log -- paths` lists a merge that differs from both parents there; plain diff-tree shows a merge as empty."""
         self.fx.commit('base', {'scripts/gates/run.py': 'GATES = ()\n', 'docs/a.md': 'a\n'})
         self.fx.branch('campaign/x')
@@ -110,6 +110,7 @@ class C2Tests(RepoTest):
         found = [c for c in self.rules(self.run2(), 'base-fix-missing') if c.subject['commit'] == merge]
         self.assertEqual(['major'], [c.severity for c in found])
         self.assertIn('scripts/gates/run.py', found[0].observed)
+        self.assertEqual({'files': 1}, found[0].value)        # the merge's own resolution, not the side's docs/side.md
 
     def test_a_listed_commit_without_files_is_reported_and_never_crashes(self):
         from unittest import mock
