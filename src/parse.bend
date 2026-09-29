@@ -47,10 +47,11 @@ def touches(left: S.At, right: S.At) -> Bool:
 def offset(+token: S.Token, +count: U32, +tail: S.Node) -> S.Node:
   S.choose(S.Node,U32.is_eq(count,0),u => tail,u => S.Offset{token,count,tail})
 
+# A name or a literal starts the next column, argument or field: whitespace separates them, as in the seed.
 def scrutinee(ts: List<&2,S.Token>) -> Bool:
   match ts:
     case Nil{}: False{}
-    case Con{head,tail}: S.identifier(head)
+    case Con{+head,tail}: Bool.or(S.identifier(head),Q.starts(S.text(head)))
 
 # After a term, `a +b` opens another column and `a + b` is an operator.
 def promotes(ts: List<&2,S.Token>) -> Bool:
@@ -107,10 +108,11 @@ def constructor_named(params: List<&2,S.Node>, +name: String) -> Bool:
     case Con{S.Constructor{token,args},tail}: Bool.or(S.matches(token,name),constructor_named(tail,name))
     case Con{other,tail}: constructor_named(tail,name)
 
-# A binder is judged against the declarations in scope, `params`: parameters, and constructors
-# once registered. The seed reads a dotted name as a global unless a parameter binds that exact
-# name, so only a parameter's name may be dotted where a pattern or a live let binds; an erased
-# let's name is a name, however it is spelled; and a registered constructor is no binder at all.
+# A binder is judged against the names in scope, `params`: parameters, the lets above it, and
+# constructors once registered. The seed reads a dotted name as a global unless the scope binds that
+# exact name, so only a bound name may be dotted where a pattern or a live let binds; an erased
+# let's name is a name, however it is spelled, and binds it below; and a registered constructor
+# is no binder at all.
 def binder(+code: String, +name: S.Token, +erased: Bool, +params: List<&2,S.Node>) -> Result<S.Error,Unit>:
   S.choose(Result<S.Error,Unit>,Bool.and(Bool.and(String.contains(S.text(name),"."),Bool.not(parameter_named(params,S.text(name)))),Bool.not(erased)),u =>
     Fail{S.Invalid{"parse",code,S.at(name)}},u =>
@@ -127,7 +129,8 @@ def binders(fuel: Nat, node: S.Node, +pattern: Bool, +params: List<&2,S.Node>) -
     case 1n+n S.Offset{token,count,tail}: binders(n,tail,pattern,params)
     case 1n+n S.Constructor{token,args}: binders(n,S.Sequence{args},pattern,params)
     case 1n+ +n S.Binding{+token,+q,ann,value,body}:
-      S.bind(Unit,Unit,binder("binding-name",token,U32.is_eq(q,0),params),u => binders(n,body,False{},params))
+      S.bind(Unit,Unit,binder("binding-name",token,U32.is_eq(q,0),params),u =>
+        binders(n,body,False{},Con{S.Parameter{token,q,token},params}))
     case 1n+n S.Match{token,value,arms}: binders(n,S.Sequence{arms},False{},params)
     case 1n+ +n S.Arm{token,head,body}:
       S.bind(Unit,Unit,binders(n,head,True{},params),u => binders(n,body,False{},params))
@@ -146,11 +149,27 @@ def registered(decls: List<&2,S.Node>, +seen: List<&2,S.Node>) -> Result<S.Error
       S.bind(Unit,Unit,binders(65536n,body,False{},List.append(&2,S.Node,params,seen)),u => registered(rest,seen))
     case Con{other,rest}: registered(rest,seen)
 
-def wrap_function(token: S.Token, params: S.Node, result: S.Token,
+# A parameter's name shadows the type of that name in the annotations after it, its own included.
+def reads(+name: S.Token, params: List<&2,S.Node>, +result: S.Token) -> Bool:
+  match params:
+    case Nil{}: String.eq(S.text(name),S.text(result))
+    case Con{S.Parameter{token,q,+typ},tail}: Bool.or(String.eq(S.text(name),S.text(typ)),reads(name,tail,result))
+    case Con{other,tail}: reads(name,tail,result)
+
+def shadows(params: List<&2,S.Node>, +result: S.Token) -> Result<S.Error,Unit>:
+  match params:
+    case Nil{}: Done{Unit{}}
+    case Con{S.Parameter{+name,q,typ},+tail}:
+      S.choose(Result<S.Error,Unit>,reads(name,Con{S.Parameter{name,q,typ},tail},result),u =>
+        Fail{S.Unsupported{"parse","parameter-shadow",S.at(name)}},u => shadows(tail,result))
+    case Con{other,tail}: shadows(tail,result)
+
+def wrap_function(token: S.Token, params: S.Node, +result: S.Token,
   +body: S.Node, rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match params:
     case S.Sequence{+items}:
-      S.bind(Unit,Parsed,binders(65536n,body,False{},items),u => Done{Parsed{S.Function{token,items,result,body},rest}})
+      S.bind(Unit,Parsed,shadows(items,result),u =>
+        S.bind(Unit,Parsed,binders(65536n,body,False{},items),u => Done{Parsed{S.Function{token,items,result,body},rest}}))
     case _: Fail{S.Internal{"parse","expected-parameters"}}
 
 # A singleton keeps the original parser observation; further columns append.
@@ -165,12 +184,16 @@ def wrap_match(token: S.Token, value: S.Node, arms: S.Node,
     case S.Sequence{items}: Done{Parsed{S.Match{token,value,items},rest}}
     case _: Fail{S.Internal{"parse","expected-arms"}}
 
+# A line break has no printable spelling.
+def spelled(+word: String) -> String:
+  S.choose(String,String.eq(word,"\n"),u => "newline",u => word)
+
 def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Token>>:
   match ts:
     case Nil{}: Fail{S.Invalid{"parse","unexpected-end",S.here(ts)}}
     case Con{+h,+t}:
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
-        Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
+        Fail{S.Invalid{"parse",String.append("expected-",spelled(word)),S.at(h)}})
 
 # A line break before a let's `=` is whitespace to the seed, which the parser cannot tell apart.
 def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
@@ -219,6 +242,11 @@ def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
       S.choose(Result<S.Error,Parsed>,S.matches(h,"+"),u => unsupported(ts,"operator"),u =>
         invalid(ts,"end-of-body"))))
     case _: invalid(ts,"unexpected-end")
+
+# A let's value ends at its line; a `+` after it is an operator, which Knot does not check.
+def line_end(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
+  S.choose(Result<S.Error,List<&2,S.Token>>,starts(ts,"+"),u =>
+    Fail{S.Unsupported{"parse","operator",S.here(ts)}},u => expect(ts,"\n"))
 
 def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match value:
@@ -439,7 +467,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"binding-type"))
         case _: invalid(tokens,"binding-type")
     case 1n+ +n BindingTail{+token,+quantity,+annotation,+value,+parent}:
-      S.bind(List<&2,S.Token>,Parsed,expect(tokens,"\n"),body =>
+      S.bind(List<&2,S.Token>,Parsed,line_end(tokens),body =>
         then(run(n,BodyAt{parent,False{}},S.skip_lines(body)),next => rest =>
           Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}}))
     case 1n+ +n RowTail{+keyword,+pattern,+parent,+column}:

@@ -137,6 +137,22 @@ def L.erased_dotted_let_binds_a_name(at): {==}
 
 def L.live_dotted_let_needs_a_parameter(at): {==}
 
+def L.erased_dotted_let_binds_below(at): {==}
+
+def L.erased_dotted_let_binds_only_itself(at): {==}
+
+def L.let_value_ends_at_its_line(at,rest): {==}
+
+def L.operator_after_let_value(at,rest): {==}
+
+def L.name_after_let_value(at,rest): {==}
+
+def L.literal_starts_a_term(at,rest): {==}
+
+def L.parameter_shadows_a_type(at): {==}
+
+def L.unread_parameter_shadows_nothing(at): {==}
+
 def L.spaced_plus_after_argument(head,rest): {==}
 
 def L.keyword_is_no_arm_body(rest): {==}

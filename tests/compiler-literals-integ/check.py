@@ -54,6 +54,47 @@ MUTANTS = [
      'old': 'case 1n+n S.Offset{token,count,tail}: C.unsupported(Unit,"literal-column",token)',
      'new': 'case 1n+n S.Offset{token,count,tail}: Done{Unit{}}',
      'fixture': 'literal-column-offset', 'verdict': (0, 'Checked\n')},
+    # Review round 1. A let names its own name for the body below it.
+    {'name': 'let-binds-nothing-below', 'file': 'parse.bend',
+     'old': 'binders(n,body,False{},Con{S.Parameter{token,q,token},params}))',
+     'new': 'binders(n,body,False{},params))',
+     'fixture': 'erased-dotted-rebind', 'verdict': (2, 'Invalid\tparse\tbinding-name\t')},
+    {'name': 'let-value-ends-at-any-token', 'file': 'parse.bend',
+     'old': 'S.bind(List<&2,S.Token>,Parsed,line_end(tokens),body =>',
+     'new': 'S.bind(List<&2,S.Token>,Parsed,expect(tokens,"\\n"),body =>',
+     'fixture': 'let-concat-typed', 'verdict': (2, 'Invalid\tparse\texpected-newline\t')},
+    {'name': 'literal-starts-no-term', 'file': 'parse.bend',
+     'old': 'Bool.or(S.identifier(head),Q.starts(S.text(head)))',
+     'new': 'S.identifier(head)',
+     'fixture': 'literal-column-late-u32', 'verdict': (2, 'Invalid\tparse\texpected-:\t')},
+    {'name': 'literal-argument-is-a-missing-comma', 'file': 'parse.bend',
+     'old': 'Bool.or(S.identifier(head),Q.starts(S.text(head)))',
+     'new': 'S.identifier(head)',
+     'fixture': 'arguments-literals', 'verdict': (2, 'Invalid\tparse\targument-separator\t')},
+    {'name': 'parameter-shadows-nothing', 'file': 'parse.bend',
+     'old': 'S.bind(Unit,Parsed,shadows(items,result),u =>\n        S.bind(Unit,Parsed,binders(65536n,body,False{},items),u => Done{Parsed{S.Function{token,items,result,body},rest}}))',
+     'new': 'S.bind(Unit,Parsed,binders(65536n,body,False{},items),u => Done{Parsed{S.Function{token,items,result,body},rest}})',
+     'fixture': 'parameter-shadows-own-type', 'verdict': (0, 'Checked\n')},
+    {'name': 'parameter-shadows-every-name', 'file': 'parse.bend',
+     'old': 'S.choose(Result<S.Error,Unit>,reads(name,Con{S.Parameter{name,q,typ},tail},result),u =>',
+     'new': 'S.choose(Result<S.Error,Unit>,True{},u =>',
+     'fixture': 'parameter-shadow-unused', 'verdict': (3, 'Unsupported\tparse\tparameter-shadow\t')},
+    {'name': 'promotion-of-a-type-accepted', 'file': 'catalog.bend',
+     'old': 'S.choose(Result<S.Error,Unit>,U32.is_eq(kind,3),u => C.invalid(Unit,"promoted-type",name),u =>',
+     'new': 'S.choose(Result<S.Error,Unit>,False{},u => C.invalid(Unit,"promoted-type",name),u =>',
+     'fixture': 'promoted-type-let', 'verdict': (0, 'Checked\n')},
+    {'name': 'promotion-of-a-later-type-rejected', 'file': 'catalog.bend',
+     'old': 'S.choose(U32,own,u => Bool.pick(U32,before,3,1),u =>',
+     'new': 'S.choose(U32,own,u => 3,u =>',
+     'fixture': 'promoted-type-later', 'verdict': (2, 'Invalid\tcheck\tpromoted-type\t')},
+    {'name': 'row-width-unrouted', 'file': 'literal-matrix.bend',
+     'old': 'Bool.and(rows_of_one(arms),scrutinee_kind(value,arms,types,scope))',
+     'new': 'scrutinee_kind(value,arms,types,scope)',
+     'fixture': 'row-wide-nat', 'verdict': (6, 'InternalFailure\tcheck\tpattern-node')},
+    {'name': 'declaration-order-by-offset', 'file': 'check.bend',
+     'old': 'function_body(signature,body,G.before(catalog,seen),index,depth)',
+     'new': 'function_body(signature,body,catalog,index,depth)',
+     'fixture': 'qualified-order-lib-first', 'verdict': (2, 'Invalid\tcheck\tunknown-constructor\t')},
 ]
 
 
@@ -200,6 +241,42 @@ def fixture(f, lanes):
     return item
 
 
+PAD = '# ' + '0' * 300 + '\n'
+
+
+def perturbed(name, pad_libs):
+    """A copy of the modules fixtures in which every module of one kind starts with a comment."""
+    target = BUILD / 'meta' / name
+    shutil.rmtree(target, ignore_errors=True)
+    shutil.copytree(ROOT / 'tests/compiler-modules/fixtures', target)
+    for path in target.rglob('*.bend'):
+        if ('lib' in path.relative_to(target).parts[:-1]) == pad_libs:
+            path.write_text(PAD + path.read_text())
+    return target
+
+
+def outcome(r):
+    """What a comment must not change: the exit, the checked book, or a rejection's outcome, phase and code."""
+    return r['exit'], r['stdout'] if r['exit'] == 0 else r['stderr'].split('\t')[:3]
+
+
+def metamorphic(check):
+    """Byte offsets order the tokens of one file: a comment before a module changes no verdict."""
+    trees = {'plain': perturbed('plain', None), 'libs': perturbed('libs', True), 'entries': perturbed('entries', False)}
+    entries = sorted(p.name for p in trees['plain'].glob('*.bend'))
+    with ThreadPoolExecutor(WORKERS) as pool:
+        seen = {kind: dict(zip(entries, pool.map(lambda e: run([*check, tree / e]), entries)))
+                for kind, tree in trees.items()}
+    pairs = []
+    for kind in ('libs', 'entries'):
+        for entry in entries:
+            plain, padded = seen['plain'][entry], seen[kind][entry]
+            require(plain['exit'] is not None and padded['exit'] is not None, (entry, kind, 'no verdict'))
+            require(outcome(plain) == outcome(padded), (entry, kind, plain, padded))
+            pairs.append({'entry': entry, 'padded': kind, 'exit': plain['exit']})
+    return {'entries': len(entries), 'pairs': pairs}
+
+
 def mutant(m, by_name):
     folder = BUILD / 'mutants' / m['name']
     folder.mkdir(parents=True, exist_ok=True)
@@ -245,6 +322,7 @@ def main():
             record['fixtures'] = list(pool.map(lambda f: fixture(f, lanes), manifest['fixtures']))
             by_name = {f['name']: f for f in manifest['fixtures']}
             record['mutants'] = list(pool.map(lambda m: mutant(m, by_name), MUTANTS))
+        record['metamorphic'] = metamorphic(lanes['native']['check'])
         require(all(digest(ROOT / path) == h for path, h in record['inputs'].items()),
                 'Inputs changed during the integration gate')
         fs = record['fixtures']
@@ -260,6 +338,7 @@ def main():
             'byte_identity_pairs': sum(f.get('byte_identical', False) for f in fs),
             'artifact_preservation_probes': sum(l.get('artifact_preserved', False) for l in ls),
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
+            'metamorphic_pairs': len(record['metamorphic']['pairs']),
             'semantic_mutants': len(record['mutants']),
             'mutant_verdict_observations': sum('witness' in m for m in record['mutants']),
         }

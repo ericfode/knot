@@ -84,6 +84,70 @@ def constructor_before(types: List<&2,C.Datatype>, +name: S.Token) -> Bool:
     case Con{C.Datatype{token,data,ctors},tail}:
       Bool.or(prior_constructor(ctors,name),constructor_before(tail,name))
 
+# Byte offsets order the tokens of one file only. A body meets the datatypes declared before it in
+# the book, imported files first, so the first `count` datatypes are placed before every offset
+# and the rest after them.
+def placed(+token: S.Token, +at: U32) -> S.Token:
+  match token:
+    case S.Token{text,S.At{lo,hi,line,column}}: S.Token{text,S.At{at,at,line,column}}
+
+def place(ctors: List<&2,C.Constructor>, +at: U32) -> List<&2,C.Constructor>:
+  match ctors:
+    case Nil{}: Nil{}
+    case Con{C.Constructor{token,fields},tail}: Con{C.Constructor{placed(token,at),fields},place(tail,at)}
+
+def ordered(types: List<&2,C.Datatype>, +count: U32) -> List<&2,C.Datatype>:
+  match types:
+    case Nil{}: Nil{}
+    case Con{C.Datatype{token,data,ctors},tail}:
+      +at = Bool.pick(U32,U32.is_gt(count,0),0,4294967295)
+      Con{C.Datatype{placed(token,at),data,place(ctors,at)},
+        ordered(tail,S.choose(U32,U32.is_gt(count,0),u => U32.sub(count,1),u => 0))}
+
+def before(catalog: C.Catalog, +count: U32) -> C.Catalog:
+  match catalog:
+    case C.Catalog{types,sigs}: C.Catalog{ordered(types,count),sigs}
+
+# The seed reads `+D` as a quantified datatype where D names a type declared before it, so no
+# promoted binder is spelled like one. An imported datatype is spelled with its module, whose
+# binder is not known here, and Base's datatypes outside the reachable slice are not in the
+# book: a binder spelled like the last segment, or like an unknown capitalized name, is unsupported.
+def suffixed(+text: String, +name: String) -> Bool:
+  match text:
+    case SNil{}: False{}
+    case SCon{+c,+tail}: Bool.or(Bool.and(U32.is_eq(Char.to_u32(c),46),String.eq(tail,name)),suffixed(tail,name))
+
+def capitalized(+name: String) -> Bool:
+  match name:
+    case SNil{}: False{}
+    case SCon{+c,tail}: Bool.and(U32.is_ge(Char.to_u32(c),65),U32.is_le(Char.to_u32(c),90))
+
+def spells(ctors: List<&2,C.Constructor>, +name: S.Token) -> Bool:
+  match ctors:
+    case Nil{}: False{}
+    case Con{C.Constructor{+token,fields},tail}: Bool.or(String.eq(S.text(token),S.text(name)),spells(tail,name))
+
+# 3 a datatype of this name before the binder, 2 one spelled with its module, 1 a datatype or a
+# constructor of the name elsewhere in the book, 0 none.
+def type_named(types: List<&2,C.Datatype>, +name: S.Token) -> U32:
+  match types:
+    case Nil{}: 0
+    case Con{C.Datatype{+token,data,+ctors},+tail}:
+      +own = String.eq(S.text(token),S.text(name))
+      +before = U32.is_le(start(token),start(name))
+      U32.max(S.choose(U32,own,u => Bool.pick(U32,before,3,1),u =>
+        S.choose(U32,Bool.and(before,suffixed(S.text(token),S.text(name))),u => 2,u => Bool.pick(U32,spells(ctors,name),1,0))),type_named(tail,name))
+
+def promotion(+types: List<&2,C.Datatype>, +name: S.Token) -> Result<S.Error,Unit>:
+  +kind = type_named(types,name)
+  S.choose(Result<S.Error,Unit>,U32.is_eq(kind,3),u => C.invalid(Unit,"promoted-type",name),u =>
+    S.choose(Result<S.Error,Unit>,Bool.or(U32.is_eq(kind,2),Bool.and(U32.is_eq(kind,0),capitalized(S.text(name)))),u =>
+      C.unsupported(Unit,"promoted-type",name),u => Done{Unit{}}))
+
+# A binder marked `+` (quantity 2) is a promotion.
+def marked(+types: List<&2,C.Datatype>, +name: S.Token, +q: U32) -> Result<S.Error,Unit>:
+  S.choose(Result<S.Error,Unit>,U32.is_eq(q,2),u => promotion(types,name),u => Done{Unit{}})
+
 def pattern_constructor(+types: List<&2,C.Datatype>, +name: S.Token) -> Result<S.Error,ConstructorRef>:
   S.choose(Result<S.Error,ConstructorRef>,constructor_before(types,name),u => find_constructor(types,name,0),u =>
     C.invalid(ConstructorRef,"unknown-constructor",name))

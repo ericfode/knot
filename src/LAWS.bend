@@ -262,6 +262,54 @@ law live_dotted_let_needs_a_parameter:
   {P.binders(3n,S.Binding{S.Token{"x.y",at},1,None{},S.Variable{S.Token{"v",at}},S.Variable{S.Token{"v",at}}},False{},Nil{})
     == Fail{S.Invalid{"parse","binding-name",at}} : Result<S.Error,Unit>}
 
+# A let binds its name for the body below it, erased or live: a later live let repeats that
+# name. An erased let names only itself, and a live let's name repeats no parameter of its own.
+law erased_dotted_let_binds_below:
+  for +at: S.At
+  {P.binders(4n,S.Binding{S.Token{"x.y",at},0,None{},S.Variable{S.Token{"v",at}},
+      S.Binding{S.Token{"x.y",at},1,None{},S.Variable{S.Token{"v",at}},S.Variable{S.Token{"x.y",at}}}},False{},Nil{})
+    == Done{Unit{}} : Result<S.Error,Unit>}
+
+law erased_dotted_let_binds_only_itself:
+  for +at: S.At
+  {P.binders(4n,S.Binding{S.Token{"x.y",at},0,None{},S.Variable{S.Token{"v",at}},
+      S.Binding{S.Token{"x.z",at},1,None{},S.Variable{S.Token{"v",at}},S.Variable{S.Token{"v",at}}}},False{},Nil{})
+    == Fail{S.Invalid{"parse","binding-name",at}} : Result<S.Error,Unit>}
+
+# A let's value ends at its line. A `+` after it is an operator, which Knot does not check;
+# any other token is no line end.
+law let_value_ends_at_its_line:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.line_end(Con{S.Token{"\n",at},rest}) == Done{rest} : Result<S.Error,List<&2,S.Token>>}
+
+law operator_after_let_value:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.line_end(Con{S.Token{"+",at},rest}) == Fail{S.Unsupported{"parse","operator",at}} : Result<S.Error,List<&2,S.Token>>}
+
+law name_after_let_value:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.line_end(Con{S.Token{"x",at},rest}) == Fail{S.Invalid{"parse","expected-newline",at}} : Result<S.Error,List<&2,S.Token>>}
+
+# A literal starts a term as a name does: whitespace separates columns, arguments and fields.
+law literal_starts_a_term:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.scrutinee(Con{S.Token{"3",at},rest}) == True{} : Bool}
+
+# A parameter's name shadows the type of that name in the annotations after it; unread, it is harmless.
+law parameter_shadows_a_type:
+  for +at: S.At
+  {P.shadows([S.Parameter{S.Token{"Flag",at},1,S.Token{"Bit",at}},S.Parameter{S.Token{"x",at},1,S.Token{"Flag",at}}],S.Token{"Bit",at})
+    == Fail{S.Unsupported{"parse","parameter-shadow",at}} : Result<S.Error,Unit>}
+
+law unread_parameter_shadows_nothing:
+  for +at: S.At
+  {P.shadows([S.Parameter{S.Token{"Flag",at},1,S.Token{"Bit",at}},S.Parameter{S.Token{"x",at},1,S.Token{"Bit",at}}],S.Token{"Bit",at})
+    == Done{Unit{}} : Result<S.Error,Unit>}
+
 # A spaced `+` after an argument may be an operator (`a ++ b` concatenates strings);
 # it is unsupported, and an arm body never starts with `case` or `def`.
 law spaced_plus_after_argument:

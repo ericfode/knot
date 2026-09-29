@@ -176,11 +176,12 @@ def call_body(reference: G.FunctionRef, +token: S.Token, +wanted: Maybe<&2,U32>,
       S.bind(C.Checked,C.Checked,next(params),value =>
         S.bind(C.Checked,C.Checked,call_result(value,token,index,result,current,scope),checked => expected(token,wanted,checked)))
 
-def binding_body(initial: C.Checked, +token: S.Token, +q: U32, types: List<&2,C.Datatype>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+def binding_body(initial: C.Checked, +token: S.Token, +q: U32, +types: List<&2,C.Datatype>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match initial:
     case C.Checked{term,+type_id,uses}:
       S.bind(C.Datatype,C.Checked,enum_at(types,type_id),definition =>
-        S.bind(Unit,C.Checked,G.quantity(token,q,definition),u => next(E.extend(scope,token,q,type_id))))
+        S.bind(Unit,C.Checked,G.quantity(token,q,definition),u =>
+          S.bind(Unit,C.Checked,G.marked(types,token,q),u => next(E.extend(scope,token,q,type_id)))))
 
 def match_body(binding: C.Binding, +token: S.Token, +arms: List<&2,S.Node>, +types: List<&2,C.Datatype>, +scope: E.Scope, +wanted: Maybe<&2,U32>, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match binding wanted:
@@ -421,16 +422,17 @@ def function_body(+signature: C.Signature, body: S.Node, +catalog: C.Catalog, in
     case C.Signature{name,params,result}:
       S.bind(C.Checked,C.Function,run(depth,Expression{body,Some{result}},catalog,index,E.parameters(params,0,Nil{})),checked => Done{checked_function(signature,checked)})
 
-def functions(nodes: List<&2,S.Node>, +sigs: List<&2,C.Signature>, +catalog: C.Catalog, +index: U32, +depth: Nat) -> Result<S.Error,List<&2,C.Function>>:
+# A body meets the datatypes declared before it, as the seed registers them: `seen` counts them.
+def functions(nodes: List<&2,S.Node>, +sigs: List<&2,C.Signature>, +catalog: C.Catalog, +index: U32, +depth: Nat, +seen: U32) -> Result<S.Error,List<&2,C.Function>>:
   match nodes:
     case Nil{}: Done{Nil{}}
-    case Con{S.Datatype{name,data,ctors},tail}: functions(tail,sigs,catalog,index,depth)
+    case Con{S.Datatype{name,data,ctors},tail}: functions(tail,sigs,catalog,index,depth,U32.add(seen,1))
     case Con{S.Function{name,params,result,+body},+tail}:
       match sigs:
         case Nil{}: C.internal(List<&2,C.Function>,"signature-alignment")
         case Con{signature,+rest}:
-          S.bind(C.Function,List<&2,C.Function>,function_body(signature,body,catalog,index,depth),head =>
-            S.bind(List<&2,C.Function>,List<&2,C.Function>,functions(tail,rest,catalog,U32.add(index,1),depth),remaining => Done{Con{head,remaining}}))
+          S.bind(C.Function,List<&2,C.Function>,function_body(signature,body,G.before(catalog,seen),index,depth),head =>
+            S.bind(List<&2,C.Function>,List<&2,C.Function>,functions(tail,rest,catalog,U32.add(index,1),depth,seen),remaining => Done{Con{head,remaining}}))
     case _: C.internal(List<&2,C.Function>,"function-node")
 
 # The enum emitter gates its whole book here until owned field storage lands.
@@ -451,7 +453,7 @@ def enum_profile(types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
 def resolved(+catalog: C.Catalog, nodes: List<&2,S.Node>, depth: Nat) -> Result<S.Error,C.Book>:
   match catalog:
     case C.Catalog{+types,sigs}:
-      S.bind(List<&2,C.Function>,C.Book,functions(nodes,sigs,catalog,0,depth),bodies => Done{C.Book{types,bodies}})
+      S.bind(List<&2,C.Function>,C.Book,functions(nodes,sigs,catalog,0,depth,0),bodies => Done{C.Book{types,bodies}})
 
 def check(depth: Nat, root: S.Node) -> Result<S.Error,C.Book>:
   match depth root:

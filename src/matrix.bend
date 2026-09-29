@@ -45,7 +45,7 @@ def validate(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.E
   match fuel node:
     case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+n S.Variable{token}: binder(token,types)
-    case 1n+n S.Promotion{token}: binder(token,types)
+    case 1n+ +n S.Promotion{+token}: S.bind(Unit,Unit,binder(token,types),u => G.promotion(types,token))
     case 1n+ +n S.Constructor{+token,+args}:
       S.bind(G.ConstructorRef,Unit,G.pattern_constructor(types,token),reference =>
         S.bind(List<&2,C.Parameter>,Unit,G.field_signature(reference,types),params =>

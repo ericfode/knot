@@ -64,7 +64,7 @@ def normalize(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>, +type_id: U3
       S.choose(Result<S.Error,S.Node>,L.is_kind(types,type_id,2),u => C.unsupported(S.Node,"char-constructor-pattern",token),u =>
         S.bind(G.ConstructorRef,S.Node,lookup(types,token),reference => constructor(reference,type_id,token,args,types)))
     case 1n+n S.Variable{token}: Done{S.Variable{token}}
-    case 1n+n S.Promotion{token}: Done{S.Promotion{token}}
+    case 1n+n S.Promotion{+token}: S.bind(Unit,S.Node,G.promotion(types,token),u => Done{S.Promotion{token}})
     case 1n+n S.Call{token,args}: C.invalid(S.Node,"pattern-form",token)
     case 1n+n _: C.internal(S.Node,"pattern-node")
 
@@ -306,7 +306,18 @@ def primitive_binding(found: Result<S.Error,C.Binding>, +types: List<&2,C.Dataty
     case Done{binding}: enabled(types,binding)
     case Fail{error}: False{}
 
-def primitive_match(value: S.Node, arms: List<&2,S.Node>, +types: List<&2,C.Datatype>, +scope: E.Scope) -> Bool:
+def rows_of_one(arms: List<&2,S.Node>) -> Bool:
+  match arms:
+    case Nil{}: True{}
+    case Con{S.Arm{token,S.Sequence{columns},body},tail}: False{}
+    case Con{head,tail}: rows_of_one(tail)
+
+def scrutinee_kind(value: S.Node, arms: List<&2,S.Node>, +types: List<&2,C.Datatype>, +scope: E.Scope) -> Bool:
   match value:
+    case S.Sequence{columns}: False{}
     case S.Variable{+token}: Bool.or(literal_arms(arms),primitive_binding(E.lookup(scope,token),types))
     case _: literal_arms(arms)
+
+# One scrutinee and one pattern per row: a row of another width is the datatype match's arity error.
+def primitive_match(+value: S.Node, +arms: List<&2,S.Node>, +types: List<&2,C.Datatype>, +scope: E.Scope) -> Bool:
+  Bool.and(rows_of_one(arms),scrutinee_kind(value,arms,types,scope))
