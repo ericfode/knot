@@ -214,7 +214,7 @@ OPERATORS = ['->', '&', '|', '||', '&&', '<', '<=', '>', '>=', '<>', '++', '<&>'
 CALLS = ['(a)', '(a, a)', '[0n]', '!(a)', '=> a', '<- a']
 # tokens the seed rejects after a term, and markers that touch a name
 JUNK = ['== a', '= a', ', a', '. a', '~ a', ': Flag', ')', '}', '-a', '^ a', '@ a', '$ a', '!', ']']
-PLUS_TERMS = ['+x0', '+ x0', '-x0', '+x0 y', '+h(a)', '+x0(a)']
+PLUS_TERMS = ['+x0', '+ x0', '-x0', '+x0 y', '+h(a)', '+x0(a)', '+(a)', '+ (a)']
 GAP_COLUMNS = [0, 2, 4, 6, 8, 12]
 
 

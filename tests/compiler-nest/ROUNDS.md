@@ -129,19 +129,19 @@ proof entries and 23 audit, name-rule and shadowing mutants; `round11.py --sweep
 `fuzz11.py`, 6,100 fixed-seed programs in six families (names, dead rows, gaps, parenthesized columns, widths, layout)
 compared with the seed: 0 false acceptances and 0 false Invalid.
 
-`round12-expectations.json` freezes 137 round-12 fixtures and 229 seed calls, generated from the templates in
+`round12-expectations.json` freezes 143 round-12 fixtures and 229 seed calls, generated from the templates in
 `round12_seed.py`, before the repairs. `match_flatten` takes a split's field binders from the first row that starts
 its constructor, so a `+` on one of its fields marks that field for every row below the split: 19 seed-accepted
 programs (each field position, `+_` and `+_x`, two levels, a Data parent, constructors split in a default matrix,
 two columns, three rows, the marks of a variable row) are Checked, and 12 controls keep the outcomes the seed gives
 (a `+` in a later row, another constructor's first row, another column, another field, none: `affine-reuse`; a `+` on
 a Type field: `reusable-type`). After a term the seed reads an infix operator, a call, an index, an offload `!(`,
-a lambda after a name and a line that starts with an operator, `!(` or `=>`, and `+name` as a term: these are
+a lambda after a name and a line that starts with an operator, `!(` or `=>`, and `+name` or `+(name)` as a term: these are
 `Unsupported parse term-form` at every site a term ends (a body, a let's value, an expression argument, a line's
 start), in a discarded row and in a live one, whose operator target the seed may define. A closer, `==`, `=>` after a
 constructor, a marker that touches a name, a lone `.` or `!`, a `(` or `[` at a line's start and an erased `-name`
 stay Invalid. `round12.py` checks both lanes, evaluator and Wasm agreement, rejection in every phase, all proof entries,
-that the oracle's wrapper writes publish by rename, 21 mutants and `fuzz12.py`, 3,000 fixed-seed programs in two
+that the oracle's wrapper writes publish by rename, 22 mutants and `fuzz12.py`, 3,000 fixed-seed programs in two
 families (plus: fielded matches with `+` in any row and slot; suffix: terms, suffixes, gaps and sites) compared with the
 seed: 0 false acceptances and 0 false Invalid. Open and not drawn: a spaced `+` or `-` that starts the line after a let's
 value (round 10's `detached_marker` law pins Invalid) and a hole `? a` or a marker `+a` as the next argument after
