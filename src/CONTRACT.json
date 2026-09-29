@@ -457,7 +457,7 @@
         "a parameter named like a type that a later annotation reads is Unsupported parse parameter-shadow, and a let's annotation spelled like a binder in scope is Unsupported parse annotation-shadow, also where that binder is a type-valued variable the seed accepts",
         "a bare `+` after an argument or a let's value is Unsupported parse operator, where the seed rejects it for want of the annotation an operator demands",
         "a function body whose first line stands in column 0 (Invalid parse body-indentation), and a line break inside a parameter, in a function header outside its parentheses, after a promotion's `+` or before a let's `=` or `:`, are Invalid, where the seed accepts them",
-        "a parameter or a declared field without its comma (Invalid parse argument-separator), a datatype declaration laid out otherwise than a header line that ends at its `:` and then one whole constructor per line, and a `;` that ends a let's value (Invalid parse expected-newline) are Invalid, where the seed accepts them"
+        "a parameter or a declared field without its comma (Invalid parse argument-separator), a datatype declaration laid out otherwise than a header line that ends at its `:` and then one whole constructor per line, a `;` that ends a let's value (Invalid parse expected-newline), the Bool operators `a && b` and `a || b` after a term (Invalid parse argument-separator, end-of-body or expected-newline; only `+` is read as operator sugar) and a call written `f!(x)` are Invalid, where the seed accepts them"
       ]
     },
     "unmet": [

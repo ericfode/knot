@@ -331,6 +331,9 @@ header line or two on one line). In arguments, constructor values and patterns, 
 after an item without its comma is `Unsupported parse argument-whitespace`; another token there is
 `Invalid parse argument-separator`. A `+` after a let's value is `Unsupported parse operator`; any
 other token there is `Invalid parse expected-newline`, also the `;` with which the seed may end a let.
+Only `+` is read as operator sugar after a term: `a && b` and `a || b`, which the seed accepts with
+no annotation, are Invalid there (`argument-separator`, `end-of-body`, `expected-newline`), and so is
+a call written `f!(x)`.
 
 Resolved occurrences use lexical levels within a function environment, never
 display-name lookup. New bindings append a level; shadowing resolves to the
