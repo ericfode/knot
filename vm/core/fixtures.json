@@ -1,6 +1,6 @@
 {
  "schema": "vm-core fixtures",
- "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6.",
+ "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed.",
  "fuel": 1000000,
  "runs": [
   {
@@ -1080,6 +1080,78 @@
      "bump": 4294967296
     },
     "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); a Program (section 8): the terminal continuation, 16 B; then main's Activation of 13 slots (128 B) and ceiling-top's 13 lets with fill1(a = 575,373) and fill2(b = 3), three 64-byte steps fewer and two 48-byte steps more, so they end at 4,294,967,184; main returns the erased Closure of \\R. \\k. k(Unit), 16 B (node, no captures); phase 1 enters it (an Activation of 0 slots, 16 B), and it returns the live Closure, 16 B; phase 2 enters that with the terminal continuation (an Activation of 1 slot, 32 B), and its Invoke of k allocates Emit{Unit}, 32 B, which ends exactly at 4 GiB, 4,294,967,296. Phase 3 completes with exit 0 and no output, and nothing more is allocated. The reference evaluation (evaluate.program) completes the same plan, with every fill shortened to 3, with exit 0 and no output. The pre-fix VM trapped at Emit's allocation; a VM that stopped a cell ending at 4 GiB would exhaust early (section 11)"
+   }
+  ]
+ },
+ "growth": {
+  "rule": "Small cells reach the heap's end, or a host's refusal to grow, in bounded time. SPEC section 5 leaves the timing of memory.grow free and section 11 counts a timeout as neither Exhausted nor agreement, so a VM that grows memory one 64 KiB page at a time fails here: V8 pays each grow in the size of the memory, 22 minutes at 4 GiB (review round 1), by its wall time (loop-4gib) and by its memory.grow count (loop-256mib). One image, core/loop-cells (review round 1's probe, byte for byte), whose every entry allocates one 16-byte Activation, so no other cell or block hides the growth. Each row's stop is derived by check-core's `loop_stop` from sections 5 and 7 in closed form, which agrees with the entry-by-entry `ceiling_run` at a 1 MiB heap; the expectations were frozen before the VM's growth policy changed (CORE.md choice 15).",
+  "rows": [
+   {
+    "name": "loop-256mib",
+    "image": "core/loop-cells",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "limits": {
+     "frames": 16777216,
+     "heap": 268435456
+    },
+    "expect": {
+     "exit": 4,
+     "stdout": "",
+     "stderr": "Exhausted\tio\tmemory\n"
+    },
+    "dump": {
+     "outcome": "Exhausted",
+     "kind": 2,
+     "cause": "heap",
+     "calls": 16777217,
+     "bump": 285278208
+    },
+    "grows_at_most": 24,
+    "basis": "Sections 5 and 7: the image ends at byte 4,456, so F0 = 65,536 and H0 = F0 + 16 MiB = 16,842,752; the pool is empty. main's entry and each of loop's is debited (calls += 1, section 7 step 1) and then takes an Activation of 0 slots: payload 2 words, a cell of 4 words, 16 bytes. A heap lowered to 256 MiB ends at H0 + 268,435,456 = 285,278,208 and holds exactly 16,777,216 cells; the next entry is debited (call 16,777,217) and its Activation would end beyond the heap: Exhausted kind 2 (heap), bump unchanged at 285,278,208. memory.grow calls: the VM grows memory in steps of 16 MiB (CORE.md choice 15), and 285,278,208 bytes lie within the first 288 MiB, so at most 18 grows (one per 16 MiB, boot included); 24 leaves room. Growing one 64 KiB page at a time takes about 3,800."
+   },
+   {
+    "name": "loop-4gib",
+    "image": "core/loop-cells",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "expect": {
+     "exit": 4,
+     "stdout": "",
+     "stderr": "Exhausted\tio\tmemory\n"
+    },
+    "dump": {
+     "outcome": "Exhausted",
+     "kind": 2,
+     "cause": "heap",
+     "calls": 267382785,
+     "bump": 4294967296
+    },
+    "basis": "As loop-256mib with the heap at its 4 GiB maximum (D19): (2^32 - 16,842,752) / 16 = 267,382,784 cells fill it exactly, the last ending at 2^32, which section 5 allows (only a cell ending beyond the maximum stops). The next entry is debited as call 267,382,785 and its Activation would end beyond it: Exhausted kind 2 (heap) with bump 2^32, and the real host shows `Exhausted io memory`. Review round 1 measured the VM that grew one page at a time at 22 min 45 s wall on this row, against a 120 s guard here."
+   },
+   {
+    "name": "loop-refused",
+    "image": "core/loop-cells",
+    "argv": [
+     "main",
+     "4294967295"
+    ],
+    "pages": 4700,
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\tio\ttrap\n"
+    },
+    "dump": {
+     "outcome": null,
+     "calls": 18198529,
+     "bump": 308019200
+    },
+    "basis": "A host that refuses memory.grow beyond 4,700 pages (node --wasm-max-mem-pages=4700), 308,019,200 bytes, below the 4 GiB maximum. Section 5: that is HostFailure, never Exhausted; the real host shows `HostFailure io trap`, exit 5, and the VM has no outcome of its own (its register stays 0). The cells tile H0..308,019,200 exactly ((308,019,200 - 16,842,752) / 16 = 18,198,528), so bump = 308,019,200 and the next entry, debited as call 18,198,529, is the one refused. The cap is 293.75 MiB, not a multiple of 16 MiB: a VM that traps when its 16 MiB step is refused would stop 5.75 MiB lower, at 301,989,888. It must fall back to the size it needs (CORE.md choice 15)."
    }
   ]
  },

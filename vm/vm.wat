@@ -359,6 +359,7 @@
   (global $frameBytes (mut i32) (i32.const 0x1000000))
   ;; knot_alloc's cursor for host transfers
   (global $hbump (mut i32) (i32.const 0))
+  ;;TEST (global $grows (mut i32) (i32.const 0))  ;; memory.grow calls, for the dump
   ;; outcome: 1 Completed, 2 Halted, 3 HostFailure, 4 Unsupported, 5 Exhausted,
   ;; 6 InternalFailure; kind is the host exit or exhaustion kind; cause a reason
   (global $oc (mut i32) (i32.const 0))
@@ -381,6 +382,7 @@
     (local.set $have (i64.shl (i64.extend_i32_u (memory.size)) (i64.const 16)))
     (if (i64.gt_u (local.get $end) (local.get $have))
       (then
+        ;;TEST (global.set $grows (i32.add (global.get $grows) (i32.const 1)))
         (if (i32.lt_s
               (memory.grow (i32.wrap_i64 (i64.shr_u
                 (i64.add (i64.sub (local.get $end) (local.get $have)) (i64.const 65535))
@@ -2985,5 +2987,6 @@
   ;;TEST   (i32.store (i32.const 4008) (i32.wrap_i64 (global.get $HL)))
   ;;TEST   (i32.store (i32.const 4012) (i32.wrap_i64 (i64.shr_u (global.get $bump) (i64.const 32))))
   ;;TEST   (i32.store (i32.const 4016) (i32.wrap_i64 (i64.shr_u (global.get $HL) (i64.const 32))))
+  ;;TEST   (i32.store (i32.const 4020) (global.get $grows))
   ;;TEST   (i32.const 3920))
 )

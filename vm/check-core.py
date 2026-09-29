@@ -21,6 +21,11 @@ Checks, in order:
   where a cell or the text would end beyond it. Each row's bump pointer and
   outcome are first derived from SPEC section 5's cell sizes over its plan
   (`ceiling_run`), independently of any VM;
+- the growth rows: a Book whose every entry allocates a 16-byte Activation stops at a lowered
+  heap (with a bounded `memory.grow` count in the test build), at the full 4 GiB through the
+  real host within its 120 s guard, and, where the host refuses growth beyond 4,700 pages
+  (`--wasm-max-mem-pages`), as the host's HostFailure; each stop is first derived from SPEC
+  sections 5 and 7 (`loop_stop`);
 - a 200,000-deep nested expression, generated iteratively, and the deep
   fixtures again under a 64 KiB host stack;
 - the malformed-image controls vm-spec froze (as many as SPEC section 4
@@ -406,6 +411,20 @@ def ceiling_expectation(plan: dict, image: bytes) -> tuple[dict, dict]:
     return exhausted, {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap', 'bump': bump}
 
 
+def loop_stop(image: bytes, heap_bytes: int = 1 << 32, memory_bytes: int = 1 << 32) -> tuple[int, int, bool]:
+    """(bump, calls, refused) where the tail loop of core/loop-cells stops, from SPEC sections 5 and 7, in
+    closed form: `ceiling_run` steps entry by entry, too many at 4 GiB (`growth_jobs` checks that the two
+    agree at a small heap). main and every entry of `loop` are debited (calls += 1) and then take an
+    Activation of 0 slots, 16 bytes, from H0. The first whose Activation would end beyond the heap's end
+    (H0 + heap_bytes, at most 4 GiB) or beyond the `memory_bytes` the host grants stops the machine with
+    the bump pointer unchanged: Exhausted kind 2 (heap) at the heap's end, the host's refusal (`refused`,
+    HostFailure) at the memory's."""
+    h0 = ((4096 + len(image)) // 65536 + 1) * 65536 + (16 << 20)
+    heap_end = min(1 << 32, h0 + heap_bytes)
+    cells = (min(heap_end, memory_bytes) - h0) // 16
+    return h0 + 16 * cells, cells + 1, memory_bytes < heap_end
+
+
 def run_control_count() -> int:
     """SPEC section 12's frozen number of admitted run controls."""
     text = ' '.join((HERE / 'SPEC.md').read_text().split())
@@ -429,8 +448,8 @@ def host(module: Path, sandbox: Path, argv: list, node_flags=()) -> dict:
     return {'exit': p.returncode, 'stdout': p.stdout.decode(), 'stderr': p.stderr.decode()}
 
 
-def harness(jobs: list, timeout=600) -> dict:
-    p = subprocess.run(['node', str(HARNESS)], input=json.dumps(jobs), capture_output=True, text=True,
+def harness(jobs: list, timeout=600, node_flags=()) -> dict:
+    p = subprocess.run(['node', *node_flags, str(HARNESS)], input=json.dumps(jobs), capture_output=True, text=True,
                        timeout=timeout * SCALE)
     require(p.returncode == 0, f'harness failed: {p.stderr[-2000:]}')
     return {r['id']: r for r in map(json.loads, p.stdout.splitlines())}
@@ -669,6 +688,71 @@ def compare(kind: str, corpus: list, outcomes: dict) -> dict:
             tally['refused'] += 1
             tally['limits'] += ref.startswith('Exhausted')
     return tally
+
+
+def growth_jobs(rows: list, plan: dict, image: bytes, name: str, sandbox: Path) -> list:
+    """A job for each frozen growth row of vm/core/fixtures.json, its stop first derived from SPEC sections
+    5 and 7 by `loop_stop` (which must agree with `ceiling_run` at a small heap). A row lowers the heap
+    (`limits`, test build only) or makes the host refuse growth beyond `pages` (`--wasm-max-mem-pages`); a
+    trap is the outcome only where the host refuses."""
+    small = 1 << 20
+    try:
+        ceiling_run(plan, image, small)
+    except Beyond as stop:
+        require(stop.bump == loop_stop(image, small)[0], f'loop_stop gives {loop_stop(image, small)}, section 5 stops at {stop.bump}')
+    else:
+        raise AssertionError('the loop of core/loop-cells does not stop under a heap of 1 MiB')
+    jobs = []
+    for r in rows:
+        bump, calls, refused = loop_stop(image, r.get('limits', {}).get('heap', 1 << 32), r.get('pages', 1 << 16) << 16)
+        if refused:  # section 5: a host that refuses growth below the maximum is HostFailure, never Exhausted
+            expect, dump = {'exit': 5, 'stdout': '', 'stderr': 'HostFailure\tio\ttrap\n'}, {'outcome': None, 'calls': calls, 'bump': bump}
+        else:
+            expect = {'exit': 4, 'stdout': '', 'stderr': 'Exhausted\tio\tmemory\n'}
+            dump = {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap', 'calls': calls, 'bump': bump}
+        require((r['expect'], r['dump']) == (expect, dump),
+                f"growth {r['name']}: frozen {r['expect']} {r['dump']}, sections 5 and 7 give {expect} {dump}")
+        jobs.append({'id': f"growth:{r['name']}", 'files': {name: str(sandbox / name)}, 'argv': [name, *r['argv']],
+                     'limits': r.get('limits'), 'flags': [f"--wasm-max-mem-pages={r['pages']}"] if 'pages' in r else [],
+                     'expect': expect, 'want': {**expect, 'stderr': ''} if refused else expect, 'dump': dump,
+                     'at_most': {'grows': r['grows_at_most']} if 'grows_at_most' in r else {}})
+    return jobs
+
+
+def growth_registers(job: dict, wasm: Path) -> dict:
+    """The job on the test build `wasm` in the in-memory host, its registers after the stop."""
+    keys = {k: job[k] for k in ('id', 'files', 'argv', 'limits')}
+    return harness([{**keys, 'wasm': str(wasm)}], 120, job['flags'])[job['id']]
+
+
+def check_growth(jobs: list, module: Path, test: Path) -> list:
+    """Each growth job on the test build, with its registers and its `memory.grow` count, and, where the
+    heap is not lowered, on the production module through the real host, whose 120 s guard is what growth
+    one page at a time overruns at 4 GiB (a timeout is neither Exhausted nor agreement, SPEC section 11)."""
+    def real(job):
+        try:
+            return host(module, Path(next(iter(job['files'].values()))).parent, job['argv'], job['flags'])
+        except subprocess.TimeoutExpired as late:
+            raise AssertionError(f"{job['id']}: no stop within {late.timeout:g} s on the real host") from late
+
+    def verified(job, out):
+        trap = job['dump']['outcome'] is None
+        require((out['status'] == 'Trap') if trap else clean(out), f"{job['id']}: {out['status']} {out['stderr']!r}")
+        require(shown(out, job['want']) == job['want'], f"{job['id']}: {shown(out, job['want'])} vs {job['want']}")
+        require(all(out['state'][k] == v for k, v in job['dump'].items()), f"{job['id']}: {out['state']} vs {job['dump']}")
+        require(all(out['state'][k] <= most for k, most in job['at_most'].items()),
+                f"{job['id']}: memory.grow called {out['state']['grows']} times, at most {job['at_most']} expected")
+        return {'name': job['id'].split(':', 1)[1], **{k: out['state'][k] for k in ('outcome', 'calls', 'bump', 'grows')}}
+
+    record = {j['id']: verified(j, growth_registers(j, test)) for j in jobs if j['limits']}  # quick, deterministic
+    rest = [j for j in jobs if not j['limits']]
+    tasks = [(j, run) for j in rest for run in (real, lambda j: growth_registers(j, test))]
+    for (j, run), out in zip(tasks, pool(lambda t: t[1](t[0]), tasks, workers=2)):
+        if run is real:
+            require(out == j['expect'], f"{j['id']}: the real host shows {out}, section 5 gives {j['expect']}")
+        else:
+            record[j['id']] = verified(j, out)
+    return [record[j['id']] for j in jobs]
 
 
 # ------------------------------------------------------------------ mutants
@@ -1063,6 +1147,15 @@ def main() -> int:
         high.append({'name': r['name'], 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode()), **r['dump']})
     record['ceiling'] = high
 
+    # heap growth (CORE.md choice 15): a stream of small cells reaches the heap's end, or a host's refusal
+    # to grow, in bounded time. SPEC section 5 leaves the timing of memory.grow free; growing one 64 KiB
+    # page at a time costs 22 minutes at 4 GiB on V8, which section 11 counts as neither Exhausted nor agreement
+    loop_plan = json.loads((HERE / 'core/loop-cells.plan.json').read_text())
+    loop_image = (HERE / 'core/loop-cells.kimg').read_bytes()
+    require(codec.encode(loop_plan, digest) == loop_image, "growth: the image is its plan's encoding")
+    growth = growth_jobs(fixtures['growth']['rows'], loop_plan, loop_image, staged('core/loop-cells'), sandbox)
+    record['growth'] = check_growth(growth, module, test)
+
     # nothing recurses: a 200,000-deep nested expression, and the deep runs on a 64 KiB host stack
     small = nested_plan(40)
     require(nested_image(40, digest) == codec.encode(small, digest), 'the nested generator matches serializer.encode')
@@ -1313,7 +1406,8 @@ def main() -> int:
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-core passed: {len(goldens)} golden images, {len(invocations)} Book invocations, {len(core)} fixture runs, "
           f"{len(dumps)} dump rows, {len(agreed)} runs equal to the reference evaluation, "
-          f"{len(high)} ceiling runs, {len(stack)} small-stack runs, {len(refused)} refused and {len(admissions)} admitted controls, "
+          f"{len(high)} ceiling runs, {len(growth)} growth runs, {len(stack)} small-stack runs, "
+          f"{len(refused)} refused and {len(admissions)} admitted controls, "
           f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted), "

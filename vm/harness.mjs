@@ -19,7 +19,8 @@ class Stop extends Error {
 
 // `bump` and `HL` are 64-bit (a heap may end exactly at 4 GiB): their high words follow.
 const REGISTERS = ['mode', 'node', 'val', 'tgt', 'tfn', 'ops', 'nops', 'act', 'top', 'F0', 'FL', 'H0', 'bump',
-  'fuel', 'calls', 'quantum', 'outcome', 'kind', 'cause', 'W', 'terminal', 'yields', 'HL', 'bump_high', 'HL_high'];
+  'fuel', 'calls', 'quantum', 'outcome', 'kind', 'cause', 'W', 'terminal', 'yields', 'HL', 'bump_high', 'HL_high',
+  'grows'];
 const OUTCOMES = [null, 'Completed', 'Halted', 'HostFailure', 'Unsupported', 'Exhausted', 'InternalFailure'];
 const strict = new TextDecoder('utf-8', {fatal: true, ignoreBOM: true});
 
