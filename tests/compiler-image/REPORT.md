@@ -103,6 +103,23 @@ constructor). Cost: 0.8 s and 96 MB peak on the native lane, 2.3 s wall under lo
   Style and semantic review of the four image files remain the coordinator's.
 - `npm ci` was not run: `node_modules` already held the pinned install.
 
+## Verification of the branch
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on the committed tree (`ee4248dc`): exit 0, 22 gates passed in 250 s wall
+(four workers, under the campaign's shared load): checker, structural, structural-trust, owned-store, fields,
+fields-trust, frontend, flat-store, census, wasm, wasm-trust, lint:verify, perch-context, classification, recursion,
+io-host, bootstrap, fields-wasm, io-abi-2, vm-spec, selfhost and `image` (681 sources, 96 encoded, 19 goldens,
+198 codec images, 10 refusals, 25 default module hashes, 23 profile controls, a 5.2 MB and a 9 MB image in
+chunked writes, 8 exhaustiveness controls, 19 mutants, 15 laws). The baseline on the vm-spec tip (`60e80693`)
+passed its 21 gates the same way. The seed is `bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts`, every run sets
+`BEND_NO_TELEMETRY=1`, no `.env` was read and no provider was called.
+
+Receipt drift, not failure: fourteen tracked receipts (frontend, checker, structural, fields, wasm, fields-wasm,
+recursion, classification, selfhost, bootstrap and the three trust inventories) are classified `semantic` because
+they record hashes of `src/*.bend`, `SPEC.md` and `CONTRACT.json`, and of programs built from them; no fixture
+observation changed. The bootstrap receipt also lists the four new source files in its corpus. `gates:refresh`
+regenerates them; the image receipt is new and current.
+
 ## What the merge-wave follow-up must add
 
 Work goes in `erase_tokens` (`lower`), where each new `C.Term` constructor makes the seed refuse to compile
