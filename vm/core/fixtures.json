@@ -1392,7 +1392,7 @@
   ]
  },
  "scope": {
-  "rule": "Images whose validation needs more scope indices than the tables' first size, W + 4200 for an image of W words (vm.wat `$validate`): a slot sits at the sum of the depths of the Closures around it, and a Branch binds every field of a constructor whose one record serves every Case that matches it (vm/scope.py). vm/scope.py builds each row's image from `family` and `args`; the gate requires its words, its `need` (the indices validation holds, derived from the plan alone) and its SHA-256 as frozen here. The verdicts and runs are the reference codec's and the reference evaluation's, fixed before the VM changed (D7): a valid image is admitted and its Book's `main` answers `On{}` (`Evaluated 1 1 On{}`, one call); a refused one is refused with the reference codec's first defect. `tables` and `edge` place an `edge-` row: its `need` is `edge` past the tables' size after `tables` doublings, (W + 4200) * 2^tables, so edge 0 fills them exactly and edge 1 makes the next doubling by one index (`unit`, `delta` do the same for a `nest-` row: the tables' first size is `delta` past the enclosing unit's depth, where the Closure's capture sits). `at_most` bounds the test build's memory.grow count at boot's one: the tables' successive sizes, at 5 bytes an index, sum to under 10 times their last, under 20 * need, and the loader's other tables take under 64 bytes a word of image, so the scratch of these rows is under 20 * need + 64 * W + 64 KiB, about 2 MB, and the 48 MiB that boot leaves holds it; tables that grow by one index at a time take gigabytes. Each `-past` row has a `-wrong` twin that declares the last slot at another type. Types are typed (K's fields cycle K, A, B, C) so that a slot read after a doubling shows whether its type was carried over. The first four rows are the reviewer's saved images, byte for byte (review round 1 of round 6), refused or trapped by the tables of W + 4200 indices that never grew. Rows `excess-` are no scope rows: a unit deeper than its `slots` and a defect after that depth are reported as the defect, since the reference codec checks a unit's `slots` when the unit ends, so a validator that refused at the first depth beyond `slots` gives another reason.",
+  "rule": "Images whose validation needs more scope indices than the tables' first size, W + 4200 for an image of W words (vm.wat `$validate`): a slot sits at the sum of the depths of the Closures around it, and a Branch binds every field of a constructor whose one record serves every Case that matches it (vm/scope.py). vm/scope.py builds each row's image from `family` and `args`; the gate requires its words, its `need` (the indices validation holds, derived from the plan alone) and its SHA-256 as frozen here. The verdicts and runs are the reference codec's and the reference evaluation's, fixed before the VM changed (D7): a valid image is admitted and its Book's `main` answers `On{}` (`Evaluated 1 1 On{}`, one call); a refused one is refused with the reference codec's first defect. `tables` and `edge` place an `edge-` row: its `need` is `edge` past the tables' size after `tables` doublings, (W + 4200) * 2^tables, so edge 0 fills them exactly and edge 1 makes the next doubling by one index (`unit`, `delta` do the same for a `nest-` row: the tables' first size is `delta` past the enclosing unit's depth, where the Closure's capture sits). `at_most` bounds the test build's memory.grow count at boot's one: the tables' successive sizes, at 5 bytes an index, sum to under 10 times their last, under 20 * need, and the loader's other tables take under 64 bytes a word of image, so the scratch of these rows is under 20 * need + 64 * W + 64 KiB, about 2 MB, and the 48 MiB that boot leaves holds it; tables that grow by one index at a time take gigabytes. Each `-past` row has a `-wrong` twin that declares the last slot at another type. Types are typed (K's fields cycle K, A, B, C) so that a slot read after a doubling shows whether its type was carried over. The first four rows are the reviewer's saved images, byte for byte (review round 1 of round 6), refused or trapped by the tables of W + 4200 indices that never grew. A `resource` row is valid by construction and needs more scratch than 4 GiB holds (`scope.scratch`): its frozen stop is the VM's, `Exhausted` kind 2 (heap), by the arithmetic of the tables' doubling, not the reference codec's, which is not run on it. Rows `excess-` are no scope rows: a unit deeper than its `slots` and a defect after that depth are reported as the defect, since the reference codec checks a unit's `slots` when the unit ends, so a validator that refused at the first depth beyond `slots` gives another reason.",
   "corpus": {
    "seed": 20260930,
    "images": 300
@@ -2541,6 +2541,54 @@
      "grows": 1
     },
     "basis": "Two units of 60 Cases over a constructor of 150 fields; the Closure's base is the first unit's depth 9,001, where its capture sits, and the tables' first size 9,002 is 1 past it: the growth comes at the capture's own slot (1 = 0) or at the first slot after the capture's use mark (1 = 1). The Closure has two captures, the second used by nothing, so the reference codec refuses `capture-use`."
+   },
+   {
+    "name": "nest-32767-2-20",
+    "family": "nest",
+    "args": {
+     "nf": 32767,
+     "m": 2,
+     "L": 20
+    },
+    "words": 33783,
+    "need": 1310700,
+    "sha256": "b851a46482220362b9a12c618834f5ad3eea43b92d5ea0d8dc6a45af8c1a131c",
+    "reference": null,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "basis": "20 units of 2 Cases over a constructor of 32,767 fields: `slots` 65,535 each (within the limit, exact), the reference codec admits it, and 1,310,700 indices, 34 times the first size 37,983. The smaller sibling of `exhausted-32767-2-8000`."
+   },
+   {
+    "name": "exhausted-32767-2-8000",
+    "family": "nest",
+    "args": {
+     "nf": 32767,
+     "m": 2,
+     "L": 8000
+    },
+    "resource": true,
+    "words": 400863,
+    "need": 524280000,
+    "sha256": "c28884a20688790be0c387c8d5fee7b89a342816a07af03c40cda353f5e4297a",
+    "reference": null,
+    "expect": {
+     "exit": 4,
+     "stdout": "",
+     "stderr": "Exhausted\tio\tmemory\n"
+    },
+    "dump": {
+     "outcome": "Exhausted",
+     "cause": "heap",
+     "kind": 2
+    },
+    "basis": "The same shape with 8,000 units: valid by construction (each unit's `slots` is 65,535 and exact; the reference codec is not run on it, since its recursion would hold 8,000 scopes of 65,535 slots, about 4 GB of lists). Its 524,280,000 indices need tables of at least 8,293,664,936 bytes of scratch while they double (`scope.scratch`), more than the 4 GiB, 4,294,963,200 bytes, that scratch may reach (`$take`), so the VM stops it as `Exhausted` kind 2, cause `heap`, where the reference codec would admit it (CORE.md choice 16)."
    },
    {
     "name": "excess-function",

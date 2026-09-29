@@ -1235,8 +1235,16 @@ def check_scope(section: dict, module: Path, test: Path, where: Path, reg: dict,
         reference = verdict(image, label, reg, digest)
         return image, reference, scope_expected(reference, plan)
 
+    def stopped(plan, image):
+        """A `resource` row: valid by construction, but its tables need more scratch than 4 GiB holds (`scope.scratch`), so the VM
+        stops it as Exhausted kind 2, cause `heap`. The reference codec is not run on it: its recursion would hold thousands of scopes."""
+        require(scope.scratch(scope.need(plan), len(image) // 4) > 0xfffff000, 'a resource row needs more scratch than 4 GiB holds')
+        case = {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap'}
+        return image, None, (expected_run(case), expected_dump(case))
+
     def prepare():
-        frozen = [(row, plan, *judged(plan, f"scope {row['name']}")) for row in section['rows'] for plan in [scope.build(row)]]
+        frozen = [(row, plan, *(stopped(plan, codec.encode(plan, digest)) if row.get('resource') else judged(plan, f"scope {row['name']}")))
+                  for row in section['rows'] for plan in [scope.build(row)]]
         made = [(name, plan, change, *judged(plan, f'scope corpus {name}'))
                 for name, plan, change in scope.corpus(cfg['seed'], cfg['images'], words, lane.Rng)]
         return frozen, made
@@ -1271,7 +1279,8 @@ def check_scope(section: dict, module: Path, test: Path, where: Path, reg: dict,
             failures.append(f"{row['name']}: the real host shows {(on_host['exit'], on_host['stdout'][:40], on_host['stderr'].strip())}, the test build "
                             f"{(out['exit'], out['stdout'][:40], out['stderr'].strip(), seen, out['broken'])}; frozen {row['expect']} {row['dump']}")
         rows.append({'name': row['name'], 'words': len(image) // 4, 'need': scope.need(plan), 'sha256': sha(image),
-                     'reference': 'admitted' if reference is None else expected_reason(reference), 'exit': on_host['exit']})
+                     'reference': 'resource' if row.get('resource') else 'admitted' if reference is None else expected_reason(reference),
+                     'exit': on_host['exit']})
     require(not failures, f'{len(failures)} of {len(frozen)} frozen scope rows differ: ' + '; '.join(failures[:30]))
 
     corpus, reasons, grown = [], {}, 0
@@ -1298,7 +1307,7 @@ def check_scope(section: dict, module: Path, test: Path, where: Path, reg: dict,
                                        'reasons': dict(sorted(reasons.items())), **tally}}
     costs = {row['name']: scope.need(plan) for row, plan, *_ in frozen} | {r['label']: scope.need(r['plan']) for r in corpus}
     jobs = [{'id': f"scope:{row['name']}", 'files': job(row['name'], test)['files'], 'argv': argv(row['name']), 'want': row['expect'],
-             'dump': row['dump'], **({'at_most': row['at_most']} if 'at_most' in row else {})} for row, *_ in frozen]
+             'dump': row['dump'], **({'at_most': row['at_most']} if 'at_most' in row else {})} for row, *_ in frozen if not row.get('resource')]
     jobs += [{'id': f"scope:{r['label']}", 'files': job(r['label'], test)['files'], 'argv': r['argv'], 'want': r['expected'][0], 'dump': r['expected'][1]}
              for r in corpus]
     return record, sorted(jobs, key=lambda j: costs[j['id'].removeprefix('scope:')])  # the deepest last: a mutant that stalls on them is stopped there

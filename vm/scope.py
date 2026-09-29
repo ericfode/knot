@@ -16,7 +16,8 @@ check-core.py encodes each plan, and the reference codec and the VM must judge i
 - `nest`: L erased Closures nested one in another, each a unit of m nested Cases over `K` that captures the last slot
   it bound and hands it to the next;
 - `excess`: a unit deeper than its `slots` with a defect after that depth, where the reference codec reports the defect;
-- `need`: how many indices a plan's validation holds, from the plan alone; `tuned` puts it at a table size;
+- `need`: how many indices a plan's validation holds, from the plan alone; `tuned` puts it at a table size; `scratch`
+  says how many bytes of scratch the doubling of the tables takes at least (a valid image can need more than 4 GiB);
 - `corpus`: a seeded corpus of `chain` and `nest`, most with one small change the reference codec then judges.
 """
 from __future__ import annotations
@@ -142,6 +143,18 @@ def need(plan: dict) -> int:
             elif op == 'invoke':
                 work += [(node[2], depth, base), *((a, depth, base) for a in node[3])]
     return most
+
+
+def scratch(need: int, words: int) -> int:
+    """The bytes of boot scratch the tables take at the least while they double from W + 4200 indices to `need`: a table of
+    4-byte types and one of use bytes at each size, each 8-byte aligned, the earlier sizes kept (scratch has no free). The
+    loader's other tables come on top, so an image whose `scratch` passes what 4 GiB holds cannot be validated."""
+    total, cap = 0, words + CAPACITY
+    while True:
+        total += (4 * cap + 7 & -8) + (cap + 7 & -8)
+        if cap >= need:
+            return total
+        cap = max(2 * cap, cap + 1)
 
 
 def tuned(nf: int, m: int, tables: int, edge: int, words, typed: bool = False, nrefs: int = 1) -> tuple[int, int]:
