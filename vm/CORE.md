@@ -770,25 +770,44 @@ adopt them or record its own, so that lockstep compares like with like.
   *Result*, on `vm.wat` sha256 `cc1f376e…` (the fixed VM; the study takes 17 minutes
   on 8 workers): of the 567 mutants, **508 show a wrong observation** (3 of them
   only on a ceiling row), **8 are killed only by a hang** (`$select`'s search and
-  `$ctor`'s walk never end) and **15 only by a trap** (an out-of-bounds store or
-  load, in `append`'s block, describe's worklist arithmetic and the two String
-  cells' immediate tests, which the gate's rule does not count), and **36
-  survive**, each explained in `study.EQUIVALENT`, which the study checks against
-  its survivors both ways. The fix of `$scell` moved 9 of the 567 (the reviewer's
+  `$ctor`'s walk never end) and **18 only by a trap** (an out-of-bounds store or
+  load, in `append`'s block, describe's worklist arithmetic, the two String
+  cells' immediate tests, and the three copies and reads one word past a cell that
+  only the memory-end rows reach), and **33 survive**, each explained in
+  `study.EQUIVALENT`, which the study checks against its survivors both ways. The
+  gate's rule for its own mutants counts a trap or a hang only in the groups whose
+  defect it is, but installed as `vm.wat` each of the 534 fails the gate: a frozen
+  run is never a trap, and a hang outlives the gate's own timeouts. So the gate
+  detects **534 of the 567 (94%)**: 508 by a wrong observation, 8 by a hang, 18 by a
+  trap. The fix of `$scell` moved 9 of the 567 (the reviewer's
   list is reproduced name for name on the source of `2e0c9b1`; on this source
   they are the same tokens on their new lines, and 9 in `$scell` are new ones).
   The reviewer's study of the same mutants on gate `2e0c9b1` found 426 that
   change a frozen row, 25 more only on its own corpora, 42 more only on its print,
   Halt, digit and Nat corpora, 12 hangs and 62 survivors. The groups run cheapest
-  first, and the 508 were first killed by: keys 181, inspection 57, goldens 88,
-  tags 50, display 47, writers 39, sweeps 20, limited 10, runs 6, programs 5,
-  ceiling 3, describe 2.
+  first, and `by_group` in the receipt counts each result by the group of its first
+  wrong observation, hang or trap. The 508 were first killed by: keys 181,
+  goldens 88, inspection 56, tags 51, display 47, writers 39, sweeps 20, limited 10,
+  runs 6, programs 5, ceiling 3, describe 2 (`$ctor:1865`'s `sub -> add` counts a
+  tag up, not down, so its walk ends only when the tag wraps, about 2^32 steps
+  later: under heavy load that outlives a row's deadline and the group's later rows
+  are skipped, so its first group moved from inspection to tags between the last
+  two runs); the hangs by keys 7 and tags 1; the traps
+  by goldens 5, keys 4, display 3, memory-end 3, tags 2 and ceiling 1.
 
-  The 36 survivors, by why no run can tell them apart:
-  - *unobservable until vm-rc* (16): 13 change which operands a prim or a completion
-    drops (`$drop` is empty, choice 1), one binds a field past a Branch's (it
-    reads past an Object and writes padding or the reference count of the next
-    cell), and two change the reference count of an append cell;
+  An earlier reading filed three of the survivors as differing only at 4 GiB: an
+  Object's and an Action's operands copied 8 bytes each (`$complete:2163` and
+  `:2170`, `const 2 -> 3`) and a Branch that binds one word past its constructor's
+  fields (`$select:2248`, `ge_u -> gt_u`). Memory grows to the next 16 MiB boundary
+  at or above a cell's end (choice 15), so it ends where a cell does at every
+  boundary a cell ends on, from 48 MiB up. The memory-end rows sit on the first;
+  each of the three traps there and nowhere else, and the gate registers them
+  (group `memory-end`).
+
+  The 33 survivors, by why no run can tell them apart:
+  - *unobservable until vm-rc* (15): 13 change which operands a prim or a completion
+    drops (`$drop` is empty, choice 1), and two change the reference count of an
+    append cell;
   - *equal on every input the VM admits* (3): `Nat.sub` at x = y (both arms of the
     select give 0), the key search's `<` against `<=` where the keys differ, and
     the Action's foreign id, which a mutant fills with the Foreign node's operand
@@ -799,12 +818,11 @@ adopt them or record its own, so that lockstep compares like with like.
     (1), every word of which that is read is written after it; the `tfn` flag (1)
     and the `imm` flag (1), tested only for truth; and the mode register after a
     finished run (2, `$describe:2706`: `$run` returns at once);
-  - *a guard another check makes redundant* (6): three class masks (`7 -> 6`), where
+  - *a guard another check makes redundant* (4): three class masks (`7 -> 6`), where
     a Closure passes the class test and the type test refuses it, since its word at
     offset 8 is a node's word offset and every node follows every type record;
-    one class mask (`7 -> 8`) that only an Action whose foreign id is the String type
-    index and whose operand is the word 1 passes, after which it reads past the
-    Action's 16-byte cell and what follows decides the outcome; and two copies of
-    4 more bytes for each operand into free heap that `$alloc` zeroes, which leave
-    memory only for an Object of three fields or an Action ending exactly at 4 GiB,
-    which no ceiling row builds.
+    and one class mask (`7 -> 8`) that only an Action whose foreign id is the String
+    type index and whose operand is the word 1 passes, after which it reads past the
+    Action's 16-byte cell and what follows decides the outcome
+    (`ill-string-action` builds that Action and still refuses by the words it finds;
+    one that ended where memory does would trap, which no row builds).

@@ -1,26 +1,40 @@
 {
- "date": "2026-09-29T07:04:44.685797+00:00",
+ "date": "2026-09-29T08:04:51.238108+00:00",
  "vm_wat_sha256": "cc1f376eea3f955cd586e83d94580f727b509299da24e0e412e3cd48ca2a5eda",
  "mutants": 567,
  "tally": {
   "killed": 508,
-  "survived": 36,
+  "survived": 33,
   "hang": 8,
-  "trap": 15
+  "trap": 18
  },
- "killed_by_group": {
-  "keys": 192,
-  "inspection": 57,
-  "goldens": 93,
-  "sweeps": 20,
-  "tags": 53,
-  "programs": 5,
-  "describe": 2,
-  "limited": 10,
-  "ceiling": 4,
-  "runs": 6,
-  "display": 50,
-  "writers": 39
+ "by_group": {
+  "killed": {
+   "keys": 181,
+   "inspection": 56,
+   "goldens": 88,
+   "sweeps": 20,
+   "tags": 51,
+   "programs": 5,
+   "describe": 2,
+   "limited": 10,
+   "runs": 6,
+   "display": 47,
+   "writers": 39,
+   "ceiling": 3
+  },
+  "hang": {
+   "keys": 7,
+   "tags": 1
+  },
+  "trap": {
+   "memory-end": 3,
+   "ceiling": 1,
+   "goldens": 5,
+   "display": 3,
+   "keys": 4,
+   "tags": 2
+  }
  },
  "survivors": [
   {
@@ -38,10 +52,6 @@
   {
    "mutant": "$select:2216:const 7->6@70",
    "reason": "the class mask lets a Closure past the class test, but its word at offset 8 is a node's word offset, which exceeds every type index (each type record is 5 words and precedes the nodes), so the type test refuses it as before"
-  },
-  {
-   "mutant": "$select:2248:i32.ge_u->i32.gt_u@31",
-   "reason": "binds one field past the Branch's: it reads a word past the Object and writes the slot after the Branch's, padding of the Activation or the reference count of the next cell, both unread until vm-rc"
   },
   {
    "mutant": "$complete:2125:const 1->2@25",
@@ -100,10 +110,6 @@
    "reason": "which operands a prim or a completion drops is unobservable while `$drop` is empty (CORE.md choice 1); vm-rc makes it observable"
   },
   {
-   "mutant": "$complete:2163:const 2->3@104",
-   "reason": "copies 4 bytes more for each operand, into padding or free heap above the bump pointer, which `$alloc` zeroes when it reuses it; it differs only where a copy leaves memory, an Object of three fields or an Action ending exactly at 4 GiB, which no ceiling row builds"
-  },
-  {
    "mutant": "$complete:2168:i32.add->i32.sub@32",
    "reason": "the payload count in the header of an Action, which stays a 16-byte cell for 0 to 2 words; only the state audit reads it"
   },
@@ -114,10 +120,6 @@
   {
    "mutant": "$complete:2169:const 3->4@72",
    "reason": "stores the Foreign node's operand count where the Action's foreign id belongs: for IO.print, the only foreign vm-core admits (choice 2), both are 1"
-  },
-  {
-   "mutant": "$complete:2170:const 2->3@100",
-   "reason": "copies 4 bytes more for each operand, into padding or free heap above the bump pointer, which `$alloc` zeroes when it reuses it; it differs only where a copy leaves memory, an Object of three fields or an Action ending exactly at 4 GiB, which no ceiling row builds"
   },
   {
    "mutant": "$append:1963:const 5->4@73",
@@ -161,14 +163,14 @@
   },
   {
    "mutant": "$scell:1898:const 7->8@60",
-   "reason": "the class test reads only the payload's parity: a wrong-class word passes it, then the type word and the tag word, only if it is an Action whose foreign id is the String type index and whose operand is the word 1; the mutant then reads past the Action's 16-byte cell, and what follows it decides the outcome (`ill-string-action` builds that Action and still refuses by the words it finds, not by its class)"
+   "reason": "the class test reads only the payload's parity: a wrong-class word passes it, then the type word and the tag word, only if it is an Action whose foreign id is the String type index and whose operand is the word 1; the mutant then reads past the Action's 16-byte cell, and what follows it decides the outcome (`ill-string-action` builds that Action and still refuses by the words it finds, not by its class; one that ended where memory does would trap)"
   },
   {
    "mutant": "$scell:1898:const 7->6@60",
    "reason": "the class mask lets a Closure past the class test, but its word at offset 8 is a node's word offset, which exceeds every type index (each type record is 5 words and precedes the nodes), so the type test refuses it as before"
   }
  ],
- "elapsed_seconds": 1221,
+ "elapsed_seconds": 1010,
  "rows": [
   {
    "mutant": "$prim:2012:i32.eq->i32.ne@9",
@@ -996,8 +998,9 @@
   },
   {
    "mutant": "$select:2248:i32.ge_u->i32.gt_u@31",
-   "result": "survived",
-   "heavy": true
+   "result": "trap",
+   "group": "memory-end",
+   "by": "memory-end:memory-end-object"
   },
   {
    "mutant": "$select:2249:i32.add->i32.sub@41",
@@ -1437,8 +1440,9 @@
   },
   {
    "mutant": "$complete:2163:const 2->3@104",
-   "result": "survived",
-   "heavy": true
+   "result": "trap",
+   "group": "memory-end",
+   "by": "memory-end:memory-end-object"
   },
   {
    "mutant": "$complete:2163:const 2->1@104",
@@ -1523,8 +1527,9 @@
   },
   {
    "mutant": "$complete:2170:const 2->3@100",
-   "result": "survived",
-   "heavy": true
+   "result": "trap",
+   "group": "memory-end",
+   "by": "memory-end:memory-end-action"
   },
   {
    "mutant": "$complete:2170:const 2->1@100",
@@ -2194,8 +2199,8 @@
   {
    "mutant": "$ctor:1865:i32.sub->i32.add@25",
    "result": "killed",
-   "group": "inspection",
-   "by": "lane:inspect-u32-snil"
+   "group": "tags",
+   "by": "lane:tags-shape"
   },
   {
    "mutant": "$ctor:1865:const 1->2@50",
