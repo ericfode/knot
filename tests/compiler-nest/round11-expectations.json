@@ -8992,6 +8992,806 @@
       }
     },
     {
+      "name": "paren-argument-comment",
+      "file": "tests/compiler-nest/round11-fixtures/paren-argument-comment.bend",
+      "sha256": "1bc6b477c3e47c4ff5f5c16bde84e9c8dae65447afd6b06e4891e39d48e487ac",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-argument-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break-argument",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\targument-whitespace\t"
+      }
+    },
+    {
+      "name": "paren-argument-nl",
+      "file": "tests/compiler-nest/round11-fixtures/paren-argument-nl.bend",
+      "sha256": "6d1a91be1c6bb68f6282d4083071d8cf7c1fd245370e00cefc816d3a990e9420",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-argument-nl.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break-argument",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\targument-whitespace\t"
+      }
+    },
+    {
+      "name": "paren-call-tight-dead",
+      "file": "tests/compiler-nest/round11-fixtures/paren-call-tight-dead.bend",
+      "sha256": "a8199f80b42506584b7d4d3b1c15a9fdd7d7b8ad34133d6d1136bf9ac9077d00",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-call-tight-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "h",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-call-tight-dead/h-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-call-tight-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "h",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-call-tight-dead/h-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-call-tight-dead.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-call-tight-dead/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-call-tight-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-call-tight-dead/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-call-tight-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-call-tight-dead/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-call-tight-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-call-tight-dead/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-call-tight-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-call-tight-dead/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-call-tight-dead.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "paren-same-line-accepted"
+    },
+    {
+      "name": "paren-dead-one-blank",
+      "file": "tests/compiler-nest/round11-fixtures/paren-dead-one-blank.bend",
+      "sha256": "c8053a4e7edeee598ac690f951441699cb6f238fcecab579ba614408919dc5dd",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-dead-one-blank.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : '_'\nLocation:\n28 |   (a):\n29>|         case _: On{}\n   |              ^\n30 | \n"
+      },
+      "calls": [],
+      "finding": "paren-break-rejected",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-dead-one-col0",
+      "file": "tests/compiler-nest/round11-fixtures/paren-dead-one-col0.bend",
+      "sha256": "4691ebb464b4b9b75196485bb7f31b5945c5fb8a95238a1961a0b48136cb1ea8",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-dead-one-col0.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : '_'\nLocation:\n27 | (a):\n28>|         case _: On{}\n   |              ^\n29 | \n"
+      },
+      "calls": [],
+      "finding": "paren-break-rejected",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-dead-one-comment",
+      "file": "tests/compiler-nest/round11-fixtures/paren-dead-one-comment.bend",
+      "sha256": "c43805359a26022658af9cc76c913043e441b92760aab9b952a44efae00917a0",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-dead-one-comment.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : '_'\nLocation:\n27 |   (a):\n28>|         case _: On{}\n   |              ^\n29 | \n"
+      },
+      "calls": [],
+      "finding": "paren-break-rejected",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-dead-one-deep",
+      "file": "tests/compiler-nest/round11-fixtures/paren-dead-one-deep.bend",
+      "sha256": "33d96c6f2afb1663e1c1060f3a13f2f25c18ed1e7dce27e35e74eee57ab3f220",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-dead-one-deep.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : '_'\nLocation:\n27 |         (a):\n28>|         case _: On{}\n   |              ^\n29 | \n"
+      },
+      "calls": [],
+      "finding": "paren-break-rejected",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-dead-one-nl",
+      "file": "tests/compiler-nest/round11-fixtures/paren-dead-one-nl.bend",
+      "sha256": "4fb8605f04877b1c25b929f067c56249e9b93885c8573e2ce5edbcc6633f9eeb",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-dead-one-nl.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : '_'\nLocation:\n27 |   (a):\n28>|         case _: On{}\n   |              ^\n29 | \n"
+      },
+      "calls": [],
+      "finding": "paren-break-rejected",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-dead-two-comment",
+      "file": "tests/compiler-nest/round11-fixtures/paren-dead-two-comment.bend",
+      "sha256": "46e76b79f6c0dfd2f0fee0683d26b3b32138bd64b9d8bc797f15749ab3ed78f5",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-dead-two-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-dead-two-nl",
+      "file": "tests/compiler-nest/round11-fixtures/paren-dead-two-nl.bend",
+      "sha256": "b34a46db500f814e370ef8088d9fad74a74da60e03217efad45683709bae2376",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-dead-two-nl.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-live-one-nl",
+      "file": "tests/compiler-nest/round11-fixtures/paren-live-one-nl.bend",
+      "sha256": "7b41c7657e6d6493c8fd64eaf75c8f8ca1d03c671111fd5ec6befbb2657fb76f",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-live-one-nl.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : '_'\nLocation:\n24 |   (a):\n25>|     case _: On{}\n   |          ^\n26 | \n"
+      },
+      "calls": [],
+      "finding": "paren-break-live",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-live-same-line",
+      "file": "tests/compiler-nest/round11-fixtures/paren-live-same-line.bend",
+      "sha256": "0a5829078c2135d239fbbe320bc01dc1c5d48d4011b63d4e8b2765a92c3467bf",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-live-same-line.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a parameter or field scrutinee (a match cannot scrutinize a computed value: give it its own def)\nLocation:\n22 | def f(a: Flag) -> Flag:\n23>|   match h (a):\n   |         ^^^^^\n24 |     case _: On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tcomputed-scrutinee\t"
+      },
+      "finding": "paren-same-line-live"
+    },
+    {
+      "name": "paren-live-tight",
+      "file": "tests/compiler-nest/round11-fixtures/paren-live-tight.bend",
+      "sha256": "7afa6dd1de421d482f750a61467283678b4918da3bea2f223465d192e5a7864c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-live-tight.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a parameter or field scrutinee (a match cannot scrutinize a computed value: give it its own def)\nLocation:\n22 | def f(a: Flag) -> Flag:\n23>|   match h(a):\n   |         ^^^^\n24 |     case _: On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tcomputed-scrutinee\t"
+      },
+      "finding": "paren-same-line-live"
+    },
+    {
+      "name": "paren-name-break",
+      "file": "tests/compiler-nest/round11-fixtures/paren-name-break.bend",
+      "sha256": "8e9afc1f866fb2ccd265b0977d71cdd26a7a974c4d35e834599ed4703b4caa9a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-name-break.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "h",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-name-break/h-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-name-break.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "h",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-name-break/h-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-name-break.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-name-break/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-name-break.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-name-break/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-name-break.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-name-break/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-name-break.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-name-break/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-name-break.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/paren-name-break/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/paren-name-break.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "paren-same-line-accepted"
+    },
+    {
+      "name": "paren-row-blank",
+      "file": "tests/compiler-nest/round11-fixtures/paren-row-blank.bend",
+      "sha256": "6eb2d25b07149c4acba38f08bb6e9fd54734882b8e6e92f4ffa8ff7f2bcbdf34",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-row-blank.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-row-comment",
+      "file": "tests/compiler-nest/round11-fixtures/paren-row-comment.bend",
+      "sha256": "72aecce3fb819f41aea2009c414210b159b13b96921c638eda352dd8102915c9",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-row-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-row-nl",
+      "file": "tests/compiler-nest/round11-fixtures/paren-row-nl.bend",
+      "sha256": "f8bc7552443d980674448d04d6580ff4ae6a647765fe694d3b5a50df77e073f5",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-row-nl.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-row-same-line",
+      "file": "tests/compiler-nest/round11-fixtures/paren-row-same-line.bend",
+      "sha256": "2d0c4315ea0df047668577c29f23d622d13b1c08929bbe2fbf3f366441e01ffa",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-row-same-line.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : 'x (y)'\nLocation:\n23 |   match a b:\n24>|     case x (y): On{}\n   |          ^^^^^\n25 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tpattern-arity\t"
+      },
+      "finding": "paren-same-line-row"
+    },
+    {
+      "name": "paren-scrutinee-blank",
+      "file": "tests/compiler-nest/round11-fixtures/paren-scrutinee-blank.bend",
+      "sha256": "0381435683141fdf2ff2a83945a2d7187c19c30d28f5c181b60c433f675e536c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-scrutinee-blank.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-scrutinee-col0",
+      "file": "tests/compiler-nest/round11-fixtures/paren-scrutinee-col0.bend",
+      "sha256": "fbae1858fa3fb85202d67f1ef3f76fea6279216efbf52346d7ac16d869b63f38",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-scrutinee-col0.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-scrutinee-comment",
+      "file": "tests/compiler-nest/round11-fixtures/paren-scrutinee-comment.bend",
+      "sha256": "a13a812a018b40438989ec73ee39374a3063b5ccf7a5589d30ada42ea85b0269",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-scrutinee-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-scrutinee-deep",
+      "file": "tests/compiler-nest/round11-fixtures/paren-scrutinee-deep.bend",
+      "sha256": "23b97305431b23f492cde7a211a93c539069ee1b69bcdac3e31336377e4f457a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-scrutinee-deep.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-scrutinee-nl",
+      "file": "tests/compiler-nest/round11-fixtures/paren-scrutinee-nl.bend",
+      "sha256": "e64a2186b2d23ebcbd103ccb4177d9e3e2a61b19f10758dad56f59b5563210a4",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-scrutinee-nl.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "paren-three-nl",
+      "file": "tests/compiler-nest/round11-fixtures/paren-three-nl.bend",
+      "sha256": "cb2e1d7f84ce779f954b5e3d497e0548ba0272e9fd10cd7f0a7f068b58a0b25a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/paren-three-nl.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "paren-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
       "name": "plusd-ctl-bare-datatype",
       "file": "tests/compiler-nest/round11-fixtures/plusd-ctl-bare-datatype.bend",
       "sha256": "5b31afbc617cb79116c4eb3e78eae8a12ee5f2d033a5b45e0e36024df19562b1",

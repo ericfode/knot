@@ -617,6 +617,45 @@ group('header-invalid', {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-:\t'
       ('header-closer', PRE + 'def f(a: Flag) -> Flag:\n  match a ):\n    case _: On{}\n\n' + main_of('On{}')),
       ('header-keyword', PRE + 'def f(a: Flag) -> Flag:\n  match a case:\n    case _: On{}\n\n' + main_of('On{}')))
 
+# Found by an exhaustive gap search over the header shapes: the seed reads a `(` that starts a line as the
+# next term, never as the arguments of the term before it (`parse_term_ops` returns at `parse_nl` and `(`).
+# A header joins its lines, so the parser read `h` and `(a)` as the call `h(a)`: one column where the seed
+# has two, a row of two patterns rejected (Invalid) and a row of one accepted (dead) or rejected (live).
+BREAKS = {'nl': '\n  ', 'col0': '\n', 'comment': ' # c\n  ', 'blank': '\n\n  ', 'deep': '\n        '}
+
+
+def paren(shape, gap):
+    return PRE + {
+        'scrutinee': f'def f(a: Flag, b: Flag) -> Flag:\n  match a{gap}(b):\n    case x y: On{{}}\n\n' + main_of('On{}, Off{}'),
+        'three': f'def f(a: Flag, b: Flag, c: Flag) -> Flag:\n  match a b{gap}(c):\n    case x y z: On{{}}\n\n' + main_of('On{}, Off{}, On{}'),
+        'row': f'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n    case x{gap}(y): On{{}}\n\n' + main_of('On{}, Off{}'),
+        'dead-two': f'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n    case _ _: Off{{}}\n    case On{{}} _:\n      match h{gap}(a):\n        case _ _: On{{}}\n\n' + main_of('On{}, Off{}'),
+        'dead-one': f'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n    case _ _: Off{{}}\n    case On{{}} _:\n      match h{gap}(a):\n        case _: On{{}}\n\n' + main_of('On{}, Off{}'),
+        'live-one': f'def f(a: Flag) -> Flag:\n  match h{gap}(a):\n    case _: On{{}}\n\n' + main_of('On{}'),
+        'argument': f'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n    case _ _: Off{{}}\n    case On{{}} _:\n      match h(a{gap}(b)):\n        case _: On{{}}\n\n' + main_of('On{}, Off{}'),
+    }[shape]
+
+
+def paren_cases(shape, gaps):
+    return [(f'paren-{shape}-{gap}', paren(shape, BREAKS[gap])) for gap in gaps]
+
+
+group('paren-break', unsupported('term-form'), None,
+      *paren_cases('scrutinee', BREAKS), *paren_cases('three', ['nl']), *paren_cases('row', ['nl', 'comment', 'blank']),
+      *paren_cases('dead-two', ['nl', 'comment']))
+group('paren-break-rejected', unsupported('term-form'), 'patterns (one per scrutinee)', *paren_cases('dead-one', BREAKS))
+group('paren-break-live', unsupported('term-form'), 'patterns (one per scrutinee)', *paren_cases('live-one', ['nl']))
+group('paren-break-argument', unsupported('argument-whitespace'), None, *paren_cases('argument', ['nl', 'comment']))
+# The same terms on one line are one call: the seed and Knot agree.
+group('paren-same-line-accepted', ACCEPTED, None,
+      ('paren-call-tight-dead', PRE + 'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n    case _ _: Off{}\n    case On{} _:\n      match h(a):\n        case _: On{}\n\n' + main_of('On{}, Off{}')),
+      ('paren-name-break', PRE + 'def f(a: Flag, b: Flag) -> Flag:\n  match a\n  b:\n    case x y: On{}\n\n' + main_of('On{}, Off{}')))
+group('paren-same-line-row', check('pattern-arity'), 'patterns (one per scrutinee)',
+      ('paren-row-same-line', PRE + 'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n    case x (y): On{}\n\n' + main_of('On{}, Off{}')))
+group('paren-same-line-live', check('computed-scrutinee'), 'a parameter or field scrutinee',
+      ('paren-live-same-line', PRE + 'def f(a: Flag) -> Flag:\n  match h (a):\n    case _: On{}\n\n' + main_of('On{}')),
+      ('paren-live-tight', PRE + 'def f(a: Flag) -> Flag:\n  match h(a):\n    case _: On{}\n\n' + main_of('On{}')))
+
 # The seed rejects these: a let that has no body, and a `case` where a statement should be.
 group('layout-invalid', {'exit': 2, 'diagnostic': 'Invalid\tparse\tbody-indentation\t'}, None,
       ('layout-ctl-def-after-let', PRE + 'def f(a: Flag) -> Flag:\n  u : Flag = a\n' + main_of('On{}')),
@@ -635,23 +674,25 @@ def cases():
     return out
 
 
-def direct(path):
+def direct(path, rejected=False):
     """The seed on the fixture alone: an Unsupported fixture has no Knot value to compare, and a Nat literal
-    does not resolve through the import that wraps a call."""
+    does not resolve through the import that wraps a call. `rejected` allows the seed's syntax error."""
     source = path.read_text()
     command = ['bun', oracle.SEED, str(path.relative_to(oracle.ROOT))]
     main = {'command': command, **oracle.run(command)}
-    assert main['exit'] == 0 and not main['stderr'], main
+    assert (main['exit'] == 0 and not main['stderr']) or (rejected and main['exit'] == 1 and main['stderr'].startswith('Error:')), main
     return {'name': path.stem, 'file': str(path.relative_to(oracle.ROOT)), 'sha256': oracle.sha256(path),
             'fields': any(not nullary for _, _, cs in oracle.declarations(source)[0] for _, nullary in cs),
             'seed': main, 'calls': []}
 
 
 def observe(path, group_name, knot, reason):
-    case = direct(path) if knot['exit'] == 3 else review_seed.observe(path)
+    # A stated reason with an Unsupported outcome marks a program the seed rejects and Knot cannot read.
+    lax = knot['exit'] == 3 and bool(reason)
+    case = direct(path, lax) if knot['exit'] == 3 else review_seed.observe(path)
     case['finding'] = group_name
     accepted = case['seed']['exit'] == 0
-    assert accepted == (knot['exit'] != 2), (path.name, 'seed acceptance and reviewed Knot outcome differ')
+    assert lax or accepted == (knot['exit'] != 2), (path.name, 'seed acceptance and reviewed Knot outcome differ')
     if reason:
         assert reason in case['seed']['stderr'], (path.name, 'seed rejects for another reason')
     case['knot'] = knot
