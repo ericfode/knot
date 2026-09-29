@@ -119,10 +119,11 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
         Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
 
-# A line break before a let's `=` or `:`, or before its value, is whitespace to the seed.
+# A line break before a let's `=` or `:` is whitespace to the seed.
 def split(+ts: List<&2,S.Token>) -> Bool:
   Bool.and(starts(ts,"\n"),Bool.or(starts(S.skip_lines(ts),"="),starts(S.skip_lines(ts),":")))
 
+# So is one before its value.
 def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
   S.choose(Result<S.Error,List<&2,S.Token>>,split(ts),u =>
     Fail{S.Unsupported{"parse","line-break",S.here(ts)}},u =>
