@@ -40,7 +40,7 @@ pinned by closed ground laws in `src/image-LAWS.bend` (`!=` laws, proved by exhi
 
 | Class | Why | Closed laws |
 |---|---|---|
-| Fuel | `encode` gives layout the fuel erasure has, and layout needs more: erasure answers from fuel 1 on `flag_book` and layout from 3; from 13 and 19 on `mixed_book` | `flag_refuted_at_1`, `flag_refuted_at_2`, `mixed_refuted_at_13`, `mixed_refuted_at_18` (the ends of the windows 1 to 2 and 13 to 18) |
+| Fuel | `encode` gives layout the fuel erasure has, and layout needs more: erasure answers from fuel 1 on `flag_book` and layout from 3; from 13 and 19 on `mixed_book` | `flag_refuted_at_1`, `flag_refuted_at_2`, and `mixed_refuted_at_13` to `mixed_refuted_at_18` (one law for each fuel of the windows 1 to 2 and 13 to 18) |
 | Limits of SPEC section 4 | layout refuses an image past a limit at any fuel; erasure has no limit. An arity past 4,096 is the cheapest ground instance; the size limit (4,194,304 words) is observed by the gate on a checked book: `image-cli answers` prints `erase_tokens Done` and `recoded Exhausted` for the 4.8M-word synthetic book | `wide_refuted` (4,097 live parameters); the gate's heavy control |
 | Names | decode reads bytes 1 to 127 only: an empty name, a zero byte and a wide Char are refused by decode as `name length`, `name padding` and `Unsupported image-name`, while layout wrote them | `accent_refuted`, and the three refusals below |
 

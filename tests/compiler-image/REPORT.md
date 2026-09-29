@@ -136,17 +136,17 @@ constructor). Cost: 0.8 s and 96 MB peak on the native lane, 2.3 s wall under lo
   portable. The gate needs clang to build the shim.
 - **No live Perch call was made** (none was allowed). Offline preflight, `--manifest=docs/compiler-campaign/manifest.json` (what the
   `perch-context` gate holds): 22 groups, 0 structural blockers, 0 truncated declarations, every composition available
-  (`image-plan` 8,557, `image-laws` 26,252 of 48,000 bytes). `node scripts/perch-style.mjs --preflight` on the eight changed and
-  related Bend files as one target reports 326 declarations (290 before) and 72 truncated contexts (62 before: the ten new laws
-  and one driver function exceed the helper limit, as the older laws do), and no composition (127,841 of 48,000 bytes for the
-  eight files together). `lint:verify`, the offline half, ran in the full gates. Style and semantic review of the changed files
+  (`image-plan` 8,557, `image-laws` 27,081 of 48,000 bytes; the `perch-context` gate passes on the final tree).
+  `node scripts/perch-style.mjs --preflight` on the eight changed and related Bend files as one target reports 334 declarations
+  (290 before) and 77 truncated contexts (62 before: the thirteen new laws and one driver function exceed the helper limit, as the
+  older laws do), and no composition (128,481 of 48,000 bytes for the eight files together). `lint:verify`, the offline half, ran in the full gates. Style and semantic review of the changed files
   remain the coordinator's.
 - `npm ci` was not run: `node_modules` already held the pinned install.
 
 ## Verification of the branch
 
-`BEND_NO_TELEMETRY=1 npm run -s gates` on the committed tree `a231ff8d` (the last commit that changes code; the commit after it
-changes this report only): exit 0, 22 gates passed in 13 minutes 15 seconds wall (four workers, under the campaign's shared
+`BEND_NO_TELEMETRY=1 npm run -s gates` on the committed tree `a231ff8d` (the last commit that changes code; the commits after it
+change documentation only): exit 0, 22 gates passed in 13 minutes 15 seconds wall (four workers, under the campaign's shared
 load). Per-gate results:
 
 | Gate | Result |
