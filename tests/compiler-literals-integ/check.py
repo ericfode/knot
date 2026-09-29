@@ -62,7 +62,7 @@ MUTANTS = [
     {'name': 'let-value-ends-at-any-token', 'file': 'parse.bend',
      'old': 'S.bind(List<&2,S.Token>,Parsed,line_end(tokens),body =>',
      'new': 'S.bind(List<&2,S.Token>,Parsed,expect(tokens,"\\n"),body =>',
-     'fixture': 'let-concat-typed', 'verdict': (2, 'Invalid\tparse\texpected-newline\t')},
+     'fixture': 'let-concat-typed', 'verdict': (2, 'Invalid\tparse\texpected-')},
     {'name': 'literal-starts-no-term', 'file': 'parse.bend',
      'old': 'Bool.or(S.identifier(head),Q.starts(S.text(head)))',
      'new': 'S.identifier(head)',

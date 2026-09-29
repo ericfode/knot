@@ -125,7 +125,8 @@ def capitalized(+name: String) -> Bool:
 def spells(ctors: List<&2,C.Constructor>, +name: S.Token) -> Bool:
   match ctors:
     case Nil{}: False{}
-    case Con{C.Constructor{+token,fields},tail}: Bool.or(String.eq(S.text(token),S.text(name)),spells(tail,name))
+    case Con{C.Constructor{+token,fields},tail}:
+      Bool.or(Bool.or(String.eq(S.text(token),S.text(name)),suffixed(S.text(token),S.text(name))),spells(tail,name))
 
 # 3 a datatype of this name before the binder, 2 one spelled with its module, 1 a datatype or a
 # constructor of the name elsewhere in the book, 0 none.

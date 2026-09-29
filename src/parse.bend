@@ -205,16 +205,12 @@ def wrap_match(token: S.Token, value: S.Node, arms: S.Node,
     case S.Sequence{items}: Done{Parsed{S.Match{token,value,items},rest}}
     case _: Fail{S.Internal{"parse","expected-arms"}}
 
-# A line break has no printable spelling.
-def spelled(+word: String) -> String:
-  S.choose(String,String.eq(word,"\n"),u => "newline",u => word)
-
 def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Token>>:
   match ts:
     case Nil{}: Fail{S.Invalid{"parse","unexpected-end",S.here(ts)}}
     case Con{+h,+t}:
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
-        Fail{S.Invalid{"parse",String.append("expected-",spelled(word)),S.at(h)}})
+        Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
 
 # A line break before a let's `=` is whitespace to the seed, which the parser cannot tell apart.
 def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
@@ -266,8 +262,12 @@ def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
 
 # A let's value ends at its line; a `+` after it is an operator, which Knot does not check.
 def line_end(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
-  S.choose(Result<S.Error,List<&2,S.Token>>,starts(ts,"+"),u =>
-    Fail{S.Unsupported{"parse","operator",S.here(ts)}},u => expect(ts,"\n"))
+  match ts:
+    case Nil{}: Fail{S.Invalid{"parse","unexpected-end",S.here(ts)}}
+    case Con{+h,+t}:
+      S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,"\n"),u => Done{t},u =>
+        S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,"+"),u =>
+          Fail{S.Unsupported{"parse","operator",S.at(h)}},u => Fail{S.Invalid{"parse","expected-newline",S.at(h)}}))
 
 def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match value:

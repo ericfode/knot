@@ -1631,3 +1631,37 @@ Prevention:
   lambdas. The cap for a dispatcher is a decision, not a refactor.
 - Add a gate or a suite together with `npm run census` (its `accepted.json` pins the gate registry
   and each gate program): the first full run after the integration books failed only `census`.
+
+## 2026-09-29 — literals-integ review round 1: `run` fits the state cap by search, with a 59-byte margin
+
+`check.bend::run` was 64,553 bytes at the floor (64,171 plus this round's checker helpers) against the
+60,000-byte state cap, and fits at 59,941. Each step was measured on a scratch export of the manifest
+preflight (2 s), then confirmed on the real command (`node scripts/perch-style.mjs --preflight
+--manifest=docs/compiler-campaign/manifest.json`, exit 0, 36 groups, `tests/perch-context/check.py` passes):
+- A local `then` for `S.bind(C.Checked,C.Checked,`: minus 799 (33 uses), and 563 off the composition.
+- The rows of `run` in `Mode` order with the expression forms last: minus 2,362. The measure expands the
+  first 48 helpers `run` names; the wide forms now come after them. The rows are independent, so the order
+  changes no verdict.
+- The two `C.exhausted` uses spelled out, and the checking task the shorter paragraph of the same SPEC:
+  together they turn 60,782 into 59,941.
+- The promoted-binder rule as one walk per body (`functions`), not spread over four checker paths: minus 307.
+
+The measure is not monotone in size, which is why this took a search, not a design:
+- Spelling out `M.retoken` (two uses) moved `run` by plus 972. An `L.intrinsic` facade for the intrinsic row
+  moved it by plus 551. A mock of a defunctionalized matrix walk (the design the earlier round proposed) moved
+  it by minus 742 only, because its helpers stay reachable. Removing single Expression rows to the end
+  changed nothing once the forms were last.
+- A greedy search over block order found 61,390 with `then`; the fit needed the task and the inline too.
+
+Prevention:
+- The margin is 59 bytes and every later row of `run` (a modules merge adds some) or comment on it counts
+  against it. Re-run the real preflight after any edit of a file `run` reaches, and treat a failure as a
+  search, not a size problem; `attrib.mjs` lists the closure.
+- The anchor scan of the previous round (`anchors_all.py`) missed two inline mutation lists: the frontend
+  gate's tuples (its `expected-unsupported` anchor named `expect`, which a helper had rewritten) and the
+  modules gate's review mutants (`promoted-constructor-ignored` needs the mutated tree to accept its witness,
+  and a new rejection of a promoted binder spelled like a module's constructor made it Unsupported). The
+  first full run found both. Scan every gate script with the AST (dict literals with `file` and `old`, and
+  the frontend tuples), not only the `MUTANTS` lists.
+- A repair that adds a rejection can invalidate another suite's mutant: list the mutants whose witnesses the
+  new rule now answers before running the full gates.
