@@ -95,6 +95,11 @@ def summary(+run: A.Run) -> Summary:
 def ran(+words: List<&2,U32>) -> Summary:
   summary(A.run_words(words,100000n,1000000))
 
+# The same run, balanced after its last step alone: for the laws that read an outcome, since the gate audits
+# every transition of every golden and control natively.
+def quickly(+words: List<&2,U32>) -> Summary:
+  summary(A.run_words_final(words,100000n,1000000))
+
 def described(+result: U32, +tag: U32, tree: String) -> Summary:
   Summary{M.Described{result,tag,M.text(tree)},True{},0,Nil{}}
 
@@ -289,3 +294,145 @@ def stop_of(+s: Summary) -> Maybe<&2,W.Stop>:
 
 law chr_inspects_its_operand:
   {stop_of(ran(E.encode(laundered_chr()))) == Some{W.Refused{"image","ill-typed"}} : Maybe<&2,W.Stop>}
+
+# ---------------------------------------------------------------- requests (D23) and Cases over them (D24)
+
+# A Program's types: Unit, U32, Char, String, IO.OP, then the arrows of IO(Unit): 5 is Unit -> IO.OP,
+# 6 is (5) -> IO.OP and 7 is @R -> 6. Type 8 is a Flag, where a plan needs one.
+def io_types() -> List<&2,W.Sort>:
+  +o = W.none()
+  [W.Algebraic{M.text("Unit"),[W.Constructor{M.text("Unit"),[]}]},
+   W.Opaque{M.text("U32")},
+   W.Algebraic{M.text("Char"),[W.Constructor{M.text("Chr"),[1]}]},
+   W.Algebraic{M.text("String"),[W.Constructor{M.text("SNil"),[]},W.Constructor{M.text("SCon"),[2,3]}]},
+   W.Algebraic{M.text("IO.OP"),[W.Constructor{M.text("Emit"),[o]},W.Constructor{M.text("Halt"),[1,3]}]},
+   W.Arrow{0,4},W.Arrow{5,4},W.Erased{o,6},
+   W.Algebraic{M.text("Flag"),[W.Constructor{M.text("Off"),[]},W.Constructor{M.text("On"),[]}]}]
+
+def io_reps() -> List<&2,U32>:
+  +o = W.none()
+  [o,1,2,3,o,o,0,o,o,o,4,o]
+
+def print_fn() -> W.Function:
+  W.Function{M.text("IO.print"),[3],7,1,W.Foreign{7,1,[W.Reference{3,0}]}}
+
+# IO.print(text)(R), as far as its continuation: the Action applied to its erased R.
+def printing(+text: String) -> W.Node:
+  W.Invoke{6,W.Application{7,0,[W.Literal{3,W.Constant{3,M.text(text)}}]},[]}
+
+# main = @R. k => body, `slots` deep, the form a Program's main takes; k is slot 0 of the body.
+def program_of(+slots: U32, +body: W.Node) -> W.Plan:
+  W.Plan{1,io_types(),[print_fn(),W.Function{M.text("main"),[],7,0,W.Closure{7,0,0,[],W.Closure{6,1,slots,[],body}}}],io_reps()}
+
+# IO.print(text)(R)(k): applying the Action to k builds a request.
+def request_of(+text: String) -> W.Node:
+  W.Invoke{4,printing(text),[W.Reference{5,0}]}
+
+# main hands `got` the request IO.print("x")(R)(k): main, IO.print, R, the Action applied to k and `got`
+# are 5 entries, and a Book has no loop.
+def over_request(+got: W.Function) -> W.Plan:
+  W.Plan{0,io_types(),
+    [print_fn(),got,
+     W.Function{M.text("main"),[],8,0,W.Application{8,1,[W.Invoke{4,printing("x"),[W.Closure{5,1,1,[],W.Construct{4,0,[W.Value{8,1}]}}]}]}}],
+    io_reps()}
+
+# got(op) = Off from a Default beside an Emit row, and got(op) over both constructors and no Default.
+def got_defaulted() -> W.Function:
+  W.Function{M.text("got"),[4],8,2,W.Case{8,0,4,0,[Some{W.Branch{0,1,1,W.Value{8,1}}},None{}],Some{W.Default{W.Value{8,0}}}}}
+
+def got_complete() -> W.Function:
+  +o = W.none()
+  W.Function{M.text("got"),[4],8,3,W.Case{8,0,4,0,[Some{W.Branch{0,1,1,W.Reference{o,1}}},Some{W.Branch{1,1,2,W.Value{8,0}}}],None{}}}
+
+# A request that a let holds is built and dropped, never performed: only the one that main returns is.
+law dropped_request_writes_nothing:
+  {quickly(E.encode(program_of(2,W.Let{4,1,request_of("dead"),request_of("live")}))) == Summary{M.Emitted{},True{},0,[M.text("live")]} : Summary}
+
+# Top's loop performs each request that a run returns to it, in order, entering `k` after each: the
+# continuation of the first request is the closure that builds the second.
+law loop_performs_each_returned_request:
+  {quickly(E.encode(program_of(1,W.Invoke{4,printing("first"),[W.Closure{5,1,2,[0],request_of("second")}]}))) == Summary{M.Emitted{},True{},0,[M.text("first"),M.text("second")]} : Summary}
+
+# A request matches no row: a Case with a Default takes it unread (D24), and one that names every
+# constructor has none to take and refuses it, `Unsupported vm effect`. Neither performs (a Book has no loop).
+law case_takes_default_over_request:
+  {quickly(E.encode(over_request(got_defaulted()))) == described(8,0,"Off{}") : Summary}
+
+law case_without_default_refuses_request:
+  {stop_of(quickly(E.encode(over_request(got_complete())))) == Some{W.Unsupported{"vm","effect"}} : Maybe<&2,W.Stop>}
+
+# main = id(IO.print("x")(R)(k)) with id(x: none) -> none: the Book's answer is a request, and describing
+# it reads it first (SPEC §6, §8), so a request is refused wherever it is read, not only by a Case.
+def rendered_request() -> W.Plan:
+  +o = W.none()
+  W.Plan{0,io_types(),
+    [print_fn(),
+     W.Function{M.text("id"),[o],o,1,W.Reference{o,0}},
+     W.Function{M.text("main"),[],8,0,W.Application{8,1,[W.Invoke{4,printing("x"),[W.Closure{5,1,1,[],W.Construct{4,0,[W.Value{8,1}]}}]}]}}],
+    io_reps()}
+
+law request_is_never_rendered:
+  {stop_of(quickly(E.encode(rendered_request()))) == Some{W.Unsupported{"vm","effect"}} : Maybe<&2,W.Stop>}
+
+# ---------------------------------------------------------------- atomic stops
+
+def nat_succ_range() -> List<&2,U32>:
+  [1196247371,1,174,0,2,32,43,65,87,96,143,0,1,4294967295,4294967295,4294967295,0,4294967295,
+   4294967295,4294967295,4294967295,4294967295,4294967295,4294967295,967372322,1597628945,
+   3931068771,212603004,2186566430,3374278737,2120669052,453228302,2,5,0,0,0,2,5,0,1,2,2,4,5,0,0,2,
+   0,5,0,1,3,0,5,1,0,4,0,6,1,1,5,1,1,3,8,6,0,2,2,105,1,1,7,7,1,1,1,116,1,6,8,0,0,0,136,2,4,1,1,
+   4294967295,4,1,1,0,9,4,5,1,0,4,5,1,1,7,1,0,30,2,97,101,4,5,1,0,6,4,1,1,1,112,4,0,1,0,6,6,1,1,1,
+   122,4,0,1,1,7,6,0,0,2,126,132,9,3,4,1819242306,3,3,7627086,4,5,1936482630,101,3,4,1702195796,3,4,
+   1869768026,3,4,1667462483,5,9,779379022,1734308713,116,3,4,1667462515,3,4,1852399981]
+
+# The coordinator's ruling on SPEC §6: no refusal, halt or exhaustion changes machine state, so a
+# stopped machine holds the frames, `act`, `top`, heap and output of the state that could not advance.
+# The only exception is the debit that SPEC §7 prescribes for an Enter that was checked and paid for.
+law stop_changes_no_state:
+  for control: M.Control
+  for stack: H.Stack
+  for heap: H.Heap
+  for meter: M.Meter
+  for out: List<&2,List<&2,U32>>
+  for stop: W.Stop
+  {M.settled(Fail{stop},M.Machine{control,stack,heap,meter,out}) == M.Machine{M.Finished{M.Stopped{stop,control}},stack,heap,meter,out} : M.Machine}
+
+law paid_stop_keeps_the_debit:
+  for control: M.Control
+  for stack: H.Stack
+  for heap: H.Heap
+  for meter: M.Meter
+  for out: List<&2,List<&2,U32>>
+  for stop: W.Stop
+  {M.paid(Fail{stop},M.Machine{control,stack,heap,meter,out}) == Done{M.Machine{M.Finished{M.Stopped{stop,control}},stack,heap,meter,out}} : Result<W.Stop,M.Machine>}
+
+# The limits: a frame that does not fit the region is Exhausted kind 3 before anything is written, and a
+# cell that would end beyond the declared memory is Exhausted kind 2 (SPEC §5, §6).
+law frame_past_region:
+  for act: U32
+  for frames: List<&2,H.Frame>
+  {H.pushed(H.Stack{act,frames,4194304},H.Scope{0}) == Fail{W.Exhausted{3,"frames"}} : Result<W.Stop,H.Stack>}
+
+law cell_past_memory:
+  for memory: W.Store
+  {H.allocate(H.Heap{memory,1073741824,H.zeros(29n)},1,0,[1]) == Fail{W.Exhausted{2,"heap"}} : Result<W.Stop,H.Cell>}
+
+# What a stopped run still holds (SPEC §6's kinds, newest first). Succ{4294967295} completes at the Gather
+# of `succ`'s body, under the Call of `succ` and the Gather of Nat.is_gt's operands, which Top holds.
+type Stopped is Data:
+  Stopped{stop: Maybe<&2,W.Stop>, held: A.Held}
+
+def stopped(+words: List<&2,U32>) -> Stopped:
+  +run = A.run_words_final(words,100000n,1000000)
+  Stopped{stop_of(summary(run)),A.held_of(run)}
+
+law nat_range_keeps_its_gather:
+  {stopped(nat_succ_range()) == Stopped{Some{W.Exhausted{2,"NatRange"}},A.Held{[1,4,1,0],True{},16}} : Stopped}
+
+# Return to Top refuses a Halt whose message holds a lone surrogate, or a request that holds a lone
+# surrogate to print, before it drops `act`: the closure of `k` is still current, under Top alone.
+law refused_halt_keeps_its_activation:
+  {stopped(E.encode(program_of(1,W.Construct{4,1,[W.Literal{1,W.Constant{0,[1]}},W.Literal{3,W.Constant{3,[55296]}}]}))) == Stopped{Some{W.Refused{"io","abi"}},A.Held{[0],True{},3}} : Stopped}
+
+law refused_print_keeps_its_activation:
+  {stopped(E.encode(program_of(1,W.Invoke{4,W.Invoke{6,W.Application{7,0,[W.Literal{3,W.Constant{3,[55296]}}]},[]},[W.Reference{5,0}]}))) == Stopped{Some{W.Refused{"io","abi"}},A.Held{[0],True{},3}} : Stopped}

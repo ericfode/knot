@@ -33,3 +33,15 @@ def L.arms_fit_their_case(): {==}
 def L.text_size_counts_bytes(): {==}
 def L.nat_spells_its_names(): {==}
 def L.chr_inspects_its_operand(): {==}
+def L.dropped_request_writes_nothing(): {==}
+def L.loop_performs_each_returned_request(): {==}
+def L.case_takes_default_over_request(): {==}
+def L.case_without_default_refuses_request(): {==}
+def L.request_is_never_rendered(): {==}
+def L.stop_changes_no_state(control,stack,heap,meter,out,stop): {==}
+def L.paid_stop_keeps_the_debit(control,stack,heap,meter,out,stop): {==}
+def L.frame_past_region(act,frames): {==}
+def L.cell_past_memory(memory): {==}
+def L.nat_range_keeps_its_gather(): {==}
+def L.refused_halt_keeps_its_activation(): {==}
+def L.refused_print_keeps_its_activation(): {==}

@@ -127,17 +127,72 @@ def balanced(+code: H.Code, +m: M.Machine) -> Bool:
 def leaked(+code: H.Code, +m: M.Machine) -> U32:
   W.count(U32,mortal_cells(live_cells(heap_of(m),base_of(code)),heap_of(m)))
 
+# SPEC §6, the atomic-stops ruling: a step that stops the machine changes no state. The stopped
+# machine keeps the frames, `act`, `top`, allocation state and output of the machine that stopped;
+# only an Enter's debit stands (SPEC §7).
+def same_frame(a: H.Frame, b: H.Frame) -> Bool:
+  match a b:
+    case H.Top{p} H.Top{q}: U32.is_eq(p,q)
+    case H.Gather{n,d,g} H.Gather{m,e,h}: Bool.and(Bool.and(U32.is_eq(n,m),U32.is_eq(d,e)),W.same(g,h))
+    case H.Bind{n} H.Bind{m}: U32.is_eq(n,m)
+    case H.Scope{d} H.Scope{e}: U32.is_eq(d,e)
+    case H.Call{c} H.Call{e}: U32.is_eq(c,e)
+    case H.InvokeFunction{n} H.InvokeFunction{m}: U32.is_eq(n,m)
+    case H.InvokeArgument{n,f} H.InvokeArgument{m,g}: Bool.and(U32.is_eq(n,m),U32.is_eq(f,g))
+    case _ _: False{}
+
+def same_frames(a: List<&2,H.Frame>, b: List<&2,H.Frame>) -> Bool:
+  match a b:
+    case Nil{} Nil{}: True{}
+    case Con{x,xs} Con{y,ys}: Bool.and(same_frame(x,y),same_frames(xs,ys))
+    case _ _: False{}
+
+def same_stack(a: H.Stack, b: H.Stack) -> Bool:
+  match a b:
+    case H.Stack{p,f,t} H.Stack{q,g,u}: Bool.and(Bool.and(U32.is_eq(p,q),U32.is_eq(t,u)),same_frames(f,g))
+
+def same_heap(a: H.Heap, b: H.Heap) -> Bool:
+  match a b:
+    case H.Heap{m,p,f} H.Heap{n,q,g}: Bool.and(U32.is_eq(p,q),W.same(f,g))
+
+def same_meter(a: M.Meter, b: M.Meter) -> Bool:
+  match a b:
+    case M.Meter{f,c,q} M.Meter{g,d,r}: Bool.and(Bool.and(U32.is_eq(f,g),U32.is_eq(c,d)),U32.is_eq(q,r))
+
+def is_enter(control: M.Control) -> Bool:
+  match control:
+    case M.Enter{target,ops}: True{}
+    case _: False{}
+
+# `after` is `before` advanced one step: a stop changed nothing but an Enter's meter.
+def atomic(before: M.Machine, after: M.Machine) -> Bool:
+  match before after:
+    case M.Machine{control,stack,heap,+meter,out} M.Machine{M.Finished{M.Stopped{stop,pending}},stack2,heap2,+meter2,out2}:
+      Bool.and(Bool.and(same_stack(stack,stack2),same_heap(heap,heap2)),
+        Bool.and(W.or(same_meter(meter,meter2),Bool.and(is_enter(control),same_meter(M.charged(meter),meter2))),
+          U32.is_eq(W.count(List<&2,U32>,out),W.count(List<&2,U32>,out2))))
+    case _ _: True{}
+
 type Audit is Data:
   Audit{machine: M.Machine, steps: U32, balanced: Bool}
 
-# Runs like `run`, auditing before every transition and after the last.
-def audited(fuel: Nat, +code: H.Code, +m: M.Machine, +steps: U32) -> Audit:
+# A step that stopped the machine was atomic against `prior`, and the state balances: after every
+# step when `each`, else after the last alone.
+def audit_from(fuel: Nat, +code: H.Code, +m: M.Machine, +steps: U32, +prior: M.Machine, +each: Bool) -> Audit:
   match fuel:
     case 0n: Audit{M.halted(m,W.Bound{"transitions"}),steps,balanced(code,m)}
     case 1n+f:
-      W.choose(Audit,Bool.not(balanced(code,m)),u => Audit{m,steps,False{}},u =>
+      +sound = Bool.and(W.choose(Bool,W.or(each,M.is_finished(m)),u => balanced(code,m),u => True{}),atomic(prior,m))
+      W.choose(Audit,Bool.not(sound),u => Audit{m,steps,False{}},u =>
       W.choose(Audit,M.is_finished(m),u => Audit{m,steps,True{}},u =>
-        audited(f,code,M.settled(M.step(code,m),m),U32.add(steps,1))))
+        audit_from(f,code,M.settled(M.step(code,m),m),U32.add(steps,1),m,each)))
+
+def audit_run(fuel: Nat, +code: H.Code, +m: M.Machine, +steps: U32, +each: Bool) -> Audit:
+  audit_from(fuel,code,m,steps,m,each)
+
+# Runs like `run`, auditing before every transition and after the last.
+def audited(fuel: Nat, +code: H.Code, +m: M.Machine, +steps: U32) -> Audit:
+  audit_run(fuel,code,m,steps,True{})
 
 # ---------------------------------------------------------------- law predicates
 
@@ -162,27 +217,31 @@ def run_concluded(+code: H.Code, +t: U32, a: Audit) -> Run:
   match a:
     case Audit{m,steps,ok}: concluded_run(code,M.concluded(code,t,m),ok)
 
-def started_run(+code: H.Code, +t: U32, +steps: Nat, result: Result<W.Stop,M.Machine>) -> Run:
+def started_run(+code: H.Code, +t: U32, +steps: Nat, result: Result<W.Stop,M.Machine>, +each: Bool) -> Run:
   match result:
     case Fail{stop}: Refusal{stop}
-    case Done{m}: run_concluded(code,t,audited(steps,code,m,0))
+    case Done{m}: run_concluded(code,t,audit_run(steps,code,m,0,each))
 
-def ran(+plan: W.Plan, +steps: Nat, +fuel: U32, booted: Result<W.Stop,M.Booted>) -> Run:
+def ran(+plan: W.Plan, +steps: Nat, +fuel: U32, booted: Result<W.Stop,M.Booted>, +each: Bool) -> Run:
   match booted:
     case Fail{stop}: Refusal{stop}
     case Done{+b}:
       +code = M.code_of(b)
       W.choose(Run,U32.is_eq(plan_entry(plan),1),
-        u => run_concluded(code,W.none(),audited(steps,code,M.program(plan,b,fuel),0)),
-        u => started_run(code,M.result_type(plan,D.main_bytes()),steps,M.book(plan,b,D.main_bytes(),fuel,Nil{})))
+        u => run_concluded(code,W.none(),audit_run(steps,code,M.program(plan,b,fuel),0,each)),
+        u => started_run(code,M.result_type(plan,D.main_bytes()),steps,M.book(plan,b,D.main_bytes(),fuel,Nil{}),each))
 
-def admitted_run(result: Result<W.Stop,W.Plan>, +words: List<&2,U32>, +steps: Nat, +fuel: U32) -> Run:
+def admitted_run(result: Result<W.Stop,W.Plan>, +words: List<&2,U32>, +steps: Nat, +fuel: U32, +each: Bool) -> Run:
   match result:
     case Fail{stop}: Refusal{stop}
-    case Done{+plan}: ran(plan,steps,fuel,M.boot(words))
+    case Done{+plan}: ran(plan,steps,fuel,M.boot(words),each)
 
 def run_words(+words: List<&2,U32>, +steps: Nat, +fuel: U32) -> Run:
-  admitted_run(E.admit(words),words,steps,fuel)
+  admitted_run(E.admit(words),words,steps,fuel,True{})
+
+# The same run, balanced after its last step alone: cheaper, for the laws that read an outcome.
+def run_words_final(+words: List<&2,U32>, +steps: Nat, +fuel: U32) -> Run:
+  admitted_run(E.admit(words),words,steps,fuel,False{})
 
 def internal(outcome: M.Outcome) -> Bool:
   match outcome:
@@ -226,6 +285,35 @@ def outcome_of(run: Run) -> M.Outcome:
   match run:
     case Refusal{stop}: M.Stopped{stop,M.Eval{0}}
     case Ran{code,m,balanced}: finished_outcome(m)
+
+# What a run's final machine still holds: its frames by SPEC §6's kind numbers, newest first,
+# whether an Activation is current, and the words the frames occupy.
+type Held is Data:
+  Held{frames: List<&2,U32>, act: Bool, top: U32}
+
+def frame_kind(frame: H.Frame) -> U32:
+  match frame:
+    case H.Top{p}: 0
+    case H.Gather{n,d,g}: 1
+    case H.Bind{n}: 2
+    case H.Scope{d}: 3
+    case H.Call{c}: 4
+    case H.InvokeFunction{n}: 5
+    case H.InvokeArgument{n,f}: 6
+
+def frame_kinds(frames: List<&2,H.Frame>) -> List<&2,U32>:
+  match frames:
+    case Nil{}: Nil{}
+    case Con{frame,rest}: Con{frame_kind(frame),frame_kinds(rest)}
+
+def held_by(m: M.Machine) -> Held:
+  match m:
+    case M.Machine{control,H.Stack{act,frames,top},heap,meter,out}: Held{frame_kinds(frames),Bool.not(U32.is_eq(act,0)),top}
+
+def held_of(run: Run) -> Held:
+  match run:
+    case Refusal{stop}: Held{Nil{},False{},0}
+    case Ran{code,m,balanced}: held_by(m)
 
 # Single-word mutations of an image: at each position, zero and the successor
 # and predecessor of the word there (so none where the word is zero).
