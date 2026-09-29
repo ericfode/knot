@@ -176,6 +176,7 @@ FORMS = {
     'index': ('a[0n]', 'a defined name'),
     'bang': ('h!(a)', None),
     'plus0': ('+x0', 'a bound variable'),
+    'lam': ('a => a', 'expected : Flag'),
 }
 MORE = {
     'and': ('On{} && Off{}', 'a defined name'), 'bar': ('a | a', 'a defined name'),
@@ -272,6 +273,27 @@ CLOSED = {
 }
 for label, (body, reason, code) in CLOSED.items():
     group(f'suffix-closed-{label}', invalid(code), reason, (f'suffix-ctl-{label}', term('dead', body)))
+# A line that starts with an operator, `!(` or `=>` continues the term before it, wherever the line stands:
+# at the margin, left of the arms, at a let's column or below it. A `(` or `[` at a line's start does not.
+CONTINUES = {
+    'cont-margin': 'case Off{} Off{}: x0\n|| a\n',
+    'cont-left': 'case Off{} Off{}: x0\n  || a\n',
+    'cont-let-margin': 'case Off{} Off{}:\n      u : Flag = x0\n|| a\n      On{}\n',
+    'cont-let-deeper': 'case Off{} Off{}:\n      u : Flag = x0\n          || a\n      On{}\n',
+    'cont-bang-margin': 'case Off{} Off{}: x0\n!(a)\n',
+    'cont-lambda-let': 'case Off{} Off{}:\n      u : Flag = a\n            => a\n      On{}\n',
+}
+
+
+def continues(rows):
+    return (TERM_PRE + f'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n    case _ _: On{{}}\n    {rows}'
+            + '\ndef main() -> Flag:\n  f(On{}, On{})\n')
+
+
+group('suffix-continues', unsupported('term-form'), None, *[(f'suffix-{name}', continues(rows)) for name, rows in CONTINUES.items()])
+group('suffix-continues-arrow', unsupported('line-break'), None, ('suffix-cont-arrow-margin', continues('case Off{} Off{}: x0\n=> a\n')))
+group('suffix-continues-index', invalid('declaration-name'), "expected : 'def', 'type' or 'law'",
+      ('suffix-ctl-index-margin', continues('case Off{} Off{}: x0\n[0n]\n')))
 group('suffix-plain', ACCEPTED, None, ('suffix-ctl-plain', term('dead', 'On{}')), ('suffix-ctl-variable', term('dead', 'a')),
       ('suffix-ctl-call', term('dead', 'h(a)')))
 
