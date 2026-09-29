@@ -3,7 +3,8 @@
 
     python3 scripts/prechecks/controls.py [--specs tests/prechecks/perch-controls/specs.json]
 
-Each spec names a rule, a split (broken, clean, held-out), an increment and the commits to build from. The packet
+Each spec names a rule, a split (dev `broken` or `clean`, or `held-out` with its expected label), an increment and the
+commits to build from. The packet
 is chosen by the unmodified builders, by text anchors that must all occur in a built packet (the first match, with
 the per-rule cap lifted to 500: a control tests the rule, and the cap only limits which claims a live run asks); a spec that
 does not find its packet is reported and skipped, never faked. A spec may instead give `excerpt`: verbatim line
@@ -11,7 +12,8 @@ ranges of files at the head commit, for a defect passage that the builders' sele
 says so). Held-out specs come from the design's control table, not from any finding's evidence.
 
 Nothing here calls Perch. `cases.json` records the expected label of every packet, which the coordinator's live
-run compares with the probabilities it gets. A stub probability is never calibration.
+run compares with the probabilities it gets (each rule's floor is its `min` in .perch/rules/prechecks.yaml). A stub
+probability is never calibration.
 """
 from __future__ import annotations
 
@@ -111,7 +113,7 @@ def main(argv=None) -> int:
             cases.append({'id': spec['id'], 'rule': spec['rule'], 'split': spec['split'], 'expected': spec['expected'],
                           'packet': path.as_posix(), 'sha256': hashlib.sha256(text.encode()).hexdigest(),
                           'increment': spec['increment'], 'head': head, 'base': base, 'how': how, 'note': spec.get('note', '')})
-    document = {'schema': 1, 'note': specs.get('note', ''), 'min': 80, 'cases': cases, 'gaps': specs.get('gaps', []), 'skipped': skipped}
+    document = {'schema': 1, 'note': specs.get('note', ''), 'cases': cases, 'gaps': specs.get('gaps', []), 'skipped': skipped}
     (out / 'cases.json').write_text(json.dumps(document, indent=1, sort_keys=True) + '\n', encoding='utf-8')
     print(f'{len(cases)} controls built, {len(skipped)} skipped')
     return 1 if skipped else 0
