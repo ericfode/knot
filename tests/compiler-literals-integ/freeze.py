@@ -90,6 +90,9 @@ PLAN = {
     'erased-dotted-rebind': ('erased dotted let', 'a live let of the name of an erased let before it: plain, '
                              'typed, twice erased, three-part, in an arm',
                              ['plain', 'typed', 'twice', 'deep', 'arm'], oracle.AGREE),
+    'erased-dotted-rebind-shapes': ('erased dotted let', 'a live let of an erased let\'s name, on an affine parameter: '
+                                    'plain, typed after a plain erased let, in an arm, past a second erased let',
+                                    ['plain', 'typed', 'arm', 'between'], oracle.AGREE),
     'erased-then-other-dotted': ('erased dotted let', 'a live let of another dotted name after an erased one',
                                  [], BINDING),
     'erased-in-other-arm': ('erased dotted let', 'a live let of the name an erased let binds in the other arm',

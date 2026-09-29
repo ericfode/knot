@@ -3,11 +3,13 @@
 Increment `literals-integ` merges `campaign/nest` into the literals line (`campaign/literals-layout`).
 Neither parent suite pins the behaviors below, which the merge decides, and review round 1 found more of
 them. Each book is frozen from the pinned seed (D7) before any Knot lane is compared with it: the six books
-of the merge, then 47 for the round-1 repairs, each in a commit of its own before the repair.
+of the merge, then 47 for the round-1 repairs, each in a commit of its own before the repair, and
+`erased-dotted-rebind-shapes`, added after the repair: the four programs of the review's first finding
+(`v1`, `v2`, `w3`, `w7`) in the shapes it gave them.
 
 | Book | Seed | Knot |
 | --- | --- | --- |
-| `erased-dotted-let`, `erased-dotted-rebind` | accept an erased dotted let, and a live let of its name below (plain, typed, twice erased, three-part, in an arm) | agree: Checked, evaluator and Wasm return the seed's tag on every call |
+| `erased-dotted-let`, `erased-dotted-rebind`, `erased-dotted-rebind-shapes` | accept an erased dotted let, and a live let of its name below (plain, typed, twice erased, three-part, in an arm, past a second erased let) | agree: Checked, evaluator and Wasm return the seed's tag on every call |
 | `erased-then-other-dotted`, `erased-in-other-arm` | reject a live dotted let that no name in scope binds | `Invalid parse binding-name` |
 | `arm-body-case`, `arm-body-def` | reject: an orphaned `case`, and a `def` that heads no term | `Invalid parse body-indentation` |
 | `spaced-plus-concat`, `let-concat-typed`, `let-concat-untyped`, `let-concat-glued` | accept `a ++ b` after an argument and on the right of a let (typed, untyped, glued) | `Unsupported parse operator` |
