@@ -110,6 +110,13 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   at 4 GiB and a control 16 bytes above, took their fill counts from the
   derivation alone. A cell may end exactly at 4 GiB, where the pre-fix VM
   trapped.
+- Three growth rows on one Book whose every entry allocates a 16-byte Activation,
+  each stop derived from SPEC sections 5 and 7 in closed form: a heap lowered to
+  256 MiB (`Exhausted` kind 2 in at most 24 `memory.grow` calls of the test
+  build), the full 4 GiB through the real host within its 120 s guard, and a
+  host that refuses growth beyond 4,700 pages (`HostFailure`, never
+  `Exhausted`, at the cap). Growing memory one page at a time fails the first by
+  its count and the second by its wall time (22 minutes on V8).
 - A 200,000-deep nested expression runs on a 64 KiB host stack.
 - The 71 refusal controls, a seeded fuzz corpus of 3,720 mutated goldens and
   7,741 goldens that each set one limit word (a record count, an arity or a
@@ -130,7 +137,7 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Fifty WAT mutants are each killed by a wrong observation. One restores the
+- Fifty-two WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right. Four read less than an inspection extent (`append`'s
   `b`, `is_empty` past its head, `eq` past a difference or an end, the moved
@@ -139,7 +146,11 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   wrong order, absent, reported as a malformed image, exclusive, given another
   limit's cause, or fitted to the wrong number of words. Each survives every
   golden and run control and dies by a limit control, except the two fits,
-  which only the limit-word images kill.
+  which only the limit-word images kill. Two change the growth policy
+  (CORE.md choice 15) and keep every outcome: memory grown one page at a time,
+  killed by the test build's `memory.grow` count (a timeout never kills, SPEC
+  section 11), and a refused step that traps, killed by the run whose host caps
+  memory.
 
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.

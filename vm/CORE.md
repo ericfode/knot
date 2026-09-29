@@ -23,8 +23,9 @@ BEND_NO_TELEMETRY=1 python3 vm/check-core.py
   not edit `src/`, so the pin lives in `vm/build.json`. The coordinator can
   mirror it into the contract.
 - **The test build** strips the `;;TEST ` prefix from its lines. That adds the
-  exports `vm_limits`, `vm_boot`, `vm_step` and `vm_dump`, plus a stop after
-  every transition when stepping. The production module exports only `memory`,
+  exports `vm_limits`, `vm_boot`, `vm_step` and `vm_dump`, a stop after
+  every transition when stepping, and a count of `memory.grow` calls that
+  `vm_dump` reports (`grows`). The production module exports only `memory`,
   `knot_alloc` and `knot_main`. It imports seven `knot_io` functions and
   declares a memory maximum of 65,536 pages.
 - [harness.mjs](harness.mjs) is an in-memory `knot_io` host for batches and
@@ -76,6 +77,8 @@ did not refuse the image.
 
 ## Memory beyond SPEC §5's map
 
+- **Growth.** Linear memory grows in 16 MiB steps (choice 15). The arguments,
+  at `0x2010000`, already take it to 48 MiB.
 - **Arguments** arrive at `0x2010000`, above every possible frame region.
 - **The image** is read in 1 MiB `read_bytes` chunks. `knot_alloc` points each
   chunk directly at its place after byte 4096. A 17th MiB means
@@ -238,7 +241,9 @@ adopt them or record its own, so that lockstep compares like with like.
     `print` or `Halt` message whose 4-byte bound crosses 4 GiB traps before the
     scan, even when its UTF-8 would fit and even if it holds a non-scalar Char.
     Since choice 10 this includes every nonempty String at a bump pointer of
-    exactly 2^32; an empty one needs no memory. §10 orders neither the
+    exactly 2^32; an empty one needs no memory. Since choice 15 the grow first
+    steps memory to 4 GiB (untouched pages) and traps at the exact grow that
+    follows. §10 orders neither the
     growth nor the scan, and the growth is not bounded by the heap limit. §11
     fails a trap where the outcome is a budget, so vm-io, which owns the effect
     path, must turn this into `Exhausted` kind 2 (heap), as describe does
@@ -281,6 +286,33 @@ adopt them or record its own, so that lockstep compares like with like.
     Decode has all of them for every function before validation starts. The
     gate names each verdict in the reference's words (`Exhausted 2 arity`), so a
     limit reported as malformed differs from it.
+15. **Memory grows in 16 MiB steps (review round 1).** `$grow`, the one site
+    behind `$alloc`, `$append`, `$take`, describe's text, `$utf8out` and
+    `knot_alloc`, covers `end` by growing memory to the next 16 MiB boundary at
+    or above it, at most to 4 GiB. A host that refuses that step is asked for
+    exactly the pages `end` needs; only a refusal of that traps
+    (`HostFailure io trap`), as §5 requires of a host that refuses growth below
+    the maximum. §5 leaves the timing of `memory.grow` free ("need not
+    agree"), so only time and the test build's count of grows depend on it:
+    values, classification, `calls` and the bump pointer are as before, and the
+    pages beyond the bump are untouched, so a step commits nothing more.
+
+    V8 pays each `memory.grow` in the size of the memory. The VM used to grow by
+    exactly the pages a cell needed, one grow per 4,096 16-byte cells, and a
+    stream of small cells slowed down superlinearly. Review round 1 measured a
+    tail loop whose every entry allocates one 16-byte Activation
+    (`core/loop-cells`): 1.4, 4.9 and 21.8 s at 16M, 32M and 64M entries, against
+    0.4, 0.7 and 1.4 s now, and 22 min 45 s to reach §5's `Exhausted` kind 2
+    (heap) at the D19 ceiling, against 5.9 s (4.3 GB resident) now. §11 counts a
+    timeout as neither Exhausted nor agreement, so a heap of small cells that
+    stopped only after such a time was unreachable in practice, and a large live
+    set (vm-rc) would pay it too. No earlier row saw it: the ceiling rows reach
+    4 GiB through `dbl`'s append blocks, one grow each.
+
+    Near a host's refusal every further page costs two calls, the refused step
+    and the exact grow, for fewer than 256 pages (`loop-refused` counts 202);
+    where the host grants the step there is one call per 16 MiB (254 up to 4 GiB
+    on the real host, 16 to a 256 MiB heap).
 
 ## Findings for the spec owner
 
@@ -476,6 +508,23 @@ adopt them or record its own, so that lockstep compares like with like.
   each row's outcome, on either side of 4 GiB and at
   it, follows from §5 and choice 12, not from a VM. Each row's `basis` records
   the arithmetic.
+- **Growth (choice 15).** Three rows on `core/loop-cells` (`loop() = call loop`,
+  `main() = call loop`, review round 1's probe byte for byte), each stop derived
+  from §5 and §7 in closed form (`loop_stop`, which agrees with the
+  entry-by-entry `ceiling_run` at a 1 MiB heap) and frozen before the policy
+  changed:
+  - `loop-256mib`, a heap lowered to 256 MiB: `Exhausted` kind 2 (heap) after
+    16,777,217 calls (main's entry and each of `loop`'s, debited before its
+    16-byte Activation) with bump 285,278,208, in at most 24 `memory.grow` calls
+    of the test build. The VM of `dcc7c09` made 3,840;
+  - `loop-4gib`, the full heap through the real host: `Exhausted io memory`
+    after 267,382,785 calls with bump 2^32, the last Activation ending exactly at
+    4 GiB, within the 120 s guard. The VM of `dcc7c09` overran the guard;
+  - `loop-refused`, a host that refuses growth beyond 4,700 pages
+    (`node --wasm-max-mem-pages=4700`, 293.75 MiB, not a multiple of 16 MiB):
+    §5's HostFailure, `HostFailure io trap` on the real host, at bump
+    308,019,200 after 18,198,529 calls, the cap. A VM whose refused step traps
+    stops 5.75 MiB lower.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
@@ -488,7 +537,7 @@ adopt them or record its own, so that lockstep compares like with like.
   reference codec: 1,674 counts that the remaining words cannot hold (it read
   `record-length`), 468 `limits` and 48 Closure `closure-slots`
   (.local/vm-core/logs/r6-limit-words-prefix.log).
-- **Mutants.** Fifty, each killed by a wrong observation in a named group
+- **Mutants.** Fifty-two, each killed by a wrong observation in a named group
   (one by a trap, below):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
@@ -537,4 +586,11 @@ adopt them or record its own, so that lockstep compares like with like.
     (group `image-limits`: the nine refusals, the three oversize images and
     `arity-at-limit`, with the outcome registers). The two fit mutants survive
     every frozen control, whose counts sit far from the fit, and die only by
-    the limit-word images (group `limit-words`).
+    the limit-word images (group `limit-words`);
+  - the growth policy (two, choice 15). Memory grown to exactly the 64 KiB pages a
+    cell needs (the VM of `dcc7c09`) gives every outcome, call count and bump
+    pointer, so a timeout cannot kill it (§11); group `growth` kills it by the test
+    build's `memory.grow` count in `loop-256mib`. A refused 16 MiB step that traps
+    instead of falling back to the size needed is killed by `loop-refused`, at bump
+    301,989,888 instead of the cap (group `refused`, judged on the registers of a
+    run whose frozen outcome is itself a trap).
