@@ -2576,8 +2576,12 @@ def atomic_controls(plans: dict, known: dict) -> list:
     - Return to Top (main, the erased R and k's closure are 3 entries, the identity a 4th): a Halt whose code, or whose message, is
       ill-typed, and an IO.OP that is a closure, are `ill-typed`; a Halt whose message holds a surrogate is `io abi`.
     - The loop (4 entries build the request: main, IO.print, the erased R and the Action applied to k; 5 with an identity): a String
-      with a surrogate is `io abi`, and one whose tail is ill-typed is `ill-typed`, each before any host call. A Case that refuses a
-      request (7 entries) pays nothing, and neither does a display that exceeds its bounds (1).
+      with a surrogate is `io abi`, so is one with a scalar `a` before it (nothing of the prefix is written), and one whose tail is
+      ill-typed is `ill-typed`, each before any host call. A Case that refuses a request (7 entries) pays nothing, and neither does
+      a Book's render of one (5: main, IO.print, the erased R, the Action applied to k, the identity) or a display that exceeds its bounds (1).
+    - Fuel (`recursion-map`'s six entries, `foreign-print`'s five): a Book that meets fuel 0 at its sixth entry has written and called
+      nothing; the Action's second application at fuel 3 builds no request and writes nothing; and the loop's k, entered after the
+      request that entries 1 to 4 built was performed (`vm\n`, 1 effect), meets fuel 0 at fuel 4.
     - After an effect: `x` is written by the request that entries 1 to 6 build (`a` by 3 entries and the first request of
       `print-non-scalar-second`, whose second String is refused after 13), and its host call is made once. The refused step that
       follows leaves both alone: an ill-typed k (entry 7, `inspect-continuation-target`), an IO.OP that is a closure that k answers
@@ -2637,11 +2641,16 @@ def atomic_controls(plans: dict, known: dict) -> list:
         twin('io-op-closure', 'inspect-io-op-closure', 4, **ILL_TYPED, **quiet),
         twin('halt-non-scalar', 'halt-surrogate', 3, **io_abi, **quiet),
         golden('print-non-scalar', 'print-non-scalar', 4, **io_abi, **quiet),
+        golden('print-non-scalar-mid', 'print-non-scalar-mid', 4, **io_abi, **quiet),
         twin('print-ill-typed', 'inspect-print-after-surrogate', 5, **ILL_TYPED, **quiet),
         twin('case-request', 'program-case-request', 7, outcome='Unsupported', cause='vm effect', **quiet),
+        twin('request-rendered', 'book-request-rendered', 5, outcome='Unsupported', cause='vm effect', **quiet),
         twin('display-visits', 'display-visits-beyond-bound', 1, outcome='Exhausted', kind=2, cause='display', **quiet),
+        twin('fuel-book', 'fuel-book-short', 5, outcome='Exhausted', kind=1, cause='fuel', **quiet),
+        twin('fuel-action', 'fuel-action-short', 3, outcome='Exhausted', kind=1, cause='fuel', **quiet),
         golden('print-then-non-scalar', 'print-non-scalar-second', 13, **io_abi, stdout='a\n', effects=1),
         twin('print-then-ill-typed-continuation', 'inspect-continuation-target', 7, **ILL_TYPED, stdout='x\n', effects=1),
+        twin('fuel-continuation', 'fuel-continuation-short', 4, outcome='Exhausted', kind=1, cause='fuel', stdout='vm\n', effects=1),
         ('atomic-print-then-io-op', continuing(closure_io_op), {'fuel': 8, **ILL_TYPED, 'calls': 8, 'stdout': 'x\n', 'effects': 1}),
         ('atomic-print-then-nat-range', continuing(succ_max, more=(nat_type,), rep={'Nat': nat}),
          {'fuel': 7, **nat_range, 'calls': 7, 'stdout': 'x\n', 'effects': 1}),
@@ -3357,6 +3366,7 @@ SITE_READ = "        if isinstance(w, tuple) and w[0] == 'request':\n           
 SITE_CASE = "            if default is None:\n                raise Halt(UNSUPPORTED)\n            arm, fields = default, ()\n"
 SITE_DISPLAY = "                raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'display'})"
 SITE_D20 = "            raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})\n"
+SITE_FUEL = "        if self.fuel == 0:\n            raise Halt({'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel'})"
 DEBIT = "        self.fuel -= 1\n        self.calls += 1\n"
 FUEL_STOP = "raise Halt({'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel'})"
 LATE = "        if getattr(self, 'late', None):\n            raise self.late\n"
@@ -3663,7 +3673,10 @@ EVALUATOR_MUTANTS = [
                                     '                if tag == 0:\n                    break\n'
                                     "                message.append(m.view(parts[0], m.rep['Char'])[1][0])\n"
                                     '                cells = parts[1]\n')]),
-    # Section 6.3 (atomic_controls): a step that stops changes nothing, so a stopped run reports what it held before the refusing step.
+]
+
+# Section 6.3 (atomic_controls): a step that stops changes nothing, so a stopped run reports what it held before the refusing step.
+ATOMIC_MUTANTS = [
     # Each mutant below mutates before it refuses. It spends an entry at its refusal, which shows as one call more, or as fuel 0 at the
     # twin that is given exactly the fuel it has spent; or it tests fuel before a refusal that no fuel test precedes, which only that twin
     # meets; or it counts an effect or writes a byte before its check, or discards what earlier steps wrote; or it reports the refusal
@@ -3674,6 +3687,7 @@ EVALUATOR_MUTANTS = [
     ('request-read-spends-entry', [spends(SITE_READ)]),
     ('d20-refusal-spends-entry', [spends(SITE_D20)]),
     ('display-refusal-spends-entry', [spends(SITE_DISPLAY)]),
+    ('fuel-stop-spends-entry', [before_raise(SITE_FUEL, 'self.calls += 1')]),
     # An Enter is refused before its debit (section 7): the existing `fuel-before-operand-check` and `fuel-test-before-request-check` fire
     # only at fuel 0, and these two pay the debit whatever the fuel.
     ('enter-operand-check-after-debit', [("        if kind not in takes or not takes[kind]():\n            raise Halt(ILL_TYPED)\n        self.debit()\n",
@@ -3715,12 +3729,20 @@ EVALUATOR_MUTANTS = [
     ('ill-typed-deferred', [(SITE_WORD, SITE_WORD.replace('raise Halt(ILL_TYPED)', 'self.late = Halt(ILL_TYPED)\n            return 0')),
                             (DEBIT, DEBIT + LATE)]),
 ]
+EVALUATOR_MUTANTS = [*EVALUATOR_MUTANTS, *ATOMIC_MUTANTS]
+ATOMIC_NAMES = {name for name, _ in ATOMIC_MUTANTS}
+# The controls that hold section 6.3 at the reference evaluation: the `atomic-*` run controls, and the three earlier fuel controls that
+# are the same twin of a refused Enter (the operand check and the class check precede the fuel test, so a run given exactly the fuel it
+# has spent reaches the same stop). Each mutant above must change at least one of them: a mutant that only a golden or another run
+# control kills is not held by the controls of the rule that it violates.
+SPENT_FUEL_TWINS = ('fuel-zero-ill-typed-invoke', 'fuel-zero-ill-typed-phase', 'fuel-zero-request-target')
 
 
 def evaluator_mutants(cases, plans, bounds, sources, table, runs) -> list:
     """Each mutant re-derives every golden expectation, Book value and run control."""
     source = EVALUATOR.read_text()
     results = []
+    atomic = [c for c in runs if c[0].startswith('atomic-') or c[0] in SPENT_FUEL_TWINS]
     for name, edits in EVALUATOR_MUTANTS:
         text = source
         for old, new in edits:
@@ -3747,7 +3769,17 @@ def evaluator_mutants(cases, plans, bounds, sources, table, runs) -> list:
             killed_by = None if got == frozen else f'run control {label}: {got}'
             if killed_by:
                 break
-        results.append({'mutant': f'evaluator:{name}', 'killed': killed_by is not None, 'by': killed_by})
+        held = None
+        for label, plan, frozen in atomic if name in ATOMIC_NAMES else []:
+            try:
+                changed = ran(plan, frozen, mutant) != frozen
+            except Exception:
+                continue
+            if changed:
+                held = label
+                break
+        results.append({'mutant': f'evaluator:{name}', 'killed': killed_by is not None and (name not in ATOMIC_NAMES or held is not None),
+                        'by': killed_by, **({'atomic': held} if name in ATOMIC_NAMES else {})})
     return results
 
 
