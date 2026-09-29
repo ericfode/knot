@@ -89,18 +89,31 @@ class C5Tests(RepoTest):
         self.assertTrue(any('parser profile' in n for n in result.notes))
 
     def test_sole_member_outside_every_group_over_the_cap(self):
+        """A file that is itself over the cap cannot fit any group review: major, and the fix is to split it."""
         self.start({'src/loose.bend': 'def loose(): 1\n'})
-        self.fx.commit('work', {'src/loose.bend': 'def loose(): 2\n'})
+        self.fx.commit('work', {'src/loose.bend': 'def loose(): 2\n# ' + 'x' * 50000 + '\n'})
         over = {'source_bytes': 135255, 'byte_limit': 48000, 'available': False, 'context_files': 7}
         stub = Stub(head=report([], composition=over), base=report([]), head_manifest=report(groups=[]), base_manifest=report(groups=[]))
         found = self.rules(self.run5(stub), 'composition-budget')
         self.assertEqual(['major'], [c.severity for c in found])
         self.assertIn('in no manifest group', found[0].observed)
-        self.assertIn('7 helper file(s)', found[0].observed)                   # the closure is named, not blamed on the file
-        self.assertIn('Add it to a group', found[0].fix_hint)
+        self.assertIn('7 helper file(s)', found[0].observed)
+        self.assertIn('Split the file', found[0].fix_hint)
         stub = Stub(head=report([], composition=over), base=report([], composition=over),
                     head_manifest=report(groups=[]), base_manifest=report(groups=[]))
         self.assertEqual([], self.rules(self.run5(stub), 'composition-budget'))    # already over the cap at base
+
+    def test_a_small_file_outside_every_group_whose_helper_closure_is_large_is_minor_and_names_the_closure(self):
+        """recursion 624228e5: 4,620 bytes of its own, 52,742 with seven helper files; no manifest existed yet."""
+        self.start({'src/loose.bend': 'def loose(): 1\n'})
+        self.fx.commit('work', {'src/loose.bend': 'def loose(): 2\n'})
+        over = {'source_bytes': 52742, 'byte_limit': 48000, 'available': False, 'context_files': 7}
+        stub = Stub(head=report([], composition=over), base=report([]), head_manifest=report(groups=[]), base_manifest=report(groups=[]))
+        found = self.rules(self.run5(stub), 'composition-budget')
+        self.assertEqual(['minor'], [c.severity for c in found])
+        self.assertIn('bytes of its own and 7 helper file(s)', found[0].observed)
+        self.assertIn('Add it to a group', found[0].fix_hint)
+        self.assertNotIn('Split the file', found[0].fix_hint)
 
     def test_a_file_that_a_group_lists_is_judged_by_its_group_not_alone(self):
         """A new law file added to an existing group composes 52k alone (its helper closure) and 22k as the group reviews it."""

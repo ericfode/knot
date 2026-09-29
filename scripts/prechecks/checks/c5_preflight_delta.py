@@ -142,12 +142,18 @@ def sole_member_budgets(ctx, targets: list[str], old_targets: list[str]) -> list
         if (bases.get(path) or 0) > limit:
             continue                                      # already over the cap at base
         own = len(ctx.head.read(path) or b'')
-        found.append(Condition(ID, 'composition-budget', 'major', {'target': path}, value={'bytes': size},
-                               expected=f'a file outside every manifest group composes within {limit} bytes',
-                               observed=f'{path} is in no manifest group and composes {size} bytes (cap {limit}): '
-                                        f'{own} bytes of its own and {context if context is not None else "?"} helper file(s)',
-                               fix_hint='Add it to a group of the manifest, which judges its composition as a group, or '
-                                        'shrink the helper closure it reaches (splitting the file alone rarely helps).'))
+        closure = f'{own} bytes of its own and {context if context is not None else "?"} helper file(s)'
+        if own > limit:                                   # the file itself cannot fit: splitting it along a seam is the fix
+            found.append(Condition(ID, 'composition-budget', 'major', {'target': path}, value={'bytes': size},
+                                   expected=f'a file outside every manifest group composes within {limit} bytes',
+                                   observed=f'{path} is in no manifest group and composes {size} bytes (cap {limit}): {closure}',
+                                   fix_hint='Split the file along a real seam.'))
+        else:                                             # the helper closure is what is large; a group shares its context
+            found.append(Condition(ID, 'composition-budget', 'minor', {'target': path}, value={'bytes': size},
+                                   expected=f'a file outside every manifest group composes within {limit} bytes, or a group reviews it',
+                                   observed=f'{path} is in no manifest group and composes {size} bytes (cap {limit}): {closure}',
+                                   fix_hint='Add it to a group of the manifest, which reviews it with its collaborators and judges the '
+                                            'composition as a group; splitting a small file does not shrink its helper closure.'))
     return found
 
 
