@@ -618,7 +618,7 @@ adopt them or record its own, so that lockstep compares like with like.
   48 MiB (the arguments), and the heap grows it only when a cell would end beyond
   it, to the next 16 MiB boundary at or above that cell's end (choice 15). So the
   memory ends exactly where a cell does whenever that cell ends on such a
-  boundary, and only there does a read or a write one word past a cell fault:
+  boundary, and only there does a read or a write past a cell's end fault:
   anywhere else it lands in the cell's padding or in free heap above the bump
   pointer, which `$alloc` zeroes before any cell holds it. Two Books fill the
   heap with `fill(k, B0{})` (a 32-byte Activation and a 32-byte `B1` a step) so
@@ -738,7 +738,7 @@ adopt them or record its own, so that lockstep compares like with like.
     `$scell` and `$finish` as the VM of `2e0c9b1` had them. Its defect is the trap
     (like `top-trap`): the mutant is killed when a row of the inspection matrix
     traps where the frozen run is a refusal, and every other row stays right.
-  - one word past a cell (group `memory-end`, three, from the study's survivors):
+  - past a cell's end (group `memory-end`, three, from the study's survivors):
     an Object's operands copied 8 bytes each (past its cell at 3, 4, 7 to 12 or 15
     to 28 fields), an Action's operand copied 8 bytes (past IO.print's 16-byte
     cell), and a Branch that binds one word more than its constructor's fields
@@ -772,14 +772,21 @@ adopt them or record its own, so that lockstep compares like with like.
   only on a ceiling row), **8 are killed only by a hang** (`$select`'s search and
   `$ctor`'s walk never end) and **18 only by a trap** (an out-of-bounds store or
   load, in `append`'s block, describe's worklist arithmetic, the two String
-  cells' immediate tests, and the three copies and reads one word past a cell that
+  cells' immediate tests, and the three copies and reads past a cell's end that
   only the memory-end rows reach), and **33 survive**, each explained in
   `study.EQUIVALENT`, which the study checks against its survivors both ways. The
   gate's rule for its own mutants counts a trap or a hang only in the groups whose
   defect it is, but installed as `vm.wat` each of the 534 fails the gate: a frozen
   run is never a trap, and a hang outlives the gate's own timeouts. So the gate
   detects **534 of the 567 (94%)**: 508 by a wrong observation, 8 by a hang, 18 by a
-  trap. The fix of `$scell` moved 9 of the 567 (the reviewer's
+  trap. That reading is the study's, confirmed by installing five of them in a
+  scratch copy, re-pinned, and running the whole gate, which exits 1 on each: the
+  three memory-end mutants (7 s, a trap on their row), one the study finds only by a
+  trap (`$append:1964:i32.add->i32.sub@19`: golden `string-codes` traps, 2 s) and
+  one only by a hang (`$select:2191:i32.ge_u->i32.gt_u@26`: a golden outlives the
+  host's 120 s timeout). Review round 6's earlier acceptance did the same for ten
+  of the reviewer's mutants.
+  The fix of `$scell` moved 9 of the 567 (the reviewer's
   list is reproduced name for name on the source of `2e0c9b1`; on this source
   they are the same tokens on their new lines, and 9 in `$scell` are new ones).
   The reviewer's study of the same mutants on gate `2e0c9b1` found 426 that

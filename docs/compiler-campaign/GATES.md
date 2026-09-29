@@ -139,7 +139,7 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   boot leaves the memory (CORE.md choice 15), so that the memory ends where
   the cell does. One is an Object whose four fields fill its cell, which a Case
   then binds; the other is the Action of an `IO.print` that is never applied.
-  A read or a write one word past a cell lands in padding or in free heap
+  A read or a write past a cell's end lands in padding or in free heap
   everywhere else, and faults only here. Section 5's model derives each fill
   count, bump pointer and line, and the reference evaluation at a fill of 3
   gives the line and the calls. The test build pins `bump` and `grows` (boot's
@@ -174,7 +174,7 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - Seventy-nine WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right; two restore the immediate tests that trapped
-  (group `traps`), and three copy or bind one word past a cell (group
+  (group `traps`), and three copy or bind past a cell's end (group
   `memory-end`), each killed by a trap on its memory-end row while every other
   row there stays right; one steps the key search to the middle, not past it, and is
   killed by the hang it makes (a row that outlives its deadline, in group

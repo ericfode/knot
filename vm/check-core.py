@@ -22,7 +22,7 @@ Checks, in order:
   outcome are first derived from SPEC section 5's cell sizes over its plan
   (`ceiling_run`), independently of any VM;
 - the memory-end rows: Books whose last cell (an Object whose fields fill it, and an Action) ends exactly at 48 MiB,
-  where boot leaves the memory, so that a read or a write one word past a cell faults there; each bump pointer and
+  where boot leaves the memory, so that a read or a write past a cell's end faults there; each bump pointer and
   line is first derived from SPEC section 5 (`ceiling_run`), and the calls from the reference evaluation;
 - the growth rows: a Book whose every entry allocates a 16-byte Activation stops at a lowered
   heap (with a bounded `memory.grow` count in the test build), at the full 4 GiB through the
@@ -1452,7 +1452,7 @@ MUTANTS = [
        '          (i32.or (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7))\n'
        '                  (i32.ne (i32.load offset=8 (local.get $x)) (global.get $rIoop))))\n'
        '      (then (call $refuse (global.get $R_ill_typed))))')], 'traps'),
-    # one word past a cell: into its padding or the free heap above the bump pointer, which `$alloc` zeroes before any cell
+    # past a cell's end: into its padding or the free heap above the bump pointer, which `$alloc` zeroes before any cell
     # holds it, so each is unobservable except where the cell ends at the end of the memory in use (section `memory-end`)
     ('object-fields-overrun', "an Object's operands are copied 8 bytes each: past its cell at 3, 4, 7 to 12 or 15 to 28 fields",
      [('(memory.copy (i32.add (local.get $c) (i32.const 16)) (local.get $ops) (i32.shl (local.get $cnt) (i32.const 2)))',
@@ -1673,7 +1673,7 @@ def main(args: list) -> int:
     stage('reference rows')
 
     # a cell that ends exactly at the end of the memory in use (48 MiB after boot): the one place where a read or a write
-    # one word past a cell faults. Section 5's model gives each row's bump pointer and line, the reference evaluation at
+    # past a cell's end faults. Section 5's model gives each row's bump pointer and line, the reference evaluation at
     # a fill of 3 the line and the calls (each further step is one entry)
     edge = fixtures['memory-end']['rows']
     for r in edge:
