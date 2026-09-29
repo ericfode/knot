@@ -1522,3 +1522,46 @@ Remaining uncertainty / next trigger:
   - Two agents printed held-out head names.
   - Dev keeps the post-cutoff vm-spec tip `63e63203` and vm-model `07e6db73` (reviewed 18:37Z), as the design did.
   - The two post-review tips `60e80693` and `2c1f3d70` were reserved for held-out before any search.
+
+## 2026-09-29 — Encoded-state cap: the tool's limit was shaping the source
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `fitInterfaceContext` in `scripts/perch-context-interfaces.mjs`, branch `campaign/perch-cap` from main `88f02bf1`. Measured on the motivating tree `campaign/literals-integ` at `6617f09b` (it contains `8ea6faf`), exported with `git archive` into scratch and given the changed tool there. Nothing on that branch was edited.
+
+Evidence links and usage receipt IDs:
+- `8ea6faf` ("Fit check.bend::run under the Perch state cap"): its message records `tests/perch-context` failing on `check.bend::run` at 64,553 bytes against the 60,000-byte state bound (the measure counts the 104 to 113 declarations `run` reaches, at about 320 bytes each with their notes), and the four changes made to fit.
+- Those changes, across `8ea6faf`, `84c24df8` and `39f7b778`: the two `C.exhausted` uses in `check.bend` spelled out, the rows of `run` reordered, one local `then`, and the tasks of three groups swapped for verbatim excerpts. The originals are `research/compiler-fields/SPEC.md` (`checking`), `tests/compiler-modules/SPEC.md` (`module-loading`) and `tests/compiler-nest/SPEC.md` (`pattern-matrix-laws` and `pattern-matrix-proofs`). Their owners had not signed off the excerpts.
+- The measured margin was 59 bytes (`run` is 59,941 at the branch tip; three other units sit at 59,935 to 59,950).
+- No provider was involved and no `.perch/usage` receipt exists. The controls and mutants are in `tests/perch-context/`; the contract is in its `CONTRACT.md` items 10 to 14.
+
+Waste or missed behavior / measured effort (or unknown): the fitting had two tiers (full body, interface summary) and then threw. The encoded-state bound counts task and metadata, so a tree that adds one row, or restores a task of a few KB, fails the `perch-context` gate. On the branch the only way to pass was to change correct code and task files to fit a tool limit, which AGENTS.md forbids ("never change correct code to satisfy a model"). The measure-and-reshape rounds were not timed: unknown.
+
+Rule + hash / requested and resolved model (or unknown): none; offline tooling, no model asked. Rubric v8 (`b0747948…`) and every target are unchanged.
+
+Judgment: confirmed. A structural tooling defect, not a model finding.
+
+Change and why:
+- A third tier: when the interface tier is exhausted, each collaborator entry left becomes `{path, name, representation: "names-only"}`, largest saving first, then path, then name, until the state fits. That covers an interface summary and a body that the interface tier kept because its interface was no smaller. A signature is not kept: on `run` 103 of 105 interfaces are one line and keeping only the first line saves 337 of 13,357 bytes.
+- The names tier's saving is the exact drop in encoded bytes; a cut that cannot shrink the state is skipped.
+- Each cut keeps one `summarized` row with reason `context-state-names-only`, and `context_notes` gains `names_only: {count, note}`, so the judge is told which context was cut. Neither exists when nothing is cut.
+- The primary source, the task, datatypes and laws are never shortened. The error after the tier reports the bytes that remain, per part. Both caps are unchanged.
+- Not done, by decision: cutting datatypes or laws (CONTRACT item 1 keeps the type closure whole), setting `truncated` or a role-context gap (that would make the advisory tier a structural blocker), and adding fields to the preflight report (that would move existing receipts).
+
+Clean / broken / held-out evidence and deterministic checks:
+- Byte identity. Over the whole compiler manifest on main, all 957 declaration states and 17 composition states have the same hash before and after (974 of 974); four of those units use the interface tier. The official `--preflight --manifest … --output` receipt is byte-identical (722,704 bytes, sha256 `044303f7…`). On `literals-integ` as it stands, 2,713 declaration and 36 composition states are identical (2,749 of 2,749).
+- `check.bend::run`, three ways (the old tool throws in (b) and (c)):
+
+  | tree | raw | after every interface | fitted | names-only |
+  | --- | --- | --- | --- | --- |
+  | (a) branch as it is | 68,192 | 60,520 (the fit returns earlier, at 59,941) | 59,941 | 0 |
+  | (b) `C.exhausted(C.Checked,token)` restored at both uses | 68,447 | 60,784 | 59,834 | 4 |
+  | (c) and the three original tasks restored | 73,295 | 65,632 | 59,881 | 27 |
+
+- Which units need the tier. In (b), one of 2,713: `run`. In (c), 53: `checking` 1 (`run`, 27 cuts), `pattern-matrix-laws` 40 (12 to 40 cuts, 2,721 to 8,146 bytes over before), `pattern-matrix-proofs` 11 (13 to 19 cuts), `module-loading` 1 (`load.bend::body`, 15). Every one fits; the largest state is 59,979.
+- Compositions. The three largest are `literal-source-machine` 47,639, `checking` 47,311 and `pattern-matrix-proofs` 46,848 of 48,000, in (b) and (c) alike. The composition bound counts source bytes only and the task is not source, so restoring the original tasks cannot make a group unavailable, and none is. The margins are 361, 689 and 1,152 bytes.
+- Controls and mutants. Seven controls (forty in all) and five mutants (thirteen in all) are killed by assertion: marker dropped, primary source shortened, tier skipped, tie-break dropped (the choice then depends on the order the entries were filled in) and row not recorded. Held-out: the three generated stress inputs the backlog listed as too large. Before, all three threw at the interface tier. Now `deep-call.bend` fits (252 declarations), `deep-stack.bend`'s 162 declarations fit (its composition is over 48,000 as a file, which is a separate bound), and `scale-catalog/main.bend` still fails, correctly: 723 collaborators (720 cut), a collaborator list of 81,057 bytes and 85,393 bytes of datatypes, laws and notes retained.
+
+Remaining uncertainty / next trigger:
+- How the judge rates a declaration whose collaborators are only names is not calibrated, so the tier stays advisory. Its rows show in receipts as `context-state-names-only`; no live review of a names-only state was made.
+- The tier can fail although the primary source, the task and the names alone would fit, because datatypes, laws and notes are kept whole. `run` carries 8,200 bytes of datatypes and 6,147 bytes of `unresolved` notes. Compacting the notes would help, but it changes every state, so it needs its own measured increment.
+- The coordinator applies the reverts on `literals-integ` after this merges. 53 units will then carry names-only rows, and a live review of a few of them is the first calibration evidence to collect.
+- The composition margins above are thin. If a merge pushes a group over 48,000, the smallest honest fix is a smaller selected group, not a change to source.

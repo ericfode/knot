@@ -54,7 +54,10 @@ and unique names, so a new increment appends its gate and required name;
 timeouts, blocked dependencies, and malformed/missing completion records exit 1.
 The Perch context increment adds gate 15, `perch-context`: 33 literal context
 controls, eight semantic mutants, one complete seed signature check, and two
-byte-identical offline compiler-manifest preflights. The literal command uses
+byte-identical offline compiler-manifest preflights. The perch-cap increment adds
+seven controls and five mutants for the names-only tier of the encoded-state
+fitting (40 controls and 13 mutants in all;
+[contract items 10 to 14](../../tests/perch-context/CONTRACT.md)). The literal command uses
 the runner's frozen `BEND_LIB` by default. Package identities and request hashes
 are independent of that store's location. It writes only its own
 `tests/perch-context/receipts/context.json` in scratch. It makes no provider

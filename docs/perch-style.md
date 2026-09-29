@@ -202,8 +202,50 @@ their type dependencies are still followed. Byte pressure or encoded-state
 pressure may also replace a helper/caller body by a signature. Receipts classify
 these as `context-helper-interface`, `context-caller-interface`,
 `context-byte-interface` or `context-state-interface`, separately from missing
-context. Required text that cannot fit retains `context-byte-limit` and a
+context; a collaborator cut to its name is `context-state-names-only`, below.
+Required text that cannot fit retains `context-byte-limit` and a
 truncation marker; qualification is withheld as before.
+
+**Names-only tier (encoded-state pressure).** Both caps stay as they are: 60,000
+bytes for the encoded state, task and metadata included, and 48,000 for
+composition source. When every helper and caller is already an interface summary
+and the state is still over 60,000, the fitting takes one more step instead of
+failing. A collaborator entry, an interface summary or a body that the interface
+tier kept because its interface was no smaller, becomes
+`{path, name, representation: "names-only"}`: lines, text and signature are
+dropped. The signature is the interface text, so it is not shortened. For
+`check.bend::run` on `campaign/literals-integ`, 103 of 105 interfaces are one
+line, and keeping only the first line saves 337 of 13,357 bytes, far too little.
+
+- **Order.** Each tier takes the largest saving first, then path, then name. The
+  interface tier's saving is the source bytes it removes. The names tier's saving
+  is the exact drop in encoded bytes, and a cut that cannot shrink the state is
+  skipped. The order of `calls` and `called_by` never changes the choice. Fitting
+  stops at the first state that fits, so an entry the cap does not need is left as
+  it was.
+- **Record and marker.** Each cut has one `summarized` row with reason
+  `context-state-names-only` (an interface entry's row changes its reason; a kept
+  body gets a new row), so the row count stays one per summarized declaration. The
+  judge-visible `context_notes` gains `names_only: {count, note}` beside each
+  entry's own `representation`, saying which context was cut to names and not to
+  infer types, contracts or behavior from them. `source_bytes` falls by the text
+  removed, and the files behind the names stay hash-pinned in the provenance.
+- **Inert when unused.** No marker and no row change exist for a state that fits,
+  so every such state is byte-identical to what it was. Over the compiler
+  manifest, all 957 declaration states and 17 composition states have the same
+  hashes as before, and the official preflight receipt is byte-identical.
+- **Never cut.** The primary source, the task or cohort text, datatypes and laws.
+  The step throws `Style context too large after names-only summaries` only when no
+  cuttable entry is left. The message reports the bytes that remain: primary
+  source, task, collaborator list and retained datatypes, laws and notes. The
+  retained group is never truncated (the type closure and law contracts stay
+  whole), so the failure can occur although the primary source, the task and the
+  names alone would fit.
+- **Advisory.** The tier sets neither `truncated` nor a role-context gap, so it is
+  never a structural blocker and never changes the role exemption. How the judge
+  rates a declaration whose collaborators are only names is not calibrated. Read a
+  rating whose receipt lists `context-state-names-only` rows as advisory evidence,
+  not as a settled qualification, and keep the tier advisory until it is measured.
 
 Hash imports resolve **offline** from the repository's `packages/`, followed by
 `--package-store=DIR` if supplied, otherwise `BEND_LIB` if set, otherwise
