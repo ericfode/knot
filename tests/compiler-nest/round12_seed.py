@@ -299,6 +299,20 @@ group('suffix-continues', unsupported('term-form'), None, *[(f'suffix-{name}', c
 group('suffix-continues-arrow', unsupported('line-break'), None, ('suffix-cont-arrow-margin', continues('case Off{} Off{}: x0\n=> a\n')))
 group('suffix-continues-index', invalid('declaration-name'), "expected : 'def', 'type' or 'law'",
       ('suffix-ctl-index-margin', continues('case Off{} Off{}: x0\n[0n]\n')))
+# A `+` marker that ends its line: the seed skips the break and reads the promoted term that follows, `+(a)` or `+ +a`.
+# An erased `-` marker wants a name: the seed rejects it either way.
+MARKER_BREAKS = {
+    'plus-break-paren': 'case Off{} Off{}: +\n      (a)\n',
+    'plus-break-paren-glued': 'case Off{} Off{}:+\n      (a)\n',
+    'plus-break-paren-own': 'case Off{} Off{}:\n      +\n      (a)\n',
+    'plus-break-paren-comment': 'case Off{} Off{}: + # c\n      (a)\n',
+    'plus-break-paren-blank': 'case Off{} Off{}: +\n\n      (a)\n',
+}
+group('suffix-marker-break', unsupported('term-form'), None, *[(f'suffix-{name}', continues(rows)) for name, rows in MARKER_BREAKS.items()])
+group('suffix-marker-break-plus', unsupported('repeated-promotion'), None, ('suffix-plus-break-plus', continues('case Off{} Off{}: +\n      +a\n')))
+group('suffix-marker-break-erased', invalid('binding-name'), 'expected : a name',
+      ('suffix-ctl-minus-break-paren', continues('case Off{} Off{}:\n      -\n      (a)\n')),
+      ('suffix-ctl-minus-inline-paren', continues('case Off{} Off{}: - (a)\n')))
 group('suffix-plain', ACCEPTED, None, ('suffix-ctl-plain', term('dead', 'On{}')), ('suffix-ctl-variable', term('dead', 'a')),
       ('suffix-ctl-call', term('dead', 'h(a)')))
 

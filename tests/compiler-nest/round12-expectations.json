@@ -6128,6 +6128,50 @@
       "finding": "suffix-closed-marker-plus"
     },
     {
+      "name": "suffix-ctl-minus-break-paren",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-ctl-minus-break-paren.bend",
+      "sha256": "222706f474f6f5ecf68047e1f0fa4e457a66139603a9309141ca6a16379d57eb",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-ctl-minus-break-paren.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name\n- observed : '('\nLocation:\n15 |       -\n16>|       (a)\n   |       ^\n17 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tbinding-name\t"
+      },
+      "finding": "suffix-marker-break-erased"
+    },
+    {
+      "name": "suffix-ctl-minus-inline-paren",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-ctl-minus-inline-paren.bend",
+      "sha256": "7c6a3d3c51eea575238b09cb1c855f7dde628c0552ba17d08950b7d77910206c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-ctl-minus-inline-paren.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name\n- observed : '('\nLocation:\n13 |     case _ _: On{}\n14>|     case Off{} Off{}: - (a)\n   |                         ^\n15 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tbinding-name\t"
+      },
+      "finding": "suffix-marker-break-erased"
+    },
+    {
       "name": "suffix-ctl-minus0",
       "file": "tests/compiler-nest/round12-fixtures/suffix-ctl-minus0.bend",
       "sha256": "b04c5b78ab3d2ded1633f39211560280ed9ab559abd6ddd70999ddaa7c98d1d6",
@@ -7343,6 +7387,138 @@
       "knot": {
         "exit": 3,
         "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "suffix-plus-break-paren-blank",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren-blank.bend",
+      "sha256": "f2270a4af6537fe407845bfb284dfe79637b1aedf45ee6080fdc84612c0e7379",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren-blank.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-marker-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "suffix-plus-break-paren-comment",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren-comment.bend",
+      "sha256": "195e085efef0dec0181733dd3fed88e5f5fb7601dbb1d9c2cf8fc81f610efda7",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren-comment.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-marker-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "suffix-plus-break-paren-glued",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren-glued.bend",
+      "sha256": "65474d88df03bd2818c0df65a465293bd020bc7041e6745ac8769e173a23e5d6",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren-glued.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-marker-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "suffix-plus-break-paren-own",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren-own.bend",
+      "sha256": "d3a16a0428fbd447abc2cbe2cfc0667d4e4613346a955f1218afee87cc8c339a",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren-own.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-marker-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "suffix-plus-break-paren",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren.bend",
+      "sha256": "328571e948c4900df07cd94cbef19c022725dd771f70a07a42263f76dbac0f04",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-plus-break-paren.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-marker-break",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "suffix-plus-break-plus",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-plus-break-plus.bend",
+      "sha256": "22a88b22dd642ed3c45ad6aa3e6c7eda7f1525ae3a6616a345a1d236a57b7a76",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-plus-break-plus.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "suffix-marker-break-plus",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\trepeated-promotion\t"
       }
     },
     {
