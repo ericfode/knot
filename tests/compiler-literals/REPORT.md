@@ -7,47 +7,259 @@ The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed 
 ## Integration with nest
 
 Branch `campaign/literals-integ`, from `campaign/literals-layout` (`e673b43`), merges `campaign/nest`
-(`c9b073f`) by the campaign's rule: merge, never rewrite history, no rebase. **Status: everything an
-executor may do is done; three items need the coordinator.** `npm run -s gates` cannot exit 0 on this
-tree, for three reasons that need someone else (each needs an action the increment prompt forbids an
-executor: ruling on frozen pins, re-witnessing frozen mutants, changing the pinned Perch state cap):
-
-1. **The two suites' frozen expectations contradict each other on eight constructs (39 pins).** No
-   rule makes every frozen gate pass unchanged; the coordinator must rule (table below).
-2. **`check.bend::run` does not fit the Perch state cap** (64,171 against 60,000). This does not depend
-   on the ruling: both suites need both matrix families whatever is decided, because the contested
-   rules are parser-side. The composition half of the old `checking` overflow is fixed (`4ea2d92`:
-   47,344 against 48,000). The state is the closure of `run` (113 declarations; 95 and 92 in the
-   parents), and no change that keeps the frozen mutant anchors reaches the 4,171 bytes needed. The
-   attribution, the measured levers and the options are in the Perch section; it needs a design or a
-   cap decision.
-3. **Two frozen mutants contradict each other, and this does not depend on the ruling either.** The
-   literals mutant `inferred-let-literal` needs `expected(token,None,<a U32 literal>)` to accept; nest's
-   round-9 mutants need the same call, on the same term shape (`C.Value`), to reject a refined value.
-   `expected` receives no provenance, and no source change was found that keeps every frozen anchor
-   and satisfies both; the literals gate cannot pass after any parser ruling unless the frozen
-   mutant gets another witness (a `String` or `Nat` literal). That edit is the literals owner's or
-   the coordinator's (Evidence section).
-
-Twenty-seven of the 32 registered gates pass; the five that fail are the ones the three reasons above
-explain (`perch-context` for the second; `nest-round3`, `nest-round9`, `nest-round10` and `literals` for
-the first and the third), and the four pin gates pass their later stages in a scratch run with the
-contested rows removed, on the tree after `4ea2d92`. The first full gate run also exposed three defects
-that no pin comparison could show; each is fixed and recorded below ("What the full gate run found").
-No frozen expectation, pin, fixture or mutant anchor was edited. Two nest harness scripts were edited,
-for plumbing only (below); that is the one place this branch touches a per-suite gate script.
+(`c9b073f`) by the campaign's rule: merge, never rewrite history, no rebase. **Status after review round 1:
+all 32 registered gates pass on `13c0672`.** The full run (`npm run -s gates`, 48 minutes under a load
+average near 50) passed 31 gates and reported `nest-round10` as exhausted at the runner's 1,800-second
+limit, a harness timeout; alone with the limit raised to 3,600 seconds it passed in 578 seconds. The run before it (23
+minutes, on `9f98fb0`, which lacked the last two source fixes) passed 30 and failed `frontend` and
+`modules` on collateral of two repairs (an inline mutation anchor of the frontend gate, and the witness of a
+modules mutant), fixed in `bdbad49`. What is left is coordinator-owned (Remaining): the ruling on the
+frozen pins and mutants (proposed here in commits that can be reverted), the owners' sign-off of the nest
+harness edit and the three excerpt tasks, live Perch, and the shared receipts (28 classified as semantic
+drift, because their inputs changed; 9 volatile-only; 65 identical).
 
 | Commit | Content |
 | --- | --- |
-| `e996d7c` | The merge of nest `c9b073f` (15 conflicted files), the checkpoint before any gate had run |
-| `2d7fb92` | Keeps nest's `Rebuild` rows inside `run`: the fields gate anchors them |
-| `eb9b1e5` | Nest harness: accepts the seed's foreign-code note, copies `src/host` into mutant builds |
-| `39f7b77` | Two task excerpts and one group split so three Perch groups fit their caps |
-| `50e81e6`, `0c7a65f` | This section, the first gate run and the scratch evidence |
-| `4ea2d92` | The eleven `run`-free literal adapters leave `check.bend`: `checking` composition 49,795 to 47,344 |
-| `9204763` | Six seed-frozen integration books, the gate `literals-integ` and its six mutants |
-| `a5662a2` | Census inventories regenerated for the new gate and suite |
-| this commit | This section brought up to date: the Perch attribution, the books, the final gate run |
+| `e996d7c` .. `4f1fa9f` | The merge of nest `c9b073f` (15 conflicted files) and the first session: see "First session" below |
+| `0c0a074`, `52d93fe` | Round 1: 40 books frozen from the seed before any repair, then amended (enum-only order books, the unplaceable promotions) |
+| `623afef`, `c2bfc34` | The repairs of the parser and the checker (findings 1, 6, 7, 8, 13, 14, 15); the second restores `patterns.bend` byte for byte |
+| `3d3f3ff` | **Proposed ruling**: the 39 contested pins, re-frozen from the seed |
+| `58d0c88` | **Proposed ruling**: the 15 dead mutant anchors and four unkillable mutants of the pin gates re-expressed or re-witnessed |
+| `ea3577a` | The nest harness compares the foreign-code note exactly |
+| `84c24df` | `checking.md` is a verbatim excerpt of the fields SPEC |
+| `8ea6faf` | `check.bend::run` fits the Perch state cap; promoted binders are judged once per body |
+| `fe59aa4` | SPEC and CONTRACT state the repaired rules and the limits that remain |
+| `1145016`, `69851f3` | Binders that shadow the type a later annotation reads: books, then the rule |
+| `a9e740d`, `9f98fb0` | The integration gate's README and the selfhost twin; the census approval (43 new declarations, 4 widened, 0 gone) |
+| `bdbad49`, `13c0672` | Collateral fixed after the first full run (`expect` verbatim, `spells`); the census for it (1 widened, 1 gone) |
+| the two after | The receipt of `literals-integ` from the final run, and this section |
+
+### Gates on the final head
+
+`npm run -s gates` on `13c0672` (clean tree), 32 gates, 48 minutes: no gate failed. 31 passed and one
+exhausted its wall limit under load and passed when run alone (the exit code is 1 for that timeout):
+
+| Result | Gates |
+| --- | --- |
+| passed (31) | `frontend` (14 fixtures, 4 mutants), `checker` (49, 7), `structural` (16, 7), `fields` (40, 9), `wasm` (25, 7), `wasm-trust`, `fields-trust`, `structural-trust`, `owned-store`, `flat-store`, `recursion` (19, 3), `fields-wasm` (8, 4), `modules` (63, 14), `census` (1,548 declarations), `perch-context` (33 controls, 8 mutants), `lint:verify`, `bootstrap` (1,593 corpus files, 54 mutants), `classification` (17, 6), `nest` (38 fixtures, 386 evaluator and 386 Wasm values, 6 mutants), `nest-review` (29 fixtures, the 3,000-program fuzz with 0 false acceptances and 0 false Invalid, 7 mutants), `io-host`, `io-abi-2`, `selfhost` (65 cases), `nest-round3` (61 fixtures, 164 values, 11 mutants), `nest-round4` (14, 64, 4), `nest-round6` (35, 118, 5), `nest-round7` (35, the 1,500-program generator, 3 mutants), `nest-round8` (37, the 3,000-program generator, 5), `nest-round9` (80 fixtures, 218 evaluator and 218 Wasm values, 12 mutants), `literals` (150 fixtures, 525 reference calls, 42 mutants), `literals-integ` (53 fixtures, 74 reference calls, 19 mutants, 84 metamorphic pairs) |
+| `nest-round10` | exhausted at 1,800 s in the full run; alone (`--timeout 3600`): passed in 578 s: 153 fixtures, 846 evaluator and 846 Wasm values, 22 mutants |
+
+`gates:verify` (20 tests), `tests/perch-style-manifest.test.mjs` (20 tests), `census:check`, the 15
+`src/*PROOF.bend` entries (`All terms check.`), the manifest preflight (exit 0) and `tests/perch-context/check.py`
+pass on the same tree; the two gates that failed the run before it, `frontend` and `modules`, pass in the
+final run (159 s and 252 s, under load).
+
+### Review round 1
+
+The coordinator's review of `4f1fa9f` confirmed 15 findings (two pairs are duplicates: 1 and 7, 9 and 11).
+This is the disposition of each, with the commit that answers it. **Fixed** means a book frozen from the
+seed first (D7), a repair, and a gate that kills a mutant of the rule. **Proposed ruling** means the finding
+assigned an edit of a frozen suite to the coordinator or the suite owners; the edit is made here in a commit
+of its own so that it can be reverted without touching a repair. **Disputed** means the finding's own
+fallback was taken, with the evidence.
+
+| # | Finding | Disposition | Commits |
+| --- | --- | --- | --- |
+| 1, 7 | An erased dotted let does not license a later live let of its name; the interim rule is not D4-safe | **Fixed.** `binders` carries every let's name in scope for its body. The 924-program enumeration of the review (684 statement sequences, 240 binder patterns, 215 accepted by the seed) now has 0 false Invalid (was 8) and 0 false acceptances | `0c0a074` (books), `623afef` |
+| 2 | 22 of the 39 contested pins are outside the known condition | **Proposed ruling**, per construct (table below): the losing pins are re-frozen from the seed. All four pin gates pass | `3d3f3ff` |
+| 3 | 15 dead mutant anchors and four survivors | **Proposed ruling**: each re-expressed as the same mistake in the merged rule, or re-witnessed; all 19 are killed | `58d0c88` |
+| 4 | `inferred-let-literal` cannot be killed by `let-u32` | **Proposed ruling**: witnessed by `let-nat` (nest's `expected` rejects an unannotated checked Value, which a U32 or Char literal is; a Nat or String literal is a Literal, and the mutant accepts `let-nat` and `let-string`, measured) | `58d0c88` |
+| 5 | `check.bend::run` state 64,171 against 60,000 | **Fixed, with a 59-byte margin** (see "Perch"): 59,941 | `8ea6faf` |
+| 6 | Byte offsets of different files are compared | **Fixed.** `functions` counts the datatypes before each body and `G.before` places them before every offset; a metamorphic stage of the gate (a comment before any module or entry of the modules fixtures changes no verdict, 84 pairs) guards it | `52d93fe`, `623afef` |
+| 8 | A `+` binder spelled like a datatype is accepted | **Fixed** where the checker can place the type (`Invalid check promoted-type`); **Unsupported** where it cannot (imported, spelled with its module; Base's types outside the reachable slice). A parameter named like an annotation after it, and (an extension) a binder in scope that a later annotation spells, are `Unsupported`, as the seed reads the variable | `623afef`, `8ea6faf`, `69851f3` |
+| 9, 11 | Nest's harness accepts any foreign-def list | **Fixed.** `successful` and `proved` compare the note exactly with the entry the modules suite pins for that CLI. **Owner sign-off pending** | `ea3577a` |
+| 10 | `checking.md` is authored prose; two other tasks drop most of their SPEC | **Disputed, under the finding's own fallback** ("if an excerpt is unavoidable"). `checking.md` is now a verbatim excerpt with the siblings' header. The original tasks do not fit: with `research/compiler-fields/SPEC.md`, `check.bend::run` is 69,092; with `tests/compiler-modules/SPEC.md`, `load.bend::body` is 62,856; with `tests/compiler-nest/SPEC.md`, several units of `matrix-LAWS.bend` (`flag`, `ctor`, ...) exceed 60,000. **Owner sign-off pending** for all three excerpts | `84c24df`, `8ea6faf` |
+| 12 | Lone-target preflight has 136 blockers | **Reported.** That mode is unavailable for these files (its composition is the import closure); the manifest preflight governs and exits 0. On the 25 changed files the lone-target form now has 138 blockers, 137 truncated units and no composition | (this section) |
+| 13 | A literal in a later column is `Invalid parse expected-:` | **Fixed.** A literal starts a term as a name does, so it reaches `Unsupported check literal-column`; juxtaposed literals in arguments, fields and patterns are `Unsupported parse argument-whitespace` | `623afef` |
+| 14 | InternalFailure for a row of the wrong width | **Fixed.** A match takes the literal matrix only with one scrutinee and rows of one pattern; every other width is `Invalid check pattern-arity`. The selfhost twin is run in bundle mode by the gate | `623afef`, `a9e740d` |
+| 15 | `++` in a let's right side is `Invalid parse expected-` | **Fixed.** A `+` after a let's value is `Unsupported parse operator`; any other token is `Invalid parse expected-newline` (no raw line break in the code) | `623afef` |
+
+The books of the round are `tests/compiler-literals-integ` (53 books, 19 mutants, the metamorphic stage and
+the selfhost twin; its README lists them by rule). Two things are stated because a reviewer would find them:
+
+- The ruling edits one assertion of a frozen oracle: `tests/compiler-nest/round10_seed.py` asserted "the
+  seed accepts a book exactly when its reviewed Knot outcome is not Invalid", and now also allows
+  `Unsupported parse operator` for a book the seed rejects (`argspace-operator-call`), and nothing else. It
+  adds one witness book, `letsplit-marker-junk` (seed-rejected: a marker, a line break, then `)`), which the
+  re-pointed mutant `line-break-before-any-name` needs.
+- The three excerpt tasks change what the style judge is told to expect of groups that other owners own. The
+  paragraph of `checking.md` was chosen for its size: paragraph 2 of the fields SPEC gave `run` 60,829,
+  paragraph 3 gives 59,941 (`84c24df` names the earlier one).
+
+### The ruling on the contested constructs
+
+Each row is a form the two suites pinned differently. The rule the tree implements is the sound precise one
+where the seed decides, and D4's Unsupported where it does not; the pins that lose are re-frozen from the
+pinned seed (`3d3f3ff`, a proposal in a commit of its own, revertable without touching a repair). Every seed
+observation and every value an accepted book must agree on is unchanged: only the reviewed Knot outcome of
+each pin moves, and the four pin gates then check each moved book against the seed in both lanes.
+
+| Construct | Nest pin (fixtures) | Literals pin | Seed | Ruling |
+| --- | --- | --- | --- | --- |
+| Rebound dotted binder | round 9 `rebound-*` (7): Unsupported dotted-binder | `binder-scope`: Checked | accepts | Checked |
+| Unbound dotted binder | round 3 `dot-*` (10): Unsupported dotted-binder | `dotted-*-binder`: Invalid pattern-binder or binding-name | rejects | Invalid `pattern-binder`, `binding-name` for a let |
+| Line break inside `(..)` or `{..}` | round 9 `hd-b1..b5`, `hd-h15` (6): Unsupported line-break | `layout-list-newline`: Checked | accepts | Checked |
+| Arm body at or below its `case` column | round 10 `bodycol-*` (7): Unsupported body-indentation | `layout-body-column`: Checked | accepts | Checked |
+| Line break after a let's `=` | round 10 `letsplit-after-eq-*` (3): Unsupported line-break | `layout-term-newline`: Checked | accepts | Checked |
+| Bare `+` after an argument | round 10 `argspace-operator-call`: Invalid argument-separator | `u32-operator-unannotated`, `string-concat-operator`: Unsupported operator | rejects `two(a + b)` for want of an annotation, accepts `a ++ b` | Unsupported operator |
+| Malformed name | round 3 `name-*` (5): Invalid lex name | `name-*` (4): Invalid parse name | rejects | Invalid `lex` name |
+| Variable row on an enum | variable and wildcard rows are Checked | `pattern-offset-zero-on-enum`: Unsupported variable-pattern | accepts | agree: evaluator and Wasm return the seed's tags |
+
+Why each side yields:
+
+- A stopgap (Unsupported for a form the seed accepts) yields to the rule that checks the form: dotted
+  binders, the three layout forms and the enum variable row. The dotted-binder rule is the scope-aware one the
+  coordinator named as final (a name in scope may be dotted: a parameter of the function, or a let above);
+  modules' rule replaces it when modules merges.
+- An Invalid that the seed also gives keeps its class. Only its phase and code follow the tree that names are
+  read by: the lexer (earlier merged), not the parser.
+- The one seed-rejected pin that becomes Unsupported is the bare `+`. The seed rejects `two(a + b)` because
+  an operator demands the annotation `(a + b : Nat)`, and the same operator with its annotation is valid: the
+  rejection is a typing rule of operator sugar that Knot does not model, so no Invalid claim about the term is
+  sound, and only Unsupported is sound for `a ++ b`. The literals suite pins the same shape Unsupported
+  (`u32-operator-unannotated`), which is the reading kept. Nest's seed script asserted "the seed accepts a
+  book exactly when its reviewed Knot outcome is not Invalid"; it now allows `Unsupported parse operator` for a
+  seed-rejected book, and nothing else.
+
+The dotted-binder rule the tree implements is `binders`: a binder is judged against the parameters of its
+function and every let above it, erased or live (`binder` skips the dotted test only for an erased let's own
+name; the erased name is in scope below). **The earlier statement that this rule was "D4-safe by the fuzz" was
+wrong**: nest's fuzz never reached an erased dotted let followed by a live let of its name, which the seed
+accepts (`-a.b = x`, then `a.b = x`) and the rule rejected (review round 1, findings 1 and 7). It is now checked on
+the review's enumeration of 924 programs (four parameter shapes, up to two of seven let statements, three
+finals, and 240 binder patterns; 215 accepted by the seed): 0 false Invalid (was 8) and 0 false acceptances.
+Nest's own fuzz (3,000 programs, `nest-review`) and the generators of rounds 7 and 8 (1,500 and 3,000) pass with
+0 false acceptances and 0 false Invalid.
+
+### Mutant anchors
+
+The anchor scan (`anchors_all.py` imports each gate script's `MUTANTS`; `anchors_ast.py` reads every dict with
+`file` and `old` and the frontend gate's tuples, so it also covers the frontend and modules gates' inline
+lists, which the first scan missed) finds every anchor in `src/`: 189 by the import scan (the integration
+gate's 19 among them), 156 statically resolvable by the AST scan, none dead. At the merge 15 anchors named
+text that no longer existed and four more could not be killed; each is re-expressed as the same mistake in
+the rule that now lives in the merged tree (`58d0c88`, a proposal in a commit of its own), keeping its
+witness and its wrong verdict wherever the witness still shows that verdict, and all 19 are killed in the
+four gates (nest-round3 11 mutants, nest-round9 12, nest-round10 22, literals 42):
+
+| Mutants | Re-expressed as |
+| --- | --- |
+| round 3 `dotted-pattern-binder`, `dotted-live-let`, `erased-let-as-pattern` | the erased flag flipped at each of the three binder sites of `binders` (a pattern variable, a live let, an erased let) |
+| round 9 `rebound-pattern-invalid`, `rebound-promotion-invalid`, `rebound-let-invalid` | each site judges a rebound dotted name against an empty scope, so the rebound witness answers Invalid |
+| round 9 `list-break-invalid-in-arguments`, `list-break-invalid-after-element` | the `skip_lines` before a list's first item and after each item dropped |
+| round 10 `every-statement-first` (a renamed field), `value-line-break-invalid` (the skip before a typed let's value), `arm-body-layout-invalid` (a body must stand right of its case), `body-layout-any-token` (a keyword body at the case column is Unsupported) | the same mistake in `BindingTail`, `AnnotatedBinding`, `StartBody` |
+| round 10 `line-break-before-any-name` | the same text, with a new seed-rejected witness `letsplit-marker-junk` (`broken` now runs only in `binder_failure`) |
+| literals `names-unread`, `name-may-end-in-dot`, `name-word-may-be-empty`, `name-word-may-start-with-digit` | the lexer: `lexeme`, and the three clauses of `words` |
+| literals `case-line-kept` | `header(tail)` in `Arms` |
+| literals `inferred-let-literal` | witnessed by `let-nat`: nest's `expected` rejects an unannotated checked Value, which a U32 or Char literal is, so `let-u32` cannot tell the mutant from the original; a Nat or String literal is a Literal, and the mutant accepts `let-nat` and `let-string` (measured) |
+
+Two more anchors were re-pointed for a repair of this round, not for the merge: `dead-before-live` and
+`offset-nat-add` (literals) name the text of `run` that the local `then` rewrote (`8ea6faf`).
+
+### Perch structural results (offline)
+
+The manifest preflight (`node scripts/perch-style.mjs --preflight --manifest=docs/compiler-campaign/manifest.json`)
+exits 0: 36 groups, 2,713 units, 0 truncated, 0 role-limited, and `tests/perch-context/check.py` passes (33
+controls, 8 mutants, 36 compositions, 0 blockers). The compositions closest to the 48,000-byte cap are
+`literal-source-machine` 47,639, `checking` 47,243 (757 to spare), `pattern-matrix-proofs` 46,848 and
+`literal-emission` 46,834; the largest states are `check.bend::run` 59,941 (cap 60,000) and 59,950 for
+`driver-pipeline` and `module-loading`. On the 25 changed files the lone-target form (a `.bend` path with no
+manifest) has 138 structural blockers, 137 truncated units and no composition (its composition is the whole
+import closure); that mode was already unavailable at both parents and is no acceptance check here, so the
+counts are reported, not fixed (finding 12).
+
+**`check.bend::run` fits the state cap by search, with a 59-byte margin.** The measure counts the declarations
+`run` reaches (about 320 bytes each with their notes: the first 48 helpers `run` names are expanded, and their
+callees enter as interfaces), so it is not monotone in size. From 64,553 bytes at the floor (64,171 at the
+start of the round, plus the round's checker helpers):
+
+| Step | State of `run` |
+| --- | --- |
+| A local `then` for the 33 `S.bind(C.Checked,C.Checked,` | minus 799 (and 563 off the composition) |
+| The rows of `run` in `Mode` order, the expression forms last (the rows are independent, so no verdict changes) | minus 2,362 |
+| The promoted-binder rule as one walk per body (`functions` calls `G.promotions`) instead of four checker paths | minus 307 |
+| The two `C.exhausted` uses spelled out, and the checking task the shorter paragraph of the same SPEC | 60,782 becomes 59,941 |
+
+Measured and not applied: spelling out `M.retoken` moved `run` by plus 972, an `L.intrinsic` facade by plus
+551, a mock of a defunctionalized matrix walk (the redesign the earlier round proposed, which needs the two
+literals leaf-walk mutants re-witnessed) by minus 742 only because its helpers stay reachable, and a greedy
+search over block order found 61,390 without the task and inline steps. **The margin is 59 bytes.** It was
+reached partly by measure-chosen levers (the row order, the inline, the task paragraph), every later row of
+`run` (a modules merge adds some) will exceed it, and the comment on `run` counts against it: re-run the real
+preflight after any edit of a file `run` reaches, and read a failure as a search, not a size problem. The
+original tasks do not fit either (`run` 69,092 with the fields SPEC, `load.bend::body` 62,856 with the
+modules SPEC, several units of `matrix-LAWS.bend` with the nest SPEC), which is why the three tasks stay
+verbatim excerpts.
+
+### What a re-merge of a newer nest tip, or of modules, must redo
+
+- Regenerate, never merge: `git checkout --ours tools/census/approved.json`, `npm run census:approve`,
+  `npm run census` (its `accepted.json` pins the gate registry and every gate program, so also after any edit
+  of a gate script). The postimages of the contested and generated files were purged from `.git/rr-cache`
+  so a merge of the same nest tip does not silently replay this resolution.
+- Manifest: union again, then complete import closures, keep the three excerpt tasks (`checking`,
+  `module-loading`, `pattern-matrix-laws`) and the `pattern-matrix-proofs` split, and run the real preflight:
+  `checking` is at 47,243 of 48,000 and `run` at 59,941 of 60,000.
+- `run`: keep the `Rebuild` rows inline (the fields gate anchors `run(n,Rebuild{head},...)`), the rows in
+  `Mode` order with the expression forms last, and the local `then`. A row a merge adds to `run` will need the
+  search of the Perch section again.
+- Keep the nest harness's exact foreign-code note (`foreign`, `successful`, `proved` in `tests/compiler-nest/check.py`,
+  compared with `tests/compiler-modules/host-check-expectations.json`) and the `src/host` copies of its two
+  mutant builders. `campaign/modules` has no nest harness, so a modules merge brings the bundle CLIs to nest's
+  gates unchanged and needs both.
+- The pins of the ruling (`3d3f3ff`) and the mutants of `58d0c88`: a newer nest tip that edits the fixtures
+  or the mutant tables of rounds 3, 9 or 10 must be merged onto them, not over them; the round-10 oracle keeps
+  its one relaxed assertion.
+- Modules: take its `rebinds` in `qualify.bend` and its driver call; keep the erased-let exemption and the scope of
+  `binders` (or the rule that replaces it); the checker no longer compares byte offsets of different files
+  (`functions` counts datatypes, `G.before` places them), so modules' removal of the checker-side source-order
+  test must remove `G.constructor_before` (`patterns.bend::fields`, `matrix.bend::binder`) whole and keep
+  `G.promotions`. Its mutant `promoted-constructor-ignored` needs the promotion walk to accept a promoted
+  binder spelled like a module's own constructor (`spells` matches by last segment).
+- Closures: `LambdaStatements` reads newline tokens; the skips sit at list continuation points only.
+- The literal adapters live in `literal-matrix.bend` (`M.primitive_match` with `rows_of_one` and
+  `scrutinee_kind`, `M.dead_arm`, `M.inspect`, `M.checked_case`, `M.checked_default`, `M.retained`) and
+  `literal-check.bend` (`L.intrinsic_type`, `L.constructor`).
+- Re-run the round-3, 9 and 10 fixtures, the literals layout books and `tests/compiler-literals-integ` after any
+  parser change: they are the contested set, and the integration gate now guards the erased-let scope, the
+  let operator, literal starts, parameter and annotation shadowing, promoted type names, row widths, declaration
+  order (with a metamorphic stage over the modules fixtures) and the selfhost arity twin.
+
+### Conflicts and their resolution (15 files)
+
+| Path | Resolution |
+| --- | --- |
+| `docs/compiler-campaign/inventory/*.json` (5), `tools/census/approved.json` | Regenerated, never hand-merged: `git checkout --ours tools/census/approved.json`, `npm run census:approve` (100 new, 9 widened, 9 gone, one import and five new files, printed in the merge commit message), `npm run census`; `census:check` exits 0. `2d7fb92` regenerates them again (`Refine` and `rebuild` gone). |
+| `docs/perch-review-log.md` | Both sides' entries in date order. |
+| `docs/compiler-campaign/manifest.json` | Three-way merge by group: union of `files` and `selected_files`. Nest's three groups are added, import closures completed (`syntax.bend` imports `primitive-op.bend`; `check.bend` the literal files). `checking` selects only `check.bend` (nest's choice) with a 792-byte task; `frontend-laws` and `literal-patterns` select their law files in full. `39f7b77` then gives `pattern-matrix-laws` and `module-loading` excerpt tasks and splits `pattern-matrix-proofs` off. |
+| `scripts/gates/run.py`, `test_runner.py` | Union: nest's rounds, then `literals`. Main's clang wrapper is untouched. The 1,800 s per-gate limit from nest's `b614b58` is kept: `nest-round10` alone took 723.8 s under load and the literals gate 364 to 909 s. |
+| `src/CONTRACT.json` | Union by key (no key was touched on both sides); the `pattern_matrix` `names` and `unsupported` statements describe the merged behavior. |
+| `src/SPEC.md` | One table of recognized forms without the superseded rows, the layout paragraph rewritten, the name rule stated as `Invalid lex name`, the routing rule between the literal and datatype matrix added. |
+| `src/patterns.bend` | Nest's `G.constructor_before` for field binders; the kind judgement stays at the frontier (nest). |
+| `src/check.bend` | Both matrix families: `import ./matrix.bend as X` beside the literals' `M`; `PrimitiveMatch` carries the literals' matrix flow unchanged and `primitive_match` (arms spell a literal or Nat offset, also in constructor fields, or the scrutinee is an installed primitive) routes to it; every other match takes nest's flat or binary path; a literal in a row of several columns is `Unsupported check literal-column`. The `Rebuild` rows stay inline in `run`, exactly as nest has them (the fields gate anchors them). `P.close` also closes at a literal leaf. |
+| `src/parse.bend` | Literals' layout, literal tokens, offsets and binder walker on nest's rows, `header`, glue rules and lexer names; `BodyAt{parent,first}`; nest's stopgaps stay where the literals side has no precise rule (line break before a let's `=` or between its marker and name, arguments without a comma, a second arm on an arm's line, `++y`). |
+| `src/matrix.bend`, `qualify.bend`, `base-load.bend`, `literal-lex.bend`, `syntax.bend` | Auto-merged files that needed edits: literal rows in `validate`; lowering-node rows in the two exhaustive walkers; `flush` and `finish` follow the lexer's `Result`; nest's `S.binder` is unused and removed. |
+
+Laws: the law statements that encode a superseded stopgap cannot hold and are removed (their text is
+in git history at `c9b073f` and `e673b43`): nest's `dotted_pattern_binder`, `dotted_promotion_binder`,
+`dotted_let_binder`, `dotted_typed_let_binder`, `line_break_in_arguments`, `line_break_after_element`
+and the literals' `malformed_name` and `name_shapes`. Restated: `cases_right_of_parent` (arity of
+`BodyAt`) and `offset_spelling`, which now quantifies over scopes with a closed match frontier because
+nest's leaf rule may reject an open one first (a weakening forced by the merge). Added, each filled:
+`erased_dotted_let_binds_a_name`, `live_dotted_let_needs_a_parameter`, `spaced_plus_after_argument`,
+`keyword_is_no_arm_body`. `lowering-PROOF.bend` and `matrix-PROOF.bend` gain rows for the three literal
+node kinds in their exhaustive matches; `PROOF.bend`'s brace proofs read `S.skip_lines`. All 15
+`src/*PROOF.bend` entries print `All terms check.` (re-run on `39f7b77`). The four laws had no
+seed-derived fixture at the merge (D7). Three now have books in `tests/compiler-literals-integ`
+(`erased-dotted-let`, `arm-body-case` and `arm-body-def`, `spaced-plus-concat`, plus `literal-column-*`
+for the `Unsupported check literal-column` row); the fourth, `live_dotted_let_needs_a_parameter`, is
+pinned by both parents' books of the contested construct (`dotted-let-binder`, `dot-let*`).
+
+### First session: the tree before review round 1
+
+The next three subsections describe the branch at `a5662a2`, before review round 1. Their counts and their
+statements about what "needs the coordinator" are superseded by the sections above; they stay because the
+evidence they record (what the first full run found, and the scratch measurements) is what round 1 built on.
 
 ### Gates on the merge head
 
@@ -126,54 +338,6 @@ manifest test and the census, and had not run a gate. The run found:
    They and the group split change groups owned by nest and by modules; they need those owners'
    sign-off (Remaining).
 
-### Contradictions between the frozen suites
-
-Each row is a form the two suites pin differently. The seed column is the pinned seed on the nest
-fixture named (`bun main.ts f.bend --check-only`); "literals" is the literals suite's pin; the
-merged column is what this tree answers. On every nest fixture below the nest tip answers its own
-pin and the literals tip answers differently (checked with both tip binaries), and the merged tree
-answers as the literals tip does or better.
-
-| Construct | Nest pin (fixtures) | Literals pin | Seed | Merged |
-| --- | --- | --- | --- | --- |
-| Rebound dotted binder | round 9 `rebound-{field,let,multi,nested,promotion,row,typed-let}` (7): `Unsupported parse dotted-binder` | `binder-scope`: Checked | accepts | Checked |
-| Unbound dotted binder | round 3 `dot-*` (10): `Unsupported parse dotted-binder` | `dotted-default-binder`, `dotted-let-binder`, `dotted-offset-binder`: `Invalid parse pattern-binder` or `binding-name` | rejects | Invalid |
-| Line break inside `(..)` or `{..}` | round 9 `hd-b1..b5`, `hd-h15` (6): `Unsupported parse line-break` | `layout-list-newline`: Checked | accepts | Checked |
-| Arm body at or below its `case` column | round 10 `bodycol-{arm-flat,arm-multi,below-col0,below-flat,last-arm,let,multi-var}` (7): `Unsupported parse body-indentation` | `layout-body-column`: Checked | accepts | Checked |
-| Line break after a let's `=` | round 10 `letsplit-after-eq-{flat,multi,untyped}` (3): `Unsupported parse line-break` | `layout-term-newline`: Checked | accepts | Checked |
-| Spaced `+` after an argument | round 10 `argspace-operator-call`: `Invalid parse argument-separator` | `u32-operator-unannotated`, `string-concat-operator`: `Unsupported parse operator` | rejects `two(a + b)` but accepts `two(a ++ b, "ab")` on String variables | Unsupported operator |
-| Malformed name | round 3 `name-*` (5): `Invalid lex name` | `name-{binder-trailing-dot,constructor-digit-word,function-double-dot,parameter-trailing-dot}`: `Invalid parse name` | rejects | Invalid lex name |
-| Variable row on an enum | variable and wildcard rows are Checked (the matrix) | `pattern-offset-zero-on-enum`: `Unsupported check variable-pattern` | accepts | Checked |
-
-Quick comparison of every frozen pin of both suites against the merged `check-cli` (single file for
-nest, `--bundle` for literals): 638 pins, 599 hold. The 39 that do not are exactly these rows: 34 nest
-pins (10 in round 3, 13 in round 9, 11 in round 10) and 5 literals pins. Nest's differential fuzz
-(3,000 seeded programs, the seed as oracle) reports 2,779 Invalid and 221 Accepted for seed and Knot
-alike, 0 false acceptances, 0 false Invalid and 221 evaluator values agreeing; nest's own tip
-answers 349 of those Unsupported (the dotted atoms), the merged tree answers them as the seed does.
-The `nest-review` gate, which runs that fuzz, passes on the merged tree (367 s, run alone).
-
-Rules chosen, and why:
-
-- A stopgap (Unsupported for a form the seed accepts) yields to the precise rule that pins Checked
-  for it: dotted binders, the three layout forms and the enum variable row. The coordinator named the
-  scope-aware dotted rule as the final one, and every yielded pin records a conservative outcome.
-- Where a rule is Invalid on a program the seed accepts, the sound side wins: nest's `Invalid` for
-  `two(a + b)` is unsound for `two(a ++ b, "ab")`, so a spaced `+` after an argument in a body is
-  `Unsupported operator`; in a pattern, and for a glued `+name`, nest's outcomes stand.
-- Names stay in the lexer (the earlier-merged increment). The literals scan of every token
-  (`names`, `name_text`, `malformed`) is gone; `literal-lex.bend`'s `flush` now applies the same
-  `lexeme` check at a quote boundary.
-- Erased lets: the seed accepts `-a.b : T = x` and `-a.b = x` with no parameter `a.b` and rejects the
-  live forms and any constructor name (probes in this session), so `binder` takes an `erased` flag: the
-  dotted test is skipped for `q = 0`, the constructor test never is. The literals walker, before this
-  merge, reported that program Invalid.
-
-The dotted-binder rule the merged tree implements is the literals rule (`binders`, scoped to the
-function's parameters, run in `wrap_function`) plus the erased-let exemption; it is D4-safe by the
-fuzz above (no Invalid on a program the seed accepts, no acceptance the seed rejects). Modules'
-scope-aware rule replaces it when modules merges.
-
 ### Evidence beyond the pins (scratch, not committed)
 
 The four pin gates stop at their first contested fixture, and `quick.py` checks only an exit code and
@@ -207,178 +371,32 @@ run had deleted their witnesses):
 | round 10 `line-break-before-any-name` | Anchor present. Measured in the relaxed run: on its witness `letsplit-after-eq-junk` the mutant answers `Invalid parse expected-term` as the original does, not the wrong verdict `Unsupported parse line-break`: the literals rule reads the line break after `=` before nest's stopgap can. Follows the ruling. |
 | literals `inferred-let-literal` | Anchor present, **independent of the ruling.** The mutation replaces `annotated(wanted,token,target => expected(token,Some{target},value))` by `expected(token,wanted,value)`; on its witness `let-u32` (an unannotated U32 literal) the gate demands that the mutant build (`Built`). It answers `Invalid check annotation-required`, because nest's round-9 rule in `expected` rejects any `C.Value` with no annotation, and a U32 literal is a `C.Value{token,type,tag}` like a refined nullary constructor. Nest's mutants `ignore-refined-value`, `ignore-refinement` and their kin delete that rule and need the refined witness to be accepted, so they need `expected(token,None,C.Value)` to reject; this one needs the same call to accept. Telling the two apart inside `expected` would take the type table, and the frozen anchors fix `expected`'s three arguments and its `None` rows (and this mutant's own replacement text calls it with three). A `String` or `Nat` literal is a `C.Literal`, which nest's guard lets through, so a different witness would kill it; the frozen one cannot. |
 
-### Conflicts and their resolution (15 files)
-
-| Path | Resolution |
-| --- | --- |
-| `docs/compiler-campaign/inventory/*.json` (5), `tools/census/approved.json` | Regenerated, never hand-merged: `git checkout --ours tools/census/approved.json`, `npm run census:approve` (100 new, 9 widened, 9 gone, one import and five new files, printed in the merge commit message), `npm run census`; `census:check` exits 0. `2d7fb92` regenerates them again (`Refine` and `rebuild` gone). |
-| `docs/perch-review-log.md` | Both sides' entries in date order. |
-| `docs/compiler-campaign/manifest.json` | Three-way merge by group: union of `files` and `selected_files`. Nest's three groups are added, import closures completed (`syntax.bend` imports `primitive-op.bend`; `check.bend` the literal files). `checking` selects only `check.bend` (nest's choice) with a 792-byte task; `frontend-laws` and `literal-patterns` select their law files in full. `39f7b77` then gives `pattern-matrix-laws` and `module-loading` excerpt tasks and splits `pattern-matrix-proofs` off. |
-| `scripts/gates/run.py`, `test_runner.py` | Union: nest's rounds, then `literals`. Main's clang wrapper is untouched. The 1,800 s per-gate limit from nest's `b614b58` is kept: `nest-round10` alone took 723.8 s under load and the literals gate 364 to 909 s. |
-| `src/CONTRACT.json` | Union by key (no key was touched on both sides); the `pattern_matrix` `names` and `unsupported` statements describe the merged behavior. |
-| `src/SPEC.md` | One table of recognized forms without the superseded rows, the layout paragraph rewritten, the name rule stated as `Invalid lex name`, the routing rule between the literal and datatype matrix added. |
-| `src/patterns.bend` | Nest's `G.constructor_before` for field binders; the kind judgement stays at the frontier (nest). |
-| `src/check.bend` | Both matrix families: `import ./matrix.bend as X` beside the literals' `M`; `PrimitiveMatch` carries the literals' matrix flow unchanged and `primitive_match` (arms spell a literal or Nat offset, also in constructor fields, or the scrutinee is an installed primitive) routes to it; every other match takes nest's flat or binary path; a literal in a row of several columns is `Unsupported check literal-column`. The `Rebuild` rows stay inline in `run`, exactly as nest has them (the fields gate anchors them). `P.close` also closes at a literal leaf. |
-| `src/parse.bend` | Literals' layout, literal tokens, offsets and binder walker on nest's rows, `header`, glue rules and lexer names; `BodyAt{parent,first}`; nest's stopgaps stay where the literals side has no precise rule (line break before a let's `=` or between its marker and name, arguments without a comma, a second arm on an arm's line, `++y`). |
-| `src/matrix.bend`, `qualify.bend`, `base-load.bend`, `literal-lex.bend`, `syntax.bend` | Auto-merged files that needed edits: literal rows in `validate`; lowering-node rows in the two exhaustive walkers; `flush` and `finish` follow the lexer's `Result`; nest's `S.binder` is unused and removed. |
-
-Laws: the law statements that encode a superseded stopgap cannot hold and are removed (their text is
-in git history at `c9b073f` and `e673b43`): nest's `dotted_pattern_binder`, `dotted_promotion_binder`,
-`dotted_let_binder`, `dotted_typed_let_binder`, `line_break_in_arguments`, `line_break_after_element`
-and the literals' `malformed_name` and `name_shapes`. Restated: `cases_right_of_parent` (arity of
-`BodyAt`) and `offset_spelling`, which now quantifies over scopes with a closed match frontier because
-nest's leaf rule may reject an open one first (a weakening forced by the merge). Added, each filled:
-`erased_dotted_let_binds_a_name`, `live_dotted_let_needs_a_parameter`, `spaced_plus_after_argument`,
-`keyword_is_no_arm_body`. `lowering-PROOF.bend` and `matrix-PROOF.bend` gain rows for the three literal
-node kinds in their exhaustive matches; `PROOF.bend`'s brace proofs read `S.skip_lines`. All 15
-`src/*PROOF.bend` entries print `All terms check.` (re-run on `39f7b77`). The four laws had no
-seed-derived fixture at the merge (D7). Three now have books in `tests/compiler-literals-integ`
-(`erased-dotted-let`, `arm-body-case` and `arm-body-def`, `spaced-plus-concat`, plus `literal-column-*`
-for the `Unsupported check literal-column` row); the fourth, `live_dotted_let_needs_a_parameter`, is
-pinned by both parents' books of the contested construct (`dotted-let-binder`, `dot-let*`).
-
-### Frozen mutant anchors
-
-`anchors_all.py` (scratch) finds every anchor of every gate script's `MUTANTS` in `src/`: 155 of 170
-occur exactly once. The 15 that do not: nest round 3 `dotted-pattern-binder`, `dotted-live-let`,
-`erased-let-as-pattern`; round 9 `rebound-pattern-invalid`, `list-break-invalid-in-arguments`,
-`list-break-invalid-after-element`; round 10 `every-statement-first` (the anchor names
-`BodyAt{column,...}`; only the field name changed, the mutation is unchanged), `value-line-break-invalid`,
-`arm-body-layout-invalid`, `body-layout-any-token`; literals `names-unread`, `name-may-end-in-dot`,
-`name-word-may-be-empty`, `name-word-may-start-with-digit` and `case-line-kept` (nest's `header(tail)`
-replaces the skip; nest's `case-header-layout` is the same mutation). Ten mutate a rule a yielded pin
-froze and cannot be adapted; the other five can be re-pointed without changing what they mutate. No
-anchor was edited.
-
-### Perch structural results (offline)
-
-Measured on `9204763` with the scratch tools `minstate.mjs`, `breakdown.mjs`, `attrib.mjs`,
-`alldecls.mjs` and `compbytes.mjs` (copies in `.local/literals-integ/tools/`). The first three
-replay the state fit of `scripts/perch-context-interfaces.mjs` (`attrib.mjs` also records which
-expanded helper first reached each declaration), `alldecls.mjs` fits every declaration of a file
-and `compbytes.mjs` replays the manifest composition. Every group preflights with 0 blockers
-except one declaration.
-
-- **Composition of `checking`: fixed, 47,344 against 48,000** (was 49,795). `4ea2d92` moves the eleven
-  declarations of `check.bend` that call no `run` and belong to the literal matrix. To
-  `literal-matrix.bend`: the routing predicates (`literal_pattern`, `literal_arms`,
-  `primitive_binding`, `primitive_match`) and the checked-walk adapters (`checked_case`,
-  `checked_default`, `dead_arm`, `retained`, and `inspect`, the old `matrix_consumed`). To
-  `literal-check.bend`: `intrinsic_type`, and `constructor` now takes the checked value, which absorbs
-  `literal_constructor`. Behavior is unchanged: the 15 `PROOF` entries print `All terms check.`; the
-  two `dead_arm` laws name `M.dead_arm`; the anchor scan is unchanged (the same 15 dead); the relaxed pin
-  gates pass their later stages on it (below). Two groups that select the receiving files grew and stay
-  under the cap (`literal-types` 33,857 to 34,103, `literal-patterns` 22,652 to 25,599); no other group
-  changed, and the largest is `literal-source-machine` at 47,639. With only `check.bend::run` exempted
-  from the state cap (a scratch copy of HEAD, both cap sites), the `perch-context` gate passes: 33
-  controls, 8 mutants, 36 compositions, 1,506 declarations covered, 0 blockers, 0 truncated, 0
-  role-limited. So `run` is the only Perch blocker on this tree.
-- **State of `check.bend::run`: 64,171 against 60,000, not fixed.** It is the only declaration of
-  `check.bend` over the cap (the next are `functions` at 52,979 and `expected` at 52,865). At the floor
-  (every callee already an interface) the state is: the declaration 11,565 bytes; the task 807; 113
-  reachable declarations at 26,910 bytes plus 83 bytes each of summary notes; 25 datatypes 8,200; about
-  6.2 KB of unresolved builtin notes (80, one per builtin name per file, 13 files); imports 494; the one
-  caller, `function_body`, with its two callees, about 900.
-
-  The measure counts reach, not size. Perch expands only the first 48 helpers in the order `run` first
-  names them, so the closure is `run`'s 61 direct references (20,105 bytes with notes) plus what the
-  bodies of those 48 name (52 more declarations, about 16 KB). Exclusive tails of the largest
-  expanded helpers (declarations only that helper reaches, bytes with notes): `L.arguments` 4 (1,194),
-  `decision_body` 3 (933), `binding_body` 3 (896), `L.primitive_type` 3 (887), `constructor` 2 (724),
-  `find_constructor` 2 (685), `empty_remainder` 2 (635), `function_body` 2 (625), `compile` 2 (596),
-  `prepend_arm` 2 (597), `let_result` 2 (591), `residual` 2 (584).
-
-  Levers measured in scratch trees at the floor, with the real task (nothing applied; the last row is an
-  estimate from the tails, and the first rows are before `4ea2d92`, when the natural order stood at 64,425):
-
-  | Lever | State |
-  | --- | --- |
-  | natural order | 64,425 (64,171 after `4ea2d92`) |
-  | entry mode first (`Expression`, `Arguments`, `Arms`, `Rebuild`, then the matrix walk) | 65,869 |
-  | `Mode` declaration order, matrix walk last | 65,867 |
-  | `Expression` rows: `Offset` last | 64,003 |
-  | `Expression` rows: `Intrinsic` last | 67,025 |
-  | leaves first in `S.Node` order, then a hill climb over every row (previous session, default task; natural 63,945) | 61,796, then 60,351 |
-  | the `Rebuild` rows in a separate dispatcher (previous session; not allowed, item 1) | 62,500 |
-  | drop the task | minus 566 |
-  | fold the single-use adapters that remain (matrix_retained, intrinsic_type, arm_body, annotation_id) and dedupe `kind_name` and the `B.parameters` chain | about minus 2.2 KB |
-
-  Bend has no mutual recursion and no reusable function values (a `+` reusable binder needs Data
-  kind), so the dispatcher cannot be split by moving rows; a `plan_run` continuation was rejected by the
-  seed ("expected Data, observed Type"). A hill-climbed order is a search artifact (it moves rows for
-  the measure, not for the reader) and still fails. The folds together would reach about 2.2 KB of the
-  4.2 KB needed and trade the house idiom of one named unpacker per continuation for nested matches
-  inside lambdas. The bigger levers touch frozen text:
-  these lines of `check.bend` are byte-pinned and must stay reachable from `run`: 291
-  (`literals:all-leaf-invalid`), 313 (`dead-before-live`), 320 (`inferred-let-literal`), 325
-  (`offset-nat-add`), 366 (`nest-review:skip-empty-default-body`), 403 and 411
-  (`fields:refine-by-spelling`, `discard-parent-demand`), and `expected`'s and `offset`'s rows
-  (29 to 30, 212). So the matrix rows cannot leave `run`, nor the `Rebuild` rows (item 1 above).
-
-  What would close it, each a decision for the coordinator or an owner: (1) re-witness the two
-  literals mutants that pin the leaf walk (`all-leaf-invalid`, `dead-before-live`), then
-  defunctionalize it (the walk returns pending leaf jobs, a fold combines their results), which takes
-  the twelve matrix rows (2.3 KB) and the declarations only they reach out of `run`; the estimate is
-  about 4 KB, so it must be measured before it is worth doing; (2) a cap decision for dispatchers,
-  the 60,000 bytes being pinned by `docs/perch-style.md` and the `perch-context` gate: the measure
-  rewards a fat hub (an extracted row adds an expanded helper and removes none), so it penalizes
-  decomposition; (3) moving `function_body` and the book driver out of `check.bend` gives `run` no
-  caller in its file (about minus 0.9 KB, not enough alone).
-
-### What a re-merge of a newer nest tip, or of modules, must redo
-
-- Regenerate, never merge: `git checkout --ours tools/census/approved.json`, `npm run census:approve`,
-  `npm run census`. The postimages of the contested and generated files were purged from
-  `.git/rr-cache` so a merge of the same nest tip does not silently replay this resolution; the
-  uncontested ones (`docs/perch-review-log.md`, `scripts/gates/run.py`, `test_runner.py`,
-  `docs/compiler-campaign/manifest.json`) are recorded.
-- Manifest: union again, then complete import closures, keep the two excerpt tasks and the
-  `pattern-matrix-proofs` split, and re-check `checking`.
-- Keep the `Rebuild` rows inline in `run`; the fields gate anchors `run(n,Rebuild{head},...)`.
-- Keep the nest harness tolerance (`FOREIGN_NOTE`, `proved`, the `src/host` copies). `campaign/modules`
-  has no nest harness, so a modules merge brings the bundle CLIs to nest's gates unchanged and needs it.
-- Modules: take its `rebinds` in `qualify.bend` and its driver call; keep the erased-let exemption in
-  whatever replaces `binder`; the checker now also carries nest's `G.constructor_before`, so modules'
-  removal of the checker-side test must remove nest's too (`patterns.bend::fields`, `matrix.bend::binder`).
-- Closures: `LambdaStatements` reads newline tokens; the skips sit at list continuation points only.
-- Re-run the round-3, 9 and 10 fixtures and the literals layout books after any parser change: they
-  are the contested set.
-- The literal adapters live in `literal-matrix.bend` (`M.primitive_match`, `M.dead_arm`, `M.inspect`,
-  `M.checked_case`, `M.checked_default`, `M.retained`) and `literal-check.bend` (`L.intrinsic_type`,
-  `L.constructor`). A newer nest tip that edits `check.bend` names none of them; a modules merge that
-  adds rows to `run` must keep `checking` under 48,000 (now 47,344, margin 656).
-- Re-run `tests/compiler-literals-integ` after any merge: its six books hold under any D4-safe ruling.
-  `spaced-plus-concat` fails, by design, under nest's Invalid reading of a spaced `+` after an argument
-  (`argspace-operator-call`), because that reading is Invalid on a book the seed accepts. Its gate is registered in `scripts/gates/run.py` and its self-test; `npm run census` regenerates
-  `accepted.json` when the registry or the gate program changes.
-
 ### Remaining
 
-Not done here, and why:
+Not done here, and why (everything an executor may do is done; these need someone else):
 
-- **The ruling on the eight constructs (39 pins).** Coordinator. Until then `nest-round3`,
-  `nest-round9`, `nest-round10` and `literals` fail on their first contested fixture; the merged
-  answers are listed above, and the pins to re-freeze from the seed if the precise rule stands.
-- **`check.bend::run`: state 64,171 against 60,000.** Needs a design or a cap decision (Perch section);
-  independent of the ruling. The composition half is done.
-- **`inferred-let-literal` (a contradiction between frozen mutants).** Independent of the ruling; the
-  literals owner or the coordinator must re-witness the mutant or accept that the literals gate
-  cannot pass (Evidence section).
-- **18 more mutants that cannot be killed on the merged tree:** the 15 dead anchors (ten follow the
-  ruling, five can be re-pointed without changing what they mutate) and three that follow the
-  ruling through a contested witness or a stopgap that no longer runs (`rebound-promotion-invalid`,
-  `rebound-let-invalid`, `line-break-before-any-name`).
-- **D7 fixtures for the merge behaviors: done** in `tests/compiler-literals-integ` for the erased
-  dotted let, the keyword arm body, the spaced `+` after an argument (the accepted `a ++ b` twin) and
-  the literal column. Not added: a live dotted let and the rejected `two(a + b)`, which are the
-  contested constructs of both parents' books (they stay with the ruling).
-- **Owner review** of the nest harness edit, the two excerpt tasks, the `pattern-matrix-proofs`
-  split and the adapter move.
-- **Live Perch** (semantic and style review of the changed declarations), and refreshing the shared
-  receipts, which the gate runs classify but leave to the coordinator. The offline `--preflight`
-  of a lone `.bend` target is structurally unavailable for these files (its composition is the whole
-  import closure, 119,218 bytes for `check.bend`, before and after); the manifest preflight is the
-  meaningful one and its only blocker is `check.bend::run`.
+- **The ruling and the mutant re-pointing are proposals.** The findings assigned edits of frozen suites to the
+  coordinator and the suite owners; `3d3f3ff` (39 pins, one relaxed oracle assertion, one new witness book),
+  `58d0c88` (19 mutants) and the `let-nat` re-witness are made here in commits of their own and can be
+  reverted without touching a repair. Reverting them makes `nest-round3`, `-9`, `-10` and `literals` fail as
+  they did at `4f1fa9f`.
+- **Owner sign-off** of the nest harness edit (`eb9b1e5`, `ea3577a`), of the three excerpt tasks and the
+  `pattern-matrix-proofs` split, and of the adapter move.
+- **The per-gate limit.** `nest-round10` takes 578 to 737 s alone or under moderate load and exhausted the
+  runner's 1,800 s limit once, in a full run under a load average near 50 (the other gates were slower by a
+  factor of 1.5 to 2 in the same run). The limit is `--timeout` of `scripts/gates/run.py`; raise it for a
+  loaded machine or run the gate alone.
+- **Live Perch** (semantic and style review of the changed declarations), and refreshing the shared receipts,
+  which the gate runs classify but leave to the coordinator. The `perch-context` state cap is met by 59 bytes
+  (above).
+- **Known limits, each Unsupported or Invalid where the seed accepts, or accepted where it rejects**
+  (`src/CONTRACT.json`, `known_imprecisions`): a promoted binder that repeats the last segment of an imported
+  datatype's name, or an unknown capitalized name, is Unsupported where the seed takes a fresh name; a
+  parameter or binder named like a type that a later annotation reads is Unsupported also where it is a
+  type parameter; a bare `+` is Unsupported where the seed rejects it for want of an annotation; the layout gaps
+  of the previous rounds (a function body in column 0, a line break in a header or before a let's `=`) stay
+  Invalid where the seed accepts. None of these accepts a book the seed rejects, and none is known to: the
+  enumerations and fuzz gates above report 0 false acceptances.
 
 ## Layout and binder order
 
