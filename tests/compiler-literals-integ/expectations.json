@@ -2360,7 +2360,7 @@
       "file": "tests/compiler-literals-integ/fixtures/promoted-type-bool.bend",
       "sha256": "9009223e517020cce1259d8e21ced908fa1dead29f9ce05b2cb1b577f4e2e462",
       "behavior": "promoted type name",
-      "covers": "Base's `+Bool`",
+      "covers": "Base's `+Bool`, which the book does not load",
       "enums": {
         "Answer": [
           "No",
@@ -2389,11 +2389,11 @@
         "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n10 |     case 0n: No{}\n11>|     case +Bool: Yes{}\n   |               ^\n12 | \n"
       },
       "knot_expected": {
-        "outcome": "Invalid",
-        "exit": 2,
+        "outcome": "Unsupported",
+        "exit": 3,
         "artifact": false,
-        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
-        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+        "diagnostic_prefix": "Unsupported\tcheck\tpromoted-type\t",
+        "justification": "A promoted binder spelled like a type the checker cannot place: an imported datatype is spelled with its module, and Base's datatypes outside the reachable slice are not in the book. The seed reads `+D` as a quantified datatype where D is a type in scope, and a fresh name otherwise; the checker cannot tell which, so the binder is unsupported (D4)."
       }
     },
     {
@@ -2435,6 +2435,57 @@
         "artifact": false,
         "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
         "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "promoted-type-imported",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-imported.bend",
+      "sha256": "acb89138a953e8d6189848cc85aa91c5db2d3158c7f226da24c209d1b0cc7c12",
+      "behavior": "promoted type name",
+      "covers": "`+Flag` in a file that imports a Flag it does not spell",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-imported.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/promoted-type-imported.bend"
+            ],
+            "exit": 0,
+            "stdout": "No{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tpromoted-type\t",
+        "justification": "A promoted binder spelled like a type the checker cannot place: an imported datatype is spelled with its module, and Base's datatypes outside the reachable slice are not in the book. The seed reads `+D` as a quantified datatype where D is a type in scope, and a fresh name otherwise; the checker cannot tell which, so the binder is unsupported (D4)."
       }
     },
     {
@@ -2624,6 +2675,47 @@
       }
     },
     {
+      "name": "promoted-type-module",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-module.bend",
+      "sha256": "04c86cf462048e28bf04137bdfc21421e79a8c05e9000ac8aa0a572d23396ce3",
+      "behavior": "promoted type name",
+      "covers": "a module's own type, promoted in its own body",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-module.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n7 |     case Off{}: On{}\n8>|     case +Flag: Off{}\n  |               ^\n9 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-module.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n7 |     case Off{}: On{}\n8>|     case +Flag: Off{}\n  |               ^\n9 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tpromoted-type\t",
+        "justification": "A promoted binder spelled like a type the checker cannot place: an imported datatype is spelled with its module, and Base's datatypes outside the reachable slice are not in the book. The seed reads `+D` as a quantified datatype where D is a type in scope, and a fresh name otherwise; the checker cannot tell which, so the binder is unsupported (D4)."
+      }
+    },
+    {
       "name": "promoted-type-nat",
       "file": "tests/compiler-literals-integ/fixtures/promoted-type-nat.bend",
       "sha256": "374e22d2a674a452a1f3166715f14a0d1882885211a3cb70809afa8e021e1725",
@@ -2794,7 +2886,7 @@
     {
       "name": "qualified-order-lib-first",
       "file": "tests/compiler-literals-integ/fixtures/qualified-order-lib-first.bend",
-      "sha256": "4a579058a4b177e9e142fc5f1f3db596b641530852fed90c1c022ae6950629ab",
+      "sha256": "79209310599ea52b1db044a8d3b0542b2a9e89d3da1b0457f681336e8e1fa847",
       "behavior": "module order",
       "covers": "qualified constructor patterns whose declarations sit later in their file than the patterns",
       "enums": {
@@ -2895,7 +2987,7 @@
     {
       "name": "qualified-order-lib-last",
       "file": "tests/compiler-literals-integ/fixtures/qualified-order-lib-last.bend",
-      "sha256": "e0f40b19fe2240e85e09623c7b7df7f32d4d15c681ef5ad162527dbfffa9ed8d",
+      "sha256": "e6b59ac04f710df02cf1754b0a80e8d48d19c49091396b59c74b96532ebfb25a",
       "behavior": "module order",
       "covers": "the same patterns after the imported declarations by offset",
       "enums": {

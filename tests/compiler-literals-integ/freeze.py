@@ -57,6 +57,12 @@ PROMOTED = invalid(
     'check', 'promoted-type',
     'Seed-invalid ("expected : a quantified datatype after +"): the seed reads `+D` as the quantified '
     'datatype D when D names a type declared before it, so no promoted binder is spelled like one.')
+UNPLACED = oracle.unsupported(
+    'check', 'promoted-type',
+    'A promoted binder spelled like a type the checker cannot place: an imported datatype is spelled with '
+    'its module, and Base\'s datatypes outside the reachable slice are not in the book. The seed reads '
+    '`+D` as a quantified datatype where D is a type in scope, and a fresh name otherwise; the checker '
+    'cannot tell which, so the binder is unsupported (D4).')
 SHADOW = oracle.unsupported(
     'parse', 'parameter-shadow',
     'Seed-invalid ("expected : Type"): a parameter\'s name shadows the type of that name in the annotations '
@@ -103,7 +109,10 @@ PLAN = {
     'promoted-type-let-typed': ('promoted type name', '`+Flag : Flag = x`', [], PROMOTED),
     'promoted-type-own-early': ('promoted type name', '`case +Early:` over the scrutinee\'s own type', [], PROMOTED),
     'promoted-type-nat': ('promoted type name', "Base's `+Nat`", [], PROMOTED),
-    'promoted-type-bool': ('promoted type name', "Base's `+Bool`", [], PROMOTED),
+    'promoted-type-bool': ('promoted type name', "Base's `+Bool`, which the book does not load", [], UNPLACED),
+    'promoted-type-module': ('promoted type name', 'a module\'s own type, promoted in its own body', [], UNPLACED),
+    'promoted-type-imported': ('promoted type name', '`+Flag` in a file that imports a Flag it does not spell',
+                               [], UNPLACED),
     'promoted-type-string': ('promoted type name', "Base's `+String`", [], PROMOTED),
     'promoted-type-later': ('promoted type name', '`+Later` before the declaration of Later',
                             ['f'], oracle.AGREE),
