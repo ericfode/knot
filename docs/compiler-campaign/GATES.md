@@ -66,7 +66,7 @@ split across lines and an arm body at its `case` column are Unsupported), and
 discarded body too), the binder name rule (`+` names no earlier datatype), the
 hidden type name (a binder hides a datatype of its name from later types) and the
 layouts the parser answers Unsupported, with `nest-sweep11` running its parser
-mutants and `fuzz11.py`, 5,400 fixed-seed programs compared with the seed, each in
+mutants and `fuzz11.py`, 6,100 fixed-seed programs compared with the seed, each in
 both compiler lanes with its own semantic mutants. The nest gates scale their
 harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs

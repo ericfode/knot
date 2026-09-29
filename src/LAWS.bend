@@ -300,3 +300,16 @@ law split_before_colon_witness:
   {[P.split([S.Token{"\n",S.At{9,10,1,9}},S.Token{":",S.At{20,21,2,8}}]),P.split([S.Token{"\n",S.At{9,10,1,9}},S.Token{"=",S.At{20,21,2,8}}]),
     P.split([S.Token{"\n",S.At{9,10,1,9}},S.Token{"v",S.At{20,21,2,8}}]),P.split([S.Token{":",S.At{9,10,1,9}}])] ==
     [True{},True{},False{},False{}] : List<&2,Bool>}
+
+# A call's parenthesis opens on its callee's line. On a later line, in a header that joins its
+# lines, it opens the next column (Knot has no term for it), as the seed reads it.
+law same_line_witness:
+  {[S.same_line(S.Token{"h",S.At{9,10,1,9}},S.Token{"(",S.At{11,12,1,11}}),S.same_line(S.Token{"h",S.At{9,10,1,9}},S.Token{"(",S.At{20,21,2,2}})] ==
+    [True{},False{}] : List<&2,Bool>}
+
+law paren_on_a_later_line_is_no_call:
+  {P.run(1n,P.Term{False{}},[S.Token{"h",S.At{9,10,1,9}},S.Token{"(",S.At{20,21,2,2}}]) ==
+    Done{P.Parsed{S.Variable{S.Token{"h",S.At{9,10,1,9}}},[S.Token{"(",S.At{20,21,2,2}}]}} : Result<S.Error,P.Parsed>}
+
+law parenthesis_opens_a_column:
+  {[P.opens([S.Token{"(",S.At{9,10,1,9}}]),P.opens([S.Token{":",S.At{9,10,1,9}}])] == [True{},False{}] : List<&2,Bool>}

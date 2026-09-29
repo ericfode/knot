@@ -32,7 +32,7 @@ MUTANTS = [
      'old': 'S.touches(name,open),u =>', 'new': 'Bool.or(Bool.not(pattern),S.touches(name,open)),u =>',
      'witness': 'w5-body-space', 'phase': 'check', 'wrong': ACCEPTED},
     {'name': 'touch-call-parenthesis', 'file': 'parse.bend',
-     'old': 'S.matches(open,"("),u =>', 'new': 'Bool.and(S.matches(open,"("),S.touches(name,open)),u =>',
+     'old': 'Bool.and(S.matches(open,"("),S.same_line(name,open)),u =>', 'new': 'Bool.and(S.matches(open,"("),S.touches(name,open)),u =>',
      'witness': 'v1-call-space', 'phase': 'check',
      'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\tend-of-body\t'}},
 ]

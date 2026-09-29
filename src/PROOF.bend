@@ -150,3 +150,9 @@ def L.same_line_statement(at,rest): {==}
 def L.let_ends_at_line_break(at,rest): {==}
 
 def L.split_before_colon_witness(): {==}
+
+def L.same_line_witness(): {==}
+
+def L.paren_on_a_later_line_is_no_call(): {==}
+
+def L.parenthesis_opens_a_column(): {==}

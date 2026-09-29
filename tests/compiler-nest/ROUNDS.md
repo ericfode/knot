@@ -93,15 +93,16 @@ at its `case` column are `Unsupported`. `round10.py` checks both lanes, evaluato
 and Wasm agreement, rejection in every phase and 22 mutants; `fuzz.py` draws
 spaced `+` atoms.
 
-`round11-expectations.json` freezes 306 round-11 fixtures and 314 seed calls, generated from the templates
+`round11-expectations.json` freezes 330 round-11 fixtures and 328 seed calls, generated from the templates
 in `round11_seed.py`, before the repairs. A dead body's nested matches are audited (unknown constructor, arity,
 width, bare constructor, call, promoted datatype or constructor, in six shapes with live twins and lax
 controls); `+X` names no datatype declared earlier in the file; a binder hides a datatype of its name from a later
 annotation, parameter type, result and field type; a numeral opens a later column and is Unsupported; the layouts
 the parser does not model (a case at or left of its match or at the margin, a statement or marked body at another
 column, a statement on a let's line, a let split before `:` or `=`, a declaration at another column or on a body's
-line) are Unsupported, as is a term after a header's scrutinee or a numeral as a call argument. `round11.py` checks
+line) are Unsupported, as is a term after a header's scrutinee, a numeral as a call argument and a `(` that starts
+a line in a header (the seed reads it as the next term, not a call). `round11.py` checks
 both lanes, evaluator and Wasm agreement, rejection in every phase, all
-proof entries and 23 audit, name-rule and shadowing mutants; `round11.py --sweep` runs 14 parser mutants and
-`fuzz11.py`, 5,400 fixed-seed programs in five families (names, dead rows, gaps, widths, layout) compared with the
-seed: 0 false acceptances and 0 false Invalid.
+proof entries and 23 audit, name-rule and shadowing mutants; `round11.py --sweep` runs 18 parser mutants and
+`fuzz11.py`, 6,100 fixed-seed programs in six families (names, dead rows, gaps, parenthesized columns, widths, layout)
+compared with the seed: 0 false acceptances and 0 false Invalid.

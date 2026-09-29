@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Round-11 regressions: every row is audited, one binder name rule, a binder hides its datatype, and the layouts the parser does not model.
 
-`round11.py` replays the 293 seed-frozen fixtures in both compiler lanes with the audit, name-rule and
-shadowing mutants; `round11.py --sweep` runs the parser mutants and the 5,400-program differential generator.
+`round11.py` replays the 330 seed-frozen fixtures in both compiler lanes with the audit, name-rule and
+shadowing mutants; `round11.py --sweep` runs the parser mutants and the 6,100-program differential generator.
 """
 import datetime
 import json
@@ -103,8 +103,8 @@ MATRIX = [
 ]
 # The parser: a numeral column, and each layout the seed reads that the parser answers Unsupported.
 PARSE = [
-    {'name': 'row-ignores-numerals', 'file': 'parse.bend', 'old': 'Bool.or(scrutinee(ts),Bool.or(numeral(ts),promotes(ts)))',
-     'new': 'Bool.or(scrutinee(ts),promotes(ts))', 'witness': 'nat-wild-space-zero', 'phase': 'check',
+    {'name': 'row-ignores-numerals', 'file': 'parse.bend', 'old': 'Bool.or(scrutinee(ts),Bool.or(numeral(ts),Bool.or(starts(ts,"("),promotes(ts))))',
+     'new': 'Bool.or(scrutinee(ts),Bool.or(starts(ts,"("),promotes(ts)))', 'witness': 'nat-wild-space-zero', 'phase': 'check',
      'wrong': invalid('parse', 'expected-:')},
     {'name': 'declaration-case-invalid', 'file': 'parse.bend', 'old': 'S.choose(Result<S.Error,Parsed>,S.matches(head,"case"),u =>',
      'new': 'S.choose(Result<S.Error,Parsed>,False{},u =>', 'witness': 'layout-case-at-match-multi', 'phase': 'check',
@@ -135,8 +135,18 @@ PARSE = [
     {'name': 'header-closer-a-term', 'file': 'parse.bend', 'old': 'Bool.not(Bool.or(S.closes(h),S.reserved(S.text(h))))',
      'new': 'Bool.not(S.reserved(S.text(h)))', 'witness': 'header-closer', 'phase': 'check', 'wrong': invalid('parse', 'expected-term')},
     {'name': 'argument-ignores-numerals', 'file': 'parse.bend',
-     'old': 'Bool.or(numeral(tokens),Bool.and(pattern,promotes(tokens)))', 'new': 'Bool.and(pattern,promotes(tokens))',
+     'old': 'Bool.or(numeral(tokens),Bool.or(starts(tokens,"("),Bool.and(pattern,promotes(tokens))))', 'new': 'Bool.or(starts(tokens,"("),Bool.and(pattern,promotes(tokens)))',
      'witness': 'argument-call-dead', 'phase': 'check', 'wrong': invalid('parse', 'argument-separator')},
+    {'name': 'call-ignores-line', 'file': 'parse.bend', 'old': 'Bool.and(S.matches(open,"("),S.same_line(name,open))',
+     'new': 'S.matches(open,"(")', 'witness': 'paren-dead-one-nl', 'phase': 'check', 'wrong': {'exit': 0}},
+    {'name': 'call-needs-touch', 'file': 'parse.bend', 'old': 'Bool.and(S.matches(open,"("),S.same_line(name,open))',
+     'new': 'Bool.and(S.matches(open,"("),S.touches(name,open))', 'witness': 'header-call-dead', 'phase': 'check',
+     'wrong': unsupported('term-form')},
+    {'name': 'opens-ignores-paren', 'file': 'parse.bend', 'old': 'Bool.or(starts(ts,"("),promotes(ts))', 'new': 'promotes(ts)',
+     'witness': 'paren-row-nl', 'phase': 'check', 'wrong': invalid('parse', 'expected-:')},
+    {'name': 'argument-ignores-paren', 'file': 'parse.bend',
+     'old': 'Bool.or(starts(tokens,"("),Bool.and(pattern,promotes(tokens)))', 'new': 'Bool.and(pattern,promotes(tokens))',
+     'witness': 'paren-argument-nl', 'phase': 'check', 'wrong': invalid('parse', 'argument-separator')},
     {'name': 'same-line-statement-invalid', 'file': 'parse.bend',
      'old': 'S.choose(Result<S.Error,List<&2,S.Token>>,S.statement(h),u =>', 'new': 'S.choose(Result<S.Error,List<&2,S.Token>>,False{},u =>',
      'witness': 'layout-same-line-glued-single', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-\n'}},

@@ -52,9 +52,9 @@ def promotes(ts: List<&2,S.Token>) -> Bool:
     case Con{+plus,Con{next,rest}}: Bool.and(S.matches(plus,"+"),S.marks(plus,next))
     case _: False{}
 
-# A row's next column opens at a name, a numeral or a marking `+`.
+# A row's next column opens at a name, a numeral, a parenthesis or a marking `+`.
 def opens(+ts: List<&2,S.Token>) -> Bool:
-  Bool.or(scrutinee(ts),Bool.or(numeral(ts),promotes(ts)))
+  Bool.or(scrutinee(ts),Bool.or(numeral(ts),Bool.or(starts(ts,"("),promotes(ts))))
 
 # A line break, then a name: whitespace to the seed.
 def broken(+ts: List<&2,S.Token>) -> Bool:
@@ -282,7 +282,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(t,"~")),u =>
               invalid(t,"parameter"),u =>
               then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
-            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.or(numeral(tokens),Bool.and(pattern,promotes(tokens))))),u => unsupported(tokens,"argument-whitespace"),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.or(numeral(tokens),Bool.or(starts(tokens,"("),Bool.and(pattern,promotes(tokens)))))),u => unsupported(tokens,"argument-whitespace"),u =>
             S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),S.matches(h,"\n")),u => unsupported(tokens,"line-break"),u =>
               invalid(tokens,"argument-separator")))))
         case _: invalid(tokens,"unexpected-end")
@@ -292,7 +292,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,Bool.and(pattern,S.matches(name,"+")),u =>
             S.choose(Result<S.Error,Parsed>,S.binder(open),u => Done{Parsed{S.Promotion{open},tail}},u => binder_failure(tokens,open,"pattern-binder",True{})),u =>
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
-          S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(open,"("),S.same_line(name,open)),u =>
             then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
             # Fields open at a brace touching the name, as in the seed.

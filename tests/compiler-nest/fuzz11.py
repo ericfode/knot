@@ -18,6 +18,10 @@ Every program carries a class `family:...`, and the summary counts seed and Knot
   those bodies, and terms the seed never checks there. Live twins of each.
 - gaps: multi-scrutinee headers, row patterns and bodies with a space, line break or comment between
   adjacent tokens, commas, detached braces and markers, and literal patterns (Nat, U32, Char, hex).
+- parens: header columns that are a name, a call `h(a)` or a parenthesized name, and row patterns that
+  are a name, a wildcard, a constructor or a parenthesized name, with a space, line break or comment
+  between any adjacent pair (the seed reads a `(` that starts a line as the next term, not a call);
+  live, and nested in an unreachable row, where a computed scrutinee is accepted.
 - widths: rows with one pattern too many or too few, constructor patterns with one field too many
   or too few, and their correct twins; reachable and not, flat and nested, one to three columns.
 - layout: the case column, statement columns, marked and unmarked bodies at or left of their case, a
@@ -38,7 +42,7 @@ import random
 import check as gate
 
 SEED = 0x4E455354 ^ 0x11
-COUNT = 5400
+COUNT = 6100
 
 PRELUDE = '''type Flag is Data:
   Off{}
@@ -276,16 +280,23 @@ def wordlike(text):
     return text[0].isalnum() or text[0] in "_'"
 
 
-def join(d, tokens, rate):
+def join(d, tokens, rate, focus=None):
     """Adjacent tokens are joined by their usual separator, or, one time in `rate`, by a random gap;
-    a rate of 0 puts exactly one random gap between one random pair."""
+    a rate of 0 puts exactly one random gap between one random pair, half the time before a token `focus`
+    accepts."""
     out = [tokens[0]]
-    only = d.rng.randrange(len(tokens) - 1) if rate == 0 and len(tokens) > 1 else None
+    only = None
+    if rate == 0 and len(tokens) > 1:
+        aimed = [i for i, tok in enumerate(tokens[1:]) if focus and focus(tok)]
+        only = d.pick(aimed) if aimed and d.chance(2) else d.rng.randrange(len(tokens) - 1)
     for i, (prev, tok) in enumerate(zip(tokens, tokens[1:])):
         needs = wordlike(prev[-1]) and wordlike(tok)
         usual = ' ' if needs else ''
         gapped = i == only if rate == 0 else d.chance(rate)
-        out.append(d.pick([gap for gap in GAP if gap or not needs]) if gapped else usual)
+        pool = [gap for gap in GAP if gap or not needs]
+        if gapped and focus and focus(tok) and d.chance(2):
+            pool = [gap for gap in pool if '\n' in gap]
+        out.append(d.pick(pool) if gapped else usual)
         out.append(tok)
     return ''.join(out)
 
@@ -310,6 +321,36 @@ def gaps_program(d):
     args = ', '.join(CALLS[t] for t in types)
     src = f'def f({params}) -> Flag:\n  {header}\n    ' + '\n    '.join(rows + [wild]) + '\n\n' + main(args)
     return f'gaps:{len(types)}col:{"literal" if literal else "plain"}', PRELUDE + src
+
+
+# ---------------------------------------------------------------------------------------- parens
+def parens_program(d):
+    opens = lambda tok: tok == '('
+    cols = d.pick([1, 2, 2, 3])
+    reach = d.pick(['dead', 'live'])
+    rate = d.pick([0, 0, 0, 6, 12])
+    names = 'abc'[:cols]
+    kinds = [d.weighted([('name', 4), ('call', 3), ('paren', 2)]) for _ in range(cols)]
+    header = ['match']
+    for name, form in zip(names, kinds):
+        header += {'name': [name], 'call': ['h', '(', name, ')'], 'paren': ['(', name, ')']}[form]
+    header.append(':')
+    rows = []
+    for _ in range(d.pick([1, 2])):
+        row = ['case']
+        for _ in range(max(cols + d.pick([0, 0, 0, 0, 1, -1]), 1)):
+            row += d.pick([['_'], ['x'], ['(', 'x', ')'], ['On', '{', '}'], ['_'], ['x']])
+        rows.append(join(d, row + [':', 'On', '{', '}'], rate, opens))
+    sig = ', '.join(f'{n}: Flag' for n in names)
+    args = ', '.join(['On{}', 'Off{}', 'On{}'][:cols])
+    scrut = ' '.join(names)
+    if reach == 'live':
+        src = f'def f({sig}) -> Flag:\n  {join(d, header, rate, opens)}\n    ' + '\n    '.join(rows) + '\n\n' + main(args)
+    else:
+        outer = ' '.join(['On{}'] + ['_'] * (cols - 1))
+        src = (f'def f({sig}) -> Flag:\n  match {scrut}:\n    case {" ".join("_" for _ in names)}: Off{{}}\n    case {outer}:\n'
+               f'      {join(d, header, rate, opens)}\n        ' + '\n        '.join(rows) + '\n\n' + main(args))
+    return f'parens:{cols}col:{reach}:{"-".join(sorted(set(kinds)))}', PRELUDE + src
 
 
 # ---------------------------------------------------------------------------------------- widths
@@ -397,7 +438,7 @@ def layout_program(d):
 
 
 FAMILIES = [('names', names_program, 1300), ('dead', dead_program, 1300), ('gaps', gaps_program, 1200),
-            ('widths', widths_program, 700), ('layout', layout_program, 900)]
+            ('parens', parens_program, 700), ('widths', widths_program, 700), ('layout', layout_program, 900)]
 
 
 def programs(count=COUNT):

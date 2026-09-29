@@ -176,6 +176,7 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | A line break in a let before its `=` or `:`, before its value or between its marker and name | `parse` | `line-break` |
 | A statement on the line of a let's value | `parse` | `same-line-statement` |
 | A numeral opening a later column of a row (a Nat literal pattern), or a term after a header's scrutinee that is no closer, separator or keyword | `parse` | `term-form` |
+| A `(` that starts a line in a match or case header, where the seed reads a parenthesized term as the next column and never as a call's arguments | `parse` | `term-form`, or `argument-whitespace` among call or constructor arguments |
 | A case at, left of, or at the margin of its match's column | `parse` | `pattern-or-indentation` |
 | A `def` or `type` at another column | `parse` | `top-level-indentation` |
 | A `def` or `type` on the line of a body's end | `parse` | `same-line-declaration` |
