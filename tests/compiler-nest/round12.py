@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Round-12 regressions: the first row of a split marks its fields, term suffixes are unsupported, and gates share no half-written file.
 
-`round12.py` replays the 151 seed-frozen fixtures in both compiler lanes, kills the first-row-marks and
+`round12.py` replays the 161 seed-frozen fixtures in both compiler lanes, kills the first-row-marks and
 term-suffix mutants, checks that a published wrapper is never seen half written, and runs the 3,000-program
 differential generator of `fuzz12.py`.
 """
@@ -36,6 +36,7 @@ REPLY = 'S.choose(Result<S.Error,Parsed>,suffix(ts),u => unsupported(ts,"term-fo
 LINE_END = 'S.choose(Result<S.Error,List<&2,S.Token>>,suffix(ts),u =>'
 BINDING = 'Bool.or(continues(tokens),Bool.and(U32.is_eq(quantity,2),starts(S.skip_lines(tokens),"(")))'
 BINDING_BREAK = 'Bool.and(U32.is_eq(quantity,2),Bool.and(starts(tokens,"\\n"),starts(S.skip_lines(tokens),"+")))'
+VALUE_BREAK = 'Bool.and(starts(rhs,"\\n"),Bool.and(Bool.not(scrutinee(S.skip_lines(rhs))),term_start(S.skip_lines(rhs))))'
 ARGUMENT = 'Bool.and(Bool.not(Bool.or(parameters,pattern)),Bool.or(suffix(tokens),lambda(head,tokens)))'
 # Each mutant is one replacement in a copy of `src/`, killed in both lanes on the named witness. The matrix
 # mutants drop the first row's marks, take them from another row or promote too many fields; the parser
@@ -105,6 +106,11 @@ MUTANTS = [
      'witness': 'suffix-plus-break-paren', 'phase': 'check', 'wrong': invalid('parse', 'binding-name')},
     {'name': 'binding-repeated-break-invalid', 'file': 'parse.bend', 'old': BINDING_BREAK, 'new': 'False{}',
      'witness': 'suffix-plus-break-plus', 'phase': 'check', 'wrong': invalid('parse', 'binding-name')},
+    {'name': 'value-break-term-invalid', 'file': 'parse.bend', 'old': VALUE_BREAK,
+     'new': 'False{}', 'witness': 'suffix-let-break-paren', 'phase': 'check', 'wrong': invalid('parse', 'expected-term')},
+    {'name': 'value-break-any-token', 'file': 'parse.bend', 'old': VALUE_BREAK,
+     'new': 'starts(rhs,"\\n")', 'witness': 'suffix-ctl-let-break-closer', 'phase': 'check',
+     'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}},
     {'name': 'continuation-needs-no-bang', 'file': 'parse.bend', 'old': 'Bool.or(operator(ts),Bool.or(bang(ts),arrow(ts)))',
      'new': 'Bool.or(operator(ts),arrow(ts))', 'witness': 'suffix-cont-bang-margin', 'phase': 'check',
      'wrong': invalid('parse', 'declaration-name')},

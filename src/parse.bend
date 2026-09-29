@@ -175,13 +175,22 @@ def split(+ts: List<&2,S.Token>) -> Bool:
 def promoted_term(+quantity: U32, +ts: List<&2,S.Token>) -> Bool:
   Bool.and(U32.is_eq(quantity,2),Bool.or(Bool.and(Bool.or(starts(ts,"\n"),starts(ts,"<eof>")),Bool.not(split(ts))),operator(ts)))
 
+# The seed reads any term after a scrutinee, unchecked in a discarded match: a header
+# ends only at a closer, a separator or a keyword.
+def term_start(ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{+h,t}: Bool.not(Bool.or(S.closes(h),S.reserved(S.text(h))))
+
 # So is one before its value.
 def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
   S.choose(Result<S.Error,List<&2,S.Token>>,split(ts),u =>
     Fail{S.Unsupported{"parse","line-break",S.here(ts)}},u =>
   S.bind(List<&2,S.Token>,List<&2,S.Token>,expect(ts,"="),+rhs =>
     S.choose(Result<S.Error,List<&2,S.Token>>,broken(rhs),u =>
-      Fail{S.Unsupported{"parse","line-break",S.here(rhs)}},u => Done{rhs})))
+      Fail{S.Unsupported{"parse","line-break",S.here(rhs)}},u =>
+    S.choose(Result<S.Error,List<&2,S.Token>>,Bool.and(starts(rhs,"\n"),Bool.and(Bool.not(scrutinee(S.skip_lines(rhs))),term_start(S.skip_lines(rhs)))),u =>
+      Fail{S.Unsupported{"parse","line-break",S.here(rhs)}},u => Done{rhs}))))
 
 # The seed reads the next statement on the line of a let's value.
 def line_end(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
@@ -254,13 +263,6 @@ def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{+h,t}: S.choose(Result<S.Error,Parsed>,S.closes(h),u => invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
     case _: invalid(ts,"unexpected-end")
-
-# The seed reads any term after a scrutinee, unchecked in a discarded match: a header
-# ends only at a closer, a separator or a keyword.
-def term_start(ts: List<&2,S.Token>) -> Bool:
-  match ts:
-    case Nil{}: False{}
-    case Con{+h,t}: Bool.not(Bool.or(S.closes(h),S.reserved(S.text(h))))
 
 # A match or case header runs to its colon; its line breaks separate no
 # columns, as in the seed. Joined tokens keep their offsets, so a brace on the

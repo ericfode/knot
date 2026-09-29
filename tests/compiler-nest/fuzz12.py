@@ -13,8 +13,8 @@ Every program carries a class `family:...`, and the summary counts seed and Knot
 - suffix: a complete term (a name, a constructor, a call) followed by one of the seed's term suffixes (each
   infix operator, a call, an index, an offload, a lambda), a junk token the seed rejects, or a `+name` term,
   after a gap of nothing, a space, a line break at a column, a comment or a blank line. It stands as an
-  inline or own-line arm body, a let value, a call argument or a def body, in a row the lowering keeps or
-  discards, in a one- or two-column match.
+  inline or own-line arm body, a let value (on the line of its `=` or the line after it), a call argument or a def
+  body, in a row the lowering keeps or discards, in a one- or two-column match.
 
 A false acceptance (seed rejects, Knot accepts), a false Invalid (seed accepts, Knot Invalid) or a host or
 internal failure fails the gate. Accepted programs also run through the Bend evaluator, in both lanes.
@@ -252,7 +252,8 @@ def suffix_program(d):
     head = ('def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n' if two else 'def f(a: Flag) -> Flag:\n  match a:\n')
     catch, row = ('_ _' if two else '_'), ('Off{} Off{}' if two else 'Off{}')
     call = 'f(On{}, On{})' if two else 'f(On{})'
-    arm = {'inline': f' {term}', 'own': f'\n      {term}', 'let': f'\n      u : Flag = {term}\n      On{{}}', 'arg': f' h({term})',
+    value = d.pick([' '] * 4 + ['\n       ', ' # c\n       ', '\n\n       '])    # the let's value after its `=`, on the line after it
+    arm = {'inline': f' {term}', 'own': f'\n      {term}', 'let': f'\n      u : Flag ={value}{term}\n      On{{}}', 'arg': f' h({term})',
            'single': f' {term}', 'nested': f'\n      match a:\n        case _: {term}'}[site]
     if reach == 'dead':
         rows = f'    case {catch}: On{{}}\n    case {row}:{arm}\n'
