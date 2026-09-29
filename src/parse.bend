@@ -454,9 +454,11 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"term-form"),u =>
             S.bind(List<&2,S.Token>,Parsed,assign(Con{separator,tail}),rhs =>
               then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest))))),u =>
-          S.choose(Result<S.Error,Parsed>,Bool.or(continues(tokens),Bool.and(U32.is_eq(quantity,2),starts(tokens,"("))),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.or(continues(tokens),Bool.and(U32.is_eq(quantity,2),starts(S.skip_lines(tokens),"("))),u =>
             unsupported(tokens,"term-form"),u =>
-            binder_failure(tokens,name,"binding-name",U32.is_ne(quantity,0))))
+          S.choose(Result<S.Error,Parsed>,Bool.and(U32.is_eq(quantity,2),Bool.and(starts(tokens,"\n"),starts(S.skip_lines(tokens),"+"))),u =>
+            unsupported(tokens,"repeated-promotion"),u =>
+            binder_failure(tokens,name,"binding-name",U32.is_ne(quantity,0)))))
         case _: invalid(tokens,"binding")
     case 1n+ +n AnnotatedBinding{+name,+quantity,+column}:
       match tokens:

@@ -20,8 +20,8 @@ A false acceptance (seed rejects, Knot accepts), a false Invalid (seed accepts, 
 internal failure fails the gate. Accepted programs also run through the Bend evaluator, in both lanes.
 
 Two seed-accepted shapes are open D4 families and are not drawn (src/SPEC.md): a spaced `+` or `-` that starts
-the line after a let's value, which round 10's `detached_marker` law pins as `Invalid detached-marker`, and a hole
-or a `+` marker as the next argument after whitespace.
+the line after a let's value, which round 10's `detached_marker` law pins as `Invalid detached-marker`, and a term that starts with `?`, `@`
+or a backslash, or a `+` marker, as the next argument after whitespace.
 """
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
@@ -214,7 +214,7 @@ OPERATORS = ['->', '&', '|', '||', '&&', '<', '<=', '>', '>=', '<>', '++', '<&>'
 CALLS = ['(a)', '(a, a)', '[0n]', '!(a)', '=> a', '<- a']
 # tokens the seed rejects after a term, and markers that touch a name
 JUNK = ['== a', '= a', ', a', '. a', '~ a', ': Flag', ')', '}', '-a', '^ a', '@ a', '$ a', '!', ']']
-PLUS_TERMS = ['+x0', '+ x0', '-x0', '+x0 y', '+h(a)', '+x0(a)', '+(a)', '+ (a)']
+PLUS_TERMS = ['+x0', '+ x0', '-x0', '+x0 y', '+h(a)', '+x0(a)', '+(a)', '+ (a)', '+\n      (a)', '+ # c\n      (a)', '+\n      +a', '-\n      (a)']
 GAP_COLUMNS = [0, 2, 4, 6, 8, 12]
 
 
