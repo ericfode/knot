@@ -65,7 +65,7 @@ MUTANTS = [
      'old': 'Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.and(pattern,promotes(tokens))))', 'new': 'False{}',
      'witness': 'argspace-call-flat', 'phase': 'check', 'wrong': invalid('argument-separator')},
     {'name': 'repeated-promotion-invalid', 'file': 'parse.bend',
-     'old': 'S.matches(name,"+"),u => unsupported(ts,"repeated-promotion")', 'new': 'False{},u => unsupported(ts,"repeated-promotion")',
+     'old': 'Bool.and(promoted,S.matches(name,"+"))', 'new': 'False{}',
      'witness': 'plusplus-flat', 'phase': 'check', 'wrong': invalid('pattern-binder')},
     {'name': 'marker-line-break-invalid', 'file': 'parse.bend',
      'old': 'broken(ts),u => unsupported(ts,"line-break"),u =>\n    invalid(ts,code)',
@@ -95,6 +95,17 @@ MUTANTS = [
      'old': 'Bool.and(starts(ts,"\\n"),starts(S.skip_lines(ts),"="))', 'new': 'starts(ts,"\\n")',
      'witness': 'letsplit-before-eq-junk', 'phase': 'check',
      'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}},
+    {'name': 'erased-repeated-promotion', 'file': 'parse.bend',
+     'old': 'Bool.and(promoted,S.matches(name,"+"))', 'new': 'S.matches(name,"+")',
+     'witness': 'plusplus-erased-let', 'phase': 'check',
+     'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\trepeated-promotion\t'}},
+    {'name': 'arm-body-layout-invalid', 'file': 'parse.bend',
+     'old': 'Bool.and(U32.is_gt(parent,0),S.identifier(h))', 'new': 'False{}',
+     'witness': 'bodycol-arm-flat', 'phase': 'check', 'wrong': invalid('body-indentation')},
+    {'name': 'body-layout-any-token', 'file': 'parse.bend',
+     'old': 'Bool.and(U32.is_gt(parent,0),S.identifier(h))', 'new': 'U32.is_gt(parent,0)',
+     'witness': 'bodycol-empty-arm', 'phase': 'check',
+     'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tbody-indentation\t'}},
 ]
 
 

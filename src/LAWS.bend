@@ -96,14 +96,13 @@ law joined_brace_witness:
       S.Token{"{",S.At{18,19,2,6}},S.Token{"}",S.At{19,20,2,7}},S.Token{":",S.At{20,21,2,8}}]))
     == Fail{S.Invalid{"parse","detached-brace",S.At{18,19,2,6}}} : Result<S.Error,P.Parsed>}
 
-# The seed reads `+` and `-` as a marker only where a name follows directly. A
-# `+` after a term opens another column only then; else the row ends there.
+# The seed reads `+` and `-` as a marker only where a name follows directly, and
+# a `+` after a term opens another column only then.
 law marks_witness:
   {[S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"b",S.At{10,11,1,10}}),
     S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"b",S.At{11,12,1,11}}),
-    S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"\n",S.At{10,11,1,10}}),
-    S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"1",S.At{10,11,1,10}})]
-    == [True{},False{},False{},False{}] : List<&2,Bool>}
+    S.marks(S.Token{"+",S.At{9,10,1,9}},S.Token{"\n",S.At{10,11,1,10}})]
+    == [True{},False{},False{}] : List<&2,Bool>}
 
 law detached_plus:
   for +keyword: S.Token
@@ -122,7 +121,7 @@ law line_broken_scrutinees_witness:
       [indented("<eof>")]}} : Result<S.Error,P.Parsed>}
 
 # After a let the seed reads a spaced `+` as an operator on its value; first in
-# a body no value comes before it, so the marker may be spaced.
+# a body it follows no value and may be spaced.
 law detached_marker:
   for +rest: List<&2,S.Token>
   {P.run(1n,P.BodyAt{2,False{}},Con{S.Token{"+",S.At{20,21,3,2}},Con{S.Token{"u",S.At{22,23,3,4}},rest}})

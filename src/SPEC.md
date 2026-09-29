@@ -168,15 +168,17 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | A line break in a let before its `=`, before its value or between its marker and name | `parse` | `line-break` |
 | A name (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
 | A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
+| An arm body that starts with a name on the line after its `case`, at the case's column or below it | `parse` | `body-indentation` |
 
 The seed reads a line break inside call or constructor arguments and inside a let
 as whitespace, arguments separated by whitespace alone as arguments, and a second
 arm on an arm's line as the next arm; Knot ends a term at a line break and takes
 a comma between arguments, so these forms are unsupported, never invalid. A def
 header's parameters and a type's fields have the same gap, which stays open (the
-selfhost suite's `layout` need), as do a body on the line after its `case` at the
-case's column and an untyped let split before its `=`: the frontend gate pins the
-first family Invalid for an unindented def body that the seed accepts. Recognition stops at that prefix; it neither validates
+selfhost suite's `layout` need), as do an unindented def body (the frontend gate
+pins it Invalid, though the seed accepts it) and an untyped let split before its
+`=`. An arm body that starts with a name and sits at or below its `case` column
+is `Unsupported parse body-indentation`; an empty arm stays invalid. Recognition stops at that prefix; it neither validates
 the suffix nor loads a module. Malformed supported syntax still reports `Invalid`. The reviewed
 [classification fixtures](../tests/subsets/classification-cases.json) retain six
 seed-accepted programs (local and hash imports separately) and six nearby

@@ -399,9 +399,9 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 100,
-          "base": 40,
-          "base_intrinsics": 9,
+          "declarations": 101,
+          "base": 41,
+          "base_intrinsics": 10,
           "foreign": 0
         },
         "entries": [
@@ -864,6 +864,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "List",
               "Result",
               "String",
@@ -1196,6 +1198,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "U32.is_ne",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.assign",
@@ -2040,6 +2043,19 @@
             "key": "U32.is_lt",
             "file": "Base",
             "via": "src/lex.step",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "U32.is_ne",
+            "file": "Base",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -2070,9 +2086,9 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 100,
-          "base": 40,
-          "base_intrinsics": 8,
+          "declarations": 101,
+          "base": 41,
+          "base_intrinsics": 9,
           "foreign": 0
         },
         "entries": [
@@ -2535,6 +2551,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "List",
               "Result",
               "String",
@@ -2867,6 +2885,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "U32.is_ne",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.assign",
@@ -3721,6 +3740,19 @@
             "dynamic_calls": []
           },
           {
+            "key": "U32.is_ne",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "Unit",
             "file": "Base",
             "via": "src/syntax.choose",
@@ -3741,9 +3773,9 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 80,
-          "base": 28,
-          "base_intrinsics": 9,
+          "declarations": 81,
+          "base": 29,
+          "base_intrinsics": 10,
           "foreign": 0
         },
         "entries": [
@@ -3998,6 +4030,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
               "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
@@ -4211,6 +4244,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "U32.is_ne",
               "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
@@ -4815,6 +4849,16 @@
             "unsafe": false,
             "dependencies": [],
             "dynamic_calls": []
+          },
+          {
+            "key": "U32.is_ne",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
           }
         ],
         "unresolved": []
@@ -4827,9 +4871,9 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 114,
-          "base": 54,
-          "base_intrinsics": 9,
+          "declarations": 115,
+          "base": 55,
+          "base_intrinsics": 10,
           "foreign": 0
         },
         "entries": [
@@ -5366,6 +5410,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "List",
               "Result",
               "String",
@@ -5687,6 +5733,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "U32.is_ne",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.assign",
@@ -6540,6 +6587,22 @@
             "dependencies": [
               "Bool",
               "Cmp.is_lt",
+              "U32",
+              "U32.cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "U32.is_ne",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.not",
+              "Cmp.is_eq",
               "U32",
               "U32.cmp"
             ],
@@ -10735,6 +10798,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "List",
               "Result",
               "String",
@@ -11067,6 +11132,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "U32.is_ne",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.assign",
@@ -14055,7 +14121,7 @@
           {
             "key": "U32.is_ne",
             "file": "Base",
-            "via": "src/scope.live_scope",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -18328,6 +18394,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "List",
               "Result",
               "String",
@@ -18660,6 +18728,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "U32.is_ne",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.assign",
@@ -21648,7 +21717,7 @@
           {
             "key": "U32.is_ne",
             "file": "Base",
-            "via": "src/scope.live_scope",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -24407,6 +24476,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
               "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
@@ -24620,6 +24690,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "U32.is_ne",
               "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
@@ -26709,7 +26780,7 @@
           {
             "key": "U32.is_ne",
             "file": "Base",
-            "via": "src/scope.live_scope",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -31004,6 +31075,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "List",
               "Result",
               "String",
@@ -31325,6 +31398,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "U32.is_ne",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.assign",
@@ -34433,7 +34507,7 @@
           {
             "key": "U32.is_ne",
             "file": "Base",
-            "via": "src/scope.live_scope",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,

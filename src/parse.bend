@@ -47,16 +47,15 @@ def promotes(ts: List<&2,S.Token>) -> Bool:
     case Con{+plus,Con{next,rest}}: Bool.and(S.matches(plus,"+"),S.marks(plus,next))
     case _: False{}
 
-# A line break before a name is whitespace to the seed, and ends a statement here.
+# A line break, then a name: whitespace to the seed.
 def broken(+ts: List<&2,S.Token>) -> Bool:
   Bool.and(starts(ts,"\n"),scrutinee(S.skip_lines(ts)))
 
-# The seed accepts a dotted binder that rebinds a name, `++y` and a name after a
-# line break; the parser resolves no scope and ends a statement at a break, so
-# each is unsupported, and any other name that cannot bind is invalid.
-def binder_failure(+ts: List<&2,S.Token>, +name: S.Token, code: String) -> Result<S.Error,Parsed>:
+# The seed accepts a rebound dotted binder, `++y` and a name after a line break,
+# which the parser cannot tell: each is unsupported; other unbindable names are invalid.
+def binder_failure(+ts: List<&2,S.Token>, +name: S.Token, code: String, promoted: Bool) -> Result<S.Error,Parsed>:
   S.choose(Result<S.Error,Parsed>,S.identifier(name),u => unsupported(ts,"dotted-binder"),u =>
-  S.choose(Result<S.Error,Parsed>,S.matches(name,"+"),u => unsupported(ts,"repeated-promotion"),u =>
+  S.choose(Result<S.Error,Parsed>,Bool.and(promoted,S.matches(name,"+")),u => unsupported(ts,"repeated-promotion"),u =>
   S.choose(Result<S.Error,Parsed>,broken(ts),u => unsupported(ts,"line-break"),u =>
     invalid(ts,code))))
 
@@ -261,7 +260,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+name,Con{+open,+tail}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(pattern,S.matches(name,"+")),u =>
-            S.choose(Result<S.Error,Parsed>,S.binder(open),u => Done{Parsed{S.Promotion{open},tail}},u => binder_failure(tokens,open,"pattern-binder")),u =>
+            S.choose(Result<S.Error,Parsed>,S.binder(open),u => Done{Parsed{S.Promotion{open},tail}},u => binder_failure(tokens,open,"pattern-binder",True{})),u =>
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
             then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
@@ -271,7 +270,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
               then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
               invalid(Con{open,tail},"detached-brace")),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(Bool.not(pattern),S.binder(name)),u =>
-            Done{Parsed{S.Variable{name},Con{open,tail}}},u => binder_failure(tokens,name,"pattern-binder")))),u =>
+            Done{Parsed{S.Variable{name},Con{open,tail}}},u => binder_failure(tokens,name,"pattern-binder",True{})))),u =>
             term_failure(tokens)))
         case _: invalid(tokens,"term")
     case 1n+ +n Body{+parent}:
@@ -280,7 +279,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+h,t}:
           S.choose(Result<S.Error,Parsed>,U32.is_gt(S.column(h),parent),u =>
-            run(n,BodyAt{S.column(h),True{}},tokens),u => invalid(tokens,"body-indentation"))
+            run(n,BodyAt{S.column(h),True{}},tokens),u =>
+          # The seed lays an arm body out anywhere; a def body keeps its indentation.
+          S.choose(Result<S.Error,Parsed>,Bool.and(U32.is_gt(parent,0),S.identifier(h)),u =>
+            unsupported(tokens,"body-indentation"),u => invalid(tokens,"body-indentation")))
         case _: invalid(tokens,"body")
     case 1n+ +n BodyAt{+column,+first}:
       match tokens:
@@ -352,7 +354,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             run(n,AnnotatedBinding{name,quantity,column},tail),u =>
             S.bind(List<&2,S.Token>,Parsed,assign(Con{separator,tail}),rhs =>
               then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest)))),u =>
-            binder_failure(tokens,name,"binding-name"))
+            binder_failure(tokens,name,"binding-name",U32.is_ne(quantity,0)))
         case _: invalid(tokens,"binding")
     case 1n+ +n AnnotatedBinding{+name,+quantity,+column}:
       match tokens:

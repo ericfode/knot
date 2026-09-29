@@ -201,15 +201,16 @@ arguments `line-break`, a second arm on an arm's line `same-line-arm`.
 `round9.py` checks both lanes, evaluator and Wasm agreement, rejection in every
 phase and twelve mutants; `fuzz.py` draws lets of matched binders.
 
-`round10-expectations.json` freezes 138 round-10 programs and 560 seed calls before
+`round10-expectations.json` freezes 152 round-10 programs and 624 seed calls before
 the repairs. The seed reads `+` and `-` as a marker only where a name follows
 directly, and `->` as one lexeme. A `+` after a term in a row (`a + b`), a marker
 after a let (`+ u = ..`) and a split arrow are `Invalid parse` (`expected-:`,
 `detached-marker`, `function-result`); a glued marker, a promotion that starts a
 row or follows a comma, and a spaced marker first in a body are accepted.
-Whitespace-separated arguments, `++y` and a let split across lines are
-`Unsupported`. `round10.py` checks both lanes, evaluator and Wasm agreement,
-rejection in every phase and nineteen mutants; `fuzz.py` draws spaced `+` atoms.
+Whitespace-separated arguments, `++y`, a let split across lines and an arm body
+at its `case` column are `Unsupported`. `round10.py` checks both lanes, evaluator
+and Wasm agreement, rejection in every phase and 22 mutants; `fuzz.py` draws
+spaced `+` atoms.
 
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual
