@@ -1,10 +1,8 @@
-<!-- prechecks packet v1; rule=required-laws-met; increment=nest; head=99053a70a68b; base=cc9f2fd23d59; builder=scripts/prechecks/packets@40e325337e4a; sources: src/LAWS.bend@99053a70 sha256=023fdc9f0a2b3a0240f581ef20cd7998cd99c16ec2bc239fa9d3e1a7b56b2805; src/catalog-LAWS.bend@99053a70 sha256=b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3; src/lowering-LAWS.bend@99053a70 sha256=21faaa4cc6d9854e650251e6360e98b17f04a399d948d7c17b25bf25cb0a03d2; src/matrix-LAWS.bend@99053a70 sha256=905f77100e8337b040f01de1bab6f78d6720c18db3e4b3f58387467b1d6b71cd -->
+<!-- prechecks packet v1; rule=required-laws-met; increment=nest; head=5374d92807c3; base=cc9f2fd23d59; builder=scripts/prechecks/packets@3a2ef420dff1; sources: src/LAWS.bend@5374d928 sha256=6fdeb67295a0844f9f641db951a7f4997b1eaf2c5a234fc45897df1e2e2e978c; src/catalog-LAWS.bend@5374d928 sha256=b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3; src/matrix-LAWS.bend@5374d928 sha256=e3d19a4039fc88fccc062a934210231b284b486d0847b0d41f00da55d17d3d8b -->
 # Claim
 Required laws (verbatim from the increment manifest):
 
-- lowering a matrix whose first row is irrefutable selects that row
-- specialization preserves first-match on the rows it keeps
-- an exhaustive matrix lowers to a tree with no missing branch
+- Proof scope: stable row-identity selection is universal over source row lists; irrefutable-column preservation, first-leaf selection, alias identity/erasure, one step of the live split's remainder (the split constructor leaves the remaining tags and its rows leave the negative matrix; other tags and variable rows stay) and work exhaustion are quantified helper laws.
 
 # Evidence
 Operation-to-law matrix computed from the sources:
@@ -21,10 +19,6 @@ Operation-to-law matrix computed from the sources:
 | src/LAWS.bend | multiple_scrutinees | 1 | yes | {P.run(4n,P.MatchTail{S.Token{"match",at},S.Variable{S.Token{"a",at}},0}, [S.Token{"b",at},S.Token{":",at},S.T |
 | src/LAWS.bend | comma_scrutinees | 1 | yes | {P.run(4n,P.MatchTail{S.Token{"match",at},S.Variable{S.Token{"a",at}},0}, [S.Token{",",at},S.Token{"b",at},S.T |
 | src/LAWS.bend | header_joins_lines | 2 | yes | {P.header(Con{S.Token{"\n",at},Con{S.Token{"a",at},Con{S.Token{"\n",at},Con{S.Token{":",at},rest}}}}) == Con{S |
-| src/LAWS.bend | touches_witness | 0 | yes | {[S.touches(S.Token{"On",S.At{9,11,1,9}},S.Token{"{",S.At{11,12,1,11}}), S.touches(S.Token{"On",S.At{9,11,1,9} |
-| src/LAWS.bend | touching_brace | 6 | yes | {P.run(2n,P.Term{pattern},Con{S.Token{"On",x},Con{S.Token{"{",y},Con{S.Token{"}",z},rest}}}) == Done{P.Parsed{ |
-| src/LAWS.bend | detached_brace | 5 | yes | {P.run(1n,P.Term{pattern},Con{S.Token{"On",x},Con{S.Token{"{",y},rest}}) == Fail{S.Invalid{"parse","detached-b |
-| src/LAWS.bend | joined_brace_witness | 0 | yes | {P.run(1n,P.Term{True{}},P.header([S.Token{"On",S.At{9,11,1,9}},S.Token{"\n",S.At{11,12,1,11}}, S.Token{"{",S. |
 | src/LAWS.bend | line_broken_scrutinees_witness | 0 | yes | {P.run(8n,P.BodyAt{2},[indented("match"),indented("\n"),indented("a"),indented("\n"),indented("b"),indented(": |
 | src/LAWS.bend | dotted_pattern_binder | 2 | yes | {P.run(1n,P.Term{True{}},Con{S.Token{"a.b",at},Con{S.Token{":",at},rest}}) == Fail{S.Invalid{"parse","pattern- |
 | src/LAWS.bend | dotted_let_binder | 2 | yes | {P.run(1n,P.BindingStart{1,2},Con{S.Token{"a.b",at},Con{S.Token{"=",at},rest}}) == Fail{S.Invalid{"parse","bin |
@@ -51,12 +45,9 @@ Operation-to-law matrix computed from the sources:
 | src/matrix-LAWS.bend | first_row_selected | 6 | yes | {M.step(token,Nil{},Con{S.Arm{arm,S.Sequence{Nil{}},body},rows},1,types,scope) == Done{body} : Result<S.Error, |
 | src/matrix-LAWS.bend | lowering_work_exhaustion | 5 | yes | {M.step(token,columns,rows,0,types,scope) == Fail{S.Exhausted{"check",S.at(token)}} : Result<S.Error,S.Node>}  |
 | src/matrix-LAWS.bend | irrefutable_lowering_witness | 0 | yes | {lower([row(S.Variable{token("_")},S.Variable{token("_")},"On"), row(ctor("Off"),ctor("Off"),"Off")]) == Done{ |
-| src/matrix-LAWS.bend | irrefutable_first_row_witness | 0 | yes | {M.expand(64n,S.Matrix{token("match"),[S.Variable{token("x")},S.Variable{token("y")}], [row(wild(),wild(),"On" |
 | src/matrix-LAWS.bend | exhaustive_matrix_witness | 0 | yes | {lower([row(ctor("Off"),ctor("Off"),"Off"),row(ctor("Off"),ctor("On"),"On"), row(ctor("On"),ctor("Off"),"On"), |
 | src/matrix-LAWS.bend | erased_alias_stays_erased | 3 | yes | {M.alias(E.Scope{[C.Binding{name,1,0,0,True{},known}],2,[1],True{},[1]},alias,1,2,[flag()]) == Done{E.Scope{[C |
 | src/matrix-LAWS.bend | alias_preserves_descent_and_identity | 2 | yes | {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,1,[flag()]) == Done{E.Scope{[ |
-| src/matrix-LAWS.bend | parameter_alias_promotes | 2 | yes | {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,2,[flag()]) == Done{E.Scope{[ |
-| src/matrix-LAWS.bend | let_alias_keeps_quantity | 4 | yes | {M.alias(E.Scope{[C.Binding{name,0,1,0,False{},known}],1,Nil{},True{},Nil{}},alias,0,mark,[flag()]) == Done{E. |
 | src/matrix-LAWS.bend | remainder_omits_split | 4 | yes | {M.remaining(Con{head,tail},ctor) == M.remaining(tail,ctor) : List<&2,S.Token>} |
 | src/matrix-LAWS.bend | remainder_keeps_other | 4 | yes | {M.remaining(Con{head,tail},ctor) == Con{head,M.remaining(tail,ctor)} : List<&2,S.Token>} |
 | src/matrix-LAWS.bend | remainder_drops_split_rows | 8 | yes | {M.without(Con{S.Arm{arm,S.Sequence{Con{S.Constructor{token,args},rest}},body},rows},ctor) == M.without(rows,c |
@@ -81,19 +72,7 @@ Operation-to-law matrix computed from the sources:
 
 Recorded obligations and limits:
 
-src/SPEC.md:355-366 (section: Trust inventory: open proof obligations):
-
-> ## Trust inventory: open proof obligations
->
-> Two general pattern-matrix lowering laws stay required and are never weakened
-> or dropped (coordinator decision D21). Until they are proved, they are open
-> obligations in this trust inventory; the pattern-matrix profile rests on the
-> evidence named here, not on a proof.
->
-> | Law | Status | Witnessed by |
-> | --- | --- | --- |
-> | Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds. Its partial-correctness part is proved: `src/lowering-LAWS.bend::irrefutable_first_row_selected` shows that every *successful* `M.expand` selects the body at every leaf | The ground-instance laws `irrefutable_lowering_witness` and `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcar
-[truncated after 12,288 bytes; 462 bytes omitted]
+(none recorded)
 
 # Scope
 Only the text above is evidence. Anything not shown is missing evidence, not a pass.

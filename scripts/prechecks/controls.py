@@ -113,7 +113,8 @@ def main(argv=None) -> int:
             cases.append({'id': spec['id'], 'rule': spec['rule'], 'split': spec['split'], 'expected': spec['expected'],
                           'packet': path.as_posix(), 'sha256': hashlib.sha256(text.encode()).hexdigest(),
                           'increment': spec['increment'], 'head': head, 'base': base, 'how': how, 'note': spec.get('note', '')})
-    document = {'schema': 1, 'note': specs.get('note', ''), 'cases': cases, 'gaps': specs.get('gaps', []), 'skipped': skipped}
+    document = {'schema': 1, 'note': specs.get('note', ''), 'cases': cases, 'gaps': specs.get('gaps', []),
+                'retired': specs.get('retired', []), 'skipped': skipped}
     (out / 'cases.json').write_text(json.dumps(document, indent=1, sort_keys=True) + '\n', encoding='utf-8')
     print(f'{len(cases)} controls built, {len(skipped)} skipped')
     return 1 if skipped else 0

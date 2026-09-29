@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=kill-is-semantic; increment=vm-spec; head=d2fe0f2048fb; base=454bf3059679; builder=scripts/prechecks/packets@40e325337e4a; sources: vm/check-spec.py@d2fe0f20 sha256=a24f2a01dc7b977efbdc2e4c76336dc96fa8a07f1f620bbf34db2a2811ba0de1 -->
+<!-- prechecks packet v1; rule=kill-is-semantic; increment=vm-spec; head=d2fe0f2048fb; base=454bf3059679; builder=scripts/prechecks/packets@3a2ef420dff1; sources: vm/check-spec.py@d2fe0f20 sha256=a24f2a01dc7b977efbdc2e4c76336dc96fa8a07f1f620bbf34db2a2811ba0de1 -->
 # Claim
 Statements about what counts as a kill:
 

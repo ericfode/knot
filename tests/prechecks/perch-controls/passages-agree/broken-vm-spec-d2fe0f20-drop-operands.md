@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=passages-agree; increment=vm-spec; head=d2fe0f2048fb; base=none; builder=manual-excerpt@40e325337e4a; sources: vm/SPEC.md@d2fe0f20 sha256=8766740dd99fadc82c5e393412a0b972bdffdcdb3de02162ce8dcbb2b86fa508; vm/SPEC.md@d2fe0f20 sha256=8766740dd99fadc82c5e393412a0b972bdffdcdb3de02162ce8dcbb2b86fa508 -->
+<!-- prechecks packet v1; rule=passages-agree; increment=vm-spec; head=d2fe0f2048fb; base=none; builder=manual-excerpt@3a2ef420dff1; sources: vm/SPEC.md@d2fe0f20 sha256=8766740dd99fadc82c5e393412a0b972bdffdcdb3de02162ce8dcbb2b86fa508; vm/SPEC.md@d2fe0f20 sha256=8766740dd99fadc82c5e393412a0b972bdffdcdb3de02162ce8dcbb2b86fa508 -->
 # Claim
 `vm/SPEC.md:333-336` (section 6, intrinsics)
 

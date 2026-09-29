@@ -1,15 +1,15 @@
-<!-- prechecks packet v1; rule=expectation-independent; increment=vm-core; head=f54d97ad3397; base=0f511b06ba24; builder=scripts/prechecks/packets@3a2ef420dff1; sources: vm/check-core.py@f54d97ad sha256=a00f30eb545d00e7ebf1b31552e65dc23b5a6a9b0250cd2a1d46ff7b59e37c97 -->
+<!-- prechecks packet v1; rule=claim-holds-against-evidence; increment=vm-core; head=f54d97ad3397; base=0f511b06ba24; builder=scripts/prechecks/packets@3a2ef420dff1; sources: vm/CORE.md@f54d97ad sha256=6328d9dbda7be66c5ae15feb69bf4e3fc7a94a3ea380ba09594824805acae7e5; vm/check-core.py@f54d97ad sha256=a00f30eb545d00e7ebf1b31552e65dc23b5a6a9b0250cd2a1d46ff7b59e37c97 -->
 # Claim
-Statements about where expected values come from:
+vm/CORE.md:156-158 (section: Evidence (gate `vm-core`)) - verbatim text:
 
-- docs/compiler-campaign/GATES.md: The test build confirms each exhaustion cause and audits the state after every transition. - `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and lowered limits, including the 250,000-deep non-tail recursion. - A 200,000-deep nested expression runs on a 64 KiB host stack. - The 61 malformed-image controls and a seeded fuzz corpus of 3,120 mutated goldens are refused with the reference codec's first defect, and none traps. - Nine WAT mutants are each killed by a wrong observation.
-- vm/CORE.md: `vm/vm.wat` implements [SPEC.md](SPEC.md) as written, independently of `vm/model.bend`; the two are compared in `vm-lockstep`.
-- vm/CORE.md: A refusal therefore names the reference codec's first defect.
-- vm/CORE.md: The gate requires this on: - the 61 frozen controls; - 3,120 seeded single mutations of the goldens: 2,868 refused, and 252 admitted and run to a clean outcome.
+> - **Goldens.** All 78 through the real host, equal to `vm-expected.json`. The
+>   test build confirms every Exhausted and Unsupported cause and audits the
+>   state after all 1,503 transitions.
 
 # Evidence
-`vm/check-core.py:366-570` function `main`, which builds expected values:
-```python
+Evidence: the changed regions that share the most words with the claim (diff hunks of modified files, declarations of added files).
+```
+`vm/check-core.py:366-570` (added)
   366  def main() -> int:
   367      started = datetime.datetime.now(datetime.timezone.utc)
   368      if BUILD.exists():
@@ -186,10 +186,9 @@ Statements about where expected values come from:
   539                'quantum': [j for j in fixture_jobs if 'quantum' in j['id']]}
   540      killed = []
   541      for name, breaks, edits, group in MUTANTS:
-  542          text = source
-  543         
+  542   
 ```
-[truncated after 12,288 bytes; 2,044 bytes omitted]
+[truncated after 12,288 bytes; 2,080 bytes omitted]
 
 # Scope
 Only the text above is evidence. Anything not shown is missing evidence, not a pass.

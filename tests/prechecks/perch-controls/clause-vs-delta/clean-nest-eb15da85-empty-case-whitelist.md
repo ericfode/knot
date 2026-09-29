@@ -1,30 +1,14 @@
-<!-- prechecks packet v1; rule=clause-vs-delta; increment=nest; head=99053a70a68b; base=cc9f2fd23d59; builder=scripts/prechecks/packets@40e325337e4a; sources: src/CONTRACT.json@99053a70 sha256=f062c80622e6eb52b8dca79d62da35b9f936587359783d54a778ef066c6d5f7a; src/matrix-LAWS.bend@99053a70 sha256=905f77100e8337b040f01de1bab6f78d6720c18db3e4b3f58387467b1d6b71cd; tests/compiler-nest/check.py@99053a70 sha256=f19b820dbdec6755c362d35d677adb3da7b30d27c4bea515cec3c47784ad42f2 -->
+<!-- prechecks packet v1; rule=clause-vs-delta; increment=nest; head=eb15da857dc7; base=3c25d9bede00; builder=scripts/prechecks/packets@3a2ef420dff1; sources: src/matrix-PROOF.bend@eb15da85 sha256=84d79973f76c766b3bfcd97dfe6f913974e9d2962c32b65781db84aa65a9ca31; tests/compiler-nest/SPEC.md@eb15da85 sha256=d85ee3b860e845faca82fe6dabcb1c6bec8dbd93270db229a170ab696b71c467; tests/compiler-nest/check.py@eb15da85 sha256=f19b820dbdec6755c362d35d677adb3da7b30d27c4bea515cec3c47784ad42f2; tests/compiler-nest/review.py@eb15da85 sha256=a017b7974c6b1a3c25906b21a85c02f11faddfc469164639caf31dbb18c58dba -->
 # Claim
-Invariance clause (src/CONTRACT.json):
+Invariance clause (tests/compiler-nest/SPEC.md):
 
-> The compiler opens the requested output only after complete checking and bounded emission; semantic failure and exhaustion leave existing output untouched. File-write failures are HostFailure and may leave an incomplete file, never a Built result. Callers must use the exit status, not file presence, as evidence of a fresh artifact.
+> A checked empty case emits `i32.const 0`; it has no domain-valid execution. The enum whitelist is unchanged and is checked on every enum-profile nest module.
 
 # Evidence
 Evidence: the governed diff hunks (base to head).
 ```
-`src/matrix-LAWS.bend:77-86` (added)
-   77  law lowering_work_exhaustion:
-   78    for +token: S.Token
-   79    for columns: List<&2,S.Node>
-   80    for rows: List<&2,S.Node>
-   81    for types: List<&2,C.Datatype>
-   82    for scope: E.Scope
-   83    {M.step(token,columns,rows,0,types,scope) == Fail{S.Exhausted{"check",S.at(token)}} : Result<S.Error,S.Node>}
-   84  
-   85  # A literal inhabited two-constructor catalog supports complete lowering laws.
-   86  # These normalizations include checking, quantities and the emitted core tree.
-
-`tests/compiler-nest/check.py:71-75` (added)
-   71  def compiled(command, source, output):
-   72      output.unlink(missing_ok=True)
-   73      result = successful([*command, source, output])
-   74      require(output.exists() and result['stdout'].strip() == f'Built\t{output.stat().st_size}', result)
-   75      return result
+`src/matrix-PROOF.bend:94-94` (added)
+   94  def L.empty_reference_stays_live(name,level,q,type_id,live): {==}
 
 `tests/compiler-nest/check.py:106-152` (added)
   106  def fixtures(record, manifest, lanes):
@@ -121,60 +105,85 @@ Evidence: the governed diff hunks (base to head).
   197                          require(output.read_bytes() == marker, ('control output changed', actual))
   198                      record['boundaries'].append({'name': name, 'lane': lane, 'phase': phase, 'result': actual})
 
-`tests/compiler-nest/check.py:309-361` (added)
-  309  def main():
-  310      BUILD.mkdir(parents=True, exist_ok=True)
-  311      RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-  312      manifest = json.loads((HERE / 'expectations.json').read_text())
-  313      fixed = json.loads((HERE / 'control-expectations.json').read_text())
-  314      paths = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json',
-  315               *sorted(HERE.glob('*.py')), *sorted(HERE.glob('*.json')), *sorted(HERE.glob('*.md')),
-  316               *sorted((HERE / 'fixtures').glob('*.bend')), *sorted((HERE / 'controls').glob('*.bend')),
-  317               ROOT / 'tests/compiler-fields-wasm/compile.bend', ROOT / 'tests/compiler-fields-wasm/enum-baseline.json', HOST]
-  318      record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'status': 'incomplete',
-  319                'inputs': {str(p.relative_to(ROOT)): digest(p) for p in paths},
-  320                'seed': manifest['seed'], 'frozen_tools': manifest['tools'],
-  321                'builds': [], 'fixtures': [], 'unmet': [], 'mutants': [], 'boundaries': [], 'enum_preservation': []}
-  322      try:
-  323          record['oracle'] = successful(['python3', HERE / 'regen.py'])
-  324          require('no differences' in record['oracle']['stdout'], record['oracle'])
-  325          record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
-  326                             for tool in ('bun', 'node', 'python3', 'wasm2wat')}
-  327          require(record['tools']['node'] == 'v22.22.3' and record['tools']['bun'] == '1.3.14', record['tools'])
-  328          record['proof'] = successful([*SEED, ROOT / 'src/matrix-PROOF.bend'])
-  329          require(record['proof']['stdout'].strip() == 'All terms check.', record['proof'])
-  330          lanes = build_lanes(record)
-  331          fixtures(record, manifest, lanes)
-  332          controls(record, fixed, lanes)
-  333          enum_bytes(record, lanes)
-  334          mutants(record, manifest, fixed)
-  335          require(all(digest(ROOT / p) == h for p, h in record['inputs'].items()), 'Inputs changed during gate')
-  336          record['counts'] = {
-  337              'seed_fixtures': len(manifest['fixtures']),
-  338              'seed_entry_calls': sum(len(c['observed']['calls']) for c in manifest['fixtures']),
-  339              'matched_frozen_outcomes': len(record['fixtures']), 'unmet_frozen_outcomes': len(record['unmet']),
-  340              'check_observations': 2 * len(record['fixtures']),
-  341              'unmet_phase_observations': 6 * len(record['unmet']),
-  342              'accepted_books': sum(c['expected']['exit'] == 0 for c in record['fixtures']),
-  343              'evaluation_values': sum(len(lane.get('calls', [])) for c in record['fixtures'] for lane in c['lanes'].values()),
-  344              'wasm_values': sum(len(lane.get('calls', [])) for c in record['fixtures'] for lane in c['lanes'].values()),
-  345              'rejected_phase_observations': sum(3 * len(c['lanes']) for c in record['fixtures'] if c['expected']['exit'] != 0),
-  346              'boundary_observations': len(record['boundaries']), 'enum_hash_checks': len(record['enum_preservation']),
-  347              'mutants': len(record['mutants']), 'semantic_kills': sum(len(c['lanes']) for c in record['mutants'])}
-  348          record['qualification'] = {'complete': not record['unmet'],
-  349              'limits': 'The gate monitors two authorized conservative recursion outcomes; neither is counted as frozen conformance.'}
-  350          record['status'] = 'passed'
-  351      except Exception as error:
-  352          record['failure'] = repr(error)
-  353          raise
-  354      finally:
-  355          RECEIPT.write_text(json.dumps(record, indent=2) + '\n')
-  356      c = record['counts']
-  357      print(f"Nest gate passed within stated scope: {c['seed_fixtures']} seed fixtures, {c['seed_entry_calls']} seed calls; "
-  358            f"{c['matched_frozen_outcomes']}/40 frozen outcomes, {c['unmet_frozen_outcomes']} UNMET; "
-  359            f"{c['evaluation_values']} evaluator values, {c['wasm_values']} Wasm values, "
-  360            f"{c['boundary_observations']} boundary observations, {c['enum_hash_checks']} enum hashes, "
-  361            f"{c['mutants']} mutants / {c['semantic_kills']} semantic kills")
+`tests/compiler-nest/review.py:20-57` (added)
+   20  def fixtures(record, manifest, lanes):
+   21      for case in manifest['fixtures']:
+   22          source = gate.ROOT / case['file']
+   23          gate.require(gate.digest(source) == case['sha256'], ('review fixture hash', case['name']))
+   24          item = {'name': case['name'], 'lanes': {}}
+   25          hashes = []
+   26          for lane, commands in lanes.items():
+   27              observed = {'check': gate.run([*commands['check'], source])}
+   28              output = BUILD / f'{case["name"]}-{lane}.wasm'
+   29              if case['knot']['exit'] == 0:
+   30                  gate.checked(observed['check'])
+   31                  observed['compile'] = gate.compiled(commands['fields' if case['fields'] else 'enum'], source, output)
+   32                  hashes.append(gate.digest(output))
+   33                  wat = gate.successful(['wasm2wat', output])['stdout']
+   34                  observed['module_sha256'] = gate.digest(output)
+   35                  if not case['fields']:
+   36                      observed['instructions'] = enum_gate.mvp_instructions(wat)
+   37                  observed['calls'] = []
+   38                  for call in case['calls']:
+   39                      value = gate.run([*commands['eval'], source, call['export'], 65536, *call['ordinals']])
+   40                      gate.evaluated(value, call)
+   41                      wasm = gate.executed(output, call, case['fields'])
+   42                      observed['calls'].append({'export': call['export'], 'arguments': call['ordinals'], 'eval': value, 'wasm': wasm})
+   43              else:
+   44                  gate.diagnostic(observed['check'], case['knot'])
+   45                  observed['eval'] = gate.run([*commands['eval'], source, 'main', 65536])
+   46                  gate.diagnostic(observed['eval'], case['knot'])
+   47                  # Both public profiles must reject before opening an artifact.
+   48                  for profile in ('enum', 'fields'):
+   49                      output.write_bytes(b'preserve rejected artifact\n')
+   50                      result = gate.run([*commands[profile], source, output])
+   51                      gate.diagnostic(result, case['knot'])
+   52                      gate.require(output.read_bytes() == b'preserve rejected artifact\n', result)
+   53                      observed[profile] = result
+   54              item['lanes'][lane] = observed
+   55          if hashes:
+   56              gate.require(len(set(hashes)) == 1, ('review native/Bun module equality', hashes))
+   57          record['fixtures'].append(item)
+
+`tests/compiler-nest/review.py:84-121` (added)
+   84  def enum_control(record, lanes):
+   85      source = HERE / 'fixtures/empty-type.bend'
+   86      for lane, commands in lanes.items():
+   87          output = BUILD / f'empty-{lane}.wasm'
+   88          result = gate.compiled(commands['enum'], source, output)
+   89          wat = gate.successful(['wasm2wat', output])['stdout']
+   90          ops = enum_gate.mvp_instructions(wat)
+   91          gate.require('unreachable' not in ops and 'i32.const' in ops, ops)
+   92          record['enum_whitelist'].append({'lane': lane, 'compile': result, 'instructions': ops,
+   93                                           'sha256': gate.digest(output)})
+   94      directory = BUILD / 'empty-unreachable'
+   95      directory.mkdir(exist_ok=True)
+   96      for source_file in (gate.ROOT / 'src').glob('*.bend'):
+   97          shutil.copy2(source_file, directory / source_file.name)
+   98      target = directory / 'wasm.bend'
+   99      text = target.read_text()
+  100      old = 'Branches{Nil{},index,pointer}: code(W.bytes(cap,[65,0]),next)'
+  101      gate.require(text.count(old) == 1, 'empty encoding mutation anchor')
+  102      target.write_text(text.replace(old, 'Branches{Nil{},index,pointer}: code(W.bytes(cap,[0]),next)'))
+  103      proof = gate.successful([*gate.SEED, directory / 'compile-cli.bend', '--check-only'])
+  104      gate.require(proof['stdout'].strip() == 'All terms check.', proof)
+  105      item = {'name': 'empty-unreachable', 'typecheck': proof, 'lanes': {}}
+  106      for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
+  107          binary = directory / ('compile' + suffix)
+  108          gate.successful([*gate.SEED, directory / 'compile-cli.bend', '-o', binary])
+  109          output = directory / f'{lane}.wasm'
+  110          gate.compiled([*runtime, binary], source, output)
+  111          wat = gate.successful(['wasm2wat', output])['stdout']
+  112          # The mutant is a valid executable module; only the declared whitelist kills it.
+  113          gate.executed(output, {'export': 'main', 'ordinals': [], 'tag': 1}, False)
+  114          try:
+  115              enum_gate.mvp_instructions(wat)
+  116          except AssertionError as error:
+  117              gate.require('unreachable' in str(error), error)
+  118              item['lanes'][lane] = {'outcome': 'semantic-kill', 'assertion': str(error)}
+  119          else:
+  120              raise AssertionError('empty-unreachable survived')
+  121      record['mutants'].append(item)
 ```
 
 # Scope

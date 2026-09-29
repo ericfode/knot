@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=claim-holds-against-evidence; increment=vm-spec; head=d2fe0f2048fb; base=454bf3059679; builder=scripts/prechecks/packets@40e325337e4a; sources: vm/SPEC.md@d2fe0f20 sha256=8766740dd99fadc82c5e393412a0b972bdffdcdb3de02162ce8dcbb2b86fa508; vm/bench/run.py@d2fe0f20 sha256=ed30fdd7dfa747e1509c6d26da2c47e7df66aa97a3679effd2a3f7b200c59d04; vm/check-spec.py@d2fe0f20 sha256=a24f2a01dc7b977efbdc2e4c76336dc96fa8a07f1f620bbf34db2a2811ba0de1 -->
+<!-- prechecks packet v1; rule=claim-holds-against-evidence; increment=vm-spec; head=d2fe0f2048fb; base=454bf3059679; builder=scripts/prechecks/packets@3a2ef420dff1; sources: vm/SPEC.md@d2fe0f20 sha256=8766740dd99fadc82c5e393412a0b972bdffdcdb3de02162ce8dcbb2b86fa508; vm/bench/run.py@d2fe0f20 sha256=ed30fdd7dfa747e1509c6d26da2c47e7df66aa97a3679effd2a3f7b200c59d04; vm/check-spec.py@d2fe0f20 sha256=a24f2a01dc7b977efbdc2e4c76336dc96fa8a07f1f620bbf34db2a2811ba0de1 -->
 # Claim
 vm/SPEC.md:572-572 (section: 12. Frozen evidence and later obligations) - verbatim text:
 
