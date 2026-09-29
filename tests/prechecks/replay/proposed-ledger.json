@@ -1,0 +1,117 @@
+{
+ "entries": [
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "dd69321f68f628625734",
+   "increment": "census-2",
+   "owner": "coordinator",
+   "reason": "census-2's round receipt cites the ignored run summary .local/gates/run-*/summary.json; accepted at merge, the coordinator refreshes receipts after integration",
+   "rule": "host-path",
+   "subject": {
+    "path": "tools/census/receipts/census-2-round-2.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 2
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C3",
+   "fingerprint": "0e4cf4252a837aa62567",
+   "increment": "classify",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted classify (merged as dcf7df7c) with its additive 112-line classification section in the frontend gate script tests/subsets/check_frontend.py; no manifest recorded the authorization",
+   "rule": "frozen-edit",
+   "subject": {
+    "path": "tests/subsets/check_frontend.py"
+   },
+   "until": null,
+   "value": {
+    "status": "M"
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "c08dc3b9f64fbc56096c",
+   "increment": "classify-2",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted classify-2 (merged as 152fcd5d) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh) and the reviewers rated them minor",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-classification/receipts/gates.stderr.txt"
+   },
+   "until": null,
+   "value": {
+    "hits": 1
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "6be2fdde53abad25d6f0",
+   "increment": "classify-2",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted classify-2 (merged as 152fcd5d) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh) and the reviewers rated them minor",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-classification/receipts/precision.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 130
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "e625bd5595baf5266f40",
+   "increment": "recursion",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted recursion (merged as ddb3599f) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh)",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-recursion/receipts/recursion.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 706
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "85fbf71828b87e742d84",
+   "increment": "recursion",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted recursion (merged as ddb3599f) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh)",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-recursion/receipts/reference.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 76
+   }
+  },
+  {
+   "added": "2026-09-29",
+   "check": "C4",
+   "fingerprint": "c63a3bd84c8d84ede9a4",
+   "increment": "recursion",
+   "owner": "coordinator",
+   "reason": "the coordinator accepted recursion (merged as ddb3599f) with receipts written by the gate run in the worktree; the merge refreshes them (npm run gates:refresh)",
+   "rule": "host-path",
+   "subject": {
+    "path": "tests/compiler-recursion/receipts/regressions.json"
+   },
+   "until": null,
+   "value": {
+    "hits": 117
+   }
+  }
+ ],
+ "note": "PROPOSED, never read by the suite: authority stays on main (docs/compiler-campaign/known-conditions.json). These are the executor conditions of major or higher that the suite reports on tips the coordinator accepted and merged; the coordinator adopts the entries it accepts. Each entry is pinned to the measured value, so a receipt that gains host paths later is reported as `changed`, not silenced."
+}
