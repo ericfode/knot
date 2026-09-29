@@ -97,7 +97,8 @@ Full stdout/stderr logs, `snapshot.json`, `dependencies.json`, normalized
 receipts, and unified semantic diffs remain alongside the summary. Scratch
 sources, build products, and dependency caches are removed by default;
 `--keep-scratch` retains them. `--timeout` sets a per-gate wall limit (default
-900 seconds); timeout kills that process group and records `exhausted`.
+1,800 seconds; 900 let the eight nest gates, each rebuilding its lanes, exhaust
+under campaign load); timeout kills that process group and records `exhausted`.
 
 To compare two runs of unchanged inputs, compare their entire `normalized`
 objects, or byte-compare their `normalized/` receipt trees. Real timings and run
