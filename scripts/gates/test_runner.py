@@ -244,6 +244,29 @@ class ExecutionTests(unittest.TestCase):
             self.assertEqual('passed', good['status'])
             self.assertEqual({'tests': 3, 'law_rules': 8}, good['counts'])
 
+    def test_host_clang_flake_is_retried_once(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            env = dict(os.environ, BEND_NO_TELEMETRY='1')
+            marker = root / 'attempts'
+            flaky = ('import sys, pathlib; p = pathlib.Path(sys.argv[1]); n = int(p.read_text()) if p.exists() else 0; '
+                     'p.write_text(str(n + 1)); '
+                     '(print("# pass 3\\nPASS: eight law rules;"), sys.exit(0)) if n else '
+                     '(print("Error: bend needs clang 14 or newer to build binaries (found no clang)", file=sys.stderr), sys.exit(1))')
+            good = run.execute(run.Gate('lint', (sys.executable, '-c', flaky, str(marker))), root, root, env, 5)
+            self.assertEqual('passed', good['status'])
+            self.assertEqual(1, good['retried']['first_exit_code'])
+            self.assertEqual('2', marker.read_text())
+            # Twice flaky stays failed, with both attempts' evidence.
+            always = ('import sys; print("bend needs clang 14 (found no clang)", file=sys.stderr); sys.exit(1)')
+            bad = run.execute(run.Gate('always', (sys.executable, '-c', always)), root, root, env, 5)
+            self.assertEqual('failed', bad['status'])
+            self.assertIn('retried', bad)
+            # Any other failure is never retried.
+            other = run.execute(run.Gate('other', (sys.executable, '-c', 'raise SystemExit(3)')), root, root, env, 5)
+            self.assertEqual('failed', other['status'])
+            self.assertNotIn('retried', other)
+
     def test_clang_on_path_survives_a_trimmed_environment(self):
         # A gate program that rebuilds its environment keeps PATH but may drop CC
         # and SDKROOT; `clang` must still be the resolved compiler with its SDK.
@@ -290,7 +313,7 @@ class ExecutionTests(unittest.TestCase):
                               'fields-trust', 'structural-trust', 'owned-store', 'flat-store',
                               'recursion', 'fields-wasm', 'census', 'lint:verify', 'perch-context',
                               'bootstrap', 'classification', 'io-host', 'io-abi-2',
-                              'selfhost', 'prechecks'}, set(names))
+                              'selfhost'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})
