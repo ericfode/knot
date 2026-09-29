@@ -283,6 +283,8 @@ CONTINUES = {
     'cont-let-margin': 'case Off{} Off{}:\n      u : Flag = x0\n|| a\n      On{}\n',
     'cont-let-deeper': 'case Off{} Off{}:\n      u : Flag = x0\n          || a\n      On{}\n',
     'cont-bang-margin': 'case Off{} Off{}: x0\n!(a)\n',
+    'cont-let-le': 'case Off{} Off{}:\n      u : Flag = x0\n      <= a\n      On{}\n',
+    'cont-let-ge': 'case Off{} Off{}:\n      u : Flag = x0 # c\n      >= a\n      On{}\n',
     'cont-lambda-let': 'case Off{} Off{}:\n      u : Flag = a\n            => a\n      On{}\n',
 }
 
