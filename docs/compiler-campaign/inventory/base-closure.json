@@ -399,7 +399,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 109,
+          "declarations": 111,
           "base": 41,
           "base_intrinsics": 10,
           "foreign": 0
@@ -1054,9 +1054,11 @@
               "Bool",
               "Bool.or",
               "List",
+              "String",
               "src/parse.numeral",
               "src/parse.promotes",
               "src/parse.scrutinee",
+              "src/parse.starts",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -1290,6 +1292,7 @@
               "src/syntax.identifier",
               "src/syntax.marks",
               "src/syntax.matches",
+              "src/syntax.same_line",
               "src/syntax.skip_lines",
               "src/syntax.statement",
               "src/syntax.text",
@@ -1724,6 +1727,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/syntax.line",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.same_line",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.malformed",
             "file": "src/syntax.bend",
             "via": "src/lex.lexeme",
@@ -1817,6 +1834,21 @@
               "Bool.or",
               "String",
               "String.eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.same_line",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.line"
             ],
             "dynamic_calls": []
           },
@@ -2229,7 +2261,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 109,
+          "declarations": 111,
           "base": 41,
           "base_intrinsics": 9,
           "foreign": 0
@@ -2884,9 +2916,11 @@
               "Bool",
               "Bool.or",
               "List",
+              "String",
               "src/parse.numeral",
               "src/parse.promotes",
               "src/parse.scrutinee",
+              "src/parse.starts",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -3120,6 +3154,7 @@
               "src/syntax.identifier",
               "src/syntax.marks",
               "src/syntax.matches",
+              "src/syntax.same_line",
               "src/syntax.skip_lines",
               "src/syntax.statement",
               "src/syntax.text",
@@ -3554,6 +3589,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/syntax.line",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.same_line",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.malformed",
             "file": "src/syntax.bend",
             "via": "src/lex.lexeme",
@@ -3647,6 +3696,21 @@
               "Bool.or",
               "String",
               "String.eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.same_line",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.line"
             ],
             "dynamic_calls": []
           },
@@ -4059,7 +4123,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 89,
+          "declarations": 91,
           "base": 29,
           "base_intrinsics": 10,
           "foreign": 0
@@ -4447,7 +4511,8 @@
               "Bool.or",
               "src/parse.numeral",
               "src/parse.promotes",
-              "src/parse.scrutinee"
+              "src/parse.scrutinee",
+              "src/parse.starts"
             ],
             "dynamic_calls": []
           },
@@ -4606,6 +4671,7 @@
               "src/syntax.identifier",
               "src/syntax.marks",
               "src/syntax.matches",
+              "src/syntax.same_line",
               "src/syntax.skip_lines",
               "src/syntax.statement",
               "src/syntax.text",
@@ -4912,6 +4978,16 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/syntax.line",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.same_line",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.malformed",
             "file": "src/syntax.bend",
             "via": "src/lex.lexeme",
@@ -4977,6 +5053,19 @@
             "dependencies": [
               "Bool.or",
               "String.eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.same_line",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/syntax.line"
             ],
             "dynamic_calls": []
           },
@@ -5274,7 +5363,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 123,
+          "declarations": 125,
           "base": 55,
           "base_intrinsics": 10,
           "foreign": 0
@@ -6002,6 +6091,7 @@
               "src/parse.numeral",
               "src/parse.promotes",
               "src/parse.scrutinee",
+              "src/parse.starts",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -6227,6 +6317,7 @@
               "src/syntax.identifier",
               "src/syntax.marks",
               "src/syntax.matches",
+              "src/syntax.same_line",
               "src/syntax.skip_lines",
               "src/syntax.statement",
               "src/syntax.text",
@@ -6651,6 +6742,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/syntax.line",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.same_line",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.malformed",
             "file": "src/syntax.bend",
             "via": "src/lex.lexeme",
@@ -6743,6 +6848,21 @@
               "Bool.or",
               "String",
               "String.eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.same_line",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.line"
             ],
             "dynamic_calls": []
           },
@@ -7292,7 +7412,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 421,
+          "declarations": 423,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -11659,9 +11779,11 @@
               "Bool",
               "Bool.or",
               "List",
+              "String",
               "src/parse.numeral",
               "src/parse.promotes",
               "src/parse.scrutinee",
+              "src/parse.starts",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -11895,6 +12017,7 @@
               "src/syntax.identifier",
               "src/syntax.marks",
               "src/syntax.matches",
+              "src/syntax.same_line",
               "src/syntax.skip_lines",
               "src/syntax.statement",
               "src/syntax.text",
@@ -13311,6 +13434,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/syntax.line",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.same_line",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.malformed",
             "file": "src/syntax.bend",
             "via": "src/lex.lexeme",
@@ -13404,6 +13541,21 @@
               "Bool.or",
               "String",
               "String.eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.same_line",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.line"
             ],
             "dynamic_calls": []
           },
@@ -15174,7 +15326,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 421,
+          "declarations": 423,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -19541,9 +19693,11 @@
               "Bool",
               "Bool.or",
               "List",
+              "String",
               "src/parse.numeral",
               "src/parse.promotes",
               "src/parse.scrutinee",
+              "src/parse.starts",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -19777,6 +19931,7 @@
               "src/syntax.identifier",
               "src/syntax.marks",
               "src/syntax.matches",
+              "src/syntax.same_line",
               "src/syntax.skip_lines",
               "src/syntax.statement",
               "src/syntax.text",
@@ -21193,6 +21348,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/syntax.line",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.same_line",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.malformed",
             "file": "src/syntax.bend",
             "via": "src/lex.lexeme",
@@ -21286,6 +21455,21 @@
               "Bool.or",
               "String",
               "String.eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.same_line",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.line"
             ],
             "dynamic_calls": []
           },
@@ -23056,7 +23240,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 372,
+          "declarations": 374,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -25813,7 +25997,8 @@
               "Bool.or",
               "src/parse.numeral",
               "src/parse.promotes",
-              "src/parse.scrutinee"
+              "src/parse.scrutinee",
+              "src/parse.starts"
             ],
             "dynamic_calls": []
           },
@@ -25972,6 +26157,7 @@
               "src/syntax.identifier",
               "src/syntax.marks",
               "src/syntax.matches",
+              "src/syntax.same_line",
               "src/syntax.skip_lines",
               "src/syntax.statement",
               "src/syntax.text",
@@ -26965,6 +27151,16 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/syntax.line",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.same_line",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.malformed",
             "file": "src/syntax.bend",
             "via": "src/lex.lexeme",
@@ -27030,6 +27226,19 @@
             "dependencies": [
               "Bool.or",
               "String.eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.same_line",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/syntax.line"
             ],
             "dynamic_calls": []
           },
@@ -28284,7 +28493,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 459,
+          "declarations": 461,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -32724,6 +32933,7 @@
               "src/parse.numeral",
               "src/parse.promotes",
               "src/parse.scrutinee",
+              "src/parse.starts",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -32949,6 +33159,7 @@
               "src/syntax.identifier",
               "src/syntax.marks",
               "src/syntax.matches",
+              "src/syntax.same_line",
               "src/syntax.skip_lines",
               "src/syntax.statement",
               "src/syntax.text",
@@ -34349,6 +34560,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/syntax.line",
+            "file": "src/syntax.bend",
+            "via": "src/syntax.same_line",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.malformed",
             "file": "src/syntax.bend",
             "via": "src/lex.lexeme",
@@ -34441,6 +34666,21 @@
               "Bool.or",
               "String",
               "String.eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.same_line",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.Token",
+              "src/syntax.line"
             ],
             "dynamic_calls": []
           },
