@@ -19,7 +19,7 @@ BEND_NO_TELEMETRY=1 scripts/bend-reference src/image-PROOF.bend      # All terms
 | [render.py](render.py), [image-cli.bend](image-cli.bend) | Two decoders' plans in one canonical text; `image-cli decode`/`recode`/`plan`/`roundtrip`/`named`/`answers` is the Bend codec driver |
 | [writes.c](writes.c), [writes.js](writes.js) | Observe every write to a file: DYLD interposer (native), Bun preload (JS) |
 | [witnesses/](witnesses/) | Small books for mutants: reordered arms, a let that changes type, a shared type and constructor name, nested cases, many slots |
-| [LAW_REVIEW.md](LAW_REVIEW.md) | The open general round-trip law (D21) in its corrected, partial-correctness form, the counterexamples of its first statement, the twenty-four closed laws and what each covers |
+| [LAW_REVIEW.md](LAW_REVIEW.md) | The open general round-trip law (D21) in its corrected, partial-correctness form, the counterexamples of its first statement, the twenty-eight closed laws and what each covers |
 | [REPORT.md](REPORT.md) | What was built, evidence, limits, review round 1, and what the merge wave must add |
 
 Sources: an explicit list (`expectations.json`), discovered once from every `tests/*/fixtures/**/*.bend`, the subset

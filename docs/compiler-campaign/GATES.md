@@ -141,10 +141,11 @@ The image increment adds gate `image` (`python3 -B tests/compiler-image/check.py
 - Nine judging controls pin how the listed sources are judged: a frozen book, a gap that closes, a source that moves, a
   checker that regresses or fails, a drifted reference, a missing source, and a source the seed rejects that `check-cli` accepts.
 - Twenty-one mutants of `src/image*.bend` are killed by wrong observations, and deleting any of the eight
-  `C.Term` arms fails the seed's check with a message naming it. `src/image-PROOF.bend` (twenty-four laws) must print
+  `C.Term` arms fails the seed's check with a message naming it. `src/image-PROOF.bend` (twenty-eight laws) must print
   `All terms check.`. The general law in `src/image-OPEN.bend` must be exactly one open claim (D21), and the gate
-  instantiates it as written at 13 fuels and books, among them the fuels where its first statement (`recoded ==
-  erase_tokens` at every fuel) fails, and requires that first statement, and the law with a wrong conclusion, to be refused there.
+  instantiates it as written at 17 fuels and books, among them every fuel where its first statement (`recoded ==
+  erase_tokens` at every fuel) fails on the two fixed books (1 to 2 and 13 to 18), and requires that first statement, at each of
+  those eight fuels, and the law with a wrong conclusion, to be refused.
 - It writes only `tests/compiler-image/receipts/image.json`.
 
 The prechecks suite's own verification (`npm run -s prechecks:verify`: its unit tests against synthetic clean and broken repositories, its semantic mutants and the Perch wiring test for its seven advisory rules, receipt `tests/prechecks/receipts/prechecks.json`) is deliberately not a registered gate: it takes 150 to 390 seconds, and every increment's full gate run would pay for it while only a change to `scripts/prechecks/` or `tests/prechecks/` can affect it. Run it whenever either changes; the coordinator runs it before merging such a change. The suite itself is not a gate either: `npm run -s prechecks` reports conditions for the

@@ -823,10 +823,9 @@ SHAPES = ('equal', 'refused')
 # layout refuses however much fuel it has (an arity past the limit, a name that is not an identifier).
 CLAIM_INSTANCES = (
     [('flag', 'B.flag_book(at)', n) for n in (0, 1, 2, 3, 64)]
-    + [('mixed', 'B.mixed_book(at)', n) for n in (0, 12, 13, 18, 19, 64)]
+    + [('mixed', 'B.mixed_book(at)', n) for n in (0, *range(12, 20), 64)]
     + [('wide', 'B.wide_book(at)', 64), ('accent', 'B.named_book(B.accent(),at)', 64)])
-FIRST_STATEMENT = (('flag', 'B.flag_book(at)', 1), ('flag', 'B.flag_book(at)', 2), ('mixed', 'B.mixed_book(at)', 13),
-                   ('mixed', 'B.mixed_book(at)', 18))
+FIRST_STATEMENT = ([('flag', 'B.flag_book(at)', n) for n in (1, 2)] + [('mixed', 'B.mixed_book(at)', n) for n in range(13, 19)])
 
 
 def open_statement() -> dict:

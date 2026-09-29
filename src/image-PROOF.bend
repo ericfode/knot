@@ -37,6 +37,22 @@ def L.mixed_refuted_at_13(at, e):
   %e : L.refusal(_)
   Unit{}
 
+def L.mixed_refuted_at_14(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.mixed_refuted_at_15(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.mixed_refuted_at_16(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
+def L.mixed_refuted_at_17(at, e):
+  %e : L.refusal(_)
+  Unit{}
+
 def L.mixed_refuted_at_18(at, e):
   %e : L.refusal(_)
   Unit{}

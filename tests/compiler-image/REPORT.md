@@ -61,8 +61,8 @@ Two confirmed major findings, both fixed; the commit messages and the gate's rec
    `erase_tokens` at the same fuel (`src/image-OPEN.bend`, [LAW_REVIEW.md](LAW_REVIEW.md), the trust inventory in `src/SPEC.md`,
    `CONTRACT.json`). Names were a further class, so layout now refuses a name that is not an identifier
    (`P.spelled`, shared with `decode`): no checked book has one, and all 96 books stay byte-identical. The gate reads the open
-   law as written and proves it at 13 fuels and books, and must fail to prove the first statement at the four fuels where it
-   is false, and a law with a wrong conclusion.
+   law as written and proves it at 17 fuels and books, and must fail to prove the first statement at each of the eight fuels of
+   its windows, and a law with a wrong conclusion.
 2. **The gate froze Knot's own verdicts through a live glob.** The source list is now explicit (690: the 681 and the nine
    goldens of vm-spec round 14); only the images of the 96 books `check-cli` accepts are frozen, unchanged; every other source is
    compared with a `check-cli` built in the same run (same exit and stderr, both lanes). The seed's verdict on the 100 Invalid
@@ -98,7 +98,7 @@ the codec driver and the laws were written with or after the encoder, from that 
 | Chunked path | a DYLD write shim (native), a Bun `fs.writeSync` preload | a 5,170,376-byte synthetic image (sha256 equal to the frozen one) reaches the file in 95 writes, the largest 55,108 bytes, on both lanes; a 9,043,376-byte image, 166 writes (LETS = 6, native only: Bun would need about 2 GB) reaches the file through the same chunks, so the output cap admits at least 8 MiB by observation; a 4,842,844-word book is `Exhausted compile budget` before the output opens, and `image-cli answers` shows erasure answering on it |
 | A missing arm is a checker error | the seed's `--check-only` | deleting any of the eight `C.Term` arms fails with the seed's message `cases for core.<Form>` |
 | Mutants | wrong observations | 21 mutants of `src/image*.bend`, each a type-correct edit with a named witness; each ends as the compiler's own outcome (exit 0 with other bytes, or a categorized failure), never a seed fail-stop or a signal; 15 are also refused by the laws |
-| Laws | the seed's checker | 24 laws, `All terms check.`; the general law in `src/image-OPEN.bend` type-checks, is exactly one open claim, and is proved at 13 fuels and books by the gate (the first statement and a wrong conclusion are refused at the same fuels) |
+| Laws | the seed's checker | 28 laws, `All terms check.`; the general law in `src/image-OPEN.bend` type-checks, is exactly one open claim, and is proved at 17 fuels and books by the gate (the first statement is refused at each of the eight fuels of its windows, and a wrong conclusion at 64) |
 | Judging of the listed sources | nine controls on real rows | a frozen book, a gap that closes, a source that moves, a checker that regresses or fails, a drifted reference, a missing source, and a source the seed rejects that `check-cli` accepts |
 
 The synthetic book is 538 KB of source: 250 functions, each with three affine 256-field lets and a final one, so
@@ -108,11 +108,11 @@ constructor). Cost: 0.8 s and 96 MB peak on the native lane, 2.3 s wall under lo
 
 ## Limits and honest gaps
 
-- **The general round-trip law is an open obligation (D21), in its partial-correctness form.** The 24 laws are ground: two
+- **The general round-trip law is an open obligation (D21), in its partial-correctness form.** The 28 laws are ground: two
   hand-written books and an all-forms plan, quantified over every source position, type, tag and slot where the words are only
   moved, plus erasure laws over every token, level, type and depth, plus the counterexamples of the first statement. The statement
   over all books and fuels is a real `law` in `src/image-OPEN.bend`, which the gate requires to type-check, be exactly one open
-  claim, and hold at 13 instances; it is reviewed in [LAW_REVIEW.md](LAW_REVIEW.md) and recorded in `src/SPEC.md`'s trust
+  claim, and hold at 17 instances; it is reviewed in [LAW_REVIEW.md](LAW_REVIEW.md) and recorded in `src/SPEC.md`'s trust
   inventory. Its evidence is the table above, not a proof; it is true as stated (no counterexample is known).
 - **A name is an identifier.** A valid UTF-8 name that is not ASCII is admitted by the reference codec and is `Unsupported
   compile image-name` here. Two functions of one name are refused by `serializer.validate` and not by the Bend codec; the checker

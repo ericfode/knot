@@ -68,14 +68,16 @@ is where one would appear.
 
 ## Evidence for the open law
 
-1. The twenty-four closed laws below, checked by the seed (`All terms check.`).
-2. **The gate instantiates the statement.** `check.py` reads `law round_trip` as written and proves it at 13 fuels and
-   books: `flag_book` at 0, 1, 2, 3 and 64; `mixed_book` at 0, 12, 13, 18, 19 and 64; and the two books that layout
+1. The twenty-eight closed laws below, checked by the seed (`All terms check.`).
+2. **The gate instantiates the statement.** `check.py` reads `law round_trip` as written and proves it at 17 fuels and
+   books: `flag_book` at 0, 1, 2, 3 and 64; `mixed_book` at 0, 12 to 19 and 64; and the two books that layout
    refuses at any fuel (`wide_book` and a book whose datatype is named `é`). At each instance either the conclusion holds
    by evaluation (`equal`: the encoder answers and decodes to the erased plan, or both refuse alike), or the hypothesis is
-   refuted (`refused`: the encoder does not answer, and a `Fail` is not a `Done`). Fuels 1, 2, 13 and 18 are `refused`,
-   the windows in which the first statement was false. The same machinery must fail to prove the first statement at
-   those four fuels, and a copy of the law with a wrong conclusion at fuel 64, so a false open law is refused.
+   refuted (`refused`: the encoder does not answer, and a `Fail` is not a `Done`). Every fuel of the two windows in which the
+   first statement was false, 1 to 2 on `flag_book` and 13 to 18 on `mixed_book`, is an instance, and is `refused`. The same
+   machinery must fail to prove the first statement at each of those eight fuels, and a copy of the law with a wrong
+   conclusion at fuel 64, so a false open law is refused. At fuel 64 the hypothesis cannot be refuted, so the equation there is
+   not vacuous.
 3. `image-cli roundtrip` on each of the 96 frozen-suite books that the checker accepts: Bend's own
    `decode(encode(b))` and `erase_tokens(b)` print alike; and `image-cli plan` prints `erase_tokens(b)` as
    `vm/serializer.py` decodes the image the compiler wrote (both lanes).
@@ -93,7 +95,7 @@ is where one would appear.
    equals the reference encoder on each. Offline, 20,300 plans, all equal. This covers the forms that this base's core does not
    produce and the merge wave's encoders will.
 
-## The closed laws (twenty-four)
+## The closed laws (twenty-eight)
 
 | Law | States | Covers |
 |---|---|---|
@@ -104,7 +106,7 @@ is where one would appear.
 | `round_trip_any_value` | the round trip for every type index, tag and result type of a value | words that are only moved |
 | `round_trip_all_forms` | `decode` of `layout` of a plan carrying all thirteen forms is that plan: literals of each kind, an intrinsic, a foreign leaf, a keys-mode Case with a default, a tag-mode Case with a missing row, a closure with a capture, an invoke, arrow and opaque types | the codec beyond this base's core |
 | `flag_refuted_at_1`, `flag_refuted_at_2` | the first statement is false: erasure answers and the image is refused for lack of fuel | the window on `flag_book` |
-| `mixed_refuted_at_13`, `mixed_refuted_at_18` | the same, at the ends of the window on `mixed_book` | the window on `mixed_book` |
+| `mixed_refuted_at_13` to `mixed_refuted_at_18` | the same, at each fuel of the window on `mixed_book` | the window on `mixed_book` |
 | `wide_refuted` | the first statement is false on a book with 4,097 live parameters | the limits of SPEC section 4 |
 | `accent_refuted` | the first statement is false on a book whose datatype is named `é` | names |
 | `empty_name_is_refused`, `nul_name_is_refused`, `wide_name_is_refused` | `encode` of a book with an empty name, a zero byte or a wide Char is `Unsupported compile image-name` | the names decode does not read |

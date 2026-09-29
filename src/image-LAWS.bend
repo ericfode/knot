@@ -137,7 +137,7 @@ def refusal(result: Result<S.Error,P.Plan>) -> Type:
     case Fail{e}: Unit
     case Done{plan}: Empty
 
-# The fuel windows: erasure answers from 1 (flag_book) and 13 (mixed_book), layout from 3 and 19.
+# The fuel windows, each fuel a law: erasure answers from 1 (flag_book) and 13 (mixed_book), layout from 3 and 19.
 law flag_refuted_at_1:
   for +at: S.At
   {I.recoded(1n,flag_book(at)) != I.erase_tokens(1n,flag_book(at)) : Result<S.Error,P.Plan>}
@@ -149,6 +149,22 @@ law flag_refuted_at_2:
 law mixed_refuted_at_13:
   for +at: S.At
   {I.recoded(13n,mixed_book(at)) != I.erase_tokens(13n,mixed_book(at)) : Result<S.Error,P.Plan>}
+
+law mixed_refuted_at_14:
+  for +at: S.At
+  {I.recoded(14n,mixed_book(at)) != I.erase_tokens(14n,mixed_book(at)) : Result<S.Error,P.Plan>}
+
+law mixed_refuted_at_15:
+  for +at: S.At
+  {I.recoded(15n,mixed_book(at)) != I.erase_tokens(15n,mixed_book(at)) : Result<S.Error,P.Plan>}
+
+law mixed_refuted_at_16:
+  for +at: S.At
+  {I.recoded(16n,mixed_book(at)) != I.erase_tokens(16n,mixed_book(at)) : Result<S.Error,P.Plan>}
+
+law mixed_refuted_at_17:
+  for +at: S.At
+  {I.recoded(17n,mixed_book(at)) != I.erase_tokens(17n,mixed_book(at)) : Result<S.Error,P.Plan>}
 
 law mixed_refuted_at_18:
   for +at: S.At
