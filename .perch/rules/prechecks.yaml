@@ -49,21 +49,22 @@
   ensure: >
     This rule concerns the outcome class (Invalid, Unsupported, Exhausted, HostFailure, InternalFailure) that
     the packet's sources assign to the same case: decision rows, limit tables, outcome sentences, frozen
-    expectation rows and the code that freezes them. For each case or limit that two or more sources mention,
-    take the class each assigns, reading a frozen expectation by the class it records (its leading outcome
-    word), not by words in its reason. The rule is broken when two sources give the same case different classes;
-    when a form the implementation cannot handle yet, and that the seed accepts, is refused as Invalid or
-    HostFailure instead of Unsupported; when a resource limit is refused as anything other than Exhausted with
-    that limit as its cause; or when the seed succeeds and the implementation refuses and the case is none of a
-    documented bound, an Unsupported capability gap, or a divergence that a decision row itself documents. A
-    documented bound is a resource limit and is itself Exhausted with its cause; a refusal of any other class
-    that is listed or frozen as a bound is not excused. HostFailure holds only for malformed input or a failure
-    outside the program's meaning: refusing a well-formed program or its result because the implementation
-    cannot handle it yet is a capability gap, even when the refusal is phrased as a host or invoke failure.
-    Invalid for a program the seed also rejects holds, and so does a passage that records another component's
-    observed deviation as a known defect without adopting it as this increment's outcome. Judge only the sources
-    shown; a case that only one of them mentions holds, and missing evidence is not a pass for a case whose
-    class the shown sources leave undecided.
+    expectation rows and the code that freezes them. First, for each case or limit that two or more sources
+    mention, take the class each assigns, reading a frozen expectation by the class it records (its leading
+    outcome word), not by words in its reason: a limit that one source calls Exhausted and another freezes as
+    HostFailure has two classes. Two sources that give the same case different classes break the rule, and no
+    exemption below excuses that. The rule is also broken when a form the implementation cannot handle yet, and
+    that the seed accepts, is refused as Invalid or HostFailure instead of Unsupported; when a resource limit is
+    refused as anything other than Exhausted with that limit as its cause; or when the seed succeeds and the
+    implementation refuses and the case is none of a documented bound, an Unsupported capability gap, or a
+    divergence that a decision row itself documents. A documented bound is a resource limit and is itself
+    Exhausted with its cause; a refusal of any other class that is listed or frozen as a bound is not excused.
+    Refusing a well-formed program or its result because the implementation cannot handle it yet is a capability
+    gap, even when phrased as a host or invoke failure. Where every source agrees, these hold: HostFailure for
+    malformed input or a failure outside the program's meaning, Invalid for a program the seed also rejects, and
+    a passage that records another component's observed deviation as a known defect without adopting it as this
+    increment's outcome. Judge only the sources shown; a case that only one of them mentions holds, and missing
+    evidence is not a pass for a case whose class the shown sources leave undecided.
 
 - name: clause-vs-delta
   where: ".local/prechecks/packets/**/clause-vs-delta/*.md"
@@ -128,14 +129,15 @@
   gate: false
   ensure: >
     This rule compares the required laws listed in the Claim with the operation-to-law matrix and the recorded
-    obligations in the Evidence. For each required law, find the law or laws whose statements establish it in
-    the generality it states (all, any, arbitrary, for every value), reading the for-binder count of each: a law
-    with 0 binders is one fixed instance (a ground witness) whatever its name, and a one-step or helper law does
-    not establish a whole theorem unless the requirement asks for it. The rule is broken when a required law is
-    established only by ground witnesses, only by laws narrower than it states (fewer cases, or a fixed size or
-    value where it says all or any), or by no law at all, and no recorded obligation names it as open with its
-    evidence. The rule holds when each required law maps to universally quantified laws (binders above zero)
-    that state it, or to a recorded open obligation. Ground witnesses and other laws that no requirement asks
-    for are not violations, and a clause of a requirement that states a limit or disclaimer rather than a
-    property needs no law. Missing evidence is not a pass: a required law whose deciding law is absent from the
-    matrix breaks the rule.
+    obligations in the Evidence. A required law is established only by a law whose own statement, read alone, is
+    the required property in the generality it states (all, any, arbitrary, for every value), with binders above
+    zero; the packet shows statements, not proofs, so several narrower laws that might be combined do not
+    establish it. Read the for-binder count of each candidate: a law with 0 binders is one fixed instance (a
+    ground witness) whatever its name, and a law about one step, one case or a fixed size is narrower than a
+    requirement about the whole process or every case. The rule is broken when a required law is matched only by
+    ground witnesses, only by narrower laws, or by no law at all, and no recorded obligation names it as open
+    with its evidence. The rule holds when each required law has such a law, or a recorded open obligation; a
+    requirement that itself asks for helper, step or instance laws is met by them. Ground witnesses and other
+    laws that no requirement asks for are not violations, and a clause of a requirement that states a limit or
+    disclaimer rather than a property needs no law. Missing evidence is not a pass: a required law with no
+    matching law in the matrix breaks the rule.
