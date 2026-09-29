@@ -6,6 +6,7 @@ from unittest import mock
 
 import checks as checks_mod
 import run as run_mod
+from lib.gitx import GitError, Repo
 from lib.model import CheckResult, Condition
 from lib.runner import Check
 from .helpers import RepoTest
@@ -82,7 +83,13 @@ class CliTests(RepoTest):
         self.assertEqual('error', json.loads(out)['checks'][0]['outcome'])
 
     def test_usage_errors_and_listing(self):
-        self.assertEqual(2, cli('--repo', str(self.fx.root.parent), '--json')[0])       # not a repository
+        # A directory that git cannot resolve to a repository is a usage error. The check patches the resolution: the
+        # gate's TMPDIR lies inside the checkout, where a temporary directory has an enclosing repository, and the tool
+        # strips GIT_CEILING_DIRECTORIES from the environment it gives git.
+        with mock.patch.object(Repo, 'top', side_effect=GitError('fatal: not a git repository')):
+            code, out, err = cli('--repo', str(self.fx.root.parent), '--json')
+        self.assertEqual((2, ''), (code, out))
+        self.assertIn('not inside a git repository', err)
         self.fx.commit('main', {'a.txt': 'a\n'})
         self.assertEqual(2, cli('--repo', str(self.fx.root), '--head', 'no-such-rev', '--json')[0])
         code, out, _ = cli('--list')
