@@ -454,7 +454,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"term-form"),u =>
             S.bind(List<&2,S.Token>,Parsed,assign(Con{separator,tail}),rhs =>
               then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest))))),u =>
-            binder_failure(tokens,name,"binding-name",U32.is_ne(quantity,0)))
+          S.choose(Result<S.Error,Parsed>,continues(tokens),u =>
+            unsupported(tokens,"term-form"),u =>
+            binder_failure(tokens,name,"binding-name",U32.is_ne(quantity,0))))
         case _: invalid(tokens,"binding")
     case 1n+ +n AnnotatedBinding{+name,+quantity,+column}:
       match tokens:
