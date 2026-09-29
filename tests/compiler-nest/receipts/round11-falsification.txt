@@ -1,0 +1,21 @@
+# Round-11 witness laws: each mutation is one replacement in a copy of src/; the named proof entry is checked with the pinned seed
+# and must fail. `first failing law` is where the seed stops; it is the named law unless another law of the same file fails first.
+
+audit-skips-nested-matches       matrix-PROOF.bend  law matrix-LAWS.discarded_unknown_constructor_witness            first failing law: matrix-LAWS.discarded_unknown_constructor_witness
+audit-rejects-every-row          matrix-PROOF.bend  law matrix-LAWS.discarded_valid_row_witness                      first failing law: matrix-LAWS.irrefutable_lowering_witness  (an earlier law of the file fails first)
+audit-drops-row-width            matrix-PROOF.bend  law matrix-LAWS.short_row_witness                                first failing law: matrix-LAWS.short_row_witness
+validate-drops-constructor-arity matrix-PROOF.bend  law matrix-LAWS.extra_field_witness                              first failing law: matrix-LAWS.extra_field_witness
+promotion-ignores-datatypes      catalog-PROOF.bend law catalog-LAWS.promoted_datatype_is_rejected                   first failing law: catalog-LAWS.promoted_datatype_is_rejected
+promotion-ignores-marker         catalog-PROOF.bend law catalog-LAWS.bare_datatype_name_binds                        first failing law: catalog-LAWS.bare_datatype_name_binds
+datatype-order-ignored           catalog-PROOF.bend law catalog-LAWS.later_datatype_is_no_datatype                   first failing law: catalog-LAWS.later_datatype_is_no_datatype
+hidden-ignores-binders           catalog-PROOF.bend law catalog-LAWS.hidden_type_is_rejected                         first failing law: catalog-LAWS.hidden_type_is_rejected
+every-type-hidden                catalog-PROOF.bend law catalog-LAWS.unrelated_binder_hides_nothing                  first failing law: catalog-LAWS.unrelated_binder_hides_nothing
+numeral-never                    PROOF.bend         law LAWS.numeral_witness                                         first failing law: LAWS.numeral_witness
+every-token-a-statement          PROOF.bend         law LAWS.statement_witness                                       first failing law: LAWS.statement_witness
+numeral-column-invalid           PROOF.bend         law LAWS.numeral_column_is_unsupported                           first failing law: LAWS.numeral_column_is_unsupported
+same-line-statement-invalid      PROOF.bend         law LAWS.same_line_statement                                     first failing law: LAWS.same_line_statement
+line-end-rejects-breaks          PROOF.bend         law LAWS.let_ends_at_line_break                                  first failing law: LAWS.let_ends_at_line_break
+colon-split-invalid              PROOF.bend         law LAWS.split_before_colon_witness                              first failing law: LAWS.split_before_colon_witness
+same-line-always                 PROOF.bend         law LAWS.same_line_witness                                       first failing law: LAWS.same_line_witness
+call-ignores-line                PROOF.bend         law LAWS.paren_on_a_later_line_is_no_call                        first failing law: LAWS.paren_on_a_later_line_is_no_call
+opens-ignores-paren              PROOF.bend         law LAWS.parenthesis_opens_a_column                              first failing law: LAWS.parenthesis_opens_a_column
