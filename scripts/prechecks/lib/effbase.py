@@ -50,8 +50,7 @@ def compute(repo: Repo, head: str, main_ref: str | None, upstreams: list[dict]) 
             result.commit, result.kind = shared, 'stacked'
             result.tree = None
         elif not repo.is_ancestor(shared, current):
-            code, conflicts, _ = repo.merge_tree(current, shared)
-            merged = repo.out('merge-tree', '--write-tree', '--no-messages', current, shared, check=False).split('\n')[0]
+            code, conflicts, _messages, merged = repo.merge_tree(current, shared)
             if merged:
                 result.tree = merged
                 result.kind = 'merged-bases' if code == 0 else 'merged-bases-with-conflicts'

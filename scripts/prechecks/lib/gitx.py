@@ -259,18 +259,18 @@ class Repo:
         return bool(self.git('status', '--porcelain', '--untracked-files=normal', '--', '.', *ENV_EXCLUDES).stdout.strip())
 
     # ---- merge simulation -------------------------------------------------
-    def merge_tree(self, a: str, b: str) -> tuple[int, list[str], str]:
-        """Trial merge without touching any checkout: (exit code, conflicted paths, messages)."""
+    def merge_tree(self, a: str, b: str) -> tuple[int, list[str], str, str | None]:
+        """Trial merge without touching any checkout: (exit code, conflicted paths, messages, merged tree oid)."""
         proc = self.git('merge-tree', '--write-tree', '--name-only', '--messages', a, b, check=False)
         if proc.returncode not in (0, 1):
             raise GitError(proc.stderr.decode(errors='replace').strip()[:300])
         lines = proc.stdout.decode('utf-8', 'replace').split('\n')
-        # Format: <tree sha>\n<conflicted names...>\n\n<messages>
+        # Format: <tree oid>\n<conflicted names...>\n\n<messages>
+        oid = lines[0].strip() or None
         conflicts, messages = [], []
-        if lines:
-            i = 1
-            while i < len(lines) and lines[i] != '':
-                conflicts.append(lines[i])
-                i += 1
-            messages = lines[i + 1:]
-        return proc.returncode, sorted(set(conflicts)), '\n'.join(messages)
+        i = 1
+        while i < len(lines) and lines[i] != '':
+            conflicts.append(lines[i])
+            i += 1
+        messages = lines[i + 1:]
+        return proc.returncode, sorted(set(conflicts)), '\n'.join(messages), oid

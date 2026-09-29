@@ -20,6 +20,7 @@ import re
 from pathlib import Path
 
 from lib import diffs, facts as facts_lib, gates as gates_lib, globs
+from lib import retired as retired_lib
 from lib import receipts as R
 from lib import textutil as T
 from lib.model import CheckResult, Condition
@@ -112,16 +113,7 @@ def stale_counts(ctx, facts_now: dict, receipts: dict) -> list[Condition]:
 
 # ---- R2 ---------------------------------------------------------------------
 def retired_terms(ctx) -> list[Condition]:
-    seed = json.loads((Path(__file__).resolve().parent.parent / 'data/retired-terms.json').read_text())['terms']
-    extra = []
-    tree = ctx.main_tree or ctx.base
-    if tree is not None:
-        try:
-            data = tree.json('docs/compiler-campaign/retired-terms.json')
-        except ValueError:
-            data = None
-        extra = (data or {}).get('terms', []) if isinstance(data, dict) else []
-    terms = [(t, re.compile(t['pattern'], re.I)) for t in seed + extra]
+    terms = retired_lib.load(ctx.main_tree or ctx.base)
     found = []
     for path in ctx.changed_paths():
         if not globs.match_any(LIVE, path) or globs.match_any(NOT_LIVE, path):
@@ -134,7 +126,7 @@ def retired_terms(ctx) -> list[Condition]:
                 continue
             context = ' '.join(all_lines[max(number - 1, 0):number + 2]).lower()
             for term, regex in terms:
-                if regex.search(line) and not any(a.lower() in context for a in term.get('allowed', [])):
+                if regex.search(line) and not retired_lib.allowed(term, context):
                     in_spec = path.endswith('SPEC.md')
                     found.append(Condition(ID, 'retired-term', 'major' if in_spec else 'minor',
                                            {'path': path, 'term': term['id'], 'text': re.sub(r'\W+', ' ', line).strip()[:50].lower()},
