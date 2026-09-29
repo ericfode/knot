@@ -177,6 +177,10 @@ class Machine:
             return f
         return self.apply(operands[0], [self.effect(f)])
 
+    def written(self) -> str:
+        """The bytes written so far, as text."""
+        return bytes(self.stdout).decode('utf-8', 'replace')
+
     def outgoing(self, codes):
         """Section 10, D20: an outgoing String holding a non-scalar Char is refused before the host call."""
         if self.policy == 'vm' and not all(map(scalar, codes)):
@@ -262,14 +266,17 @@ class Machine:
 
 
 def book(plan: dict, name: str, ordinals: list, fuel: int) -> dict:
-    """A Book invocation whose section 8 checks passed: the ordinals are the live arguments."""
+    """A Book invocation whose section 8 checks passed: the ordinals are the live arguments.
+    `stdout` is all that the run writes, as text: what an effect wrote, which under D22 is
+    nothing whether the run ends or stops, and on success the describe line after it. A Halt
+    reports it too, so a stop that had written something first is not the stop D22 freezes."""
     m = Machine(plan, fuel)
     index = next(i for i, f in enumerate(plan['functions']) if f['name'] == name)
     try:
         w = m.call(index, list(ordinals))
-        return {'exit': 0, 'stdout': m.describe(w, plan['functions'][index]['result']), 'calls': m.calls}
+        return {'exit': 0, 'stdout': m.written() + m.describe(w, plan['functions'][index]['result']), 'calls': m.calls}
     except Halt as h:
-        return {**h.outcome, 'calls': m.calls}
+        return {**h.outcome, 'stdout': m.written(), 'calls': m.calls}
 
 
 def program(plan: dict, fuel: int, policy: str = 'vm') -> dict:

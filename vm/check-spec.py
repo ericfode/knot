@@ -2245,6 +2245,13 @@ EVALUATOR_MUTANTS = [
                                                           '        codes = self.codes(operands[0])\n' + BOOK_GUARD)]),
     ('book-refuses-after-scalar-check', [(BOOK_GUARD, ''), ('        self.outgoing(codes)\n',
                                                             '        self.outgoing(codes)\n' + BOOK_GUARD)]),
+    # A Book writes nothing (effect_controls freeze `stdout` empty on every stop at an Action): an
+    # effect that writes and then stops, or that writes as its Action meets fuel 0, is not that stop.
+    ('book-writes-then-refuses', [(BOOK_GUARD, BOOK_GUARD.replace('            raise', "            self.stdout += b'x\\n'\n            raise"))]),
+    ('book-writes-at-fuel-zero', [("        self.debit()\n        if kind == 'closure':",
+                                   "        if kind == 'action' and operands and self.entry != 'program' and self.fuel == 0:\n"
+                                   "            self.stdout += b'x\\n'\n"
+                                   "        self.debit()\n        if kind == 'closure':")]),
     ('book-refuses-action-build', [("        if op == 'foreign':\n            return ('action', node[2], tuple(operands))\n",
                                     "        if op == 'foreign':\n            if self.entry != 'program':\n"
                                     "                raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"

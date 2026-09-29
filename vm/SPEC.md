@@ -671,6 +671,14 @@ Action), and so does `IO.args`; a print whose String an `id` call builds stops a
 The pure `got(k(Unit{}))` evaluates after 3 entries, an Action built and dropped after 2
 and one applied to its erased `R` after 3.
 
+**No host call and no write are frozen.** Every Book control that stops at an Action freezes
+`stdout` empty beside its cause and `calls`, and the reference evaluation reports the bytes
+written on every Book outcome, a Halt included (§12). A VM's harness MUST compare them: for
+`IO.print` a host call is a write, so an empty `stdout` is what shows that none was made;
+`IO.args` writes nothing, so a harness with a host MUST also require that its trace holds no
+`knot_io` call for the run, the cause alone not telling a refusal from a call followed by
+one. A stop that had written or called first is not D22's stop, whatever its cause.
+
 ## 9. Primitives and numeric bounds (D15)
 
 **Registry.** `registry.json` freezes ids 0..38 exactly as literals' `primitive.bend`
@@ -1039,7 +1047,8 @@ lane and requires:
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`:
   `book-print`, `book-print-continuation-call` (`k` a function) and
   `book-print-twice` (the reviewers' bookio-1, bk-print and bookio-2) stop
-  `Unsupported vm effect` after 4 calls, writing nothing; `book-print-non-scalar` (a
+  `Unsupported vm effect` after 4 calls, writing nothing (each of these Book controls freezes
+  `stdout` empty, `fuel-book-effect-short` too); `book-print-non-scalar` (a
   surrogate) too, so D22 precedes D20; `book-print-ill-typed` (`"a"` then `id(λ)`)
   stops the same way after 5, so it precedes the inspection, and `book-args`
   (`IO.args`, foreign 0, of type `IO(List)`) after 4, so it precedes the check of the
@@ -1091,9 +1100,11 @@ lane and requires:
   Char words unread; `is_empty` reading one cell; `eq` stopping at the first
   difference, or reading one list only one cell past the other's length (either
   way round); a Halt's code, or its message, unread; and a print that checks each
-  Char as it reads it. Eighteen more, of D22, a Halt's message, keys and the debit, die
+  Char as it reads it. Twenty more, of D22, a Halt's message, keys and the debit, die
   by the controls above: a Book that performs the effect and one that drops it silently
-  (by every `book-print*` control); one that refuses before the debit (by every Book
+  (by every `book-print*` control); one that writes and then refuses (by every `book-print*`
+  control's empty `stdout`) or writes as its Action meets fuel 0 (by `fuel-book-effect-short`
+  alone); one that refuses before the debit (by every Book
   print control and both fuel controls) or when the fuel is 0 (by `fuel-book-effect-short`
   alone); one that names the foreign it refuses, as vm-model
   answered `Unsupported vm foreign 0` (by `book-args` alone); one that refuses only

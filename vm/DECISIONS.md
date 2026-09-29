@@ -545,6 +545,30 @@ follows it (§5, §10, §11) without a new image header word.
    value. The choice between refusing that shape and recording a divergence by contract is
    finding 11 below.
 
+28. **D22's silence is frozen.** Review of the round-9 branch found the clause "before the
+   host call, writing nothing" frozen by no key. The Book controls that stop at an Action
+   froze `{outcome, cause, calls}`, `evaluate.book` returned `{**outcome, 'calls'}` on a Halt
+   and never its stdout, and the reviewer's `book-writes-then-refuses` (the effect appends
+   `x\n`, then the step stops with D22's cause) survived every golden, run control and
+   mutant. This executor's own D22 mutants (a Book that performs the effect, one that drops
+   it) died because they change the outcome, while what D22 exists for, no host call and no
+   output, was the unfrozen observable. The eight Book controls that stop at an Action now
+   freeze `stdout` empty (`689934c8`, before the change): `book-print`,
+   `book-print-continuation-call`, `book-print-twice`, `book-print-non-scalar`,
+   `book-print-ill-typed`, `book-args`, `fuel-book-effect-exact` and, since its Action meets
+   fuel 0 and writes nothing either, `fuel-book-effect-short`. `evaluate.book` reports the
+   bytes the run wrote on every outcome, a Halt included, and on success ahead of the describe
+   line, so a Book that performed an effect would show it there as well. Two evaluator
+   mutants die: `book-writes-then-refuses` by every `book-print*` control, and
+   `book-writes-at-fuel-zero` (a write as the Action meets fuel 0) by `fuel-book-effect-short`
+   alone. §8 says that the key is frozen and that a harness must compare it, and that a
+   harness with a host must also require a host trace with no call: `IO.args` writes nothing,
+   so a cause alone cannot tell a refusal from a call followed by one. Read from their
+   branches, vm-core's `expected_run` already carries `case.get('stdout', '')` for every
+   outcome and vm-model's `agrees` requires an empty stdout of an Unsupported run, so neither
+   changes for the key; neither compares a host trace for `book-args` today (vm-core
+   refuses every foreign but IO.print at load, round-9 item 1 below).
+
 ## What vm-model and vm-core must now follow (round 9)
 
 Each item names the SPEC text and the controls that freeze it; `check-spec.py`'s
