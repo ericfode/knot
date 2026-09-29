@@ -6,11 +6,11 @@ directory of programs, so a `.env` file can never be in the working directory of
 from __future__ import annotations
 
 import re
-import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
+from . import proc as proc_mod
 from .context import tool_env, tool_timeout_scale
 
 CLIS = {'parse': 'src/parse-cli.bend', 'check': 'src/check-cli.bend', 'eval': 'src/eval-cli.bend'}
@@ -30,6 +30,12 @@ class Outcome:
     @property
     def accepted(self) -> bool:
         return self.kind == 'Checked'
+
+    @property
+    def code(self) -> str | None:
+        """The diagnostic's code (`template-binder`, `type-application`, ...), when the line has the standard shape."""
+        match = DIAGNOSTIC.match(self.line)
+        return match.group(3) if match else None
 
     def to_json(self) -> list:
         return [self.exit, self.kind, self.line, self.begin, self.stdout]
@@ -51,12 +57,19 @@ def classify(exit_code, stdout: str, stderr: str) -> Outcome:
     return Outcome(exit_code, kind, line, begin, stdout if exit_code == 0 else '')
 
 
+def source_key(ctx, tree) -> str:
+    """What a lane depends on: the `src` subtree (a lane exports only `src/`). A commit that changes a document or a
+    test therefore reuses every build and every cached outcome of its parent."""
+    return ctx.repo.subtree(tree.treeish, 'src') or tree.treeish
+
+
 class Lanes:
     """The three CLIs of one tree, built lazily into `cache` and run on programs in `programs`."""
 
     def __init__(self, ctx, tree, label: str, programs: Path):
         self.ctx, self.tree, self.label = ctx, tree, label
-        self.cache = ctx.scratch / 'cache' / 'lanes' / tree.treeish
+        self.key = source_key(ctx, tree)
+        self.cache = ctx.scratch / 'cache' / 'lanes' / self.key
         self.programs = programs
         self.built: dict[str, Path | None] = {}
         self.errors: dict[str, str] = {}
@@ -75,10 +88,13 @@ class Lanes:
             entry = source / CLIS[name]
             if not entry.is_file():
                 return name, None, f'{CLIS[name]} does not exist in {self.label}'
-            proc = subprocess.run(['bun', str(seed.resolve()), str(entry), '-o', str(out)], cwd=source, env=tool_env(),
-                                  capture_output=True, timeout=240 * tool_timeout_scale())
-            if proc.returncode != 0 or not out.is_file():
-                return name, None, proc.stderr.decode('utf-8', 'replace').strip().splitlines()[-1][:160] if proc.stderr.strip() else 'build failed'
+            code, _stdout, stderr = proc_mod.run(['bun', str(seed.resolve()), str(entry), '-o', str(out)], cwd=source, env=tool_env(),
+                                                 timeout=240 * tool_timeout_scale(), cancel=self.ctx.cancel)
+            if code != 0 or not out.is_file():
+                if code is None and stderr == b'cancelled':
+                    raise proc_mod.Cancelled()
+                text = stderr.decode('utf-8', 'replace').strip()
+                return name, None, (text.splitlines()[-1][:160] if text else 'timeout' if code is None else 'build failed')
             return name, out, ''
 
         with ThreadPoolExecutor(max_workers=3) as pool:
@@ -93,9 +109,10 @@ class Lanes:
         binary = self.built.get(lane)
         if binary is None:
             return Outcome(None, 'timeout', 'lane unavailable', None)
-        try:
-            proc = subprocess.run(['bun', str(binary), str(program), *args], cwd=self.programs, env=tool_env(),
-                                  capture_output=True, timeout=timeout)
-        except subprocess.TimeoutExpired:
+        code, stdout, stderr = proc_mod.run(['bun', str(binary), str(program), *args], cwd=self.programs, env=tool_env(),
+                                            timeout=timeout, cancel=self.ctx.cancel)
+        if code is None:
+            if stderr == b'cancelled':
+                raise proc_mod.Cancelled()             # the hang guard gave up on this check: never record it as a lane result
             return Outcome(None, 'timeout', '', None)
-        return classify(proc.returncode, proc.stdout.decode('utf-8', 'replace'), proc.stderr.decode('utf-8', 'replace'))
+        return classify(code, stdout.decode('utf-8', 'replace'), stderr.decode('utf-8', 'replace'))

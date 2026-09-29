@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import os
-import subprocess
 import threading
 import time
 from dataclasses import dataclass, field
@@ -11,6 +10,7 @@ from pathlib import Path
 from . import effbase as effbase_mod
 from . import ledger as ledger_mod
 from . import manifest as manifest_mod
+from . import proc as proc_mod
 from .gitx import Change, Commit, Repo
 from .tree import Tree
 
@@ -63,6 +63,7 @@ class Context:
     scratch: Path = field(default_factory=lambda: Path('.local/prechecks'))
     options: dict = field(default_factory=dict)
     facts: dict = field(default_factory=dict)
+    cancel: threading.Event = field(default_factory=threading.Event)   # a check's hang guard raises its own (runner.CheckContext)
     _lock: threading.Lock = field(default_factory=threading.Lock)
     _changes: list | None = None
     _commits: list | None = None
@@ -125,16 +126,12 @@ class Context:
         with self._lock:
             return tree.export(self.exports_dir() / tree.treeish, links=links)
 
-    def run(self, argv, *, cwd=None, timeout: float = 120, env: dict | None = None, input: bytes | None = None):
-        """Run a tool with the allowlisted environment; returns (code, stdout, stderr) and never raises on timeout."""
-        try:
-            proc = subprocess.run([str(a) for a in argv], cwd=str(cwd) if cwd else None, env=tool_env(env), input=input,
-                                  capture_output=True, timeout=timeout * tool_timeout_scale())
-            return proc.returncode, proc.stdout, proc.stderr
-        except subprocess.TimeoutExpired:
-            return None, b'', b'timeout'
-        except OSError as error:
-            return None, b'', str(error).encode()
+    def run(self, argv, *, cwd=None, timeout: float = 120, env: dict | None = None, input: bytes | None = None,
+            cancel: threading.Event | None = None):
+        """Run a tool with the allowlisted environment; returns (code, stdout, stderr) and never raises on timeout.
+        The tool gets its own process group, which is killed on timeout or when `cancel` is raised (lib/proc.py)."""
+        return proc_mod.run(argv, cwd=cwd, env=tool_env(env), input=input, timeout=timeout * tool_timeout_scale(),
+                            cancel=cancel or self.cancel)
 
     def publish(self, key: str, value) -> None:
         with self._lock:
@@ -154,11 +151,34 @@ def inc_from_branch(branch: str | None) -> str | None:
     return None
 
 
+def campaign_id(ref: str) -> str | None:
+    """`campaign/<id>` inside a ref name (`refs/heads/campaign/x`, `origin/campaign/x`, `campaign/x`)."""
+    parts = ref.split('/')
+    if 'campaign' in parts and parts.index('campaign') + 1 < len(parts):
+        return '/'.join(parts[parts.index('campaign') + 1:]) or None
+    return None
+
+
+def inc_for_head(repo: Repo, head: str, commit: str) -> str | None:
+    """The increment a `--head` revision belongs to, from ref names alone: the argument itself when it names a
+    campaign ref, else the one campaign ref whose tip is exactly that commit. The invoking checkout's branch is never
+    consulted: the same commit must get the same verdict from every checkout."""
+    named = campaign_id(head)
+    if named:
+        return named
+    found = {campaign_id(ref) for ref in repo.refs_at(commit)} - {None}
+    return found.pop() if len(found) == 1 else None
+
+
 def build(repo: Repo, *, head: str | None = None, base: str | None = None, inc: str | None = None,
           main_ref: str | None = None, manifest_path: str | None = None, ledger_path: str | None = None,
           tier: str = 'fast', jobs: int = 4, upstream: list[str] | None = None, options: dict | None = None,
           scratch: Path | None = None) -> Context:
-    inc = inc or inc_from_branch(repo.branch())
+    explicit_none = inc == 'none'
+    if inc == 'none':
+        inc = None                          # an explicit "no increment" (a replay of main, or of a commit no campaign ref names)
+    elif inc is None and not head:
+        inc = inc_from_branch(repo.branch())
     main = detect_main_ref(repo, main_ref)
     main_commit = repo.rev_parse(main) if main else None
     if head:
@@ -167,6 +187,8 @@ def build(repo: Repo, *, head: str | None = None, base: str | None = None, inc: 
             raise SystemExit(f'prechecks: unknown --head {head!r}')
         head_tree = Tree(repo, repo.tree_sha(head_commit), label=head_commit[:10])
         worktree, dirty = False, False
+        if inc is None and not explicit_none:
+            inc = inc_for_head(repo, head, head_commit)
     else:
         head_commit = repo.rev_parse('HEAD')
         dirty = repo.worktree_dirty()

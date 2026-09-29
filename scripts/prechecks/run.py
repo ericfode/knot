@@ -6,8 +6,10 @@
 Runs the deterministic checks C1-C8 on the current tree (the working copy, including uncommitted and
 untracked files) against a base (default: the merge-base with main, or the effective base of a stacked
 increment). Exit 0: no new or changed executor-actionable condition at or above --fail-on (default
-major). Exit 3: at least one. Exit 1: a check crashed. Exit 2: usage error. Coordinator- and
-upstream-actor conditions never fail the run; `unavailable` is never a pass.
+major). Exit 3: at least one. Exit 1: a check crashed. Exit 2: usage error. Exit 4 (--strict only): nothing
+failed but some check or rule did not run. Coordinator- and upstream-actor conditions never fail the run.
+A check in which a rule did not run is `partial`, and one that could not run at all is `unavailable`:
+neither is ever reported as a pass, and both are listed by name with their reasons.
 """
 from __future__ import annotations
 
@@ -33,7 +35,8 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument('--repo', help='repository to check (default: the current directory\'s)')
     p.add_argument('--head', help='check a committed revision instead of the working copy')
     p.add_argument('--base', help='compare against this ref (default: merge-base with main, or the effective base)')
-    p.add_argument('--inc', help='increment id (default: derived from a campaign/<id> branch)')
+    p.add_argument('--inc', help='increment id (default: the campaign/<id> branch, or with --head the one campaign ref '
+                                 'that names that commit; `none` for no increment)')
     p.add_argument('--main-ref', help='the trunk ref (default: main, then origin/main)')
     p.add_argument('--manifest', help='increment manifest file (default: docs/compiler-campaign/increments/<id>.json on main)')
     p.add_argument('--ledger', help='known-conditions ledger file (default: read from main)')
@@ -45,6 +48,9 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument('--skip', help='comma-separated check ids to skip')
     p.add_argument('--jobs', type=int, default=4)
     p.add_argument('--fail-on', choices=('none',) + SEVERITIES, default='major')
+    p.add_argument('--strict', action='store_true',
+                   help='exit 4 when some check or rule did not run (unavailable or partial) and nothing else fails; '
+                        'the default reports the gap but lets the run pass on the rules that could run')
     p.add_argument('--json', action='store_true', help='print the full report as JSON on stdout')
     p.add_argument('--out', help='output directory (default: .local/prechecks/<head8>/)')
     p.add_argument('--no-write', action='store_true', help='do not write report files')
@@ -77,6 +83,9 @@ def main(argv=None) -> int:
     except SystemExit as error:
         print(error, file=sys.stderr)
         return 2
+    if args.head and args.inc is None and ctx.inc is None:
+        print(f'prechecks: no campaign/<id> ref names {args.head}; running without an increment '
+              '(manifest, ownership and ledger lookups need --inc <id>; `--inc none` silences this)', file=sys.stderr)
     selected = checks_mod.load(only, skip)
     if args.tier == 'all':
         args.tier = ctx.tier = 'slow'
@@ -90,17 +99,17 @@ def main(argv=None) -> int:
     out_dir = Path(args.out) if args.out else ctx.scratch / (ctx.head_commit or 'tree')[:8]
     report = None
     if not args.no_write:
-        report = report_mod.write(ctx, outcomes, args.fail_on, out_dir)
+        report = report_mod.write(ctx, outcomes, args.fail_on, out_dir, args.strict)
     if args.emit_ledger:
         entries = [ledger_mod.entry_for(c) for o in outcomes for c in o.result.conditions if c.status == 'new']
         print(json.dumps(entries, indent=1))
         return 0
     if args.json:
-        print(json.dumps(report or report_mod.to_json(ctx, outcomes, args.fail_on), indent=1, sort_keys=True))
+        print(json.dumps(report or report_mod.to_json(ctx, outcomes, args.fail_on, args.strict), indent=1, sort_keys=True))
     else:
-        sys.stdout.write(report_mod.text(ctx, outcomes, args.fail_on, verbose=args.verbose))
+        sys.stdout.write(report_mod.text(ctx, outcomes, args.fail_on, verbose=args.verbose, strict=args.strict))
         print(f'({time.monotonic() - started:.1f}s; report in {out_dir})' if not args.no_write else f'({time.monotonic() - started:.1f}s)')
-    return runner_mod.summarize(outcomes, args.fail_on)['exit']
+    return runner_mod.summarize(outcomes, args.fail_on, args.strict)['exit']
 
 
 if __name__ == '__main__':

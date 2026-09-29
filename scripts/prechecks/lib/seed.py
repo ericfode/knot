@@ -7,9 +7,10 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
+import threading
 from pathlib import Path
 
+from . import proc as proc_mod
 from .context import tool_env, tool_timeout_scale
 
 SEED_DIR = '.toolchain/bend-2.0.29-574b6d3/bend2'
@@ -19,7 +20,8 @@ DIAGNOSTIC = re.compile(r'\A\s*Error:\n- ')
 
 
 class Seed:
-    def __init__(self, root: Path, scratch: Path, timeout: float = 60):
+    def __init__(self, root: Path, scratch: Path, timeout: float = 60, cancel: threading.Event | None = None):
+        self.cancel = cancel
         self.dir = (Path(root) / SEED_DIR)
         self.main = self.dir / 'main.ts'
         self.bend_ts = self.dir / 'bend.ts'
@@ -35,28 +37,31 @@ class Seed:
         result = {}
         for i in range(0, len(paths), batch):
             chunk = [str(p) for p in paths[i:i + batch]]
-            proc = subprocess.run(['bun', str(HERE / 'seedparse.ts'), str(self.bend_ts.resolve()), *chunk],
-                                  cwd=self.scratch, env=tool_env(), capture_output=True, timeout=self.timeout * 4)
-            if proc.returncode != 0:
-                raise RuntimeError('seed parse oracle failed: ' + proc.stderr.decode(errors='replace')[:300])
-            for row in json.loads(proc.stdout):
+            code, stdout, stderr = proc_mod.run(['bun', str(HERE / 'seedparse.ts'), str(self.bend_ts.resolve()), *chunk],
+                                                cwd=self.scratch, env=tool_env(), timeout=self.timeout * 4, cancel=self.cancel)
+            if code is None and stderr == b'cancelled':
+                raise proc_mod.Cancelled()
+            if code != 0:
+                raise RuntimeError('seed parse oracle failed: ' + stderr.decode(errors='replace')[:300])
+            for row in json.loads(stdout):
                 result[row['f']] = {'ok': row['ok'], 'exp': row.get('exp'), 'beg': row.get('beg')}
         return result
 
     def _cli(self, args: list, cwd: Path) -> dict:
-        try:
-            proc = subprocess.run(['bun', str(self.main.resolve()), *args], cwd=cwd, env=tool_env(), capture_output=True,
-                                  timeout=self.timeout)
-        except subprocess.TimeoutExpired:
+        code, stdout, stderr = proc_mod.run(['bun', str(self.main.resolve()), *args], cwd=cwd, env=tool_env(),
+                                            timeout=self.timeout, cancel=self.cancel)
+        if code is None:
+            if stderr == b'cancelled':
+                raise proc_mod.Cancelled()
             return {'exit': None, 'stdout': '', 'stderr': '', 'verdict': 'timeout'}
-        out, err = proc.stdout.decode('utf-8', 'replace'), proc.stderr.decode('utf-8', 'replace')
-        if proc.returncode == 0:
+        out, err = stdout.decode('utf-8', 'replace'), stderr.decode('utf-8', 'replace')
+        if code == 0:
             verdict = 'accept'
         elif DIAGNOSTIC.match(err):
             verdict = 'reject'
         else:
             verdict = 'crash'
-        return {'exit': proc.returncode, 'stdout': out, 'stderr': err, 'verdict': verdict}
+        return {'exit': code, 'stdout': out, 'stderr': err, 'verdict': verdict}
 
     def check_only(self, path: Path) -> dict:
         path = Path(path)

@@ -13,6 +13,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ENV_EXCLUDES = (':(exclude).env', ':(exclude).env.*', ':(glob,exclude)**/.env', ':(glob,exclude)**/.env.*')
+# Directories every campaign worktree shares or generates. GATES.md links `.toolchain` and `node_modules` as symlinks, and
+# `.gitignore`'s `node_modules/` and `.toolchain/` match directories only, so without these pathspecs a snapshot would stage
+# the two symlinks and every worktree would look dirty. The gate runner excludes the same four names (run.py `excluded`).
+SHARED_EXCLUDES = (':(exclude).toolchain', ':(exclude)node_modules', ':(exclude).local', ':(exclude)build')
+SNAPSHOT_EXCLUDES = ENV_EXCLUDES + SHARED_EXCLUDES
 
 
 class GitError(RuntimeError):
@@ -269,11 +274,21 @@ class Repo:
             head = self.rev_parse('HEAD')
             if head:
                 self.git('read-tree', head, env=env)
-            self.git('add', '-A', '--', '.', *ENV_EXCLUDES, env=env)
+            self.git('add', '-A', '--', '.', *SNAPSHOT_EXCLUDES, env=env)
             return self.out('write-tree', env=env)
 
     def worktree_dirty(self) -> bool:
-        return bool(self.git('status', '--porcelain', '--untracked-files=normal', '--', '.', *ENV_EXCLUDES).stdout.strip())
+        return bool(self.git('status', '--porcelain', '--untracked-files=normal', '--', '.', *SNAPSHOT_EXCLUDES).stdout.strip())
+
+    def refs_at(self, commit: str) -> list[str]:
+        """Branch and remote-branch names whose tip is exactly `commit`."""
+        text = self.out('for-each-ref', f'--points-at={commit}', '--format=%(refname)', 'refs/heads', 'refs/remotes', check=False)
+        return sorted(line for line in text.splitlines() if line)
+
+    def subtree(self, treeish: str, path: str) -> str | None:
+        """Object id of `path` inside a tree (a directory's tree id or a file's blob id), or None when absent."""
+        proc = self.git('rev-parse', '--verify', '--quiet', f'{treeish}:{path}', check=False)
+        return proc.stdout.decode().strip() or None if proc.returncode == 0 else None
 
     # ---- merge simulation -------------------------------------------------
     def merge_tree(self, a: str, b: str) -> tuple[int, list[str], str, str | None]:

@@ -1,4 +1,10 @@
-"""Run checks in dependency order on worker threads, with per-check budgets, and assemble the report."""
+"""Run checks in dependency order on worker threads, with per-check budgets, and assemble the report.
+
+A check that overruns its budget is reported `unavailable` and is also stopped: the runner raises the check's
+cancel flag, every tool the check started through `ctx.run` is killed with its whole process group, and pools of
+queued tool runs stop starting new ones (lib/proc.py). A guard that only relabelled the check would let the queued
+work run on, keep the process alive and spend the host's time on a result nobody reads.
+"""
 from __future__ import annotations
 
 import threading
@@ -29,7 +35,27 @@ class Outcome:
     timed_out: bool = False
 
 
-def _call(check: Check, ctx: Context, box: dict) -> None:
+class CheckContext:
+    """The run context as one check sees it: every attribute of the Context, plus the `cancel` flag that the hang
+    guard raises when the check overruns. `run` starts tools that the guard can kill. A check must not assign
+    attributes; shared state goes through `ctx.publish` and the facts it returns."""
+
+    def __init__(self, ctx: Context, cancel: threading.Event):
+        object.__setattr__(self, '_ctx', ctx)
+        object.__setattr__(self, 'cancel', cancel)
+
+    def __getattr__(self, name):
+        return getattr(self._ctx, name)
+
+    def __setattr__(self, name, value):
+        raise AttributeError(f'a check must not assign ctx.{name}')
+
+    def run(self, argv, **kw):
+        kw.setdefault('cancel', self.cancel)
+        return self._ctx.run(argv, **kw)
+
+
+def _call(check: Check, ctx: CheckContext, box: dict) -> None:
     try:
         box['result'] = check.run(ctx).finish()
     except Exception as error:      # a bug in a check must be visible, never a silent pass
@@ -46,8 +72,8 @@ def execute(checks: list[Check], ctx: Context, *, progress=None) -> list[Outcome
     while pending or running:
         for check in list(pending):
             if all(dep in done or dep not in {c.id for c in checks} for dep in check.needs) and len(running) < ctx.jobs:
-                box: dict = {}
-                thread = threading.Thread(target=_call, args=(check, ctx, box), daemon=True)
+                box: dict = {'cancel': threading.Event()}
+                thread = threading.Thread(target=_call, args=(check, CheckContext(ctx, box['cancel']), box), daemon=True)
                 running[check.id] = (thread, box, time.monotonic(), check)
                 thread.start()
                 pending.remove(check)
@@ -61,6 +87,7 @@ def execute(checks: list[Check], ctx: Context, *, progress=None) -> list[Outcome
         for check_id, timed_out in finished:
             thread, box, started, check = running.pop(check_id)
             if timed_out:
+                box['cancel'].set()                     # stop the check's tools and its queued runs, not just the label
                 result = CheckResult(outcome='unavailable', reason=f'timeout after {check.budget * scale * budget_env:.0f}s')
             else:
                 result = box['result']
@@ -72,16 +99,31 @@ def execute(checks: list[Check], ctx: Context, *, progress=None) -> list[Outcome
     return [done[c.id] for c in checks]
 
 
-def summarize(outcomes: list[Outcome], fail_on: str = 'major') -> dict:
-    """Exit-code policy: only new or changed executor conditions at or above `fail_on` fail the run."""
+def incomplete(outcomes: list[Outcome]) -> list[dict]:
+    """Checks and rules that did not run: [{check, outcome, reason, rules: {rule: reason}}]. Never a pass."""
+    rows = []
+    for o in outcomes:
+        if o.result.outcome in ('unavailable', 'error') or o.result.rules_unavailable or o.result.outcome == 'partial':
+            rows.append({'check': o.check.id, 'name': o.check.name, 'outcome': o.result.outcome, 'reason': o.result.reason,
+                         'rules': dict(o.result.rules_unavailable)})
+    return rows
+
+
+def summarize(outcomes: list[Outcome], fail_on: str = 'major', strict: bool = False) -> dict:
+    """Exit-code policy: only new or changed executor conditions at or above `fail_on` fail the run (3). A check
+    error is 1. With `strict`, a run in which some check or rule did not run and nothing else failed is 4: the
+    default lets an implementer proceed on the rules that could run, but never calls the gap a pass."""
     threshold = severity_rank(fail_on) if fail_on != 'none' else 99
     failing = [c for o in outcomes for c in o.result.conditions
                if c.actor == 'executor' and c.status in ('new', 'changed') and severity_rank(c.severity) >= threshold]
     errors = [o for o in outcomes if o.result.outcome == 'error']
+    gaps = incomplete(outcomes)
     if errors:
         code = 1
     elif failing:
         code = 3
+    elif strict and gaps:
+        code = 4
     else:
         code = 0
     counts: dict[str, int] = {}
@@ -89,7 +131,8 @@ def summarize(outcomes: list[Outcome], fail_on: str = 'major') -> dict:
         for condition in outcome.result.conditions:
             key = f'{condition.severity}/{condition.status}'
             counts[key] = counts.get(key, 0) + 1
-    return {'exit': code, 'failing': len(failing), 'errors': len(errors), 'counts': counts}
+    return {'exit': code, 'failing': len(failing), 'errors': len(errors), 'counts': counts,
+            'incomplete': sum(1 for g in gaps if g['outcome'] != 'error'), 'strict': strict}
 
 
 def all_conditions(outcomes: list[Outcome]) -> list[Condition]:

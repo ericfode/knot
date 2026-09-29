@@ -96,6 +96,30 @@ class CliTests(RepoTest):
         self.assertEqual(0, code)
         self.assertEqual(['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'], [line.split()[0] for line in out.strip().splitlines()])
 
+    def test_a_gap_is_reported_by_name_and_only_strict_makes_it_exit_4(self):
+        self.fx.commit('main', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'b.txt': 'b\n'})
+        args = ['--repo', str(self.fx.root), '--only', 'C3', '--no-write']
+        code, out, _ = cli(*args, '--json')
+        report = json.loads(out)
+        self.assertEqual(0, code)                                       # no condition: the run passes on the rules that could run
+        self.assertEqual('partial', report['checks'][0]['outcome'])     # ... but it is not a pass, and the report says which rule did not run
+        self.assertIn('out-of-scope-edit', report['checks'][0]['rules_unavailable'])
+        self.assertEqual(1, report['summary']['incomplete'])
+        code, out, _ = cli(*args)
+        self.assertIn('not run  out-of-scope-edit', out)
+        self.assertEqual(4, cli(*args, '--strict')[0])
+
+    def test_head_without_a_campaign_ref_says_so_and_none_silences_it(self):
+        first = self.fx.commit('main', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'b.txt': 'b\n'})
+        args = ['--repo', str(self.fx.root), '--head', first, '--only', 'C3', '--no-write', '--json']
+        self.assertIn('running without an increment', cli(*args)[2])
+        self.assertNotIn('running without an increment', cli(*args, '--inc', 'none')[2])
+        self.assertIsNone(json.loads(cli(*args)[1])['increment'])
+
     def test_uncommitted_and_untracked_files_are_judged(self):
         self.fx.commit('main', {'a.txt': 'a\n'})
         self.fx.branch('campaign/x')

@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 
 SEVERITIES = ('info', 'minor', 'major', 'blocking')
 ACTORS = ('executor', 'coordinator', 'upstream')
-OUTCOMES = ('pass', 'conditions', 'unavailable', 'not-applicable', 'error')
+OUTCOMES = ('pass', 'conditions', 'partial', 'unavailable', 'not-applicable', 'error')
 
 
 def severity_rank(name: str) -> int:
@@ -82,9 +82,21 @@ class CheckResult:
     notes: list = field(default_factory=list)
 
     def finish(self):
-        if self.outcome in ('pass', 'conditions'):
-            self.outcome = 'conditions' if self.conditions else 'pass'
+        """Settle the outcome. `pass` means every rule ran and found nothing; a check that found nothing but had a rule
+        that did not run is `partial`, never a pass (DESIGN 2.2: `unavailable` never counts as a pass)."""
+        if self.outcome in ('pass', 'conditions', 'partial'):
+            if self.conditions:
+                self.outcome = 'conditions'
+            elif self.rules_unavailable:
+                self.outcome = 'partial'
+            else:
+                self.outcome = 'pass'
         return self
+
+    @property
+    def incomplete(self) -> bool:
+        """True when some rule, or the whole check, did not run."""
+        return self.outcome in ('unavailable', 'partial') or bool(self.rules_unavailable)
 
 
 def not_applicable(reason: str) -> CheckResult:

@@ -6,14 +6,19 @@ from pathlib import Path
 
 from .context import Context
 from .model import SEVERITIES, severity_rank
-from .runner import Outcome, all_conditions, summarize
+from .runner import Outcome, all_conditions, incomplete, summarize
 
-VERSION = 1
+VERSION = 2
 LIST_LIMIT = 12          # conditions per rule printed in the terminal summary; JSON keeps them all
 
 
-def to_json(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major') -> dict:
-    summary = summarize(outcomes, fail_on)
+def cell(text: str) -> str:
+    """Text that is safe inside one Markdown table cell (a `|` or a line break would split or end the row)."""
+    return ' '.join(str(text).split()).replace('|', '\\|')
+
+
+def to_json(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', strict: bool = False) -> dict:
+    summary = summarize(outcomes, fail_on, strict)
     return {
         'schema': VERSION,
         'increment': ctx.inc,
@@ -28,6 +33,7 @@ def to_json(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major') -> di
         'fail_on': fail_on,
         'exit': summary['exit'],
         'summary': summary,
+        'incomplete': incomplete(outcomes),
         'checks': [{'id': o.check.id, 'name': o.check.name, 'outcome': o.result.outcome, 'reason': o.result.reason,
                     'seconds': o.seconds, 'rules_run': o.result.rules_run,
                     'rules_unavailable': o.result.rules_unavailable, 'notes': o.result.notes,
@@ -42,6 +48,11 @@ def facts_json(ctx: Context, outcomes: list[Outcome]) -> dict:
         if outcome.result.facts:
             facts[outcome.check.id] = outcome.result.facts
     facts.update(ctx.facts)
+    # What ran and what did not: a reviewer must be able to tell a check that found nothing from one that could not look.
+    facts['coverage'] = {o.check.id: {'outcome': o.result.outcome, 'reason': o.result.reason,
+                                      'rules_run': sorted(set(o.result.rules_run)),
+                                      'rules_unavailable': dict(sorted(o.result.rules_unavailable.items()))}
+                         for o in outcomes}
     return facts
 
 
@@ -57,8 +68,8 @@ def known_lines(outcomes: list[Outcome]) -> list[str]:
     return sorted(set(lines))
 
 
-def markdown(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major') -> str:
-    report = to_json(ctx, outcomes, fail_on)
+def markdown(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', strict: bool = False) -> str:
+    report = to_json(ctx, outcomes, fail_on, strict)
     out = [f"# Prechecks report", '',
            f"- increment: {ctx.inc or 'none'}",
            f"- head: {ctx.head_commit or 'none'}{' (working copy included)' if ctx.worktree else ''}",
@@ -67,7 +78,7 @@ def markdown(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major') -> s
            '| check | outcome | seconds | new | changed | known |', '|---|---|---|---|---|---|']
     for o in outcomes:
         cs = o.result.conditions
-        out.append(f"| {o.check.id} {o.check.name} | {o.result.outcome}{' (' + o.result.reason + ')' if o.result.reason else ''} "
+        out.append(f"| {o.check.id} {o.check.name} | {o.result.outcome}{' (' + cell(o.result.reason) + ')' if o.result.reason else ''} "
                    f"| {o.seconds:.1f} | {sum(c.status == 'new' for c in cs)} | {sum(c.status == 'changed' for c in cs)} "
                    f"| {sum(c.status == 'known' for c in cs)} |")
     for status in ('new', 'changed'):
@@ -89,16 +100,19 @@ def markdown(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major') -> s
     known = [c for c in all_conditions(outcomes) if c.status == 'known']
     if known:
         out += ['', f'## Known conditions ({len(known)}, not findings)', '']
-    unavailable = [o for o in outcomes if o.result.outcome in ('unavailable', 'error')]
-    if unavailable:
-        out += ['', '## Unavailable checks (never a pass)', '']
-        for o in unavailable:
-            out.append(f"- {o.check.id} {o.check.name}: {o.result.outcome}: {o.result.reason}")
+    gaps = incomplete(outcomes)
+    if gaps:
+        out += ['', '## Checks and rules that did not run (never a pass)', '']
+        for gap in gaps:
+            if gap['outcome'] in ('unavailable', 'error'):
+                out.append(f"- {gap['check']} {gap['name']}: {gap['outcome']}: {gap['reason']}")
+            for rule, reason in sorted(gap['rules'].items()):
+                out.append(f"- {gap['check']} `{rule}`: {reason}")
     return '\n'.join(out) + '\n'
 
 
-def text(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', *, verbose: bool = False) -> str:
-    report = to_json(ctx, outcomes, fail_on)
+def text(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', *, verbose: bool = False, strict: bool = False) -> str:
+    report = to_json(ctx, outcomes, fail_on, strict)
     lines = [f"prechecks: head {(ctx.head_commit or 'none')[:10]}{'+worktree' if ctx.worktree else ''}"
              f" base {(ctx.base_commit or 'none')[:10]} ({report['base']['kind']})"
              f"{' inc ' + ctx.inc if ctx.inc else ''}"]
@@ -108,6 +122,8 @@ def text(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', *, verbo
         if o.result.reason:
             head += f'  ({o.result.reason})'
         lines.append(head)
+        for rule, reason in sorted(o.result.rules_unavailable.items()):
+            lines.append(f'    not run  {rule}: {reason}')
         per_rule: dict[str, int] = {}
         for c in cs:
             if c.status == 'known' and not verbose:
@@ -123,16 +139,18 @@ def text(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', *, verbo
         if hidden:
             lines.append(f'    ({hidden} known condition{"s" if hidden != 1 else ""} not shown)')
     summary = report['summary']
-    lines.append(f"exit {summary['exit']}: {summary['failing']} failing condition(s), {summary['errors']} check error(s)")
+    lines.append(f"exit {summary['exit']}: {summary['failing']} failing condition(s), {summary['errors']} check error(s), "
+                 f"{summary['incomplete']} check(s) with a rule or check that did not run"
+                 + (' (--strict: exit 4 when nothing else fails)' if summary['incomplete'] and not strict else ''))
     return '\n'.join(lines) + '\n'
 
 
-def write(ctx: Context, outcomes: list[Outcome], fail_on: str, out_dir: Path) -> dict:
+def write(ctx: Context, outcomes: list[Outcome], fail_on: str, out_dir: Path, strict: bool = False) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
-    report = to_json(ctx, outcomes, fail_on)
+    report = to_json(ctx, outcomes, fail_on, strict)
     paths = {'report.json': json.dumps(report, indent=1, sort_keys=True) + '\n',
              'facts.json': json.dumps(facts_json(ctx, outcomes), indent=1, sort_keys=True, default=str) + '\n',
-             'report.md': markdown(ctx, outcomes, fail_on),
+             'report.md': markdown(ctx, outcomes, fail_on, strict),
              'known.txt': '\n'.join(known_lines(outcomes)) + ('\n' if known_lines(outcomes) else '')}
     for name, content in paths.items():
         (out_dir / name).write_text(content, encoding='utf-8')
