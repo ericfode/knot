@@ -109,7 +109,7 @@ def width(row: Row) -> U32:
     case Declared{name,first,count}: count
     case Signature{sort}: 0
 
-def typed(+image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +at: U32, +expect: U32) -> Result<W.Stop,Row>:
+def typed(+image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +at: U32, +expect: U32, +size: U32) -> Result<W.Stop,Row>:
   +kind = W.read(image,U32.add(at,1))
   +name = W.read(image,U32.add(at,2))
   +a = W.read(image,U32.add(at,3))
@@ -117,7 +117,8 @@ def typed(+image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +at: U32,
   W.unless(Row,W.or(Bool.not(U32.is_eq(W.read(image,at),5)),U32.is_ge(kind,4)),"type record",u =>
     W.choose(Result<W.Stop,Row>,U32.is_eq(kind,0),
       u => W.unless(Row,Bool.not(U32.is_eq(a,expect)),"constructor grouping",u =>
-             W.then(List<&2,U32>,Row,name_at(names,name),t => Done{Declared{t,a,b}})),
+             W.unless(Row,U32.is_gt(b,U32.sub(size,expect)),"constructor count",u =>
+             W.then(List<&2,U32>,Row,name_at(names,name),t => Done{Declared{t,a,b}}))),
       u => W.choose(Result<W.Stop,Row>,U32.is_eq(kind,3),
         u => W.unless(Row,W.or(Bool.not(U32.is_eq(a,0)),Bool.not(U32.is_eq(b,0))),"opaque type",u =>
                W.then(List<&2,U32>,Row,name_at(names,name),t => Done{Signature{W.Opaque{t}}})),
@@ -125,12 +126,12 @@ def typed(+image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +at: U32,
                W.then(U32,Row,reference(a,bound),d =>
                  W.then(U32,Row,reference(b,bound),r => Done{Signature{arrow(U32.is_eq(kind,1),d,r)}}))))))
 
-def rows(at: List<&2,U32>, +image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +expect: U32) -> Result<W.Stop,List<&2,Row>>:
+def rows(at: List<&2,U32>, +image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +expect: U32, +size: U32) -> Result<W.Stop,List<&2,Row>>:
   match at:
     case Nil{}: Done{Nil{}}
     case Con{a,rest}:
-      W.then(Row,List<&2,Row>,typed(image,names,bound,a,expect),+row =>
-        W.then(List<&2,Row>,List<&2,Row>,rows(rest,image,names,bound,U32.add(expect,width(row))),more => Done{Con{row,more}}))
+      W.then(Row,List<&2,Row>,typed(image,names,bound,a,expect,size),+row =>
+        W.then(List<&2,Row>,List<&2,Row>,rows(rest,image,names,bound,U32.add(expect,width(row)),size),more => Done{Con{row,more}}))
 
 def widths(rows: List<&2,Row>) -> U32:
   match rows:
@@ -488,7 +489,7 @@ def decoded(lists: List<&2,List<&2,U32>>, +image: W.Store, +total: U32) -> Resul
     case Con{+t,Con{+c,Con{f,Con{k,Con{+n,Con{m,Nil{}}}}}}}:
       W.then(List<&2,List<&2,U32>>,W.Plan,names(m,image),+names =>
       W.unless(W.Plan,repeated(names),"duplicate name",u =>
-      W.then(List<&2,Row>,W.Plan,rows(t,image,names,W.count(U32,t),0),+rows =>
+      W.then(List<&2,Row>,W.Plan,rows(t,image,names,W.count(U32,t),0,W.count(U32,c)),+rows =>
       W.unless(W.Plan,Bool.not(U32.is_eq(widths(rows),W.count(U32,c))),"constructor count",u =>
       W.then(W.Store,W.Plan,placed(c,image,names,rows,W.count(U32,t),W.empty()),+filled =>
       W.then(List<&2,W.Constant>,W.Plan,constants(k,image),+constants =>

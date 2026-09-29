@@ -1029,7 +1029,10 @@ MUTANTS = [
      "the arity limit precedes its record's length"),
     ('closure-slots-unlimited', 'decode', [('      W.limit(W.Store,closure_slots(op,image,a),65536,"slots",u =>\n',
                                             '      W.limit(W.Store,0,65536,"slots",u =>\n')],
-     "a Closure's slots is unlimited"),
+     "a Closure's slots is unlimited"),    # vm-spec 137ca0e (round 12): a type record's constructor count must fit the constructor table,
+    # checked before the record's name and before the count sizes anything.
+    ('constructor-count-unchecked', 'decode', [('W.unless(Row,U32.is_gt(b,U32.sub(size,expect)),', 'W.unless(Row,False{},')],
+     "a type record's constructor count is not checked against the table"),
 ]
 
 
