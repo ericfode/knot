@@ -226,10 +226,10 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Eighty-six WAT mutants are each killed by a wrong observation. One restores the
+- One hundred and thirty-eight WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right; two restore the immediate tests that trapped
-  (group `traps`), and three copy or bind past a cell's end (group
+  (group `traps`), and four copy or bind past a cell's end (group
   `memory-end`), each killed by a trap on its memory-end row while every other
   row there stays right; one steps the key search to the middle, not past it, and is
   killed by the hang it makes (a row that outlives its deadline, in group
@@ -252,8 +252,18 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   quarter of them, or drops the use marks, a table grows to the index that
   passed it and not to twice its size (killed by the memory.grow count), and a
   unit is refused as soon as its depth passes its `slots`, which names another
-  first defect than the reference codec's.
-- `python3 vm/check-core.py --study [--heavy]` runs the 582 systematic
+  first defect than the reference codec's. Fifty-one came with round 7: the
+  eager rule, a dropped request that is performed, and a Case with a Default
+  that refuses a request (D22 to D24); each half-done step of SPEC section
+  6.3's atomic stops (a Gather popped before its node can refuse, `act`
+  dropped before a check, an Activation made after a frame is popped); the
+  describe domain (an arrow or a `none` field inside it, an Unsupported that
+  is a HostFailure) and a visit charged before its word is inspected; and 19
+  named for the survivors of the study that new rows now kill (a Closure whose
+  depth leaves out its live argument, the room of a frame off by one byte, a
+  describe walk that skips a field, a control left in Enter, a capture loop
+  that runs one time too many).
+- `python3 vm/check-core.py --study [--heavy]` runs the 993 systematic
   single-token mutants of `vm/study.py` against these rows instead, and writes
   `vm/receipts/study.json`; `vm/CORE.md` gives its result and why each survivor
   survives. The gate prints the time of each stage on stderr.

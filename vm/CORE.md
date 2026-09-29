@@ -13,7 +13,8 @@ BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FN 
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FUEL -- [ARGS...]
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py --freeze         # rewrite core/seeded.json and core/lane.json from the seed
-BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 582 systematic mutants (3,057 s at a load of 45)
+BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 993 systematic mutants (2,783 s at a load of about 35)
+BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --only NAME,NAME  # the mutants whose names contain one of these (no receipt)
 ```
 
 ## Build and pins
@@ -23,7 +24,9 @@ BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 582 systemat
   reassembles it and requires identical bytes.
 - The design puts the `vm.wasm` hash in `src/CONTRACT.json`. This increment does
   not edit `src/`, so the pin lives in `vm/build.json`. The coordinator can
-  mirror it into the contract.
+  mirror it into the contract. Round 7 (D22 to D24, SPEC §6.3) re-pinned it:
+  `vm.wasm` sha256 `a8ef5f83…49f9f9` (20,278 bytes; the scope-table fix of round 6 had
+  `407cb872…a7a2`, 19,697), `vm.wat` `96bc6c90…bcb1a`. Nothing since has changed either.
 - **The test build** strips the `;;TEST ` prefix from its lines. That adds the
   exports `vm_limits`, `vm_boot`, `vm_step` and `vm_dump`, a stop after
   every transition when stepping, and a count of `memory.grow` calls that
@@ -1013,98 +1016,108 @@ adopt them or record its own, so that lockstep compares like with like.
   it. Every mutant row has a deadline in the gate, so a hang in another group is
   a Timeout that never counts, and the mutant is reported as surviving that
   group, not left to stall the gate.
-- **Mutant study.** `vm/study.py` enumerates the 582 systematic single-token
-  mutants of 23 functions of `vm.wat`: the 21 semantic ones, and `$setscope` and
-  `$holdscope`, which hold the validator's scope tables (a comparison or an
-  arithmetic or bitwise operator swapped, or a small `i32.const` moved by one). It
-  reproduces the reviewer's 567 name for name (on the lines they have now). `python3 vm/check-core.py --study --heavy`
-  runs each against the gate's own rows (the same jobs and the same
-  `observed_wrong`, so a kill there is a kill in the gate), group by group until a
-  row shows a wrong observation or outlives its deadline, then runs each survivor
-  against the ten ceiling rows too, and writes `vm/receipts/study.json`.
+- **Mutant study.** `vm/study.py` enumerates the 993 systematic single-token mutants of 35 functions of
+  `vm.wat` (a comparison or an arithmetic or bitwise operator swapped, or a small `i32.const` moved by
+  one): the 21 semantic ones of round 6, `$setscope` and `$holdscope`, which hold the validator's scope
+  tables, and the twelve that round 7 added for D22 to D24 and SPEC §6.3 (`$request`, `$opnd`, `$pop`,
+  `$fit`, `$spare`, `$unscoped`, `$tail`, `$enter`, `$serve` and `$finish`, and the two of the describe
+  domain and the invocation, `$describable` and `$entry`). On round 6's source it reproduced the
+  reviewer's 567 name for name (on the lines they have now). `python3 vm/check-core.py --study --heavy`
+  runs each against the gate's own rows (the same jobs and the same `observed_wrong`, so a kill there is
+  a kill in the gate), group by group until a row shows a wrong observation or outlives its deadline, then
+  runs each survivor against the ten ceiling rows too, and writes `vm/receipts/study.json`. `--only
+  NAME,NAME` runs the mutants whose names contain any of those words and writes no receipt.
 
-  *Result*, on `vm.wat` sha256 `f206e6e3…` (the scope-table fix; the study took
-  3,057 s on 8 workers at a load of about 45, where round 6's 567 took 1,092 s):
-  of the 582 mutants, **515 show a wrong observation** (3 of them only on a
-  ceiling row, 3 first on the scope rows), **8 are killed only by a hang** (`$select`'s search and
-  `$ctor`'s walk never end) and **18 only by a trap** (an out-of-bounds store or
-  load, in `append`'s block, describe's worklist arithmetic, the two String
-  cells' immediate tests, and the three copies and reads past a cell's end that
-  only the memory-end rows reach), and **41 survive**, each explained in
-  `study.EQUIVALENT`, which the study checks against its survivors both ways. The
-  gate's rule for its own mutants counts a trap or a hang only in the groups whose
-  defect it is, but installed as `vm.wat` each of the 541 fails the gate: a frozen
-  run is never a trap, and a hang outlives the gate's own timeouts. So the gate
-  detects **541 of the 582 (93%)**: 515 by a wrong observation, 8 by a hang, 18 by a
-  trap. That reading is the study's, confirmed (in review round 6's closing session)
-  by installing five of them in a scratch copy, re-pinned, and running the whole gate,
-  which exits 1 on each: the
-  three memory-end mutants (7 s, a trap on their row), one the study finds only by a
-  trap (`$append:1985:i32.add->i32.sub@19`: golden `string-codes` traps, 2 s) and
-  one only by a hang (`$select:2212:i32.ge_u->i32.gt_u@26`: a golden outlives the
-  host's 120 s timeout). Review round 6's earlier acceptance did the same for ten
-  of the reviewer's mutants.
-  The fix of `$scell` moved 9 of the 567 (the reviewer's
-  list is reproduced name for name on the source of `2e0c9b1`; on this source
-  they are the same tokens on their new lines, and 9 in `$scell` are new ones). The
-  scope-table fix added 21 lines above all of them, so every name moved by 21
-  (checked: each of the 567 old names is among the new source's mutants, each with
-  the result it had, but for the `$ctor` walk below), and added 15 mutants in
-  `$setscope` and `$holdscope`: 7 are killed (4 first by the keys rows, since a
-  `$setscope` that misplaces its writes breaks every validation, and 3 by the scope
-  rows: the write that holds `s` indices, a type table of 2 bytes an index, and a
-  doubling that copies half the types) and 8 survive, below.
-  The reviewer's study of the same mutants on gate `2e0c9b1` found 426 that
-  change a frozen row, 25 more only on its own corpora, 42 more only on its print,
-  Halt, digit and Nat corpora, 12 hangs and 62 survivors. The groups run cheapest
-  first, and `by_group` in the receipt counts each result by the group of its first
-  wrong observation, hang or trap. The 515 were first killed by: keys 186,
-  goldens 88, inspection 56, tags 50, display 47, writers 39, sweeps 20, limited 10,
-  runs 6, programs 5, ceiling 3, scope 3, describe 2 (`$ctor:1886`'s `sub -> add` counts a
-  tag up, not down, so its walk ends only when the tag wraps, about 2^32 steps
-  later: under heavy load that outlives a row's deadline and the group's later rows
-  are skipped, so its first group moved from inspection to tags, and now to keys,
-  between the last three runs, the one mutant of the 567 whose result moved); the hangs by keys 7 and tags 1; the traps
-  by goldens 5, keys 4, display 3, memory-end 3, tags 2 and ceiling 1.
+  *Result*, on `vm.wat` sha256 `96bc6c90…` (round 7; 2,783 s on 10 workers, a load of about 35; the
+  receipt's `KNOT_GATE_TIMEOUT_SCALE` was 2, so that load could not turn a slow row into a hang): of the
+  993 mutants, **880 show a wrong observation** (4 only on a ceiling row), **14 are killed only by a
+  hang** (`$select`'s search, `$ctor`'s walk, and loops of `$enter`, `$serve`, `$describable` and
+  `$entry` that never end) and **27 only by a trap** (an out-of-bounds store or load: `append`'s block,
+  describe's worklist arithmetic, the String cells' immediate tests, the loads of a large scalar in
+  `$enter` and `$finish`, the walks of the describe domain and of the invocation's arguments, and the
+  copies and reads past a cell's end that only the four memory-end rows reach), and **72 survive**, each
+  explained in `study.EQUIVALENT`, which the study checks against its survivors both ways. The gate's
+  rule for its own mutants counts a trap or a hang only in the groups whose defect it is, but installed
+  as `vm.wat` each of the 921 fails the gate: a frozen run is never a trap, and a hang outlives the
+  gate's own timeouts. So the gate detects **921 of the 993 (92.7%)**: 880 by a wrong observation, 14 by
+  a hang, 27 by a trap (round 6's 541 of 582, 93%). The groups run cheapest first, and `by_group` in the
+  receipt counts each result by the group of its first wrong observation, hang or trap: the 880 were
+  first killed by keys 259, inspection 160, goldens 138, invocations 58, tags 52, display 47, runs 47,
+  describe-domain 24, fixtures 23, limited 23, sweeps 20, dumps 6, ceiling 4, programs 4, scope 3,
+  witness 3, describe 2, memory-end 2, writers 2, describe-order 1, fuzz-admitted 1, reference 1; the
+  hangs by keys 8, describe-domain 2, inspection 2, goldens 1, tags 1; the traps by keys 7, goldens 5,
+  inspection 4, memory-end 4, display 3, tags 2, ceiling 1, describe-domain 1.
 
-  An earlier reading filed three of the survivors as differing only at 4 GiB: an
-  Object's and an Action's operands copied 8 bytes each (`$complete:2184` and
-  `:2191`, `const 2 -> 3`) and a Branch that binds one word past its constructor's
-  fields (`$select:2269`, `ge_u -> gt_u`). Memory grows to the next 16 MiB boundary
-  at or above a cell's end (choice 15), so it ends where a cell does at every
-  boundary a cell ends on, from 48 MiB up. The memory-end rows sit on the first;
-  each of the three traps there and nowhere else, and the gate registers them
-  (group `memory-end`).
+  That reading is the study's, and installing mutants confirms it: a scratch copy of the branch whose
+  `vm.wat` carries one mutant, re-pinned (`python3 vm/build.py --write`), makes the whole gate exit 1.
+  Round 6's closing session did it for five of its 541 (three memory-end mutants, a golden that traps, a
+  golden that outlives the host's timeout). Round 7 did it for five the study finds by other means than a
+  wrong observation (`.local/vm-core/probe/r12/accept7.py`): `$enter:2409:i32.ge_u->i32.gt_u@28`, the trap of
+  `memory-end-closure` (exit 1 after 17 s); `$room:2735:i64.gt_u->i64.ge_u@9`, found only by a ceiling row
+  (164 s, at `ceiling-top`); `$entry:2954:const 1->0@46`, a hang (243 s, the real host's 120 s timeout);
+  `$describable:2914:const 1->0@63`, a trap (123 s); and `$finish:2690:const 1->2@40`, a trap that a lane row
+  reports (59 s). Earlier results: on round 6's source (`f206e6e3…`, after the scope-table fix) the same
+  study ran 582 mutants of 23 functions in 3,057 s at a load of about 45: 515 by a wrong observation, 8 by a
+  hang, 18 by a trap and 41 survivors (541 detected, 93%); the reviewer's study of gate `2e0c9b1` had found
+  426 of its 567 by a frozen row, 67 more only by its own corpora, 12 hangs and 62 survivors.
 
-  The 41 survivors, by why no run tells them apart: 40 are argued equal on every
-  input or unobservable until vm-rc, and one is reachable by a layout no row builds.
-  - *unobservable until vm-rc* (15): 13 change which operands a prim or a completion
-    drops (`$drop` is empty, choice 1), and two change the reference count of an
-    append cell;
-  - *equal on every input the VM admits* (3): `Nat.sub` at x = y (both arms of the
-    select give 0), the key search's `<` against `<=` where the keys differ, and
-    the Action's foreign id, which a mutant fills with the Foreign node's operand
-    count instead (both are 1 for IO.print, the only foreign choice 2 admits);
-  - *no state is read* (11): the header payload count of an Action (2), a String
-    cell (2) or a Big cell (2), which leaves the cell's size class unchanged and is
-    read only by the state audit; the half of an append block cleared first
-    (1), every word of which that is read is written after it; the `tfn` flag (1)
-    and the `imm` flag (1), tested only for truth; and the mode register after a
-    finished run (2, `$describe:2727`: `$run` returns at once);
-  - *a guard another check makes redundant* (3): three class masks (`7 -> 6`), where
-    a Closure passes the class test and the type test refuses it, since its word at
-    offset 8 is a node's word offset and every node follows every type record;
-  - *the scope tables' size and copying are no observation* (8, `$setscope:1394`
-    and `$holdscope`): the tables grow one write early (a write holding one index
-    more than it needs, or a doubling when exactly full: 2); at a size equal to the
-    index that passed it either arm gives the same size (1); a type table of twice
-    the bytes it needs (1); a copy of as many bytes again, into the half of the new
-    type table that is written before it is read (1); and the guard on a table of
-    2^30 indices (3), which no image reaches: the earlier tables stay in scratch, so
-    `$take` stops the image before a table passes 2^29 (choice 16);
-  - *reachable, but by no row* (1): a class mask (`7 -> 8`) that only an Action whose
-    foreign id is the String type index and whose operand is the word 1 passes,
-    after which it reads past the Action's 16-byte cell, so the words of the next
-    cell decide the outcome. `ill-string-action` builds that Action and still
-    refuses by the words it finds; another layout after it could read as a String,
-    and one ending where memory does would trap. No row builds either.
+  How round 7 used it. The first run on the VM that follows D22 to D24 and SPEC §6.3 (993 mutants) left
+  109 survivors and one crash (a `$serve` mutant that repeated a print without end filled the process;
+  the harness now stops a run at 1,000,000 prints, and it is a hang). Holding the study's goldens,
+  invocations and reference rows to the state audit, which the gate already required of them, killed 12
+  of the 109 (the class of an Activation, the operand copy of a function's entry, the payload count read
+  from an Action, and the scratch word where the loop keeps IO.print's answer). Of the 97 left, 25 were
+  holes in the rows, not equal mutants, and each is now a frozen row (`Study rows` above) and a registered mutant: a Closure whose
+  depth leaves out its live argument (no row bound a slot inside a Closure that had a live argument),
+  a tail loop below a Call frame taken for a non-tail entry, the room of a Case's Scope and of a Call
+  frame off by one byte either way, `show` counting its digits in base 9 or 11, a describe walk that
+  skips a field, an erased arrow that is not a function argument, a search of the export table that
+  reads one entry too far, the class of a usage refusal, a Book, an Emit or a Halt that ends in control
+  Enter (the study's kill of six needed one invariant: every clean run ends in Halt), and a capture loop
+  that copies one word too many, which only a Closure's full Activation at the memory's end shows. The
+  72 that remain are argued below.
+
+  An earlier reading filed three of the survivors as differing only at 4 GiB: an Object's and an
+  Action's operands copied 8 bytes each and a Branch that binds one word past its constructor's fields.
+  Memory grows to the next 16 MiB boundary at or above a cell's end (choice 15), so it ends where a
+  cell does at every boundary a cell ends on, from 48 MiB up. The memory-end rows sit on the first;
+  each of the three traps there and nowhere else, and the gate registers them (group `memory-end`). The
+  fourth, the Closure's capture loop, is `memory-end-closure`.
+
+  The 72 survivors, by why no run tells them apart: 70 are argued equal on every input or unobservable until
+  vm-rc, and two are reachable by a layout no row builds.
+  - *unobservable until vm-rc* (29): 13 change which operands a prim or a completion drops (`$drop` is
+    empty, choice 1); two the reference count of an append cell; three the owner word of an Activation
+    (offset 8, which nothing loads); and eleven the loop over an Action's operands as its request is
+    built, whose only effect is `$dup`, every load of it in bounds;
+  - *equal on every input the VM admits* (27): `Nat.sub` at x = y (both arms of the select give 0), and
+    the key search's `<` against `<=` where the keys differ; the flags and answers that a reader tests
+    only for truth (6: `imm`, `tfn`, `$tail`'s and `$serve`'s answers, a seen mark and `$describable`'s
+    answer); the four class masks (`7 -> 6`), where a Closure passes the class test and the type test
+    refuses it, since its word at offset 8 is a node's word offset and every node follows every type
+    record; the Action's foreign id, which only Top's loop reads, in a Program, whose one foreign is
+    IO.print (its id and its operand count are both 1); the operand-count test of an Action target
+    (`nops > 1`), which no valid image meets (Run controls above); the width of the copy of an Action
+    into its request, which no foreign of the registry (two operands at most) overflows; the four loads
+    of `$opnd` for an operand that no completion reads; six sizes of `$describable`'s scratch tables,
+    which have slack; and two of `$entry`: a Program's first test at argc 2, which the second test (it
+    reads argument 2 past the table, where scratch's first bytes give length 0) makes in its place, and
+    the walk over the ordinals, which starts at the FUEL that `$u32must` read a line above;
+  - *no state is read* (6): the header payload count of a String cell (2), a Big cell (2) or the
+    terminal continuation's `Emit{x}` (1), which leaves the cell's size class unchanged and is read only
+    by the state audit; and the half of an append block cleared first (1), every word of which that is
+    read is written after it;
+  - *the scope tables' size and copying are no observation* (8, `$setscope:1420` and `$holdscope`): the
+    tables grow one write early (a write holding one index more than it needs, or a doubling when
+    exactly full: 2); at a size equal to the index that passed it either arm gives the same size (1); a
+    type table of twice the bytes it needs (1); a copy of as many bytes again, into the half of the new
+    type table that is written before it is read (1); and the guard on a table of 2^30 indices (3), which
+    no image reaches: the earlier tables stay in scratch, so `$take` stops the image before a table
+    passes 2^29 (choice 16);
+  - *reachable, but by no row* (2): a class mask (`7 -> 8`) that only an Action whose foreign id is the
+    String type index and whose operand is the word 1 passes, after which it reads past the Action's
+    16-byte cell, so the words of the next cell decide the outcome (`ill-string-action` builds that
+    Action and still refuses by the words it finds; another layout after it could read as a String, and
+    one ending where memory does would trap); and the halved stack of `$describable`, which overruns only
+    for constructors of more than half of the image's words, into memory above scratch that nothing reads
+    (no `$take` follows it), and traps only where that block ends where memory does. No row builds either.
