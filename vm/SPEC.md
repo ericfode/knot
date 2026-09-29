@@ -650,11 +650,12 @@ compares it.
 
 **Check, then change.** So a row decides everything that it can refuse before it changes anything: its substeps take
 effect together, once the last check has passed, and the order in which it lists them is the order of its effects and
-never of its refusals. Where two checks of one step would both stop the machine, the earlier of these names the stop: a
-request (`Unsupported vm effect`, §6), the type of a word (`ill-typed`), then the limits, in the order of the row's
-substeps (§6.1's Scope before its fields, §7's target before its fuel). A word is therefore inspected before it is charged
-against a limit: §8's display counts a visit only for a word that it has inspected. Where the written order tempts a
-machine to change first, the rows decide these before their first change:
+never of its refusals. Where two checks of one step would both stop the machine, the earlier names the stop, in this
+order: the words that the step reads, in the order of §6 and §9 (operand order), each with its request first
+(`Unsupported vm effect`) and then its type (`ill-typed`); then the limits, in the order of the row's substeps (§6.1's
+Scope before its fields, §7's target before its fuel). A word is therefore inspected before it is charged against a
+limit: §8's display counts a visit only for a word that it has inspected. Where the written order tempts a machine to
+change first, the rows decide these before their first change:
 
 | Row | Its checks |
 |---|---|
@@ -673,9 +674,10 @@ tests fuel, and any other step tests none). What the frames, `act`, `top`, the c
 is held by comparing machines: vm-model's steps are atomic, and vm-lockstep compares vm-core with it at every halt, as at every state,
 on the images that reach each stop: `inspect-halt-code` and `inspect-halt-message` (Return to Top refuses a Halt whose code or message is
 ill-typed before `act` is dropped), the `NatRange` goldens `nat-succ-range`, `nat-range` and `nat-mul-range`, and the ill-typed operands of
-`inspection_controls` (a Gather completion). The heap and the frame region (kinds 2 and 3), `RCOverflow` and a release's worklist are out of the
-reference evaluation's reach; vm-core's frame-region and heap-limit rows, which freeze `calls`, `top` and the bump pointer beside the outcome,
-and the lockstep hold them.
+`inspection_controls` (a Gather completion). A fuel stop is the Enter's own test: §7's eleven fuel controls freeze it, and the lockstep already
+compares its pending Enter, target and operands. An image past a limit of §4 is refused at load, before there is a state to keep (§4's limit
+controls). The heap and the frame region (kinds 2 and 3), `RCOverflow` and a release's worklist are out of the reference evaluation's reach;
+vm-core's frame-region and heap-limit rows, which freeze `calls`, `top` and the bump pointer beside the outcome, and the lockstep hold them.
 
 ## 7. Entry, fuel and quantum (D16)
 
