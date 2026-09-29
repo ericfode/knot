@@ -91,6 +91,89 @@ class GeneratorTests(unittest.TestCase):
         self.assertTrue(list(generate.layout_variants(text)))
 
 
+FAKE_CODEC = """import json
+
+class Malformed(Exception):
+    pass
+
+class Exhausted(Exception):
+    pass
+
+def registry(path=None):
+    return {'registry': 1}
+
+def base_digest(reg):
+    return b'digest'
+
+def encode(plan, digest):
+    if plan.get('mode') == 'crash':
+        return None.to_bytes(1, 'little')          # the d2fe0f20 failure: an AttributeError on a none-typed node
+    if plan.get('mode') == 'malformed':
+        raise Malformed('bad image')
+    if plan.get('mode') == 'refused':
+        raise ValueError('not a plan')
+    return json.dumps(plan).encode()
+
+def decode(data, digest):
+    plan = json.loads(data)
+    if plan.get('mode') == 'lossy':
+        plan.pop('extra', None)
+    return plan
+
+def validate(plan, registry):
+    return []
+"""
+
+
+def plan(**fields):
+    return json.dumps({'entry': 'book', **fields})
+
+
+class FamilyVTests(RepoTest):
+    """R11 and R12 over the reference codec of the tree, with a fake codec so that every outcome is deliberate."""
+
+    def start(self, goldens: dict, codec=FAKE_CODEC):
+        files = {'vm/serializer.py': codec, 'vm/registry.json': '{}\n'}
+        files.update({f'vm/golden/{name}.plan.json': text for name, text in goldens.items()})
+        self.fx.commit('main', files)
+        self.fx.branch('campaign/x')
+
+    def run5(self):
+        return self.conditions(c1, options={'registry': 'none'})[1]
+
+    def test_clean_goldens_and_declared_refusals_raise_nothing(self):
+        self.start({'a': plan(), 'b': plan(mode='malformed'), 'c': plan(mode='refused')})
+        self.fx.commit('work', {'README.md': '# x\n'})
+        result = self.run5()
+        self.assertEqual([], result.conditions)
+        self.assertEqual(3, result.facts['family_v']['plans'])
+        self.assertIn('family L', ' '.join(result.notes))
+
+    def test_a_new_crash_of_the_reference_is_major_and_an_old_one_is_known(self):
+        self.start({'a': plan()})
+        self.fx.commit('a golden that crashes the encoder', {'vm/golden/crash.plan.json': plan(mode='crash')})
+        found = [c for c in self.run5().conditions if c.rule == 'reference-crash']
+        self.assertEqual(1, len(found))
+        self.assertEqual(('major', 'executor'), (found[0].severity, found[0].actor))
+        self.assertIn('AttributeError', found[0].observed)
+        self.fx.commit('unrelated', {'README.md': '# x\n'})
+        again = self.conditions(c1, options={'registry': 'none'}, base=self.fx.git('rev-parse', 'HEAD'))[1]
+        self.assertEqual([], again.conditions)                                # the same crash at base is known
+        self.assertEqual(1, again.facts['family_v']['known'])
+
+    def test_roundtrip_is_judged_on_goldens_only(self):
+        self.start({'a': plan()})
+        self.fx.commit('lossy golden', {'vm/golden/lossy.plan.json': plan(mode='lossy', extra=1)})
+        found = [c for c in self.run5().conditions if c.rule == 'roundtrip']
+        self.assertEqual(['vm/golden/lossy.plan.json'], [c.evidence['plan'] for c in found])
+
+    def test_a_tree_without_a_codec_is_not_applicable(self):
+        self.fx.commit('main', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'b.txt': 'b\n'})
+        self.assertEqual('not-applicable', self.run5().outcome)
+
+
 @unittest.skipUnless(HAVE_SEED, 'needs the pinned seed and bun')
 class EndToEndTests(RepoTest):
     """A synthetic broken head against real lanes: the classify mutant that turns Unsupported into Invalid."""

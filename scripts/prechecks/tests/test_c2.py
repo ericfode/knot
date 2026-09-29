@@ -91,6 +91,35 @@ class C2Tests(RepoTest):
         found = self.rules(self.run2(), 'base-fix-missing')
         self.assertEqual(['minor'], [c.severity for c in found])
 
+    def test_a_conflict_resolving_merge_on_main_is_listed_by_its_first_parent_diff(self):
+        """`git log -- paths` lists a merge that differs from both parents there; plain diff-tree shows a merge as empty."""
+        self.fx.commit('base', {'scripts/gates/run.py': 'GATES = ()\n', 'docs/a.md': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('branch work', {'src/a.bend': 'a\n'})
+        self.fx.checkout('main')
+        self.fx.branch('side')
+        self.fx.commit('side', {'docs/side.md': 's\n'})
+        self.fx.checkout('main')
+        self.fx.commit('main', {'docs/other.md': 'x\n'})
+        self.fx.git('merge', '--no-commit', '--no-ff', 'side')
+        self.fx.write('scripts/gates/run.py', 'GATES = (1,)\n')
+        self.fx.git('add', '-A')
+        self.fx.git('commit', '-q', '-m', 'merge side, with a gate registered')
+        merge = self.fx.git('rev-parse', 'HEAD')
+        self.fx.checkout('campaign/x')
+        found = [c for c in self.rules(self.run2(), 'base-fix-missing') if c.subject['commit'] == merge]
+        self.assertEqual(['major'], [c.severity for c in found])
+        self.assertIn('scripts/gates/run.py', found[0].observed)
+
+    def test_a_listed_commit_without_files_is_reported_and_never_crashes(self):
+        from unittest import mock
+        from lib.gitx import Repo
+        self.diverge({'scripts/gates/run.py': 'GATES = (1,)\n'}, {'src/a.bend': 'a\n'})
+        with mock.patch.object(Repo, 'commit_files', lambda self, sha: []):
+            found = self.rules(self.run2(), 'base-fix-missing')
+        self.assertEqual(['minor'], [c.severity for c in found])
+        self.assertIn('a merged path', found[0].observed)
+
     # ---- R4 ------------------------------------------------------------------------
     def test_decision_drift_in_the_branch_spec(self):
         base = {'docs/COMPILER-CAMPAIGN.md': DECISIONS_OLD, 'vm/SPEC.md': '# spec\n'}

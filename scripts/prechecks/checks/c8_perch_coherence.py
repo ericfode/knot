@@ -41,4 +41,4 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'perch-coherence', 'advisory Perch packets: claims against the evidence that decides them', run, budget=10)
+CHECK = Check(ID, 'perch-coherence', 'advisory Perch packets: claims against the evidence that decides them', run, budget=20)

@@ -323,4 +323,4 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'claims-vs-facts', 'prose, reports and names against measured facts', run, budget=10, needs=('C5',))
+CHECK = Check(ID, 'claims-vs-facts', 'prose, reports and names against measured facts', run, budget=20, needs=('C5',))

@@ -573,4 +573,4 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'frozen-and-owned', 'frozen and owned artifacts and the history since the base', run, budget=15)
+CHECK = Check(ID, 'frozen-and-owned', 'frozen and owned artifacts and the history since the base', run, budget=25)

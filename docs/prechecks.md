@@ -55,6 +55,10 @@ npm run -s prechecks -- --list
   never fail the run, and `unavailable` is never a pass. One consequence: the vm-core `a5e2ffa8` replay of C2 lists the
   unconsumed `run_controls` but exits 0, because its actor is `upstream`; no flag turns coordinator or upstream conditions
   into a failure, by design (an executor cannot merge or rebase).
+- **Hang guards.** Each check has a budget that is multiplied by `KNOT_GATE_TIMEOUT_SCALE` (default 4): C1 180 s, C2 80 s, C3 100 s,
+  C4 60 s, C5 120 s, C6 80 s, C7 80 s, C8 80 s. A check that overruns is reported `unavailable` with the reason `timeout after Ns`,
+  never a pass. The guards are hang detectors, not expected times: on a host at load average 50 to 90, a 20 s guard on C4 tripped
+  on a 581-file increment (literals `3246fa3d`) that takes about 9 s alone, and the guards were raised for that reason.
 - **Output.** A terminal summary (twelve conditions per rule; the rest are in JSON), and in `.local/prechecks/<head8>/`:
   `report.json`, `report.md`, `facts.json` (the measured facts), `known.txt` (lines for the review harness's `known`
   argument). `--emit-ledger` prints ledger entries that would acknowledge every new condition.
@@ -120,6 +124,19 @@ times; dotted binders; gapped Nat `+`. Replays (`--head <rev> --base <rev>`, mai
 
 Main against itself yields no condition; the seed-accepted forms that Knot calls Invalid on main (155 of the 996 corpus
 programs on the first run) are reported as facts (`d4_gaps`), not conditions.
+
+**Family V (VM plans).** When a tree carries `vm/serializer.py` and `vm/registry.json`, C1 also exercises that tree's own
+reference codec in a child process with a memory limit (`lib/codecprobe.py`), at head and at base, on every
+`vm/golden/*.plan.json` and on the 13 harvested reviewer plans (`tests/prechecks/registry/vm.jsonl`).
+`reference-crash` (major) is an exception the codec does not declare: its declared refusals are `Malformed`, `Exhausted`
+and `ValueError`, and an `AttributeError`, `IndexError`, `MemoryError` or `RecursionError` is a defect of the oracle that
+every VM lane is judged against. `roundtrip` (major) is `decode(encode(golden)) != golden`, or a decode that refuses the
+encoder's own output. Roundtrip is strict for goldens only, since a reviewer's probe plan may be malformed on purpose. A verdict
+that base already had is a known gap; a golden that the branch added or edited is judged as new.
+Replay: vm-spec `d2fe0f20` against its merge base with main `454bf305` gives exit 3 with five `reference-crash` majors, all
+`AttributeError: 'NoneType' object has no attribute 'to_bytes'` raised by the encoder on harvested reviewer plans
+(`isempty-unchecked`, `chr-unchecked`, `append-tail-unchecked` and two more). The unit controls are the synthetic clean and
+broken codecs of `FamilyVTests`.
 
 ### C2 merge-forecast
 
@@ -265,9 +282,11 @@ These edits live in the campaign harness, outside the repository:
 
 ## Limits and what is not built
 
-- **Family V** (VM image lanes: reference evaluator, `run-wasm-io`, the model binary, the laundering matrix) is not built;
-  the tree on main has no `vm/`. C1 reports it unavailable when `vm/evaluate.py` exists. The harvested plans are stored in
-  `tests/prechecks/registry/vm.jsonl` for it. Likewise R8 (helper lanes) needs declared helpers.
+- **Family V is partly built**: R11 `reference-crash` and R12 `roundtrip` of the tree's own codec exist (above). R9 and R10
+  (the reference evaluator against `run-wasm-io`, the model binary and the laundering matrix) need the VM binary and a
+  machine-readable divergence table, and C1 reports them unavailable (`vm-lanes`) when `vm/evaluate.py` exists. The
+  harvested plans in `tests/prechecks/registry/vm.jsonl` are their corpus. R8 (helper lanes) needs declared helpers. The tree
+  on main has no `vm/`, so on main the family is not applicable.
 - **C2 R9** (forward-merge replay of upstream goldens through the downstream lanes), **C7 R3-R5** adapters and the C1 model lane
   are slow-tier work that needs those lanes.
 - **The seed budget**: at most 200 uncached seed check runs per fast run; the rest are completed over later runs (the cache is

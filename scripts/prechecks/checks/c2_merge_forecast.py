@@ -123,7 +123,7 @@ def base_fixes(ctx, result: CheckResult) -> None:
         result.conditions.append(Condition(ID, 'base-fix-missing', 'major' if runner else 'minor', {'commit': sha}, actor='coordinator',
                                            value={'files': len(files)},
                                            expected='main commits to the runner, host or owned paths are merged into the branch',
-                                           observed=f'main has {sha[:8]} {subject[:70]!r} touching {(runner or files)[0]}, which the branch lacks',
+                                           observed=f'main has {sha[:8]} {subject[:70]!r} touching {(runner or files or ['a merged path'])[0]}, which the branch lacks',
                                            fix_hint='Known merge condition: the branch predates this fix.'))
 
 
@@ -321,4 +321,4 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'merge-forecast', 'the branch against main, its upstreams and its siblings', run, budget=10)
+CHECK = Check(ID, 'merge-forecast', 'the branch against main, its upstreams and its siblings', run, budget=20)

@@ -15,7 +15,10 @@ promised to repair its family).
   R6 diagnostic-shape    a non-Checked line is not `Class<TAB>phase<TAB>code<TAB>span`, or has a control character
   R7 incomplete-repair   a violation that exists at base, in a family the manifest lists in d4_targets
 
-Family V (VM images) and R8 (helper lanes) need `vm/evaluate.py` and declared helpers; they report unavailable.
+  R11 reference-crash    (family V) the tree's reference codec raises an undeclared exception on a plan
+  R12 roundtrip          (family V) decode(encode(golden)) != golden
+
+R9/R10 (reference against the VM lanes) and R8 (helper lanes) need the VM binary and declared helpers; they report unavailable.
 """
 from __future__ import annotations
 
@@ -24,6 +27,7 @@ import json
 import random
 import re
 import shutil
+import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -49,6 +53,7 @@ def sha(text: str) -> str:
 
 
 TOOL_REGISTRY = Path(__file__).resolve().parents[3] / 'tests/prechecks/registry/lang.jsonl'
+TOOL_VM_REGISTRY = Path(__file__).resolve().parents[3] / 'tests/prechecks/registry/vm.jsonl'
 
 
 def load_registry(ctx) -> list[dict]:
@@ -186,11 +191,77 @@ def outcome_table(lanes: Lanes, programs: dict, paths: dict[str, Path], have_mai
     return cached
 
 
-def run(ctx) -> CheckResult:
+def family_v(ctx, result: CheckResult) -> None:
+    """R11 reference-crash and R12 roundtrip over the VM plans: the goldens (strict) and the harvested reviewer plans.
+
+    The tree's own `vm/serializer.py` is exercised in a child process at head and at the base; a crash or a
+    roundtrip failure that only head has is a condition. R9 and R10 (lane divergence) need the VM binary and its
+    machine-readable divergence table and are not implemented here.
+    """
+    if not ctx.head.has('vm/serializer.py') or not ctx.head.has('vm/registry.json'):
+        return
+    plans = []
+    for path in ctx.head.glob('vm/golden/*.plan.json'):
+        try:
+            plans.append({'name': path, 'plan': json.loads(ctx.head.text(path) or 'null'), 'strict': True})
+        except ValueError:
+            continue
+    if ctx.options.get('registry', 'tool') == 'tool' and TOOL_VM_REGISTRY.is_file():
+        for line in TOOL_VM_REGISTRY.read_text(encoding='utf-8').split('\n'):
+            if line.strip():
+                row = json.loads(line)
+                try:
+                    plans.append({'name': 'registry:' + row['source'].get('cited', row['sha256'][:8]), 'plan': json.loads(row['text']), 'strict': False})
+                except (ValueError, KeyError):
+                    continue
+    directory = ctx.scratch / 'family-v'
+    directory.mkdir(parents=True, exist_ok=True)
+    plan_file = directory / 'plans.json'
+    plan_file.write_text(json.dumps(plans))
+
+    def probe(tree, label):
+        out = directory / f'{tree.treeish}.json'
+        if out.is_file():
+            return json.loads(out.read_text())
+        export = ctx.export(tree)
+        code, _o, err = ctx.run([sys.executable, '-B', str(Path(__file__).resolve().parents[1] / 'lib/codecprobe.py'), export, plan_file, out],
+                                timeout=120)
+        if code != 0 or not out.is_file():
+            raise RuntimeError(f'{label} codec probe failed: {(err or b"").decode("utf-8", "replace").strip()[-160:]}')
+        return json.loads(out.read_text())
+
+    try:
+        head = probe(ctx.head, 'head')
+    except RuntimeError as error:
+        result.rules_unavailable['family-v'] = str(error)
+        return
+    try:
+        base = probe(ctx.base, 'base') if ctx.base.has('vm/serializer.py') and ctx.base.treeish != ctx.head.treeish else (head if ctx.base.treeish == ctx.head.treeish else {})
+    except RuntimeError:
+        base = {}
+    known = 0
+    # A golden that this branch added or edited has no verdict at base: the branch's own artifact is judged as new.
+    fresh = {p['name'] for p in plans if p['strict'] and (not ctx.base.has(p['name']) or ctx.base.sha(p['name']) != ctx.head.sha(p['name']))}
+    for name, row in sorted(head.items()):
+        if row['kind'] in ('ok', 'declared'):
+            continue
+        rule = 'reference-crash' if row['kind'] == 'crash' else 'roundtrip'
+        if name not in fresh and base.get(name, {}).get('kind') == row['kind']:
+            known += 1
+            continue
+        result.conditions.append(Condition(
+            ID, rule, 'major', {'probe': hashlib.sha256(name.encode()).hexdigest()[:16], 'lane': 'reference-codec'},
+            expected='the reference codec refuses a bad plan with a declared error and round-trips every golden',
+            observed=f"{name}: {row['stage']}: {row['error']}", value={'family': 'vm-plan'}, evidence={'plan': name, **row},
+            fix_hint='A crash of the reference is a defect of the oracle every VM lane is judged against.'))
+    result.rules_run += ['reference-crash', 'roundtrip']
+    result.facts['family_v'] = {'plans': len(plans), 'known': known}
+
+
+def family_l(ctx) -> CheckResult:
+    """Family L: programs, judged by the seed, run through Knot's lanes at head and at the base."""
     started = time.monotonic()
     result = CheckResult()
-    if ctx.base is None:
-        return not_applicable('no base to ratchet against')
     if not ctx.head.has('src/parse-cli.bend') or not ctx.head.has('src/check-cli.bend'):
         return not_applicable('the tree has no src/parse-cli.bend and src/check-cli.bend')
     seed = Seed(ctx.root, ctx.scratch / 'seed-run')
@@ -199,7 +270,7 @@ def run(ctx) -> CheckResult:
     if shutil.which('bun') is None:
         return unavailable('bun is not on PATH')
     if ctx.head.has('vm/evaluate.py'):
-        result.rules_unavailable['family-v'] = 'family V (VM image lanes) is not implemented in this build'
+        result.rules_unavailable['vm-lanes'] = 'R9 and R10 (reference against VM lanes) need the VM binary and a divergence table; not implemented'
     result.rules_unavailable['helper-divergence'] = 'no helper lanes are declared (lanes.helpers)'
 
     # ---- corpus -------------------------------------------------------------------------
@@ -324,6 +395,22 @@ def run(ctx) -> CheckResult:
         result.rules_unavailable['seed-budget'] = f'{oracle.skipped} check-level verdict(s) exceed the {oracle.budget}-run cap; the slow tier completes them'
     result.facts = {'counts': counts, 'd4_gaps': gaps[:200], 'd4_gap_count': len(gaps), 'seed_runs': oracle.used,
                     'cold_base_cache': cold, 'seconds': round(time.monotonic() - started, 1), 'seed_revision': SEED_REVISION}
+    return result
+
+
+def run(ctx) -> CheckResult:
+    if ctx.base is None:
+        return not_applicable('no base to ratchet against')
+    result = family_l(ctx)
+    if result.outcome in ('not-applicable', 'unavailable'):          # family L cannot run here; family V may still
+        reason = f'family L {result.outcome}: {result.reason}'
+        result = CheckResult()
+        result.notes.append(reason)
+        family_v(ctx, result)
+        if not result.rules_run and 'family-v' not in result.rules_unavailable:
+            return not_applicable(reason)
+        return result
+    family_v(ctx, result)
     return result
 
 

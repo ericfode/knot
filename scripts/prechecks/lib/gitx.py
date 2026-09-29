@@ -154,6 +154,10 @@ class Repo:
         return self.git(*args).stdout.decode('utf-8', 'replace')
 
     def commit_files(self, sha: str) -> list[Change]:
+        """Files a commit changed; a merge is diffed against its first parent (plain diff-tree shows a merge as empty)."""
+        parents = self.out('rev-list', '--parents', '-n', '1', sha).split()[1:]
+        if len(parents) > 1:
+            return self.name_status(parents[0], sha)
         raw = self.git('diff-tree', '-r', '-z', '--name-status', '--no-commit-id', '-M', '--root', sha).stdout.split(b'\0')
         out, i = [], 0
         while i < len(raw) and raw[i]:

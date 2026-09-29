@@ -13,6 +13,7 @@ whole tree: main already carries 52 legacy receipt and evidence files with host 
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import sys
@@ -231,11 +232,37 @@ def _keys(value, at=''):
             yield from _keys(child, f'{at}/{i}')
 
 
+REWRITE_MARKS = ('.toolchain/', '.bend/lib/', '$ROOT', '$BEND_LIB')
+
+
+def fast_normalizer(normalize):
+    """The gate's own Normalizer, with `text` skipped for a string that none of its rewrites can touch.
+
+    Every rewrite in `Normalizer.text` needs one of the alias keys or one of REWRITE_MARKS to occur in the string, so
+    a string with none of them comes back unchanged; the answer is identical, and a large inventory has over a million
+    strings (10 s of regular expressions on a 581-file increment).
+    """
+    class Fast(normalize.Normalizer):
+        def text(self, value, aliases):
+            if any(key in value for key in aliases) or any(mark in value for mark in REWRITE_MARKS):
+                return super().text(value, aliases)
+            return value
+    return Fast(Path('/nonexistent-prechecks-root'))
+
+
 def date_only(ctx, receipts_touched) -> tuple[list[Condition], str]:
     normalize = gates_lib.load_module('normalize')
     if normalize is None:
         return [], 'scripts/gates/normalize.py unavailable'
-    normalizer = normalize.Normalizer(Path('/nonexistent-prechecks-root'))
+    normalizer = fast_normalizer(normalize)
+    memo: dict = {}
+
+    def normalized(path, data):
+        key = (path, hashlib.sha1(data).digest())
+        if key not in memo:
+            memo[key] = normalizer.receipt(path, data, {})
+        return memo[key]
+
     found = []
     for commit in ctx.commits():
         if commit.is_merge:
@@ -248,7 +275,7 @@ def date_only(ctx, receipts_touched) -> tuple[list[Condition], str]:
             if old is None or new is None:
                 continue
             try:
-                a, b = normalizer.receipt(change.path, old, {}), normalizer.receipt(change.path, new, {})
+                a, b = normalized(change.path, old), normalized(change.path, new)
             except ValueError:
                 continue
             if normalize.classify(old, new, a, b) == 'volatile-only':
@@ -335,4 +362,4 @@ def run(ctx) -> CheckResult:
     return result
 
 
-CHECK = Check(ID, 'receipt-integrity', 'a committed receipt against the tree it describes', run, budget=5)
+CHECK = Check(ID, 'receipt-integrity', 'a committed receipt against the tree it describes', run, budget=15)

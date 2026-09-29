@@ -1,7 +1,9 @@
 import hashlib
 import json
+import shutil
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from checks import c4_receipt_integrity as c4
 from .helpers import RepoTest
@@ -158,6 +160,23 @@ class C4Tests(RepoTest):
         self.assertEqual(1, len(found))
         self.assertEqual('coordinator', found[0].actor)
 
+    def test_the_fast_normalizer_answers_exactly_as_the_gates_normalizer(self):
+        from lib import gates as gates_lib
+        normalize = gates_lib.load_module('normalize')
+        base = normalize.Normalizer(Path('/nonexistent-prechecks-root'))
+        fast = c4.fast_normalizer(normalize)
+        strings = ['', 'plain', 'a/b/c', '/nonexistent-prechecks-root/src/a.bend', 'x /nonexistent-prechecks-root/y z',
+                   '../../.toolchain/bend/main.ts', '/Users/me/checkout/.toolchain/bend-2.0.29/x', '$ROOT/.toolchain/./y',
+                   '.bend/lib/Base', '/home/u/.bend/lib/Base/List', '$BEND_LIB/./a', '$ROOT', 'sha256:abc', '2026-09-28T01:00:00Z',
+                   '/other/checkout/scripts/x.py', 'toolchain', '.toolchain', '$BEND']
+        for aliases in ({str(base.root): '$ROOT'}, {str(base.root): '$ROOT', '/other/checkout': '$ROOT'}, {'': '$ROOT'}):
+            for text in strings:
+                self.assertEqual(base.text(text, aliases), fast.text(text, aliases), (text, aliases))
+        value = {'date': '2026-09-28T01:00:00+00:00', 'argv': ['/x/scripts/bend-reference', '/x/src/a.bend'], 'elapsed_seconds': 3.5,
+                 'p': '/x/.toolchain/a', '/x/key': ['plain', '/x/.bend/lib/Base']}
+        data = json.dumps(value).encode()
+        self.assertEqual(base.receipt('r.json', data, {}), fast.receipt('r.json', data, {}))
+
     # ---- R4 the implementer's own gate run -----------------------------------------
     def write_run(self, ctx, receipts, gates):
         head = ctx.head
@@ -182,6 +201,29 @@ class C4Tests(RepoTest):
                          sorted(c.rule for c in result.conditions if c.rule in ('gate-red', 'own-receipt-stale', 'unowned-receipt-drift')))
         drift = [c for c in result.conditions if c.rule == 'unowned-receipt-drift'][0]
         self.assertEqual(('major', 'coordinator'), (drift.severity, drift.actor))
+
+    def test_the_slow_tier_runs_the_gates_itself_but_the_fast_tier_never_does(self):
+        self.branch_from({'scripts/gates/run.py': 'GATES = ()\n', 'a.txt': 'a\n'})
+        self.fx.commit('work', {'b.txt': 'b\n'})
+        for tier, expected in (('fast', 0), ('slow', 1)):
+            ctx = self.fx.context(tier=tier)
+            calls = []
+
+            def fake_run(argv, **kwargs):
+                calls.append([str(a) for a in argv])
+                self.write_run(ctx, [{'path': 'tests/compiler-checker/receipts/checker.json', 'classification': 'semantic'}],
+                               [{'name': 'checker', 'status': 'passed'}])
+                return 0, b'', b''
+
+            with mock.patch.object(ctx, 'run', fake_run):
+                result = c4.CHECK.run(ctx).finish()
+            self.assertEqual(expected, len(calls), tier)
+            if expected:
+                self.assertIn('scripts/gates/run.py', calls[0][-1])
+                self.assertTrue([c for c in result.conditions if c.rule == 'unowned-receipt-drift'])
+            else:
+                self.assertIn('gate-run', result.rules_unavailable)
+            shutil.rmtree(self.fx.root / '.local', ignore_errors=True)
 
     def test_gate_run_of_a_different_snapshot_is_unavailable_not_a_pass(self):
         self.branch_from({'a.txt': 'a\n'})
