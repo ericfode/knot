@@ -1,0 +1,20 @@
+{
+ "entry":"program",
+ "representation":{"Unit":0,"U32":1,"Char":2,"String":3,"IO.OP":4},
+ "types":[
+  {"kind":"data","name":"Unit","constructors":[{"name":"Unit","fields":[]}]},
+  {"kind":"opaque","name":"U32"},
+  {"kind":"data","name":"Char","constructors":[{"name":"Chr","fields":[1]}]},
+  {"kind":"data","name":"String","constructors":[{"name":"SNil","fields":[]},{"name":"SCon","fields":[2,3]}]},
+  {"kind":"data","name":"IO.OP","constructors":[{"name":"Emit","fields":[null]},{"name":"Halt","fields":[1,3]}]},
+  {"kind":"arrow","domain":0,"result":4},
+  {"kind":"arrow","domain":5,"result":4},
+  {"kind":"erased-arrow","domain":null,"result":6}
+ ],
+ "functions":[
+  {"name":"IO.print","parameters":[3],"result":7,"slots":1,"body":["foreign",7,1,[["ref",3,0]]]},
+  {"name":"once","parameters":[7,7,5],"result":4,"slots":4,"body":["let",4,3,["invoke",4,["invoke",6,["ref",7,0],[]],[["closure",5,1,1,[],["con",4,1,[["lit",1,"U32",7],["lit",3,"String",[117,110,114,101,97,99,104,101,100]]]]]]],["invoke",4,["invoke",6,["ref",7,1],[]],[["ref",5,2]]]]},
+  {"name":"run","parameters":[7,7],"result":7,"slots":2,"body":["closure",7,0,2,[0,1],["closure",6,1,3,[0,1],["call",4,1,[["ref",7,0],["ref",7,1],["ref",5,2]]]]]},
+  {"name":"main","parameters":[],"result":7,"slots":0,"body":["call",7,2,[["call",7,0,[["lit",3,"String",[100,101,97,100]]]],["call",7,0,[["lit",3,"String",[108,105,118,101]]]]]]}
+ ]
+}

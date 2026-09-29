@@ -1743,6 +1743,7 @@
       "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
       "divergence": "non-scalar output",
       "vm_stdout": "",
+      "vm_calls": 4,
       "features": [
         "Foreign",
         "Intrinsic",
@@ -1776,6 +1777,7 @@
       "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
       "divergence": "non-scalar output",
       "vm_stdout": "",
+      "vm_calls": 4,
       "features": [
         "Foreign",
         "Literal",
@@ -1852,6 +1854,7 @@
       "seed_bun_stderr": "bend: 67237376 is not a Unicode scalar value\n",
       "divergence": "non-scalar output",
       "vm_stdout": "",
+      "vm_calls": 4,
       "features": [
         "Foreign",
         "Intrinsic",
@@ -1944,6 +1947,7 @@
       "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
       "divergence": "non-scalar output",
       "vm_stdout": "a\n",
+      "vm_calls": 13,
       "features": [
         "Foreign",
         "Closure",
@@ -2620,6 +2624,568 @@
         "exit": 0,
         "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
         "stderr": ""
+      }
+    },
+    {
+      "name": "chr-pattern",
+      "source": "vm/golden/chr-pattern.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "unavailable": "Unsupported check char-constructor-pattern",
+      "features": [
+        "Case",
+        "Branch",
+        "Reference",
+        "Literal",
+        "Intrinsic",
+        "tags-mode Char"
+      ],
+      "sha256": "fc9133c0e68b433b32188b72037f003b975a8304b476fcdc15e16e4738ea548d",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tcheck\tchar-constructor-pattern\t60:63:5:9\n"
+      }
+    },
+    {
+      "name": "list-head-match",
+      "source": "vm/golden/list-head-match.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "unavailable": "Unsupported parse parameter-type",
+      "features": [
+        "Case",
+        "Branch",
+        "Reference",
+        "Construct",
+        "generic"
+      ],
+      "sha256": "84010bf42ff3dc9a28a7830c077d0398866915543f26562e999d14966b41e007",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:21\n"
+      }
+    },
+    {
+      "name": "nat-transitions",
+      "source": "vm/golden/nat-transitions.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "bound"
+      ],
+      "sha256": "ea0205e7e046128e8f8911c3bf897556daf4ac58e0db23e14fc6a4f9235d2e31",
+      "seed": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "name": "keep-swapped",
+      "source": "vm/golden/keep-swapped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request"
+      ],
+      "sha256": "acb6cd196803fcc53e4fe885d4c143e37512582fa23bea1236343ff3fdbe8e55",
+      "seed": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "keep-first",
+      "source": "vm/golden/keep-first.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request"
+      ],
+      "sha256": "5fda912b2c47c17e3b54cf3bc1e784d1b9acf613e5837d4396dd638af6e5cff2",
+      "seed": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "run2-flag",
+      "source": "vm/golden/run2-flag.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "first\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "dropped request"
+      ],
+      "sha256": "b768243d508ac992e61271d3306c77f655af4a21c5d6042957b7c4395055a5d5",
+      "seed": {
+        "exit": 0,
+        "stdout": "first\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t50:54:7:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "first\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "spine",
+      "source": "vm/golden/spine.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "first\nsecond\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic"
+      ],
+      "sha256": "1dec1c0cab3c7e9d0e63ac54381d955785531e9378af12e997c44c5f218e17ca",
+      "seed": {
+        "exit": 0,
+        "stdout": "first\nsecond\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t17:18:3:15\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "first\nsecond\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "keep-non-scalar",
+      "source": "vm/golden/keep-non-scalar.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request",
+        "non-scalar Char"
+      ],
+      "sha256": "44a9e37cff11c41cc5f6edf7aa7db7729fc3b211c855e27adfab591c707bc37d",
+      "seed": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: 55296 is not a Unicode scalar value\n"
+      }
+    },
+    {
+      "name": "book-drop",
+      "source": "vm/golden/book-drop.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "On{}\n",
+      "seed_bun_stderr": "",
+      "unavailable": "Unsupported parse parameter-type",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "dropped request"
+      ],
+      "sha256": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t50:54:7:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "let-dropped-request",
+      "source": "vm/golden/let-dropped-request.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Let",
+        "dropped request"
+      ],
+      "sha256": "b8b76111f7d889bc862ed6112c52bf446df401a3b461ff0fcc551fbacefe0bae",
+      "seed": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "let-live-request",
+      "source": "vm/golden/let-live-request.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Let",
+        "dropped request"
+      ],
+      "sha256": "6077fdf121bb517def58d33cbd33474ea0f329cd49a2d7a80785ab17c693731f",
+      "seed": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "field-request-returned",
+      "source": "vm/golden/field-request-returned.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "boxed-then-returned\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Construct",
+        "Case",
+        "Branch",
+        "request in a field"
+      ],
+      "sha256": "47ffde6755afd77a5ea34a23c4b05bd029637109d534ef0444b87cf1b341842f",
+      "seed": {
+        "exit": 0,
+        "stdout": "boxed-then-returned\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tgeneric-datatype\t10:11:3:8\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "boxed-then-returned\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "field-request-dropped",
+      "source": "vm/golden/field-request-dropped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Construct",
+        "dropped request",
+        "request in a field"
+      ],
+      "sha256": "7a3315e6b0f9b45964a240dec1087f40932bc52322271ac1696af2421b0cc679",
+      "seed": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tgeneric-datatype\t10:11:3:8\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "emit-field-request-dropped",
+      "source": "vm/golden/emit-field-request-dropped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Construct",
+        "dropped request",
+        "request in a field"
+      ],
+      "sha256": "f0d691c1fad9ecddbe6900ca7ad5c9e76dd600f0fc7469215c84035439eeb4f6",
+      "seed": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "capture-request-dropped",
+      "source": "vm/golden/capture-request-dropped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request",
+        "captured request"
+      ],
+      "sha256": "cc5c1906f358d2224825f338d2251f5223c17c0bc654eee21d2e8a01efc9eafc",
+      "seed": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t14:18:3:12\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "live\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "case-request-emit-default-u32",
+      "source": "vm/golden/case-request-emit-default-u32.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "2\n",
+      "seed_bun_stderr": "bend: runtime fail-stop\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "Default",
+        "Case over a request"
+      ],
+      "sha256": "e15e4c1b1deb3217165d7068de335b319d211f7eeed8925adb7f5dc4e2f20b35",
+      "seed": {
+        "exit": 0,
+        "stdout": "2\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t14:18:3:12\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-halt-default-u32",
+      "source": "vm/golden/case-request-halt-default-u32.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "4\n",
+      "seed_bun_stderr": "bend: runtime fail-stop\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "Default",
+        "Case over a request"
+      ],
+      "sha256": "0405abcfe6b2ee88f963c320cc28adf8cca71cef719ea832d08c99d2c0818478",
+      "seed": {
+        "exit": 0,
+        "stdout": "4\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t14:18:3:12\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-emit-default",
+      "source": "vm/golden/case-request-emit-default.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "",
+      "seed_bun_stderr": "bend: runtime fail-stop\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "Default",
+        "Case over a request"
+      ],
+      "sha256": "f954c78c88b0d3132a15fb208c17f8b5dee22e6ea4ceca4f77c4a96462f73b98",
+      "seed": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t14:18:3:12\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
       }
     }
   ]

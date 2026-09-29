@@ -852,6 +852,7 @@
       "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
       "divergence": "non-scalar output",
       "vm_stdout": "",
+      "vm_calls": 4,
       "features": [
         "Foreign",
         "Intrinsic",
@@ -868,6 +869,7 @@
       "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
       "divergence": "non-scalar output",
       "vm_stdout": "",
+      "vm_calls": 4,
       "features": [
         "Foreign",
         "Literal",
@@ -883,6 +885,7 @@
       "seed_bun_stderr": "bend: 67237376 is not a Unicode scalar value\n",
       "divergence": "non-scalar output",
       "vm_stdout": "",
+      "vm_calls": 4,
       "features": [
         "Foreign",
         "Intrinsic",
@@ -949,6 +952,7 @@
       "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
       "divergence": "non-scalar output",
       "vm_stdout": "a\n",
+      "vm_calls": 13,
       "features": [
         "Foreign",
         "Closure",
@@ -1344,6 +1348,295 @@
           "fuel": "0001048576",
           "vm": "Two{On{},Off{}}"
         }
+      ]
+    },
+    {
+      "name": "chr-pattern",
+      "source": "vm/golden/chr-pattern.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "unavailable": "Unsupported check char-constructor-pattern",
+      "features": [
+        "Case",
+        "Branch",
+        "Reference",
+        "Literal",
+        "Intrinsic",
+        "tags-mode Char"
+      ]
+    },
+    {
+      "name": "list-head-match",
+      "source": "vm/golden/list-head-match.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "unavailable": "Unsupported parse parameter-type",
+      "features": [
+        "Case",
+        "Branch",
+        "Reference",
+        "Construct",
+        "generic"
+      ]
+    },
+    {
+      "name": "nat-transitions",
+      "source": "vm/golden/nat-transitions.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "bound"
+      ]
+    },
+    {
+      "name": "keep-swapped",
+      "source": "vm/golden/keep-swapped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request"
+      ]
+    },
+    {
+      "name": "keep-first",
+      "source": "vm/golden/keep-first.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request"
+      ]
+    },
+    {
+      "name": "run2-flag",
+      "source": "vm/golden/run2-flag.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "first\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "dropped request"
+      ]
+    },
+    {
+      "name": "spine",
+      "source": "vm/golden/spine.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "first\nsecond\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic"
+      ]
+    },
+    {
+      "name": "keep-non-scalar",
+      "source": "vm/golden/keep-non-scalar.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request",
+        "non-scalar Char"
+      ]
+    },
+    {
+      "name": "book-drop",
+      "source": "vm/golden/book-drop.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "On{}\n",
+      "seed_bun_stderr": "",
+      "unavailable": "Unsupported parse parameter-type",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "dropped request"
+      ]
+    },
+    {
+      "name": "let-dropped-request",
+      "source": "vm/golden/let-dropped-request.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Let",
+        "dropped request"
+      ]
+    },
+    {
+      "name": "let-live-request",
+      "source": "vm/golden/let-live-request.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Let",
+        "dropped request"
+      ]
+    },
+    {
+      "name": "field-request-returned",
+      "source": "vm/golden/field-request-returned.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "boxed-then-returned\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Construct",
+        "Case",
+        "Branch",
+        "request in a field"
+      ]
+    },
+    {
+      "name": "field-request-dropped",
+      "source": "vm/golden/field-request-dropped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Construct",
+        "dropped request",
+        "request in a field"
+      ]
+    },
+    {
+      "name": "emit-field-request-dropped",
+      "source": "vm/golden/emit-field-request-dropped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Construct",
+        "dropped request",
+        "request in a field"
+      ]
+    },
+    {
+      "name": "capture-request-dropped",
+      "source": "vm/golden/capture-request-dropped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "live\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request",
+        "captured request"
+      ]
+    },
+    {
+      "name": "case-request-emit-default-u32",
+      "source": "vm/golden/case-request-emit-default-u32.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "2\n",
+      "seed_bun_stderr": "bend: runtime fail-stop\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "Default",
+        "Case over a request"
+      ]
+    },
+    {
+      "name": "case-request-halt-default-u32",
+      "source": "vm/golden/case-request-halt-default-u32.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "4\n",
+      "seed_bun_stderr": "bend: runtime fail-stop\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "Default",
+        "Case over a request"
+      ]
+    },
+    {
+      "name": "case-request-emit-default",
+      "source": "vm/golden/case-request-emit-default.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "",
+      "seed_bun_stderr": "bend: runtime fail-stop\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "Default",
+        "Case over a request"
       ]
     }
   ]
