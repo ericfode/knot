@@ -72,6 +72,7 @@ def main(argv=None) -> int:
     ap.add_argument('--manifest')
     ap.add_argument('--upstream', action='append', default=[])
     ap.add_argument('--rules', help='comma-separated rule names (default: all seven)')
+    ap.add_argument('--limit', type=int, default=40, help='packets per rule (default 40, the live-run cap per increment and round)')
     ap.add_argument('--json', action='store_true')
     args = ap.parse_args(argv)
     repo = Repo(args.repo)
@@ -82,7 +83,8 @@ def main(argv=None) -> int:
         return 2
     try:
         ctx = context_mod.build(repo, head=args.head, base=args.base, inc=args.inc, main_ref=args.main_ref,
-                                manifest_path=args.manifest, upstream=args.upstream)
+                                manifest_path=args.manifest, upstream=args.upstream,
+                                options={'packet_limit': args.limit})
     except SystemExit as error:
         print(error, file=sys.stderr)
         return 2

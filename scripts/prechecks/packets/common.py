@@ -120,6 +120,56 @@ def paragraph_at(text: str, line: int) -> tuple[int, int, str]:
     return start + 1, end + 1, '\n'.join(lines[start:end + 1])
 
 
+BULLET = re.compile(r'^\s*(?:[-*+]|\d+[.)])\s+')
+
+
+def unit_at(text: str, line: int) -> tuple[int, int, str, str]:
+    """(first, last, text, lead) of the claim unit holding `line`: a list item with its continuation lines, else the
+    sentence of the paragraph that covers the line. `lead` is the item's paragraph lead-in (empty for a sentence)."""
+    lines = text.split('\n')
+    i = min(max(line, 1), len(lines)) - 1
+    start = i
+    while start > 0 and lines[start].strip() and not BULLET.match(lines[start]) and lines[start][:1] in ' \t':
+        start -= 1
+    if BULLET.match(lines[start]):
+        end = start
+        while end + 1 < len(lines) and lines[end + 1].strip() and not BULLET.match(lines[end + 1]) and lines[end + 1][:1] in ' \t':
+            end += 1
+        first, _last, _p = paragraph_at(text, start + 1)
+        lead = lines[first - 1].strip() if first - 1 < start else ''
+        return start + 1, end + 1, '\n'.join(lines[start:end + 1]), lead
+    first, last, paragraph = paragraph_at(text, line)
+    begin = sum(len(l) + 1 for l in lines[first - 1:i])
+    finish = begin + len(lines[i])
+    # Pieces: a list item starts a piece of its own; prose between items is split into sentences.
+    pieces, position, current = [], 0, []
+    for raw in paragraph.split('\n'):
+        if BULLET.match(raw) and current:
+            pieces.append((current[0], position - 1))
+            current = []
+        if not current:
+            current = [position]
+        position += len(raw) + 1
+    if current:
+        pieces.append((current[0], len(paragraph)))
+    spans = []
+    for lo, hi in pieces:
+        chunk = paragraph[lo:hi]
+        cursor = 0
+        for sentence in re.split(r'(?<=[.!?])\s+(?=[A-Z`(\[|])', chunk):
+            found = chunk.find(sentence, cursor)
+            found = cursor if found < 0 else found
+            cursor = found + len(sentence)
+            span = (lo + found, lo + cursor)
+            if span[0] < finish and span[1] > begin:
+                spans.append(span)
+    if not spans:
+        return first, last, paragraph, ''
+    lo, hi = spans[0][0], spans[-1][1]
+    before = paragraph[:lo].count('\n')
+    return first + before, first + paragraph[:hi].count('\n'), paragraph[lo:hi], ''
+
+
 def sentences_of(paragraph: str) -> list[str]:
     flat = re.sub(r'\s+', ' ', paragraph).strip()
     return [s for s in re.split(r'(?<=[.!?])\s+(?=[A-Z`(\[|])', flat) if s]

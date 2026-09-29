@@ -1,0 +1,371 @@
+{
+ "note": "Calibration controls for .perch/rules/prechecks.yaml. Sources: the design's control table (dev broken and clean; held-out from the afternoon rounds). No finding evidence from a held-out round was read to build them.",
+ "controls": [
+  {
+   "id": "vm-spec-d2fe0f20-bench",
+   "rule": "claim-holds-against-evidence",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "anchors": [
+    "the bench sources and baselines unchanged",
+    "def check_bench"
+   ],
+   "note": "SPEC section 12 promises the bench sources and baselines unchanged; the deciding code is check_bench (design table, dev)."
+  },
+  {
+   "id": "nest-acbdfb2e-partition",
+   "rule": "claim-holds-against-evidence",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "acbdfb2e",
+   "anchors": [
+    "partitioned among constructor branches"
+   ],
+   "note": "research/compiler-fields/SPEC.md: matrix steps partitioned among constructor branches, against nest's total counter (design table, dev)."
+  },
+  {
+   "id": "vm-spec-63e63203-bench",
+   "rule": "claim-holds-against-evidence",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "63e63203",
+   "base": "454bf305",
+   "anchors": [
+    "bench sources",
+    "def check_bench"
+   ],
+   "note": "The same claim at the vm-spec tip 63e63203, where workloads.json pins the digests (design table, clean). The wording changed with the fix: sources, guards and recorded outputs unchanged."
+  },
+  {
+   "id": "vm-spec-e14d8581-result-u32",
+   "rule": "outcome-follows-d4",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "e14d8581",
+   "anchors": [
+    "result-u32"
+   ],
+   "note": "result-u32 frozen as HostFailure scalar-result although the seed succeeds; D4 wants Unsupported (blocking, design table, dev)."
+  },
+  {
+   "id": "vm-spec-0f511b06-describe",
+   "rule": "outcome-follows-d4",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "0f511b06",
+   "anchors": [
+    "result-u32"
+   ],
+   "note": "Section 8 and section 11 disagree on the Book-describe outcome (design table, dev)."
+  },
+  {
+   "id": "vm-spec-63e63203",
+   "rule": "outcome-follows-d4",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "63e63203",
+   "base": "454bf305",
+   "anchors": [
+    "result-u32"
+   ],
+   "note": "The vm-spec tip, after result-u32 became Unsupported invoke result-type (design table, clean)."
+  },
+  {
+   "id": "vm-spec-5517f263-inspection",
+   "rule": "outcome-follows-d4",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "5517f263",
+   "base": "454bf305",
+   "anchors": [
+    "image-size"
+   ],
+   "note": "Held-out (review started after 2026-09-28T12:00Z): SPEC section 4 says an oversize image is Exhausted image-size; check-spec.py:966-972 freezes it as HostFailure image (design table)."
+  },
+  {
+   "id": "nest-57a0c01d-enum",
+   "rule": "clause-vs-delta",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "57a0c01d",
+   "anchors": [
+    "unreachable"
+   ],
+   "note": "nest's lowering makes knot-enum-1 emit unreachable (design table, dev)."
+  },
+  {
+   "id": "modules-6f44f677-single-file",
+   "rule": "clause-vs-delta",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "modules",
+   "head": "6f44f677",
+   "anchors": [
+    "single-file"
+   ],
+   "note": "The single-file path claimed unchanged (design table, dev)."
+  },
+  {
+   "id": "closures-a1d68911-fields-wasm",
+   "rule": "clause-vs-delta",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "closures",
+   "head": "a1d68911",
+   "anchors": [
+    "unreachable"
+   ],
+   "note": "knot-fields-wasm-1 widened against its frozen profile (design table, dev)."
+  },
+  {
+   "id": "nest-99053a70-recursion",
+   "rule": "clause-vs-delta",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "99053a70",
+   "anchors": [
+    "recursion"
+   ],
+   "note": "Held-out: nest's change against the recursion contract (design table)."
+  },
+  {
+   "id": "vm-spec-d2fe0f20-vm-expectation",
+   "rule": "expectation-independent",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "anchors": [
+    "def vm_expectation"
+   ],
+   "note": "check-spec.py:474-477 derives an expected value from eval-cli (design table, dev)."
+  },
+  {
+   "id": "vm-core-f54d97ad-control-jobs",
+   "rule": "expectation-independent",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "f54d97ad",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "want"
+   ],
+   "note": "check-core.py:501-535 control_jobs derives want from the VM's own output (design table, dev)."
+  },
+  {
+   "id": "vm-spec-d2fe0f20-source-mutants",
+   "rule": "kill-is-semantic",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "anchors": [
+    "source_mutants"
+   ],
+   "note": "source_mutants credits a kill without requiring a semantic observation (design table, dev)."
+  },
+  {
+   "id": "vm-model-07e6db73-kills",
+   "rule": "kill-is-semantic",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-model",
+   "head": "07e6db73",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "kill"
+   ],
+   "note": "vm-model 07e6db73 refuses a harness fault in every kill (design table, clean)."
+  },
+  {
+   "id": "vm-model-19cf7d8f-inspection-runs",
+   "rule": "kill-is-semantic",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "vm-model",
+   "head": "19cf7d8f",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       41,
+       44
+      ],
+      "note": "trusted-runtime definition of done"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       598,
+       609
+      ],
+      "note": "function inspection_runs, named by the design table"
+     }
+    ]
+   },
+   "note": "Held-out: the design table names inspection_runs at 19cf7d8f (torn reads). The builder's kill selector does not reach it, so the packet is an excerpt of the named function and the definition-of-done line."
+  },
+  {
+   "id": "nest-5374d928-ground-laws",
+   "rule": "required-laws-met",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "5374d928",
+   "manifest": {
+    "required_laws": [
+     "lowering a matrix whose first row is irrefutable selects that row",
+     "specialization preserves first-match on the rows it keeps",
+     "an exhaustive matrix lowers to a tree with no missing branch"
+    ]
+   },
+   "anchors": [
+    "irrefutable"
+   ],
+   "note": "Ground witnesses under general law names (design table, dev)."
+  },
+  {
+   "id": "nest-c500d7d5-ground-laws",
+   "rule": "required-laws-met",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "c500d7d5",
+   "manifest": {
+    "required_laws": [
+     "lowering a matrix whose first row is irrefutable selects that row",
+     "specialization preserves first-match on the rows it keeps",
+     "an exhaustive matrix lowers to a tree with no missing branch"
+    ]
+   },
+   "anchors": [
+    "irrefutable"
+   ],
+   "note": "The same after round 5 (design table, dev)."
+  },
+  {
+   "id": "nest-99053a70-d21",
+   "rule": "required-laws-met",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "99053a70",
+   "manifest": {
+    "required_laws": [
+     "lowering a matrix whose first row is irrefutable selects that row",
+     "specialization preserves first-match on the rows it keeps",
+     "an exhaustive matrix lowers to a tree with no missing branch"
+    ]
+   },
+   "anchors": [
+    "irrefutable"
+   ],
+   "note": "Held-out: the D21 counterexample (design table)."
+  },
+  {
+   "id": "vm-spec-94bc3d57-d20",
+   "rule": "passages-agree",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "94bc3d57",
+   "anchors": [
+    "Term `D20`"
+   ],
+   "note": "tests/compiler-io/FIXTURES.md:100-122 against the D20 row (design table, dev)."
+  },
+  {
+   "id": "vm-spec-a0fd6e00-d20",
+   "rule": "passages-agree",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "a0fd6e00",
+   "anchors": [
+    "Term `D20`"
+   ],
+   "note": "After a0fd6e00 states D20's program-value rule in the io fixtures' precondition (design table, clean)."
+  },
+  {
+   "id": "vm-spec-d2fe0f20-drop-operands",
+   "rule": "passages-agree",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       333,
+       336
+      ],
+      "note": "section 6, intrinsics"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       470,
+       476
+      ],
+      "note": "section 9, the append primitive"
+     }
+    ]
+   },
+   "note": "SPEC section 6 says an intrinsic drops its operands; section 9 says b's cells are moved (design table, dev). The builder's term selector does not reach it, so the packet is an excerpt of the two passages."
+  }
+ ],
+ "gaps": [
+  {
+   "rule": "claim-holds-against-evidence",
+   "split": "held-out",
+   "reason": "The design lists no held-out P1 instance. Held-out doc-prose-vs-code-drift rounds exist (nest 384acc6e, 47172493, 99053a70), but their defect passages are known only from evidence that must not be read before replay."
+  },
+  {
+   "rule": "passages-agree",
+   "split": "held-out",
+   "reason": "The design lists none. Held-out prose-vs-authoritative-text rounds exist (vm-model 37e69a30, vm-spec cea554ab); their passages are known only from unread evidence."
+  },
+  {
+   "rule": "clause-vs-delta",
+   "split": "clean",
+   "reason": "The design lists no clean instance: no commit is known to satisfy its clauses after a repair."
+  },
+  {
+   "rule": "expectation-independent",
+   "split": "clean",
+   "reason": "The design's clean control is the tip where want comes from the reference codec; the commit was not identified in the design data."
+  },
+  {
+   "rule": "expectation-independent",
+   "split": "held-out",
+   "reason": "The design lists none, and no held-out P5 round exists in the history."
+  },
+  {
+   "rule": "required-laws-met",
+   "split": "clean",
+   "reason": "The design lists none: no increment is known to have met every required law with a universal binder."
+  }
+ ]
+}

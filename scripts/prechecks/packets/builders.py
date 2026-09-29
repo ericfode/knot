@@ -24,6 +24,7 @@ GATE_SCRIPT = re.compile(r'^(?:tests|research)/.+/(?:check[^/]*\.py|host-check\.
 NOT_CODE = re.compile(r'\.(?:md|json|gz|txt|log|lock|png|wasm)$|/receipts/|/evidence/|/generated/')
 IDENT = re.compile(r'`([A-Za-z_][\w.-]{3,}(?:\(\))?)`')
 PATHS = re.compile(r'`((?:[\w.-]+/)+[\w.-]+\.[A-Za-z0-9]+)`')
+BUDGET = re.compile(r'\b(\d[\d,]{2,})\s+(?:[\w-]+\s+){0,2}(?:steps?|bytes?|pages?|words?|records?|depth|levels?|slots?|fuel|visits?|limit|budget|quantum|arity|MiB|KiB|characters?)\b', re.I)
 
 
 # ---- shared selection helpers -------------------------------------------------------------
@@ -68,6 +69,14 @@ def relevance(ctx, paragraph: str) -> int:
     tokens = words(paragraph)
     seen = set().union(*diff_tokens(ctx).values()) if diff_tokens(ctx) else set()
     return len(tokens & seen)
+
+
+def claim_score(ctx, unit: str, *, named: bool = False) -> float:
+    """Rank a claim unit: how much of it the diff speaks about (coverage and count), how absolute it is, how short."""
+    tokens = words(unit)
+    shared = relevance(ctx, unit)
+    coverage = shared / len(tokens) if tokens else 0.0
+    return round(20 * named + 80 * coverage + 3 * min(shared, 6) + 3 * len(TRIGGERS.findall(unit)) - min(len(tokens) / 4, 30), 2)
 
 
 def ranked_paths(ctx, paragraph: str, paths: list[str]) -> list[str]:
@@ -155,9 +164,9 @@ def evidence_block(title: str, text: str, lang: str = '') -> str:
     return f'{title}\n{C.fence(body, lang)}' + (f'\n{marker}' if marker else '')
 
 
-def _top(packets: list[Packet]) -> list[Packet]:
-    """The PER_RULE_LIMIT highest-scoring packets, numbered in key order so rebuilding is byte-identical."""
-    best = sorted(_dedupe(packets), key=lambda p: (-p.meta.get('score', 0), p.key))[:C.PER_RULE_LIMIT]
+def _top(packets: list[Packet], limit: int = C.PER_RULE_LIMIT) -> list[Packet]:
+    """The `limit` highest-scoring packets, numbered in key order so rebuilding is byte-identical."""
+    best = sorted(_dedupe(packets), key=lambda p: (-p.meta.get('score', 0), p.key))[:limit]
     return sorted(best, key=lambda p: p.key)
 
 
@@ -171,42 +180,54 @@ def _dedupe(packets: list[Packet]) -> list[Packet]:
 
 
 # ---- P1 claim-holds-against-evidence ------------------------------------------------------
+def claim_units(ctx, path: str):
+    """(first, last, text, lead, section) for every claim unit (list item or sentence run) that has an added line."""
+    text = ctx.head.text(path) or ''
+    rows = text.split('\n')
+    seen, out = set(), []
+    for number in added_numbers(ctx, path):
+        if number > len(rows) or not rows[number - 1].strip():
+            continue                                             # a blank line is not a claim
+        first, last, unit, lead = C.unit_at(text, number)
+        if (first, last) in seen or not unit.strip() or unit.lstrip().startswith(('|', '```', '#')):
+            continue
+        seen.add((first, last))
+        out.append((first, last, unit, lead, C.section_at(text, first)))
+    return out
+
+
+def claim_text(path, first, last, section, unit, lead) -> str:
+    where = f'{path}:{first}-{last}' + (f' (section: {section})' if section else '')
+    return where + ' - verbatim text:\n\n' + (quote(lead) + '\n' if lead else '') + quote(unit)
+
+
 def p1(ctx):
     rule, packets, missing = 'claim-holds-against-evidence', [], []
     code = changed_code(ctx)
     for path in changed_docs(ctx):
-        text = ctx.head.text(path) or ''
-        seen: set[int] = set()
-        for number in added_numbers(ctx, path):
-            first, last, paragraph = C.paragraph_at(text, number)
-            if first in seen or not paragraph.strip() or paragraph.lstrip().startswith(('|', '```')):
-                continue
-            seen.add(first)
-            section = C.section_at(text, first)
-            claim = f'{path}:{first}-{last}' + (f' (section: {section})' if section else '') + ' - verbatim text:\n\n' + quote(paragraph)
+        for first, last, unit, lead, section in claim_units(ctx, path):
+            claim = claim_text(path, first, last, section, unit, lead)
             key = f'{path}:{first}'
-            if TRIGGERS.search(paragraph):                      # type A: claim against the diff it governs
-                named = [p for p in PATHS.findall(paragraph) if p in code]
-                paths = named or ranked_paths(ctx, paragraph, code)
+            if TRIGGERS.search(unit):                              # type A: the claim against the diff that decides it
+                named = [p for p in PATHS.findall(unit) if p in code]
                 if named:
                     patch, used_paths = diff_text(ctx, named, unified=2), named
                 else:
-                    patch, used_paths = relevant_evidence(ctx, paragraph, paths)
+                    patch, used_paths = relevant_evidence(ctx, unit, ranked_paths(ctx, unit, code))
                 if patch.strip():
-                    scope = ('the diff of the paths the paragraph names' if named
+                    scope = ('the diff of the paths the claim names' if named
                              else 'the changed regions that share the most words with the claim (diff hunks of modified files, '
                                   'declarations of added files)')
-                    strength = len(TRIGGERS.findall(paragraph))
                     packets.append(Packet(rule, key + ':A', claim, evidence_block(f'Evidence: {scope}.', patch, 'diff' if named else ''),
                                           [source(ctx, path)] + [source(ctx, p) for p in used_paths if ctx.head.has(p)][:8],
-                                          {'type': 'A', 'score': 100 * bool(named) + relevance(ctx, paragraph) + 2 * strength}))
+                                          {'type': 'A', 'score': claim_score(ctx, unit, named=bool(named))}))
                 else:
                     missing.append(Unavailable(rule, key + ':A', 'the branch changes no code to check the claim against'))
-            if globs.match_any(NORMATIVE, path):                 # type B: claim against the declarations it names
+            if globs.match_any(NORMATIVE, path):                   # type B: the claim against the declarations it names
                 blocks, used = [], []
-                for token in sorted(set(IDENT.findall(paragraph)))[:6]:
+                for token in sorted(set(IDENT.findall(unit)))[:6]:
                     name = token.removesuffix('()')
-                    if not re.search(r'[_-]', name) and not token.endswith('()'):
+                    if (not re.search(r'[_-]', name) and not token.endswith('()')) or '/' in name or re.search(r'\.\w{1,4}$', name):
                         continue
                     hits = [h for h in ctx.repo.grep(ctx.head.treeish, name, list(C.CODE_SUFFIXES)) if h[0] != path]
                     defs = [h for h in hits if re.search(rf'\b(?:def|function|law|type)\s+{re.escape(name)}\b|\b{re.escape(name)}\s*=', h[2])]
@@ -217,10 +238,35 @@ def p1(ctx):
                         used.append(source(ctx, hit[0]))
                 if blocks:
                     body, marker = C.cap('\n\n'.join(blocks))
-                    packets.append(Packet(rule, key + ':B', claim, 'Evidence: the declarations the paragraph names, at head.\n\n' + body
+                    packets.append(Packet(rule, key + ':B', claim, 'Evidence: the declarations the claim names, at head.\n\n' + body
                                           + (f'\n{marker}' if marker else ''), [source(ctx, path)] + used,
-                                          {'type': 'B', 'score': 50 + len(blocks) * 5 + relevance(ctx, paragraph)}))
-    return _top(packets), missing
+                                          {'type': 'B', 'score': 5 * len(blocks) + claim_score(ctx, unit)}))
+                budget_blocks, budget_used = [], []                 # type N: a numeric budget against the code that uses the number
+                for number in sorted({m.group(1).replace(',', '') for m in BUDGET.finditer(unit)})[:2]:
+                    if int(number) < 100:
+                        continue
+                    hits = [h for h in ctx.repo.grep(ctx.head.treeish, number, list(C.CODE_SUFFIXES)) if h[0] != path]
+                    hits.sort(key=lambda h: (h[0] not in code, h[0], h[1]))
+                    for hit in hits[:1]:
+                        body = ctx.head.text(hit[0]) or ''
+                        start, end, block = C.block_at(hit[0], body, hit[1])
+                        budget_blocks.append(f'`{hit[0]}:{start}-{end}` (declaration using the budget {number})\n{C.fence(C.numbered(block, start))}')
+                        budget_used.append(source(ctx, hit[0]))
+                if budget_blocks:
+                    body, marker = C.cap('\n\n'.join(budget_blocks))
+                    packets.append(Packet(rule, key + ':N', claim, 'Evidence: the declarations that use the stated number, at head.\n\n' + body
+                                          + (f'\n{marker}' if marker else ''), [source(ctx, path)] + budget_used,
+                                          {'type': 'N', 'score': 5 * len(budget_blocks) + claim_score(ctx, unit)}))
+    limit = ctx.options.get('packet_limit', C.PER_RULE_LIMIT)
+    share = {'A': 0.4, 'B': 0.3, 'N': 0.3}                       # slots by kind of claim: against diffs, declarations, budgets
+    by_type = {t: sorted((p for p in _dedupe(packets) if p.meta['type'] == t), key=lambda p: (-p.meta['score'], p.key)) for t in share}
+    chosen, spare = [], []
+    for kind, ranked in by_type.items():
+        take = -(-int(limit * share[kind] * 100) // 100)
+        chosen += ranked[:take]
+        spare += ranked[take:]
+    chosen += sorted(spare, key=lambda p: (-p.meta['score'], p.key))[:max(limit - len(chosen), 0)]
+    return sorted(chosen[:limit], key=lambda p: p.key), missing
 
 
 # ---- P2 passages-agree ------------------------------------------------------------------
@@ -272,7 +318,7 @@ def p2(ctx):
         packets.append(Packet(rule, term, body_claim, text + (f'\n{marker}' if marker else ''),
                               [source(ctx, p) for p, *_ in unique[:8]],
                               {'term': term, 'score': len(unique) + 2 * len(claim_rows) + 10 * (term.startswith('D') and term[1:].isdigit())}))
-    return _top(packets), missing
+    return _top(packets, ctx.options.get('packet_limit', C.PER_RULE_LIMIT)), missing
 
 
 # ---- P3 outcome-follows-d4 -----------------------------------------------------------------
@@ -282,29 +328,23 @@ OUTCOME = re.compile(r'\b(Unsupported|Invalid|Exhausted|HostFailure)\b')
 def p3(ctx):
     rule, missing = 'outcome-follows-d4', []
     specs = [p for p in ctx.changed_paths(statuses='AMRC') if p.endswith('SPEC.md') and not DOC_SKIP.search(p)]
-    packets = []
     decisions = ctx.head.text('docs/COMPILER-CAMPAIGN.md') or ''
     rows = [m.group(0) for m in re.finditer(r'(?m)^\|\s*D(?:4|16)\s*\|.*$', decisions)]
     if not rows:
         return [], [Unavailable(rule, 'D4', 'no D4 or D16 decision rows at head')]
+    packets = []
     for path in sorted(specs):
         text = ctx.head.text(path) or ''
-        lines = [n for n in added_numbers(ctx, path) if OUTCOME.search(text.split('\n')[n - 1] if n - 1 < len(text.split('\n')) else '')]
-        if not lines:
-            continue
-        seen, claims = set(), []
-        for number in lines:
-            first, last, paragraph = C.paragraph_at(text, number)
-            if first not in seen:
-                seen.add(first)
-                section = C.section_at(text, first)
-                claims.append(f'{path}:{first}-{last}' + (f' (section: {section})' if section else '') + ':\n\n' + quote(paragraph))
-        blocks = ['Decision rows (verbatim, docs/COMPILER-CAMPAIGN.md):\n\n' + '\n'.join(rows)]
+        by_section: dict[str, list] = {}
+        for first, last, unit, lead, section in claim_units(ctx, path):
+            if OUTCOME.search(unit):
+                by_section.setdefault(section, []).append((first, last, unit, lead))
+        context_blocks = ['Decision rows (verbatim, docs/COMPILER-CAMPAIGN.md):\n\n' + '\n'.join(rows)]
         for number, level, heading in C.sections(text):
             if re.search(r'limit|outcome|bound|exhaust|refus|resource', heading, re.I):
                 nxt = next((n for n, lv, _h in C.sections(text) if n > number and lv <= level), len(text.split('\n')) + 1)
-                body = '\n'.join(text.split('\n')[number - 1:nxt - 1])
-                blocks.append(f'{path}:{number}-{nxt - 1} (section: {heading}):\n\n{quote(body)}')
+                context_blocks.append(f'{path}:{number}-{nxt - 1} (section: {heading}):\n\n'
+                                      + quote('\n'.join(text.split('\n')[number - 1:nxt - 1])))
         for expected in ('vm/golden/vm-expected.json',):
             if ctx.head.has(expected):
                 try:
@@ -314,11 +354,34 @@ def p3(ctx):
                 rows_ = data if isinstance(data, list) else (data or {}).get('rows', []) if isinstance(data, dict) else []
                 departs = [r for r in rows_ if isinstance(r, dict) and re.search(r'diverg|refus|host-?failure|exhaust', json.dumps(r), re.I)]
                 if departs:
-                    blocks.append(f'{expected}: frozen rows that record a refusal or divergence:\n' + C.fence(json.dumps(departs[:12], indent=1, sort_keys=True), 'json'))
-        body, marker = C.cap('\n\n'.join(blocks))
-        packets.append(Packet(rule, path, 'Outcome sentences this branch changed:\n\n' + '\n\n'.join(claims), body + (f'\n{marker}' if marker else ''),
-                              [source(ctx, path)], {}))
-    return packets[:C.PER_RULE_LIMIT], missing
+                    context_blocks.append(f'{expected}: frozen rows that record a refusal or divergence:\n'
+                                          + C.fence(json.dumps(departs[:12], indent=1, sort_keys=True), 'json'))
+        body, marker = C.cap('\n\n'.join(context_blocks))
+        for section, units in by_section.items():
+            for at in range(0, len(units), 3):                      # three outcome claims per packet, none dropped
+                group = units[at:at + 3]
+                claims = [claim_text(path, f, l, section, u, lead) for f, l, u, lead in group]
+                score = sum(len(set(OUTCOME.findall(u))) + 2 * bool(re.search(r'limit|bound|refus|cause|budget', u, re.I))
+                            for _f, _l, u, _lead in group)
+                frozen, used = [], [source(ctx, path)]
+                for token in sorted({t for _f, _l, u, _lead in group for t in re.findall(r'`([a-z][a-z0-9]*(?:-[a-z0-9]+)+)`', u)})[:4]:
+                    hits = [h for h in ctx.repo.grep(ctx.head.treeish, token, ['*.py', '*.mjs', '*.ts', '*.json'])
+                            if h[0] != path and '/receipts/' not in h[0] and not h[0].endswith('.md')]
+                    for hit in hits[:1]:
+                        text_ = ctx.head.text(hit[0]) or ''
+                        if hit[0].endswith('.py'):
+                            a, b, block = C.block_at(hit[0], text_, hit[1])
+                        else:
+                            a, b = max(hit[1] - 6, 1), hit[1] + 6
+                            block = '\n'.join(text_.split('\n')[a - 1:b])
+                        frozen.append(f'`{hit[0]}:{a}-{b}` (frozen expectation code naming `{token}`)\n{C.fence(C.numbered(block, a))}')
+                        used.append(source(ctx, hit[0]))
+                extra, extra_marker = C.cap('\n\n'.join(frozen), C.EVIDENCE_LIMIT // 2) if frozen else ('', '')
+                packets.append(Packet(rule, f'{path}:{group[0][0]}', 'Outcome claims this branch changed:\n\n' + '\n\n'.join(claims),
+                                      body + (f'\n{marker}' if marker else '') + (f'\n\nFrozen expectations that name the same cause:\n\n{extra}'
+                                                                                + (f'\n{extra_marker}' if extra_marker else '') if extra else ''),
+                                      used, {'score': score + 3 * len(frozen)}))
+    return _top(packets, ctx.options.get('packet_limit', C.PER_RULE_LIMIT)), missing
 
 
 # ---- P4 clause-vs-delta --------------------------------------------------------------------
@@ -341,32 +404,70 @@ def _clauses(ctx) -> list[tuple[str, str]]:
                     found.append((path, node.strip()))
     for path in ctx.changed_paths(statuses='AMRC'):
         if path.endswith(('SPEC.md', 'README.md')) and not DOC_SKIP.search(path):
-            for paragraph in (p for p in re.split(r'\n\s*\n', ctx.head.text(path) or '') if INVARIANCE.search(p)):
-                for sentence in C.sentences_of(paragraph):
-                    if INVARIANCE.search(sentence):
-                        found.append((path, sentence))
+            for _first, _last, unit, _lead, _section in claim_units(ctx, path):
+                if INVARIANCE.search(unit):
+                    found.append((path, re.sub(r'\s+', ' ', unit).strip()))
     for sentence in ctx.manifest.get('charter', []) or []:
         found.append(('manifest.charter', sentence))
+    return found
+
+
+def _norm(text: str) -> str:
+    return re.sub(r'\s+', ' ', text).strip().lower()
+
+
+def _reworded_clauses(ctx) -> list[tuple[str, str]]:
+    """Invariance clauses of the base documents that the branch reworded or deleted: a contract changed under the same name."""
+    found = []
+    for path in ctx.changed_paths(statuses='MRC'):
+        if not (path.endswith(('SPEC.md', 'README.md', 'CONTRACT.json')) and not DOC_SKIP.search(path)) or ctx.base is None:
+            continue
+        old, new = ctx.base.text(path) or '', _norm(ctx.head.text(path) or '')
+        if path.endswith('.json'):
+            units = [t for t in re.findall(r'"((?:[^"\\]|\\.){30,})"', old) if INVARIANCE.search(t)]
+        else:
+            units = [re.sub(r'\s+', ' ', u).strip() for para in re.split(r'\n\s*\n', old) for u in C.sentences_of(para)
+                     if INVARIANCE.search(u) and len(u) > 30]
+        for unit in units:
+            if _norm(unit) not in new:
+                found.append((path, unit))
     return found
 
 
 def p4(ctx):
     rule, packets, missing = 'clause-vs-delta', [], []
     code = changed_code(ctx)
-    for path, clause in sorted(set(_clauses(ctx)))[:120]:
-        named = [p for p in PATHS.findall(clause) if p in code]
-        stem = re.findall(r'\bknot-[\w-]+', clause)
-        governed = named or [p for p in code if any(s.split('knot-', 1)[1].split('-')[0] in p for s in stem)]
-        key = f'{path}:{C.sha256(clause)[:10]}'
-        if not governed:
+    for path, clause in sorted(set(_reworded_clauses(ctx)))[:120]:
+        shared = relevance(ctx, clause)
+        hunks = [h for h in re.split(r'(?m)^(?=@@ )', diff_text(ctx, [path], unified=1))[1:]
+                 if len(words(clause) & words(''.join(l for l in h.split('\n') if l.startswith('-')))) >= max(2, len(words(clause)) // 2)]
+        patch, used = relevant_evidence(ctx, clause, ranked_paths(ctx, clause, code))
+        if not hunks and not patch.strip():
             continue
-        patch = diff_text(ctx, sorted(set(governed)), unified=3)
+        evidence = ('Evidence: the document change that rewords or removes the clause (unified diff, base to head).\n'
+                    + C.fence(''.join(hunks)[:C.EVIDENCE_LIMIT // 3], 'diff') if hunks else '')
+        if patch.strip():
+            evidence += ('\n\n' if evidence else '') + evidence_block('Evidence: the changed code regions that share the most words with the clause.', patch)
+        packets.append(Packet(rule, f'{path}:{C.sha256(clause)[:10]}:base', f'Invariance clause at base ({path}), reworded or removed by this branch:\n\n' + quote(clause),
+                              evidence, [source(ctx, path)], {'score': 30 + shared + 2 * len(INVARIANCE.findall(clause))}))
+    for path, clause in sorted(set(_clauses(ctx)))[:200]:
+        named = [p for p in PATHS.findall(clause) if p in code]
+        key = f'{path}:{C.sha256(clause)[:10]}'
+        if named:
+            patch, used = diff_text(ctx, sorted(set(named)), unified=3), sorted(set(named))
+            shared = 100
+        else:
+            shared = relevance(ctx, clause)
+            if shared < 3:                                       # the clause shares too little with the change to govern any of it
+                continue
+            patch, used = relevant_evidence(ctx, clause, ranked_paths(ctx, clause, code))
         if not patch.strip():
             continue
         packets.append(Packet(rule, key, f'Invariance clause ({path}):\n\n' + quote(clause),
-                              evidence_block('Evidence: the governed diff hunks (base to head).', patch, 'diff'),
-                              [source(ctx, p) for p in governed[:6] if ctx.head.has(p)] + ([source(ctx, path)] if ctx.head.has(path) else []), {}))
-    return _top(packets), missing
+                              evidence_block('Evidence: the governed diff hunks (base to head).', patch, 'diff' if named else ''),
+                              [source(ctx, p) for p in used[:6] if ctx.head.has(p)] + ([source(ctx, path)] if ctx.head.has(path) else []),
+                              {'score': shared + 2 * len(INVARIANCE.findall(clause))}))
+    return _top(packets, ctx.options.get('packet_limit', C.PER_RULE_LIMIT)), missing
 
 
 # ---- P5 expectation-independent / P6 kill-is-semantic -----------------------------------------
@@ -382,6 +483,8 @@ def _functions(source_text: str):
 
 
 def _builds_expectation(node) -> bool:
+    if re.search(r'expect|want|baseline', node.name, re.I):
+        return True
     for child in ast.walk(node):
         if isinstance(child, ast.Assign) and any(isinstance(t, ast.Name) and t.id in EXPECT_NAMES for t in child.targets):
             return True
@@ -423,7 +526,7 @@ def p5(ctx):
             packets.append(Packet(rule, f'{path}::{node.name}', 'Statements about where expected values come from:\n\n' + claim,
                                   evidence_block(f'`{path}:{node.lineno}-{node.end_lineno}` function `{node.name}`, which builds expected values:',
                                                  C.numbered(block, node.lineno), 'python'), [source(ctx, path)], {}))
-    return _top(packets), missing
+    return _top(packets, ctx.options.get('packet_limit', C.PER_RULE_LIMIT)), missing
 
 
 def p6(ctx):
@@ -446,7 +549,7 @@ def p6(ctx):
         evidence, marker = C.cap('\n\n'.join(rendered))
         packets.append(Packet(rule, path, 'Statements about what counts as a kill:\n\n' + claim, evidence + (f'\n{marker}' if marker else ''),
                               [source(ctx, path)], {}))
-    return _top(packets), missing
+    return _top(packets, ctx.options.get('packet_limit', C.PER_RULE_LIMIT)), missing
 
 
 # ---- P7 required-laws-met ----------------------------------------------------------------------

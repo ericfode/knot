@@ -33,7 +33,8 @@
     passages, a passage that promises what another passage says is not provided, or a
     passage that repeats a superseded value beside the current one breaks this rule.
     A term that appears in only one passage is not a violation. Do not use knowledge of
-    passages the packet does not show.
+    passages the packet does not show; anything the packet does not show is missing
+    evidence, not a pass.
 
 - name: outcome-follows-d4
   where: ".local/prechecks/packets/**/outcome-follows-d4/*.md"
@@ -47,6 +48,7 @@
     stated cause; and every case where the seed succeeds but Knot refuses is a
     documented lane bound. An outcome class that differs between two of these sources,
     or a seed-succeeds and Knot-refuses row with no documented bound, breaks this rule.
+    Anything the packet does not show is missing evidence, not a pass.
 
 - name: clause-vs-delta
   where: ".local/prechecks/packets/**/clause-vs-delta/*.md"
@@ -58,8 +60,8 @@
     unchanged, frozen, kept or forbidden, unless the clause itself lists that delta.
     Compare each clause with the governed diff hunks. A changed behavior, an added
     form, a widened profile or a moved emitter that a clause promises unchanged or
-    forbids breaks this rule. A hunk the packet does not show is missing evidence, not
-    proof that nothing changed.
+    forbids breaks this rule. A hunk the packet does not show is missing evidence, not a
+    pass and not proof that nothing changed.
 
 - name: expectation-independent
   where: ".local/prechecks/packets/**/expectation-independent/*.md"
@@ -73,7 +75,8 @@
     the want, expected or baseline values with the sentence that names their source.
     An expectation computed by the code under test, copied from its output, or labeled
     independent while derived from it breaks this rule. An expectation frozen from the
-    pinned seed, or derived by a separate reference, satisfies it.
+    pinned seed, or derived by a separate reference, satisfies it. Anything the packet
+    does not show is missing evidence, not a pass.
 
 - name: kill-is-semantic
   where: ".local/prechecks/packets/**/kill-is-semantic/*.md"
@@ -85,7 +88,8 @@
     Inspect the kill predicate and the code that runs it. A crash, a timeout, a harness
     bound, a host failure, a torn or truncated read, or a text-only match must never be
     credited as a kill. Any path in the code shown that credits one of those as a kill
-    breaks this rule. Equivalent mutants are reported separately with a reason.
+    breaks this rule. Equivalent mutants are reported separately with a reason. Anything
+    the packet does not show is missing evidence, not a pass.
 
 - name: required-laws-met
   where: ".local/prechecks/packets/**/required-laws-met/*.md"
@@ -98,4 +102,4 @@
     evidence. A ground witness under a general law name does not satisfy a required
     law. Compare the required-law list with the operation-to-law matrix and the recorded
     obligations. A required law that is missing, ground-only, or silently narrowed
-    breaks this rule.
+    breaks this rule. Anything the packet does not show is missing evidence, not a pass.
