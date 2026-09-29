@@ -125,7 +125,7 @@ def names_program(d):
     if used:
         body = f'      y : {used} = {ANNOTATED[used]}\n'
     elif use == 'call':
-        body = f'      h(On{{}})\n'
+        body = '      y : Flag = h(On{})\n'
     body += '      On{}\n'
     binder = f'{mark}{name}'
     later = LATER if site == 'later' or d.chance(6) else ''
