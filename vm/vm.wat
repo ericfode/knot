@@ -16,8 +16,9 @@
 ;;   nothing yet, and image constants are immortal.
 ;; - An Action applied to its continuation builds a request (class 5), a value
 ;;   that only Top's loop performs (D23); a request is never inspected, but a
-;;   Case takes its Default (D24). A refusal changes no state (§6): every check
-;;   of a step comes before its first write.
+;;   Case takes its Default (D24). A stop changes no state (§6.3): every check
+;;   of a step, its room included, comes before its first write; only the
+;;   debit of an Enter that a later check stops stays.
 (module
   (import "knot_io" "args" (func $io_args (param i32)))
   (import "knot_io" "print" (func $io_print (param i32 i32)))
@@ -428,6 +429,17 @@
         (local.set $n (i32.add (local.get $n) (i32.const 1)))
         (br $next)))
     (local.get $n))
+
+  ;; Room for `bytes` more frames above `top`: else Exhausted kind 3 (§6), decided before anything is written (§6.3).
+  (func $spare (param $bytes i32)
+    (if (i32.gt_u (i32.add (global.get $top) (local.get $bytes)) (global.get $FL))
+      (then (call $exhaust (i32.const 3) (global.get $R_frames)))))
+
+  ;; Room for `bytes` more cells at the bump pointer, which may end exactly at HL: else Exhausted kind 2 (heap), decided before the
+  ;; first is allocated (§5, §6.3).
+  (func $fit (param $bytes i64)
+    (if (i64.gt_u (i64.add (global.get $bump) (local.get $bytes)) (global.get $HL))
+      (then (call $exhaust (i32.const 2) (global.get $R_heap)))))
 
   ;; Report `prefix code` through die(status). Never returns.
   (func $stop (param $class i32) (param $status i32) (param $prefix i32) (param $code i32)
@@ -1860,8 +1872,8 @@
     (local.set $bytes (if (result i32) (i32.le_u (local.get $words) (i32.const 4))
       (then (i32.const 16))
       (else (i32.shl (i32.const 4) (i32.sub (i32.const 32) (i32.clz (i32.sub (local.get $words) (i32.const 1))))))))
+    (call $fit (i64.extend_i32_u (local.get $bytes)))
     (local.set $end (i64.add (global.get $bump) (i64.extend_i32_u (local.get $bytes))))
-    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))
     (if (i64.gt_u (local.get $end) (i64.shl (i64.extend_i32_u (memory.size)) (i64.const 16)))
       (then (call $grow (local.get $end))))
     (local.set $p (i32.wrap_i64 (global.get $bump)))
@@ -1966,9 +1978,15 @@
     (i32.store offset=20 (local.get $c) (local.get $tail))
     (local.get $c))
 
-  ;; unsigned decimal, allocated from its last digit
+  ;; unsigned decimal, allocated from its last digit, once there is room for every digit
   (func $show (param $v i32) (result i32)
-    (local $s i32)
+    (local $s i32) (local $d i32) (local $n i32)
+    (local.set $d (local.get $v))
+    (loop $count
+      (local.set $n (i32.add (local.get $n) (i32.const 1)))
+      (local.set $d (i32.div_u (local.get $d) (i32.const 10)))
+      (br_if $count (local.get $d)))
+    (call $fit (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)))
     (local.set $s (i32.const 1))
     (loop $digit
       (local.set $s (call $scon (i32.or (i32.shl (i32.add (i32.const 48) (i32.rem_u (local.get $v) (i32.const 10)))
@@ -2000,8 +2018,8 @@
     (local.set $n (call $slen (local.get $a)))
     (drop (call $slen (local.get $b)))
     (if (i32.eqz (local.get $n)) (then (return (local.get $b))))
+    (call $fit (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)))
     (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))
-    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))
     (call $grow (local.get $end))
     (local.set $base (i32.wrap_i64 (global.get $bump)))
     (memory.fill (local.get $base) (i32.const 0) (i32.shl (local.get $n) (i32.const 5)))
@@ -2026,7 +2044,7 @@
   ;; reverse(a) allocates from a's first character
   (func $reverse (param $a i32) (result i32)
     (local $s i32)
-    (drop (call $slen (local.get $a)))
+    (call $fit (i64.shl (i64.extend_i32_u (call $slen (local.get $a))) (i64.const 5)))
     (local.set $s (i32.const 1))
     (block $done
       (loop $next
@@ -2116,8 +2134,7 @@
     (local $p i32) (local $v i32)
     (local.set $v (global.get $top))
     (local.set $p (i32.add (local.get $v) (i32.shl (local.get $n) (i32.const 2))))
-    (if (i32.gt_u (i32.add (local.get $p) (i32.const 12)) (global.get $FL))
-      (then (call $exhaust (i32.const 3) (global.get $R_frames))))
+    (call $spare (i32.add (i32.shl (local.get $n) (i32.const 2)) (i32.const 12)))
     (memory.fill (local.get $v) (i32.const 0) (i32.shl (local.get $n) (i32.const 2)))
     (i32.store (local.get $p) (local.get $node))
     (i32.store offset=4 (local.get $p) (local.get $aux))
@@ -2125,24 +2142,28 @@
     (global.set $top (i32.add (local.get $p) (i32.const 12)))
     (local.get $v))
 
-  ;; §6.2: a tail entry has only Scope frames between the top and the nearest
-  ;; Call or Top; it pops them and releases the caller. Otherwise the Call
-  ;; frame's room is checked now, before the callee is allocated.
-  (func $tail (result i32)
-    (local $p i32) (local $k i32)
+  ;; the top of the frames that lie below the Scope frames on it (§6.2)
+  (func $unscoped (result i32)
+    (local $p i32)
     (local.set $p (global.get $top))
     (loop $scan
-      (local.set $k (i32.and (i32.load (i32.sub (local.get $p) (i32.const 4))) (i32.const 15)))
-      (if (i32.eq (local.get $k) (i32.const 3))
+      (if (i32.eq (i32.and (i32.load (i32.sub (local.get $p) (i32.const 4))) (i32.const 15)) (i32.const 3))
         (then (local.set $p (i32.sub (local.get $p) (i32.const 12))) (br $scan))))
+    (local.get $p))
+
+  ;; §6.2: a tail entry has only Scope frames between the top and the nearest Call or Top. It pops them and releases the caller
+  ;; (`$leave`) once it can no longer stop (§6.3); a non-tail entry pushes a Call frame, whose room on the region as it stands is decided now.
+  (func $tail (result i32)
+    (local $k i32)
+    (local.set $k (i32.and (i32.load (i32.sub (call $unscoped) (i32.const 4))) (i32.const 15)))
     (if (i32.or (i32.eqz (local.get $k)) (i32.eq (local.get $k) (i32.const 4)))
-      (then
-        (global.set $top (local.get $p))
-        (call $drop (global.get $act))
-        (return (i32.const 1))))
-    (if (i32.gt_u (i32.add (global.get $top) (i32.const 16)) (global.get $FL))
-      (then (call $exhaust (i32.const 3) (global.get $R_frames))))
+      (then (return (i32.const 1))))
+    (call $spare (i32.const 16))
     (i32.const 0))
+
+  (func $leave
+    (global.set $top (call $unscoped))
+    (call $drop (global.get $act)))
 
   ;; §7 fuel: one unit per entry, checked with the Enter still pending
   (func $debit
@@ -2309,11 +2330,13 @@
     (if (local.get $f)
       (then
         ;; push Scope(depth), then bind: Chr's field is its own code word; Succ's
-        ;; is the predecessor n - 1, made only now (a Big from 2^31) and moved
-        (local.set $d (i32.load offset=12 (global.get $act)))
-        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))
+        ;; is the predecessor n - 1, made only now (a Big from 2^31) and moved.
+        ;; The room for the Scope, then for the predecessor's cell, is decided before either takes effect (§6.1, §6.3)
+        (call $spare (i32.const 12))
         (if (i32.eq (local.get $scr) (global.get $rNat))
           (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))
+        (local.set $d (i32.load offset=12 (global.get $act)))
+        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))
         (if (i32.eq (local.get $scr) (global.get $rChar))
           (then (call $dup (local.get $x)) (local.set $w (local.get $x))))
         (if (local.get $fields)
@@ -2346,6 +2369,7 @@
         (i32.store offset=8 (local.get $a) (call $w (i32.add (local.get $f) (i32.const 5))))
         (i32.store offset=12 (local.get $a) (global.get $nops))
         (memory.copy (i32.add (local.get $a) (i32.const 16)) (global.get $ops) (i32.shl (global.get $nops) (i32.const 2)))
+        (if (local.get $tail) (then (call $leave)))
         (call $activate (local.get $a) (local.get $tail))
         (global.set $node (call $w (i32.add (local.get $f) (i32.const 5))))
         (global.set $mode (i32.const 0))
@@ -2392,6 +2416,7 @@
           (then (i32.store offset=16 (i32.add (local.get $a) (i32.shl (local.get $ncap) (i32.const 2)))
                            (i32.load (global.get $ops)))))
         (call $drop (local.get $x))
+        (if (local.get $tail) (then (call $leave)))
         (call $activate (local.get $a) (local.get $tail))
         (global.set $node (call $w (i32.add (local.get $cn) (i32.sub (call $w (local.get $cn)) (i32.const 1)))))
         (global.set $mode (i32.const 0))
@@ -2560,15 +2585,15 @@
               (drop (call $frame (i32.const 5) (global.get $node) (i32.const 0) (i32.const 0)))
               (global.set $node (i32.load offset=4108 (local.get $na)))
               (br $step))
-            ;; Return to Top: §8's phase. The loop (phase 3) refuses before it releases the activation, so a refusal changes nothing
-            ;; (§6); §6's table releases first for a Book's answer, which describe then refuses
+            ;; Return to Top: §8's phase. A Book's description and the loop (phase 3) refuse before the activation is released, so a
+            ;; refusal changes nothing (§6.3); each drops `act` once its checks have passed
             (local.set $aux (i32.load (i32.sub (global.get $top) (i32.const 8))))
             (if (i32.eq (local.get $aux) (i32.const 3))
               (then (if (call $serve (global.get $val)) (then (br $step))) (return (i32.const 0))))
-            (call $drop (global.get $act))
-            (global.set $act (i32.const 0))
             (if (i32.eqz (local.get $aux))
               (then (call $describe (global.get $val)) (return (i32.const 0))))
+            (call $drop (global.get $act))
+            (global.set $act (i32.const 0))
             (i32.store (i32.sub (global.get $top) (i32.const 8)) (i32.add (local.get $aux) (i32.const 1)))
             (i32.store (i32.const 32) (global.get $terminal))
             (global.set $tgt (global.get $val))
@@ -2623,15 +2648,18 @@
             (call $drop (global.get $act))
             (global.set $act (local.get $c))
             (br $step))
-            ;; Return to InvokeFunction: a live arrow gathers its argument
+            ;; Return to InvokeFunction: a live arrow gathers its argument, whose frame is one word longer than the one popped: its room is
+            ;; judged on the region as the pop leaves it, before the pop (§6.3)
             (local.set $c (i32.load (i32.sub (global.get $top) (i32.const 12))))
-            (global.set $top (i32.sub (global.get $top) (i32.const 12)))
             (if (call $w (i32.add (local.get $c) (i32.const 4)))
               (then
+                (call $spare (i32.const 4))
+                (global.set $top (i32.sub (global.get $top) (i32.const 12)))
                 (i32.store (call $frame (i32.const 6) (local.get $c) (i32.const 0) (i32.const 1)) (global.get $val))
                 (global.set $node (call $w (i32.add (local.get $c) (i32.const 5))))
                 (global.set $mode (i32.const 0))
                 (br $step)))
+            (global.set $top (i32.sub (global.get $top) (i32.const 12)))
             (global.set $tgt (global.get $val))
             (global.set $tfn (i32.const 0))
             (global.set $nops (i32.const 0))
@@ -2815,6 +2843,8 @@
         (local.set $t (call $w (i32.add (i32.add (i32.load (i32.sub (local.get $sp) (i32.const 8))) (i32.const 5)) (local.get $j))))
         (local.set $w (i32.load offset=16 (i32.add (local.get $w) (i32.shl (local.get $j) (i32.const 2)))))
         (br $render)))
+    (call $drop (global.get $act))
+    (global.set $act (i32.const 0))
     (call $drop (local.get $x))
     (global.set $oc (i32.const 1))
     (global.set $mode (i32.const 3))

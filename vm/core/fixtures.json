@@ -882,6 +882,27 @@
     "top": 65560
    },
    "basis": "main = invoke (x => x) On{}. Boot pushes Top(0), 12 bytes; Eval Invoke pushes InvokeFunction, 12 more, which fill a region of 24 bytes exactly; the closure evaluates and returns to it. A live arrow then pops the InvokeFunction (3 words) and pushes an InvokeArgument (4 words, 16 bytes): judged on the region as the pop leaves it, F0 + 12 + 16 = F0 + 28 does not fit in 24, so the step stops Exhausted kind 3 (frames) before it pops (section 6.3): top = F0 + 24 = 65,560 (the image ends at byte 4,488, so F0 = 65,536), after 1 entry, main's. A step that popped first would stop with top F0 + 12"
+  },
+  {
+   "name": "call-frames",
+   "image": "core/call-frames",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 24,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames",
+    "calls": 2,
+    "top": 65560,
+    "bump": 16842784
+   },
+   "basis": "main = let x = f() in On{}. Boot pushes Top(0), 12 bytes; main's entry is a tail entry below it, and its Activation (owner, depth and 1 slot: payload 3, 5 words, so 8) is 32 bytes, bump = H0 + 32 = 16,842,784; Eval Let pushes Bind, 12 more, which fill a region of 24 bytes exactly. The value `f()` is an Application, whose entry is not a tail entry (a Bind lies between it and Top): section 7 step 3 pushes a Call frame, 16 bytes, which does not fit. The room for it is decided before f's Activation is allocated (section 6.3), so the step stops Exhausted kind 3 (frames) after its debit, 2 entries, with nothing else changed: top = F0 + 24 = 65,560 and bump = H0 + 32. An entry that allocated first would stop with the Activation built (bump H0 + 48)"
   }
  ],
  "admitted": {

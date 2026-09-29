@@ -8,8 +8,15 @@ Checks, in order:
 - every golden image runs through scripts/run-wasm-io.mjs with the output
   vm/golden/vm-expected.json fixes, and through the test build with the
   precise Exhausted, Unsupported or HostFailure cause in the VM's own outcome
-  registers and a structural audit after every transition; so does every Book
+  registers, the `calls` a row freezes and a structural audit after every transition; so does every Book
   invocation vm-expected.json freezes beside them (SPEC section 8's walk);
+- atomic stops (SPEC section 6.3): every run below that ends in a stop, a HostFailure, an Unsupported or an Exhausted of any
+  kind, is played again to its last step by the harness, and that step may change no register, frame word or cell but the
+  debit of an Enter (`atomic`); vm/core/fixtures.json's `witness` rows pin by hand the frames and `act` that a stop leaves;
+- vm/core/fixtures.json's `describe` rows: a Book result with an arrow or a `none`-typed field is Unsupported before any
+  entry (SPEC section 8 step 5), and a word is inspected before its visit is charged (a chain of N Links around an
+  ill-typed leaf at N = 1,048,575, 1,048,576 and 1,048,577), each derived again from the codec and from the reference
+  evaluation at a bound of eight visits;
 - vm/core/fixtures.json: literal-review runs (250,000-deep non-tail recursion,
   quantum re-entry after an Action, fuel boundaries, rendering and its bounds,
   frame exhaustion, invocation errors), state-dump rows and lowered limits
@@ -46,8 +53,9 @@ Checks, in order:
   a function of exactly 4,096 parameters), loaded and run as
   vm/core/fixtures.json freezes them (and as the reference evaluation runs
   them), and its
-  run controls, run to the outcome and call count check-spec.py freezes with
-  them, at their frozen fuel (section 7's boundary) or also on exactly that
+  run controls, run to the outcome, call count, output and host calls (`effects`) check-spec.py freezes with
+  them (D22 to D24: a request is built by the Action's second application and performed only by Top's loop, and the
+  22 atomic controls of section 6.3), at their frozen fuel (section 7's boundary) or also on exactly that
   much fuel (section 7's operand check); its argument controls, with their
   frozen verdicts or the reference evaluation's run (section 8's words); and a
   seeded fuzz corpus of mutated goldens, and another that varies every word of
@@ -1402,7 +1410,7 @@ def check_describe(section: dict, module: Path, test: Path, staged, sandbox: Pat
     is inspected before its visit is charged (a visit is one rendered constructor, which such a word is not, and section 6 halts it
     before the step changes any state), so N Links around an ill-typed leaf are `HostFailure image ill-typed` for N at and one below the
     visit bound, and Exhausted (display) one above it. The reference evaluation runs the same chain at a bound of `bound` visits
-    (N = bound - 1, bound and bound + 1, in a moment where N = 1,048,576 takes minutes and a recursion a million deep), and each frozen
+    (N = bound - 1, bound and bound + 1: at N = 1,048,576 the evaluation takes minutes and a recursion a million deep), and each frozen
     row is that outcome at the real bound, with N + 3 calls: main, coerce and N + 1 builds. The VM must give each on the real host
     and in the test build."""
     def loaded(row):
@@ -1546,27 +1554,35 @@ MUTANTS = [
     # readings change the outcome at the rows whose heap ends exactly at 4 GiB; `top-trap` below
     # restores the old trap itself
     ('top-cell-exhausted', 'a cell ending exactly at 4 GiB is Exhausted',
-     [('(local.set $end (i64.add (global.get $bump) (i64.extend_i32_u (local.get $bytes))))\n'
-       '    (if (i64.gt_u (local.get $end) (global.get $HL))',
-       '(local.set $end (i64.add (global.get $bump) (i64.extend_i32_u (local.get $bytes))))\n'
-       '    (if (i64.ge_u (local.get $end) (global.get $HL))')], 'full-heap'),
+     [('    (call $fit (i64.extend_i32_u (local.get $bytes)))\n',
+       '    (call $fit (i64.add (i64.extend_i32_u (local.get $bytes)) (i64.const 1)))\n')], 'full-heap'),
     ('top-block-exhausted', 'an append block ending exactly at 4 GiB is Exhausted',
-     [('(local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n'
-       '    (if (i64.gt_u (local.get $end) (global.get $HL))',
-       '(local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n'
-       '    (if (i64.ge_u (local.get $end) (global.get $HL))')], 'full-heap'),
+     [('    (call $fit (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)))\n'
+       '    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n',
+       '    (call $fit (i64.add (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)) (i64.const 1)))\n'
+       '    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n')], 'full-heap'),
     ('bump-wraps', 'the bump pointer wraps to 0 when a cell ends at 4 GiB (a 32-bit bump pointer)',
      [('    (global.set $bump (local.get $end))\n    (local.get $p))',
        '    (global.set $bump (i64.extend_i32_u (i32.wrap_i64 (local.get $end))))\n    (local.get $p))')],
      'full-heap'),
-    # vm-spec D17: a Nat Case's predecessor is made after the Branch's Scope push
-    ('nat-pred-before-push', "a Nat Case's predecessor is made before its Scope push",
-     [('        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))\n'
+    # vm-spec D17 and round 14: a Nat Case decides the room for its Scope, then for the predecessor's cell, before either takes effect
+    ('nat-pred-before-push', "a Nat Case's predecessor is made before the room for its Scope is decided",
+     [('        (call $spare (i32.const 12))\n'
        '        (if (i32.eq (local.get $scr) (global.get $rNat))\n'
        '          (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))\n',
        '        (if (i32.eq (local.get $scr) (global.get $rNat))\n'
        '          (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))\n'
-       '        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))\n')], 'limited'),
+       '        (call $spare (i32.const 12))\n')], 'limited'),
+    ('nat-pred-after-push', "a Nat Case pushes its Scope before it makes the predecessor, so a heap stop leaves the Scope pushed (vm-spec D17 before round 14)",
+     [('        (call $spare (i32.const 12))\n'
+       '        (if (i32.eq (local.get $scr) (global.get $rNat))\n'
+       '          (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))\n'
+       '        (local.set $d (i32.load offset=12 (global.get $act)))\n'
+       '        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))\n',
+       '        (local.set $d (i32.load offset=12 (global.get $act)))\n'
+       '        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))\n'
+       '        (if (i32.eq (local.get $scr) (global.get $rNat))\n'
+       '          (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))\n')], 'limited'),
     # vm-spec DECISIONS 18: every operand is read over its section 9 extent, a String whole.
     # Each reads less, and exactly as much on a well-typed word; an inspection control kills it
     ('append-b-unread', 'append moves b unread (the old CORE.md choice 3)',
@@ -1596,10 +1612,14 @@ MUTANTS = [
     # the pre-fix VM itself: both guards restored. Its defect is the trap, so group `trap` kills
     # it only when every row ending exactly at 4 GiB traps and every other ceiling row stays right
     ('top-trap', 'a cell or an append block ending exactly at 4 GiB traps (the pre-fix VM)',
-     [('(i64.extend_i32_u (local.get $bytes))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))',
-       '(i64.extend_i32_u (local.get $bytes))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))'),
-      ('(i64.const 5))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))',
-       '(i64.const 5))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))')], 'trap'),
+     [('    (call $fit (i64.extend_i32_u (local.get $bytes)))\n    (local.set $end (i64.add (global.get $bump) (i64.extend_i32_u (local.get $bytes))))\n',
+       '    (call $fit (i64.extend_i32_u (local.get $bytes)))\n    (local.set $end (i64.add (global.get $bump) (i64.extend_i32_u (local.get $bytes))))\n'
+       '    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))\n'),
+      ('    (call $fit (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)))\n'
+       '    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n',
+       '    (call $fit (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)))\n'
+       '    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n'
+       '    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))\n')], 'trap'),
     # vm-spec cea554a, section 4's limit table: each limit is Exhausted kind 2 with its own cause, inclusive,
     # checked in the order the table gives. Each survives every golden and run control, and dies by a limit
     # control (group `image-limits`) or, where no frozen control holds the boundary, by the limit-word corpus
@@ -1769,11 +1789,16 @@ MUTANTS = [
        '(if (i32.gt_u (i32.add (local.get $sp) (i32.const 12)) (global.get $FL))\n            (then (call $exhaust (i32.const 2) (global.get $R_frames))))')], 'limited'),
     # a lowered heap: append's block is checked where it is made, the same edits as `top-block-exhausted` at the edge of 4 GiB
     ('append-block-fits-heap', 'an append block ending exactly at a lowered heap limit is Exhausted',
-     [('    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (call $grow (local.get $end))',
-       '    (if (i64.ge_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (call $grow (local.get $end))')], 'limited'),
+     [('    (call $fit (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)))\n'
+       '    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n',
+       '    (call $fit (i64.add (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)) (i64.const 1)))\n'
+       '    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n')], 'limited'),
     ('append-heap-kind', 'an append block that does not fit the heap stops as a frame exhaustion',
-     [('    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (call $grow (local.get $end))',
-       '    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 3) (global.get $R_heap))))\n    (call $grow (local.get $end))')], 'limited'),
+     [('    (call $fit (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)))\n'
+       '    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n',
+       '    (if (i64.gt_u (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))) (global.get $HL))\n'
+       '      (then (call $exhaust (i32.const 3) (global.get $R_heap))))\n'
+       '    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n')], 'limited'),
     ('action-cell-oversize', 'an Action takes one payload word more than its id and operands',
      [('(local.set $c (call $alloc (i32.add (local.get $cnt) (i32.const 1)) (i32.const 3)))',
        '(local.set $c (call $alloc (i32.add (local.get $cnt) (i32.const 2)) (i32.const 3)))')], 'limited'),
@@ -1897,6 +1922,28 @@ MUTANTS = [
        '          (local.set $visits (i32.add (local.get $visits) (i32.const 1)))\n'
        '          (if (i32.gt_u (local.get $visits) (i32.const 1048576)) (then (call $exhaust (i32.const 2) (global.get $R_display))))\n'
        '          (local.set $tag (call $tagof (local.get $w) (local.get $t)))\n')], 'describe-order'),
+    # round 14 (SPEC 6.1, 6.2, 6.3 and 9): a stop leaves the machine as its step found it, so the room for what a step does is decided first
+    ('enter-pops-before-room', 'a tail entry pops its Scope frames and releases act before its Activation is judged to fit',
+     [('        (local.set $tail (call $tail))\n        (local.set $a (call $alloc (i32.add (call $w (i32.add (local.get $f) (i32.const 4))) (i32.const 2)) (i32.const 4)))',
+       '        (local.set $tail (call $tail))\n        (if (local.get $tail) (then (call $leave)))\n'
+       '        (local.set $a (call $alloc (i32.add (call $w (i32.add (local.get $f) (i32.const 4))) (i32.const 2)) (i32.const 4)))')], 'limited'),
+    ('call-room-unchecked', 'a non-tail entry does not decide the room for its Call frame before it allocates its Activation',
+     [('    (call $spare (i32.const 16))\n    (i32.const 0))', '    (i32.const 0))')], 'limited'),
+    ('invoke-pops-before-room', 'InvokeFunction pops its frame before the room for the argument frame that replaces it is judged',
+     [('                (call $spare (i32.const 4))\n                (global.set $top (i32.sub (global.get $top) (i32.const 12)))\n',
+       '                (global.set $top (i32.sub (global.get $top) (i32.const 12)))\n                (call $spare (i32.const 16))\n')], 'limited'),
+    ('reverse-cell-by-cell', 'reverse allocates its result a cell at a time, so a heap stop leaves the cells it had built',
+     [('    (call $fit (i64.shl (i64.extend_i32_u (call $slen (local.get $a))) (i64.const 5)))\n', '    (drop (call $slen (local.get $a)))\n')], 'limited'),
+    ('show-digit-by-digit', 'show allocates its result a digit at a time, so a heap stop leaves the cells it had built',
+     [('    (call $fit (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5)))\n    (local.set $s (i32.const 1))',
+       '    (local.set $s (i32.const 1))')], 'limited'),
+    ('book-drops-act-first', "a Book's answer releases act before describe inspects and charges it, as SPEC section 6's table read before round 14",
+     [('            (if (i32.eqz (local.get $aux))\n              (then (call $describe (global.get $val)) (return (i32.const 0))))\n',
+       '            (if (i32.eqz (local.get $aux))\n              (then (call $drop (global.get $act)) (global.set $act (i32.const 0)) (call $describe (global.get $val)) (return (i32.const 0))))\n')], 'atomic'),
+    ('describe-writes-head-first', "a Book's description writes its head to the host before its result is inspected, so a refusal leaves output behind",
+     [('    (call $emitdec (global.get $resT))\n    (call $emitc (i32.const 9))\n    (if (i32.eq (global.get $resT) (global.get $rNat))',
+       '    (call $emitdec (global.get $resT))\n    (call $emitc (i32.const 9))\n    (call $io_print (i32.wrap_i64 (global.get $out)) (global.get $len))\n'
+       '    (if (i32.eq (global.get $resT) (global.get $rNat))')], 'runs'),
 ]
 
 
@@ -2362,7 +2409,7 @@ def main(args: list) -> int:
     run_jobs = [{'id': r['label'], 'files': {r['argv'][0]: str(loaded / r['argv'][0])}, 'argv': r['argv'],
                  'want': r['want'], 'dump': r['dump']} for r in run_rows]
     limited_jobs = [{'id': f"limited:{l['name']}", 'files': {staged(l['image']): str(sandbox / staged(l['image']))},
-                     'argv': [staged(l['image']), *l['argv']], 'limits': l['limits'], 'want': l.get('expect') or expected_run(l['dump']),
+                     'argv': [staged(l['image']), *l['argv']], 'limits': l['limits'], 'atomic': True, 'want': l.get('expect') or expected_run(l['dump']),
                      'dump': {k: v for k, v in l['dump'].items() if k != 'yields'}} for l in fixtures['limited']]
     ceiling_mutant_jobs = [{**j, 'id': f"ceiling:{r['name']}", 'want': r['expect'], 'dump': r['dump']}
                            for j, r in zip(ceiling_jobs, ceiling)]

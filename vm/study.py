@@ -5,9 +5,11 @@ A mutant changes one token of one line: a comparison or an arithmetic or bitwise
 its neighbour, or a small `i32.const` moved by one. The functions are the ones that decide what a
 program computes and what a Book or a Program writes: the prims and their helpers, Case selection, the
 completion of a gathered node, describe and the UTF-8 writer, and the two that hold the validator's scope
-tables (`$setscope` and `$holdscope`, whose depth no image size bounds). The rest of the loader and the
-validator, the frames and the memory are not among them; the limit, refusal, ceiling and growth rows of the
-gate cover those.
+tables (`$setscope` and `$holdscope`, whose depth no image size bounds). Round 7 added what D22 to D24 and
+SPEC 6.3 put in the machine (a request, the operands of a completion, the room checks, Enter, Top's loop
+and the final IO.OP) and the two of the describe domain and the invocation (`$describable`, `$entry`). The
+rest of the loader and the validator, the frames and the memory are not among them; the limit, refusal,
+ceiling and growth rows of the gate cover those.
 
 `python3 vm/check-core.py --study` runs every mutant against the gate's own rows (the same jobs and the
 same `observed_wrong`, so a kill here is a kill there) and writes vm/receipts/study.json.
@@ -18,7 +20,8 @@ import re
 
 FUNCTIONS = ['$prim', '$select', '$complete', '$show', '$seq', '$append', '$reverse', '$scon', '$nat', '$cmp',
              '$scalar', '$num', '$tagof', '$ctor', '$describe', '$emitdec', '$utf8out', '$slen', '$scell',
-             '$spell', '$room', '$setscope', '$holdscope']
+             '$spell', '$room', '$setscope', '$holdscope',
+             '$request', '$opnd', '$pop', '$fit', '$spare', '$unscoped', '$tail', '$enter', '$serve', '$finish', '$describable', '$entry']
 SWAPS = [('i32.lt_u', 'i32.le_u'), ('i32.le_u', 'i32.lt_u'), ('i32.gt_u', 'i32.ge_u'), ('i32.ge_u', 'i32.gt_u'),
          ('i32.eq ', 'i32.ne '), ('i32.ne ', 'i32.eq '), ('i32.add', 'i32.sub'), ('i32.sub', 'i32.add'),
          ('i64.lt_u', 'i64.le_u'), ('i64.gt_u', 'i64.ge_u'), ('i32.shr_u', 'i32.shl'), ('i32.and', 'i32.or')]
@@ -90,7 +93,7 @@ _WHY = [
      ['$scon:1939:const 4->5@31', '$scon:1939:const 4->3@31', '$scalar:1865:const 1->2@35', '$scalar:1865:const 1->0@35']),
     ("stores the Foreign node's operand count where the Action's foreign id belongs: for IO.print, the only foreign vm-core "
      "admits (choice 2), both are 1", ['$complete:2190:const 3->4@72']),
-    ("the mode register after a finished run: `$run` returns at once (vm.wat line 2480) and no observation reads the register",
+    ("the mode register after a finished run: `$run` returns at once and no observation reads the register",
      ['$describe:2727:const 3->4@22', '$describe:2727:const 3->2@22']),
     ("the scope tables grow one write early, a write holding one index more than it needs or the tables doubling when exactly full: "
      "the result and the scratch of every image are the same, and the tables' size is no observation",
