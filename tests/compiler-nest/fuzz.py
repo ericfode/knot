@@ -16,6 +16,9 @@ COUNT = 3000
 DOTTED = ['a.b', '+a.b', '_.x', 'On.x', 'v.', 'a..b', 'a.1']
 # A space, comment or line break detaches a brace from its constructor name.
 GAPS = [' ', '\n      ', ' # gap\n      ']
+# A `+` opens the next column only where a name follows it directly; after a
+# space, a line break or a bare `+ ` the seed reads an infix operator.
+PLUS_GAPS = [' + ', '+ ', '\n      + ']
 
 
 def programs(count=COUNT):
@@ -28,11 +31,14 @@ def programs(count=COUNT):
         if rng.randrange(48) == 0:
             return rng.choice(('On', 'Off')) + rng.choice(GAPS) + '{}'
         return rng.choice(DOTTED) if rng.randrange(12) == 0 else rng.choice(
-            ['Off{}', 'On{}', '_', 'v', 'w', 'x', '+v', '_x'])
+            ['Off{}', 'On{}', '_', 'v', 'w', 'x', '+v', '+ v', '_x'])
 
     def sep():
         # Headers run to their colon; a line break inside one separates nothing.
         return rng.choice(('\n      ', ',\n      ')) if rng.randrange(8) == 0 else rng.choice((' ', ', '))
+
+    def row_sep():
+        return rng.choice(PLUS_GAPS) if rng.randrange(40) == 0 else sep()
 
     for index in range(count):
         shape = rng.choice(('flag', 'multi', 'pair', 'box'))
@@ -75,6 +81,10 @@ def programs(count=COUNT):
         for binder in (y, 'v', 'w', 'p' if fields else 'x'):
             body_terms += [f'\n      u = {binder}\n      u', f'\n      u : Flag = {binder}\n      u',
                            f'\n      -u = {binder}\n      On{{}}']
+        # After a let, a marker takes its name glued (the seed reads `+ w` as an
+        # operator on the value); first in a body it may be spaced.
+        body_terms += [f'\n      u = {y}\n      - w = {y}\n      On{{}}', f'\n      u = {y}\n      -w = {y}\n      On{{}}',
+                       f'\n      u = {y}\n      + w = {y}\n      w', f'\n      + u = {y}\n      u']
         columns = ['x', y] if shape == 'multi' else ['p' if fields else 'x']
         if empty and shape == 'multi' and rng.randrange(2) == 0:
             columns.insert(rng.randrange(3), 'e')
@@ -83,7 +93,7 @@ def programs(count=COUNT):
             if shape == 'flag':
                 pattern = atom()
             elif shape == 'multi':
-                pattern = sep().join(atom() for _ in columns)
+                pattern = row_sep().join(atom() for _ in columns)
             else:
                 pattern = opener('P') + ', '.join(atom() for _ in slots) + '}'
                 if shape == 'box':

@@ -41,7 +41,7 @@ and their required outputs are present and readable. The runner's self-test
 requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
 this branch retains the main gates and appends `nest`, `nest-review`,
-`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8` and `nest-round9`. `nest-review` checks the round-2 reviewer
+`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8`, `nest-round9` and `nest-round10`. `nest-review` checks the round-2 reviewer
 repros, enum whitelist, semantic repair mutants and fixed-seed 3,000-program
 comparison, whose generator includes lets of matched binders; `nest-round3` checks the round-3 repros (binder grammar, ordered
 empty binders, line-broken headers), `nest-round4` the round-4 recursion
@@ -55,8 +55,13 @@ Type-kind generator, and `nest-round9` the round-9 lets of refined binders (an
 unannotated let of a binder that a positive branch refined to a constructor
 needs an annotation), the dotted-binder stopgap (every dotted binder is
 Unsupported) and the line-break stopgap (a line break in call or constructor
-arguments, or a second arm on an arm's line, is Unsupported), each in both
-compiler lanes with its own semantic mutants.
+arguments, or a second arm on an arm's line, is Unsupported), and
+`nest-round10` the round-10 glue rules (a `+` or `-` marker and a return arrow
+are read touching what follows: a spaced `+` between row columns, a spaced
+marker after a let and a split `->` are rejected, while a marker first in a body
+and a promotion that starts a row or follows a comma stay spaced), each in both
+compiler lanes with its own semantic mutants. The nest gates scale their
+harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,
