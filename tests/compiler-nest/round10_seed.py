@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""Replay round-10 seed observations. --write is only for the pre-fix freeze.
+
+Knot outcomes are literal review, keyed by fixture; the seed decides only
+acceptance. The seed's operator loop (`parse_term_ops`, bend.ts) reads a `+` or
+`-` as an infix operator unless a name starts right after it. Three
+consequences, each frozen here from the reviewer's probes:
+
+- After a term in a pattern row, `a + b`, `a+ b` and a `+ b` on the next line
+  are one operator term, so the row has too few patterns and is rejected; `a +b`
+  and `a+b` open the next column. A `+` that starts a row or follows a comma is
+  not after a term, and stays a promotion spaced or not.
+- The same loop reads a let's value. A spaced marker on the next line (`+ u : F
+  = ..`) continues that value, and the next statement would start at the `:` or
+  `=`; a marker first in a body follows no value and may be spaced.
+- A return arrow is the literal `->`; `- >` is rejected.
+"""
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import json
+from pathlib import Path
+
+import regen as oracle
+import review_seed
+
+HERE = Path(__file__).resolve().parent
+MANIFEST = HERE / 'round10-expectations.json'
+FIXTURES = HERE / 'round10-fixtures'
+ACCEPTED = {'exit': 0, 'outcome': 'Accepted'}
+
+
+def invalid(code):
+    return {'exit': 2, 'diagnostic': f'Invalid\tparse\t{code}\t'}
+
+
+COLON, MARKER, RESULT = invalid('expected-:'), invalid('detached-marker'), invalid('function-result')
+# What the seed says about each rejected group, so a fixture cannot be rejected for another reason.
+REASON = {'plus-row-gap': 'patterns (one per scrutinee)', 'marker-gap': '- expected : a term',
+          'arrow-gap': "- expected : '->'"}
+GRID = [f'rowtok-{sep}-{left}-{right}' for sep in ('spaced', 'after', 'newline')
+        for left in ('a', 'wild', 'ctor', 'promo', 'a1') for right in ('b', 'wild')]
+
+# Group -> fixture -> reviewed Knot outcome.
+REVIEWED = {
+    # The finding: a `+` detached from its binder between row columns. The row-token
+    # grid (three separators, five left and two right patterns) and the reviewer's
+    # plus grid, with the two- and three-column repros and the fielded variant.
+    'plus-row-gap': {name: COLON for name in (
+        *GRID, 'rowplus-second-spaced', 'rowplus-second-plus-space-after', 'rowplus-ctor-spaced',
+        'rowplus-nl-spaced', 'rowplus-wild-spaced', 'rowplus-three-cols-mid', 'rowplus-three-cols-last',
+        'rowplus-three-cols-both', 'rowplus-plus-wild-spaced', 'rowplus-plus-plus',
+        'rowplus-repro-column', 'rowplus-repro-column-fields')},
+    # Seed-accepted, and must stay accepted: a `+` glued to its binder, and a
+    # promotion that starts a row, follows a comma or sits inside fields.
+    'plus-row-control': {name: ACCEPTED for name in (
+        'rowplus-comma-glued', 'rowplus-comma-nospace', 'rowplus-comma-nospace-spaced-plus',
+        'rowplus-comma-spaced', 'rowplus-ctor-glued', 'rowplus-ctor-tight', 'rowplus-field-spaced-plus',
+        'rowplus-field-spaced-then-column', 'rowplus-first-column-spaced-flat', 'rowplus-first-glued',
+        'rowplus-first-promo-then-ctor', 'rowplus-first-spaced', 'rowplus-first-spaced-wild',
+        'rowplus-nl-glued', 'rowplus-plus-wild', 'rowplus-repro-glued-column',
+        'rowplus-repro-glued-column-fields', 'rowplus-second-glued', 'rowplus-second-tight',
+        'rowplus-three-cols-mid-glued', 'rowplus-var-then-two', 'rowplus-wild-tight')},
+    # The finding: a `+` or `-` let marker apart from its name after another statement.
+    'marker-gap': {name: MARKER for name in (
+        'marker-repro', 'marker-plus-spaced-typed', 'marker-plus-spaced-after-untyped',
+        'marker-plus-spaced-untyped', 'marker-minus-spaced-typed', 'marker-minus-spaced-untyped',
+        'marker-plus-newline', 'marker-arm-later', 'marker-third-statement',
+        'marker-erased-then-plus-spaced', 'marker-after-call-value', 'marker-after-constructor-value')},
+    # Seed-accepted: a spaced marker first in a body (typed and untyped, `+` and `-`,
+    # in an arm too) and in a parameter list, and a glued marker after a let.
+    'marker-control': {name: ACCEPTED for name in (
+        'marker-repro-glued', 'marker-after-let-glued-plus', 'marker-after-let-glued-minus',
+        'marker-arm-first', 'marker-arm-later-glued', 'marker-third-statement-glued',
+        'marker-first-plus-spaced-typed', 'marker-first-plus-double-space',
+        'marker-first-plus-spaced-tight-colon', 'marker-first-minus-spaced-typed',
+        'marker-first-plus-spaced-untyped', 'marker-first-minus-spaced-untyped',
+        'marker-first-plus-glued', 'marker-first-minus-glued', 'marker-param-spaced-plus',
+        'marker-param-spaced-erased', 'marker-typed-param-spaced')},
+    # The finding: a return arrow split into `-` and `>`.
+    'arrow-gap': {name: RESULT for name in (
+        'arrow-repro', 'arrow-two-spaces', 'arrow-three-spaces', 'arrow-split-main',
+        'arrow-empty-params', 'arrow-type-application')},
+    'arrow-control': {name: ACCEPTED for name in (
+        'arrow-glued', 'arrow-tight-before', 'arrow-tight-after', 'arrow-tight-both')},
+}
+
+
+def reviewed():
+    return {name: (finding, knot) for finding, cases in REVIEWED.items() for name, knot in cases.items()}
+
+
+def observe(path, finding, knot):
+    case = review_seed.observe(path)
+    case['finding'] = finding
+    accepted = case['seed']['exit'] == 0
+    assert accepted == (knot['exit'] != 2), (path.name, 'seed acceptance and reviewed Knot outcome differ')
+    if finding in REASON:
+        assert REASON[finding] in case['seed']['stderr'], (path.name, 'seed rejects for another reason')
+    case['knot'] = knot
+    return case
+
+
+def main():
+    args = argparse.ArgumentParser()
+    args.add_argument('--write', action='store_true')
+    write = args.parse_args().write
+    table = reviewed()
+    files = sorted(FIXTURES.glob('*.bend'))
+    assert sorted(p.stem for p in files) == sorted(table), ('unreviewed or missing fixtures',
+        sorted(set(p.stem for p in files) ^ set(table)))
+    with ThreadPoolExecutor(6) as pool:
+        cases = list(pool.map(lambda p: observe(p, *table[p.stem]), files))
+    result = {'basis': 'Reviewer probes verbatim (the row-token grid, the plus grid with its two- and '
+                       'three-column and fielded repros, the let-marker probes and the split-arrow repro) and '
+                       'their controls, frozen with the pinned seed before the repairs.',
+              'seed': oracle.environment()[0], 'fixtures': cases}
+    if write:
+        MANIFEST.write_text(json.dumps(result, indent=2) + '\n')
+    else:
+        assert result == json.loads(MANIFEST.read_text()), 'round-10 seed observations changed'
+    print(f"Round-10 seed: {len(result['fixtures'])} fixtures, "
+          f"{sum(len(c['calls']) for c in result['fixtures'])} calls; no differences")
+
+
+if __name__ == '__main__':
+    main()
