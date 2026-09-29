@@ -168,8 +168,31 @@ class C5Tests(RepoTest):
         self.fx.commit('work', {'src/parse.bend': 'def parse(): 2\n'})
         stub = Stub(head=report([]), base=report([]), head_manifest=None, base_manifest=report(groups=[]),
                     head_error='Style run limited to 5000 units; narrow groups or raise max_units')
-        found = self.rules(self.run5(stub), 'unit-cap')
+        result = self.run5(stub)
+        found = self.rules(result, 'unit-cap')
         self.assertEqual(('major', 5000), (found[0].severity, found[0].value['max_units']))
+        # the group rules read that manifest run, so they did not run: named, never silently absent
+        self.assertEqual({'composition-budget (groups)', 'manifest-membership'}, set(result.rules_unavailable))
+        self.assertIn('limited to 5000 units', result.rules_unavailable['composition-budget (groups)'])
+        self.assertTrue(result.finish().incomplete)
+
+    def test_an_aborted_manifest_run_is_a_blocker_and_names_the_rules_that_did_not_run(self):
+        self.start()
+        self.fx.commit('work', {'src/parse.bend': 'def parse(): 2\n'})
+        stub = Stub(head=report([]), base=report([]), head_manifest=None, base_manifest=report(groups=[]), head_error='the run crashed')
+        result = self.run5(stub)
+        self.assertEqual(['run-aborted'], [c.subject['reasons'][0] for c in self.rules(result, 'preflight-new-blocker')])
+        self.assertIn('manifest-membership', result.rules_unavailable)
+
+    def test_a_completed_manifest_run_leaves_the_group_rules_running(self):
+        self.start()
+        self.fx.commit('work', {'src/parse.bend': 'def parse(): 2\n'})
+        stub = Stub(head=report([]), base=report([]), head_manifest=report(groups=[group('parsing', 1000)]),
+                    base_manifest=report(groups=[group('parsing', 1000)]))
+        result = self.run5(stub)
+        self.assertNotIn('manifest-membership', result.rules_unavailable)
+        self.assertNotIn('composition-budget (groups)', result.rules_unavailable)
+        self.assertIn('manifest-membership', result.rules_run)
 
     def test_manifest_membership(self):
         self.start()

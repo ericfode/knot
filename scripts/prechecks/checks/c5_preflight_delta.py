@@ -27,6 +27,7 @@ from lib.runner import Check
 
 ID = 'C5'
 COMPOSITION_CAP = 48000
+GROUP_RULES = ('composition-budget (groups)', 'manifest-membership')     # the rules that read the full-manifest preflight
 TASK_CAP = 16000
 MANIFESTS = ('docs/compiler-campaign/manifest.json', 'vm/perch-manifest.json')
 EXCLUDED_TARGETS = ('tests/**/fixtures/**', 'tests/**/generated/**', 'research/**/generated/**', 'packages/**')
@@ -306,11 +307,16 @@ def run(ctx) -> CheckResult:
             result.conditions.append(condition)
         result.rules_run.append('composition-budget')
     manifest_path = next((m for m in MANIFESTS if ctx.head.has(m)), None)
+    if not manifest_path:
+        for rule in GROUP_RULES:
+            result.rules_unavailable[rule] = 'no Perch manifest in this tree'
     if manifest_path:
         head_m, head_error = preflight(ctx, ctx.head, [f'--manifest={manifest_path}'], 'head manifest', timeout=240)
         base_m, base_error = (preflight(ctx, ctx.base, [f'--manifest={manifest_path}'], 'base manifest', timeout=240)
                               if ctx.base.has(manifest_path) else (None, ''))
         if head_m is None:
+            for rule in GROUP_RULES:                       # both need the manifest run that just did not complete
+                result.rules_unavailable[rule] = f"the full-manifest preflight did not complete: {(head_error or 'no report')[:120]}"
             cap = re.search(r'limited to (\d+) units', head_error or '')
             if cap:
                 result.conditions.append(Condition(ID, 'unit-cap', 'major', {'manifest': manifest_path},
