@@ -311,7 +311,7 @@ a malformed record, and a `slots` of 65,536 that its body does not reach. vm-cor
 MUST refuse the same controls, and MUST admit its six admitted plan controls (three
 Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
 Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 100 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 103 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -1099,7 +1099,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 100 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 103 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1155,7 +1155,7 @@ lane and requires:
   control, and not each instance: the prim ids that no control names (U32 `mul` … `shrn`
   but `shln`, and Nat `mul` … `is_ge`) are vm-prims' to witness, one control per id and
   operand (§9), and the byte List and the operands of every foreign but `IO.print` are
-  vm-io's. Thirty-one effect controls (`effect_controls`) freeze
+  vm-io's. Thirty-four effect controls (`effect_controls`) freeze
   D23 (§8), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`, which builds a
   request that `got` receives: `book-print`, `book-print-continuation-call` (`k` a function) and
@@ -1205,7 +1205,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 89 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 92 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 93 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1227,14 +1227,15 @@ lane and requires:
   size check: it would allocate 32 GiB at `type-count-max`, and a crash is no kill. The other 33 `raise` and
   `fail` statements of the codec that the review's audit removed one at a time are pinned by no control: for
   13 of them the audit found only images on which the codec then crashes, which §11 does not count as a
-  kill, and for 20 no image at all (DECISIONS, finding 12). Ten rule mutants of
+  kill, and for 20 no image at all (DECISIONS, finding 12). Thirteen rule mutants of
   `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
   `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
   bound whose budget it does not pass; display steps counted as visits;
   transitions that omit materialization; a D20 golden whose `calls` are not
   checked; an unavailable Book lane whose declared line is not checked or whose cause
-  is not named; a declaration kept where check-cli prints a core; and a Book without a
-  core that declared none.
+  is not named; a declaration kept where check-cli prints a core; a Book without a
+  core that declared none; and a witness (§8) whose source hash, lane bytes or literal review goes
+  unchecked, each by its own frozen refusal.
   Four survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, the fuel test before the operand check,
   and a free terminal continuation. A request's debit paid by the loop after its effect, not

@@ -1626,6 +1626,14 @@ def effect_controls(plans: dict) -> list:
     pick = {'name': 'pick', 'parameters': [None], 'result': 8, 'slots': 1, 'body': [
         'case', 8, 0, 1, 'keys', [['branch', 7, 1, 0, ['value', 8, 1]]], ['default', ['value', 8, 0]]]}
     pair = {'kind': 'data', 'name': 'Pair', 'constructors': [{'name': 'Pair', 'fields': [8, 8]}]}      # type 10
+
+    def defaulted(name, rows, slots):
+        """`got` with a Default beside these rows: one Flag per arm, Off{} from the Default"""
+        return {'name': name, 'parameters': [4], 'result': 8, 'slots': slots,
+                'body': ['case', 8, 0, 4, 'tags', rows, ['default', ['value', 8, 0]]]}
+    emit_default = defaulted('got-emit-default', [['branch', 0, 1, 1, ['value', 8, 1]], None], 2)
+    halt_default = defaulted('got-halt-default', [None, ['branch', 1, 1, 2, ['value', 8, 1]]], 3)
+    default_only = defaulted('got-default-only', [None, None], 1)
     request, k_ref = printing(text('x')), ['ref', 5, 0]
     unsupported = {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0}
 
@@ -1682,6 +1690,18 @@ def effect_controls(plans: dict) -> list:
         # before any ill-typed check and, for the Enter, before the debit.
         ('program-case-request', entered(['con', 4, 0, [['call', 8, got, [printing(text('x'), k_ref)]]]]),
          {**unsupported, 'calls': 7}),
+        # A Case over a request is refused whatever rows it has, a Default included: an Emit row or a Halt row
+        # beside a Default, or no row at all (the same 7 entries: main, IO.print, R, the Action, k, `got-*`). The
+        # pinned literals head reports `Unsupported check variable-pattern` for every catch-all on an algebraic
+        # type, so no Knot source lowers to these plans. The seed's native lane takes the Default of the first
+        # two and both lanes run the third without reading the request, and the Bun lane fail-stops on a
+        # constructor row (the witnesses case-request-*): a recorded capability gap (section 8), never an arm.
+        ('program-case-request-emit-default',
+         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, emit_default), {**unsupported, 'calls': 7}),
+        ('program-case-request-halt-default',
+         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, halt_default), {**unsupported, 'calls': 7}),
+        ('program-case-request-default-only',
+         entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, default_only), {**unsupported, 'calls': 7}),
         ('book-request-rendered', image('book', through_id(request, 8)), {**unsupported, 'calls': 5}),
         ('book-request-field',
          {**image('book', ['con', 10, 0, [['value', 8, 1], through_id(request, 8)]], 0, result=10), 'types': [*types, pair]},
@@ -2553,6 +2573,10 @@ EVALUATOR_MUTANTS = [
     ('case-request-picks-arm', [("        self.read(w)\n        if t == self.rep.get('Nat') and isinstance(w, int):",
                                  "        if isinstance(w, tuple) and w[0] == 'request':\n            return 0, (0,)\n"
                                  "        if t == self.rep.get('Nat') and isinstance(w, int):")]),
+    ('case-default-takes-request',
+     [("            tag, fields = self.view(env[slot], t)\n            arm = rows[tag] or default\n",
+       "            w = env[slot]\n            if default is not None and isinstance(w, tuple) and w[0] == 'request':\n"
+       "                return self.eval(default[-1], env)\n            tag, fields = self.view(w, t)\n            arm = rows[tag] or default\n")]),
     ('view-request-as-ill-typed', [("        self.read(w)\n        if t == self.rep.get('Nat') and isinstance(w, int):",
                                     "        if t == self.rep.get('Nat') and isinstance(w, int):")]),
     ('word-request-as-ill-typed', [("        self.read(w)\n        if not isinstance(w, int):", "        if not isinstance(w, int):")]),

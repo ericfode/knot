@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T06:29:03.100506+00:00",
+ "date": "2026-09-29T06:32:10.203907+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -8,7 +8,7 @@
  },
  "inputs": {
   "vm/DECISIONS.md": "bca8072c1c62c5c062bcf1fd938422fe96f364bc920bb37a33cd1c47480e368a",
-  "vm/SPEC.md": "2e2882f41467dbf72298690aae8ba3bccffae203de54e6dd180046b189f456df",
+  "vm/SPEC.md": "a29c999e4d9bc4d00b3961f9669622f09292a46be0925b21d022dd3b2f3ad083",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "0be431fcd6a16731cc2139a560e5f8ca5d4ec9c17d366ba6ad7a596284a00d74",
+  "vm/check-spec.py": "998edc9da03de0c1e0af0ea2e43546c51070198b4a2361a5a56415512fc88cfe",
   "vm/evaluate.py": "0e8de3f917bd614b9778059a94c477eff4bfe39fdbdbf4bb1ae6884ad330c74b",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
@@ -4133,6 +4133,9 @@
   "run:program-request-dropped-argument",
   "run:program-request-dropped-ill-typed",
   "run:program-case-request",
+  "run:program-case-request-emit-default",
+  "run:program-case-request-halt-default",
+  "run:program-case-request-default-only",
   "run:book-request-rendered",
   "run:book-request-field",
   "run:inspect-request-chr",
@@ -5182,6 +5185,45 @@
    "effects": 0,
    "calls": 7,
    "image_sha256": "410ac67ce27e441a553bdf3f6dc37bdd68fd6619361ac472acdcf4c0962d6431"
+  },
+  "program-case-request-emit-default": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "66a844a101a986d8b291964d2bbc32c289edcddbde2dbc0397019a0c43597132"
+  },
+  "program-case-request-halt-default": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "691ad4fd879f2ce0492f8e7cb5960384abab20862bf783c22c906d674b314c97"
+  },
+  "program-case-request-default-only": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "67e2e5585163fb75faf908bf723b49984624a30a496b3f5a8c641c14b4385cb1"
   },
   "book-request-rendered": {
    "argv": [
@@ -6316,6 +6358,11 @@
    "mutant": "evaluator:case-request-picks-arm",
    "killed": true,
    "by": "run control book-print: {'outcome': None, 'cause': None, 'stdout': 'Evaluated\\t8\\t0\\tOff{}\\n', 'effects': 0, 'calls': 5}"
+  },
+  {
+   "mutant": "evaluator:case-default-takes-request",
+   "killed": true,
+   "by": "run control program-case-request-emit-default: {'outcome': None, 'cause': None, 'stdout': '', 'effects': 0, 'calls': 7}"
   },
   {
    "mutant": "evaluator:view-request-as-ill-typed",
