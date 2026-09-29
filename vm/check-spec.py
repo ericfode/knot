@@ -1506,9 +1506,13 @@ def effect_controls(plans: dict) -> list:
     - `IO.args` under a Book stops the same way: D22 precedes the check of the foreign id, whatever it is.
     - D22 follows step 1: `book-print` completes its refusal with fuel 4, its debited entries, and at fuel
       3 its Action meets fuel 0 and stops `Exhausted` kind 1 after 3, where the fuel test precedes it.
-    - Under a Program the same Action prints, from inside a pure argument, before the Program's
-      own print: main, IO.print, R, the Action (writes `x`), k, got, say, IO.print, R, the
-      Action (writes `t`) and the terminal continuation are 11 entries.
+    - Under a Program the same Action prints, and where it meets `k` may lie in an argument of a
+      call: `run(m) = λ@R. λk. id(m(R)(k))` passes the answer of `IO.print("x")(R)(k)` through
+      `id`. The pinned seed writes `x` for that source on both lanes; main, IO.print, run, R,
+      run's closure, the Action twice, the terminal continuation and id are 9 entries. The seed
+      refuses the shape that a Case reads the answer of (`got(IO.print("x")(R)(k))`, its own
+      test request_out_of_band.bend), so nothing here claims the machine agrees with the seed
+      there, and no control freezes that shape (section 8).
     - A Halt's message is an outgoing String (D20): a lone surrogate in it stops the run as
       `HostFailure io abi` before `die`, at the third entry (main, R, k's closure). A scalar one,
       `x` and U+1F600, reaches `die` after the same 3 entries, so the run ends with `halt` 1 and
@@ -1516,7 +1520,7 @@ def effect_controls(plans: dict) -> list:
       message, or every one above ASCII, would differ."""
     fp, flag = plans['foreign-print'], plans['value-on']['types'][0]
     types = [*fp['types'], flag, {'kind': 'arrow', 'domain': 8, 'result': 8}]   # 8 Flag, 9 Flag -> Flag
-    print_, got, ident, resume, say = 0, 1, 2, 3, 4
+    print_, got, ident, resume, through = 0, 1, 2, 3, 4
     functions = [
         {'name': 'IO.print', 'parameters': [3], 'result': 7, 'slots': 1, 'body': ['foreign', 7, 1, [['ref', 3, 0]]]},
         {'name': 'got', 'parameters': [4], 'result': 8, 'slots': 3, 'body': ['case', 8, 0, 4, 'tags', [
@@ -1547,8 +1551,11 @@ def effect_controls(plans: dict) -> list:
                   {'kind': 'erased-arrow', 'domain': None, 'result': 12}]
     args = {'name': 'IO.args', 'parameters': [], 'result': 13, 'slots': 0, 'body': ['foreign', 13, 0, []]}
     listed = ['invoke', 4, ['invoke', 12, ['call', 13, 4, []], []], [['closure', 11, 1, 1, [], ['con', 4, 0, [['value', 8, 1]]]]]]
-    saying = {'name': 'say', 'parameters': [8], 'result': 7, 'slots': 1, 'body': ['case', 7, 0, 8, 'tags', [
-        ['branch', 0, 1, 0, ['call', 7, print_, [text('f')]]], ['branch', 1, 1, 0, ['call', 7, print_, [text('t')]]]], None]}
+    # run(m: IO(Unit)) = λ@R. λk. id(m(R)(k)): the Action meets k inside an argument of a call, and the
+    # IO.OP it answers only passes through id. Slots: m is 0, k 1; both closures capture m.
+    running = {'name': 'run', 'parameters': [7], 'result': 7, 'slots': 1, 'body': [
+        'closure', 7, 0, 1, [0], ['closure', 6, 1, 2, [0], ['call', 4, ident, [
+            ['invoke', 4, ['invoke', 6, ['ref', 7, 0], []], [['ref', 5, 1]]]]]]]}
 
     def halting(message):
         """main = λ@R. λk. Halt{1, message}"""
@@ -1570,8 +1577,8 @@ def effect_controls(plans: dict) -> list:
          {'exit': 0, 'stdout': on, 'calls': 2}),
         ('book-action-erased', image('book', ['let', 8, 0, ['invoke', 6, ['call', 7, print_, [text('x')]], []], ['value', 8, 1]], 1),
          {'exit': 0, 'stdout': on, 'calls': 3}),
-        ('program-print-in-value', image('program', ['call', 7, say, [bound(text('x'))]], 0, saying),
-         {'exit': 0, 'stdout': 'x\nt\n', 'calls': 11}),
+        ('program-print-through-id', image('program', ['call', 7, through, [['call', 7, print_, [text('x')]]]], 0, running),
+         {'exit': 0, 'stdout': 'x\n', 'calls': 9}),
         ('halt-surrogate', image('program', halting(['lit', 3, 'String', [0xD800]])),
          {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'calls': 3}),
         ('halt-scalar', image('program', halting(['lit', 3, 'String', [0x78, 0x1F600]])),

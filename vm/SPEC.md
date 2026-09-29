@@ -642,9 +642,21 @@ and IO.OP representations.
 **Actions.** `Foreign` builds an Action and performs nothing; dropping it or leaving
 it in an unselected branch has no effect. Its first (erased) application returns
 the Action itself; its second, with `k`, performs exactly one effect under a Program
-entry. That entry performs its effects wherever an Action meets its continuation, even
-inside a pure argument of `main`, in evaluation order: run control
-`program-print-in-value` writes `x` from a function argument and then its own `t`.
+entry, wherever that application occurs, in evaluation order. Run control
+`program-print-through-id` applies the Action to its continuation inside an argument of
+a call (`run(m) = λ@R. λk. id(m(R)(k))`, whose answer only passes through `id`) and writes
+`x` after 9 entries. The pinned seed writes `x` for that source on both of its lanes.
+
+**Where the seed refuses (not frozen).** The seed does not run every shape that this
+machine can. A Case over the IO.OP that an applied effect answers, such as
+`got(IO.print("x")(R)(k))` with `got` matching `Emit` and `Halt`, fail-stops in every
+lane and never fires the effect: an applied effect answers a request that only the
+event loop decodes (the seed's own test, `tests/io/request_out_of_band.bend`). §11 binds
+a VM only where the seed succeeds, so that shape lies outside it. The transition rules of
+§6 and §7 apply to it unchanged (the effect is performed, then the Case reads what `k`
+returned), and no run control freezes it or claims that the seed agrees. Whether a VM
+should refuse it, as D22 refuses an effect under a Book, is the coordinator's decision
+(DECISIONS, finding 11).
 
 **A Book entry never performs an effect (D22).** Under a Book invocation the second
 application of any Action, `Enter(Action, [k])`, stops the run with `Unsupported vm
@@ -1037,8 +1049,8 @@ lane and requires:
   `Evaluated 8 1 On{}` after 3,
   an Action built and dropped (`book-action-dropped`) after 2 and one applied to its
   erased `R` (`book-action-erased`) after 3; the same Action prints under a Program
-  entry from inside a pure argument of `main` (`program-print-in-value`), `x\nt\n`
-  after 11; a Halt whose message is a lone surrogate (`halt-surrogate`) stops
+  entry from inside an argument of a call (`program-print-through-id`, whose source the seed
+  prints `x` for on both lanes), `x\n` after 9; a Halt whose message is a lone surrogate (`halt-surrogate`) stops
   `HostFailure io abi` before `die` after 3; and one whose message is scalar
   (`halt-scalar`, `x` and U+1F600) ends with `halt` 1 and that `message` after 3, the
   reference evaluation's view of a `die` whose exit status and stderr are the host's

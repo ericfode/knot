@@ -378,8 +378,8 @@ follows it (§5, §10, §11) without a new image header word.
    scalar check runs first, so the print of a non-scalar or an ill-typed String is
    refused the same way, as `Unsupported`, never `HostFailure`. An Action built, dropped
    or applied to its erased `R` is not an effect, and the Program entry, the only one
-   that performs effects, performs them wherever an Action meets its continuation, even
-   inside a pure argument of `main`. `evaluate.py` gains `Machine.entry`, and `effect`
+   that performs effects, performs them where an Action meets its continuation (entry
+   27). `evaluate.py` gains `Machine.entry`, and `effect`
    refuses before it reads an operand; `evaluate.book` no longer runs the effect.
    Fourteen effect controls (`effect_controls`, frozen before the change) rebuild the
    reviewers' probes on foreign-print's types: `book-print`,
@@ -392,7 +392,8 @@ follows it (§5, §10, §11) without a new image header word.
    for every foreign id, before it is checked. The pure `got(k(Unit{}))` of bk-direct
    (`book-continuation-called`), an Action built and dropped and one applied to its
    erased `R` still evaluate, after 3, 2 and 3; `program-print-in-value` (pg-print)
-   prints `x` from a pure argument and then its own `t` after 11 (§12). Two fuel
+   printed `x` from a pure argument and then its own `t` after 11; entry 27 withdrew it
+   and `program-print-through-id` replaced it (§12). Two fuel
    controls put the refusal after step 1's fuel test: `book-print` at fuel 4 is refused
    after its 4 debits, and at 3 its Action meets fuel 0 and stops `Exhausted` kind 1
    after 3. The refusal precedes both D20 and the inspection because a Book performs no
@@ -487,6 +488,63 @@ follows it (§5, §10, §11) without a new image header word.
    `True{}`. It parses as `Unsupported` on the main-line parser (a `declaration-form`),
    never `Invalid`.
 
+27. **A Program's effect in an argument is witnessed by the seed; a Case over an applied
+   effect is not frozen.** Review of the round-9 branch found the run control
+   `program-print-in-value` (`main = say(got(IO.print("x")(R)(k)))`, `x\nt\n` after 11, "even
+   inside a pure argument of `main`") contradicted by the pinned seed. Its source analogue
+
+   ```
+   def got(x: IO.OP<Flag>) -> Flag:
+     match x:
+       case Emit{v}: v
+       case Halt{+c, +m}: Off{}
+   def say(f: Flag) -> IO(Unit):
+     match f:
+       case Off{}: IO.print("f")
+       case On{}: IO.print("t")
+   def main() -> IO(Unit):
+     say(got(IO.print("x", Flag, u => Emit{On{}})))
+   ```
+
+   ends `bend: runtime fail-stop` with exit 1 and no stdout on the seed's Bun lane and on
+   its native lane alike (`scripts/bend-reference F.bend`, then `-o F.native && ./F.native`,
+   re-run in this review round), and the seed's own test `tests/io/request_out_of_band.bend` pins
+   why: an applied foreign effect answers a request that only the event loop decodes, so a
+   Case over it is refused in every lane and the effect never fires. The clause "even inside
+   a pure argument of `main`" was this executor's addition in entry 21. D22 says only that a
+   Book never performs an effect and that the Program entry is the only one that does; the
+   coordinator's round-9 item 1 needed only that the same Action print under a Program, which
+   the seed-run golden `foreign-print` already witnesses. §11 owes the seed's value where the
+   seed succeeds, and a frozen MUST of an effect that the seed refuses had no basis in it.
+   The seed's refusal begins where a Case reads the answer: `run(m) = λ@R. λk. m(R)(k)` and
+   `run(m) = λ@R. λk. id(m(R)(k))` (a generic `id` over the IO.OP) both print `x` on the two
+   lanes (exit 0, bytes `78 0a`), while a match that rebuilds `Emit` and `Halt`, or the
+   source analogue with the Action held in a variable, fail-stop like the one above.
+
+   ```
+   def id(-A: Type, x: A) -> A:
+     x
+   def run(m: IO(Unit)) -> IO(Unit):
+     R => k => id(IO.OP<R>, m(R, k))
+   def main() -> IO(Unit):
+     run(IO.print("x"))
+   ```
+
+   The finding offered three ways out. This executor took the one that needs no
+   decision-table entry, since D22 is the coordinator's row: drop the claim and re-freeze
+   the control on a shape the seed prints. `program-print-through-id` is that source's
+   plan, `x\n` after 9 entries by literal review of §7 (main, IO.print, run, `R`, run's
+   closure, the Action twice, the terminal continuation, id), and it does put an Action's
+   application inside an argument of a call, which is what the withdrawn control showed of
+   the machine. §8 now says which shape the seed refuses and that no control freezes it.
+   The transition rules of §6 and §7 still apply there, so vm-model and vm-core, which
+   perform the effect, are unchanged; nothing in the gate depends on either reading, and
+   `evaluate.py` did not change. Refusing every Action applied off the IO spine (a
+   frame-based rule) would refuse `run` above through `id`, where the seed succeeds, and so
+   break §11; the seed's boundary is a Case over the answer, for which the machine has no
+   value. The choice between refusing that shape and recording a divergence by contract is
+   finding 11 below.
+
 ## What vm-model and vm-core must now follow (round 9)
 
 Each item names the SPEC text and the controls that freeze it; `check-spec.py`'s
@@ -497,8 +555,8 @@ branch brings all of them.
    `Unsupported vm effect` after its debit, before any operand is read, inspected or
    checked for D20, before the foreign id is checked and before any host call, for every
    foreign (`book-args`). Building an Action, dropping it and applying it to its erased
-   `R` stay free, and the Program entry is unchanged (`program-print-in-value`, 11
-   calls, `x\nt\n`). Controls: `book-print`, `book-print-continuation-call`,
+   `R` stay free, and the Program entry is unchanged (`program-print-through-id`, 9
+   calls, `x\n`; round 10 replaced `program-print-in-value`, entry 27). Controls: `book-print`, `book-print-continuation-call`,
    `book-print-twice`, `book-print-non-scalar` and `book-args` (4 calls),
    `book-print-ill-typed` (5), `book-continuation-called` (3), `book-action-dropped` (2)
    and `book-action-erased` (3); `book-print` at fuel 4 is refused and at fuel 3 stops
@@ -645,3 +703,14 @@ branch brings all of them.
    admits the value (`erased-field`). Under D4 neither is a source error. The
    owner is literals, or merge-wave when the invocation walk is shared; the fix
    is to walk live fields and treat U32 as having no ordinal.
+11. **The seed refuses a Case over the IO.OP an applied effect answers; the VM performs the
+   effect.** `got(IO.print("x")(R)(k))`, a match that rebuilds `Emit` and `Halt`, and the
+   same shapes with the Action held in a variable fail-stop on both seed lanes with the
+   effect never firing (`tests/io/request_out_of_band.bend`; entry 27 lists the sources and
+   bytes). §7 still performs the effect there and vm-core and vm-model do, and §11 permits
+   it, because the seed does not succeed; nothing freezes it either way. The coordinator
+   chooses between refusing it as `Unsupported vm effect` (D4-legal and conservative, but
+   it needs a rule the machine can apply without refusing `id(m(R)(k))`, which the seed
+   runs) and recording a divergence by contract against D22's "one reading" rationale. The
+   first needs a decision-table entry that this executor does not edit. Until then §8 states
+   the gap.
