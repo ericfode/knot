@@ -10,8 +10,10 @@ The gate reads the program's own value from it: the code lists a Program passes 
 `IO.print`, in order, and a Book's result. Under the `vm` policy an outgoing String (a print's
 operand or a Halt's message) with a non-scalar Char halts with `HostFailure io abi` before it
 is written (section 10, D20); under the `native` policy every String is written as the seed's
-native lane writes it. Only a Program entry performs an effect: under a Book entry an Action
-applied to its continuation stops with `Unsupported vm effect` (section 8, D22).
+native lane writes it. An Action applied to its continuation builds a request, an inert value
+(section 8, D23): only the Program's Top loop performs the request that a run returns to it,
+and a Book never reaches the loop. A request is never inspected: every read of a word meets it
+first and stops with `Unsupported vm effect` (section 6).
 A Python exception other than `Halt` is a harness failure, never an outcome.
 """
 from __future__ import annotations
@@ -20,6 +22,7 @@ WORD = 0xFFFFFFFF
 DISPLAY_VISITS, DISPLAY_BYTES = 1 << 20, 16 << 20
 TERMINAL = ('terminal',)
 ILL_TYPED = {'outcome': 'HostFailure', 'cause': 'image ill-typed'}
+UNSUPPORTED = {'outcome': 'Unsupported', 'cause': 'vm effect'}
 
 
 class Halt(Exception):
@@ -55,14 +58,21 @@ def show(n: int) -> list:
 class Machine:
     def __init__(self, plan: dict, fuel: int, policy: str = 'vm'):
         self.types, self.functions = plan['types'], plan['functions']
-        self.rep, self.entry = plan.get('representation', {}), plan['entry']
+        self.rep = plan.get('representation', {})
         self.fuel, self.calls, self.policy = fuel, 0, policy
         self.stdout, self.prints, self.effects = bytearray(), [], 0
 
     # ---------------------------------------------------------------- inspection (section 6)
 
+    def read(self, w):
+        """Every read of a word meets a request first, and a request is never inspected (D23)."""
+        if isinstance(w, tuple) and w[0] == 'request':
+            raise Halt(UNSUPPORTED)
+        return w
+
     def view(self, w, t) -> tuple:
         """(tag, fields) of word `w` read at the concrete type `t`, or ill-typed."""
+        self.read(w)
         if t == self.rep.get('Nat') and isinstance(w, int):
             return (0, ()) if w == 0 else (1, (w - 1,))
         if t == self.rep.get('Char') and isinstance(w, int):
@@ -75,6 +85,7 @@ class Machine:
         raise Halt(ILL_TYPED)
 
     def word(self, w) -> int:
+        self.read(w)
         if not isinstance(w, int):
             raise Halt(ILL_TYPED)
         return w
@@ -161,7 +172,9 @@ class Machine:
         return self.eval(f['body'], operands + [None] * f['slots'])
 
     def apply(self, f, operands: list):
-        """Enter a value: the operand check precedes the debit."""
+        """Enter a value: the operand check precedes the debit. An Action applied to its continuation
+        builds a request (D23): its operands and `k` stay unread until the Top loop performs it."""
+        self.read(f)
         kind = f[0] if isinstance(f, tuple) else None
         takes = {'closure': lambda: len(operands) == f[1][2], 'action': lambda: len(operands) <= 1,
                  'terminal': lambda: len(operands) == 1}
@@ -175,7 +188,7 @@ class Machine:
             return ('obj', self.rep['IO.OP'], 0, (operands[0],))
         if not operands:
             return f
-        return self.apply(operands[0], [self.effect(f)])
+        return ('request', f[1], f[2], operands[0])
 
     def written(self) -> str:
         """The bytes written so far, as text."""
@@ -186,12 +199,10 @@ class Machine:
         if self.policy == 'vm' and not all(map(scalar, codes)):
             raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})
 
-    def effect(self, action):
-        """Section 10: one Action applied to its continuation performs exactly one effect, under a
-        Program entry only. Under a Book entry the step stops before it reads an operand (D22)."""
-        if self.entry != 'program':
-            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})
-        _, foreign, operands = action
+    def effect(self, request):
+        """Section 10: the Top loop performs exactly one effect, that of the request a run returns
+        to it, and reads its operands only now. `k` is entered by the loop, after the effect."""
+        _, foreign, operands, _ = request
         if foreign != 1:
             raise NotImplementedError(f'foreign {foreign} has no reference effect')
         codes = self.codes(operands[0])
@@ -270,11 +281,11 @@ class Machine:
 
 def book(plan: dict, name: str, ordinals: list, fuel: int) -> dict:
     """A Book invocation whose section 8 checks passed: the ordinals are the live arguments.
-    `stdout` is all that the run writes, as text: what an effect wrote, which under D22 is
-    nothing whether the run ends or stops, and on success the describe line after it. A Halt
-    reports it too, so a stop that had written something first is not the stop D22 freezes.
-    `effects` counts the host calls made, which under D22 is 0 even for a foreign that writes
-    nothing (`IO.args`), so a stop that had called the host first is not that stop either."""
+    `stdout` is all that the run writes, as text: what an effect wrote, which for a Book is
+    nothing whether the run ends or stops (it never reaches the loop, D22, D23), and on success
+    the describe line after it. A Halt reports it too, so a Book that wrote something first shows
+    it. `effects` counts the host calls made, which for a Book is 0 even for a foreign that writes
+    nothing (`IO.args`)."""
     m = Machine(plan, fuel)
     index = next(i for i, f in enumerate(plan['functions']) if f['name'] == name)
     try:
@@ -288,13 +299,16 @@ def book(plan: dict, name: str, ordinals: list, fuel: int) -> dict:
 def program(plan: dict, fuel: int, policy: str = 'vm') -> dict:
     """Section 8's Program phases; `stdout` holds the bytes written, `prints` every String
     passed to IO.print (the refused one included), `effects` the host calls made (a refused one
-    is none). A Halt's message is an outgoing String, so one holding a non-scalar Char is
-    refused like a print's, after both words are inspected."""
+    is none). Phase 3 is the loop: each request that a run returns to it is performed, then its
+    continuation is entered. A Halt's message is an outgoing String, so one holding a non-scalar
+    Char is refused like a print's, after both words are inspected."""
     m = Machine(plan, fuel, policy)
     try:
         w = m.call(next(i for i, f in enumerate(plan['functions']) if f['name'] == 'main'), [])
         w = m.apply(w, [])
         w = m.apply(w, [TERMINAL])
+        while isinstance(w, tuple) and w[0] == 'request':
+            w = m.apply(w[3], [m.effect(w)])
         tag, fields = m.view(w, m.rep['IO.OP'])
         if tag == 0:
             outcome = {'exit': 0}

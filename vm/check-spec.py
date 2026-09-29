@@ -2308,8 +2308,11 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest, in
     return results
 
 
-# D22's guard in evaluate.py, which several mutants move or remove.
-BOOK_GUARD = "        if self.entry != 'program':\n            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
+# Lines of evaluate.py that several mutants replace: the Top loop's step, and the attribute that a Book
+# mutant reads to tell a Book from a Program (D23 needs no such distinction).
+LOOP = '            w = m.apply(w[3], [m.effect(w)])'
+ENTRY = ("        self.rep = plan.get('representation', {})\n",
+         "        self.rep, self.entry = plan.get('representation', {}), plan['entry']\n")
 
 # Semantic mutants of the reference evaluation: each must change a golden expectation, a Book
 # value or a run control, or be refused by the rule; a crash is never a kill.
@@ -2347,19 +2350,19 @@ EVALUATOR_MUTANTS = [
                               'arm, fields = next((r for r in rows if r[1] == key != WORD), default), ()')]),
     ('case-key-max-wildcard', [('arm, fields = next((r for r in rows if r[1] == key), default), ()',
                                 'arm, fields = next((r for r in rows if r[1] in (key, WORD)), default), ()')]),
-    # Section 7: the debit of an Action's entry stands when its effect stops the machine, which the D20
-    # goldens' `calls` and the Book effect controls count.
-    ('effect-refusal-refunds-debit', [('        return self.apply(operands[0], [self.effect(f)])',
-                                       '        try:\n            r = self.effect(f)\n        except Halt:\n'
-                                       '            self.fuel, self.calls = self.fuel + 1, self.calls - 1\n            raise\n'
-                                       '        return self.apply(operands[0], [r])')]),
+    # Section 7: the debit of the entry that built a request stands when the loop's effect stops the machine,
+    # which the D20 goldens' `calls` count.
+    ('effect-refusal-refunds-debit', [(LOOP, '            try:\n                r = m.effect(w)\n            except Halt:\n'
+                                             '                m.fuel, m.calls = m.fuel + 1, m.calls - 1\n                raise\n'
+                                             '            w = m.apply(w[3], [r])')]),
     # Section 7's fuel boundary (fuel_controls): no golden runs out of fuel.
     ('fuel-never-exhausts', [('        if self.fuel == 0:\n            raise Halt', '        if False:\n            raise Halt')]),
     ('fuel-exhausts-early', [('        if self.fuel == 0:\n            raise Halt', '        if self.fuel <= 1:\n            raise Halt')]),
-    ('effect-before-debit', [("        self.debit()\n        if kind == 'closure':",
-                              "        if kind != 'action' or not operands:\n            self.debit()\n        if kind == 'closure':"),
-                             ('        return self.apply(operands[0], [self.effect(f)])',
-                              '        r = self.effect(f)\n        self.debit()\n        return self.apply(operands[0], [r])')]),
+    # The Action's second application is debited where it builds the request; a debit paid by the loop after
+    # the effect leaves a dropped request free and writes before it meets fuel 0.
+    ('debit-at-perform', [("        self.debit()\n        if kind == 'closure':",
+                           "        if kind != 'action' or not operands:\n            self.debit()\n        if kind == 'closure':"),
+                          (LOOP, '            r = m.effect(w)\n            m.debit()\n            w = m.apply(w[3], [r])')]),
     ('fuel-before-operand-check', [('        if kind not in takes or not takes[kind]():',
                                     '        if self.fuel == 0:\n            self.debit()\n'
                                     '        if kind not in takes or not takes[kind]():')]),
@@ -2471,19 +2474,23 @@ EVALUATOR_MUTANTS = [
      [("            tag, fields = self.view(v, u)\n            if u == nat:",
        "            tag, fields = (0, ()) if isinstance(v, tuple) and v[0] == 'closure' else self.view(v, u)\n            if u == nat:")]),
     ('enter-immediate-target-as-action',
-     [("        kind = f[0] if isinstance(f, tuple) else None\n", "        kind = f[0] if isinstance(f, tuple) else 'action'\n")]),
+     [("        kind = f[0] if isinstance(f, tuple) else None\n",
+       "        f = f if isinstance(f, tuple) else ('action', 0, ())\n        kind = f[0]\n")]),
     ('enter-object-target-admitted',
      [("'terminal': lambda: len(operands) == 1}", "'terminal': lambda: len(operands) == 1, 'obj': lambda: True}")]),
-    # The Action's continuation is entered after its effect, and read only then.
-    ('continuation-read-before-effect',
-     [("        return self.apply(operands[0], [self.effect(f)])",
+    # A request's continuation is entered by the loop after the effect, and read only then: not when the
+    # request is built, not before the effect, and not left unread as the terminal continuation.
+    ('continuation-read-at-build',
+     [("        return ('request', f[1], f[2], operands[0])",
        "        if not (isinstance(operands[0], tuple) and operands[0][0] in ('closure', 'action', 'terminal')):\n"
-       "            raise Halt(ILL_TYPED)\n"
-       "        return self.apply(operands[0], [self.effect(f)])")]),
+       "            raise Halt(ILL_TYPED)\n        return ('request', f[1], f[2], operands[0])")]),
+    ('continuation-read-before-effect',
+     [(LOOP, "            if not (isinstance(w[3], tuple) and w[3][0] in ('closure', 'action', 'terminal')):\n"
+             "                raise Halt(ILL_TYPED)\n" + LOOP)]),
     ('continuation-unread-as-terminal',
-     [("        return self.apply(operands[0], [self.effect(f)])",
-       "        r = self.effect(f)\n        if not isinstance(operands[0], tuple):\n"
-       "            return ('obj', self.rep['IO.OP'], 0, (r,))\n        return self.apply(operands[0], [r])")]),
+     [(LOOP, "            r = m.effect(w)\n            if not isinstance(w[3], tuple):\n"
+             "                w = ('obj', m.rep['IO.OP'], 0, (r,))\n                continue\n"
+             "            w = m.apply(w[3], [r])")]),
     ('final-word-unread-as-emit',
      [("        tag, fields = m.view(w, m.rep['IO.OP'])",
        "        tag, fields = m.view(w, m.rep['IO.OP']) if isinstance(w, tuple) and w[0] == 'obj' else (0, ())")]),
@@ -2495,46 +2502,68 @@ EVALUATOR_MUTANTS = [
                                      '            if tag == 0:\n                break\n'
                                      "            codes.append(self.view(fields[0], self.rep['Char'])[1][0])\n"
                                      '            s = fields[1]\n')]),
-    # Section 8 (D22, effect_controls): only a Program entry performs an effect, and the step stops
-    # before it reads an operand. Each survives every golden and dies by an effect control.
-    ('book-performs-effect', [(BOOK_GUARD, '')]),
-    ('book-drops-effect', [("            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n", '            return 0\n')]),
-    ('program-refuses-effect', [("        if self.entry != 'program':\n", '        if True:\n')]),
-    ('book-refuses-at-fuel-zero', [("        self.debit()\n        if kind == 'closure':",
-                                    "        if kind == 'action' and operands and self.entry != 'program' and self.fuel == 0:\n"
-                                    "            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
-                                    "        self.debit()\n        if kind == 'closure':")]),
-    ('book-refuses-before-debit', [("        self.debit()\n        if kind == 'closure':",
-                                    "        if kind == 'action' and operands and self.entry != 'program':\n"
-                                    "            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
-                                    "        self.debit()\n        if kind == 'closure':")]),
-    ('book-names-the-foreign', [("            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n",
-                                 "            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect' if action[1] == 1"
-                                 " else f'vm foreign {action[1]}'})\n")]),
-    ('book-refuses-after-inspection', [(BOOK_GUARD, ''), ('        codes = self.codes(operands[0])\n',
-                                                          '        codes = self.codes(operands[0])\n' + BOOK_GUARD)]),
-    ('book-refuses-after-scalar-check', [(BOOK_GUARD, ''), ('        self.outgoing(codes)\n',
-                                                            '        self.outgoing(codes)\n' + BOOK_GUARD)]),
-    # A Book writes nothing (effect_controls freeze `stdout` empty on every stop at an Action): an
-    # effect that writes and then stops, or that writes as its Action meets fuel 0, is not that stop.
-    ('book-writes-then-refuses', [(BOOK_GUARD, BOOK_GUARD.replace('            raise', "            self.stdout += b'x\\n'\n            raise"))]),
-    ('book-writes-at-fuel-zero', [("        self.debit()\n        if kind == 'closure':",
-                                   "        if kind == 'action' and operands and self.entry != 'program' and self.fuel == 0:\n"
-                                   "            self.stdout += b'x\\n'\n"
-                                   "        self.debit()\n        if kind == 'closure':")]),
-    # No host call (`effects` 0 on every Book control that stops at an Action): a stop that called the
-    # host first, or did so for the foreign that writes nothing, is not D22's stop.
-    ('book-calls-host-then-refuses', [(BOOK_GUARD, BOOK_GUARD.replace('            raise', '            self.effects += 1\n            raise'))]),
-    ('book-args-calls-host', [(BOOK_GUARD, BOOK_GUARD.replace(
-        '            raise', '            if action[1] != 1:\n                self.effects += 1\n            raise'))]),
-    ('book-refuses-action-build', [("        if op == 'foreign':\n            return ('action', node[2], tuple(operands))\n",
-                                    "        if op == 'foreign':\n            if self.entry != 'program':\n"
-                                    "                raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
-                                    "            return ('action', node[2], tuple(operands))\n")]),
-    ('book-refuses-erased-application', [('        if not operands:\n            return f\n',
-                                          "        if not operands:\n            if self.entry != 'program':\n"
-                                          "                raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
-                                          '            return f\n')]),
+    # Section 8 (D23; the goldens keep-swapped, keep-first, run2-flag, keep-non-scalar and book-drop, and effect_controls):
+    # the Action's second application builds an inert request, and only Top's loop performs the one a run returns.
+    # Each survives some golden or run control, and dies by those that name it.
+    # The eager rule, that round 10 froze and the seed's `keep(x, y) = y` refutes, and a request dropped by the
+    # function that received it or by the let that bound it, performed anyway:
+    ('eager-effect', [("        return ('request', f[1], f[2], operands[0])",
+                       "        return self.apply(operands[0], [self.effect(('request', f[1], f[2], operands[0]))])")]),
+    ('dropped-argument-request-performed',
+     [("        return self.eval(f['body'], operands + [None] * f['slots'])",
+       "        env = operands + [None] * f['slots']\n        w = self.eval(f['body'], env)\n        for v in env:\n"
+       "            if isinstance(v, tuple) and v[0] == 'request' and v is not w:\n                self.effect(v)\n        return w")]),
+    ('dropped-let-request-performed',
+     [("            env[node[2]] = self.eval(node[3], env)\n            return self.eval(node[4], env)\n",
+       "            env[node[2]] = self.eval(node[3], env)\n            w = self.eval(node[4], env)\n"
+       "            if isinstance(env[node[2]], tuple) and env[node[2]][0] == 'request' and env[node[2]] is not w:\n"
+       "                self.effect(env[node[2]])\n            return w\n")]),
+    # The loop enters k before the effect: it survives every run that finishes, and dies where k's entry stops.
+    ('loop-enters-k-before-effect', [(LOOP, '            req, w = w, m.apply(w[3], [0])\n            m.effect(req)')]),
+    # A request is never inspected: a Case that picks an arm of it, and each read of a word that takes it for
+    # an ill-typed word (a Case, a scalar, an Enter's target) and not for a request.
+    ('case-request-picks-arm', [("        self.read(w)\n        if t == self.rep.get('Nat') and isinstance(w, int):",
+                                 "        if isinstance(w, tuple) and w[0] == 'request':\n            return 0, (0,)\n"
+                                 "        if t == self.rep.get('Nat') and isinstance(w, int):")]),
+    ('view-request-as-ill-typed', [("        self.read(w)\n        if t == self.rep.get('Nat') and isinstance(w, int):",
+                                    "        if t == self.rep.get('Nat') and isinstance(w, int):")]),
+    ('word-request-as-ill-typed', [("        self.read(w)\n        if not isinstance(w, int):", "        if not isinstance(w, int):")]),
+    ('enter-request-as-ill-typed', [("        self.read(f)\n", "")]),
+    ('describe-request-word-admitted',
+     [("            tag, fields = self.view(v, u)\n            if u == nat:",
+       "            tag, fields = (0, ()) if isinstance(v, tuple) and v[0] == 'request' else self.view(v, u)\n            if u == nat:")]),
+    # A request's operands, and D20's check of them, belong to the loop that performs it, not to the application that builds it.
+    ('request-operands-read-at-build', [("        return ('request', f[1], f[2], operands[0])",
+                                         "        if f[1] == 1:\n            self.codes(f[2][0])\n        return ('request', f[1], f[2], operands[0])")]),
+    ('request-scalar-check-at-build', [("        return ('request', f[1], f[2], operands[0])",
+                                        "        if f[1] == 1:\n            self.outgoing(self.codes(f[2][0]))\n"
+                                        "        return ('request', f[1], f[2], operands[0])")]),
+    # The loop performs each request it is handed, one after another, and nothing that is not returned to it.
+    ('loop-refuses-request', [(LOOP, '            raise Halt(UNSUPPORTED)')]),
+    ('loop-performs-once', [("        while isinstance(w, tuple) and w[0] == 'request':\n",
+                             "        if isinstance(w, tuple) and w[0] == 'request':\n")]),
+    ('emit-performs-its-field',
+     [("        if tag == 0:\n            outcome = {'exit': 0}\n",
+       "        if tag == 0:\n            if isinstance(fields[0], tuple) and fields[0][0] == 'request':\n"
+       "                m.effect(fields[0])\n            outcome = {'exit': 0}\n")]),
+    # A Book has no loop (D22 follows from D23): one that runs it performs the request its result is, and one that
+    # refuses or drops a request where it is built (D22's rule of round 9, which D23 replaces) is not the seed's, nor
+    # is one that refuses to build the Action or to apply it to its erased R.
+    ('book-runs-loop', [("        w = m.call(index, list(ordinals))\n",
+                         "        w = m.call(index, list(ordinals))\n        while isinstance(w, tuple) and w[0] == 'request':\n"
+                         "            w = m.apply(w[3], [m.effect(w)])\n")]),
+    ('book-refuses-request-build', [ENTRY, ("        return ('request', f[1], f[2], operands[0])",
+                                            "        if self.entry != 'program':\n            raise Halt(UNSUPPORTED)\n"
+                                            "        return ('request', f[1], f[2], operands[0])")]),
+    ('book-enters-k-without-effect', [ENTRY, ("        return ('request', f[1], f[2], operands[0])",
+                                              "        if self.entry != 'program':\n            return self.apply(operands[0], [0])\n"
+                                              "        return ('request', f[1], f[2], operands[0])")]),
+    ('book-refuses-action-build', [ENTRY, ("        if op == 'foreign':\n            return ('action', node[2], tuple(operands))\n",
+                                           "        if op == 'foreign':\n            if self.entry != 'program':\n"
+                                           "                raise Halt(UNSUPPORTED)\n            return ('action', node[2], tuple(operands))\n")]),
+    ('book-refuses-erased-application', [ENTRY, ('        if not operands:\n            return f\n',
+                                                 "        if not operands:\n            if self.entry != 'program':\n"
+                                                 "                raise Halt(UNSUPPORTED)\n            return f\n")]),
     # Sections 8 and 10 (D20 on a Halt's message): read after the code, whole, then checked.
     ('halt-message-unchecked', [('            m.outgoing(message)\n', '')]),
     ('halt-message-refused', [('            m.outgoing(message)\n', "            raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})\n")]),
