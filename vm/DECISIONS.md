@@ -704,9 +704,9 @@ branch brings all of them.
 
 The review of round 9 changed no behaviour of the machine, so neither VM has to change for a
 frozen control. Measured on the reviewer's builds, vm-core `dcc7c095` and vm-model `07e6db73`
-(which still predate D22, entries 21 and 28): both agree with the 25 new inspection, UTF-8 and
-`program-print-through-id` run controls and refuse the 16 new refusal controls with the frozen
-reason. What changes is what they are held to, all by the harnesses that read `check-spec.py`:
+(which still predate D22, entries 21 and 28): both agree with the 26 new inspection, UTF-8 and
+`program-print-through-id` run controls (23, 2 and 1) and refuse the 16 new refusal controls with the
+frozen reason. What changes is what they are held to, all by the harnesses that read `check-spec.py`:
 
 1. **The run-control count is 85, the refusal count 87 (22 byte-level, 9 at the limits, 56
    plan-level).** vm-core's gate reads both from SPEC §12 and §4 (`run_control_count`,
