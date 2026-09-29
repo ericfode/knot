@@ -52,12 +52,9 @@ and unique names, so a new increment appends its gate and required name;
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,
 timeouts, blocked dependencies, and malformed/missing completion records exit 1.
-The Perch context increment adds gate 15, `perch-context`: 33 literal context
-controls, eight semantic mutants, one complete seed signature check, and two
-byte-identical offline compiler-manifest preflights. The perch-cap increment adds
-seven controls and five mutants for the names-only tier of the encoded-state
-fitting (40 controls and 13 mutants in all;
-[contract items 10 to 14](../../tests/perch-context/CONTRACT.md)). The literal command uses
+The Perch context increment adds gate 15, `perch-context`: 40 literal context
+controls, thirteen semantic mutants, one complete seed signature check, and two
+byte-identical offline compiler-manifest preflights. The literal command uses
 the runner's frozen `BEND_LIB` by default. Package identities and request hashes
 are independent of that store's location. It writes only its own
 `tests/perch-context/receipts/context.json` in scratch. It makes no provider
@@ -66,6 +63,11 @@ The `io-abi-2` increment appends gate `io-abi-2` for the `knot-io-2` host
 delta ([IO-ABI.md](IO-ABI.md#knot-io-2-delta)). Its counts record the foreign
 reference, seed-witness, read, parity and mutant totals; it writes
 `tests/compiler-io-abi-2/receipts/{host,reference}.json`.
+
+The gate began with 33 controls and eight mutants. The perch-cap increment, the
+names-only tier of the encoded-state fitting, accounts for seven of the controls and
+five of the mutants; its expectations are items 10 to 14 of the
+[context contract](../../tests/perch-context/CONTRACT.md).
 
 The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
 
