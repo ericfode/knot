@@ -74,6 +74,8 @@ GATES = (
          ('tests/compiler-io-abi-2/receipts/host.json', 'tests/compiler-io-abi-2/receipts/reference.json')),
     Gate('selfhost', ('python3', 'tests/compiler-selfhost/check.py'),
          ('tests/compiler-selfhost/receipts/selfhost.json',)),
+    Gate('prechecks', ('python3', '-B', 'tests/prechecks/check.py'),
+         ('tests/prechecks/receipts/prechecks.json',)),
 )
 
 
