@@ -557,9 +557,11 @@ def atomic(label: str, out: dict):
 
 def observed_wrong(job: dict, out: dict) -> bool:
     """The run `out` differs from the row's frozen run (unless the row freezes none), its registers or its yields, or
-    exceeds a bound the row states; or, on an `atomic` row, its refusal changed the machine (harness.mjs)."""
+    exceeds a bound the row states; or, on an `atomic` row, its refusal changed the machine (harness.mjs), or, on an
+    `audit` row, a state of the run broke a layout of SPEC sections 5 and 6 (`audit` in harness.mjs)."""
     return ((job['want'] is not None and shown(out, job['want']) != job['want'])
             or (job.get('atomic') and bool((out.get('atomic') or {}).get('moved')))
+            or (job.get('trace') == 'audit' and out.get('broken') is not None)
             or any((out['yields'] if k == 'yields' else out['effects'] if k == 'effects' else out['state'][k]) != v
                    for k, v in job.get('dump', {}).items())
             or any(out['state'][k] > most for k, most in job.get('at_most', {}).items()))
@@ -1144,8 +1146,8 @@ def run_study(groups: dict, source: str, args: list) -> int:
     shows a wrong observation (the gate's `observed_wrong`) or outlives its deadline (a hang). A mutant no row
     kills must be explained in `study.EQUIVALENT`, and each explanation must name a survivor. Writes vm/receipts/study.json."""
     workers = int(args[args.index('--jobs') + 1]) if '--jobs' in args else 6
-    only = args[args.index('--only') + 1] if '--only' in args else ''
-    mutants = [m for m in study.mutants(source) if only in m[0]]
+    only = args[args.index('--only') + 1] if '--only' in args else ''  # names containing any of these, comma-separated
+    mutants = [m for m in study.mutants(source) if any(o in m[0] for o in only.split(','))]
     started = time.monotonic()
 
     def strike(item, order=STUDY_ORDER):
@@ -2099,7 +2101,7 @@ def main(args: list) -> int:
         require(derived == (r['expect'], r['dump']), f"reference {r['name']}: frozen {r['expect']} {r['dump']}, "
                                                      f"the reference evaluation {derived}")
     reference_jobs = [{'id': f"reference:{r['name']}", 'files': {staged(r['image']): str(sandbox / staged(r['image']))},
-                       'argv': [staged(r['image']), *r['argv']], 'want': r['expect'], 'dump': r['dump']} for r in compared]
+                       'argv': [staged(r['image']), *r['argv']], 'want': r['expect'], 'dump': r['dump'], 'trace': 'audit'} for r in compared]
     ran = pool(lambda j: host(module, sandbox, j['argv']), reference_jobs)
     dumped = harness([{**{k: j[k] for k in ('id', 'files', 'argv')}, 'wasm': str(test), 'trace': 'audit', 'atomic': True}
                       for j in reference_jobs])
@@ -2394,7 +2396,7 @@ def main(args: list) -> int:
     # also compares the VM's own outcome registers.
     source = (HERE / 'vm.wat').read_text()
     goldens_jobs = [{'id': f'golden:{n}', 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')}, 'argv': golden_argv(n),
-                     'want': expected_run(expected['cases'][n]), 'dump': expected_dump(expected['cases'][n])}
+                     'want': expected_run(expected['cases'][n]), 'dump': expected_dump(expected['cases'][n]), 'trace': 'audit'}
                     for n in names]
     fixture_jobs = [{'id': f"fixture:{r['name']}", 'files': {staged(r['image']): str(sandbox / staged(r['image']))} if r['image'] else {},
                      'argv': [staged(r['image']), *r['argv']], 'want': r['expect']} for r in runs]
@@ -2404,7 +2406,7 @@ def main(args: list) -> int:
     admitted_jobs = [{'id': f"admitted:{r['label']}", 'files': {r['argv'][0]: str(loaded / r['argv'][0])},
                       'argv': r['argv'], 'want': frozen[r['label']]['expect']} for r in welcome]
     invocation_jobs = [{'id': f'invocation:{label}', 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')},
-                        'argv': invocation_argv[label], 'want': expected_run(row), 'dump': expected_dump(row)}
+                        'argv': invocation_argv[label], 'want': expected_run(row), 'dump': expected_dump(row), 'trace': 'audit'}
                        for label, n, row in invoked]
     run_jobs = [{'id': r['label'], 'files': {r['argv'][0]: str(loaded / r['argv'][0])}, 'argv': r['argv'],
                  'want': r['want'], 'dump': r['dump']} for r in run_rows]

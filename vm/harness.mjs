@@ -20,6 +20,9 @@ import path from 'node:path';
 import vm from 'node:vm';
 import {fileURLToPath} from 'node:url';
 
+// no row prints a million lines (each print is at least two entries of a run whose fuel is a million); a mutant that repeats one does
+const MAX_PRINTS = 1_000_000;
+
 class Stop extends Error {
   constructor(status, exit) { super(status); Object.assign(this, {status, exit}); }
 }
@@ -140,7 +143,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
     },
     print(p, n) {
       stdout.push(Buffer.from(text(p, n) + '\n'));
-      prints++;
+      if (++prints > MAX_PRINTS) throw new Stop('Timeout', 4);  // a run that prints without end is a hang: stopped before it fills the process
     },
     die(code, p, n) {
       stderr.push(Buffer.from(text(p, n) + '\n'));

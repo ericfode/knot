@@ -43,7 +43,7 @@ BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 582 systemat
 | Book result | `print("Evaluated\ttype\ttag\ttree")`, then `knot_main` returns (exit 0) |
 | Program `Emit` / `Halt` | return (exit 0) / `die(code, message)` |
 | HostFailure | `die(5, "HostFailure\t<phase>\t<code>")`; the phase is `image`, `invoke`, `arguments` or `io` (`io abi`: D20's non-scalar output) |
-| Unsupported | `die(3, "Unsupported\t<phase>\t<code>")`: `invoke result-type`, and `vm foreign` |
+| Unsupported | `die(3, "Unsupported\t<phase>\t<code>")`: `invoke result-type`, `vm foreign` and `vm effect` |
 | InternalFailure | `die(6, "InternalFailure\tvm\tinternal")` |
 | Exhausted | `exhausted(kind)` |
 
@@ -126,9 +126,12 @@ adopt them or record its own, so that lockstep compares like with like.
 1. **Reclamation.** vm-core has none (vm-rc adds it). Cells carry rc = 1.
    Constants and the terminal continuation are immortal. `$dup` and `$drop`
    mark every substep of §5–§7 and are empty.
-2. **Foreign leaves.** vm-core performs only `IO.print`. An image that
-   contains any other foreign id is refused as `Unsupported vm foreign` before
-   any entry: a D4 capability gap, never Invalid. vm-io lifts this.
+2. **Foreign leaves.** vm-core performs only `IO.print`. A Program image that
+   names any other foreign id is refused as `Unsupported vm foreign` before any
+   entry, though its `main` may never reach it: a D4 capability gap, never Invalid.
+   A Book loads whatever foreign it holds, since it never performs (D22): `book-args`
+   (`IO.args`) builds a request and stops `Unsupported vm effect` where a read meets it
+   (choice 17). vm-io lifts the refusal.
 3. **Every operand is read over its whole extent (settled by SPEC §6 and
    §9, vm-spec DECISIONS 18).** A prim inspects each operand at its §9 type, in
    operand order, before it computes or allocates: a scalar's word, the four
@@ -165,10 +168,13 @@ adopt them or record its own, so that lockstep compares like with like.
    | the operand of Succ and of Chr | `$complete`: `$num`, before the `NatRange` test or any allocation |
    | prims 0–33, the four conversions included | `$prim`: `$num` on each operand, in operand order |
    | String prims 34–38 | `$seq`, `$append`, `$reverse` and `$prim` walk each String with `$slen` first |
-   | an Enter's target | `$enter`: its class, then its operand count (§7) |
-   | every rendered word | `$describe`: `$num` or `$tagof` |
-   | an Action operand | `$perform` → `$utf8out`, whose `$slen` walks the whole String before the scalar check (D20) |
-   | the final IO.OP, a Halt's code and message | `$finish`: the IO.OP check, `$num` on the code, then `$utf8out` on the message |
+   | an Enter's target | `$enter`: a request first, then its class, then its operand count (§7) |
+   | every rendered word | `$describe`: `$num` or `$tagof`, each before the word's visit is charged (choice 6) |
+   | a request's operand | `$serve` → `$utf8out`, whose `$slen` walks the whole String before the scalar check (D20) |
+   | the final IO.OP, a Halt's code and message | `$finish`: the IO.OP check, `$num` on the code, then `$utf8out` on the message, all before `act` is dropped |
+
+   A request is read first at every point above (`$request`, choice 17): `Unsupported vm effect`, whatever the type and before
+   any state changes, but at a Case, whose Default takes it.
 
    A byte List's extent (§6, `File.write_bytes`) has no site here: vm-core
    refuses every foreign but `IO.print` at load (choice 2), so vm-io owes it,
@@ -188,7 +194,13 @@ adopt them or record its own, so that lockstep compares like with like.
    spelled with its own type's Zero and Succ names. The 16 MiB bound applies
    to the tree text, separators included, after `Evaluated\ttype\ttag\t`.
    Both bounds are inclusive. SPEC §8 now states this reading (vm-spec
-   `0e07562`), and its four display run controls pin it.
+   `0e07562`), and its four display run controls pin it. A word is inspected
+   before its visit is charged: an ill-typed word is no constructor, so it is
+   no visit. Review round 6 found `$describe` charging first, so that the
+   1,048,577th visit was `Exhausted` (display) where the word is ill-typed
+   (`describe-order-1048576`; SPEC §6.3 says the same). A Book's describe
+   domain has no `none`-typed field and no arrow (§8 step 5): such a result is
+   `Unsupported invoke result-type` before any entry, and rows pin both classes.
 7. **Invocation order.** Checks run in this order, which SPEC §8 now states
    whole (vm-spec D16):
    1. no IMAGE word: `arguments usage`;
@@ -213,24 +225,38 @@ adopt them or record its own, so that lockstep compares like with like.
 
    Step 1 is the host's: without an IMAGE word there is no image to read.
    Steps 2–5 are §8's; the 13 argument controls and `invoke-words` pin them.
-8. **Halted states.**
-   - **Stated limit.** An ill-typed operand of a prim, Succ or Chr halts with
-     its Gather frame already popped. When the last operand arrives, `$run`
-     pops the frame (`$top` becomes the operand block) and only then calls
-     `$complete`, which inspects the operands (`$num`, `$slen`). A step that
-     inspects first would leave the frame in the halted state.
+8. **Stops change nothing (SPEC §6.3).** A step that stops the machine, by a refusal, a halt or an exhaustion of any kind, has
+   no post-state: the control stays pending, and `act`, the frames and `top`, every cell, the bump pointer, the counters and
+   everything written or called are as the step found them. The one change a stop leaves is the debit of an Enter whose step 2 or 3 stopped (§7).
+   Every check of a step comes before its first change, and where two would both stop it the earlier names the stop: a request
+   (`Unsupported vm effect`), then a word's type (`ill-typed`), then the limits in the order of the row's substeps. `vm.wat` orders each
+   row so:
 
-     The outcome, `HostFailure image` (`ill-typed`), the heap and `calls` do
-     not depend on it: the inspection precedes every allocation and `$dup` and
-     `$drop` do nothing in vm-core. No control observes it: the run controls
-     and the dump rows pin a halted state's outcome, cause and `calls`, and the
-     structural audit runs before each transition, so it never sees the state
-     a halt leaves. Only a comparison of the frames of such a halt would tell
-     the two readings apart. None exists, and the reading is not changed,
-     since no outcome depends on it.
-   - At zero fuel the pending Enter's registers are kept and the mode reads
-     Halt. §7 asks that the Enter stay in the state, while §6 lists Halt as a
-     control.
+   | Row | Its checks, then its changes |
+   |---|---|
+   | Return, top Gather | `$complete` reads the last operand from `val` (`$opnd`), inspects, tests NatRange and allocates the result; `$pop` then stores that operand and pops the frame. `$prim` takes its operands as words. A refusal leaves the Gather frame with its last slot 0 and its count one short. |
+   | Eval Case | the scrutinee's inspection, then `$spare` for the Scope (kind 3), then the predecessor's cell (kind 2), then the push and the binds. A heap stop leaves no Scope (`nat-pred-heap`). |
+   | Enter | a request as the target, its class and operand count, fuel; then `$debit`, `$tail` (a Call frame's room, kind 3) and `$alloc` (the Activation, kind 2); only then `$leave` (a tail entry's pops and release) and `$activate`. A stop after the debit leaves the pending Enter, its Scope frames and `act` (`tail-heap`). |
+   | Return, top InvokeFunction | `$spare` for the 16 bytes of InvokeArgument on the region as the pop leaves it; then the pop and the push (`invoke-frames`). |
+   | String prims | `$fit` for every cell of a result before the first is allocated, `append`'s block as before (`reverse-heap-short`, `show-heap-short`). |
+   | Return, top Top | a Book's description (`$describe`: every word inspected and then charged, the text built in scratch) or the loop (`$serve` and `$finish`: an operand, an IO.OP, a Halt's code and message inspected, D20's scalar check) refuses before `act` is dropped or anything is written; each drops `act` once its checks have passed. |
+
+   *Amended by the coordinator's ruling and vm-spec round 14.* This choice used to state a limit: Return to Gather popped the
+   frame before `$complete` inspected the operands or tested NatRange, and Return to Top dropped `act` before it inspected an
+   IO.OP or a Halt (vm-lockstep findings 1 and 2, 23 and 2 runs). Both are gone, and so is the Book's exemption (a description that
+   stops no longer finds `act` dropped). `nat-pred-heap` is re-frozen: its `top` counted the Scope that §6.1 used to leave pushed.
+
+   *What holds it.* The harness's `atomic` replay plays every run that ends in a stop to its last step and names what that step changed
+   (registers, frame words, cells); the goldens, invocations, run and admitted controls, reference rows, admitted fuzz images, the
+   lane and the dump and limited rows are held to none. The witness rows pin by hand what a replay cannot know absolutely, and
+   eight mutants restore a half-done step (group `atomic`, `limited`).
+
+   *What stays open.* A `memory.grow` that the host refuses traps (§5: HostFailure, no state to keep); `$utf8out` grows memory
+   before D20's scan (choice 11, vm-io's); and there is no release, so the release's worklist and a tail entry's release-then-allocate
+   (§6.3) wait for vm-rc.
+
+   At zero fuel the pending Enter's registers are kept and the mode reads Halt. §7 asks that the Enter stay in the state, while §6 lists Halt
+   as a control; vm-lockstep confirmed the reading (95 fuel stops).
 9. **A `Halt` result.** Its message is converted to UTF-8 before the result
    is dropped.
 10. **4 GiB.** A cell or an `append` block may end exactly at 4 GiB: §5 stops
@@ -383,6 +409,22 @@ adopt them or record its own, so that lockstep compares like with like.
     (19,697 bytes; was `41ca972b…cddc`, 19,581). The 21 lines it adds sit above every
     function of the study, whose survivors' names moved by 21.
 
+17. **A request is a value (D22, D23, D24; SPEC §5 class 5, §6, §7, §8).** An Action applied to its continuation `k` builds a
+    request, a class-5 cell `[foreign, operand…, k]`, and performs nothing (`$enter`'s Action branch): no operand is read, no foreign id
+    checked, no host called, and the entry that builds it pays its debit. A request is inert, and every read meets it first
+    (`$request`) and stops `Unsupported vm effect` (the reason code `effect`; D4: never Invalid): `$num`, `$tagof`, `$scell`, an Enter's
+    target before its operand count and its debit, and so describe's result and fields, a prim's operand and a String's tail. A Let, a
+    Reference, a Construct, a Foreign, a capture and an operand move a request unread, so it can be stored, passed and dropped, and a
+    dropped request is no effect. One read takes a request without refusing it (D24): a Case matches no row of a request in either mode, so
+    `$select` takes its Default, unread and binding nothing, at any scrutinee type, and refuses one only where it has no Default.
+    Only Top's loop performs one (`$serve`), the one a run returns to phase 3: it reads the operand whole and makes D20's scalar check
+    (`$utf8out`), drops `act`, calls the host and enters `k` with IO.print's answer, the Unit immediate, pending as an Enter, the phase
+    still 3, so the loop is a loop and frames do not accumulate across effects. Its step is no entry and pays nothing. A Book has no
+    loop (D22): it loads whatever foreign it holds and stops `Unsupported vm effect` where a read meets its request (`book-args`),
+    while a Program that names another foreign than IO.print is still refused at load (choice 2). The harness counts host calls for
+    requests (`effects`): every `print`, less the one that describes a completed Book. The audit reads class 5 (its edges are the
+    operands and `k`, not the foreign word).
+
 ## Findings for the spec owner
 
 - **A chain of Closures has no §4 limit on its scope depth (open).** §4 limits one
@@ -436,10 +478,12 @@ adopt them or record its own, so that lockstep compares like with like.
   original on the nine above, a lazy stand-in for their list on the rest, and
   the patched codec agree on every verdict, and the two corpora are generated
   in 1.2 s and 42 MiB instead of 35 GB.
-- **Ambiguities.** Choice 8's zero-fuel state is a real ambiguity in §6–§7 and
-  needs one normative reading before lockstep; its Gather frame at an
-  ill-typed halt is a stated limit no control observes. SPEC §8 has settled
-  choice 6, and §6.1 choice 5 (D17).
+- **Ambiguities (resolved).** Choice 8's zero-fuel state was a real ambiguity in §6–§7;
+  vm-lockstep confirmed the reading against the model (95 fuel stops, the pending Enter,
+  its target and operands alike) and §7 keeps the Enter pending. Its Gather frame at an
+  ill-typed halt was a stated limit that no control observed: SPEC §6.3 (round 14) rules
+  that a stop changes nothing, and choice 8 follows it. SPEC §8 has settled choice 6, and
+  §6.1 choice 5 (D17), which round 14 reverses at a heap stop (no Scope is left pushed).
 - **Chr's inspection (choice 13, resolved).** §6's Inspection list now names
   the operand of a Chr construction (vm-spec `31aeaf2`).
 - **Other readings where the reference evaluation differs.** These are not
@@ -450,9 +494,10 @@ adopt them or record its own, so that lockstep compares like with like.
     §9 now gives every extent (vm-spec DECISIONS 18); the VM follows it
     (choice 3). vm-spec's controls `inspect-append-b` and `inspect-is-empty`
     freeze both points, and the VM halts `ill-typed` at each.
-  - A `Halt` message holding a surrogate. The VM refuses it as `HostFailure io
-    abi`: it treats the message as an outgoing String under §10. The
-    reference's `program` returns the Halt with its codes.
+  - A `Halt` message holding a surrogate (resolved). The VM refuses it as `HostFailure io
+    abi`: it treats the message as an outgoing String under §10, which SPEC §8 now
+    says (DECISIONS entry 24), and the reference's `program` refuses it too
+    (`halt-surrogate`, `halt-scalar`).
   vm-io owns the effect path.
 
 ## Evidence (gate `vm-core`)
