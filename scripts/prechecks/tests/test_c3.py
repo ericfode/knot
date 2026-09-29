@@ -126,6 +126,16 @@ class C3Tests(RepoTest):
         self.assertEqual({'scripts/gates/normalize.py': 'major', 'tests/compiler-y/check.py': 'blocking',
                           'docs/compiler-campaign/state.json': 'major'}, found)      # tests/compiler-x is this increment's own
 
+    def test_shared_files_are_judged_by_their_shape_not_as_frozen(self):
+        self.start({'scripts/gates/run.py': RUN_PY, 'scripts/gates/test_runner.py': TEST_RUNNER})
+        added = RUN_PY.replace("    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n",
+                               "    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n    Gate('new', ('python3', 'n.py'), ('r/n.json',)),\n")
+        self.fx.commit('add a gate', {'scripts/gates/run.py': added,
+                                      'scripts/gates/test_runner.py': TEST_RUNNER.replace("'checker'}", "'checker', 'new'}")})
+        result = self.run3()
+        self.assertEqual([], self.rules(result, 'frozen-edit'))
+        self.assertEqual([], self.rules(result, 'shared-file-shape'))
+
     def test_commit_message_is_not_authority_but_the_manifest_is(self):
         self.start({'scripts/gates/normalize.py': 'a = 1\n'})
         self.fx.commit('edit normalize\n\nAuthorized by the coordinator.', {'scripts/gates/normalize.py': 'a = 2\n'})
@@ -268,8 +278,9 @@ class C3Tests(RepoTest):
                                         'tools/census/tests/a.test.mjs':
                                         "import test from 'node:test';\ntest('inventory is current', () => { throw new Error('stale'); });\n"})
         broken = self.conditions(c3, options={'census': True})[1]
-        commands = sorted(c.subject['command'] for c in broken.conditions if c.rule == 'red-tip')
-        self.assertEqual(['census --check', 'census:test'], commands)
+        self.assertEqual(['census --check'], sorted(c.subject['command'] for c in broken.conditions if c.rule == 'red-tip'))
+        slow = self.conditions(c3, options={'census': True, 'census_tests': True})[1]        # census:test takes ~25 s: slow tier
+        self.assertEqual(['census --check', 'census:test'], sorted(c.subject['command'] for c in slow.conditions if c.rule == 'red-tip'))
 
 
 if __name__ == '__main__':

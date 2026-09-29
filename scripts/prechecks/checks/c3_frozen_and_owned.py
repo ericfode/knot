@@ -12,7 +12,7 @@ Rules (DESIGN 3.3). Authorization is read from main, never from the branch and n
   R8 generator-not-reproducible   (declared generators only)
   R9 normalized-comparison
   R10 history lints (trailer, red wording, census approval summary, mixed-gate commit)
-  R11 red-tip                 census:test / census --check fail at head
+  R11 red-tip                 census --check fails at head (fast tier); census:test too in the slow tier
 """
 from __future__ import annotations
 
@@ -175,10 +175,11 @@ def _superset(old, new) -> bool:
 def frozen_edits(ctx) -> list[Condition]:
     found = []
     data = ctx.manifest.frozen_data()
+    appends = ctx.manifest.appends()
     for change in ctx.changes():
         path = change.old_path or change.path
-        if change.status == 'A' or not ctx.manifest.is_frozen(path) or globs.match_any(data, path):
-            continue                                   # additions are fine; data files get the row check (R6)
+        if change.status == 'A' or not ctx.manifest.is_frozen(path) or globs.match_any(data, path) or path in appends:
+            continue                                   # additions are fine; data files get the row check (R6), shared files R2
         if ctx.manifest.is_authorized(path) or (change.old_path and ctx.manifest.is_authorized(change.path)):
             continue
         assertions = bool(re.search(r'(?:^|/)(?:check[^/]*\.py|trust\.ts|host-check\.py)$', path))
@@ -520,10 +521,12 @@ def red_tip(ctx) -> tuple[list[Condition], str]:
     if code is None:
         return [], 'census --check timed out or node is missing'
     if code != 0:
+        text = (err or out).decode(errors='replace')
+        lines = [l for l in text.splitlines() if l.strip() and not l.startswith(('unrecognized-suite', '(node:', '(Use '))]
         found.append(Condition(ID, 'red-tip', 'major', {'command': 'census --check'}, expected='census --check passes at head',
-                               observed=(err or out).decode(errors='replace').strip().splitlines()[-1][:160] if (err or out) else f'exit {code}',
+                               observed=(lines[0] if lines else f'exit {code}')[:160],
                                fix_hint='Run `npm run census` and review the approval policy.'))
-    if (export / 'tools/census/tests').is_dir():
+    if (export / 'tools/census/tests').is_dir() and (ctx.tier in ('slow', 'all') or ctx.options.get('census_tests')):
         tests = sorted(p.name for p in (export / 'tools/census/tests').glob('*.test.mjs'))
         code, out, err = ctx.run(['node', '--test', *[f'tools/census/tests/{t}' for t in tests]], cwd=export, timeout=120)
         if code not in (0, None):

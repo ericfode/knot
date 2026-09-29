@@ -1,7 +1,7 @@
 """C4 receipt-integrity: a committed receipt against the tree it describes.
 
 Rules (DESIGN 3.4). Scope is receipts added or changed between the effective base and head, never the
-whole tree: main already carries about twenty legacy package receipts with host paths.
+whole tree: main already carries 52 legacy receipt and evidence files with host paths.
 
   R1 host-path                    a host-specific path in a changed receipt
   R2 stale-receipt-hash           a recorded input hash differs from the recomputed one (ratcheted against base)
@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 
 from lib import gaterun
@@ -261,9 +262,19 @@ def date_only(ctx, receipts_touched) -> tuple[list[Condition], str]:
 def gate_run(ctx) -> tuple[list[Condition], str]:
     """R4: read the implementer's newest gate run whose snapshot equals this head."""
     summary, path, reason = gaterun.find(ctx)
+    if summary is None and ctx.tier == 'slow' and not ctx.options.get('no_gate_run') and _is_working_copy(ctx):
+        # The slow tier runs the registered gates itself (ten minutes or more) on the working copy it is judging.
+        ctx.run([sys.executable, '-B', 'scripts/gates/run.py'], cwd=ctx.root, timeout=2400)
+        summary, path, reason = gaterun.find(ctx)
     if summary is None:
         return [], reason
     return _read_summary(ctx, summary, path), ''
+
+
+def _is_working_copy(ctx) -> bool:
+    """True when the judged tree is what a gate run in this checkout would export (not a historical --head)."""
+    return (ctx.root / 'scripts/gates/run.py').is_file() and (ctx.worktree or (
+        ctx.head_commit is not None and ctx.head_commit == ctx.repo.rev_parse('HEAD') and not ctx.dirty))
 
 
 def _read_summary(ctx, summary: dict, path: str) -> list[Condition]:

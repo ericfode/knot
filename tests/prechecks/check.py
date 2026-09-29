@@ -56,6 +56,17 @@ MUTANTS = [
      'tests.test_c6.C6Tests.test_stale_count_after_the_receipt_moves'),
     ('packets-uncapped-evidence', 'packets.common', 'cap', 'lambda text, limit=12288: (text, "")',
      'tests.test_packets.PacketTests.test_cap_marker_text'),
+    ('packets-no-passages', 'packets.builders', "BUILDERS['passages-agree']", 'lambda ctx: ([], [])',
+     'tests.test_packets.PacketTests.test_p2_collects_every_passage_that_mentions_a_term'),
+    ('packets-no-claims', 'packets.builders', "BUILDERS['claim-holds-against-evidence']", 'lambda ctx: ([], [])',
+     'tests.test_packets.PacketTests.test_p1_type_a_selects_the_declaration_that_decides_the_claim'),
+    ('c1-ignore-violations', 'checks.c1_probe_differential', 'violations', 'lambda text, verdicts, outcomes: {}',
+     'tests.test_c1.RuleTests.test_d4_invalid_and_its_clean_control'),
+    ('c7-ignore-timeouts', 'checks.c7_gate_adequacy', 'unscaled_timeouts', EMPTY1,
+     'tests.test_c7.C7Tests.test_unscaled_timeouts'),
+    ('c7-ignore-limits', 'checks.c7_gate_adequacy', 'limits', EMPTY1,
+     'tests.test_c7.C7Tests.test_limit_needs_controls_at_l_minus_one_l_and_l_plus_one'),
+    ('c7-ignore-wiring', 'checks.c7_gate_adequacy', 'wiring', EMPTY1, 'tests.test_c7.C7Tests.test_gate_wiring'),
 ]
 
 
@@ -89,7 +100,7 @@ def main():
     sys.dont_write_bytecode = True
     inputs = sorted(p for p in PACKAGE.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix in ('.py', '.ts', '.json'))
     inputs += sorted(p for p in (ROOT / 'tests/prechecks').rglob('*') if p.is_file() and p != RECEIPT and p != Path(__file__)
-                     and '__pycache__' not in p.parts and 'receipts' not in p.parts)
+                     and '__pycache__' not in p.parts and 'receipts' not in p.parts and p.suffix != '.md')  # docs are not inputs
     inputs += [ROOT / '.perch/rules/prechecks.yaml', ROOT / 'scripts/check-prechecks-rule-wiring.mjs',
                ROOT / 'scripts/prechecks-perch-run.mjs', Path(__file__)]
     record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in inputs}
@@ -103,10 +114,14 @@ def main():
 
         for name, module, function, replacement, test in MUTANTS:
             imported = __import__(module, fromlist=['*'])
-            require(hasattr(imported, function), f'{name}: {module}.{function} is missing')
+            table = re.match(r"(\w+)\['([\w-]+)'\]$", function)                # a dispatch table entry, e.g. BUILDERS['name']
+            require(hasattr(imported, table.group(1) if table else function), f'{name}: {module}.{function} is missing')
             control = run_suite(loader.loadTestsFromName(test))
-            require(control.wasSuccessful() and control.testsRun == 1, f'{name}: its pinning test must pass unmutated: {test}')
-            with mock.patch.object(imported, function, eval(replacement)):
+            require(control.wasSuccessful() and control.testsRun == 1 and not control.skipped,
+                    f'{name}: its pinning test must pass unmutated, and not be skipped: {test}')
+            patch = (mock.patch.dict(getattr(imported, table.group(1)), {table.group(2): eval(replacement)}) if table
+                     else mock.patch.object(imported, function, eval(replacement)))
+            with patch:
                 mutated = run_suite(loader.loadTestsFromName(test))
             require(not mutated.wasSuccessful(), f'Surviving semantic mutant: {name} ({test} still passes)')
             record['mutants'].append({'name': name, 'target': f'{module}.{function}', 'killed_by': test,

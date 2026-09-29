@@ -209,9 +209,10 @@ def run(ctx) -> CheckResult:
         corpus.setdefault(sha(row['text']), (row['family'], row['source'].get('cited', row['sha256'][:8]), row['text'], row.get('seed')))
     for row in load_fixtures(ctx):
         corpus.setdefault(sha(row['text']), (row['family'], row['source'], row['text'], row['seed']))
-    limit = int(ctx.options.get('c1_limit', LIMIT))
+    slow = ctx.tier == 'slow'
+    limit = int(ctx.options.get('c1_limit', 5000 if slow else LIMIT))
     cold = not (ctx.scratch / 'cache' / 'lanes' / ctx.base.treeish / 'check.js').is_file()
-    if cold:
+    if cold and not slow:
         limit = min(limit, COLD_LIMIT)
     rng_seed = int((ctx.head_commit or ctx.head.treeish)[:8], 16)
     fixed = list(corpus.items())
@@ -234,7 +235,7 @@ def run(ctx) -> CheckResult:
     paths = materialize(corpus, programs_dir)
 
     # ---- oracle -------------------------------------------------------------------------------
-    oracle = oracle_mod.Oracle(seed, ctx.scratch / 'seed-cache', budget=200)
+    oracle = oracle_mod.Oracle(seed, ctx.scratch / 'seed-cache', budget=3000 if slow else 200)
     for digest, (_f, _k, _t, verdict) in corpus.items():
         oracle.prefill(digest, verdict)
     plain = {d: paths[d] for d, (_f, _k, text, _v) in corpus.items() if not oracle_mod.IMPORT.search(text)}

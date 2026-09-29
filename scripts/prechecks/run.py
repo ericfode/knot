@@ -39,7 +39,8 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument('--ledger', help='known-conditions ledger file (default: read from main)')
     p.add_argument('--upstream', action='append', default=[], metavar='ID[=REF]',
                    help='declare an upstream increment this branch is stacked on (repeatable)')
-    p.add_argument('--tier', choices=('fast', 'slow', 'all'), default='fast')
+    p.add_argument('--tier', choices=('fast', 'slow', 'all'), default='fast',
+                   help='fast (default): the pre-review stage; slow (or all): the same checks with their minute-scale extras')
     p.add_argument('--only', help='comma-separated check ids, for example C3,C4')
     p.add_argument('--skip', help='comma-separated check ids to skip')
     p.add_argument('--jobs', type=int, default=4)
@@ -76,8 +77,9 @@ def main(argv=None) -> int:
     except SystemExit as error:
         print(error, file=sys.stderr)
         return 2
-    selected = [c for c in checks_mod.load(only, skip)
-                if args.tier == 'all' or (c.slow if args.tier == 'slow' else not c.slow)]
+    selected = checks_mod.load(only, skip)
+    if args.tier == 'all':
+        args.tier = ctx.tier = 'slow'
 
     def progress(outcome):
         print(f'{outcome.check.id} {outcome.check.name}: {outcome.result.outcome} ({outcome.seconds:.1f}s)', file=sys.stderr)
