@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T13:15:51.961022+00:00",
+ "date": "2026-09-29T16:20:50.674251+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "f1f1dd5456764624a01ca822f56680c23c0b32b51c1563ec67925b62c464ed65",
-  "vm/SPEC.md": "312e9598d624049a73f2f1c125d18b50b8fa178575e179377fd5bb8d4390317d",
+  "vm/DECISIONS.md": "5d6bc0325728c38d0cf8028e2b9a73177677d0788cb6574139aba6e39b81a796",
+  "vm/SPEC.md": "89c4384369e7f5a25dd8a150c30be568dc688fbaa66f6d04b80b8c61de4d0714",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,8 +20,8 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "432403372f9724f818ca6aad773d3a684d6c36582138fd706d1b726d873a26c4",
-  "vm/evaluate.py": "3109fd44c0c5fa316ac378c8f2e0d854047a82c6fbde7c532300b7991c89ab7e",
+  "vm/check-spec.py": "b79c5deafb2a869a5376d706f2e1e792e54f81376d7e78a2c1ec70294435ae16",
+  "vm/evaluate.py": "b573d19d8720d2f9b2b9ad4c1499e3338ffbb222e7430c08d53ccded164b241f",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
   "vm/golden/book-drop.plan.json": "e945d79959aae7ebf6a786d5c6702d113c08e0ab6497d9cee5baaf762ec27e3e",
@@ -4810,6 +4810,30 @@
   "run:key-max",
   "run:key-max-miss",
   "run:char-key-max",
+  "run:atomic-ill-typed-chr",
+  "run:atomic-ill-typed-succ",
+  "run:atomic-ill-typed-prim",
+  "run:atomic-ill-typed-case",
+  "run:atomic-ill-typed-render",
+  "run:atomic-nat-succ-range",
+  "run:atomic-nat-add-range",
+  "run:atomic-nat-mul-range",
+  "run:atomic-halt-code",
+  "run:atomic-halt-message",
+  "run:atomic-io-op-closure",
+  "run:atomic-halt-non-scalar",
+  "run:atomic-print-non-scalar",
+  "run:atomic-print-non-scalar-mid",
+  "run:atomic-print-ill-typed",
+  "run:atomic-case-request",
+  "run:atomic-request-rendered",
+  "run:atomic-display-visits",
+  "run:atomic-print-then-non-scalar",
+  "run:atomic-print-then-ill-typed-continuation",
+  "run:atomic-print-then-io-op",
+  "run:atomic-print-then-nat-range",
+  "run:atomic-display-leaf-charged",
+  "run:atomic-display-leaf-ill-typed",
   "codes:surrogate-pair",
   "codes:u1f600",
   "codes:lone-surrogate",
@@ -6136,6 +6160,348 @@
    "stdout": "Evaluated\t0\t1\tOn{}\n",
    "calls": 2,
    "image_sha256": "785914a621529e0db791c505d0ccc317d176ecb26e24020df2a2d81907e036f3"
+  },
+  "atomic-ill-typed-chr": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "2"
+   ],
+   "fuel": 2,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 2,
+   "image_sha256": "178482c14febe93339a05a02e3beba637c35d5212d225b146d8c32264f9c73d5"
+  },
+  "atomic-ill-typed-succ": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "2"
+   ],
+   "fuel": 2,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 2,
+   "image_sha256": "7cebb3e9841bff3b9572745fa2a1f2e2204bd8837770f9bd46b8f525b3c8e42d"
+  },
+  "atomic-ill-typed-prim": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "3"
+   ],
+   "fuel": 3,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 3,
+   "image_sha256": "562635317c93282e04d9116a46762bfe7f69f687cde8d3e125c79ca1744ccedc"
+  },
+  "atomic-ill-typed-case": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "3"
+   ],
+   "fuel": 3,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 3,
+   "image_sha256": "a6dc4a94ae2c12c8f7aee889cdb54d44e40eb34f149a818f6173f990055162e5"
+  },
+  "atomic-ill-typed-render": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "2"
+   ],
+   "fuel": 2,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 2,
+   "image_sha256": "3b74484ee7ddd7bdf3a686116b0038c7447c3e7616b4a03af7c5b9c81cadd6fb"
+  },
+  "atomic-nat-succ-range": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "2"
+   ],
+   "fuel": 2,
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "NatRange",
+   "stdout": "",
+   "effects": 0,
+   "calls": 2,
+   "image_sha256": "f5c42546a90656ac21ed508158d301797c4c2f6db93d45b01eca30835b0c8bd4"
+  },
+  "atomic-nat-add-range": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "2"
+   ],
+   "fuel": 2,
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "NatRange",
+   "stdout": "",
+   "effects": 0,
+   "calls": 2,
+   "image_sha256": "ad719e55041d9f60d76ecd4fb07210f8e80ac09686b32dbb56a19eb0f38bf1eb"
+  },
+  "atomic-nat-mul-range": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "2"
+   ],
+   "fuel": 2,
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "NatRange",
+   "stdout": "",
+   "effects": 0,
+   "calls": 2,
+   "image_sha256": "1e31a37bf01bf8281c52fd04ceb1356af05de1e60500dce7e93856721f1f4bd4"
+  },
+  "atomic-halt-code": {
+   "argv": [
+    "IMAGE",
+    "4",
+    "--"
+   ],
+   "fuel": 4,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 4,
+   "image_sha256": "98762dcd518cb1a69c8f641c1e93c0f3b6f1140ecc359eb829cb297ac095829a"
+  },
+  "atomic-halt-message": {
+   "argv": [
+    "IMAGE",
+    "4",
+    "--"
+   ],
+   "fuel": 4,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 4,
+   "image_sha256": "8b8d64349f902e96178ab5bda81ad58d4de778f75050cee072fabc911680f685"
+  },
+  "atomic-io-op-closure": {
+   "argv": [
+    "IMAGE",
+    "4",
+    "--"
+   ],
+   "fuel": 4,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 4,
+   "image_sha256": "78d3cace2290ca97dd253f86a9271a5d720d8b8b70d9bc58bfae2620ef5a6cd0"
+  },
+  "atomic-halt-non-scalar": {
+   "argv": [
+    "IMAGE",
+    "3",
+    "--"
+   ],
+   "fuel": 3,
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "",
+   "effects": 0,
+   "calls": 3,
+   "image_sha256": "c33cbe9c4668c78dca17790c597c1bd1612e16ed7f7a65d9cd033d0355a509fb"
+  },
+  "atomic-print-non-scalar": {
+   "argv": [
+    "IMAGE",
+    "4",
+    "--"
+   ],
+   "fuel": 4,
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "",
+   "effects": 0,
+   "calls": 4,
+   "image_sha256": "c6dab66cedabc0dfa41a0b03f7354eef0a6db32fa0ecf525fc2e7f0a2bc5ad33"
+  },
+  "atomic-print-non-scalar-mid": {
+   "argv": [
+    "IMAGE",
+    "4",
+    "--"
+   ],
+   "fuel": 4,
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "",
+   "effects": 0,
+   "calls": 4,
+   "image_sha256": "a2a1b8be38508619bcb0552dcf8735fc57372144bc5db9c2569ca8875b6ce017"
+  },
+  "atomic-print-ill-typed": {
+   "argv": [
+    "IMAGE",
+    "5",
+    "--"
+   ],
+   "fuel": 5,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 5,
+   "image_sha256": "fd7eb4353d3253ca5eefd7d3f5114be510c16b7f6bf77bbe76f353286376ba3b"
+  },
+  "atomic-case-request": {
+   "argv": [
+    "IMAGE",
+    "7",
+    "--"
+   ],
+   "fuel": 7,
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "410ac67ce27e441a553bdf3f6dc37bdd68fd6619361ac472acdcf4c0962d6431"
+  },
+  "atomic-request-rendered": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "5"
+   ],
+   "fuel": 5,
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 5,
+   "image_sha256": "9b48e2e18da981721f2d05a98357efc7f40cef4ed214f7ad3953a41be3a1befe"
+  },
+  "atomic-display-visits": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1"
+   ],
+   "fuel": 1,
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "display",
+   "stdout": "",
+   "effects": 0,
+   "calls": 1,
+   "image_sha256": "8cfa8e0082525f9e3fb055b032bc0b1f776f89ab9d19a8cfefa66949b2c630c2"
+  },
+  "atomic-print-then-non-scalar": {
+   "argv": [
+    "IMAGE",
+    "13",
+    "--"
+   ],
+   "fuel": 13,
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "a\n",
+   "effects": 1,
+   "calls": 13,
+   "image_sha256": "f29f6d212d6d7ad2bd9a41f2ba2f446212bd3b734cdb714591489a283ddf6a84"
+  },
+  "atomic-print-then-ill-typed-continuation": {
+   "argv": [
+    "IMAGE",
+    "7",
+    "--"
+   ],
+   "fuel": 7,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "x\n",
+   "effects": 1,
+   "calls": 7,
+   "image_sha256": "04d9dc94d2b7c872534af14d9784837a5d8f21cd61633dc93d5ef17cfaa635de"
+  },
+  "atomic-print-then-io-op": {
+   "argv": [
+    "IMAGE",
+    "8",
+    "--"
+   ],
+   "fuel": 8,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 8,
+   "stdout": "x\n",
+   "effects": 1,
+   "image_sha256": "1a9299c2a901eab19d7a8c51d7942b4e96aacfbb3c67ebd1b1cd2d2b262574c1"
+  },
+  "atomic-print-then-nat-range": {
+   "argv": [
+    "IMAGE",
+    "7",
+    "--"
+   ],
+   "fuel": 7,
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "NatRange",
+   "calls": 7,
+   "stdout": "x\n",
+   "effects": 1,
+   "image_sha256": "c1cde57331cee3b0e1971bdce4bd7ab4d7625103070b40f4e8f3e050a146901e"
+  },
+  "atomic-display-leaf-charged": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1"
+   ],
+   "fuel": 1,
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "display",
+   "calls": 1,
+   "stdout": "",
+   "effects": 0,
+   "image_sha256": "e7917c31b81793bf4bc077ea9858c353b89fd0205730c85004bb7efa542ea2f6"
+  },
+  "atomic-display-leaf-ill-typed": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "2"
+   ],
+   "fuel": 2,
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "calls": 2,
+   "stdout": "",
+   "effects": 0,
+   "image_sha256": "269cd8848f6e02f77bafd0f4f4b3cc0f7d3444d90baed08275ba1b88b98133d1"
   }
  },
  "describe": {
@@ -7484,6 +7850,138 @@
    "by": "run control inspect-halt-after-surrogate: {'outcome': 'HostFailure', 'cause': 'io abi', 'calls': 4}"
   },
   {
+   "mutant": "evaluator:nat-range-spends-entry",
+   "killed": true,
+   "by": "run control atomic-nat-succ-range: {'fuel': 2, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 2}",
+   "atomic": "atomic-nat-succ-range"
+  },
+  {
+   "mutant": "evaluator:ill-typed-spends-entry",
+   "killed": true,
+   "by": "run control inspect-chr: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'calls': 3}",
+   "atomic": "atomic-ill-typed-chr"
+  },
+  {
+   "mutant": "evaluator:case-request-spends-entry",
+   "killed": true,
+   "by": "run control book-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 6}",
+   "atomic": "atomic-case-request"
+  },
+  {
+   "mutant": "evaluator:request-read-spends-entry",
+   "killed": true,
+   "by": "run control book-request-rendered: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 6}",
+   "atomic": "fuel-zero-request-target"
+  },
+  {
+   "mutant": "evaluator:d20-refusal-spends-entry",
+   "killed": true,
+   "by": "print-non-scalar: print-non-scalar: literal review counts 4 calls, the reference evaluation 5",
+   "atomic": "atomic-halt-non-scalar"
+  },
+  {
+   "mutant": "evaluator:display-refusal-spends-entry",
+   "killed": true,
+   "by": "run control display-visits-beyond-bound: {'outcome': 'Exhausted', 'kind': 2, 'cause': 'display', 'calls': 2}",
+   "atomic": "atomic-display-visits"
+  },
+  {
+   "mutant": "evaluator:enter-operand-check-after-debit",
+   "killed": true,
+   "by": "run control erased-closure-invoked-live: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'calls': 3}",
+   "atomic": "fuel-zero-ill-typed-invoke"
+  },
+  {
+   "mutant": "evaluator:enter-request-target-after-debit",
+   "killed": true,
+   "by": "run control enter-request-target: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 6}",
+   "atomic": "fuel-zero-request-target"
+  },
+  {
+   "mutant": "evaluator:nat-range-tests-fuel",
+   "killed": true,
+   "by": "run control atomic-nat-succ-range: {'fuel': 2, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 2}",
+   "atomic": "atomic-nat-succ-range"
+  },
+  {
+   "mutant": "evaluator:ill-typed-tests-fuel",
+   "killed": true,
+   "by": "run control atomic-ill-typed-chr: {'fuel': 2, 'outcome': 'Exhausted', 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 2}",
+   "atomic": "atomic-ill-typed-chr"
+  },
+  {
+   "mutant": "evaluator:case-request-tests-fuel",
+   "killed": true,
+   "by": "run control fuel-book-effect-exact: {'fuel': 5, 'outcome': 'Exhausted', 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 5}",
+   "atomic": "atomic-case-request"
+  },
+  {
+   "mutant": "evaluator:request-read-tests-fuel",
+   "killed": true,
+   "by": "run control fuel-zero-request-target: {'fuel': 5, 'outcome': 'Exhausted', 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 5}",
+   "atomic": "fuel-zero-request-target"
+  },
+  {
+   "mutant": "evaluator:d20-refusal-tests-fuel",
+   "killed": true,
+   "by": "run control atomic-halt-non-scalar: {'fuel': 3, 'outcome': 'Exhausted', 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 3}",
+   "atomic": "atomic-halt-non-scalar"
+  },
+  {
+   "mutant": "evaluator:display-refusal-tests-fuel",
+   "killed": true,
+   "by": "run control atomic-display-visits: {'fuel': 1, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 1}",
+   "atomic": "atomic-display-visits"
+  },
+  {
+   "mutant": "evaluator:effect-counted-before-scalar-check",
+   "killed": true,
+   "by": "run control atomic-print-non-scalar: {'fuel': 4, 'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'effects': 1, 'calls': 4}",
+   "atomic": "atomic-print-non-scalar"
+  },
+  {
+   "mutant": "evaluator:effect-counted-before-inspection",
+   "killed": true,
+   "by": "run control inspect-request-print: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 1, 'calls': 10}",
+   "atomic": "atomic-print-non-scalar"
+  },
+  {
+   "mutant": "evaluator:effect-writes-before-scalar-check",
+   "killed": true,
+   "by": "print-non-scalar-mid: print-non-scalar-mid: VM output '' is not b'a', what the earlier prints write",
+   "atomic": "atomic-print-non-scalar-mid"
+  },
+  {
+   "mutant": "evaluator:describe-writes-header-before-stop",
+   "killed": true,
+   "by": "run control book-request-field: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': 'Evaluated\\t10\\t0\\t', 'effects': 0, 'calls': 5}",
+   "atomic": "atomic-ill-typed-render"
+  },
+  {
+   "mutant": "evaluator:describe-charges-before-inspecting",
+   "killed": true,
+   "by": "run control atomic-display-leaf-ill-typed: {'fuel': 2, 'outcome': 'Exhausted', 'cause': 'display', 'calls': 2, 'stdout': '', 'effects': 0}",
+   "atomic": "atomic-display-leaf-ill-typed"
+  },
+  {
+   "mutant": "evaluator:stop-discards-output",
+   "killed": true,
+   "by": "print-non-scalar-second: print-non-scalar-second: VM output 'a\\n' is not b'', what the earlier prints write",
+   "atomic": "atomic-print-then-non-scalar"
+  },
+  {
+   "mutant": "evaluator:nat-range-deferred",
+   "killed": true,
+   "by": "run control atomic-nat-succ-range: {'fuel': 2, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 2}",
+   "atomic": "atomic-nat-succ-range"
+  },
+  {
+   "mutant": "evaluator:ill-typed-deferred",
+   "killed": true,
+   "by": "run control inspect-chr: {'outcome': None, 'cause': None, 'calls': 2}",
+   "atomic": "atomic-ill-typed-chr"
+  },
+  {
    "mutant": "rule:rejected-limit-as-host-failure",
    "killed": true,
    "by": "control oversize: HostFailure image: exhausted image-size"
@@ -7600,9 +8098,9 @@
   }
  ],
  "canonical": {
-  "corpus": 5804,
+  "corpus": 5828,
   "noncanonical": 527,
-  "admitted": 541,
+  "admitted": 565,
   "controls_by_clause": {
    "main-word": [
     "main-index-none"
