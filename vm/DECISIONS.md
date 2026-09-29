@@ -926,7 +926,9 @@ follows it (§5, §10, §11) without a new image header word.
        `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and `case-request-nested-default-compiled`: `Unsupported vm
        effect` after 8 entries, nothing written, `effects` 0, the entries walked by hand before they ran), and the three goldens
        are described as hand-lowered witnesses of the plan-level rule. No frozen expectation of a golden moved. The four twins die by
-       `case-request-picks-arm` and `case-request-without-default-ill-typed`; no new mutant was needed.
+       `case-request-picks-arm` and `case-request-without-default-ill-typed`, and the two retested plans of finding 3 by
+       `case-request-refused-with-default` and `case-request-ignores-default` (each measured alone against the control); no new
+       mutant was needed.
      - *For the coordinator: not vm-spec's to edit.* `docs/COMPILER-CAMPAIGN.md`'s D24 row says that compiled programs will reach
        the shapes, which is false of nest at 2a84a4f5. A rationale that is true of it: "A request matches no constructor row, so a
        Case takes its Default when its plan has one and otherwise stops `Unsupported vm effect`. The seed's native lane takes a

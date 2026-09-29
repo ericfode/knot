@@ -1478,9 +1478,10 @@ lane and requires:
   controls that hand `got` a request, `program-case-request` and the four `-compiled` twins); a request taken for an ill-typed word where a
   String or a result is read (by `book-request-rendered`, `book-request-field` and `inspect-request-print`);
   D24's rule, that a Case takes its Default over a request: refused, as D23 refused it (by the three
-  goldens of a Case with a Default, the three Default controls, `case-request-default-at-flag` and
-  `case-request-default-keys`), picking a row and not the Default (by the goldens `case-request-emit-default-u32` and
-  `-halt-default-u32`, which print 1 and 3 for 2 and 4, and by those two controls), taken only at IO.OP (by those two
+  goldens of a Case with a Default, the three Default controls, `case-request-default-at-flag`,
+  `case-request-default-keys` and the two `-retested` plans), picking a row and not the Default (by the goldens
+  `case-request-emit-default-u32` and `-halt-default-u32`, which print 1 and 3 for 2 and 4, by those two controls and by the
+  two `-retested` plans), taken only at IO.OP (by those two
   controls) or not by a keys Case (by `case-request-default-keys` alone); a request taken for an ill-typed word at a
   scalar (by `inspect-request-chr` and `-prim` alone) or at an
   Enter's target (by `enter-request-target` and `fuel-zero-request-target`); an Enter that tests fuel before it
