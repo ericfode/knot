@@ -10,8 +10,13 @@ RUN_PY = """GATES = (
 )
 
 
-def counts(name):
-    return {}
+def counts(root, gate, stdout):
+    result = {}
+    if gate.name == 'frontend':
+        result['a'] = 1
+    if gate.name == 'checker':
+        result['b'] = 2
+    return result
 """
 TEST_RUNNER = """import unittest
 
@@ -76,24 +81,96 @@ class C3Tests(RepoTest):
         self.assertEqual({'src/b.bend': 'minor', 'tests/compiler-y/check.py': 'major'}, found)
 
     # ---- R2 ------------------------------------------------------------------
+    NEW_ROW = "    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n    Gate('new', ('python3', 'n.py'), ('r/n.json',)),\n"
+    NEW_BRANCH = ("    if gate.name == 'new':\n        for key in ('x', 'y'):\n            result[key] = 1\n"
+                  "        result['z'] = len(stdout)\n")
+
+    def run_py_with(self, head_source):
+        self.start({'scripts/gates/run.py': RUN_PY, 'scripts/gates/test_runner.py': TEST_RUNNER})
+        self.fx.commit('edit run.py', {'scripts/gates/run.py': head_source})
+        return self.rules(self.run3(), 'shared-file-shape')
+
+    def registered(self, branch=NEW_BRANCH):
+        """RUN_PY with the new gate's row and, as GATES.md asks of every new gate, its counts() branch."""
+        added = RUN_PY.replace("    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n", self.NEW_ROW)
+        return added.replace('    return result\n', branch + '    return result\n')
+
     def test_shared_shape_run_py(self):
         self.start({'scripts/gates/run.py': RUN_PY, 'scripts/gates/test_runner.py': TEST_RUNNER})
-        added = RUN_PY.replace("    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n",
-                               "    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n    Gate('new', ('python3', 'n.py'), ('r/n.json',)),\n")
+        added = RUN_PY.replace("    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n", self.NEW_ROW)
         self.fx.commit('add a gate row', {'scripts/gates/run.py': added})
         self.assertEqual([], self.rules(self.run3(), 'shared-file-shape'))
         changed = added.replace("('python3', 'b.py')", "('python3', 'other.py')")
         self.fx.commit('edit an existing row', {'scripts/gates/run.py': changed})
         found = self.rules(self.run3(), 'shared-file-shape')
         self.assertEqual(('major', 'gate checker changed'), (found[0].severity, found[0].observed.split('; ')[0]))
-        self.fx.commit('touch counts', {'scripts/gates/run.py': added + "\n\ndef helper():\n    return 1\n"})
-        self.assertTrue(self.rules(self.run3(), 'shared-file-shape') == [] or True)
-        edited = added.replace('return {}', 'return {"x": 1}')
+        self.fx.commit('add a helper', {'scripts/gates/run.py': added + "\n\ndef helper():\n    return 1\n"})
+        found = self.rules(self.run3(), 'shared-file-shape')
+        self.assertTrue(any('outside the GATES table: def helper' in p for c in found for p in c.evidence['problems']))
+        edited = added.replace("result['b'] = 2", "result['b'] = 3")
         self.fx.commit('edit counts()', {'scripts/gates/run.py': edited})
         found = self.rules(self.run3(), 'shared-file-shape')
-        self.assertTrue(any('outside the GATES table' in p for c in found for p in c.evidence['problems']))
+        self.assertTrue(any('counts() line changed or removed' in p for c in found for p in c.evidence['problems']))
         allowed = self.run3(manifest_path=self.manifest_with(authorized=[{'path': 'scripts/gates/run.py', 'change': 'counts'}]))
         self.assertEqual([], self.rules(allowed, 'shared-file-shape'))
+
+    def test_a_new_gates_counts_branch_is_the_registration_that_gates_md_asks_for(self):
+        """The diff shape of io-abi-2, joint and bootstrap: a Gate row and an `if gate.name == '<it>':` block in counts()."""
+        self.assertEqual([], self.run_py_with(self.registered()))
+
+    def test_only_the_new_gates_branch_may_be_added_to_counts(self):
+        cases = {
+            'a branch for a gate that already existed': self.registered("    if gate.name == 'frontend':\n        result['q'] = 1\n"),
+            'a branch for a gate this diff does not add': self.registered("    if gate.name == 'ghost':\n        result['q'] = 1\n"),
+            'a loose statement': self.registered("    result['loose'] = 1\n"),
+            'an else branch': self.registered("    if gate.name == 'new':\n        result['q'] = 1\n    else:\n        result['r'] = 1\n"),
+        }
+        for label, source in cases.items():
+            with self.subTest(label):
+                problems = c3.run_py_problems(RUN_PY, source, {'new'})
+                self.assertEqual(1, len(problems), (label, problems))
+                self.assertIn('counts() gained a statement', problems[0])
+
+    def test_editing_or_removing_an_existing_gates_count_branch_is_still_flagged(self):
+        edited = self.registered().replace("result['a'] = 1", "result['a'] = 99")
+        problems = c3.run_py_problems(RUN_PY, edited, {'new'})
+        self.assertEqual(["counts() line changed or removed: if gate.name == 'frontend':"], problems)
+        removed = self.registered().replace("    if gate.name == 'checker':\n        result['b'] = 2\n", '')
+        self.assertEqual(["counts() line changed or removed: if gate.name == 'checker':"], c3.run_py_problems(RUN_PY, removed, {'new'}))
+        self.assertEqual(['counts() changed its signature'], c3.run_py_problems(RUN_PY, self.registered().replace(
+            'def counts(root, gate, stdout):', 'def counts(root, gate):'), {'new'}))
+        self.assertEqual([], c3.run_py_problems(RUN_PY, self.registered(), {'new'}))           # the clean control
+
+    def test_a_branch_selecting_several_new_gates_is_accepted_only_when_all_are_new(self):
+        both = RUN_PY.replace("    Gate('checker', ('python3', 'b.py'), ('r/b.json',)),\n", self.NEW_ROW.replace(
+            "Gate('new'", "Gate('other', ('python3', 'o.py'), ('r/o.json',)),\n    Gate('new'"))
+        branch = "    if gate.name in ('new', 'other'):\n        result['q'] = 1\n"
+        added = both.replace('    return result\n', branch + '    return result\n')
+        self.assertEqual([], c3.run_py_problems(RUN_PY, added, {'new', 'other'}))
+        self.assertEqual(1, len(c3.run_py_problems(RUN_PY, added, {'new'})))
+
+    def test_a_new_gates_branch_beside_other_edits_outside_counts_is_still_flagged(self):
+        source = self.registered().replace("def counts(root, gate, stdout):", "TIMEOUT = 5\n\n\ndef counts(root, gate, stdout):")
+        found = self.run_py_with(source)
+        self.assertEqual(1, len(found))
+        self.assertTrue(any('outside the GATES table: TIMEOUT = 5' in p for p in found[0].evidence['problems']))
+
+    def test_package_json_gains_scripts_only(self):
+        base = {'name': 'knot', 'scripts': {'gates': 'python3 run.py'}, 'dependencies': {'yaml': '1'}}
+        self.start({'package.json': json.dumps(base, indent=2) + '\n'})
+        more = json.loads(json.dumps(base))
+        more['scripts']['prechecks'] = 'python3 -B scripts/prechecks/run.py'
+        self.fx.commit('add a script', {'package.json': json.dumps(more, indent=2) + '\n'})
+        result = self.run3(manifest_path=self.manifest_with(owns=['scripts/prechecks/**']))
+        self.assertEqual([], self.rules(result, 'shared-file-shape'))
+        self.assertEqual([], self.rules(result, 'out-of-scope-edit'))          # an appendable file is not out of scope
+        more['scripts']['gates'] = 'python3 other.py'
+        more['dependencies']['left-pad'] = '1'
+        self.fx.commit('change a script and a dependency', {'package.json': json.dumps(more, indent=2) + '\n'})
+        found = self.rules(self.run3(), 'shared-file-shape')
+        self.assertEqual(1, len(found))
+        self.assertEqual('minor', found[0].severity)
+        self.assertEqual({'script gates changed or was removed', 'a key other than scripts changed'}, set(found[0].evidence['problems']))
 
     def test_shared_shape_required_names_and_paragraphs(self):
         self.start({'scripts/gates/test_runner.py': TEST_RUNNER, 'docs/compiler-campaign/GATES.md': 'one\n\ntwo\n'})

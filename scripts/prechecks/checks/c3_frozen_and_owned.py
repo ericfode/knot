@@ -17,6 +17,7 @@ Rules (DESIGN 3.3). Authorization is read from main, never from the branch and n
 from __future__ import annotations
 
 import ast
+import collections
 import difflib
 import hashlib
 import json
@@ -118,6 +119,74 @@ def _outside(base_text: str, head_text: str, base_range, head_range) -> list[str
     return [line for line in offending if line.strip()]
 
 
+def _counts_function(module: ast.Module):
+    for node in module.body:
+        if isinstance(node, ast.FunctionDef) and node.name == 'counts':
+            return node
+    return None
+
+
+def _selected_gates(node: ast.AST, parameter: str) -> set[str] | None:
+    """The gate names that a statement of counts() selects: `if <parameter>.name == 'g':` or `... in ('g', 'h'):`."""
+    if not isinstance(node, ast.If) or node.orelse:
+        return None
+    test = node.test
+    if not (isinstance(test, ast.Compare) and len(test.ops) == 1 and isinstance(test.left, ast.Attribute)
+            and test.left.attr == 'name' and isinstance(test.left.value, ast.Name) and test.left.value.id == parameter):
+        return None
+    comparator = test.comparators[0]
+    if isinstance(test.ops[0], ast.Eq) and isinstance(comparator, ast.Constant) and isinstance(comparator.value, str):
+        return {comparator.value}
+    if isinstance(test.ops[0], ast.In) and isinstance(comparator, (ast.Tuple, ast.List, ast.Set)):
+        names = {e.value for e in comparator.elts if isinstance(e, ast.Constant) and isinstance(e.value, str)}
+        return names if len(names) == len(comparator.elts) else None
+    return None
+
+
+def run_py_problems(base_text: str, head_text: str, added: set[str]) -> list[str]:
+    """What a change to scripts/gates/run.py does beyond adding Gate rows to GATES.
+
+    GATES.md tells every new gate to extend count extraction with its own completion record, which is an added
+    `if gate.name == '<the new gate>':` statement in counts(). That is allowed, and only that: every other line of the
+    file, every existing statement of counts() and the branches of gates that already existed must be unchanged.
+    """
+    try:
+        base_mod, head_mod = ast.parse(base_text), ast.parse(head_text)
+    except SyntaxError:
+        return [f'line outside the GATES table: {l.strip()[:60]}' for l in
+                _outside(base_text, head_text, _gates_range(base_text), _gates_range(head_text))[:3]]
+    base_counts, head_counts = _counts_function(base_mod), _counts_function(head_mod)
+    spans = lambda source, func: [r for r in (_gates_range(source), (func.lineno, func.end_lineno) if func else None) if r]
+    blank = lambda text, ranges: [line for number, line in enumerate(text.split('\n'), 1)
+                                  if not any(a <= number <= b for a, b in ranges)]
+    rest_base, rest_head = blank(base_text, spans(base_text, base_counts)), blank(head_text, spans(head_text, head_counts))
+    problems = []
+    if rest_base != rest_head:
+        changed = [line for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(None, rest_base, rest_head, autojunk=False).get_opcodes()
+                   if tag != 'equal' for line in rest_base[i1:i2] + rest_head[j1:j2] if line.strip()]
+        problems += [f'line outside the GATES table: {line.strip()[:60]}' for line in changed[:3]]
+    if base_counts is None or head_counts is None:
+        return problems + ([] if base_counts is None and head_counts is None else ['counts() was added or removed'])
+    if ast.dump(base_counts.args) != ast.dump(head_counts.args):
+        problems.append('counts() changed its signature')
+    parameter = head_counts.args.args[1].arg if len(head_counts.args.args) > 1 else 'gate'
+    segment = lambda text, node: ast.get_source_segment(text, node) or ''
+    before = collections.Counter(segment(base_text, node) for node in base_counts.body)
+    after = collections.Counter(segment(head_text, node) for node in head_counts.body)
+    gone = before - after
+    for text in gone:
+        problems.append(f'counts() line changed or removed: {text.splitlines()[0].strip()[:60]}')
+    for node in head_counts.body:
+        text = segment(head_text, node)
+        if after[text] > before[text]:
+            names = _selected_gates(node, parameter)
+            edited = bool(names) and not names <= added and bool(gone)      # the edit of an existing branch is reported above
+            if (not names or not names <= added) and not edited:
+                problems.append(f"counts() gained a statement other than a branch for a new gate: {text.splitlines()[0].strip()[:60]}")
+            before[text] += 1                                   # judge each added copy once
+    return problems
+
+
 def shared_shape(ctx) -> list[Condition]:
     found = []
     for path, shape in ctx.manifest.appends().items():
@@ -135,8 +204,7 @@ def shared_shape(ctx) -> list[Condition]:
                 elif (after[name].argv, after[name].outputs, after[name].needs) != (row.argv, row.outputs, row.needs):
                     problems.append(f'gate {name} changed')
             if not _authorized(ctx, path, 'counts'):
-                problems += [f'line outside the GATES table: {l.strip()[:60]}' for l in
-                             _outside(base_text, head_text, _gates_range(base_text), _gates_range(head_text))[:3]]
+                problems += run_py_problems(base_text, head_text, set(after) - set(before))
         elif shape == 'required-name':
             removed = gates_lib.required_names(base_text) - gates_lib.required_names(head_text)
             if removed:
@@ -147,6 +215,17 @@ def shared_shape(ctx) -> list[Condition]:
             problems += [f'deleted line: {line.strip()[:60]}' for line in
                          (l for h in diffs.parse(ctx.repo.patch(ctx.base.treeish, ctx.head.treeish, [path], unified=0)).get(path, [])
                           for l in h.removed) if line.strip()][:3]
+        elif shape == 'package-scripts':
+            try:
+                old, new = json.loads(base_text), json.loads(head_text)
+            except ValueError:
+                old = new = None
+            if isinstance(old, dict) and isinstance(new, dict):
+                if {k: v for k, v in old.items() if k != 'scripts'} != {k: v for k, v in new.items() if k != 'scripts'}:
+                    problems.append('a key other than scripts changed')
+                for name, command in (old.get('scripts') or {}).items():
+                    if (new.get('scripts') or {}).get(name) != command:
+                        problems.append(f'script {name} changed or was removed')
         else:                                          # census-approval, manifest-group: JSON supersets
             try:
                 old, new = json.loads(base_text), json.loads(head_text)

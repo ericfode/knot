@@ -18,6 +18,7 @@ APPENDS = {
     'tools/census/approved.json': 'census-approval',
     'docs/compiler-campaign/manifest.json': 'manifest-group',
     'docs/perch-review-log.md': 'gate-paragraph',
+    'package.json': 'package-scripts',
 }
 
 # Byte-identical to base unless the coordinator authorizes the edit.
