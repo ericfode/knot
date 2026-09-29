@@ -27,14 +27,19 @@
   min: 80
   gate: false
   ensure: >
-    The passages in this packet all describe one term or decision. They neither
-    contradict each other nor claim more than the mechanism described in another
-    passage allows. A number, limit, outcome class or rule that differs between two
-    passages, a passage that promises what another passage says is not provided, or a
-    passage that repeats a superseded value beside the current one breaks this rule.
-    A term that appears in only one passage is not a violation. Do not use knowledge of
-    passages the packet does not show; anything the packet does not show is missing
-    evidence, not a pass.
+    Two passages disagree when they cannot both be true of the same case. Compare each passage in the Claim
+    section with every other passage shown, in the Claim and the Evidence, on the facts they share about the
+    named term: a number, count or limit; an outcome class or diagnostic; the criterion that decides a
+    classification; what an operation does with each of its operands (dropped, copied, moved into the result,
+    kept); and whether a change is made or only proposed, pending or awaiting a decision. The rule is broken
+    when any such pair cannot both be true: one passage decides a classification by a criterion that another
+    passage says does not decide it; one says every operand is dropped where another says an operand is moved
+    into the result or kept; one states a change as made where another says it still awaits a decision; two give
+    the same case different numbers, classes or diagnostics; or one keeps a superseded value beside the current
+    one. Passages about different cases, added detail consistent with the others, and text marked as history
+    hold, and a term that appears in only one passage holds. Judge only the passages shown. Missing evidence is
+    not a pass where a passage's meaning depends on text the packet does not show; passages that do not overlap
+    are not missing evidence.
 
 - name: outcome-follows-d4
   where: ".local/prechecks/packets/**/outcome-follows-d4/*.md"
@@ -84,12 +89,27 @@
   min: 80
   gate: false
   ensure: >
-    A mutant counts as killed only by a semantic observation of the mutated behavior.
-    Inspect the kill predicate and the code that runs it. A crash, a timeout, a harness
-    bound, a host failure, a torn or truncated read, or a text-only match must never be
-    credited as a kill. Any path in the code shown that credits one of those as a kill
-    breaks this rule. Equivalent mutants are reported separately with a reason. Anything
-    the packet does not show is missing evidence, not a pass.
+    This rule concerns code that decides whether a mutant is killed: the kill predicate and the code that runs
+    mutants and records their observations. A kill must come from a semantic observation: the mutant runs to a
+    well-formed answer and that answer differs from a reference or frozen expectation. A run that merely fails
+    to agree with its expectation is not yet a wrong answer. For each outcome that must never count as a kill (a
+    crash or signal, a timeout, a harness or tool limit, a host or infrastructure failure, a torn or truncated
+    read, a text-only match), trace what the shown code records for it and whether the kill predicate would then
+    count the mutant as killed. The rule is broken when a disagreement is counted as a kill without first
+    establishing that the run ended in a well-formed answer, even if the killed set is later compared with an
+    expected list; when a predicate counts any difference between observations and one of those outcomes yields
+    a differing observation (for example an empty result on timeout); when a set of exits or outcomes accepted
+    as a well-formed answer includes one the packet defines as a harness limit, crash, host failure or timeout;
+    when a fault filter removes only some of those outcomes before kills are counted; or when a kill is credited
+    because a name or substring appears in text output rather than because a value differs from its reference. A
+    predicate that first requires the run to succeed, or pins its observation to a well-formed outcome (a fixed
+    set of verdict exits, an exact registered diagnostic, a completed status), and only then compares it with
+    the frozen expectation holds, even when a failed comparison is caught as the kill; so does a fault that
+    fails the gate instead of counting, and an equivalent mutant reported separately with a reason. An exact
+    outcome the mutant is registered to produce is a semantic observation whatever its class. If the packet
+    shows no code that decides kills and its Claim says nothing about what counts as a kill, the rule holds; if
+    the Claim says what counts as a kill but the code that decides it is not shown, missing evidence is not a
+    pass.
 
 - name: required-laws-met
   where: ".local/prechecks/packets/**/required-laws-met/*.md"
