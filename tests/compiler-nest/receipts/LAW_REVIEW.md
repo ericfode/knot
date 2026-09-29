@@ -389,3 +389,51 @@ arm as Invalid, and stop a body at no line break.
 `list-break-invalid-after-element` and `same-line-arm-invalid`. Its
 fixtures, the fuzz generator and the mutant characterization are in
 REVIEW-9.md.
+
+## Round 10
+
+The round-10 review confirmed an unsound acceptance in the parser: a `+` that
+does not touch its binder, between the columns of a pattern row (`case a + b:`),
+was read as the start of another column. The seed's operator loop
+(`parse_term_ops`) reads a `+` or `-` as an infix operator unless a name starts
+right after it, so it reads `a + b` as one term with too few patterns and
+rejects it; `a +b` and `a+b` open the next column, and a `+` that starts a row or
+follows a comma is not after a term. The same loop rejects a spaced marker after
+a let (`+ u : F = ..`, since the let's value continues across the line break)
+and a return arrow split into `-` and `>`. Knot Checked, compiled and ran all
+three.
+
+No earlier law pinned adjacency for `+`, `-` or `->` (round 6 pinned a
+constructor's brace). `S.marks` states the seed's rule once: a name touching the
+marker. `promotes` (row continuation), `BodyAt` (a marker after a let) and
+`FunctionTail` (the arrow, with `S.touches`) apply it. The round adds five laws in
+`src/LAWS.bend` and restates a sixth, all with `{==}` proofs.
+
+| Law | Quantification and evidence | Limit |
+|---|---|---|
+| `marks_witness` | A glued name, a name one space on and a line break after `+` | Ground token positions |
+| `detached_plus` | Every keyword, pattern, parent, column and suffix: at RowTail a `+` one space from its binder ends the row, `Invalid parse expected-:` at the `+` | Ground positions; RowTail only (Arms tests the same predicate and RowTail re-tests it) |
+| `detached_marker`, `first_marker` | Every suffix: after a let a `+` one space from its name is `Invalid parse detached-marker`; the same tokens first in a body proceed into the binding | Ground positions; the flag's plumbing at `BindingTail` is pinned by the `every-statement-first` mutant and the marker fixtures |
+| `split_arrow` | Every location and suffix: `-` and `>` two positions apart are `Invalid parse function-result` | Ground offsets |
+| `return_type_application` (restated) | As before, with the arrow's tokens at touching offsets, since symbolic positions no longer say that the arrow touches | Ground offsets for the arrow |
+
+The laws are ground witnesses over positions, unlike `touching_brace` and
+`detached_brace`, which quantify them under a touch hypothesis and a cong proof.
+The frontend-laws group composes from its five files and stands at 47,916 of the
+48,000 bytes, so the first, quantified versions (49,891 bytes) were a structural
+blocker of the perch-context gate. **The stopgaps of finding 3 have no laws**
+(argument whitespace, a repeated promotion, a line break in a let, an arm body
+at its case column): they have 46 fixtures (`round10-fixtures`) and thirteen mutants.
+The modules round must restate the four dotted-binder laws in this file and will
+not fit either: a parser-law file and its manifest group are the way out.
+
+Falsification (`round10-falsification.txt`): each of the six laws fails, as the
+first failing law, under a named mutation of the parser: `marks` without its
+name test or by name only (`marks_witness`), `promotes` ignoring the gap or
+RowTail testing `starts` again (`detached_plus`), the marker gap ignored
+(`detached_marker`), the marker required to touch even first in a body
+(`first_marker`), the arrow gap ignored (`split_arrow`) and the arrow never
+touching (`return_type_application`).
+
+`nest-round10` kills 22 type-correct mutants in both lanes; see REVIEW-10.md for
+each and for the fixtures, the fuzz generator and the reviewer's edit grids.

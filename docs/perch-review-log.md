@@ -1268,3 +1268,56 @@ Prevention:
   selfhost suite's reviewed D4 gaps and left four of its twenty judge controls
   with nothing to run on. Confining it to the requested body arguments
   restored all twenty.
+
+## 2026-09-28 — nest review round 10: a detached `+` between row columns was accepted
+
+Confirmed:
+- A `+` after a term in a pattern row that does not touch its binder
+  (`case a + b:`) was read as another column; the seed reads it as an infix
+  operator, so `a + b` is one term with too few patterns, and rejects it. The
+  same operator loop rejects a spaced marker after a let (`+ u : F = ..`), and
+  a return arrow split as `- >` is rejected too. Knot Checked, compiled and ran
+  all three: 57 of the 60 frozen seed-rejected programs, and 14 more in the
+  reviewer's edit grids. The first is branch-introduced (main stopped at
+  Unsupported match-scrutinees for multi-column rows, and the branch parses
+  through them); the other two were on main.
+- The same parse now reached seven main-era whitespace shapes (arguments
+  separated by whitespace, `++y`, a let split across lines, an arm body at its
+  case column) that the seed accepts and Knot reported Invalid: a D4 regression
+  in multi-scrutinee matches. They are Unsupported now.
+- The nest gates ignored KNOT_GATE_TIMEOUT_SCALE, so two failed with a harness
+  timeout under load 50 to 80.
+
+See the [round-10 dispositions](../tests/compiler-nest/receipts/REVIEW-10.md).
+
+Prevention:
+- State an adjacency rule once, for every token pair the seed reads as a unit,
+  and grep the parser for each. Round 6 froze `{` glued to a constructor name;
+  the same reading of `+`, `-` and `->` (`S.marks`, `S.touches`) waited for the
+  reviewer's one-character edit grids. `starts(tokens,"+")` and two separate
+  `-` and `>` tokens were the places it hid. Run such a grid as a gate: the
+  extended fuzz now reports 68 false acceptances against `5ef36ae6`.
+- A generator's atoms and separators must include the spaced form of every
+  glued token: `+ v` at a non-first column and ` + ` between columns were
+  outside the vocabulary in every round.
+- A rule that lives in one dispatcher and is re-tested in the next (Arms, then
+  RowTail) leaves the first test unobservable: its mutant cannot be killed.
+  Gate the mutant that can, and say so.
+- Edits to a registered gate script or to the runner stale
+  `docs/compiler-campaign/inventory/accepted.json` (it records their hashes):
+  run `census --check` before every commit that touches one, not only after the
+  last source edit. It failed the first full run of the round.
+- A mutant that edits a shared predicate changes all its users: the round-6
+  `touch-past-one` shifted `touches`, which now also decides the arrow, so it
+  dies at every def header. Prefer mutants at a call site, and re-run the older
+  mutants after widening a shared helper.
+- Put a classification's test where the rule lives. The first line-break
+  stopgap sat in `term_failure`, which every parse failure reaches, and moved
+  two round-3 mutant outcomes; in a helper for the let's `=` it moved none.
+- A context-bounded law group is a design constraint. Laws over positions with a
+  hypothesis and a cong proof cost two to three times a ground witness;
+  frontend-laws stands at 47,916 of 48,000 bytes and the five stopgap sites got
+  no laws. The next parser round needs a law file of its own.
+- Every gate that rebuilds lanes per mutant scales with the mutant count:
+  `nest-round10` takes 13 minutes under campaign load and 4 unloaded, so the
+  runner's per-gate limit is now 1,800 s.
