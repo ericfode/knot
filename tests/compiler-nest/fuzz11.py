@@ -115,7 +115,9 @@ class Draw:
 def names_program(d):
     site = d.weighted([('row', 4), ('row2a', 3), ('row2b', 3), ('field', 3), ('nested', 3), ('let', 5), ('param', 3),
                        ('scrutinee', 2), ('typefield', 2), ('later', 2)])
-    name = d.pick(LETTABLE if site == 'let' else AFTER + ['q'] if site == 'later' else NAMES)
+    # a parameter or field named after a datatype is the case that hides a later type
+    name = d.pick(LETTABLE if site == 'let' else AFTER + ['q'] if site == 'later' else
+                  DATATYPES if site in ('param', 'typefield') and d.chance(2) else NAMES)
     mark = d.weighted([('', 5), ('+', 4), ('-', 1)]) if site in ('let', 'param', 'typefield') else d.weighted([('', 5), ('+', 4)])
     use = d.weighted([('type', 6), ('none', 2), ('call', 1)])
     used = d.pick(list(ANNOTATED)) if use == 'type' else None
@@ -374,7 +376,7 @@ def layout_program(d):
     elif form == 'same-line':
         body = f'{at}v : Flag = On{{}}{d.pick(["", " "])}v\n'
     elif form == 'plain-split':
-        body = f'{at}v{d.pick(["", " # gap"])}\n{pad(body_col + d.pick([0, 2]))}{d.pick([": Flag = On{}", "= h(a)"])}\n{pad(stmt_col)}v\n'
+        body = f'{at}v{d.pick(["", " # gap"])}\n{pad(d.pick([0, 1, body_col, body_col + 2]))}{d.pick([": Flag = On{}", "= h(a)"])}\n{pad(stmt_col)}v\n'
     else:
         head = 'def f(p: Opt, b: Flag) -> Flag:\n' if multi else 'def f(p: Opt) -> Flag:\n'
         cols = 'p b' if multi else 'p'

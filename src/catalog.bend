@@ -108,6 +108,17 @@ def binder(+types: List<&2,C.Datatype>, +token: S.Token, +promoted: Bool) -> Res
 def hidden(-A: Type, seen: List<&2,S.Token>, +name: S.Token, next: Unit -> Result<S.Error,A>) -> Result<S.Error,A>:
   S.choose(Result<S.Error,A>,named(seen,name),u => C.invalid(A,"type-shadowed",name),next)
 
+def visible(types: List<&2,C.Datatype>, +name: S.Token, seen: List<&2,S.Token>) -> Result<S.Error,TypeRef>:
+  S.bind(TypeRef,TypeRef,find_type(types,name,0),reference => hidden(TypeRef,seen,name,u => Done{reference}))
+
+# A parameter's type sees the parameters before it; the names left are what the result sees.
+def telescope(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
+  match nodes:
+    case Nil{}: Done{seen}
+    case Con{S.Parameter{+name,q,+type_name},+tail}:
+      hidden(List<&2,S.Token>,seen,type_name,u => telescope(tail,Con{name,seen}))
+    case _: C.internal(List<&2,S.Token>,"parameter-node")
+
 def datatype(tokens: List<&2,C.Constructor>, +name: S.Token, data: Bool) -> Result<S.Error,C.Datatype>:
   Done{C.Datatype{name,data,tokens}}
 
@@ -145,24 +156,15 @@ def parameter_type(+token: S.Token, +q: U32, reference: TypeRef) -> Result<S.Err
     case TypeRef{+index,definition}:
       S.bind(Unit,C.Parameter,quantity(token,q,definition),u => Done{C.Parameter{token,q,index}})
 
-def telescope(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
+def parameters(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
   match nodes:
     case Nil{}: Done{Nil{}}
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
         S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
-          hidden(List<&2,C.Parameter>,seen,type_name,u =>
-            S.bind(C.Parameter,List<&2,C.Parameter>,parameter_type(name,q,reference),head =>
-              S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,telescope(tail,types,Con{name,seen},U32.add(count,1)),rest => Done{Con{head,rest}})))))
+          S.bind(C.Parameter,List<&2,C.Parameter>,parameter_type(name,q,reference),head =>
+            S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,parameters(tail,types,U32.add(count,1)),rest => Done{Con{head,rest}}))))
     case _: C.internal(List<&2,C.Parameter>,"parameter-node")
-
-def parameters(nodes: List<&2,S.Node>, types: List<&2,C.Datatype>, count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
-  telescope(nodes,types,Nil{},count)
-
-def named_parameter(params: List<&2,C.Parameter>, +name: S.Token) -> Bool:
-  match params:
-    case Nil{}: False{}
-    case Con{C.Parameter{+token,q,type_id},tail}: Bool.or(String.eq(S.text(token),S.text(name)),named_parameter(tail,name))
 
 def signature(token: S.Token, params: List<&2,C.Parameter>, reference: TypeRef) -> C.Signature:
   match reference:
@@ -173,9 +175,9 @@ def collect_signatures(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +cou
     case Nil{}: Done{Nil{}}
     case Con{S.Function{+name,+params,+result,body},+tail}:
       S.choose(Result<S.Error,List<&2,C.Signature>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Signature>,name),u =>
-        S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),+ps =>
-          S.bind(TypeRef,List<&2,C.Signature>,find_type(types,result,0),reference =>
-            S.choose(Result<S.Error,List<&2,C.Signature>>,named_parameter(ps,result),u => C.invalid(List<&2,C.Signature>,"type-shadowed",result),u =>
+        S.bind(List<&2,S.Token>,List<&2,C.Signature>,telescope(params,Nil{}),names =>
+          S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),ps =>
+            S.bind(TypeRef,List<&2,C.Signature>,visible(types,result,names),reference =>
               S.bind(List<&2,C.Signature>,List<&2,C.Signature>,collect_signatures(tail,types,U32.add(count,1)),rest =>
                 Done{Con{signature(name,ps,reference),rest}})))))
     case Con{S.Datatype{name,data,ctors},tail}: collect_signatures(tail,types,count)
@@ -203,11 +205,10 @@ def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
         S.choose(Result<S.Error,List<&2,C.Parameter>>,named(seen,name),u => C.invalid(List<&2,C.Parameter>,"duplicate-field",name),u =>
-          S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
-            hidden(List<&2,C.Parameter>,seen,type_name,u =>
-              S.bind(C.Parameter,List<&2,C.Parameter>,field_type(name,q,data,reference),head =>
-                S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,fields(tail,types,data,Con{name,seen},U32.add(count,1)),rest =>
-                  Done{Con{head,rest}}))))))
+          S.bind(TypeRef,List<&2,C.Parameter>,visible(types,type_name,seen),reference =>
+            S.bind(C.Parameter,List<&2,C.Parameter>,field_type(name,q,data,reference),head =>
+              S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,fields(tail,types,data,Con{name,seen},U32.add(count,1)),rest =>
+                Done{Con{head,rest}})))))
     case _: C.internal(List<&2,C.Parameter>,"field-node")
 
 def resolve_constructors(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool) -> Result<S.Error,List<&2,C.Constructor>>:

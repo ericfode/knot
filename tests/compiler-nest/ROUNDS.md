@@ -101,6 +101,6 @@ annotation, parameter type, result and field type; a numeral opens a later colum
 the parser does not model (a case at or left of its match or at the margin, a statement or marked body at another
 column, a statement on a let's line, a let split before `:` or `=`, a declaration at another column or on a body's
 line) are Unsupported. `round11.py` checks both lanes, evaluator and Wasm agreement, rejection in every phase, all
-proof entries and 22 audit, name-rule and shadowing mutants; `round11.py --sweep` runs 10 parser mutants and
+proof entries and 23 audit, name-rule and shadowing mutants; `round11.py --sweep` runs 10 parser mutants and
 `fuzz11.py`, 5,400 fixed-seed programs in five families (names, dead rows, gaps, widths, layout) compared with the
 seed: 0 false acceptances and 0 false Invalid.

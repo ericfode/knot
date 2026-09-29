@@ -36,9 +36,8 @@ def annotation_id(reference: G.TypeRef) -> Result<S.Error,Maybe<&2,U32>>:
 def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>, scope: E.Scope) -> Result<S.Error,Maybe<&2,U32>>:
   match token scope:
     case None{} _: Done{None{}}
-    case Some{+name} E.Scope{bindings,next,open,live,smaller}:
-      S.bind(G.TypeRef,Maybe<&2,U32>,G.find_type(types,name,0),reference =>
-        G.hidden(Maybe<&2,U32>,E.names(bindings),name,u => annotation_id(reference)))
+    case Some{name} E.Scope{bindings,next,open,live,smaller}:
+      S.bind(G.TypeRef,Maybe<&2,U32>,G.visible(types,name,E.names(bindings)),reference => annotation_id(reference))
 
 def constant(reference: G.ConstructorRef, +token: S.Token, wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
   match reference wanted:

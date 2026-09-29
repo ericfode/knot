@@ -30,9 +30,8 @@ def unsupported(code):
 
 AUDIT_BODY = 'S.bind(Unit,Unit,audit(n,body,width,types),u => audit(n,S.Sequence{tail},width,types))'
 LET_PROMOTION = 'S.bind(Unit,Unit,G.promotion(types,token,U32.is_eq(q,2)),u => audit(n,body,width,types))'
-HIDES = 'G.hidden(Maybe<&2,U32>,E.names(bindings),name,u => annotation_id(reference))'
-FIELD_HIDES = 'hidden(List<&2,C.Parameter>,seen,type_name,u =>\n              S.bind(C.Parameter,List<&2,C.Parameter>,field_type('
-PARAM_HIDES = 'hidden(List<&2,C.Parameter>,seen,type_name,u =>\n            S.bind(C.Parameter,List<&2,C.Parameter>,parameter_type('
+HIDES = 'G.visible(types,name,E.names(bindings))'
+TELESCOPE = 'hidden(List<&2,S.Token>,seen,type_name,u => telescope(tail,Con{name,seen}))'
 # Each mutant is one replacement in a copy of `src/`, killed in both lanes on the named witness. The first
 # group breaks the audit (a body, a let, a nested match, the rows after the first), the width and constructor
 # arity checks of finding 6 (which no gate saw fail before), the pattern forms and the binder rule; the
@@ -85,21 +84,21 @@ MATRIX = [
      'new': 'case 1n+n S.Variable{token}: G.binder(types,token,True{})', 'witness': 'plusd-ctl-bare-datatype', 'phase': 'check',
      'wrong': invalid('check', 'datatype-pattern-binder')},
     # finding 3
-    {'name': 'annotation-ignores-binders', 'file': 'check.bend', 'old': HIDES, 'new': 'annotation_id(reference)',
+    {'name': 'annotation-ignores-binders', 'file': 'check.bend', 'old': HIDES, 'new': 'G.find_type(types,name,0)',
      'witness': 'shadow-row', 'phase': 'check', 'wrong': ACCEPTED},
-    {'name': 'annotation-hides-every-name', 'file': 'check.bend', 'old': HIDES,
-     'new': 'G.hidden(Maybe<&2,U32>,Con{name,E.names(bindings)},name,u => annotation_id(reference))',
+    {'name': 'every-type-hidden', 'file': 'catalog.bend',
+     'old': 'S.choose(Result<S.Error,A>,named(seen,name),u => C.invalid(A,"type-shadowed",name),next)',
+     'new': 'S.choose(Result<S.Error,A>,True{},u => C.invalid(A,"type-shadowed",name),next)',
      'witness': 'shadow-ctl-plain-binder', 'phase': 'check', 'wrong': invalid('check', 'type-shadowed')},
-    {'name': 'parameter-type-ignores-earlier', 'file': 'catalog.bend', 'old': PARAM_HIDES,
-     'new': PARAM_HIDES.replace('hidden(List<&2,C.Parameter>,seen,', 'hidden(List<&2,C.Parameter>,Nil{},'),
+    {'name': 'parameter-type-ignores-earlier', 'file': 'catalog.bend', 'old': TELESCOPE, 'new': 'telescope(tail,Con{name,seen})',
      'witness': 'shadow-param-type', 'phase': 'check', 'wrong': ACCEPTED},
-    {'name': 'parameter-type-hides-itself', 'file': 'catalog.bend', 'old': PARAM_HIDES,
-     'new': PARAM_HIDES.replace('hidden(List<&2,C.Parameter>,seen,', 'hidden(List<&2,C.Parameter>,Con{name,seen},'),
+    {'name': 'parameter-type-hides-itself', 'file': 'catalog.bend', 'old': TELESCOPE,
+     'new': TELESCOPE.replace('hidden(List<&2,S.Token>,seen,', 'hidden(List<&2,S.Token>,Con{name,seen},'),
      'witness': 'shadow-ctl-param-own-type', 'phase': 'check', 'wrong': invalid('check', 'type-shadowed')},
-    {'name': 'result-type-ignores-parameters', 'file': 'catalog.bend', 'old': 'named_parameter(ps,result)', 'new': 'False{}',
+    {'name': 'result-type-ignores-parameters', 'file': 'catalog.bend', 'old': 'visible(types,result,names)', 'new': 'find_type(types,result,0)',
      'witness': 'shadow-param-result', 'phase': 'check', 'wrong': ACCEPTED},
-    {'name': 'field-type-ignores-earlier', 'file': 'catalog.bend', 'old': FIELD_HIDES,
-     'new': FIELD_HIDES.replace('hidden(List<&2,C.Parameter>,seen,', 'hidden(List<&2,C.Parameter>,Nil{},'),
+    {'name': 'field-type-ignores-earlier', 'file': 'catalog.bend', 'old': 'visible(types,type_name,seen)',
+     'new': 'find_type(types,type_name,0)',
      'witness': 'shadow-field-type', 'phase': 'check', 'wrong': ACCEPTED},
 ]
 # The parser: a numeral column, and each layout the seed reads that the parser answers Unsupported.
