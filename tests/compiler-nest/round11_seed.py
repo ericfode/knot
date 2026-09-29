@@ -538,6 +538,58 @@ NESTED = '''def f(p: Opt, b: Flag) -> Flag:
 group('layout-match-body', unsupported('body-indentation'), None, ('layout-match-body-multi', PRE + NESTED),
       ('layout-match-body-single', PRE + NESTED.replace('match p b:', 'match p:').replace('Some{v} _', 'Some{v}').replace('case _ _:', 'case _:')
        .replace('f(p: Opt, b: Flag)', 'f(p: Opt)').replace('Some{On{}}, On{}', 'Some{On{}}')))
+# Found by token-mutation fuzzing of the fixtures: more places where the seed reads any layout.
+def within(context, arm, rows=None):
+    """A def whose match has the row `case <pattern>:` followed by `arm` and a default row."""
+    head, cols, pat, dflt, args = CONTEXTS[context]
+    rows = rows or f'    case {dflt}: Off{{}}\n'
+    return PRE + head + f'match {cols}:\n    case {pat}:\n{arm}{rows}\n' + main_of(args)
+
+
+# A statement on the line of the previous let's value.
+SAME = {'glued': 'v : Flag = On{}v', 'spaced': 'v : Flag = On{} v', 'untyped': 'v = h(a) v'}
+group('layout-same-line', unsupported('same-line-statement'), None,
+      *[(f'layout-same-line-{form}-{context}', within(context, f'      {text}\n'))
+        for form, text in SAME.items() for context in CONTEXTS])
+# A plain name split from its `:` or `=` by a line break.
+SPLIT = {'colon': 'v\n        : Flag = On{}', 'equals': 'v\n        = h(a)', 'colon-comment': 'v # gap\n        : Flag = On{}',
+         'colon-margin': 'v\n : Flag = On{}'}
+group('layout-plain-split', unsupported('line-break'), None,
+      *[(f'layout-plain-split-{kind}-{context}', within(context, f'      {text}\n      v\n'))
+        for kind, text in SPLIT.items() for context in CONTEXTS])
+# A declaration at another column, or on the line of the previous body's end.
+DEFS = 'def f(a: Flag) -> Flag:\n  match a:\n    case _: Off{{}}\n{gap}def main() -> Flag:\n  f(On{{}})\n'
+group('layout-declaration', unsupported('top-level-indentation'), None,
+      *[(f'layout-def-indent-{n}', PRE + DEFS.format(gap='\n' + ' ' * n)) for n in (1, 2)],
+      ('layout-type-indent', PRE + 'def f(a: Flag) -> Flag:\n  a\n\n  type Later is Data:\n    LateA{}\n\n' + main_of('On{}')))
+group('layout-declaration-deep', unsupported('pattern-or-indentation'), None,
+      *[(f'layout-def-indent-{n}', PRE + DEFS.format(gap='\n' + ' ' * n)) for n in (3, 4)])
+group('layout-declaration-glued', unsupported('same-line-declaration'), None,
+      ('layout-def-glued-arm', PRE + 'def f(a: Flag) -> Flag:\n  match a:\n    case _: Off{}def main() -> Flag:\n  f(On{})\n'),
+      ('layout-def-glued-flat', PRE + 'def f(a: Flag) -> Flag:\n  On{}def main() -> Flag:\n  f(On{})\n'),
+      ('layout-def-spaced-arm', PRE + 'def f(a: Flag) -> Flag:\n  match a:\n    case _: Off{} def main() -> Flag:\n  f(On{})\n'),
+      ('layout-type-glued', PRE + 'def f(a: Flag) -> Flag:\n  On{} type Later is Data:\n  LateA{}\n\n' + main_of('On{}')))
+# The first case at the margin: the seed reads it as a row of the match.
+group('layout-case-margin', unsupported('pattern-or-indentation'), None,
+      *[(f'layout-case-margin-{context}', PRE + CONTEXTS[context][0] + f'match {CONTEXTS[context][1]}:\ncase {CONTEXTS[context][2]}: On{{}}\n'
+         f'    case {CONTEXTS[context][3]}: Off{{}}\n\n' + main_of(CONTEXTS[context][4])) for context in CONTEXTS])
+# A let in a discarded body reads `+` like any other (the datatype half of the binder rule).
+DEADLET = '''def f(a: Flag) -> Flag:
+  match a:
+    case _: Off{{}}
+    case On{{}}:
+      {let}
+      On{{}}
+
+'''
+group('dead-plus-let', check('datatype-pattern-binder'), 'a quantified datatype after +',
+      *[(f'dead-let-plus-{name}', PRE + DEADLET.format(let=let) + main_of('On{}'))
+        for name, let in (('flag', '+Flag = a'), ('color', '+Color = a'), ('typed', '+Flag : Flag = a'), ('spaced', '+ Flag = a'))])
+group('dead-let-ok', ACCEPTED, None,
+      *[(f'dead-let-ok-{name}', PRE + DEADLET.format(let=let) + main_of('On{}'))
+        for name, let in (('plain', 'q = h(a)'), ('plus', '+q = h(a)'), ('erased-datatype', '-Flag = a'),
+                          ('plus-later', '+Later = a'), ('plus-function', '+h = a'))])
+
 # The seed rejects these: a let that has no body, and a `case` where a statement should be.
 group('layout-invalid', {'exit': 2, 'diagnostic': 'Invalid\tparse\tbody-indentation\t'}, None,
       ('layout-ctl-def-after-let', PRE + 'def f(a: Flag) -> Flag:\n  u : Flag = a\n' + main_of('On{}')),
