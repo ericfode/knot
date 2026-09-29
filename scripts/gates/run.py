@@ -31,6 +31,10 @@ class Gate:
 
 
 GATES = (
+    # First, not appended: the gate is one of the longest (minutes), and the scheduler starts gates in table order, so a late row
+    # would run alone at the end of the run instead of beside the other long gates.
+    Gate('prechecks', ('python3', '-B', 'tests/prechecks/check.py'),
+         ('tests/prechecks/receipts/prechecks.json',)),
     Gate('frontend', ('python3', 'tests/subsets/check_frontend.py'),
          ('tests/subsets/receipts/frontend.json',)),
     Gate('checker', ('python3', 'tests/compiler-checker/check.py'),
@@ -74,8 +78,6 @@ GATES = (
          ('tests/compiler-io-abi-2/receipts/host.json', 'tests/compiler-io-abi-2/receipts/reference.json')),
     Gate('selfhost', ('python3', 'tests/compiler-selfhost/check.py'),
          ('tests/compiler-selfhost/receipts/selfhost.json',)),
-    Gate('prechecks', ('python3', '-B', 'tests/prechecks/check.py'),
-         ('tests/prechecks/receipts/prechecks.json',)),
 )
 
 
