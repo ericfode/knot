@@ -1562,3 +1562,45 @@ Prevention:
 - Every gate that rebuilds lanes per mutant scales with the mutant count:
   `nest-round10` takes 13 minutes under campaign load and 4 unloaded, so the
   runner's per-gate limit is now 1,800 s.
+
+## 2026-09-29 — literals-integ: merging nest into the literals stack, defects the pins could not show
+
+The merge checkpoint (`e996d7c`) was checked with the frozen pins of both suites, nest's
+fuzz, all 15 proof entries, the manifest test and the census. The first full gate run
+found what none of those could see. Confirmed:
+- A missed defect. The checkpoint moved nest's `Rebuild` rows into a separate
+  dispatcher to lower `check.bend::run`'s Perch state. The fields gate anchors the live
+  text `run(n,Rebuild{head},...)`; the checkpoint's anchor scan covered the nest and
+  literals gates only (116 of 170 anchors), so the extraction was committed with a
+  known-failing gate. Fixed in `2d7fb92`.
+- All nine nest gates stopped in 25 to 46 seconds, before their first fixture. The
+  stack carries the modules increment, whose CLIs call the host path-identity module:
+  the seed prints a foreign-code note that nest's harness read as a failure, and its
+  mutant builders did not copy `src/host`. Harness plumbing, fixed in `eb9b1e5`; with it
+  six of the nine pass.
+- A per-declaration failure masks its group. Preflight stops at the first unit that is
+  over the 60,000-byte state cap, so the 48,000-byte composition of two groups was never
+  computed: `pattern-matrix-laws` (51,860) and `checking` (49,795). Two more units
+  (`flag`, `body`) were over the cap for a reason one line long: a whole SPEC as the task.
+- Four mutants cannot be killed on the merged tree beyond the fifteen with dead anchors.
+  One, `inferred-let-literal`, is equivalent whatever the ruling is: nest's `expected`
+  rejects an unannotated `C.Value` too, so the literals mutation that removes its own
+  guard changes nothing on its U32 witness.
+
+Prevention:
+- Run one full `gates` before a merge checkpoint is committed, not after. It takes 22
+  minutes here; the pin comparison alone hid three defect classes.
+- Scan the anchors of every gate script's `MUTANTS`, not of the two suites being merged:
+  `anchors_all.py` does, and `list_anchors.py FILE` names every anchor in a file before it
+  is restructured.
+- Do not restructure a dispatcher to move a Perch metric. The row extraction moved `run`
+  by 1.4 KB and a hill climb over row order by 3.6 KB (60,351, not applied); neither reached
+  the cap. The cause is the closure (114 declarations against 95 and 92), so the fix is a
+  design, not an arrangement.
+- Measure every group's state and composition with the first failure downgraded
+  (`minstate.mjs`, `compbytes.mjs`) before reporting how many groups fit.
+- A gate that stops at its first failure says little about the rest. `relax.py` runs a
+  gate with its contested rows removed and every mutant loop tolerant; it turned "only
+  the 39 pins fail" into four passing gates and a list of 19 unkillable mutants.
+- When two suites guard the same term shape, list the mutants that delete one of the
+  guards: each becomes equivalent once both are present.
