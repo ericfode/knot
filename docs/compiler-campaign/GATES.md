@@ -29,6 +29,14 @@ The wrapper runs the resolved compiler and supplies the SDK when it is missing,
 which keeps those paths off the shim. `test_runner` pins it with a trimmed
 environment.
 
+The same message also appears under heavy host load with the real compiler on
+PATH: the seed's `spawnSync` probe returns nothing. It is a host fault, not an
+assertion, so the runner reruns a gate once when the gate failed and its output
+contains `bend needs clang`. The result records the first attempt under
+`retried` (its logs keep the `.retry` suffix on the second attempt), and the
+normalized summary leaves `retried` out, so a retried pass normalizes like a
+clean one. A gate that fails twice stays failed. Other failures are never retried.
+
 Harness wall-clock guards inside the gate scripts (the seed-build and CLI
 `run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
 unless the caller sets it. These guards only catch hangs; no passing receipt
