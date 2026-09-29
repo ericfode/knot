@@ -3374,11 +3374,11 @@ EVALUATOR_MUTANTS = [
        "                self.effect(env[node[2]])\n            return w\n")]),
     # The loop enters k before the effect: it survives every run that finishes, and dies where k's entry stops.
     ('loop-enters-k-before-effect', [(LOOP, '            req, w = w, m.apply(w[3], [0])\n            m.effect(req)')]),
-    # A request is never inspected, except that D24 gives a tags-mode Case its Default: a request matches no
-    # constructor row. Each mutant changes one part of that rule. The old refusal (D23's, the rule of round 12) refuses
+    # A request is never inspected, except that D24 gives a Case its Default: a request matches no row, of either mode.
+    # Each mutant changes one part of that rule. The old refusal (D23's, the rule of round 12) refuses
     # a Case whatever its Default; a Case that ignores its Default picks a row (the goldens `case-request-emit-default-u32`
     # and `-halt-default-u32` print 1 and 3 for 2 and 4), and one without a Default picks its first row or takes the
-    # request for an ill-typed word; the Default is taken only at IO.OP, or also by a key-mode Case, a scalar read.
+    # request for an ill-typed word; the Default is taken only at IO.OP, or not by a key-mode Case, which then reads the request as a scalar.
     ('case-request-refused-with-default', [("            if default is None:\n                raise Halt(UNSUPPORTED)\n            arm, fields = default, ()\n",
                                             "            raise Halt(UNSUPPORTED)\n")]),
     ('case-request-ignores-default', [("            if default is None:\n                raise Halt(UNSUPPORTED)\n            arm, fields = default, ()\n",
@@ -3390,12 +3390,11 @@ EVALUATOR_MUTANTS = [
     ('case-request-without-default-ill-typed', [("                raise Halt(UNSUPPORTED)\n            arm, fields = default, ()\n",
                                                  "                raise Halt(ILL_TYPED)\n            arm, fields = default, ()\n")]),
     ('case-request-default-at-io-op-only',
-     [("        elif isinstance(env[slot], tuple) and env[slot][0] == 'request':\n",
-       "        elif isinstance(env[slot], tuple) and env[slot][0] == 'request' and t == self.rep.get('IO.OP'):\n")]),
-    ('keys-case-takes-request-default',
-     [("            key = self.word(env[slot])\n            arm, fields = next((r for r in rows if r[1] == key), default), ()\n",
-       "            if isinstance(env[slot], tuple) and env[slot][0] == 'request':\n                return self.eval(default[-1], env)\n"
-       "            key = self.word(env[slot])\n            arm, fields = next((r for r in rows if r[1] == key), default), ()\n")]),
+     [("        if isinstance(env[slot], tuple) and env[slot][0] == 'request':\n",
+       "        if isinstance(env[slot], tuple) and env[slot][0] == 'request' and t == self.rep.get('IO.OP'):\n")]),
+    ('keys-case-refuses-request',
+     [("        if isinstance(env[slot], tuple) and env[slot][0] == 'request':\n",
+       "        if isinstance(env[slot], tuple) and env[slot][0] == 'request' and mode != 'keys':\n")]),
     ('view-request-as-ill-typed', [("        self.read(w)\n        if t == self.rep.get('Nat') and isinstance(w, int):",
                                     "        if t == self.rep.get('Nat') and isinstance(w, int):")]),
     ('word-request-as-ill-typed', [("        self.read(w)\n        if not isinstance(w, int):", "        if not isinstance(w, int):")]),
