@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Frozen seed observations versus both Knot lanes; no host language semantics."""
 from __future__ import annotations
+from concurrent.futures import ThreadPoolExecutor
 import datetime
 import hashlib
 import json
@@ -11,6 +12,7 @@ import shutil
 import subprocess
 
 TIMEOUT_SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # harness hang guard only
+WORKERS = 4  # independent observations run on this many threads; results keep their frozen order
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 # The modules host query makes the seed name its five foreign-dependent CLI
@@ -488,45 +490,47 @@ def evaluated_wrong(m, f, folder):
     return {**record, 'eval': evaluated}
 
 
+def mutant(m, by_name):
+    folder = BUILD / 'mutants' / m['name']
+    folder.mkdir(parents=True, exist_ok=True)
+    for source in sorted((ROOT / 'src').glob('*.bend')):
+        shutil.copy2(source, folder / source.name)
+    shutil.copytree(ROOT / 'src/host', folder / 'host', dirs_exist_ok=True)
+    path = folder / m['file']
+    code = path.read_text()
+    require(code.count(m['old']) == 1, (m['name'], 'mutation anchor not unique'))
+    code = code.replace(m['old'], m['new'])
+    if 'prepend' in m:
+        code = code.replace('def decoded(', m['prepend'] + 'def decoded(')
+    if 'import' in m:
+        require(code.startswith('import Base\n'), (m['name'], 'import anchor'))
+        code = code.replace('import Base\n', 'import Base\n' + m['import'], 1)
+    path.write_text(code)
+    f = by_name[m['fixture']]
+    record = {**m, 'sha256': digest(path)}
+    # Evaluator-only mutants change no emitted byte; their witness is the evaluator lane.
+    entry = folder / ('eval-cli.bend' if m.get('lane') == 'eval' else 'compile-cli.bend')
+    typed = success([*SEED, entry, '--check-only'])
+    require(typed['stdout'] == HOST_CHECKS[entry.name]['stdout'], typed)
+    record['typecheck'] = typed
+    if m.get('lane') != 'eval':
+        compiler = folder / 'compile.js'
+        record['build'] = built(entry, compiler)
+        if 'fault' in m:
+            record.update(killed_by_fault(m, f, by_name[m['control']], compiler, folder))
+        else:
+            kill = killed_by_verdict if 'verdict' in m else killed_by_value
+            record.update(kill(m, f, compiler, folder))
+    if m.get('eval') or m.get('lane') == 'eval':
+        record.update(evaluated_wrong(m, f, folder))
+    record['killed'] = True
+    return record
+
+
 def mutants(fixtures):
     by_name = {f['name']: f for f in fixtures}
-    records = []
-    for m in MUTANTS:
-        folder = BUILD / 'mutants' / m['name']
-        folder.mkdir(parents=True, exist_ok=True)
-        for source in sorted((ROOT / 'src').glob('*.bend')):
-            shutil.copy2(source, folder / source.name)
-        shutil.copytree(ROOT / 'src/host', folder / 'host', dirs_exist_ok=True)
-        path = folder / m['file']
-        code = path.read_text()
-        require(code.count(m['old']) == 1, (m['name'], 'mutation anchor not unique'))
-        code = code.replace(m['old'], m['new'])
-        if 'prepend' in m:
-            code = code.replace('def decoded(', m['prepend'] + 'def decoded(')
-        if 'import' in m:
-            require(code.startswith('import Base\n'), (m['name'], 'import anchor'))
-            code = code.replace('import Base\n', 'import Base\n' + m['import'], 1)
-        path.write_text(code)
-        f = by_name[m['fixture']]
-        record = {**m, 'sha256': digest(path)}
-        # Evaluator-only mutants change no emitted byte; their witness is the evaluator lane.
-        entry = folder / ('eval-cli.bend' if m.get('lane') == 'eval' else 'compile-cli.bend')
-        typed = success([*SEED, entry, '--check-only'])
-        require(typed['stdout'] == HOST_CHECKS[entry.name]['stdout'], typed)
-        record['typecheck'] = typed
-        if m.get('lane') != 'eval':
-            compiler = folder / 'compile.js'
-            record['build'] = built(entry, compiler)
-            if 'fault' in m:
-                record.update(killed_by_fault(m, f, by_name[m['control']], compiler, folder))
-            else:
-                kill = killed_by_verdict if 'verdict' in m else killed_by_value
-                record.update(kill(m, f, compiler, folder))
-        if m.get('eval') or m.get('lane') == 'eval':
-            record.update(evaluated_wrong(m, f, folder))
-        record['killed'] = True
-        records.append(record)
-    return records
+    with ThreadPoolExecutor(WORKERS) as pool:
+        return list(pool.map(lambda m: mutant(m, by_name), MUTANTS))
 
 
 def boundaries(lanes):
@@ -606,10 +610,11 @@ def main():
     record = {'status': 'incomplete', 'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'seed': manifest['seed'], 'inputs': {p.relative_to(ROOT).as_posix(): digest(p) for p in inputs}}
     try:
-        record['reference_verification'] = success(['python3', HERE / 'regen.py'])
-        record['supplemental_verification'] = success(['python3', HERE / 'supplemental.py'])
-        record['regression_verification'] = success(['python3', HERE / 'regressions.py'])
-        record['result_verification'] = success(['python3', HERE / 'results.py'])
+        with ThreadPoolExecutor(WORKERS) as pool:
+            verified = [pool.submit(success, ['python3', HERE / name])
+                        for name in ('regen.py', 'supplemental.py', 'regressions.py', 'results.py')]
+            for key, future in zip(('reference', 'supplemental', 'regression', 'result'), verified):
+                record[key + '_verification'] = future.result()
         require(supplemental['seed_sha256'] == manifest['seed']['sha256'] == regressions['seed_sha256'] ==
                 results['seed_sha256'], 'Seed identity differs')
         record['tools'] = {tool: success([tool, '--version'])['stdout'].strip() for tool in ('bun', 'node', 'python3')}
@@ -621,10 +626,12 @@ def main():
             require(r['stdout'] == 'All terms check.\n', r)
             record['proofs'].append({'entry': entry, 'result': r})
         lanes = build_lanes(record)
-        record['fixtures'] = []
-        for f in [*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures']]:
-            record['fixtures'].append(fixture(f, lanes, record['base'], manifest['seed']['sha256']['bend2/base.bend']))
-        record['results'] = [result_fixture(f, lanes) for f in results['fixtures']]
+        pin = manifest['seed']['sha256']['bend2/base.bend']
+        with ThreadPoolExecutor(WORKERS) as pool:
+            record['fixtures'] = list(pool.map(
+                lambda f: fixture(f, lanes, record['base'], pin),
+                [*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures']]))
+            record['results'] = list(pool.map(lambda f: result_fixture(f, lanes), results['fixtures']))
         record['boundaries'] = boundaries(lanes) + offset_limits(lanes)
         record['mutants'] = mutants([*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures'],
                                      *results['fixtures']])
