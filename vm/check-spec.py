@@ -2041,8 +2041,9 @@ def run_controls(plans: dict) -> list:
                                    ['default', ['value', 1, 1]]]]}]},
          {'exit': 0, 'stdout': 'Evaluated\t1\t1\tOn{}\n', 'calls': 1}),
     ]
-    return [*controls, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in controls}}),
-            *inspection_controls(plans), *effect_controls(plans), *key_controls(plans)]
+    listed = [*controls, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in controls}}),
+              *inspection_controls(plans), *effect_controls(plans), *key_controls(plans)]
+    return [*listed, *atomic_controls(plans, {label: (plan, frozen) for label, plan, frozen in listed})]
 
 
 def effect_controls(plans: dict) -> list:
@@ -2556,6 +2557,98 @@ def fuel_controls(plans: dict) -> list:
         ('fuel-zero-program', printed, at(0, fuel, 0, stdout='')),
         ('fuel-zero-ill-typed-invoke', plans['erased-closure-invoked-live'], at(2, ILL_TYPED, 2)),
         ('fuel-zero-ill-typed-phase', plans['phase-one-live'], at(2, ILL_TYPED, 2)),
+    ]
+
+
+def atomic_controls(plans: dict, known: dict) -> list:
+    """Section 6.3 at what the reference evaluation can see. It has no frames, `act` or cells, so a stop shows in its outcome,
+    `calls`, `stdout` and `effects` alone, and the rule is that a stopped run reports what the run held before the refusing step:
+    the entries paid, the bytes written and the host calls made by the steps that completed, and nothing of the refused one.
+    A refused step also pays nothing, so the same run given exactly the fuel that it has spent, `fuel = calls`, reaches the same
+    stop (an Enter is refused before it tests fuel, and no other step tests any). Each twin is the run of an existing control or
+    golden, frozen again at that fuel and with the `stdout` and `effects` that the first freeze left out. The values are by literal
+    review of each plan, written before the run: no Book writes anything and calls no host; a Program that stops before its first
+    request has written nothing and made no call.
+    - Gather completions (2 entries: main and the identity; 3 with a Base function or `pick`): a Chr, a Succ, a word prim
+      and a Case that read an ill-typed word, and a rendered field, each with its operands still in place.
+    - NatRange (main and the callee, `succ`, `Nat.add` or `Nat.mul`, are 2 entries; `Nat.is_gt` is never entered): a Succ and
+      two prims stop at the result that would exceed 2^32-1.
+    - Return to Top (main, the erased R and k's closure are 3 entries, the identity a 4th): a Halt whose code, or whose message, is
+      ill-typed, and an IO.OP that is a closure, are `ill-typed`; a Halt whose message holds a surrogate is `io abi`.
+    - The loop (4 entries build the request: main, IO.print, the erased R and the Action applied to k; 5 with an identity): a String
+      with a surrogate is `io abi`, and one whose tail is ill-typed is `ill-typed`, each before any host call. A Case that refuses a
+      request (7 entries) pays nothing, and neither does a display that exceeds its bounds (1).
+    - After an effect: `x` is written by the request that entries 1 to 6 build (`a` by 3 entries and the first request of
+      `print-non-scalar-second`, whose second String is refused after 13), and its host call is made once. The refused step that
+      follows leaves both alone: an ill-typed k (entry 7, `inspect-continuation-target`), an IO.OP that is a closure that k answers
+      through the identity (entries 7 and 8), and a Succ of 2^32-1 in k (entry 7; the Nat is type 9 of a plan that adds it).
+    - An ill-typed word is inspected before it is charged (section 8). Pair{n, w} with the Nat word n = 1,048,574 has charged
+      1 + 1,048,575 = 1,048,576 visits, the whole bound, when it reaches its second field: a Flag there is the 1,048,577th visit and
+      is refused as `display` (1 entry), and the same field made by the identity from a closure is refused as `ill-typed` first
+      (2 entries), because a word that is not inspected is no visit."""
+    def twin(name, label, calls, **frozen):
+        plan, base = known[label]
+        require(base['calls'] == calls, f'atomic control {name}: {label} freezes {base["calls"]} calls, not {calls}')
+        return f'atomic-{name}', plan, {'fuel': calls, **frozen, 'calls': calls}
+
+    def golden(name, source, calls, **frozen):
+        return f'atomic-{name}', plans[source], {'fuel': calls, **frozen, 'calls': calls}
+    quiet = {'stdout': '', 'effects': 0}
+    nat_range = {'outcome': 'Exhausted', 'kind': 2, 'cause': 'NatRange'}
+    io_abi = {'outcome': 'HostFailure', 'cause': 'io abi'}
+    fp = plans['foreign-print']
+    ident = {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]}
+    unit_identity = ['closure', len(fp['types']), 1, 1, [], ['ref', 0, 0]]
+
+    def program(body, *functions, more=(), rep=None):
+        """foreign-print's types, then the arrow Unit -> Unit (type 8) and `more`; the identity is function 0, IO.print function 1"""
+        return {'entry': 'program', 'representation': {**fp['representation'], **(rep or {})},
+                'types': [*fp['types'], {'kind': 'arrow', 'domain': 0, 'result': 0}, *more],
+                'functions': [ident, *functions, {'name': 'main', 'parameters': [], 'result': 7, 'slots': 0, 'body': body}]}
+
+    def continuing(k, **more):
+        """main = λ@R. λk. IO.print("x")(R)(k): `x` is the effect that entries 1 to 6 build and the loop performs, k entry 7"""
+        applied_to = ['invoke', 4, ['invoke', 6, ['call', 7, 1, [['lit', 3, 'String', [120]]]], []], [k]]
+        return program(['closure', 7, 0, 0, [], ['closure', 6, 1, 1, [], applied_to]], fp['functions'][0], **more)
+    nat = len(fp['types']) + 1
+    nat_type = {'kind': 'data', 'name': 'Nat', 'constructors': [{'name': 'Zero', 'fields': []}, {'name': 'Succ', 'fields': [nat]}]}
+    closure_io_op = ['closure', 5, 1, 1, [], ['call', 4, 0, [unit_identity]]]                 # u => id(λ), read as an IO.OP
+    succ_max = ['closure', 5, 1, 1, [], ['con', 4, 0, [['con', nat, 1, [['lit', nat, 'Nat', 4294967295]]]]]]   # u => Emit{Succ{2^32-1}}
+    flag = plans['value-on']['types'][0]
+    natural = {'kind': 'data', 'name': 'Nat', 'constructors': [{'name': 'Zero', 'fields': []}, {'name': 'Succ', 'fields': [0]}]}
+    pair = {'kind': 'data', 'name': 'Pair', 'constructors': [{'name': 'Pair', 'fields': [0, 1]}]}
+
+    def second(word):
+        """main = Pair{1,048,574n, word}: Nat 0, Flag 1, Pair 2, Flag -> Flag 3"""
+        return {'entry': 'book', 'representation': {'Nat': 0}, 'types': [natural, flag, pair, {'kind': 'arrow', 'domain': 1, 'result': 1}],
+                'functions': [ident, {'name': 'main', 'parameters': [], 'result': 2, 'slots': 0,
+                                      'body': ['con', 2, 0, [['lit', 0, 'Nat', 1048574], word]]}]}
+    return [
+        twin('ill-typed-chr', 'inspect-chr', 2, **ILL_TYPED, **quiet),
+        twin('ill-typed-succ', 'inspect-succ-closure', 2, **ILL_TYPED, **quiet),
+        twin('ill-typed-prim', 'inspect-u32-add', 3, **ILL_TYPED, **quiet),
+        twin('ill-typed-case', 'inspect-case-closure-scrutinee', 3, **ILL_TYPED, **quiet),
+        twin('ill-typed-render', 'inspect-render-field', 2, **ILL_TYPED, **quiet),
+        golden('nat-succ-range', 'nat-succ-range', 2, **nat_range, **quiet),
+        golden('nat-add-range', 'nat-range', 2, **nat_range, **quiet),
+        golden('nat-mul-range', 'nat-mul-range', 2, **nat_range, **quiet),
+        twin('halt-code', 'inspect-halt-code', 4, **ILL_TYPED, **quiet),
+        twin('halt-message', 'inspect-halt-message', 4, **ILL_TYPED, **quiet),
+        twin('io-op-closure', 'inspect-io-op-closure', 4, **ILL_TYPED, **quiet),
+        twin('halt-non-scalar', 'halt-surrogate', 3, **io_abi, **quiet),
+        golden('print-non-scalar', 'print-non-scalar', 4, **io_abi, **quiet),
+        twin('print-ill-typed', 'inspect-print-after-surrogate', 5, **ILL_TYPED, **quiet),
+        twin('case-request', 'program-case-request', 7, outcome='Unsupported', cause='vm effect', **quiet),
+        twin('display-visits', 'display-visits-beyond-bound', 1, outcome='Exhausted', kind=2, cause='display', **quiet),
+        golden('print-then-non-scalar', 'print-non-scalar-second', 13, **io_abi, stdout='a\n', effects=1),
+        twin('print-then-ill-typed-continuation', 'inspect-continuation-target', 7, **ILL_TYPED, stdout='x\n', effects=1),
+        ('atomic-print-then-io-op', continuing(closure_io_op), {'fuel': 8, **ILL_TYPED, 'calls': 8, 'stdout': 'x\n', 'effects': 1}),
+        ('atomic-print-then-nat-range', continuing(succ_max, more=(nat_type,), rep={'Nat': nat}),
+         {'fuel': 7, **nat_range, 'calls': 7, 'stdout': 'x\n', 'effects': 1}),
+        ('atomic-display-leaf-charged', second(['value', 1, 1]),
+         {'fuel': 1, 'outcome': 'Exhausted', 'kind': 2, 'cause': 'display', 'calls': 1, **quiet}),
+        ('atomic-display-leaf-ill-typed', second(['call', 1, 0, [['closure', 3, 1, 1, [], ['ref', 1, 0]]]]),
+         {'fuel': 2, **ILL_TYPED, 'calls': 2, **quiet}),
     ]
 
 
@@ -3254,6 +3347,37 @@ LOOP = '            w = m.apply(w[3], [m.effect(w)])'
 ENTRY = ("        self.rep = plan.get('representation', {})\n",
          "        self.rep, self.entry = plan.get('representation', {}), plan['entry']\n")
 
+# The refusal sites of evaluate.py that section 6.3's mutants edit, and what they insert before the `raise Halt` that ends a site. A stop
+# changes nothing, so a refusal that first spends an entry (`debit()`, which is also refused at fuel 0), tests fuel, counts or writes
+# is a mutant that mutates before it refuses; the atomic controls (`atomic_controls`) run each stop at exactly the fuel it has spent.
+SITE_NAT = "            raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'NatRange'})"
+SITE_WORD = "        if not isinstance(w, int):\n            raise Halt(ILL_TYPED)\n        return w"
+SITE_VIEW = "            return w[2], w[3]\n        raise Halt(ILL_TYPED)\n"
+SITE_READ = "        if isinstance(w, tuple) and w[0] == 'request':\n            raise Halt(UNSUPPORTED)\n        return w"
+SITE_CASE = "            if default is None:\n                raise Halt(UNSUPPORTED)\n            arm, fields = default, ()\n"
+SITE_DISPLAY = "                raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'display'})"
+SITE_D20 = "            raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})\n"
+DEBIT = "        self.fuel -= 1\n        self.calls += 1\n"
+FUEL_STOP = "raise Halt({'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel'})"
+LATE = "        if getattr(self, 'late', None):\n            raise self.late\n"
+
+
+def before_raise(site: str, code: str) -> tuple:
+    """(site, site with `code` placed before its `raise Halt`, at that line's indent)"""
+    lines = site.split('\n')
+    at = next(i for i, line in enumerate(lines) if 'raise Halt' in line)
+    pad = lines[at][:len(lines[at]) - len(lines[at].lstrip())]
+    return site, '\n'.join([*lines[:at], *(pad + c for c in code.split('\n')), *lines[at:]])
+
+
+def spends(site: str) -> tuple:
+    return before_raise(site, 'self.debit()')
+
+
+def tests_fuel(site: str) -> tuple:
+    return before_raise(site, f'if self.fuel == 0:\n    {FUEL_STOP}')
+
+
 # Semantic mutants of the reference evaluation: each must change a golden expectation, a Book
 # value or a run control, or be refused by the rule; a crash is never a kill.
 EVALUATOR_MUTANTS = [
@@ -3539,6 +3663,57 @@ EVALUATOR_MUTANTS = [
                                     '                if tag == 0:\n                    break\n'
                                     "                message.append(m.view(parts[0], m.rep['Char'])[1][0])\n"
                                     '                cells = parts[1]\n')]),
+    # Section 6.3 (atomic_controls): a step that stops changes nothing, so a stopped run reports what it held before the refusing step.
+    # Each mutant below mutates before it refuses. It spends an entry at its refusal, which shows as one call more, or as fuel 0 at the
+    # twin that is given exactly the fuel it has spent; or it tests fuel before a refusal that no fuel test precedes, which only that twin
+    # meets; or it counts an effect or writes a byte before its check, or discards what earlier steps wrote; or it reports the refusal
+    # at the next entry, as a machine does that pops a Gather frame and goes on.
+    ('nat-range-spends-entry', [spends(SITE_NAT)]),
+    ('ill-typed-spends-entry', [spends(SITE_WORD), spends(SITE_VIEW)]),
+    ('case-request-spends-entry', [spends(SITE_CASE)]),
+    ('request-read-spends-entry', [spends(SITE_READ)]),
+    ('d20-refusal-spends-entry', [spends(SITE_D20)]),
+    ('display-refusal-spends-entry', [spends(SITE_DISPLAY)]),
+    # An Enter is refused before its debit (section 7): the existing `fuel-before-operand-check` and `fuel-test-before-request-check` fire
+    # only at fuel 0, and these two pay the debit whatever the fuel.
+    ('enter-operand-check-after-debit', [("        if kind not in takes or not takes[kind]():\n            raise Halt(ILL_TYPED)\n        self.debit()\n",
+                                          "        self.debit()\n        if kind not in takes or not takes[kind]():\n            raise Halt(ILL_TYPED)\n")]),
+    ('enter-request-target-after-debit', [("        self.read(f)\n        kind = f[0]",
+                                           "        if isinstance(f, tuple) and f[0] == 'request':\n            self.debit()\n"
+                                           "        self.read(f)\n        kind = f[0]")]),
+    ('nat-range-tests-fuel', [tests_fuel(SITE_NAT)]),
+    ('ill-typed-tests-fuel', [tests_fuel(SITE_WORD), tests_fuel(SITE_VIEW)]),
+    ('case-request-tests-fuel', [tests_fuel(SITE_CASE)]),
+    ('request-read-tests-fuel', [tests_fuel(SITE_READ)]),
+    ('d20-refusal-tests-fuel', [tests_fuel(SITE_D20)]),
+    ('display-refusal-tests-fuel', [tests_fuel(SITE_DISPLAY)]),
+    # The loop counts a host call where the call is made, after every refusal of section 10, and writes nothing of a refused String.
+    ('effect-counted-before-scalar-check', [("        self.outgoing(codes)\n        self.effects += 1              # the host call, after every refusal of section 10\n",
+                                             "        self.effects += 1\n        self.outgoing(codes)\n")]),
+    ('effect-counted-before-inspection', [("        codes = self.codes(operands[0])\n        self.prints.append(codes)\n",
+                                           "        self.effects += 1\n        codes = self.codes(operands[0])\n        self.prints.append(codes)\n"),
+                                          ("        self.effects += 1              # the host call, after every refusal of section 10\n", "")]),
+    ('effect-writes-before-scalar-check',
+     [("        self.outgoing(codes)\n",
+       "        bad = next((i for i, c in enumerate(codes) if not scalar(c)), None)\n"
+       "        if self.policy == 'vm' and bad is not None:\n            self.stdout += b''.join(map(utf8, codes[:bad]))\n"
+       "        self.outgoing(codes)\n")]),
+    # A description is written whole, after its checks: one that streams its head leaves it behind at a stop; and a word is inspected
+    # before it is charged, so the visit that a word would be is no visit when it is ill-typed.
+    ('describe-writes-header-before-stop',
+     [("        head = self.view(w, t)[0]\n", "        head = self.view(w, t)[0]\n        self.stdout += f'Evaluated\\t{t}\\t{head}\\t'.encode()\n"),
+      ("        return f'Evaluated\\t{t}\\t{head}\\t{\"\".join(out)}\\n'", "        return f'{\"\".join(out)}\\n'")]),
+    ('describe-charges-before-inspecting',
+     [("            v, u = item\n            tag, fields = self.view(v, u)\n",
+       "            v, u = item\n            if u != nat and cost[0] + 1 > DISPLAY_VISITS:\n"
+       "                raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'display'})\n            tag, fields = self.view(v, u)\n")]),
+    # A stop keeps what the completed steps wrote; and a refusal is reported by the step that makes it, not by the next entry.
+    ('stop-discards-output', [("    except Halt as h:\n        outcome = h.outcome\n    return {**outcome, 'stdout': bytes(m.stdout)",
+                               "    except Halt as h:\n        outcome = h.outcome\n        m.stdout.clear()\n    return {**outcome, 'stdout': bytes(m.stdout)")]),
+    ('nat-range-deferred', [(SITE_NAT, "            self.late = Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'NatRange'})\n            return 0"),
+                            (DEBIT, DEBIT + LATE)]),
+    ('ill-typed-deferred', [(SITE_WORD, SITE_WORD.replace('raise Halt(ILL_TYPED)', 'self.late = Halt(ILL_TYPED)\n            return 0')),
+                            (DEBIT, DEBIT + LATE)]),
 ]
 
 
