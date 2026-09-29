@@ -248,6 +248,8 @@ def decode(data: bytes, digest: bytes) -> dict:
         if kind == 'data':
             if r[2] != expect:
                 raise Malformed('constructor grouping')
+            if r[3] > len(ctors) - expect:              # a count the constructor table cannot hold sizes nothing
+                raise Malformed('constructor count')
             expect += r[3]
             plan_types.append({'kind': kind, 'name': text(r[1]), 'constructors': [None] * r[3]})
         elif kind == 'opaque':

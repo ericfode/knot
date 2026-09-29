@@ -280,6 +280,8 @@ follows it (§5, §10, §11) without a new image header word.
    `none`, would otherwise leak an eager Big. It is image-only, since the pinned
    checker lowers `case _:` on Nat to a binding Branch. The allocation follows
    the push, which orders frame-region (kind 3) before heap (kind 2) exhaustion.
+   *(Round 14, entry 38: that is the order of the checks and no order of effects; a heap stop
+   leaves no Scope pushed.)*
    The reference evaluation has no RC, so this gate checks only the two values;
    the evaluator mutant `nat-predecessor-narrowed` (31 bits kept) survives every
    other golden and dies by `nat-case-big`, and §12 binds vm-model's zero-leak
@@ -436,7 +438,8 @@ follows it (§5, §10, §11) without a new image header word.
    the Book effect controls, and the rule mutant `d20-calls-unchecked` by the two
    controls. Entry 15's mutant `effect-before-debit` now also dies by the D20 goldens'
    `calls` (its refused print is debited 3 times, not 4); before, only a fuel or an
-   inspection control killed it.
+   inspection control killed it. *(Round 14, entry 38: the debit is the one change that a stop
+   leaves; the Enter stays pending with everything else as it was.)*
 23. **A key may be 0xffffffff.** `none` is `0xffffffff`, and neither §2 nor §3 said
    whether a keys row may carry it: a decoder that read a key word as an optional index
    would drop or misread the row. §2 and §3 now say that in a Case record `none` marks only an absent tag row (mode 0) and an absent
@@ -522,7 +525,8 @@ follows it (§5, §10, §11) without a new image header word.
    its native lane alike (`scripts/bend-reference F.bend`, then `-o F.native && ./F.native`,
    re-run in this review round), and the seed's own test `tests/io/request_out_of_band.bend` pins
    why: an applied foreign effect answers a request that only the event loop decodes, so a
-   Case over it is refused in every lane and the effect never fires. The clause "even inside
+   Case that names both constructors over it is refused in every lane and the effect never fires (round 12: a Case
+   with a catch-all is not, entry 33). The clause "even inside
    a pure argument of `main`" was this executor's addition in entry 21. D22 says only that a
    Book never performs an effect and that the Program entry is the only one that does; the
    coordinator's round-9 item 1 needed only that the same Action print under a Program, which
@@ -530,8 +534,10 @@ follows it (§5, §10, §11) without a new image header word.
    seed succeeds, and a frozen MUST of an effect that the seed refuses had no basis in it.
    The seed's refusal begins where a Case reads the answer: `run(m) = λ@R. λk. m(R)(k)` and
    `run(m) = λ@R. λk. id(m(R)(k))` (a generic `id` over the IO.OP) both print `x` on the two
-   lanes (exit 0, bytes `78 0a`), while a match that rebuilds `Emit` and `Halt` fail-stops like the one above, and the
-   source analogue with the request held in a variable crashes both lanes (finding 13).
+   lanes (exit 0, bytes `78 0a`), while a match that rebuilds `Emit` and `Halt` fail-stops like the one above. (This
+   entry added that the source analogue with the request held in a variable crashes both lanes. Round 12 corrects
+   it: the crash is the form of `main`, and a request held in a variable runs once `main` is a call; finding 13,
+   entry 32.)
 
    ```
    def id(-A: Type, x: A) -> A:
@@ -557,7 +563,8 @@ follows it (§5, §10, §11) without a new image header word.
    Case over the answer. It is the loop: an effect fires only where the pure evaluator returns
    its request to the loop, so a request that is dropped never fires, and one that any read meets
    is refused. D23, entry 31, adopts that boundary, and it settles the choice that this entry left to
-   finding 11.)*
+   finding 11. Round 12 corrects that correction in turn: a Case that names both constructors is the only
+   read that fail-stops on both lanes, and the native lane runs a Case with a catch-all; entry 33, finding 14.)*
 
 28. **D22's silence is frozen.** Review of the round-9 branch found the clause "before the
    host call, writing nothing" frozen by no key. The Book controls that stop at an Action
@@ -672,7 +679,9 @@ follows it (§5, §10, §11) without a new image header word.
    that a run returns to it, and then enters its `k`. A request that a let, an argument, a field, a capture
    or an Emit holds is dropped with no effect. A request that a Case inspects, that a Book renders or
    that any read of §6 meets is `Unsupported vm effect` (D4), before an ill-typed test and, at an Enter's
-   target, before the debit. The seed's crash on a let-bound request (finding 13) is outside the model.
+   target, before the debit, whatever rows the Case has (entry 33). A let-bound request is inside the model
+   (goldens `let-dropped-request` and `let-live-request`); the seed's crash that this entry first blamed on
+   a let is the form of `main` (finding 13, entry 32).
 
    The three choices that the round-10 review left open, each pinned by a control:
    - Operand inspection (§6) and D20's scalar check happen when the loop performs the request. A dropped
@@ -727,6 +736,340 @@ follows it (§5, §10, §11) without a new image header word.
    re-frozen and the fifteen new) disagree, besides the halt rows of round 9.
    `docs/compiler-campaign/VM-DESIGN.md` (section 2, IO) still says that invoking an Action with its
    continuation performs the call; D23 supersedes that sentence, and the file is the coordinator's to amend.
+
+32. **The seed's crash is `main`'s form, and a request held anywhere else runs (round 12, review finding 1).**
+   Entry 31 and finding 13 said that the seed crashes on a request bound by a `let`, used or dropped, and that
+   "no golden can freeze the shape". The review of round 11 showed that the crash is caused by `main` being a
+   bare `R => k => ...` lambda, whatever its body, and that a request held by a let, a field, an Emit or a
+   capture runs on both seed lanes and agrees with D23 once `main` is a call. Reproduced here on the pinned
+   seed: `main = R => k => IO.print("direct")(R, k)`, `R => k => k(Unit{})` and `R => k => Halt{1, "boom"}`
+   crash (exit 1, no output: native `bend: memory fault (machine stack overflow?)`, Bun a TypeError), finding
+   13's reproducer verbatim crashes, and the same source with the let deleted crashes identically (witnesses
+   `main-lambda-print`, `-continue`, `-halt`, `-let` and `-nolet`). The reproducer with the lambda moved into a
+   helper, `run(m, n) = R => k => once(R, m, n, k)` and `main = run(IO.print("dead"), IO.print("live"))`, prints
+   `live` on both lanes: the dead let-bound request is built and never performed (golden
+   `let-dropped-request`), and so is the variant that returns a let-bound live request (`let-live-request`).
+   Four more goldens do the same for a request in a field, returned or dropped (`field-request-returned`,
+   `field-request-dropped`), in an Emit's field (`emit-field-request-dropped`) and in a capture
+   (`capture-request-dropped`). The earlier claim was wrong because no gate held it. Every seed fact that SPEC §8
+   now cites is a witness that the gate re-runs on both lanes (§12, `golden/witnesses.json`).
+
+   What stays: the run controls that build `main` as `λ@R. λk. body` (`program-request-dropped-let`,
+   `program-request-in-emit`, `program-request-dropped-ill-typed` and the others) keep their values. They are
+   literal review of §7 and §8 and make no claim about the seed, since a crash of `main`'s form is no value that
+   a VM owes; the call-shaped goldens are their seed-witnessed twins. No frozen expectation moved, and the six
+   goldens pass on the committed evaluator, which already follows D23: the eager rule and the dropped-request
+   mutants die by them (SPEC §12). Their plans are hand-lowered (§1): the one Base declaration they reach is
+   `IO.print`, ahead of the source's functions, and `Box` is the one added type, which needed `check_declarations`
+   to accept a generic `type Box<-R: Type> is Type:` beside `type Flag is Data:`.
+
+33. **A Case over a request is refused whatever rows it has, and the seed's lanes disagree (round 12, review
+   finding 2).** *Superseded in round 13: the coordinator chose option b, D24 (entry 35). A Case with a
+   Default takes it; the three `program-case-request-*` controls below are runs now, and the witnesses that show the
+   native lane taking the catch-all are goldens. What stays true is the measurement, and the refusal of a Case without a
+   Default.* Entry 27's round-11 correction and finding 11 said that the seed fail-stops in every lane on a
+   Case over an applied effect's answer, and SPEC §8 said that no golden agrees with the seed there "because the
+   seed does not succeed". The review of round 11 measured otherwise (witnesses `case-request-*`; native / Bun):
+
+   | A Case over a request that | native | Bun |
+   |---|---|---|
+   | names both Emit and Halt (`case-request-both-arms`) | fail-stop, exit 1 | fail-stop, exit 1 |
+   | names one constructor beside a catch-all (`-emit-default`, `-emit-default-u32`, `-halt-default-u32`) | exit 0, takes the catch-all (`2` where the arms give 1 and 2, `4` where they give 3 and 4) | fail-stop, exit 1 |
+   | is only a catch-all or a binder (`-default-only`, `-binder`) | exit 0, the request is never read | exit 0 |
+
+   D23 as decided refuses every read of a request. That stands, as a recorded capability gap for the last two
+   rows, for these reasons. First, the pinned literals head answers `Unsupported check variable-pattern` for a
+   catch-all on an algebraic type (`_` alone, a binder, and `_` after a constructor arm, each tried on a Flag:
+   witnesses `catch-all-lone`, `-binder` and `-after-arm`, which the seed runs), so no Knot source lowers to
+   such a plan and no compiled program can reach the divergence: only a hand-written plan can, and D4 has
+   Knot say Unsupported for a form it cannot handle. A `_` after key arms on a U32 or a Char is accepted
+   (`default-hit`, `case-char`) and is not about requests. Second, the lanes disagree with each other on the
+   shape that matters. The Bun lane is the cross-check and the native lane the reference (entry 7), so that
+   alone decides nothing. Third, the refusal is the one rule that both VMs must already implement at every other
+   read (§6). Frozen by literal review before the controls ran: `program-case-request-emit-default`,
+   `-halt-default` and `-default-only` (each 7 entries: main, IO.print, R, the Action applied to `k`, `k`'s
+   closure and the Case's function; then `Unsupported vm effect`, nothing written, `effects` 0). The evaluator
+   mutant `case-default-takes-request` (a Case with a Default over a request takes it) survived every earlier golden
+   and run control, measured on the round-11 tip, and dies by exactly these three. The alternative, finding 2's option
+   b, is finding 14.
+
+34. **A type record's constructor count is refused before it sizes a list (round 12, review finding 3).**
+   `serializer.decode` allocated `[None] * r[3]` from a data type record's raw count and checked the counts
+   against the constructor table only after the loop: a golden with that word set to 0xFFFFFFFF asked for a
+   32 GiB list before it was refused (the review's watchdog aborted at 32,788 MB), which §4 forbids and which on
+   a smaller host is a MemoryError that is neither Malformed nor Exhausted. The codec now refuses
+   `r[3] > len(ctors) - expect` as `constructor count` after the first-constructor check and before it allocates
+   (§4 states the per-record order: first constructor, count, name). Three byte-level controls pin it on
+   `second`: `type-grouping` (`constructor grouping`), `type-count-max` (0xFFFFFFFF, `constructor count`) and
+   `type-count-short` (the counts sum to 2 of 3, `constructor count`), and three codec mutants die by verdict:
+   `constructor-count-exclusive`, `constructor-grouping-unchecked` and `constructor-count-sum-unchecked`. No mutant
+   restores the late check as it was: sized from the raw count it would allocate 32 GiB at `type-count-max`, which is a
+   host's memory and no verdict, and a crash is no kill (§11). *(Corrected in round 13, entry 37: the clause-level audit of
+   entry 36 did omit the check, and the gate held 35 GB for it; that omission now sizes the list by the constructor table.)*
+   The ordering of the check against the allocation is held by that control against the committed codec, by the gate's
+   assertion that its own peak memory stays under 4 GiB, and by the two VMs' gates. The audit of the rest of `decode` found
+   no other count that sizes anything before the structure holds it: section counts are checked against the words left,
+   records against their lengths, closure and Case lengths before their arrays, and arities and `slots` against §4's limits.
+   Measured: 0xFFFFFFFF in every data type record of four goldens refuses in under a millisecond at a 22 MB process peak.
+
+35. **D24: a request matches no row, so a Case takes its Default (round 13).** The coordinator
+   chose option b of finding 14 (main `51ca324b`): the seed's native lane takes the catch-all on every shape measured in
+   entry 33, and the pattern matrix of the nest increment now accepts catch-alls on algebraic types, so compiled programs
+   will reach these shapes; §11 owes the native lane's value wherever it succeeds. *(Corrected in entry 37: nest's checker
+   accepts a catch-all but lowers it into a row for each remaining constructor and emits no Default, so a compiled program
+   reaches the complete tables of the `-compiled` controls, which the VM refuses; the Default rule is reached by a
+   hand-written plan and by a keys Case.)* SPEC §6, §6.1 and §8 now say: a class-5
+   scrutinee is not inspected; it matches no row of a tags table or of a keys table, so the Case's Default takes it, unread,
+   and a Case without a Default stops `Unsupported vm effect`; a binder or a lone catch-all holds no Case and binds the
+   request as a value. That is D24's text as written ("a Case over a request takes its Default when it has one", with D23's
+   refusal remaining "for a Case without a Default"), and a keys Case always has a Default, so no keys Case refuses a request.
+   Two points of it are pinned by a frozen control each:
+
+   - **Either mode.** The rule does not ask what the Case compares. `case-request-default-keys` (a Book: a request handed
+     through `id` to a keys Case whose Default answers `Off{}`; `Evaluated 8 0 Off{}` after 6 entries) is the twin of
+     `case-request-default-at-flag`. The first commits of round 13 read the rule as a tags-mode rule and kept a keys Case
+     refusing (`inspect-request-keys`); that contradicted the text and the any-type point below, and was corrected in the
+     same round (two commits: the control re-frozen, then the evaluator). The evaluator mutant `keys-case-refuses-request`
+     (the old key-mode refusal) dies by that control alone. No compiled program reaches a keys Case with a request, since a
+     request arrives there only through a `none` position that a hand-written plan hands a request, so the choice is the
+     text's alone.
+   - **Any scrutinee type.** The Case never reads the word beyond its class, so the Default is taken at IO.OP and at a
+     type that a plan names by mistake alike (`case-request-default-at-flag`, a Book whose Case names Flag: `Evaluated 8 0
+     Off{}` after 6 entries). `case-request-default-at-io-op-only` dies by it and by the keys control.
+   - **Without a Default, refused as before**: `Unsupported vm effect`, never ill-typed (`case-request-without-default-ill-typed`),
+     and no row is picked (`case-request-picks-arm`); the seven Book controls that hand `got` a request and
+     `program-case-request` freeze it.
+
+   Frozen first (D7, two red commits) and then implemented. Three goldens promote witnesses of entry 33: the native lane's
+   values by seed, the Bun lane recorded beside each (it fail-stops on all three): `case-request-emit-default-u32`
+   (`case Emit{v}: 1 / case _: 2`, printed: `2`), `case-request-halt-default-u32` (`4`) and `case-request-emit-default`
+   (`case Emit{v}: d / case _: d`: exit 0, no output). Their plans are hand-lowered (§1) and their entry counts were
+   walked by hand before an evaluator ran: 13, 13 and 9 entries, effects 1, 1 and 0 (the request that the Case receives
+   is dropped; the print that the two U32 goldens perform is `2\n` or `4\n`). The three `program-case-request-emit-default`,
+   `-halt-default` and `-default-only` controls stop being refusals: each ends exit 0 after the same 7 entries with nothing
+   written and `effects` 0, since the Default's Flag goes into an Emit's unread field (the goldens hold the Default's
+   value). The witnesses `case-request-emit-default`, `-emit-default-u32` and `-halt-default-u32` are retired, as the goldens carry them
+   (14 witnesses become 11; `witness_refusals` uses `case-request-both-arms`); `case-request-default-only` and `-binder`
+   stay, since a lone catch-all holds no Case. One control is new, `case-request-default-at-flag`. The evaluator
+   mutant `case-default-takes-request` is the rule now and is removed; five are new, and each dies by named controls
+   (SPEC §12): `case-request-refused-with-default` (D23's refusal: the three goldens, the three Default controls and the
+   two Book controls), `case-request-ignores-default` (picks the first present row: the `2` and `4` goldens print 1 and 3),
+   `case-request-without-default-ill-typed`, `case-request-default-at-io-op-only` and `keys-case-refuses-request`;
+   `case-request-picks-arm` is re-anchored on the Case without a Default. Round 11's control `inspect-request-keys`
+   is `case-request-default-keys` and a run. Nothing else moved: vm-expected.json gained exactly three rows.
+
+36. **Round 13, review findings 1 to 3: the conditions of §4 are listed form by form, and each is pinned.** The review of
+   round 12 ran 47 mutants of the reference codec against the frozen controls and 19 survived: a loader could omit a condition
+   and pass every control that the two VMs are held to. Finding 1: four conditions of step 4 had no control (a repeated keys
+   row, a Construct of a nullary constructor, an Invoke that takes the wrong number of operands, a Case whose slot and scrutinee
+   are two concrete types). Finding 2: finding 12 was wrong (above). Finding 3: canonicality had one control, several controls
+   pinned one instance of their rule (the last padding byte, the first digest word), and UTF-8 was undefined. Nothing in
+   `serializer.py` changes, since it already refused each image; the controls were frozen against it, and each mutant survives the
+   old battery and dies by its control.
+   - **The text.** §2 defines a name (well-formed UTF-8 by the Unicode Standard's Table 3-7, spelled out; no NUL; every unused byte zero)
+     and says that `Closure.site` starts at 0. §4 step 4 is listed form by form with the label of each condition's control, and step
+     5 is ten clauses (main word; names in order and used; constants in order, used and once; constructors in order; nodes in
+     post-order; sites from 0; arms' result types), each about words that a decoded plan does not keep, so no earlier step can
+     refuse a breach. The clauses are the decomposition that a loader without an encoder needs.
+   - **The controls.** 121 refusals (99 byte-level, on a valid golden's records laid out again by `Layout`; 22 plan-level): 211 in
+     all. One clause each. A name in every malformed form of UTF-8 (overlong in 2, 3 and 4 bytes, a surrogate, beyond U+10FFFF, a lead of
+     `F5`, cut inside and before ASCII, a stray continuation), each unused byte, the empty name, a repeated name, digest words 25 to
+     31; every record kind with a length or a count that contradicts its words; the ten canonicality clauses (four for the sites);
+     the four conditions of finding 1 (the Invoke in three: a live arrow with none, with two, an erased one with one); and the
+     statements of finding 2. Two admitted plan controls hold the other side of UTF-8: a name of each length and one with every
+     edge of a length.
+   - **The mutants.** 48 codec mutants (89 to 137), each omitting one clause and dying by the control that breaks it alone; ten rule
+     mutants, one per canonicality clause (13 to 23), which delete a clause of `piecewise_rejected`; the gate's total is 261 (203
+     before). The clauses are held against re-encoding on 5,797 images (`canonical_differential`), and the statement audit is
+     finding 12's rewrite.
+   - **One change of the gate's own rule.** `rejected` reads a `ValueError` of the re-encoding as `noncanonical`: a plan that the
+     encoder refuses (a name that holds a surrogate, which a decoder that admits surrogates yields) is the decoding of no image.
+     The reference never raises there. It makes the reviewer's `utf8-surrogates-accepted` die by a changed refusal instead of a raise.
+   - **What stays open.** Nothing that the reviewer named. Three of its mutants raise by construction (finding 12, above); each is
+     held and has a codec mutant that models the omission without the raise. The count of refusals, controls and mutants moves
+     again whenever a rule does; SPEC §4 and §12 state today's, and `vm-core`'s harness reads the two sentence shapes that carry the
+     refusal and run-control counts.
+
+37. **Round 13, review round 1: three confirmed findings (the audit's memory; D24 and compiled programs; a fourth row of §8).**
+   The coordinator's review of the tip `3b43fca4` confirmed three findings, all measured and reproduced by a verifier. This
+   entry records each; the fixes are separate commits, no frozen expectation of an existing golden or control moved, and the
+   witnesses and controls that they add were frozen first (D7), with the entries counted by hand before any of them ran.
+   - **Finding 1: the gate held 35 GB.** The clause-level audit of entry 36 omits every refusal of the reference codec, and its
+     omission of `decode`'s `constructor count` guard is exactly the late size check that entry 34 said no mutant restores: without
+     it `type-count-max` (0xFFFFFFFF) sized `[None] * r[3]`, a list of 32 GiB. The gate passed on a host with the memory
+     (`/usr/bin/time -l`: 103.86 s, a maximum resident set of 34,793,570,304 bytes, in the gate's own process) because the
+     allocation succeeds and the refusal then changes to `constructor grouping`, which counts as a kill; on a host without it
+     the allocation raises MemoryError, which is a crash and no kill, and the audit would fail with a misleading message. SPEC
+     §12, `check-spec.py` and entry 34 all said the opposite. Fixed as the review proposed: that one omission now also sizes its
+     list by the constructor table (`BOUNDED`, `min(r[3], len(ctors))`), `expect += r[3]` stays, and the omission is killed by
+     `control type-count-max: HostFailure image: constructor grouping` with the same 178 omissions and 136 kills as before. The gate
+     asserts that its own peak memory stays under 4 GiB (`PEAK_RSS`), so that a later omission that sizes an allocation from a raw
+     word fails on any host instead of passing where the memory exists. Measured after: `/usr/bin/time -l` 38.90 s and 1,094,483,968
+     bytes for the largest process of the run (a seed build), 430,030,848 bytes (410 MiB) in the gate's own process.
+     What the audit still cannot hold is the order of the check against the allocation in a codec that allocates first: that mutant
+     would ask for 32 GiB, so the committed codec's order is held by running `type-count-max` against it, and by the assertion.
+   - **Finding 2: D24's Default is unreachable from compiled programs.** D24's rationale (`docs/COMPILER-CAMPAIGN.md`: nest's pattern
+     matrix accepts catch-alls, so compiled programs will reach these shapes) does not hold for the lowering. `campaign/nest` at
+     2a84a4f5 accepts a catch-all on an algebraic type and lowers it into a row for each constructor that no source arm names, the
+     catch-all's body copied into each, with no Default (`src/check.bend`, `default_arms` and `fallback`: a terminal default "is
+     checked once while live, then shared by its remaining runtime tags"); the image encoder (`campaign/image` 54f47b2a,
+     `src/image.bend`) has no Default term and builds every tags Case as a complete table. Reproduced here on my own build of that
+     commit (`BEND_NO_TELEMETRY=1 bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts src/check-cli.bend -o .local/nest-check`, then
+     `.local/nest-check` on a source over `type Op is Data: Emit{v: Flag} / Halt{c: Flag, m: Flag}`, since that checker refuses an
+     `IO.OP<R>` parameter as `Unsupported parse parameter-type`): `Emit: On / _: Off`, `Emit: On / Halt: Off / _: On` and
+     `Emit: On / Halt: Off` all print the core `case $0 [0(1 $1:0;)=>v0.1;1(1 $1:0;1 $2:0;)=>v0.0]`; `Emit: On / Halt{On{}, m}: Off / _: On`
+     and the same with the `_` only inside `match c` both print `case $0 [0(1 $1:0;)=>v0.1;1(1 $1:0;1 $2:0;)=>case $1
+     [1=>v0.0;0=>v0.1]]`; a lone `_` and a binder print the bare body `v0.1`, so §8's third row does hold for compiled programs.
+     The merged head (`campaign/literals-integ` at 9f98fb09, built the same way, `.local/integ-check --bundle .`, over `import Base`
+     and `type Cmd is Data: Send{v: Flag2} / Stop{c: U32, m: Flag2}`, since Base already declares Emit and Halt) agrees on the flat
+     shapes: `Send: 1 / _: 2` and `Send: 1 / Stop{c, m}: 2 / _: 3` both print `f(1:2)->0=case $0 [0(1 $1:1;)=>v0.1;1(1 $1:0;1 $2:1;)=>v0.2]`,
+     a lone `_` and a binder print `v0.3`, and `Send: 1 / Stop{c, m}: (match c: case 0: 2 / case _: 3)`, with or without a dead outer
+     `_`, prints `... 1(1 $1:0;1 $2:1;)=>case $1 [0=>v0.2;_=>v0.3]]`. It refuses the exact source of `case-request-nested-default`,
+     a `_` after the literal field pattern `Stop{0, m}`, as `Unsupported check variable-pattern 186:187:15:9`, at check time and before
+     any image exists, so that witness is a seed fact whose exact source no compiled program reaches today. Its plan is reached by nest's
+     constructor sub-pattern, and by `case-request-inner-default-only`'s source, which the merged head lowers to the same plan (the native
+     lane fail-stops there and the VM agrees); adding a dead outer `_` to that source lowers to the same plan again.
+     So a compiled Case over a request is a complete table with no Default: the VM answers `Unsupported vm effect` where the native
+     lane takes the catch-all, and the three D24 goldens witness plans that no lowering emits.
+     - *Fixed inside `vm/`, by the review's second option* (the first is nest's and image's to change, so it is the coordinator's
+       call). SPEC §6, §6.1, §8 and §11 and entry 35 now say that D24's rule is the VM's for a plan that holds a Default (a
+       hand-written plan, a keys Case), that a compiled program meets the refusal for a catch-all, and that this is a recorded
+       `Unsupported` gap, never a bound. Four run controls freeze the compiled twins (`case-request-emit-default-u32-compiled`,
+       `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and `case-request-nested-default-compiled`: `Unsupported vm
+       effect` after 8 entries, nothing written, `effects` 0, the entries walked by hand before they ran), and the three goldens
+       are described as hand-lowered witnesses of the plan-level rule. No frozen expectation of a golden moved. The four twins die by
+       `case-request-picks-arm` and `case-request-without-default-ill-typed` (so does the Book's, of finding 3), and the two retested plans of finding 3 by
+       `case-request-refused-with-default` and `case-request-ignores-default` (each measured alone against the control); no new
+       mutant was needed.
+     - *For the coordinator: not vm-spec's to edit.* `docs/COMPILER-CAMPAIGN.md`'s D24 row says that compiled programs will reach
+       the shapes, which is false of nest at 2a84a4f5. A rationale that is true of it: "A request matches no constructor row, so a
+       Case takes its Default when its plan has one and otherwise stops `Unsupported vm effect`. The seed's native lane takes a
+       source's catch-all, and the checker's lowering of an algebraic catch-all is a complete table with no Default, so compiled
+       programs meet the refusal, a recorded `Unsupported` gap; hand-written plans and keys Cases reach the rule." The alternative
+       that keeps D24's rationale is a change of nest's checker (keep a terminal catch-all as a Default term) and of the encoder
+       (§3 maps it to a tags Default), which closes the second row of §8's table; the fourth row needs finding 3's shape too.
+   - **Finding 3: a fourth row of §8's table.** The native lane takes a catch-all that sits beside a table naming every constructor
+     (`Emit: 1 / Halt: 2 / _: 3` prints `3`) or that is reached only through a field pattern (`Emit: 1 / Halt{0, m}: 2 / _: 3` prints
+     `3`), while the plan of such a source is a complete table with no Default, since §3 keeps a Default only where a row is absent.
+     §8 had no row for it, and its sentences "wherever a Case can meet a request" (§8) and "D24 closed it" (§11) promised more than
+     a plan can carry. The review's headline, that the image cannot express the native answer, is refuted by its own verifier and by
+     two controls here: `case-request-both-plus-default-retested` and `case-request-nested-default-retested`, whose Default tests the
+     slot again for the arms named after the catch-all, validate, round-trip and print `3` after 13 entries with one effect, as the
+     native lane does. What stands is that no lowering emits them. Fixed: a fourth row of the table (§8); four seed witnesses,
+     `case-request-both-plus-default` (`3`), `-nested-default` (`3`), `-inner-default-only` (a fail-stop on both lanes) and the Book
+     `-book-both-plus-default` (`On{}`; the Bun lane prints its stuck term), each with its literal review written before
+     `--freeze-new` observed the seed; the two sentences corrected. `-inner-default-only` is the review's p1e with the same constants
+     as the nested witness: its plan equals the nested one's, so two sources, one plan and two native answers show that no rule of the
+     VM agrees with the seed on it. The Book's plan has its own control, `case-request-book-both-plus-default-compiled` (`got` names Emit and Halt and its dead
+     catch-all is dropped, `go` hands it the request: `Unsupported vm effect` after 6 entries, walked by hand before it ran), which
+     is not `book-print`'s: that `got` returns Emit's field and there is no `go`. The gap closes by a
+     lowering that emits the retested shape, or by a §3 that admits a Default beside a complete table (with `redundant-default` and
+     the canonical-order clause changed); both are the coordinator's call.
+
+38. **Round 14: atomic stops (the coordinator's ruling after vm-lockstep findings 1 and 2).** The lockstep (`campaign/vm-lockstep`)
+   compared vm-core with the model on every transition of 296 runs and found two places where a halting step is not atomic in the VM. Its
+   finding 1: the VM pops a Gather frame before it inspects the operands or tests Succ's `NatRange` (CORE.md choice 8 records this for an
+   ill-typed operand as a stated limit that no control observes; the `NatRange` stop has the same mechanism; 23 of the 296 runs hit it).
+   Its finding 2: §6's table dropped `act` at Return to Top and §8's phase 3 then refused an ill-typed IO.OP, while the sentence above
+   the table said that a refusal changes no state (the runs `inspect-halt-code` and `inspect-halt-message`). The model follows the
+   sentence and the VM follows the table. The lockstep accepts both as named halting relations (`GATHER_POPPED`, `TOP_RELEASED`, 23 and 2
+   in `frozen.json`) until one normative reading exists. The coordinator's ruling is that reading: **no refusal, halt or exhaustion changes
+   machine state; every check that a step can fail (operand inspection, NatRange, IO.OP inspection at Return to Top, limits) happens before
+   the step mutates frames, `act`, `top`, the heap or the meters; the only exception is the fuel debit that §7 prescribes and the
+   Enter-debit rule that keeps it.** The VM must not pop a Gather frame before it inspects its operands or tests NatRange, and Return to Top
+   refuses an ill-typed IO.OP before it drops `act`.
+   - **The text (SPEC §6.3, and the rows it reads).** One rule: a step that stops has no post-state, and the machine keeps the state in
+     which the step began. The written order of a row's substeps is the order of its effects and never of its refusals ("check, then
+     change"), and where two checks of one step would both stop the machine, a request names the stop before a word's type, and a
+     word's type before a limit, the limits in the order of the row's substeps. Applying it to every row found more text that said
+     otherwise, and each place is corrected: the Gather row (the frame is popped by the completion, not before it: finding 1); the Top
+     row (refuse, then drop `act`, then the rest of §8: finding 2, and for a Book's description at phase 0 as well as for phase 3); §6.1's
+     "a heap `Exhausted` (kind 2) leaves the Scope pushed", which is reversed (the checks keep their order, the frame region's before the
+     fields', and both precede the effects); §6.2 and §7, where a tail entry pops Scopes and drops `act` before it allocates (the fit
+     is judged as if the release had happened, so that a tail loop still reuses its cell, and a stop of steps 2 and 3 keeps the pending Enter
+     and the debit and nothing else); InvokeFunction, which pops 3 words and pushes 4 (the fit is judged on the region as the pop leaves it);
+     §8's phase 3 and §10 (inspection, D20's scalar check and the room for the conversion and the Result come before `act` is dropped
+     and before the host call; `IO.print`'s Result is the Unit immediate, and a foreign whose Result allocates reserves its cells first: vm-io's);
+     §9's prims (the room for every cell of a result is decided before the first is allocated); and §5 (a release that would overflow
+     its worklist decrements no count and frees no cell; the room for every cell of a step is decided first). §11 says that every stop is atomic.
+   - **What the reference evaluation can pin, and what it cannot.** evaluate.py has no frames, `act` or cells: its state is `fuel`, `calls`,
+     `stdout` and `effects`, and it was already atomic, so it does not change (its docstring says so). A stop shows there as the outcome and
+     those four, and the rule is that a stopped run reports what it held before the refusing step (an effect that an earlier step performed
+     stays, one that the refused step would have performed is none), and that the same run given exactly the fuel that it has spent reaches
+     the same stop, since a refused step pays nothing. That last property is the one that no earlier control could see: a refusal that tests
+     fuel first is invisible at fuel 1,000,000. Frames, `act`, `top` and the heap at a stop are held by comparing machines, not here: vm-model's
+     steps are atomic by construction (MODEL.md: "A refused transition leaves the machine as it was"), and the lockstep compares vm-core
+     with it at every halt once its two relations are removed. What the reference evaluation cannot reach at all is the heap, the frame region,
+     `RCOverflow` and a release's worklist; vm-core's frame-region and heap-limit rows (`nat-pred-frames`, `nat-pred-heap`,
+     `describe-frames-short`, `append-heap-short`) freeze `calls`, `top` and the bump pointer at such a stop and are where they are held.
+   - **The controls (27, D7).** `atomic_controls`, run controls 111 to 138. The expected values were written by literal review before any run
+     (entries walked by hand, `stdout` and `effects` from each source), and the reference evaluation reproduced all of them on its first run, with the
+     unchanged evaluate.py (the last five were added in review, the same way). Twenty are twins of existing controls or goldens at fuel = `calls`, freezing the `stdout` and `effects` that the first
+     freeze left out, one or more for each stop kind of the ruling: an ill-typed Chr, Succ, word prim, Case scrutinee and rendered field;
+     `NatRange` at a Succ, `Nat.add` and `Nat.mul` (the plans of the goldens `nat-succ-range`, `nat-range` and `nat-mul-range`, which freeze no
+     `calls`: 2 each, the callee's entry being the last); Return to Top refusing a Halt's code (`inspect-halt-code`) or message
+     (`inspect-halt-message`), an IO.OP that is a closure, and a Halt message with a surrogate; the loop refusing a String with a surrogate, one with a
+     scalar `a` before it (`print-non-scalar-mid`: nothing of the prefix is written) and one with an ill-typed tail; a Case refusing a request and a Book's
+     render of one (`book-request-rendered`, after 5); a display beyond its bound; fuel 0 at a Book's last entry (`fuel-book-short`) and at a Program's
+     Action's second application (`fuel-action-short`: no request is built). Five stop after an effect and freeze what it wrote and called
+     (`a\n` or `x\n` or `vm\n`, 1 effect: the last is `fuel-continuation-short`, whose `k` meets fuel 0 after the loop performed the request), and two
+     order inspection before charge at the display bound (`Pair{1,048,574n, w}` has charged the whole visit bound
+     when it reaches `w`: a Flag there is the 1,048,577th visit, `display`; a closure handed there as a Flag is `ill-typed` first). The last pair is
+     the ordering of vm-core's round-7 finding 2 (describe counted a visit before it inspected the word, so an ill-typed word at the last visit
+     was `Exhausted` display), at the reference's own outcome, with a Nat word for the visits instead of a chain of a million constructors.
+   - **The mutants (23).** Each mutates before it refuses (SPEC §12), and dies by a changed observation. The gate requires more than a kill:
+     at least one control of the atomic set (the 27 `atomic-*` controls and the three `fuel-zero-*` controls of a refused Enter, the same twin)
+     must change under each, since a mutant that only a golden or another run control kills is not held by the controls of the rule that it
+     violates (`ATOMIC_MUTANTS`, `SPENT_FUEL_TWINS`, and `atomic` in each mutant's receipt row; with the controls of three of them removed, the gate
+     reports those three as survivors). Measured on the tree, each against the 111 goldens, the 108 run controls outside the atomic set and the 30
+     inside it (a count is the controls that kill it):
+
+     | Mutant | goldens | run controls outside the atomic set | atomic set |
+     |---|---:|---:|---:|
+     | `nat-range-spends-entry` | 0 | 0 | 4 |
+     | `ill-typed-spends-entry` | 0 | 40 | 11 |
+     | `case-request-spends-entry` | 0 | 13 | 1 |
+     | `request-read-spends-entry` | 0 | 6 | 2 |
+     | `d20-refusal-spends-entry` | 4 | 1 | 4 |
+     | `display-refusal-spends-entry` | 0 | 2 | 2 |
+     | `fuel-stop-spends-entry` | 0 | 8 | 3 |
+     | `enter-operand-check-after-debit` | 0 | 8 | 3 |
+     | `enter-request-target-after-debit` | 0 | 1 | 1 |
+     | `nat-range-tests-fuel` | 0 | 0 | 4 |
+     | `ill-typed-tests-fuel` | 0 | 0 | 11 |
+     | `case-request-tests-fuel` | 0 | 1 | 1 |
+     | `request-read-tests-fuel` | 0 | 0 | 2 |
+     | `d20-refusal-tests-fuel` | 0 | 0 | 4 |
+     | `display-refusal-tests-fuel` | 0 | 0 | 2 |
+     | `effect-counted-before-scalar-check` | 0 | 0 | 3 |
+     | `effect-counted-before-inspection` | 0 | 1 | 4 |
+     | `effect-writes-before-scalar-check` | 1 | 0 | 1 |
+     | `describe-writes-header-before-stop` | 0 | 1 | 4 |
+     | `describe-charges-before-inspecting` | 0 | 0 | 1 |
+     | `stop-discards-output` | 1 | 2 | 5 |
+     | `nat-range-deferred` | 0 | 0 | 4 |
+     | `ill-typed-deferred` | 0 | 20 | 4 |
+
+     Nine survive every golden and every run control outside the atomic set (the three `nat-range-` mutants, `ill-typed-tests-fuel`,
+     `request-read-tests-fuel`, `d20-refusal-tests-fuel`, `display-refusal-tests-fuel`, `effect-counted-before-scalar-check` and
+     `describe-charges-before-inspecting`) and die by that set alone; the other fourteen die by earlier controls too. Before the two
+     twins added after review (`atomic-print-non-scalar-mid`, `atomic-request-rendered`) and the three `fuel-zero-*` controls counted by name,
+     four of the 22 (`request-read-spends-entry`, `request-read-tests-fuel`, `enter-request-target-after-debit` and
+     `effect-writes-before-scalar-check`) were killed by no atomic control and only by earlier ones; the requirement above is what closes that.
+     Evaluator mutants 97 to 120, 284 in all.
+   - **What this does not claim.** That a machine leaves its frames, `act`, `top`, cells and free lists as it found them: no vm-spec control
+     sees them, and the text above says who does. That the release worklist and the tail entry's release-then-allocate can be made atomic
+     cheaply: SPEC states the requirement and the fit rule (as if the release had happened), and a reclaiming VM (vm-rc) must size the release
+     first or undo it; the model is atomic by construction and vm-core does not reclaim yet. That the room for a foreign's Result and for a
+     conversion's blocks is checked in vm-core today: CORE.md choice 11 records that `$utf8out` grows memory before D20's scan and traps at 4 GiB;
+     §10 now orders D20's check, then the room, then the call, and the fix is vm-io's.
+   - **For the coordinator: not vm-spec's to edit.** `docs/COMPILER-CAMPAIGN.md` should record the ruling. Proposed row: "D25 | Atomic stops. A step
+     that stops the machine (a refusal, a halt or an exhaustion of any kind) has no effect: the machine keeps the state in which the step began, and
+     every check that a step can fail is decided before the step changes frames, `act`, `top`, the heap, the meters or the output. The one exception is
+     the fuel debit of SPEC §7 and the Enter-debit rule that keeps it. | vm-lockstep found that the VM popped a Gather frame before it inspected its
+     operands or tested NatRange, and that SPEC §6's table dropped `act` before Return to Top refused an ill-typed IO.OP, while the model and the
+     sentence above the table were atomic. One rule for both machines makes a halted state comparable, and removes the lockstep's two named halting
+     relations. |"
 
 ## What vm-model and vm-core must now follow (round 9)
 
@@ -839,7 +1182,9 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    Construct, Foreign, a Closure's captures, an Enter's operands and an Emit's field do not read a request.
    Controls: `program-case-request`, `book-request-rendered`, `book-request-field`, `inspect-request-chr`,
    `inspect-request-prim`, `inspect-request-keys`, `inspect-request-print`, `enter-request-target` and
-   `fuel-zero-request-target` (the same Enter at fuel 5, which meets fuel 0 and is refused, not exhausted).
+   `fuel-zero-request-target` (the same Enter at fuel 5, which meets fuel 0 and is refused, not exhausted). *(Round 13, D24:
+   a Case with a Default takes a request, so `inspect-request-keys` is now the run `case-request-default-keys`, and a Case
+   is no read of this list when it has a Default.)*
 4. **Seven frozen values move (each re-frozen in its own commit).**
 
    | control | before | now | why |
@@ -866,8 +1211,139 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    too: 1 on `program-request-dropped-let`, `-argument` and `-ill-typed` (the one request the loop performs),
    0 on `program-request-in-emit`, `program-case-request` and `inspect-request-print`. The reference
    evaluation's `prints` and `effects` count only the requests that the loop performs. vm-core's `expected_run` and vm-model's `agrees`
-   read `Unsupported vm effect` and the new calls without change; the seed's crash on a let-bound request
-   (finding 13) is not something either VM should reproduce.
+   read `Unsupported vm effect` and the new calls without change; the seed's crash on a `main` that is itself a
+   lambda (finding 13, corrected in round 12) is not something either VM should reproduce.
+
+## What vm-model and vm-core must now follow (round 12)
+
+The review of round 11 confirmed three findings (entries 32 to 34) and changed no rule of D23, so neither VM
+has to change its machine for D23 beyond round 11's list; what changes is the set of images and controls
+that they are held to. Not measured on the reviewer's builds of vm-core and vm-model, which are other
+worktrees; the checks below are what the harnesses read from `check-spec.py`, SPEC §4, §8, §11 and §12.
+
+1. **The loader refuses a type record's constructor count before it sizes anything (§4, entry 34).** For each
+   data type record: its first constructor must be the constructor table's next (`constructor grouping`), then
+   its count must fit what the table still holds (`constructor count`), then the name; and the counts sum to
+   the table's size (`constructor count` again). A loader that sizes a list, a region or a table from the raw count
+   before this check asks for 32 GiB at `0xFFFFFFFF` and traps or exhausts instead of reporting `HostFailure
+   image`. Three new byte-level refusals, each on `second`: `type-grouping`, `type-count-max` and
+   `type-count-short`, all `HostFailure image` with the reference reason where the VM reports one. The refusal
+   count is 90 (25 byte-level, 9 at the limits, 56 plan-level); vm-core's `refusal_counts` reads it from §4.
+2. **Six goldens with a request in a let, a field, an Emit or a capture (§8, §11, entry 32).**
+   `let-dropped-request`, `let-live-request`, `field-request-returned`, `field-request-dropped`,
+   `emit-field-request-dropped` and `capture-request-dropped` are Programs whose expected rows are the seed's
+   bytes (`live\n`, `live\n`, `boxed-then-returned\n`, `live\n`, `live\n`, `live\n`, basis `seed`). Their rows are
+   the outcome and the bytes, as every golden's is: no entry count is frozen for them (lockstep derives each
+   golden's exact count later, §12). The machine of round 11 already produces them: the dropped request is built
+   (debited) and never performed, and the loop performs the one request that a run returns. The goldens are 108.
+3. **Three run controls for a Case with a Default over a request (§6, §8, entry 33).**
+   `program-case-request-emit-default`, `-halt-default` and `-default-only` stop `Unsupported vm effect` after 7
+   entries with nothing written and `effects` 0, as `program-case-request`. *(Superseded by D24: round 13's list
+   item 2 says the opposite. A VM takes the Default of a Case over a request.)* The run
+   controls are 103 (34 effect controls), which vm-core's `run_control_count` reads from §12.
+4. **Nothing else moves.** No frozen value changed: the 102 earlier goldens, the 100 earlier run controls and the 87
+   earlier refusals hold as frozen, and the seed witnesses (`golden/witnesses.json`, 14, §8 and §12) are
+   evidence for the text, not obligations: the VMs do not read them.
+5. **Counts (§12, GATES.md).** 108 goldens, 103 admitted run controls, 90 refusals (25 byte-level), 117 admitted
+   controls in the gate line, mutants 89 codec, 4 source, 93 evaluator and 13 rule (199).
+
+## What vm-model and vm-core must now follow (round 13)
+
+Both VMs still implement the eager rule of round 8 (an Action's effect performed where it meets its continuation), and neither
+has followed round 9's, 10's, 11's or 12's list. They next follow **D22, D23 and D24 together**, and this round's loader controls.
+This list is the one to work from; the earlier lists remain the detail behind each item (entries 21 to 36). `check-spec.py`'s
+`run_controls`, `plan_controls`, `byte_controls` and goldens are the shared harness, and merging this branch brings all of them.
+
+1. **A request is a value, and only Top's loop performs it (D23; §5 class 5, §6, §7 step 2, §8; round 11's items 1 to 3).**
+   `Enter(Action, [k])` builds a class-5 Request (`foreign`, the duplicated operands, `k`) and returns it: no operand read, no
+   foreign id checked, no host call, and the Action's second application is the entry that is debited. Top's phase 3 is a loop:
+   it inspects the request's operands whole, makes D20's scalar check, calls the host, builds the Base result, `dup`s `k`, drops the
+   request and enters `k`, and ends only at an Emit or a Halt. A dropped request is no effect. D22 follows: a Book has no loop,
+   so it never performs one (`book-drop` is `On{}`; `book-request-dropped` is 4 entries).
+2. **A request is never inspected, except that a Case takes its Default (D24; §6, §6.1; supersedes round 12's item 3).**
+   At every read of §6 the class is read first and a request stops the run `Unsupported vm effect`, whatever the type and before
+   any state changes, and at an Enter's target before its operand count and its debit. The one exception: a **Case whose scrutinee
+   is a request takes its Default**, in tags mode and in keys mode alike (a class-5 word reads no tag and no key, matches no row,
+   and the Default binds nothing), at any scrutinee type, with or without rows (`program-case-request-emit-default`,
+   `-halt-default`, `-default-only`: exit 0 after 7 entries, nothing written, `effects` 0; `case-request-default-at-flag` and
+   `case-request-default-keys`: Books, `Evaluated 8 0 Off{}` after 6, the second at a keys Case; the goldens
+   `case-request-emit-default-u32` prints `2`, `case-request-halt-default-u32` `4`, `case-request-emit-default` nothing). A Case
+   **without** a Default, a tags Case whose every row names a constructor, still stops `Unsupported vm effect`
+   (`program-case-request` and the seven Book controls that hand `got` a request). A keys Case has a Default always, so it never
+   refuses one: round 11's `inspect-request-keys` (a refusal after 6) is now `case-request-default-keys` (a run after 6). A VM must
+   not read the request's payload, perform it, or take a row. Only a plan that holds a Default takes one, and a compiler's plan
+   does not (nest's checker expands a catch-all into a row for each remaining constructor): the five `-compiled` controls
+   refuse the request, `Unsupported vm effect` with nothing written (four Programs after 8 entries, the Book after 6), and the two `-retested` controls, whose
+   Default tests the slot again, take it (`3\n` after 13 entries, one effect); a VM follows the plan, not the source.
+3. **Frozen values that are new or moved since round 8 (re-freeze each; the outcome, `stdout` and `effects` are otherwise as before).**
+   `book-print`, `-continuation-call`, `-twice`, `-non-scalar` and `book-args` refuse after 5 entries (were 4), `book-print-ill-typed`
+   after 6 (was 5), `fuel-book-effect-exact` at fuel 5 (was 4), and the three `program-case-request-*` Default controls, which round 12
+   froze as `Unsupported vm effect` after 7 entries, run to exit 0 after the same 7 (D24). New controls: the request controls of round 11 (fifteen) and round 12's `call-shaped`
+   goldens (six), the three D24 goldens, `case-request-default-at-flag`, and the seven of review round 1: the four
+   Programs `case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and
+   `case-request-nested-default-compiled`, the Book `case-request-book-both-plus-default-compiled`, and the two
+   `case-request-both-plus-default-retested` and `-nested-default-retested`.
+4. **`stdout` and `effects` are compared on every run control that freezes them** (`effects` is the number of host calls the run
+   made: the `knot_io` calls of vm-core's trace, the effects of vm-model's model), and `calls` at every stop (§7: a stop keeps its debit).
+5. **The loader refuses every image of `byte_controls` and `plan_controls`, and admits every admitted control (§2, §4).** Round 13
+   adds 121 refusals, listed in SPEC §4 form by form. What a loader must now check that the earlier lists did not name: a name is
+   well-formed UTF-8 (no overlong form, no surrogate, nothing above U+10FFFF, no cut or stray sequence) and admits every scalar,
+   including non-ASCII names at each length (the two admitted names); each unused byte of a name is zero; all eight digest words;
+   no repeated key in a keys row, no Construct of a nullary constructor, an Invoke of a live arrow takes one operand and of an
+   erased arrow none, a Case's slot and scrutinee are one concrete type or the slot is `none`; and **the ten canonicality clauses**
+   (§4 step 5: a loader with no encoder checks them one by one; `piecewise_rejected` is a model of it). Each refusal carries the
+   reference's reason where the VM reports one.
+6. **The counts, which both harnesses read from SPEC.** §4 states `freezes 211 refusals (124 byte-level, 9 at the limits, 78
+   plan-level)` and §12 `111 admitted **run controls**` (42 effect controls); the sentence shapes are unchanged and the numbers
+   are new. Goldens 111; admitted controls 127 (7 code lists, 111 runs, 8 admitted plan controls, `arity-at-limit`); mutants
+   137 codec, 4 source, 97 evaluator and 23 rule (261). vm-model reads the lists themselves.
+7. **Not obligations.** The 15 seed witnesses (`golden/witnesses.json`) and the codec's refusal accounting (`statement_audit`, finding
+   12) are evidence for the text and for the reference; neither VM reads them.
+
+## What vm-model and vm-core must now follow (round 14)
+
+Round 13's list stands in full (D22, D23 and D24, the loader controls and the counts it states move as item 6 below says). Round 14 adds one rule, and
+**the atomic stops of SPEC §6.3 (entry 38)**, which vm-core and vm-model follow together with D22, D23 and D24. `check-spec.py`'s `run_controls` is the
+shared harness, so merging this branch brings the 27 new controls.
+
+1. **A step that stops changes nothing (§6.3).** The machine keeps the state in which the step began: control pending, `act`, frames and `top`, every cell,
+   the free lists and the bump pointer, the meters and everything written or called; the one change a stop leaves is the debit of an Enter whose step 2 or 3
+   stopped. Every check is decided before the step's first change: a request, then a word's type, then the limits in the order of the row's substeps.
+2. **vm-core.**
+   - Gather completion (Construct's Succ and Chr, an Intrinsic): inspect every operand, test `NatRange` and decide the room for the result **before** popping
+     the Gather frame. This retires CORE.md choice 8's "stated limit" and the lockstep's `GATHER_POPPED` (23 runs).
+   - Return to Top, at phase 0 as well as phase 3: the refusals of §8 (a Book's description: each word inspected and then charged, and the room for the text; a
+     request's operands, D20's check and the room for the conversion; an IO.OP, a Halt's code and message and D20's check of it) come **before** `act` is
+     dropped and before any output or host call. This retires `TOP_RELEASED` (`inspect-halt-code`, `inspect-halt-message`).
+   - Eval Case: the room for the Scope and what the fields need are decided before either takes effect, so a heap stop at the predecessor leaves no Scope pushed.
+     **`nat-pred-heap` freezes the old reading**: its `top` 65,572 counts the Scope that §6.1 used to leave pushed, and moves to 65,560, the `top` of
+     `nat-pred-frames`; the row's basis (vm-spec D17, "the allocation follows the push") is now the order of the checks. `bump` and `calls` do not move.
+   - Enter, steps 2 and 3: a stop keeps the debit and the pending Enter and nothing else; the callee's Activation is judged after the tail entry's pops and release
+     (§6.2), and a Call frame on the region as it stands. Return, top InvokeFunction: the fit of the push is judged after the pop.
+   - Describe inspects a word **before** it charges the visit (round-7 finding 2); `atomic-display-leaf-ill-typed` is the reference outcome of that ordering
+     (the Nat word `1,048,574` and `Pair`: 1,048,576 visits, so an ill-typed `w` is refused, and a Flag `w` is `display`: `atomic-display-leaf-charged`).
+   - §5's allocation-room rule holds for prims (`append`'s block) as it does at the ceiling rows.
+3. **vm-model.** Its steps are atomic already: run the 27 controls (they are run controls, at the fuel frozen with each), and check the three places where the text
+   moved: a Book's description is part of the Return-to-Top step (the lockstep's trace folds it in, `advanced`; the model's own `run` ends at `Answered` after `act`
+   is dropped, and a stop of the description must keep `act`), §6.1's stop leaves no Scope, and a tail entry's stop restores its Scopes and `act` (`body_entered` is
+   atomic because a failure discards the whole transition).
+4. **vm-lockstep.** Delete `GATHER_POPPED`, `TOP_RELEASED` and their counts (`halting_relations` in `frozen.json`, 23 and 2); compare a halt as any state, frames, `top`,
+   `act` and heap included. Say which stops compare the pending control: today only the fuel stop's pending Enter is compared (95 fuel stops), because vm-core's
+   registers cannot name any other. The display controls are `untraced`; the 27 controls and the `inspect-render-*` runs are witnesses for the description's
+   stop once they are traced.
+5. **New expectations.** Twenty-seven run controls (§12): the 20 twins (fuel = `calls`; `stdout` and `effects` frozen, the three of a fuel stop among them), the five that
+   stop after an effect, and the two of the display order. Both harnesses compare `stdout` and `effects` on every run control that freezes them and `calls` at every stop, as round 13's item 4 says.
+6. **Counts (§12, GATES.md).** 138 admitted run controls, 154 admitted controls in the gate line (7 code lists, 138 runs, 8 admitted plan controls, `arity-at-limit`);
+   211 refusals (unchanged: 124 byte-level, 9 at the limits, 78 plan-level), 111 goldens, 15 seed witnesses; mutants 137 codec, 4 source, 120 evaluator and 23 rule
+   (284). The two sentence shapes that vm-core reads (`N admitted **run controls**`, `freezes N refusals (...)`) are unchanged in form.
+7. **Witness states, by hand from §5 and §6 (not run on any machine: confirm them on the first run, D7).** At `nat-succ-range` the `NatRange` stop
+   happens with four frames on the region: Top(0) (3 words), the Gather of `Nat.is_gt` (5), the Call frame of `succ`'s entry (4; the entry is not a tail entry,
+   since a Gather lies between it and Top) and the Gather of the Succ with its operand (4), so `top` = F0 + 64 = 65,600 for this 696-byte image (F0 = 65,536).
+   A machine that pops the Gather first shows 65,584. At `inspect-halt-code` and `inspect-halt-message` Return to Top(3) refuses with the Top frame alone (`top` =
+   F0 + 12) and `act` the Activation of the closure whose body built the Halt, where a machine that drops `act` first shows 0.
+8. **Not obligations, and later.** The release worklist and the tail entry's release-then-allocate are atomic in the model and required by §6.3 of any reclaiming VM
+   (vm-rc: size the release first, or undo it); the room for a foreign's Result and for a conversion's blocks before the host call is vm-io's, with CORE.md choice 11
+   (D20's check, then the room, then the call).
 
 ## Findings that need an owner
 
@@ -939,6 +1415,13 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    the main-line parser). No row is `Invalid`, so the six stay six (`Invalid parse expected-=` 6 and `Invalid parse
    function-result` 10 are as before), every other count is unchanged, and both files agree across the two
    lanes. The merge condition stands, and no shared bootstrap receipt was refreshed.
+   Round 12's six goldens and fourteen witnesses (round 13 moved three of the witnesses to goldens, so the corpus keeps
+   their files) and main's four `tests/perch-arithmetic` sources (the merge of D24) change it once more,
+   as measured by the gate runner (all 21 gates passed) at `024e7638` against the same receipt: 917 files, `Parsed` 163,
+   `Unsupported lex literal` 238 (each new source exits 3 `Unsupported` in the main-line parser, the three promoted
+   goldens at their `"x"`), `Unsupported parse declaration-form` 291 and `parameter-type` 59. No row is `Invalid`, so
+   the six stay six (`Invalid parse expected-=` 6 and `function-result` 10 are as before), and both files agree across the
+   two lanes. The merge condition stands, and no shared bootstrap receipt was refreshed.
 6. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged
@@ -991,33 +1474,63 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    where the pure evaluator returns its request to the loop, so `keep(m1(..), m2(k))` printed `kept`
    on both lanes and `dropped` then `kept` under the eager rule (a divergence on a shape the seed
    *succeeds* on, which §11 forbids). D23 makes a request a value that only Top's loop performs, and
-   a request that any read meets, the Case among them, `Unsupported vm effect`.
-12. **34 refusal statements of `serializer.py` are pinned by no control.** The review's audit removed each
-   `raise` and `fail` of the codec once (93) and searched random byte-level and plan-level corruptions
-   of the goldens and run controls (two runs of tens of thousands) for an image that the committed
-   codec refuses and the mutant admits. Besides entry 30's 14 statements, none was found for 34. For 12 of
-   them, removal crashes the decoder on some image (`node record`, `{what} index`, `name index`, `constructor tag`,
-   `type record`, `child offset`, `constant index`, `constructor record`, `constant record`, and the
-   `length` of a record of a fixed-size node, of a Case and of a Closure), which §11 does not count as a
-   kill. For the other 22 it found no such image at all: `length`, `name length`, `duplicate name`,
-   `constructor grouping`, `opaque type`, `arrow name`, `constructor count`, `constructor order`,
-   `scalar constant width`, `shared node`, the `length` of a call-like node, `standalone arm`,
-   `case key`, `case arm kind`, `opcode`, `unreachable node`, `standalone {op}`, `type index`,
-   `tag case on a non-data type`, `tag table is not dense`, `key case on a non-scalar type` and
-   `unknown node`. Some are defences that a later check makes unreachable; the rest may have no
-   witness in a random corpus. Most are rules of §4 steps 2 and 3 that vm-core and vm-model enforce.
-   The coordinator decides whether a crash on a frozen refusal control is a kill for a codec mutant
-   (§11 says it is not), and whether the generator (`auto.py` of the review) becomes a gate step;
-   until then those statements are held by the two VMs' gates, not by this one.
-13. **The pinned seed crashes on a request bound by a `let`.** `dead : IO.OP<R> = IO.print("dead")(R, x =>
-   Halt{7, "unreached"})` followed by a body, and the same with a live request that the body returns
-   (`live : IO.OP<R> = n(R, k)` then `live`), exit 1 on both lanes without output: Bun `TypeError:
-   s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)`, native `bend:
-   memory fault (machine stack overflow?)`. The same requests held by a parameter (`keep`, `pick`) run.
-   This is a seed defect, not a fail-stop, so §11 does not bind the VM there and no golden can freeze the
-   shape. D23's model has no such gap: a `let` moves a request unread, and `program-request-dropped-let`
-   freezes by literal review that a dropped one has no effect and that the live one is performed. Owner:
-   the coordinator, if the seed pin ever moves. A reproducer:
+   a request that any read meets, the Case among them, `Unsupported vm effect`. (Round 12: even that boundary
+   was narrower than said. Only a Case naming both constructors fail-stops on both lanes; finding 14.)
+12. **Every refusal of the decoder and the validator is pinned, held by a raise, or unreached (rewritten in round 13;
+   rounds 9 to 12 were wrong).** They said that 34, then 33, refusal statements of `serializer.py` were "pinned by no
+   control" (13 because removing them only crashes the decoder, 20 because "no image at all" reaches them) and left them to
+   the two VMs' gates. The review of round 12 showed the second half false: `name length` (a type named `''`, or a name record
+   with a word too many), `tag case on a non-data type` (a tags Case on U32 with no rows and no Default), `key case on a
+   non-scalar type` (a keys Case on a Flag that has a Default) and `tag table is not dense` (a Flag's table one row short)
+   each have a one-edit image that the codec refuses and that a codec without the statement admits, and no frozen control was
+   one of them, so a loader that omitted them passed every control the VMs are held to. The audit's "no image at all" was true of
+   its own search only, and the inference from it, and the deferral to the VMs, were not. The same review found conditions inside
+   the tests of statements that had a control, which no control reached: 19 of its 47 mutants survived every frozen
+   control.
+   The claim is held by the gate now, not by an audit's transcript (`statement_audit`, `CRASH_HELD_MUTANTS`, SPEC §12): the gate omits
+   each of the codec's 100 refusals (`raise` statements, `fail` calls and `limit` calls, each turned into `pass` with the `return`
+   or `continue` after it kept) and each operand of the `or` in the 78 tests that have one, in turn (178 omissions), and each is one of these:
+   - **Killed (136).** A frozen image, refusal, verdict or admitted control changes when the omission is made. Among them are
+     all the statements of the earlier list but the nine held or unreached below. Measured outside the gate, by re-running the
+     reviewer's own 47 mutants (its probe `mut_codec.py`) against this tree: 44 die by a control (its decoder that accepts
+     surrogates dies because `rejected` reads an encoder's refusal as a plan that no image encodes), and the three that remain
+     are below.
+   - **Held by a raise (33).** Omitting the refusal or the clause makes the reference raise on the control that pins it: four
+     refusals (`name index`, `child offset`, `node record` and `constant index`, on `name-index-beyond`, `child-not-record`,
+     `node-record-short` and `constant-index-beyond`), and twenty-nine clauses, each a bound that keeps an index or a key inside its
+     table (`CRASH_HELD` names the control of each: an unknown kind, a record cut short, a tag beyond its type, a representation or
+     a Construct that names an arrow, a table too long, a capture beyond the depth, and so on). §11 counts no crash as a kill, so the
+     gate requires the raise on that control, and that nothing else kills the mutant. Three of the reviewer's mutants remove a whole
+     bound and raise by construction (the entry kind and the constant kind index a table; the block of `tag case on a non-data
+     type` takes its `return` with it, so `types[t]['constructors']` raises on every type that has none): each survives every
+     frozen image and raises on its control (`entry-kind`, `constant-kind-unknown`, `tag-case-on-opaque`). The codec mutants
+     `decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4` and `validator-tag-case-on-any-type` model the same omissions
+     without a raise, and die by those controls.
+   - **Unreached (5), each with its argument in `UNREACHABLE`.** `constructor order` (every constructor record has a tag below its
+     type's count and no tag repeats, and the counts sum to the table, so the records fill every slot); the decoder's closing
+     `opcode` and the validator's `unknown node` (`node record` refuses an opcode beyond the table, and the thirteen within it have a
+     case each); the validator's `standalone {op}` (the decoder refuses a Branch or a Default that no Case holds, so the validator
+     is handed none); the validator's `type index` (the decoder refuses a type word beyond the table first).
+   - **The encoder's input checks (4).** `u32_list` (`text_spelling` holds it) and its two clauses, and an unknown plan node, which no
+     decoded plan holds.
+   A refusal or clause that a new statement adds and nothing pins fails the gate, as does an entry that a control has come to kill or
+   that no longer raises where it is said to. What the gate does not claim: that no other image exists for an omission that is held or
+   unreached (it argues the five, and shows the thirty-three raise), and anything about an operand of an `and`, a comparison's
+   boundary or what a test computes (the audit drops only the operands of `or` tests). The earlier text's numbers (34, 33, 13, 20) are
+   retired. *(Round 12: `constructor grouping` and the sum check of `constructor count` were pinned, by `type-grouping` and
+   `type-count-short`; entry 34.)*
+13. **The pinned seed crashes on a Program whose `main` is itself `R => k => ...`.** *Retired in round 12 as
+   a seed defect about `let`; recorded as the seed fact about `main`'s form (entry 32).* The first report blamed
+   a request bound by a `let` (`dead : IO.OP<R> = IO.print("dead")(R, x => Halt{7, "unreached"})`, then a body):
+   exit 1 on both lanes without output, Bun `TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is
+   an instance of Object)`, native `bend: memory fault (machine stack overflow?)`. The let is innocent. The
+   reproducer below crashes on both lanes (witness `main-lambda-let`), crashes identically with the let deleted
+   (`main-lambda-nolet`) and with any other body of a bare-lambda `main` (`main-lambda-print`, `-continue` and
+   `-halt`), and runs once `main` is a call, with the let intact (golden `let-dropped-request`, `live` on both
+   lanes). The same requests held by a
+   parameter (`keep`, `pick`) ran because their `main` was a call. §11 does not bind the VM to a crash: it is
+   no value. The owner is the coordinator, if the seed pin moves, and whoever writes the compiler campaign's
+   differential tests: a source whose `main` is a lambda has no seed value to compare with. It crashes:
 
    ```
    def once(-R: Type, m: IO(Unit), n: IO(Unit), k: Unit -> IO.OP<R>) -> IO.OP<R>:
@@ -1026,3 +1539,27 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    def main() -> IO(Unit):
      R => k => once(R, IO.print("dead"), IO.print("live"), k)
    ```
+
+   and this runs, printing `live` on both lanes:
+
+   ```
+   def run(m: IO(Unit), n: IO(Unit)) -> IO(Unit):
+     R => k => once(R, m, n, k)
+   def main() -> IO(Unit):
+     run(IO.print("dead"), IO.print("live"))
+   ```
+14. **The seed's lanes disagree on a Case with a catch-all over a request; D23 refuses it (coordinator's choice).**
+   *Resolved in round 13: the coordinator chose option b as D24, and entry 35 has the rule and the controls; entry 37
+   records that nest's lowering emits no Default, so compiled programs do not reach it. The text below is the round-12
+   record.* Recorded in entry 33, which has the measurements and the witnesses. D23 as decided is option a: every Case over
+   a request is `Unsupported vm effect`, and the shapes on which the native lane succeeds are a recorded capability
+   gap that no compiled program reaches, because the pinned literals head refuses every catch-all on an algebraic
+   type. Option b, from review finding 2: a request selects no tag row, so a Case with a Default takes the
+   Default and one without stops `Unsupported vm effect`. That is what the native lane does on all six shapes
+   measured, and the Bun lane agrees on two of the three rows (the first and the third). It would change §6 and
+   §6.1 (a class-5 scrutinee is not refused when the Case has a Default), the evaluator (`case-default-takes-request`
+   becomes the rule, and the three `program-case-request-*` Default controls become runs that return the Default's
+   value), three new goldens for the native lane's values (`2`, `4` and the empty output; basis `seed`, with the Bun
+   lane recorded beside it), and both VMs' Case, which would take the Default of a class-5 word without reading
+   its payload. It would change no compiled program. It is worth doing only if the self-hosting compiler is to emit
+   a catch-all over an IO.OP, which its checker refuses today; the recommendation is to keep option a.

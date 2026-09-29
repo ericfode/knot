@@ -1,0 +1,422 @@
+{
+  "basis": "Seed observations that vm/SPEC.md section 8 cites and no golden can carry: the seed fails, its two lanes agree on a form that binds a request as a value and holds no Case, Knot cannot lower the form (the `head` lane is the pinned literals head's check-cli), or the seed's native lane takes a catch-all for which the image has no place (round 13, review round 1: a catch-all beside a table that names every constructor, or reached only through a field pattern; section 3 keeps a Default only where a row is absent, so a compiled plan is a complete table and the VM refuses the request). Each source runs on both seed lanes; the native lane is the reference. The exit and stdout of each lane were reviewed from the probes of the round-11 review, of round 12 and of round 13's review round 1 before `check-spec.py --freeze-new` froze the bytes. Round 13 (D24) promoted the three witnesses of a Case with a Default beside a constructor row over a request to goldens, `case-request-emit-default-u32`, `case-request-halt-default-u32` and `case-request-emit-default`, which the VM must match. A witness is evidence for the text and never a VM expectation.",
+  "witnesses": [
+    {
+      "name": "main-lambda-print",
+      "source": "vm/golden/witness/main-lambda-print.bend",
+      "note": "main is a bare `R => k => ...`: `IO.print(\"direct\")(R, k)`. Both lanes crash.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "f6dbd0f93fd632ad5c4325a8904b2f1e2d69d255435ed174c954731b15e4a965",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)\n"
+      }
+    },
+    {
+      "name": "main-lambda-continue",
+      "source": "vm/golden/witness/main-lambda-continue.bend",
+      "note": "main = `R => k => k(Unit{})`. Both lanes crash.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "e0598301d5300da2c16e19eae099547514a30d86ec1c90139af4a9d20d9a8bf9",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: undefined is not an object (evaluating 'f.j')\n"
+      }
+    },
+    {
+      "name": "main-lambda-halt",
+      "source": "vm/golden/witness/main-lambda-halt.bend",
+      "note": "main = `R => k => Halt{1, \"boom\"}`. Both lanes crash.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "6e97e3c55fb4837eb5dd4456fd77d558159c462a3bfd504311f4411459572039",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)\n"
+      }
+    },
+    {
+      "name": "main-lambda-let",
+      "source": "vm/golden/witness/main-lambda-let.bend",
+      "note": "a let-bound dead request beside a bare lambda main (DECISIONS finding 13 as first reported). Both lanes crash.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "3983174374b3d69755c03c3ac9f9079c7f1b3763d877b331856e4bf3ea926209",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)\n"
+      }
+    },
+    {
+      "name": "main-lambda-nolet",
+      "source": "vm/golden/witness/main-lambda-nolet.bend",
+      "note": "the same source without the let: the crash is main's form, not the let. Its call-shaped twin with the let is the golden `let-dropped-request`.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "5155609d05e831760bf514c8729eadcc364373c800f2d22d2c0f787cadf43cbf",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)\n"
+      }
+    },
+    {
+      "name": "case-request-default-only",
+      "source": "vm/golden/witness/case-request-default-only.bend",
+      "note": "`case _: d` over a request: never read, both lanes run and the request is never performed; a lone catch-all holds no Case (D24).",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": ""
+        }
+      },
+      "sha256": "39a1c394fd3db71d8b826c92072a9d786f49e619451c21ae27586eb9b52f3e10",
+      "native": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "case-request-binder",
+      "source": "vm/golden/witness/case-request-binder.bend",
+      "note": "`case y: d` over a request: never read, both lanes run; a binder holds no Case (D24: it binds the request as a value).",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": ""
+        }
+      },
+      "sha256": "46c7f7bdc32ffbca7f101892d13e1bbebe54672ff2b84c1cbed9337812a7ca6b",
+      "native": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "case-request-both-arms",
+      "source": "vm/golden/witness/case-request-both-arms.bend",
+      "note": "arms for Emit and Halt over a request: both lanes fail-stop (the seed's own tests/io/request_out_of_band.bend).",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "bcb1903ab848d84f14a595b66c7727c1bef096e88233bd732af62bfe410054ab",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "catch-all-lone",
+      "source": "vm/golden/witness/catch-all-lone.bend",
+      "note": "a lone `case _:` over a Flag: the seed runs it, the pinned literals head answers Unsupported check variable-pattern.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "head": {
+          "exit": 3,
+          "stdout": ""
+        }
+      },
+      "sha256": "3f4aa580f3aa9d4b61d7e26d6632dabe9d48a8c97300c924a12cdf0202552a47",
+      "native": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "head": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tcheck\tvariable-pattern\t81:82:9:9\n"
+      }
+    },
+    {
+      "name": "catch-all-binder",
+      "source": "vm/golden/witness/catch-all-binder.bend",
+      "note": "a lone binder `case y:` over a Flag: the same.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "Off{}\n"
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "Off{}\n"
+        },
+        "head": {
+          "exit": 3,
+          "stdout": ""
+        }
+      },
+      "sha256": "3f011e9b08e68fd7083737cf12919aba8a7ec97ca202d03aa3e4337e48445eb5",
+      "native": {
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "head": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tcheck\tvariable-pattern\t81:82:9:9\n"
+      }
+    },
+    {
+      "name": "catch-all-after-arm",
+      "source": "vm/golden/witness/catch-all-after-arm.bend",
+      "note": "`case _:` after a constructor arm over a Flag: the same. The pinned literals head refuses every catch-all on an algebraic type; the pattern matrix of the nest increment accepts them but lowers each into a complete table with no Default, so the Case with a Default over a request is a golden and a rule for hand-written plans (D24, SPEC section 8, DECISIONS entry 37).",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "head": {
+          "exit": 3,
+          "stdout": ""
+        }
+      },
+      "sha256": "9ace690e3db2eb6a26d9a1e07913151db0afb74a547bf08be8e72803254a9515",
+      "native": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "head": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tcheck\tvariable-pattern\t102:103:10:9\n"
+      }
+    },
+    {
+      "name": "case-request-both-plus-default",
+      "source": "vm/golden/witness/case-request-both-plus-default.bend",
+      "note": "arms for Emit and Halt and a catch-all over a request, printed as a U32: the catch-all is dead for every constructor and live only for a request, so the native lane takes it (`3`) and the Bun lane fail-stops. Section 3 keeps a Default only where a row is absent, so the plan of this source is the table of its two arms, equal to the compiled twin of the golden `case-request-emit-default-u32` (`case-request-emit-default-u32-compiled`), which the VM refuses; that golden's source prints `2`. A recorded gap (SPEC section 8), never a VM expectation.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "3\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "bb79c34104b745d58336428c06606718f597169665648d7a32cff03c105234fc",
+      "native": {
+        "exit": 0,
+        "stdout": "3\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-nested-default",
+      "source": "vm/golden/witness/case-request-nested-default.bend",
+      "note": "arms for Emit and for Halt whose code is matched against 0, and a catch-all: the outer table names every constructor, so the catch-all is reached only through the field pattern and the native lane takes it for a request (`3`); the Bun lane fail-stops. Where a checker accepts the source (nest at 2a84a4f5 lowers a constructor sub-pattern so; the merged head refuses a `_` after a literal field pattern as `Unsupported check variable-pattern`), the plan is Emit and Halt rows, the Halt row a keys Case on its code with the catch-all as its Default, and no Default at the outer table (`case-request-nested-default-compiled`), which the VM refuses; `case-request-inner-default-only` has the same plan and a native fail-stop. A recorded gap (SPEC section 8).",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "3\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "84c4d4a4a832adef5ddf6d6736329767b21f87fd38f48b1a5db2308993cbccf5",
+      "native": {
+        "exit": 0,
+        "stdout": "3\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-inner-default-only",
+      "source": "vm/golden/witness/case-request-inner-default-only.bend",
+      "note": "the catch-all only inside the Halt arm, as the default of a match on its code, and no outer catch-all: a request matches no arm of the outer Case, so both lanes fail-stop. Its plan is the plan of `case-request-nested-default` (Emit and Halt rows, the Halt row a keys Case on its code with Default 3, no Default at the outer table), whose native value is `3`: two sources, one plan, two native answers, so no rule of the VM can agree with the seed on that plan (`case-request-nested-default-compiled`, SPEC section 8).",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "28e1526d42531bef14e6ea7d052ef2793d01de1831cdcdec0293155432f8e53a",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-book-both-plus-default",
+      "source": "vm/golden/witness/case-request-book-both-plus-default.bend",
+      "note": "the same shape as a Book over a Flag: the native lane takes the catch-all (`On{}`) and the Bun lane prints the unreduced term, a `got` that never reduces. Its plan is a complete table with no Default (`case-request-book-both-plus-default-compiled`), which the VM refuses after 6 entries, as it refuses `book-print` after 5. A recorded gap (SPEC section 8).",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "On{}\n"
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "got(Flag, IO.print(\"x\", Flag, u => Emit{On{}}))\n"
+        }
+      },
+      "sha256": "c415bbbfc14ff68e6dde6d583aee8c75043f4c633c88f23614a94c358de83554",
+      "native": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "got(Flag, IO.print(\"x\", Flag, u => Emit{On{}}))\n",
+        "stderr": ""
+      }
+    }
+  ]
+}

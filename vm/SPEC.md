@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 102 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 111 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden and frozen Book invocation, derived by the rules of §8 and §11 |
 | [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
@@ -144,16 +144,23 @@ text, and `decode` returns every u32 code: a text step would merge a surrogate
 pair or refuse a code above U+10FFFF (§12).
 Literal pools hold source literals only, never computed results.
 
-**Names.** Nonempty UTF-8 without NUL, unused final bytes zero, unique by bytes.
-A type and a constructor with the same spelling share one name record.
+**Names.** A name is a nonempty byte string that is well-formed UTF-8 as the Unicode Standard defines it (Table 3-7)
+and holds no NUL. Well-formed means: no overlong form (a lead of `C0` or `C1`, `E0` before a byte under `A0`, `F0`
+before a byte under `90`), no surrogate (`ED` before a byte from `A0`), no code above U+10FFFF (`F4` before a byte from
+`90`, and any lead from `F5`), no sequence cut short by the end or by a byte that is not a continuation, and no stray
+continuation byte. So a name is a string of Unicode scalar values, any of them, U+0080 and U+10FFFF and the
+noncharacters among them, and a loader that refuses a non-ASCII name, or one length of them, is wrong as much as one
+that admits a malformed form. The bytes of the last word past the name's length are zero, each of them and not only the
+last. Names are unique by bytes. A type and a constructor with the same spelling share one name record.
 
 **Canonical order.** Names are interned in first-use order over type names, then
 constructor names, then function names. Constants are interned by `(kind, data)`
 in node-stream order. Nodes are emitted by visiting function bodies in table
 order, children in the order of §3, parent last (post-order). No node is shared
-and none is unreachable. `Closure.site` numbers closures consecutively in stream
+and none is unreachable. `Closure.site` numbers closures consecutively from 0 in stream
 order. An image is **canonical exactly when re-encoding its decoded plan
-reproduces it byte for byte**; `serializer.py` is that re-encoder.
+reproduces it byte for byte**; `serializer.py` is that re-encoder. A loader without an encoder checks the
+ten clauses of §4 step 5, which say the same.
 
 ## 3. Node records
 
@@ -254,17 +261,73 @@ stack. The validator checks every function, reachable or not:
    (`image-size`), even when it is also malformed. Then length, magic, version,
    total, entry kind, reserved word and registry digest.
 2. Section offsets, adjacency, counts and the limits below, record lengths, name
-   UTF-8, padding and uniqueness; constructor grouping; known type, constant and
-   node tags.
+   length, UTF-8 (§2), padding and uniqueness; constructor grouping and count (below); known
+   type, constant and node tags.
 3. Every index and child offset is in range and names a record of the right
    table; every child precedes its parent; each node has exactly one parent or is
    exactly one function's root.
-4. The scope, arity and type rules of §2–§3, including representation field
-   types, acyclic arrows, `IO(Unit)` for a Program's `main`, distinct function names
+4. The scope, arity and type rules of §2–§3, form by form (below), and of the image as a whole:
+   representation field types, acyclic arrows, `IO(Unit)` for a Program's `main`, distinct function names
    (`FN` is found by name, §8, and `main` is one of them), literal kinds, prim and foreign ids and
-   arities (a reserved id is refused, never run as a Base body), arrow kinds, captures and exact
-   `slots`.
-5. Canonicality as defined in §2.
+   arities (a reserved id is refused, never run as a Base body).
+5. Canonicality (§2): ten clauses, below.
+
+**Step 4, form by form.** Each condition has a frozen refusal (§12), and a loader that omits it admits an image.
+- **Value**: an algebraic type, a tag below its constructor count, and no live field (`value-with-fields`).
+- **Literal**: a constant of the kind that its type pins (`literal-kind`).
+- **Reference**: a slot below the depth, typed as its binder (`ref-beyond-depth`, `reference-type`).
+- **Construct**: an algebraic type and a tag below its constructor count (`construct-tag`); the constructor has
+  **at least one live field** and the node exactly that many operands, so a nullary constructor is a Value and never
+  a Construct, whatever it is handed (`construct-arity`, `construct-nullary`); each operand fits its field
+  (`construct-field-type`).
+- **Application**: the function is in the table (`function-index`), the operand count is its live arity
+  (`call-arity`), and the operands and the result fit (`call-result`).
+- **Intrinsic and Foreign**: the id is registered and not reserved (`prim-unknown`, `prim-reserved`,
+  `foreign-unknown`); the operand count is the registry's (`prim-arity`); each operand and the result are the
+  pinned representations that the registry names (`prim-on-flags`, `prim-result`, `foreign-operand-type`,
+  `foreign-result`).
+- **Let**: its slot is the depth (`let-slot`), and its body has its type (`let-body-type`).
+- **Case**: its slot is below the depth (`case-slot-beyond-depth`). Its scrutinee type is concrete, and its slot's
+  type is that type or `none`, so a slot of one concrete type under a scrutinee of another is refused
+  (`inspect-none-parameter`, `case-slot-type-mismatch`). In tags mode the scrutinee is a data type
+  (`tag-case-on-opaque`), the table has one row for each constructor (`tag-table-not-dense`), the Default is
+  present exactly when some row is `none` (`missing-tag`, `redundant-default`), a row's key is its tag
+  (`branch-key`), and it binds the live fields from the depth (`branch-first-slot`, `branch-fields`). In keys mode
+  the scrutinee is U32 or Char (`key-case-on-flag`), the keys increase strictly, so **no key repeats**
+  (`keys-descending`, `keys-repeated`), a Default is present (`keys-without-default`), and a row binds nothing
+  (`key-branch-binds-field`). Every arm body fits the Case's type (`branch-body-type`, `key-body-type`,
+  `default-body-type`).
+- **Closure**: its arrow kind matches `live_argument` (`closure-arrow`); its captures are distinct enclosing slots in
+  ascending order below the depth (`capture-order`, `captures-repeated`) and exactly the body's free live slots
+  (`unused-capture`); `slots` is the body's exact depth (`closure-slots`); the body fits the arrow's result
+  (`closure-result-type`).
+- **Invoke**: the function's type is an arrow (`invoke-non-arrow`); a live arrow takes **exactly one operand** and an
+  erased arrow **none**, so a missing operand and an extra one are both refused (`invoke-live-without-argument`,
+  `invoke-live-two-arguments`, `invoke-erased-with-argument`); the operand and the result fit (`invoke-types`).
+- **Function**: its body has its result type (`body-type`), and its `slots` are the body's exact depth
+  (`function-slots`).
+
+**Step 5, clause by clause.** An image that passes steps 1 to 4 is canonical exactly when these ten hold, and a decoded
+plan does not keep the words that they are about, so no earlier step can refuse a breach: a layout may differ from the
+canonical one and decode to the same plan. `canonical_violations` reads each clause from the image's words and never by encoding it
+again, and the gate holds it against re-encoding (§12). One frozen control breaks each clause alone, and the image
+passes every other step.
+1. **Main word.** Header word 4 is the index of the function named `main`, or `none` if there is none
+   (`main-index-none`; a wrong index is `main-index`, at step 3).
+2. **Names in order.** The name records are in first-use order: the names of the data and opaque types, then the
+   constructor names, then the function names, each at its first use (`names-out-of-order`).
+3. **Names used.** No name record is unused (`name-unused`).
+4. **Constants in order.** The constants are in first-use order over the node stream (`constants-out-of-order`).
+5. **Constants used.** No constant is unused (`unused-constant`).
+6. **Constants once.** No two constants have one kind and one datum (`constants-duplicate`).
+7. **Constructors in order.** The constructor records are in type order, and in tag order within a type
+   (`constructors-out-of-order`).
+8. **Nodes in order.** The node records are the post-order of the function bodies in table order, the children of a
+   node in the order of §3 (`nodes-out-of-order`).
+9. **Sites from 0.** The Closure sites are 0, 1, 2, ... in stream order (`closure-site-first`, `closure-site-second`,
+   `closure-sites-swapped`, `closure-sites-from-one`).
+10. **Arms' types.** A Branch and a Default carry the result type of their Case (`arm-type-branch`,
+    `arm-type-default`).
 
 A refused image is `HostFailure image` with a reason, except past a **resource
 limit** of version 1, which is `Exhausted` kind 2 with the limit as its cause (D16).
@@ -281,26 +344,56 @@ malformed record, an inexact `slots` and every later rule:
 | live arity 4,096 | a larger arity in a function record whose length holds it (`arity`) | a length that does not (`function record`) |
 | `slots` 65,536, a function's or a Closure's | a larger `slots` (`slots`), even when inexact | none: every word is a count; exactness is step 4 |
 
-`check-spec.py` freezes 87 refusals (22 byte-level, 9 at the limits, 56 plan-level), and
+**A type record's constructor count** is a count that the structure bounds, and it is refused before it
+sizes or governs anything. A data type's record names its first constructor, which must be the table's
+next (`constructor grouping`), and its count, which must fit what the constructor table still holds
+(`constructor count`); the counts of all data types then sum to the table's size, and a shortfall is
+`constructor count` too. The order within a record is the first constructor, then the count, then the name.
+A loader that sized a list from the count before this check would ask for 32 GiB at `0xFFFFFFFF`, and
+on a smaller host would trap or exhaust instead of reporting `HostFailure image`; the control
+`type-count-max` refuses it, as `type-grouping` refuses a first constructor that is not the table's next
+and `type-count-short` a sum that falls short.
+
+`check-spec.py` freezes 211 refusals (124 byte-level, 9 at the limits, 78 plan-level), and
 vm-model and vm-core MUST each refuse every one of them, with the frozen refusal: `Exhausted`
 kind 2 for a limit, `HostFailure image` for the rest, and the reference codec's own reason where
-the VM reports one (vm-model spells it, vm-core maps it to a code of its own). A plan-level
-control breaks exactly one rule of §2–§4 in a golden's plan, and its message is the validator's
-first, so a loader that omits the rule admits it: a name with a NUL, or with a nonzero unused
-final byte (byte-level); two functions of one name; a call to a function beyond the table; a
-Case on a slot at or above the depth; a construct tag, or field type, that does not fit; a tag
-row keyed for another tag; a key Branch that binds a field; a closure whose arrow kind or result
-does not fit; an Invoke that does not fit; a Let, or a function, whose body has another type;
-U32 or File declared as a data type; and the rules of earlier rounds. Which control kills which
-codec mutant is `check-spec.py`'s (§12).
+the VM reports one (vm-model spells it, vm-core maps it to a code of its own). A control breaks exactly one
+rule of §2–§4 in a golden's image or plan, and the reference's refusal names that rule alone. A loader that omits the
+rule admits the image or, where it decides canonicality by encoding the decoded plan again, refuses it as `noncanonical`
+instead (a changed reason: an opaque type's payload word, a named arrow, a scalar of two words and a repeated name are
+words that a plan does not keep, so they are refused by their own rule or, failing that, by canonicality). Byte-level, on a valid
+golden's records laid out again: every malformed form of a name
+(each of the overlong forms, a surrogate, a code beyond U+10FFFF, a lead of `F5`, a sequence cut short inside or before
+an ASCII byte, a stray continuation), a NUL inside a name and each nonzero unused byte (the first and both, not
+only the last), an empty name, a name whose length word does not match its bytes, a repeated name, a name
+index beyond the table; each of digest words 24 to 31; a first constructor that is not the table's next, a
+constructor count of `0xFFFFFFFF`, and a sum of counts short of the table; a record of one word, a type of another
+kind, an opaque type with a payload word, a named arrow, a constructor whose count, type, tag or name is wrong, a
+constant of an unknown kind, of two words, of none or of the wrong length, a node record with an extra word or a
+count that its operands contradict (each form), a Branch, a Default or a Case row that is the wrong node, a shared
+node, an orphan, a keys row that does not repeat its key or whose arm is no Branch, a function whose record, root or type
+words are wrong, a record cut short or overrunning the image, a count of records beyond the image, a main word beyond the
+table; and the ten clauses of §4 step 5, one image each (four for the sites). Plan-level:
+two functions of one name; a call to a function beyond the table; a Case on a slot at or above the depth, or whose slot
+and scrutinee are two concrete types; a tags Case on a type with no constructors, a keys Case on a Flag, a Flag's
+table one row short; a keys row that repeats; a construct tag, or field type, that does not fit, or a Construct of
+a nullary constructor; a tag row keyed for another tag; a key Branch that binds a field; a closure whose arrow kind or
+result does not fit, or that captures a slot twice; an Invoke that does not fit, or that takes the wrong number of
+operands for its arrow (a live one with none or two, an erased one with one); a Let, or a function, whose body has
+another type; a table one row too long, a representation or a Construct that names an arrow, a Program with no `main`, a
+Value of a tag beyond its type or of a type with no constructors, a call or an Invoke whose operand does not fit, a capture
+beyond the depth, a keys row whose first slot is not the depth, a closure or an Invoke of a data type; U32 or File declared as
+a data type; and the rules of earlier rounds. Which control kills which codec mutant is `check-spec.py`'s (§12).
 At the limits: the record, arity and `slots` limits passed by one (a function's
 `slots` and a Closure's), a record count beyond the image and an arity beyond its
 record, an image of exactly 16 MiB (`total`), 2^20 records whose first zero word is
 a malformed record, and a `slots` of 65,536 that its body does not reach. vm-core
-MUST refuse the same controls, and MUST admit its six admitted plan controls (three
-Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
-Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 100 run controls; vm-model and
+MUST refuse the same controls, and MUST admit its eight admitted plan controls (three
+Cases on a `none` slot, among them `list-head-match`, three whose arms fit their
+Case, among them `first-code`, S's shapes, and two of names, a type named with each length of
+UTF-8 (U+0024, U+00A2, U+20AC, U+10348) and one named with every edge of a length (U+0080, U+07FF, U+0800, U+D7FF, U+E000,
+U+FFFF, U+10000, U+10FFFF)), `arity-at-limit` (an unused function of
+4,096 parameters), its seven code-list controls and its 138 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -355,8 +448,9 @@ release(p): worklist = [p]
 
 Children are processed first-field-first. The worklist lives in the frame region
 above the top frame and is empty between transitions; overflowing it is
-`Exhausted` kind 3. Underflow, a dangling pointer, a double free or a class
-mismatch is an InternalFailure, never exhaustion.
+`Exhausted` kind 3. A release that would overflow it is a stop like any other
+(§6.3): it decrements no count and frees no cell. Underflow, a dangling pointer, a
+double free or a class mismatch is an InternalFailure, never exhaustion.
 
 **Allocation.** A cell of `2 + payload` words takes the smallest power of two not
 below `max(4, 2 + payload)` words. Each class has a LIFO free list; a free cell is
@@ -366,8 +460,9 @@ debug build poisons freed payloads with `0xdeadbeef`. Addresses, bump, free-list
 order and padding MUST agree in lockstep; the timing of `memory.grow` need not.
 An allocation whose cell would end beyond the declared maximum of 65,536 pages
 (4 GiB, D19) stops the machine with `Exhausted` kind 2 (heap), reproducibly on every
-host. A host that refuses `memory.grow` below that maximum is `HostFailure`, never
-`Exhausted`.
+host, and the step that asked for it has changed nothing (§6.3): the room for every
+cell that a step allocates is decided before the step's first change. A host that
+refuses `memory.grow` below that maximum is `HostFailure`, never `Exhausted`.
 
 **Constants.** At load, before any other allocation, pool entries are materialized
 in index order from the bump pointer, immortal: a scalar at or above 2^31 is a Big
@@ -405,12 +500,14 @@ on top and `top` one word past it; popping reads `head` and removes `n + 3` word
 | 6 InvokeArgument | the Invoke | 0 | the function value |
 
 A push that does not fit in the region is `Exhausted` kind 3, before anything is
-written. A 250,000-deep `U32.add(depth(p),1)` recursion holds one Scope (3 words),
+written (§6.3). A 250,000-deep `U32.add(depth(p),1)` recursion holds one Scope (3 words),
 one Gather (5) and one Call (4) per level: 12 MB of the 16 MiB region.
 
 **Transitions.** Each row is one externally visible step. Its dups, drops,
 releases and allocations are substeps performed in the order written, and belong
-to its post-state. No row runs user code or a second host effect.
+to its post-state. No row runs user code or a second host effect. A step that
+stops the machine has no post-state: §6.3 says what it leaves, and the order in
+which a row lists its substeps is the order of its effects, never of its refusals.
 
 | Control | Step |
 |---|---|
@@ -419,20 +516,23 @@ to its post-state. No row runs user code or a second host effect.
 | Eval Reference | `dup` the slot; Return it. |
 | Eval Construct/Intrinsic/Application/Foreign, `n > 0` | Push Gather; Eval operand 0. |
 | same, `n = 0` | Complete the node (below) with no operands. |
-| Return, top Gather | Move the word into the next operand slot. If operands remain, Eval the next one; otherwise pop and complete. |
+| Return, top Gather | Move the word into the next operand slot. If operands remain, Eval the next one; otherwise complete the node (below) and pop the frame with it: a stop of the completion leaves the frame, with its operands, in place (§6.3). |
 | Eval Let | Push Bind; Eval the value. |
 | Return, top Bind | Pop; move the word into slot `depth`; push Scope(`depth`); `depth += 1`; Eval the body. |
 | Return, top Scope | Pop; drop slots `depth-1` down to the saved depth, zeroing them; restore depth; keep returning. |
 | Return, top Call | Pop; drop `act`; `act` = the saved caller; keep returning. |
-| Eval Case | Select the arm (§6.1). Branch with `f > 0` fields: push Scope(`depth`), then bind the fields (§6.1), `depth += f`. Eval the arm body. |
+| Eval Case | Select the arm (§6.1). Branch with `f > 0` fields: push Scope(`depth`), then bind the fields (§6.1), `depth += f`; a stop at the selection, the push or the predecessor's cell leaves neither Scope nor cell (§6.1, §6.3). Eval the arm body. |
 | Eval Closure | `dup` the captured slots in order; allocate the Closure; Return it. |
 | Eval Invoke | Push InvokeFunction; Eval the function. |
-| Return, top InvokeFunction | Pop. Live: push InvokeArgument holding the function; Eval the argument. Erased: `Enter(function, [])`. |
+| Return, top InvokeFunction | Pop. Live: push InvokeArgument holding the function; Eval the argument. Erased: `Enter(function, [])`. The room for the push is judged on the region as the pop leaves it (§6.3). |
 | Return, top InvokeArgument | Pop; `Enter(function, [argument])`. |
-| Return, top Top | Drop `act` and set it to 0; then §8. |
+| Return, top Top | First the refusals of §8's phase, which change nothing (§6.3); then drop `act` and set it to 0; then the rest of §8. |
 | Enter | §7. |
 
-**Completing a gathered node.**
+**Completing a gathered node.** The frame is popped by the completion, not before it:
+what a completion can refuse (an ill-typed operand, `NatRange`, the room for its result
+cell) it decides while the Gather frame still holds the operands, and a stop leaves the
+frame, the operands and the heap as they were (§6.3).
 - Construct: Nat Succ first inspects its operand as a Nat, and Char Chr its
   operand as a U32 (below). An Object or a Closure there (class 0 or 1), like any
   cell but a Big, halts with `HostFailure image` (`ill-typed`) before the
@@ -443,7 +543,8 @@ to its post-state. No row runs user code or a second host effect.
 - Intrinsic: inspect every operand over its §9 extent, in operand order; then
   compute the prim (§9), allocating its result, then drop the operands in operand
   order, except an operand the prim moves into its result (§9), which is neither
-  dropped nor duplicated. Return the result.
+  dropped nor duplicated. Return the result. A `NatRange` of the computation is a
+  stop, and so is a result that has no room: neither has allocated or dropped anything.
 - Foreign: allocate an Action that takes the operands. Return it.
 - Application: `Enter(function, operands)`.
 
@@ -472,12 +573,27 @@ so D4 refuses it: it is not ill-typed, and it is never `Invalid`. The request's 
 are not words that any of these points reads. Nothing reads them until Top's loop performs the
 request (§8), and a Let, a Reference, a Construct, a Foreign, a Closure's captures and an Enter's
 operands move or share a request unread, so a request can be stored, captured, passed and dropped.
-Dropping one releases it (§5) and has no effect.
+Dropping one releases it (§5) and has no effect. One read takes a request without refusing it (D24): a
+Case matches no row of a request, in either mode, so its Default takes it, unread; only a Case without a Default,
+a tags Case whose every row names a constructor, refuses it (§6.1). The seed's native lane does the same for a source
+with no catch-all; a source with one is taken by the native lane, and a compiler that lowers the catch-all into rows leaves
+its plan no Default to take (§8).
 
 ### 6.1 Case selection
 
-The scrutinee is borrowed from its slot and inspected (§6) against the Case's
-scrutinee type, whether its slot is typed so or `none`. Selection reads a tag and
+The scrutinee is borrowed from its slot. **A request selects no row (D24).** A class-5
+scrutinee is not inspected: it matches no row, of a tags table or of a keys table, so the Case takes its Default, and a
+Case without a Default, a tags Case whose every row names a constructor, stops `Unsupported vm effect` (§6). A keys Case
+has a Default always (§3), so it never refuses a request. It holds at any scrutinee type, whether the Case's rows are an
+Emit row, a Halt row, keys or none (`program-case-request-emit-default`, `-halt-default` and `-default-only`; a Case
+that names Flag, `case-request-default-at-flag`; a keys Case, `case-request-default-keys`), because the Case never reads
+the word beyond its class. The Default binds nothing, the request is neither read nor performed, and the Case borrows it
+as it borrows every scrutinee, so the Default's value is what the run goes on with (§8: the goldens
+`case-request-emit-default-u32`, `-halt-default-u32` and `case-request-emit-default`). Only a plan that holds a Default takes
+one, and §3 keeps a Default only where a row is absent: a lowering that expands a source catch-all into a row for each
+constructor that no arm names hands the VM a Case that names every constructor, which a request refuses like any Case without a
+Default (§8's fourth row and its `-compiled` controls). Any other word is inspected (§6) against the Case's scrutinee type, whether its slot is typed so or `none`, and
+whether the Case has rows or only a Default. Selection reads a tag and
 allocates nothing: an Object's tag is in its payload, an immediate of an algebraic
 type is tag `v`, a Nat word `n` is Zero (tag 0) when `n = 0` and otherwise Succ
 (tag 1), and a Char word is Chr (tag 0). In key mode the scalar's value is
@@ -494,8 +610,11 @@ fields into consecutive slots in field order:
   and the Scope pop drops it like any other. A Default or a Zero arm makes no
   predecessor.
 
-The allocation follows the Scope push, so a frame-region `Exhausted` (kind 3)
-allocates nothing, and a heap `Exhausted` (kind 2) leaves the Scope pushed. Golden
+The checks come in the order of the substeps, the room for the Scope first and then what the
+fields need (the predecessor's cell, or the counts that the `dup`s raise, `RCOverflow`), and all of
+them before either the push or the fields take effect (§6.3): a frame-region `Exhausted` (kind 3)
+allocates nothing, a heap `Exhausted` (kind 2) leaves no Scope pushed, and when both would stop
+the Case the frame region names the stop. Either way the machine is as the Case found it. Golden
 `nat-case-big` binds the Big predecessor 2^31, which its run frees only if it was
 moved; run control `nat-default-big` takes the Default of a Nat Case on 2^31 + 1
 and allocates nothing (§12).
@@ -508,6 +627,58 @@ closure bodies are in tail position, and a Let body or Case arm inherits its
 parent's position, while initializers and operands never do. A tail entry pops
 those Scope frames and drops `act` (releasing the caller) **before** allocating
 the callee, so a tail loop reuses its cell. A non-tail entry pushes Call(`act`).
+The order is the order of the effects, and the fit is judged on what the entry
+leaves: the callee's Activation fits if it fits after the pops and the release,
+since it takes the cell that the release frees, and a Call frame if it fits on the
+region as it stands. When it does not fit, the entry stops with the Scope frames
+and `act` as they were (§6.3, §7).
+
+### 6.3 Atomic stops
+
+**A step that stops has no effect.** A **stop** is a step that ends the run instead of completing: a
+`HostFailure` (an ill-typed word, D20's `io abi`), an `Exhausted` of any kind (fuel; `NatRange`, `RCOverflow`,
+display and the heap, kind 2; the frame region and a release's worklist, kind 3) or an `Unsupported` (a request that a
+read meets, D23). A broken invariant is a defect (§11) and no stop. The step that stops has no post-state: the
+machine keeps the state in which the step began, whichever of its substeps had been tried. The control that could not
+advance stays pending with the words it owns (an Enter its target and operands, a Return its word, an Eval its node); `act`, `depth`,
+every frame and `top`, every cell (each rc and payload word), the free lists, the bump pointer, the counters, the
+constants and everything written or called on the host are as the step found them. A pop, a move into a slot, a `dup`,
+a `drop`, a release, an allocation, a push, a byte written and a host call that the step would have made are none of
+them made, or are undone. The one change that a stop leaves is the debit of `fuel`, `calls` and `quantum` that §7's
+step 1 pays, when a later step of that Enter is what stops. A machine MUST leave exactly this state, and vm-lockstep
+compares it.
+
+**Check, then change.** So a row decides everything that it can refuse before it changes anything: its substeps take
+effect together, once the last check has passed, and the order in which it lists them is the order of its effects and
+never of its refusals. Where two checks of one step would both stop the machine, the earlier names the stop, in this
+order: the words that the step reads, in the order of §6 and §9 (operand order), each with its request first
+(`Unsupported vm effect`) and then its type (`ill-typed`); for an outgoing String, D20's scalar check (`io abi`, §8 and
+§10) after the whole-extent inspection; then the limits, in the order of the row's substeps (§6.1's Scope before its
+fields, §7's target before its fuel, §10's room after D20's check). A word is therefore inspected before it is charged against a
+limit: §8's display counts a visit only for a word that it has inspected. Where the written order tempts a machine to
+change first, the rows decide these before their first change:
+
+| Row | Its checks |
+|---|---|
+| Return, top Gather (a completion) | the inspections of §6 and §9 in operand order; `NatRange`; the room for the result: the frame is popped by a completion that has passed them |
+| Eval Case | the scrutinee's inspection (§6.1); the room for the Scope; the room or the counts that the fields need |
+| Eval Closure, Return, top InvokeFunction, the cell of a Construct or a Foreign | the room for the cell or for the push; a `dup` that would overflow a count (`RCOverflow`) leaves every earlier `dup` of the step undone |
+| Return, top Top | §8's refusals of the phase, before `act` is dropped: a Book's description (each word inspected, then charged, and the room for the text), a Program's request (its operands inspected whole, D20's scalar check, the room that its conversion and its result take), or its IO.OP, a Halt's code, its message and D20's check of it |
+| Enter | §7: the target's class and operand count, then fuel; the debit is then paid, and a stop of steps 2 and 3 keeps the debit and nothing else |
+| any `drop` or release | the worklist's room (kind 3): a release that would overflow it decrements no count and frees no cell |
+
+**What holds each stop.** The reference evaluation ([evaluate.py](evaluate.py)) has no frames, `act` or cells, so it sees this rule
+only in its outcome, `calls`, `stdout` and `effects`. §12's atomic controls freeze each stop with all four: what a stopped run reports
+is what the run held before the refusing step (a stop after an effect keeps that effect's bytes and its host call), and the same run
+given exactly the fuel that it has spent reaches the same stop, since a refused step pays nothing (an Enter is refused before it
+tests fuel, and any other step tests none). What the frames, `act`, `top`, the cells and the free lists hold at a stop is beyond it, and
+is held by comparing machines: vm-model's steps are atomic, and vm-lockstep compares vm-core with it at every halt, as at every state,
+on the images that reach each stop: `inspect-halt-code` and `inspect-halt-message` (Return to Top refuses a Halt whose code or message is
+ill-typed before `act` is dropped), the `NatRange` goldens `nat-succ-range`, `nat-range` and `nat-mul-range`, and the ill-typed operands of
+`inspection_controls` (a Gather completion). A fuel stop is the Enter's own test: §7's eleven fuel controls freeze it, three atomic controls freeze what it leaves
+(`atomic-fuel-book`, `-action` and `-continuation`), and the lockstep already compares its pending Enter, target and operands. An image past a limit of §4 is refused at load, before there is a state to keep (§4's limit
+controls). The heap and the frame region (kinds 2 and 3), `RCOverflow` and a release's worklist are out of the reference evaluation's reach;
+vm-core's frame-region and heap-limit rows, which freeze `calls`, `top` and the bump pointer beside the outcome, and the lockstep hold them.
 
 ## 7. Entry, fuel and quantum (D16)
 
@@ -540,14 +711,19 @@ the callee, so a tail loop reuses its cell. A non-tail entry pushes Call(`act`).
      type and Return it.
 3. "Enter a body" means: apply §6.2 (tail: pop Scopes, drop `act`; otherwise push
    Call), allocate an Activation of the owner's `slots` capacity with depth equal
-   to the bound slot count, fill it as above, and Eval the body.
+   to the bound slot count, fill it as above, and Eval the body. Steps 1 to 3 are
+   one step (§6.3), and the debit is the one change of it that a stop leaves.
 
-**A stop keeps the debit.** Once step 1 has debited, the debit stands whatever
-step 2 or 3 does: when one stops the machine (`Exhausted` kind 2 or 3, a
-`HostFailure`), `fuel` is not refunded and `calls` counts that entry. So does a
-refusal by the loop, which follows the debit of the entry that built the request
-(D23): the loop's step is no entry and pays nothing. A refused print is therefore
-debited. `print-non-scalar` (and `-mid` and `-wide`) stops after 4 calls (main,
+**A stop keeps the debit, and nothing else (§6.3).** Once step 1 has debited, the
+debit stands whatever step 2 or 3 does: when one stops the machine (`Exhausted`
+kind 2 or 3, a `HostFailure`), `fuel` is not refunded, `calls` counts that entry
+and `quantum` its debit. Nothing else stands: the Enter stays pending with its
+target and operands as they were, and what steps 2 and 3 had begun (a tail entry's
+popped Scope frames and released `act`, a pushed Call frame, `dup`ed captures,
+moved operands, a built cell) is as if never begun, so that the room for all of it
+is decided before the first (§6.2). A refusal by the loop follows the debit of the
+entry that built the request (D23): the loop's step is no entry, pays nothing and
+changes nothing. A refused print is therefore debited. `print-non-scalar` (and `-mid` and `-wide`) stops after 4 calls (main,
 IO.print, the erased `R` and the Action applied to `k`, which built the request that
 the loop then refused), `print-non-scalar-second` after 13, and a Book's Case over a
 request after the entry of the function that holds it (5 in `book-print`, §8).
@@ -641,8 +817,8 @@ ordinal 0 as the value 0, because its loader models U32 as one nullary construct
 Goldens `invoke-args` and `invoke-arrow` freeze each cause of steps 2–5, and
 `invoke-words` step 1's words (§12). The VM then
 pushes Top(phase 0) and starts with `Enter(FN, ordinals)`; it has no loop, so no request
-is performed under it (Actions, below). Return to Top(0) halts
-with the result and prints
+is performed under it (Actions, below). Return to Top(0) describes the
+result, drops `act` and halts with it, printing
 
 ```
 Evaluated<TAB>type<TAB>tag<TAB>tree<LF>
@@ -660,8 +836,13 @@ scalar, closure or `none`-typed word; each is still inspected against that type
 or a nullary value costs one, and a Nat word `n` costs `n + 1`. The bounds are
 inclusive: at most 1,048,576 visits and 16 MiB (16,777,216 bytes) of `tree`,
 separators included. A result that needs more is `Exhausted` kind 2 (`display`),
-never a truncated value (§12's four display run controls). The result is dropped
-after printing.
+never a truncated value (§12's four display run controls). The description is
+decided before anything changes (§6.3): every word is inspected and then charged,
+the tree is built in scratch, and only a description that has passed drops `act` and
+prints its line whole. A refusal (`ill-typed`, `display`, a request, the room for
+the text) stops the machine with `act` still owned, the result still held and nothing
+written, and it leaves the same `calls` as the run held before the step. The result
+is dropped after printing.
 
 **Program** (`IMAGE FUEL -- [ARGS…]`; only `ARGS` reach `IO.args`). `main` takes no
 live argument and returns `IO(Unit)`, where
@@ -674,7 +855,7 @@ The VM pushes Top(phase 1) and starts with `Enter(main, [])`. Returns to Top:
 |---|---|
 | 1 | set phase 2; `Enter(w, [])` applies the erased `R` |
 | 2 | set phase 3; `Enter(w, [terminal])` |
-| 3 | The loop. If `w` is a request (class 5), perform its effect and enter its continuation, in this order: inspect (§6) every operand over its whole extent, in operand order, before any is converted (§10); make D20's scalar check of every outgoing String or byte List, before the host call; convert the operands, call the host and build the Base result `r` (§10); then `dup` the request's `k`, drop `w` (which releases its operands and, with the `dup`, leaves `k` owned by the step), and continue with `Enter(k, [r])`. The phase stays 3, so the answer of that entry returns to Top and is read the same way, and the loop ends only at an Emit or a Halt. The step is no entry (§7); one effect at most. Otherwise `w` must be an IO.OP Object, and a Halt's code a U32 and its message a String over its whole extent (§6); else `HostFailure image` (`ill-typed`). Emit ends with exit 0, its field unread, after `w` is dropped. A Halt's message is an outgoing String (§10): the code and then the whole message are inspected, and a message holding a non-scalar Char is refused as `HostFailure io abi` before `die` (D20), with `w` still owned and nothing written. Otherwise the VM converts the message, drops `w` and calls the host's `die` with the code and the message. |
+| 3 | The loop. If `w` is a request (class 5), perform its effect and enter its continuation, in this order. The refusals come first and change nothing (§6.3): inspect (§6) every operand over its whole extent, in operand order, before any is converted (§10); make D20's scalar check of every outgoing String or byte List; and decide the room that the conversion and the Base result `r` take (§10), all before the host call. Then drop `act` and set it to 0 (§6's table), convert the operands, call the host and build `r`; then `dup` the request's `k`, drop `w` (which releases its operands and, with the `dup`, leaves `k` owned by the step), and continue with `Enter(k, [r])`. The phase stays 3, so the answer of that entry returns to Top and is read the same way, and the loop ends only at an Emit or a Halt. The step is no entry (§7); one effect at most. Otherwise `w` must be an IO.OP Object, and a Halt's code a U32 and its message a String over its whole extent (§6); else `HostFailure image` (`ill-typed`), with `act` and `w` still owned. Emit ends with exit 0, its field unread, after `act` and `w` are dropped. A Halt's message is an outgoing String (§10): the code and then the whole message are inspected, and a message holding a non-scalar Char is refused as `HostFailure io abi` before `die` (D20), with `act` and `w` still owned and nothing written. Otherwise, the room for the conversion being decided with those checks, the VM drops `act`, converts the message, drops `w` and calls the host's `die` with the code and the message. |
 
 `IO.pure`, `IO.bind` and `IO.die` are ordinary Base code; `IO.die` returns `Halt`
 directly. An Emit is a value that ends the loop, not a request, and a request is neither an Emit
@@ -693,7 +874,13 @@ request is built and dropped. Goldens `keep-swapped` (`keep(-R,x,y) = y`: the re
 `m1(R, x => Halt{7,"unreached"})` is dropped, and the run prints `kept`), `keep-first`, `run2-flag`
 (`pick` over a user Flag) and `book-drop` (a Book) freeze that on both seed lanes, and `spine`
 (`R => k => m1(R, x => m2(R, k))`, IO.bind's shape) freezes the requests that do reach the
-loop. Run control `program-print-through-id` applies the Action to its continuation inside an argument
+loop. Six goldens freeze the same for each place a request can be held, every one with a call-shaped
+`main` (`main = run(IO.print(..), ..)`, since the seed crashes on a `main` that is itself a lambda, below):
+`let-dropped-request` and `let-live-request` (bound by a let, dropped, and the live one returned),
+`field-request-returned` and `field-request-dropped` (a field of a user `Box`, unboxed by a match and
+returned, or dropped), `emit-field-request-dropped` (an Emit's field) and `capture-request-dropped` (a
+closure's capture). Each prints its `live\n` (or `boxed-then-returned\n`) on both seed lanes, and the dropped
+request of each is built and never performed. Run control `program-print-through-id` applies the Action to its continuation inside an argument
 of a call (`run(m) = λ@R. λk. id(m(R)(k))`, whose answer only passes through `id`) and writes `x`
 after 9 entries, and the pinned seed writes `x` for that source on both of its lanes.
 
@@ -710,23 +897,66 @@ its entry (`book-request-dropped`, `program-request-dropped-let`), and performin
 (`program-request-dropped-argument`), and `inspect-continuation-target` writes `x` before the
 loop reads a `k` that is an immediate.
 
-**Where the seed refuses, and the VM with it.** The seed's boundary is the loop, and it is not
-only a Case over the answer. An effect fires only where the pure evaluator answers its request to
-the loop, so a request that is dropped never fires, and one that reaches a read is refused. A Case
-over the IO.OP that an applied effect answers, such as `got(IO.print("x")(R)(k))` with `got` matching
-`Emit` and `Halt`, fail-stops in every lane (`bend: runtime fail-stop`, no output, exit 1) and never
-fires the effect: the request is one that only the event loop decodes (the seed's own test,
-`tests/io/request_out_of_band.bend`). D23 gives the VM that boundary, and D4 its refusal: a request
-that a Case inspects, that a Book renders or that any other read of §6 meets is `Unsupported vm
-effect` (§6), where the seed fail-stops or has no such value, and it is never performed. Run controls
-freeze the refusals, and no golden agrees with the seed there, because the seed does not succeed
-(`program-case-request` is that Case in a Program, `book-request-rendered` and `book-request-field`
-the render of a root and of a field, and `inspect-request-chr`, `inspect-request-prim`,
-`inspect-request-keys`, `inspect-request-print` and `enter-request-target` each other kind of read, §12).
-The seed also crashes on a request bound by a `let`, used or dropped, in both lanes (Bun `TypeError:
-s.fun is not a function`, native `memory fault`, exit 1), which no VM rule can agree with: a `let` moves a
-request unread, and `program-request-dropped-let` freezes that shape by literal review, with no claim of
-seed agreement.
+**Where the seed refuses, and the VM with it.** The seed's boundary is the loop: an effect fires only
+where the pure evaluator answers its request to the loop, so a request that is dropped never fires. A
+request that a Case meets is where the seed's two lanes part, and they do not fail-stop alike (the goldens
+and witnesses below; the native lane is the reference, and the VM follows it wherever its plan can):
+
+| A Case over a request that | seed native | seed Bun | VM |
+|---|---|---|---|
+| names both Emit and Halt, no Default (witness `case-request-both-arms`; the seed's own test `tests/io/request_out_of_band.bend`) | fail-stop (`bend: runtime fail-stop`), exit 1 | fail-stop, exit 1 | `Unsupported vm effect` (`program-case-request`) |
+| names one constructor beside a catch-all (goldens `case-request-emit-default-u32` prints `2`, `-halt-default-u32` prints `4`, `case-request-emit-default` prints nothing) | takes the catch-all, exit 0 | fail-stop, exit 1 | takes the Default of a plan that holds one (D24); a compiled plan holds none (below) |
+| is only a catch-all or a binder (witnesses `case-request-default-only`, `-binder`) | exit 0, the request is never read | exit 0 | binds it as a value: no Case (D24) |
+| names every constructor and a catch-all beside them, or reaches the catch-all only through a field pattern (witnesses `case-request-both-plus-default` and `-nested-default` print `3`; the Book `case-request-book-both-plus-default` yields `On{}`) | takes the catch-all, exit 0 | fail-stop, exit 1 (the Book prints its stuck term) | `Unsupported vm effect`: a table that names every constructor has no Default (§3), and a request matches none of its rows (`case-request-emit-default-u32-compiled` and `case-request-nested-default-compiled` for a Program, `case-request-book-both-plus-default-compiled` for the Book) |
+
+So "fail-stops in every lane" holds of the first row alone, and the Bun lane agrees with the native lane on the
+first and third rows. **D24 is the VM's rule for a plan that holds a Default.** A request matches no row, so a Case
+takes its Default when its plan has one (a keys Case always does) and otherwise stops `Unsupported vm effect`, which is
+the first row's answer and D4's refusal (§6.1); a binder or a lone catch-all holds no Case and never reads the request, so
+it binds it as a value, and a plan may still hold a Case whose rows are all `none`
+(`program-case-request-default-only`), which takes its Default. The three goldens freeze the second row's values by the
+seed's native lane, each with the Bun lane recorded beside it (a fail-stop, exit 1, on all three); before D24 they were
+witnesses, and D23 refused every such Case, a Default included, as a capability gap (DECISIONS entries 33 and 35,
+finding 14). Their plans are hand-lowered (§1) witnesses of the plan-level rule, and no lowering emits their Default.
+A plan holds a Default only where a row is absent (§3), and the checker of the nest increment (`campaign/nest` at
+2a84a4f5) lowers a source catch-all on an algebraic type into a row for each constructor that no arm of the source names,
+with the catch-all's body copied into it, and emits no Default; a lone catch-all or a binder lowers to its bare body, with
+no Case, the third row's shape. (That checker refuses an `IO.OP<R>` parameter as `Unsupported parse parameter-type`, so
+this was measured on sources over a user type of IO.OP's shape; the merged head of `campaign/literals-integ` at 9f98fb09
+lowers these shapes the same way, DECISIONS entry 37.) The second row's sources therefore lower to the complete tables of
+`case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled` and `case-request-emit-default-compiled`, a source
+of the fourth row's first shape is a complete table already, and the VM refuses each request where the seed's native lane
+takes the catch-all: five run controls, `Unsupported vm effect` with nothing written, four Programs after 8 entries (three golden sources and
+the nested one) and the Book of `case-request-book-both-plus-default` after 6. That is a recorded capability gap (D4: Unsupported, never Invalid, never a bound), and no rule of the VM
+closes it, because a complete table has lost what the catch-all was for: the sources of `case-request-emit-default-u32`
+(`Emit: 1 / _: 2`, native `2`) and of `case-request-both-plus-default` (`Emit: 1 / Halt: 2 / _: 3`, native `3`) lower to
+one plan. So do those of `case-request-inner-default-only` (a native fail-stop) and of `case-request-nested-default`
+(native `3`) where a checker accepts the latter's `_` after a field pattern: nest at 2a84a4f5 does for a constructor
+sub-pattern, and the merged head refuses it after a literal one as `Unsupported check variable-pattern`, at check time and
+before any image exists. The image can express the seed's answer: a Default that tests the slot again for the arms that the source
+names after the catch-all takes a request as the native lane does (`case-request-both-plus-default-retested` and
+`-nested-default-retested`, each `3\n` after 13 entries with one effect). Closing the gap is therefore a change of the
+lowering, to emit that shape, or of §3, to admit a Default beside a complete table; the VM's Case rule needs neither. The
+refusal of a request that a Case without a Default or any other read of §6 meets is unchanged, and no golden agrees with the
+seed there: `program-case-request` is a Case in a Program, `book-request-rendered` and `book-request-field` the render of a
+root and of a field, and `inspect-request-chr`, `inspect-request-prim`, `inspect-request-print` and
+`enter-request-target` each other kind of read (§12). The pinned literals head reports `Unsupported check
+variable-pattern` for every catch-all on an algebraic type (`_` alone, a binder, and `_` after a constructor arm, each
+tried on a Flag: the witnesses `catch-all-lone`, `-binder` and `-after-arm`, which the seed runs), so those goldens'
+plans are hand-lowered and the eval lane of each is observed (`Unsupported parse parameter-type`), not compared.
+A `_` after key arms on a U32 or a Char is accepted (`default-hit`, `case-char`) and is not about requests.
+
+**The seed's crash is `main`'s form, not a let.** The seed crashes on a Program whose `main` is itself
+`R => k => ...`, whatever the body: both lanes exit 1 with no output, native `bend: memory fault
+(machine stack overflow?)` and Bun a TypeError (the witnesses `main-lambda-print`, `-continue`, `-halt`,
+`-let` and `-nolet`, whose bodies print, continue, halt, hold a let and hold none). A request bound by a
+let, held by a field, held by an Emit or captured runs on both lanes and agrees with D23 once `main` is a
+call: the six goldens above freeze it, and `let-dropped-request` is `main-lambda-let` with the lambda moved
+from `main` into a helper. No VM rule can agree with a crash of `main`'s form, none is owed one, and it is no
+value. The plan-level run controls that build `main` as `λ@R. λk. body` (`program-request-dropped-let`,
+`program-request-in-emit`, `program-case-request` and most of the D23 and D20 controls) freeze §7 and §8 by
+literal review and make no claim about the seed; the call-shaped goldens are the seed-witnessed twins of
+those that hold a request in a let, an Emit or a dropped argument.
 
 **A Book entry never reaches the loop (D22, D23).** A Book invocation has no loop: its Top frame is
 phase 0, which describes the result and halts. No request is performed under it, whatever it holds,
@@ -747,7 +977,9 @@ erased `R` after 3, and a request built and dropped after 4.
 `stdout` empty and `effects` 0 beside its cause and `calls`, and so does `book-request-dropped`,
 which builds one and ends. D23's Program controls freeze `effects` too: 1 where the loop performs the
 one request that a run returns (`program-request-dropped-let`, `-argument`, `-ill-typed`), 0 where it
-returns none (`program-request-in-emit`) or a refused one (`program-case-request`, `inspect-request-print`). The reference evaluation reports
+returns none (`program-request-in-emit`) or a refused one (`program-case-request`, `inspect-request-print`);
+the three Default controls (`program-case-request-emit-default`, `-halt-default`, `-default-only`) also perform
+none, since D24's Default takes the request unread. The reference evaluation reports
 both on every Book outcome, a Halt included (§12): `stdout` is the bytes written, and `effects`
 the host calls made, counted where the call would be, at the loop after D20's check and just
 before the write. A VM's harness MUST compare both: `stdout` against what its host
@@ -833,7 +1065,10 @@ dropping it as well is a use after free.
 **Allocation order.** A String result is allocated last cell first: `append(a,b)`
 copies `a`'s cells onto the moved `b` from `a`'s last character to its first;
 `reverse(a)` allocates from `a`'s first character; `show` from its last digit. A
-Big result is allocated before the operands are dropped. Prims still without a
+Big result is allocated before the operands are dropped. The order is that of the
+effects: the room for every cell of a result is decided before the first is
+allocated, so that a prim whose result does not all fit stops with none of it built
+(§6.3). Prims still without a
 golden witness (U32 `is_ne/le/ge`, `U32.from_nat`, `Char.from_u32`, and Nat
 `is_ne/lt/le/ge`) owe edge witnesses in vm-prims: 0, 1, 2^31 and 2^32-1.
 
@@ -871,7 +1106,13 @@ operand before it converts any, a String or a byte List over its whole extent,
 so an ill-typed cell anywhere in it halts as `ill-typed` even after a non-scalar
 Char or a byte above 255. Then it
 converts its operands, calls the host, builds the exact pinned Base Result, pair
-and handle view, and the loop enters `k` with it. Outgoing Strings must be Unicode scalars and are encoded as
+and handle view, and the loop enters `k` with it. The host call is the step's last
+change and nothing that the machine can refuse follows it (§6.3): after D20's check
+and before the call, the step decides the room that its conversion (the allocator
+blocks of §5) and the cells of the Result need, so that a request that cannot be
+performed is refused with no call made and nothing written. `IO.print`'s Result is
+the Unit immediate and takes no cell; a foreign whose Result allocates reserves its
+cells before its call (vm-io owns those foreigns). Outgoing Strings must be Unicode scalars and are encoded as
 canonical UTF-8, with no surrogate merging or replacement. An outgoing String that
 holds a non-scalar Char (a surrogate, or a code above U+10FFFF) halts with
 `HostFailure io abi` before the host call: none of it is encoded or written (D20,
@@ -889,7 +1130,10 @@ copies low bytes and passes the flag; a nonzero flag is errno 22 before any writ
 Accepted, Invalid, Unsupported, Exhausted, HostFailure and InternalFailure are
 recorded separately. Malformed images, unknown ids and malformed invocations are
 HostFailure, and an image past a resource limit of §4 is Exhausted kind 2; source forms Knot does not handle are Unsupported, and so is a Book
-result that §8 cannot describe and a request that is inspected, rendered or otherwise consumed as data (D23); a broken invariant is a defect. A timeout or
+result that §8 cannot describe and a request that is inspected, rendered or otherwise consumed as data (D23), a Case's
+Default aside (D24); a broken invariant is a defect. A refusal, a halt or an exhaustion of any of these
+kinds is a stop, and a stop is atomic (§6.3): it is reported with the meters, the output and the effects that the
+run held before the refusing step, less the debit that an Enter's step 1 had paid when its step 2 or 3 stopped. A timeout or
 crash never counts as a semantic mutant kill.
 
 The observation lanes are the seed, pinned Knot eval-cli, the Bend model on the
@@ -933,7 +1177,11 @@ exhaustion never excuses the VM. A VM that exhausts early, corrupts a result or
 reports an engine trap as a budget fails. Unsupported, timeout, unknown failure
 and a missing lane are neither Exhausted nor agreement. An Unsupported outcome is
 D4's refusal of a form Knot does not handle: a recorded capability gap, never a
-bound. Expected values are never regenerated from a candidate VM.
+bound. Round 12 recorded one that a hand-written plan could hold and Knot could not lower, a Case with a Default
+over a request, where the seed's native lane picks the Default. D24 gave the VM the native lane's value for a plan that
+holds the Default (§6.1, §8). A compiler that lowers a source catch-all into a row for each remaining constructor emits no
+Default, so for compiled programs the gap stays open and §8's table records it (round 13, review round 1). Expected values
+are never regenerated from a candidate VM.
 
 **Non-scalar output (D20).** The program's own value decides it, never a seed
 lane. The reference evaluation of the plan ([evaluate.py](evaluate.py), §6–§10 on
@@ -987,15 +1235,16 @@ reports the `InternalFailure eval result-tag` defect recorded in DECISIONS.md
 each time), derived from the
 image's type table and never listed as a bound; the seed's stdout for the Programs
 `foreign-print`, `io-bind`, `non-scalar-code`, `non-scalar-unprinted`, and D23's `keep-swapped`, `keep-first`,
-`run2-flag`, `spine` and `keep-non-scalar` (§8); and D20's
+`run2-flag`, `spine` and `keep-non-scalar`, the six of round 12 with a request in a let, a field, an
+Emit or a capture, and the three of D24 with a Case with a Default over a request (§8); and D20's
 refusal for `print-non-scalar`, `print-non-scalar-mid` and `print-non-scalar-wide`,
 with no output, and for `print-non-scalar-second` after `a\n`. For the Programs before D23
 the eval lane is not excused but unavailable: both literals `eval-cli`
 and `check-cli` report `Invalid parse function-result` for
 `def main() -> IO(Unit)`, a program the seed runs. Under D4 that should be Unsupported; it is recorded as observed, not
-relabelled, and their plans follow §1 by hand. The five of D23 declare helpers with an `IO(Unit)` or
-`IO.OP<R>` parameter, which both heads answer `Unsupported parse parameter-type` (D4's own answer), and
-follow §1 by hand as well. `io-bind`, `non-scalar-unprinted`
+relabelled, and their plans follow §1 by hand. Fourteen goldens (`list-head-match`, and those of D23, round 12 and D24 that hold a request) declare helpers with an
+`IO(Unit)`, `IO.OP<R>` or `List<Flag>` parameter, which both heads answer `Unsupported parse parameter-type` (D4's own
+answer), and follow §1 by hand as well. `io-bind`, `non-scalar-unprinted`
 and `print-non-scalar-second` keep Base's `IO.bind` (and `IO.pure`) unspecialized,
 so their `A`-typed nodes are `none`.
 
@@ -1083,12 +1332,12 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a tags-mode Case on Char, a Program, a boxed
   scalar constant and a `none`-typed node covered;
-- all 87 refusals of §4 with their frozen reasons, each resource limit
-  `Exhausted` kind 2 on one side and malformed or invalid on the other, its six
+- all 211 refusals of §4 with their frozen reasons (124 byte-level, 9 at the limits, 78 plan-level), each resource limit
+  `Exhausted` kind 2 on one side and malformed or invalid on the other, its eight
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 100 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 138 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1144,8 +1393,8 @@ lane and requires:
   control, and not each instance: the prim ids that no control names (U32 `mul` … `shrn`
   but `shln`, and Nat `mul` … `is_ge`) are vm-prims' to witness, one control per id and
   operand (§9), and the byte List and the operands of every foreign but `IO.print` are
-  vm-io's. Thirty-one effect controls (`effect_controls`) freeze
-  D23 (§8), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
+  vm-io's. Forty-two effect controls (`effect_controls`) freeze
+  D23 (§8), D24 (§6.1), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`, which builds a
   request that `got` receives: `book-print`, `book-print-continuation-call` (`k` a function) and
   `book-print-twice` (the reviewers' bookio-1, bk-print and bookio-2) stop
@@ -1165,16 +1414,35 @@ lane and requires:
   alone (`program-request-dropped-let`, `live\n`, `effects` 1, after 10, the dead one's three entries
   paid); by an argument of a call (`program-request-dropped-argument`, `keep-swapped`'s plan, `kept\n`,
   `effects` 1, after 12); or holding an ill-typed String, which the loop never reads
-  (`program-request-dropped-ill-typed`, a closure tail, `kept\n`, `effects` 1, after 12). A request that
+  (`program-request-dropped-ill-typed`, a closure tail, `kept\n`, `effects` 1, after 12).
+  `program-request-in-emit`, `-dropped-let` and `-dropped-ill-typed` build `main` as `λ@R. λk. body`, a form
+  that crashes the seed (§8): they are literal review with no seed claim, and the call-shaped goldens
+  `emit-field-request-dropped`, `let-dropped-request` and `keep-non-scalar` witness that the same holds. A request that
   any read meets stops `Unsupported vm effect` (§6), whatever the type and before an ill-typed
-  test: a Case over the answer in a Program (`program-case-request`, `Emit{got(IO.print("x")(R)(k))}`,
-  after 7, nothing written); a Book's result and a field of it, rendered (`book-request-rendered`,
+  test: a Case without a Default over the answer in a Program (`program-case-request`, `Emit{got(IO.print("x")(R)(k))}`,
+  after 7, nothing written);
+  a Book's result and a field of it, rendered (`book-request-rendered`,
   `book-request-field`, after 5); a request handed through `id` to a Chr operand (`inspect-request-chr`,
-  after 5), a prim operand (`inspect-request-prim`, `U32.add`, after 6), a key-mode Case
-  (`inspect-request-keys`, after 6) and an Enter's target (`enter-request-target`, after 5, the Enter
+  after 5), a prim operand (`inspect-request-prim`, `U32.add`, after 6)
+  and an Enter's target (`enter-request-target`, after 5, the Enter
   refused before it is debited, and with fuel 5 the same Enter meets fuel 0 and is refused all the same,
   `fuel-zero-request-target`); and a String whose tail is a request, which the loop reads whole when it
-  performs the print (`inspect-request-print`, after 10, nothing written). The same Action prints under a
+  performs the print (`inspect-request-print`, after 10, nothing written). A Case with a Default
+  takes the request instead (D24, §6.1): the same Case with a Default beside an Emit row, a Halt row or no row ends
+  exit 0 after the same 7 entries, nothing written and `effects` 0 (`program-case-request-emit-default`, `-halt-default`
+  and `-default-only`, whose Default's Flag goes into an Emit's unread field), and so does a Book's Case that names
+  Flag, handed the request through `id` (`case-request-default-at-flag`, `Evaluated 8 0 Off{}` after 6), and a Book's keys
+  Case, which has a Default always (`case-request-default-keys`, the same line after the same 6 entries); the values
+  are the seed's in the goldens `case-request-emit-default-u32` (`2`), `-halt-default-u32` (`4`) and
+  `case-request-emit-default` (no output). Lowered as a compiler lowers those three sources and the fourth row's nested one
+  (a row for each constructor, the catch-all's body copied, no Default), the same Cases refuse the request:
+  `Unsupported vm effect` after 8 entries with nothing written and `effects` 0 (`case-request-emit-default-u32-compiled`,
+  `-halt-default-u32-compiled`, `case-request-emit-default-compiled` and `case-request-nested-default-compiled`), and so does
+  the Book of the fourth row (`case-request-book-both-plus-default-compiled`: `got` names Emit and Halt, `go` hands it the
+  request) after 6; and a
+  Default that tests the slot again for the arms named after the catch-all takes the request as the native lane does,
+  `3\n` after 13 entries and one effect (`case-request-both-plus-default-retested` and `-nested-default-retested`). The
+  same Action prints under a
   Program entry from inside an argument of a call (`program-print-through-id`, whose source the seed
   prints `x` for on both lanes), `x\n` after 9; a Halt whose message is a lone surrogate (`halt-surrogate`)
   stops `HostFailure io abi` before `die` after 3; and one whose message is scalar
@@ -1187,14 +1455,40 @@ lane and requires:
   both lanes. Three key controls (`key_controls`)
   freeze §3's key: `pick` answers `On{}` from a key Branch at 0xffffffff for the U32
   and the Char `4294967295` (`key-max`, `char-key-max`) and `Off{}` from its Default for
-  0xfffffffe (`key-max-miss`), each after 2 calls;
+  0xfffffffe (`key-max-miss`), each after 2 calls. Twenty-seven **atomic controls** (`atomic_controls`) pin §6.3 where
+  the reference evaluation can see it: a stopped run reports what the run held before the refusing step, and the same run
+  given exactly the fuel that it has spent, `fuel = calls`, reaches the same stop, since a refused step pays nothing.
+  Twenty are twins that stop before any effect, each the run of an existing control or golden frozen again at that fuel and
+  with the `stdout` and `effects` that its first freeze left out (a Book writes nothing and calls no host; a Program that
+  stops before its first request has done neither). A Chr, a Succ, a word prim, a Case and a rendered field read an
+  ill-typed word (`atomic-ill-typed-chr`, `-succ`, `-prim`, `-case` and `-render`, after 2, 2, 3, 3 and 2 entries). A Succ,
+  `Nat.add` and `Nat.mul` have a result above 2^32-1 (`atomic-nat-succ-range`, `-add-range` and `-mul-range`, the plans of the
+  goldens `nat-succ-range`, `nat-range` and `nat-mul-range`: `NatRange` after 2 entries, main and the callee, `Nat.is_gt` never
+  entered). Return to Top refuses a Halt whose code, or whose message, is ill-typed and an IO.OP that is a closure (`atomic-halt-code`,
+  `-halt-message` and `-io-op-closure`, `ill-typed` after 4), and a Halt whose message holds a surrogate (`atomic-halt-non-scalar`, `io abi`
+  after 3). The loop refuses a String with a surrogate (`atomic-print-non-scalar`, `print-non-scalar`'s plan, `io abi` after 4),
+  one with a scalar before it, of which nothing is written (`atomic-print-non-scalar-mid`, after 4) and one whose tail is
+  ill-typed (`atomic-print-ill-typed`, after 5), each with no host call. A Case refuses a request (`atomic-case-request`,
+  after 7), so does a Book's render of one (`atomic-request-rendered`, after 5), and a display exceeds its bounds
+  (`atomic-display-visits`, `display` after 1). A Book that meets fuel 0 at its last entry has written and called nothing
+  (`atomic-fuel-book`, `recursion-map` at fuel 5), and neither has a Program whose Action's second application meets it (`atomic-fuel-action`,
+  `foreign-print` at fuel 3: no request is built). Five stop after
+  an effect and freeze the bytes and the host call that it made: `atomic-fuel-continuation` (`foreign-print` at fuel 4: `vm\n`, 1 effect, the
+  loop's `k` meets fuel 0), `atomic-print-then-non-scalar` (`print-non-scalar-second`'s plan:
+  `a\n`, 1 effect, `io abi` after 13), `atomic-print-then-ill-typed-continuation` (`inspect-continuation-target`'s plan: `x\n`, 1 effect,
+  an ill-typed `k` after 7), `atomic-print-then-io-op` (`x\n`, 1 effect, a closure that `k` answers through the identity as its
+  IO.OP, after 8) and `atomic-print-then-nat-range` (`x\n`, 1 effect, `Succ{4294967295}` in `k`, `NatRange` after 7). Two order a word's
+  inspection before its charge (§8): `Pair{n, w}` with the Nat word n = 1,048,574 has charged 1 + 1,048,575 visits, the whole
+  bound, when it reaches `w`, so a Flag there is the 1,048,577th visit (`atomic-display-leaf-charged`, `display` after 1) and a
+  closure that the identity hands there as a Flag is refused as `ill-typed` first (`atomic-display-leaf-ill-typed`, after 2), for a
+  word that is not inspected is no visit;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 86 codec mutants and 4 source mutants killed through a changed image, a decode
+- 137 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 92 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 120 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1208,17 +1502,54 @@ lane and requires:
   closure result, that does not fit; an Invoke that does not fit; and a function body of another
   type. Each survives every golden and dies by the control that breaks its rule, three of them (a
   nonzero padding byte, U32 not opaque and the Invoke) by another refusal that the next check gives
-  instead of the frozen one, the rest by an admission. The other 34 `raise` and `fail` statements
-  of the codec that the review's audit removed one at a time are pinned by no control: for 12 of them
-  the audit found only images on which the codec then crashes, which §11 does not count as a kill, and
-  for 22 no image at all (DECISIONS, finding 12). Ten rule mutants of
-  `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
+  instead of the frozen one, the rest by an admission. Three more, of a type record's constructors
+  (round 12, review finding 3), are a count refused where it exactly fills the constructor table (by
+  `opcode` and every other control of a valid image), the first-constructor check removed (by
+  `type-grouping`, which the next check refuses as `noncanonical` instead) and the sum of the counts
+  removed (by `type-count-short`, which a constructor's tag refuses instead). No mutant restores the late
+  size check as it was, sizing the list from the raw count: it would allocate 32 GiB at `type-count-max`, which is a host's
+  memory and no verdict, and a crash is no kill. The audit below omits the check with the list sized by the constructor table,
+  so that control is refused as `constructor grouping` instead; and the gate holds its own peak memory under 4 GiB (a host with
+  the memory would otherwise pass while holding 35 GB). Forty-eight more (round 13, review
+  findings 1 to 3) each omit one clause that no control had pinned, and each dies by the control that breaks that clause
+  alone: a keys row may repeat, a Construct may be nullary, an Invoke's operand count is unchecked (any, for a live arrow
+  alone, for an erased one alone), a Case's slot may be any type, captures may repeat, a tags Case on any type, a keys
+  Case on any type, a tag table of any length, a Program with no `main`, a call whose operands are not checked against the
+  callee, an Invoke whose operand is not checked against the arrow, a keys row whose first slot is not the depth; an empty
+  name, a name whose length word is unchecked, a repeated name, a shared child, an unreachable node, an opaque type with a
+  payload, a named arrow, a scalar of any width, a record of one word, the type, constructor, constant and function length
+  words; each digest word alone, each unused byte of a name alone, the last one only; and seven of UTF-8, which read a name
+  as opaque bytes after a check of part of Unicode's table 3-7 (without the overlong forms, the surrogates, the range, the
+  cut sequences or the stray continuations, without the first three, and ASCII only, which the two admitted names kill), and
+  a decoder that accepts surrogates alone (`rejected` reads an encoder's refusal as a plan that no image encodes). Where
+  removing a bound only makes the reference raise (the entry kind and the constant kind index a table), the mutant reads the
+  kind modulo the table, so that the refusal changes (`decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4`).
+  **Every refusal of the decoder and the validator, and every clause of its test, is accounted for** (`statement_audit`):
+  the gate omits each of the codec's 100 `raise` statements, `fail` calls and `limit` calls in turn, as above, and each
+  operand of the `or` in the 78 tests that have one (178 omissions; the omission of the constructor-count guard also sizes
+  its list by the constructor table, so that no run asks for 32 GiB), and requires that a frozen image, refusal or verdict
+  changes (136 do) or that the omission is listed with what holds it: 33 make the reference raise on the control that pins
+  them (four refusals, `name index`, `child offset`, `node record` and `constant index`, and twenty-nine clauses, each a
+  bound that keeps an index or a key inside its table; §11 does not count a raise as a kill, so the gate requires the raise
+  on that control and that nothing else kills them); 5 are unreached, each with its argument (`constructor order`, the
+  decoder's closing `opcode`, and the validator's `standalone {op}`, `type index` and `unknown node`, which earlier steps
+  refuse first); and 4 are the encoder's input checks (`u32_list`, its two clauses, and an unknown plan node;
+  `text_spelling` holds the first, and no decoded plan holds a form outside the table). It does not drop an operand of an
+  `and`, a comparison's boundary or what a test computes. Three of round 12's reviewer mutants remove a bound
+  whole and raise by construction (the entry kind, the constant kind, and the block of `tag case on a non-data type`, whose
+  `return` goes with it): `CRASH_HELD_MUTANTS` requires that each survives every frozen image and raises on its
+  control (`entry-kind`, `constant-kind-unknown`, `tag-case-on-opaque`). Twenty-three rule mutants of
+  `check-spec.py` itself are killed the same way, the ten of them for §4 step 5 (below): `rejected` reporting a limit as
   `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
   bound whose budget it does not pass; display steps counted as visits;
   transitions that omit materialization; a D20 golden whose `calls` are not
   checked; an unavailable Book lane whose declared line is not checked or whose cause
-  is not named; a declaration kept where check-cli prints a core; and a Book without a
-  core that declared none.
+  is not named; a declaration kept where check-cli prints a core; a Book without a
+  core that declared none; a witness (§8) whose source hash, lane bytes or literal review goes
+  unchecked, each by its own frozen refusal; and, for each clause of §4 step 5, `piecewise_rejected` without that
+  clause (`canonicality-without-*`), each by the control that breaks it alone (`canonical_differential`: the clauses and
+  re-encoding decide 5,797 images alike, the controls, the admitted images, the goldens, 480 seeded layouts and 4,875
+  perturbations of a word among them, and 527 of them are noncanonical).
   Four survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, the fuel test before the operand check,
   and a free terminal continuation. A request's debit paid by the loop after its effect, not
@@ -1246,18 +1577,28 @@ lane and requires:
   takes an immediate for an Action, or an Object for its target; a request's continuation read when the
   request is built, or by the loop before its effect, or left unread and taken for the terminal
   continuation; and a last word that is no IO.OP taken for `Emit`. Four more, of §10's UTF-8 of a scalar (the one-byte edge, the two-byte
-  lead, and the edges of two and three bytes), die by the two print controls. Twenty-eight more,
-  of D23, a Halt's message, keys and the debit, die
-  by the controls above: the eager rule of round 10, performing at the Action's application (by the goldens
-  `keep-swapped`, `keep-first`, `run2-flag`, `keep-non-scalar` and `book-drop`, and twenty run controls); a
-  request performed although it is dropped, by the function that received it (by those five goldens and
+  lead, and the edges of two and three bytes), die by the two print controls. Thirty-three more,
+  of D23 and D24, a Halt's message, keys and the debit, die
+  by the controls above: the eager rule of round 10, performing at the Action's application (by ten goldens,
+  `keep-swapped`, `keep-first`, `run2-flag`, `keep-non-scalar`, `book-drop`, `let-dropped-request`,
+  `let-live-request`, `field-request-dropped`, `emit-field-request-dropped` and `capture-request-dropped`, and
+  twenty-four run controls); a request performed although it is dropped, by the function that received it (by
+  nine goldens, those but `field-request-dropped`, whose function receives the Box and not the request, and
   `program-request-dropped-argument`, `program-request-dropped-ill-typed` and `book-request-dropped`) or by the
-  let that bound it (by `program-request-dropped-let` and `book-request-dropped`); a loop that enters `k`
+  let that bound it (by `let-dropped-request`, `let-live-request`, `program-request-dropped-let` and
+  `book-request-dropped`); a loop that enters `k`
   before it performs the effect (by `fuel-continuation-short`, `inspect-continuation-target`,
-  `inspect-print-after-surrogate`, `inspect-request-print` and the four D20 goldens' `calls`); a Case that
-  picks an arm of a request, and a request taken for an ill-typed word at a Case (each by the seven Book
-  controls that hand `got` a request, `program-case-request`, `book-request-rendered`, `book-request-field` and
-  `inspect-request-print`), at a scalar (by `inspect-request-chr`, `-prim` and `-keys` alone) or at an
+  `inspect-print-after-surrogate`, `inspect-request-print` and the four D20 goldens' `calls`); a Case
+  without a Default that picks an arm of a request, or takes it for an ill-typed word (each by the seven Book
+  controls that hand `got` a request, `program-case-request` and the five `-compiled` twins); a request taken for an ill-typed word where a
+  String or a result is read (by `book-request-rendered`, `book-request-field` and `inspect-request-print`);
+  D24's rule, that a Case takes its Default over a request: refused, as D23 refused it (by the three
+  goldens of a Case with a Default, the three Default controls, `case-request-default-at-flag`,
+  `case-request-default-keys` and the two `-retested` plans), picking a row and not the Default (by the goldens
+  `case-request-emit-default-u32` and `-halt-default-u32`, which print 1 and 3 for 2 and 4, by those two controls and by the
+  two `-retested` plans), taken only at IO.OP (by those two
+  controls) or not by a keys Case (by `case-request-default-keys` alone); a request taken for an ill-typed word at a
+  scalar (by `inspect-request-chr` and `-prim` alone) or at an
   Enter's target (by `enter-request-target` and `fuel-zero-request-target`); an Enter that tests fuel before it
   reads a request (by `fuel-zero-request-target` alone); a rendered field that admits a request (by
   `book-request-field` alone); a request's operands read when it is built (by `book-print-ill-typed` and
@@ -1274,7 +1615,37 @@ lane and requires:
   `inspect-halt-after-surrogate` alone) or before the code
   (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
   and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused print
-  whose debit is refunded (by the D20 goldens' `calls`);
+  whose debit is refunded (by the D20 goldens' `calls`). Twenty-three more (round 14, §6.3) mutate before they refuse, and each
+  dies by a changed observation of a control of the rule that it violates: the gate requires that at least one of the atomic
+  controls (the 27 `atomic-*` controls and the three `fuel-zero-*` controls of a refused Enter, `-ill-typed-invoke`, `-ill-typed-phase`
+  and `-request-target`, which are the same twin) changes under each. Nine spend an entry at a refusal (a `NatRange`, an ill-typed word, a Case over a request, a read of a
+  request, D20's check, a display bound, a fuel stop, and an Enter that pays its debit before it checks its operands or its request); six test
+  fuel before a refusal that no fuel test precedes (the same sites but the Enter's); five change the output or the effects before their
+  check (an effect counted before D20's check or before the String is inspected, a scalar prefix written before the refusal, a description
+  whose head is written before its words are inspected, and a visit charged before its word is inspected); and three undo or defer (a
+  stop that discards what earlier steps wrote, and a `NatRange` or an ill-typed word that is reported at the next entry). Nine survive
+  every golden and every run control outside that set and die by it alone: the three `nat-range-` mutants, `ill-typed-tests-fuel`,
+  `request-read-tests-fuel`, `d20-refusal-tests-fuel`, `display-refusal-tests-fuel`, `effect-counted-before-scalar-check` and
+  `describe-charges-before-inspecting` (by `atomic-display-leaf-ill-typed` alone). The other fourteen die by earlier controls that freeze
+  `calls`, `stdout` or `effects` as well, and DECISIONS entry 38 lists the kills of each, as measured;
+- 15 **seed witnesses** (`golden/witnesses.json`, `check-spec.py witness_controls`): sources that §8 cites
+  and no golden can carry, each re-run on both seed lanes (three also through the literals head's check-cli) and held
+  to its source's hash, to its frozen exit, stdout and stderr, and to the review of its exit and stdout that
+  was written before the bytes were frozen. Five show that the seed crashes on a `main` that is itself a
+  lambda (`main-lambda-print`, `-continue`, `-halt`, `-let` and `-nolet`); three on a Case over a request that
+  holds no Case with a Default beside a constructor row (`case-request-default-only` and `-binder`, which
+  read nothing, and `-both-arms`, which fail-stops in both lanes; the three that D24 promoted to goldens are
+  `case-request-emit-default-u32`, `-halt-default-u32` and `case-request-emit-default`); three (`catch-all-lone`, `-binder` and `-after-arm`) that both lanes run a catch-all on
+  an algebraic type that the literals head refuses as `Unsupported check variable-pattern`; four (round 13, review round 1)
+  on a catch-all for which a compiled plan has no place (`case-request-both-plus-default`, `-nested-default`,
+  `-inner-default-only` and the Book `-book-both-plus-default`): the native lane takes it, printing `3`, `3` and `On{}`,
+  and fail-stops only where the catch-all is inside the Halt arm; the plan of the first is the complete table of
+  `case-request-emit-default-u32-compiled`, and that of the second, where a checker accepts its source, the nested table of
+  `case-request-nested-default-compiled`, which is also the plan of the third (§8), and that of the fourth, a Book, is
+  `case-request-book-both-plus-default-compiled`; the VM refuses all three. Three frozen
+  refusals of the comparison (a source that drifted, a lane that drifted, a lane that contradicts its
+  review) are held by three rule mutants. A witness is evidence for the text and never a VM expectation:
+  vm-model and vm-core do not read it;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).

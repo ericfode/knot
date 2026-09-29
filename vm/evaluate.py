@@ -13,8 +13,15 @@ is written (section 10, D20); under the `native` policy every String is written 
 native lane writes it. An Action applied to its continuation builds a request, an inert value
 (section 8, D23): only the Program's Top loop performs the request that a run returns to it,
 and a Book never reaches the loop. A request is never inspected: every read of a word meets it
-first and stops with `Unsupported vm effect` (section 6).
+first and stops with `Unsupported vm effect` (section 6), except that a Case matches no row of a request,
+in either mode, so it takes its Default, and only a Case without one refuses (section 6.1, D24).
 A Python exception other than `Halt` is a harness failure, never an outcome.
+
+A stop is atomic (section 6.3). The state of this evaluation is its meters (`fuel`, `calls`), its output (`stdout`) and `effects`,
+and a refusal is decided before its step changes any of them, so a stopped run reports what it held before the refusing step; the
+one change that a stop leaves is an Enter's debit, paid before its callee runs. `prints` is the harness's record of every String
+the loop was handed, the refused one included, and is no machine state. Frames, `act` and cells do not exist here: the lockstep
+holds them (section 6.3).
 """
 from __future__ import annotations
 
@@ -148,7 +155,12 @@ class Machine:
 
     def case(self, node, env):
         _, _, slot, t, mode, rows, default = node
-        if mode == 'keys':
+        if isinstance(env[slot], tuple) and env[slot][0] == 'request':
+            # D24: a request matches no row, of either mode, so the Default takes it, unread, and without one it is refused.
+            if default is None:
+                raise Halt(UNSUPPORTED)
+            arm, fields = default, ()
+        elif mode == 'keys':
             key = self.word(env[slot])
             arm, fields = next((r for r in rows if r[1] == key), default), ()
         else:
