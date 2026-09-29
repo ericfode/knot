@@ -847,6 +847,38 @@ follows it (§5, §10, §11) without a new image header word.
    `keys-case-takes-request-default`; `case-request-picks-arm` is re-anchored on the Case without a Default. Nothing
    else moved: vm-expected.json gained exactly three rows.
 
+36. **Round 13, review findings 1 to 3: the conditions of §4 are listed form by form, and each is pinned.** The review of
+   round 12 ran 47 mutants of the reference codec against the frozen controls and 19 survived: a loader could omit a condition
+   and pass every control that the two VMs are held to. Finding 1: four conditions of step 4 had no control (a repeated keys
+   row, a Construct of a nullary constructor, an Invoke that takes the wrong number of operands, a Case whose slot and scrutinee
+   are two concrete types). Finding 2: finding 12 was wrong (above). Finding 3: canonicality had one control, several controls
+   pinned one instance of their rule (the last padding byte, the first digest word), and UTF-8 was undefined. Nothing in
+   `serializer.py` changes, since it already refused each image; the controls were frozen against it, and each mutant survives the
+   old battery and dies by its control.
+   - **The text.** §2 defines a name (well-formed UTF-8 by the Unicode Standard's Table 3-7, spelled out; no NUL; every unused byte zero)
+     and says that `Closure.site` starts at 0. §4 step 4 is listed form by form with the label of each condition's control, and step
+     5 is ten clauses (main word; names in order and used; constants in order, used and once; constructors in order; nodes in
+     post-order; sites from 0; arms' result types), each about words that a decoded plan does not keep, so no earlier step can
+     refuse a breach. The clauses are the decomposition that a loader without an encoder needs.
+   - **The controls.** 103 refusals (93 byte-level, on a valid golden's records laid out again by `Layout`; 10 plan-level): 193 in
+     all. One clause each. A name in every malformed form of UTF-8 (overlong in 2, 3 and 4 bytes, a surrogate, beyond U+10FFFF, a lead of
+     `F5`, cut inside and before ASCII, a stray continuation), each unused byte, the empty name, a repeated name, digest words 25 to
+     31; every record kind with a length or a count that contradicts its words; the ten canonicality clauses (four for the sites);
+     the four conditions of finding 1 (the Invoke in three: a live arrow with none, with two, an erased one with one); and the
+     statements of finding 2. Two admitted plan controls hold the other side of UTF-8: a name of each length and one with every
+     edge of a length.
+   - **The mutants.** 44 codec mutants (89 to 133), each omitting one clause and dying by the control that breaks it alone; ten rule
+     mutants, one per canonicality clause (13 to 23), which delete a clause of `piecewise_rejected`; the gate's total is 257 (203
+     before). The clauses are held against re-encoding on 5,779 images (`canonical_differential`), and the statement audit is
+     finding 12's rewrite.
+   - **One change of the gate's own rule.** `rejected` reads a `ValueError` of the re-encoding as `noncanonical`: a plan that the
+     encoder refuses (a name that holds a surrogate, which a decoder that admits surrogates yields) is the decoding of no image.
+     The reference never raises there. It makes the reviewer's `utf8-surrogates-accepted` die by a changed refusal instead of a raise.
+   - **What stays open.** Nothing that the reviewer named. Three of its mutants raise by construction (finding 12, above); each is
+     held and has a codec mutant that models the omission without the raise. The count of refusals, controls and mutants moves
+     again whenever a rule does; SPEC §4 and §12 state today's, and `vm-core`'s harness reads the two sentence shapes that carry the
+     refusal and run-control counts.
+
 ## What vm-model and vm-core must now follow (round 9)
 
 Item 1 (D22) is superseded by round 11's items 1 to 3.
@@ -1021,6 +1053,52 @@ worktrees; the checks below are what the harnesses read from `check-spec.py`, SP
 5. **Counts (§12, GATES.md).** 108 goldens, 103 admitted run controls, 90 refusals (25 byte-level), 117 admitted
    controls in the gate line, mutants 89 codec, 4 source, 93 evaluator and 13 rule (199).
 
+## What vm-model and vm-core must now follow (round 13)
+
+Both VMs still implement the eager rule of round 8 (an Action's effect performed where it meets its continuation), and neither
+has followed round 9's, 10's, 11's or 12's list. They next follow **D22, D23 and D24 together**, and this round's loader controls.
+This list is the one to work from; the earlier lists remain the detail behind each item (entries 21 to 36). `check-spec.py`'s
+`run_controls`, `plan_controls`, `byte_controls` and goldens are the shared harness, and merging this branch brings all of them.
+
+1. **A request is a value, and only Top's loop performs it (D23; §5 class 5, §6, §7 step 2, §8; round 11's items 1 to 3).**
+   `Enter(Action, [k])` builds a class-5 Request (`foreign`, the duplicated operands, `k`) and returns it: no operand read, no
+   foreign id checked, no host call, and the Action's second application is the entry that is debited. Top's phase 3 is a loop:
+   it inspects the request's operands whole, makes D20's scalar check, calls the host, builds the Base result, `dup`s `k`, drops the
+   request and enters `k`, and ends only at an Emit or a Halt. A dropped request is no effect. D22 follows: a Book has no loop,
+   so it never performs one (`book-drop` is `On{}`; `book-request-dropped` is 4 entries).
+2. **A request is never inspected, except that a tags-mode Case takes its Default (D24; §6, §6.1; supersedes round 12's item 3).**
+   At every read of §6 the class is read first and a request stops the run `Unsupported vm effect`, whatever the type and before
+   any state changes, and at an Enter's target before its operand count and its debit. The one exception: a **tags-mode Case whose
+   scrutinee is a request takes its Default** (a class-5 word reads no tag, matches no row, and the Default binds nothing), at any
+   scrutinee type, with or without rows (`program-case-request-emit-default`, `-halt-default`, `-default-only`: exit 0 after 7
+   entries, nothing written, `effects` 0; `case-request-default-at-flag`: a Book, `Evaluated 8 0 Off{}` after 6; the goldens
+   `case-request-emit-default-u32` prints `2`, `case-request-halt-default-u32` `4`, `case-request-emit-default` nothing). A tags-mode
+   Case **without** a Default still stops `Unsupported vm effect` (`program-case-request` and the seven Book controls that hand `got`
+   a request), and a **key-mode** Case refuses a request as before (`inspect-request-keys`, after 6): a key comparison reads a scalar
+   and a key row is no constructor row (entry 35 records this reading for the coordinator). A VM must not read the request's
+   payload, perform it, or take a row.
+3. **Frozen values that are new or moved since round 8 (re-freeze each; the outcome, `stdout` and `effects` are otherwise as before).**
+   `book-print`, `-continuation-call`, `-twice`, `-non-scalar` and `book-args` refuse after 5 entries (were 4), `book-print-ill-typed`
+   after 6 (was 5), `fuel-book-effect-exact` at fuel 5 (was 4), and the three `program-case-request-*` Default controls, which round 12
+   froze as `Unsupported vm effect` after 7 entries, run to exit 0 after the same 7 (D24). New controls: the request controls of round 11 (fifteen) and round 12's `call-shaped`
+   goldens (six), the three D24 goldens, `case-request-default-at-flag`.
+4. **`stdout` and `effects` are compared on every run control that freezes them** (`effects` is the number of host calls the run
+   made: the `knot_io` calls of vm-core's trace, the effects of vm-model's model), and `calls` at every stop (§7: a stop keeps its debit).
+5. **The loader refuses every image of `byte_controls` and `plan_controls`, and admits every admitted control (§2, §4).** Round 13
+   adds 103 refusals, listed in SPEC §4 form by form. What a loader must now check that the earlier lists did not name: a name is
+   well-formed UTF-8 (no overlong form, no surrogate, nothing above U+10FFFF, no cut or stray sequence) and admits every scalar,
+   including non-ASCII names at each length (the two admitted names); each unused byte of a name is zero; all eight digest words;
+   no repeated key in a keys row, no Construct of a nullary constructor, an Invoke of a live arrow takes one operand and of an
+   erased arrow none, a Case's slot and scrutinee are one concrete type or the slot is `none`; and **the ten canonicality clauses**
+   (§4 step 5: a loader with no encoder checks them one by one; `piecewise_rejected` is a model of it). Each refusal carries the
+   reference's reason where the VM reports one.
+6. **The counts, which both harnesses read from SPEC.** §4 states `freezes 193 refusals (118 byte-level, 9 at the limits, 66
+   plan-level)` and §12 `104 admitted **run controls**` (35 effect controls); the sentence shapes are unchanged and the numbers
+   are new. Goldens 111; admitted controls 120 (7 code lists, 104 runs, 8 admitted plan controls, `arity-at-limit`); mutants
+   133 codec, 4 source, 97 evaluator and 23 rule (257). vm-model reads the lists themselves.
+7. **Not obligations.** The 11 seed witnesses (`golden/witnesses.json`) and the codec's refusal accounting (`statement_audit`, finding
+   12) are evidence for the text and for the reference; neither VM reads them.
+
 ## Findings that need an owner
 
 1. **A D4 classification defect in the literals head.** For
@@ -1091,6 +1169,13 @@ worktrees; the checks below are what the harnesses read from `check-spec.py`, SP
    the main-line parser). No row is `Invalid`, so the six stay six (`Invalid parse expected-=` 6 and `Invalid parse
    function-result` 10 are as before), every other count is unchanged, and both files agree across the two
    lanes. The merge condition stands, and no shared bootstrap receipt was refreshed.
+   Round 12's six goldens and fourteen witnesses (round 13 moved three of the witnesses to goldens, so the corpus keeps
+   their files) and main's four `tests/perch-arithmetic` sources (the merge of D24) change it once more,
+   as measured by the gate runner (all 21 gates passed) at `024e7638` against the same receipt: 917 files, `Parsed` 163,
+   `Unsupported lex literal` 238 (each new source exits 3 `Unsupported` in the main-line parser, the three promoted
+   goldens at their `"x"`), `Unsupported parse declaration-form` 291 and `parameter-type` 59. No row is `Invalid`, so
+   the six stay six (`Invalid parse expected-=` 6 and `function-result` 10 are as before), and both files agree across the
+   two lanes. The merge condition stands, and no shared bootstrap receipt was refreshed.
 6. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged
@@ -1145,27 +1230,45 @@ worktrees; the checks below are what the harnesses read from `check-spec.py`, SP
    *succeeds* on, which §11 forbids). D23 makes a request a value that only Top's loop performs, and
    a request that any read meets, the Case among them, `Unsupported vm effect`. (Round 12: even that boundary
    was narrower than said. Only a Case naming both constructors fail-stops on both lanes; finding 14.)
-12. **34 refusal statements of `serializer.py` are pinned by no control.** The review's audit removed each
-   `raise` and `fail` of the codec once (93) and searched random byte-level and plan-level corruptions
-   of the goldens and run controls (two runs of tens of thousands) for an image that the committed
-   codec refuses and the mutant admits. Besides entry 30's 14 statements, none was found for 34. For 12 of
-   them, removal crashes the decoder on some image (`node record`, `{what} index`, `name index`, `constructor tag`,
-   `type record`, `child offset`, `constant index`, `constructor record`, `constant record`, and the
-   `length` of a record of a fixed-size node, of a Case and of a Closure), which §11 does not count as a
-   kill. For the other 22 it found no such image at all: `length`, `name length`, `duplicate name`,
-   `constructor grouping`, `opaque type`, `arrow name`, `constructor count`, `constructor order`,
-   `scalar constant width`, `shared node`, the `length` of a call-like node, `standalone arm`,
-   `case key`, `case arm kind`, `opcode`, `unreachable node`, `standalone {op}`, `type index`,
-   `tag case on a non-data type`, `tag table is not dense`, `key case on a non-scalar type` and
-   `unknown node`. Some are defences that a later check makes unreachable; the rest may have no
-   witness in a random corpus. Most are rules of §4 steps 2 and 3 that vm-core and vm-model enforce.
-   The coordinator decides whether a crash on a frozen refusal control is a kill for a codec mutant
-   (§11 says it is not), and whether the generator (`auto.py` of the review) becomes a gate step;
-   until then those statements are held by the two VMs' gates, not by this one. *(Round 12: `constructor
-   grouping` and the sum check of `constructor count` are now pinned, by `type-grouping` and `type-count-short`,
-   and a new statement, the count's fit before it allocates, joins the group whose removal crashes the decoder,
-   so 33 remain, 13 and 20; entry 34. The same review found that the unchecked count made the proposed
-   generator hang or exhaust memory on an image the committed codec now refuses at once.)*
+12. **Every refusal of the decoder and the validator is pinned, held by a raise, or unreached (rewritten in round 13;
+   rounds 9 to 12 were wrong).** They said that 34, then 33, refusal statements of `serializer.py` were "pinned by no
+   control" (13 because removing them only crashes the decoder, 20 because "no image at all" reaches them) and left them to
+   the two VMs' gates. The review of round 12 showed the second half false: `name length` (a type named `''`, or a name record
+   with a word too many), `tag case on a non-data type` (a tags Case on U32 with no rows and no Default), `key case on a
+   non-scalar type` (a keys Case on a Flag that has a Default) and `tag table is not dense` (a Flag's table one row short)
+   each have a one-edit image that the codec refuses and that a codec without the statement admits, and no frozen control was
+   one of them, so a loader that omitted them passed every control the VMs are held to. The audit's "no image at all" was true of
+   its own search only, and the inference from it, and the deferral to the VMs, were not. The same review found conditions inside
+   the tests of statements that had a control, which no control reached: 19 of its 47 mutants survived every frozen
+   control.
+   The claim is held by the gate now, not by an audit's transcript (`statement_audit`, `CRASH_HELD_MUTANTS`, SPEC §12): the gate omits
+   each of the codec's 100 refusals (`raise` statements, `fail` calls and `limit` calls, each turned into `pass` with the `return`
+   or `continue` after it kept) in turn, and each is one of these:
+   - **Killed (89).** A frozen image, refusal, verdict or admitted control changes when the statement is omitted. Among them are
+     all the statements of the earlier list but the nine held or unreached below. Measured outside the gate, by re-running the
+     reviewer's own 47 mutants (its probe `mut_codec.py`) against this tree: 44 die by a control (its decoder that accepts
+     surrogates dies because `rejected` reads an encoder's refusal as a plan that no image encodes), and the three that remain
+     are below.
+   - **Held by a raise (4).** Omitting `name index`, `child offset`, `node record` or `constant index` makes the reference raise
+     on the control that pins it (`name-index-beyond`, `child-not-record`, `node-record-short`, `constant-index-beyond`); §11 counts
+     no crash as a kill, so the gate requires the raise on that control, that the control freezes that refusal, and that nothing
+     else kills the mutant. Three of the reviewer's mutants remove a whole bound and raise by construction (the entry kind and the
+     constant kind index a table; the block of `tag case on a non-data type` takes its `return` with it, so `types[t]['constructors']`
+     raises on every type that has none): each survives every frozen image and raises on its control (`entry-kind`,
+     `constant-kind-unknown`, `tag-case-on-opaque`). The codec mutants `decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4`
+     and `validator-tag-case-on-any-type` model the same omissions without a raise, and die by those controls.
+   - **Unreached (5), each with its argument in `UNREACHABLE`.** `constructor order` (every constructor record has a tag below its
+     type's count and no tag repeats, and the counts sum to the table, so the records fill every slot); the decoder's closing
+     `opcode` and the validator's `unknown node` (`node record` refuses an opcode beyond the table, and the thirteen within it have a
+     case each); the validator's `standalone {op}` (the decoder refuses a Branch or a Default that no Case holds, so the validator
+     is handed none); the validator's `type index` (the decoder refuses a type word beyond the table first).
+   - **The encoder's input checks (2).** `u32_list` (`text_spelling` holds it) and an unknown plan node, which no decoded plan holds.
+   A refusal that a new statement adds and nothing pins fails the gate, as does an entry that a control has come to kill or that no
+   longer raises where it is said to. What the gate does not claim: that no other image exists for a statement that is held or
+   unreached (it argues the five, and shows the four raise), and anything about a clause inside a test that a statement's control
+   does not reach; the clauses that round 12's reviewer named are each pinned by a control and a codec mutant (SPEC §4 lists them form
+   by form, and entry 36 the controls). The earlier text's numbers (34, 33, 13, 20) are retired. *(Round 12: `constructor grouping` and the sum check of
+   `constructor count` were pinned, by `type-grouping` and `type-count-short`; entry 34.)*
 13. **The pinned seed crashes on a Program whose `main` is itself `R => k => ...`.** *Retired in round 12 as
    a seed defect about `let`; recorded as the seed fact about `main`'s form (entry 32).* The first report blamed
    a request bound by a `let` (`dead : IO.OP<R> = IO.print("dead")(R, x => Halt{7, "unreached"})`, then a body):

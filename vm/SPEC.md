@@ -144,16 +144,23 @@ text, and `decode` returns every u32 code: a text step would merge a surrogate
 pair or refuse a code above U+10FFFF (§12).
 Literal pools hold source literals only, never computed results.
 
-**Names.** Nonempty UTF-8 without NUL, unused final bytes zero, unique by bytes.
-A type and a constructor with the same spelling share one name record.
+**Names.** A name is a nonempty byte string that is well-formed UTF-8 as the Unicode Standard defines it (Table 3-7)
+and holds no NUL. Well-formed means: no overlong form (a lead of `C0` or `C1`, `E0` before a byte under `A0`, `F0`
+before a byte under `90`), no surrogate (`ED` before a byte from `A0`), no code above U+10FFFF (`F4` before a byte from
+`90`, and any lead from `F5`), no sequence cut short by the end or by a byte that is not a continuation, and no stray
+continuation byte. So a name is a string of Unicode scalar values, any of them, U+0080 and U+10FFFF and the
+noncharacters among them, and a loader that refuses a non-ASCII name, or one length of them, is wrong as much as one
+that admits a malformed form. The bytes of the last word past the name's length are zero, each of them and not only the
+last. Names are unique by bytes. A type and a constructor with the same spelling share one name record.
 
 **Canonical order.** Names are interned in first-use order over type names, then
 constructor names, then function names. Constants are interned by `(kind, data)`
 in node-stream order. Nodes are emitted by visiting function bodies in table
 order, children in the order of §3, parent last (post-order). No node is shared
-and none is unreachable. `Closure.site` numbers closures consecutively in stream
+and none is unreachable. `Closure.site` numbers closures consecutively from 0 in stream
 order. An image is **canonical exactly when re-encoding its decoded plan
-reproduces it byte for byte**; `serializer.py` is that re-encoder.
+reproduces it byte for byte**; `serializer.py` is that re-encoder. A loader without an encoder checks the
+ten clauses of §4 step 5, which say the same.
 
 ## 3. Node records
 
@@ -254,17 +261,73 @@ stack. The validator checks every function, reachable or not:
    (`image-size`), even when it is also malformed. Then length, magic, version,
    total, entry kind, reserved word and registry digest.
 2. Section offsets, adjacency, counts and the limits below, record lengths, name
-   UTF-8, padding and uniqueness; constructor grouping and count (below); known
+   length, UTF-8 (§2), padding and uniqueness; constructor grouping and count (below); known
    type, constant and node tags.
 3. Every index and child offset is in range and names a record of the right
    table; every child precedes its parent; each node has exactly one parent or is
    exactly one function's root.
-4. The scope, arity and type rules of §2–§3, including representation field
-   types, acyclic arrows, `IO(Unit)` for a Program's `main`, distinct function names
+4. The scope, arity and type rules of §2–§3, form by form (below), and of the image as a whole:
+   representation field types, acyclic arrows, `IO(Unit)` for a Program's `main`, distinct function names
    (`FN` is found by name, §8, and `main` is one of them), literal kinds, prim and foreign ids and
-   arities (a reserved id is refused, never run as a Base body), arrow kinds, captures and exact
-   `slots`.
-5. Canonicality as defined in §2.
+   arities (a reserved id is refused, never run as a Base body).
+5. Canonicality (§2): ten clauses, below.
+
+**Step 4, form by form.** Each condition has a frozen refusal (§12), and a loader that omits it admits an image.
+- **Value**: an algebraic type, a tag below its constructor count, and no live field (`value-with-fields`).
+- **Literal**: a constant of the kind that its type pins (`literal-kind`).
+- **Reference**: a slot below the depth, typed as its binder (`ref-beyond-depth`, `reference-type`).
+- **Construct**: an algebraic type and a tag below its constructor count (`construct-tag`); the constructor has
+  **at least one live field** and the node exactly that many operands, so a nullary constructor is a Value and never
+  a Construct, whatever it is handed (`construct-arity`, `construct-nullary`); each operand fits its field
+  (`construct-field-type`).
+- **Application**: the function is in the table (`function-index`), the operand count is its live arity
+  (`call-arity`), and the operands and the result fit (`call-result`).
+- **Intrinsic and Foreign**: the id is registered and not reserved (`prim-unknown`, `prim-reserved`,
+  `foreign-unknown`); the operand count is the registry's (`prim-arity`); each operand and the result are the
+  pinned representations that the registry names (`prim-on-flags`, `prim-result`, `foreign-operand-type`,
+  `foreign-result`).
+- **Let**: its slot is the depth (`let-slot`), and its body has its type (`let-body-type`).
+- **Case**: its slot is below the depth (`case-slot-beyond-depth`). Its scrutinee type is concrete, and its slot's
+  type is that type or `none`, so a slot of one concrete type under a scrutinee of another is refused
+  (`inspect-none-parameter`, `case-slot-type-mismatch`). In tags mode the scrutinee is a data type
+  (`tag-case-on-opaque`), the table has one row for each constructor (`tag-table-not-dense`), the Default is
+  present exactly when some row is `none` (`missing-tag`, `redundant-default`), a row's key is its tag
+  (`branch-key`), and it binds the live fields from the depth (`branch-first-slot`, `branch-fields`). In keys mode
+  the scrutinee is U32 or Char (`key-case-on-flag`), the keys increase strictly, so **no key repeats**
+  (`keys-descending`, `keys-repeated`), a Default is present (`keys-without-default`), and a row binds nothing
+  (`key-branch-binds-field`). Every arm body fits the Case's type (`branch-body-type`, `key-body-type`,
+  `default-body-type`).
+- **Closure**: its arrow kind matches `live_argument` (`closure-arrow`); its captures are distinct enclosing slots in
+  ascending order below the depth (`capture-order`, `captures-repeated`) and exactly the body's free live slots
+  (`unused-capture`); `slots` is the body's exact depth (`closure-slots`); the body fits the arrow's result
+  (`closure-result-type`).
+- **Invoke**: the function's type is an arrow (`invoke-non-arrow`); a live arrow takes **exactly one operand** and an
+  erased arrow **none**, so a missing operand and an extra one are both refused (`invoke-live-without-argument`,
+  `invoke-live-two-arguments`, `invoke-erased-with-argument`); the operand and the result fit (`invoke-types`).
+- **Function**: its body has its result type (`body-type`), and its `slots` are the body's exact depth
+  (`function-slots`).
+
+**Step 5, clause by clause.** An image is canonical exactly when these ten hold, and a decoded plan does not keep the
+words that they are about, so no earlier step can refuse a breach: a layout may differ from the canonical one and
+decode to the same plan. `canonical_violations` reads each clause from the image's words and never by encoding it
+again, and the gate holds it against re-encoding (§12). One frozen control breaks each clause alone, and the image
+passes every other step.
+1. **Main word.** Header word 4 is the index of the function named `main`, or `none` if there is none
+   (`main-index-none`; a wrong index is `main-index`, at step 3).
+2. **Names in order.** The name records are in first-use order: the names of the data and opaque types, then the
+   constructor names, then the function names, each at its first use (`names-out-of-order`).
+3. **Names used.** No name record is unused (`name-unused`).
+4. **Constants in order.** The constants are in first-use order over the node stream (`constants-out-of-order`).
+5. **Constants used.** No constant is unused (`unused-constant`).
+6. **Constants once.** No two constants have one kind and one datum (`constants-duplicate`).
+7. **Constructors in order.** The constructor records are in type order, and in tag order within a type
+   (`constructors-out-of-order`).
+8. **Nodes in order.** The node records are the post-order of the function bodies in table order, the children of a
+   node in the order of §3 (`nodes-out-of-order`).
+9. **Sites from 0.** The Closure sites are 0, 1, 2, ... in stream order (`closure-site-first`, `closure-site-second`,
+   `closure-sites-swapped`, `closure-sites-from-one`).
+10. **Arms' types.** A Branch and a Default carry the result type of their Case (`arm-type-branch`,
+    `arm-type-default`).
 
 A refused image is `HostFailure image` with a reason, except past a **resource
 limit** of version 1, which is `Exhausted` kind 2 with the limit as its cause (D16).
@@ -291,26 +354,39 @@ on a smaller host would trap or exhaust instead of reporting `HostFailure image`
 `type-count-max` refuses it, as `type-grouping` refuses a first constructor that is not the table's next
 and `type-count-short` a sum that falls short.
 
-`check-spec.py` freezes 90 refusals (25 byte-level, 9 at the limits, 56 plan-level), and
+`check-spec.py` freezes 193 refusals (118 byte-level, 9 at the limits, 66 plan-level), and
 vm-model and vm-core MUST each refuse every one of them, with the frozen refusal: `Exhausted`
 kind 2 for a limit, `HostFailure image` for the rest, and the reference codec's own reason where
-the VM reports one (vm-model spells it, vm-core maps it to a code of its own). A plan-level
-control breaks exactly one rule of §2–§4 in a golden's plan, and its message is the validator's
-first, so a loader that omits the rule admits it: a name with a NUL, or with a nonzero unused
-final byte, a first constructor that is not the table's next, a constructor count of
-`0xFFFFFFFF`, and a sum of counts short of the table (byte-level); two functions of one name; a call to a function beyond the table; a
-Case on a slot at or above the depth; a construct tag, or field type, that does not fit; a tag
-row keyed for another tag; a key Branch that binds a field; a closure whose arrow kind or result
-does not fit; an Invoke that does not fit; a Let, or a function, whose body has another type;
-U32 or File declared as a data type; and the rules of earlier rounds. Which control kills which
+the VM reports one (vm-model spells it, vm-core maps it to a code of its own). A control breaks exactly one
+rule of §2–§4 in a golden's image or plan, and its refusal is the first that any loader gives, so a loader that
+omits the rule admits it. Byte-level, on a valid golden's records laid out again: every malformed form of a name
+(each of the overlong forms, a surrogate, a code beyond U+10FFFF, a lead of `F5`, a sequence cut short inside or before
+an ASCII byte, a stray continuation), a NUL inside a name and each nonzero unused byte (the first and both, not
+only the last), an empty name, a name whose length word does not match its bytes, a repeated name, a name
+index beyond the table; each of digest words 24 to 31; a first constructor that is not the table's next, a
+constructor count of `0xFFFFFFFF`, and a sum of counts short of the table; a record of one word, a type of another
+kind, an opaque type with a payload word, a named arrow, a constructor whose count, type, tag or name is wrong, a
+constant of an unknown kind, of two words, of none or of the wrong length, a node record with an extra word or a
+count that its operands contradict (each form), a Branch, a Default or a Case row that is the wrong node, a shared
+node, an orphan, a keys row that does not repeat its key, a function whose record, root or type words are wrong, a
+main word beyond the table; and the ten clauses of §4 step 5, one image each (four for the sites). Plan-level:
+two functions of one name; a call to a function beyond the table; a Case on a slot at or above the depth, or whose slot
+and scrutinee are two concrete types; a tags Case on a type with no constructors, a keys Case on a Flag, a Flag's
+table one row short; a keys row that repeats; a construct tag, or field type, that does not fit, or a Construct of
+a nullary constructor; a tag row keyed for another tag; a key Branch that binds a field; a closure whose arrow kind or
+result does not fit, or that captures a slot twice; an Invoke that does not fit, or that takes the wrong number of
+operands for its arrow (a live one with none or two, an erased one with one); a Let, or a function, whose body has
+another type; U32 or File declared as a data type; and the rules of earlier rounds. Which control kills which
 codec mutant is `check-spec.py`'s (§12).
 At the limits: the record, arity and `slots` limits passed by one (a function's
 `slots` and a Closure's), a record count beyond the image and an arity beyond its
 record, an image of exactly 16 MiB (`total`), 2^20 records whose first zero word is
 a malformed record, and a `slots` of 65,536 that its body does not reach. vm-core
-MUST refuse the same controls, and MUST admit its six admitted plan controls (three
-Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
-Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
+MUST refuse the same controls, and MUST admit its eight admitted plan controls (three
+Cases on a `none` slot, among them `list-head-match`, three whose arms fit their
+Case, among them `first-code`, S's shapes, and two of names, a type named with each length of
+UTF-8 (U+0024, U+00A2, U+20AC, U+10348) and one named with every edge of a length (U+0080, U+07FF, U+0800, U+D7FF, U+E000,
+U+FFFF, U+10000, U+10FFFF)), `arity-at-limit` (an unused function of
 4,096 parameters), its seven code-list controls and its 104 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
@@ -1143,8 +1219,8 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a tags-mode Case on Char, a Program, a boxed
   scalar constant and a `none`-typed node covered;
-- all 90 refusals of §4 with their frozen reasons, each resource limit
-  `Exhausted` kind 2 on one side and malformed or invalid on the other, its six
+- all 193 refusals of §4 with their frozen reasons (118 byte-level, 9 at the limits, 66 plan-level), each resource limit
+  `Exhausted` kind 2 on one side and malformed or invalid on the other, its eight
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
@@ -1262,7 +1338,7 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 89 codec mutants and 4 source mutants killed through a changed image, a decode
+- 133 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe, invocation or argument verdict or a changed observation, and 97 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
@@ -1283,18 +1359,40 @@ lane and requires:
   `opcode` and every other control of a valid image), the first-constructor check removed (by
   `type-grouping`, which the next check refuses as `noncanonical` instead) and the sum of the counts
   removed (by `type-count-short`, which a constructor's tag refuses instead). No mutant restores the late
-  size check: it would allocate 32 GiB at `type-count-max`, and a crash is no kill. The other 33 `raise` and
-  `fail` statements of the codec that the review's audit removed one at a time are pinned by no control: for
-  13 of them the audit found only images on which the codec then crashes, which §11 does not count as a
-  kill, and for 20 no image at all (DECISIONS, finding 12). Thirteen rule mutants of
-  `check-spec.py` itself are killed the same way: `rejected` reporting a limit as
+  size check: it would allocate 32 GiB at `type-count-max`, and a crash is no kill. Forty-four more (round 13, review
+  findings 1 to 3) each omit one clause that no control had pinned, and each dies by the control that breaks that clause
+  alone: a keys row may repeat, a Construct may be nullary, an Invoke's operand count is unchecked (any, for a live arrow
+  alone, for an erased one alone), a Case's slot may be any type, captures may repeat, a tags Case on any type, a keys
+  Case on any type, a tag table of any length; an empty name, a name whose length word is unchecked, a repeated name, a
+  shared child, an unreachable node, an opaque type with a payload, a named arrow, a scalar of any width, a record of
+  one word, the type, constructor, constant and function length words; each digest word alone, each unused byte of a name alone,
+  the last one only; and seven of UTF-8, which read a name as opaque bytes after a check of part of Unicode's table 3-7
+  (without the overlong forms, the surrogates, the range, the cut sequences or the stray continuations, without the first
+  three, and ASCII only, which the two admitted names kill), and a decoder that accepts surrogates alone (`rejected` reads an
+  encoder's refusal as a plan that no image encodes). Where removing a bound only makes the reference raise (the entry kind
+  and the constant kind index a table), the mutant reads the kind modulo the table, so that the refusal changes
+  (`decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4`). **Every refusal of the decoder and the validator is accounted
+  for** (`statement_audit`): the gate omits each of the codec's 100 `raise` statements, `fail` calls and `limit` calls in turn, as above, and
+  requires that a frozen image, refusal or verdict changes (89 do), or that the statement is listed with what holds it: 4
+  make the reference raise on the control that pins them (`name index`, `child offset`, `node record`, `constant index`,
+  which §11 does not count as a kill, so the gate requires the raise on that control and that nothing else kills them), 5 are
+  unreached, each with its argument (`constructor order`, the decoder's closing `opcode`, and the validator's `standalone {op}`,
+  `type index` and `unknown node`, which earlier steps refuse first) and 2 are the encoder's input checks (`text_spelling` holds
+  the first, and no decoded plan holds a form outside the table). Three of round 12's reviewer mutants remove a bound
+  whole and raise by construction (the entry kind, the constant kind, and the block of `tag case on a non-data type`, whose
+  `return` goes with it): `CRASH_HELD_MUTANTS` requires that each survives every frozen image and raises on its
+  control (`entry-kind`, `constant-kind-unknown`, `tag-case-on-opaque`). Twenty-three rule mutants of
+  `check-spec.py` itself are killed the same way, the ten of them for §4 step 5 (below): `rejected` reporting a limit as
   `HostFailure image`; an eval lane excused by any Exhausted, or by a documented
   bound whose budget it does not pass; display steps counted as visits;
   transitions that omit materialization; a D20 golden whose `calls` are not
   checked; an unavailable Book lane whose declared line is not checked or whose cause
   is not named; a declaration kept where check-cli prints a core; a Book without a
-  core that declared none; and a witness (§8) whose source hash, lane bytes or literal review goes
-  unchecked, each by its own frozen refusal.
+  core that declared none; a witness (§8) whose source hash, lane bytes or literal review goes
+  unchecked, each by its own frozen refusal; and, for each clause of §4 step 5, `piecewise_rejected` without that
+  clause (`canonicality-without-*`), each by the control that breaks it alone (`canonical_differential`: the clauses and
+  re-encoding decide 5,779 images alike, the controls, the admitted images, the goldens, 480 seeded layouts and 4,875
+  perturbations of a word among them, and 527 of them are noncanonical).
   Four survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, the fuel test before the operand check,
   and a free terminal continuation. A request's debit paid by the loop after its effect, not
