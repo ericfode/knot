@@ -13,8 +13,8 @@ Checks, in order:
 - vm/core/fixtures.json: literal-review runs (250,000-deep non-tail recursion,
   quantum re-entry after an Action, fuel boundaries, rendering and its bounds,
   frame exhaustion, invocation errors), state-dump rows and lowered limits
-  (among them where a Nat Case's predecessor is made against its Scope push);
-  and Books whose frozen run the reference evaluation (vm/evaluate.py) must
+  (among them where a Nat Case's predecessor is made against its Scope push, describe's frame region at its
+  exact fit, `append` at a lowered heap and an Action's cell); and Books whose frozen run the reference evaluation (vm/evaluate.py) must
   also give (Chr's operand, a Big predecessor);
 - the ceiling fixtures: Books and a Program whose bump pointer ends near or
   exactly at 4 GiB, described exactly or completed, or Exhausted kind 2 (heap)
@@ -58,9 +58,9 @@ Checks, in order:
   is the trap, and group `hang`, whose defect is a search that never ends: a row that outlives its
   deadline is the wrong observation there).
 
-`--study` runs the systematic mutants of vm/study.py against these rows instead (vm/receipts/study.json);
-`--freeze` rewrites vm/core/seeded.json and vm/core/lane.json from the seed. It writes only
-vm/receipts/core.json.
+`--study [--heavy]` runs the systematic mutants of vm/study.py against these rows instead (it writes
+vm/receipts/study.json); `--freeze` rewrites vm/core/seeded.json and vm/core/lane.json from the seed. The gate
+writes only vm/receipts/core.json.
 """
 from __future__ import annotations
 
@@ -488,7 +488,7 @@ def observed_wrong(job: dict, out: dict) -> bool:
     """The run `out` differs from the row's frozen run (unless the row freezes none), its registers or its yields, or
     exceeds a bound the row states."""
     return ((job['want'] is not None and shown(out, job['want']) != job['want'])
-            or any((out['state'][k] if k in out['state'] else out[k]) != v for k, v in job.get('dump', {}).items())
+            or any((out['yields'] if k == 'yields' else out['state'][k]) != v for k, v in job.get('dump', {}).items())
             or any(out['state'][k] > most for k, most in job.get('at_most', {}).items()))
 
 
@@ -1013,8 +1013,37 @@ def lane_groups(rows: list, where: Path) -> dict:
 STUDY = HERE / 'receipts/study.json'
 STUDY_ORDER = ['keys', 'describe', 'tags', 'display', 'goldens', 'invocations', 'runs', 'reference', 'sweeps', 'writers',
                'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'controls']  # cheap and telling first
+HEAVY = ['ceiling']  # about 4 GiB a row: only a study's survivors run them (`--heavy`)
 GUARD = {'fixtures': 120_000, 'limited': 120_000, 'programs': 120_000, 'ceiling': 600_000, 'full-heap': 600_000,
          'trap': 600_000, 'growth': 600_000, 'refused': 600_000}  # ms a row may take before it is stopped, else 30,000
+
+
+BASELINE = ['keys', 'describe', 'tags', 'display', 'sweeps', 'writers', 'programs', 'hang', 'fuzz-admitted', 'dumps']
+
+
+def deadline(job: dict, group: str) -> int:
+    """Milliseconds a mutant row may run: its own, or its group's, scaled like every hang guard of the gate."""
+    return int((job.get('deadline') or GUARD.get(group, 30_000)) * SCALE)
+
+
+def check_baseline(groups: dict, test: Path):
+    """The groups of the lane, the mutated goldens and the dump rows are built apart from the checks that froze them, so
+    the unmutated test build must show nothing wrong on any of them: a group that kills every mutant, this one included,
+    kills none."""
+    for group in BASELINE:
+        jobs = groups[group]
+        batch = [{**{k: v for k, v in j.items() if k not in ('want', 'dump', 'at_most')}, 'wasm': str(test),
+                  'deadline': deadline(j, group)} for j in jobs]
+        out = harness(batch, timeout=1800)
+        wrong = [j['id'] for j in jobs if not clean(out[j['id']]) or observed_wrong(j, out[j['id']])]
+        require(not wrong, f'group {group}: the unmutated VM is wrong on {len(wrong)} of {len(jobs)} rows, first {wrong[:3]}')
+
+
+def run_group(batch: list, group: str) -> dict:
+    """A group's jobs on the test build: rows that touch about 4 GiB each get a process of their own, two at a time."""
+    if group in ('ceiling', 'full-heap', 'trap'):
+        return {k: v for part in pool(lambda j: harness([j], timeout=1200), batch, workers=2) for k, v in part.items()}
+    return harness(batch, timeout=1200, max_timeouts=1)
 
 
 def run_study(groups: dict, source: str, args: list) -> int:
@@ -1026,7 +1055,7 @@ def run_study(groups: dict, source: str, args: list) -> int:
     mutants = [m for m in study.mutants(source) if only in m[0]]
     started = time.monotonic()
 
-    def strike(item):
+    def strike(item, order=STUDY_ORDER):
         index, mutant = item
         row = {'mutant': mutant[0]}
         wasm = BUILD / f'study-{index}.wasm'
@@ -1034,22 +1063,30 @@ def run_study(groups: dict, source: str, args: list) -> int:
             wasm.write_bytes(build.assemble(build.test_source(study.apply(source, mutant))))
         except subprocess.CalledProcessError:
             return {**row, 'result': 'unassemblable'}
-        for group in STUDY_ORDER:
+        unclean = None  # the first hang or trap: it kills only if no row shows a clean wrong observation
+        for group in order:
             jobs = groups[group]
             batch = [{**{k: v for k, v in j.items() if k not in ('want', 'dump', 'at_most')}, 'wasm': str(wasm),
-                      'deadline': j.get('deadline') or GUARD.get(group, 30_000)} for j in jobs]
+                      'deadline': deadline(j, group)} for j in jobs]
             try:
-                out = harness(batch, timeout=1200, max_timeouts=1)
+                out = run_group(batch, group)
             except AssertionError as failure:
                 return {**row, 'result': 'crashed', 'group': group, 'by': str(failure)[-120:]}
-            hung = [j['id'] for j in jobs if out[j['id']]['status'] == 'Timeout']
-            broken = [j['id'] for j in jobs if out[j['id']]['status'] in ('Trap', 'HostStack')]
             wrong = [j['id'] for j in jobs if clean(out[j['id']]) and observed_wrong(j, out[j['id']])]
-            for result, ids in (('hang', hung), ('trap', broken), ('killed', wrong)):
-                if ids:
-                    return {**row, 'result': result, 'group': group, 'by': ids[0]}
-        return {**row, 'result': 'survived'}
+            if wrong:
+                return {**row, 'result': 'killed', 'group': group, 'by': wrong[0]}
+            if unclean is None:
+                for result, states in (('hang', ('Timeout',)), ('trap', ('Trap', 'HostStack'))):
+                    ids = [j['id'] for j in jobs if out[j['id']]['status'] in states]
+                    if ids:
+                        unclean = {**row, 'result': result, 'group': group, 'by': ids[0]}
+                        break
+        return unclean or {**row, 'result': 'survived'}
     rows = pool(strike, list(enumerate(mutants)), workers=workers)
+    if '--heavy' in args:  # what the rows of about 4 GiB add, for the survivors only
+        again = [(i, m) for (i, m), r in zip(enumerate(mutants), rows) if r['result'] == 'survived']
+        for (i, _), r in zip(again, pool(lambda item: strike(item, HEAVY), again, workers=max(1, workers // 3))):
+            rows[i] = {**r, 'heavy': True}
     tally = {}
     for r in rows:
         tally[r['result']] = tally.get(r['result'], 0) + 1
@@ -1862,6 +1899,8 @@ def main(args: list) -> int:
                                for r, plan in fuzz_plans]
     # a search that never ends is the defect of group `hang`: the goldens' one-key Default miss joins the lane's key rows
     groups['hang'] += [{**j, 'deadline': 3_000} for j in goldens_jobs if j['id'] == 'golden:default-miss']
+    check_baseline(groups, test)
+    stage('baseline of the mutant groups')
     if study:
         return run_study(groups, source, args[1:])
 
@@ -1881,9 +1920,9 @@ def main(args: list) -> int:
             continue
         wasm.write_bytes(build.assemble(build.test_source(text)))
         batch = [{**{k: v for k, v in j.items() if k not in ('want', 'dump')}, 'wasm': str(wasm),
-                  'deadline': j.get('deadline') or GUARD.get(group, 30_000)} for j in groups[group]]  # a hang ends as a Timeout
+                  'deadline': deadline(j, group)} for j in groups[group]]  # a hang ends as a Timeout
         if group in ('ceiling', 'full-heap', 'trap'):  # about 4 GiB each: one process per run
-            out = {k: v for part in pool(lambda j: harness([j]), batch, workers=2) for k, v in part.items()}
+            out = run_group(batch, group)
         else:
             out = harness(batch, node_flags=next(iter(groups[group]), {}).get('flags', ()), max_timeouts=1 if group == 'hang' else None)
         refusal = group == 'refused'  # the frozen outcome is the host's refusal: a trap, whose registers are the observation
@@ -1909,7 +1948,9 @@ def main(args: list) -> int:
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-core passed: {len(goldens)} golden images, {len(invocations)} Book invocations, {len(core)} fixture runs, "
           f"{len(dumps)} dump rows, {len(agreed)} runs equal to the reference evaluation, "
-          f"{len(high)} ceiling runs, {len(growth)} growth runs, {len(stack)} small-stack runs, "
+          f"{len(seeded_rows['rows'])} seeded rows, a lane of {record['lane']['rows']} rows (seed {record['lane']['seed']}; "
+          f"{record['lane']['sample']['rows']} run again through the seed), {sum(record['both'].values())} admitted images "
+          f"through both, {len(high)} ceiling runs, {len(growth)} growth runs, {len(stack)} small-stack runs, "
           f"{len(refused)} refused and {len(admissions)} admitted controls, "
           f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "

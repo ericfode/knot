@@ -12,6 +12,8 @@ python3 vm/build.py --write         # after a reviewed edit of vm.wat: rebuild a
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FN FUEL [ORDINALS...]
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FUEL -- [ARGS...]
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py
+BEND_NO_TELEMETRY=1 python3 vm/check-core.py --freeze         # rewrite core/seeded.json and core/lane.json from the seed
+BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 567 systematic mutants (about 17 minutes)
 ```
 
 ## Build and pins
@@ -445,6 +447,64 @@ adopt them or record its own, so that lockstep compares like with like.
   `nat-pred-big` (choice 5). Each frozen run is literal review, and
   `evaluate.book` and the VM must both give it: two are `ill-typed` after 2
   calls, the Chr control prints `True{}`, and `nat-pred-big` prints `On{}`.
+- **Seeded rows ([core/seeded.json](core/seeded.json)).** Twenty-two Books whose
+  expected results the pinned seed's native lane fixed before any VM ran them (D7;
+  `python3 vm/check-core.py --freeze` writes the file): each has a model tree that
+  the seed's bytes, the reference evaluation and the VM must all give, and the
+  gate runs the seed again and requires the frozen bytes (`source`, `image` and
+  `seed` are pinned by hash and value). Review round 6 found that Case arm
+  selection was pinned only at trivial shapes (one or two keys, a query at a key
+  or one miss) and that describe was pinned only up to two fields; an inverted
+  key comparison, a flipped tag Default and a describe with a wrong separator
+  passed the whole gate.
+  - *Key Cases.* U32 and Char Cases of 3 and 5 keys, queried below the first key,
+    at the first, between two keys, at a middle key, at the last and above it.
+    The boundary rows put keys and scrutinees at 2^30, 2^31 and 2^32-1, each
+    query once as a literal and once computed by `U32.add` (a fresh Big cell from
+    2^31): one key set ends at 2^32-1, one ends below it, so "above the last"
+    includes 2^32-1. Every arm and the Default answer a different constructor
+    (keys + 1 of them), so no neighbour's arm can stand in for another's. The
+    Char rows use scalar keys and computed non-scalar scrutinees
+    (`Char.from_u32`; D20: only a Tri is output). `keys-char-nonscalar`, whose keys
+    are non-scalar codes the seed cannot spell, is by literal review.
+  - *Wide constructors.* 3, 5 and 9 fields, flat and first and last inside one of
+    one field more, a different constructor at each position, so a separator, a
+    closing brace or an offset that fails from the third field on changes the text.
+  - *Tag Defaults.* Three tag Cases on a type with two nullary and two fielded
+    constructors: one names all four, two default one of each kind, so a Default
+    is reached by an immediate and by an Object.
+  - *Inspection edges, by literal review* (the seed types every program): an
+    immediate of tag 2 at a two-constructor type (with a Default, without one, and
+    at a one-constructor type), an immediate naming a constructor with fields (as a
+    Branch and as the Default), a scalar operand that is an Action, and a Book
+    result whose tag equals its type's constructor count. The last two need a
+    type record after the result's constructors to differ from a refusal.
+- **Differential lane ([lane.py](lane.py), [core/lane.json](core/lane.json)).**
+  2,472 rows from a fixed SplitMix64 stream (seed 20260929, integer arithmetic
+  only, so no row depends on the Python version): 2,000 random programs over small
+  data types, closures, Nat recursion, U32 key Cases and every U32 and Nat prim,
+  emitted as Bend and as a plan (every second one *laundered*: its values pass
+  through `none`-typed identities, so a Case scrutinizes a word whose type only the
+  run can check); 200 random key Cases; 76 prim sweeps over boundary operands (a
+  model, not a VM, gives each answer); 54 prints and 48 Halts at the UTF-8 length
+  boundaries and the exit-code residues; 60 type and tag indices of 10 to 1,000
+  and 10 Nat renderings; two display rows at the visit bound; and the seeded
+  rows. Each runs through the test build and the production module and through
+  `vm/evaluate.py`; stdout, exit, stderr, outcome, cause and calls must be equal,
+  and a row with a model tree must give it too. The seeded rows and the sample (106
+  rows) also run on the real host. An 84-row sample (40 programs, 12 key Cases,
+  12 sweeps, 10 prints, 10 Halts, spread evenly through their families) runs
+  through the seed's native lane again: a Book's tree must be the seed's and a Program's stdout, stderr
+  and exit its own, and the seed's bytes are frozen in `lane.json`. Two readings
+  stand in for what the reference evaluation does not model, both this VM's
+  documented behaviour: an image with a foreign leaf other than IO.print is
+  `Unsupported vm foreign` before any entry (choice 2), and a Halt message with a
+  non-scalar Char is refused as `io abi` (open item below). No row applies an
+  Action to a continuation in a Book or drops a request (D22, D23).
+- **Every admitted image through both.** The 93 goldens, the 44 invocations, the
+  14 admitted controls, the 71 fuel-and-call runs of the 41 run controls and the
+  289 mutated goldens the reference codec admits (511 in all) are also compared
+  with the reference evaluation, in the same fields.
 - **[core/fixtures.json](core/fixtures.json).** Literal review, frozen before
   any run:
   - the 250,000-deep non-tail recursion, with 500,003 entries and seven yields
@@ -537,8 +597,8 @@ adopt them or record its own, so that lockstep compares like with like.
   reference codec: 1,674 counts that the remaining words cannot hold (it read
   `record-length`), 468 `limits` and 48 Closure `closure-slots`
   (.local/vm-core/logs/r6-limit-words-prefix.log).
-- **Mutants.** Fifty-two, each killed by a wrong observation in a named group
-  (one by a trap, below):
+- **Mutants.** Seventy-four, each killed by a wrong observation in a named group
+  (one by a trap and one by a hang, below):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
@@ -594,3 +654,88 @@ adopt them or record its own, so that lockstep compares like with like.
     instead of falling back to the size needed is killed by `loop-refused`, at bump
     301,989,888 instead of the cap (group `refused`, judged on the registers of a
     run whose frozen outcome is itself a trap).
+  - Case arm selection (review round 6; the seeded rows, groups `keys` and `tags`).
+    The key search stepping toward the wrong half, never looking at the last key,
+    or (group `hang`, below) stepping to the middle instead of past it; a tag
+    Default reached by an immediate checked as a Branch and a Branch as a Default;
+    and a tag equal to its Case's constructor count taken as in range (an
+    immediate of tag 2 at a type with 2 constructors, read as the next record's).
+    On gate `2e0c9b1`, run with each installed, the inverted comparison, the flipped
+    Default check and the tag range passed whole; the stepping to the middle hung
+    it (below); and the last key dropped was already caught by golden `case-char`,
+    whose second key is its last;
+  - describe of three or more fields (group `describe`): a separator before
+    only the second field, before every second field, or a closing brace after
+    the second whatever the Object has;
+  - describe's bounds (groups `display`, `limited`): a Nat word adding n or n + 2
+    visits, a constructor costing two, the visit bound exclusive, and the worklist
+    triple 11 or 13 bytes, exclusive, unchecked, or reported as a heap exhaustion
+    (the frame region it shares holds exactly 12 bytes per open Object);
+  - append at a lowered heap (group `limited`): a block ending exactly at the
+    limit refused, or a block past it reported as another kind. The exact edit of
+    `top-block-exhausted`, which the 4 GiB rows kill, so the pin no longer needs a
+    row that touches 4 GiB;
+  - an Action's cell one payload word too large (`action-cell`, bump);
+  - a scalar operand that is an Action passing as a Big cell (`ill-scalar-action`),
+    and a Book result whose tag equals its type's constructor count
+    (`ill-describe-at-count`) (group `tags`).
+
+  **Group `hang`.** The reviewer's `mid+1 -> mid` steps the key search to the
+  middle instead of past it: on a miss above a key `lo` never moves, and the search
+  never ends. It shows no wrong observation, only no observation, and the frozen
+  outcome of every row ends. So it is killed the way `top-trap` is: a row that
+  outlives its deadline (the harness's `deadline`, a watchdog that also stops a
+  Wasm loop) is the wrong observation in this group. The mutant also hangs the
+  goldens (`default-miss`: one key 7, queried at 9), so it never passed the gate
+  silently: the real-host run waited for its 120 s timeout and the gate failed by
+  it. Every mutant row has a deadline in the gate, so a hang in another group is
+  a Timeout that never counts, and the mutant is reported as surviving that
+  group, not left to stall the gate.
+- **Mutant study.** `vm/study.py` enumerates the 567 systematic single-token
+  mutants of the 21 semantic functions of `vm.wat` (a comparison or an arithmetic
+  or bitwise operator swapped, or a small `i32.const` moved by one) and reproduces
+  the reviewer's list name for name. `python3 vm/check-core.py --study --heavy`
+  runs each against the gate's own rows (the same jobs and the same
+  `observed_wrong`, so a kill there is a kill in the gate), group by group until a
+  row shows a wrong observation or outlives its deadline, then runs each survivor
+  against the ten ceiling rows too, and writes `vm/receipts/study.json`.
+
+  *Result*, on `vm.wat` sha256 `1c7eb650…` (the study of 17 minutes, 8 workers): of
+  the 567 mutants, **508 show a wrong observation** (3 of them only on a ceiling
+  row), **8 are killed only by a hang** (`$select`'s search and `$ctor`'s walk never
+  end) and **13 only by a trap** (an out-of-bounds store in `append`'s block or in
+  describe's worklist arithmetic, which the gate's rule does not count), and **38
+  survive**, each explained in `study.EQUIVALENT`, which the study checks against
+  its survivors both ways. The reviewer's study of the same mutants on gate
+  `2e0c9b1` found 426 that change a frozen row, 25 more only on its own corpora, 42
+  more only on its print, Halt, digit and Nat corpora, 12 hangs and 62
+  survivors. By the group that first killed them: keys 192, goldens 146, display
+  50, tags 49, writers 41, sweeps 20, limited 10, runs 8, programs 5, ceiling 3,
+  reference 2, describe 2.
+
+  The 38 survivors, by why no run can tell them apart:
+  - *unobservable until vm-rc* (16): 13 change which operands a prim or a completion
+    drops (`$drop` is empty, choice 1), one binds a field past a Branch's (it
+    reads past an Object and writes padding or the reference count of the next
+    cell), and two change the reference count of an append cell;
+  - *unobservable until vm-io* (1): the Action's foreign id is never read, since
+    only IO.print is performed (choice 2);
+  - *no state is read* (11): the header payload count of an Action (2), a String
+    cell (2) or a Big cell (2), which leaves the cell's size class unchanged and is
+    read only by the state audit; the half of an append block cleared first
+    (1), every word of which that is read is written after it; the `tfn` flag (1)
+    and the `imm` flag (1), tested only for truth; and the mode register after a
+    finished run (2, `$describe:2704`: `$run` returns at once);
+  - *equal on every input* (2): `Nat.sub` at x = y (both arms of the select give 0),
+    and the key search's `<` against `<=`, where the keys differ;
+  - *a guard another check makes redundant* (8): three class masks (`7 -> 6`), where
+    a Closure passes the class test and the type test refuses it, since its word at
+    offset 8 is a node's word offset and every node follows every type record;
+    two immediate tests of a String cell, where the word plus 4 lands in low VM
+    memory that is never a String cell; one class mask (`7 -> 8`) that only an
+    Action whose foreign id is the String type index and whose operand is the empty
+    String could pass (constructible, not pinned); and two copies of 4 more bytes
+    for each operand into free heap that `$alloc` zeroes, which leave memory only for an
+    Object of three fields or an Action ending exactly at 4 GiB, which no ceiling
+    row builds.
+

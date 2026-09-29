@@ -6,16 +6,21 @@ form, the words after IMAGE that run it, and, where the same program exists in B
 module runs nothing: check-core.py encodes each plan, runs it through vm.wasm and vm/evaluate.py, and
 compares; the seed's native lane runs the items that carry a source and are frozen in vm/core/.
 
-Families:
+Families (a row's `family`):
 - `program`: random well-typed Books over small data types, closures, Nat recursion, U32 key Cases and
   every U32 and Nat prim, emitted twice (Bend source and plan). Every second one is laundered: its
   values pass through `none`-typed identities (SPEC section 3), so a Case scrutinizes a word whose
   type only the run can check;
+- `keys`: U32 and Char Cases, seeded (3 and 5 keys, queries below, at, between and above them, at
+  2^30, 2^31 and 2^32-1) and random, each answering every arm and the Default with a different constructor;
+- `wide` and `tags`: constructors of 3, 5 and 9 fields for describe, and tag Cases whose Default is
+  reached by an immediate and by an Object;
+- `ill-typed`: the edges of section 6.1's inspection, by literal review;
 - `sweep`: every prim over boundary operands, as Books whose result lists the answers;
 - `print`, `halt`, `digits`, `nat`: Programs and Books that reach the VM's decimal, UTF-8 and text
   writers at their byte and digit boundaries;
-- the seeded rows of vm/core/seeded.json (key Cases, wide constructors, tag Defaults) and the
-  ill-typed boundary rows of section 6.1.
+- `display`: a Nat then constructors at section 8's visit bound.
+The rows of `keys`, `wide`, `tags` and `ill-typed` that vm/core/seeded.json freezes carry `frozen`.
 """
 from __future__ import annotations
 

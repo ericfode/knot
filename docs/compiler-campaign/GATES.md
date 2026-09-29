@@ -97,8 +97,30 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   build confirms each exhaustion cause and audits the state after every
   transition.
 - `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and
-  lowered limits, including the 250,000-deep non-tail recursion and where a
-  Nat Case makes its predecessor against its Scope push (vm-spec D17).
+  lowered limits, including the 250,000-deep non-tail recursion, where a
+  Nat Case makes its predecessor against its Scope push (vm-spec D17), a
+  describe that needs exactly 132 bytes of frame region (12 bytes an open
+  Object) and stops one byte short, an `append` block that ends exactly at a
+  lowered heap and one 16 bytes past it, and the cell of an Action.
+- 22 seeded rows (`vm/core/seeded.json`) whose expected results the pinned seed's
+  native lane fixed before any VM ran them: U32 and Char key Cases of 3 and 5
+  keys queried below, at, between and above their keys (with keys and computed
+  scrutinees at 2^30, 2^31 and 2^32-1), constructors of 3, 5 and 9 fields flat and
+  nested in a wider one, tag Cases whose Default is reached by an immediate and by
+  an Object, and, by literal review, the edges of SPEC section 6.1's inspection.
+  The gate runs the seed again and requires its frozen bytes; the reference
+  evaluation and the VM, on the real host and the test build, must give the
+  same run.
+- A differential lane (`vm/lane.py`; seed and sizes in `vm/core/lane.json`): 2,472
+  generated rows (2,000 programs, every second one laundered through `none`
+  types; 200 random key Cases; 76 prim sweeps; the print, Halt, digit and Nat
+  writers' boundaries; two rows at the display bound). Each runs through the test
+  build and the production module and through `vm/evaluate.py`, which must
+  agree on stdout, exit, stderr, outcome, cause and calls; an 84-row sample also
+  runs through the seed's native lane with its bytes frozen. Every admitted
+  golden, invocation, control and fuzz image (511) is compared with the reference
+  evaluation too. `python3 vm/check-core.py --freeze` rewrites the two frozen
+  files from the seed.
 - Three Books on Chr's operand and one with a Big predecessor (`reference`
   rows) run as literal review froze them. vm-spec's reference evaluation (`vm/evaluate.py`) must give the same
   run and call count.
@@ -137,9 +159,14 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Fifty-two WAT mutants are each killed by a wrong observation. One restores the
+- Seventy-four WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
-  ceiling row stays right. Four read less than an inspection extent (`append`'s
+  ceiling row stays right; one steps the key search to the middle, not past it,
+  and is killed by the hang it makes (a row that outlives its deadline, in
+  group `hang`). Twenty-two came with review round 6: the key search, tag
+  Defaults and range, describe's separators, closing brace, visit and frame
+  bounds, `append` at a lowered heap, an Action's cell, and a scalar read of an
+  Action. Four read less than an inspection extent (`append`'s
   `b`, `is_empty` past its head, `eq` past a difference or an end, the moved
   word of a conversion); each survives every golden and dies by its own
   inspection controls. Fifteen move SPEC section 4's limits: checked in the
@@ -151,6 +178,10 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   killed by the test build's `memory.grow` count (a timeout never kills, SPEC
   section 11), and a refused step that traps, killed by the run whose host caps
   memory.
+- `python3 vm/check-core.py --study [--heavy]` runs the 567 systematic
+  single-token mutants of `vm/study.py` against these rows instead, and writes
+  `vm/receipts/study.json`; `vm/CORE.md` gives its result and why each survivor
+  survives. The gate prints the time of each stage on stderr.
 
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.
