@@ -23,7 +23,7 @@ Unsupported, never Invalid (D4). Only a term can follow an argument as another o
 (a name, or a `+` marker in a pattern), so `two(a = b)` stays Invalid. An operator after an
 argument is a term suffix: the seed parses `two(a + b)` in a row it discards and, in a live row, rejects
 it for its type (`a type for this operator`), a reason the parser cannot see, so round 12 amended it to
-Unsupported. A `+name` after an argument is a term too: the seed rejects `two(a +b)` live for its scope
+Unsupported (`term-form`) and round 13 to `operator`, the code of an operator token that continues a term. A `+name` after an argument is a term too: the seed rejects `two(a +b)` live for its scope
 and accepts it in a discarded row, so round 13 amended it to Unsupported as well.
 An arm body on the line after its `case`, at the case's column or below it, is
 seed-accepted layout; only a body that starts with a name is Unsupported (an empty arm
@@ -123,8 +123,9 @@ REVIEWED = {
     # the lowering discards (round13 `argterm-promo-dead2`), so the parser reports it unsupported.
     'argument-promotion': {'argspace-promoted-call': unsupported('term-form')},
     # Round 12: the seed rejects this operator for its type, in a live row; the same text is accepted in a
-    # row the lowering discards (round12 `suffix-*-dead-arg`), so the parser reports it unsupported.
-    'argument-operator': {'argspace-operator-call': unsupported('term-form')},
+    # row the lowering discards (round12 `suffix-*-dead-arg`), so the parser reports it unsupported. Round 13:
+    # an operator token that continues a term is `operator`, the seed's sugar that Knot does not model.
+    'argument-operator': {'argspace-operator-call': unsupported('operator')},
     'repeated-promotion': {name: PROMOTION for name in (
         'plusplus-flat', 'plusplus-multi', 'plusplus-repro', 'plusplus-spaced-flat', 'plusplus-triple-flat',
         'plusplus-let', 'plusplus-spaced-let')},
