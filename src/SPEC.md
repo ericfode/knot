@@ -118,6 +118,9 @@ digits, underscores or dots. Keywords cannot be identifiers.
   match, a matrix split or a zero-row match), or at a body that is not a match
   (a let included). A promoted `Type`-kind binder that is destructured first is
   never bound; its fields carry the promoted quantity and face the same rule.
+  A split's field binders are those of the first row that starts its constructor, as in the seed: a `+` on one of
+  them marks that field in every row below the split, and at every later split of the remaining rows; a `+` in a later
+  row marks only its own binder, and the marks of a variable row reach every row of its column.
   A binder that the frontier binds at a `Type` kind reports `Invalid check
   reusable-type`.
   Constructor columns follow binder order and close earlier parameters.
@@ -183,6 +186,15 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | A name or a numeral (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
 | A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
 | An arm body that starts with a name, `+`, `-` or `match` on the line after its `case`, at the case's column or below it; a later statement at another column | `parse` | `body-indentation` |
+| A term suffix where a term ends (a body, a let's value, an expression argument): an infix operator, a call, an index, an offload `!(`, a lambda after a name; a `+name` term; a line that starts with an operator, `!(` or `=>` | `parse` | `term-form` |
+
+After a term the seed reads an infix operator (each of its table: `->`, `&`, `|`, `||`, `&&`, comparisons, `<>`, `++`,
+`<&>`, `.|.`, `.^.`, `.&.`, shifts, arithmetic), a call, an index, an offload `!(` and, after a name, a lambda `=>`;
+`+name` is a promoted variable, and a line that starts with an operator, `!(` or `=>` continues the term before it.
+A body the lowering discards is parsed and never checked, and a live one needs a target the program defines (`def
+Bool.or`, `def Pair`), so the parser leaves each unread: `Unsupported parse term-form`, never Invalid. It keeps
+`Invalid` where the seed rejects everywhere: a closer, `==`, `=>` after a constructor, a `+` or `-` touching a name
+(a marker), a lone `.` or `!`, a `(` or `[` at a line's start, an erased `-name`, and a constructor line of a type.
 
 The seed reads a line break inside call or constructor arguments and inside a let
 as whitespace, arguments separated by whitespace alone as arguments, and a second
@@ -194,8 +206,9 @@ pins it Invalid, though the seed accepts it), a call with fewer arguments than
 parameters that the seed reads as an unused partial application (`Invalid check
 call-arity`), a global function used as a value (`Invalid check free-name`) and a
 Nat literal pattern as a let binder at another column, a constructor line of a type declaration at another
-column, and a term suffix after a complete term (an infix operator, a chained call, an index; the seed parses it
-in a discarded body without checking it, `Invalid parse end-of-body`). An arm body that starts
+column, a spaced `+` or `-` that starts the line after a let's value (the seed continues the value with an
+operator; round 10's `detached_marker` law pins `Invalid parse detached-marker`) and a hole or a `+` marker as the next
+argument after whitespace. An arm body that starts
 with a name, `+`, `-` or `match` and sits at or below its `case` column, and a
 later statement at another column, are `Unsupported parse body-indentation`; an
 empty arm stays invalid. Recognition stops at that prefix; it neither validates

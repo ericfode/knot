@@ -3,6 +3,28 @@
 `SPEC.md` states the contract; this file records what each review round froze from the seed and
 which mutants its gate kills. The seed is Bend 2.0.29 at `574b6d39a235b539eb19a5c532993a0abb3d11ad`.
 
+The first gate, `check.py`, keeps the controls and mutants that the contract once spelled out:
+
+The added controls have independent seed/literal expectations in
+`control-expectations.json`. A depth-12 complete binary tree requires 81,908
+bytes for its tree cells plus 100 bytes for the depth value, exceeding the
+65,536-byte arena. The seed and evaluator return On; emitted Wasm reports
+`Exhausted wasm arena-overflow`. The depth-4 control needs 344 bytes and succeeds.
+A wide total matrix exhausts the matrix-step budget. Under binary expansion its
+13 independent strict columns require `T(0)=1; T(n+1)=2+2*T(n)`, or 24,574
+matrix visits. This literal derivation independently justifies the unchanged
+`matrix-work` exhaustion expectation. The depth-13 unary, 13-column/two-row,
+14-constructor/depth-3 and compiler self-shape controls are linear-size and must
+be accepted. Reusing a reconstructed
+nested affine alias must remain Invalid. Rejected/exhausted compilation must
+preserve an existing output file.
+
+The gate typechecks six independent compiler mutants and demands the intended
+wrong semantic observation in both native and Bun lanes: last-row selection,
+specificity sorting, omitted defaults, missing-arm acceptance, erased-field
+activation and affine reuse through a nested alias. A type error, timeout,
+missing import, invalid module or host failure is not a semantic kill.
+
 `review-expectations.json` freezes 29 copied reviewer programs and 49 seed calls
 before repairs. `review.py` checks both compiler lanes, evaluator/Wasm agreement,
 rejection in both profiles, preserved output artifacts, the enum whitelist and
@@ -106,3 +128,21 @@ both lanes, evaluator and Wasm agreement, rejection in every phase, all
 proof entries and 23 audit, name-rule and shadowing mutants; `round11.py --sweep` runs 18 parser mutants and
 `fuzz11.py`, 6,100 fixed-seed programs in six families (names, dead rows, gaps, parenthesized columns, widths, layout)
 compared with the seed: 0 false acceptances and 0 false Invalid.
+
+`round12-expectations.json` freezes 137 round-12 fixtures and 229 seed calls, generated from the templates in
+`round12_seed.py`, before the repairs. `match_flatten` takes a split's field binders from the first row that starts
+its constructor, so a `+` on one of its fields marks that field for every row below the split: 19 seed-accepted
+programs (each field position, `+_` and `+_x`, two levels, a Data parent, constructors split in a default matrix,
+two columns, three rows, the marks of a variable row) are Checked, and 12 controls keep the outcomes the seed gives
+(a `+` in a later row, another constructor's first row, another column, another field, none: `affine-reuse`; a `+` on
+a Type field: `reusable-type`). After a term the seed reads an infix operator, a call, an index, an offload `!(`,
+a lambda after a name and a line that starts with an operator, `!(` or `=>`, and `+name` as a term: these are
+`Unsupported parse term-form` at every site a term ends (a body, a let's value, an expression argument, a line's
+start), in a discarded row and in a live one, whose operator target the seed may define. A closer, `==`, `=>` after a
+constructor, a marker that touches a name, a lone `.` or `!`, a `(` or `[` at a line's start and an erased `-name`
+stay Invalid. `round12.py` checks both lanes, evaluator and Wasm agreement, rejection in every phase, all proof entries,
+that the oracle's wrapper writes publish by rename, 21 mutants and `fuzz12.py`, 3,000 fixed-seed programs in two
+families (plus: fielded matches with `+` in any row and slot; suffix: terms, suffixes, gaps and sites) compared with the
+seed: 0 false acceptances and 0 false Invalid. Open and not drawn: a spaced `+` or `-` that starts the line after a let's
+value (round 10's `detached_marker` law pins Invalid) and a hole `? a` or a marker `+a` as the next argument after
+whitespace.

@@ -39,6 +39,11 @@ selected body still undergoes scope, type and quantity checking. When no columns
 remain, the first row supplies the body. Only bodies shadowed at that leaf are
 discarded. Pattern names and arities are validated before body selection.
 
+A split's field binders are those of the first row that starts a constructor, as in the seed's `match_flatten`:
+a `+` on one of them marks that field in every row below the split, and at every later split of the remaining
+rows (`M.leading`, `M.marked`); a `+` in a later row marks only its own binder, and the marks of a variable row
+reach every row of its column.
+
 Each generated decision has one scrutinee and flat positive field binders. The
 checker checks both branches before coalescing the binary spine into existing
 core `Case` trees. A terminal default is checked once and then shared across its
@@ -79,26 +84,6 @@ expectations are unchanged. They are monitored separately and never counted
 as conformance passes. The gate may complete its authorized bounded scope with
 those two outcomes pending; its receipt must set `qualification.complete=false`.
 All other unexpected mismatches fail the gate.
-
-The added controls have independent seed/literal expectations in
-`control-expectations.json`. A depth-12 complete binary tree requires 81,908
-bytes for its tree cells plus 100 bytes for the depth value, exceeding the
-65,536-byte arena. The seed and evaluator return On; emitted Wasm reports
-`Exhausted wasm arena-overflow`. The depth-4 control needs 344 bytes and succeeds.
-A wide total matrix exhausts the matrix-step budget. Under binary expansion its
-13 independent strict columns require `T(0)=1; T(n+1)=2+2*T(n)`, or 24,574
-matrix visits. This literal derivation independently justifies the unchanged
-`matrix-work` exhaustion expectation. The depth-13 unary, 13-column/two-row,
-14-constructor/depth-3 and compiler self-shape controls are linear-size and must
-be accepted. Reusing a reconstructed
-nested affine alias must remain Invalid. Rejected/exhausted compilation must
-preserve an existing output file.
-
-The gate typechecks six independent compiler mutants and demands the intended
-wrong semantic observation in both native and Bun lanes: last-row selection,
-specificity sorting, omitted defaults, missing-arm acceptance, erased-field
-activation and affine reuse through a nested alias. A type error, timeout,
-missing import, invalid module or host failure is not a semantic kill.
 
 Proof scope: stable row-identity selection is universal over source row lists;
 irrefutable-column preservation, first-leaf selection, alias identity/erasure,

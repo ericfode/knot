@@ -41,7 +41,7 @@ and their required outputs are present and readable. The runner's self-test
 requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
 this branch retains the main gates and appends `nest`, `nest-review`,
-`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8`, `nest-round9`, `nest-round10`, `nest-round11` and `nest-sweep11`. `nest-review` checks the round-2 reviewer
+`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8`, `nest-round9`, `nest-round10`, `nest-round11`, `nest-sweep11` and `nest-round12`. `nest-review` checks the round-2 reviewer
 repros, enum whitelist, semantic repair mutants and fixed-seed 3,000-program
 comparison, whose generator includes lets of matched binders; `nest-round3` checks the round-3 repros (binder grammar, ordered
 empty binders, line-broken headers), `nest-round4` the round-4 recursion
@@ -67,7 +67,11 @@ discarded body too), the binder name rule (`+` names no earlier datatype), the
 hidden type name (a binder hides a datatype of its name from later types) and the
 layouts the parser answers Unsupported, with `nest-sweep11` running its parser
 mutants and `fuzz11.py`, 6,100 fixed-seed programs compared with the seed, each in
-both compiler lanes with its own semantic mutants. The nest gates scale their
+both compiler lanes with its own semantic mutants, and `nest-round12` the round-12 first-row marks (a `+` on a field of
+the first row that starts a constructor marks that field in every row below its split), the term suffixes (an operator,
+a call, an index, an offload, a lambda after a term, and `+name` as a term, are Unsupported wherever a term ends) and
+the oracle's atomic wrapper writes, with 20 semantic mutants and `fuzz12.py`, 3,000 fixed-seed programs compared with
+the seed. The nest gates scale their
 harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
