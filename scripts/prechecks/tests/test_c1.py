@@ -94,6 +94,23 @@ class RuleTests(unittest.TestCase):
         self.assertEqual({}, c1.violations('x', seed, {'parse': out('Invalid', 'Invalid\tparse\tend-of-body\t116:117:9:14', 116)}))
         self.assertEqual({('parse', 'unsound-accept')}, set(c1.violations('x', seed, {'parse': out('Checked')})))
 
+    def test_the_confirmed_programs_are_flagged_by_the_seed_error_offset_alone(self):
+        """A non-leading `~x`, `Name<` read as less-than in a return type and in an annotation: the seed's error is at the
+        recognized token, so the offsets alone (no `expect`) flag the tip's Unsupported and not the base's Invalid."""
+        rows = {row['source']['cited']: row for row in c1.tool_rows()}
+        for cited, code in (('.local/probes/template-second.bend', 'template-binder'), ('r1-return-lt.bend', 'type-application'),
+                            ('r2b-annot-spaced-lt.bend', 'type-application')):
+            with self.subTest(program=cited):
+                row = rows[cited]
+                offset = row['seed']['offset']
+                verdicts = {'parse': {'ok': False, 'beg': offset}}
+                tip = out('Unsupported', f'Unsupported\tparse\t{code}\t{offset}:{offset + 1}:1:1', offset)
+                base = out('Invalid', f'Invalid\tparse\tparameter\t{offset}:{offset + 1}:1:1', offset)
+                self.assertEqual({('parse', 'premature-unsupported')},
+                                 set(c1.violations(row['text'], verdicts, {'parse': tip}, frozenset({code}))))
+                self.assertNotIn('raise', c1.violations(row['text'], verdicts, {'parse': tip}, frozenset({code}))[('parse', 'premature-unsupported')])
+                self.assertEqual({}, c1.violations(row['text'], verdicts, {'parse': base}, frozenset({code})))
+
     def test_the_confirmed_classify_regressions_are_flagged_from_the_registry(self):
         """The reviewers' confirmed at-prefix programs, frozen in the registry: the tip's Unsupported must be flagged and
         the base's Invalid must not (the tips' spans are the ones the reviewers recorded)."""
@@ -364,8 +381,10 @@ class EndToEndTests(RepoTest):
         before = 'Bool.and(parameters,starts(t,"~")),u =>\n              invalid(t,"parameter"),u =>'
         after = 'Bool.and(parameters,starts(t,"~")),u =>\n              unsupported(t,"template-binder"),u =>'
         self.assertEqual(1, parse.count(before))
-        self.fx.commit('report a tilde after an ordinary binder as a template binder', {'src/parse.bend': parse.replace(before, after)})
-        result = self.run1(options={'c1_limit': 400, 'registry': 'tool'})
+        row = next(r for r in c1.tool_rows() if r['source']['cited'] == '.local/probes/template-second.bend')     # the reviewer's program
+        self.fx.commit('report a tilde after an ordinary binder as a template binder',
+                       {'src/parse.bend': parse.replace(before, after), 'tests/prechecks/registry/lang.jsonl': json.dumps(row) + '\n'})
+        result = self.run1(options={'c1_limit': 70, 'registry': 'none'})
         found = [c for c in result.conditions if c.rule == 'premature-unsupported']
         self.assertTrue(found, [c.line() for c in result.conditions][:5])
         self.assertEqual({'major'}, {c.severity for c in found})           # minor, raised one step: base said Invalid
@@ -374,8 +393,23 @@ class EndToEndTests(RepoTest):
         self.assertEqual(1, len(frozen), [c.line() for c in found])       # the reviewer's confirmed program, from the registry
         self.assertIn("the seed's error token", ' '.join(c.observed for c in found if c not in frozen))     # and the grid programs
         self.assertEqual({'d4-invalid', 'unsound-accept'} & {c.rule for c in result.conditions}, set())
-        again = self.run1(options={'c1_limit': 400, 'registry': 'tool'}, base=self.fx.git('rev-parse', 'HEAD'))
+        again = self.run1(options={'c1_limit': 70, 'registry': 'none'}, base=self.fx.git('rev-parse', 'HEAD'))
         self.assertEqual([], [c for c in again.conditions if c.rule == 'premature-unsupported'])
+
+    def test_a_recognized_prefix_that_the_spec_lists_is_policy_not_a_condition(self):
+        """Before classify, a leading `~name:` was Invalid; after it, Unsupported at the prefix while the seed rejects the
+        program later (`~a: Flag, ~b: List<Flag>`). The SPEC table lists the code, so that is D4's documented policy."""
+        parse = (REAL / 'src/parse.bend').read_text()
+        recognizer = 'unsupported(ts,"template-binder"),u => invalid(ts,"parameter"))'
+        self.assertEqual(1, parse.count(recognizer))
+        self.fx.checkout('main')
+        self.fx.commit('before classify: no recognizer', {'src/parse.bend': parse.replace(recognizer, 'invalid(ts,"parameter"),u => invalid(ts,"parameter"))')})
+        self.fx.branch('campaign/z')
+        self.fx.commit('add the recognizer', {'src/parse.bend': parse})
+        result = self.run1(options={'c1_limit': 70, 'registry': 'none'})
+        self.assertEqual([], [c.line() for c in result.conditions if c.rule == 'premature-unsupported'])
+        self.assertGreater(result.facts['prefix_policy'].get('template-binder', 0), 0)      # counted as a fact, never as a condition
+        self.assertIn('template-binder', result.facts['spec_prefix_codes'])
 
     def test_the_conditions_do_not_depend_on_the_commit_the_cache_or_a_documentation_only_change(self):
         parse = (REAL / 'src/parse.bend').read_text()
