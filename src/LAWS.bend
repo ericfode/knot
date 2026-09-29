@@ -117,9 +117,21 @@ law detached_plus:
 def indented(text: String) -> S.Token: S.Token{text,S.At{0,0,1,2}}
 
 law line_broken_scrutinees_witness:
-  {P.run(8n,P.BodyAt{2},[indented("match"),indented("\n"),indented("a"),indented("\n"),indented("b"),indented(":"),indented("<eof>")])
+  {P.run(8n,P.BodyAt{2,True{}},[indented("match"),indented("\n"),indented("a"),indented("\n"),indented("b"),indented(":"),indented("<eof>")])
     == Done{P.Parsed{S.Match{indented("match"),S.Sequence{[S.Variable{indented("a")},S.Variable{indented("b")}]},Nil{}},
       [indented("<eof>")]}} : Result<S.Error,P.Parsed>}
+
+# After a let the seed reads a spaced `+` as an operator on its value; first in
+# a body no value comes before it, so the marker may be spaced.
+law detached_marker:
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.BodyAt{2,False{}},Con{S.Token{"+",S.At{20,21,3,2}},Con{S.Token{"u",S.At{22,23,3,4}},rest}})
+    == Fail{S.Invalid{"parse","detached-marker",S.At{20,21,3,2}}} : Result<S.Error,P.Parsed>}
+
+law first_marker:
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.BodyAt{2,True{}},Con{S.Token{"+",S.At{20,21,3,2}},Con{S.Token{"u",S.At{22,23,3,4}},rest}})
+    == Fail{S.Exhausted{"parse",S.At{22,23,3,4}}} : Result<S.Error,P.Parsed>}
 
 # A dotted binder rebinds a name only where that name is in scope, which the
 # parser cannot see: in a pattern, a `+` promotion, a let and a typed let it is

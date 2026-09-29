@@ -13,7 +13,7 @@ type Mode is Data:
   Term{pattern: Bool}
   Body{parent: U32}
   StartBody{parent: U32}
-  BodyAt{column: U32}
+  BodyAt{column: U32, first: Bool}
   Arms{parent: U32, column: U32}
   Header{keyword: S.Token, name: S.Token}
   TypeKind{name: S.Token}
@@ -264,16 +264,19 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+h,t}:
           S.choose(Result<S.Error,Parsed>,U32.is_gt(S.column(h),parent),u =>
-            run(n,BodyAt{S.column(h)},tokens),u => invalid(tokens,"body-indentation"))
+            run(n,BodyAt{S.column(h),True{}},tokens),u => invalid(tokens,"body-indentation"))
         case _: invalid(tokens,"body")
-    case 1n+ +n BodyAt{+column}:
+    case 1n+ +n BodyAt{+column,+first}:
       match tokens:
         case Con{+h,Con{+second,+tail}}:
           S.choose(Result<S.Error,Parsed>,U32.is_eq(S.column(h),column),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,"match"),u =>
             then(run(n,Term{False{}},header(Con{second,tail})),value => rest => run(n,MatchTail{h,value,S.column(h)},rest)),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"+"),S.matches(h,"-")),u =>
-            run(n,BindingStart{Bool.pick(U32,S.matches(h,"+"),2,0),S.column(h)},Con{second,tail}),u =>
+            # After a let, the seed reads a spaced marker as an operator on its value.
+            S.choose(Result<S.Error,Parsed>,Bool.or(first,S.marks(h,second)),u =>
+              run(n,BindingStart{Bool.pick(U32,S.matches(h,"+"),2,0),S.column(h)},Con{second,tail}),u =>
+              invalid(tokens,"detached-marker")),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(second,"="),S.matches(second,":")),u =>
             run(n,BindingStart{1,S.column(h)},tokens),u =>
             then(run(n,Term{False{}},tokens),value => rest => reply(value,rest))))),u =>
@@ -347,7 +350,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case _: invalid(tokens,"binding-type")
     case 1n+ +n BindingTail{+token,+quantity,+annotation,+value,+column}:
       S.bind(List<&2,S.Token>,Parsed,expect(tokens,"\n"),body =>
-        then(run(n,BodyAt{column},S.skip_lines(body)),next => rest =>
+        then(run(n,BodyAt{column,False{}},S.skip_lines(body)),next => rest =>
           Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}}))
     case 1n+ +n RowTail{+keyword,+pattern,+parent,+column}:
       S.choose(Result<S.Error,Parsed>,starts(tokens,","),u =>

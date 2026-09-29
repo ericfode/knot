@@ -80,6 +80,10 @@ def L.detached_plus(keyword,pattern,parent,column,rest): {==}
 
 def L.line_broken_scrutinees_witness(): {==}
 
+def L.detached_marker(rest): {==}
+
+def L.first_marker(rest): {==}
+
 def L.dotted_pattern_binder(at,rest): {==}
 
 def L.dotted_promotion_binder(at,rest): {==}
