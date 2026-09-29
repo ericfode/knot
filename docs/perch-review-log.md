@@ -1057,3 +1057,90 @@ seed lanes before repair; 21 dummy-only path controls and 14 oracle controls
 now supplement the original suite. The three restored-defect mutants are
 killed without infrastructure failures. Original expectations are unchanged;
 live Perch review remains with the coordinator.
+
+## 2026-09-28 — Live review of the compiler-campaign backlog (`185b7d5..a6367eb9`)
+
+Date / scope / source revision: 2026-09-28 (receipts UTC 2026-09-29T04:50:55Z to
+05:17:21Z), all 490 Bend files changed on `main` since the campaign charter;
+main stayed at `a6367eb9f434d0123ea809e81f63a853012a9fe4` throughout. Live
+commands ran from the main checkout, no tracked file there was touched, no code
+was changed. Semantic: `npm run lint -- <file>` per file (every parsed
+declaration, all rules); style: rubric v8 through the manifest groups that select
+a changed file in full, explicit groups for research and harness files, and one
+group per fixture suite. Results, tables and per-declaration style rows:
+[campaign-backlog-2026-09-28](perch-execution/campaign-backlog-2026-09-28/README.md);
+every finding: [ledger](perch-execution/campaign-backlog-2026-09-28/findings-ledger.md).
+
+Evidence links and usage receipt IDs: 490 semantic and 28 style receipts, one id
+per run in [receipts.tsv](perch-execution/campaign-backlog-2026-09-28/receipts.tsv)
+(the ignored `.perch/usage/` files stay local).
+
+Waste or missed behavior / measured effort: none missed. 13,629 provider
+requests (9,074 semantic, 4,555 style), no authentication, quota or provider
+failure. First to last receipt 26 min 26 s of wall clock including adjudication
+pauses; time spent on deterministic evidence is not separated.
+
+Rule + hash / requested and resolved model: semantic `rules_sha256`
+`7879db5b57067b4f0237cd80da969cd1e79adbd61fda600351f6bfd6d45f0506` (13 source
+rules and the built-in questions), Bend parser
+`bend-2.0.29-574b6d3-observer-v3+law-template-arity`; style rubric v8
+`b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693`, endpoint sha
+`17abdbd0cf748030a25a6c7693461b98ac2889b23590f11c185652ec125830e9`. Requested
+`jev-latest`, resolved `jev-1.13.0` in every provider response of this run.
+
+Judgment: **confirmed defects 0.** 246 semantic findings: 219 false-positive,
+12 duplicate (9 `lint` mirrors of custom-rule breaks, 3 restatements), 12
+unresolved (advisory refactor observations, no behaviour claim), 3 confirmed as
+true positives on deliberately invalid fixtures whose label names the intended
+rejection (`wrong-type-arg.main` type_confusion, `rigid-domain-mismatch.compose`
+wrong_order, `result-missing-fail.opened` bend-effect-boundary); these are not
+defects. Precision over adjudicated findings for jev-1.13.0: custom
+`bend-machine-arithmetic` 0 confirmed of 46 deduplicated (p 0.81 to 0.86, floor
+0.80; a text check found no arithmetic in any flagged declaration; its question,
+unlike the other Bend rules, has no "if none, this rule holds" clause); built-in
+`does_not_do_what_it_claims` 0 confirmed of 81 false positives (2 duplicates,
+p 0.71 to 0.92, 53 on `{==}` law fills). Fill-class findings (74 in five proof
+entries) are refuted by the pinned seed: every entry prints `All terms check.`,
+every law has its fill, and one wrong law under the same fill is rejected in each
+entry. This repeats the `L.put_empty` false positive of 2026-09-27 (p .78) at
+scale despite the paired law being supplied. The two `integer_overflow` flags
+(`wasm.allocate`, data-lifetime `allocate`) are guarded (catalog cap of 256
+fields; explicit size/live/id guards, boundary probes and a mutant). The
+adaptive-runtime `offer`/`publish` flags disagree with 186 independent phase
+observations and 7 killed mutants. `count_ceiling_preserves_state` states only
+`Fail{3}`; the composed property holds (probe plus mutant), so the code is right
+and only the law name outruns its statement.
+
+Change and why: none to code, rules, floors or the rubric. Retain. The task
+forbade fixes, and repeated false positives are triggers for review, not
+automatic edits.
+
+Clean / broken / held-out evidence and deterministic checks: not a calibration
+run. Deterministic checks: seed proofs of the five changed proof entries, five
+wrong-law mutants, two scratch boundary probes with mutants, one composed probe
+with mutant, the adaptive-runtime CPU gate (8 laws, 62 commands, 186 phase
+observations, 7 mutants killed), read-only verify runs of eight fixture suites
+(identical to their frozen expectations) and `--check-only` on every flagged
+fixture (60 accepted, 36 rejected). Style: all 14 explicit compositions miss the
+payoff target (7 below, 7 uncertain) although 11 meet memetic; 29 of 101 changed
+compiler declarations meet all five role-scaled targets; 761 of 3,934 fixture
+declarations do. No rewrite and no pass is claimed. The payoff miss on
+`recursion-laws` (8%, seed-accepted proofs) is recorded once as an unresolved
+calibration observation, possibly tied to the interface-only rule against
+inferring proof execution.
+
+Remaining uncertainty / next trigger: 44 fixtures rejected by the pinned parser
+(seed also rejects) have zero coverage, and 7 datatype-only files have no
+executable declaration (semantic not applicable, style-rated on their datatypes); three
+generated stress fixtures (`deep-call`, `deep-stack`, `scale-catalog`) exceed a
+style context. `src/SPEC.md` (20,417 bytes) is over the 16 KB task cap, so
+Galaxy brain stays advisory in 10 of 17 manifest groups. Fixture suite gates
+for `tests/compiler-recursion` and `tests/subsets` were not re-run. Next
+maintenance review: (1) propose skipping built-in defect, refactor and docs
+questions for `{==}` law fills, or supplying the seed's acceptance as context;
+(2) append the "holds when no arithmetic" clause to `bend-machine-arithmetic`
+and re-check with clean/broken/held-out controls; consider excluding
+`tests/**/fixtures/**` from source rules; never raise a floor to hide noise.
+Prevention for the next backlog review: run law-fill files with a reviewed
+noise filter, and give the coordinator a fixture list up front so parse
+rejections are planned rather than discovered.
