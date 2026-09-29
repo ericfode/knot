@@ -2871,8 +2871,8 @@ def check_witness(entry, got, source_sha):
 
 def witness_controls(built) -> dict:
     """The seed's lanes, and where a witness asks it the literals head, on the sources that section 8 cites and no
-    golden can carry, because the seed fails, or its lanes disagree, or it succeeds where D23 refuses, or Knot cannot
-    lower the form. Each source's hash, and each lane's exit, stdout and stderr, are re-observed and must equal
+    golden can carry, because the seed fails, or holds no Case over the request it binds, or Knot cannot lower the
+    form. Each source's hash, and each lane's exit, stdout and stderr, are re-observed and must equal
     `witnesses.json`; the literal review of each lane's exit and stdout was written before the bytes were frozen. A
     witness is evidence for SPEC's text and never a VM expectation."""
     frozen = json.loads(WITNESSES.read_text())['witnesses']
@@ -2888,7 +2888,7 @@ def witness_controls(built) -> dict:
 def witness_refusals() -> list:
     """Frozen refusals of `check_witness`: a source that drifted, a lane that drifted, and a frozen lane
     that contradicts its literal review. Each is refused by name, so a check that is dropped admits one."""
-    entry = next(w for w in json.loads(WITNESSES.read_text())['witnesses'] if w['name'] == 'case-request-emit-default-u32')
+    entry = next(w for w in json.loads(WITNESSES.read_text())['witnesses'] if w['name'] == 'case-request-both-arms')
     got = {lane: entry[lane] for lane in entry['review']}
     other = {**got['native'], 'stdout': '1\n'}
     out = []

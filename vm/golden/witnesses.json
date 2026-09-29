@@ -1,5 +1,5 @@
 {
-  "basis": "Seed observations that vm/SPEC.md section 8 cites and no golden can carry: the seed fails, its two lanes disagree, or it succeeds where D23 refuses, or Knot cannot lower the form (the `head` lane is the pinned literals head's check-cli). Each source runs on both seed lanes; the native lane is the reference. The exit and stdout of each lane were reviewed from the probes of the round-11 review and of round 12 before `check-spec.py --freeze-new` froze the bytes. A witness is evidence for the text and never a VM expectation.",
+  "basis": "Seed observations that vm/SPEC.md section 8 cites and no golden can carry: the seed fails, its two lanes agree on a form that binds a request as a value and holds no Case, or Knot cannot lower the form (the `head` lane is the pinned literals head's check-cli). Each source runs on both seed lanes; the native lane is the reference. The exit and stdout of each lane were reviewed from the probes of the round-11 review and of round 12 before `check-spec.py --freeze-new` froze the bytes. Round 13 (D24) promoted the three witnesses of a Case with a Default beside a constructor row over a request to goldens, `case-request-emit-default-u32`, `case-request-halt-default-u32` and `case-request-emit-default`, which the VM must match. A witness is evidence for the text and never a VM expectation.",
   "witnesses": [
     {
       "name": "main-lambda-print",
@@ -134,7 +134,7 @@
     {
       "name": "case-request-default-only",
       "source": "vm/golden/witness/case-request-default-only.bend",
-      "note": "`case _: d` over a request: never read, both lanes run and the request is never performed.",
+      "note": "`case _: d` over a request: never read, both lanes run and the request is never performed; a lone catch-all holds no Case (D24).",
       "review": {
         "native": {
           "exit": 0,
@@ -160,7 +160,7 @@
     {
       "name": "case-request-binder",
       "source": "vm/golden/witness/case-request-binder.bend",
-      "note": "`case y: d` over a request: never read, both lanes run.",
+      "note": "`case y: d` over a request: never read, both lanes run; a binder holds no Case (D24: it binds the request as a value).",
       "review": {
         "native": {
           "exit": 0,
@@ -184,32 +184,6 @@
       }
     },
     {
-      "name": "case-request-emit-default",
-      "source": "vm/golden/witness/case-request-emit-default.bend",
-      "note": "an Emit arm and a catch-all over a request: the native lane takes the catch-all, the Bun lane fail-stops.",
-      "review": {
-        "native": {
-          "exit": 0,
-          "stdout": ""
-        },
-        "bun": {
-          "exit": 1,
-          "stdout": ""
-        }
-      },
-      "sha256": "f954c78c88b0d3132a15fb208c17f8b5dee22e6ea4ceca4f77c4a96462f73b98",
-      "native": {
-        "exit": 0,
-        "stdout": "",
-        "stderr": ""
-      },
-      "bun": {
-        "exit": 1,
-        "stdout": "",
-        "stderr": "bend: runtime fail-stop\n"
-      }
-    },
-    {
       "name": "case-request-both-arms",
       "source": "vm/golden/witness/case-request-both-arms.bend",
       "note": "arms for Emit and Halt over a request: both lanes fail-stop (the seed's own tests/io/request_out_of_band.bend).",
@@ -228,58 +202,6 @@
         "exit": 1,
         "stdout": "",
         "stderr": "bend: runtime fail-stop\n"
-      },
-      "bun": {
-        "exit": 1,
-        "stdout": "",
-        "stderr": "bend: runtime fail-stop\n"
-      }
-    },
-    {
-      "name": "case-request-emit-default-u32",
-      "source": "vm/golden/witness/case-request-emit-default-u32.bend",
-      "note": "an Emit arm (1) and a catch-all (2) over a request, printed: the native lane prints 2, the Bun lane fail-stops.",
-      "review": {
-        "native": {
-          "exit": 0,
-          "stdout": "2\n"
-        },
-        "bun": {
-          "exit": 1,
-          "stdout": ""
-        }
-      },
-      "sha256": "e15e4c1b1deb3217165d7068de335b319d211f7eeed8925adb7f5dc4e2f20b35",
-      "native": {
-        "exit": 0,
-        "stdout": "2\n",
-        "stderr": ""
-      },
-      "bun": {
-        "exit": 1,
-        "stdout": "",
-        "stderr": "bend: runtime fail-stop\n"
-      }
-    },
-    {
-      "name": "case-request-halt-default-u32",
-      "source": "vm/golden/witness/case-request-halt-default-u32.bend",
-      "note": "a Halt arm (3) and a catch-all (4) over a request, printed: the native lane prints 4, the Bun lane fail-stops.",
-      "review": {
-        "native": {
-          "exit": 0,
-          "stdout": "4\n"
-        },
-        "bun": {
-          "exit": 1,
-          "stdout": ""
-        }
-      },
-      "sha256": "0405abcfe6b2ee88f963c320cc28adf8cca71cef719ea832d08c99d2c0818478",
-      "native": {
-        "exit": 0,
-        "stdout": "4\n",
-        "stderr": ""
       },
       "bun": {
         "exit": 1,
@@ -360,7 +282,7 @@
     {
       "name": "catch-all-after-arm",
       "source": "vm/golden/witness/catch-all-after-arm.bend",
-      "note": "`case _:` after a constructor arm over a Flag: the same, so no compiled program holds a Case with a Default over an algebraic type, an IO.OP included.",
+      "note": "`case _:` after a constructor arm over a Flag: the same. The pinned literals head refuses every catch-all on an algebraic type; the pattern matrix of the nest increment accepts them (D24), which is why the Case with a Default over a request is a golden and a rule.",
       "review": {
         "native": {
           "exit": 0,
