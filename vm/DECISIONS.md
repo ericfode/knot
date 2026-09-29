@@ -2,8 +2,11 @@
 
 D15–D18 were adopted at `454bf30` in `docs/COMPILER-CAMPAIGN.md`. The wording below
 is what [SPEC.md](SPEC.md) implements; it refines the adopted rows without
-changing their direction. This executor does not edit the campaign decision table,
-except the D20 row, rewritten at the coordinator's round-4 direction.
+changing their direction. This executor does not edit the campaign decision table.
+The round-4 D20 rewrite was restored to the frozen base (`51ca324b`) to resolve
+pre-review condition C3 (`5be3981d8c3646e00856`). Its proposed wording remains
+pending coordinator authorization in the increment's handoff. SPEC and the frozen
+D20 goldens retain the reviewed program-value rule (entry 10); no expectation moved.
 D19, adopted on main after this branch's base (`b926a3c`), replaces the 2,048-page
 (128 MiB) memory bound with a declared 65,536-page (4 GiB) maximum; the spec
 follows it (§5, §10, §11) without a new image header word.
