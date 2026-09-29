@@ -318,28 +318,27 @@ law parenthesis_opens_a_column:
 # name) a lambda, and a body it discards holds them unchecked: they are unsupported wherever a term
 # ends. A `+` or `-` that touches a name is a marker and `.` opens only `.|.`, `.^.` and `.&.`.
 def tok(text: String, +at: U32) -> S.Token: S.Token{text,S.At{at,U32.add(at,1),1,at}}
+def glued(a: String, b: String) -> List<&2,S.Token>: [tok(a,9),tok(b,10)]
+def spaced(a: String, b: String) -> List<&2,S.Token>: [tok(a,9),tok(b,11)]
 
 law suffix_witness:
-  {[P.suffix([tok("|",9),tok("|",10),tok("a",12)]),P.suffix([tok("(",9),tok("a",10)]),P.suffix([tok("[",9),tok("a",10)]),
-    P.suffix([tok("!",9),tok("(",10)]),P.suffix([tok("-",9),tok(">",10)]),P.suffix([tok("+",9),tok("a",11)]),
-    P.suffix([tok(".",9),tok("|",10)]),P.suffix([tok("+",9),tok("a",10)]),P.suffix([tok("=",9),tok("=",10)]),
-    P.suffix([tok(".",9),tok("a",11)]),P.suffix([tok("!",9),tok("a",10)]),P.suffix([tok("\n",9),tok("|",10)])] ==
+  {[P.suffix(glued("|","|")),P.suffix(glued("(","a")),P.suffix(glued("[","a")),P.suffix(glued("!","(")),P.suffix(glued("-",">")),
+    P.suffix(spaced("+","a")),P.suffix(glued(".","|")),P.suffix(glued("+","a")),P.suffix(glued("=","=")),P.suffix(spaced(".","a")),
+    P.suffix(glued("!","a")),P.suffix(glued("\n","|"))] ==
     [True{},True{},True{},True{},True{},True{},True{},False{},False{},False{},False{},False{}] : List<&2,Bool>}
 
 law continues_witness:
-  {[P.continues([tok("|",9),tok("a",10)]),P.continues([tok("!",9),tok("(",10)]),P.continues([tok("=",9),tok(">",10)]),
-    P.continues([tok("=",9),tok(">",11)]),P.continues([tok("(",9),tok("a",10)]),P.continues([tok("a",9),tok("b",11)])] ==
-    [True{},True{},True{},False{},False{},False{}] : List<&2,Bool>}
+  {[P.continues(glued("|","a")),P.continues(glued("!","(")),P.continues(glued("=",">")),P.continues(spaced("=",">")),
+    P.continues(glued("(","a")),P.continues(spaced("a","b"))] == [True{},True{},True{},False{},False{},False{}] : List<&2,Bool>}
 
 law lambda_witness:
-  {[P.lambda(S.Variable{tok("a",5)},[tok("=",9),tok(">",10)]),P.lambda(S.Variable{tok("a",5)},[tok("=",9),tok(">",11)]),
-    P.lambda(S.Constructor{tok("On",5),Nil{}},[tok("=",9),tok(">",10)])] == [True{},False{},False{}] : List<&2,Bool>}
+  {[P.lambda(S.Variable{tok("a",5)},glued("=",">")),P.lambda(S.Variable{tok("a",5)},spaced("=",">")),
+    P.lambda(S.Constructor{tok("On",5),Nil{}},glued("=",">"))] == [True{},False{},False{}] : List<&2,Bool>}
 
 law promoted_term_witness:
-  {[P.promoted_term(2,[tok("\n",9),tok("a",10),tok("<eof>",11)]),P.promoted_term(2,[tok("|",9),tok("a",10)]),
-    P.promoted_term(2,[tok("(",9),tok("a",10)]),P.promoted_term(0,[tok("\n",9),tok("a",10),tok("<eof>",11)]),
-    P.promoted_term(2,[tok("\n",9),tok(":",10),tok("<eof>",11)]),P.promoted_term(2,[tok("y",10),tok("\n",11)])] ==
-    [True{},True{},False{},False{},False{},False{}] : List<&2,Bool>}
+  {[P.promoted_term(2,[tok("\n",9),tok("a",10),tok("<eof>",11)]),P.promoted_term(2,glued("|","a")),P.promoted_term(2,glued("(","a")),
+    P.promoted_term(0,[tok("\n",9),tok("a",10),tok("<eof>",11)]),P.promoted_term(2,[tok("\n",9),tok(":",10),tok("<eof>",11)]),
+    P.promoted_term(2,glued("y","\n"))] == [True{},True{},False{},False{},False{},False{}] : List<&2,Bool>}
 
 law suffix_ends_a_body:
   for +at: S.At
@@ -348,8 +347,6 @@ law suffix_ends_a_body:
   {P.reply(value,Con{S.Token{"|",at},rest}) == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,P.Parsed>}
 
 law marker_ends_no_body:
-  for +at: S.At
-  for +rest: List<&2,S.Token>
   {P.reply(S.Variable{tok("a",5)},[tok("+",9),tok("x",10),tok("<eof>",11)]) ==
     Fail{S.Invalid{"parse","end-of-body",S.At{9,10,1,9}}} : Result<S.Error,P.Parsed>}
 

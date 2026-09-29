@@ -167,7 +167,7 @@ def L.promoted_term_witness(): {==}
 
 def L.suffix_ends_a_body(at,value,rest): {==}
 
-def L.marker_ends_no_body(at,rest): {==}
+def L.marker_ends_no_body(): {==}
 
 def L.suffix_ends_a_let(at,rest): {==}
 

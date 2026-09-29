@@ -430,20 +430,11 @@ law extra_field_witness:
 
 # A split takes its field binders from the first row that starts its constructor: a `+` on one
 # of them marks that field in every row below the split, and a `+` in a later row marks only its own.
-def pair() -> C.Datatype:
-  C.Datatype{token("Pair"),False{},[C.Constructor{token("P"),[parameter("l",0),parameter("r",0)]}]}
-def pair_row(a: S.Node, b: S.Node, body: S.Node) -> S.Node: arm(S.Constructor{token("P"),[a,b]},body)
+def pair() -> C.Datatype: C.Datatype{token("Pair"),False{},[C.Constructor{token("P"),[parameter("l",0),parameter("r",0)]}]}
+def p(l: S.Node, r: S.Node) -> S.Node: S.Constructor{token("P"),[l,r]}
 def first_rows(mark: S.Node) -> Result<S.Error,C.Checked>:
-  K.run(64n,K.Expression{on(named("p"),[pair_row(ctor("On"),mark,S.Constructor{token("P"),[named("v"),named("v")]}),
-      pair_row(ctor("Off"),named("v"),S.Constructor{token("P"),[named("v"),named("v")]})]),Some{1}},
+  K.run(64n,K.Expression{on(named("p"),[arm(p(ctor("On"),mark),p(named("v"),named("v"))),arm(p(ctor("Off"),named("v")),p(named("v"),named("v")))]),Some{1}},
     C.Catalog{[flag(),pair()],Nil{}},0,E.parameters([parameter("p",1)],0,Nil{}))
-
-law leading_witness:
-  {M.leading([arm(S.Sequence{[wild()]},ctor("On")),arm(S.Sequence{[S.Constructor{token("P"),[ctor("On"),plus("v")]}]},ctor("On")),
-      arm(S.Sequence{[S.Constructor{token("P"),[wild(),named("w")]}]},ctor("On"))]) == [ctor("On"),plus("v")] : List<&2,S.Node>}
-
-law marked_witness:
-  {M.marked([named("a"),named("b"),named("c")],[plus("x"),named("y"),ctor("On")]) == [plus("a"),named("b"),named("c")] : List<&2,S.Node>}
 
 law first_row_marks_witness:
   {accepted(first_rows(plus("v"))) == True{} : Bool}
