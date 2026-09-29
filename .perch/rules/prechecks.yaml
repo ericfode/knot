@@ -12,14 +12,19 @@
   min: 80
   gate: false
   ensure: >
-    Inspect the Claim and Evidence sections of this packet. Every claim in the Claim
-    section holds given only the Evidence section. A clause the code does not enforce,
-    an exemption wider than the named cases, a normalization that hides a difference,
-    an unbounded counter, an absolute word (only, exactly, every, all, never, always,
-    unchanged, identical) contradicted by a changed line, or evidence missing from the
-    packet breaks this rule. Missing evidence is not a pass: if the Evidence section
-    does not show the code or diff needed to establish the claim, the rule is broken.
-    Do not use knowledge of files the packet does not show.
+    This rule concerns documentation sentences in the Claim section that state what code does, checks, requires,
+    keeps, counts or bounds, judged against the code in the Evidence section. For each such sentence, find the
+    shown code that decides it. The rule is broken when the shown code contradicts a sentence: a requirement or
+    check the sentence states that the code does not perform (the value is only recorded, or checked for some
+    cases and not others); an exemption, skip or fallback wider than the cases the sentence names; a
+    normalization (stripping, case folding, substring or membership tests) that hides a difference the sentence
+    says is compared; a counter or size the sentence says is bounded that nothing bounds; a count or list in the
+    sentence that differs from what the code shows; or an absolute word (only, exactly, every, all, never,
+    always, unchanged, identical) that a shown line contradicts. It is also broken when a sentence states a
+    requirement or check and the code that would perform it is not shown: missing evidence is not a pass. The
+    rule holds when every such sentence is realized by the shown code; a detail that follows directly from shown
+    code needs no separate line, and sentences about history, rationale or plans make no claim about the code
+    and need no evidence. Do not use knowledge of files the packet does not show.
 
 - name: passages-agree
   where: ".local/prechecks/packets/**/passages-agree/*.md"
