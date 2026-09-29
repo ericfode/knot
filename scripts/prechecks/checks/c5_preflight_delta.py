@@ -99,20 +99,26 @@ def grouped_files(ctx) -> set[str]:
 
 def tolerant_preflight(ctx, tree, targets: list[str], label: str, timeout: float = 120):
     """(report, error, dropped). A target that does not parse under the Perch parser aborts the whole batch
-    ("Bend target does not parse: <path>"); such a target is dropped and the rest are preflighted again, so one intentionally
-    malformed fixture does not blind the check to every other changed file. `dropped` lists what was not preflighted."""
-    dropped: list[str] = []
-    targets = list(targets)
-    for _ in range(12):
-        report, error = preflight(ctx, tree, targets, label, timeout)
-        match = re.search(r'Bend target does not parse: (\S+)', error or '')
-        if report is not None or not match or match.group(1) not in targets:
-            return report, error, dropped
-        dropped.append(match.group(1))
-        targets = [t for t in targets if t != match.group(1)]
-        if not targets:
-            return None, error, dropped
-    return None, error, dropped
+    ("Bend target does not parse: <path>"), so one intentionally malformed fixture would blind the check to every other changed
+    file. When the batch fails that way, each target is preflighted alone (in parallel; the results are cached and the
+    sole-member rule reuses them), the ones that do not parse are dropped, and the rest are preflighted together. `dropped`
+    lists what was not preflighted."""
+    from concurrent.futures import ThreadPoolExecutor
+    report, error = preflight(ctx, tree, targets, label, timeout)
+    if report is not None or 'does not parse' not in (error or ''):
+        return report, error, []
+
+    def unparseable(path):
+        alone, why = preflight(ctx, tree, [path], label, timeout)
+        return path, alone is None and 'does not parse' in (why or '')
+
+    with ThreadPoolExecutor(max_workers=max(ctx.jobs, 1)) as pool:
+        dropped = [path for path, bad in pool.map(unparseable, targets) if bad]
+    kept = [t for t in targets if t not in dropped]
+    if not kept or not dropped:
+        return None, error, dropped
+    report, error = preflight(ctx, tree, kept, label, timeout)
+    return report, error, dropped
 
 
 def sole_member_budgets(ctx, targets: list[str], old_targets: list[str]) -> list[Condition]:
