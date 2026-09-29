@@ -267,6 +267,7 @@ CLOSED = {
     'marker-minus': ('a -b', "expected : 'def', 'type' or 'law'", 'end-of-body'),
     'dot': ('a . a', "expected : 'def', 'type' or 'law'", 'end-of-body'),
     'question': ('a ? a', "expected : 'def', 'type' or 'law'", 'end-of-body'),
+    'bang': ('a ! a', "expected : 'def', 'type' or 'law'", 'end-of-body'),
     'minus0': ('-x0', "expected : '='", 'expected-='),
     'plus0-name': ('+x0 y', "expected : '='", 'expected-='),
     'plus0-call': ('+h(a)', 'expected : a quantified datatype after +', 'expected-='),

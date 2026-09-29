@@ -5440,6 +5440,28 @@
       }
     },
     {
+      "name": "suffix-ctl-bang",
+      "file": "tests/compiler-nest/round12-fixtures/suffix-ctl-bang.bend",
+      "sha256": "a0f83cfac4ad0a098bbd86a64c476ca49e7f577bc66c37cd1f6fbdf7cfb1eb25",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round12-fixtures/suffix-ctl-bang.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '!'\nLocation:\n13 |     case _ _: On{}\n14>|     case Off{} Off{}: a ! a\n   |                         ^\n15 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t"
+      },
+      "finding": "suffix-closed-bang"
+    },
+    {
       "name": "suffix-ctl-call",
       "file": "tests/compiler-nest/round12-fixtures/suffix-ctl-call.bend",
       "sha256": "922281abbd4d462cc2c9086c575b523abebf7f001f8667228515505b375f9504",
