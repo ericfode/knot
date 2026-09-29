@@ -2699,6 +2699,196 @@
         "stdout": "",
         "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
       }
+    },
+    {
+      "name": "keep-swapped",
+      "source": "vm/golden/keep-swapped.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request"
+      ],
+      "sha256": "acb6cd196803fcc53e4fe885d4c143e37512582fa23bea1236343ff3fdbe8e55",
+      "seed": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "keep-first",
+      "source": "vm/golden/keep-first.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request"
+      ],
+      "sha256": "5fda912b2c47c17e3b54cf3bc1e784d1b9acf613e5837d4396dd638af6e5cff2",
+      "seed": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "run2-flag",
+      "source": "vm/golden/run2-flag.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "first\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "Branch",
+        "dropped request"
+      ],
+      "sha256": "b768243d508ac992e61271d3306c77f655af4a21c5d6042957b7c4395055a5d5",
+      "seed": {
+        "exit": 0,
+        "stdout": "first\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t50:54:7:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "first\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "spine",
+      "source": "vm/golden/spine.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "first\nsecond\n",
+      "seed_bun_stderr": "",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic"
+      ],
+      "sha256": "1dec1c0cab3c7e9d0e63ac54381d955785531e9378af12e997c44c5f218e17ca",
+      "seed": {
+        "exit": 0,
+        "stdout": "first\nsecond\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t17:18:3:15\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "first\nsecond\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "keep-non-scalar",
+      "source": "vm/golden/keep-non-scalar.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "kept\n",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "dropped request",
+        "non-scalar Char"
+      ],
+      "sha256": "44a9e37cff11c41cc5f6edf7aa7db7729fc3b211c855e27adfab591c707bc37d",
+      "seed": {
+        "exit": 0,
+        "stdout": "kept\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t15:19:3:13\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: 55296 is not a Unicode scalar value\n"
+      }
+    },
+    {
+      "name": "book-drop",
+      "source": "vm/golden/book-drop.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "On{}\n",
+      "seed_bun_stderr": "",
+      "unavailable": "Unsupported parse parameter-type",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Case",
+        "dropped request"
+      ],
+      "sha256": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tparse\tparameter-type\t50:54:7:13\n"
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      }
     }
   ]
 }
