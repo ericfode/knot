@@ -148,7 +148,17 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   the machine halts `Answered` with `act` still current, and `concluded` describes
   the answer, then drops `act` and the answer, so a description that stops (a display
   bound, an ill-typed word, a request) leaves `act` owned. The audit compares a
-  stopped description with the machine before the Return (`Audit.prior`).
+  stopped description with the machine before the Return (`Audit.prior`). The other
+  two places where SPEC §6.3 moved the text hold by construction: a Case's stop at
+  the selection, the Scope's push or the predecessor's cell leaves no Scope (the
+  frame region's room is checked before the fields', and either failure discards the
+  whole transition), and a tail entry's stop restores its Scopes and `act`, since its
+  pops, its release and its allocation are one transition that `settled` turns back
+  (`stop_changes_no_state` proves that for every step and every stop; `frame_past_region`
+  and `cell_past_memory` pin the two limits, refused before anything is written). No
+  audited run reaches either stop, since each needs a full frame region or heap
+  (vm-core's rows `nat-pred-frames` and `nat-pred-heap` are the images that do), so the
+  `atomic` check does not witness them: the laws do.
 - A stopped machine keeps the control it could not advance, so the words of a
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
