@@ -49,7 +49,7 @@ def step_at(+c: Char, state: State) -> Result<S.Error,State>:
 def step(+c: Char, +state: State) -> Result<S.Error,State>:
   match state:
     case State{+off,line,col,mode,tokens}:
-      S.choose(Result<S.Error,State>,U32.is_lt(off,65536),u => step_at(c,state),u =>
+      S.choose(Result<S.Error,State>,U32.is_lt(off,4194304),u => step_at(c,state),u =>
         Fail{S.Exhausted{"lex",S.At{off,off,line,col}}})
 
 def finish(state: State) -> List<&2,S.Token>:
