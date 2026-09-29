@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=outcome-follows-d4; increment=vm-spec; head=5517f2638f3e; base=454bf3059679; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: docs/perch-execution/role-v5-2026-09-27/proof-context/reproduction-after.json@5517f263 sha256=8559e9ef40432532cfbf83360a1946687f3fefa4d07e3cc720682f61ad27ff78; vm/SPEC.md@5517f263 sha256=f52eca73e1ba4882f5180bc729ade834c5ff29a230b1843746d4821fc244b5df; vm/check-spec.py@5517f263 sha256=2c2bf64534fb1cfa4e4a303ece215db7407b4237db5b788a9d2143053a3ddeee; vm/check-spec.py@5517f263 sha256=2c2bf64534fb1cfa4e4a303ece215db7407b4237db5b788a9d2143053a3ddeee -->
+<!-- prechecks packet v1; rule=outcome-follows-d4; increment=vm-spec; head=5517f2638f3e; base=454bf3059679; builder=scripts/prechecks/packets@40e325337e4a; sources: vm/SPEC.md@5517f263 sha256=f52eca73e1ba4882f5180bc729ade834c5ff29a230b1843746d4821fc244b5df; vm/check-spec.py@5517f263 sha256=2c2bf64534fb1cfa4e4a303ece215db7407b4237db5b788a9d2143053a3ddeee; vm/check-spec.py@5517f263 sha256=2c2bf64534fb1cfa4e4a303ece215db7407b4237db5b788a9d2143053a3ddeee; vm/check-spec.py@5517f263 sha256=2c2bf64534fb1cfa4e4a303ece215db7407b4237db5b788a9d2143053a3ddeee -->
 # Claim
 Outcome claims this branch changed:
 
@@ -297,7 +297,7 @@ Frozen expectations that name the same cause:
  1106                   'body': ['case', case_type, 0, 2, 'tags', [['branch', 0, 1, 0, nil], ['branch', 1, 1, 2, ['ref', None, 1]]], None]},
  1107                  {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['call', 0, 0, [
  1108         
-[truncated after 6,144 bytes; 21,219 bytes omitted]
+[truncated after 6,144 bytes; 21,816 bytes omitted]
 
 # Scope
 Only the text above is evidence. Anything not shown is missing evidence, not a pass.

@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=clause-vs-delta; increment=closures; head=a1d68911d5fa; base=fa31fec064ba; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: src/CONTRACT.json@a1d68911 sha256=cfb3530115e505e1e1b8cfcd2420d33b351c12c39fb48bc6246a754063a1e10c; src/catalog.bend@a1d68911 sha256=63ae5138855d8fe70dd05f2bb83d80afe0ed11b7a42112ff53be9076c8e8e55f; src/check.bend@a1d68911 sha256=e74f6449394f7b2f919a01759177c30b32c68d257960a2d6814889b0b24868cb; src/checked-display.bend@a1d68911 sha256=8fa67b838a44b1643799ddfdaaa4aa66206de623fb430610fc2732932639d459; src/closure-LAWS.bend@a1d68911 sha256=e42d0b0f77801fbf9b01cda68d1b6dafeddc00473b5ae215ff7bb967c5f4facf; src/closure-PROOF.bend@a1d68911 sha256=be31b24e6376c7a01e3fc4ecb7d4f1332b923119a68347f41ed555f4427840de; src/closure-check-LAWS.bend@a1d68911 sha256=0ad2e499a3c09883a6a9f3bf1528a35298c59b668da946c68fd69cfce2bff3df -->
+<!-- prechecks packet v1; rule=clause-vs-delta; increment=closures; head=a1d68911d5fa; base=fa31fec064ba; builder=scripts/prechecks/packets@40e325337e4a; sources: src/CONTRACT.json@a1d68911 sha256=cfb3530115e505e1e1b8cfcd2420d33b351c12c39fb48bc6246a754063a1e10c; src/catalog.bend@a1d68911 sha256=63ae5138855d8fe70dd05f2bb83d80afe0ed11b7a42112ff53be9076c8e8e55f; src/check.bend@a1d68911 sha256=e74f6449394f7b2f919a01759177c30b32c68d257960a2d6814889b0b24868cb; src/checked-display.bend@a1d68911 sha256=8fa67b838a44b1643799ddfdaaa4aa66206de623fb430610fc2732932639d459; src/closure-LAWS.bend@a1d68911 sha256=e42d0b0f77801fbf9b01cda68d1b6dafeddc00473b5ae215ff7bb967c5f4facf; src/closure-PROOF.bend@a1d68911 sha256=be31b24e6376c7a01e3fc4ecb7d4f1332b923119a68347f41ed555f4427840de; src/closure-check-LAWS.bend@a1d68911 sha256=0ad2e499a3c09883a6a9f3bf1528a35298c59b668da946c68fd69cfce2bff3df -->
 # Claim
 Invariance clause (src/CONTRACT.json):
 
@@ -7,6 +7,20 @@ Invariance clause (src/CONTRACT.json):
 # Evidence
 Evidence: the governed diff hunks (base to head).
 ```
+@@ -58,4 +57,5 @@ def find_constructor(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) ->
+     case Con{C.Datatype{token,data,ctors},+tail}:
+       constructor_next(constructor_tag(ctors,name,0),index,u => find_constructor(tail,name,U32.add(index,1)))
++    case Con{C.Arrow{token,domain,result},tail}: find_constructor(tail,name,U32.add(index,1))
+ 
+ def constructors(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Constructor>>:
+
+@@ -95,4 +95,5 @@ def unique_constructors(types: List<&2,C.Datatype>, seen: List<&2,S.Token>) -> R
+     case Con{C.Datatype{name,data,tokens},+tail}:
+       S.bind(List<&2,S.Token>,Unit,distinct_constructors(tokens,seen),next => unique_constructors(tail,next))
++    case Con{C.Arrow{name,domain,result},tail}: unique_constructors(tail,seen)
+ 
+ def quantity(+token: S.Token, +q: U32, definition: C.Datatype) -> Result<S.Error,Unit>:
+
 @@ -101,4 +102,7 @@ def quantity(+token: S.Token, +q: U32, definition: C.Datatype) -> Result<S.Error
        S.choose(Result<S.Error,Unit>,U32.is_gt(q,2),u => C.internal(Unit,"quantity-range"),u =>
          S.choose(Result<S.Error,Unit>,Bool.and(U32.is_eq(q,2),Bool.not(data)),u => C.invalid(Unit,"reusable-type",token),u => Done{Unit{}}))
@@ -30,20 +44,6 @@ Evidence: the governed diff hunks (base to head).
 +
 +def arrow_id(types: List<&2,C.Datatype>, domain: U32, result: U32) -> Result<S.Error,U32>:
 +  F.arrow_id(types,domain,result)
-
-@@ -58,4 +57,5 @@ def find_constructor(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) ->
-     case Con{C.Datatype{token,data,ctors},+tail}:
-       constructor_next(constructor_tag(ctors,name,0),index,u => find_constructor(tail,name,U32.add(index,1)))
-+    case Con{C.Arrow{token,domain,result},tail}: find_constructor(tail,name,U32.add(index,1))
- 
- def constructors(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Constructor>>:
-
-@@ -95,4 +95,5 @@ def unique_constructors(types: List<&2,C.Datatype>, seen: List<&2,S.Token>) -> R
-     case Con{C.Datatype{name,data,tokens},+tail}:
-       S.bind(List<&2,S.Token>,Unit,distinct_constructors(tokens,seen),next => unique_constructors(tail,next))
-+    case Con{C.Arrow{name,domain,result},tail}: unique_constructors(tail,seen)
- 
- def quantity(+token: S.Token, +q: U32, definition: C.Datatype) -> Result<S.Error,Unit>:
 
 @@ -116,4 +119,5 @@ def complete_arms(definition: C.Datatype, seen: List<&2,U32>, +token: S.Token) -
      case C.Datatype{name,data,tokens}:
@@ -82,19 +82,20 @@ index 90a0d86b..57caf033 100644
 `src/closure-PROOF.bend:15-15` (added)
    15  def L.outer_levels_are_unchanged(id): {==}
 
-`src/closure-check-LAWS.bend:103-114` (added)
-  103  law apply_evaluates_the_function_first:
-  104    for token: S.Token
-  105    for arrow: U32
-  106    for typ: U32
-  107    for +function: C.Term
-  108    for +argument: C.Term
-  109    for +caller: List<&2,V.Entry>
-  110    for +frames: List<&2,V.Frame>
-  111    for book: C.Book
-  112    {V.step(V.Evaluate{C.Invoke{token,arrow,typ,function,argument},caller,frames},book) ==
-  113      Done{V.Evaluate{function,caller,Con{V.ApplyArgument{argument,caller},frames}}} : Result<S.Error,V.State>}
-  114  
+`src/closure-check-LAWS.bend:44-53` (added)
+   44  law affine_capture_cannot_be_consumed_twice:
+   45    for +token: S.Token
+   46    for function: C.Term
+   47    for argument: C.Term
+   48    for arrow: U32
+   49    for domain: U32
+   50    for result: U32
+   51    {H.invoke(C.Checked{function,arrow,[3]},C.Checked{argument,domain,[3]},token,result) ==
+   52      Fail{S.Invalid{"check","affine-reuse",S.at(token)}} : Result<S.Error,C.Checked>}
+   53  
+
+`src/closure-check-PROOF.bend:8-8` (added)
+    8  def L.affine_capture_cannot_be_consumed_twice(token,function,argument,arrow,domain,result): {==}
 
 `src/closure-check-PROOF.bend:13-13` (added)
    13  def L.apply_evaluates_the_function_first(token,arrow,typ,function,argument,caller,frames,book): {==}

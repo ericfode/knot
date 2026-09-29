@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=clause-vs-delta; increment=modules; head=6f44f6774d90; base=92de61cea385; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: src/CONTRACT.json@6f44f677 sha256=bea1e2e42976648448cb2369a226d7e38eaf6d6803092c1ad78af9d500ae3dad; src/base-pin-PROOF.bend@6f44f677 sha256=eeaf454f5623a6252f5ff9afcd857f5802e6f1a725a995e9ace367f2462096a3; tests/compiler-modules/check.py@6f44f677 sha256=750abd65ea77809397515c968afafed1e0cd0061ae35f947fe9a349b8c11b394 -->
+<!-- prechecks packet v1; rule=clause-vs-delta; increment=modules; head=6f44f6774d90; base=92de61cea385; builder=scripts/prechecks/packets@40e325337e4a; sources: src/CONTRACT.json@6f44f677 sha256=bea1e2e42976648448cb2369a226d7e38eaf6d6803092c1ad78af9d500ae3dad; src/base-pin-LAWS.bend@6f44f677 sha256=ded60e2d77e229559df6f5db2b95eaeca90933f3f0ac7ed212ce05c6d2362465; tests/compiler-modules/check.py@6f44f677 sha256=750abd65ea77809397515c968afafed1e0cd0061ae35f947fe9a349b8c11b394 -->
 # Claim
 Invariance clause (src/CONTRACT.json):
 
@@ -7,26 +7,27 @@ Invariance clause (src/CONTRACT.json):
 # Evidence
 Evidence: the governed diff hunks (base to head).
 ```
-`src/base-pin-PROOF.bend:11-11` (added)
-   11  def L.complete_block_still_gets_padding(): {==}
+`src/base-pin-LAWS.bend:51-55` (added)
+   51  law hash_failure_is_preserved:
+   52    for text: String
+   53    for +error: S.Error
+   54    {H.verified(text,Fail{error}) == Fail{error} : Result<S.Error,String>}
+   55  
 
-`tests/compiler-modules/check.py:287-302` (added)
-  287  def build_lanes(record):
-  288      lanes = {}
-  289      record['builds'] = []
-  290      for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
-  291          lanes[lane] = {}
-  292          for phase in ('check', 'eval', 'compile'):
-  293              output = BUILD / (phase + suffix)
-  294              output.unlink(missing_ok=True)
-  295              built = successful([*SEED, ROOT / f'src/{phase}-cli.bend', '-o', output])
-  296              record['builds'].append({'lane': lane, 'phase': phase, 'result': built,
-  297                                       'sha256': digest(output)})
-  298              lanes[lane][phase] = [*runtime, output, '--bundle', BUNDLE]
-  299              lanes[lane]['plain-' + phase] = [*runtime, output]
-  300              if phase == 'check':
-  301                  lanes[lane]['audit'] = [*runtime, output, '--audit-bundle', BUNDLE]
-  302      return lanes
+`tests/compiler-modules/check.py:50-62` (added)
+   50  def run(argv, timeout=180, bundle=BUNDLE, cwd=ROOT):
+   51      command = [str(x) for x in argv]
+   52      try:
+   53          result = subprocess.run(command, cwd=cwd, env=environment(bundle), text=True,
+   54                                  capture_output=True, timeout=timeout)
+   55          return {'argv': command, 'exit': result.returncode,
+   56                  'stdout': result.stdout, 'stderr': result.stderr}
+   57      except subprocess.TimeoutExpired:
+   58          return {'argv': command, 'exit': None, 'outcome': 'harness-timeout',
+   59                  'budget_seconds': timeout, 'stdout': '', 'stderr': ''}
+   60      except OSError as error:
+   61          return {'argv': command, 'exit': None, 'outcome': 'host-launch-failure',
+   62                  'stdout': '', 'stderr': str(error)}
 
 `tests/compiler-modules/check.py:305-325` (added)
   305  def tampered_base(lanes, expected):

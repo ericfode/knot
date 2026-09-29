@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=claim-holds-against-evidence; increment=nest; head=acbdfb2e2322; base=cc9f2fd23d59; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: research/compiler-fields/SPEC.md@acbdfb2e sha256=6282a40d4f838576f3d1e6f1ea231d9890031bb00796d2ee2b2b98792057a56b; src/check.bend@acbdfb2e sha256=6ed75f0d166a728b7f0687feca49935ad248423106d451592b46868bd416238c -->
+<!-- prechecks packet v1; rule=claim-holds-against-evidence; increment=nest; head=acbdfb2e2322; base=cc9f2fd23d59; builder=scripts/prechecks/packets@40e325337e4a; sources: research/compiler-fields/SPEC.md@acbdfb2e sha256=6282a40d4f838576f3d1e6f1ea231d9890031bb00796d2ee2b2b98792057a56b; src/check.bend@acbdfb2e sha256=6ed75f0d166a728b7f0687feca49935ad248423106d451592b46868bd416238c -->
 # Claim
 research/compiler-fields/SPEC.md:72-75 (section: Observations and bounds) - verbatim text:
 

@@ -118,8 +118,8 @@ times; dotted binders; gapped Nat `+`. Replays (`--head <rev> --base <rev>`, mai
 | nest `eb15da85` (`3c25d9be`) | exit 3, 4 blocking: a dotted binder accepted at parse and check lanes, an empty-typed binder turned Invalid, a moved type accepted |
 | classify `5e5b2201`, with a hand-written manifest declaring every grid family in `d4_targets` | 184 `incomplete-repair` majors, for example `Flag<Flag, Flag>` and `@x: Flag -> Flag` as return types and `let x.y.z` |
 
-Main against itself yields no condition; the 155 seed-accepted forms that Knot calls Invalid on main are reported as facts
-(`d4_gaps`), not conditions.
+Main against itself yields no condition; the seed-accepted forms that Knot calls Invalid on main (155 of the 996 corpus
+programs on the first run) are reported as facts (`d4_gaps`), not conditions.
 
 ### C2 merge-forecast
 

@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=clause-vs-delta; increment=nest; head=57a0c01df87f; base=d14418b7cb04; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: src/CONTRACT.json@57a0c01d sha256=a8003b0a3b6f673dda1a3b022641475944193df2b31a846dc05a2f570d674ed0; src/catalog-LAWS.bend@57a0c01d sha256=b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3; src/matrix-LAWS.bend@57a0c01d sha256=872942aaf3936e939f50caea516c4305824a737aac7c7791d38e1b6f87bf8d76; src/matrix-PROOF.bend@57a0c01d sha256=3a6d3c19fce3e6f2fb562bbf964198e8411d4d2b4cfc4e41d2233200991ccdc9; tests/compiler-nest/check.py@57a0c01d sha256=b0fc9e5f895a2ae18a7ce7234ce6def1df23fe0af25c3f852780dd49cef3b5d7; tests/compiler-nest/regen.py@57a0c01d sha256=c561615d5652d50f632abd6c05044733a0866148c96337033557c19bdfac2249 -->
+<!-- prechecks packet v1; rule=clause-vs-delta; increment=nest; head=57a0c01df87f; base=d14418b7cb04; builder=scripts/prechecks/packets@40e325337e4a; sources: src/CONTRACT.json@57a0c01d sha256=a8003b0a3b6f673dda1a3b022641475944193df2b31a846dc05a2f570d674ed0; src/catalog-LAWS.bend@57a0c01d sha256=b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3; src/matrix-LAWS.bend@57a0c01d sha256=872942aaf3936e939f50caea516c4305824a737aac7c7791d38e1b6f87bf8d76; tests/compiler-nest/check.py@57a0c01d sha256=b0fc9e5f895a2ae18a7ce7234ce6def1df23fe0af25c3f852780dd49cef3b5d7; tests/compiler-nest/regen.py@57a0c01d sha256=c561615d5652d50f632abd6c05044733a0866148c96337033557c19bdfac2249 -->
 # Claim
 Invariance clause (src/CONTRACT.json):
 
@@ -27,18 +27,16 @@ index dcc3879f..682ee5c6 100644
     8  # Independent observation: row identities only, with no generated fields,
     9  # aliases, scopes or bodies. Specialization must be a stable selection.
 
-`src/matrix-LAWS.bend:130-137` (added)
-  130  law default_completes_missing_branch:
-  131    for +name: S.Token
-  132    for fields: List<&2,C.Parameter>
-  133    for +ctors: List<&2,C.Constructor>
-  134    for +explicit: List<&2,S.Token>
-  135    for absent: {M.named(explicit,name) == False{} : Bool}
-  136    {M.defaults(Con{C.Constructor{name,fields},ctors},explicit) == Con{name,M.defaults(ctors,explicit)} : List<&2,S.Token>}
-  137  
-
-`src/matrix-PROOF.bend:64-64` (added)
-   64  def L.irrefutable_specialization(arm,name,rest,body,rows,ctor,fields,level): {==}
+`src/matrix-LAWS.bend:37-45` (added)
+   37  law specialization_preserves_first_match:
+   38    for +rows: List<&2,S.Node>
+   39    for +ctor: S.Token
+   40    for +fields: List<&2,S.Node>
+   41    for +level: U32
+   42    {identities(M.specialize(rows,ctor,fields,level)) == selected(rows,ctor) : List<&2,S.Token>}
+   43  
+   44  # Irrefutable heads survive both forms of column elimination at the head;
+   45  # once no columns remain the lowering selects that row's body.
 
 `tests/compiler-nest/check.py:19-19` (added)
    19  FIELDS = '--profile=knot-fields-wasm-1'
@@ -157,6 +155,9 @@ index dcc3879f..682ee5c6 100644
   353            f"{c['evaluation_values']} evaluator values, {c['wasm_values']} Wasm values, "
   354            f"{c['boundary_observations']} boundary observations, {c['enum_hash_checks']} enum hashes, "
   355            f"{c['mutants']} mutants / {c['semantic_kills']} semantic kills")
+
+`tests/compiler-nest/regen.py:36-36` (added)
+   36  CALLS = '.local/compiler-nest/calls'
 
 `tests/compiler-nest/regen.py:116-148` (added)
   116  def observe(fixture):

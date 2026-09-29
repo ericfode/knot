@@ -1057,3 +1057,35 @@ seed lanes before repair; 21 dummy-only path controls and 14 oracle controls
 now supplement the original suite. The three restored-defect mutants are
 killed without infrastructure failures. Original expectations are unchanged;
 live Perch review remains with the coordinator.
+
+## 2026-09-28 — prechecks: seven advisory rules for claim-against-evidence review
+
+Date / scope / source revision: 2026-09-28, the pre-review suite of [docs/prechecks.md](prechecks.md), branch
+`campaign/prechecks` on main `43a394a4`. Rules: `.perch/rules/prechecks.yaml`, sha256 prefix `c2085179a50a7b64` at the
+time of writing (the file is the identity; this prefix is not recomputed).
+
+Waste addressed: about 72 of 1,100 review findings (the mined classes doc-prose-vs-code-drift, prose-vs-authoritative-text,
+outcome-table-vs-d4-and-bounds, contract-clause-contradicted-by-change, required-law-unmet-or-unrecorded, and the Perch halves
+of oracle-from-implementation and mutant-kill-credit) were claims that a document made and the code or diff contradicted.
+Reviewers found them by reading; the deterministic checks cannot, because the claim is prose.
+
+Rule + model: `claim-holds-against-evidence`, `passages-agree`, `outcome-follows-d4`, `clause-vs-delta`,
+`expectation-independent`, `kill-is-semantic`, `required-laws-met`; each `each: file`, `min: 80`, `gate: false`, reading only its
+own packet directory under `.local/prechecks/packets/`. No model was asked: requested and resolved model are unknown.
+
+Judgment: **blocked**. Live calibration needs the main checkout's credentials, which no workflow has; no probability exists,
+and none is claimed. The built-in `docs` category selects zero checks on a packet, so it cannot serve as the baseline arm.
+
+Change and why: the rules are new and advisory. A deterministic builder selects claims by mechanical triggers and ranks the
+evidence that decides them; a stubbed-provider wiring test proves that each packet selects exactly its own rule, that an
+advisory verdict exits 3 and that unrelated files select nothing; a live runner (dry run by default, main checkout only) is
+written and has not been run.
+
+Clean / broken / held-out evidence: 22 calibration packets under `tests/prechecks/perch-controls/` (every rule has a broken
+control; gaps are documented with reasons). Two disclosed exposures: vm-spec `5517f263` moved from held-out to dev when its
+passages were read to fix the P3 builder, and one held-out literals finding was printed during orientation and used for nothing.
+
+Remaining uncertainty / next trigger: the coordinator runs `node scripts/prechecks-perch-run.mjs --controls --live` from the main
+checkout, records model, probabilities and hashes here, freezes the rule text if every broken packet is at or above 0.8 and every
+clean one below, then runs the held-out packets. A rule that does not separate is rewritten or narrowed, never floor-raised.
+Selection recall is bounded (two calibration defects are not reached by any builder); replay measures it.

@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=required-laws-met; increment=nest; head=5374d92807c3; base=cc9f2fd23d59; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: src/LAWS.bend@5374d928 sha256=6fdeb67295a0844f9f641db951a7f4997b1eaf2c5a234fc45897df1e2e2e978c; src/catalog-LAWS.bend@5374d928 sha256=b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3; src/matrix-LAWS.bend@5374d928 sha256=e3d19a4039fc88fccc062a934210231b284b486d0847b0d41f00da55d17d3d8b -->
+<!-- prechecks packet v1; rule=required-laws-met; increment=nest; head=5374d92807c3; base=cc9f2fd23d59; builder=scripts/prechecks/packets@40e325337e4a; sources: src/LAWS.bend@5374d928 sha256=6fdeb67295a0844f9f641db951a7f4997b1eaf2c5a234fc45897df1e2e2e978c; src/catalog-LAWS.bend@5374d928 sha256=b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3; src/matrix-LAWS.bend@5374d928 sha256=e3d19a4039fc88fccc062a934210231b284b486d0847b0d41f00da55d17d3d8b -->
 # Claim
 Required laws (verbatim from the increment manifest):
 

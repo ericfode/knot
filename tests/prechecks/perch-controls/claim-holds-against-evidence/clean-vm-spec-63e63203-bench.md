@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=claim-holds-against-evidence; increment=vm-spec; head=63e63203bb2e; base=454bf3059679; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: tests/compiler-bootstrap/check.py@63e63203 sha256=c1507662a6f30eabd6e661932264ed9515effa3b27461dcec9611802d6cd76d4; tests/compiler-io/host/invoke.mjs@63e63203 sha256=94282fff5cc0d8fdf847e7ade9cc356de2a2682e8f877fd4eacd8c7afcd400ec; vm/SPEC.md@63e63203 sha256=9d65a6ae4cdd8b78181ff8846add9e6415c935f46dc2362d74aab6459815caed; vm/bench/run.py@63e63203 sha256=ed30fdd7dfa747e1509c6d26da2c47e7df66aa97a3679effd2a3f7b200c59d04; vm/check-spec.py@63e63203 sha256=016a7b2a0bef5180a5818283874301c693b056bfd9e03d98cb614e1d0a13f511 -->
+<!-- prechecks packet v1; rule=claim-holds-against-evidence; increment=vm-spec; head=63e63203bb2e; base=454bf3059679; builder=scripts/prechecks/packets@40e325337e4a; sources: tests/compiler-bootstrap/check.py@63e63203 sha256=c1507662a6f30eabd6e661932264ed9515effa3b27461dcec9611802d6cd76d4; tests/compiler-io/host/invoke.mjs@63e63203 sha256=94282fff5cc0d8fdf847e7ade9cc356de2a2682e8f877fd4eacd8c7afcd400ec; tests/compiler-poly/regen.py@63e63203 sha256=0a16988ec448aeae260061af6113a7eff7bdf271361780d7218b733e5e0b89a8; vm/SPEC.md@63e63203 sha256=9d65a6ae4cdd8b78181ff8846add9e6415c935f46dc2362d74aab6459815caed; vm/check-spec.py@63e63203 sha256=016a7b2a0bef5180a5818283874301c693b056bfd9e03d98cb614e1d0a13f511 -->
 # Claim
 vm/SPEC.md:1098-1100 (section: 12. Frozen evidence and later obligations) - verbatim text:
 
@@ -10,152 +10,186 @@ vm/SPEC.md:1098-1100 (section: 12. Frozen evidence and later obligations) - verb
 # Evidence
 Evidence: the changed regions that share the most words with the claim (diff hunks of modified files, declarations of added files).
 ```
-@@ -406,4 +1007,113 @@ def controls(names, native, bun) -> list[dict]:
-             'abi': answer and answer['abi'],
-             'outcome': outcome(shown(got)) if answer and answer['blocked'] else None}})
-+    # A real host stack trap, and the host's memory classification on V8's messages.
-+    module = folder / 'host-stack.wasm'
-+    module.write_bytes(recursive_module())
-+    answer, got = host(module, [{'argv': [str(MANIFEST.relative_to(ROOT))], 'inputs': [], 'outputs': []}], 'host-stack')
-+    result.append({'name': 'host-stack-trap', 'expected': {'abi': 'knot-bytes-0', 'resource': 'host-stack'},
-+                   'observed': {'abi': answer and answer['abi'],
-+                                'resource': exhaustion(shown(got[0])) if answer and not answer['blocked'] else None}})
-+    probe = ("import { trap } from './" + HOST + "';"
-+             "const see = m => { const r = trap(new RangeError(m)); return { exit: r.exit, host: r.host,"
-+             " stderr: Buffer.from(r.stderr, 'base64').toString() }; };"
-+             "console.log(JSON.stringify([see('WebAssembly.Instance(): Out of memory: Cannot allocate Wasm memory"
-+             " for new instance'), see('WebAssembly.Memory(): could not allocate memory'),"
-+             " see('Maximum call stack size exceeded'), see('offset is out of bounds')]));")
-+    r = run(['node', '--input-type=module', '-e', probe], SECONDS['tool'])
-+    try:
-+        seen = [exhaustion(row) or outcome(row) for row in json.loads(r['stdout'])]
-+    except ValueError:
-+        seen = shown(r)
-+    result.append({'name': 'host-trap-classification',
-+                   'expected': {'resources': ['host-memory', 'host-memory', 'host-stack', 'HostFailure']},
-+                   'observed': {'resources': seen}})
-+    return result
-+
-+
-+def sandbox_controls(bundle, manifest, argv) -> list[dict]:
-+    """Live refusals: damaged copies of S's sandbox must fail verification before any step."""
-+    source = ROOT / BUILD / bundle['sandbox']
-+    entry = bundle['entry']
-+    package = next((p for p in bundle['order'] if p.startswith(f'{LIB}/')), manifest['base']['path'])
-+
-+    def symlink(folder):
-+        twin = folder.parent / f'{folder.name}-twin.bend'
-+        twin.write_bytes((folder / entry).read_bytes())
-+        (folder / entry).unlink()
-+        (folder / entry).symlink_to(twin)
-+
-+    def hardlink(folder):
-+        os.link(folder / entry, folder.parent / f'{folder.name}-twin.bend')
-+
-+    def tamper(folder):
-+        with (folder / package).open('ab') as f:
-+            f.write(b'\n')
-+
-+    def extra(folder):
-+        (folder / LIB / 'extra.bend').write_bytes(b'')
-+
-+    # Staging itself refuses a package whose bytes differ from its pin: the run
-+    # stops there, before any seed invocation.
-+    library = ROOT / BUILD / 'controls' / 'tampered-lib'
-+    shutil.rmtree(library, ignore_errors=True)
-+    for name in manifest['packages']:
-+        (library / name).parent.mkdir(parents=True, exist_ok=True)
-+        (library / name).write_bytes((library_path() / name).read_bytes() + b'\n')
-+    try:
-+        stage_sandbox(entry, ROOT / BUILD / 'controls' / 'staging-pin-refused', manifest, library)
-+        seen = {'refused': False}
-+    except AssertionError as error:
-+        seen = {'refused': True, 'reason': 'differs from its pin' if 'differs from its pin' in str(error) else str(error)}
-+    result = [{'name': 'staging-pin-refused', 'expected': {'refused': True, 'reason': 'differs from its pin'},
-+               'observed': seen}]
-+    for label, damage, reason in (
-+            ('sandbox-symlink-refused', symlink, 'not a regular single-link file'),
-+            ('sandbox-hardlink-refused', hardlink, 'not a regular single-link file'),
-+            ('sandbox-pin-refused', tamper, 'differs from its pin'),
-+            ('sandbox-extra-file-refused', extra, 'differs from its staged record')):
-+        folder = ROOT / BUILD / 'controls' / label
-+        for leftover in folder.parent.glob(f'{label}-twin.bend'):
-+            leftover.unlink()
-+        replica(source, folder, bundle)
-+        damage(folder)
-+        try:
-+            verify(folder, bundle, manifest)
-+            seen = {'refused': False}
-+        except AssertionError as error:
-+            seen = {'refused': True, 'reason': reason if reason in str(error) else str(error)}
-+        result.append({'name': label, 'expected': {'refused': True, 'reason': reason}, 'observed': seen})
-+    result.append({'name': 'argv-reserved-refused', 'expected': {'reserved': ['--threads']},
-+                   'observed': {'reserved': reserved_in([*argv, '--threads', '2'], manifest)}})
-+    # Live routing of A2's result on the S that C1 built: a host timeout, a host
-+    # stack trap, a Knot rejection, success, a Knot budget, the VM's fuel and
-+    # heap budgets (D16, D19), and a harness that cannot run A2 yet.
-+    answered = {'abi': 'knot-io', 'blocked': None}
-+    pending = {'abi': 'knot-io', 'blocked': {'source': 'harness', 'exit': 3, 'stdout': '',
-+                                             'stderr': 'Unsupported\thost\tio-abi-pending\n'}}
-+    record = lambda exit, stderr, **more: {'argv': argv, 'exit': exit, 'stdout': b'', 'stderr': stderr, **more}
-+    routed = [a3_stopped(a, o, argv) for a, o in (
-+        (None, record(None, b'', outcome='Exhausted', budget_seconds=1, source='harness')),
-+        (answered, record(4, b'Exhausted\twasm\tcall-stack\n', host=True, files={})),
-+        (answered, record(3, b'Unsupported\tlex\tliteral\t0:1:1:1\n', host=False, files={})),
-+        (answered, record(0, b'', host=False, files={})),
-+        (answered, record(4, b'Exhausted\tparse\tbudget\t12:13:3:4\n', host=False, files={})),
-+        (answered, record(4, b'Exhausted\tio\tsteps\n', host=False, files={})),
-+        (answered, record(4, b'Exhausted\tio\tmemory\n', host=False, files={})),
-+        (pending, record(3, b'Unsupported\thost\tio-abi-pending\n', source='harness')))]
-+    result.append({'name': 'a3-routing', 'expected': {
-+        'statuses': ['divergent-exhausted', 'divergent-exhausted', 'divergent-unsupported', 'reached',
-+                     'divergent-exhausted', 'blocked', 'blocked', 'blocked'],
-+        'excuses': [None, None, None, None, None, 'vm-fuel', 'vm-heap', 'harness-io-abi-pending']},
-+        'observed': {'statuses': [r['status'] if r else 'reached' for r in routed],
-+                     'excuses': [r.get('excuse') if r else None for r in routed]}})
-+    # Live: a host that refuses its module before the guest runs still records the
-+    # argv the guest was handed, which the judge checks, and the node command apart.
-+    module = ROOT / BUILD / 'controls' / 'host-refused.wasm'
-+    module.write_bytes(MAGIC + b'\xff')
-+    handed = invocation('e2e3.a3', argv)
-+    _, got = host(module, [{'argv': handed, 'inputs': [], 'outputs': [OUTPUT]}], 'host-refused')
-+    row = shown(got)
-+    result.append({'name': 'host-refused-argv', 'expected': {'argv': handed, 'executor': 'node'},
-+                   'observed': {'argv': row['argv'], 'executor': (row.get('host_argv') or [None])[0]}})
-     return result
+@@ -50,36 +81,83 @@ def require(condition, detail):
  
+ 
++def timeout_scale() -> float:
++    value = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE') or 1)
++    require(math.isfinite(value) and value > 0, 'KNOT_GATE_TIMEOUT_SCALE must be a positive number')
++    return value
++
++
++# Wall-clock guards only catch hangs; they scale with host load (FX-08).
++SECONDS = {k: v * timeout_scale() for k, v in
++           {'parse': 60, 'compile': 600, 'host': 600, 'call': 60, 'tool': 60}.items()}
++# Children never inherit Node preload options or a C compiler override: either
++# would silently change the recorded runtime or build identity.
++ENV = {**{k: v for k, v in os.environ.items() if k not in ('NODE_OPTIONS', 'CC')}, 'BEND_NO_TELEMETRY': '1'}
++
++
+ def digest(data: bytes) -> str:
+     return hashlib.sha256(data).hexdigest()
+ 
+ 
++def canonical(value) -> bytes:
++    return json.dumps(value, sort_keys=True, separators=(',', ':')).encode()
++
++
+ def text(data: bytes) -> str:
+     return data.decode('utf-8', 'backslashreplace')
+ 
+ 
+-def run(argv, timeout, stdin=None):
+-    """Raw bytes; a timeout is exhaustion, a signal keeps its negative exit."""
++def run(argv, timeout, cwd: Path = ROOT, env=None):
++    """Raw bytes; a timeout is exhaustion, a signal keeps its negative exit.
++    Wall time and peak RSS come from this child's own rusage."""
+     argv = [str(x) for x in argv]
+-    try:
+-        p = subprocess.run(argv, cwd=ROOT, capture_output=True, timeout=timeout, input=stdin)
+-        return {'argv': argv, 'exit': p.returncode, 'stdout': p.stdout, 'stderr': p.stderr}
+-    except subprocess.TimeoutExpired:
++    start = time.monotonic()
++    child = subprocess.Popen(argv, cwd=cwd, env=env or ENV, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
++                             stderr=subprocess.PIPE)
++    streams = {}
++    readers = [threading.Thread(target=lambda n=n: streams.__setitem__(n, getattr(child, n).read()))
++               for n in ('stdout', 'stderr')]
++    for reader in readers:
++        reader.start()
++    lock, state = threading.Lock(), {'reaped': False, 'expired': False}
++
++    def expire():
++        with lock:
++            if not state['reaped']:
++                state['expired'] = True
++                child.kill()
++    timer = threading.Timer(timeout, expire)
++    timer.start()
++    _, status, usage = os.wait4(child.pid, 0)
++    with lock:
++        state['reaped'] = True
++    timer.cancel()
++    child.returncode = os.waitstatus_to_exitcode(status)
++    for reader in readers:
++        reader.join()
++    if state['expired']:
+         return {'argv': argv, 'exit': None, 'outcome': 'Exhausted', 'budget_seconds': timeout,
+                 'stdout': b'', 'stderr': b''}
++    return {'argv': argv, 'exit': child.returncode, 'stdout': streams['stdout'], 'stderr': streams['stderr'],
++            'elapsed_seconds': round(time.monotonic() - start, 3),
++            'peak_rss_bytes': usage.ru_maxrss * (1 if sys.platform == 'darwin' else 1024)}
+ 
+ 
+ def shown(obs) -> dict:
+-    """Receipt form of an observation: text, no host paths."""
++    """Receipt form of an observation: text, no host paths, no timings."""
+     row = {'argv': obs['argv'], 'exit': obs['exit'], 'stdout': text(obs['stdout']), 'stderr': text(obs['stderr'])}
+-    row.update({k: obs[k] for k in ('outcome', 'budget_seconds') if k in obs})
++    row.update({k: obs[k] for k in ('outcome', 'budget_seconds', 'host', 'host_argv') if k in obs})
+     return row
+ 
+ 
+-def successful(argv, timeout=SECONDS['compile']):
+-    obs = run(argv, timeout)
++def successful(argv, timeout=SECONDS['compile'], cwd: Path = ROOT, env=None):
++    obs = run(argv, timeout, cwd, env)
+     require(obs['exit'] == 0, shown(obs))
+     return obs
+ 
+ 
++def relative(path: Path, cwd: Path) -> str:
++    return os.path.relpath(path, cwd)
++
++
+ # ---------------------------------------------------------------- the verdict
+ 
+
+@@ -472,10 +1402,76 @@ def mutants(progress) -> list[dict]:
+ # ------------------------------------------------------------------- main
+ 
++def seed_step(builds) -> dict:
++    """The only seed invocations in the pipeline, each inside its entry's sandbox.
++    C1 is built twice under the same name; the two binaries must be identical."""
++    def build(item):
++        label, (entry, folder, out) = item
++        out.parent.mkdir(parents=True, exist_ok=True)
++        lane = 'bun' if out.suffix == '.js' else 'native'
++        successful([relative(ROOT / SEED, folder), entry, '-o', relative(out, folder)], cwd=folder,
++                   env={**ENV, 'BEND_LIB': str(folder / LIB)})
++        return label, {'entry': entry, 'lane': lane, 'sandbox': folder.name, 'sha256': digest(out.read_bytes())}
++    with ThreadPoolExecutor(max_workers=3) as pool:
++        records = dict(pool.map(build, builds.items()))
++    repeat = records.pop('C1-repeat')
++    records['C1']['repeat_sha256'] = repeat['sha256']
++    return records
++
++
++def audit(contract, manifest, folder: Path, bundle, checker: Path | None) -> dict:
++    """C1's loader closure (--audit-bundle Module lines) against the staged
++    files (FX-21), and the D2 trust inventory of unchecked Base (FX-20)."""
++    if checker is None:
++        return {'status': 'unavailable', 'reason': 'src/CONTRACT.json advertises no --audit-bundle'}
++    argv = ['--audit-bundle', LIB, bundle['entry']]
++    obs = run([relative(checker, folder), *argv], SECONDS['compile'], cwd=folder)
++    verify(folder, bundle, manifest)
++    if obs['exit'] != 0:
++        return {'status': 'blocked', 'args': argv, 'tool': 'seed-built src/check-cli.bend', 'blocker': stopped(obs, 'knot')}
++    fields = [line.split('\t', 1) for line in text(obs['stdout']).splitlines() if '\t' in line]
++    pick = lambda key: [value for k, value in fields if k == key]
++    return {'status': 'recorded', 'args': argv, 'tool': 'seed-built src/check-cli.bend', 'modules': pick('Module'),
++            'trust': {'base_pin': pick('BasePin'), 'base_checked': pick('BaseChecked'),
++                      'base_unchecked': pick('BaseUnchecked')}}
++
++
++# A two-module entry that loads under module loading today: a local module and Base.
++PROBE = {
++    'probe/side.bend': 'import Base\n\ndef yes() -> Bool:\n  True{}\n',
++    'probe/main.bend': ('import ./side.bend as W\n\ntype Light is Type:\n  Dark{}\n  Lit{}\n\n'
++                        'def see(x: Bool) -> Light:\n  match x:\n    case False{}: Dark{}\n    case True{}: Lit{}\n\n'
++                        'def main() -> Light:\n  see(Bool.not(W.yes()))\n'),
++}
++
++
++def audit_control(contract, manifest, checker: Path | None) -> dict:
++    """The FX-21 comparator on a real audit of an entry that loads today. It
++    applies only where the compiler advertises --audit-bundle."""
++    if checker is None:
++        return {'name': 'audit-closure', 'expected': {'status': 'unavailable'}, 'observed': {'status': 'unavailable'}}
++    folder = ROOT / BUILD / 'controls' / 'audit-closure'
++    shutil.rmtree(folder, ignore_errors=True)
++    base = manifest['base']['path']
++    for name, data in ((base, (ROOT / base).read_bytes()), *((n, t.encode()) for n, t in PROBE.items())):
++        (folder / name).parent.mkdir(parents=True, exist_ok=True)
++        (folder / name).write_bytes(data)
++    (folder / LIB).mkdir()
++    bundle = {'entry': 'probe/main.bend', 'root': LIB, 'sandbox': folder.name, 'order': [base, *PROBE],
++              'files': inspect(folder), 'unresolved': []}
++    record = audit(contract, manifest, folder, bundle, checker)
++    return {'name': 'audit-closure',
++            'expected': {'status': 'recorded', 'problems': [], 'modules': list(PROBE)},
++            'observed': {'status': record['status'], 'problems': audit_problems(record, contract, bundle, manifest),
++                         'modules': record.get('modules')}}
++
++
+ def main() -> int:
+     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+     parser.add_argument('--judge', metavar='RECEIPT', help='apply the gate verdict to a recorded progress receipt')
++    parser.add_argument('--contract', metavar='CONTRACT', type=Path, default=ROOT / CONTRACT,
++                        help='the src/CONTRACT.json the receipt names by hash (default: this tree\'s)')
+     args = parser.parse_args()
+     if args.judge:
+-        violations = judge(json.loads(Path(args.judge).read_bytes()))
++        violations = judge(json.loads(Path(args.judge).read_bytes()), args.contract)
+         print('\n'.join(violations) if violations else 'Judge passed')
+         return 1 if violations else 0
 
 `tests/compiler-io/host/invoke.mjs:7-8` (added)
     7  const args = JSON.parse(fs.readFileSync(argumentsPath, 'utf8')).map(a =>
     8    typeof a === 'string' ? a : Buffer.from(a.hex, 'hex'));
 
-`vm/bench/run.py:175-187` (added)
-  175  def main():
-  176      parser = argparse.ArgumentParser()
-  177      parser.add_argument('--repeat', type=int, default=5)
-  178      parser.add_argument('--only', choices=('workloads', 'parse-cli'))
-  179      args = parser.parse_args()
-  180      stamp = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'host': host(),
-  181               'seed': '2.0.29 574b6d3 (native lane, clang)'}
-  182      if args.only != 'parse-cli':
-  183          rows = workloads(args.repeat)
-  184          (HERE / 'baselines.json').write_text(json.dumps({**stamp, 'workloads': rows}, indent=1) + '\n')
-  185      if args.only != 'workloads':
-  186          result = parse_cli(max(1, args.repeat // 2 + 1))
-  187          (HERE / 'parse-cli.json').write_text(json.dumps({**stamp, **result}, indent=1) + '\n')
-
-`vm/check-spec.py:152-162` (added)
-  152  def lanes(case, built):
-  153      got = {'seed': observed(seed_observation(case)),
-  154             'eval': observed(run(eval_argv(case, built), 120))}
-  155      if 'seed_bun_stderr' in case:
-  156          # The seed's Bun lane, recorded beside a native observation; it never classifies.
-  157          got['seed_bun'] = observed(run([SEED, case['source']], 120))
-  158      if 'invocations' in case:
-  159          # The seed runs only `main`; eval-cli is the oracle for every other invocation.
-  160          got['invocations'] = [{**reviewed(i), 'eval': observed(run(invoke_argv(case, built, i), 120))}
-  161                                for i in case['invocations']]
-  162      return got
+`tests/compiler-poly/regen.py:54-54` (added)
+   54  REVIEWED_SHA256 = '85ba1897f89bcd79c35c33dcc6cff20db612ebf7cce15afe739f81b491656bbe'
 
 `vm/check-spec.py:2402-2432` (added)
  2402  def check_bench(built: dict, read=committed) -> dict:

@@ -36,13 +36,26 @@ def changed_code(ctx) -> list[str]:
     return [p for p in ctx.changed_paths(statuses='AMRC') if not NOT_CODE.search(p) and not DOC_SKIP.search(p)]
 
 
+_MEMO: dict = {}
+
+
+def memo(ctx, kind: str, path: str, compute):
+    """Per (head, base, kind, path) results: a big increment has hundreds of claims that all rank the same files."""
+    key = (ctx.head.treeish, ctx.base.treeish if ctx.base else None, kind, path)
+    if key not in _MEMO:
+        _MEMO[key] = compute()
+    return _MEMO[key]
+
+
 def added_numbers(ctx, path: str) -> list[int]:
-    patch = ctx.repo.patch(ctx.base.treeish, ctx.head.treeish, [path], unified=0)
-    lines = []
-    for hunks in diffs.parse(patch).values():
-        for hunk in hunks:
-            lines += list(range(hunk.new_start, hunk.new_start + len(hunk.added)))
-    return lines
+    def compute():
+        patch = ctx.repo.patch(ctx.base.treeish, ctx.head.treeish, [path], unified=0)
+        lines = []
+        for hunks in diffs.parse(patch).values():
+            for hunk in hunks:
+                lines += list(range(hunk.new_start, hunk.new_start + len(hunk.added)))
+        return lines
+    return memo(ctx, 'added', path, compute)
 
 
 STOP = set('''which their there after before every about would could should these those other while where because through '''
@@ -108,6 +121,24 @@ def split_blocks(path: str, text: str) -> list[tuple[int, int, str]]:
     return [(i + 1, min(i + 40, len(lines)), '\n'.join(lines[i:i + 40])) for i in range(0, len(lines), 40)]
 
 
+def pieces_of(ctx, path: str) -> list[tuple[set, str, str]]:
+    """(words, sort label, text) of the regions of one changed file that can serve as evidence, computed once."""
+    def compute():
+        pieces = []
+        if ctx.base is not None and ctx.base.has(path):
+            chunks = re.split(r'(?m)^(?=@@ )', diff_text(ctx, [path], unified=2))
+            header, hunks = chunks[0], chunks[1:]
+            for k, hunk in enumerate(hunks):
+                pieces.append((words(hunk), f'{k:06d}', (header if k == 0 else '') + hunk))
+        else:
+            text = ctx.head.text(path) or ''
+            for start, end, block in split_blocks(path, text):
+                if block.strip():
+                    pieces.append((words(block), f'{start:06d}', f'`{path}:{start}-{end}` (added)\n{C.numbered(block, start)}\n'))
+        return pieces
+    return memo(ctx, 'pieces', path, compute)
+
+
 def relevant_evidence(ctx, paragraph: str, paths: list[str]) -> tuple[str, list[str]]:
     """The changed regions that share the most words with the claim, best first until the evidence cap.
 
@@ -115,34 +146,46 @@ def relevant_evidence(ctx, paragraph: str, paths: list[str]) -> tuple[str, list[
     whole diff would exhaust the cap on the first declarations and never reach the one that decides the claim).
     """
     tokens = words(paragraph)
-    pieces = []
+    scored = []
     for path in paths:
-        if ctx.base is not None and ctx.base.has(path):
-            patch = diff_text(ctx, [path], unified=2)
-            chunks = re.split(r'(?m)^(?=@@ )', patch)
-            header, hunks = chunks[0], chunks[1:]
-            for hunk in hunks:
-                first = hunk.split('\n', 1)[0]
-                pieces.append((len(tokens & words(hunk)), path, first, header + hunk if not pieces or pieces[-1][1] != path else hunk))
-        else:
-            text = ctx.head.text(path) or ''
-            for start, end, block in split_blocks(path, text):
-                if block.strip():
-                    pieces.append((len(tokens & words(block)), path, f'{start}', f'`{path}:{start}-{end}` (added)\n{C.numbered(block, start)}\n'))
-    ranked = sorted(pieces, key=lambda p: (-p[0], p[1], p[2]))
+        for piece_words, label, body in pieces_of(ctx, path):
+            scored.append((len(tokens & piece_words), path, label, body))
+    ranked = sorted(scored, key=lambda p: (-p[0], p[1], p[2]))
     chosen, used, size = [], [], 0
-    for score, path, _tag, body in ranked:
+    for score, path, label, body in ranked:
         if score == 0 and chosen:
             break
         cost = len(body.encode('utf-8'))
         if size + cost > C.EVIDENCE_LIMIT and chosen:
             continue
-        chosen.append((path, _tag, body))
+        chosen.append((path, label, body))
         used.append(path)
         size += cost
-    chosen.sort(key=lambda c: (c[0], int(c[1]) if c[1].isdigit() else 0, c[1]))
-    text = '\n'.join(body for _p, _t, body in chosen)
-    return text, sorted(set(used))
+    chosen.sort(key=lambda c: (c[0], c[1]))
+    return '\n'.join(body for _p, _l, body in chosen), sorted(set(used))
+
+
+CODE_TOKEN = re.compile(r'[A-Za-z_][A-Za-z0-9_-]{3,}|(?<![\w.])\d{3,}(?![\w.])')
+
+
+def code_index(ctx) -> dict:
+    """{token: [(path, line, text)]} over every code file at head, built once: one pass replaces a `git grep` per token."""
+    def compute():
+        index: dict = {}
+        for path in ctx.head.files():
+            if not path.endswith(('.py', '.mjs', '.ts', '.js', '.bend')):
+                continue
+            for number, line in enumerate((ctx.head.text(path) or '').split('\n'), 1):
+                for token in set(CODE_TOKEN.findall(line)):
+                    hits = index.setdefault(token, [])
+                    if len(hits) < 40:
+                        hits.append((path, number, line))
+        return index
+    return memo(ctx, 'codeindex', '', compute)
+
+
+def grep_code(ctx, token: str, suffixes: tuple = ('.py', '.mjs', '.ts', '.js', '.bend')) -> list[tuple[str, int, str]]:
+    return [h for h in code_index(ctx).get(token, []) if h[0].endswith(suffixes)]
 
 
 def source(ctx, path: str) -> Source:
@@ -156,6 +199,8 @@ def quote(text: str) -> str:
 def diff_text(ctx, paths: list[str], unified: int = 3) -> str:
     if not paths:
         return ''
+    if len(paths) == 1:
+        return memo(ctx, f'diff{unified}', paths[0], lambda: ctx.repo.patch(ctx.base.treeish, ctx.head.treeish, paths, unified=unified))
     return ctx.repo.patch(ctx.base.treeish, ctx.head.treeish, paths, unified=unified)
 
 
@@ -229,7 +274,7 @@ def p1(ctx):
                     name = token.removesuffix('()')
                     if (not re.search(r'[_-]', name) and not token.endswith('()')) or '/' in name or re.search(r'\.\w{1,4}$', name):
                         continue
-                    hits = [h for h in ctx.repo.grep(ctx.head.treeish, name, list(C.CODE_SUFFIXES)) if h[0] != path]
+                    hits = [h for h in grep_code(ctx, name) if h[0] != path]
                     defs = [h for h in hits if re.search(rf'\b(?:def|function|law|type)\s+{re.escape(name)}\b|\b{re.escape(name)}\s*=', h[2])]
                     for hit in (defs or hits)[:1]:
                         body = ctx.head.text(hit[0]) or ''
@@ -245,7 +290,7 @@ def p1(ctx):
                 for number in sorted({m.group(1).replace(',', '') for m in BUDGET.finditer(unit)})[:2]:
                     if int(number) < 100:
                         continue
-                    hits = [h for h in ctx.repo.grep(ctx.head.treeish, number, list(C.CODE_SUFFIXES)) if h[0] != path]
+                    hits = [h for h in grep_code(ctx, number) if h[0] != path]
                     hits.sort(key=lambda h: (h[0] not in code, h[0], h[1]))
                     for hit in hits[:1]:
                         body = ctx.head.text(hit[0]) or ''
@@ -365,8 +410,7 @@ def p3(ctx):
                             for _f, _l, u, _lead in group)
                 frozen, used = [], [source(ctx, path)]
                 for token in sorted({t for _f, _l, u, _lead in group for t in re.findall(r'`([a-z][a-z0-9]*(?:-[a-z0-9]+)+)`', u)})[:4]:
-                    hits = [h for h in ctx.repo.grep(ctx.head.treeish, token, ['*.py', '*.mjs', '*.ts', '*.json'])
-                            if h[0] != path and '/receipts/' not in h[0] and not h[0].endswith('.md')]
+                    hits = [h for h in grep_code(ctx, token, ('.py', '.mjs', '.ts')) if h[0] != path and '/receipts/' not in h[0]]
                     for hit in hits[:1]:
                         text_ = ctx.head.text(hit[0]) or ''
                         if hit[0].endswith('.py'):

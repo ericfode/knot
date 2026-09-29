@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=outcome-follows-d4; increment=vm-spec; head=63e63203bb2e; base=454bf3059679; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: vm/SPEC.md@63e63203 sha256=9d65a6ae4cdd8b78181ff8846add9e6415c935f46dc2362d74aab6459815caed; vm/check-spec.py@63e63203 sha256=016a7b2a0bef5180a5818283874301c693b056bfd9e03d98cb614e1d0a13f511; vm/check-spec.py@63e63203 sha256=016a7b2a0bef5180a5818283874301c693b056bfd9e03d98cb614e1d0a13f511; vm/golden/expectations.json@63e63203 sha256=e5c5c8b55866236578b95e6295901153d05ddd4a3af3339e06ed45b31fb00c83; vm/golden/expectations.json@63e63203 sha256=e5c5c8b55866236578b95e6295901153d05ddd4a3af3339e06ed45b31fb00c83 -->
+<!-- prechecks packet v1; rule=outcome-follows-d4; increment=vm-spec; head=63e63203bb2e; base=454bf3059679; builder=scripts/prechecks/packets@40e325337e4a; sources: vm/SPEC.md@63e63203 sha256=9d65a6ae4cdd8b78181ff8846add9e6415c935f46dc2362d74aab6459815caed; vm/check-spec.py@63e63203 sha256=016a7b2a0bef5180a5818283874301c693b056bfd9e03d98cb614e1d0a13f511; vm/check-spec.py@63e63203 sha256=016a7b2a0bef5180a5818283874301c693b056bfd9e03d98cb614e1d0a13f511 -->
 # Claim
 Outcome claims this branch changed:
 
@@ -201,23 +201,6 @@ vm/SPEC.md:791-914 (section: 11. Outcomes and the Exhausted-lane rule):
 
 Frozen expectations that name the same cause:
 
-`vm/golden/expectations.json:1690-1702` (frozen expectation code naming `result-char`)
-```
- 1690          "exit": 6,
- 1691          "stdout": "",
- 1692          "stderr": "InternalFailure\teval\tresult-tag\n"
- 1693        }
- 1694      },
- 1695      {
- 1696        "name": "result-char",
- 1697        "source": "vm/golden/result-char.bend",
- 1698        "lane": "literals",
- 1699        "seed_stdout": "'a'\n",
- 1700        "features": [
- 1701          "Literal",
- 1702          "describe"
-```
-
 `vm/check-spec.py:566-595` (frozen expectation code naming `result-string`)
 ```
   566  def print_argument(name: str, source: str, plan: dict, strings: dict, built: dict, registry: dict) -> str | None:
@@ -295,8 +278,13 @@ Frozen expectations that name the same cause:
   968               bounds, None),
   969              ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound}, None),
   970              # Section 11: a Book's eval lane is unavailable only where its review declares the exact
-  971              # Unsupported line that the head prints; no 
-[truncated after 6,144 bytes; 4,401 bytes omitted]
+  971              # Unsupported line that the head prints; no other failure of a Book's lane stands in.
+  972              ('eval-unsupported-undeclared', 'chr-pattern', without('chr-pattern', 'unavailable'), bounds, None),
+  973              ('unavailable-where-eval-agrees', 'value-on',
+  974               {**cases['value-on'], 'unavailable': 'Unsupported check char-constructor-pattern'}, bounds, None),
+  975              ('unavailable-other-line', 'list-head-match',
+  976               {**cases['list-head-match'], 'unavailable': 'Unsupported check 
+[truncated after 6,144 bytes; 3,383 bytes omitted]
 
 # Scope
 Only the text above is evidence. Anything not shown is missing evidence, not a pass.

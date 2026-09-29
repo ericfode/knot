@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=clause-vs-delta; increment=nest; head=99053a70a68b; base=cc9f2fd23d59; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: src/CONTRACT.json@99053a70 sha256=f062c80622e6eb52b8dca79d62da35b9f936587359783d54a778ef066c6d5f7a; src/matrix-LAWS.bend@99053a70 sha256=905f77100e8337b040f01de1bab6f78d6720c18db3e4b3f58387467b1d6b71cd; tests/compiler-nest/check.py@99053a70 sha256=f19b820dbdec6755c362d35d677adb3da7b30d27c4bea515cec3c47784ad42f2 -->
+<!-- prechecks packet v1; rule=clause-vs-delta; increment=nest; head=99053a70a68b; base=cc9f2fd23d59; builder=scripts/prechecks/packets@40e325337e4a; sources: src/CONTRACT.json@99053a70 sha256=f062c80622e6eb52b8dca79d62da35b9f936587359783d54a778ef066c6d5f7a; src/matrix-LAWS.bend@99053a70 sha256=905f77100e8337b040f01de1bab6f78d6720c18db3e4b3f58387467b1d6b71cd; tests/compiler-nest/check.py@99053a70 sha256=f19b820dbdec6755c362d35d677adb3da7b30d27c4bea515cec3c47784ad42f2 -->
 # Claim
 Invariance clause (src/CONTRACT.json):
 

@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=kill-is-semantic; increment=vm-model; head=19cf7d8f71ff; base=none; builder=manual-excerpt@47dbd98ca1c7; sources: docs/COMPILER-CAMPAIGN.md@19cf7d8f sha256=40e00d3b2f87172cf12890ff2fb1561395b84165009a65be9d0c0d56c46d8b7a; vm/check-model.py@19cf7d8f sha256=f9d4dd03a9050086e0f05b793c504480690a6c8fe5fe27593f71f935d2901f77 -->
+<!-- prechecks packet v1; rule=kill-is-semantic; increment=vm-model; head=19cf7d8f71ff; base=none; builder=manual-excerpt@40e325337e4a; sources: docs/COMPILER-CAMPAIGN.md@19cf7d8f sha256=40e00d3b2f87172cf12890ff2fb1561395b84165009a65be9d0c0d56c46d8b7a; vm/check-model.py@19cf7d8f sha256=f9d4dd03a9050086e0f05b793c504480690a6c8fe5fe27593f71f935d2901f77 -->
 # Claim
 `docs/COMPILER-CAMPAIGN.md:41-44` (trusted-runtime definition of done)
 

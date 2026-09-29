@@ -1,4 +1,4 @@
-<!-- prechecks packet v1; rule=outcome-follows-d4; increment=vm-spec; head=e14d8581dc12; base=454bf3059679; builder=scripts/prechecks/packets@47dbd98ca1c7; sources: docs/perch-execution/role-v5-2026-09-27/proof-context/reproduction-after.json@e14d8581 sha256=8559e9ef40432532cfbf83360a1946687f3fefa4d07e3cc720682f61ad27ff78; vm/SPEC.md@e14d8581 sha256=775b305468384b9e8ec07490db7b51716e2d159635be1d9b3e3ab584923842ac -->
+<!-- prechecks packet v1; rule=outcome-follows-d4; increment=vm-spec; head=e14d8581dc12; base=454bf3059679; builder=scripts/prechecks/packets@40e325337e4a; sources: vm/SPEC.md@e14d8581 sha256=775b305468384b9e8ec07490db7b51716e2d159635be1d9b3e3ab584923842ac -->
 # Claim
 Outcome claims this branch changed:
 
@@ -136,25 +136,6 @@ vm/SPEC.md:576-624 (section: 11. Outcomes and the Exhausted-lane rule):
 > relabelled, and their plans follow §1 by hand. `io-bind` keeps Base's `IO.bind`
 > and `IO.pure` unspecialized, so its `A`-typed nodes are `none`.
 >
-
-Frozen expectations that name the same cause:
-
-`docs/perch-execution/role-v5-2026-09-27/proof-context/reproduction-after.json:479-491` (frozen expectation code naming `ill-typed`)
-```
-  479            }
-  480          },
-  481          "compiler-checker-trust": {
-  482            "type": "noul",
-  483            "instructions": "Is `rule` true of the code below?",
-  484            "criteria": {
-  485              "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
-  486              "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds."
-  487            }
-  488          },
-  489          "compiler-cache-identity": {
-  490            "type": "noul",
-  491            "instructions": "Is `rule` true of the code below?",
-```
 
 # Scope
 Only the text above is evidence. Anything not shown is missing evidence, not a pass.

@@ -8,6 +8,7 @@ truncated; a packet whose evidence cannot be resolved is reported `unavailable`,
 from __future__ import annotations
 
 import ast
+import functools
 import hashlib
 import re
 from dataclasses import dataclass, field
@@ -176,17 +177,25 @@ def sentences_of(paragraph: str) -> list[str]:
 
 
 # ---- code blocks ----------------------------------------------------------------------
-def python_block(source: str, line: int) -> tuple[int, int, str] | None:
+@functools.lru_cache(maxsize=128)
+def _python_spans(source: str) -> tuple:
+    """(start, end) of every def and class in `source`, parsed once per text."""
     try:
         module = ast.parse(source)
     except SyntaxError:
-        return None
-    best = None
+        return ()
+    spans = []
     for node in ast.walk(module):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-            start = min([node.lineno] + [d.lineno for d in node.decorator_list])
-            if start <= line <= node.end_lineno and (best is None or start >= best[0]):
-                best = (start, node.end_lineno)
+            spans.append((min([node.lineno] + [d.lineno for d in node.decorator_list]), node.end_lineno))
+    return tuple(spans)
+
+
+def python_block(source: str, line: int) -> tuple[int, int, str] | None:
+    best = None
+    for start, end in _python_spans(source):
+        if start <= line <= end and (best is None or start >= best[0]):
+            best = (start, end)
     if best is None:
         return None
     lines = source.split('\n')
