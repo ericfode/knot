@@ -77,10 +77,42 @@ def wrap_type(token: S.Token, reusable: Bool, value: S.Node,
     case S.Sequence{items}: Done{Parsed{S.Datatype{token,reusable,items},rest}}
     case _: Fail{S.Internal{"parse","expected-constructors"}}
 
-def wrap_function(token: S.Token, params: S.Node, result: S.Token,
-  body: S.Node, rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+def parameter_named(params: List<&2,S.Node>, +name: String) -> Bool:
   match params:
-    case S.Sequence{items}: Done{Parsed{S.Function{token,items,result,body},rest}}
+    case Nil{}: False{}
+    case Con{S.Parameter{token,q,typ},tail}: Bool.or(S.matches(token,name),parameter_named(tail,name))
+    case Con{other,tail}: parameter_named(tail,name)
+
+# The seed reads a dotted name as a global unless a parameter binds that exact name, so only
+# a parameter's name may be dotted where a let or a pattern binds.
+def binder(+code: String, +name: S.Token, +params: List<&2,S.Node>) -> Result<S.Error,Unit>:
+  S.choose(Result<S.Error,Unit>,Bool.and(String.contains(S.text(name),"."),Bool.not(parameter_named(params,S.text(name)))),u =>
+    Fail{S.Invalid{"parse",code,S.at(name)}},u => Done{Unit{}})
+
+# The binders of a body in source order: a let name, or a variable at a pattern position.
+def binders(fuel: Nat, node: S.Node, +pattern: Bool, +params: List<&2,S.Node>) -> Result<S.Error,Unit>:
+  match fuel node:
+    case 0n _: Fail{S.Exhausted{"parse",S.At{0,0,0,0}}}
+    case 1n+n S.Promotion{token}: binder("pattern-binder",token,params)
+    case 1n+ +n S.Variable{+token}:
+      S.choose(Result<S.Error,Unit>,pattern,u => binder("pattern-binder",token,params),u => Done{Unit{}})
+    case 1n+n S.Offset{token,count,tail}: binders(n,tail,pattern,params)
+    case 1n+n S.Constructor{token,args}: binders(n,S.Sequence{args},pattern,params)
+    case 1n+ +n S.Binding{+token,q,ann,value,body}:
+      S.bind(Unit,Unit,binder("binding-name",token,params),u => binders(n,body,False{},params))
+    case 1n+n S.Match{token,value,arms}: binders(n,S.Sequence{arms},False{},params)
+    case 1n+ +n S.Arm{token,head,body}:
+      S.bind(Unit,Unit,binders(n,head,True{},params),u => binders(n,body,False{},params))
+    case 1n+n S.Sequence{Nil{}}: Done{Unit{}}
+    case 1n+ +n S.Sequence{Con{head,tail}}:
+      S.bind(Unit,Unit,binders(n,head,pattern,params),u => binders(n,S.Sequence{tail},pattern,params))
+    case 1n+n _: Done{Unit{}}
+
+def wrap_function(token: S.Token, params: S.Node, result: S.Token,
+  +body: S.Node, rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  match params:
+    case S.Sequence{+items}:
+      S.bind(Unit,Parsed,binders(65536n,body,False{},items),u => Done{Parsed{S.Function{token,items,result,body},rest}})
     case _: Fail{S.Internal{"parse","expected-parameters"}}
 
 def wrap_match(token: S.Token, value: S.Node, arms: S.Node,
@@ -346,5 +378,32 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"pattern-or-indentation")))
         case _: invalid(tokens,"unexpected-end")
 
-def parse(depth: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
-  run(depth,Book{},tokens)
+# The seed reads a name as words joined by single dots, each a letter or `_` and then word
+# characters; `head` marks a word start, where a dot cannot stand and a digit cannot begin.
+def name_text(s: String, +head: Bool) -> Bool:
+  match s:
+    case SNil{}: Bool.not(head)
+    case SCon{+c,+tail}:
+      S.choose(Bool,Char.is_eq(c,'.'),u =>
+        S.choose(Bool,head,u => False{},u => name_text(tail,True{})),u =>
+        S.choose(Bool,Bool.or(Bool.not(head),S.alpha(Char.to_u32(c))),u => name_text(tail,False{}),u => False{}))
+
+def word_start(s: String) -> Bool:
+  match s:
+    case SNil{}: False{}
+    case SCon{c,tail}: S.alpha(Char.to_u32(c))
+
+# A token that starts like a name is one, and the seed rejects a malformed one wherever it stands.
+def malformed(+s: String) -> Bool:
+  S.choose(Bool,word_start(s),u => Bool.not(name_text(s,True{})),u => False{})
+
+def names(tokens: List<&2,S.Token>) -> Result<S.Error,Unit>:
+  match tokens:
+    case Nil{}: Done{Unit{}}
+    case Con{+h,+t}:
+      S.choose(Result<S.Error,Unit>,malformed(S.text(h)),u => Fail{S.Invalid{"parse","name",S.at(h)}},u => names(t))
+
+def parse(+depth: Nat, +tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  match depth:
+    case 0n: run(0n,Book{},tokens)
+    case 1n+n: S.bind(Unit,Parsed,names(tokens),u => run(1n+n,Book{},tokens))

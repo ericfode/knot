@@ -28,8 +28,10 @@ commands additionally load user modules and a checked reachable Base slice.
 ## Accepted language
 
 The retained enum profile accepts ASCII Bend source with LF line endings, spaces, `#` comments,
-and indentation. Identifiers use letters/underscore followed by letters,
-digits, underscores or dots. Keywords cannot be identifiers.
+and indentation. A name is words joined by single dots, as the pinned seed reads one: each
+word is a letter or underscore followed by letters, digits or underscores. Keywords cannot be
+names. A run of name characters that starts like a name and is not one (`x.`, `a..b`, `A.1`)
+is `Invalid parse name`, in every position, before any structure is read.
 
 - Named, nonempty, monomorphic `type T is Type:` and `type T is Data:`
   declarations containing nullary constructors such as `Off{}` and `On{}`.
@@ -188,6 +190,23 @@ laws. These are helper/transition laws; whole-graph order independence and
 compiler correctness are not proved.
 
 ## Binding and quantity semantics
+
+A pattern or let binder names one value. The seed reads a dotted name as a reference to a
+global, so a dotted binder is `Invalid parse pattern-binder` (`binding-name` for a let)
+unless a parameter of the same function binds that exact name, which the binder then repeats;
+the parser checks this for the single-file and the bundle entry alike. A constructor is no
+binder once it is declared: a let binder that names a constructor of Base, of an import or of
+the book's own earlier declarations is `Invalid check constructor-pattern-binder`, as a
+pattern binder already was. The seed registers constructors in source order, so a let binder
+may name a constructor declared later, as a parameter, a function or a type may. The let rule
+lives in qualification, which orders registration, so it is a `--bundle` rule. Known
+imprecisions, each Invalid where the seed accepts and inherited: the single-file entry does not
+test let binders against constructors; the checker's catalog-wide test also rejects a pattern
+binder named like a constructor declared later in the book (`constructor-pattern-binder`);
+an arm body must start right of its `case` keyword (`Invalid parse body-indentation`), so an
+offset tail dedented left of `case` with the body on the same line is rejected; and a newline
+after `case` or inside call or constructor arguments, other than after an offset's `+`, is
+`Invalid parse expected-term`.
 
 Resolved occurrences use lexical levels within a function environment, never
 display-name lookup. New bindings append a level; shadowing resolves to the
@@ -414,7 +433,9 @@ where a path selects its row, so a dead leaf's failure is
 row, reachable or not, as in the seed. The 256-offset bound, quantities, first-parameter strict
 field descent and forward-call restrictions remain enforced. An offset's `+`
 must touch its literal (`1n+p`); a separated `+` is operator sugar,
-`Unsupported parse operator`. As in the seed, `0n+t` reads as t itself, so a
+`Unsupported parse operator`. The tail follows the `+` after a space, a newline, a
+comment or a blank line, as the seed's term reader skips them; a keyword on a later line is no
+tail (`Unsupported parse term-form`). As in the seed, `0n+t` reads as t itself, so a
 parsed offset always spells a successor. An expression offset checks as that
 spelling, the matrix's own expansion: `kn+t` is k Succ constructors around the
 shared tail, as the seed builds it, so recursion through `1n+f(p)` allocates
@@ -521,7 +542,7 @@ expansion; they
 do not prove whole-compiler correctness or all-input intrinsic refinement. The
 registered literals gate compares the frozen accepted calls in both evaluator
 and compiler lanes, compares 61 frozen primitive and record result displays in
-both evaluator lanes, and kills 25 type-correct semantic mutants. The Wasm host
+both evaluator lanes, and kills 36 type-correct semantic mutants. The Wasm host
 observes enum results only, so result displays have no Wasm lane.
 Live Perch review remains a coordinator gate; offline preflight alone is not a
 style pass. Existing compiler gates and their frozen expectations are retained.

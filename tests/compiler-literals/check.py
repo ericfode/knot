@@ -382,11 +382,38 @@ MUTANTS = [
     {'name': 'raw-delete', 'file': 'primitive-eval.bend', 'lane': 'eval',
      'old': 'Bool.and(U32.is_ge(code,32),U32.is_ne(code,127))', 'new': 'U32.is_ge(code,32)',
      'fixture': 'result-char', 'export': 'sample', 'arguments': [12], 'wrong_display': "'\x7f'"},
-    # Review round 10: the tail of an offset follows its `+` after a newline or a comment.
+    # Review round 10 (workflow review 1 of a122239e). Each mutant undoes one rule the frozen books pin:
+    # the offset tail after a newline, the reading of every name, the scope of a dotted binder, the
+    # constructor test of a let binder, and its source order.
     {'name': 'offset-newline-kept', 'file': 'parse.bend',
      'old': 'then(run(n,Term{pattern},S.skip_lines(tail)),value => rest =>',
      'new': 'then(run(n,Term{pattern},tail),value => rest =>',
      'fixture': 'offset-layout', 'verdict': (2, 'Invalid\tparse\texpected-term\t')},
+    {'name': 'names-unread', 'file': 'parse.bend',
+     'old': 'S.bind(Unit,Parsed,names(tokens),u => run(1n+n,Book{},tokens))',
+     'new': 'run(1n+n,Book{},tokens)',
+     'fixture': 'name-parameter-trailing-dot', 'verdict': (0, 'Built\t')},
+    {'name': 'dotted-binder-anywhere', 'file': 'parse.bend',
+     'old': 'Bool.not(parameter_named(params,S.text(name)))', 'new': 'True{}',
+     'fixture': 'binder-scope', 'verdict': (2, 'Invalid\tparse\tpattern-binder\t')},
+    {'name': 'name-may-end-in-dot', 'file': 'parse.bend',
+     'old': '    case SNil{}: Bool.not(head)', 'new': '    case SNil{}: True{}',
+     'fixture': 'name-parameter-trailing-dot', 'verdict': (0, 'Built\t')},
+    {'name': 'name-word-may-be-empty', 'file': 'parse.bend',
+     'old': 'S.choose(Bool,head,u => False{},u => name_text(tail,True{}))', 'new': 'name_text(tail,True{})',
+     'fixture': 'name-function-double-dot', 'verdict': (0, 'Built\t')},
+    {'name': 'name-word-may-start-with-digit', 'file': 'parse.bend',
+     'old': 'S.choose(Bool,Bool.or(Bool.not(head),S.alpha(Char.to_u32(c))),u => name_text(tail,False{}),u => False{})',
+     'new': 'name_text(tail,False{})',
+     'fixture': 'name-constructor-digit-word', 'verdict': (0, 'Built\t')},
+    {'name': 'let-binder-unchecked', 'file': 'qualify.bend',
+     'old': 'S.bind(Qualified,Qualified,pattern(token,S.Variable{token},names,ctors),u =>',
+     'new': 'S.bind(Qualified,Qualified,done(S.Variable{token}),u =>',
+     'fixture': 'let-constructor-binder', 'verdict': (0, 'Built\t')},
+    {'name': 'constructor-binder-anywhere', 'file': 'qualify.bend',
+     'old': 'Bool.and(known(S.text(resolved),names),contains(ctors,S.text(resolved)))',
+     'new': 'contains(ctors,S.text(resolved))',
+     'fixture': 'binder-scope', 'verdict': (2, 'Invalid\tcheck\tconstructor-pattern-binder\t')},
 ]
 
 

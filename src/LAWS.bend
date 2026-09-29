@@ -100,6 +100,28 @@ law hash_import:
   {P.run(1n,P.Header{S.Token{"import",at},S.Token{"0x77a1a37baca5d86f62241cab956a1fb1",at}},Con{S.Token{"/",at},rest})
     == Fail{S.Unsupported{"parse","import",at}} : Result<S.Error,P.Parsed>}
 
+law malformed_name:
+  for +at: S.At
+  {P.names([S.Token{"f",at},S.Token{"x.",at}]) == Fail{S.Invalid{"parse","name",at}} : Result<S.Error,Unit>}
+
+law name_shapes:
+  {[P.malformed("x."),P.malformed("x..y"),P.malformed("x.1"),P.malformed("x.1a"),P.malformed("a.b_1"),P.malformed("_"),P.malformed("1.5"),P.malformed("<eof>")]
+    == [True{},True{},True{},True{},False{},False{},False{},False{}] : List<&2,Bool>}
+
+law dotted_binder_needs_a_parameter:
+  for +at: S.At
+  {P.binders(2n,S.Variable{S.Token{"x.y",at}},True{},Nil{})
+    == Fail{S.Invalid{"parse","pattern-binder",at}} : Result<S.Error,Unit>}
+
+law dotted_binder_repeats_a_parameter:
+  for +at: S.At
+  {P.binders(2n,S.Variable{S.Token{"x.y",at}},True{},[S.Parameter{S.Token{"x.y",at},1,S.Token{"U32",at}}])
+    == Done{Unit{}} : Result<S.Error,Unit>}
+
+law dotted_reference_binds_nothing:
+  for +at: S.At
+  {P.binders(2n,S.Variable{S.Token{"x.y",at}},False{},Nil{}) == Done{Unit{}} : Result<S.Error,Unit>}
+
 law offset_tail_after_newline:
   for +rest: List<&2,S.Token>
   {P.run(2n,P.LiteralTail{S.Literal{S.Token{"1n",S.At{0,2,1,0}},1,1,Nil{}},True{}},

@@ -394,6 +394,18 @@
       "trusted": "U32.to_nat as Base's reading of the count; the linear allocation of recursion through an offset is measured by the frozen depth books, not proved",
       "open_obligations": []
     },
+    "names_and_binders": {
+      "names": "A name is words joined by single dots, each a letter or underscore then letters, digits or underscores, as in the seed. A token that starts like a name and is not one is Invalid parse name, in every position; the parser reads names before structure (src/parse.bend::names).",
+      "dotted_binder": "A dotted pattern or let binder is Invalid parse pattern-binder (binding-name for a let) unless a parameter of the same function binds that exact name (src/parse.bend::binders); single-file and bundle entries alike.",
+      "constructor_let_binder": "A let binder naming a constructor of Base, of an import or of the book's own earlier declarations is Invalid check constructor-pattern-binder; a constructor declared later, a parameter, a function or a type may be named (src/qualify.bend::walk_in, --bundle only).",
+      "offset_layout": "The tail of an offset follows its `+` after a space, a newline, a comment or a blank line; a keyword on a later line is Unsupported parse term-form.",
+      "known_imprecisions": [
+        "the single-file entry does not test let binders against constructors",
+        "a pattern binder named like a constructor declared later in the book is Invalid check constructor-pattern-binder, where the seed accepts it",
+        "an arm body starting left of its case keyword is Invalid parse body-indentation, where the seed accepts it",
+        "a newline after case or inside call or constructor arguments, other than after an offset's `+`, is Invalid parse expected-term, where the seed accepts it"
+      ]
+    },
     "unmet": [
       "R3/R7 owned storage and reclamation",
       "broader recursion",

@@ -225,10 +225,11 @@ def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound:
         then(walk_in(n,S.Sequence{args},position,names,bound,ctors),items => binders =>
           sequence(items,xs => Done{Qualified{S.Call{t,xs},binders}})))
     case 1n+ +n S.Binding{+token,q,ann,value,+body}:
-      S.bind(Maybe<&2,S.Token>,Qualified,annotation(ann,names),a =>
-        then(walk_in(n,value,Expression{},names,bound,ctors),v => ignored =>
-          then(walk_in(n,body,Expression{},names,Con{S.text(token),bound},ctors),b => unused =>
-            done(S.Binding{token,q,a,v,b}))))
+      S.bind(Qualified,Qualified,pattern(token,S.Variable{token},names,ctors),u =>
+        S.bind(Maybe<&2,S.Token>,Qualified,annotation(ann,names),a =>
+          then(walk_in(n,value,Expression{},names,bound,ctors),v => ignored =>
+            then(walk_in(n,body,Expression{},names,Con{S.text(token),bound},ctors),b => unused =>
+              done(S.Binding{token,q,a,v,b})))))
     case 1n+ +n S.Match{token,value,+arms}:
       then(walk_in(n,value,Expression{},names,bound,ctors),v => ignored =>
         then(walk_in(n,S.Sequence{arms},Expression{},names,bound,ctors),items => unused =>

@@ -163,3 +163,16 @@ law promoted_constructor_is_not_a_pattern_binder:
   {Q.walk_in(1n,S.Promotion{S.Token{"Off",at}},Q.Pattern{},
     Q.Names{"m",Nil{},Nil{},["m.Off"]},Nil{},["m.Off"]) ==
     Fail{S.Invalid{"check","constructor-pattern-binder",at}} : Result<S.Error,Q.Qualified>}
+
+law constructor_is_not_a_let_binder:
+  for +at: S.At
+  {Q.walk_in(3n,S.Binding{S.Token{"True",at},1,None{},S.Variable{S.Token{"v",at}},S.Variable{S.Token{"v",at}}},Q.Expression{},
+    Q.Names{"m",Nil{},["True"],Nil{}},["v"],["True"]) ==
+    Fail{S.Invalid{"check","constructor-pattern-binder",at}} : Result<S.Error,Q.Qualified>}
+
+law later_constructor_can_be_a_let_binder:
+  for +at: S.At
+  {Q.walk_in(3n,S.Binding{S.Token{"Late",at},1,None{},S.Variable{S.Token{"v",at}},S.Variable{S.Token{"v",at}}},Q.Expression{},
+    Q.Names{"m",Nil{},Nil{},Nil{}},["v"],["m.Late"]) ==
+    Done{Q.Qualified{S.Binding{S.Token{"Late",at},1,None{},S.Variable{S.Token{"v",at}},S.Variable{S.Token{"v",at}}},Nil{}}}
+    : Result<S.Error,Q.Qualified>}
