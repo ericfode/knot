@@ -849,15 +849,17 @@ A plan holds a Default only where a row is absent (§3), and the checker of the 
 2a84a4f5) lowers a source catch-all on an algebraic type into a row for each constructor that no arm of the source names,
 with the catch-all's body copied into it, and emits no Default; a lone catch-all or a binder lowers to its bare body, with
 no Case, the third row's shape. (That checker refuses an `IO.OP<R>` parameter as `Unsupported parse parameter-type`, so
-this was measured on sources over a user type of IO.OP's shape, DECISIONS entry 37.) The second row's sources therefore
-lower to the complete tables of `case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled` and
-`case-request-emit-default-compiled`, the fourth row's sources are complete tables already, and the VM refuses each
-request where the seed's native lane takes the catch-all: four run controls, `Unsupported vm effect` after 8 entries with
-nothing written. That is a recorded capability gap (D4: Unsupported, never Invalid, never a bound), and no rule of the VM
+this was measured on sources over a user type of IO.OP's shape; the merged head of `campaign/literals-integ` at 9f98fb09
+lowers these shapes the same way, DECISIONS entry 37.) The second row's sources therefore lower to the complete tables of
+`case-request-emit-default-u32-compiled`, `-halt-default-u32-compiled` and `case-request-emit-default-compiled`, a source
+of the fourth row's first shape is a complete table already, and the VM refuses each request where the seed's native lane
+takes the catch-all: four run controls, `Unsupported vm effect` after 8 entries with nothing written. That is a recorded capability gap (D4: Unsupported, never Invalid, never a bound), and no rule of the VM
 closes it, because a complete table has lost what the catch-all was for: the sources of `case-request-emit-default-u32`
 (`Emit: 1 / _: 2`, native `2`) and of `case-request-both-plus-default` (`Emit: 1 / Halt: 2 / _: 3`, native `3`) lower to
-one plan, and so do those of `case-request-nested-default` (native `3`) and `case-request-inner-default-only` (a native
-fail-stop). The image can express the seed's answer: a Default that tests the slot again for the arms that the source
+one plan. So do those of `case-request-inner-default-only` (a native fail-stop) and of `case-request-nested-default`
+(native `3`) where a checker accepts the latter's `_` after a field pattern: nest at 2a84a4f5 does for a constructor
+sub-pattern, and the merged head refuses it after a literal one as `Unsupported check variable-pattern`, at check time and
+before any image exists. The image can express the seed's answer: a Default that tests the slot again for the arms that the source
 names after the catch-all takes a request as the native lane does (`case-request-both-plus-default-retested` and
 `-nested-default-retested`, each `3\n` after 13 entries with one effect). Closing the gap is therefore a change of the
 lowering, to emit that shape, or of §3, to admit a Default beside a complete table; the VM's Case rule needs neither. The
@@ -1512,8 +1514,9 @@ lane and requires:
   an algebraic type that the literals head refuses as `Unsupported check variable-pattern`; four (round 13, review round 1)
   on a catch-all for which a compiled plan has no place (`case-request-both-plus-default`, `-nested-default`,
   `-inner-default-only` and the Book `-book-both-plus-default`): the native lane takes it, printing `3`, `3` and `On{}`,
-  and fail-stops only where the catch-all is inside the Halt arm; the plans of the first two lower to the complete tables of
-  `case-request-emit-default-u32-compiled` and `case-request-nested-default-compiled`, which the VM refuses (§8). Three frozen
+  and fail-stops only where the catch-all is inside the Halt arm; the plan of the first is the complete table of
+  `case-request-emit-default-u32-compiled`, and that of the second, where a checker accepts its source, the nested table of
+  `case-request-nested-default-compiled`, which is also the plan of the third (§8); the VM refuses both. Three frozen
   refusals of the comparison (a source that drifted, a lane that drifted, a lane that contradicts its
   review) are held by three rule mutants. A witness is evidence for the text and never a VM expectation:
   vm-model and vm-core do not read it;

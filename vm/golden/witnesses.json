@@ -343,7 +343,7 @@
     {
       "name": "case-request-nested-default",
       "source": "vm/golden/witness/case-request-nested-default.bend",
-      "note": "arms for Emit and for Halt whose code is matched against 0, and a catch-all: the outer table names every constructor, so the catch-all is reached only through the field pattern and the native lane takes it for a request (`3`); the Bun lane fail-stops. The plan is Emit and Halt rows, the Halt row a keys Case on its code with the catch-all as its Default, and no Default at the outer table (`case-request-nested-default-compiled`), which the VM refuses; `case-request-inner-default-only` has the same plan and a native fail-stop. A recorded gap (SPEC section 8).",
+      "note": "arms for Emit and for Halt whose code is matched against 0, and a catch-all: the outer table names every constructor, so the catch-all is reached only through the field pattern and the native lane takes it for a request (`3`); the Bun lane fail-stops. Where a checker accepts the source (nest at 2a84a4f5 lowers a constructor sub-pattern so; the merged head refuses a `_` after a literal field pattern as `Unsupported check variable-pattern`), the plan is Emit and Halt rows, the Halt row a keys Case on its code with the catch-all as its Default, and no Default at the outer table (`case-request-nested-default-compiled`), which the VM refuses; `case-request-inner-default-only` has the same plan and a native fail-stop. A recorded gap (SPEC section 8).",
       "review": {
         "native": {
           "exit": 0,

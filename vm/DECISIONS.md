@@ -917,6 +917,15 @@ follows it (§5, §10, §11) without a new image header word.
      `Emit: On / Halt: Off` all print the core `case $0 [0(1 $1:0;)=>v0.1;1(1 $1:0;1 $2:0;)=>v0.0]`; `Emit: On / Halt{On{}, m}: Off / _: On`
      and the same with the `_` only inside `match c` both print `case $0 [0(1 $1:0;)=>v0.1;1(1 $1:0;1 $2:0;)=>case $1
      [1=>v0.0;0=>v0.1]]`; a lone `_` and a binder print the bare body `v0.1`, so §8's third row does hold for compiled programs.
+     The merged head (`campaign/literals-integ` at 9f98fb09, built the same way, `.local/integ-check --bundle .`, over `import Base`
+     and `type Cmd is Data: Send{v: Flag2} / Stop{c: U32, m: Flag2}`, since Base already declares Emit and Halt) agrees on the flat
+     shapes: `Send: 1 / _: 2` and `Send: 1 / Stop{c, m}: 2 / _: 3` both print `f(1:2)->0=case $0 [0(1 $1:1;)=>v0.1;1(1 $1:0;1 $2:1;)=>v0.2]`,
+     a lone `_` and a binder print `v0.3`, and `Send: 1 / Stop{c, m}: (match c: case 0: 2 / case _: 3)`, with or without a dead outer
+     `_`, prints `... 1(1 $1:0;1 $2:1;)=>case $1 [0=>v0.2;_=>v0.3]]`. It refuses the exact source of `case-request-nested-default`,
+     a `_` after the literal field pattern `Stop{0, m}`, as `Unsupported check variable-pattern 186:187:15:9`, at check time and before
+     any image exists, so that witness is a seed fact whose exact source no compiled program reaches today. Its plan is reached by nest's
+     constructor sub-pattern, and by `case-request-inner-default-only`'s source, which the merged head lowers to the same plan (the native
+     lane fail-stops there and the VM agrees); adding a dead outer `_` to that source lowers to the same plan again.
      So a compiled Case over a request is a complete table with no Default: the VM answers `Unsupported vm effect` where the native
      lane takes the catch-all, and the three D24 goldens witness plans that no lowering emits.
      - *Fixed inside `vm/`, by the review's second option* (the first is nest's and image's to change, so it is the coordinator's
