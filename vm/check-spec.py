@@ -1575,7 +1575,6 @@ def effect_controls(plans: dict) -> list:
     def bound(*string_and_k):
         return ['call', 8, got, [printing(*string_and_k)]]
     laundered = ['con', 3, 1, [['lit', 2, 'Char', 97], ['call', 3, ident, [['closure', 9, 1, 1, [], ['ref', 8, 0]]]]]]
-    refused = {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 4}
     on = 'Evaluated\t8\t1\tOn{}\n'
     # IO.args (foreign 0) is IO(List<String>): a List of Strings' continuation type 11, applied to 12.
     args_types = [{'kind': 'data', 'name': 'List', 'constructors': [{'name': 'Nil', 'fields': []}, {'name': 'Con', 'fields': [None, 10]}]},
@@ -1630,7 +1629,7 @@ def effect_controls(plans: dict) -> list:
         ('book-print-ill-typed', image('book', bound(laundered)), {**unsupported, 'calls': 6}),
         ('book-args', {**image('book', ['call', 8, got, [listed]], 0, args), 'types': [*types, *args_types],
                        'representation': {**fp['representation'], 'List': 10}}, {**unsupported, 'calls': 5}),
-        ('fuel-book-effect-exact', image('book', bound(text('x'))), {'fuel': 4, **refused}),
+        ('fuel-book-effect-exact', image('book', bound(text('x'))), {'fuel': 5, **unsupported, 'calls': 5}),
         ('fuel-book-effect-short', image('book', bound(text('x'))),
          {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 3}),
         ('book-continuation-called', image('book', ['call', 8, got, [['call', 4, resume, [['value', 0, 0]]]]]),
