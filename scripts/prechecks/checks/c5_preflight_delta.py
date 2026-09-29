@@ -6,7 +6,8 @@ and reports only what the branch changed; absolute counts are not findings (25 t
 exist at every base).
 
   R1 preflight-new-blocker    a unit newly truncated at head
-  R2 composition-budget       a group's composition crossed the 48,000-byte cap, or headroom fell under 2%
+  R2 composition-budget       a group's composition crossed the 48,000-byte cap, or headroom fell under 2%; a changed file in
+                              no group that composes over the cap alone (a file in a group is judged by its group)
   R3 unit-cap                 the full manifest run exceeds the style unit cap
   R4 manifest-membership      a new .bend outside every manifest group, or a group lost a file
   R5 task-provenance          a --task file that did not exist at base, or is over the size cap
@@ -84,30 +85,69 @@ def changed_targets(ctx) -> list[str]:
     return [p for p in ctx.changed_paths(statuses='AMRC') if p.endswith('.bend') and not globs.match_any(EXCLUDED_TARGETS, p)]
 
 
+def grouped_files(ctx) -> set[str]:
+    """Every file that a manifest group lists (files or selected_files): those are reviewed, and budgeted, as their group."""
+    for path in MANIFESTS:
+        if ctx.head.has(path):
+            try:
+                data = ctx.head.json(path) or {}
+            except ValueError:
+                return set()
+            return {f for g in data.get('groups', []) for f in (g.get('files') or []) + (g.get('selected_files') or [])}
+    return set()
+
+
+def tolerant_preflight(ctx, tree, targets: list[str], label: str, timeout: float = 120):
+    """(report, error, dropped). A target that does not parse under the Perch parser aborts the whole batch
+    ("Bend target does not parse: <path>"); such a target is dropped and the rest are preflighted again, so one intentionally
+    malformed fixture does not blind the check to every other changed file. `dropped` lists what was not preflighted."""
+    dropped: list[str] = []
+    targets = list(targets)
+    for _ in range(12):
+        report, error = preflight(ctx, tree, targets, label, timeout)
+        match = re.search(r'Bend target does not parse: (\S+)', error or '')
+        if report is not None or not match or match.group(1) not in targets:
+            return report, error, dropped
+        dropped.append(match.group(1))
+        targets = [t for t in targets if t != match.group(1)]
+        if not targets:
+            return None, error, dropped
+    return None, error, dropped
+
+
 def sole_member_budgets(ctx, targets: list[str], old_targets: list[str]) -> list[Condition]:
-    """A changed file that is its own composition group and exceeds the cap (each file preflighted alone)."""
+    """A changed file that is in no manifest group and exceeds the cap on its own (each file preflighted alone).
+
+    A file that a group lists is reviewed as part of its group, and the group composition check (ratcheted against the
+    base) judges it; measuring it alone would charge it for helper files that no split of the file can remove.
+    """
     from concurrent.futures import ThreadPoolExecutor
+    grouped = grouped_files(ctx)
+    targets = [t for t in targets if t not in grouped]
     if len(targets) > 24:
         targets = targets[:24]
 
     def one(tree, path, label):
         report, _error = preflight(ctx, tree, [path], label)
         composition = (report or {}).get('composition') or {}
-        return path, composition.get('source_bytes'), composition.get('byte_limit') or COMPOSITION_CAP
+        return path, composition.get('source_bytes'), composition.get('byte_limit') or COMPOSITION_CAP, composition.get('context_files')
 
     with ThreadPoolExecutor(max_workers=max(ctx.jobs, 1)) as pool:
         heads = list(pool.map(lambda p: one(ctx.head, p, 'head'), targets))
-        bases = {p: b for p, b, _l in pool.map(lambda p: one(ctx.base, p, 'base'), [t for t in targets if t in old_targets])}
+        bases = {p: b for p, b, _l, _c in pool.map(lambda p: one(ctx.base, p, 'base'), [t for t in targets if t in old_targets])}
     found = []
-    for path, size, limit in heads:
+    for path, size, limit, context in heads:
         if size is None or size <= limit:
             continue
         if (bases.get(path) or 0) > limit:
             continue                                      # already over the cap at base
+        own = len(ctx.head.read(path) or b'')
         found.append(Condition(ID, 'composition-budget', 'major', {'target': path}, value={'bytes': size},
-                               expected=f'a sole-member group composes within {limit} bytes',
-                               observed=f'{path} composes {size} bytes (cap {limit}) and cannot be reviewed as a group',
-                               fix_hint='Split the file along a real seam.'))
+                               expected=f'a file outside every manifest group composes within {limit} bytes',
+                               observed=f'{path} is in no manifest group and composes {size} bytes (cap {limit}): '
+                                        f'{own} bytes of its own and {context if context is not None else "?"} helper file(s)',
+                               fix_hint='Add it to a group of the manifest, which judges its composition as a group, or '
+                                        'shrink the helper closure it reaches (splitting the file alone rarely helps).'))
     return found
 
 
@@ -221,8 +261,12 @@ def run(ctx) -> CheckResult:
         result.rules_unavailable['preflight'] = 'no scripts/perch-style.mjs in this tree'
         return result
     old_targets = [p for p in targets if ctx.base.has(p)]
-    head_report, head_error = preflight(ctx, ctx.head, targets, 'head')
-    base_report, base_error = (preflight(ctx, ctx.base, old_targets, 'base') if old_targets else (None, ''))
+    head_report, head_error, unparsed = tolerant_preflight(ctx, ctx.head, targets, 'head')
+    base_report, base_error, _base_unparsed = (tolerant_preflight(ctx, ctx.base, old_targets, 'base') if old_targets else (None, '', []))
+    if unparsed:
+        facts['unparsed_targets'] = unparsed
+        result.rules_unavailable['preflight-targets'] = (f'{len(unparsed)} changed .bend target(s) do not parse under the Perch parser and were '
+                                                         f'not preflighted: {", ".join(unparsed[:3])}' + (' ...' if len(unparsed) > 3 else ''))
     if head_report is None:
         result.rules_unavailable['preflight-new-blocker'] = head_error or 'preflight produced no report'
     else:

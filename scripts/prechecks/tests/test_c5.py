@@ -88,15 +88,56 @@ class C5Tests(RepoTest):
         self.assertEqual([], self.rules(result, 'preflight-new-blocker'))
         self.assertTrue(any('parser profile' in n for n in result.notes))
 
-    def test_sole_member_over_the_cap(self):
-        self.start()
-        self.fx.commit('work', {'src/parse.bend': 'def parse(): 2\n'})
-        over = {'source_bytes': 135255, 'byte_limit': 48000, 'available': False}
+    def test_sole_member_outside_every_group_over_the_cap(self):
+        self.start({'src/loose.bend': 'def loose(): 1\n'})
+        self.fx.commit('work', {'src/loose.bend': 'def loose(): 2\n'})
+        over = {'source_bytes': 135255, 'byte_limit': 48000, 'available': False, 'context_files': 7}
         stub = Stub(head=report([], composition=over), base=report([]), head_manifest=report(groups=[]), base_manifest=report(groups=[]))
-        self.assertEqual(['major'], [c.severity for c in self.rules(self.run5(stub), 'composition-budget')])
+        found = self.rules(self.run5(stub), 'composition-budget')
+        self.assertEqual(['major'], [c.severity for c in found])
+        self.assertIn('in no manifest group', found[0].observed)
+        self.assertIn('7 helper file(s)', found[0].observed)                   # the closure is named, not blamed on the file
+        self.assertIn('Add it to a group', found[0].fix_hint)
         stub = Stub(head=report([], composition=over), base=report([], composition=over),
                     head_manifest=report(groups=[]), base_manifest=report(groups=[]))
-        self.assertEqual([], self.rules(self.run5(stub), 'composition-budget'))
+        self.assertEqual([], self.rules(self.run5(stub), 'composition-budget'))    # already over the cap at base
+
+    def test_a_file_that_a_group_lists_is_judged_by_its_group_not_alone(self):
+        """A new law file added to an existing group composes 52k alone (its helper closure) and 22k as the group reviews it."""
+        self.start()
+        self.fx.commit('work', {'src/parse.bend': 'def parse(): 2\n'})               # src/parse.bend is listed by the `parsing` group
+        over = {'source_bytes': 52838, 'byte_limit': 48000, 'available': False, 'context_files': 7}
+        groups = [group('parsing', 22008, files=['src/parse.bend']), group('checking', 1000)]
+        stub = Stub(head=report([], composition=over), base=report([]), head_manifest=report(groups=groups), base_manifest=report(groups=groups))
+        result = self.run5(stub)
+        self.assertEqual([], self.rules(result, 'composition-budget'))
+        self.assertEqual(22008, result.facts['preflight']['groups']['parsing']['bytes'])
+        # The group rule still catches the same file when the group itself loses its composition (vm-model's model.bend).
+        lost = [group('parsing', 144319, files=['src/parse.bend'], available=False, reasons=['composition_byte_limit']), group('checking', 1000)]
+        stub = Stub(head=report([], composition=over), base=report([]), head_manifest=report(groups=lost), base_manifest=report(groups=groups))
+        found = self.rules(self.run5(stub), 'composition-budget')
+        self.assertEqual([('major', 'parsing')], [(c.severity, c.subject.get('group')) for c in found])
+
+    def test_a_target_that_does_not_parse_is_dropped_and_named_not_a_blind_spot(self):
+        self.start()
+        self.fx.commit('work', {'src/parse.bend': 'def parse(): 2\n', 'tests/x/bad.bend': 'not bend\n', 'tests/x/worse.bend': 'still not\n'})
+        calls = []
+
+        def stub(ctx, tree, args, label, timeout=120):
+            calls.append((label, list(args)))
+            if args and args[0].startswith('--manifest='):
+                return report(groups=[]), ''
+            for bad in ('tests/x/bad.bend', 'tests/x/worse.bend'):
+                if bad in args:
+                    return None, f'Style ranking failed: Bend target does not parse: {bad}'
+            return (report([unit('src/parse.bend::a', 'context-file-limit')]) if label == 'head' else report([])), ''
+
+        with mock.patch.object(c5, 'preflight', stub):
+            result = self.conditions(c5)[1]
+        self.assertEqual(['src/parse.bend::a'], [c.subject['target'] for c in self.rules(result, 'preflight-new-blocker')])
+        self.assertEqual(['tests/x/bad.bend', 'tests/x/worse.bend'], result.facts['preflight']['unparsed_targets'])
+        self.assertIn('2 changed .bend target(s) do not parse', result.rules_unavailable['preflight-targets'])
+        self.assertEqual('conditions', result.finish().outcome)
 
     def test_manifest_group_budgets_ratchet_against_base(self):
         self.start()
