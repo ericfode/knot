@@ -102,7 +102,7 @@ the lowering of two hand-written displays; 15 seed witnesses (sources whose two 
 three the literals head, it re-executes and compares with frozen bytes and a literal review, with three
 frozen refusals of that comparison); 137 codec, 4 source, 128 evaluator and twenty-three
 rule mutants of `check-spec.py` itself (ten of them delete one clause of the canonicality clauses that the gate holds
-against re-encoding on 5,797 images); the accounting of all 178 omissions of a refusal of the reference codec or of a clause of its test, each killed,
+against re-encoding on 5,843 images); the accounting of all 178 omissions of a refusal of the reference codec or of a clause of its test, each killed,
 held by a raise or unreached; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It asserts that its own peak
 memory stays under 4 GiB (it holds about 430 MB): no mutant sizes an allocation from a raw word of an image. It writes only

@@ -1567,7 +1567,7 @@ lane and requires:
   core that declared none; a witness (§8) whose source hash, lane bytes or literal review goes
   unchecked, each by its own frozen refusal; and, for each clause of §4 step 5, `piecewise_rejected` without that
   clause (`canonicality-without-*`), each by the control that breaks it alone (`canonical_differential`: the clauses and
-  re-encoding decide 5,797 images alike, the controls, the admitted images, the goldens, 480 seeded layouts and 4,875
+  re-encoding decide 5,843 images alike, the controls, the admitted images, the goldens, 480 seeded layouts and 4,875
   perturbations of a word among them, and 527 of them are noncanonical).
   Four survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, the fuel test before the operand check,

@@ -1104,7 +1104,9 @@ follows it (§5, §10, §11) without a new image header word.
      Three rows of entry 38's table moved (40 to 46, 6 to 12 and 20 to 23), and the nine that die by the atomic set alone did not. SPEC §12's sentence that
      named `inspect-request-chr` and `-prim` as the only killers of a request taken for an ill-typed scalar, and its counts of the killers of the eager rule (ten
      goldens and twenty-four run controls, which round 13's three goldens and later controls had already outgrown) and of `book-enters-k-without-effect`
-     (fourteen Book run controls), were re-measured on the tree: thirteen goldens and forty-six run controls, and thirty.
+     (fourteen Book run controls), were re-measured on the tree: thirteen goldens and forty-six run controls, and thirty. The count of images on which
+     the canonicality clauses are held against re-encoding (SPEC §12 and GATES.md said 5,797, stale since the atomic controls added admitted images) is the
+     receipt's 5,843: 211 refusals, the 166 admitted controls, 111 goldens, 480 layouts and 4,875 perturbations, 527 of them noncanonical.
    - **Two survivors of the review that are no mutants.** `construct-nat-limit-first` (a Succ that tests the range before it inspects its word: an int always passes
      the inspection, and a non-int never reaches the range test) and `book-stop-discards-effects` (a Book's `effects` is always 0). Neither changes anything that
      the reference evaluation reports, so neither is added; the review's own other mutants (`view-type-before-request`, `word-type-before-request`,
