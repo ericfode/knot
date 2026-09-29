@@ -93,9 +93,9 @@ is `Invalid lex name`, in every position, before any structure is read.
   binder already in context, before the scrutinee in match order, has an empty
   constructor set (an emptied residual or a zero-constructor datatype). This
   never bypasses the checking of a selected body. Pattern binders and live let
-  binders are single words; a dotted one repeats a parameter of the same function
-  and is otherwise invalid (see Binding and quantity semantics), while an erased
-  let's name is a name, however it is spelled.
+  binders are single words; a dotted one repeats a name in scope, a parameter of the same
+  function or a let above it, and is otherwise invalid (see Binding and quantity semantics),
+  while an erased let's name is a name, however it is spelled, and is in scope below it.
   `_` is anonymous in row and
   field positions; referring to it reports `Invalid check free-name`. Names
   such as `_x` remain ordinary binders.
@@ -167,7 +167,10 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | `import ./...`, `import ../...` or `import 0x.../...` | `parse` | `import` |
 | A second `case` arm on the line of an arm's body | `parse` | `same-line-arm` |
 | A line break in a let before its `=` or between its marker and name | `parse` | `line-break` |
-| A name (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
+| A name or a literal (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
+| A `+` after a let's value on its line (`c = a ++ b`) | `parse` | `operator` |
+| A parameter named like the type of itself, of a later parameter or of the result | `parse` | `parameter-shadow` |
+| A `+` binder spelled like a datatype that the checker cannot place | `check` | `promoted-type` |
 | A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
 
 The seed reads arguments separated by whitespace alone as arguments, a second arm on
@@ -279,8 +282,9 @@ compiler correctness are not proved.
 
 A pattern or let binder names one value. The seed reads a dotted name as a reference to a
 global, so a dotted binder is `Invalid parse pattern-binder` (`binding-name` for a let)
-unless a parameter of the same function binds that exact name, which the binder then repeats;
-the parser checks this for the single-file and the bundle entry alike. A constructor is no
+unless the scope binds that exact name, which the binder then repeats: a parameter of the same
+function, or a let above it, erased or live (the seed's parse scope holds the name of every let).
+The parser checks this for the single-file and the bundle entry alike (`binders`). A constructor is no
 binder once it is registered, and the seed registers constructors in source order: a pattern
 or let binder that names a constructor of Base, of an import or of the book's own earlier
 declarations is `Invalid check constructor-pattern-binder`, while one may name a constructor
@@ -289,6 +293,20 @@ for a `--bundle` book. For a single file the parser's `registered` judges each b
 the constructors declared before it, and the driver runs it before checking; the checker
 repeats the source-order test for field and row binders (`G.constructor_before`), which
 agrees with it on a single file.
+
+The seed reads `+D` as a quantified datatype where D names a type declared before it, so a
+promoted binder (a `+` pattern, field or let) spelled like one is `Invalid check promoted-type`. A
+body is judged once, before it is checked, against the datatypes declared before it (`G.promotions`);
+a binder the checker cannot place is `Unsupported check promoted-type`: an imported datatype is
+spelled with its module and its binder's module is unknown here, and Base's datatypes outside the
+reachable slice are not in the book, so a capitalized name that no datatype or constructor of the
+book spells counts too. A parameter named like the type of itself, of a later parameter or of the
+result shadows that type in the annotation: `Unsupported parse parameter-shadow`.
+
+A body meets the datatypes declared before it, as the seed registers them. The book lists them in
+load order, imported files first, so `functions` counts those before each body and `G.before`
+places their constructors before every byte offset and the rest after: an imported constructor
+is always earlier, and offsets of different files are never compared.
 
 Layout follows the seed's term reader, which skips line breaks between a term's tokens. A line
 break may follow `case`, `match`, a let's `=` and an offset's `+`, may precede the `:` that
@@ -302,7 +320,9 @@ a match with no rows. Known imprecisions, each Invalid where the seed accepts: a
 first line must leave column 0 (`Invalid parse body-indentation`, pinned by the frontend
 gate); a function body's match must put its cases right of `match`; a line break inside a
 parameter, in a function header outside its parentheses, after a promotion's `+` or before a
-let's `=` or `:`; and a list item without its comma (`Invalid parse argument-separator`).
+let's `=` or `:`. A name or a literal after a list item without its comma is `Unsupported parse
+argument-whitespace`; another token there is `Invalid parse argument-separator`. A `+` after a
+let's value is `Unsupported parse operator`; any other token there is `Invalid parse expected-newline`.
 
 Resolved occurrences use lexical levels within a function environment, never
 display-name lookup. New bindings append a level; shadowing resolves to the
@@ -579,10 +599,11 @@ a known type, as bare constructors do: an unannotated binding (`n = 3`,
 `n = 2n+m`) is `Invalid check annotation-required`, a literal or offset
 scrutinee is `Invalid check constructor-scrutinee`, and with Base a literal or
 offset arm on a datatype scrutinee is `Invalid check pattern-type`. A literal field pattern
-is `Unsupported check nested-field-pattern`. A single-column match takes this matrix when an
-arm spells a literal or a Nat offset (also in a constructor's fields) or its scrutinee is an
-installed primitive; every other match is a datatype match, flat or a binary matrix, and a
-literal in a row of several columns is `Unsupported check literal-column`. As in the seed, a row that binds
+is `Unsupported check nested-field-pattern`. A match takes this matrix when it has one
+scrutinee and rows of one pattern, and an arm spells a literal or a Nat offset (also in a constructor's
+fields) or the scrutinee is an installed primitive; every other match is a datatype match, flat or a
+binary matrix, so a row of another width is `Invalid check pattern-arity` and a literal in a row of
+several columns, whatever its column, is `Unsupported check literal-column`. As in the seed, a row that binds
 a matrix column with `+` (`+x`, `1n+ +p`, `SCon{c, +t}`) promotes that column
 in every row of the match, and so every field opened from it. The binder, the
 scrutinee and those fields may then be used twice, even in rows before the `+`
