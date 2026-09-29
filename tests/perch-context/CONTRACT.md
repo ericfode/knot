@@ -89,7 +89,10 @@ of failing. Shaping source to fit a tool cap is not a fix.
     names tier's saving is the encoded-state bytes the cut removes, including the
     change to its `summarized` row; a cut that cannot shrink the state is skipped.
     The choice is a function of the entries alone: the order in which `calls` and
-    `called_by` were filled never changes which entries are cut.
+    `called_by` were filled never changes which entries are cut. The names tier
+    compares path and name by code point, so the process locale never changes its
+    choice. The interface tier's tie-break is unchanged (the runtime's collation),
+    which keeps every state that fits today byte-identical.
 11. **Names-only entry.** A helper or caller entry that is not yet a name (an
     interface summary, or a body the interface tier kept because its interface
     was no smaller) becomes `{path, name, representation: "names-only"}`: no
@@ -120,8 +123,9 @@ its marker, its rows, its source-byte accounting and an untouched primary source
 and task, both at unit level (a small cap) and through the whole preparation
 (the 60,000-byte cap); a unit whose primary source exceeds the cap still fails
 with the new error; states that fit are pinned to hashes taken before the tier
-existed; entries inserted out of size order, with two equal-size entries inserted
-in reverse path and name order, are cut in exactly the specified order. Four
+existed; entries inserted out of size order, with four equal-size entries (two of
+them differing only in case) inserted out of path and name order, are cut in
+exactly the specified order. Four
 syntax-valid semantic mutants must be rejected by these controls:
 `names-only-marker-dropped`, `primary-source-shortened`, `names-only-tier-skipped`
 and `names-only-order-nondeterministic` (its mutation drops the path and name

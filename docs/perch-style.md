@@ -220,9 +220,10 @@ line, and keeping only the first line saves 337 of 13,357 bytes, far too little.
 - **Order.** Each tier takes the largest saving first, then path, then name. The
   interface tier's saving is the source bytes it removes. The names tier's saving
   is the exact drop in encoded bytes, and a cut that cannot shrink the state is
-  skipped. The order of `calls` and `called_by` never changes the choice. Fitting
-  stops at the first state that fits, so an entry the cap does not need is left as
-  it was.
+  skipped. The order of `calls` and `called_by` never changes the choice, and the
+  names tier compares path and name by code point, so the process locale does not
+  either. The interface tier's tie-break is unchanged. Fitting stops at the first
+  state that fits, so an entry the cap does not need is left as it was.
 - **Record and marker.** Each cut has one `summarized` row with reason
   `context-state-names-only` (an interface entry's row changes its reason; a kept
   body gets a new row), so the row count stays one per summarized declaration. The
