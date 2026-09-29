@@ -87,6 +87,23 @@ def ratio(a: float, b: float):
     return round(a / b, 2) if b and b > 0 else None
 
 
+# Units of work of each frozen workload (vm/bench/workloads.json shapes): rounds times the size of a round.
+FROZEN_UNITS = {'deep-recursion': 4000 * 250000, 'peano': 200 * 1_000_000, 'list-fold': 240 * 1_000_000, 'string-scan': 900 * 10000}
+
+
+def per_unit(row: dict, native: dict, vm: dict, null: dict, frozen_baselines: dict) -> dict:
+    """Cycles per unit of work, start-up subtracted: the variant's, both lanes, and the seed's at the frozen size
+    (vm/bench/baselines.json), which the variant's short seed run cannot resolve."""
+    (unit, work), = row['work'].items()
+    base = frozen_baselines['workloads'][row['frozen_workload']]['summary']['cycles']['median']
+    seed_frozen = base / FROZEN_UNITS[row['frozen_workload']]
+    seed_variant = (native['cycles']['median'] - null['native']['cycles']['median']) / work
+    vm_variant = (vm['cycles']['median'] - null['vm']['cycles']['median']) / work
+    return {'unit': unit, 'work': work, 'seed_cycles_per_unit_frozen_size': round(seed_frozen, 3),
+            'seed_cycles_per_unit_variant': round(seed_variant, 3), 'vm_cycles_per_unit': round(vm_variant, 3),
+            'ratio_vm_to_seed_frozen_size': ratio(vm_variant, seed_frozen), 'ratio_vm_to_seed_variant': ratio(vm_variant, seed_variant)}
+
+
 def main(argv) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--repeat', type=int, default=5)
@@ -159,24 +176,23 @@ def main(argv) -> int:
                  'repeat': args.repeat, 'native': n, 'vm': v,
                  'ratio_cpu_raw': ratio(v['cpu']['median'], n['cpu']['median']),
                  'ratio_cpu_min_of_min': ratio(v['cpu']['min'], n['cpu']['min']),
-                 'ratio_cycles_raw': ratio(v['cycles']['median'], n['cycles']['median']) if v.get('cycles') and n.get('cycles') else None,
-                 'ratio_cpu_null_subtracted': ratio(net_vm, net_native) if net_native > 0.02 else None,
-                 'null_subtracted_note': None if net_native > 0.02 else 'the seed lane runs under 20 ms above its start-up: the ratio is not reported',
+                 'ratio_cpu_null_subtracted': ratio(net_vm, net_native) if net_native > 0.05 else None,
+                 'cpu_note': 'user + sys is read to 10 ms by /usr/bin/time: a seed run under about 50 ms is not resolved by it, so cycles, which are not rounded, carry those rows',
+                 'ratio_cycles_raw': ratio(v['cycles']['median'], n['cycles']['median']),
+                 'ratio_cycles_null_subtracted': ratio(v['cycles']['median'] - null['vm']['cycles']['median'],
+                                                       n['cycles']['median'] - null['native']['cycles']['median']),
+                 'per_unit': per_unit(row, n, v, null, frozen_baselines),
                  'samples': {lane: [{k: s[k] for k in ('cpu', 'user', 'sys', 'real', 'cycles', 'instructions', 'max_rss_bytes', 'load_1m_before', 'load_1m_after')}
                                     for s in samples[name][lane]] for lane in ('native', 'vm')}}
-        base = frozen_baselines['workloads'].get(row['frozen_workload']) if isinstance(frozen_baselines.get('workloads'), dict) else None
-        if base is None:
-            base = frozen_baselines.get(row['frozen_workload']) if isinstance(frozen_baselines, dict) else None
-        if base and base.get('summary'):
-            entry['frozen_full_size_baseline_cpu_median'] = round(base['summary']['user']['median'] + base['summary']['sys']['median'], 4)
         rows[name] = entry
     result = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'host': machine(),
               'load_average_at_start_and_end': [list(os.getloadavg())],
               'protocol': 'whole-process CPU (user + sys) and cycles under /usr/bin/time -l, lanes alternated; the VM is the pinned release vm.wasm through scripts/run-wasm-io.mjs',
               'null_program': null, 'workloads': rows}
     args.out.write_text(json.dumps(result, indent=1) + '\n')
-    print(json.dumps({k: {'raw': v['ratio_cpu_raw'], 'net': v['ratio_cpu_null_subtracted'],
-                          'native_cpu': v['native']['cpu']['median'], 'vm_cpu': v['vm']['cpu']['median']} for k, v in rows.items()}, indent=1))
+    print(json.dumps({k: {'cpu_raw': v['ratio_cpu_raw'], 'cycles_raw': v['ratio_cycles_raw'], 'cycles_net': v['ratio_cycles_null_subtracted'],
+                          'per_unit_frozen_size': v['per_unit']['ratio_vm_to_seed_frozen_size'],
+                          'seed_cpu': v['native']['cpu']['median'], 'vm_cpu': v['vm']['cpu']['median']} for k, v in rows.items()}, indent=1))
     return 0
 
 

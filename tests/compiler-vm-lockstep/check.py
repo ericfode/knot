@@ -12,18 +12,22 @@ memory) one transition at a time, then requires:
   complete machine state, before the first transition and after each one, is the same in both
   machines (tests/compiler-vm-lockstep/lockstep.py: registers, frames, output and every cell the
   roots reach; the constants word for word); a halting transition may differ from the model's atomic
-  one only by the two relations CORE.md choice 8 documents, counted and frozen;
+  one only by two named relations (lockstep.py; CORE.md choice 8 and SPEC section 6), counted and frozen;
 - the refusals the controls freeze are refused by both machines alike;
 - two long runs (a 70,000-entry tail loop and a 40,000-deep recursion, each crossing the 65,536-entry
   quantum) agree in sampled states and at every state around the yield;
-- the exact strength (identity of addresses, rc and free lists) holds between the model and itself and
-  is refused where the model first reclaims, which is what vm-rc will change;
+- the exact strength (identity of addresses, rc and free lists) to refuse an rc-only and a free-list-only change
+  that the reclaim-blind strengths pass, to hold between the model and itself, and to fail against the VM where the
+  model first reclaims, which is what vm-rc will change;
 - the VM's release module, through the real host, equals the frozen expectation and, live, the pinned
-  eval-cli under the Exhausted-lane rule (SPEC section 11) on every golden and Book invocation;
+  eval-cli under the Exhausted-lane rule (SPEC section 11) on every golden and Book invocation, and equals
+  the live eval-cli and each frozen suite's expectation on every call of the wasm, fields-wasm, recursion and
+  fields suites whose oracle core display lowers to an image (the others have no image until `image`);
 - every Program's effects are classified as eager and D23 give one trace (`spine`) or as pending D23,
   against the classes frozen by literal review;
 - VM mutants, model mutants and harness weakenings, each killed at a named state through a wrong
-  observation; the state-only ones first shown to leave every output-level observation intact.
+  observation (a side that produced no trace is a harness fault, never a kill); the state-only ones first shown
+  to leave every final control and output unchanged, and the frame and heap ones to pass vm-core's own audit.
 
 It writes only tests/compiler-vm-lockstep/receipts/lockstep.json.
 """
@@ -559,8 +563,8 @@ def long_kill(model: Path, base: Base) -> dict:
 KINDS = {1: 'steps', 2: 'memory', 3: 'frames'}
 
 
-def host_run(argv: list) -> dict:
-    p = subprocess.run(['node', str(HOST), str(HERE / 'vm.wasm'), str(GOLDEN), '--', *argv], capture_output=True, timeout=300 * SCALE,
+def host_run(argv: list, sandbox: Path = GOLDEN) -> dict:
+    p = subprocess.run(['node', str(HOST), str(HERE / 'vm.wasm'), str(sandbox), '--', *argv], capture_output=True, timeout=300 * SCALE,
                        env={**os.environ, 'BEND_NO_TELEMETRY': '1'})
     return {'exit': p.returncode, 'stdout': p.stdout.decode('utf-8', 'replace'), 'stderr': p.stderr.decode('utf-8', 'replace')}
 
@@ -582,13 +586,14 @@ def eval_oracles() -> dict:
             target.write_text(text)
         built[lane] = {'tree': root / lane, 'commit': entry['commit']}
 
-    def build(lane):
-        out = root / f'{lane}-eval'
-        got = run([SEED, built[lane]['tree'] / 'src/eval-cli.bend', '-o', out], 900)
-        require(got['exit'] == 0 and out.exists(), (lane, got['stderr'][-1500:]))
-        return lane, out
-    for lane, out in pool(build, list(built), workers=2):
-        built[lane]['eval'] = out
+    def build(job):
+        lane, tool = job
+        out = root / f'{lane}-{tool}'
+        got = run([SEED, built[lane]['tree'] / f'src/{tool}-cli.bend', '-o', out], 900)
+        require(got['exit'] == 0 and out.exists(), (lane, tool, got['stderr'][-1500:]))
+        return lane, tool, out
+    for lane, tool, out in pool(build, [(lane, 'eval') for lane in built] + [('literals', 'check')], workers=3):
+        built[lane][tool] = out
     return built
 
 
@@ -653,20 +658,116 @@ def value_lane() -> dict:
     for r in rows:
         counts[r['bucket'].split(':')[0]] = counts.get(r['bucket'].split(':')[0], 0) + 1
     return {'eval_commits': {lane: built[lane]['commit'] for lane in built}, 'fixtures': len(rows), 'buckets': counts,
-            'rows': rows}
+            'frozen_suites': suite_lane(built), 'rows': rows}
+
+
+TYPE = re.compile(r'^type (\w+) is (?:Data|Type):\n((?:  \w+\{[^}]*\}\n)+)', re.M)
+
+# The frozen suites whose expectations the VM can be asked for: `calls` are exported functions with ordinal arguments
+# and the seed's result tag; `main` is Knot's own eval-cli line for `main`, frozen with the suite.
+SUITES = (('wasm', 'tests/compiler-wasm', 'calls'), ('fields-wasm', 'tests/compiler-fields-wasm', 'calls'),
+          ('recursion', 'tests/compiler-recursion', 'main'), ('fields', 'tests/compiler-fields', 'main'))
+
+
+def declared_types(text: str):
+    """The source's own datatypes as a plan's type table: names, constructor order, live field types. None when a
+    field names a type this parser does not know (a Base type), which the lowering cannot lay out."""
+    blocks = TYPE.findall(text)
+    names = [n for n, _ in blocks]
+    types = []
+    for name, body in blocks:
+        constructors = []
+        for ctor, fields in re.findall(r'^  (\w+)\{([^}]*)\}$', body, re.M):
+            live = []
+            for field in (f.strip() for f in fields.split(',') if f.strip()):
+                erased = field.startswith('-')
+                field_type = field.split(':', 1)[1].strip() if ':' in field else None
+                if field_type not in names:
+                    return None
+                if not erased:
+                    live.append(names.index(field_type))
+            constructors.append({'name': ctor, 'fields': live})
+        types.append({'kind': 'data', 'name': name, 'constructors': constructors})
+    return types
+
+
+def suite_lane(built: dict) -> dict:
+    """Frozen suites of the repository run on the VM. There is no encoder yet (`image`), so each program's image is made
+    the way vm-spec cross-checks its goldens: the oracle check-cli's canonical core display (literals head) lowered by
+    `check-spec.from_display` over the program's own datatypes. A program that cannot be lowered (a Base type, a form the
+    oracle refuses, a check the oracle answers otherwise than the suite froze) is a bucket of its own and never counts as
+    agreement."""
+    sandbox = BUILD / 'suite'
+    sandbox.mkdir(parents=True, exist_ok=True)
+    check = built['literals']['check']
+    out = {}
+    for suite, directory, kind in SUITES:
+        base = ROOT if suite == 'wasm' else ROOT / directory
+        cases = json.loads((ROOT / directory / 'cases.json').read_text())['cases']
+        agree, unlowered, rejects = [], [], []
+        for case in cases:
+            path = (base / case['file']).relative_to(ROOT)
+            text = (ROOT / path).read_text()
+            if kind == 'main' and not (case.get('eval', {}).get('exit') == 0 and case['eval'].get('stdout', '').startswith('Evaluated')):
+                rejects.append(str(path))   # the suite freezes a diagnostic: the checker refuses it, so no image exists to run
+                continue
+            types = declared_types(text) if not re.search(r'^import ', text, re.M) else None
+            shown = run([check, '--bundle', '.', path], 120)
+            if types is None or shown['exit'] != 0 or not types:
+                unlowered.append({'program': str(path), 'reason': 'no lowering: ' + ('a Base import or an unknown field type' if types is None else
+                                  (shown['stderr'] or shown['stdout']).strip()[:120])})
+                continue
+            plan = {'entry': 'book', 'types': types, 'functions': []}
+            try:
+                plan['functions'] = cs.from_display(shown['stdout'], plan, text, REGISTRY)
+                image = codec.encode(plan, DIGEST)
+            except (AssertionError, KeyError, IndexError, TypeError, ValueError) as error:
+                unlowered.append({'program': str(path), 'reason': f'the display is outside the lowering: {type(error).__name__}'})
+                continue
+            problems = cs.rejected(image, REGISTRY, DIGEST)
+            if problems is not None:
+                unlowered.append({'program': str(path), 'reason': f'the reference codec refuses the lowered image: {problems}'})
+                continue
+            name = f"{suite}-{Path(case['file']).stem}"
+            (sandbox / f'{name}.kimg').write_bytes(image)
+            if kind == 'calls':
+                calls = [(c['export'], c['arguments'], f"Evaluated\t{case['type_id']}\t{c['tag']}\t{case['constructors'][c['tag']]}{{}}\n") for c in case['calls']]
+            else:
+                calls = [('main', [], case['eval']['stdout'].rstrip('\n') + '\n')]
+            for export, arguments, want in calls:
+                vm = host_run([f'{name}.kimg', export, str(cs.VM_FUEL), *map(str, arguments)], sandbox)
+                require(vm['exit'] == 0 and vm['stdout'] == want, f"{path} {export}{arguments}: the VM shows {vm}, the frozen expectation is {want!r}")
+                ev = eval_live([built['literals']['eval'], '--bundle', '.', path, export, cs.EVAL_BUDGET, *map(str, arguments)])
+                require(ev['exit'] == 0 and ev['stdout'] == vm['stdout'], f"{path} {export}{arguments}: eval-cli {ev}, VM {vm}")
+                agree.append({'program': str(path), 'call': f"{export}({','.join(map(str, arguments))})"})
+        out[suite] = {'fixtures': len(cases), 'programs_lowered': len({a['program'] for a in agree}), 'calls_agree': len(agree),
+                      'rejected_by_the_checker': len(rejects), 'not_lowered': unlowered}
+        require(out[suite]['programs_lowered'] + len(rejects) + len(unlowered) == len(cases), f'{suite}: a fixture is in no bucket')
+    return out
 
 
 def invocation_label(label: str):
     return label.split(':', 1)[1] if ':' in label else None
 
 
-def frozen_suites() -> list:
-    """The frozen eval suites of the repository and their images: none exists until src/image.bend (increment
-    `image`) encodes a checked Book. A fixture without an image is not compared, and never counts as agreement."""
+def frozen_suites(lane: dict) -> list:
+    """Every frozen suite of the repository and what became of its fixtures on the VM. Where no encoder exists (`image`), a
+    fixture has an image only if the oracle's core display could be lowered (suite_lane); every other fixture is
+    reported as it is, and none counts as agreement."""
     inventory = json.loads((ROOT / 'docs/compiler-campaign/inventory/accepted.json').read_text())
-    return [{'suite': s['suite'], 'directory': s['directory'], 'admission': s['admission'], 'fixtures': s['fixtures'],
-             'image': 'none: needs src/image.bend (the `image` increment)'}
-            for s in inventory['suites'] if s.get('fixtures')]
+    out = []
+    for s in inventory['suites']:
+        if not s.get('fixtures'):
+            continue
+        got = lane.get(s['suite'])
+        row = {'suite': s['suite'], 'directory': s['directory'], 'admission': s['admission'], 'fixtures': s['fixtures']}
+        if got:
+            row['on_the_vm'] = {'programs_lowered_and_agree': got['programs_lowered'], 'calls_agree': got['calls_agree'],
+                                'rejected_by_the_checker': got['rejected_by_the_checker'], 'not_lowered': len(got['not_lowered'])}
+        else:
+            row['on_the_vm'] = 'no image: needs src/image.bend (the `image` increment), or the suite freezes no evaluation'
+        out.append(row)
+    return out
 
 
 # ------------------------------------------------------------------ main
@@ -735,7 +836,9 @@ def main(argv=()) -> int:
         record.update(mutant_lane(base, rows))
     if 'value' not in skip:
         record['value'] = value_lane()
-    record['suites'] = frozen_suites()
+        got = {k: {'programs': v['programs_lowered'], 'calls': v['calls_agree']} for k, v in record['value']['frozen_suites'].items()}
+        require(got == EXPECTED['suite_lane'], f"frozen suites lowered: {got}, frozen {EXPECTED['suite_lane']}")
+        record['suites'] = frozen_suites(record['value']['frozen_suites'])
     record['pending'] = EXPECTED['pending']
     record['elapsed_seconds'] = round(time.time() - started, 1)
     if skip:
@@ -747,7 +850,8 @@ def main(argv=()) -> int:
     print(f"vm-lockstep passed: {summary['runs']} runs, {summary['transitions']} transitions, {summary['states_compared']} states compared "
           f"({summary['strength']['layout']} layout, {summary['strength']['graph']} graph), {record['refusals']['runs']} refusals, "
           f"{len(record['long'])} long runs, {len(record['mutants'])} mutants, {len(record['weakenings'])} weakenings, "
-          f"{record['value']['fixtures']} value fixtures; {RECEIPT.relative_to(ROOT)}")
+          f"{record['value']['fixtures']} value fixtures, {sum(v['programs_lowered'] for v in record['value']['frozen_suites'].values())} suite programs; "
+          f"{RECEIPT.relative_to(ROOT)}")
     return 0
 
 

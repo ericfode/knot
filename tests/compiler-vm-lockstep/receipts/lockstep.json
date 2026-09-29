@@ -1,6 +1,6 @@
 {
  "gate": "vm-lockstep",
- "date": "2026-09-29T05:58:03.736046+00:00",
+ "date": "2026-09-29T06:22:50.895053+00:00",
  "status": "passed",
  "pins": {
   "tool": "wat2wasm",
@@ -21,11 +21,11 @@
   "model/machine.bend": "da767af160d081b421977e44b09f192c1d7755e84316f3566ff8b0b7e9a87fb8",
   "model/audit.bend": "e18ff95e1ae98dc8a6a4581453d891bfffcfdba6e1e6bc78198b2f0db3033947",
   "model-cli.bend": "a963b9568a1fb8658a42eb362b26d76dc1d1f71db531b28598166baacaea20d1",
-  "lockstep.py": "9aa6d3645316d4838ca4693b6cf5ea6b13552f5a9b189d5d3fd949c6219ade77",
+  "lockstep.py": "ab53b874871696316ee8291d736b782ec3b3147929f61cc4b827a6abc1d21662",
   "runs.py": "a7638e36cbf5db9be7fa363f3af3373a78fda23188155a8e1e71e19e9d79d1a2",
-  "check.py": "ecfc47d57928bad3ebabd6badc788d5fefe262038dc219c3860ffa1b27dd4081",
-  "js/vm-trace.mjs": "cdea13b702fb1149e14f1ba2d1b8604ecebb4ee3ac5dc8f5cd59c4286ac5239a",
-  "expectations.json": "3e9837c638b4265b4d8ce37b5eeac5a09bfa72cf976125536246566988322a9f",
+  "check.py": "0af658c5f09575629110aa3d9a54f8e7894fce68316a82f7fac649337c762592",
+  "js/vm-trace.mjs": "228f130e2a4d4a7154ca149b56909810172311320218bf92f73ba81f77052a0b",
+  "frozen.json": "5fb26659cb6fe65c421d214eb943a91bdb868ecc0f92c8d862132b42111bdd5c",
   "fixtures/long.plans.json": "ee44b1a96e0e1b8f4ae1bc792643dd2893e080d732c4a9bfe98a9b9f2ec55dbd"
  },
  "untraced": {
@@ -40,6 +40,7 @@
   "runs": 296,
   "transitions": 2940,
   "states_compared": 3196,
+  "fuel_stops_with_pending_enter_compared": 95,
   "strength": {
    "layout": 1577,
    "graph": 1619,
@@ -78,8 +79,8 @@
    }
   },
   "halting_relations": {
-   "choice 8: a Gather frame is popped before its operands are inspected": 23,
-   "choice 8: the Activation is released before the final IO.OP is inspected": 2
+   "the VM pops a Gather frame before inspecting its operands or testing NatRange": 23,
+   "the VM releases the Activation at Return to Top before inspecting the final IO.OP": 2
   }
  },
  "refusals": {
@@ -264,14 +265,28 @@
   }
  ],
  "exact": {
+  "controls": [
+   {
+    "control": "rc-only",
+    "step": 10,
+    "auto": "passes",
+    "exact": "refuses (heap)"
+   },
+   {
+    "control": "free-list-head-only",
+    "step": 10,
+    "auto": "passes",
+    "exact": "refuses (heap)"
+   }
+  ],
   "model_against_itself_states": 218,
   "vm_against_model": {
-   "runs_with_an_exact_divergence": 86,
+   "goldens_with_an_exact_divergence": 86,
    "first_divergence_of_recursion_map": {
     "step": 13,
     "field": "heap"
    },
-   "note": "the VM has no reclamation (CORE.md choice 1); vm-rc turns `mode` to exact for VM against model"
+   "note": "the VM has no reclamation (CORE.md choice 1); vm-rc turns exact on for VM against model"
   }
  },
  "mutants": {
@@ -291,7 +306,12 @@
    "breaks": "a Scope pop drops its slots but leaves their words in the Activation",
    "dimension": "heap",
    "state_only": true,
-   "output_visible_runs": 0
+   "output_visible_runs": 0,
+   "vm_core_audit": {
+    "goldens": 93,
+    "audited_states": 1806,
+    "broken": []
+   }
   },
   "call-frame-node": {
    "killed_by_runs": 78,
@@ -309,7 +329,12 @@
    "breaks": "a Call frame's node word holds 7, which nothing reads",
    "dimension": "frames",
    "state_only": true,
-   "output_visible_runs": 0
+   "output_visible_runs": 0,
+   "vm_core_audit": {
+    "goldens": 93,
+    "audited_states": 1806,
+    "broken": []
+   }
   },
   "calls-counted-twice": {
    "killed_by_runs": 165,
@@ -381,7 +406,12 @@
    "breaks": "Return to Top leaves `act` pointing at the released Activation",
    "dimension": "act",
    "state_only": true,
-   "output_visible_runs": 0
+   "output_visible_runs": 0,
+   "vm_core_audit": {
+    "goldens": 93,
+    "audited_states": 1806,
+    "broken": []
+   }
   },
   "describe-tag-off": {
    "killed_by_runs": 104,
@@ -473,6 +503,24 @@
    "dimension": "frames",
    "state_only": false,
    "output_visible_runs": 151
+  },
+  "fuel-stop-drops-operands": {
+   "killed_by_runs": 4,
+   "harness_faults": 0,
+   "fields": [
+    "outcome"
+   ],
+   "first": {
+    "run": "admitted:run:fuel-action-short",
+    "step": 12,
+    "field": "outcome",
+    "detail": "the pending Enter is 'N W 16842832 16842816' (model) against 'N W 16842880' (VM)"
+   },
+   "machine": "vm",
+   "breaks": "a fuel stop forgets the operands of the Enter it leaves pending",
+   "dimension": "outcome",
+   "state_only": true,
+   "output_visible_runs": 0
   },
   "closure-entry-free": {
    "killed_by_runs": 18,
@@ -596,7 +644,7 @@
    "breaks": "a Call frame keeps no caller",
    "dimension": "frames",
    "state_only": false,
-   "output_visible_runs": 9
+   "output_visible_runs": 8
   }
  },
  "weakenings": [
@@ -654,6 +702,50 @@
    "vm-bound": 3,
    "declared": 11,
    "agree-refusal": 34
+  },
+  "frozen_suites": {
+   "wasm": {
+    "fixtures": 25,
+    "programs_lowered": 25,
+    "calls_agree": 90,
+    "rejected_by_the_checker": 0,
+    "not_lowered": []
+   },
+   "fields-wasm": {
+    "fixtures": 8,
+    "programs_lowered": 6,
+    "calls_agree": 24,
+    "rejected_by_the_checker": 0,
+    "not_lowered": [
+     {
+      "program": "tests/compiler-fields-wasm/fixtures/erased.bend",
+      "reason": "the reference codec refuses the lowered image: HostFailure image: validator: ghost: construct arity"
+     },
+     {
+      "program": "tests/compiler-fields-wasm/fixtures/deep-call.bend",
+      "reason": "no lowering: Exhausted\tparse\tbudget\t11080:11081:754:10"
+     }
+    ]
+   },
+   "recursion": {
+    "fixtures": 19,
+    "programs_lowered": 11,
+    "calls_agree": 11,
+    "rejected_by_the_checker": 8,
+    "not_lowered": []
+   },
+   "fields": {
+    "fixtures": 40,
+    "programs_lowered": 18,
+    "calls_agree": 18,
+    "rejected_by_the_checker": 21,
+    "not_lowered": [
+     {
+      "program": "tests/compiler-fields/fixtures/all-erased-return.bend",
+      "reason": "the reference codec refuses the lowered image: HostFailure image: validator: main: construct arity"
+     }
+    ]
+   }
   },
   "rows": [
    {
@@ -1486,77 +1578,97 @@
    "directory": "tests/compiler-baseslice",
    "admission": "requirement",
    "fixtures": 40,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": "no image: needs src/image.bend (the `image` increment), or the suite freezes no evaluation"
   },
   {
    "suite": "checker",
    "directory": "tests/compiler-checker",
    "admission": "evidence",
    "fixtures": 49,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": "no image: needs src/image.bend (the `image` increment), or the suite freezes no evaluation"
   },
   {
    "suite": "closures",
    "directory": "tests/compiler-closures",
    "admission": "requirement",
    "fixtures": 42,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": "no image: needs src/image.bend (the `image` increment), or the suite freezes no evaluation"
   },
   {
    "suite": "fields",
    "directory": "tests/compiler-fields",
    "admission": "evidence",
    "fixtures": 40,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": {
+    "programs_lowered_and_agree": 18,
+    "calls_agree": 18,
+    "rejected_by_the_checker": 21,
+    "not_lowered": 1
+   }
   },
   {
    "suite": "fields-wasm",
    "directory": "tests/compiler-fields-wasm",
    "admission": "evidence",
    "fixtures": 8,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": {
+    "programs_lowered_and_agree": 6,
+    "calls_agree": 24,
+    "rejected_by_the_checker": 0,
+    "not_lowered": 2
+   }
   },
   {
    "suite": "generics",
    "directory": "tests/compiler-generics",
    "admission": "requirement",
    "fixtures": 40,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": "no image: needs src/image.bend (the `image` increment), or the suite freezes no evaluation"
   },
   {
    "suite": "literals",
    "directory": "tests/compiler-literals",
    "admission": "requirement",
    "fixtures": 40,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": "no image: needs src/image.bend (the `image` increment), or the suite freezes no evaluation"
   },
   {
    "suite": "recursion",
    "directory": "tests/compiler-recursion",
    "admission": "evidence",
    "fixtures": 19,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": {
+    "programs_lowered_and_agree": 11,
+    "calls_agree": 11,
+    "rejected_by_the_checker": 8,
+    "not_lowered": 0
+   }
   },
   {
    "suite": "catalog",
    "directory": "tests/compiler-structural",
    "admission": "evidence",
    "fixtures": 16,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": "no image: needs src/image.bend (the `image` increment), or the suite freezes no evaluation"
   },
   {
    "suite": "wasm",
    "directory": "tests/compiler-wasm",
    "admission": "evidence",
    "fixtures": 25,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": {
+    "programs_lowered_and_agree": 25,
+    "calls_agree": 90,
+    "rejected_by_the_checker": 0,
+    "not_lowered": 0
+   }
   },
   {
    "suite": "frontend",
    "directory": "tests/subsets",
    "admission": "evidence",
    "fixtures": 14,
-   "image": "none: needs src/image.bend (the `image` increment)"
+   "on_the_vm": "no image: needs src/image.bend (the `image` increment), or the suite freezes no evaluation"
   }
  ],
  "pending": [
@@ -1566,5 +1678,5 @@
   "vm-prims: sha256-64k needs the reserved prims 39 and 40 (U32.or, U32.xor).",
   "vm-rc: peano, list-fold and deep-recursion allocate beyond a bump arena of 4 GiB (vm/bench/README.md), so their speed ratios cannot be measured before reclamation."
  ],
- "elapsed_seconds": 142.7
+ "elapsed_seconds": 192.7
 }

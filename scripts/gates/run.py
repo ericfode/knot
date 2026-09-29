@@ -77,6 +77,7 @@ GATES = (
     Gate('vm-spec', ('python3', 'vm/check-spec.py'), ('vm/receipts/spec.json',)),
     Gate('vm-model', ('python3', 'vm/check-model.py'), ('vm/receipts/model.json',)),
     Gate('vm-core', ('python3', 'vm/check-core.py'), ('vm/receipts/core.json',)),
+    Gate('vm-lockstep', ('python3', 'tests/compiler-vm-lockstep/check.py'), ('tests/compiler-vm-lockstep/receipts/lockstep.json',)),
 )
 
 
@@ -295,6 +296,10 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
             result[key] = record[key]
         result['review'] = record['review_counts']
+    if gate.name == 'vm-lockstep':
+        result.update(runs=record['lockstep']['runs'], transitions=record['lockstep']['transitions'],
+                      states_compared=record['lockstep']['states_compared'], value_fixtures=record['value']['fixtures'],
+                      weakenings=len(record['weakenings']))
     if gate.name == 'io-abi-2':
         for key in ('read_observations', 'reference_observations', 'seed_observations', 'seed_exhausted',
                     'mutants_killed', 'case_mode'):

@@ -183,6 +183,35 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.
 
+The vm-lockstep increment adds gate `vm-lockstep` (`python3 tests/compiler-vm-lockstep/check.py`), which
+compares the WAT VM with its Bend model on complete machine state after every transition
+([tests/compiler-vm-lockstep/README.md](../../tests/compiler-vm-lockstep/README.md), report in
+[REPORT.md](../../tests/compiler-vm-lockstep/REPORT.md)). It changes nothing under `vm/` but a new trace entry
+for the model, `vm/model-trace.bend`, and requires:
+- `vm/build.json`'s pins to hold, so the release `vm.wasm` and the test build it drives are vm-core's;
+- 296 runs (the 93 goldens, their 44 Book invocations, every golden at fuel 0, and the admitted,
+  inspection and argument controls) to agree in every state, before the first transition and after each:
+  registers, frames, output and every cell the roots reach, at layout strength (identical addresses, rc
+  masked) until the model first reclaims and at graph strength after (the VM does not reclaim yet), the
+  load-time constants word for word throughout; the pending Enter of each fuel stop as well;
+- a halting transition to differ from the model's atomic one only by two named relations, counted and
+  frozen in `tests/compiler-vm-lockstep/frozen.json`;
+- the 82 refusals of the frozen controls to be refused alike, two long runs across the 65,536-entry
+  quantum to agree in sampled states and at every state around the yield, and the exact strength (addresses,
+  rc, free lists), which vm-rc will turn on, to be controlled and to refuse where the model first frees;
+- the release VM's output, through the real host, to equal vm-expected and, live, the pinned eval-cli on
+  every golden and Book invocation, each in exactly one bucket of the Exhausted-lane rule, and the VM, the live
+  eval-cli and each suite's frozen expectation to agree on every call of the frozen wasm, fields-wasm,
+  recursion and fields suites whose oracle core display lowers to an image (60 programs, 143 calls, counts
+  frozen; the other suites have no image until `image` and count as nothing);
+- the D23 class of each Program (spine or pending) to equal the classes frozen by literal review;
+- nineteen mutants (thirteen of the VM, six of the model) killed at a named state through a wrong observation,
+  the state-only ones first shown to leave every final control and output unchanged, and eight weakened
+  comparisons each shown to let one of them through.
+It writes only `tests/compiler-vm-lockstep/receipts/lockstep.json`. The speed ratio is measured by
+`tests/compiler-vm-lockstep/bench/run.py`, which the gate does not run: timings are observations.
+
+
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
 

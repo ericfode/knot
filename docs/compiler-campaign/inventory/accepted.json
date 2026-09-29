@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "0a5e8b660cf9fffb14bce58551b524c44ef6e57918e321c0b68bac84444a93c2",
+    "sha256": "4b8a1a82e308e96d1e571fc3b7bfb38ec91689fbe17d4637b494553225883da4",
     "gates": [
       {
         "name": "frontend",
@@ -310,6 +310,19 @@
             "sha256": "e03d43f96665b1152b958b8d1c157e1fab13cad05d953a53f9c7373d9be82482"
           }
         ]
+      },
+      {
+        "name": "vm-lockstep",
+        "argv": [
+          "python3",
+          "tests/compiler-vm-lockstep/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-vm-lockstep/check.py",
+            "sha256": "0af658c5f09575629110aa3d9a54f8e7894fce68316a82f7fac649337c762592"
+          }
+        ]
       }
     ]
   },
@@ -598,6 +611,18 @@
       "gates": [],
       "fixtures": 0,
       "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "suite": "tests/compiler-vm-lockstep",
+      "directory": "tests/compiler-vm-lockstep",
+      "status": "no-fixture-manifest",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [],
+      "gates": [
+        "vm-lockstep"
+      ],
+      "fixtures": 0
     },
     {
       "suite": "wasm",
