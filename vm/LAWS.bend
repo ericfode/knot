@@ -97,7 +97,7 @@ def ran(+words: List<&2,U32>) -> Summary:
 
 # The same run, balanced after its last step alone: for the laws that read an outcome, since the gate audits
 # every transition of every golden and control natively.
-def quickly(+words: List<&2,U32>) -> Summary:
+def ran_final(+words: List<&2,U32>) -> Summary:
   summary(A.run_words_final(words,100000n,1000000))
 
 def described(+result: U32, +tag: U32, tree: String) -> Summary:
@@ -295,6 +295,15 @@ def stop_of(+s: Summary) -> Maybe<&2,W.Stop>:
 law chr_inspects_its_operand:
   {stop_of(ran(E.encode(laundered_chr()))) == Some{W.Refused{"image","ill-typed"}} : Maybe<&2,W.Stop>}
 
+# A stopped run's reason, and what it still holds: its frames by SPEC §6's kind numbers newest first, whether an
+# Activation is current, and the words the frames occupy.
+type Stopped is Data:
+  Stopped{stop: Maybe<&2,W.Stop>, held: A.Held}
+
+def stopped(+words: List<&2,U32>) -> Stopped:
+  +run = A.run_words_final(words,100000n,1000000)
+  Stopped{stop_of(summary(run)),A.held_of(run)}
+
 # ---------------------------------------------------------------- requests (D23) and Cases over them (D24)
 
 # A Program's types: Unit, U32, Char, String, IO.OP, then the arrows of IO(Unit): 5 is Unit -> IO.OP,
@@ -346,20 +355,20 @@ def got_complete() -> W.Function:
 
 # A request that a let holds is built and dropped, never performed: only the one that main returns is.
 law dropped_request_writes_nothing:
-  {quickly(E.encode(program_of(2,W.Let{4,1,request_of("dead"),request_of("live")}))) == Summary{M.Emitted{},True{},0,[M.text("live")]} : Summary}
+  {ran_final(E.encode(program_of(2,W.Let{4,1,request_of("dead"),request_of("live")}))) == Summary{M.Emitted{},True{},0,[M.text("live")]} : Summary}
 
 # Top's loop performs each request that a run returns to it, in order, entering `k` after each: the
 # continuation of the first request is the closure that builds the second.
 law loop_performs_each_returned_request:
-  {quickly(E.encode(program_of(1,W.Invoke{4,printing("first"),[W.Closure{5,1,2,[0],request_of("second")}]}))) == Summary{M.Emitted{},True{},0,[M.text("first"),M.text("second")]} : Summary}
+  {ran_final(E.encode(program_of(1,W.Invoke{4,printing("first"),[W.Closure{5,1,2,[0],request_of("second")}]}))) == Summary{M.Emitted{},True{},0,[M.text("first"),M.text("second")]} : Summary}
 
 # A request matches no row: a Case with a Default takes it unread (D24), and one that names every
 # constructor has none to take and refuses it, `Unsupported vm effect`. Neither performs (a Book has no loop).
 law case_takes_default_over_request:
-  {quickly(E.encode(over_request(got_defaulted()))) == described(8,0,"Off{}") : Summary}
+  {ran_final(E.encode(over_request(got_defaulted()))) == described(8,0,"Off{}") : Summary}
 
 law case_without_default_refuses_request:
-  {stop_of(quickly(E.encode(over_request(got_complete())))) == Some{W.Unsupported{"vm","effect"}} : Maybe<&2,W.Stop>}
+  {stop_of(ran_final(E.encode(over_request(got_complete())))) == Some{W.Unsupported{"vm","effect"}} : Maybe<&2,W.Stop>}
 
 # main = id(IO.print("x")(R)(k)) with id(x: none) -> none: the Book's answer is a request, and describing
 # it reads it first (SPEC §6, §8), so a request is refused wherever it is read, not only by a Case.
@@ -371,8 +380,10 @@ def rendered_request() -> W.Plan:
      W.Function{M.text("main"),[],8,0,W.Application{8,1,[W.Invoke{4,printing("x"),[W.Closure{5,1,1,[],W.Construct{4,0,[W.Value{8,1}]}}]}]}}],
     io_reps()}
 
+# The description is the rest of Return to Top(0), which drops `act` only once it has passed (SPEC §6.3):
+# the refusal leaves `act` current, under Top alone.
 law request_is_never_rendered:
-  {stop_of(quickly(E.encode(rendered_request()))) == Some{W.Unsupported{"vm","effect"}} : Maybe<&2,W.Stop>}
+  {stopped(E.encode(rendered_request())) == Stopped{Some{W.Unsupported{"vm","effect"}},A.Held{[0],True{},3}} : Stopped}
 
 # ---------------------------------------------------------------- atomic stops
 
@@ -417,15 +428,8 @@ law cell_past_memory:
   for memory: W.Store
   {H.allocate(H.Heap{memory,1073741824,H.zeros(29n)},1,0,[1]) == Fail{W.Exhausted{2,"heap"}} : Result<W.Stop,H.Cell>}
 
-# What a stopped run still holds (SPEC §6's kinds, newest first). Succ{4294967295} completes at the Gather
-# of `succ`'s body, under the Call of `succ` and the Gather of Nat.is_gt's operands, which Top holds.
-type Stopped is Data:
-  Stopped{stop: Maybe<&2,W.Stop>, held: A.Held}
-
-def stopped(+words: List<&2,U32>) -> Stopped:
-  +run = A.run_words_final(words,100000n,1000000)
-  Stopped{stop_of(summary(run)),A.held_of(run)}
-
+# Succ{4294967295} completes at the Gather of `succ`'s body, under the Call of `succ` and the Gather of
+# Nat.is_gt's operands, which Top holds: kinds 1, 4, 1, 0 in SPEC §6's numbering.
 law nat_range_keeps_its_gather:
   {stopped(nat_succ_range()) == Stopped{Some{W.Exhausted{2,"NatRange"}},A.Held{[1,4,1,0],True{},16}} : Stopped}
 

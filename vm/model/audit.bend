@@ -173,18 +173,19 @@ def atomic(before: M.Machine, after: M.Machine) -> Bool:
           U32.is_eq(W.count(List<&2,U32>,out),W.count(List<&2,U32>,out2))))
     case _ _: True{}
 
+# `prior` is the machine before the last step, which a Book's description is atomic against.
 type Audit is Data:
-  Audit{machine: M.Machine, steps: U32, balanced: Bool}
+  Audit{machine: M.Machine, steps: U32, balanced: Bool, prior: M.Machine}
 
 # A step that stopped the machine was atomic against `prior`, and the state balances: after every
 # step when `each`, else after the last alone.
 def audit_from(fuel: Nat, +code: H.Code, +m: M.Machine, +steps: U32, +prior: M.Machine, +each: Bool) -> Audit:
   match fuel:
-    case 0n: Audit{M.halted(m,W.Bound{"transitions"}),steps,balanced(code,m)}
+    case 0n: Audit{M.halted(m,W.Bound{"transitions"}),steps,balanced(code,m),prior}
     case 1n+f:
       +sound = Bool.and(W.choose(Bool,W.or(each,M.is_finished(m)),u => balanced(code,m),u => True{}),atomic(prior,m))
-      W.choose(Audit,Bool.not(sound),u => Audit{m,steps,False{}},u =>
-      W.choose(Audit,M.is_finished(m),u => Audit{m,steps,True{}},u =>
+      W.choose(Audit,Bool.not(sound),u => Audit{m,steps,False{},prior},u =>
+      W.choose(Audit,M.is_finished(m),u => Audit{m,steps,True{},prior},u =>
         audit_from(f,code,M.settled(M.step(code,m),m),U32.add(steps,1),m,each)))
 
 def audit_run(fuel: Nat, +code: H.Code, +m: M.Machine, +steps: U32, +each: Bool) -> Audit:
@@ -208,14 +209,14 @@ def plan_entry(plan: W.Plan) -> U32:
     case W.Plan{entry,types,functions,reps}: entry
 
 # The answer's description and drop are audited too.
-def concluded_run(+code: H.Code, result: Result<W.Stop,M.Machine>, ok: Bool) -> Run:
+def concluded_run(+code: H.Code, +prior: M.Machine, result: Result<W.Stop,M.Machine>, ok: Bool) -> Run:
   match result:
     case Fail{stop}: Refusal{stop}
-    case Done{+m}: Ran{code,m,Bool.and(ok,balanced(code,m))}
+    case Done{+m}: Ran{code,m,Bool.and(Bool.and(ok,atomic(prior,m)),balanced(code,m))}
 
 def run_concluded(+code: H.Code, +t: U32, a: Audit) -> Run:
   match a:
-    case Audit{m,steps,ok}: concluded_run(code,M.concluded(code,t,m),ok)
+    case Audit{m,steps,ok,prior}: concluded_run(code,prior,M.concluded(code,t,m),ok)
 
 def started_run(+code: H.Code, +t: U32, +steps: Nat, result: Result<W.Stop,M.Machine>, +each: Bool) -> Run:
   match result:

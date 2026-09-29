@@ -129,14 +129,14 @@ def audit_report(+code: H.Code, +m: M.Machine, +steps: U32, balanced: Bool) -> I
   +line = String.concat(["audit\t",Bool.pick(String,passed,"passed","failed"),"\t",U32.show(steps),"\t",outcome_name(outcome),"\t",U32.show(live),"\t",U32.show(calls_of(m)),"\t",U32.show(M.effects(m))])
   W.choose(IO(Unit),passed,u => IO.print(line),u => IO.die(Unit,6,line))
 
-def audit_settled(+code: H.Code, result: Result<W.Stop,M.Machine>, +steps: U32, balanced: Bool) -> IO(Unit):
+def audit_settled(+code: H.Code, result: Result<W.Stop,M.Machine>, +steps: U32, balanced: Bool, +prior: M.Machine) -> IO(Unit):
   match result:
     case Fail{stop}: stopped(stop)
-    case Done{m}: audit_report(code,m,steps,balanced)
+    case Done{+m}: audit_report(code,m,steps,Bool.and(balanced,A.atomic(prior,m)))
 
 def audit_concluded(+code: H.Code, +t: U32, a: A.Audit) -> IO(Unit):
   match a:
-    case A.Audit{m,+steps,balanced}: audit_settled(code,M.concluded(code,t,m),steps,balanced)
+    case A.Audit{m,+steps,balanced,prior}: audit_settled(code,M.concluded(code,t,m),steps,balanced,prior)
 
 def audit_started(+code: H.Code, +t: U32, result: Result<W.Stop,M.Machine>) -> IO(Unit):
   match result:

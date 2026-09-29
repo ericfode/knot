@@ -11,7 +11,8 @@ type Target is Data:
   Callee{function: U32}
   Held{word: U32}
 
-# A Book halts Answered, then is Described; a Program Emits or Dies. A stop
+# A Book halts Answered, its `act` still current, then is Described: its description is the rest of
+# Return to Top(0), which drops `act` only once the description has passed. A Program Emits or Dies. A stop
 # keeps the control it could not advance, whose words stay owned (SPEC §7:
 # the pending Enter stays in the state).
 type Outcome is Data:
@@ -182,7 +183,6 @@ def outgoing(+code: H.Code, +heap: H.Heap, +w: U32) -> Result<W.Stop,List<&2,U32
       Done{H.scalars_of(line,heap)}))
 
 def topped(+code: H.Code, +phase: U32, +w: U32, +rest: List<&2,H.Frame>, +top: U32, +heap: H.Heap) -> Result<W.Stop,Next>:
-  W.choose(Result<W.Stop,Next>,U32.is_eq(phase,0),u => to(Finished{Answered{w}},H.Stack{0,Con{H.Top{0},rest},top},heap),u =>
   W.choose(Result<W.Stop,Next>,U32.is_eq(phase,1),u => to(Enter{Held{w},Nil{}},H.Stack{0,Con{H.Top{2},rest},top},heap),u =>
   W.choose(Result<W.Stop,Next>,U32.is_eq(phase,2),u => to(Enter{Held{w},[H.terminal(code)]},H.Stack{0,Con{H.Top{3},rest},top},heap),u =>
     H.inspected_at(Next,code,heap,H.rep(code,10),w,u =>
@@ -191,10 +191,10 @@ def topped(+code: H.Code, +phase: U32, +w: U32, +rest: List<&2,H.Frame>, +top: U
         u => H.inspected_at(Next,code,heap,H.rep(code,1),H.load_word(heap,w,4),u =>
                H.bind(List<&2,U32>,Next,outgoing(code,heap,H.load_word(heap,w,5)),message =>
                H.bind(H.Heap,Next,H.drop(heap,H.room(H.Stack{0,rest,top}),w),heap2 =>
-                 to(Finished{Died{H.scalar(heap,H.load_word(heap,w,4)),message}},H.Stack{0,Con{H.Top{3},rest},top},heap2)))))))))
+                 to(Finished{Died{H.scalar(heap,H.load_word(heap,w,4)),message}},H.Stack{0,Con{H.Top{3},rest},top},heap2))))))))
 
-# The Return transitions of SPEC §6, by the top frame.
-def returned(+code: H.Code, +w: U32, stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
+# The Return transitions of SPEC §6, by the top frame. A Book's Top(0) keeps `act` for `concluded`.
+def returned(+code: H.Code, +w: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
   match stack:
     case H.Stack{+act,Con{H.Gather{+node,+need,+got},+rest},+top}:
       +have : List<&2,U32> = Con{w,got}
@@ -220,6 +220,7 @@ def returned(+code: H.Code, +w: U32, stack: H.Stack, +heap: H.Heap) -> Result<W.
         u => to(Enter{Held{w},Nil{}},popped,heap))
     case H.Stack{+act,Con{H.InvokeArgument{node,+f},rest},+top}:
       to(Enter{Held{f},[w]},H.Stack{act,rest,U32.sub(top,4)},heap)
+    case H.Stack{act,Con{H.Top{0},rest},top}: to(Finished{Answered{w}},stack,heap)
     case H.Stack{+act,Con{H.Top{+phase},+rest},+top}:
       H.bind(H.Heap,Next,H.drop(heap,H.room(H.Stack{act,rest,top}),act),heap => topped(code,phase,w,rest,top,heap))
     case H.Stack{act,Nil{},top}: Fail{W.Internal{"no frame"}}
@@ -616,14 +617,14 @@ def result_type(+plan: W.Plan, +name: List<&2,U32>) -> U32:
   match plan:
     case W.Plan{entry,types,functions,reps}: V.callee_result(D.function_at(functions,E.function_index(functions,name,0)))
 
-# A Book's answer is described, then dropped (SPEC §8). A description that
-# stops (a display bound, an ill-typed word) stops the machine like any other
-# transition, leaving the answer owned.
+# A Book's answer is described, then `act` and the answer are dropped (SPEC §6.3, §8). A description
+# that stops (a display bound, an ill-typed word, a request) leaves `act` and the answer owned.
 def concluded(+code: H.Code, +t: U32, m: Machine) -> Result<W.Stop,Machine>:
   match m:
     case Machine{Finished{Answered{+w}},+stack,+heap,+meter,+out}:
       Done{settled(H.bind(List<&2,U32>,Machine,described(code,heap,w,t),tree =>
-        H.bind(H.Heap,Machine,H.drop(heap,H.room(stack),w),heap2 =>
-          Done{Machine{Finished{Described{t,H.tag_of(code,heap,t,w),tree}},stack,heap2,meter,out}})),
+        H.bind(H.Heap,Machine,H.drop(heap,H.room(stack),H.act_of(stack)),+heap2 =>
+        H.bind(H.Heap,Machine,H.drop(heap2,H.room(stack),w),heap3 =>
+          Done{Machine{Finished{Described{t,H.tag_of(code,heap,t,w),tree}},H.with_act(stack,0),heap3,meter,out}}))),
         Machine{Finished{Answered{w}},stack,heap,meter,out})}
     case _: Done{m}
