@@ -315,7 +315,7 @@ class ExecutionTests(unittest.TestCase):
                               'bootstrap', 'classification', 'nest', 'nest-review', 'io-host', 'io-abi-2',
                               'selfhost', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7',
                               'nest-round8', 'nest-round9', 'nest-round10', 'nest-round11',
-                              'nest-sweep11', 'nest-round12'}, set(names))
+                              'nest-sweep11', 'nest-round12', 'nest-round13'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})
