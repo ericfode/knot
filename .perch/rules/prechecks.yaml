@@ -79,13 +79,12 @@
     rule is broken when a shown hunk changes what the clause promises, and the clause itself does not name that
     change: it alters the behavior or value said to be unchanged or kept; adds a form, instruction, export,
     function or dependency where the clause says only certain ones exist; does what the clause says never
-    happens; or removes or rewrites a pinned expectation the clause freezes. A clause quoted from the base
-    revision counts the same as one from the head: the branch rewording or removing the clause does not make the
-    change listed, so judge only whether the shown code or data changes what the clause promised. Hunks that
-    touch other subjects, hunks that add checks keeping the invariant, hunks that make exactly the change the
-    clause names, and a base clause the branch rewords while the shown hunks keep what it promised all hold.
-    Missing evidence is not a pass where a hunk that changes the clause's subject is shown cut off; a packet
-    whose hunks do not touch the subject holds.
+    happens; or removes or rewrites a pinned expectation the clause freezes. Judge the shown code and data
+    against what the clause promised, whatever revision the clause is quoted from: rewording the clause in the
+    same change neither excuses a change to its subject nor makes an unchanged subject a violation. Hunks that
+    touch other subjects, hunks that add checks keeping the invariant, and hunks that make exactly the change
+    the clause names hold. Missing evidence is not a pass where a hunk that changes the clause's subject is
+    shown cut off; a packet whose hunks do not touch the subject holds.
 
 - name: expectation-independent
   where: ".local/prechecks/packets/**/expectation-independent/*.md"
@@ -103,7 +102,8 @@
     judging expectation is frozen from the pinned seed's observation, derived by a separate reference
     implementation or codec, written as a reviewed literal, or taken from Knot's evaluator only after the code
     compares it with the seed; the implementation's output may be recorded in a receipt without judging
-    anything. Missing evidence is not a pass where the code that builds a judging expectation is not shown.
+    anything. A literal written in the code is its own source. Missing evidence is not a pass where the packet
+    shows neither the code that produces a judging value nor a sentence naming its source.
 
 - name: kill-is-semantic
   where: ".local/prechecks/packets/**/kill-is-semantic/*.md"
