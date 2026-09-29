@@ -2087,9 +2087,9 @@ def effect_controls(plans: dict) -> list:
       without a Default, a tags Case whose every row names a constructor (`program-case-request`), still refuses
       the request. A compiler does not emit that Default: nest's checker copies a catch-all's body into a row for each
       constructor that the source names no arm for, so its Case is a complete table and refuses the request where the
-      native lane takes the catch-all (the four `case-request-*-compiled` controls, each after 8 entries; the seed's
-      values are the witnesses `case-request-both-plus-default`, `-nested-default`, `-inner-default-only` and
-      `-book-both-plus-default`). A Default that tests the slot again for the arms named after the catch-all is a plan
+      native lane takes the catch-all (the `case-request-*-compiled` controls: four Programs each after 8 entries and
+      the Book `case-request-book-both-plus-default-compiled` after 6; the seed's values are the witnesses
+      `case-request-both-plus-default`, `-nested-default`, `-inner-default-only` and `-book-both-plus-default`). A Default that tests the slot again for the arms named after the catch-all is a plan
       that takes the request as the native lane does (`case-request-both-plus-default-retested` and
       `-nested-default-retested`, `3` after 13 entries): the image can express the answer, and no lowering emits it.
     - A scalar String is written as canonical UTF-8 (section 10): `foreign-print`'s plan prints the four
@@ -2192,6 +2192,17 @@ def effect_controls(plans: dict) -> list:
     def entered(body, slots=1, *more):
         """main = λ@R. λk. body, k being slot 0 of the inner closure and `slots` its depth"""
         return image('program', ['closure', 7, 0, 0, [], ['closure', 6, 1, slots, [], body]], 0, *more)
+    # The witness `case-request-book-both-plus-default`, hand-lowered as nest's checker lowers it: `got` names Emit and Halt and
+    # its dead catch-all is dropped (SPEC 3 keeps a Default only where a row is absent), and `go(m)` hands it the request that
+    # `m(Flag, u => Emit{On{}})` builds. The entries are main, IO.print, go, the erased R of the Action, the Action applied to
+    # the continuation, which builds the request, and `got`, whose Case refuses it: 6.
+    book_default = {'entry': 'book', 'representation': fp['representation'], 'types': [*fp['types'], flag], 'functions': [
+        functions[print_],
+        {'name': 'got', 'parameters': [4], 'result': 8, 'slots': 3, 'body': [
+            'case', 8, 0, 4, 'tags', [['branch', 0, 1, 1, ['value', 8, 0]], ['branch', 1, 1, 2, ['value', 8, 0]]], None]},
+        {'name': 'go', 'parameters': [7], 'result': 8, 'slots': 1, 'body': [
+            'call', 8, 1, [['invoke', 4, ['invoke', 6, ['ref', 7, 0], []], [inline]]]]},
+        {'name': 'main', 'parameters': [], 'result': 8, 'slots': 0, 'body': ['call', 8, 2, [['call', 7, print_, [text('x')]]]]}]}
     return [
         ('book-print', image('book', bound(text('x'))), {**unsupported, 'calls': 5}),
         ('book-print-continuation-call', image('book', bound(text('x'), calling)), {**unsupported, 'calls': 5}),
@@ -2271,7 +2282,8 @@ def effect_controls(plans: dict) -> list:
                  [['branch', 0, 2, 1, u32(1)],
                   ['branch', 1, 2, 2, ['case', 1, 2, 1, 'keys', [['branch', 0, 4, 0, u32(2)]], ['default', u32(3)]]]], 4),
          {**unsupported, 'calls': 8}),
-        # The image can express the seed's answer for those two witnesses, where no lowering of nest's emits it: the catch-all
+        ('case-request-book-both-plus-default-compiled', book_default, {**unsupported, 'calls': 6}),
+        # The image can express the seed's answer for the first two witnesses, where no lowering of nest's emits it: the catch-all
         # stays a Default, and the arm that the source names after it is tested inside it, on the same slot. A request matches no
         # row of either Case and takes the Default of each, so the answer is the native lane's, `3` (the witnesses
         # `case-request-both-plus-default` and `-nested-default`): 13 entries, as the goldens' 13 (8 to the end of `got`, then
