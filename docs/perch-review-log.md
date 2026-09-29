@@ -1396,6 +1396,54 @@ Prevention:
   to Invalid. Label a difference by the construct before it as well as by main's
   answer, and freeze the gap once instead of recounting it.
 
+## 2026-09-29 — nest review round 12: term suffixes, first-row marks, a shared oracle file
+
+Confirmed:
+- A term suffix after a complete term (an infix operator, a chained call, an index,
+  an offload `!(`) and a `+x0` term were Invalid in a discarded row of a two-scrutinee
+  match, where the merge base answered Unsupported. Round 11 had counted "the one
+  program" of the probe roots; the class is everything `parse_term_ops` reads after a
+  term (its call, index, offload, lambda and infix table), `+name`, and a line that
+  starts with one of them, at every site a term ends. A live row is seed-accepted too
+  when the program defines the operator's target, so Invalid was wrong there as well.
+- A `+` on a field of the first row that starts a constructor was ignored: the seed's
+  `match_flatten` builds the split's field binders from that row, so every row below the
+  split sees the mark; Knot let each row promote its own alias, and rows separated by an
+  earlier constructor column never saw it (`Invalid check affine-reuse`).
+- `nest-round11` and `nest-sweep11` replay one oracle, which rewrote the same wrapper
+  files with a truncating write: a concurrent reader saw an empty file and the gate failed
+  in its first seconds (5 of 12 paired starts).
+
+See the [round-12 dispositions](../tests/compiler-nest/receipts/REVIEW-12.md).
+
+Prevention:
+- Enumerate a class from the seed's function, not from probe hits. The list of forms a
+  parser rule stops at is the switch in `parse_term_ops`; write it out (call, index,
+  offload, lambda, every `INFIX` entry) and draw each at every site and gap before
+  reporting "one program".
+- Freeze the dead twin of every Invalid pin that stops at a term. Round 10 pinned
+  `two(a + b)` Invalid because the seed rejects it, but the seed rejects it for its type,
+  and accepts the same text in a discarded row or with a defined target; a parse-level
+  Invalid needs a rejection the seed makes before it knows which rows it keeps.
+- Port a seed algorithm's shape, not its symptom. The mark reaches the field through the
+  split, so a generator that puts `+` in every row and slot of a fielded match, with a
+  catch-all row, found the class in one run (7 of its 1,800 programs are false Invalid on the
+  round-11 tip; its 1,200 suffix programs add 336).
+- Write a token predicate head first. Older laws normalize over an abstract tail; a
+  predicate that inspects the second token before deciding on the first stops them
+  reducing, and the anchors of older mutants pin the order of branches. Test both before
+  the first full run: run every mutant of every gate at once (about three minutes) instead
+  of learning one moved anchor per ten-minute gate run.
+- Gates that share an oracle must share no writable path: publish by rename, and prove it
+  by holding a handle across a second publish (deterministic), not by timing a race.
+- A group's composition cap counts interface bytes: each new definition costs 60 to 90
+  bytes, and a law block of 1.5 kilobytes put `pattern-matrix-laws` at 48,667 of 48,000.
+  Run the manifest preflight before writing the laws, and drop what the fixtures and
+  mutants already pin.
+- Token mutation of the frozen fixtures is still the discovery tool (it found `+(a)` and
+  `<=` at a let's column); label its false Invalid by the construct before it, and count
+  a number in a commit message with a command (a message said 14 fixtures; there were nine).
+
 ## 2026-09-28 — Live review of the compiler-campaign backlog (`185b7d5..a6367eb9`)
 
 Date / scope / source revision: 2026-09-28 (receipts UTC 2026-09-29T04:50:55Z to
