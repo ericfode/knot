@@ -1623,7 +1623,8 @@ def effect_controls(plans: dict) -> list:
     return [
         ('book-print', image('book', bound(text('x'))), {**unsupported, 'calls': 5}),
         ('book-print-continuation-call', image('book', bound(text('x'), calling)), {**unsupported, 'calls': 5}),
-        ('book-print-twice', image('book', ['let', 8, 0, bound(text('y')), bound(text('x'))], 1), refused),
+        ('book-print-twice', image('book', ['let', 8, 0, bound(text('y')), bound(text('x'))], 1),
+         {**unsupported, 'calls': 5}),
         ('book-print-non-scalar', image('book', bound(['lit', 3, 'String', [0xD800]])), refused),
         ('book-print-ill-typed', image('book', bound(laundered)), {**refused, 'calls': 5}),
         ('book-args', {**image('book', ['call', 8, got, [listed]], 0, args), 'types': [*types, *args_types],
