@@ -1,0 +1,365 @@
+{
+  "purpose": "D7 freeze before implementing reusable Nat offset patterns, Nat.is_le, U32.and, String.reverse.",
+  "seed_sha256": {
+    "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "fixtures": [
+    {
+      "name": "bootstrap-helpers",
+      "file": "tests/compiler-literals/supplemental/bootstrap-helpers.bend",
+      "sha256": "e7aa9faf08edb3538b46ff136f977dfe553c274c70f6d896adc21d8356c726dc",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Probe": [
+          "OffsetZero",
+          "OffsetOne",
+          "OffsetTwo",
+          "OffsetThree",
+          "Less",
+          "Equal",
+          "Greater",
+          "Mask",
+          "MaskMiss",
+          "Reverse",
+          "ReverseUnicode",
+          "ReverseEmpty"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/supplemental/bootstrap-helpers.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "observe",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "OffsetZero"
+          ],
+          "type": "Answer",
+          "constructor": "No",
+          "tag": 0,
+          "wrapper": {
+            "path": ".local/literals/probe-OffsetZero.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.OffsetZero{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-OffsetZero.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "OffsetOne"
+          ],
+          "type": "Answer",
+          "constructor": "No",
+          "tag": 0,
+          "wrapper": {
+            "path": ".local/literals/probe-OffsetOne.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.OffsetOne{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-OffsetOne.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "OffsetTwo"
+          ],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "wrapper": {
+            "path": ".local/literals/probe-OffsetTwo.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.OffsetTwo{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-OffsetTwo.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "OffsetThree"
+          ],
+          "type": "Answer",
+          "constructor": "No",
+          "tag": 0,
+          "wrapper": {
+            "path": ".local/literals/probe-OffsetThree.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.OffsetThree{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-OffsetThree.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            4
+          ],
+          "argument_constructors": [
+            "Less"
+          ],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "wrapper": {
+            "path": ".local/literals/probe-Less.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.Less{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-Less.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            5
+          ],
+          "argument_constructors": [
+            "Equal"
+          ],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "wrapper": {
+            "path": ".local/literals/probe-Equal.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.Equal{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-Equal.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            6
+          ],
+          "argument_constructors": [
+            "Greater"
+          ],
+          "type": "Answer",
+          "constructor": "No",
+          "tag": 0,
+          "wrapper": {
+            "path": ".local/literals/probe-Greater.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.Greater{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-Greater.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            7
+          ],
+          "argument_constructors": [
+            "Mask"
+          ],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "wrapper": {
+            "path": ".local/literals/probe-Mask.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.Mask{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-Mask.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            8
+          ],
+          "argument_constructors": [
+            "MaskMiss"
+          ],
+          "type": "Answer",
+          "constructor": "No",
+          "tag": 0,
+          "wrapper": {
+            "path": ".local/literals/probe-MaskMiss.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.MaskMiss{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-MaskMiss.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            9
+          ],
+          "argument_constructors": [
+            "Reverse"
+          ],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "wrapper": {
+            "path": ".local/literals/probe-Reverse.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.Reverse{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-Reverse.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            10
+          ],
+          "argument_constructors": [
+            "ReverseUnicode"
+          ],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "wrapper": {
+            "path": ".local/literals/probe-ReverseUnicode.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.ReverseUnicode{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-ReverseUnicode.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            11
+          ],
+          "argument_constructors": [
+            "ReverseEmpty"
+          ],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "wrapper": {
+            "path": ".local/literals/probe-ReverseEmpty.bend",
+            "source": "import ../../tests/compiler-literals/supplemental/bootstrap-helpers.bend as F\n\ndef main() -> F.Answer:\n  F.observe(F.ReverseEmpty{})\n"
+          },
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/literals/probe-ReverseEmpty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../tests/compiler-literals/supplemental/bootstrap-helpers.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    }
+  ]
+}

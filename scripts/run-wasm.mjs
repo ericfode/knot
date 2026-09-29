@@ -8,7 +8,7 @@ let invoking = false;
 // Fail closed: only a completed, reported result clears the host-failure code.
 process.exitCode = 5;
 try {
-  if (!['knot-enum-1', 'knot-fields-wasm-1'].includes(profile)) throw new Error('unknown Wasm profile');
+  if (!['knot-enum-1', 'knot-fields-wasm-1', 'knot-literals-wasm-1'].includes(profile)) throw new Error('unknown Wasm profile');
   if (!path || !name || raw.some(x => !/^(0|[1-9][0-9]*)$/.test(x))) throw new Error('expected module export [ordinal ...]');
   const args = raw.map(Number);
   if (args.some(x => !Number.isSafeInteger(x) || x < 0 || x > 255)) throw new Error('ordinal outside enum-profile bounds');
@@ -30,8 +30,9 @@ try {
   // selection asserts compiler provenance; this is not an arbitrary-Wasm ABI.
   const stack = invoking && error instanceof RangeError && /maximum call stack size exceeded/i.test(error.message);
   const arena = invoking && profile === 'knot-fields-wasm-1' && error instanceof WebAssembly.RuntimeError && error.message === 'unreachable';
-  if (stack || arena) {
-    console.error(`Exhausted\twasm\t${stack ? 'call-stack' : 'arena-overflow'}`);
+  const bounded = invoking && profile === 'knot-literals-wasm-1' && error instanceof WebAssembly.RuntimeError && error.message === 'unreachable';
+  if (stack || arena || bounded) {
+    console.error(`Exhausted\twasm\t${stack ? 'call-stack' : bounded ? 'resource-limit' : 'arena-overflow'}`);
     process.exitCode = 4;
   } else {
     console.error(`HostFailure\twasm\t${error.message}`);

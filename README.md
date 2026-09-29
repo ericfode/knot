@@ -24,6 +24,12 @@ matches; fields and recursion remain outside this profile. This is a seed-built
 compiler that emits Wasm programs. Compiling itself and lowering source to the
 GPU remain subsequent milestones.
 
+The [module increment](tests/compiler-modules/README.md) adds explicit
+`--bundle ROOT` commands for local/hash imports and the pinned Base's checked
+reachable slice. A combined ordered book preserves file-local aliases and
+checks every user definition. An audit lists unchecked Base declarations.
+The original single-file command behavior remains available.
+
 The approved [longer goal](docs/SELF-HOSTING-GOAL.md) ends with a reproducible
 whole-compiler bootstrap and compiler-generated GPU execution. The first
 [structural increment](research/compiler-fields/README.md) checks constructor

@@ -1,0 +1,1711 @@
+{
+  "schema": "knot-modules-fixtures-1",
+  "purpose": "Frozen seed expectations for campaign increment 4 (modules and Base loading); see FIXTURES.md.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "tools": {
+    "bun": "1.3.14"
+  },
+  "environment": {
+    "cwd": "<ROOT>",
+    "env": {
+      "BEND_NO_TELEMETRY": "1",
+      "BEND_LIB": "tests/compiler-modules/bundle/lib",
+      "BEND_HUB": "file://<ROOT>/tests/compiler-modules/bundle/hub"
+    },
+    "cleared": "every other BEND_* variable",
+    "normalization": "each spelling of the repository root in stdout/stderr becomes <ROOT>; otherwise exact"
+  },
+  "bundle": {
+    "provenance": {
+      "0x4454ff15e96d17231b8b4ebd9030ac38": "synthetic two-file fixture package (mark.bend, board.bend imports ./mark.bend); frozen here, never published; directory named by the seed publish formula",
+      "0xc409b77d3230ca33374caf6b0993f0cb": "packages/releases.json output_builder; byte-identical copy of the seed store entry ~/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb",
+      "names/knot-fixture-bytes@0.0.0.1": "local-only name for the named-package fixture; never published"
+    },
+    "packages": {
+      "0x4454ff15e96d17231b8b4ebd9030ac38": {
+        "content_hash": "0x4454ff15e96d17231b8b4ebd9030ac38",
+        "files": {
+          "board.bend": "4218a8e683287abae2f27055dc6f36a2e904416da437016d7fcd5e9820ccdaf4",
+          "mark.bend": "8bf2fa5d5e7c036d565404819df72e4be0c6c62bd66166c8aee4b8b901776c64"
+        }
+      },
+      "0xc409b77d3230ca33374caf6b0993f0cb": {
+        "content_hash": "0xc409b77d3230ca33374caf6b0993f0cb",
+        "files": {
+          "BYTE_LAWS.bend": "cffc93ff7f84fec0e39e26fabdd8ee1b74a93f34cbf875403acc7d44d76b599a",
+          "BYTE_PROOF.bend": "969180966cbeebb904be36ba3a84b69147a47c64f22eaaad14e82b4160a54df9",
+          "LAWS.bend": "7c0b887642a77a3b8522b9c05a66ae61045b618b6bd062510530f5a2a783b569",
+          "LICENSE": "7be3637ad6ba94d74378f1479b4798fcf6ccbfddc00f9d7313ae0aab089b0e87",
+          "PROOF.bend": "b6851d6a3738b754309c7d803f39c6c5e7e3d5eec6c376f83b8f61cc53d539f7",
+          "byte_model.bend": "d70023c2847de95e68f84db86f42c5fc7f1ed094166a492f2d108319ef43a396",
+          "bytes.bend": "b1c672949a72bcbc37509e31a1a20715eb73813904a50157328ded9ed0069ff1",
+          "conformance.bend": "f1f4bc8a01dbfa28fc62298ac3185fdcdca7e23569ed929ed8bf692ccd54ced5",
+          "example.bend": "8ab3b54a35ecd7e3ee1112fe0a80cb4d3c1c59930e906c116c564f7418c08ad3",
+          "main.bend": "4121b71f530bbb0d4cb05f7ff2ce3f2f65bbe5a5e3c1bb2f059a15b2c0491bb8",
+          "model.bend": "5a38de9bb16563d90077fd3e112084a420cc3b2cd55492a0e03c11d7c9101157",
+          "release.bend": "d13eb60779d4941ebbfdec4478345c61ec60dc0f8118f2ef3e7a1910966fd988"
+        }
+      }
+    },
+    "names": {
+      "knot-fixture-bytes@0.0.0.1": "0xc409b77d3230ca33374caf6b0993f0cb"
+    }
+  },
+  "features": {
+    "closures": "lambdas and higher-order calls (ladder 7)",
+    "fields": "fielded constructors and field binders executed end to end (ladder 2)",
+    "generics": "erased type parameters, quantity arguments, parameterized datatypes (ladder 6)",
+    "literals": "U32/Nat/Char/String literals and primitives, list literals (ladder 5)",
+    "recursion": "structural recursion (ladder 1)"
+  },
+  "sources": {
+    "calls/base-bool--differ-Dark-Lit.bend": "e9d512ca33a4c1b2878253b50b7f08b18e13e8c6fafacd120dd68695efaa6cb5",
+    "calls/base-bool--differ-Lit-Lit.bend": "d17f76f5d58b5e17e4ee893d321a9aa8d45d9a88d5f97ba4219444c5cb5c3237",
+    "calls/hash-bytes--probe-Long.bend": "702e66f16f77c268295f719558503298ce9ee460efa8e58547417d8d31e9f1c0",
+    "calls/hash-bytes--probe-Wide.bend": "45176e42d1d09f8695cefa7b76e66cbcd2fabfd9c8bc1f2b5f91933179c1e049",
+    "calls/qualified-names--see-Off.bend": "5742822c821b9122ae898f6fde617056c8fc855c4b2be740e9f505be256aa2cd",
+    "calls/qualified-names--see-On.bend": "9e738bd0ae8b5c05d834fcfe826937d892fafb9a6bd0b408661696cf30e358e2",
+    "calls/same-bare-names--flip-Off.bend": "e0203f2259705da01787406a9dea8942e84a783b86941d3852ca912b72fd5da0",
+    "calls/same-bare-names--flip-On.bend": "7c4ddd88dd2dffb23861030e8a840deeea9f0df28e371459daea4ded56871f67",
+    "fixtures/alias-member-definition.bend": "ca6d12c52f130625895c5d871272ae519e2bb1081e4d34b711fe45e62a1de67b",
+    "fixtures/alias-name-reuse.bend": "2b0f660ff0844d17fbc9d4b8639e175bc36a0b520755a0315a0960fdc58c0a53",
+    "fixtures/alias-not-reexported.bend": "59d05919f4e0356f058e3cd0c11922b97bde63645ff9cc7f20e6646551897890",
+    "fixtures/bare-imported-constructor.bend": "bea8c19e25a303e2d383ba2cde1c0d5502e20edce6cb90f0b1e646aec143554a",
+    "fixtures/bare-relative-path.bend": "b728baae0b205066d7c4b7a85a95a946528e9ec402515fb600f89cde60e47366",
+    "fixtures/base-after-module.bend": "984d3b4e55d98c4c04efeafd04908c1d84c9fa83c86cfbec7b81b4ecadef9c92",
+    "fixtures/base-bool-pick.bend": "40a8629cfb2ab18a8fef6d24e7b8cbb8fa2c6782daaf4da996474f5428160b62",
+    "fixtures/base-bool.bend": "54c28377615d71a7ae023bfbfd80aeaaf08907cc68246f600984af3f3725306e",
+    "fixtures/base-list.bend": "344bb8f85533f300c4aae9f369029a1ce1bcebac125cae91da65bcbc3e14fb7a",
+    "fixtures/base-maybe.bend": "23cf57dccbd08c09c957a925afc045431f89fe3614f94bfea954aa8ca7ffbf92",
+    "fixtures/base-name-after-base.bend": "258a69dcaacf64a761ba35ac2e98954faa52dce80ed99458d00d247286292dd2",
+    "fixtures/base-transitive.bend": "883d4998c7235d64b4591670511fcb4bf54e0fb9c0f0638e88785b11e8604f84",
+    "fixtures/base-with-alias.bend": "b2ffa4ec362cf0988fd8ec21a54832ade1bffebbcfdcebbcfa2583eaa238806c",
+    "fixtures/diamond.bend": "26743f8680918eb7380488c2228e7226412436dc357f4bfc474ca036c641ccf2",
+    "fixtures/distinct-identity.bend": "ac508e8de6bc54fe0293a2d95a9603e28e6091cf6907c776ae205c110c4292fa",
+    "fixtures/duplicate-alias.bend": "cbc5cedc635e2347f5de5abd9562daa8dd07f4422d5ee111f6751ca34b902931",
+    "fixtures/entry-shadows-base.bend": "7d844c5a26cee1723e6318e85db5910b423ff04bd0b39da6dc4aaee81f3c6b42",
+    "fixtures/foreign-definition.bend": "db0ea061005d9cee97d8c44115eab2d1166cc32974d8fd76d1a30cbe3d7a4225",
+    "fixtures/hash-absent-package.bend": "10a6aa0d5c943e40196e64ce13504476f4fe3e3dcc40b9e5092d503fb5413cf9",
+    "fixtures/hash-bytes.bend": "922c888d4bff972e7ac9034b74c86279d5b61cf9521e982471a4f93965bf71b2",
+    "fixtures/hash-internal-import.bend": "b352db60a18c477829914baa7a1e969d40b92cbec554d6604cf113e3854f7b7a",
+    "fixtures/hash-local-package.bend": "16b8c5945e5f97fc144a7be00b04f031c5b2c888fb8f1c71f5a773601e71fecc",
+    "fixtures/hash-uppercase.bend": "b05271d225c1b26573ca6ed8809a63688fbda301d860e4dbaf1f82d5f386653a",
+    "fixtures/import-after-declaration.bend": "951d0a49f4586ab0b6cad9c2ee95f97a10ebd044b405e759ce8e1b7e45cbc2f5",
+    "fixtures/import-comments.bend": "0becdd8f1b269dc76cf27e7f1ea1db5887d3efcd36d78c40b7b5bc5d8504d69f",
+    "fixtures/import-cycle.bend": "9b5d588d5edc5d9b8f5c4c6f18a501879c122b4352c8e026ce06825a4dd84720",
+    "fixtures/import-dotted-filename.bend": "328c1e4f5c5db0751f38574a49776c2b2af99f9c3d33ae51726f1be29dd54bdc",
+    "fixtures/import-non-bend.bend": "234d414088e92354ae8d1a9e0d73119408bb8f50691a79b4011b616de099dae8",
+    "fixtures/import-without-alias.bend": "3c3aebae41f8fbd3f79c361ebc100b08628da297d594ae045be3fc6d91d88b2b",
+    "fixtures/lib/chain/one.bend": "dda344ebc1e28683d6b15a5114a0cff09eff7b85a7dcf762dc52936a4eae444b",
+    "fixtures/lib/chain/three.bend": "108bf174fe78a0f756f3c858e9cfd357294ac267d31edb1420cc30772b2402e5",
+    "fixtures/lib/chain/two.bend": "3cb99f9e0ca21929a490c886dea427afaedce4c633c35b57fd53742fd1a3b6fa",
+    "fixtures/lib/cycle/a.bend": "85d7051572b1b20b6c4027b4c1e7d951b8ac360cfa6cbde10ddb0a69df20ca81",
+    "fixtures/lib/cycle/b.bend": "a3823e6855fe5c7b3d218a66b33dea1d294bb962722632c3dad9f031d072d6c3",
+    "fixtures/lib/deep/a/b/leaf.bend": "aef9f9260c07de88c6038b2547d722c486d1f9e9b56690be79f0ac66ef2677cd",
+    "fixtures/lib/deep/a/b/twig.bend": "2cdbaa472a8eaa1a85df6275a4ff0dddaca039bd4f6675eba8c0beeeef1f7640",
+    "fixtures/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "fixtures/lib/flag.txt": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "fixtures/lib/flag.v2.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "fixtures/lib/left.bend": "3ea506a428e59722eea1739118dc9d79fbaa54c9ac36b81cd87dba0d536a9ffb",
+    "fixtures/lib/own-bool.bend": "a33406e777fe07ff9a1c2299d1c2be7ba09bdc7481e0b73449ae8102be6f9fa1",
+    "fixtures/lib/right.bend": "3a6c4dd4899044d86388c1eb71276864a7d729ca33ff86905a6128baf0e0220b",
+    "fixtures/lib/tick.js": "71da9d47d3230278755c3d93381b152a336ae571cc59ed7dc5b27953059f221b",
+    "fixtures/lib/twin/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "fixtures/lib/with-base.bend": "4987865b7faa63ffeb8ec568886d1e52c3b87787c1ea60de3c3789d782214bcc",
+    "fixtures/lib/with-main.bend": "5bd8895fc75bc725144e76d56ab93b402f0b493d58030e682f2b963b97b0cc14",
+    "fixtures/lowercase-alias.bend": "3815c3b09b3b08d4def5fbb39a3574630edfd31f99d706227a1c29f6a932f632",
+    "fixtures/missing-module.bend": "db3078a380b19e7bd4742df971b782afbe0aced7baf62dbbeeacf1d087b86cc0",
+    "fixtures/module-main.bend": "6130c5d1c018d5cc22cd16acbc9792a143053ef16cbe96e15d30c2abe51c01f2",
+    "fixtures/named-package.bend": "99e95b82ef0c681ff2bbad0b3cb8ff29bb317d972ea58e382f143540f7393269",
+    "fixtures/nested-paths.bend": "564e88aa83c69dc3ee4cc2f2dae87f33c70f869e62a7ae660499452754a85e93",
+    "fixtures/no-base-loaded.bend": "aba549281bae671ef55646a6158821160b57e011f0e6a50422f6319eadd5b4dd",
+    "fixtures/qualified-names.bend": "9a0f462ab40bdc6059435127f2e6037aa26f3ca4a77b875d2d78afc28c1e130d",
+    "fixtures/same-bare-names.bend": "9a14fd5fda5787b5e99d7feaa93c11f37c688ef21e78ba55ece784cbf047565d",
+    "fixtures/self-import.bend": "383d9313f72c325ce0b005fcd5f05123630b03832a35795daca90ff61abe4fb8",
+    "fixtures/transitive-chain.bend": "e4f6cec4652c77b3309def70212b8fedc8adc81b674c8e04e1c91177a2dbc899",
+    "fixtures/two-aliases-one-file.bend": "9a1967d76033c879030e0e6b2332c5221cae929b05e76a8105329e69732acfcf",
+    "fixtures/parent-relative-path.bend": "da14666c681055ba05fc8865e9632193ad3cda0cedbe26ce19820118d188e37b",
+    "fixtures/lib/broken.bend": "7d4bb9fe16b972d0884c420bb15c6df19e71284df6b43bcfa4da30744937e6d8",
+    "fixtures/unused-invalid-module.bend": "c6e306a111791a2c37d706032dd08f373b7e9adec6fd0c0e22c7a9e28c25ded3"
+  },
+  "fixtures": [
+    {
+      "file": "fixtures/qualified-names.bend",
+      "feature": "qualified-names",
+      "kind": "positive",
+      "summary": "A.T in a signature, A.f call, A.C construction and A.C patterns resolve through one alias.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/qualified-names.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/qualified-names.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        },
+        {
+          "export": "see",
+          "arguments": [
+            {
+              "type": "lib/flag.Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          ],
+          "run": "calls/qualified-names--see-Off.bend",
+          "wrapper_source": "import ../fixtures/qualified-names.bend as Q\nimport ../fixtures/lib/flag.bend as F\n\ndef main() -> Q.Light:\n  Q.see(F.Off{})\n",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/calls/qualified-names--see-Off.bend",
+          "exit": 0,
+          "stdout": "../fixtures/qualified-names.Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        },
+        {
+          "export": "see",
+          "arguments": [
+            {
+              "type": "lib/flag.Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          ],
+          "run": "calls/qualified-names--see-On.bend",
+          "wrapper_source": "import ../fixtures/qualified-names.bend as Q\nimport ../fixtures/lib/flag.bend as F\n\ndef main() -> Q.Light:\n  Q.see(F.On{})\n",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/calls/qualified-names--see-On.bend",
+          "exit": 0,
+          "stdout": "../fixtures/qualified-names.Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/lowercase-alias.bend",
+      "feature": "qualified-names",
+      "kind": "edge",
+      "summary": "An alias need not be capitalized: `as f` qualifies f.Flag, f.flip and f.On.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/lowercase-alias.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/lowercase-alias.bend",
+          "exit": 0,
+          "stdout": "Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "fixtures/bare-imported-constructor.bend",
+      "feature": "qualified-names",
+      "kind": "negative",
+      "summary": "A bare Off{} pattern does not name the imported lib/flag.Off; constructors need the alias.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/bare-imported-constructor.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/bare-imported-constructor.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n 8 |   match x:\n 9>|     case Off{}: Dark{}\n   |          ^^^^^\n10 |     case On{}: Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/transitive-chain.bend",
+      "feature": "multiple-files",
+      "kind": "positive",
+      "summary": "Three files each declare Hop{Near,Far}; a value built two imports away flows back while each file names only its direct import.",
+      "modules": [
+        "fixtures/lib/chain/one.bend",
+        "fixtures/lib/chain/two.bend",
+        "fixtures/lib/chain/three.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/transitive-chain.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/transitive-chain.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/module-main.bend",
+      "feature": "multiple-files",
+      "kind": "edge",
+      "summary": "An imported module may define main; it is W.main, and the entry file main is the one that runs.",
+      "modules": [
+        "fixtures/lib/with-main.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/module-main.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/module-main.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/alias-not-reexported.bend",
+      "feature": "multiple-files",
+      "kind": "negative",
+      "summary": "Aliases are per file: L.F.Flag does not reach the flag module imported by lib/left.bend.",
+      "modules": [
+        "fixtures/lib/left.bend",
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/alias-not-reexported.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/alias-not-reexported.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: lib/left.F.Off)\nLocation:\n 8 |   match x:\n 9>|     case L.F.Off{}: Dark{}\n   |          ^^^^^^^^^\n10 |     case L.F.On{}: Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/nested-paths.bend",
+      "feature": "relative-paths",
+      "kind": "positive",
+      "summary": "A module three directories down imports ../../../flag.bend and ./twig.bend relative to its own directory.",
+      "modules": [
+        "fixtures/lib/flag.bend",
+        "fixtures/lib/deep/a/b/leaf.bend",
+        "fixtures/lib/deep/a/b/twig.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/nested-paths.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/nested-paths.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/bare-relative-path.bend",
+      "feature": "relative-paths",
+      "kind": "edge",
+      "summary": "A path without ./ (lib/flag.bend) is relative to the importing file, like ./lib/flag.bend.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/bare-relative-path.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/bare-relative-path.bend",
+          "exit": 0,
+          "stdout": "Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "fixtures/import-dotted-filename.bend",
+      "feature": "relative-paths",
+      "kind": "negative",
+      "summary": "Path segments are plain names; flag.v2.bend exists and is valid Bend, but the path rule rejects it before any file lookup.",
+      "modules": [
+        "fixtures/lib/flag.v2.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/import-dotted-filename.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/import-dotted-filename.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : './lib/flag.v2.bend'\nLocation:\n1>| import ./lib/flag.v2.bend as F\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/diamond.bend",
+      "feature": "module-identity",
+      "kind": "positive",
+      "summary": "lib/left and lib/right both import lib/flag; it loads once and all three views share one Flag type.",
+      "modules": [
+        "fixtures/lib/left.bend",
+        "fixtures/lib/right.bend",
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/diamond.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/diamond.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/two-aliases-one-file.bend",
+      "feature": "module-identity",
+      "kind": "edge",
+      "summary": "Two aliases of one file denote one module: F.On, G.flip and G.Flag patterns interoperate.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/two-aliases-one-file.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/two-aliases-one-file.bend",
+          "exit": 0,
+          "stdout": "Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "fixtures/distinct-identity.bend",
+      "feature": "module-identity",
+      "kind": "negative",
+      "summary": "A byte-identical copy at another path is a different module: lib/twin/flag.Flag is not lib/flag.Flag.",
+      "modules": [
+        "fixtures/lib/flag.bend",
+        "fixtures/lib/twin/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/distinct-identity.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/distinct-identity.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : lib/twin/flag.Flag\n- observed : lib/flag.Flag\nLocation: main\n13 | def main() -> Light:\n14>|   see(B.flip(A.On{}))\n   |              ^^^^^^\n15 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/same-bare-names.bend",
+      "feature": "alias-collisions",
+      "kind": "positive",
+      "summary": "The entry declares Flag, Off, On and flip like its import; bare names resolve to the entry and flip is the identity.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Flag",
+        "constructors": [
+          "Off",
+          "On"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/same-bare-names.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/same-bare-names.bend",
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": "",
+          "constructor": "On",
+          "tag": 1
+        },
+        {
+          "export": "flip",
+          "arguments": [
+            {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          ],
+          "run": "calls/same-bare-names--flip-Off.bend",
+          "wrapper_source": "import ../fixtures/same-bare-names.bend as S\n\ndef main() -> S.Flag:\n  S.flip(S.Off{})\n",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/calls/same-bare-names--flip-Off.bend",
+          "exit": 0,
+          "stdout": "../fixtures/same-bare-names.Off{}\n",
+          "stderr": "",
+          "constructor": "Off",
+          "tag": 0
+        },
+        {
+          "export": "flip",
+          "arguments": [
+            {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          ],
+          "run": "calls/same-bare-names--flip-On.bend",
+          "wrapper_source": "import ../fixtures/same-bare-names.bend as S\n\ndef main() -> S.Flag:\n  S.flip(S.On{})\n",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/calls/same-bare-names--flip-On.bend",
+          "exit": 0,
+          "stdout": "../fixtures/same-bare-names.On{}\n",
+          "stderr": "",
+          "constructor": "On",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/alias-name-reuse.bend",
+      "feature": "alias-collisions",
+      "kind": "edge",
+      "summary": "Alias F coexists with a local type F and a local binder F; only dotted F.x names use the alias.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "F",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/alias-name-reuse.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/alias-name-reuse.bend",
+          "exit": 0,
+          "stdout": "Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "fixtures/duplicate-alias.bend",
+      "feature": "alias-collisions",
+      "kind": "negative",
+      "summary": "A second import may not reuse alias F, even for a different file.",
+      "modules": [
+        "fixtures/lib/flag.bend",
+        "fixtures/lib/twin/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/duplicate-alias.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/duplicate-alias.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh alias (F names an earlier import)\n- observed : 'import ./lib/twin/flag.bend as F'\nLocation:\n1 | import ./lib/flag.bend as F\n2>| import ./lib/twin/flag.bend as F\n  |        ^\n3 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/alias-member-definition.bend",
+      "feature": "alias-collisions",
+      "kind": "negative",
+      "summary": "A local definition may not add a member F.keep under an import alias.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/alias-member-definition.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/alias-member-definition.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (F is an import's alias)\n- observed : 'F.keep'\nLocation:\n6 | \n7>| def F.keep(x: F.Flag) -> F.Flag:\n  |     ^^^^^^\n8 |   x\n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/import-comments.bend",
+      "feature": "import-syntax",
+      "kind": "edge",
+      "summary": "Comment and blank lines may precede imports, and a trailing # comment ends an import line.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/import-comments.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/import-comments.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/import-without-alias.bend",
+      "feature": "import-syntax",
+      "kind": "negative",
+      "summary": "A path import requires `as Name`; only Base is imported bare.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/import-without-alias.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/import-without-alias.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import ('import Base', or 'import <path> as <Name>')\n- observed : 'import ./lib/flag.bend'\nLocation:\n1>| import ./lib/flag.bend\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/import-non-bend.bend",
+      "feature": "import-syntax",
+      "kind": "negative",
+      "summary": "An import path must end in .bend; flag.txt holds valid Bend source and is still rejected.",
+      "modules": [
+        "fixtures/lib/flag.txt"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/import-non-bend.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/import-non-bend.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import of a .bend file\n- observed : './lib/flag.txt'\nLocation:\n1>| import ./lib/flag.txt as F\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/import-after-declaration.bend",
+      "feature": "import-syntax",
+      "kind": "negative",
+      "summary": "Imports form the file header; after a declaration, import is a reserved word, not an import.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/import-after-declaration.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/import-after-declaration.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a name (got the keyword 'import')\n- observed : 'import'\nLocation:\n4 | \n5>| import ./lib/flag.bend as F\n  | ^^^^^^\n6 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/import-cycle.bend",
+      "feature": "cycles-and-missing",
+      "kind": "negative",
+      "summary": "lib/cycle/a imports lib/cycle/b, which imports lib/cycle/a.",
+      "modules": [
+        "fixtures/lib/cycle/a.bend",
+        "fixtures/lib/cycle/b.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/import-cycle.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/import-cycle.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : an import cycle through <ROOT>/tests/compiler-modules/fixtures/lib/cycle/a.bend\nLocation:\n1>| import ./a.bend as A\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/self-import.bend",
+      "feature": "cycles-and-missing",
+      "kind": "negative",
+      "summary": "A file importing itself is the shortest cycle.",
+      "modules": [],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/self-import.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/self-import.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : an import cycle through <ROOT>/tests/compiler-modules/fixtures/self-import.bend\nLocation:\n1>| import ./self-import.bend as Me\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/missing-module.bend",
+      "feature": "cycles-and-missing",
+      "kind": "negative",
+      "summary": "An import of a file that does not exist.",
+      "modules": [],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/missing-module.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/missing-module.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : no such file: <ROOT>/tests/compiler-modules/fixtures/lib/absent.bend\nLocation:\n1>| import ./lib/absent.bend as A\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/base-bool.bend",
+      "feature": "base-import",
+      "kind": "positive",
+      "summary": "import Base; monomorphic Bool.not/and/or/xor over Base Bool, observed through a local enum.",
+      "modules": [
+        "Base"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/base-bool.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/base-bool.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        },
+        {
+          "export": "differ",
+          "arguments": [
+            {
+              "type": "Light",
+              "constructor": "Dark",
+              "tag": 0
+            },
+            {
+              "type": "Light",
+              "constructor": "Lit",
+              "tag": 1
+            }
+          ],
+          "run": "calls/base-bool--differ-Dark-Lit.bend",
+          "wrapper_source": "import ../fixtures/base-bool.bend as K\n\ndef main() -> K.Light:\n  K.differ(K.Dark{}, K.Lit{})\n",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/calls/base-bool--differ-Dark-Lit.bend",
+          "exit": 0,
+          "stdout": "../fixtures/base-bool.Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        },
+        {
+          "export": "differ",
+          "arguments": [
+            {
+              "type": "Light",
+              "constructor": "Lit",
+              "tag": 1
+            },
+            {
+              "type": "Light",
+              "constructor": "Lit",
+              "tag": 1
+            }
+          ],
+          "run": "calls/base-bool--differ-Lit-Lit.bend",
+          "wrapper_source": "import ../fixtures/base-bool.bend as K\n\ndef main() -> K.Light:\n  K.differ(K.Lit{}, K.Lit{})\n",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/calls/base-bool--differ-Lit-Lit.bend",
+          "exit": 0,
+          "stdout": "../fixtures/base-bool.Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "fixtures/base-bool-pick.bend",
+      "feature": "base-import",
+      "kind": "positive",
+      "summary": "Bool.pick selects between two local constructors through an erased type argument.",
+      "modules": [
+        "Base"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "generics"
+        ]
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/base-bool-pick.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/base-bool-pick.bend",
+          "exit": 0,
+          "stdout": "Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "fixtures/base-list.bend",
+      "feature": "base-import",
+      "kind": "positive",
+      "summary": "List.reverse and List.head over a list literal of local constructors, read back through Maybe.",
+      "modules": [
+        "Base"
+      ],
+      "result": {
+        "type": "Suit",
+        "constructors": [
+          "Club",
+          "Heart",
+          "Spade"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "fields",
+          "generics",
+          "literals",
+          "recursion"
+        ]
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/base-list.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/base-list.bend",
+          "exit": 0,
+          "stdout": "Spade{}\n",
+          "stderr": "",
+          "constructor": "Spade",
+          "tag": 2
+        }
+      ]
+    },
+    {
+      "file": "fixtures/base-maybe.bend",
+      "feature": "base-import",
+      "kind": "positive",
+      "summary": "Maybe.or and Maybe.is_some over Some{Heart{}}, observed as Bool.",
+      "modules": [
+        "Base"
+      ],
+      "result": {
+        "type": "Suit",
+        "constructors": [
+          "Club",
+          "Heart",
+          "Spade"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "fields",
+          "generics"
+        ]
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/base-maybe.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/base-maybe.bend",
+          "exit": 0,
+          "stdout": "Spade{}\n",
+          "stderr": "",
+          "constructor": "Spade",
+          "tag": 2
+        }
+      ]
+    },
+    {
+      "file": "fixtures/base-transitive.bend",
+      "feature": "base-import",
+      "kind": "edge",
+      "summary": "The entry never imports Base, but its import does; Base names such as Bool.not are then global.",
+      "modules": [
+        "fixtures/lib/with-base.bend",
+        "Base"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/base-transitive.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/base-transitive.bend",
+          "exit": 0,
+          "stdout": "Dark{}\n",
+          "stderr": "",
+          "constructor": "Dark",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "fixtures/base-after-module.bend",
+      "feature": "base-import",
+      "kind": "edge",
+      "summary": "A module declaring its own Bool loads before Base and keeps lib/own-bool.Bool; order decides (contrast base-name-after-base).",
+      "modules": [
+        "fixtures/lib/own-bool.bend",
+        "Base"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/base-after-module.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/base-after-module.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/base-with-alias.bend",
+      "feature": "base-import",
+      "kind": "negative",
+      "summary": "Base is imported bare; `import Base as B` is read as a path import of a non-.bend file.",
+      "modules": [],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/base-with-alias.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/base-with-alias.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import of a .bend file\n- observed : 'Base'\nLocation:\n1>| import Base as B\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/base-name-after-base.bend",
+      "feature": "base-import",
+      "kind": "negative",
+      "summary": "Once Base is loaded, a later module declaring Bool collides with Base Bool.",
+      "modules": [
+        "Base",
+        "fixtures/lib/own-bool.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/base-name-after-base.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/base-name-after-base.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Bool)\n- observed : 'Bool'\nLocation:\n1>| type Bool is Type:\n  |      ^^^^\n2 |   No{}\n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/entry-shadows-base.bend",
+      "feature": "base-import",
+      "kind": "negative",
+      "summary": "Base loaded by an import makes the entry declaration of Bool a duplicate, although the entry never imports Base.",
+      "modules": [
+        "fixtures/lib/with-base.bend",
+        "Base"
+      ],
+      "result": {
+        "type": "Bool",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/entry-shadows-base.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/entry-shadows-base.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Bool)\n- observed : 'Bool'\nLocation:\n2 | \n3>| type Bool is Type:\n  |      ^^^^\n4 |   Dark{}\n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/no-base-loaded.bend",
+      "feature": "base-import",
+      "kind": "negative",
+      "summary": "Without any import of Base, Bool, its constructors and Bool.not are undefined; adding import Base makes the same monomorphic program valid.",
+      "modules": [],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/no-base-loaded.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/no-base-loaded.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: False)\nLocation:\n6 |   match x:\n7>|     case False{}: Dark{}\n  |          ^^^^^^^\n8 |     case True{}: Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/hash-local-package.bend",
+      "feature": "hash-package",
+      "kind": "positive",
+      "summary": "Enum-only package 0x4454ff15e96d17231b8b4ebd9030ac38 resolved by hash from the frozen bundle; its ./mark.bend import and the entry import agree.",
+      "modules": [
+        "0x4454ff15e96d17231b8b4ebd9030ac38/board.bend",
+        "0x4454ff15e96d17231b8b4ebd9030ac38/mark.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/hash-local-package.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/hash-local-package.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/hash-bytes.bend",
+      "feature": "hash-package",
+      "kind": "positive",
+      "summary": "The ByteOutput package 0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend from the frozen bundle: accepted, invalid-byte and limit outcomes.",
+      "modules": [
+        "Base",
+        "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend"
+      ],
+      "result": {
+        "type": "Verdict",
+        "constructors": [
+          "Accepted",
+          "BadByte",
+          "Full"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "closures",
+          "fields",
+          "generics",
+          "literals",
+          "recursion"
+        ]
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/hash-bytes.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/hash-bytes.bend",
+          "exit": 0,
+          "stdout": "Accepted{}\n",
+          "stderr": "",
+          "constructor": "Accepted",
+          "tag": 0
+        },
+        {
+          "export": "probe",
+          "arguments": [
+            {
+              "type": "Case",
+              "constructor": "Wide",
+              "tag": 1
+            }
+          ],
+          "run": "calls/hash-bytes--probe-Wide.bend",
+          "wrapper_source": "import ../fixtures/hash-bytes.bend as H\n\ndef main() -> H.Verdict:\n  H.probe(H.Wide{})\n",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/calls/hash-bytes--probe-Wide.bend",
+          "exit": 0,
+          "stdout": "../fixtures/hash-bytes.BadByte{}\n",
+          "stderr": "",
+          "constructor": "BadByte",
+          "tag": 1
+        },
+        {
+          "export": "probe",
+          "arguments": [
+            {
+              "type": "Case",
+              "constructor": "Long",
+              "tag": 2
+            }
+          ],
+          "run": "calls/hash-bytes--probe-Long.bend",
+          "wrapper_source": "import ../fixtures/hash-bytes.bend as H\n\ndef main() -> H.Verdict:\n  H.probe(H.Long{})\n",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/calls/hash-bytes--probe-Long.bend",
+          "exit": 0,
+          "stdout": "../fixtures/hash-bytes.Full{}\n",
+          "stderr": "",
+          "constructor": "Full",
+          "tag": 2
+        }
+      ]
+    },
+    {
+      "file": "fixtures/hash-internal-import.bend",
+      "feature": "hash-package",
+      "kind": "edge",
+      "summary": "byte_model.bend imports ./bytes.bend inside the package; its B.Error and the entry import agree.",
+      "modules": [
+        "Base",
+        "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+        "0xc409b77d3230ca33374caf6b0993f0cb/byte_model.bend"
+      ],
+      "result": {
+        "type": "Verdict",
+        "constructors": [
+          "Kept",
+          "Refused"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "closures",
+          "fields",
+          "generics",
+          "literals",
+          "recursion"
+        ]
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/hash-internal-import.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/hash-internal-import.bend",
+          "exit": 0,
+          "stdout": "Kept{}\n",
+          "stderr": "",
+          "constructor": "Kept",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "fixtures/named-package.bend",
+      "feature": "hash-package",
+      "kind": "edge",
+      "summary": "A name@version import that the seed resolves offline through the bundle names file to the same hash.",
+      "modules": [
+        "Base",
+        "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "phase": "load",
+        "code": "named-package",
+        "diagnostic_prefix": "Unsupported\tload\tnamed-package\t",
+        "justification": "name@version is a mutable hub pointer (BEND_LIB/names or the network), not content identity; the frozen bundle admits only 0x hash imports, so Knot reports the recognized form at load before reading any package file."
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/named-package.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/named-package.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/hash-uppercase.bend",
+      "feature": "hash-package",
+      "kind": "negative",
+      "summary": "Hash paths are lowercase hex; an uppercase hash is read as a local path and rejected.",
+      "modules": [],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/hash-uppercase.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/hash-uppercase.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : '0xC409B77D3230CA33374CAF6B0993F0CB/bytes.bend'\nLocation:\n1>| import 0xC409B77D3230CA33374CAF6B0993F0CB/bytes.bend as B\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/hash-absent-package.bend",
+      "feature": "hash-package",
+      "kind": "negative",
+      "summary": "A hash absent from the frozen bundle fails at the offline hub stub; nothing is fetched.",
+      "modules": [],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/hash-absent-package.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/hash-absent-package.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error: ENOENT: no such file or directory, open '<ROOT>/tests/compiler-modules/bundle/hub/0x00000000000000000000000000000000/manifest'\n"
+        }
+      ]
+    },
+    {
+      "file": "fixtures/foreign-definition.bend",
+      "feature": "foreign-definition",
+      "kind": "edge",
+      "summary": "A def whose body is `import \"./lib/tick.js\"` (the other import form); main never calls it.",
+      "modules": [
+        "Base",
+        "fixtures/lib/tick.js"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "phase": "check",
+        "code": "foreign-definition",
+        "diagnostic_prefix": "Unsupported\tcheck\tforeign-definition\t",
+        "justification": "src/SPEC.md excludes foreign code and D4 forbids passing an uncheckable form through; parse must accept the form because pinned Base has foreign definitions, so the unreachable user definition is reported when user declarations are checked, before its IO signature."
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/foreign-definition.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/foreign-definition.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "All terms check, but 1 def relies on unsafe or foreign code:\n- tick\n",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/parent-relative-path.bend",
+      "feature": "relative-paths",
+      "kind": "positive",
+      "summary": "A parent-relative import resolves against the importing file and canonicalizes ../fixtures/lib/flag.bend to lib/flag.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/parent-relative-path.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/parent-relative-path.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/unused-invalid-module.bend",
+      "feature": "complete-user-module-checking",
+      "kind": "negative",
+      "summary": "An imported user module has an unused ill-typed definition; even an unreferenced imported module must be checked completely.",
+      "modules": [
+        "fixtures/lib/broken.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/unused-invalid-module.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/unused-invalid-module.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : lib/broken.Value\n- observed : lib/broken.Other\nLocation: lib/broken.unused\n7 | def unused() -> Value:\n8>|   Wrong{}\n  |   ^^^^^^^\n9 | \n"
+        }
+      ]
+    }
+  ]
+}

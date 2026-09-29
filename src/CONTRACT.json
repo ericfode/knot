@@ -9,7 +9,13 @@
     "pinned Base",
     "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend"
   ],
-  "accepted_program_imports": [],
+  "accepted_program_imports": [
+    "--bundle: ./path.bend as A",
+    "--bundle: ../path.bend as A",
+    "--bundle: path.bend as A",
+    "--bundle: 0x<hash>/path.bend as A",
+    "--bundle: Base"
+  ],
   "host": {
     "engine": "Node",
     "version": "22.22.3",
@@ -19,7 +25,7 @@
   },
   "compiler": {
     "entry": "src/compile-cli.bend",
-    "arguments": "source output [characters parser-depth checker-depth emitter-depth output-bytes]",
+    "arguments": "[--bundle ROOT] source output [characters parser-depth checker-depth emitter-depth output-bytes]",
     "defaults": {
       "characters": 65536,
       "parser_depth": 512,
@@ -33,11 +39,19 @@
       "checker_depth": 4096,
       "emitter_depth": 4096,
       "output_bytes": 1048576
-    }
+    },
+    "bundle_defaults": {
+      "characters": 65536,
+      "parser_depth": 512,
+      "checker_depth": 4096,
+      "emitter_depth": 4096,
+      "output_bytes": 1048576
+    },
+    "profile_selection": "Books containing a loader-installed primitive type select knot-literals-wasm-1; other books retain knot-enum-1."
   },
   "evaluator": {
     "entry": "src/eval-cli.bend",
-    "arguments": "source function transition-budget [live-ordinals...]",
+    "arguments": "[--bundle ROOT] source function transition-budget [live-ordinals...]",
     "input_limits": {
       "characters": 65536,
       "parser_depth": 512,
@@ -45,7 +59,12 @@
     },
     "maximum_transitions": 1048576,
     "recommended_transitions": 65536,
-    "budget_unit": "one explicit source-machine step; a terminal return consumes no further budget"
+    "budget_unit": "one explicit source-machine step; a terminal return consumes no further budget; primitive decoding and application have separate fixed bounds",
+    "bundle_input_limits": {
+      "characters": 65536,
+      "parser_depth": 512,
+      "checker_depth": 4096
+    }
   },
   "catalog_limits": {
     "types": 256,
@@ -143,7 +162,7 @@
     "emitter": "src/wasm.bend::emit_profile(Fields{}, checked_book, depth, bytes)",
     "arguments": "source output [characters parser-depth checker-depth emitter-depth output-bytes]",
     "budgets": "Same defaults and maximum overrides as compiler; profile selection is explicit.",
-    "enum_entry_unchanged": "src/compile-cli.bend calls emit, which selects Enum{} and retains enum_profile rejection.",
+    "enum_entry_unchanged": "Books without installed primitive types retain Enum{} and its unchanged capability rejection; primitive books select the separate literals profile.",
     "sections": [
       1,
       3,
@@ -214,5 +233,185 @@
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+  },
+  "module_loading": {
+    "profile": "knot-modules-1",
+    "contract": "tests/compiler-modules/SPEC.md",
+    "evidence": "tests/compiler-modules/receipts/modules.json",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-modules/check.py",
+    "check_arguments": "--bundle ROOT source",
+    "audit_arguments": "--audit-bundle ROOT source",
+    "legacy_commands": "Existing single-file forms retain their diagnostics, limits and exit codes; parent-relative imports now report Unsupported parse import.",
+    "bundle": "Explicit frozen local directory standing in for BEND_LIB; no network or named-package resolution.",
+    "identity": "Lexically normalized filesystem path after a host query checks exact directory-entry spelling and no symlink components; ambiguous paths report Unsupported load path-identity. Entry and bundle roots are queried before normalization.",
+    "namespaces": "Local modules relative to entry directory; bundle modules relative to bundle root; aliases are file-local.",
+    "declaration_order": "Dependency-first ordered stream; all user definitions checked, including unused definitions; completed paths are loaded once and active back edges rejected.",
+    "base": {
+      "path": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+      "sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+      "bytes": 67190,
+      "declarations": 466,
+      "pin": "Runtime Bend SHA-256 over bounded ASCII input, before inventory construction.",
+      "registration": "Book-global from first import event, with distinct type/function and constructor namespaces. Both bare and qualified user declarations, and the later Base inventory, reject same-category collisions.",
+      "slice": "Transitive dependencies of every user declaration. Selected ordinary Base bodies are parsed/checked; the closed literal registry lowers four types and 39 operations with checked signatures and quantities.",
+      "trust_inventory": "After combined checking: BasePin, Module, BaseChecked source bodies, BaseIntrinsic trusted lowerings, BaseUnchecked exact unselected complement. The three declaration inventories partition all 466 declarations.",
+      "unsupported": "Reachable forms outside the supported source or closed intrinsic surface retain specific Unsupported reasons; unsafe/foreign declarations are rejected before registry lookup."
+    },
+    "limits": {
+      "loader_transitions": 1024,
+      "source_characters_per_file": 65536,
+      "base_ascii_bytes": 131072,
+      "base_slice": "Finite dependency work bound derived from parser depth."
+    },
+    "unsupported": {
+      "named_packages": "load named-package",
+      "absolute_imports": "load absolute-import",
+      "mixed_entry_bundle_path_basis": "load mixed-path-roots",
+      "noncanonical_path_identity": "load path-identity"
+    },
+    "proof_entries": [
+      "src/load-PROOF.bend",
+      "src/qualify-PROOF.bend",
+      "src/base-load-PROOF.bend",
+      "src/base-pin-PROOF.bend"
+    ],
+    "proof_laws": 81,
+    "proof_boundary": "Path, scope, transition, selection and digest helper laws; not whole-graph confluence, SHA-256 refinement or compiler correctness.",
+    "foreign_effects": "Existing IO/file effects plus src/path-host.bend::inspect, a minimal native/Bun filesystem identity query. It observes component spelling and symlinks only; classification stays in Bend. No environment lookup or network is added.",
+      "wasm_profile": "Default enum emitter; importing a book adds no fielded or recursive capability to it. Loader-installed primitive types select knot-literals-wasm-1, documented below.",
+      "literals_amendment": "tests/compiler-modules/SPEC.md#literals-amendment: registry lowering in base-load, BaseIntrinsic audit rows, literal-aware module lexing, raised --bundle defaults; approved by the coordinator, 2026-09-28, with the modules-owner sign-off granted."
+  },
+  "literals": {
+    "profile": "knot-literals-wasm-1",
+    "contract": "tests/compiler-literals/README.md",
+    "evidence": "tests/compiler-literals/receipts/literals.json",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-literals/check.py",
+    "frozen_expectations": [
+      "tests/compiler-literals/expectations.json",
+      "tests/compiler-literals/supplemental.json",
+      "tests/compiler-literals/regressions.json",
+      "tests/compiler-literals/results.json"
+    ],
+    "reader": "ASCII source; decimal U32/Nat; quoted code lists; 1-8 digit Unicode escapes preserve arbitrary U32 codes including surrogates and NUL.",
+    "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; every leaf checked, each path's first leaf before any other, and a failing leaf that its path does not select is Unsupported dead-arm, since the seed never checks it; Nat offsets 0..256, with `+` adjacent to the literal; `0n+t` reads as t, as in the seed. With Base, a literal or Nat offset arm on a datatype scrutinee is Invalid pattern-type; without it, the arm takes the literal-base-type rule.",
+    "checking": "Literals and Nat offsets check against a known type, as in the seed: an unannotated binding is Invalid annotation-required, and a literal or Nat offset scrutinee is Invalid constructor-scrutinee. An expression offset kn+t checks its tail once and wraps k = U32.to_nat(count) Succ constructors around it (src/literal-offset.bend::successors), the matrix spelling as in the seed; a successor takes no checker level. A count above 4096 is Exhausted check. See expression_offset for the compile limit and the laws.",
+    "intrinsic_registry": {
+      "types": 4,
+      "operations": 39,
+      "source": "src/literal-base.bend",
+      "signatures": "src/primitive.bend",
+      "trust": "Pinned semantics, independent finite differential checks and helper laws; no all-input Base refinement proof."
+    },
+    "unsupported": [
+      "operator sugar, including a `+` separated from a Nat literal",
+      "F32",
+      "raw non-ASCII quoted text",
+      "Chr constructor patterns",
+      "the Base U32 constructor U32{data: Word(32n)}, in patterns and expressions",
+      "a literal or Nat offset inside a constructor field pattern",
+      "general nested patterns beyond the bounded primitive matrix",
+      "a failing body in a matrix leaf that its path does not select (dead-arm)",
+      "without Base, a literal or Nat offset whose target datatype declares the constructor that spells it, or a U32 or Char literal with any target (literal-base-type)"
+    ],
+    "core": [
+      "Literal for Nat/String",
+      "Intrinsic with typed primitive opcode and checked arguments",
+      "Default branch"
+    ],
+    "representation": {
+      "U32": "unboxed i32 bits",
+      "Char": "unboxed i32 code, no surrogate merging",
+      "Nat": "unary Zero/Succ cells",
+      "String": "SNil/SCon cells with unboxed Char head",
+      "other_data": "tag plus live fields in declaration order",
+      "erased_fields": "no evaluation or slot"
+    },
+    "wasm": {
+      "sections": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        10,
+        11
+      ],
+      "imports": [],
+      "memory_pages": 1024,
+      "maximum_pages": 1024,
+      "exports": "all source functions; runtime helpers, memory and globals unexported",
+      "static_bytes": [
+        0,
+        1048576
+      ],
+      "return_stack_bytes": [
+        1048576,
+        5242880
+      ],
+      "frame_stack_bytes": [
+        5242880,
+        23068672
+      ],
+      "heap_bytes": [
+        23068672,
+        67108864
+      ],
+      "lifetime": "instance; immutable initialized cells; monotonic allocation; no reclamation",
+      "instruction_words": 5,
+      "max_instructions": 32768,
+      "section_runs": "Each section body enters the published builder as runs of at most 4096 bytes; the builder's finish copies a chunk with a non-tail List.append, so the run width bounds that host stack depth and both compiler lanes build identical modules up to max_instructions.",
+      "host_command": "node scripts/run-wasm.mjs --profile=knot-literals-wasm-1 module export [live-ordinals...]",
+      "host_boundary": "Enum-only live parameter/result signatures; valid declared ordinals and compiler provenance are caller preconditions.",
+      "unreachable": "Exhausted wasm resource-limit, exit 4",
+      "other_traps": "HostFailure, exit 5"
+    },
+    "fixed_primitive_work_limit": 1048576,
+    "result_display": "eval prints Evaluated<TAB>type<TAB>word<TAB>display. An installed primitive displays as the seed's literal (300, 3n, 'a', \"a\\n\"), also inside records; other data displays Name{live fields} with ',' separators. The word is a U32 or Char value's bits, otherwise the constructor tag. The inspection budget and 65,536-character cap apply.",
+    "abi_deviation": "64 MiB heap/stacks and an explicit instruction machine support frozen unary 65536n and deep non-tail self-recursion without a binary Nat representation or host-stack dependence.",
+    "proof_entries": [
+      "src/literal-PROOF.bend",
+      "src/literal-core-PROOF.bend",
+      "src/literal-matrix-PROOF.bend"
+    ],
+    "proof_laws": 37,
+    "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, section runs, core transitions, offset construction (for every k, and every count up to 4096 in the checker laws) and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
+    "expression_offset": {
+      "lowering": "The tail is checked once and k = U32.to_nat(count) Succ constructors wrap it (src/literal-offset.bend::successors), keeping the tail's uses; the outermost takes the expected type.",
+      "count_limit": 4096,
+      "count_limit_outcome": "Exhausted check at the offset; the seed answers Yes",
+      "compile_limit": "2047 successors: the emitter takes two of its 4096 levels for each, so above that compilation is Exhausted emit and the checker CLI's core display is Exhausted inspect; evaluation continues to the count limit. Resource bounds, never rejections.",
+      "proved": [
+        "src/literal-core-LAWS.bend::offset_cells: for every k, in any book, and every tail with a known value, k successors return k cells around it in 4k+c transitions (induction on k)",
+        "src/literal-core-LAWS.bend::offset_cells_call: offset_cells applied to a tail that calls a book function (k = 2, c = 3, 11 transitions)",
+        "src/check-LAWS.bend::offset_lowering: for every count up to 4096 and every tail that checks to a term and its uses, against the installed Nat, the checker returns successors(to_nat(count), term) with those uses",
+        "src/check-LAWS.bend::offset_bound: the same tails above 4096, Exhausted check",
+        "src/check-LAWS.bend::single_argument_keeps_uses: a constructor of one argument keeps its uses"
+      ],
+      "witnesses": [
+        "src/literal-core-LAWS.bend::natural_offset (k = 2)",
+        "src/check-LAWS.bend::offset_spelling (k = 2)"
+      ],
+      "trusted": "U32.to_nat as Base's reading of the count; the linear allocation of recursion through an offset is measured by the frozen depth books, not proved",
+      "open_obligations": []
+    },
+    "names_and_binders": {
+      "names": "A name is words joined by single dots, each a letter or underscore then letters, digits or underscores, as in the seed. A token that starts like a name and is not one is Invalid parse name, in every position; the parser reads names before structure (src/parse.bend::names).",
+      "dotted_binder": "A dotted pattern or let binder is Invalid parse pattern-binder (binding-name for a let) unless a parameter of the same function binds that exact name (src/parse.bend::binders); single-file and bundle entries alike.",
+      "constructor_let_binder": "A let binder naming a constructor of Base, of an import or of the book's own earlier declarations is Invalid check constructor-pattern-binder; a constructor declared later, a parameter, a function or a type may be named (src/qualify.bend::walk_in, --bundle only).",
+      "offset_layout": "The tail of an offset follows its `+` after a space, a newline, a comment or a blank line; a keyword on a later line is Unsupported parse term-form.",
+      "known_imprecisions": [
+        "the single-file entry does not test let binders against constructors",
+        "a pattern binder named like a constructor declared later in the book is Invalid check constructor-pattern-binder, where the seed accepts it",
+        "an arm body starting left of its case keyword is Invalid parse body-indentation, where the seed accepts it",
+        "a newline after case or inside call or constructor arguments, other than after an offset's `+`, is Invalid parse expected-term, where the seed accepts it"
+      ]
+    },
+    "unmet": [
+      "R3/R7 owned storage and reclamation",
+      "broader recursion",
+      "primitive/structured Wasm host observations and host arguments",
+      "self-hosting"
+    ],
+    "style": "Offline preflight only; live review and ratings belong to coordinator."
   }
 }

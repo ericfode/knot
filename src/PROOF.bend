@@ -59,3 +59,21 @@ def L.local_import(at,rest):
 
 def L.hash_import(at,rest):
   {==}
+
+def L.malformed_name(at): {==}
+
+def L.name_shapes(): {==}
+
+def L.dotted_binder_needs_a_parameter(at): {==}
+
+def L.dotted_binder_repeats_a_parameter(at): {==}
+
+def L.dotted_reference_binds_nothing(at): {==}
+
+def L.offset_tail_after_newline(rest): {==}
+
+def L.list_across_lines(at,rest): {==}
+
+def L.arm_across_lines(at): {==}
+
+def L.cases_right_of_parent(at,rest): {==}

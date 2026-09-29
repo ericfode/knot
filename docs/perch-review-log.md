@@ -1,5 +1,34 @@
 # Perch review log
 
+## 2026-09-27 Pacific — modules context and integration ordering
+
+The module implementation exposed two deterministic integration misses: manifest
+groups omitted imported local files, and a shorter checker-display path changed
+the seed-generated foreign-capability order. The unchanged manifest and fields
+trust tests caught both. Closing every group and sharing the checked display/IO
+boundary repaired them without changing assertions. The same implementation
+also needed separate type/function and constructor reference sets: otherwise a
+user name could incorrectly hide a reachable Base declaration. The independent
+[namespace regressions](../tests/compiler-modules/regressions.json) retain that
+failure boundary. A full-Base SHA vector caught a non-tail padding append that
+overflowed the Bun host stack; reversed accumulation preserves the same bytes.
+A later 50 KB comment and 50,000 blank-line probe found the same host-stack
+weakness in header splitting/reassembly after the initial corpus passed. Both
+seed-accepted regressions were frozen in `71d20dd` before the traversal repair.
+
+The [final preflight table](../tests/compiler-modules/README.md#offline-preflight)
+records truncation and composition limits. Four new closed submechanisms fit
+48 KB; the loader closure is 83,512 bytes and remains unavailable. No live scores
+or automatic style pass are claimed. An additional gate-run export was correctly
+refused while parallel preflight commands were still writing receipts.
+
+Prevention: check import closure and the existing trust inventories immediately
+after adding CLI paths; include cross-namespace cases, long-header boundaries and the real pinned input
+in frozen controls; finish all preflight/receipt writes before starting the gate
+runner's immutable export. Final deterministic results and the initial failures
+are recorded in the module verification receipt. No elapsed-effort estimate is
+inferred from these attempts.
+
 ## 2026-09-26 Pacific — expressive role and helper scale
 
 Confirmed policy mismatch: marginal contract importance was making tiny access,
@@ -1041,6 +1070,31 @@ budgets; it remains a failed run. A one-worker retry passed without changing
 any limit. All 33 context controls and eight semantic mutants pass, and the
 literal manifest command has zero blockers and no provider requests.
 
+## 2026-09-27 — Modules review round 2: identity and global inventory
+
+The coordinator's four confirmed findings are fixed with seed-frozen regressions:
+symlink/case aliases must be Unsupported before typechecking; declarations must
+check both bare and qualified names; Base imported later must reject collisions;
+pattern binders must see the complete constructor inventory; and quoted foreign
+bodies remain Unsupported at column zero. Independent probes also exposed the
+same binder defect for reusable `+Off` and `+True`, frozen before repair.
+See [the review record](../tests/compiler-modules/REVIEW-ROUND-2.md) and the
+[seed expectations](../tests/compiler-modules/review-round2.json).
+
+Prevention: cross filesystem aliases with canonical controls, both import orders
+with names in each category, and constructor visibility with an empty Base slice.
+Include ordinary and reusable binder parser nodes. Resolve names before comparing
+constructors; reachability must not decide user-source validity.
+
+The authorized host query exposes one new foreign boundary. Initial integration
+runs caught exact CLI/trust-verdict assertions and scratch source copies that
+assumed Bend-only inputs. Seed-derived assertion amendments retain exact named
+foreign dependencies; no language outcome is relaxed. Copy the complete host
+adapter closure when building mutants. Recompute local import closure after
+merging context manifests, retaining bounded selected mechanisms and interface
+collaborators. The full manifest then has zero offline structural blockers;
+this is not a live semantic/style verdict.
+
 ## 2026-09-27 — IO host review 2: sandbox aliases, empty effects and oracle faults
 
 The coordinator's three confirmed findings against `6051e37` are repaired;
@@ -1057,3 +1111,190 @@ seed lanes before repair; 21 dummy-only path controls and 14 oracle controls
 now supplement the original suite. The three restored-defect mutants are
 killed without infrastructure failures. Original expectations are unchanged;
 live Perch review remains with the coordinator.
+
+## 2026-09-27 — Literal payload and serialization boundaries
+
+The literals implementation initially reconstructed escaped code points through
+host String values. The frozen surrogate/non-Unicode witnesses exposed that
+compiled `Char.from_u32` cannot preserve that representation. Literal payloads
+now retain U32 code lists until source-value or Wasm-cell construction. The
+checked surrogate laws and the merged-surrogates mutant are in
+[the literal packet](../tests/compiler-literals/LAW_REVIEW.md).
+
+The 256-offset matrix then exposed host stack exhaustion while serializing a
+39191-byte instruction module. A graph-only probe isolated serialization from
+lowering. Byte concatenation, byte length and instruction serialization now use
+accumulators. The same frozen offset book is compiled and every recorded call
+executed in both lanes by [the gate](../tests/compiler-literals/check.py).
+
+Prevention: make code-point preservation an explicit representation invariant,
+and exercise the largest frozen shape through serialization before broadening
+runtime checks. These were deterministic implementation defects, not model
+findings. Live Perch review remains the coordinator's responsibility; no elapsed
+time or style score is inferred from this work.
+
+The complete suite also retained a 50000-blank-line module regression and the
+legacy single-file literal rejection. The former caught a non-tail float-token
+scan; it now accumulates tokens. The latter caught a profile-boundary leak;
+legacy checking now rejects literal nodes explicitly, with a checked boundary
+law. Prevention: run the shared profile and large-input regressions before
+calling the new fixture surface complete. Their assertions were not changed.
+
+## 2026-09-27 — Literals review round 1: three missed deterministic defects
+
+The coordinator's adversarial review of `2ea222e` confirmed three defects that
+the literals gate could not see. They were missed deterministic coverage, not
+Perch findings.
+
+- The parser read `1n + p` and `3n +x` as offsets, although the seed rejects
+  them. No frozen book separated `+` from its literal.
+- A seed-valid `case U32{w}` was reported Invalid rather than Unsupported.
+- The Bun evaluator overflowed the host stack on String.length and
+  String.append above about 35,000 Chars. The frozen books never exceeded a
+  few hundred Chars, and the native lane hid the fault.
+
+[The regression freeze](../tests/compiler-literals/regressions.json) now pins
+each finding before its fix, with seed-accepted controls. The adjacency and
+U32 mutants are classification kills, and an evaluator-only mutant covers the
+new append traversal.
+
+Prevention: sweep token spacing around every new operator-like form against
+the seed. Run each seed-valid form of a newly installed Base type (its
+constructors as well as its literals) through D4. Exercise every new
+traversal near its declared element bound in both evaluator lanes, not only
+at the sizes the fixtures happen to use. Live Perch review remains the
+coordinator's.
+
+Avoidable rework in the same round: after merging `main`, only the modules and
+literals gates were run directly. The merged `checking` manifest group already
+exceeded the 48000-byte composition bound, and a later catalog import pushed
+three literal groups over it. The perch-context gate caught both only in the
+first full run. Prevention: run the full gate runner once after every merge,
+before fixture work begins.
+
+## 2026-09-27 — Literals review round 2: new syntax nodes outside the matrix
+
+The adversarial review of `3cf9705` confirmed three more defects the literals
+gate could not see; reproducing them exposed a fourth. All are missed
+deterministic coverage of the new `Literal` and `Offset` nodes outside the
+primitive matrix, not Perch findings.
+
+- An unannotated `n = 3`, `s = "ab"` or `n = 2n+m` checked and ran; the seed
+  cannot infer a literal. The only frozen let-literal lacked `import Base`.
+- `match 3:` or `match 1n+m:`, and a literal arm on a datatype scrutinee,
+  fell through to `InternalFailure` (`scrutinee-node`, `pattern-node`); a
+  literal field pattern did the same (`pattern-field-node`).
+- Found while reproducing: the seed reads `0n+t` as t. Knot rewrote it to
+  `Nat.add(0n,t)`, so a seed-valid `U32.is_eq(0n+x,3)` and `case 0n+p` on a
+  U32 or String column were Invalid, a D4 violation. The review's own fix
+  (gate every offset on an annotation) would have made the seed-valid
+  `n = 0n+m` Invalid as well.
+
+[The regression freeze](../tests/compiler-literals/regressions.json) pins 23
+round-2 books before the fixes, with agreeing controls; four verdict mutants
+cover the new gate, the zero-offset reading, the scrutinee arm and the pattern
+arm. A 406-book differential sweep of the reviewers' probes found no
+seed-valid Invalid, no seed-invalid acceptance and no InternalFailure after
+the fix.
+
+Prevention: when a change adds a syntax node, enumerate every dispatch over
+that type (`case _:` fallbacks included) and freeze a seed book for each, in
+both synthesis and checking positions. Probe the degenerate count of every
+counted form (here `0n+t`) against the seed before accepting a reviewer's
+proposed fix.
+
+## 2026-09-28 — Literals review round 6: own-type literals keyed on a name
+
+Round 5 fixed a seed-valid `2n` against a book's own `Nat` by resolving the
+literal's type by the name `Nat` and reporting a non-installed match as
+Unsupported. The review of `c7f3487` found the same D4 violation in the
+positions that fix never exercised: literal and offset arms on an own
+Zero/Succ or SNil/SCon type (any name), and expression literals against an own
+type named N or T, which fell to a synthetic `unknown-type 0:0:0:0`.
+
+[The round-6 freeze](../tests/compiler-literals/regressions.json) pins 17
+books first. The fix keys the case on the absent installed primitive and on
+the constructor the seed actually spells (the matrix's `M.literal`), so
+`case 0n` on `N{Z, S}` stays Invalid as the seed rejects it. The review named
+`literal-matrix.bend::normalize` as the site; a probe that gave each candidate
+Invalid its own code showed every repro failing in `check.bend::pattern`, and
+`normalize` is unreachable without an installed type. See
+[the round-6 report](../tests/compiler-literals/REPORT.md).
+
+Prevention: key a capability boundary on the property the seed uses (here,
+Base's absence and the spelled constructor), never on a type name, and check
+every position the form can occupy (arm, return, argument, let) against the
+seed with a name other than the primitive's. Locate a failing site with distinct per-site
+codes before following a reviewer's attribution.
+
+## 2026-09-28 — Literals review round 7: an offset lowered to a counting intrinsic
+
+Since the original literals implementation (`2ea222e`), `check.bend` rewrote
+the expression `kn+t` to `Nat.add(kn,t)`. Every gate agreed with the seed
+because no frozen book recursed through an offset expression deeply enough to
+reach a budget; `Nat.add` counts both arguments and builds a fresh Nat, so
+`up(n) = 1n+up(p)` allocated about n²/2 cells and was Exhausted at `up(2000n)`
+in the evaluator and `up(3400n)` in Wasm, while the seed answers. Six review
+rounds passed over it; the coordinator's verifier found it by scaling a
+recursion form Knot's own source uses 86 times.
+
+[The round-7 freeze](../tests/compiler-literals/regressions.json) pins depth
+3000-4000 books first. The fix checks the offset as the pattern matrix's own
+spelling (`M.literal`): k Succ constructors around the shared tail, as the
+seed builds it. See [the round-7 report](../tests/compiler-literals/REPORT.md).
+
+Prevention: a lowering that replaces a constructor form with a primitive
+changes cost, not only value. Freeze every such form at a depth near the
+gate's budgets, measure evaluator transitions and Wasm cells at two sizes,
+and require the ratio the seed's representation implies.
+
+## 2026-09-28 — Literals review round 8: a builder chunk was a host stack depth
+
+Since `knot-literals-wasm-1` landed, `literal-wasm.bend` handed each section
+body to the published byte builder as one fragment. The builder's `finish`
+copies a chunk with Base's `List.append`, which is not tail recursive, so on
+the Bun compile lane a chunk of about 60.5 KB overflowed the host stack
+(`bend: memory fault`, exit 1, an unclassified outcome) while the native lane
+built the module. No frozen book reached that size: the largest module was
+39191 bytes. Round 1 had fixed the same class in the evaluator lane only (long
+Strings), and seven review rounds passed over the compiler lane; the
+coordinator's verifier found it by scaling module size until the lanes
+disagreed.
+
+[The round-8 freeze](../tests/compiler-literals/regressions.json) pins a
+156918-byte book first. The fix appends each section body in 4096-byte runs
+(`machine-code.bend::runs`); the unbounded-chunk mutant, which restores one
+chunk, faults on that book. See [the round-8 report](../tests/compiler-literals/REPORT.md).
+
+Prevention: once one lane is fixed for host stack depth, scale every phase of
+both lanes (check, eval, compile, run) with the same inputs past the fault,
+and freeze a book at about twice the observed threshold. Treat any non-tail
+traversal over data proportional to the output, including one inside a
+pinned package, as a stack budget to bound at its call site.
+
+## 2026-09-28 — Literals review round 9: a general claim proved at k = 2
+
+Round 7 described an expression offset as "k Succ constructors around a shared
+tail" in the README, the SPEC and two law comments, and proved it with two laws
+at k = 2 (`natural_offset`, `offset_spelling`). The claim ranged over every k;
+the laws did not, and the frozen depth books measured cost, not construction.
+The coordinator's review found it. The natural proof was also blocked, and
+nobody had tried it: the checker reached the successors through a U32 count
+decremented with `U32.sub` and tested against the literal 0, which does not
+reduce for a symbolic count (`U32.sub(U32.inc(c),1) == c` is not provable by
+reflexivity and Base has no Word lemma that inverts its adder), so an induction
+over the count had nothing to stand on.
+
+[The round-9 freeze](../tests/compiler-literals/regressions.json) pins
+expressions of 1364, 1365 and 2000 successors first. The fix converts the
+count once (`U32.to_nat`) and wraps the tail with a builder structural in a
+Nat, so `offset_cells` (every k, by induction) and `offset_lowering` (every
+count up to 4096) are proved; it also lifts the depth limit from 1364 to 2047
+successors end to end. See [the round-9 report](../tests/compiler-literals/REPORT.md).
+
+Prevention: when prose quantifies over a family, the law must quantify over it
+or the prose must say ground instance. Try the induction the claim implies
+before writing the ground instance, and if the counter is a machine word,
+carry it as a Nat where a law must range over it. A draft rule could flag a
+`law` whose statement fixes a numeral that a neighbouring comment or SPEC
+sentence generalizes; none is added here.

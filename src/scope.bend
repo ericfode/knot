@@ -131,10 +131,13 @@ def matchable(binding: C.Binding, +token: S.Token, scope: Scope) -> Result<S.Err
           Done{C.Binding{name,level,q,type_id,param,None{}}},u => C.invalid(C.Binding,"unmatchable-binder",token)))
     case _ _: C.invalid(C.Binding,"already-matched",token)
 
+# A literal or Nat offset is already a constructor value, as its Base spelling is.
 def scrutinee(node: S.Node, +scope: Scope) -> Result<S.Error,C.Binding>:
   match node:
     case S.Variable{+token}:
       S.bind(C.Binding,C.Binding,lookup(scope,token),binding => matchable(binding,token,scope))
     case S.Constructor{token,args}: C.invalid(C.Binding,"constructor-scrutinee",token)
+    case S.Literal{token,kind,number,text}: C.invalid(C.Binding,"constructor-scrutinee",token)
+    case S.Offset{token,count,tail}: C.invalid(C.Binding,"constructor-scrutinee",token)
     case S.Call{token,args}: C.invalid(C.Binding,"computed-scrutinee",token)
     case _: C.internal(C.Binding,"scrutinee-node")

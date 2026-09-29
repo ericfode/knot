@@ -15,7 +15,7 @@ for (const source of ['compile-cli.bend','eval-cli.bend','runtime-PROOF.bend']) 
   const unsafe=Object.entries(book.tlds).filter(([k,t]:any)=>t.$==='Def' && t.u).map(([name])=>name);
   const generated=source==='runtime-PROOF.bend'?null:path.join(root,'.local/compiler-wasm/gate',source.replace('.bend','.js'));
   const runtime=generated?JSON.parse(fs.readFileSync(generated,'utf8').match(/for \(const k of (\[[^\n]*\])\) \{/)[1]):[];
-  const allowed=['IO.args','File.open','File.read','File.close','File.write_bytes','IO.print'];
+  const allowed=['IO.args','File.open','File.read','File.close','File.write_bytes','path-host.inspect','IO.print'];
   if(runtime.some((x:string)=>!allowed.includes(x)))throw new Error('Unexpected runtime foreign capability');
   const compiled_foreign=foreign.filter(([k])=>runtime.includes(k)).map(([name,t]:any)=>({name,files:t.i.map((p:string)=>({path:relative(p),sha256:digest(p)}))}));
   entries.push({entry:'src/'+source,holes:book.hols,loaded_files:[...seen.keys()].map(p=>({path:relative(p),sha256:digest(p)})),whole_checked_foreign_count:foreign.length,whole_checked_foreign:foreign.map(([name,t]:any)=>({name,files:t.i.map((p:string)=>({path:relative(p),sha256:digest(p)}))})),whole_checked_unsafe:unsafe,compiled_foreign,compiled_runtime_foreign_names:runtime,generated_js_sha256:generated?digest(generated):null});

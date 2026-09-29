@@ -5,7 +5,8 @@
       "name": "syntax-core",
       "files": [
         "src/syntax.bend",
-        "src/core.bend"
+        "src/core.bend",
+        "src/primitive-op.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Shared syntax, errors and resolved terms."
@@ -14,7 +15,8 @@
       "name": "frontend-lexing",
       "files": [
         "src/syntax.bend",
-        "src/lex.bend"
+        "src/lex.bend",
+        "src/primitive-op.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Character budgets, token spans and tokenization."
@@ -23,7 +25,9 @@
       "name": "frontend-parsing",
       "files": [
         "src/syntax.bend",
-        "src/parse.bend"
+        "src/parse.bend",
+        "src/primitive-op.bend",
+        "src/literal.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Tokens to the bounded syntax tree; parser depth and unsupported forms."
@@ -34,7 +38,9 @@
         "src/syntax.bend",
         "src/core.bend",
         "src/diagnostic.bend",
-        "src/checked-display.bend"
+        "src/checked-display.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Stable failure categories and resolved-term observations."
@@ -44,7 +50,8 @@
       "files": [
         "src/syntax.bend",
         "src/core.bend",
-        "src/catalog.bend"
+        "src/catalog.bend",
+        "src/primitive-op.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
       "notes": "Ordered type, constructor and field signatures; kinds and declaration bounds."
@@ -56,7 +63,8 @@
         "src/core.bend",
         "src/scope.bend",
         "src/catalog.bend",
-        "src/patterns.bend"
+        "src/patterns.bend",
+        "src/primitive-op.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Lexical levels, quantities, pattern frontier and field bindings."
@@ -69,17 +77,33 @@
         "src/catalog.bend",
         "src/scope.bend",
         "src/patterns.bend",
-        "src/check.bend"
+        "src/check.bend",
+        "src/primitive-op.bend",
+        "src/literal-check.bend",
+        "src/literal-base.bend",
+        "src/primitive.bend",
+        "src/literal-matrix.bend",
+        "src/literal-types.bend",
+        "src/literal-offset.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
-      "notes": "Complete checking boundary and explicit unsupported capabilities."
+      "notes": "Complete checking boundary and explicit unsupported capabilities; catalog and literal collaborators enter as interfaces.",
+      "selected_files": [
+        "src/check.bend",
+        "src/scope.bend",
+        "src/patterns.bend"
+      ]
     },
     {
       "name": "evaluation",
       "files": [
         "src/syntax.bend",
         "src/core.bend",
-        "src/eval.bend"
+        "src/eval.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend",
+        "src/primitive-eval.bend",
+        "src/literal-types.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Independent source machine, continuations, field values and bounded observation."
@@ -88,7 +112,8 @@
       "name": "wasm-codec",
       "files": [
         "src/syntax.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/primitive-op.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Binary byte and LEB construction; ByteOutput resolves from its verified local published closure."
@@ -103,7 +128,14 @@
         "src/catalog.bend",
         "src/check.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/primitive-op.bend",
+        "src/literal-check.bend",
+        "src/literal-base.bend",
+        "src/primitive.bend",
+        "src/literal-matrix.bend",
+        "src/literal-types.bend",
+        "src/literal-offset.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Enum and fielded terms to binary Wasm; checker collaborators enter as interfaces.",
@@ -134,7 +166,29 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/wasm.bend"
+        "src/wasm.bend",
+        "src/load.bend",
+        "src/imports.bend",
+        "src/qualify.bend",
+        "src/base-load.bend",
+        "src/base-pin.bend",
+        "src/primitive-op.bend",
+        "src/literal-wasm.bend",
+        "src/machine-code.bend",
+        "src/literal-check.bend",
+        "src/literal-base.bend",
+        "src/primitive.bend",
+        "src/literal-matrix.bend",
+        "src/primitive-eval.bend",
+        "src/literal-types.bend",
+        "src/literal.bend",
+        "src/literal-lex.bend",
+        "src/machine-lower.bend",
+        "src/machine-runtime.bend",
+        "src/machine-vm.bend",
+        "src/primitive-wasm.bend",
+        "src/path-host.bend",
+        "src/literal-offset.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through checking to evaluation or Wasm, including all CLI entries; phase implementations enter as interfaces.",
@@ -153,7 +207,9 @@
         "src/LAWS.bend",
         "src/lex.bend",
         "src/parse.bend",
-        "src/PROOF.bend"
+        "src/PROOF.bend",
+        "src/primitive-op.bend",
+        "src/literal.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Frontend boundary laws and their complete proof entry."
@@ -172,7 +228,15 @@
         "src/catalog.bend",
         "src/lex.bend",
         "src/parse.bend",
-        "src/patterns.bend"
+        "src/patterns.bend",
+        "src/primitive-op.bend",
+        "src/literal-check.bend",
+        "src/literal-base.bend",
+        "src/primitive.bend",
+        "src/literal-matrix.bend",
+        "src/literal.bend",
+        "src/literal-types.bend",
+        "src/literal-offset.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -200,7 +264,16 @@
         "src/lex.bend",
         "src/parse.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend",
+        "src/primitive-eval.bend",
+        "src/literal-types.bend",
+        "src/literal-check.bend",
+        "src/literal-base.bend",
+        "src/literal-matrix.bend",
+        "src/literal.bend",
+        "src/literal-offset.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -231,7 +304,16 @@
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
         "src/scope.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/primitive-op.bend",
+        "src/literal-check.bend",
+        "src/literal-base.bend",
+        "src/primitive.bend",
+        "src/literal-matrix.bend",
+        "src/primitive-eval.bend",
+        "src/literal-types.bend",
+        "src/literal.bend",
+        "src/literal-offset.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -263,7 +345,16 @@
         "src/parse.bend",
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend",
+        "src/primitive-eval.bend",
+        "src/literal-types.bend",
+        "src/literal-check.bend",
+        "src/literal-base.bend",
+        "src/literal-matrix.bend",
+        "src/literal.bend",
+        "src/literal-offset.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -297,7 +388,16 @@
         "src/parse.bend",
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/primitive-op.bend",
+        "src/literal-check.bend",
+        "src/literal-base.bend",
+        "src/primitive.bend",
+        "src/literal-matrix.bend",
+        "src/primitive-eval.bend",
+        "src/literal-types.bend",
+        "src/literal.bend",
+        "src/literal-offset.bend"
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -305,6 +405,248 @@
         "src/recursion-LAWS.bend",
         "src/recursion-PROOF.bend"
       ]
+    },
+    {
+      "name": "module-import-paths",
+      "files": [
+        "src/imports.bend",
+        "src/syntax.bend",
+        "src/primitive-op.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Import headers and lexical canonical path resolution.",
+      "selected_files": [
+        "src/imports.bend"
+      ]
+    },
+    {
+      "name": "module-qualification",
+      "files": [
+        "src/qualify.bend",
+        "src/qualify-LAWS.bend",
+        "src/qualify-PROOF.bend",
+        "src/syntax.bend",
+        "src/primitive-op.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Per-file aliases, ordered registration and lexical scope.",
+      "selected_files": [
+        "src/qualify.bend",
+        "src/qualify-LAWS.bend",
+        "src/qualify-PROOF.bend"
+      ]
+    },
+    {
+      "name": "module-base-slice",
+      "files": [
+        "src/base-load.bend",
+        "src/base-load-LAWS.bend",
+        "src/base-load-PROOF.bend",
+        "src/syntax.bend",
+        "src/lex.bend",
+        "src/parse.bend",
+        "src/literal-base.bend",
+        "src/primitive-op.bend",
+        "src/literal.bend",
+        "src/primitive.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Complete Base inventory and checked reachable declaration partition.",
+      "selected_files": [
+        "src/base-load.bend",
+        "src/base-load-LAWS.bend",
+        "src/base-load-PROOF.bend"
+      ]
+    },
+    {
+      "name": "module-base-pin",
+      "files": [
+        "src/base-pin.bend",
+        "src/base-pin-LAWS.bend",
+        "src/base-pin-PROOF.bend",
+        "src/syntax.bend",
+        "src/primitive-op.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "ASCII SHA-256 verification of the unmodified pinned Base input.",
+      "selected_files": [
+        "src/base-pin.bend",
+        "src/base-pin-LAWS.bend",
+        "src/base-pin-PROOF.bend"
+      ]
+    },
+    {
+      "name": "module-loading",
+      "files": [
+        "src/load.bend",
+        "src/load-LAWS.bend",
+        "src/load-PROOF.bend",
+        "src/syntax.bend",
+        "src/lex.bend",
+        "src/parse.bend",
+        "src/imports.bend",
+        "src/qualify.bend",
+        "src/base-load.bend",
+        "src/base-pin.bend",
+        "src/literal-lex.bend",
+        "src/primitive-op.bend",
+        "src/literal.bend",
+        "src/literal-base.bend",
+        "src/primitive.bend",
+        "src/path-host.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Bounded import stack, completed-path reuse, cycles, user books and Base input boundary.",
+      "selected_files": [
+        "src/load.bend",
+        "src/load-LAWS.bend",
+        "src/load-PROOF.bend"
+      ]
+    },
+    {
+      "name": "module-path-host",
+      "files": [
+        "src/path-host.bend",
+        "src/syntax.bend",
+        "src/primitive-op.bend"
+      ],
+      "selected_files": [
+        "src/path-host.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Host path identity observation and separate Unsupported or HostFailure classification; the OS implementations are trusted foreign adapters."
+    },
+    {
+      "name": "literal-frontend",
+      "files": [
+        "src/literal.bend",
+        "src/literal-lex.bend",
+        "src/syntax.bend",
+        "src/lex.bend",
+        "src/primitive-op.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "Quoted code sequences and decimal tokens; legacy lexer remains separately gated."
+    },
+    {
+      "name": "literal-primitives",
+      "files": [
+        "src/primitive-op.bend",
+        "src/primitive.bend",
+        "src/primitive-eval.bend",
+        "src/syntax.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "Closed primitive algebra, typed signatures and independent source operations."
+    },
+    {
+      "name": "literal-types",
+      "files": [
+        "src/literal-base.bend",
+        "src/literal-types.bend",
+        "src/literal-check.bend",
+        "src/syntax.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend",
+        "src/core.bend",
+        "src/catalog.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "Pinned Base lowering registry and installed primitive type identities."
+    },
+    {
+      "name": "literal-patterns",
+      "files": [
+        "src/literal-matrix.bend",
+        "src/literal-matrix-LAWS.bend",
+        "src/literal-matrix-PROOF.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/catalog.bend",
+        "src/scope.bend",
+        "src/patterns.bend",
+        "src/literal-types.bend",
+        "src/primitive-op.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "First-match primitive matrix, unary offsets and checked expansion laws."
+    },
+    {
+      "name": "literal-source-machine",
+      "files": [
+        "src/literal-core-LAWS.bend",
+        "src/literal-core-PROOF.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/eval.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend",
+        "src/primitive-eval.bend",
+        "src/literal-types.bend",
+        "src/literal-offset.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "Literal materialization, primitive calls and default branches with checked transition laws."
+    },
+    {
+      "name": "literal-instruction-graph",
+      "files": [
+        "src/machine-lower.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend",
+        "src/literal-types.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "Checked source terms to bounded instruction graph with lexical frame slots."
+    },
+    {
+      "name": "literal-machine-runtime",
+      "files": [
+        "src/machine-runtime.bend",
+        "src/primitive-wasm.bend",
+        "src/machine-vm.bend",
+        "src/machine-code.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend",
+        "src/syntax.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "Immutable unary cells, guarded primitive operations and bounded explicit stacks."
+    },
+    {
+      "name": "literal-emission",
+      "files": [
+        "src/literal-wasm.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/literal-types.bend",
+        "src/machine-code.bend",
+        "src/machine-lower.bend",
+        "src/machine-runtime.bend",
+        "src/machine-vm.bend",
+        "src/primitive-wasm.bend",
+        "src/wasm-bytes.bend",
+        "src/primitive-op.bend",
+        "src/primitive.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "Graph and runtime serialization; published ByteOutput remains explicit external context."
+    },
+    {
+      "name": "literal-algebra-laws",
+      "files": [
+        "src/literal-LAWS.bend",
+        "src/literal-PROOF.bend",
+        "src/syntax.bend",
+        "src/literal.bend",
+        "src/primitive-eval.bend",
+        "src/machine-code.bend",
+        "src/primitive-op.bend"
+      ],
+      "task": "tests/compiler-literals/README.md",
+      "notes": "Arithmetic guards, escapes, overflow and bit-preserving constants with checked proofs."
     }
   ],
   "context": "interfaces-v1"

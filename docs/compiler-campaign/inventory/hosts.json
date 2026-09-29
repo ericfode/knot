@@ -12,7 +12,7 @@
     "typechecked": false
   },
   "census_sources": {
-    "tools/census/census.mjs": "eeb60cd34ee35090f211c39e6627b9ae4b656f45c750d5270fbc7d0018909045",
+    "tools/census/census.mjs": "df158a987364e93c7f68acb8f4d09219360478601a8c3473493b4df277c1b751",
     "tools/census/features.mjs": "eba11b4fb39ca377f68e8d1e4862bb958d6555700851e5d78487a9412e671f11",
     "tools/census/evidence.mjs": "c826612ac56a1a2dc023b82aa229e1a07016f35ccc2757ba5de305e0af88d4f2",
     "tools/census/gates.py": "1ec2b26515c6eabfcb3d65775af00a17e35c3c3336f80c7258cc8ed89bc7754b",
@@ -635,14 +635,19 @@
         "foreign": [],
         "intrinsics": [
           "Bool.or",
+          "Nat.sub",
           "String.append",
+          "String.length",
           "U32.add",
           "U32.cmp",
           "U32.is_eq",
           "U32.is_ge",
           "U32.is_gt",
           "U32.is_le",
-          "U32.is_lt"
+          "U32.is_lt",
+          "U32.mul",
+          "U32.sub",
+          "U32.to_nat"
         ],
         "word_representations": [
           "Nat",
@@ -655,13 +660,17 @@
         "foreign": [],
         "intrinsics": [
           "Bool.or",
+          "Nat.sub",
           "U32.add",
           "U32.cmp",
           "U32.is_eq",
           "U32.is_ge",
           "U32.is_gt",
           "U32.is_le",
-          "U32.is_lt"
+          "U32.is_lt",
+          "U32.mul",
+          "U32.sub",
+          "U32.to_nat"
         ],
         "word_representations": [
           "Nat",
@@ -679,12 +688,16 @@
           "File.read",
           "File.write_bytes",
           "IO.args",
-          "IO.print"
+          "IO.print",
+          "src/path-host.inspect"
         ],
         "intrinsics": [
           "Bool.or",
+          "Bool.xor",
           "Nat.cmp",
+          "Nat.sub",
           "String.append",
+          "String.length",
           "U32.add",
           "U32.and",
           "U32.cmp",
@@ -699,9 +712,13 @@
           "U32.is_zero",
           "U32.mod",
           "U32.mul",
+          "U32.not",
+          "U32.or",
+          "U32.shln",
           "U32.shrn",
           "U32.sub",
-          "U32.to_nat"
+          "U32.to_nat",
+          "U32.xor"
         ],
         "word_representations": [
           "Nat",
@@ -717,11 +734,14 @@
           "File.read",
           "File.write_bytes",
           "IO.args",
-          "IO.print"
+          "IO.print",
+          "src/path-host.inspect"
         ],
         "intrinsics": [
           "Bool.or",
+          "Bool.xor",
           "Nat.cmp",
+          "Nat.sub",
           "U32.add",
           "U32.and",
           "U32.cmp",
@@ -736,9 +756,13 @@
           "U32.is_zero",
           "U32.mod",
           "U32.mul",
+          "U32.not",
+          "U32.or",
+          "U32.shln",
           "U32.shrn",
           "U32.sub",
-          "U32.to_nat"
+          "U32.to_nat",
+          "U32.xor"
         ],
         "word_representations": [
           "Nat",
@@ -752,7 +776,7 @@
   "knot_emitted_wasm": {
     "profile": "knot-enum-1",
     "contract": "src/CONTRACT.json",
-    "contract_sha256": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
+    "contract_sha256": "03272fef98a1f7f456350712a6530c3915c3b60d2d562259823e2ed1f85c1be1",
     "host": {
       "engine": "Node",
       "version": "22.22.3",

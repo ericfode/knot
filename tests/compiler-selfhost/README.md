@@ -253,7 +253,7 @@ requires. The generated scale fixtures are:
    reports the row's first code at its first line break inside a delimiter.
    For `layout-lambda-statements` that is `Invalid parse expected-term` at
    `939:940:39:9`, the diagnostic closures' Knot reports.
-6. Three type-correct mutants of `src/` must be killed by an unblocked case, with a classified, non-crashing observation:
+6. Three type-correct mutants of `src/` must be killed by an unblocked case, with a classified, non-crashing observation. Type-correct means the seed checks the mutated CLI with exactly the frozen foreign-dependency verdict of the modules host query (`tests/compiler-modules/host-check-expectations.json`), as the other compiler gates require; each mutant copy carries `src/host`:
    - `reject-every-self-call` (check.bend): `nested-self-call` becomes `Unsupported check recursive-call`.
    - `admit-mistyped-constant` (check.bend): `nested-self-call-mistyped` checks.
    - `unreversed-fields` (eval.bend): `nested-self-call` evaluates wrong constructors.
