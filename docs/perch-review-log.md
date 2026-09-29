@@ -1689,3 +1689,31 @@ Prevention:
   and start no builds of your own while the first gates build their lanes. Batch every edit before the one final
   run: a documentation edit of `src/SPEC.md` or `src/CONTRACT.json` changes gate inputs (and the census pins the
   contract's sha256), so it needs the run again.
+
+## 2026-09-29 — literals-integ review round 1, third session: a finding's programs frozen as near variants
+
+The fix clause of the blocking finding (an erased dotted let does not license a later live let of its name)
+asked for its four repro shapes to be frozen from the seed before the repair, and the report said they were.
+The books of the first round-1 session (`erased-dotted-rebind`) held the same rule in nearby shapes: typed after
+typed, one name twice, one erased name in an arm. The review's own programs had no book: `v2` (a plain erased
+let, then a typed live one), `w3` (plain, in an arm on a second parameter) and `w7` (two erased names, the
+second one live). Nothing in the tree was wrong (the 924-program enumeration gives 0 false Invalid), and a
+mutant that puts the original bug back, an erased let's name left out of `binders`' scope list, answers the
+review's `Invalid parse binding-name 106:109:10:2` on all four and is killed by both books. But a reviewer who
+reads the books against the finding could not find the finding's programs, which is the point of freezing them.
+`erased-dotted-rebind-shapes` (`f32d39c`) now holds the four as written, frozen from the seed alone.
+
+A second, smaller gap: `GATES.md` still described `nest-round9` and `nest-round10` as freezing the stopgaps
+(every dotted binder Unsupported; a line break in arguments, a let split after `=`, an arm body at its `case`
+column Unsupported) that the ruling of `3d3f3ff` had re-frozen. Only the seed scripts' docstrings recorded the
+amendment; `tests/compiler-nest/SPEC.md` (lines 13-17, 198-199) and the docstring of `round9.py` still state the
+stopgap. `19ab584` corrects `GATES.md`; the other two are nest-owned, and editing a gate script needs the census
+again, so they wait for the owners' sign-off of the ruling.
+
+Prevention:
+- When a finding names its repro programs, freeze those programs, with the finding's ids in the commit
+  message, and put variants beside them, not in their place. Check the books against the finding by name
+  before calling it frozen.
+- After a ruling that moves pins, grep every document that describes those pins (GATES.md, the suite's SPEC and
+  FIXTURES, the gate scripts' docstrings) for the old outcome words, update the ones the branch owns, and list
+  the rest as owner-owned in the report.

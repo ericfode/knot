@@ -8,8 +8,9 @@ The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed 
 
 Branch `campaign/literals-integ`, from `campaign/literals-layout` (`e673b43`), merges `campaign/nest`
 (`c9b073f`) by the campaign's rule: merge, never rewrite history, no rebase. **Status after review round 1:
-`npm run -s gates` exits 0 on `34038c6`, all 32 registered gates passed** (51 minutes, with the runner's
-documented load knobs; see "Gates on the final head"). The earlier full run on `13c0672` (48 minutes under a
+`npm run -s gates` exits 0 on `19ab584`, all 32 registered gates passed** (38 minutes, with the runner's
+documented load knobs; see "Third session" and "Gates on the final head"). The run on `34038c6`, before the third
+session added a book, passed the same 32 (51 minutes). The earlier full run on `13c0672` (48 minutes under a
 load average near 50) passed 31 gates and had `nest-round10` exhaust the runner's 1,800-second limit, a
 harness timeout; alone with the limit raised to 3,600 seconds it passed in 578 seconds. The run before that (23
 minutes, on `9f98fb0`, which lacked the last two source fixes) passed 30 and failed `frontend` and
@@ -35,9 +36,11 @@ drift, because their inputs changed; 9 volatile-only; 65 identical).
 | `bdbad49`, `13c0672` | Collateral fixed after the first full run (`expect` verbatim, `spells`); the census for it (1 widened, 1 gone) |
 | `70f9724`, `bf10504`, `9d3910a` | The receipt of `literals-integ` from the run on `13c0672`, and the report of the round |
 | `ac170e0`, `34038c6` | Second session: the `annotation-shadow` rule and the inherited gaps stated in the SPEC and the contract, the stale false-acceptance line corrected, GATES.md's counts; the census for the contract |
-| the one after | The receipt of `literals-integ` from the final run on `34038c6`, this section and the review log |
+| `6617f09` | The receipt of `literals-integ` from the run on `34038c6`, the status and "Second session" sections, and the review log |
+| `f32d39c`, `19ab584` | Third session: the review's four dotted-binder shapes as it wrote them (`erased-dotted-rebind-shapes`, the 54th book), and GATES.md's description of the pins the ruling moved |
+| the one after | The receipt of `literals-integ` from the run on `19ab584`, "Third session" and the review log |
 
-### Gates on the final head
+### Gates at the end of the second session (`34038c6`)
 
 `BEND_NO_TELEMETRY=1 KNOT_GATE_TIMEOUT_SCALE=30 npm run -s gates -- --timeout 7200` on `34038c6` (clean
 tree), run `run-imogzrwj`: exit 0, status `passed`, 32 of 32 gates, 3,053 s. The load average was 62 at the
@@ -110,6 +113,142 @@ rule and corrects the line, and with `34038c6` names the inherited gaps above; G
 integration gate's 53 books and 19 mutants. The 15 `src/*PROOF.bend` entries print `All terms check.`, and
 `gates:verify` (20), the manifest test (20), `census:check` and the manifest preflight (exit 0: 36 groups,
 2,713 units, 0 truncated, 0 blockers, `check.bend::run` 59,941) pass on the final source.
+
+### Third session: the three listed findings, checked on fresh builds
+
+After a pause a later review workflow listed three findings again, numbers 1 and 7, 9 and 11, and 10 of the
+round's fifteen (two pairs are duplicates): the blocking one (an erased dotted let does not license a later live
+let of its name), the foreign note of nest's harness, and the task files. The branch already answers all fifteen
+("Review round 1" below), so this session re-implemented nothing. It rebuilt `check`, `eval` and `compile` from an
+export of `6617f09` (natively, and `check` in the Bun lane), checked each finding's fix clause against them, and
+added the one thing a clause named that was only near-covered. The other ten findings stand as answered below.
+The two commits that re-freeze pins and re-point mutants (`3d3f3ff`, `58d0c88`) are the round's proposed ruling on
+findings 2 to 4, kept in commits of their own so that the coordinator can revert them; they are not unrequested
+edits of frozen expectations.
+
+| Finding | Disposition |
+| --- | --- |
+| Blocking: an erased dotted let, then a live let of its name, is `Invalid parse binding-name` where the seed accepts (findings 1 and 7 of the round) | **Fixed.** Books frozen from the seed in `0c0a074`, the repair in `623afef`, and the review's four programs as it wrote them in `f32d39c` |
+| Major: nest's harness accepts any foreign-def list (9 and 11) | **Fixed.** `ea3577a`; the nest owner's sign-off is pending |
+| Major: `checking.md` is authored prose, and two other tasks drop most of their SPEC (10) | **Disputed**, under the finding's own fallback ("if an excerpt is unavoidable"): `84c24df` makes `checking.md` a verbatim excerpt; the originals do not fit. The owners' sign-off is pending |
+
+**The blocking finding, checked.**
+
+- The review's 20 dotted-binder repros (`v1`..`v10`, `w1`..`w7`, `c1`..`c3`): the 10 the seed accepts are `Checked` in
+  single-file mode and in bundle mode, in the native and the Bun lane, and `eval` returns the seed's value; the 10
+  it rejects are `Invalid`. The four programs the fix clause names (`v1`, `v2`, `w3`, `w7`) are all `Checked`.
+- The review's 924-program enumeration, with the seed run afresh here (not the review's cached column) against
+  the native single-file, native bundle and Bun bundle lanes: 215 accepted, all `Checked`; 709 rejected, all
+  `Invalid`; 0 false Invalid (8 at `4f1fa9f`), 0 false acceptances, 0 crashes, 0 disagreements between lanes.
+- A second corpus the review never saw: 480 programs drawn with a fixed seed (two to four lets of three dotted
+  names in five forms, erased, live or promoted, typed or plain, then a final name). The seed accepts 28, 23 of
+  them an erased let followed by a live let of its name; all 28 are `Checked` in every lane, and the 452 the seed
+  rejects are `Invalid`.
+- A mutant that puts the original bug back (an erased let's name left out of the scope list in `binders`) answers
+  `Invalid parse binding-name 106:109:10:2` on `v1`, as the review recorded, and the same code on `v2`, `w3` and
+  `w7`; `erased-dotted-rebind` and the new book both kill it, and the two seed-rejected controls are unchanged.
+- The clause asked for the binder comment, the contract's names text and this report's claim to be corrected: the
+  comment on `binder` in `src/parse.bend`, `pattern_matrix/names` and `literals/names_and_binders/dotted_binder` in
+  `src/CONTRACT.json`, and the retraction in "The ruling on the contested constructs" now say that an erased
+  let's name is in scope below it.
+- **The new book.** The books frozen before the repair (`erased-dotted-rebind`) hold the rule in nearby shapes: a
+  typed live let after a typed erased one, one name erased twice, one erased name in an arm. The review's own
+  programs had no book: `v2` (a plain erased let, then a typed live one), `w3` (plain, in an arm of a match on a
+  second parameter) and `w7` (two erased names, the second live). `erased-dotted-rebind-shapes` holds the four as
+  the review wrote them, on an affine parameter, frozen from the seed alone (it accepts the book, `main` is `On`,
+  the eleven calls carry its tags). Both lanes check it with the seed's values and byte-identical binaries; the 53
+  earlier entries of `expectations.json` are unchanged, checked entry by entry. The gate ran directly on
+  `f32d39c`: 54 fixtures (11 agree, 15 Invalid, 28 Unsupported), 85 reference calls, 19 of 19 mutants killed.
+
+**The foreign note, checked.**
+
+- `git diff c9b073f -- tests/compiler-nest/check.py tests/compiler-nest/review.py` is the exact note (`HOST_CHECKS`,
+  `foreign`, `successful`, `proved`), the same two mutant sites, and the `src/host` copy that the two mutant builders
+  need; no `FOREIGN_NOTE` and no count pattern remains anywhere in the tree.
+- The review's rows applied to nest's own predicates, for each of the three CLIs: the pinned note is accepted;
+  an injected def with count 6, count 99, count 1 over the same five names, one different def, a list cut to
+  `main`, an empty note and a bare `All terms check.` are all rejected (0 accepted other than the pin), by `proved`
+  on stdout and by the `-o` build's stderr test.
+- The review's exact-pin probe on a fresh export, with real builds: the check, eval and compile CLIs are accepted by
+  `successful` (`-o`) and `proved` (`--check-only`), and three regressions (an extra def that reaches the host
+  query, an `@unsafe` def, an `@unsafe` def in the parser) are rejected by both. The mutant builders keep the
+  CLI's file name, so `foreign` finds its pin.
+
+**The task files, disputed.**
+
+- `checking.md` is paragraph 3 of `research/compiler-fields/SPEC.md`, byte for byte (an exact substring test),
+  under the "Excerpt of" header its siblings carry. Nothing in it is authored. The other two were verbatim paragraphs
+  already.
+- The originals do not fit. With each original task the offline preflight of its group stops with "Style context
+  too large after interface summaries": `checking` (fields SPEC) at `check.bend::run`, `module-loading` (modules
+  SPEC) at `load.bend::body`, `pattern-matrix-laws` (nest SPEC) at `matrix-LAWS.bend::flag`. The earlier session
+  measured 65,368, 62,856 and 67,870 (with three more matrix units at 65,646 to 67,478) against the 60,000-byte
+  state cap. With the excerpts the three groups pass, at 47,243, 29,116 and 31,575 of the 48,000-byte composition
+  cap. A seam split of a group cannot lower a unit's state: the manifest puts 328 units in several groups, and in
+  each of the 320 unit-and-task pairs where those groups share a task, `state_bytes` is the same in every group,
+  whatever the group's files.
+- Two facts a reader should hear here and not from the diff. Paragraph 3 of the fields SPEC was chosen partly for its
+  size (paragraph 2 gave `run` 60,829, over the cap; paragraph 3 gives 59,941, a margin of 59 bytes). And the three
+  excerpts change what the style judge is told to expect of groups that other owners own, which is why their
+  sign-off stays open.
+
+**The other checks of the round, on the same head.** The 15 `src/*PROOF.bend` entries print `All terms check.`;
+`gates:verify` (20 tests) and `tests/perch-style-manifest.test.mjs` (20 tests) pass; `census:check` exits 0 (a
+gate program changed, so `npm run census` moved two hashes, the manifest's in `accepted.json` and the one derived
+from it in `selfhost.json`); the manifest preflight exits 0 (36 groups, 2,713 units, 0 truncated, 0 blockers; the
+largest state is 59,950, `load.bend::body`, and `check.bend::run` is 59,941). The lone-target preflight of the
+one new `.bend` file, `erased-dotted-rebind-shapes.bend`, exits 3 with `missing_task_context`: the mode that was
+already unavailable at both parents (a fixture has no manifest group).
+
+**Left for the owners, found here.** `tests/compiler-nest/SPEC.md` (lines 13-17 and 198-199) and the docstring of
+`tests/compiler-nest/round9.py` still state the superseded stopgap ("every dotted binder is
+`Unsupported parse dotted-binder`"), while the tree implements the ruling and the seed scripts' docstrings record
+it. They are nest's documents, and a gate script's edit needs the census again, so they wait with the owners'
+sign-off of the ruling. `GATES.md` was the branch's own and is corrected in `19ab584`.
+
+### Gates on the final head
+
+`BEND_NO_TELEMETRY=1 KNOT_GATE_TIMEOUT_SCALE=30 npm run -s gates -- --timeout 7200` on `19ab584` (clean tree),
+run `run-c2qxd52m`: exit 0, status `passed`, 32 of 32 gates, 2,302 s with the runner's four jobs; the load average
+was between 17 and 45 while it ran. Receipts: 65 identical, 9 volatile-only and 28 semantic, the same classes as
+the run on `34038c6`; the shared receipts stay the coordinator's, and the receipt of `literals-integ` is refreshed
+from this run. The counts of every gate equal those of the run on `34038c6` except two: `bootstrap` reads one more
+corpus file (the new book is a `.bend` file) and `literals-integ` one more fixture. A first full run on `6617f09`
+was interrupted at 15 minutes with 23 gates passed and none failed, and its scratch was removed; it is no evidence
+here.
+
+| Gate | Result | Counts (the runner's) | Seconds |
+| --- | --- | --- | --- |
+| `frontend` | passed | 14 fixtures, 4 mutants | 191 |
+| `checker` | passed | 49 fixtures, 7 mutants | 93 |
+| `structural` | passed | 16 fixtures, 7 mutants | 112 |
+| `fields` | passed | 40 fixtures, 9 mutants | 195 |
+| `wasm` | passed | 25 fixtures, 90 reference calls, 7 mutants | 126 |
+| `wasm-trust`, `fields-trust`, `structural-trust` | passed | 3, 4 and 2 entries, 0 proof holes | 1 each |
+| `owned-store` | passed | 3,532 cases, 6 mutants | 10 |
+| `flat-store` | passed | 3,534 instances per lane, 9 mutants | 23 |
+| `recursion` | passed | 19 fixtures, 3 mutants | 103 |
+| `fields-wasm` | passed | 8 fixtures, 4 mutants | 240 |
+| `modules` | passed | 63 fixtures, 71 reference calls, 14 mutants | 256 |
+| `census` | passed | 1,548 declarations, 42 classes, 71 files | 5 |
+| `perch-context` | passed | 33 controls, 8 mutants | 58 |
+| `lint:verify` | passed | 168 tests, 8 law rules | 8 |
+| `bootstrap` | passed | 1,594 corpus files, 8 stages, 54 mutants | 103 |
+| `classification` | passed | 17 fixtures, 6 mutants | 14 |
+| `nest` | passed | 38 fixtures, 386 evaluator and 386 Wasm values, 6 mutants | 605 |
+| `nest-review` | passed | 29 fixtures, the 3,000-program fuzz with 0 false acceptances and 0 false Invalid, 7 mutants | 643 |
+| `io-host` | passed | 20 fixtures, 6 mutants | 17 |
+| `io-abi-2` | passed | 43 fixtures, 5 mutants | 94 |
+| `selfhost` | passed | 65 cases (2 passed, 63 blocked, 0 D4 gaps), 3 mutants | 458 |
+| `nest-round3` | passed | 61 fixtures, 164 evaluator and 164 Wasm values, 11 mutants | 747 |
+| `nest-round4` | passed | 14 fixtures, 64 evaluator values, 4 mutants | 349 |
+| `nest-round6` | passed | 35 fixtures, 118 evaluator values, 5 mutants | 407 |
+| `nest-round7` | passed | 35 fixtures, the 1,500-program generator (0 false acceptances, 0 false Invalid), 3 mutants | 379 |
+| `nest-round8` | passed | 37 fixtures, the 3,000-program generator (0 false acceptances, 0 false Invalid), 5 mutants | 414 |
+| `nest-round9` | passed | 80 fixtures, 218 evaluator and 218 Wasm values, 12 mutants | 557 |
+| `nest-round10` | passed | 153 fixtures, 846 evaluator and 846 Wasm values, 22 mutants | 939 |
+| `literals` | passed | 150 fixtures, 525 reference calls, 42 mutants | 338 |
+| `literals-integ` | passed | 54 fixtures, 19 mutants (and the metamorphic stage and the selfhost twin) | 87 |
 
 ### Review round 1
 
