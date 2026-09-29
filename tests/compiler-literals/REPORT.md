@@ -8,7 +8,7 @@ The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed 
 
 Branch `campaign/literals-integ`, from `campaign/literals-layout` (`e673b43`), merges `campaign/nest`
 (`c9b073f`) by the campaign's rule: merge, never rewrite history, no rebase. **Status: incomplete.**
-`npm run -s gates` cannot exit 0 on this tree, for two reasons that need someone else:
+`npm run -s gates` cannot exit 0 on this tree, for three reasons that need someone else:
 
 1. **The two suites' frozen expectations contradict each other on eight constructs (39 pins).** No
    rule makes every frozen gate pass unchanged; the coordinator must rule (table below).
@@ -16,11 +16,21 @@ Branch `campaign/literals-integ`, from `campaign/literals-layout` (`e673b43`), m
    60,000; composition 49,795 against 48,000). This does not depend on the ruling: both suites need
    both matrix families whatever is decided, because the contested rules are parser-side. It needs a
    design (below).
+3. **Two frozen mutants contradict each other, and this does not depend on the ruling either.** The
+   literals mutant `inferred-let-literal` needs `expected(token,None,<a U32 literal>)` to accept; nest's
+   round-9 mutants need the same call, on the same term shape (`C.Value`), to reject a refined value.
+   `expected` receives no provenance, and no source change was found that keeps every frozen anchor
+   and satisfies both; the literals gate cannot pass after any parser ruling unless the frozen
+   mutant gets another witness (a `String` or `Nat` literal). That edit is the literals owner's or
+   the coordinator's (Evidence section).
 
-Everything else registered passes. The first full gate run also exposed three defects that no pin
-comparison could show; each is fixed and recorded below ("What the full gate run found"). No frozen
-expectation, pin, fixture or mutant anchor was edited. Two nest harness scripts were edited, for
-plumbing only (below); that is the one place this branch touches a per-suite gate script.
+Twenty-six of the 31 registered gates pass (25 in the full run, `nest-review` when run alone); the
+five that fail are the ones the three reasons above explain, and the four pin gates among them pass
+their later stages in a scratch run with the contested rows removed. The first full gate
+run also exposed three defects that no pin comparison could show; each is fixed and recorded below
+("What the full gate run found"). No frozen expectation, pin, fixture or mutant anchor was edited.
+Two nest harness scripts were edited, for plumbing only (below); that is the one place this branch
+touches a per-suite gate script.
 
 | Commit | Content |
 | --- | --- |
@@ -163,14 +173,15 @@ runner's own environment. No repository file is touched. All four pass:
 
 So the claim "only the contested rows fail" now rests on the full gates, not on the pins alone: every
 other fixture in these four gates builds, evaluates and runs to the frozen value on the merged tree.
-The 19 mutants that cannot be killed there are the 15 dead anchors above and four more:
+The 19 mutants that cannot be killed there are the 15 dead anchors above and four more. Each was
+built and run on its witness (the two round-9 rows in a separate scratch build, because the relaxed
+run had deleted their witnesses):
 
 | Mutant | Why it cannot be killed on the merged tree |
 | --- | --- |
-| round 9 `rebound-promotion-invalid`, `rebound-let-invalid` | Anchor present; the witness fixtures `rebound-promotion` and `rebound-let` are contested pins (the merged answer is Checked), so the wrong verdict is not the one the mutant changes. Follows the ruling. |
-| round 10 `line-break-before-any-name` | Anchor present; on its witness `letsplit-after-eq-junk` the mutant answers `Invalid parse expected-term` as the original does, because the literals rule reads the line break after `=` before nest's stopgap can. Follows the ruling. |
-| literals `inferred-let-literal` | Anchor present, **independent of the ruling.** The mutation replaces `annotated(wanted,token,target => expected(token,Some{target},value))` by `expected(token,wanted,value)`, and its witness `let-u32` must then be accepted. Nest's round-9 rule in `expected` (a `C.Value` with no annotation is `annotation-required`) also rejects it, and a U32 literal is a `C.Value`. The two guards overlap, so the mutation is equivalent on that witness. A `String` or `Nat` literal (`C.Literal`) would pass nest's guard, so a different witness would kill it; the frozen witness cannot. |
-
+| round 9 `rebound-promotion-invalid`, `rebound-let-invalid` | Anchor present, mutation typechecks and builds. Measured: on their witnesses `rebound-promotion` and `rebound-let` the mutant answers `Checked` (exit 0), as the unmutated tree does, not the wrong verdict `Invalid pattern-binder` / `binding-name` the gate demands. The tree accepts a rebound dotted binder, so `binder_failure` is not reached and the mutated line is dead for these inputs. Follows the ruling. |
+| round 10 `line-break-before-any-name` | Anchor present. Measured in the relaxed run: on its witness `letsplit-after-eq-junk` the mutant answers `Invalid parse expected-term` as the original does, not the wrong verdict `Unsupported parse line-break`: the literals rule reads the line break after `=` before nest's stopgap can. Follows the ruling. |
+| literals `inferred-let-literal` | Anchor present, **independent of the ruling.** The mutation replaces `annotated(wanted,token,target => expected(token,Some{target},value))` by `expected(token,wanted,value)`; on its witness `let-u32` (an unannotated U32 literal) the gate demands that the mutant build (`Built`). It answers `Invalid check annotation-required`, because nest's round-9 rule in `expected` rejects any `C.Value` with no annotation, and a U32 literal is a `C.Value{token,type,tag}` like a refined nullary constructor. Nest's mutants `ignore-refined-value`, `ignore-refinement` and their kin delete that rule and need the refined witness to be accepted, so they need `expected(token,None,C.Value)` to reject; this one needs the same call to accept. Telling the two apart inside `expected` would take the type table, and the frozen anchors fix `expected`'s three arguments and its `None` rows (and this mutant's own replacement text calls it with three). A `String` or `Nat` literal is a `C.Literal`, which nest's guard lets through, so a different witness would kill it; the frozen one cannot. |
 
 ### Conflicts and their resolution (15 files)
 
@@ -269,11 +280,14 @@ Not done here, and why:
   `nest-round9`, `nest-round10` and `literals` fail on their first contested fixture; the merged
   answers are listed above, and the pins to re-freeze from the seed if the precise rule stands.
 - **`checking`: state and composition.** Needs a design; independent of the ruling (Perch section).
-- **19 mutants that cannot be killed on the merged tree** (Evidence section): 15 dead anchors (ten
-  follow the ruling, five can be re-pointed without changing what they mutate), three that follow the
-  ruling through a contested witness or a stopgap that no longer runs, and `inferred-let-literal`,
-  which needs a different witness whatever the ruling is.
-- **D7 fixtures for four merge behaviors** with no seed-derived book yet: an erased dotted let, a
+- **`inferred-let-literal` (a contradiction between frozen mutants).** Independent of the ruling; the
+  literals owner or the coordinator must re-witness the mutant or accept that the literals gate
+  cannot pass (Evidence section).
+- **18 more mutants that cannot be killed on the merged tree:** the 15 dead anchors (ten follow the
+  ruling, five can be re-pointed without changing what they mutate) and three that follow the
+  ruling through a contested witness or a stopgap that no longer runs (`rebound-promotion-invalid`,
+  `rebound-let-invalid`, `line-break-before-any-name`).
+- **D7 fixtures for five merge behaviors** with no seed-derived book yet: an erased dotted let, a
   live dotted let without a parameter, `keyword_is_no_arm_body`, `spaced_plus_after_argument`, and
   the `Unsupported check literal-column` row.
 - **Owner review** of the nest harness edit, the two excerpt tasks and the `pattern-matrix-proofs`
