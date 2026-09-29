@@ -53,17 +53,21 @@ and `nest-round8` the round-8 Type-kind promotions (a `+` binder's kind is
 judged where the match frontier binds it) with the reviewer's 3,000-program
 Type-kind generator, and `nest-round9` the round-9 lets of refined binders (an
 unannotated let of a binder that a positive branch refined to a constructor
-needs an annotation), the dotted-binder stopgap (every dotted binder is
-Unsupported) and the line-break stopgap (a line break in call or constructor
-arguments, or a second arm on an arm's line, is Unsupported), and
+needs an annotation), the dotted-binder scope (a dotted binder that repeats a
+name in scope is Checked, as the seed accepts it; the round's stopgap that made
+every dotted binder Unsupported is superseded, see "The ruling on the contested
+constructs" in the [literals report](../../tests/compiler-literals/REPORT.md)) and
+the line-break rules (a line break in call or constructor arguments is whitespace
+and Checked, a second arm on an arm's line is Unsupported), and
 `nest-round10` the round-10 glue rules (a `+` or `-` marker and a return arrow
 are read touching what follows: a spaced `+` between row columns, a spaced
 marker after a let and a split `->` are rejected, while a marker first in a body
 and a promotion that starts a row or follows a comma stay spaced) and the
-whitespace stopgaps (arguments separated by whitespace alone, `++y`, a let
-split across lines and an arm body at its `case` column are Unsupported), each in
-both compiler lanes with its own semantic mutants. The nest gates scale their
-harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
+whitespace rules (arguments separated by whitespace alone, `++y`, a bare `+` after
+an argument and a let split before its `=` or between its marker and name are
+Unsupported; a line break after a let's `=` and an arm body at its `case` column
+are Checked), each in both compiler lanes with its own semantic mutants. The nest
+gates scale their harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,
