@@ -105,12 +105,12 @@ law dead_arm_invalid:
   for +phase: String
   for code: String
   for +at: S.At
-  {K.dead_arm(Fail{S.Invalid{phase,code,at}}) == Fail{S.Unsupported{phase,"dead-arm",at}} : Result<S.Error,C.Checked>}
+  {M.dead_arm(Fail{S.Invalid{phase,code,at}}) == Fail{S.Unsupported{phase,"dead-arm",at}} : Result<S.Error,C.Checked>}
 
 law dead_arm_exhausted:
   for +phase: String
   for +at: S.At
-  {K.dead_arm(Fail{S.Exhausted{phase,at}}) == Fail{S.Exhausted{phase,at}} : Result<S.Error,C.Checked>}
+  {M.dead_arm(Fail{S.Exhausted{phase,at}}) == Fail{S.Exhausted{phase,at}} : Result<S.Error,C.Checked>}
 
 # L.primitive_type's cases: the installed primitive wins; without it, the
 # target decides by the constructor the literal spells (M.literal).

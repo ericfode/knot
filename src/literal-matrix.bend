@@ -255,3 +255,58 @@ def compile(depth: Nat, binding: C.Binding, arms: List<&2,S.Node>, types: List<&
 def enabled(+types: List<&2,C.Datatype>, binding: C.Binding) -> Bool:
   +id = type_id(binding)
   Bool.or(L.is_kind(types,id,0),Bool.or(L.is_kind(types,id,1),Bool.or(L.is_kind(types,id,2),L.is_kind(types,id,3))))
+
+def checked_case(value: C.Checked, column: C.Binding, +target: U32) -> Result<S.Error,C.Checked>:
+  match value column:
+    case C.Checked{C.Sequence{arms},ignored,uses} C.Binding{token,level,q,typ,param,known}:
+      Done{C.Checked{C.Case{token,level,target,arms},target,uses}}
+    case _ _: C.internal(C.Checked,"matrix-case")
+
+def checked_default(value: C.Checked) -> Result<S.Error,C.Checked>:
+  match value:
+    case C.Checked{term,typ,uses}: Done{C.Checked{C.Sequence{[C.Default{term}]},0,uses}}
+
+# A path selects the first leaf of its list; the rest are dead there. The seed
+# checks a body only where a path selects it, so a match walks its plan twice,
+# live leaves first, and a dead leaf's failure is Unsupported, never Invalid.
+def dead_arm(result: Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+  match result:
+    case Fail{S.Invalid{phase,code,at}}: Fail{S.Unsupported{phase,"dead-arm",at}}
+    case Fail{error}: Fail{error}
+    case Done{value}: Done{value}
+
+def retained(first: C.Checked, rest: C.Checked) -> Result<S.Error,C.Checked>:
+  Done{first}
+
+def inspect(body: C.Checked, +binding: C.Binding, +scope: E.Scope) -> Result<S.Error,C.Checked>:
+  match binding:
+    case C.Binding{+token,+level,q,typ,param,known}:
+      S.bind(C.Checked,C.Checked,E.reference(binding,token,scope),inspected => consumed(body,inspected,level,token))
+
+# A match takes the literal matrix when an arm spells a literal or Nat offset, or its scrutinee is an
+# installed primitive; every other match is a datatype match, flat or a binary matrix.
+def literal_pattern(fuel: Nat, node: S.Node) -> Bool:
+  match fuel node:
+    case 0n _: False{}
+    case 1n+n S.Literal{token,kind,number,text}: True{}
+    case 1n+n S.Offset{token,count,tail}: True{}
+    case 1n+ +n S.Constructor{token,+args}: literal_pattern(n,S.Sequence{args})
+    case 1n+ +n S.Sequence{Con{+head,+tail}}: Bool.or(literal_pattern(n,head),literal_pattern(n,S.Sequence{tail}))
+    case 1n+n _: False{}
+
+def literal_arms(arms: List<&2,S.Node>) -> Bool:
+  match arms:
+    case Nil{}: False{}
+    case Con{S.Arm{token,S.Sequence{columns},body},tail}: literal_arms(tail)
+    case Con{S.Arm{token,pat,body},tail}: Bool.or(literal_pattern(4096n,pat),literal_arms(tail))
+    case Con{head,tail}: literal_arms(tail)
+
+def primitive_binding(found: Result<S.Error,C.Binding>, +types: List<&2,C.Datatype>) -> Bool:
+  match found:
+    case Done{binding}: enabled(types,binding)
+    case Fail{error}: False{}
+
+def primitive_match(value: S.Node, arms: List<&2,S.Node>, +types: List<&2,C.Datatype>, +scope: E.Scope) -> Bool:
+  match value:
+    case S.Variable{+token}: Bool.or(literal_arms(arms),primitive_binding(E.lookup(scope,token),types))
+    case _: literal_arms(arms)

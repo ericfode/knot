@@ -39,8 +39,12 @@ def result(value: C.Checked, token: S.Token, +type_id: U32, op: R.Op) -> Result<
     case C.Checked{C.Sequence{args},ignored,uses}: Done{C.Checked{C.Intrinsic{token,type_id,op,args},type_id,uses}}
     case _: C.internal(C.Checked,"intrinsic-arguments")
 
-def constructor(term: C.Term, +types: List<&2,C.Datatype>, +type_id: U32) -> C.Term:
-  match term:
-    case C.Construct{+token,typ,tag,params,+args}:
-      S.choose(C.Term,T.is_kind(types,type_id,2),u => C.Intrinsic{token,type_id,R.FromCode{},args},u => C.Construct{token,typ,tag,params,args})
-    case _: term
+def constructor(value: C.Checked, +types: List<&2,C.Datatype>) -> Result<S.Error,C.Checked>:
+  match value:
+    case C.Checked{C.Construct{+token,typ,tag,params,+args},+type_id,uses}:
+      Done{C.Checked{S.choose(C.Term,T.is_kind(types,type_id,2),u => C.Intrinsic{token,type_id,R.FromCode{},args},u => C.Construct{token,typ,tag,params,args}),type_id,uses}}
+    case _: Done{value}
+
+def intrinsic_type(reference: G.TypeRef, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+  match reference:
+    case G.TypeRef{id,definition}: next(id)
