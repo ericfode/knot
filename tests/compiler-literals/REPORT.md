@@ -7,8 +7,10 @@ The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed 
 ## Integration with nest
 
 Branch `campaign/literals-integ`, from `campaign/literals-layout` (`e673b43`), merges `campaign/nest`
-(`c9b073f`) by the campaign's rule: merge, never rewrite history, no rebase. **Status: incomplete.**
-`npm run -s gates` cannot exit 0 on this tree, for three reasons that need someone else:
+(`c9b073f`) by the campaign's rule: merge, never rewrite history, no rebase. **Status: everything an
+executor may do is done; three items need the coordinator.** `npm run -s gates` cannot exit 0 on this
+tree, for three reasons that need someone else (each needs an action the increment prompt forbids an
+executor: ruling on frozen pins, re-witnessing frozen mutants, changing the pinned Perch state cap):
 
 1. **The two suites' frozen expectations contradict each other on eight constructs (39 pins).** No
    rule makes every frozen gate pass unchanged; the coordinator must rule (table below).
