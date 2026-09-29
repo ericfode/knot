@@ -53,6 +53,10 @@ node scripts/prechecks-perch-run.mjs --controls          # dry run: lists every 
 node scripts/prechecks-perch-run.mjs --controls --live   # one request per packet, recorded under .perch/usage/
 ```
 
+The runner stages the controls under `.local/prechecks/packets/controls/` (production plans skip that directory, and a live calibration
+removes it when it ends), asks one request per packet, and never caps the controls. Packets built elsewhere are copied into
+`.local/prechecks/packets/staged/` before they are asked; the cap for a production run is per rule and per (increment, head).
+
 The report lists each packet's probability of violation and whether the set separates: every broken and held-out packet at
 or above the floor and every clean packet below it. A rule that does not separate is rewritten or narrowed, never
 floor-raised. Record the run (model, probabilities, rule and input hashes) in `docs/perch-review-log.md`.

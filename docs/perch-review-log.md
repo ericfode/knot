@@ -1114,6 +1114,8 @@ of them (it proves plumbing, never calibration).
 
 Clean / broken / held-out evidence: unchanged (22 calibration packets under `tests/prechecks/perch-controls/`).
 
-Remaining uncertainty / next trigger: what would have prevented the waste is a dry run over one real built increment (the replay's
-packets) that counted asked and skipped packets per rule before the runner was trusted; the coordinator's first `--live` run should
-start with that dry run and read its per-rule counts.
+Remaining uncertainty / next trigger: what would have prevented the waste is a dry run over one real built increment that counted asked
+and skipped packets per rule before the runner was trusted; it was run in this round (zero requests): vm-spec `d2fe0f20` builds 130
+packets in six rules, the previous plan asked 40 of them (all one rule) and the fixed plan asks all 130 (40, 33, 14, 40, 2, 1 by rule); over
+the replay's 7,949 packets it asks all of them. The coordinator's first `--live` run should start with the same dry run on its own packets
+and read the per-rule counts.
