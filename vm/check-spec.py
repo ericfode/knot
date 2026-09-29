@@ -2579,6 +2579,9 @@ def atomic_controls(plans: dict, known: dict) -> list:
       with a surrogate is `io abi`, so is one with a scalar `a` before it (nothing of the prefix is written), and one whose tail is
       ill-typed is `ill-typed`, each before any host call. A Case that refuses a request (7 entries) pays nothing, and neither does
       a Book's render of one (5: main, IO.print, the erased R, the Action applied to k, the identity) or a display that exceeds its bounds (1).
+    - Fuel (`recursion-map`'s six entries, `foreign-print`'s five): a Book that meets fuel 0 at its sixth entry has written and called
+      nothing; the Action's second application at fuel 3 builds no request and writes nothing; and the loop's k, entered after the
+      request that entries 1 to 4 built was performed (`vm\n`, 1 effect), meets fuel 0 at fuel 4.
     - After an effect: `x` is written by the request that entries 1 to 6 build (`a` by 3 entries and the first request of
       `print-non-scalar-second`, whose second String is refused after 13), and its host call is made once. The refused step that
       follows leaves both alone: an ill-typed k (entry 7, `inspect-continuation-target`), an IO.OP that is a closure that k answers
@@ -2643,8 +2646,11 @@ def atomic_controls(plans: dict, known: dict) -> list:
         twin('case-request', 'program-case-request', 7, outcome='Unsupported', cause='vm effect', **quiet),
         twin('request-rendered', 'book-request-rendered', 5, outcome='Unsupported', cause='vm effect', **quiet),
         twin('display-visits', 'display-visits-beyond-bound', 1, outcome='Exhausted', kind=2, cause='display', **quiet),
+        twin('fuel-book', 'fuel-book-short', 5, outcome='Exhausted', kind=1, cause='fuel', **quiet),
+        twin('fuel-action', 'fuel-action-short', 3, outcome='Exhausted', kind=1, cause='fuel', **quiet),
         golden('print-then-non-scalar', 'print-non-scalar-second', 13, **io_abi, stdout='a\n', effects=1),
         twin('print-then-ill-typed-continuation', 'inspect-continuation-target', 7, **ILL_TYPED, stdout='x\n', effects=1),
+        twin('fuel-continuation', 'fuel-continuation-short', 4, outcome='Exhausted', kind=1, cause='fuel', stdout='vm\n', effects=1),
         ('atomic-print-then-io-op', continuing(closure_io_op), {'fuel': 8, **ILL_TYPED, 'calls': 8, 'stdout': 'x\n', 'effects': 1}),
         ('atomic-print-then-nat-range', continuing(succ_max, more=(nat_type,), rep={'Nat': nat}),
          {'fuel': 7, **nat_range, 'calls': 7, 'stdout': 'x\n', 'effects': 1}),
@@ -3360,6 +3366,7 @@ SITE_READ = "        if isinstance(w, tuple) and w[0] == 'request':\n           
 SITE_CASE = "            if default is None:\n                raise Halt(UNSUPPORTED)\n            arm, fields = default, ()\n"
 SITE_DISPLAY = "                raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'display'})"
 SITE_D20 = "            raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})\n"
+SITE_FUEL = "        if self.fuel == 0:\n            raise Halt({'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel'})"
 DEBIT = "        self.fuel -= 1\n        self.calls += 1\n"
 FUEL_STOP = "raise Halt({'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel'})"
 LATE = "        if getattr(self, 'late', None):\n            raise self.late\n"
@@ -3680,6 +3687,7 @@ ATOMIC_MUTANTS = [
     ('request-read-spends-entry', [spends(SITE_READ)]),
     ('d20-refusal-spends-entry', [spends(SITE_D20)]),
     ('display-refusal-spends-entry', [spends(SITE_DISPLAY)]),
+    ('fuel-stop-spends-entry', [before_raise(SITE_FUEL, 'self.calls += 1')]),
     # An Enter is refused before its debit (section 7): the existing `fuel-before-operand-check` and `fuel-test-before-request-check` fire
     # only at fuel 0, and these two pay the debit whatever the fuel.
     ('enter-operand-check-after-debit', [("        if kind not in takes or not takes[kind]():\n            raise Halt(ILL_TYPED)\n        self.debit()\n",

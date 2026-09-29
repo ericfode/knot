@@ -393,7 +393,7 @@ Cases on a `none` slot, among them `list-head-match`, three whose arms fit their
 Case, among them `first-code`, S's shapes, and two of names, a type named with each length of
 UTF-8 (U+0024, U+00A2, U+20AC, U+10348) and one named with every edge of a length (U+0080, U+07FF, U+0800, U+D7FF, U+E000,
 U+FFFF, U+10000, U+10FFFF)), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 135 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 138 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -675,8 +675,8 @@ tests fuel, and any other step tests none). What the frames, `act`, `top`, the c
 is held by comparing machines: vm-model's steps are atomic, and vm-lockstep compares vm-core with it at every halt, as at every state,
 on the images that reach each stop: `inspect-halt-code` and `inspect-halt-message` (Return to Top refuses a Halt whose code or message is
 ill-typed before `act` is dropped), the `NatRange` goldens `nat-succ-range`, `nat-range` and `nat-mul-range`, and the ill-typed operands of
-`inspection_controls` (a Gather completion). A fuel stop is the Enter's own test: §7's eleven fuel controls freeze it, and the lockstep already
-compares its pending Enter, target and operands. An image past a limit of §4 is refused at load, before there is a state to keep (§4's limit
+`inspection_controls` (a Gather completion). A fuel stop is the Enter's own test: §7's eleven fuel controls freeze it, three atomic controls freeze what it leaves
+(`atomic-fuel-book`, `-action` and `-continuation`), and the lockstep already compares its pending Enter, target and operands. An image past a limit of §4 is refused at load, before there is a state to keep (§4's limit
 controls). The heap and the frame region (kinds 2 and 3), `RCOverflow` and a release's worklist are out of the reference evaluation's reach;
 vm-core's frame-region and heap-limit rows, which freeze `calls`, `top` and the bump pointer beside the outcome, and the lockstep hold them.
 
@@ -1337,7 +1337,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 135 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 138 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1455,10 +1455,10 @@ lane and requires:
   both lanes. Three key controls (`key_controls`)
   freeze §3's key: `pick` answers `On{}` from a key Branch at 0xffffffff for the U32
   and the Char `4294967295` (`key-max`, `char-key-max`) and `Off{}` from its Default for
-  0xfffffffe (`key-max-miss`), each after 2 calls. Twenty-four **atomic controls** (`atomic_controls`) pin §6.3 where
+  0xfffffffe (`key-max-miss`), each after 2 calls. Twenty-seven **atomic controls** (`atomic_controls`) pin §6.3 where
   the reference evaluation can see it: a stopped run reports what the run held before the refusing step, and the same run
   given exactly the fuel that it has spent, `fuel = calls`, reaches the same stop, since a refused step pays nothing.
-  Eighteen are twins that stop before any effect, each the run of an existing control or golden frozen again at that fuel and
+  Twenty are twins that stop before any effect, each the run of an existing control or golden frozen again at that fuel and
   with the `stdout` and `effects` that its first freeze left out (a Book writes nothing and calls no host; a Program that
   stops before its first request has done neither). A Chr, a Succ, a word prim, a Case and a rendered field read an
   ill-typed word (`atomic-ill-typed-chr`, `-succ`, `-prim`, `-case` and `-render`, after 2, 2, 3, 3 and 2 entries). A Succ,
@@ -1470,8 +1470,11 @@ lane and requires:
   one with a scalar before it, of which nothing is written (`atomic-print-non-scalar-mid`, after 4) and one whose tail is
   ill-typed (`atomic-print-ill-typed`, after 5), each with no host call. A Case refuses a request (`atomic-case-request`,
   after 7), so does a Book's render of one (`atomic-request-rendered`, after 5), and a display exceeds its bounds
-  (`atomic-display-visits`, `display` after 1). Four stop after
-  an effect and freeze the bytes and the host call that it made: `atomic-print-then-non-scalar` (`print-non-scalar-second`'s plan:
+  (`atomic-display-visits`, `display` after 1). A Book that meets fuel 0 at its last entry has written and called nothing
+  (`atomic-fuel-book`, `recursion-map` at fuel 5), and neither has a Program whose Action's second application meets it (`atomic-fuel-action`,
+  `foreign-print` at fuel 3: no request is built). Five stop after
+  an effect and freeze the bytes and the host call that it made: `atomic-fuel-continuation` (`foreign-print` at fuel 4: `vm\n`, 1 effect, the
+  loop's `k` meets fuel 0), `atomic-print-then-non-scalar` (`print-non-scalar-second`'s plan:
   `a\n`, 1 effect, `io abi` after 13), `atomic-print-then-ill-typed-continuation` (`inspect-continuation-target`'s plan: `x\n`, 1 effect,
   an ill-typed `k` after 7), `atomic-print-then-io-op` (`x\n`, 1 effect, a closure that `k` answers through the identity as its
   IO.OP, after 8) and `atomic-print-then-nat-range` (`x\n`, 1 effect, `Succ{4294967295}` in `k`, `NatRange` after 7). Two order a word's
@@ -1485,7 +1488,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 137 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 119 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 120 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1612,18 +1615,18 @@ lane and requires:
   `inspect-halt-after-surrogate` alone) or before the code
   (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
   and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused print
-  whose debit is refunded (by the D20 goldens' `calls`). Twenty-two more (round 14, §6.3) mutate before they refuse, and each
+  whose debit is refunded (by the D20 goldens' `calls`). Twenty-three more (round 14, §6.3) mutate before they refuse, and each
   dies by a changed observation of a control of the rule that it violates: the gate requires that at least one of the atomic
-  controls (the 24 `atomic-*` controls and the three `fuel-zero-*` controls of a refused Enter, `-ill-typed-invoke`, `-ill-typed-phase`
-  and `-request-target`, which are the same twin) changes under each. Eight spend an entry at a refusal (a `NatRange`, an ill-typed word, a Case over a request, a read of a
-  request, D20's check, a display bound, and an Enter that pays its debit before it checks its operands or its request); six test
+  controls (the 27 `atomic-*` controls and the three `fuel-zero-*` controls of a refused Enter, `-ill-typed-invoke`, `-ill-typed-phase`
+  and `-request-target`, which are the same twin) changes under each. Nine spend an entry at a refusal (a `NatRange`, an ill-typed word, a Case over a request, a read of a
+  request, D20's check, a display bound, a fuel stop, and an Enter that pays its debit before it checks its operands or its request); six test
   fuel before a refusal that no fuel test precedes (the same sites but the Enter's); five change the output or the effects before their
   check (an effect counted before D20's check or before the String is inspected, a scalar prefix written before the refusal, a description
   whose head is written before its words are inspected, and a visit charged before its word is inspected); and three undo or defer (a
   stop that discards what earlier steps wrote, and a `NatRange` or an ill-typed word that is reported at the next entry). Nine survive
   every golden and every run control outside that set and die by it alone: the three `nat-range-` mutants, `ill-typed-tests-fuel`,
   `request-read-tests-fuel`, `d20-refusal-tests-fuel`, `display-refusal-tests-fuel`, `effect-counted-before-scalar-check` and
-  `describe-charges-before-inspecting` (by `atomic-display-leaf-ill-typed` alone). The other thirteen die by earlier controls that freeze
+  `describe-charges-before-inspecting` (by `atomic-display-leaf-ill-typed` alone). The other fourteen die by earlier controls that freeze
   `calls`, `stdout` or `effects` as well, and DECISIONS entry 38 lists the kills of each, as measured;
 - 15 **seed witnesses** (`golden/witnesses.json`, `check-spec.py witness_controls`): sources that §8 cites
   and no golden can carry, each re-run on both seed lanes (three also through the literals head's check-cli) and held
