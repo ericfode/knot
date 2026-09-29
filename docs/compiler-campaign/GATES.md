@@ -85,8 +85,8 @@ and eval-cli on 111 golden sources, and requires the frozen observations byte fo
 byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display, save
 three Book goldens whose lane's head (the literals one) answers Unsupported and
-whose review declares the line. It also checks the frozen VM expectation table; 193 refused image controls (118 byte-level,
-66 plan-level, and nine on either side of the resource limits that are `Exhausted` kind 2); 27
+whose review declares the line. It also checks the frozen VM expectation table; 211 refused image controls (124 byte-level,
+78 plan-level, and nine on either side of the resource limits that are `Exhausted` kind 2); 27
 expectation, seven invocation, two seed-display, three display-lane and two bench
 controls; two excused eval-bound controls; eight admitted plan controls (two of them names in every length of UTF-8),
 one admitted limit control, seven admitted code-list controls and 104 run controls with their frozen
@@ -96,9 +96,9 @@ performed only by the Program's Top loop, dropped without effect and refused as
 bytes and host calls a Book makes, which are none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar); nine describe-domain controls; 13 argument controls;
 the lowering of two hand-written displays; 11 seed witnesses (sources whose two seed lanes, and for
 three the literals head, it re-executes and compares with frozen bytes and a literal review, with three
-frozen refusals of that comparison); 133 codec, 4 source, 97 evaluator and twenty-three
+frozen refusals of that comparison); 137 codec, 4 source, 97 evaluator and twenty-three
 rule mutants of `check-spec.py` itself (ten of them delete one clause of the canonicality clauses that the gate holds
-against re-encoding on 5,779 images); the accounting of all 100 refusals of the reference codec, each killed when omitted,
+against re-encoding on 5,797 images); the accounting of all 178 omissions of a refusal of the reference codec or of a clause of its test, each killed,
 held by a raise or unreached; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.

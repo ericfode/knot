@@ -860,16 +860,16 @@ follows it (§5, §10, §11) without a new image header word.
      5 is ten clauses (main word; names in order and used; constants in order, used and once; constructors in order; nodes in
      post-order; sites from 0; arms' result types), each about words that a decoded plan does not keep, so no earlier step can
      refuse a breach. The clauses are the decomposition that a loader without an encoder needs.
-   - **The controls.** 103 refusals (93 byte-level, on a valid golden's records laid out again by `Layout`; 10 plan-level): 193 in
+   - **The controls.** 121 refusals (99 byte-level, on a valid golden's records laid out again by `Layout`; 22 plan-level): 211 in
      all. One clause each. A name in every malformed form of UTF-8 (overlong in 2, 3 and 4 bytes, a surrogate, beyond U+10FFFF, a lead of
      `F5`, cut inside and before ASCII, a stray continuation), each unused byte, the empty name, a repeated name, digest words 25 to
      31; every record kind with a length or a count that contradicts its words; the ten canonicality clauses (four for the sites);
      the four conditions of finding 1 (the Invoke in three: a live arrow with none, with two, an erased one with one); and the
      statements of finding 2. Two admitted plan controls hold the other side of UTF-8: a name of each length and one with every
      edge of a length.
-   - **The mutants.** 44 codec mutants (89 to 133), each omitting one clause and dying by the control that breaks it alone; ten rule
-     mutants, one per canonicality clause (13 to 23), which delete a clause of `piecewise_rejected`; the gate's total is 257 (203
-     before). The clauses are held against re-encoding on 5,779 images (`canonical_differential`), and the statement audit is
+   - **The mutants.** 48 codec mutants (89 to 137), each omitting one clause and dying by the control that breaks it alone; ten rule
+     mutants, one per canonicality clause (13 to 23), which delete a clause of `piecewise_rejected`; the gate's total is 261 (203
+     before). The clauses are held against re-encoding on 5,797 images (`canonical_differential`), and the statement audit is
      finding 12's rewrite.
    - **One change of the gate's own rule.** `rejected` reads a `ValueError` of the re-encoding as `noncanonical`: a plan that the
      encoder refuses (a name that holds a surrogate, which a decoder that admits surrogates yields) is the decoding of no image.
@@ -1085,17 +1085,17 @@ This list is the one to work from; the earlier lists remain the detail behind ea
 4. **`stdout` and `effects` are compared on every run control that freezes them** (`effects` is the number of host calls the run
    made: the `knot_io` calls of vm-core's trace, the effects of vm-model's model), and `calls` at every stop (§7: a stop keeps its debit).
 5. **The loader refuses every image of `byte_controls` and `plan_controls`, and admits every admitted control (§2, §4).** Round 13
-   adds 103 refusals, listed in SPEC §4 form by form. What a loader must now check that the earlier lists did not name: a name is
+   adds 121 refusals, listed in SPEC §4 form by form. What a loader must now check that the earlier lists did not name: a name is
    well-formed UTF-8 (no overlong form, no surrogate, nothing above U+10FFFF, no cut or stray sequence) and admits every scalar,
    including non-ASCII names at each length (the two admitted names); each unused byte of a name is zero; all eight digest words;
    no repeated key in a keys row, no Construct of a nullary constructor, an Invoke of a live arrow takes one operand and of an
    erased arrow none, a Case's slot and scrutinee are one concrete type or the slot is `none`; and **the ten canonicality clauses**
    (§4 step 5: a loader with no encoder checks them one by one; `piecewise_rejected` is a model of it). Each refusal carries the
    reference's reason where the VM reports one.
-6. **The counts, which both harnesses read from SPEC.** §4 states `freezes 193 refusals (118 byte-level, 9 at the limits, 66
+6. **The counts, which both harnesses read from SPEC.** §4 states `freezes 211 refusals (124 byte-level, 9 at the limits, 78
    plan-level)` and §12 `104 admitted **run controls**` (35 effect controls); the sentence shapes are unchanged and the numbers
    are new. Goldens 111; admitted controls 120 (7 code lists, 104 runs, 8 admitted plan controls, `arity-at-limit`); mutants
-   133 codec, 4 source, 97 evaluator and 23 rule (257). vm-model reads the lists themselves.
+   137 codec, 4 source, 97 evaluator and 23 rule (261). vm-model reads the lists themselves.
 7. **Not obligations.** The 11 seed witnesses (`golden/witnesses.json`) and the codec's refusal accounting (`statement_audit`, finding
    12) are evidence for the text and for the reference; neither VM reads them.
 
@@ -1243,32 +1243,36 @@ This list is the one to work from; the earlier lists remain the detail behind ea
    control.
    The claim is held by the gate now, not by an audit's transcript (`statement_audit`, `CRASH_HELD_MUTANTS`, SPEC §12): the gate omits
    each of the codec's 100 refusals (`raise` statements, `fail` calls and `limit` calls, each turned into `pass` with the `return`
-   or `continue` after it kept) in turn, and each is one of these:
-   - **Killed (89).** A frozen image, refusal, verdict or admitted control changes when the statement is omitted. Among them are
+   or `continue` after it kept) and each operand of the `or` in the 78 tests that have one, in turn (178 omissions), and each is one of these:
+   - **Killed (136).** A frozen image, refusal, verdict or admitted control changes when the omission is made. Among them are
      all the statements of the earlier list but the nine held or unreached below. Measured outside the gate, by re-running the
      reviewer's own 47 mutants (its probe `mut_codec.py`) against this tree: 44 die by a control (its decoder that accepts
      surrogates dies because `rejected` reads an encoder's refusal as a plan that no image encodes), and the three that remain
      are below.
-   - **Held by a raise (4).** Omitting `name index`, `child offset`, `node record` or `constant index` makes the reference raise
-     on the control that pins it (`name-index-beyond`, `child-not-record`, `node-record-short`, `constant-index-beyond`); §11 counts
-     no crash as a kill, so the gate requires the raise on that control, that the control freezes that refusal, and that nothing
-     else kills the mutant. Three of the reviewer's mutants remove a whole bound and raise by construction (the entry kind and the
-     constant kind index a table; the block of `tag case on a non-data type` takes its `return` with it, so `types[t]['constructors']`
-     raises on every type that has none): each survives every frozen image and raises on its control (`entry-kind`,
-     `constant-kind-unknown`, `tag-case-on-opaque`). The codec mutants `decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4`
-     and `validator-tag-case-on-any-type` model the same omissions without a raise, and die by those controls.
+   - **Held by a raise (33).** Omitting the refusal or the clause makes the reference raise on the control that pins it: four
+     refusals (`name index`, `child offset`, `node record` and `constant index`, on `name-index-beyond`, `child-not-record`,
+     `node-record-short` and `constant-index-beyond`), and twenty-nine clauses, each a bound that keeps an index or a key inside its
+     table (`CRASH_HELD` names the control of each: an unknown kind, a record cut short, a tag beyond its type, a representation or
+     a Construct that names an arrow, a table too long, a capture beyond the depth, and so on). §11 counts no crash as a kill, so the
+     gate requires the raise on that control, and that nothing else kills the mutant. Three of the reviewer's mutants remove a whole
+     bound and raise by construction (the entry kind and the constant kind index a table; the block of `tag case on a non-data
+     type` takes its `return` with it, so `types[t]['constructors']` raises on every type that has none): each survives every
+     frozen image and raises on its control (`entry-kind`, `constant-kind-unknown`, `tag-case-on-opaque`). The codec mutants
+     `decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4` and `validator-tag-case-on-any-type` model the same omissions
+     without a raise, and die by those controls.
    - **Unreached (5), each with its argument in `UNREACHABLE`.** `constructor order` (every constructor record has a tag below its
      type's count and no tag repeats, and the counts sum to the table, so the records fill every slot); the decoder's closing
      `opcode` and the validator's `unknown node` (`node record` refuses an opcode beyond the table, and the thirteen within it have a
      case each); the validator's `standalone {op}` (the decoder refuses a Branch or a Default that no Case holds, so the validator
      is handed none); the validator's `type index` (the decoder refuses a type word beyond the table first).
-   - **The encoder's input checks (2).** `u32_list` (`text_spelling` holds it) and an unknown plan node, which no decoded plan holds.
-   A refusal that a new statement adds and nothing pins fails the gate, as does an entry that a control has come to kill or that no
-   longer raises where it is said to. What the gate does not claim: that no other image exists for a statement that is held or
-   unreached (it argues the five, and shows the four raise), and anything about a clause inside a test that a statement's control
-   does not reach; the clauses that round 12's reviewer named are each pinned by a control and a codec mutant (SPEC §4 lists them form
-   by form, and entry 36 the controls). The earlier text's numbers (34, 33, 13, 20) are retired. *(Round 12: `constructor grouping` and the sum check of
-   `constructor count` were pinned, by `type-grouping` and `type-count-short`; entry 34.)*
+   - **The encoder's input checks (4).** `u32_list` (`text_spelling` holds it) and its two clauses, and an unknown plan node, which no
+     decoded plan holds.
+   A refusal or clause that a new statement adds and nothing pins fails the gate, as does an entry that a control has come to kill or
+   that no longer raises where it is said to. What the gate does not claim: that no other image exists for an omission that is held or
+   unreached (it argues the five, and shows the thirty-three raise), and anything about an operand of an `and`, a comparison's
+   boundary or what a test computes (the audit drops only the operands of `or` tests). The earlier text's numbers (34, 33, 13, 20) are
+   retired. *(Round 12: `constructor grouping` and the sum check of `constructor count` were pinned, by `type-grouping` and
+   `type-count-short`; entry 34.)*
 13. **The pinned seed crashes on a Program whose `main` is itself `R => k => ...`.** *Retired in round 12 as
    a seed defect about `let`; recorded as the seed fact about `main`'s form (entry 32).* The first report blamed
    a request bound by a `let` (`dead : IO.OP<R> = IO.print("dead")(R, x => Halt{7, "unreached"})`, then a body):

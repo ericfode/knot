@@ -354,7 +354,7 @@ on a smaller host would trap or exhaust instead of reporting `HostFailure image`
 `type-count-max` refuses it, as `type-grouping` refuses a first constructor that is not the table's next
 and `type-count-short` a sum that falls short.
 
-`check-spec.py` freezes 193 refusals (118 byte-level, 9 at the limits, 66 plan-level), and
+`check-spec.py` freezes 211 refusals (124 byte-level, 9 at the limits, 78 plan-level), and
 vm-model and vm-core MUST each refuse every one of them, with the frozen refusal: `Exhausted`
 kind 2 for a limit, `HostFailure image` for the rest, and the reference codec's own reason where
 the VM reports one (vm-model spells it, vm-core maps it to a code of its own). A control breaks exactly one
@@ -371,16 +371,19 @@ constructor count of `0xFFFFFFFF`, and a sum of counts short of the table; a rec
 kind, an opaque type with a payload word, a named arrow, a constructor whose count, type, tag or name is wrong, a
 constant of an unknown kind, of two words, of none or of the wrong length, a node record with an extra word or a
 count that its operands contradict (each form), a Branch, a Default or a Case row that is the wrong node, a shared
-node, an orphan, a keys row that does not repeat its key, a function whose record, root or type words are wrong, a
-main word beyond the table; and the ten clauses of §4 step 5, one image each (four for the sites). Plan-level:
+node, an orphan, a keys row that does not repeat its key or whose arm is no Branch, a function whose record, root or type
+words are wrong, a record cut short or overrunning the image, a count of records beyond the image, a main word beyond the
+table; and the ten clauses of §4 step 5, one image each (four for the sites). Plan-level:
 two functions of one name; a call to a function beyond the table; a Case on a slot at or above the depth, or whose slot
 and scrutinee are two concrete types; a tags Case on a type with no constructors, a keys Case on a Flag, a Flag's
 table one row short; a keys row that repeats; a construct tag, or field type, that does not fit, or a Construct of
 a nullary constructor; a tag row keyed for another tag; a key Branch that binds a field; a closure whose arrow kind or
 result does not fit, or that captures a slot twice; an Invoke that does not fit, or that takes the wrong number of
 operands for its arrow (a live one with none or two, an erased one with one); a Let, or a function, whose body has
-another type; U32 or File declared as a data type; and the rules of earlier rounds. Which control kills which
-codec mutant is `check-spec.py`'s (§12).
+another type; a table one row too long, a representation or a Construct that names an arrow, a Program with no `main`, a
+Value of a tag beyond its type or of a type with no constructors, a call or an Invoke whose operand does not fit, a capture
+beyond the depth, a keys row whose first slot is not the depth, a closure or an Invoke of a data type; U32 or File declared as
+a data type; and the rules of earlier rounds. Which control kills which codec mutant is `check-spec.py`'s (§12).
 At the limits: the record, arity and `slots` limits passed by one (a function's
 `slots` and a Closure's), a record count beyond the image and an arity beyond its
 record, an image of exactly 16 MiB (`total`), 2^20 records whose first zero word is
@@ -1222,7 +1225,7 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a tags-mode Case on Char, a Program, a boxed
   scalar constant and a `none`-typed node covered;
-- all 193 refusals of §4 with their frozen reasons (118 byte-level, 9 at the limits, 66 plan-level), each resource limit
+- all 211 refusals of §4 with their frozen reasons (124 byte-level, 9 at the limits, 78 plan-level), each resource limit
   `Exhausted` kind 2 on one side and malformed or invalid on the other, its eight
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
@@ -1341,7 +1344,7 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 133 codec mutants and 4 source mutants killed through a changed image, a decode
+- 137 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe, invocation or argument verdict or a changed observation, and 97 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
@@ -1362,26 +1365,31 @@ lane and requires:
   `opcode` and every other control of a valid image), the first-constructor check removed (by
   `type-grouping`, which the next check refuses as `noncanonical` instead) and the sum of the counts
   removed (by `type-count-short`, which a constructor's tag refuses instead). No mutant restores the late
-  size check: it would allocate 32 GiB at `type-count-max`, and a crash is no kill. Forty-four more (round 13, review
+  size check: it would allocate 32 GiB at `type-count-max`, and a crash is no kill. Forty-eight more (round 13, review
   findings 1 to 3) each omit one clause that no control had pinned, and each dies by the control that breaks that clause
   alone: a keys row may repeat, a Construct may be nullary, an Invoke's operand count is unchecked (any, for a live arrow
   alone, for an erased one alone), a Case's slot may be any type, captures may repeat, a tags Case on any type, a keys
-  Case on any type, a tag table of any length; an empty name, a name whose length word is unchecked, a repeated name, a
-  shared child, an unreachable node, an opaque type with a payload, a named arrow, a scalar of any width, a record of
-  one word, the type, constructor, constant and function length words; each digest word alone, each unused byte of a name alone,
-  the last one only; and seven of UTF-8, which read a name as opaque bytes after a check of part of Unicode's table 3-7
-  (without the overlong forms, the surrogates, the range, the cut sequences or the stray continuations, without the first
-  three, and ASCII only, which the two admitted names kill), and a decoder that accepts surrogates alone (`rejected` reads an
-  encoder's refusal as a plan that no image encodes). Where removing a bound only makes the reference raise (the entry kind
-  and the constant kind index a table), the mutant reads the kind modulo the table, so that the refusal changes
-  (`decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4`). **Every refusal of the decoder and the validator is accounted
-  for** (`statement_audit`): the gate omits each of the codec's 100 `raise` statements, `fail` calls and `limit` calls in turn, as above, and
-  requires that a frozen image, refusal or verdict changes (89 do), or that the statement is listed with what holds it: 4
-  make the reference raise on the control that pins them (`name index`, `child offset`, `node record`, `constant index`,
-  which §11 does not count as a kill, so the gate requires the raise on that control and that nothing else kills them), 5 are
-  unreached, each with its argument (`constructor order`, the decoder's closing `opcode`, and the validator's `standalone {op}`,
-  `type index` and `unknown node`, which earlier steps refuse first) and 2 are the encoder's input checks (`text_spelling` holds
-  the first, and no decoded plan holds a form outside the table). Three of round 12's reviewer mutants remove a bound
+  Case on any type, a tag table of any length, a Program with no `main`, a call whose operands are not checked against the
+  callee, an Invoke whose operand is not checked against the arrow, a keys row whose first slot is not the depth; an empty
+  name, a name whose length word is unchecked, a repeated name, a shared child, an unreachable node, an opaque type with a
+  payload, a named arrow, a scalar of any width, a record of one word, the type, constructor, constant and function length
+  words; each digest word alone, each unused byte of a name alone, the last one only; and seven of UTF-8, which read a name
+  as opaque bytes after a check of part of Unicode's table 3-7 (without the overlong forms, the surrogates, the range, the
+  cut sequences or the stray continuations, without the first three, and ASCII only, which the two admitted names kill), and
+  a decoder that accepts surrogates alone (`rejected` reads an encoder's refusal as a plan that no image encodes). Where
+  removing a bound only makes the reference raise (the entry kind and the constant kind index a table), the mutant reads the
+  kind modulo the table, so that the refusal changes (`decoder-entry-kind-mod-2`, `decoder-constant-kind-mod-4`).
+  **Every refusal of the decoder and the validator, and every clause of its test, is accounted for** (`statement_audit`):
+  the gate omits each of the codec's 100 `raise` statements, `fail` calls and `limit` calls in turn, as above, and each
+  operand of the `or` in the 78 tests that have one (178 omissions), and requires that a frozen image, refusal or verdict
+  changes (136 do) or that the omission is listed with what holds it: 33 make the reference raise on the control that pins
+  them (four refusals, `name index`, `child offset`, `node record` and `constant index`, and twenty-nine clauses, each a
+  bound that keeps an index or a key inside its table; §11 does not count a raise as a kill, so the gate requires the raise
+  on that control and that nothing else kills them); 5 are unreached, each with its argument (`constructor order`, the
+  decoder's closing `opcode`, and the validator's `standalone {op}`, `type index` and `unknown node`, which earlier steps
+  refuse first); and 4 are the encoder's input checks (`u32_list`, its two clauses, and an unknown plan node;
+  `text_spelling` holds the first, and no decoded plan holds a form outside the table). It does not drop an operand of an
+  `and`, a comparison's boundary or what a test computes. Three of round 12's reviewer mutants remove a bound
   whole and raise by construction (the entry kind, the constant kind, and the block of `tag case on a non-data type`, whose
   `return` goes with it): `CRASH_HELD_MUTANTS` requires that each survives every frozen image and raises on its
   control (`entry-kind`, `constant-kind-unknown`, `tag-case-on-opaque`). Twenty-three rule mutants of
@@ -1394,7 +1402,7 @@ lane and requires:
   core that declared none; a witness (§8) whose source hash, lane bytes or literal review goes
   unchecked, each by its own frozen refusal; and, for each clause of §4 step 5, `piecewise_rejected` without that
   clause (`canonicality-without-*`), each by the control that breaks it alone (`canonical_differential`: the clauses and
-  re-encoding decide 5,779 images alike, the controls, the admitted images, the goldens, 480 seeded layouts and 4,875
+  re-encoding decide 5,797 images alike, the controls, the admitted images, the goldens, 480 seeded layouts and 4,875
   perturbations of a word among them, and 527 of them are noncanonical).
   Four survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, the fuel test before the operand check,
