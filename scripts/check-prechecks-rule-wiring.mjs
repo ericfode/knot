@@ -22,6 +22,8 @@ const names = [
 const cells = ['broken', 'clean', 'held-out/broken', 'held-out/clean'];
 const cellOf = c => (c.split === 'held-out' ? `held-out/${c.expected}` : c.split);
 const DEV_MIN = 3;
+// Every rule is uncalibrated (docs/perch-review-log.md, 2026-09-29): no dev gap reached the 0.10 margin, so each keeps 80.
+const FLOORS = Object.fromEntries(names.map(name => [name, 80]));
 const RULES_SET = new Set(names);
 const dir = await mkdtemp(join(tmpdir(), 'knot-prechecks-rules-'));
 const previous = process.cwd();
@@ -53,7 +55,7 @@ try {
   for (const rule of rules) {
     assert.equal(rule.each, 'file', rule.name);
     assert.equal(rule.gate, false, `${rule.name} must stay advisory until calibrated`);
-    assert.ok(Number.isInteger(rule.min) && rule.min >= 50 && rule.min <= 95, `${rule.name}: min is a percentage floor in [50, 95]`);
+    assert.equal(rule.min, FLOORS[rule.name], `${rule.name}: its floor is pinned here; a calibrated floor edits this map with its evidence`);
     assert.equal(rule.where, `.local/prechecks/packets/**/${rule.name}/*.md`, rule.name);
     assert.match(rule.ensure, /missing\s+evidence(?:,|\s+is)?\s+not a pass/i, `${rule.name} must say that missing evidence is not a pass`);
   }

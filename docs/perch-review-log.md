@@ -1304,7 +1304,7 @@ Date / scope / source revision or working-copy hashes: 2026-09-29, branch `perch
 
 Evidence links and usage receipt IDs:
 - [`results-2026-09-29.json`](../tests/prechecks/perch-controls/results-2026-09-29.json) holds every run's identities (rule file, per-rule hashes, the receipts' combined `rules_sha256`) and per-control probabilities. The [controls README](../tests/prechecks/perch-controls/README.md) holds the labels and the retired controls.
-- Receipts: 212 `check` receipts in the main checkout's `.perch/usage/`, 2026-09-29T15:31Z to 16:1xZ. Every one completed with a verdict; none failed.
+- Receipts: 212 `check` receipts in the main checkout's `.perch/usage/`, 2026-09-29T15:31Z to 16:27Z. Every one completed with a verdict; none failed.
 - How the runs were made: each run was asked from the main checkout by overlaying this branch's rules, runner and controls. The script refused to overlay paths that were already modified, and after each run it restored the working copy and compared it with a status and HEAD snapshot (all nine matched). Nothing was committed there.
 - Main moved from `82d79f4a` to `c853cc5a` between run 8 and the held-out run (a gate-timeout change touching no Perch or prechecks file); each run's before and after snapshots matched.
 
@@ -1336,7 +1336,7 @@ Change and why:
    - kill-is-semantic now asks for a trace of what a crash, timeout or harness limit records, and of whether the kill predicate would count it.
 3. **Runner and wiring test.**
    - `prechecks-perch-run.mjs` uses each rule's own floor with Perch's strict `>` (it used a fixed 0.8 with `>=`), reports separation per rule, and adds `--split dev|held-out`. A `--controls` dry run no longer leaves staged controls.
-   - The wiring test allows a per-rule integer floor (still advisory). It requires at least 3 dev controls of each label per rule, and allows a held-out control of either label or a documented gap per cell.
+   - The wiring test pins each rule's floor in an explicit map (all 80 today), so a calibrated floor must edit the test beside its evidence; `gate: false` is still asserted. It requires at least 3 dev controls of each label per rule, and allows a held-out control of either label or a documented gap per cell.
 
 Pre-commitments, verbatim, written before any held-out packet was labelled:
 - "A floor is set only where the dev gap (lowest broken minus highest clean) is >= 0.10, placed at the integer percentage nearest the middle of the gap; confirmed only if held-out separates at that floor."
