@@ -1,0 +1,191 @@
+{
+ "entry": "book",
+ "representation": {
+  "Nat": 0,
+  "U32": 1,
+  "Bool": 2
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "Nat",
+   "constructors": [
+    {
+     "name": "Zero",
+     "fields": []
+    },
+    {
+     "name": "Succ",
+     "fields": [
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "opaque",
+   "name": "U32"
+  },
+  {
+   "kind": "data",
+   "name": "Bool",
+   "constructors": [
+    {
+     "name": "False",
+     "fields": []
+    },
+    {
+     "name": "True",
+     "fields": []
+    }
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "U32.add",
+   "parameters": [
+    1,
+    1
+   ],
+   "result": 1,
+   "slots": 2,
+   "body": [
+    "prim",
+    1,
+    0,
+    [
+     [
+      "ref",
+      1,
+      0
+     ],
+     [
+      "ref",
+      1,
+      1
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "U32.is_eq",
+   "parameters": [
+    1,
+    1
+   ],
+   "result": 2,
+   "slots": 2,
+   "body": [
+    "prim",
+    2,
+    8,
+    [
+     [
+      "ref",
+      1,
+      0
+     ],
+     [
+      "ref",
+      1,
+      1
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "depth",
+   "parameters": [
+    0
+   ],
+   "result": 1,
+   "slots": 2,
+   "body": [
+    "case",
+    1,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      1,
+      0,
+      [
+       "lit",
+       1,
+       "U32",
+       0
+      ]
+     ],
+     [
+      "branch",
+      1,
+      1,
+      1,
+      [
+       "call",
+       1,
+       0,
+       [
+        [
+         "call",
+         1,
+         2,
+         [
+          [
+           "ref",
+           0,
+           1
+          ]
+         ]
+        ],
+        [
+         "lit",
+         1,
+         "U32",
+         1
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 2,
+   "slots": 0,
+   "body": [
+    "call",
+    2,
+    1,
+    [
+     [
+      "call",
+      1,
+      2,
+      [
+       [
+        "lit",
+        0,
+        "Nat",
+        400000
+       ]
+      ]
+     ],
+     [
+      "lit",
+      1,
+      "U32",
+      400000
+     ]
+    ]
+   ]
+  }
+ ]
+}

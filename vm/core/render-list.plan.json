@@ -1,0 +1,146 @@
+{
+ "entry": "book",
+ "representation": {
+  "Nat": 0
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "Nat",
+   "constructors": [
+    {
+     "name": "Zero",
+     "fields": []
+    },
+    {
+     "name": "Succ",
+     "fields": [
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Flag",
+   "constructors": [
+    {
+     "name": "Off",
+     "fields": []
+    },
+    {
+     "name": "On",
+     "fields": []
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "List",
+   "constructors": [
+    {
+     "name": "Stop",
+     "fields": []
+    },
+    {
+     "name": "Push",
+     "fields": [
+      1,
+      2
+     ]
+    }
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "build",
+   "parameters": [
+    0,
+    2
+   ],
+   "result": 2,
+   "slots": 3,
+   "body": [
+    "case",
+    2,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "ref",
+       2,
+       1
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       2,
+       0,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "con",
+         2,
+         1,
+         [
+          [
+           "value",
+           1,
+           1
+          ],
+          [
+           "ref",
+           2,
+           1
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 2,
+   "slots": 0,
+   "body": [
+    "call",
+    2,
+    0,
+    [
+     [
+      "lit",
+      0,
+      "Nat",
+      100000
+     ],
+     [
+      "value",
+      2,
+      0
+     ]
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,687 @@
+{
+ "entry": "program",
+ "representation": {
+  "Nat": 0,
+  "U32": 1,
+  "String": 3,
+  "Char": 4,
+  "Unit": 5,
+  "IO.OP": 6
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "Nat",
+   "constructors": [
+    {
+     "name": "Zero",
+     "fields": []
+    },
+    {
+     "name": "Succ",
+     "fields": [
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "opaque",
+   "name": "U32"
+  },
+  {
+   "kind": "data",
+   "name": "Box",
+   "constructors": [
+    {
+     "name": "B0",
+     "fields": []
+    },
+    {
+     "name": "B1",
+     "fields": [
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "String",
+   "constructors": [
+    {
+     "name": "SNil",
+     "fields": []
+    },
+    {
+     "name": "SCon",
+     "fields": [
+      4,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Char",
+   "constructors": [
+    {
+     "name": "Chr",
+     "fields": [
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Unit",
+   "constructors": [
+    {
+     "name": "Unit",
+     "fields": []
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "IO.OP",
+   "constructors": [
+    {
+     "name": "Emit",
+     "fields": [
+      null
+     ]
+    },
+    {
+     "name": "Halt",
+     "fields": [
+      1,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "arrow",
+   "domain": 5,
+   "result": 6
+  },
+  {
+   "kind": "arrow",
+   "domain": 7,
+   "result": 6
+  },
+  {
+   "kind": "erased-arrow",
+   "domain": null,
+   "result": 8
+  }
+ ],
+ "functions": [
+  {
+   "name": "fill1",
+   "parameters": [
+    0,
+    2
+   ],
+   "result": 0,
+   "slots": 3,
+   "body": [
+    "case",
+    0,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "lit",
+       0,
+       "Nat",
+       0
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       0,
+       0,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "con",
+         2,
+         1,
+         [
+          [
+           "ref",
+           2,
+           1
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "fill2",
+   "parameters": [
+    0,
+    1
+   ],
+   "result": 0,
+   "slots": 3,
+   "body": [
+    "case",
+    0,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "lit",
+       0,
+       "Nat",
+       0
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       0,
+       1,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "prim",
+         1,
+         0,
+         [
+          [
+           "ref",
+           1,
+           1
+          ],
+          [
+           "lit",
+           1,
+           "U32",
+           0
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "dbl",
+   "parameters": [
+    0,
+    3
+   ],
+   "result": 0,
+   "slots": 3,
+   "body": [
+    "case",
+    0,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "lit",
+       0,
+       "Nat",
+       0
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       0,
+       2,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "prim",
+         3,
+         35,
+         [
+          [
+           "ref",
+           3,
+           1
+          ],
+          [
+           "ref",
+           3,
+           1
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 9,
+   "slots": 13,
+   "body": [
+    "let",
+    9,
+    0,
+    [
+     "call",
+     0,
+     2,
+     [
+      [
+       "lit",
+       0,
+       "Nat",
+       26
+      ],
+      [
+       "lit",
+       3,
+       "String",
+       [
+        120
+       ]
+      ]
+     ]
+    ],
+    [
+     "let",
+     9,
+     1,
+     [
+      "call",
+      0,
+      2,
+      [
+       [
+        "lit",
+        0,
+        "Nat",
+        25
+       ],
+       [
+        "lit",
+        3,
+        "String",
+        [
+         120
+        ]
+       ]
+      ]
+     ],
+     [
+      "let",
+      9,
+      2,
+      [
+       "call",
+       0,
+       2,
+       [
+        [
+         "lit",
+         0,
+         "Nat",
+         24
+        ],
+        [
+         "lit",
+         3,
+         "String",
+         [
+          120
+         ]
+        ]
+       ]
+      ],
+      [
+       "let",
+       9,
+       3,
+       [
+        "call",
+        0,
+        2,
+        [
+         [
+          "lit",
+          0,
+          "Nat",
+          23
+         ],
+         [
+          "lit",
+          3,
+          "String",
+          [
+           120
+          ]
+         ]
+        ]
+       ],
+       [
+        "let",
+        9,
+        4,
+        [
+         "call",
+         0,
+         2,
+         [
+          [
+           "lit",
+           0,
+           "Nat",
+           22
+          ],
+          [
+           "lit",
+           3,
+           "String",
+           [
+            120
+           ]
+          ]
+         ]
+        ],
+        [
+         "let",
+         9,
+         5,
+         [
+          "call",
+          0,
+          2,
+          [
+           [
+            "lit",
+            0,
+            "Nat",
+            21
+           ],
+           [
+            "lit",
+            3,
+            "String",
+            [
+             120
+            ]
+           ]
+          ]
+         ],
+         [
+          "let",
+          9,
+          6,
+          [
+           "call",
+           0,
+           2,
+           [
+            [
+             "lit",
+             0,
+             "Nat",
+             18
+            ],
+            [
+             "lit",
+             3,
+             "String",
+             [
+              120
+             ]
+            ]
+           ]
+          ],
+          [
+           "let",
+           9,
+           7,
+           [
+            "call",
+            0,
+            2,
+            [
+             [
+              "lit",
+              0,
+              "Nat",
+              17
+             ],
+             [
+              "lit",
+              3,
+              "String",
+              [
+               120
+              ]
+             ]
+            ]
+           ],
+           [
+            "let",
+            9,
+            8,
+            [
+             "call",
+             0,
+             2,
+             [
+              [
+               "lit",
+               0,
+               "Nat",
+               14
+              ],
+              [
+               "lit",
+               3,
+               "String",
+               [
+                120
+               ]
+              ]
+             ]
+            ],
+            [
+             "let",
+             9,
+             9,
+             [
+              "call",
+              0,
+              2,
+              [
+               [
+                "lit",
+                0,
+                "Nat",
+                13
+               ],
+               [
+                "lit",
+                3,
+                "String",
+                [
+                 120
+                ]
+               ]
+              ]
+             ],
+             [
+              "let",
+              9,
+              10,
+              [
+               "call",
+               0,
+               2,
+               [
+                [
+                 "lit",
+                 0,
+                 "Nat",
+                 11
+                ],
+                [
+                 "lit",
+                 3,
+                 "String",
+                 [
+                  120
+                 ]
+                ]
+               ]
+              ],
+              [
+               "let",
+               9,
+               11,
+               [
+                "call",
+                0,
+                0,
+                [
+                 [
+                  "lit",
+                  0,
+                  "Nat",
+                  575373
+                 ],
+                 [
+                  "value",
+                  2,
+                  0
+                 ]
+                ]
+               ],
+               [
+                "let",
+                9,
+                12,
+                [
+                 "call",
+                 0,
+                 1,
+                 [
+                  [
+                   "lit",
+                   0,
+                   "Nat",
+                   3
+                  ],
+                  [
+                   "lit",
+                   1,
+                   "U32",
+                   2147483648
+                  ]
+                 ]
+                ],
+                [
+                 "closure",
+                 9,
+                 0,
+                 0,
+                 [],
+                 [
+                  "closure",
+                  8,
+                  1,
+                  1,
+                  [],
+                  [
+                   "invoke",
+                   6,
+                   [
+                    "ref",
+                    7,
+                    0
+                   ],
+                   [
+                    [
+                     "value",
+                     5,
+                     0
+                    ]
+                   ]
+                  ]
+                 ]
+                ]
+               ]
+              ]
+             ]
+            ]
+           ]
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ]
+   ]
+  }
+ ]
+}

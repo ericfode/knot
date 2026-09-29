@@ -22,7 +22,12 @@ On macOS the runner resolves the toolchain clang once (`xcrun --find clang`) and
 passes it to every gate as `CC`, unless the caller set `CC`. The seed probes
 `$CC` before `clang`. The `/usr/bin/clang` shim intermittently printed nothing
 under parallel load, which the seed reported as "found no clang". The resolved
-binary is the same compiler the shim forwards to.
+binary is the same compiler the shim forwards to. Some gate programs rebuild
+their own environment for seed and mutant builds, keeping `PATH` but dropping
+`CC` and `SDKROOT`, so the runner also puts a `clang` wrapper first on `PATH`.
+The wrapper runs the resolved compiler and supplies the SDK when it is missing,
+which keeps those paths off the shim. `test_runner` pins it with a trimmed
+environment.
 
 Harness wall-clock guards inside the gate scripts (the seed-build and CLI
 `run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
@@ -109,6 +114,74 @@ image the reference codec admits as `length`, `magic`, `total` or `noncanonical`
 a harness fault that fails the gate, and a harness control runs every staged run
 three at once on the unmutated model and requires every row to agree. It writes
 only `vm/receipts/model.json`.
+
+The vm-core increment adds gate `vm-core` (`python3 vm/check-core.py`). It
+checks `vm/vm.wat`, the WAT `knot-vm-1`:
+- The pinned `wat2wasm` reassembles `vm/vm.wasm` byte for byte. The module's
+  imports, exports and 65,536-page memory are as the spec requires, and its call
+  graph has no cycle.
+- All 93 golden images run through `scripts/run-wasm-io.mjs` with their
+  `vm-expected.json` outputs. So do its 44 frozen Book invocations. The test
+  build confirms each exhaustion cause and audits the state after every
+  transition.
+- `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and
+  lowered limits, including the 250,000-deep non-tail recursion and where a
+  Nat Case makes its predecessor against its Scope push (vm-spec D17).
+- Three Books on Chr's operand and one with a Big predecessor (`reference`
+  rows) run as literal review froze them. vm-spec's reference evaluation (`vm/evaluate.py`) must give the same
+  run and call count.
+- Ten images (nine Books and a Program) whose bump pointer ends near or
+  exactly at 4 GiB. Each row's bump pointer and outcome are first derived from
+  SPEC section 5's cell sizes over its plan, independently of any VM. The first
+  six pins were measured from the pre-fix VM (`c9869ef`), and the derivation
+  agrees with them. Review round 4's four rows, three whose heap ends exactly
+  at 4 GiB and a control 16 bytes above, took their fill counts from the
+  derivation alone. A cell may end exactly at 4 GiB, where the pre-fix VM
+  trapped.
+- Three growth rows on one Book whose every entry allocates a 16-byte Activation,
+  each stop derived from SPEC sections 5 and 7 in closed form: a heap lowered to
+  256 MiB (`Exhausted` kind 2 in at most 24 `memory.grow` calls of the test
+  build), the full 4 GiB through the real host within its 120 s guard, and a
+  host that refuses growth beyond 4,700 pages (`HostFailure`, never
+  `Exhausted`, at the cap). Growing memory one page at a time fails the first by
+  its count and the second by its wall time (22 minutes on V8).
+- A 200,000-deep nested expression runs on a 64 KiB host stack.
+- The 71 refusal controls, a seeded fuzz corpus of 3,720 mutated goldens and
+  7,741 goldens that each set one limit word (a record count, an arity or a
+  `slots`) around its limit are refused with the reference codec's first
+  defect, and none traps. A crash of the reference codec on any of those
+  images fails the gate. Nine of the controls sit on either side of SPEC
+  section 4's resource limits: past a limit the VM stops `Exhausted` kind 2
+  with the limit as its cause, and the gate compares that with the reference's
+  `Exhausted 2 <limit>`, in the VM's own outcome registers too.
+- The 55 controls vm-spec admits load:
+  - 14 run as literal review froze them, and as the reference evaluation
+    runs them, `arity-at-limit` (a function of exactly 4,096 parameters)
+    among them;
+  - all 41 run controls, as many as SPEC section 12 states, run to the outcome
+    and call count that `check-spec.py` freezes: the eleven fuel controls at
+    their frozen fuel, the others also on exactly that much fuel. Eighteen of
+    them are inspection points (SPEC section 6 and section 9's extents).
+- `check-spec.py`'s 13 argument controls run through the real host to their
+  frozen verdicts, or, where the words are admitted, as the reference
+  evaluation runs them.
+- Fifty-two WAT mutants are each killed by a wrong observation. One restores the
+  pre-fix trap at 4 GiB and is killed by that trap, only while every other
+  ceiling row stays right. Four read less than an inspection extent (`append`'s
+  `b`, `is_empty` past its head, `eq` past a difference or an end, the moved
+  word of a conversion); each survives every golden and dies by its own
+  inspection controls. Fifteen move SPEC section 4's limits: checked in the
+  wrong order, absent, reported as a malformed image, exclusive, given another
+  limit's cause, or fitted to the wrong number of words. Each survives every
+  golden and run control and dies by a limit control, except the two fits,
+  which only the limit-word images kill. Two change the growth policy
+  (CORE.md choice 15) and keep every outcome: memory grown one page at a time,
+  killed by the test build's `memory.grow` count (a timeout never kills, SPEC
+  section 11), and a refused step that traps, killed by the run whose host caps
+  memory.
+
+It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
+its conventions and open spec points.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.

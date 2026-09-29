@@ -1,0 +1,617 @@
+{
+ "entry": "book",
+ "representation": {
+  "Nat": 0,
+  "U32": 1,
+  "String": 4,
+  "Char": 5
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "Nat",
+   "constructors": [
+    {
+     "name": "Zero",
+     "fields": []
+    },
+    {
+     "name": "Succ",
+     "fields": [
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "opaque",
+   "name": "U32"
+  },
+  {
+   "kind": "data",
+   "name": "Res",
+   "constructors": [
+    {
+     "name": "Off",
+     "fields": []
+    },
+    {
+     "name": "On",
+     "fields": []
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Box",
+   "constructors": [
+    {
+     "name": "B0",
+     "fields": []
+    },
+    {
+     "name": "B1",
+     "fields": [
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "String",
+   "constructors": [
+    {
+     "name": "SNil",
+     "fields": []
+    },
+    {
+     "name": "SCon",
+     "fields": [
+      5,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "data",
+   "name": "Char",
+   "constructors": [
+    {
+     "name": "Chr",
+     "fields": [
+      1
+     ]
+    }
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "fill1",
+   "parameters": [
+    0,
+    3
+   ],
+   "result": 2,
+   "slots": 3,
+   "body": [
+    "case",
+    2,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "value",
+       2,
+       1
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       2,
+       0,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "con",
+         3,
+         1,
+         [
+          [
+           "ref",
+           3,
+           1
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "fill2",
+   "parameters": [
+    0,
+    1
+   ],
+   "result": 2,
+   "slots": 3,
+   "body": [
+    "case",
+    2,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "value",
+       2,
+       1
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       2,
+       1,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "prim",
+         1,
+         0,
+         [
+          [
+           "ref",
+           1,
+           1
+          ],
+          [
+           "lit",
+           1,
+           "U32",
+           0
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "dbl",
+   "parameters": [
+    0,
+    4
+   ],
+   "result": 2,
+   "slots": 3,
+   "body": [
+    "case",
+    2,
+    0,
+    0,
+    "tags",
+    [
+     [
+      "branch",
+      0,
+      2,
+      0,
+      [
+       "value",
+       2,
+       1
+      ]
+     ],
+     [
+      "branch",
+      1,
+      2,
+      1,
+      [
+       "call",
+       2,
+       2,
+       [
+        [
+         "ref",
+         0,
+         2
+        ],
+        [
+         "prim",
+         4,
+         35,
+         [
+          [
+           "ref",
+           4,
+           1
+          ],
+          [
+           "ref",
+           4,
+           1
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ],
+    null
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 2,
+   "slots": 12,
+   "body": [
+    "let",
+    2,
+    0,
+    [
+     "call",
+     2,
+     2,
+     [
+      [
+       "lit",
+       0,
+       "Nat",
+       26
+      ],
+      [
+       "lit",
+       4,
+       "String",
+       [
+        120
+       ]
+      ]
+     ]
+    ],
+    [
+     "let",
+     2,
+     1,
+     [
+      "call",
+      2,
+      2,
+      [
+       [
+        "lit",
+        0,
+        "Nat",
+        25
+       ],
+       [
+        "lit",
+        4,
+        "String",
+        [
+         120
+        ]
+       ]
+      ]
+     ],
+     [
+      "let",
+      2,
+      2,
+      [
+       "call",
+       2,
+       2,
+       [
+        [
+         "lit",
+         0,
+         "Nat",
+         24
+        ],
+        [
+         "lit",
+         4,
+         "String",
+         [
+          120
+         ]
+        ]
+       ]
+      ],
+      [
+       "let",
+       2,
+       3,
+       [
+        "call",
+        2,
+        2,
+        [
+         [
+          "lit",
+          0,
+          "Nat",
+          23
+         ],
+         [
+          "lit",
+          4,
+          "String",
+          [
+           120
+          ]
+         ]
+        ]
+       ],
+       [
+        "let",
+        2,
+        4,
+        [
+         "call",
+         2,
+         2,
+         [
+          [
+           "lit",
+           0,
+           "Nat",
+           22
+          ],
+          [
+           "lit",
+           4,
+           "String",
+           [
+            120
+           ]
+          ]
+         ]
+        ],
+        [
+         "let",
+         2,
+         5,
+         [
+          "call",
+          2,
+          2,
+          [
+           [
+            "lit",
+            0,
+            "Nat",
+            21
+           ],
+           [
+            "lit",
+            4,
+            "String",
+            [
+             120
+            ]
+           ]
+          ]
+         ],
+         [
+          "let",
+          2,
+          6,
+          [
+           "call",
+           2,
+           2,
+           [
+            [
+             "lit",
+             0,
+             "Nat",
+             18
+            ],
+            [
+             "lit",
+             4,
+             "String",
+             [
+              120
+             ]
+            ]
+           ]
+          ],
+          [
+           "let",
+           2,
+           7,
+           [
+            "call",
+            2,
+            2,
+            [
+             [
+              "lit",
+              0,
+              "Nat",
+              17
+             ],
+             [
+              "lit",
+              4,
+              "String",
+              [
+               120
+              ]
+             ]
+            ]
+           ],
+           [
+            "let",
+            2,
+            8,
+            [
+             "call",
+             2,
+             2,
+             [
+              [
+               "lit",
+               0,
+               "Nat",
+               14
+              ],
+              [
+               "lit",
+               4,
+               "String",
+               [
+                120
+               ]
+              ]
+             ]
+            ],
+            [
+             "let",
+             2,
+             9,
+             [
+              "call",
+              2,
+              2,
+              [
+               [
+                "lit",
+                0,
+                "Nat",
+                13
+               ],
+               [
+                "lit",
+                4,
+                "String",
+                [
+                 120
+                ]
+               ]
+              ]
+             ],
+             [
+              "let",
+              2,
+              10,
+              [
+               "call",
+               2,
+               2,
+               [
+                [
+                 "lit",
+                 0,
+                 "Nat",
+                 11
+                ],
+                [
+                 "lit",
+                 4,
+                 "String",
+                 [
+                  120
+                 ]
+                ]
+               ]
+              ],
+              [
+               "let",
+               2,
+               11,
+               [
+                "call",
+                2,
+                0,
+                [
+                 [
+                  "lit",
+                  0,
+                  "Nat",
+                  314324
+                 ],
+                 [
+                  "value",
+                  3,
+                  0
+                 ]
+                ]
+               ],
+               [
+                "call",
+                2,
+                1,
+                [
+                 [
+                  "lit",
+                  0,
+                  "Nat",
+                  1
+                 ],
+                 [
+                  "lit",
+                  1,
+                  "U32",
+                  2147483648
+                 ]
+                ]
+               ]
+              ]
+             ]
+            ]
+           ]
+          ]
+         ]
+        ]
+       ]
+      ]
+     ]
+    ]
+   ]
+  }
+ ]
+}
