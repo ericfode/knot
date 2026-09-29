@@ -278,7 +278,9 @@ nest-round12: passed (826.06s)
 The regenerated receipts: 64 identical, 9 volatile-only, 29 semantic. The semantic ones are the older gates' receipts, which record
 build and input hashes and the worktree path of their `argv` (refresh them after the merge, as before); the regenerated
 `round12.json` differs from the committed one only in those `argv` paths (its counts, the sweep's observation hash and all 225 input
-hashes are equal). `BEND_NO_TELEMETRY=1 npm run -s gates:verify`: 20 tests, OK. `node tools/census/census.mjs --check`: exit 0.
+hashes are equal). The message of `6ba71564` says the direct run was at `960f6347`; it started at 08:47 on `6d287718` plus
+uncommitted documents, before `abbd048f` and `960f6347` existed, and the equal hashes are what make the receipt stand.
+`BEND_NO_TELEMETRY=1 npm run -s gates:verify`: 20 tests, OK. `node tools/census/census.mjs --check`: exit 0.
 
 Every `src/*PROOF.bend` entry prints `All terms check.` (`PROOF`, `catalog-PROOF`, `check-PROOF`, `fields-PROOF`,
 `lowering-PROOF`, `matrix-PROOF`, `recursion-PROOF`, `runtime-PROOF`).
