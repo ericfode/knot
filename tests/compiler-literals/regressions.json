@@ -336,6 +336,166 @@
       }
     },
     {
+      "name": "binder-scope",
+      "file": "tests/compiler-literals/regressions/binder-scope.bend",
+      "sha256": "2d300b7de28460fceb332563e33ef14f446f75dd1ffd84bb21c435facb18eec3",
+      "finding": "binder scope control",
+      "covers": "a dotted parameter rebound by default, promoted, offset and field patterns and by typed, promoted and plain lets; a later constructor, a parameter, a function and a type naming binders",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Probe": [
+          "Low",
+          "High"
+        ],
+        "Later": [
+          "Late"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/binder-scope.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/binder-scope.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "dotted",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/binder-scope-dotted-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/binder-scope.bend as F\n\ndef main() -> F.Answer:\n  F.dotted(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/binder-scope-dotted-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/binder-scope.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "dotted",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/binder-scope-dotted-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/binder-scope.bend as F\n\ndef main() -> F.Answer:\n  F.dotted(F.High{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/binder-scope-dotted-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/binder-scope.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "lets",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/binder-scope-lets-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/binder-scope.bend as F\n\ndef main() -> F.Answer:\n  F.lets(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/binder-scope-lets-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/binder-scope.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "lets",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/binder-scope-lets-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/binder-scope.bend as F\n\ndef main() -> F.Answer:\n  F.lets(F.High{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/binder-scope-lets-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/binder-scope.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
       "name": "dead-arm-char-duplicate",
       "file": "tests/compiler-literals/regressions/dead-arm-char-duplicate.bend",
       "sha256": "c9efacea5002d2daf1c164f4472289d7a28780dac3cc056baf598359985e05d5",
@@ -1160,6 +1320,170 @@
         "artifact": false,
         "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
         "justification": "Seed-invalid (\"a constructor of U32\"): the seed checks the patterns of unreachable arms."
+      }
+    },
+    {
+      "name": "dotted-default-binder",
+      "file": "tests/compiler-literals/regressions/dotted-default-binder.bend",
+      "sha256": "3593af04455b7219ad96ead9a19f073c29e3493fbf7d85924535c5a0713cd104",
+      "finding": "dotted binder",
+      "covers": "`case x.y` in a U32 default row",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dotted-default-binder.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : x.y\nLocation:\n10 |     case 0: No{}\n11>|     case x.y: Yes{}\n   |          ^^^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dotted-default-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : x.y\nLocation:\n10 |     case 0: No{}\n11>|     case x.y: Yes{}\n   |          ^^^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tpattern-binder\t",
+        "justification": "Seed-invalid (\"a pattern (a binder or a constructor)\"): a dotted name that no parameter binds is a global reference, never a pattern binder."
+      }
+    },
+    {
+      "name": "dotted-let-binder",
+      "file": "tests/compiler-literals/regressions/dotted-let-binder.bend",
+      "sha256": "02f24367da4ca76c92ae54b50200531f4732bc621212c9977885799f3cd2c812",
+      "finding": "dotted binder",
+      "covers": "`x.y : U32 = 3`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dotted-let-binder.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n 8 | def main() -> Answer:\n 9>|   x.y : U32 = 3\n   |   ^^^\n10 |   Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dotted-let-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n 8 | def main() -> Answer:\n 9>|   x.y : U32 = 3\n   |   ^^^\n10 |   Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tbinding-name\t",
+        "justification": "Seed-invalid (\"a name (a parallel or typed let binds names)\"): a dotted name that no parameter binds is a global reference, never a let binder."
+      }
+    },
+    {
+      "name": "dotted-offset-binder",
+      "file": "tests/compiler-literals/regressions/dotted-offset-binder.bend",
+      "sha256": "5f94b305fd53540bced72bb2380264ee184c3ffb31dd714c50cb7edecac3c4df",
+      "finding": "dotted binder",
+      "covers": "`case 1n+x.y`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dotted-offset-binder.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : x.y\nLocation:\n10 |     case 0n: No{}\n11>|     case 1n+x.y: Yes{}\n   |             ^^^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dotted-offset-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : x.y\nLocation:\n10 |     case 0n: No{}\n11>|     case 1n+x.y: Yes{}\n   |             ^^^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tpattern-binder\t",
+        "justification": "Seed-invalid (\"a pattern (a binder or a constructor)\"): a dotted name that no parameter binds is a global reference, never a pattern binder."
+      }
+    },
+    {
+      "name": "dotted-shadows-intrinsic",
+      "file": "tests/compiler-literals/regressions/dotted-shadows-intrinsic.bend",
+      "sha256": "66a97bc1ab136624bf4e54c3e6974d73fa6154a194894c425cd993c0dec47d7f",
+      "finding": "dotted binder",
+      "covers": "`case U32.add: U32.add`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dotted-shadows-intrinsic.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : U32.add\nLocation:\n15 |     case 0: 1\n16>|     case U32.add: U32.add\n   |          ^^^^^^^\n17 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/dotted-shadows-intrinsic.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : U32.add\nLocation:\n15 |     case 0: 1\n16>|     case U32.add: U32.add\n   |          ^^^^^^^\n17 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tpattern-binder\t",
+        "justification": "Seed-invalid (\"a pattern (a binder or a constructor)\"): a dotted name that no parameter binds is a global reference, never a pattern binder."
       }
     },
     {
@@ -2222,6 +2546,47 @@
       }
     },
     {
+      "name": "let-constructor-binder",
+      "file": "tests/compiler-literals/regressions/let-constructor-binder.bend",
+      "sha256": "d034c7775f6ad41f5ed5e31385e414be298f9f49518a45f2d7c330cf0f3cd231",
+      "finding": "constructor binder",
+      "covers": "`True : U32 = 3`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-constructor-binder.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n 8 | def main() -> Answer:\n 9>|   True : U32 = 3\n   |   ^^^^\n10 |   Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-constructor-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n 8 | def main() -> Answer:\n 9>|   True : U32 = 3\n   |   ^^^^\n10 |   Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t",
+        "justification": "Seed-invalid (\"a braced constructor pattern\"): a constructor declared before a let is no name for its binder."
+      }
+    },
+    {
       "name": "let-nat",
       "file": "tests/compiler-literals/regressions/let-nat.bend",
       "sha256": "65bd76543e1a5d4b9f73bf1e9da997cc38efb57579a941f9243c7a43a1600009",
@@ -2383,6 +2748,47 @@
         "artifact": false,
         "diagnostic_prefix": "Invalid\tcheck\tannotation-required\t",
         "justification": "Seed-invalid (\"an annotated term (cannot infer)\"): a literal or a Nat offset checks against a known type, and an unannotated binding supplies none."
+      }
+    },
+    {
+      "name": "let-own-constructor-binder",
+      "file": "tests/compiler-literals/regressions/let-own-constructor-binder.bend",
+      "sha256": "f07e1eb0a60456b6c8969fa4fd52a947a85103ae131b6b8fbc1645825522c788",
+      "finding": "constructor binder",
+      "covers": "`No : U32 = 3` with the book's own No",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-own-constructor-binder.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a braced constructor pattern (No is a constructor: write No{}, or rename the binder)\nLocation:\n 8 | def main() -> Answer:\n 9>|   No : U32 = 3\n   |   ^^\n10 |   Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/let-own-constructor-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a braced constructor pattern (No is a constructor: write No{}, or rename the binder)\nLocation:\n 8 | def main() -> Answer:\n 9>|   No : U32 = 3\n   |   ^^\n10 |   Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t",
+        "justification": "Seed-invalid (\"a braced constructor pattern\"): a constructor declared before a let is no name for its binder."
       }
     },
     {
@@ -2838,6 +3244,170 @@
         "outcome": "agree",
         "exit": 0,
         "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "name-binder-trailing-dot",
+      "file": "tests/compiler-literals/regressions/name-binder-trailing-dot.bend",
+      "sha256": "0484730b60716538a49e4eea4ea192e587dfd7a17b0f14c5ffccc6268a95268b",
+      "finding": "malformed name",
+      "covers": "`case x.:` in a U32 default row",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/name-binder-trailing-dot.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'x.')\n- observed : 'x.'\nLocation:\n10 |     case 0: No{}\n11>|     case x.: Yes{}\n   |          ^^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/name-binder-trailing-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'x.')\n- observed : 'x.'\nLocation:\n10 |     case 0: No{}\n11>|     case x.: Yes{}\n   |          ^^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tname\t",
+        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot reads every name whole before any structure."
+      }
+    },
+    {
+      "name": "name-constructor-digit-word",
+      "file": "tests/compiler-literals/regressions/name-constructor-digit-word.bend",
+      "sha256": "067d76735b53418e69fb167c7d23a05d080d013eb2f8b60840f4b5727258ab0f",
+      "finding": "malformed name",
+      "covers": "the constructor `A.1{}`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/name-constructor-digit-word.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'A.1')\n- observed : 'A.1'\nLocation:\n 8 | type Letter is Type:\n 9>|   A.1{}\n   |   ^^^\n10 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/name-constructor-digit-word.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'A.1')\n- observed : 'A.1'\nLocation:\n 8 | type Letter is Type:\n 9>|   A.1{}\n   |   ^^^\n10 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tname\t",
+        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot reads every name whole before any structure."
+      }
+    },
+    {
+      "name": "name-function-double-dot",
+      "file": "tests/compiler-literals/regressions/name-function-double-dot.bend",
+      "sha256": "420987a4522837eb3c5ac522a680dd5c9d6574f330ae2215ab47a32a32af0e1b",
+      "finding": "malformed name",
+      "covers": "`def a..b()`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/name-function-double-dot.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'a..b')\n- observed : 'a..b'\nLocation:\n7 | \n8>| def a..b() -> Answer:\n  |     ^^^^\n9 |   Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/name-function-double-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'a..b')\n- observed : 'a..b'\nLocation:\n7 | \n8>| def a..b() -> Answer:\n  |     ^^^^\n9 |   Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tname\t",
+        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot reads every name whole before any structure."
+      }
+    },
+    {
+      "name": "name-parameter-trailing-dot",
+      "file": "tests/compiler-literals/regressions/name-parameter-trailing-dot.bend",
+      "sha256": "c575a7f522bef9ce2795791d36ed3a76d857da130f4977fdf52626f9660d2382",
+      "finding": "malformed name",
+      "covers": "`def f(x.: U32)`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/name-parameter-trailing-dot.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'x.')\n- observed : 'x.'\nLocation:\n7 | \n8>| def f(x.: U32) -> Answer:\n  |       ^^\n9 |   Yes{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/name-parameter-trailing-dot.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a name (words joined by dots, got 'x.')\n- observed : 'x.'\nLocation:\n7 | \n8>| def f(x.: U32) -> Answer:\n  |       ^^\n9 |   Yes{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tname\t",
+        "justification": "Seed-invalid (\"a name (words joined by dots)\"): a name is words joined by single dots, each starting with a letter or `_`, wherever it stands. Knot reads every name whole before any structure."
       }
     },
     {
@@ -3503,6 +4073,256 @@
         "outcome": "agree",
         "exit": 0,
         "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "offset-layout",
+      "file": "tests/compiler-literals/regressions/offset-layout.bend",
+      "sha256": "508b4d7ef47504d9e861d898cc88bc71959a061d0bca0e476b342e9b2ec79d75",
+      "finding": "offset layout",
+      "covers": "the tail of an offset after a newline, a comment or a blank line: binder, promotion, dedented and stacked patterns, and three expression offsets",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Size": [
+          "Empty",
+          "Three"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-layout.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/offset-layout.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "patterns",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-layout-patterns-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-layout.bend as F\n\ndef main() -> F.Answer:\n  F.patterns(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-layout-patterns-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-layout.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "patterns",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-layout-patterns-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-layout.bend as F\n\ndef main() -> F.Answer:\n  F.patterns(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-layout-patterns-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-layout.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nested",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-layout-nested-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-layout.bend as F\n\ndef main() -> F.Answer:\n  F.nested(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-layout-nested-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-layout.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nested",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-layout-nested-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-layout.bend as F\n\ndef main() -> F.Answer:\n  F.nested(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-layout-nested-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-layout.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "expressions",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-layout-expressions-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-layout.bend as F\n\ndef main() -> F.Answer:\n  F.expressions(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-layout-expressions-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-layout.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "expressions",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-layout-expressions-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-layout.bend as F\n\ndef main() -> F.Answer:\n  F.expressions(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-layout-expressions-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-layout.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "offset-layout-keyword",
+      "file": "tests/compiler-literals/regressions/offset-layout-keyword.bend",
+      "sha256": "6ad3b6c67670004ae0ce77918280120d4d49b576efb1cf2db029a02ce096b8a8",
+      "finding": "offset layout control",
+      "covers": "a `def` line after `1n+` is no tail",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-layout-keyword.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term (the keyword 'def' cannot head one)\n- observed : 'def'\nLocation:\n 9 |   1n+\n10>| def stray() -> Nat:\n   | ^^^\n11 |   0n\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-layout-keyword.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term (the keyword 'def' cannot head one)\n- observed : 'def'\nLocation:\n 9 |   1n+\n10>| def stray() -> Nat:\n   | ^^^\n11 |   0n\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t",
+        "justification": "Seed-invalid (\"a term (the keyword 'def' cannot head one)\"): a newline after an offset's `+` is skipped like a space, so a keyword on the next line is no tail; Knot does not read it as a term (D4)."
       }
     },
     {

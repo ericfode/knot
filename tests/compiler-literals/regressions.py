@@ -106,6 +106,27 @@ UNSPELLED = invalid(
     'primitive, and the target declares no constructor it spells: N declares Z and S, and an '
     'imported datatype declares only qualified names.')
 
+LAYOUT_KEYWORD = oracle.unsupported(
+    'parse', 'term-form',
+    'Seed-invalid ("a term (the keyword \'def\' cannot head one)"): a newline after an offset\'s `+` is '
+    'skipped like a space, so a keyword on the next line is no tail; Knot does not read it as a term (D4).')
+MALFORMED = invalid(
+    'parse', 'name',
+    'Seed-invalid ("a name (words joined by dots)"): a name is words joined by single dots, each starting '
+    'with a letter or `_`, wherever it stands. Knot reads every name whole before any structure.')
+DOTTED_PATTERN = invalid(
+    'parse', 'pattern-binder',
+    'Seed-invalid ("a pattern (a binder or a constructor)"): a dotted name that no parameter binds is a '
+    'global reference, never a pattern binder.')
+DOTTED_LET = invalid(
+    'parse', 'binding-name',
+    'Seed-invalid ("a name (a parallel or typed let binds names)"): a dotted name that no parameter binds is '
+    'a global reference, never a let binder.')
+LET_CONSTRUCTOR = invalid(
+    'check', 'constructor-pattern-binder',
+    'Seed-invalid ("a braced constructor pattern"): a constructor declared before a let is no name for its '
+    'binder.')
+
 # name -> (finding, covers, entries, Knot)
 PLAN = {
     'offset-spaced-pattern': ('offset adjacency', 'case 1n + p', [], SPACED),
@@ -242,6 +263,23 @@ PLAN = {
     'own-t-empty-expr': ('own primitive expression', '"" against an own SNil/SCon type named T', [], SPELLED),
     'own-n-expr-module': ('own primitive expression control', 'own-n-literal-expr imported as a module',
                           [], UNSPELLED),
+    'offset-layout': ('offset layout', 'the tail of an offset after a newline, a comment or a blank line: binder, '
+                      'promotion, dedented and stacked patterns, and three expression offsets',
+                      ['patterns', 'nested', 'expressions'], oracle.AGREE),
+    'offset-layout-keyword': ('offset layout control', 'a `def` line after `1n+` is no tail', [], LAYOUT_KEYWORD),
+    'name-parameter-trailing-dot': ('malformed name', '`def f(x.: U32)`', [], MALFORMED),
+    'name-function-double-dot': ('malformed name', '`def a..b()`', [], MALFORMED),
+    'name-constructor-digit-word': ('malformed name', 'the constructor `A.1{}`', [], MALFORMED),
+    'name-binder-trailing-dot': ('malformed name', '`case x.:` in a U32 default row', [], MALFORMED),
+    'dotted-default-binder': ('dotted binder', '`case x.y` in a U32 default row', [], DOTTED_PATTERN),
+    'dotted-offset-binder': ('dotted binder', '`case 1n+x.y`', [], DOTTED_PATTERN),
+    'dotted-shadows-intrinsic': ('dotted binder', '`case U32.add: U32.add`', [], DOTTED_PATTERN),
+    'dotted-let-binder': ('dotted binder', '`x.y : U32 = 3`', [], DOTTED_LET),
+    'let-constructor-binder': ('constructor binder', '`True : U32 = 3`', [], LET_CONSTRUCTOR),
+    'let-own-constructor-binder': ('constructor binder', "`No : U32 = 3` with the book's own No", [], LET_CONSTRUCTOR),
+    'binder-scope': ('binder scope control', 'a dotted parameter rebound by default, promoted, offset and field '
+                     'patterns and by typed, promoted and plain lets; a later constructor, a parameter, a function '
+                     'and a type naming binders', ['dotted', 'lets'], oracle.AGREE),
 }
 
 
