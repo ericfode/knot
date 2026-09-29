@@ -7,10 +7,9 @@
 //
 // Batch mode: a JSON array of jobs on stdin, one JSON result per line.
 //   {id, wasm, files: {name: path}, argv, limits?: {frames, heap}, trace?: 'yields' | 'audit', deadline?: ms, atomic?: true}
-// An `atomic` job is traced, and when it ends in a refusal of the kinds that SPEC section 6 says change no state (an
-// ill-typed word, a request that a read meets, NatRange, D20's `io abi`) the run is played again to its last step and the
-// result's `atomic` names the registers and memory that step changed (`moved`, empty when it left the machine as it found it).
-// The step that returns a Book's result to Top is exempt: SPEC section 6's table drops `act` before section 8 describes.
+// An `atomic` job is traced, and when it ends in a stop (a HostFailure, an Unsupported or an Exhausted of any kind: SPEC section 6.3
+// says such a step has no effect) the run is played again to its last step and the result's `atomic` names the registers and memory
+// that step changed (`moved`, empty when it left the machine as it found it). The debit of an Enter is the step's own change.
 // A result reports `effects`: the host calls the run made for requests (every `print`, less the one a completed Book's result is described with).
 // A traced result says whether vm_boot returned (`booted`): an image refusal
 // happens before, a run-time failure after. A job with a `deadline` that outlives it is stopped and
@@ -107,14 +106,6 @@ function moved(before, after) {
   return names;
 }
 
-// The step that returns a Book's result to its Top frame (phase 0) is not held to atomicity: section 6's table drops `act` first.
-function booksAnswer(before) {
-  const f = before.frames, n = f.length;
-  return before.r.mode === 1 && n >= 12 && (f.readUInt32LE(n - 4) & 15) === 0 && f.readUInt32LE(n - 8) === 0;
-}
-
-const ATOMIC = new Set(['ill-typed', 'effect', 'NatRange', 'abi']);
-
 export async function runVM({module, files = {}, argv = [], limits = null, trace = null, deadline = null, atomicAt = null}) {
   const stdout = [], stderr = [], handles = new Map(), yields = [];
   let instance, next = 1, steps = 0, audited = 0, broken = null, booted = null, prints = 0, entry = null, atomic = null;
@@ -195,7 +186,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
           if (steps === atomicAt) {  // the last step of a run that stops: what it changed
             const before = snapshot(x);
             try { r = x.vm_step(); } finally {
-              atomic = booksAnswer(before) ? {exempt: true, moved: []} : {exempt: false, moved: moved(before, snapshot(x))};
+              atomic = {moved: moved(before, snapshot(x))};
             }
           } else r = x.vm_step();
           steps++;
@@ -237,7 +228,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     const files = Object.fromEntries(Object.entries(job.files ?? {}).map(([k, p]) => [k, fs.readFileSync(p)]));
     let got = await runVM({...job, module: modules.get(job.wasm), files, trace: job.atomic ? job.trace ?? 'yields' : job.trace});
     if (job.atomic) {
-      const stop = got.booted && got.state && ATOMIC.has(got.state.cause) && ['HostFailure', 'Unsupported', 'Exhausted'].includes(got.state.outcome);
+      const stop = got.booted && got.state && ['HostFailure', 'Unsupported', 'Exhausted'].includes(got.state.outcome);
       const again = stop ? await runVM({...job, module: modules.get(job.wasm), files, trace: 'yields', atomicAt: got.steps}) : null;
       got = {...got, atomic: again ? again.atomic : null};
     }

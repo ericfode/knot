@@ -329,7 +329,8 @@ def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[in
     continuation. Each entry allocates an Activation of its owner's `slots` (section 7):
     a function's or a Closure node's. Each Construct with fields allocates an Object, a
     Closure its cell, a U32 result at or above 2^31 a Big cell, `append` one String cell
-    per code of its first operand as one block (CORE.md choice 4), and the terminal
+    per code of its first operand as one block (CORE.md choice 4), `reverse` and `show` a
+    String cell per code or digit, likewise as one block (SPEC section 6.3), and the terminal
     continuation `Emit{x}`. Nothing is freed (choice 1), so the bump pointer is the sum.
     An Action (a Foreign node) is a cell of its foreign id and operands. A cell may end exactly at 4 GiB; one that would end beyond raises `Beyond`. A String
     here is its code count, since only sizes reach the heap. A Book's line is section 8's
@@ -430,6 +431,12 @@ def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[in
         if op == 'prim' and node[2] == 35:  # String.append
             take(scon * ops[0])
             return ops[0] + ops[1]
+        if op == 'prim' and node[2] == 36:  # String.reverse: one cell per code, whose room is decided first (section 6.3)
+            take(scon * ops[0])
+            return ops[0]
+        if op == 'prim' and node[2] in (32, 33):  # U32.show, Nat.show: one cell per decimal digit, likewise
+            take(scon * len(str(ops[0])))
+            return len(str(ops[0]))
         raise AssertionError(f'the section 5 model does not cover {node[:3]}')
 
     def enter(index, ops):
@@ -527,17 +534,17 @@ def clean(result: dict) -> bool:
         s in stderr for s in ('HostFailure\tio\ttrap', 'HostFailure\tio\thost', 'Exhausted\tio\tcall-stack'))
 
 
-STOPS = {'replayed': 0, 'exempt': 0}
+STOPS = {'replayed': 0}
 
 
 def atomic(label: str, out: dict):
-    """A refusal of the kinds SPEC section 6 says change no state (an ill-typed word, a request that a read meets, NatRange,
-    D20's `io abi`) leaves the machine as its last step found it: the harness played the run again to that step and names
-    the registers and memory that it changed (`moved`). The step that answers a Book is exempt (harness.mjs)."""
+    """A stop, a HostFailure, an Unsupported or an Exhausted of any kind, leaves the machine as its last step found it, but for the
+    debit of an Enter (SPEC section 6.3): the harness played the run again to that step and names the registers and memory that it
+    changed (`moved`)."""
     at = out.get('atomic')
     if at is not None:
-        STOPS['exempt' if at['exempt'] else 'replayed'] += 1
-        require(not at['moved'], f"{label}: its last step, a refusal, changed {at['moved']}")
+        STOPS['replayed'] += 1
+        require(not at['moved'], f"{label}: its last step, a stop, changed {at['moved']}")
 
 
 def observed_wrong(job: dict, out: dict) -> bool:
@@ -986,9 +993,6 @@ def sample_rows(rows: list, cfg: dict) -> list:
     return out
 
 
-ATOMIC_FAMILIES = ('inspection', 'ill-typed', 'tags', 'halt', 'print', 'sweep')  # rows that end in refusals, at every place of section 6
-
-
 def lane_job(row: dict, wasm: Path, where: Path, trace=None, atomic=False) -> dict:
     return {'id': row['name'], 'wasm': str(wasm), 'files': {row['file']: str(where / row['file'])},
             'argv': [row['file'], *row['argv']], **({'trace': trace} if trace else {}), **({'atomic': True} if atomic else {})}
@@ -1011,8 +1015,7 @@ def check_lane(cfg: dict, seeded: dict, module: Path, test: Path, where: Path, r
     require(sorted(frozen) == sorted(fixed), f'seeded rows {sorted(frozen)} vs the lane {sorted(fixed)}')
     sample = sample_rows(rows, cfg)
     audited = set(fixed) | {r['name'] for r in sample}
-    ran = harness([lane_job(r, test, where, 'audit' if r['name'] in audited else None, r['family'] in ATOMIC_FAMILIES) for r in rows],
-                  timeout=1800)
+    ran = harness([lane_job(r, test, where, 'audit' if r['name'] in audited else None, True) for r in rows], timeout=1800)
     made = harness([lane_job(r, module, where) for r in rows], timeout=1800)
     tally, failures = {}, []
     for r in rows:
@@ -1092,7 +1095,7 @@ def lane_groups(rows: list, where: Path) -> dict:
 
 
 STUDY = HERE / 'receipts/study.json'
-STUDY_ORDER = ['keys', 'describe', 'describe-domain', 'tags', 'display', 'inspection', 'goldens', 'invocations', 'runs', 'atomic', 'reference',
+STUDY_ORDER = ['keys', 'describe', 'describe-domain', 'tags', 'display', 'inspection', 'goldens', 'invocations', 'runs', 'atomic', 'witness', 'reference',
                'sweeps', 'writers', 'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'memory-end', 'describe-order', 'scope',
                'controls']  # cheap and telling first
 HEAVY = ['ceiling']  # about 4 GiB a row: only a study's survivors run them (`--heavy`)
@@ -1365,6 +1368,31 @@ def check_scope(section: dict, module: Path, test: Path, where: Path, reg: dict,
     jobs += [{'id': f"scope:{r['label']}", 'files': job(r['label'], test)['files'], 'argv': r['argv'], 'want': r['expected'][0], 'dump': r['expected'][1]}
              for r in corpus]
     return record, sorted(jobs, key=lambda j: costs[j['id'].removeprefix('scope:')])  # the deepest last: a mutant that stalls on them is stopped there
+
+
+def check_witness(section: dict, plans: dict, test: Path, where: Path, digest: bytes) -> tuple[list, list]:
+    """Frames, `top` and `act` at a stop, which no run of the reference evaluation shows (SPEC section 6.3; fixtures.json `witness`): the
+    frame region's start F0 follows from the image's length, `top` must stand `top_above_f0` above it, and a row that says `act` is `held`
+    must still own its Activation. Each row's values were derived by hand from sections 5 and 6 (DECISIONS entry 38), before any run.
+    Returns the receipt's rows and the jobs of mutant group `witness`."""
+    where.mkdir(exist_ok=True)
+    controls = {label: plan for label, plan, _ in spec.run_controls(plans)}
+    jobs, mine = [], []
+    for r in section['rows']:
+        data = (HERE / f"{r['image']}.kimg").read_bytes() if 'image' in r else codec.encode(controls[r['control']], digest)
+        (where / f"{r['name']}.kimg").write_bytes(data)
+        f0 = (4096 + len(data) + 0xFFFF) & ~0xFFFF
+        argv = [f"{r['name']}.kimg", *r['argv']]
+        jobs.append({'id': r['name'], 'wasm': str(test), 'files': {argv[0]: str(where / argv[0])}, 'argv': argv})
+        mine.append({'id': f"witness:{r['name']}", 'files': jobs[-1]['files'], 'argv': argv, 'want': None, 'dump': {**r['dump'], 'top': f0 + r['top_above_f0']}})
+    out = harness(jobs)
+    for r, j in zip(section['rows'], mine):
+        state = out[r['name']]['state']
+        require(clean(out[r['name']]) and all(state[k] == v for k, v in j['dump'].items()),
+                f"witness {r['name']}: the VM stopped with {state}, derived {j['dump']}")
+        if 'act' in r:
+            require((state['act'] != 0) == (r['act'] == 'held'), f"witness {r['name']}: `act` is {state['act']}, the step must leave it {r['act']}")
+    return [{'name': r['name'], 'top_above_f0': r['top_above_f0'], **r['dump']} for r in section['rows']], mine
 
 
 def check_describe(section: dict, module: Path, test: Path, staged, sandbox: Path, reg: dict, digest: bytes) -> tuple[list, list, list]:
@@ -1987,7 +2015,8 @@ def main(args: list) -> int:
     jobs = [{'id': n, 'wasm': str(test), 'files': {staged(by_name[n]['image']): str(sandbox / staged(by_name[n]['image']))},
              'argv': [staged(by_name[n]['image']), *by_name[n]['argv']], 'trace': 'yields'} for n in fixtures['dumps']]
     jobs += [{'id': l['name'], 'wasm': str(test), 'files': {staged(l['image']): str(sandbox / staged(l['image']))},
-              'argv': [staged(l['image']), *l['argv']], 'limits': l['limits']} for l in fixtures['limited']]
+              'argv': [staged(l['image']), *l['argv']], 'limits': l['limits'], 'atomic': True} for l in fixtures['limited']]
+    jobs = [{**j, 'atomic': True} for j in jobs]
     for l in fixtures['limited']:  # a pinned bump under a lowered heap: section 5's model stops (or ends) there too
         if (l['dump'].get('cause') == 'heap' or l.get('model')) and 'bump' in l['dump']:
             plan, image = json.loads((HERE / f"{l['image']}.plan.json").read_text()), (HERE / f"{l['image']}.kimg").read_bytes()
@@ -2002,6 +2031,7 @@ def main(args: list) -> int:
     dumps = []
     for name, want in [*fixtures['dumps'].items(), *((l['name'], l['dump']) for l in fixtures['limited'])]:
         got, state = dumped[name], dumped[name]['state']
+        atomic(f'dump {name}', got)
         seen = {'outcome': state['outcome'], 'kind': state['kind'], 'cause': state['cause'],
                 'calls': state['calls'], 'yields': got['yields'], 'top': state['top'], 'bump': state['bump']}
         require(all(seen[k] == v for k, v in want.items()), f'dump {name}: {seen} vs {want}')
@@ -2270,6 +2300,10 @@ def main(args: list) -> int:
     record['arguments'] = [{'control': r['label'], 'verdict': r['verdict'], 'exit': r['want']['exit']} for r in word_rows]
     stage('controls')
 
+    # the frames, `top` and `act` that SPEC section 6.3 leaves at a stop, as DECISIONS entry 38 derives them by hand
+    record['witness'], witness_jobs = check_witness(fixtures['witness'], plans, test, BUILD / 'witness', digest)
+    stage('witness states')
+
     # the validator's scope tables at the depths where they grow: fixtures.json's `scope` rows, then a seeded corpus
     record['scope_tables'], scope_jobs = check_scope(fixtures['scope'], module, test, BUILD / 'scope', reg, digest)
     stage('scope tables')
@@ -2354,6 +2388,7 @@ def main(args: list) -> int:
     groups['scope'] = scope_jobs  # the scope rows and corpus: a refusal, or a run, other than the reference codec's
     # the rows that bound their memory.grow count: tables that grow by one index a slot take gigabytes, and the rows that show it are few
     groups['scope-growth'] = [j for j in scope_jobs if j['id'] in ('scope:nest-mark', 'scope:edge-t1-past')]
+    groups['witness'] = witness_jobs  # `top` at a stop that pops a Gather, and `act` at a refusal of Return to Top, as derived by hand
     groups['describe-domain'] = domain_jobs  # an arrow or a `none`-typed field in a Book's result: Unsupported, whatever else the VM says
     groups['describe-order'] = order_jobs  # an ill-typed word at the last visit within the bound, and one beyond it, inspected before it is charged
     groups['traps'] = groups['inspection']  # the same rows: a fault where the frozen run is a refusal is the wrong observation
@@ -2370,7 +2405,7 @@ def main(args: list) -> int:
     candidates = goldens_jobs + invocation_jobs + run_jobs + groups['inspection'] + groups['tags']
     probe = harness([{**{k: v for k, v in j.items() if k not in ('want', 'dump', 'at_most')}, 'wasm': str(test), 'atomic': True,
                       'deadline': deadline(j, 'atomic')} for j in candidates], timeout=1800)
-    groups['atomic'] = [{**j, 'atomic': True} for j in candidates if (probe[j['id']].get('atomic') or {}).get('exempt') is False]
+    groups['atomic'] = [{**j, 'atomic': True} for j in candidates if probe[j['id']].get('atomic') is not None]
     require(len(groups['atomic']) >= 40, f'the rows that end in a refusal that changes no state: {len(groups["atomic"])}')
     check_baseline(groups, test)
     stage('baseline of the mutant groups')
@@ -2431,7 +2466,7 @@ def main(args: list) -> int:
           f"{record['lane']['sample']['rows']} run again through the seed), {sum(record['both'].values())} admitted images "
           f"through both, {len(high)} ceiling runs, {len(ends)} memory-end runs, {len(growth)} growth runs, {len(stack)} small-stack runs, "
           f"{len(refused)} refused and {len(admissions)} admitted controls, {STOPS['replayed']} refusals replayed to show that they change "
-          f"no state ({STOPS['exempt']} of a Book's answer exempt), {len(record['describe'])} describe rows, "
+          f"no state, {len(record['describe'])} describe rows, "
           f"{len(record['scope_tables']['rows'])} scope rows and {record['scope_tables']['corpus']['images']} scope images, "
           f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "

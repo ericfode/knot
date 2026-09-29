@@ -1,6 +1,6 @@
 {
  "schema": "vm-core fixtures",
- "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed. The memory-end rows state theirs: their fill counts, bump pointers and lines are derived by section 5's model and the reference evaluation, after a probe of the VM found the defects they catch. The describe rows state theirs: SPEC section 8's describe domain (no arrow, no `none`-typed field) and the order of an ill-typed word's inspection and its visit's charge, by literal review of sections 6 and 8, and check-core derives each again from the codec and from the reference evaluation (at a bound of eight visits, where it is fast).",
+ "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed. The memory-end rows state theirs: their fill counts, bump pointers and lines are derived by section 5's model and the reference evaluation, after a probe of the VM found the defects they catch. The describe rows state theirs: SPEC section 8's describe domain (no arrow, no `none`-typed field) and the order of an ill-typed word's inspection and its visit's charge, by literal review of sections 6 and 8, and check-core derives each again from the codec and from the reference evaluation (at a bound of eight visits, where it is fast). The witness rows state theirs: frames, `top` and `act` at a stop, derived by hand from sections 5 and 6 by DECISIONS entry 38 before any machine ran them. The round 14 limited rows state theirs: their bump pointers come from section 5's model (`ceiling_run`), and their `top` from the frames it lists.",
  "fuel": 1000000,
  "runs": [
   {
@@ -639,10 +639,10 @@
     "kind": 2,
     "cause": "heap",
     "calls": 1,
-    "top": 65572,
+    "top": 65560,
     "bump": 16842800
    },
-   "basis": "Section 5: the image ends at byte 4,664, so F0 = 65,536 and H0 = F0 + 16 MiB = 16,842,752. A cell is 2 header words plus its payload, rounded to a power of two of at least 4 words (check-core's `cell`). Boot pushes Top(0) (3 words, section 6), so top = F0 + 12, and materializes the pool's Big 2^31 + 1 (payload 1: 16 B). main's entry is a tail entry below Top (section 6.2): no Call frame; its Activation (owner, depth and 2 slots: payload 4, 6 words, so 8) is 32 B, so bump = H0 + 48. Eval Let pushes Bind (top F0 + 24); its Return pops it and pushes Scope (F0 + 24). Eval Case selects Succ (section 6.1: selection allocates nothing), pushes Scope(depth), and only then allocates the predecessor 2^31, a Big of 16 B (vm-spec D17: the allocation follows the push). Completed, the run ends at H0 + 64, which check-core's section 5 model (`ceiling_run`) also gives for this plan. With a 48-byte heap the pool Big and the Activation fill it (a cell may end at HL); the Case's Scope is pushed (top = F0 + 36 = 65,572), and the predecessor's 16 B are Exhausted kind 2 (heap) with bump = H0 + 48 = 16,842,800, as the section 5 model stopped at the heap limit gives. A VM that made the predecessor before the push would stop with top F0 + 24. Provenance: a first draft of this row left out the cells' 2 header words (an Activation of 16 B, and a 32-byte heap); a run of the pre-fix VM, before the row was committed, exposed the slip. Every value here was then rederived from section 5's cell rule (check-core's `cell`) and section 6's 3-word frames; in the gate, `ceiling_run` under the lowered heap checks the heap row's bump, and both `top` values and the frames row's bump rest on this hand derivation. The pins that tell the two orders apart differ from the pre-fix VM's (80bd5cf)"
+   "basis": "Section 5: the image ends at byte 4,664, so F0 = 65,536 and H0 = F0 + 16 MiB = 16,842,752. A cell is 2 header words plus its payload, rounded to a power of two of at least 4 words (check-core's `cell`). Boot pushes Top(0) (3 words, section 6), so top = F0 + 12, and materializes the pool's Big 2^31 + 1 (payload 1: 16 B). main's entry is a tail entry below Top (section 6.2): no Call frame; its Activation (owner, depth and 2 slots: payload 4, 6 words, so 8) is 32 B, so bump = H0 + 48. Eval Let pushes Bind (top F0 + 24); its Return pops it and pushes Scope (F0 + 24). Eval Case selects Succ (section 6.1: selection allocates nothing), pushes Scope(depth) and allocates the predecessor 2^31, a Big of 16 B (section 6.1: the room for the Scope, then for the cell, is decided first). Completed, the run ends at H0 + 64, which check-core's section 5 model (`ceiling_run`) also gives for this plan. With a 48-byte heap the pool Big and the Activation fill it (a cell may end at HL), and the predecessor's 16 B are Exhausted kind 2 (heap) with bump = H0 + 48 = 16,842,800, as the section 5 model stopped at the heap limit gives. Re-frozen in round 14: this row froze top = F0 + 36 = 65,572, the Scope that section 6.1 then left pushed at a heap stop (vm-spec D17: the allocation follows the push). Section 6.1 and 6.3 now decide the room for the Scope and then for the predecessor's cell before either takes effect, so the stop leaves no Scope pushed and the machine as the Case found it: top = F0 + 24 = 65,560, the top of `nat-pred-frames`. `bump` and `calls` do not move (DECISIONS entry 38). Provenance: a first draft of this row left out the cells' 2 header words (an Activation of 16 B, and a 32-byte heap); a run of the pre-fix VM, before the row was committed, exposed the slip. Every value here was then rederived from section 5's cell rule (check-core's `cell`) and section 6's 3-word frames; in the gate, `ceiling_run` under the lowered heap checks the heap row's bump, and both `top` values and the frames row's bump rest on this hand derivation. The pins that tell the two orders apart differ from the pre-fix VM's (80bd5cf)"
   },
   {
    "name": "describe-frames-fit",
@@ -753,6 +753,135 @@
     "stderr": ""
    },
    "basis": "main = let a = IO.print(\"x\") in On{} builds an Action and never applies it (no effect, section 8). From H0 = 16,842,752 the pool takes 32 bytes (one SCon), main's and IO.print's Activations 32 each, and the Action, a cell of its foreign id and its one operand (2 words, 4 with the header), 16: 112 bytes, which `ceiling_run` gives too. A cell one payload word larger would reach the next size"
+  },
+  {
+   "name": "reverse-heap-fit",
+   "image": "core/reverse-let",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 320
+   },
+   "model": true,
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 2,
+    "bump": 16843072
+   },
+   "basis": "main = let s = String.reverse(\"abcd\") in On{}: from H0 = 16,842,752 the pool takes 128 bytes (4 SCon cells of 32), main's Activation (1 slot) and String.reverse's (1 slot) 32 each, and reverse's result 4 cells of 32: 320 bytes, which section 5's model (`ceiling_run`) gives too. A heap of exactly 320 bytes ends the last cell exactly at its limit, which section 5 allows: the Book completes with bump 16,843,072"
+  },
+  {
+   "name": "reverse-heap-short",
+   "image": "core/reverse-let",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 288
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "heap",
+    "calls": 2,
+    "bump": 16842944
+   },
+   "basis": "the same Book with 32 bytes less heap: the fourth cell of the result would end beyond it. Section 6.3 and section 9 decide the room for every cell of a result before the first is allocated, so reverse stops Exhausted kind 2 (heap) with none of it built: the bump pointer stays where the result would have begun, H0 + 192 = 16,842,944, after 2 entries. A reverse that allocated cell by cell would have built three cells first and stopped with bump H0 + 288"
+  },
+  {
+   "name": "show-heap-fit",
+   "image": "core/show-let",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 224
+   },
+   "model": true,
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 2,
+    "bump": 16842976
+   },
+   "basis": "main = let s = U32.show(12345) in On{}: from H0 the pool takes nothing (12345 is an immediate), main's Activation and U32.show's 32 bytes each, and the five digits 5 cells of 32: 224 bytes, which section 5's model gives too, ending the last cell exactly at the limit"
+  },
+  {
+   "name": "show-heap-short",
+   "image": "core/show-let",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 160
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "heap",
+    "calls": 2,
+    "bump": 16842816
+   },
+   "basis": "the same Book with 64 bytes less heap: the room for the five digits is decided before the first cell, so U32.show stops Exhausted kind 2 (heap) with none built and bump H0 + 64 = 16,842,816, after 2 entries. A show that allocated digit by digit would have built three cells first and stopped with bump H0 + 160"
+  },
+  {
+   "name": "tail-heap",
+   "image": "core/tail-loop",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 112
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "heap",
+    "calls": 5,
+    "top": 65560,
+    "bump": 16842864
+   },
+   "basis": "main = countdown(10n), with countdown(n) = case n of Zero -> On | Succ{m} -> countdown(m): a tail loop whose Succ Branch holds a Scope frame across the call. From H0 main's Activation (no slots) takes 16 bytes and each entry of countdown one of 32 (owner, depth and 2 slots), so a heap of 112 bytes holds main and three of them (bump H0 + 112 = 16,842,864, which section 5's model gives). The fourth entry of countdown (the fifth of the run, its debit paid) is a tail entry, whose Activation does not fit. Section 6.2 and 6.3 decide the fit before the entry pops its Scope frame and releases act, so the stop leaves the machine as the entry found it: Top(0) (12 bytes) and the Scope (12) are still on the region, top = F0 + 24 = 65,560. An entry that popped first would stop with top F0 + 12"
+  },
+  {
+   "name": "invoke-frames",
+   "image": "core/invoke-frames",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 24,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames",
+    "calls": 1,
+    "top": 65560
+   },
+   "basis": "main = invoke (x => x) On{}. Boot pushes Top(0), 12 bytes; Eval Invoke pushes InvokeFunction, 12 more, which fill a region of 24 bytes exactly; the closure evaluates and returns to it. A live arrow then pops the InvokeFunction (3 words) and pushes an InvokeArgument (4 words, 16 bytes): judged on the region as the pop leaves it, F0 + 12 + 16 = F0 + 28 does not fit in 24, so the step stops Exhausted kind 3 (frames) before it pops (section 6.3): top = F0 + 24 = 65,560 (the image ends at byte 4,488, so F0 = 65,536), after 1 entry, main's. A step that popped first would stop with top F0 + 12"
   }
  ],
  "admitted": {
@@ -2798,5 +2927,55 @@
     }
    ]
   }
+ },
+ "witness": {
+  "rule": "States at a stop that SPEC 6.3 fixes and no run of the reference evaluation can show: the frames, `top` and `act`. DECISIONS entry 38 (round 14, item 7) derives these by hand from sections 5 and 6, before any machine ran them; `top_above_f0` is `top` less the frame region's start.",
+  "rows": [
+   {
+    "name": "nat-succ-range",
+    "image": "golden/nat-succ-range",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "dump": {
+     "outcome": "Exhausted",
+     "kind": 2,
+     "cause": "NatRange"
+    },
+    "top_above_f0": 64,
+    "basis": "the NatRange stop happens with four frames on the region: Top(0) (3 words, 12 bytes), the Gather of Nat.is_gt (5 words, 20), the Call frame of succ's entry (4 words, 16; not a tail entry, since a Gather lies between it and Top) and the Gather of the Succ with its operand (4 words, 16): 64 bytes, so top = F0 + 64 = 65,600 for this 696-byte image (F0 = 65,536). A machine that pops the Gather first shows 65,584"
+   },
+   {
+    "name": "inspect-halt-code",
+    "control": "inspect-halt-code",
+    "argv": [
+     "1000000",
+     "--"
+    ],
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "ill-typed"
+    },
+    "top_above_f0": 12,
+    "act": "held",
+    "basis": "Return to Top(3) refuses a Halt whose code is ill-typed with the Top frame alone on the region (top = F0 + 12) and `act` the Activation of the closure whose body built the Halt: the refusal comes before `act` is dropped, where a machine that drops it first shows 0"
+   },
+   {
+    "name": "inspect-halt-message",
+    "control": "inspect-halt-message",
+    "argv": [
+     "1000000",
+     "--"
+    ],
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "ill-typed"
+    },
+    "top_above_f0": 12,
+    "act": "held",
+    "basis": "as `inspect-halt-code`, for a Halt whose message is ill-typed"
+   }
+  ]
  }
 }
