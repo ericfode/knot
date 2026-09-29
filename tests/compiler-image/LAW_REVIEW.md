@@ -83,6 +83,15 @@ is where one would appear.
    (five witnesses were added afterwards), and the 111 golden images decode to the text of
    `serializer.decode` and re-encode to their own bytes.
 5. Twenty-one mutants of the codec, each killed by a wrong observation; the laws refuse most of them too.
+6. Generated books (`fuzz.py`, seeded, on checked programs with live, erased and reusable fields, parameters and lets, nested
+   matches in any arm order, and calls): each of the 300 programs a gate run, of which `check-cli` accepts 289, encodes to the
+   bytes of the independent reference and `image-cli roundtrip` prints `equal`. Offline, seeds 0 to 20,399: 19,636 accepted,
+   all byte-identical to the reference, valid and canonical under `vm/serializer.py`, and round-tripped.
+7. The codec half of the law on random plans (`fuzz.py`): 300 plans a gate run, with every node form of SPEC section 3, both Case
+   modes, defaults, constants of each kind, closures and names that repeat, are encoded by `vm/serializer.py`; the Bend decoder
+   prints the plan the reference decodes and the Bend layout writes the same bytes back, so `decode(layout(p)) = p` and layout
+   equals the reference encoder on each. Offline, 20,300 plans, all equal. This covers the forms that this base's core does not
+   produce and the merge wave's encoders will.
 
 ## The closed laws (twenty-four)
 

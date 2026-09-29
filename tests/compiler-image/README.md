@@ -15,7 +15,7 @@ BEND_NO_TELEMETRY=1 scripts/bend-reference src/image-PROOF.bend      # All terms
 | [reference.py](reference.py) | Independent reference: declarations read from source text, the core `check-cli` displays, `vm/check-spec.py`'s projection and `vm/serializer.py`'s layout |
 | [freeze.py](freeze.py) | Discovers the source list and writes `expectations.json`; the gate recomputes the contract and every frozen image and requires them unchanged |
 | [synthetic.py](synthetic.py) | A wide 5.2 MB book with the plan it must encode to, generated together |
-| [fuzz.py](fuzz.py) | A seeded generator of small programs in the checked profile (erased and reusable fields, parameters and lets, nested matches, calls): 300 a run, each one `check-cli` accepts must encode to the reference's bytes and round-trip |
+| [fuzz.py](fuzz.py) | Seeded generators: small programs in the checked profile (erased and reusable fields, parameters and lets, nested matches, calls), 300 a run, each one `check-cli` accepts must encode to the reference's bytes and round-trip; and random record plans with every node form, 300 a run, which the Bend codec must read and write back as the reference does |
 | [render.py](render.py), [image-cli.bend](image-cli.bend) | Two decoders' plans in one canonical text; `image-cli decode`/`recode`/`plan`/`roundtrip`/`named`/`answers` is the Bend codec driver |
 | [writes.c](writes.c), [writes.js](writes.js) | Observe every write to a file: DYLD interposer (native), Bun preload (JS) |
 | [witnesses/](witnesses/) | Small books for mutants: reordered arms, a let that changes type, a shared type and constructor name, nested cases, many slots |

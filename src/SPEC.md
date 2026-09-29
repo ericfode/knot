@@ -306,8 +306,9 @@ control. `encode` binds on `erase_tokens`, so an answer implies that erasure suc
 has no induction proof: it needs one through erasure, the two-pass layout and the stack decoder, and the seed's kernel does not
 reduce `U32` arithmetic on a variable. Its evidence is the ground laws, the gate's instantiation of the law at 13 fuels and books
 (including the four fuels where the first statement fails, with that statement and a wrong conclusion refused by the same
-machinery), the byte-for-byte comparison of 96 books' images with an independent reference, the 111 golden images decoded
-and re-encoded, and mutants killed by wrong observations. It is recorded in the trust inventory below and reviewed in
+machinery), the byte-for-byte comparison of 96 books' images with an independent reference, 300 generated programs and 300
+random record plans a gate run held to the same reference, the 111 golden images decoded and re-encoded, and mutants killed by
+wrong observations. It is recorded in the trust inventory below and reviewed in
 `tests/compiler-image/LAW_REVIEW.md`, and stays open until discharged.
 
 The gate is `BEND_NO_TELEMETRY=1 python3 tests/compiler-image/check.py`; see its
@@ -395,7 +396,7 @@ obligations in this trust inventory; the profile each belongs to rests on the ev
 
 | Law | Status | Witnessed by |
 | --- | --- | --- |
-| Image round trip: for every fuel and book, whenever `encode` answers, `decode` of its words is `erase_tokens` at the same fuel (`src/image-OPEN.bend`) | Unproved general law, in its partial-correctness form. It is true as stated: no counterexample is known, and layout now refuses every name that `decode` would not read. Its first statement, `recoded == erase_tokens` at every fuel and book, was false and is pinned as closed counterexamples: fuel (`flag_refuted_at_1`, `flag_refuted_at_2`, `mixed_refuted_at_13`, `mixed_refuted_at_18`), the limits of vm/SPEC section 4 (`wide_refuted`; the gate's over-limit control on a checked book) and names (`accent_refuted`). The proof would be an induction over `C.Term` through erasure, the two-pass layout and the stack decoder, which the seed's kernel cannot do while `U32` offsets are variables | The 24 closed laws of `src/image-LAWS.bend`; the gate's instantiation of the law at 13 fuels and books, with the first statement and a wrong conclusion refused at the same fuels; 96 accepted books byte-identical to an independent reference and round-tripped by Bend's own decoder; 111 golden images decoded and re-encoded; 21 mutants killed by wrong observations |
+| Image round trip: for every fuel and book, whenever `encode` answers, `decode` of its words is `erase_tokens` at the same fuel (`src/image-OPEN.bend`) | Unproved general law, in its partial-correctness form. It is true as stated: no counterexample is known, and layout now refuses every name that `decode` would not read. Its first statement, `recoded == erase_tokens` at every fuel and book, was false and is pinned as closed counterexamples: fuel (`flag_refuted_at_1`, `flag_refuted_at_2`, `mixed_refuted_at_13`, `mixed_refuted_at_18`), the limits of vm/SPEC section 4 (`wide_refuted`; the gate's over-limit control on a checked book) and names (`accent_refuted`). The proof would be an induction over `C.Term` through erasure, the two-pass layout and the stack decoder, which the seed's kernel cannot do while `U32` offsets are variables | The 24 closed laws of `src/image-LAWS.bend`; the gate's instantiation of the law at 13 fuels and books, with the first statement and a wrong conclusion refused at the same fuels; 96 accepted books byte-identical to an independent reference and round-tripped by Bend's own decoder; 300 generated programs and 300 random record plans of every node form a gate run, the same way; 111 golden images decoded and re-encoded; 21 mutants killed by wrong observations |
 
 ## Required evidence
 

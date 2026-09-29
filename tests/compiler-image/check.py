@@ -17,7 +17,8 @@ expectation. The source list is explicit (expectations.json); seed-audit.json re
 pinned seed contradicts (D4 gaps, recorded and not judged here).
 The write pattern of the chunked path is observed from outside (a DYLD shim for the native lane, a Bun
 preload for the JS lane). Mutants of src/image*.bend are killed by a wrong observation, never a crash. The open
-round-trip law of src/image-OPEN.bend is instantiated at fuels that include the counterexamples of its first statement.
+round-trip law of src/image-OPEN.bend is instantiated at fuels that include the counterexamples of its first statement,
+and 300 generated programs and 300 random record plans (fuzz.py) are held to the same independent reference.
 """
 from __future__ import annotations
 
@@ -779,6 +780,40 @@ def fuzz_books(tools, check_cli) -> dict:
     return {'programs': FUZZ_PROGRAMS, 'accepted': len(taken), 'refused': FUZZ_PROGRAMS - len(taken), 'features': totals}
 
 
+FUZZ_PLANS = 300
+
+
+def plan_case(tools, seed):
+    """One random plan: the reference encodes it, the Bend decoder must print the plan the reference decodes, and the Bend
+    layout must write those words back byte for byte, so decode(layout(plan)) = plan and layout agrees with the reference."""
+    data = codec.encode(fuzz.plan(seed), reference.DIGEST)
+    decoded = codec.decode(data, reference.DIGEST)
+    require(codec.encode(decoded, reference.DIGEST) == data, (seed, 'the reference image is not canonical'))
+    path = BUILD / 'fuzz' / f'plan{seed}.kimg'
+    path.write_bytes(data)
+    want = (render.render(decoded) + '\n').encode()
+    for lane, command in (('native', [tools['image']]), ('bun', ['bun', tools['image-js']])):
+        if lane == 'bun' and seed % 50:
+            continue
+        printed = run([*command, 'decode', path])
+        require(printed['exit'] == 0 and printed['stdout'] == want, (seed, lane, 'decode', shown(printed)))
+        again = BUILD / 'fuzz' / f'plan{seed}.{lane}.out'
+        again.unlink(missing_ok=True)
+        result = run([*command, 'recode', path, again])
+        require(result['exit'] == 0 and again.exists() and again.read_bytes() == data, (seed, lane, 'recode', shown(result)))
+    return fuzz.forms(decoded)
+
+
+def fuzz_plans(tools) -> dict:
+    """Random plans beyond what this base's core produces (D21 evidence for the codec half of the open law, and for the forms
+    that the merge wave's encoders add): every node form of SPEC section 3 must occur."""
+    (BUILD / 'fuzz').mkdir(exist_ok=True)
+    seen = pmap(lambda seed: plan_case(tools, seed), range(FUZZ_PLANS))
+    forms = set().union(*seen)
+    require(forms == set(codec.OPCODES), ('the generated plans miss node forms', sorted(set(codec.OPCODES) - forms)))
+    return {'plans': FUZZ_PLANS, 'forms': sorted(forms), 'plans_with_form': {f: sum(f in s for s in seen) for f in sorted(forms)}}
+
+
 # ---------------------------------------------------------------- the proofs and the open claim
 
 OPEN = ROOT / 'src/image-OPEN.bend'
@@ -971,6 +1006,7 @@ def main():
         record['profile'] = profile_controls(tools, rows, frozen)
         record['names'] = name_controls(tools, check_cli)
         record['fuzz'] = fuzz_books(tools, check_cli)
+        record['fuzz_plans'] = fuzz_plans(tools)
         record['synthetic'] = chunk_evidence(tools, frozen['synthetic'])
         record['synthetic_plan'] = deep_reference(frozen)
         record['exhaustive'] = pmap(exhaustive_case, FORMS)
@@ -989,7 +1025,8 @@ def main():
           f"decode(encode(b)) = erase_tokens(b) observed, {record['codec']['images']} images through the Bend codec in 2 lanes, "
           f"{len(record['refusals'])} decoder refusals, {record['default_profile_modules']} default module hashes unchanged, "
           f"{len(record['profile'])} profile controls, {len(record['names']['refused'])} refused names, {record['fuzz']['accepted']} of "
-          f"{record['fuzz']['programs']} generated programs encoded to the reference and round-tripped, synthetic "
+          f"{record['fuzz']['programs']} generated programs encoded to the reference and round-tripped, {record['fuzz_plans']['plans']} random "
+          f"plans of all {len(record['fuzz_plans']['forms'])} forms decoded and re-laid-out as the reference does, synthetic "
           f"{record['synthetic']['native']['bytes']}-byte image in {record['synthetic']['native']['writes']} chunked writes, a "
           f"{record['synthetic']['eight_mib']['bytes']}-byte image in {record['synthetic']['eight_mib']['writes']}, "
           f"{len(record['exhaustive'])} exhaustiveness controls, {len(record['mutants'])} mutants killed "

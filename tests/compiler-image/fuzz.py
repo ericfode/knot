@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""A seeded generator of small programs in the checked profile of this base, for the image gate's fuzz stage.
+"""Seeded generators for the image gate's fuzz stages.
 
-Every type is Data. Constructors carry live, erased (`-`) and reusable (`+`) fields, functions take reusable and erased
-parameters, and bodies nest matches on parameters and bound fields (arms in any order), erased and reusable lets, and
-calls of earlier functions, with erased arguments filled by the smallest closed value of their type. `check-cli`
-decides which programs are accepted; the gate holds each accepted one to the independent reference's bytes and to
-`decode(encode(b)) = erase_tokens(b)`. The programs are a function of the seed alone.
+`program(seed)`: a small program in the checked profile of this base. Every type is Data. Constructors carry live,
+erased (`-`) and reusable (`+`) fields, functions take reusable and erased parameters, and bodies nest matches on
+parameters and bound fields (arms in any order), erased and reusable lets, and calls of earlier functions, with erased
+arguments filled by the smallest closed value of their type. `check-cli` decides which programs are accepted; the gate
+holds each accepted one to the independent reference's bytes and to `decode(encode(b)) = erase_tokens(b)`.
+
+`plan(seed)`: a random record plan in the reference codec's format (vm/serializer.py), with every node form of SPEC
+section 3, both Case modes, defaults, constants of each kind, closures, names that repeat, and representation words. This
+base's core produces few of these forms, so the merge wave's encoders meet them first here: the gate encodes each with the
+reference, and the Bend decoder must read it as the reference does and the Bend layout must write it back byte for byte.
+
+Both are a function of the seed alone.
 """
 import random
 import re
@@ -134,3 +141,93 @@ def features(source: str) -> dict:
             counts['matches'] += 1
             counts['nested_matches'] += len(line) - len(line.lstrip()) > 2
     return counts
+
+
+NAMES = ('a', 'b', 'Flag', 'Off', 'On', 'main', 'f', 'g', 'x1', 'List.map', 'U32', 'Nat', 'longer_name_of_some_kind', 'ab', 'abc', 'abcd', 'abcde')
+REPRESENTATIONS = ('Nat', 'U32', 'Char', 'String', 'Bool', 'Cmp', 'Unit', 'List', 'Result', 'Sigma', 'IO.OP', 'File')
+
+
+def plan(seed: int) -> dict:
+    r = random.Random(seed)
+    count = r.randint(1, 5)
+    types = []
+    for i in range(count):
+        kind = 'data' if i == 0 else r.choice(['data', 'data', 'data', 'arrow', 'erased-arrow', 'opaque'])
+        if kind == 'data':
+            constructors = [{'name': r.choice(NAMES), 'fields': [None if r.random() < 0.15 else r.randrange(count) for _ in range(r.randint(0, 3))]}
+                            for _ in range(r.randint(0, 3))]
+            types.append({'kind': 'data', 'name': r.choice(NAMES), 'constructors': constructors})
+        elif kind == 'opaque':
+            types.append({'kind': 'opaque', 'name': r.choice(NAMES)})
+        else:
+            types.append({'kind': kind, 'domain': None if r.random() < 0.2 else r.randrange(count), 'result': None if r.random() < 0.2 else r.randrange(count)})
+
+    def type_id():
+        return None if r.random() < 0.1 else r.randrange(count)
+
+    def node(depth):
+        if depth <= 0:
+            return r.choice([lambda: ['value', type_id(), r.randrange(4)], lambda: ['ref', type_id(), r.randrange(6)],
+                             lambda: ['lit', type_id(), 'U32', r.randrange(2**32)]])()
+        form = r.choice(['lit', 'value', 'ref', 'prim', 'con', 'call', 'foreign', 'let', 'case', 'case', 'closure', 'invoke'])
+        if form == 'lit':
+            kind = r.choice(['U32', 'Nat', 'Char', 'String'])
+            value = ([r.randrange(2 ** r.choice([7, 11, 16, 21])) for _ in range(r.randint(0, 4))] if kind == 'String'
+                     else r.randrange(2 ** 21) if kind == 'Char' else r.randrange(300) if kind == 'Nat' else r.randrange(2 ** 32))
+            return ['lit', type_id(), kind, value]
+        if form == 'value':
+            return ['value', type_id(), r.randrange(5)]
+        if form == 'ref':
+            return ['ref', type_id(), r.randrange(8)]
+        if form in ('prim', 'con', 'call', 'foreign'):
+            return [form, type_id(), r.randrange(30), [node(depth - 1) for _ in range(r.randint(0, 3))]]
+        if form == 'let':
+            return ['let', type_id(), r.randrange(8), node(depth - 1), node(depth - 1)]
+        if form == 'case':
+            mode = r.choice(['tags', 'keys'])
+            if mode == 'tags':
+                rows = [None if r.random() < 0.25 else ['branch', i, r.randrange(6), r.randrange(4), node(depth - 1)] for i in range(r.randint(0, 4))]
+            else:
+                rows = [['branch', key, r.randrange(6), r.randrange(4), node(depth - 1)] for key in sorted(r.sample(range(50), r.randint(0, 4)))]
+            fallback = ['default', node(depth - 1)] if r.random() < 0.5 else None
+            return ['case', type_id(), r.randrange(6), None if r.random() < 0.1 else r.randrange(count), mode, rows, fallback]
+        if form == 'closure':
+            return ['closure', type_id(), r.randrange(4), r.randrange(8), sorted(r.sample(range(8), r.randint(0, 3))), node(depth - 1)]
+        return ['invoke', type_id(), node(depth - 1), [node(depth - 1) for _ in range(r.randint(0, 3))]]
+
+    functions = [{'name': r.choice(NAMES + ('main',)), 'parameters': [type_id() for _ in range(r.randint(0, 4))], 'result': type_id(),
+                  'slots': r.randrange(10), 'body': node(r.randint(0, 4))} for _ in range(r.randint(1, 4))]
+    result = {'entry': r.choice(['book', 'program']), 'types': types, 'functions': functions}
+    if r.random() < 0.4:
+        result['representation'] = {name: r.randrange(count) for name in r.sample(REPRESENTATIONS, r.randint(1, 4))}
+    return result
+
+
+def forms(plan: dict) -> set:
+    """The node forms a plan uses."""
+    found = set()
+
+    def walk(n):
+        found.add(n[0])
+        if n[0] in ('prim', 'con', 'call', 'foreign'):
+            for k in n[3]:
+                walk(k)
+        elif n[0] == 'let':
+            walk(n[3]); walk(n[4])
+        elif n[0] == 'case':
+            for row in n[5]:
+                if row is not None:
+                    walk(row)
+            if n[6] is not None:
+                walk(n[6])
+        elif n[0] in ('branch', 'default'):
+            walk(n[-1])
+        elif n[0] == 'closure':
+            walk(n[5])
+        elif n[0] == 'invoke':
+            walk(n[2])
+            for a in n[3]:
+                walk(a)
+    for f in plan['functions']:
+        walk(f['body'])
+    return found

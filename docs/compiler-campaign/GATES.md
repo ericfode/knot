@@ -133,8 +133,12 @@ The image increment adds gate `image` (`python3 -B tests/compiler-image/check.py
   `image-cli answers` shows erasure answering on it: the size-limit counterexample of the round trip's first statement.
 - A name that is not an identifier is refused by layout as `Unsupported compile image-name` (`image-cli named`, both lanes).
 - 300 seeded programs (`fuzz.py`: erased and reusable fields, parameters and lets, nested matches, calls) run through the same
-  lanes: each one `check-cli` accepts must encode to the reference's bytes and print `Roundtrip equal` (12 of them on the Bun lane
-  too). Nine judging controls pin how the listed sources are judged: a frozen book, a gap that closes, a source that moves, a
+  lanes: each one `check-cli` accepts must encode to the reference's bytes and print `Roundtrip equal` (12 of them on the Bun
+  lane too).
+- 300 random record plans of all 13 node forms (`fuzz.py`: both Case modes, defaults, constants of each kind, closures) are
+  encoded by the reference; `image-cli decode` must print the plan the reference decodes and `recode` must write the same
+  bytes (native lane, and the Bun lane on 6): the codec half of the round trip, on forms this base's core does not produce.
+- Nine judging controls pin how the listed sources are judged: a frozen book, a gap that closes, a source that moves, a
   checker that regresses or fails, a drifted reference, a missing source, and a source the seed rejects that `check-cli` accepts.
 - Twenty-one mutants of `src/image*.bend` are killed by wrong observations, and deleting any of the eight
   `C.Term` arms fails the seed's check with a message naming it. `src/image-PROOF.bend` (twenty-four laws) must print
