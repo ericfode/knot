@@ -1,6 +1,6 @@
 {
  "schema": "vm-core fixtures",
- "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed.",
+ "rule": "Expected observations are literal review of each plan under vm/SPEC.md, written before any VM run (D7); golden rows reuse vm/golden images with invocations the goldens do not freeze. The ceiling section states its own provenance: its bump pointers were first measured, and are now derived from section 5. The nat-pred limited rows state theirs: a draft slip, caught by a pre-fix VM run before commit, was corrected by rederiving from sections 5 and 6. The growth rows state theirs: their stops are derived from sections 5 and 7 by check-core's `loop_stop`, and their memory.grow bound is the growth policy's (CORE.md choice 15), fixed before the VM changed. The memory-end rows state theirs: their fill counts, bump pointers and lines are derived by section 5's model and the reference evaluation, after a probe of the VM found the defects they catch.",
  "fuel": 1000000,
  "runs": [
   {
@@ -1262,6 +1262,53 @@
      "bump": 308019200
     },
     "basis": "A host that refuses memory.grow beyond 4,700 pages (node --wasm-max-mem-pages=4700), 308,019,200 bytes, below the 4 GiB maximum. Section 5: that is HostFailure, never Exhausted; the real host shows `HostFailure io trap`, exit 5, and the VM has no outcome of its own (its register stays 0). The cells tile H0..308,019,200 exactly ((308,019,200 - 16,842,752) / 16 = 18,198,528), so bump = 308,019,200 and the next entry, debited as call 18,198,529, is the one refused. The cap is 293.75 MiB, not a multiple of 16 MiB: a VM that traps when its 16 MiB step is refused would stop 5.75 MiB lower, at 301,989,888. It must fall back to the size it needs (CORE.md choice 15)."
+   }
+  ]
+ },
+ "memory-end": {
+  "rule": "A cell that ends exactly at the end of the memory in use. Boot grows memory once, to 48 MiB (the arguments sit at 0x2010000, CORE.md), and the heap grows it only when a cell would end beyond it, to the next 16 MiB boundary at or above the cell's end (CORE.md choice 15), so memory ends exactly where a cell does whenever that cell ends at such a boundary. A VM that reads or writes a word past a cell's end faults only there: anywhere else the access lands in the cell's padding or in free heap above the bump pointer, which `$alloc` zeroes before any cell holds it. Each row fills the heap from H0 with fill(k, B0{}), one 32-byte Activation and one 32-byte B1 cell per step, so that its last cell ends at 48 MiB. Section 5's model (check-core's `ceiling_run`) gives the fill count k, the pool constants that align the last cell, the bump pointer and the line; the reference evaluation of the same plan with k = 3 gives the line again and the calls, each further step being one entry of fill. The gate derives all of it again. `grows` is literal review of choice 15: boot's one grow, and one more for describe's text, which starts at the bump pointer, the memory's end. A probe of the VM (.local/vm-core/probe/r9/, review round 6's closing session) showed that three of the study's survivors trap on these Books and on no other row, before they were frozen.",
+  "rows": [
+   {
+    "name": "memory-end-object",
+    "image": "core/memory-end-object",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "fill": 523262,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t4\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 523264,
+     "bump": 50331648,
+     "grows": 2
+    },
+    "basis": "main = let a = fill(523262n, B0{}) in let t = T4{1, 2, 3, 4} in case t of T4{a, b, c, d} -> On{}. The image ends at byte 5,288, so F0 = 65,536 and H0 = F0 + 16 MiB = 16,842,752, and the pool holds no cell (every literal is an immediate). main's Activation (6 slots: payload 8, 10 words, so 16) is 64 bytes; each of fill's k + 1 entries takes an Activation of 3 slots (payload 5, so 8 words: 32 bytes) and each of its k steps a B1 (payload 3: 32 bytes); T4 (4 fields: payload 6, 8 words) takes 32 more. So T4 ends at H0 + 128 + 64k = 50,331,648 = 48 MiB exactly, and fills its cell: the Case binds its four words, the last at 48 MiB - 4. describe writes `On{}` from 48 MiB, which grows memory once. 523,264 entries: main and fill k + 1 times"
+   },
+   {
+    "name": "memory-end-action",
+    "image": "core/memory-end-action",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "fill": 523261,
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t8\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 523264,
+     "bump": 50331648,
+     "grows": 2
+    },
+    "basis": "main = let a = fill(523261n, B0{}) in let b = 2147483648 in let c = \"y\" in let d = IO.print(\"x\") in On{}: the Action is built and never applied (section 8). The image ends at byte 5,644, so H0 = 16,842,752. The pool holds \"x\" and \"y\" (a 32-byte SCon each) and the Big 2^31 (16 bytes): 80 bytes, which align the Action. main's Activation (4 slots) and IO.print's (1 slot) are 32 bytes each, fill's k + 1 Activations and k B1 cells 32 each, and the Action, a cell of its foreign id and its one operand (2 words, 4 with the header), 16. So the Action ends at H0 + 192 + 64k = 50,331,648 = 48 MiB exactly. describe writes `On{}` from 48 MiB, which grows memory once. 523,264 entries: main, fill k + 1 times and IO.print"
    }
   ]
  },

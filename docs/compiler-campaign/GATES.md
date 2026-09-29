@@ -135,6 +135,15 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   at 4 GiB and a control 16 bytes above, took their fill counts from the
   derivation alone. A cell may end exactly at 4 GiB, where the pre-fix VM
   trapped.
+- Two memory-end rows: Books whose last cell ends exactly at 48 MiB, where
+  boot leaves the memory (CORE.md choice 15), so that the memory ends where
+  the cell does. One is an Object whose four fields fill its cell, which a Case
+  then binds; the other is the Action of an `IO.print` that is never applied.
+  A read or a write one word past a cell lands in padding or in free heap
+  everywhere else, and faults only here. Section 5's model derives each fill
+  count, bump pointer and line, and the reference evaluation at a fill of 3
+  gives the line and the calls. The test build pins `bump` and `grows` (boot's
+  grow, and one for the text that starts at the memory's end).
 - Three growth rows on one Book whose every entry allocates a 16-byte Activation,
   each stop derived from SPEC sections 5 and 7 in closed form: a heap lowered to
   256 MiB (`Exhausted` kind 2 in at most 24 `memory.grow` calls of the test
@@ -162,10 +171,12 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Seventy-six WAT mutants are each killed by a wrong observation. One restores the
+- Seventy-nine WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right; two restore the immediate tests that trapped
-  (group `traps`); one steps the key search to the middle, not past it, and is
+  (group `traps`), and three copy or bind one word past a cell (group
+  `memory-end`), each killed by a trap on its memory-end row while every other
+  row there stays right; one steps the key search to the middle, not past it, and is
   killed by the hang it makes (a row that outlives its deadline, in group
   `hang`). Twenty-four came with review round 6: the key search, tag
   Defaults and range, describe's separators, closing brace, visit and frame

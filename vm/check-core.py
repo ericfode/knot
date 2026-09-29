@@ -21,6 +21,9 @@ Checks, in order:
   where a cell or the text would end beyond it. Each row's bump pointer and
   outcome are first derived from SPEC section 5's cell sizes over its plan
   (`ceiling_run`), independently of any VM;
+- the memory-end rows: Books whose last cell (an Object whose fields fill it, and an Action) ends exactly at 48 MiB,
+  where boot leaves the memory, so that a read or a write one word past a cell faults there; each bump pointer and
+  line is first derived from SPEC section 5 (`ceiling_run`), and the calls from the reference evaluation;
 - the growth rows: a Book whose every entry allocates a 16-byte Activation stops at a lowered
   heap (with a bounded `memory.grow` count in the test build), at the full 4 GiB through the
   real host within its 120 s guard, and, where the host refuses growth beyond 4,700 pages
@@ -55,9 +58,9 @@ Checks, in order:
   sample of it also through the seed's native lane, with the seed's bytes frozen; and every admitted golden,
   control and fuzz image through both;
 - WAT mutants, each killed by a named fixture group through a wrong
-  observation (a trap, host stack failure or timeout never counts, except for group `trap`, whose defect
-  is the trap, and group `hang`, whose defect is a search that never ends: a row that outlives its
-  deadline is the wrong observation there).
+  observation (a trap, host stack failure or timeout never counts, except for groups `trap`, `traps` and
+  `memory-end`, whose defect is the trap, and group `hang`, whose defect is a search that never ends: a row
+  that outlives its deadline is the wrong observation there).
 
 `--study [--heavy]` runs the systematic mutants of vm/study.py against these rows instead (it writes
 vm/receipts/study.json); `--freeze` rewrites vm/core/seeded.json and vm/core/lane.json from the seed. The gate
@@ -367,7 +370,12 @@ def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[in
             return value(node[4], env, tail)
         if op == 'case':
             _, _, slot, t, mode, rows, default = node
-            require((t, mode, default) == (rep['Nat'], 'tags', None), 'the model cases on Nat only')
+            require((mode, default) == ('tags', None), 'the model cases by tag, without a Default')
+            if t != rep.get('Nat'):  # an Object: selection allocates nothing, and a Branch binds its fields' words
+                _, _, tag, fields = env[slot]
+                arm = rows[tag]
+                env[arm[2]:arm[2] + arm[3]] = fields[:arm[3]]
+                return value(arm[4], env, tail)
             n = env[slot]
             arm = rows[n > 0]
             if n:  # choice 5: n - 1 is allocated only when a Branch binds it
@@ -383,7 +391,7 @@ def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[in
         ops = [value(k, env) for k in node[3]]
         if op == 'call':
             return Tail((node[2], ops)) if tail else enter(node[2], ops)
-        if op == 'con' and node[1] not in (rep['Nat'], rep['Char']):
+        if op == 'con' and node[1] not in (rep.get('Nat'), rep.get('Char')):  # Succ and Chr make words, not cells
             take(cell(2 + len(ops)))
             return ('obj', node[1], node[2], tuple(ops))
         if op == 'foreign':  # an inert Action: the foreign id and its operands, no type or tag word
@@ -431,6 +439,14 @@ def ceiling_expectation(plan: dict, image: bytes) -> tuple[dict, dict]:
     if bump + len(line) - 1 <= 1 << 32:  # the text is the line without its LF
         return {'exit': 0, 'stdout': line, 'stderr': ''}, {'outcome': 'Completed', 'bump': bump}
     return exhausted, {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap', 'bump': bump}
+
+
+def refilled(plan: dict, fill: int, n: int) -> dict:
+    """`plan` with its one Nat literal `fill` set to `n`: a memory-end row at a size the reference evaluation's
+    recursion reaches."""
+    text = json.dumps(plan)
+    require(text.count(f'"Nat", {fill}]') == 1, f'one Nat literal {fill}')
+    return json.loads(text.replace(f'"Nat", {fill}]', f'"Nat", {n}]'))
 
 
 def loop_stop(image: bytes, heap_bytes: int = 1 << 32, memory_bytes: int = 1 << 32) -> tuple[int, int, bool]:
@@ -1014,7 +1030,7 @@ def lane_groups(rows: list, where: Path) -> dict:
 
 STUDY = HERE / 'receipts/study.json'
 STUDY_ORDER = ['keys', 'describe', 'tags', 'display', 'inspection', 'goldens', 'invocations', 'runs', 'reference', 'sweeps', 'writers',
-               'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'controls']  # cheap and telling first
+               'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'memory-end', 'controls']  # cheap and telling first
 HEAVY = ['ceiling']  # about 4 GiB a row: only a study's survivors run them (`--heavy`)
 GUARD = {'fixtures': 120_000, 'limited': 120_000, 'programs': 120_000, 'ceiling': 600_000, 'full-heap': 600_000,
          'trap': 600_000, 'growth': 600_000, 'refused': 600_000}  # ms a row may take before it is stopped, else 30,000
@@ -1095,12 +1111,13 @@ def run_study(groups: dict, source: str, args: list) -> int:
     survivors = [r['mutant'] for r in rows if r['result'] == 'survived']
     unexplained = [m for m in survivors if m not in study.EQUIVALENT]
     stale = [m for m in study.EQUIVALENT if m not in survivors and not only]
-    by_group = {}
+    by_group = {}  # result -> the group of its first wrong observation, hang or trap -> mutants
     for r in rows:
         if 'group' in r:
-            by_group[r['group']] = by_group.get(r['group'], 0) + 1
+            first = by_group.setdefault(r['result'], {})
+            first[r['group']] = first.get(r['group'], 0) + 1
     receipt = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'vm_wat_sha256': sha(source.encode()),
-               'mutants': len(rows), 'tally': tally, 'killed_by_group': by_group,
+               'mutants': len(rows), 'tally': tally, 'by_group': by_group,
                'survivors': [{'mutant': m, 'reason': study.EQUIVALENT.get(m)} for m in survivors],
                'elapsed_seconds': round(time.monotonic() - started), 'rows': rows}
     if not only:
@@ -1435,6 +1452,19 @@ MUTANTS = [
        '          (i32.or (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7))\n'
        '                  (i32.ne (i32.load offset=8 (local.get $x)) (global.get $rIoop))))\n'
        '      (then (call $refuse (global.get $R_ill_typed))))')], 'traps'),
+    # one word past a cell: into its padding or the free heap above the bump pointer, which `$alloc` zeroes before any cell
+    # holds it, so each is unobservable except where the cell ends at the end of the memory in use (section `memory-end`)
+    ('object-fields-overrun', "an Object's operands are copied 8 bytes each: past its cell at 3, 4, 7 to 12 or 15 to 28 fields",
+     [('(memory.copy (i32.add (local.get $c) (i32.const 16)) (local.get $ops) (i32.shl (local.get $cnt) (i32.const 2)))',
+       '(memory.copy (i32.add (local.get $c) (i32.const 16)) (local.get $ops) (i32.shl (local.get $cnt) (i32.const 3)))')],
+     'memory-end'),
+    ('action-operands-overrun', "an Action's operands are copied 8 bytes each: past the 16-byte cell of IO.print's Action",
+     [('(memory.copy (i32.add (local.get $c) (i32.const 12)) (local.get $ops) (i32.shl (local.get $cnt) (i32.const 2)))',
+       '(memory.copy (i32.add (local.get $c) (i32.const 12)) (local.get $ops) (i32.shl (local.get $cnt) (i32.const 3)))')],
+     'memory-end'),
+    ('branch-binds-past-fields', "a Branch binds one word more than its constructor's fields: past a cell its fields fill",
+     [('(br_if $bound (i32.ge_u (local.get $j) (local.get $f)))', '(br_if $bound (i32.gt_u (local.get $j) (local.get $f)))')],
+     'memory-end'),
     # describe's own bounds (section 8): a Nat then constructors near 1,048,576 visits, and the frame region its worklist
     # shares (12 bytes an open Object). The visit and frame checks were pinned only where nothing followed or opened
     ('nat-visits-undercount', 'a Nat word adds n visits to the running count, not n + 1',
@@ -1641,6 +1671,35 @@ def main(args: list) -> int:
         agreed.append({'name': j['id'].split(':', 1)[1], 'exit': got['exit'], **j['dump']})
     record['reference'] = agreed
     stage('reference rows')
+
+    # a cell that ends exactly at the end of the memory in use (48 MiB after boot): the one place where a read or a write
+    # one word past a cell faults. Section 5's model gives each row's bump pointer and line, the reference evaluation at
+    # a fill of 3 the line and the calls (each further step is one entry)
+    edge = fixtures['memory-end']['rows']
+    for r in edge:
+        plan, image = json.loads((HERE / f"{r['image']}.plan.json").read_text()), (HERE / f"{r['image']}.kimg").read_bytes()
+        require(codec.encode(plan, digest) == image and spec.rejected(image, reg, digest) is None,
+                f"memory-end {r['name']}: the image is its plan's encoding, and the reference codec admits it")
+        derived = ceiling_expectation(plan, image)
+        require(derived == (r['expect'], {'outcome': 'Completed', 'bump': r['dump']['bump']}) and r['dump']['bump'] == 48 << 20,
+                f"memory-end {r['name']}: frozen {r['expect']} {r['dump']}, section 5 gives {derived}")
+        shrunk = refilled(plan, r['fill'], 3)
+        derived = reference_run(shrunk, 1000)
+        require(derived == (r['expect'], {'outcome': 'Completed', 'calls': r['dump']['calls'] - (r['fill'] - 3)}),
+                f"memory-end {r['name']}: frozen {r['expect']} {r['dump']}, the reference evaluation at a fill of 3 {derived}")
+    edge_jobs = [{'id': f"memory-end:{r['name']}", 'files': {staged(r['image']): str(sandbox / staged(r['image']))},
+                  'argv': [staged(r['image']), *r['argv']], 'want': r['expect'], 'dump': r['dump']} for r in edge]
+    ran = pool(lambda j: host(module, sandbox, j['argv']), edge_jobs)
+    dumped = harness([{**{k: j[k] for k in ('id', 'files', 'argv')}, 'wasm': str(test)} for j in edge_jobs])
+    ends = []
+    for j, got in zip(edge_jobs, ran):
+        dump, state = dumped[j['id']], dumped[j['id']]['state']
+        require(got == j['want'], f"{j['id']}: {got} vs {j['want']}")
+        require((dump['exit'], dump['stdout']) == (got['exit'], got['stdout']), f"{j['id']}: harness and host differ")
+        require(all(state[k] == v for k, v in j['dump'].items()), f"{j['id']}: {state} vs {j['dump']}")
+        ends.append({'name': j['id'].split(':', 1)[1], 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode()), **j['dump']})
+    record['memory_end'] = ends
+    stage('memory end')
 
     # the differential lane: seeded rows, generated programs, sweeps and writers through vm.wasm and the reference
     # evaluation, the frozen seed sample through the seed's native lane (vm/lane.py, vm/core/lane.json)
@@ -1918,6 +1977,7 @@ def main(args: list) -> int:
     require(all(groups[g] for g in ('growth', 'refused')), 'the growth rows have a bounded count and a refusal')
     groups.update(lane_groups(lane_all, BUILD / 'lane'))
     groups['traps'] = groups['inspection']  # the same rows: a fault where the frozen run is a refusal is the wrong observation
+    groups['memory-end'] = edge_jobs  # a fault where the frozen run completes, at a cell that ends where memory does
     groups['dumps'] = [{'id': f'dump:{n}', 'files': {staged(by_name[n]['image']): str(sandbox / staged(by_name[n]['image']))},
                         'argv': [staged(by_name[n]['image']), *by_name[n]['argv']], 'trace': 'yields', 'want': None, 'dump': want}
                        for n, want in fixtures['dumps'].items()]
@@ -1957,7 +2017,7 @@ def main(args: list) -> int:
                                                           clean(out[j['id']]) or out[j['id']]['status'] in ('Timeout', 'Skipped') and group == 'hang')]
         if group == 'hang':  # the frozen outcome always ends: a row that outlives its deadline is the wrong observation
             wrong = [j['id'] for j in groups[group] if out[j['id']]['status'] == 'Timeout']
-        elif group == 'traps':  # no frozen run is a trap: a row that traps is the wrong observation, and every other row stays right
+        elif group in ('traps', 'memory-end'):  # no frozen run is a trap: a row that traps is the wrong observation, and every other row stays right
             wrong = [j['id'] for j in groups[group] if out[j['id']]['status'] == 'Trap']
             askew = [j['id'] for j in groups[group] if out[j['id']]['status'] != 'Trap'
                      and not (clean(out[j['id']]) and not observed_wrong(j, out[j['id']]))]
@@ -1982,7 +2042,7 @@ def main(args: list) -> int:
           f"{len(dumps)} dump rows, {len(agreed)} runs equal to the reference evaluation, "
           f"{len(seeded_rows['rows'])} seeded rows, a lane of {record['lane']['rows']} rows (seed {record['lane']['seed']}; "
           f"{record['lane']['sample']['rows']} run again through the seed), {sum(record['both'].values())} admitted images "
-          f"through both, {len(high)} ceiling runs, {len(growth)} growth runs, {len(stack)} small-stack runs, "
+          f"through both, {len(high)} ceiling runs, {len(ends)} memory-end runs, {len(growth)} growth runs, {len(stack)} small-stack runs, "
           f"{len(refused)} refused and {len(admissions)} admitted controls, "
           f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "

@@ -614,6 +614,31 @@ adopt them or record its own, so that lockstep compares like with like.
     §5's HostFailure, `HostFailure io trap` on the real host, at bump
     308,019,200 after 18,198,529 calls, the cap. A VM whose refused step traps
     stops 5.75 MiB lower.
+- **Memory end (`fixtures.json` section `memory-end`).** Boot grows memory once, to
+  48 MiB (the arguments), and the heap grows it only when a cell would end beyond
+  it, to the next 16 MiB boundary at or above that cell's end (choice 15). So the
+  memory ends exactly where a cell does whenever that cell ends on such a
+  boundary, and only there does a read or a write one word past a cell fault:
+  anywhere else it lands in the cell's padding or in free heap above the bump
+  pointer, which `$alloc` zeroes before any cell holds it. Two Books fill the
+  heap with `fill(k, B0{})` (a 32-byte Activation and a 32-byte `B1` a step) so
+  that their last cell ends at 48 MiB:
+  - `memory-end-object` (k = 523,262): `T4{1, 2, 3, 4}`, whose four fields fill
+    its 32-byte cell, then a Case that binds them; `On{}` after 523,264 entries;
+  - `memory-end-action` (k = 523,261, with the pool constants `"y"` and 2^31
+    aligning it): the 16-byte Action of an `IO.print` that is never applied;
+    `On{}` after 523,264 entries.
+
+  Section 5's model (`ceiling_run`, which now also binds a Branch's fields) gives
+  each fill count, bump pointer and line; the reference evaluation of the same
+  plan with k = 3 gives the line and the calls, each further step being one
+  entry. The test build pins `bump` = 48 MiB and `grows` = 2 (boot's grow, and
+  one for describe's text, which starts at the memory's end), so a change of
+  policy that moved the memory's end would fail the rows, not leave them testing
+  nothing. A probe of the VM (`.local/vm-core/probe/r9/`) found that three of the
+  study's survivors trap on these Books and nowhere else, before the rows were
+  frozen; the frozen values come from the model and the reference, which the gate
+  derives again.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
@@ -626,8 +651,8 @@ adopt them or record its own, so that lockstep compares like with like.
   reference codec: 1,674 counts that the remaining words cannot hold (it read
   `record-length`), 468 `limits` and 48 Closure `closure-slots`
   (.local/vm-core/logs/r6-limit-words-prefix.log).
-- **Mutants.** Seventy-six, each killed by a wrong observation in a named group
-  (three by a trap and one by a hang, below):
+- **Mutants.** Seventy-nine, each killed by a wrong observation in a named group
+  (six by a trap and one by a hang, below):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
@@ -713,6 +738,14 @@ adopt them or record its own, so that lockstep compares like with like.
     `$scell` and `$finish` as the VM of `2e0c9b1` had them. Its defect is the trap
     (like `top-trap`): the mutant is killed when a row of the inspection matrix
     traps where the frozen run is a refusal, and every other row stays right.
+  - one word past a cell (group `memory-end`, three, from the study's survivors):
+    an Object's operands copied 8 bytes each (past its cell at 3, 4, 7 to 12 or 15
+    to 28 fields), an Action's operand copied 8 bytes (past IO.print's 16-byte
+    cell), and a Branch that binds one word more than its constructor's fields
+    (past a cell the fields fill: 4, 12 or 28 of them). Everywhere else the copy
+    or read lands in padding or in free heap and changes nothing; each traps on
+    its own memory-end row, and is killed there only while the other row stays
+    right.
 
   **Group `hang`.** The reviewer's `mid+1 -> mid` steps the key search to the
   middle instead of past it: on a miss above a key `lo` never moves, and the search
