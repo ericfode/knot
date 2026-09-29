@@ -13,7 +13,10 @@ RECEIPT = HERE / 'receipts/round6.json'
 ACCEPTED = {'exit': 0}
 
 # The first restores the finding; the others move the rule to lines, shift the
-# offset, confine it to patterns or extend it to a call's parenthesis.
+# offset, confine it to patterns or extend it to a call's parenthesis. `touches`
+# also decides a return arrow's `->` (round 10), so the shifted offset now fails
+# every def header before it reaches the brace witness: still killed, by a
+# different diagnostic.
 MUTANTS = [
     {'name': 'ignore-detached-brace', 'file': 'parse.bend',
      'old': 'S.touches(name,open),u =>', 'new': 'True{},u =>',
@@ -24,7 +27,7 @@ MUTANTS = [
     {'name': 'touch-past-one', 'file': 'syntax.bend',
      'old': 'U32.is_eq(b,c)', 'new': 'U32.is_eq(U32.add(b,1),c)',
      'witness': 'touch-pattern-inner-space', 'phase': 'check',
-     'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\tdetached-brace\t'}},
+     'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\tfunction-result\t'}},
     {'name': 'touch-patterns-only', 'file': 'parse.bend',
      'old': 'S.touches(name,open),u =>', 'new': 'Bool.or(Bool.not(pattern),S.touches(name,open)),u =>',
      'witness': 'w5-body-space', 'phase': 'check', 'wrong': ACCEPTED},

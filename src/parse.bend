@@ -47,14 +47,13 @@ def promotes(ts: List<&2,S.Token>) -> Bool:
     case Con{+plus,Con{next,rest}}: Bool.and(S.matches(plus,"+"),S.marks(plus,next))
     case _: False{}
 
-# The seed reads a line break before a name as whitespace; a statement here ends at it.
+# A line break before a name is whitespace to the seed, and ends a statement here.
 def broken(+ts: List<&2,S.Token>) -> Bool:
   Bool.and(starts(ts,"\n"),scrutinee(S.skip_lines(ts)))
 
-# The seed accepts a dotted binder where it rebinds a name in scope, a promotion
-# of a promotion (`++y`) and a name after a line break; the parser resolves no
-# scope and ends a statement at a line break, so each is unsupported, and any
-# other name that cannot bind is invalid.
+# The seed accepts a dotted binder that rebinds a name, `++y` and a name after a
+# line break; the parser resolves no scope and ends a statement at a break, so
+# each is unsupported, and any other name that cannot bind is invalid.
 def binder_failure(+ts: List<&2,S.Token>, +name: S.Token, code: String) -> Result<S.Error,Parsed>:
   S.choose(Result<S.Error,Parsed>,S.identifier(name),u => unsupported(ts,"dotted-binder"),u =>
   S.choose(Result<S.Error,Parsed>,S.matches(name,"+"),u => unsupported(ts,"repeated-promotion"),u =>
@@ -112,10 +111,13 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
         Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
 
-# A line break before the expected token is whitespace to the seed.
-def expect_line(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Token>>:
-  S.choose(Result<S.Error,List<&2,S.Token>>,Bool.and(starts(ts,"\n"),starts(S.skip_lines(ts),word)),u =>
-    Fail{S.Unsupported{"parse","line-break",S.here(ts)}},u => expect(ts,word))
+# A line break before a let's `=` or before its value is whitespace to the seed.
+def assign(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
+  S.choose(Result<S.Error,List<&2,S.Token>>,Bool.and(starts(ts,"\n"),starts(S.skip_lines(ts),"=")),u =>
+    Fail{S.Unsupported{"parse","line-break",S.here(ts)}},u =>
+  S.bind(List<&2,S.Token>,List<&2,S.Token>,expect(ts,"="),+rhs =>
+    S.choose(Result<S.Error,List<&2,S.Token>>,broken(rhs),u =>
+      Fail{S.Unsupported{"parse","line-break",S.here(rhs)}},u => Done{rhs})))
 
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match rest:
@@ -173,10 +175,9 @@ def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
 def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{+h,t}:
-      S.choose(Result<S.Error,Parsed>,broken(ts),u => unsupported(ts,"line-break"),u =>
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,")"),Bool.or(S.matches(h,"}"),
         Bool.or(S.matches(h,":"),Bool.or(S.matches(h,","),Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")))))),u =>
-          invalid(ts,"expected-term"),u => unsupported(ts,"term-form")))
+          invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
     case _: invalid(ts,"unexpected-end")
 
 # A match or case header runs to its colon; its line breaks separate no
@@ -349,7 +350,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(name),Bool.or(U32.is_eq(quantity,0),S.binder(name))),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(separator,":"),u =>
             run(n,AnnotatedBinding{name,quantity,column},tail),u =>
-            S.bind(List<&2,S.Token>,Parsed,expect_line(Con{separator,tail},"="),rhs =>
+            S.bind(List<&2,S.Token>,Parsed,assign(Con{separator,tail}),rhs =>
               then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest)))),u =>
             binder_failure(tokens,name,"binding-name"))
         case _: invalid(tokens,"binding")
@@ -359,7 +360,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.identifier(typ),u =>
             S.choose(Result<S.Error,Parsed>,starts(tail,"<"),u =>
               unsupported(tail,"type-application"),u =>
-            S.bind(List<&2,S.Token>,Parsed,expect_line(tail,"="),rhs =>
+            S.bind(List<&2,S.Token>,Parsed,assign(tail),rhs =>
               then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,Some{typ},value,column},rest)))),u =>
             unsupported(tokens,"binding-type"))
         case _: invalid(tokens,"binding-type")

@@ -833,6 +833,30 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.assign",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.broken",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.binder_failure",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -881,7 +905,7 @@
           {
             "key": "src/parse.broken",
             "file": "src/parse.bend",
-            "via": "src/parse.binder_failure",
+            "via": "src/parse.assign",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -929,28 +953,6 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.expect_line",
-            "file": "src/parse.bend",
-            "via": "src/parse.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "List",
-              "Result",
-              "String",
-              "src/parse.expect",
-              "src/parse.starts",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.here",
-              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -1196,11 +1198,11 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
-              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -1301,7 +1303,6 @@
               "Result",
               "String",
               "src/parse.Parsed",
-              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -2503,6 +2504,30 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.assign",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.broken",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.binder_failure",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -2551,7 +2576,7 @@
           {
             "key": "src/parse.broken",
             "file": "src/parse.bend",
-            "via": "src/parse.binder_failure",
+            "via": "src/parse.assign",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2599,28 +2624,6 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.expect_line",
-            "file": "src/parse.bend",
-            "via": "src/parse.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "List",
-              "Result",
-              "String",
-              "src/parse.expect",
-              "src/parse.starts",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.here",
-              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -2866,11 +2869,11 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
-              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -2971,7 +2974,6 @@
               "Result",
               "String",
               "src/parse.Parsed",
-              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -3970,6 +3972,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.assign",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/parse.broken",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.bind",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.binder_failure",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -4005,7 +4026,7 @@
           {
             "key": "src/parse.broken",
             "file": "src/parse.bend",
-            "via": "src/parse.binder_failure",
+            "via": "src/parse.assign",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4042,23 +4063,6 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.expect_line",
-            "file": "src/parse.bend",
-            "via": "src/parse.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "src/parse.expect",
-              "src/parse.starts",
-              "src/syntax.choose",
-              "src/syntax.here",
-              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -4207,11 +4211,11 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
-              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -4292,7 +4296,6 @@
             "unsafe": false,
             "dependencies": [
               "Bool.or",
-              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.choose",
@@ -5333,6 +5336,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.assign",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "src/parse.broken",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.binder_failure",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -5380,7 +5406,7 @@
           {
             "key": "src/parse.broken",
             "file": "src/parse.bend",
-            "via": "src/parse.binder_failure",
+            "via": "src/parse.assign",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5427,28 +5453,6 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.expect_line",
-            "file": "src/parse.bend",
-            "via": "src/parse.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "List",
-              "Result",
-              "String",
-              "src/parse.expect",
-              "src/parse.starts",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.here",
-              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -5685,11 +5689,11 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
-              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -5788,7 +5792,6 @@
               "List",
               "Result",
               "src/parse.Parsed",
-              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -10701,6 +10704,30 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.assign",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.broken",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.binder_failure",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -10749,7 +10776,7 @@
           {
             "key": "src/parse.broken",
             "file": "src/parse.bend",
-            "via": "src/parse.binder_failure",
+            "via": "src/parse.assign",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10797,28 +10824,6 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.expect_line",
-            "file": "src/parse.bend",
-            "via": "src/parse.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "List",
-              "Result",
-              "String",
-              "src/parse.expect",
-              "src/parse.starts",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.here",
-              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -11064,11 +11069,11 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
-              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -11169,7 +11174,6 @@
               "Result",
               "String",
               "src/parse.Parsed",
-              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -18293,6 +18297,30 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.assign",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.broken",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.binder_failure",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -18341,7 +18369,7 @@
           {
             "key": "src/parse.broken",
             "file": "src/parse.bend",
-            "via": "src/parse.binder_failure",
+            "via": "src/parse.assign",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -18389,28 +18417,6 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.expect_line",
-            "file": "src/parse.bend",
-            "via": "src/parse.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "List",
-              "Result",
-              "String",
-              "src/parse.expect",
-              "src/parse.starts",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.here",
-              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -18656,11 +18662,11 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
-              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -18761,7 +18767,6 @@
               "Result",
               "String",
               "src/parse.Parsed",
-              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",
@@ -24376,6 +24381,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.assign",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/parse.broken",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.bind",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.binder_failure",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -24411,7 +24435,7 @@
           {
             "key": "src/parse.broken",
             "file": "src/parse.bend",
-            "via": "src/parse.binder_failure",
+            "via": "src/parse.assign",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24448,23 +24472,6 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.expect_line",
-            "file": "src/parse.bend",
-            "via": "src/parse.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "src/parse.expect",
-              "src/parse.starts",
-              "src/syntax.choose",
-              "src/syntax.here",
-              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -24613,11 +24620,11 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
-              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -24698,7 +24705,6 @@
             "unsafe": false,
             "dependencies": [
               "Bool.or",
-              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.choose",
@@ -30968,6 +30974,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.assign",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "src/parse.broken",
+              "src/parse.expect",
+              "src/parse.starts",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose",
+              "src/syntax.here",
+              "src/syntax.skip_lines"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.binder_failure",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -31015,7 +31044,7 @@
           {
             "key": "src/parse.broken",
             "file": "src/parse.bend",
-            "via": "src/parse.binder_failure",
+            "via": "src/parse.assign",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -31062,28 +31091,6 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.matches"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.expect_line",
-            "file": "src/parse.bend",
-            "via": "src/parse.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "List",
-              "Result",
-              "String",
-              "src/parse.expect",
-              "src/parse.starts",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.here",
-              "src/syntax.skip_lines"
             ],
             "dynamic_calls": []
           },
@@ -31320,11 +31327,11 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.assign",
               "src/parse.binder_failure",
               "src/parse.body_end",
               "src/parse.columns",
               "src/parse.expect",
-              "src/parse.expect_line",
               "src/parse.header",
               "src/parse.invalid",
               "src/parse.parameter",
@@ -31423,7 +31430,6 @@
               "List",
               "Result",
               "src/parse.Parsed",
-              "src/parse.broken",
               "src/parse.invalid",
               "src/parse.unsupported",
               "src/syntax.Error",

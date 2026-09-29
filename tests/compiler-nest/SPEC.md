@@ -209,7 +209,7 @@ after a let (`+ u = ..`) and a split arrow are `Invalid parse` (`expected-:`,
 row or follows a comma, and a spaced marker first in a body are accepted.
 Whitespace-separated arguments, `++y` and a let split across lines are
 `Unsupported`. `round10.py` checks both lanes, evaluator and Wasm agreement,
-rejection in every phase and eighteen mutants; `fuzz.py` draws spaced `+` atoms.
+rejection in every phase and nineteen mutants; `fuzz.py` draws spaced `+` atoms.
 
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual
