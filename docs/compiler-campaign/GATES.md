@@ -114,7 +114,8 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - The 71 refusal controls, a seeded fuzz corpus of 3,720 mutated goldens and
   7,741 goldens that each set one limit word (a record count, an arity or a
   `slots`) around its limit are refused with the reference codec's first
-  defect, and none traps. Nine of the controls sit on either side of SPEC
+  defect, and none traps. A crash of the reference codec on any of those
+  images fails the gate. Nine of the controls sit on either side of SPEC
   section 4's resource limits: past a limit the VM stops `Exhausted` kind 2
   with the limit as its cause, and the gate compares that with the reference's
   `Exhausted 2 <limit>`, in the VM's own outcome registers too.

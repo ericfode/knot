@@ -294,6 +294,39 @@ adopt them or record its own, so that lockstep compares like with like.
   fail on images nested deeper than Python's recursion limit. `check-core.py`
   lays out its 200,000-deep image iteratively. At depth 40 that layout is
   checked equal to `serializer.encode`.
+- **`serializer.decode` allocates from a count before it checks it (open,
+  vm-spec).** The type loop builds `'constructors': [None] * r[3]` before
+  `expect != len(ctors)` ties the counts to the constructor records. Nine of the
+  gate's 3,720 fuzz images reach it with a count near 2^32 (`char-eq-38`,
+  `erased-let-26`, `let-3`, `nat-add-21`, `print-non-scalar-24`,
+  `result-u32-field-28`, `string-empty-9`, `string-ne-length-33` and
+  `value-on-26`). Each makes the reference allocate a list of about 32 GB for 2
+  to 5 s and then refuse the image (`constructor count` for five, `constructor
+  grouping` for four), so the gate's process peaks at about 35 GB, though no
+  limit-word image reaches it.
+
+  The gate used to record such a crash of the reference and go on. On a host
+  that could not allocate the list it would have compared fewer images than it
+  reported. It now fails on any crash (`verdict`, both corpora), and
+  `crash_fails` shows on every run that the guard fires. The allocation itself
+  is in vm-spec's file. Making the slots after the `constructor count` check
+  keeps every verdict (the counts then sum to the number of constructor
+  records, so the lists fit the image):
+
+  ```python
+              plan_types.append({'kind': kind, 'name': text(r[1]), 'constructors': r[3]})
+      ...
+      if expect != len(ctors):
+          raise Malformed('constructor count')
+      for t in plan_types:  # the counts now sum to len(ctors), so the slots fit the image
+          if t['kind'] == 'data':
+              t['constructors'] = [None] * t['constructors']
+  ```
+
+  This was checked on the 3,720 fuzz and 7,741 limit-word images: the real
+  original on the nine above, a lazy stand-in for their list on the rest, and
+  the patched codec agree on every verdict, and the two corpora are generated
+  in 1.2 s and 42 MiB instead of 35 GB.
 - **Ambiguities.** Choice 8's zero-fuel state is a real ambiguity in §6–§7 and
   needs one normative reading before lockstep; its Gather frame at an
   ill-typed halt is a stated limit no control observes. SPEC §8 has settled
@@ -448,7 +481,9 @@ adopt them or record its own, so that lockstep compares like with like.
   cycle and no `call_indirect`.
 - **Malformed images.** As above: 71 frozen controls, nine of them at §4's
   limits (each `Exhausted` kind 2 on one side, malformed or invalid on the
-  other), 3,720 fuzz images and 7,741 limit-word images, with no trap. The
+  other), 3,720 fuzz images and 7,741 limit-word images, with no trap and no
+  crash of the reference codec (a crash fails the gate, and `crash_fails`
+  checks that it does). The
   VM of `6f78bd2` refused 2,190 of the limit-word images differently from the
   reference codec: 1,674 counts that the remaining words cannot hold (it read
   `record-length`), 468 `limits` and 48 Closure `closure-slots`

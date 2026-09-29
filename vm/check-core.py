@@ -34,8 +34,9 @@ Checks, in order:
   them, at their frozen fuel (section 7's boundary) or also on exactly that
   much fuel (section 7's operand check); its argument controls, with their
   frozen verdicts or the reference evaluation's run (section 8's words); and a
-  seeded fuzz corpus of mutated goldens, where every refusal matches the
-  reference and no run traps;
+  seeded fuzz corpus of mutated goldens, and another that varies every word of
+  section 4's limits, where every refusal matches the reference and no run traps
+  (a crash of the reference codec on any image fails the gate, it is never skipped);
 - WAT mutants, each killed by a named fixture group through a wrong
   observation (a trap, host stack failure or timeout never counts, except for
   group `trap`, whose defect is the trap).
@@ -553,6 +554,32 @@ def nested_plan(n: int) -> dict:
                            'body': ['call', 1, 1, [chain, ['lit', 0, 'U32', n]]]}]}
 
 
+def verdict(data: bytes, label: str, reg: dict, digest: bytes) -> str | None:
+    """The reference codec's verdict on an image (`spec.rejected`). A crash of the reference is no
+    verdict, and a corpus that skipped the row would compare less than it reports, so it fails the
+    gate, naming the image."""
+    try:
+        return spec.rejected(data, reg, digest)
+    except Exception as error:
+        raise AssertionError(f'{label}: the reference codec crashed ({type(error).__name__}: {error})') from error
+
+
+def crash_fails() -> bool:
+    """Whether `verdict` fails on a reference that crashes: `spec.rejected` is replaced by one that raises."""
+    saved = spec.rejected
+
+    def crash(*_):
+        raise MemoryError('probe')
+    spec.rejected = crash
+    try:
+        verdict(b'', 'probe', {}, b'')
+    except AssertionError:
+        return True
+    finally:
+        spec.rejected = saved
+    return False
+
+
 def fuzz_corpus(images: dict, reg: dict, digest: bytes, out: Path) -> list:
     """Seeded single mutations of the goldens: a header or body word replaced from a
     pool of boundary values, two body words swapped, a truncation, or a small shift."""
@@ -578,11 +605,8 @@ def fuzz_corpus(images: dict, reg: dict, digest: bytes, out: Path) -> list:
                 i = rng.randrange(32, len(w))
                 w[i] = (w[i] + rng.choice([-4, -2, 2, 4])) & NONE
                 data = b''.join(x.to_bytes(4, 'little') for x in w)
-            try:
-                reference = spec.rejected(data, reg, digest)
-            except Exception as error:  # the Python reference itself fails: recorded, not compared
-                reference = f'reference-crash {type(error).__name__}'
             label = f'{name}-{k}'
+            reference = verdict(data, f'fuzz {label}', reg, digest)
             (out / f'{label}.kimg').write_bytes(data)
             entry = int.from_bytes(data[12:16], 'little') if len(data) >= 16 else 0
             rows.append({'label': label, 'sha256': sha(data), 'reference': reference,
@@ -620,10 +644,7 @@ def limit_corpus(images: dict, reg: dict, digest: bytes, out: Path) -> list:
         for what, index, values in words:
             for v in sorted({v for v in values if 0 <= v <= NONE and v != w[index]}):
                 data = b''.join(x.to_bytes(4, 'little') for x in [*w[:index], v, *w[index + 1:]])
-                try:
-                    reference = spec.rejected(data, reg, digest)
-                except Exception as error:  # the Python reference itself fails: recorded, not compared
-                    reference = f'reference-crash {type(error).__name__}'
+                reference = verdict(data, f'limit word {name}: {what} = {v}', reg, digest)
                 file = f'l{len(rows)}.kimg'
                 (out / file).write_bytes(data)
                 rows.append({'label': f'{name}: {what} = {v}', 'sha256': sha(data), 'reference': reference,
@@ -634,8 +655,8 @@ def limit_corpus(images: dict, reg: dict, digest: bytes, out: Path) -> list:
 def compare(kind: str, corpus: list, outcomes: dict) -> dict:
     """The VM refuses each image of a corpus with the reference codec's first defect, a limit of
     section 4 as Exhausted kind 2 among them, admits what the reference admits, and never traps.
-    An image the reference cannot decode is counted, not compared."""
-    tally = {'refused': 0, 'limits': 0, 'accepted': 0, 'reference_crash': 0}
+    Every row has the reference's verdict (`verdict`): none is skipped."""
+    tally = {'refused': 0, 'limits': 0, 'accepted': 0}
     for r in corpus:
         g = outcomes[r['label']]
         require(clean(g), f"{kind} {r['label']} is not a clean outcome: {g['status']} {g['stderr']!r}")
@@ -643,8 +664,6 @@ def compare(kind: str, corpus: list, outcomes: dict) -> dict:
         if ref is None:
             require(observed_reason(g) is None, f"{kind} {r['label']}: reference admits it, VM refused {g['stderr']!r}")
             tally['accepted'] += 1
-        elif ref.startswith('reference-crash'):
-            tally['reference_crash'] += 1
         else:
             require(observed_reason(g) == expected_reason(ref), f"{kind} {r['label']}: VM {g['stderr']!r}, reference {ref!r}")
             tally['refused'] += 1
@@ -887,6 +906,7 @@ def main() -> int:
     BUILD.mkdir(parents=True)
     reg = codec.registry()
     digest = codec.base_digest(reg)
+    require(crash_fails(), 'a crash of the reference codec fails the gate')
     record = {'date': started.isoformat(), 'status': 'incomplete',
               'scope': 'knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10',
               'inputs': {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in sorted(
@@ -1296,10 +1316,9 @@ def main() -> int:
           f"{len(high)} ceiling runs, {len(stack)} small-stack runs, {len(refused)} refused and {len(admissions)} admitted controls, "
           f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "
-          f"({tally['refused']} refused, {tally['accepted']} admitted, {tally['reference_crash']} reference crashes), "
+          f"({tally['refused']} refused, {tally['accepted']} admitted), "
           f"{len(words_corpus)} limit-word images "
-          f"({words_tally['refused']} refused, {words_tally['limits']} of them at a limit, {words_tally['accepted']} admitted, "
-          f"{words_tally['reference_crash']} reference crashes), "
+          f"({words_tally['refused']} refused, {words_tally['limits']} of them at a limit, {words_tally['accepted']} admitted), "
           f"{len(killed)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 
