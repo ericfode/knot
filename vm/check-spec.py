@@ -1111,6 +1111,9 @@ def byte_controls(images: dict, digest: bytes) -> list:
     swap = word(capture, 7) + 1                 # first function record (swap, arity 2: 8 words)
     body = word(capture, swap + 5)              # its root Let node
     oversize = b'\0' * (4 * codec.LIMITS['image_words'])
+    # second's name records: `Flag` (its data word at names_at + 3) and `On` plus two padding bytes (names_at + 12).
+    require((word(second, names_at + 3), word(second, names_at + 12)) ==
+            (int.from_bytes(b'Flag', 'little'), int.from_bytes(b'On\0\0', 'little')), 'second: name records')
     out = [
         ('truncated', second[:-4], 'total'),
         ('bad-magic', word_patch(second, 0, 0x474D494C), 'magic'),
@@ -1125,6 +1128,9 @@ def byte_controls(images: dict, digest: bytes) -> list:
         ('opcode', word_patch(second, first_node + 1, 13), 'node record'),
         ('main-index', word_patch(second, 4, 0), 'main index'),
         ('name-utf8', word_patch(second, names_at + 3, 0xFFFFFFFF), 'name utf-8'),
+        # Section 2: a name has no NUL and its unused final bytes are zero.
+        ('name-nul', word_patch(second, names_at + 3, int.from_bytes(b'F\0ag', 'little')), 'name padding'),
+        ('name-padding', word_patch(second, names_at + 12, int.from_bytes(b'On\0\1', 'little')), 'name padding'),
         ('function-root-shared', word_patch(capture, swap + 8 + 5, body), 'function root'),
         ('child-not-record', word_patch(capture, body + 4, word(capture, body + 4) + 1), 'child offset'),
         ('child-after-parent', word_patch(capture, body + 4, body + 6), 'child after parent'),
@@ -1386,6 +1392,22 @@ def plan_controls(plans: dict) -> list:
          'Nat shape'),
         ('reference-none-view', edit('reference', [*body(0), 1], None), 'reference type'),
         ('arrow-cycle', edit('closure-id', ['types', 1, 'domain'], 1), 'arrow cycle'),
+        # Rules of sections 2-4 that no control refused (review of round 9, finding 4): each control
+        # breaks one rule of a golden plan, and its frozen message is the validator's first.
+        ('function-index', edit('reference', [*body(1), 2], 9), 'function index'),
+        ('case-slot-beyond-depth', edit('case-on', [*body(0), 2], 3), 'case slot beyond depth'),
+        ('construct-tag', edit('pair', [*body(0), 2], 3), 'construct tag'),
+        ('construct-field-type', edit('construct', ['types', 1, 'constructors', 0, 'fields', 0], 1), 'construct field type'),
+        ('branch-key', edit('case-on', [*body(0), 5, 0, 1], 1), 'branch key'),
+        ('key-branch-binds-field', edit('case-char', [*body(0), 5, 0, 3], 1), 'key branch binds nothing'),
+        ('closure-arrow', edit('closure-id', [*body(1), 3, 0, 2], 0), 'closure arrow'),
+        ('invoke-types', edit('closure-id', [*body(0), 1], 1), 'invoke types'),
+        ('closure-result-type', edit('closure-nested', [*body(0), 5, 1], 2), 'closure result type'),
+        ('let-body-type', edit('closure-shadow', [*body(0), 4, 1], 1), 'let body type'),
+        ('body-type', edit('pair', ['functions', 0, 'result'], 0), 'body type'),
+        ('u32-not-opaque', edit('u32-zero', ['representation', 'U32'], 0), 'U32 must be opaque'),
+        ('file-not-opaque', edit('value-on', ['representation'], {'File': 0}), 'File must be opaque'),
+        ('duplicate-function-name', edit('reference', ['functions', 1, 'name'], 'id'), 'duplicate function name'),
     ]
 
 
