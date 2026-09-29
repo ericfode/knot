@@ -8,6 +8,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
@@ -47,10 +48,19 @@ def run(argv, timeout=120*TIMEOUT_SCALE):
                 'outcome': 'harness-timeout', 'stdout': '', 'stderr': ''}
 
 
+# The seed notes when a def relies on foreign code, as the bundle CLIs do through the host path-identity
+# module: on stderr when it builds, on stdout when it only checks. The note is not a failure.
+FOREIGN_NOTE = re.compile(r'All terms check, but \d+ defs? rel(?:y|ies) on unsafe or foreign code:\n(?:- \w+\n)+')
+
+
 def successful(argv):
     result = run(argv)
-    require(result['exit'] == 0 and not result['stderr'], result)
+    require(result['exit'] == 0 and (not result['stderr'] or FOREIGN_NOTE.fullmatch(result['stderr'])), result)
     return result
+
+
+def proved(result):
+    return result['stdout'].strip() == 'All terms check.' or FOREIGN_NOTE.fullmatch(result['stdout']) is not None
 
 
 def diagnostic(result, expected):
@@ -244,6 +254,7 @@ def mutants(record, manifest, fixed):
         directory = BUILD / mutation['name']; directory.mkdir(exist_ok=True)
         for source in (ROOT / 'src').glob('*.bend'):
             shutil.copy2(source, directory / source.name)
+        shutil.copytree(ROOT / 'src/host', directory / 'host', dirs_exist_ok=True)
         target = directory / mutation['file']; text = target.read_text()
         require(text.count(mutation['old']) == 1, ('mutation anchor', mutation['name']))
         text = text.replace(mutation['old'], mutation['new'])
@@ -253,7 +264,7 @@ def mutants(record, manifest, fixed):
         phase = mutation['phase']
         entry = directory / f'{phase}-cli.bend'
         proof = successful([*SEED, entry, '--check-only'])
-        require(proof['stdout'].strip() == 'All terms check.', proof)
+        require(proved(proof), proof)
         case = cases.get(mutation['witness']) or fixed['fixtures'][mutation['witness']]
         expected = case.get('knot') or case['expectations']
         item = {'name': mutation['name'], 'file': mutation['file'], 'old': mutation['old'], 'new': mutation['new'],

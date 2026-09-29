@@ -95,13 +95,14 @@ def enum_control(record, lanes):
     directory.mkdir(exist_ok=True)
     for source_file in (gate.ROOT / 'src').glob('*.bend'):
         shutil.copy2(source_file, directory / source_file.name)
+    shutil.copytree(gate.ROOT / 'src/host', directory / 'host', dirs_exist_ok=True)
     target = directory / 'wasm.bend'
     text = target.read_text()
     old = 'Branches{Nil{},index,pointer}: code(W.bytes(cap,[65,0]),next)'
     gate.require(text.count(old) == 1, 'empty encoding mutation anchor')
     target.write_text(text.replace(old, 'Branches{Nil{},index,pointer}: code(W.bytes(cap,[0]),next)'))
     proof = gate.successful([*gate.SEED, directory / 'compile-cli.bend', '--check-only'])
-    gate.require(proof['stdout'].strip() == 'All terms check.', proof)
+    gate.require(gate.proved(proof), proof)
     item = {'name': 'empty-unreachable', 'typecheck': proof, 'lanes': {}}
     for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
         binary = directory / ('compile' + suffix)
