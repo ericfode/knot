@@ -233,7 +233,7 @@ def main():
     inputs = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json', HOST,
               Path(__file__), HERE / 'expectations.json', HERE / 'freeze.py', HERE / 'README.md',
               ROOT / 'tests/compiler-literals/regen.py', ROOT / 'tests/compiler-modules/host-check-expectations.json',
-              *sorted((ROOT / 'src/host').glob('*')), *sorted((HERE / 'fixtures').glob('*.bend'))]
+              *sorted((ROOT / 'src/host').glob('*')), *sorted((HERE / 'fixtures').rglob('*.bend'))]
     record = {'status': 'incomplete', 'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'inputs': {p.relative_to(ROOT).as_posix(): digest(p) for p in inputs}}
     try:

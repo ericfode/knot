@@ -8,6 +8,210 @@
   },
   "fixtures": [
     {
+      "name": "arguments-constructor-literals",
+      "file": "tests/compiler-literals-integ/fixtures/arguments-constructor-literals.bend",
+      "sha256": "2caa3d382b3eb812b72e452da13ee27a2a4eebfc366ca2371c264434c8ec22a4",
+      "behavior": "juxtaposed literals",
+      "covers": "`Two{3 4}` as a value",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/arguments-constructor-literals.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/arguments-constructor-literals.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\targument-whitespace\t",
+        "justification": "Seed-valid: whitespace separates call arguments, constructor fields and pattern fields, a literal among them. Knot reads commas, so a term that follows another without one is unsupported (D4)."
+      }
+    },
+    {
+      "name": "arguments-field-pattern-literal",
+      "file": "tests/compiler-literals-integ/fixtures/arguments-field-pattern-literal.bend",
+      "sha256": "fd1d7a7d257de8d3ebd4d14a131efd8dd7573ef6742a08c6a3d394a93ba2f6e4",
+      "behavior": "juxtaposed literals",
+      "covers": "`case Two{a 4}:`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/arguments-field-pattern-literal.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/arguments-field-pattern-literal.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\targument-whitespace\t",
+        "justification": "Seed-valid: whitespace separates call arguments, constructor fields and pattern fields, a literal among them. Knot reads commas, so a term that follows another without one is unsupported (D4)."
+      }
+    },
+    {
+      "name": "arguments-literals",
+      "file": "tests/compiler-literals-integ/fixtures/arguments-literals.bend",
+      "sha256": "aa8bd4ceb2d07e90d8c1911efda7a9cacc0b4200823d7f47c133441a00be2a2c",
+      "behavior": "juxtaposed literals",
+      "covers": "`two(3 4)`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/arguments-literals.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/arguments-literals.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\targument-whitespace\t",
+        "justification": "Seed-valid: whitespace separates call arguments, constructor fields and pattern fields, a literal among them. Knot reads commas, so a term that follows another without one is unsupported (D4)."
+      }
+    },
+    {
+      "name": "arguments-name-literal",
+      "file": "tests/compiler-literals-integ/fixtures/arguments-name-literal.bend",
+      "sha256": "cde78006a8f2e505334b79b649f8e41acf11e9cbaeb157d85c009319c5830824",
+      "behavior": "juxtaposed literals",
+      "covers": "`two(x 3)`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/arguments-name-literal.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/arguments-name-literal.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\targument-whitespace\t",
+        "justification": "Seed-valid: whitespace separates call arguments, constructor fields and pattern fields, a literal among them. Knot reads commas, so a term that follows another without one is unsupported (D4)."
+      }
+    },
+    {
       "name": "arm-body-case",
       "file": "tests/compiler-literals-integ/fixtures/arm-body-case.bend",
       "sha256": "083e10be8c34b85d8c517e5bdd90cb906166da86d2dd602126c034f5c59dba91",
@@ -87,6 +291,211 @@
         "artifact": false,
         "diagnostic_prefix": "Invalid\tparse\tbody-indentation\t",
         "justification": "Seed-invalid (an orphaned `case`; \"the keyword 'def' cannot head\" a term): the keywords `case` and `def` head no arm body, so a keyword in body position at or left of its arm is no body."
+      }
+    },
+    {
+      "name": "binder-type-name-plain",
+      "file": "tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend",
+      "sha256": "7a7ea3619043970d95dcad49f418ce9e28d21c06274e8caa6b8bf671ba98c68f",
+      "behavior": "promoted type name",
+      "covers": "a type's name as a plain binder: pattern, erased let, let",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Flag",
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pattern",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/binder-type-name-plain-pattern-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend as F\n\ndef main() -> F.Flag:\n  F.pattern(F.Off{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/binder-type-name-plain-pattern-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pattern",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/binder-type-name-plain-pattern-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend as F\n\ndef main() -> F.Flag:\n  F.pattern(F.On{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/binder-type-name-plain-pattern-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "erased",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/binder-type-name-plain-erased-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend as F\n\ndef main() -> F.Flag:\n  F.erased(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/binder-type-name-plain-erased-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "erased",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/binder-type-name-plain-erased-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend as F\n\ndef main() -> F.Flag:\n  F.erased(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/binder-type-name-plain-erased-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "plain",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/binder-type-name-plain-plain-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend as F\n\ndef main() -> F.Flag:\n  F.plain(F.Off{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/binder-type-name-plain-plain-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "plain",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/binder-type-name-plain-plain-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.bend as F\n\ndef main() -> F.Flag:\n  F.plain(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/binder-type-name-plain-plain-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/binder-type-name-plain.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
       }
     },
     {
@@ -243,6 +652,856 @@
       }
     },
     {
+      "name": "erased-dotted-rebind",
+      "file": "tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend",
+      "sha256": "35a610629e57a6f138d31640e894d2f1bd0b7c7a5848c2f846d845f12d94f5c4",
+      "behavior": "erased dotted let",
+      "covers": "a live let of the name of an erased let before it: plain, typed, twice erased, three-part, in an arm",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Flag",
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "plain",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-plain-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.plain(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-plain-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "plain",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-plain-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.plain(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-plain-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "typed",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-typed-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.typed(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-typed-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "typed",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-typed-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.typed(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-typed-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "twice",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-twice-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.twice(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-twice-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "twice",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-twice-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.twice(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-twice-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "deep",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-deep-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.deep(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-deep-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "deep",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-deep-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.deep(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-deep-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "arm",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-arm-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.arm(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-arm-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "arm",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/erased-dotted-rebind-arm-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.bend as F\n\ndef main() -> F.Flag:\n  F.arm(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/erased-dotted-rebind-arm-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/erased-dotted-rebind.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "erased-in-other-arm",
+      "file": "tests/compiler-literals-integ/fixtures/erased-in-other-arm.bend",
+      "sha256": "0db7e19d1967de8e755658f6c15a52052c7122ad5f00dd3048f4331cc97d56e4",
+      "behavior": "erased dotted let",
+      "covers": "a live let of the name an erased let binds in the other arm",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/erased-in-other-arm.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n11 |     case On{}:\n12>|       a.b : Flag = x\n   |       ^^^\n13 |       On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/erased-in-other-arm.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n11 |     case On{}:\n12>|       a.b : Flag = x\n   |       ^^^\n13 |       On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tbinding-name\t",
+        "justification": "Seed-invalid (\"a name (a parallel or typed let binds names; destructure in its body)\"): a live dotted let is valid only where its exact name is already bound, by a parameter or an enclosing let."
+      }
+    },
+    {
+      "name": "erased-then-other-dotted",
+      "file": "tests/compiler-literals-integ/fixtures/erased-then-other-dotted.bend",
+      "sha256": "b01268d071fedc15f380c301f56de1c3afbb9bf98390aeeb9abf254a85937e08",
+      "behavior": "erased dotted let",
+      "covers": "a live let of another dotted name after an erased one",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/erased-then-other-dotted.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n7 |   -a.b : Flag = x\n8>|   a.b.c : Flag = x\n  |   ^^^^^\n9 |   On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/erased-then-other-dotted.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n7 |   -a.b : Flag = x\n8>|   a.b.c : Flag = x\n  |   ^^^^^\n9 |   On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tparse\tbinding-name\t",
+        "justification": "Seed-invalid (\"a name (a parallel or typed let binds names; destructure in its body)\"): a live dotted let is valid only where its exact name is already bound, by a parameter or an enclosing let."
+      }
+    },
+    {
+      "name": "let-concat-glued",
+      "file": "tests/compiler-literals-integ/fixtures/let-concat-glued.bend",
+      "sha256": "39dfb6747285f9df5b00bcdefaf79bf1a7a498afa751e09147898f2f8d1aef94",
+      "behavior": "let operator",
+      "covers": "`c : String = a++b`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/let-concat-glued.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/let-concat-glued.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-valid: the right side of a let is an operator expression (`a ++ b` concatenates). Knot does not check operator sugar, so an operator after the value is unsupported, never a missing line end (D4)."
+      }
+    },
+    {
+      "name": "let-concat-typed",
+      "file": "tests/compiler-literals-integ/fixtures/let-concat-typed.bend",
+      "sha256": "4ccf7e930804740128fd871e23bd7ddcad067d46f6850cae7804e8122856bcc1",
+      "behavior": "let operator",
+      "covers": "`c : String = a ++ b`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/let-concat-typed.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/let-concat-typed.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-valid: the right side of a let is an operator expression (`a ++ b` concatenates). Knot does not check operator sugar, so an operator after the value is unsupported, never a missing line end (D4)."
+      }
+    },
+    {
+      "name": "let-concat-untyped",
+      "file": "tests/compiler-literals-integ/fixtures/let-concat-untyped.bend",
+      "sha256": "9f937db5104a979ce5e54c34a7d1fe2882bbfadda11b3c92fe0b1bc3752249cb",
+      "behavior": "let operator",
+      "covers": "`c = a ++ b`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/let-concat-untyped.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/let-concat-untyped.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-valid: the right side of a let is an operator expression (`a ++ b` concatenates). Knot does not check operator sugar, so an operator after the value is unsupported, never a missing line end (D4)."
+      }
+    },
+    {
+      "name": "literal-column-after-binder",
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-after-binder.bend",
+      "sha256": "28f02c335a5c04a47fb39f6ed9859f93eb3fcbdb4b053accad014c1262f9fcaa",
+      "behavior": "literal column",
+      "covers": "`case v 0` in a two-column match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/literal-column-after-binder.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/literal-column-after-binder.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4)."
+      }
+    },
+    {
+      "name": "literal-column-late-char",
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-late-char.bend",
+      "sha256": "48452300e4cbca52b9753912b1548c00cb0fb66f3a304c84037d5d1817f390ed",
+      "behavior": "literal column",
+      "covers": "`case No{} 'a'` in a two-column match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/literal-column-late-char.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/literal-column-late-char.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4)."
+      }
+    },
+    {
+      "name": "literal-column-late-nat",
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-late-nat.bend",
+      "sha256": "60252559236c79f90efffd44a68f0c67179334c8e3afa441cd6a067dcf7f17a8",
+      "behavior": "literal column",
+      "covers": "`case No{} 2n` in a two-column match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/literal-column-late-nat.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/literal-column-late-nat.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4)."
+      }
+    },
+    {
+      "name": "literal-column-late-offset",
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-late-offset.bend",
+      "sha256": "68e9439d7433ff5e10639454b3fe6b6b5ce6644fde5205b95bbce792a0be7744",
+      "behavior": "literal column",
+      "covers": "`case No{} 1n+p` in a two-column match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/literal-column-late-offset.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/literal-column-late-offset.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4)."
+      }
+    },
+    {
+      "name": "literal-column-late-string",
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-late-string.bend",
+      "sha256": "ac0e96fd0e55526cd6b9edb97e85af02929470b585441e78955f33bac21b788b",
+      "behavior": "literal column",
+      "covers": "`case No{} \"a\"` in a two-column match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/literal-column-late-string.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/literal-column-late-string.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4)."
+      }
+    },
+    {
+      "name": "literal-column-late-u32",
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-late-u32.bend",
+      "sha256": "bb0e1de813f0ebc680b87ef0a69bc391f6d9168646904152abcf6ac452ce8b9d",
+      "behavior": "literal column",
+      "covers": "`case No{} 0` in a two-column match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/literal-column-late-u32.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/literal-column-late-u32.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4)."
+      }
+    },
+    {
       "name": "literal-column-offset",
       "file": "tests/compiler-literals-integ/fixtures/literal-column-offset.bend",
       "sha256": "231bd206603bc5cd34e84962c473b8d87b635ab3f9d4967badab054d8a93d1a7",
@@ -278,6 +1537,57 @@
               "bun",
               ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
               "tests/compiler-literals-integ/fixtures/literal-column-offset.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
+        "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4)."
+      }
+    },
+    {
+      "name": "literal-column-third",
+      "file": "tests/compiler-literals-integ/fixtures/literal-column-third.bend",
+      "sha256": "2ac231efa67711e593a3c7590ebd6101f7d43aa72305535976ac64b26162720f",
+      "behavior": "literal column",
+      "covers": "`case No{} No{} 0` in a three-column match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/literal-column-third.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/literal-column-third.bend"
             ],
             "exit": 0,
             "stdout": "Yes{}\n",
@@ -342,6 +1652,1509 @@
         "artifact": false,
         "diagnostic_prefix": "Unsupported\tcheck\tliteral-column\t",
         "justification": "Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in a single-column match, and claims nothing about the rest (D4)."
+      }
+    },
+    {
+      "name": "parameter-shadow-unused",
+      "file": "tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend",
+      "sha256": "816483a1585e85003bf176a98057449e43f4c9813cfaf5e6cf89a55542722362",
+      "behavior": "parameter shadow",
+      "covers": "a parameter named like a type that no annotation reads",
+      "enums": {
+        "Bit": [
+          "Lo",
+          "Hi"
+        ],
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Bit",
+          "constructor": "Lo",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend"
+            ],
+            "exit": 0,
+            "stdout": "Lo{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0,
+            0
+          ],
+          "argument_constructors": [
+            "Lo",
+            "Lo"
+          ],
+          "type": "Bit",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/parameter-shadow-unused-f-Lo-Lo.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend as F\n\ndef main() -> F.Bit:\n  F.f(F.Lo{}, F.Lo{})\n"
+          },
+          "constructor": "Hi",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/parameter-shadow-unused-f-Lo-Lo.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.Hi{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0,
+            1
+          ],
+          "argument_constructors": [
+            "Lo",
+            "Hi"
+          ],
+          "type": "Bit",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/parameter-shadow-unused-f-Lo-Hi.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend as F\n\ndef main() -> F.Bit:\n  F.f(F.Lo{}, F.Hi{})\n"
+          },
+          "constructor": "Lo",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/parameter-shadow-unused-f-Lo-Hi.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.Lo{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1,
+            0
+          ],
+          "argument_constructors": [
+            "Hi",
+            "Lo"
+          ],
+          "type": "Bit",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/parameter-shadow-unused-f-Hi-Lo.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend as F\n\ndef main() -> F.Bit:\n  F.f(F.Hi{}, F.Lo{})\n"
+          },
+          "constructor": "Hi",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/parameter-shadow-unused-f-Hi-Lo.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.Hi{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1,
+            1
+          ],
+          "argument_constructors": [
+            "Hi",
+            "Hi"
+          ],
+          "type": "Bit",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/parameter-shadow-unused-f-Hi-Hi.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend as F\n\ndef main() -> F.Bit:\n  F.f(F.Hi{}, F.Hi{})\n"
+          },
+          "constructor": "Lo",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/parameter-shadow-unused-f-Hi-Hi.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.Lo{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "arguments": [
+            0,
+            0
+          ],
+          "argument_constructors": [
+            "Lo",
+            "Lo"
+          ],
+          "type": "Bit",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/parameter-shadow-unused-g-Lo-Lo.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend as F\n\ndef main() -> F.Bit:\n  F.g(F.Lo{}, F.Lo{})\n"
+          },
+          "constructor": "Lo",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/parameter-shadow-unused-g-Lo-Lo.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.Lo{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "arguments": [
+            0,
+            1
+          ],
+          "argument_constructors": [
+            "Lo",
+            "Hi"
+          ],
+          "type": "Bit",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/parameter-shadow-unused-g-Lo-Hi.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend as F\n\ndef main() -> F.Bit:\n  F.g(F.Lo{}, F.Hi{})\n"
+          },
+          "constructor": "Hi",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/parameter-shadow-unused-g-Lo-Hi.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.Hi{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "arguments": [
+            1,
+            0
+          ],
+          "argument_constructors": [
+            "Hi",
+            "Lo"
+          ],
+          "type": "Bit",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/parameter-shadow-unused-g-Hi-Lo.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend as F\n\ndef main() -> F.Bit:\n  F.g(F.Hi{}, F.Lo{})\n"
+          },
+          "constructor": "Lo",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/parameter-shadow-unused-g-Hi-Lo.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.Lo{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "arguments": [
+            1,
+            1
+          ],
+          "argument_constructors": [
+            "Hi",
+            "Hi"
+          ],
+          "type": "Bit",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/parameter-shadow-unused-g-Hi-Hi.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.bend as F\n\ndef main() -> F.Bit:\n  F.g(F.Hi{}, F.Hi{})\n"
+          },
+          "constructor": "Hi",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/parameter-shadow-unused-g-Hi-Hi.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/parameter-shadow-unused.Hi{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "parameter-shadows-later-type",
+      "file": "tests/compiler-literals-integ/fixtures/parameter-shadows-later-type.bend",
+      "sha256": "39b2d6c3c6121cc5d72145912a9006b31d54171d32014aa45f449b9336447cc1",
+      "behavior": "parameter shadow",
+      "covers": "`def f(Flag: Other, y: Flag)`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ],
+        "Other": [
+          "O1"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadows-later-type.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Other\nContext:\n- Flag : Other\nLocation: f\n 8 | \n 9>| def f(Flag: Other, y: Flag) -> Flag:\n   |                       ^^^^\n10 |   y\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadows-later-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Other\nContext:\n- Flag : Other\nLocation: f\n 8 | \n 9>| def f(Flag: Other, y: Flag) -> Flag:\n   |                       ^^^^\n10 |   y\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-shadow\t",
+        "justification": "Seed-invalid (\"expected : Type\"): a parameter's name shadows the type of that name in the annotations that follow. Whether such a name is a type parameter is beyond Knot, so it is unsupported (D4)."
+      }
+    },
+    {
+      "name": "parameter-shadows-own-type",
+      "file": "tests/compiler-literals-integ/fixtures/parameter-shadows-own-type.bend",
+      "sha256": "b64becb001259e8278fb48603752e7f7b26b97ebb8d58d444a2f719cba164327",
+      "behavior": "parameter shadow",
+      "covers": "`def f(+Flag: Flag)`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadows-own-type.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: f\n6 | \n7>| def f(+Flag: Flag) -> Flag:\n  |                       ^^^^\n8 |   On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadows-own-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: f\n6 | \n7>| def f(+Flag: Flag) -> Flag:\n  |                       ^^^^\n8 |   On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-shadow\t",
+        "justification": "Seed-invalid (\"expected : Type\"): a parameter's name shadows the type of that name in the annotations that follow. Whether such a name is a type parameter is beyond Knot, so it is unsupported (D4)."
+      }
+    },
+    {
+      "name": "parameter-shadows-result",
+      "file": "tests/compiler-literals-integ/fixtures/parameter-shadows-result.bend",
+      "sha256": "da62ef809a0813fcc1d45b89fe19e55b3681ffa452f68146cab3695cb1c17d82",
+      "behavior": "parameter shadow",
+      "covers": "`def f(Flag: Other) -> Flag`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ],
+        "Other": [
+          "O1"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadows-result.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Other\nContext:\n- Flag : Other\nLocation: f\n 8 | \n 9>| def f(Flag: Other) -> Flag:\n   |                       ^^^^\n10 |   On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadows-result.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Other\nContext:\n- Flag : Other\nLocation: f\n 8 | \n 9>| def f(Flag: Other) -> Flag:\n   |                       ^^^^\n10 |   On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-shadow\t",
+        "justification": "Seed-invalid (\"expected : Type\"): a parameter's name shadows the type of that name in the annotations that follow. Whether such a name is a type parameter is beyond Knot, so it is unsupported (D4)."
+      }
+    },
+    {
+      "name": "parameter-shadows-type",
+      "file": "tests/compiler-literals-integ/fixtures/parameter-shadows-type.bend",
+      "sha256": "a4c7ef8d12e386dcd87e443e4bceb120faa062f4d5cf93003a85a6e78538acb8",
+      "behavior": "parameter shadow",
+      "covers": "`def f(Flag: Flag)`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadows-type.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: f\n5 | \n6>| def f(Flag: Flag) -> Flag:\n  |                      ^^^^\n7 |   On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/parameter-shadows-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: f\n5 | \n6>| def f(Flag: Flag) -> Flag:\n  |                      ^^^^\n7 |   On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\tparameter-shadow\t",
+        "justification": "Seed-invalid (\"expected : Type\"): a parameter's name shadows the type of that name in the annotations that follow. Whether such a name is a type parameter is beyond Knot, so it is unsupported (D4)."
+      }
+    },
+    {
+      "name": "promoted-fresh-name",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-fresh-name.bend",
+      "sha256": "1d17657052fe6ec668e030ccb34b7c58bbc95c3d7a52214d81f7c59cee7a80c7",
+      "behavior": "promoted type name",
+      "covers": "`+z`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-fresh-name.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Flag",
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/promoted-fresh-name.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/promoted-fresh-name-f-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/promoted-fresh-name.bend as F\n\ndef main() -> F.Flag:\n  F.f(F.Off{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/promoted-fresh-name-f-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/promoted-fresh-name.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/promoted-fresh-name-f-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/promoted-fresh-name.bend as F\n\ndef main() -> F.Flag:\n  F.f(F.On{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/promoted-fresh-name-f-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/promoted-fresh-name.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "promoted-function-name",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-function-name.bend",
+      "sha256": "956d5c1ba16700cf15ead4c54efdf6b668b42d5f0b3ecff095be3f3fdbefddb9",
+      "behavior": "promoted type name",
+      "covers": "`+g` where g is a function",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-function-name.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Flag",
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/promoted-function-name.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/promoted-function-name-g-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/promoted-function-name.bend as F\n\ndef main() -> F.Flag:\n  F.g(F.Off{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/promoted-function-name-g-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/promoted-function-name.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "g",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/promoted-function-name-g-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/promoted-function-name.bend as F\n\ndef main() -> F.Flag:\n  F.g(F.On{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/promoted-function-name-g-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/promoted-function-name.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/promoted-function-name-f-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/promoted-function-name.bend as F\n\ndef main() -> F.Flag:\n  F.f(F.Off{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/promoted-function-name-f-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/promoted-function-name.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/promoted-function-name-f-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/promoted-function-name.bend as F\n\ndef main() -> F.Flag:\n  F.f(F.On{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/promoted-function-name-f-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/promoted-function-name.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "promoted-type-bool",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-bool.bend",
+      "sha256": "9009223e517020cce1259d8e21ced908fa1dead29f9ce05b2cb1b577f4e2e462",
+      "behavior": "promoted type name",
+      "covers": "Base's `+Bool`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-bool.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n10 |     case 0n: No{}\n11>|     case +Bool: Yes{}\n   |               ^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-bool.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n10 |     case 0n: No{}\n11>|     case +Bool: Yes{}\n   |               ^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
+        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "promoted-type-field",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-field.bend",
+      "sha256": "6c44b55541afe92d42869bfdf84398ea24602055f651b6444f7d96a8ddb9a323",
+      "behavior": "promoted type name",
+      "covers": "`case Cell{+Flag}:`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-field.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : '}'\nLocation:\n10 |   match c:\n11>|     case Cell{+Flag}: On{}\n   |                    ^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : '}'\nLocation:\n10 |   match c:\n11>|     case Cell{+Flag}: On{}\n   |                    ^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
+        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "promoted-type-later",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-later.bend",
+      "sha256": "309b48433f3c21c04aeb19523ed921b29130c6d9a3bd4e6ccd7533d472de2f61",
+      "behavior": "promoted type name",
+      "covers": "`+Later` before the declaration of Later",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ],
+        "Later": [
+          "L"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-later.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Flag",
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/promoted-type-later.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Off"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/promoted-type-later-f-Off.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/promoted-type-later.bend as F\n\ndef main() -> F.Flag:\n  F.f(F.Off{})\n"
+          },
+          "constructor": "On",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/promoted-type-later-f-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/promoted-type-later.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "On"
+          ],
+          "type": "Flag",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/promoted-type-later-f-On.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/promoted-type-later.bend as F\n\ndef main() -> F.Flag:\n  F.f(F.On{})\n"
+          },
+          "constructor": "Off",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/promoted-type-later-f-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/promoted-type-later.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "promoted-type-let",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-let.bend",
+      "sha256": "d9e2635f40770888dcffce169bc45f1485265b89c3a38a91d4f709fd50a46714",
+      "behavior": "promoted type name",
+      "covers": "`+Flag = x`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-let.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : '='\nLocation:\n6 | def f(+x: Flag) -> Flag:\n7>|   +Flag = x\n  |         ^\n8 |   On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : '='\nLocation:\n6 | def f(+x: Flag) -> Flag:\n7>|   +Flag = x\n  |         ^\n8 |   On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
+        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "promoted-type-let-typed",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-let-typed.bend",
+      "sha256": "cddffbf10f194cbf64618a4af6b2b5d4ff53685b987114ffff1dc8c15d1f0078",
+      "behavior": "promoted type name",
+      "covers": "`+Flag : Flag = x`",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-let-typed.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n6 | def f(+x: Flag) -> Flag:\n7>|   +Flag : Flag = x\n  |         ^\n8 |   On{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-let-typed.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n6 | def f(+x: Flag) -> Flag:\n7>|   +Flag : Flag = x\n  |         ^\n8 |   On{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
+        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "promoted-type-nat",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-nat.bend",
+      "sha256": "374e22d2a674a452a1f3166715f14a0d1882885211a3cb70809afa8e021e1725",
+      "behavior": "promoted type name",
+      "covers": "Base's `+Nat`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-nat.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n10 |     case 0n: No{}\n11>|     case +Nat: Yes{}\n   |              ^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-nat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n10 |     case 0n: No{}\n11>|     case +Nat: Yes{}\n   |              ^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
+        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "promoted-type-own-early",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-own-early.bend",
+      "sha256": "99f3e4bacb9cc02c38f349ef6a65bde4a393b97eebdb8b66ad0d5638d9f84dd5",
+      "behavior": "promoted type name",
+      "covers": "`case +Early:` over the scrutinee's own type",
+      "enums": {
+        "Early": [
+          "E0",
+          "E1"
+        ],
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-own-early.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n12 |     case E0{}: On{}\n13>|     case +Early: Off{}\n   |                ^\n14 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-own-early.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n12 |     case E0{}: On{}\n13>|     case +Early: Off{}\n   |                ^\n14 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
+        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "promoted-type-pattern",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-pattern.bend",
+      "sha256": "93eb4485d9bae164493af67e2a01e269c1e966a722600310e162dcca1aa6cf6f",
+      "behavior": "promoted type name",
+      "covers": "`case +Flag:` in a default row",
+      "enums": {
+        "Flag": [
+          "Off",
+          "On"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n 9 |     case Off{}: On{}\n10>|     case +Flag: Off{}\n   |               ^\n11 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n 9 |     case Off{}: On{}\n10>|     case +Flag: Off{}\n   |               ^\n11 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
+        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "promoted-type-string",
+      "file": "tests/compiler-literals-integ/fixtures/promoted-type-string.bend",
+      "sha256": "1e1fb2bcace6210c94576174b246ed0ee0de91db45d28c3809ab1dec867414fd",
+      "behavior": "promoted type name",
+      "covers": "Base's `+String`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-string.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n10 |     case \"a\": No{}\n11>|     case +String: Yes{}\n   |                 ^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/promoted-type-string.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n10 |     case \"a\": No{}\n11>|     case +String: Yes{}\n   |                 ^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpromoted-type\t",
+        "justification": "Seed-invalid (\"expected : a quantified datatype after +\"): the seed reads `+D` as the quantified datatype D when D names a type declared before it, so no promoted binder is spelled like one."
+      }
+    },
+    {
+      "name": "qualified-order-lib-first",
+      "file": "tests/compiler-literals-integ/fixtures/qualified-order-lib-first.bend",
+      "sha256": "4a579058a4b177e9e142fc5f1f3db596b641530852fed90c1c022ae6950629ab",
+      "behavior": "module order",
+      "covers": "qualified constructor patterns whose declarations sit later in their file than the patterns",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/qualified-order-lib-first.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/qualified-order-lib-first.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "No"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/qualified-order-lib-first-f-No.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/qualified-order-lib-first.bend as F\n\ndef main() -> F.Answer:\n  F.f(F.No{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/qualified-order-lib-first-f-No.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/qualified-order-lib-first.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Yes"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/qualified-order-lib-first-f-Yes.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/qualified-order-lib-first.bend as F\n\ndef main() -> F.Answer:\n  F.f(F.Yes{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/qualified-order-lib-first-f-Yes.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/qualified-order-lib-first.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "qualified-order-lib-last",
+      "file": "tests/compiler-literals-integ/fixtures/qualified-order-lib-last.bend",
+      "sha256": "e0f40b19fe2240e85e09623c7b7df7f32d4d15c681ef5ad162527dbfffa9ed8d",
+      "behavior": "module order",
+      "covers": "the same patterns after the imported declarations by offset",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/qualified-order-lib-last.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals-integ/fixtures/qualified-order-lib-last.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "No"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/qualified-order-lib-last-f-No.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/qualified-order-lib-last.bend as F\n\ndef main() -> F.Answer:\n  F.f(F.No{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/qualified-order-lib-last-f-No.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/qualified-order-lib-last.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Yes"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals-integ/calls/qualified-order-lib-last-f-Yes.bend",
+            "source": "import ../../../tests/compiler-literals-integ/fixtures/qualified-order-lib-last.bend as F\n\ndef main() -> F.Answer:\n  F.f(F.Yes{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals-integ/calls/qualified-order-lib-last-f-Yes.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals-integ/fixtures/qualified-order-lib-last.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "row-narrow-literal",
+      "file": "tests/compiler-literals-integ/fixtures/row-narrow-literal.bend",
+      "sha256": "77b514ddc7ed880d9ef816abbc045d209006c1de4b2c1abc17ba0e3546a667ea",
+      "behavior": "row width",
+      "covers": "`case 0n:` in a two-scrutinee match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/row-narrow-literal.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : '0n'\nLocation:\n 9 |   match n s:\n10>|     case 0n: Yes{}\n   |          ^^\n11 |     case _ _: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/row-narrow-literal.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : '0n'\nLocation:\n 9 |   match n s:\n10>|     case 0n: Yes{}\n   |          ^^\n11 |     case _ _: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-arity\t",
+        "justification": "Seed-invalid (\"expected : N patterns (one per scrutinee)\"): every row names one pattern per scrutinee."
+      }
+    },
+    {
+      "name": "row-narrow-nested-literal",
+      "file": "tests/compiler-literals-integ/fixtures/row-narrow-nested-literal.bend",
+      "sha256": "2e2c4007d0dcaa3ee65219f34d1350a25f923125f6de2a95721c7468eb83a2e1",
+      "behavior": "row width",
+      "covers": "`case Bx{0}:` in a two-scrutinee match",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/row-narrow-nested-literal.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : 'Bx{0}'\nLocation:\n12 |   match a b:\n13>|     case Bx{0}: Yes{}\n   |          ^^^^^\n14 |     case _ _: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/row-narrow-nested-literal.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 2 patterns (one per scrutinee)\n- observed : 'Bx{0}'\nLocation:\n12 |   match a b:\n13>|     case Bx{0}: Yes{}\n   |          ^^^^^\n14 |     case _ _: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-arity\t",
+        "justification": "Seed-invalid (\"expected : N patterns (one per scrutinee)\"): every row names one pattern per scrutinee."
+      }
+    },
+    {
+      "name": "row-wide-nat",
+      "file": "tests/compiler-literals-integ/fixtures/row-wide-nat.bend",
+      "sha256": "3168871c958a616b1a2cbb54cd33078c6d0421d1830516fe7b6a4174803e4d69",
+      "behavior": "row width",
+      "covers": "`case x y:` over one Nat scrutinee",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/row-wide-nat.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 1 patterns (one per scrutinee)\n- observed : 'x y'\nLocation:\n 9 |   match v:\n10>|     case x y: Yes{}\n   |          ^^^\n11 |     case _: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/row-wide-nat.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 1 patterns (one per scrutinee)\n- observed : 'x y'\nLocation:\n 9 |   match v:\n10>|     case x y: Yes{}\n   |          ^^^\n11 |     case _: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-arity\t",
+        "justification": "Seed-invalid (\"expected : N patterns (one per scrutinee)\"): every row names one pattern per scrutinee."
+      }
+    },
+    {
+      "name": "row-wide-u32",
+      "file": "tests/compiler-literals-integ/fixtures/row-wide-u32.bend",
+      "sha256": "06af772a79a958a26ae7e9c697f97922ea8360719f8e2856e5d7ba5c8c0d2357",
+      "behavior": "row width",
+      "covers": "`case _ _:` over one U32 scrutinee",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/row-wide-u32.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 1 patterns (one per scrutinee)\n- observed : '_ _'\nLocation:\n 9 |   match v:\n10>|     case _ _: Yes{}\n   |          ^^^\n11 |     case _: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals-integ/fixtures/row-wide-u32.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 1 patterns (one per scrutinee)\n- observed : '_ _'\nLocation:\n 9 |   match v:\n10>|     case _ _: Yes{}\n   |          ^^^\n11 |     case _: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\tpattern-arity\t",
+        "justification": "Seed-invalid (\"expected : N patterns (one per scrutinee)\"): every row names one pattern per scrutinee."
       }
     },
     {

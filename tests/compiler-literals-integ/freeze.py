@@ -41,6 +41,29 @@ COLUMN = oracle.unsupported(
     'check', 'literal-column',
     'Seed-valid: a literal or Nat offset in a row of several columns. Knot checks a literal only in '
     'a single-column match, and claims nothing about the rest (D4).')
+LET_OPERATOR = oracle.unsupported(
+    'parse', 'operator',
+    'Seed-valid: the right side of a let is an operator expression (`a ++ b` concatenates). Knot does '
+    'not check operator sugar, so an operator after the value is unsupported, never a missing line end (D4).')
+WHITESPACE = oracle.unsupported(
+    'parse', 'argument-whitespace',
+    'Seed-valid: whitespace separates call arguments, constructor fields and pattern fields, a literal '
+    'among them. Knot reads commas, so a term that follows another without one is unsupported (D4).')
+BINDING = invalid(
+    'parse', 'binding-name',
+    'Seed-invalid ("a name (a parallel or typed let binds names; destructure in its body)"): a live dotted '
+    'let is valid only where its exact name is already bound, by a parameter or an enclosing let.')
+PROMOTED = invalid(
+    'check', 'promoted-type',
+    'Seed-invalid ("expected : a quantified datatype after +"): the seed reads `+D` as the quantified '
+    'datatype D when D names a type declared before it, so no promoted binder is spelled like one.')
+SHADOW = oracle.unsupported(
+    'parse', 'parameter-shadow',
+    'Seed-invalid ("expected : Type"): a parameter\'s name shadows the type of that name in the annotations '
+    'that follow. Whether such a name is a type parameter is beyond Knot, so it is unsupported (D4).')
+ARITY = invalid(
+    'check', 'pattern-arity',
+    'Seed-invalid ("expected : N patterns (one per scrutinee)"): every row names one pattern per scrutinee.')
 
 # name -> (behavior, covers, entries, Knot)
 PLAN = {
@@ -52,7 +75,67 @@ PLAN = {
                            [], CONCAT),
     'literal-column-u32': ('literal column', '`case 0 No{}` in a two-column match', [], COLUMN),
     'literal-column-offset': ('literal column', '`case 1n+p No{}` in a two-column match', [], COLUMN),
+    # Review round 1: the behaviors its findings decided, each frozen before the repair.
+    'erased-dotted-rebind': ('erased dotted let', 'a live let of the name of an erased let before it: plain, '
+                             'typed, twice erased, three-part, in an arm',
+                             ['plain', 'typed', 'twice', 'deep', 'arm'], oracle.AGREE),
+    'erased-then-other-dotted': ('erased dotted let', 'a live let of another dotted name after an erased one',
+                                 [], BINDING),
+    'erased-in-other-arm': ('erased dotted let', 'a live let of the name an erased let binds in the other arm',
+                            [], BINDING),
+    'let-concat-typed': ('let operator', '`c : String = a ++ b`', [], LET_OPERATOR),
+    'let-concat-untyped': ('let operator', '`c = a ++ b`', [], LET_OPERATOR),
+    'let-concat-glued': ('let operator', '`c : String = a++b`', [], LET_OPERATOR),
+    'literal-column-late-u32': ('literal column', '`case No{} 0` in a two-column match', [], COLUMN),
+    'literal-column-late-offset': ('literal column', '`case No{} 1n+p` in a two-column match', [], COLUMN),
+    'literal-column-late-nat': ('literal column', '`case No{} 2n` in a two-column match', [], COLUMN),
+    'literal-column-late-char': ('literal column', "`case No{} 'a'` in a two-column match", [], COLUMN),
+    'literal-column-late-string': ('literal column', '`case No{} "a"` in a two-column match', [], COLUMN),
+    'literal-column-third': ('literal column', '`case No{} No{} 0` in a three-column match', [], COLUMN),
+    'literal-column-after-binder': ('literal column', '`case v 0` in a two-column match', [], COLUMN),
+    'arguments-literals': ('juxtaposed literals', '`two(3 4)`', [], WHITESPACE),
+    'arguments-name-literal': ('juxtaposed literals', '`two(x 3)`', [], WHITESPACE),
+    'arguments-constructor-literals': ('juxtaposed literals', '`Two{3 4}` as a value', [], WHITESPACE),
+    'arguments-field-pattern-literal': ('juxtaposed literals', '`case Two{a 4}:`', [], WHITESPACE),
+    'promoted-type-pattern': ('promoted type name', '`case +Flag:` in a default row', [], PROMOTED),
+    'promoted-type-field': ('promoted type name', '`case Cell{+Flag}:`', [], PROMOTED),
+    'promoted-type-let': ('promoted type name', '`+Flag = x`', [], PROMOTED),
+    'promoted-type-let-typed': ('promoted type name', '`+Flag : Flag = x`', [], PROMOTED),
+    'promoted-type-own-early': ('promoted type name', '`case +Early:` over the scrutinee\'s own type', [], PROMOTED),
+    'promoted-type-nat': ('promoted type name', "Base's `+Nat`", [], PROMOTED),
+    'promoted-type-bool': ('promoted type name', "Base's `+Bool`", [], PROMOTED),
+    'promoted-type-string': ('promoted type name', "Base's `+String`", [], PROMOTED),
+    'promoted-type-later': ('promoted type name', '`+Later` before the declaration of Later',
+                            ['f'], oracle.AGREE),
+    'promoted-function-name': ('promoted type name', '`+g` where g is a function', ['g', 'f'], oracle.AGREE),
+    'promoted-fresh-name': ('promoted type name', '`+z`', ['f'], oracle.AGREE),
+    'binder-type-name-plain': ('promoted type name', 'a type\'s name as a plain binder: pattern, erased let, let',
+                               ['pattern', 'erased', 'plain'], oracle.AGREE),
+    'parameter-shadows-own-type': ('parameter shadow', '`def f(+Flag: Flag)`', [], SHADOW),
+    'parameter-shadows-type': ('parameter shadow', '`def f(Flag: Flag)`', [], SHADOW),
+    'parameter-shadows-later-type': ('parameter shadow', '`def f(Flag: Other, y: Flag)`', [], SHADOW),
+    'parameter-shadows-result': ('parameter shadow', '`def f(Flag: Other) -> Flag`', [], SHADOW),
+    'parameter-shadow-unused': ('parameter shadow', 'a parameter named like a type that no annotation reads',
+                                ['f', 'g'], oracle.AGREE),
+    'row-wide-nat': ('row width', '`case x y:` over one Nat scrutinee', [], ARITY),
+    'row-wide-u32': ('row width', '`case _ _:` over one U32 scrutinee', [], ARITY),
+    'row-narrow-literal': ('row width', '`case 0n:` in a two-scrutinee match', [], ARITY),
+    'row-narrow-nested-literal': ('row width', '`case Bx{0}:` in a two-scrutinee match', [], ARITY),
+    'qualified-order-lib-first': ('module order', 'qualified constructor patterns whose declarations sit later '
+                                  'in their file than the patterns', ['f'], oracle.AGREE),
+    'qualified-order-lib-last': ('module order', 'the same patterns after the imported declarations by offset',
+                                 ['f'], oracle.AGREE),
 }
+
+
+def enums(source):
+    """The nullary enums of a book: the values a call is compared on. A datatype with fields has no tag."""
+    found = {}
+    for name, body in re.findall(r'^type (\w+) is (?:Type|Data):\n((?:  .*\n)+)', source, re.M):
+        ctors = re.findall(r'^  (\w+)\{\}$', body, re.M)
+        if len(ctors) == len(body.splitlines()):
+            found[name] = ctors
+    return found
 
 
 def call(name, fn, args, kinds, sigs):
@@ -83,7 +166,7 @@ def fixture(name):
     behavior, covers, entries, knot = PLAN[name]
     path = FIXTURES / f'{name}.bend'
     source = path.read_text()
-    kinds, sigs = oracle.enums(source), oracle.signatures(source)
+    kinds, sigs = enums(source), oracle.signatures(source)
     entry = {'name': name, 'file': str(path.relative_to(ROOT)), 'sha256': oracle.sha256(path),
              'behavior': behavior, 'covers': covers, 'enums': kinds}
     entry['seed_check'] = oracle.seed([entry['file'], '--check-only'])
