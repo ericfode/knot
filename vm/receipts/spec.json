@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T11:09:19.889559+00:00",
+ "date": "2026-09-29T13:08:40.008849+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "6923ad742d17a53586a7f8211e41c2cae9abc9495b3a1700e6f876d3e0a7b20d",
-  "vm/SPEC.md": "95296293b33ccc25e28170989875c36cb2bd9c665b7ca2dc0e83355024fecc79",
+  "vm/DECISIONS.md": "5ab89f0aa7b326a10e908829a72b66aa44b9e8b7bf80c7a9a87f561c5102f5b2",
+  "vm/SPEC.md": "a1eff7592862c23bab0991bd87d41ea8de14b3d7fc8f1695eaa7e730f6c05b1a",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "4578273498e9c373d78ae27f72b3f963f97693531d0f8f97a4a2c5c3b08b6515",
+  "vm/check-spec.py": "b1d1eea89d0455a6f9566b154b5fcd89f6a055a08b6bcd04fcc87fd6ae84b958",
   "vm/evaluate.py": "3109fd44c0c5fa316ac378c8f2e0d854047a82c6fbde7c532300b7991c89ab7e",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
@@ -359,7 +359,7 @@
   "vm/golden/value-on.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
   "vm/golden/value-on.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
   "vm/golden/vm-expected.json": "6a316bcd740d939b42985524cc6385b50f6237379a52877b2a490cef69b1f04e",
-  "vm/golden/witnesses.json": "5e9211239b2764f1c590e94a892a4737647616dbf9a86ddb1f11558cf3c6a4f3",
+  "vm/golden/witnesses.json": "0d9cad1d10754be28427f11c1216e6d560749c33eb007d479000a5de6f3082e3",
   "vm/golden/write-sources.py": "e2632c0f73731e6e3ef52cc6c319cea1c38c218c5c7c0042da3a8c2594cb7623",
   "vm/oracles/closures.json.gz": "de15465bd281b9bcb9cdd582581eb5c6755de58c8a92e133d4d04b8989b7fcab",
   "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
@@ -4639,6 +4639,54 @@
     "stdout": "",
     "stderr": "Unsupported\tcheck\tvariable-pattern\t102:103:10:9\n"
    }
+  },
+  "case-request-both-plus-default": {
+   "native": {
+    "exit": 0,
+    "stdout": "3\n",
+    "stderr": ""
+   },
+   "bun": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "bend: runtime fail-stop\n"
+   }
+  },
+  "case-request-nested-default": {
+   "native": {
+    "exit": 0,
+    "stdout": "3\n",
+    "stderr": ""
+   },
+   "bun": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "bend: runtime fail-stop\n"
+   }
+  },
+  "case-request-inner-default-only": {
+   "native": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "bend: runtime fail-stop\n"
+   },
+   "bun": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "bend: runtime fail-stop\n"
+   }
+  },
+  "case-request-book-both-plus-default": {
+   "native": {
+    "exit": 0,
+    "stdout": "On{}\n",
+    "stderr": ""
+   },
+   "bun": {
+    "exit": 0,
+    "stdout": "got(Flag, IO.print(\"x\", Flag, u => Emit{On{}}))\n",
+    "stderr": ""
+   }
   }
  },
  "admitted": [
@@ -4742,6 +4790,12 @@
   "run:program-case-request-emit-default",
   "run:program-case-request-halt-default",
   "run:program-case-request-default-only",
+  "run:case-request-emit-default-u32-compiled",
+  "run:case-request-halt-default-u32-compiled",
+  "run:case-request-emit-default-compiled",
+  "run:case-request-nested-default-compiled",
+  "run:case-request-both-plus-default-retested",
+  "run:case-request-nested-default-retested",
   "run:case-request-default-at-flag",
   "run:book-request-rendered",
   "run:book-request-field",
@@ -5828,6 +5882,82 @@
    "effects": 0,
    "calls": 7,
    "image_sha256": "67e2e5585163fb75faf908bf723b49984624a30a496b3f5a8c641c14b4385cb1"
+  },
+  "case-request-emit-default-u32-compiled": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 8,
+   "image_sha256": "cf064fd24f9326a11738911b0c1458f997e0bfc34c5191dea96d9ddf6569f861"
+  },
+  "case-request-halt-default-u32-compiled": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 8,
+   "image_sha256": "ec81c49bbeffd6c8dd4ee72da75dd16a0f2c4ac33badb9e3691df2fe9284d73f"
+  },
+  "case-request-emit-default-compiled": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 8,
+   "image_sha256": "68ac4c1989e2ac67f339c3e2c354571f0fd45b8be10d919ff258a19e4f9c653a"
+  },
+  "case-request-nested-default-compiled": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 8,
+   "image_sha256": "66c350d988a327ceb2d55f422b2fef0bb02b03424f61d77bc9cd0fe6015a17ad"
+  },
+  "case-request-both-plus-default-retested": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "3\n",
+   "effects": 1,
+   "calls": 13,
+   "image_sha256": "ce835ad371dee9d5a49d5853695926c0a71e503a2450e93e295254547d9cc24d"
+  },
+  "case-request-nested-default-retested": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "3\n",
+   "effects": 1,
+   "calls": 13,
+   "image_sha256": "f85da24ecb1d3f235c3a084081f10ce49fdbad0f2684700efd2e73c3d7b6a2e0"
   },
   "case-request-default-at-flag": {
    "argv": [
@@ -7456,9 +7586,9 @@
   }
  ],
  "canonical": {
-  "corpus": 5797,
+  "corpus": 5803,
   "noncanonical": 527,
-  "admitted": 534,
+  "admitted": 540,
   "controls_by_clause": {
    "main-word": [
     "main-index-none"
