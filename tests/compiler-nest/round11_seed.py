@@ -590,6 +590,33 @@ group('dead-let-ok', ACCEPTED, None,
         for name, let in (('plain', 'q = h(a)'), ('plus', '+q = h(a)'), ('erased-datatype', '-Flag = a'),
                           ('plus-later', '+Later = a'), ('plus-function', '+h = a'))])
 
+# Found by the 100,000-mutant fuzz: in a discarded body the seed reads any term as a scrutinee, and any
+# argument after whitespace, unchecked; a live match with the same header is rejected.
+HEADED = '''def f(a: Flag, b: Flag) -> Flag:
+  match a b:
+    case _ _: Off{{}}
+    case On{{}} _:
+      {inner}
+'''
+HEADS = {'plus': ('a + b', '_'), 'minus': ('a - b', '_'), 'numeral': ('a 10n', '_ _'), 'succ': ('a 1n+m b', '_ _ _'),
+         'two-plus': ('a b + a', '_ _')}
+group('header-term', unsupported('term-form'), None,
+      *[(f'header-{name}-dead', PRE + HEADED.format(inner=f'match {head}:\n        case {row}: On{{}}') + '\n' + main_of('On{}, Off{}'))
+        for name, (head, row) in HEADS.items()])
+# An application with a space, `a (b)`, is one call term in both.
+group('header-ok', ACCEPTED, None,
+      ('header-call-dead', PRE + HEADED.format(inner='match a (b):\n        case _: On{}') + '\n' + main_of('On{}, Off{}')))
+ARGS = {'call': 'h(On{} 10n)', 'call-second': 'h(On{}, On{} 10n)', 'field': 'Pr{On{} 10n}', 'succ': 'h(On{} 1n+m)'}
+group('argument-numeral', unsupported('argument-whitespace'), None,
+      *[(f'argument-{name}-dead', PRE + HEADED.format(inner=text) + '\n' + main_of('On{}, Off{}'))
+        for name, text in ARGS.items()])
+group('argument-comma', unsupported('term-form'), None,
+      ('argument-comma-dead', PRE + HEADED.format(inner='h(On{}, 10n)') + '\n' + main_of('On{}, Off{}')))
+# A closer or a keyword ends the header: the seed rejects these too.
+group('header-invalid', {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-:\t'}, None,
+      ('header-closer', PRE + 'def f(a: Flag) -> Flag:\n  match a ):\n    case _: On{}\n\n' + main_of('On{}')),
+      ('header-keyword', PRE + 'def f(a: Flag) -> Flag:\n  match a case:\n    case _: On{}\n\n' + main_of('On{}')))
+
 # The seed rejects these: a let that has no body, and a `case` where a statement should be.
 group('layout-invalid', {'exit': 2, 'diagnostic': 'Invalid\tparse\tbody-indentation\t'}, None,
       ('layout-ctl-def-after-let', PRE + 'def f(a: Flag) -> Flag:\n  u : Flag = a\n' + main_of('On{}')),

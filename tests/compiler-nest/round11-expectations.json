@@ -12,6 +12,116 @@
   },
   "fixtures": [
     {
+      "name": "argument-call-dead",
+      "file": "tests/compiler-nest/round11-fixtures/argument-call-dead.bend",
+      "sha256": "85e9f71341b4a5bc7107be1b2481862a3edaa510653fd6d9be41d64664c699d7",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/argument-call-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "argument-numeral",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\targument-whitespace\t"
+      }
+    },
+    {
+      "name": "argument-call-second-dead",
+      "file": "tests/compiler-nest/round11-fixtures/argument-call-second-dead.bend",
+      "sha256": "ead3a058c67b6e83911da1dad5ae4052c20a7329c24b303c84a4d4deb82d1457",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/argument-call-second-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "argument-numeral",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\targument-whitespace\t"
+      }
+    },
+    {
+      "name": "argument-comma-dead",
+      "file": "tests/compiler-nest/round11-fixtures/argument-comma-dead.bend",
+      "sha256": "586d1208036088fb9843863aa4043756d9e8a00a1cd563fa47d335331de0599e",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/argument-comma-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "argument-comma",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "argument-field-dead",
+      "file": "tests/compiler-nest/round11-fixtures/argument-field-dead.bend",
+      "sha256": "e97ea7d83defe93de6f42eeba47c3c4803ed55402cf83079046e4269d24af9c2",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/argument-field-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "argument-numeral",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\targument-whitespace\t"
+      }
+    },
+    {
+      "name": "argument-succ-dead",
+      "file": "tests/compiler-nest/round11-fixtures/argument-succ-dead.bend",
+      "sha256": "a510291fbe9b751b21a73462f2024defa0917d8a14b126bfb7cac8019bffb70d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/argument-succ-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "argument-numeral",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\targument-whitespace\t"
+      }
+    },
+    {
       "name": "arity-ctl-dead-fields",
       "file": "tests/compiler-nest/round11-fixtures/arity-ctl-dead-fields.bend",
       "sha256": "bb21f77330ca28d99f57a9a7ffde782ae40317afb4a848173f5f05ce2ae7263f",
@@ -5656,6 +5766,318 @@
         "diagnostic": "Invalid\tcheck\tpattern-arity\t"
       },
       "finding": "dead-wide"
+    },
+    {
+      "name": "header-call-dead",
+      "file": "tests/compiler-nest/round11-fixtures/header-call-dead.bend",
+      "sha256": "3f8b39a6b7263776a504576ad3b283ead4bc88a886af1e2ba229c864f41f6570",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/header-call-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "h",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/header-call-dead/h-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/header-call-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "h",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/header-call-dead/h-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/header-call-dead.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/header-call-dead/f-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/header-call-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/header-call-dead/f-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/header-call-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/header-call-dead/f-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/header-call-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/header-call-dead/f-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/header-call-dead.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/header-call-dead/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round11-fixtures/header-call-dead.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "header-ok"
+    },
+    {
+      "name": "header-closer",
+      "file": "tests/compiler-nest/round11-fixtures/header-closer.bend",
+      "sha256": "43f493379347ec5da6131bacccb90ef1da99c8ce2714cd9387b95b914de30fdb",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/header-closer.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n22 | def f(a: Flag) -> Flag:\n23>|   match a ):\n   |           ^\n24 |     case _: On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-:\t"
+      },
+      "finding": "header-invalid"
+    },
+    {
+      "name": "header-keyword",
+      "file": "tests/compiler-nest/round11-fixtures/header-keyword.bend",
+      "sha256": "0fb3f3e0b43eaa04d39677c8fe3f15e750a36ca55f50b6e4da5fef846c52a292",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/header-keyword.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a match heading this case (this case is orphaned)\n- observed : 'case'\nLocation:\n22 | def f(a: Flag) -> Flag:\n23>|   match a case:\n   |           ^^^^\n24 |     case _: On{}\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-:\t"
+      },
+      "finding": "header-invalid"
+    },
+    {
+      "name": "header-minus-dead",
+      "file": "tests/compiler-nest/round11-fixtures/header-minus-dead.bend",
+      "sha256": "e786e9f0d94b70fb4f4499919e8228d4062486d4df87cfd2e932ccae48023586",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/header-minus-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "header-term",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "header-numeral-dead",
+      "file": "tests/compiler-nest/round11-fixtures/header-numeral-dead.bend",
+      "sha256": "132793f0dae2070bac6c6917f5145664d095b3efde771a0bad6f38edc4714638",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/header-numeral-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "header-term",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "header-plus-dead",
+      "file": "tests/compiler-nest/round11-fixtures/header-plus-dead.bend",
+      "sha256": "a37552d3ef394a8090c766ceca7e4d92390e9c150a100122442e306be575faef",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/header-plus-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "header-term",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "header-succ-dead",
+      "file": "tests/compiler-nest/round11-fixtures/header-succ-dead.bend",
+      "sha256": "fa293e848e162f4c680620c4a74967ce892ecf08f88ffa16b6ca717c00462e6e",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/header-succ-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "header-term",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "header-two-plus-dead",
+      "file": "tests/compiler-nest/round11-fixtures/header-two-plus-dead.bend",
+      "sha256": "431694c01bbe50b0f02b5f59f3727606f299d1d521d7201973740f4ba42e3ac9",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round11-fixtures/header-two-plus-dead.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "finding": "header-term",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
     },
     {
       "name": "layout-canonical-multi",
