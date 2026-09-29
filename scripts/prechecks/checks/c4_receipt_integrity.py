@@ -239,8 +239,9 @@ def fast_normalizer(normalize):
     """The gate's own Normalizer, with `text` skipped for a string that none of its rewrites can touch.
 
     Every rewrite in `Normalizer.text` needs one of the alias keys or one of REWRITE_MARKS to occur in the string, so
-    a string with none of them comes back unchanged; the answer is identical, and a large inventory has over a million
-    strings (10 s of regular expressions on a 581-file increment).
+    a string with none of them comes back unchanged and the answer is identical. Measured on the 20 receipt pairs
+    (58 MB) that literals `3246fa3d` rewrote: 3.95 s with the gate's Normalizer, 1.73 s with this one and 0.98 s
+    with the blob memo of `date_only` besides.
     """
     class Fast(normalize.Normalizer):
         def text(self, value, aliases):

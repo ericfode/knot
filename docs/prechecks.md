@@ -60,7 +60,7 @@ npm run -s prechecks -- --list
   never a pass. The guards are hang detectors, not expected times. In the loaded sweep above, four replays reported `unavailable`
   (generics C2 and C5, harness-2 C2, literals C4; the reasons were not recorded, and C4's old guard of 20 s was the tightest);
   after the guards were raised each of the four produced a result. C4 alone on the 581-file literals increment (`3246fa3d`)
-  takes about 9 to 11 s.
+  took 9 to 15 s in four measurements at load averages of 20 to 46.
 - **Output.** A terminal summary (twelve conditions per rule; the rest are in JSON), and in `.local/prechecks/<head8>/`:
   `report.json`, `report.md`, `facts.json` (the measured facts), `known.txt` (lines for the review harness's `known`
   argument). `--emit-ledger` prints ledger entries that would acknowledge every new condition.
