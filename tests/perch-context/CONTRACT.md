@@ -75,3 +75,53 @@ default store. A standing parse-back oracle replaces omitted bodies with holes
 and requires parsing plus the exact declaration-name set. This is a syntax
 oracle, not acceptance of incomplete proofs or implementations. The adversarial
 `fixtures/signatures.bend` separately passes the complete pinned seed checker.
+
+## Encoded-state fitting (perch-cap increment; fixed before implementation)
+
+Tooling only: no rubric, target, Bend source or accepted contract changes. The
+60,000-byte encoded-state cap (task and metadata included) and the 48,000-byte
+composition cap do not move. A declaration state that is still over the cap once
+every helper and caller body is an interface summary gets a third tier, instead
+of failing. Shaping source to fit a tool cap is not a fix.
+
+10. **Order.** Every fitting step takes the largest saving first, then path, then
+    name. The interface tier keeps its saving (the source bytes it removes). The
+    names tier's saving is the encoded-state bytes the cut removes, including the
+    change to its `summarized` row; a cut that cannot shrink the state is skipped.
+    The choice is a function of the entries alone: the order in which `calls` and
+    `called_by` were filled never changes which entries are cut.
+11. **Names-only entry.** A helper or caller entry that is not yet a name (an
+    interface summary, or a body the interface tier kept because its interface
+    was no smaller) becomes `{path, name, representation: "names-only"}`: no
+    lines, no text, no signature. The signature is what the interface tier
+    already supplies; keeping only its first line saved 337 of 13,357 bytes for
+    `check.bend::run` (103 of its 105 interfaces are one line), so it is dropped,
+    not shortened.
+12. **Recorded and marked.** Each cut has exactly one `provenance.summarized` row
+    with reason `context-state-names-only` (an interface entry's row changes its
+    reason; a body entry gets a new row). The judge-visible `context_notes` gains
+    `names_only: {count, note}` saying which context was cut to names.
+    `provenance.source_bytes` and `context_notes.source_bytes` fall by the source
+    bytes removed and still equal the supplied source. The files behind names-only
+    entries stay in `provenance.files` with their hashes. Neither `truncated` nor a
+    role-context gap is set: the tier is advisory, never a structural blocker.
+13. **Nothing else is cut.** The primary source, the task or cohort text, the
+    datatypes and the laws are byte-identical. Every state that fits today is
+    byte-identical, with no marker and no row change, because the tier runs only
+    where the fitting used to throw. Over the whole compiler manifest the state
+    hashes before and after are equal.
+14. **Failure.** The fitting throws only when no cuttable entry is left and the
+    state still exceeds the cap. The error names the case (`after names-only
+    summaries`) and reports the bytes that remain: the primary source, the task,
+    the names-only entries and the retained datatypes, laws and notes.
+
+Controls: a unit that is over the cap after every interface summary fits, with
+its marker, its rows, its source-byte accounting and an untouched primary source
+and task, both at unit level (a small cap) and through the whole preparation
+(the 60,000-byte cap); a unit whose primary source exceeds the cap still fails
+with the new error; states that fit are pinned to hashes taken before the tier
+existed; entries inserted out of size order, with two equal-size entries inserted
+in reverse path and name order, are cut in exactly the specified order. Four
+syntax-valid semantic mutants must be rejected by these controls:
+`names-only-marker-dropped`, `primary-source-shortened`, `names-only-tier-skipped`
+and `names-only-order-nondeterministic`. Infrastructure errors are not kills.
