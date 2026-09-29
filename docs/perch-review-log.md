@@ -1270,3 +1270,27 @@ tests assert those requests, so the change needs its own decision, controls and
 cache-identity note rather than a rule edit. Prevention: give every source rule an
 explicit applicability sentence and include a no-arithmetic control before
 accepting its floor.
+
+## 2026-09-29 — prechecks rules: first live calibration
+
+Date / scope / source revision: 2026-09-29. The seven advisory prechecks rules (`.perch/rules/prechecks.yaml`) on main
+`46f2cdd4`, asked from the main checkout with `node scripts/prechecks-perch-run.mjs --live --controls` over the 22
+calibration packets in `tests/prechecks/perch-controls/`. That is 18 expected broken (15 dev, 3 held-out) and 4
+expected clean. 22 requests; 4.5 s wall.
+Evidence: the runner's report (scratchpad `prechecks/calibration-live-1.json`) and the wrapper receipts under
+`.perch/usage/`.
+Rule / model: the rules as merged; the model is the configured default (identity in the receipts).
+Result: at the 0.80 floor, 2 of 18 broken controls are flagged (claim-holds 0.89, outcome-follows-d4 0.84), and 0 of 4
+clean controls. Pooled separation is weak: broken 0.28 to 0.89 (median 0.57), clean 0.25 to 0.70 (median 0.44), AUC
+0.66. Per rule:
+- kill-is-semantic separates: broken 0.68 and 0.70 against clean 0.30.
+- outcome-follows-d4 separates: broken 0.76, 0.76 and 0.84 against clean 0.57.
+- claim-holds-against-evidence is marginal: broken 0.75 and 0.89 against clean 0.70.
+- passages-agree does not separate: broken 0.28 and 0.29 against clean 0.25.
+- clause-vs-delta (0.28 to 0.48), required-laws-met (0.39 to 0.55) and expectation-independent (0.60 and 0.69) have no
+  clean control. The first two never approach the floor on their broken controls.
+Judgment: uncalibrated. Every rule stays `gate: false`, and none is promoted into the pipeline.
+Change: none in this entry.
+Next trigger: narrow the questions as the 2026-09-28 bend-machine-arithmetic repair did: an applicability sentence,
+concrete violation shapes and explicit exemptions. Add clean controls to every rule (at least 3 each) and a held-out
+clean set, rerun, and set floors only from separated controls. Retire passages-agree if a rewrite still cannot separate.
