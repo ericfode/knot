@@ -23,9 +23,11 @@ ROOT = R.ROOT
 
 
 def sources() -> list:
-    """The frozen suites' sources: every suite fixture, the subset corpus and the golden sources."""
+    """The frozen suites' sources: every suite fixture, the subset corpus, the golden sources and this
+    gate's witnesses."""
     found = set()
-    for pattern in ('tests/*/fixtures/**/*.bend', 'tests/subsets/**/*.bend', 'vm/golden/*.bend'):
+    for pattern in ('tests/*/fixtures/**/*.bend', 'tests/subsets/**/*.bend', 'vm/golden/*.bend',
+                    'tests/compiler-image/witnesses/*.bend'):
         found |= {p.relative_to(ROOT).as_posix() for p in ROOT.glob(pattern)}
     return sorted(found)
 
@@ -40,7 +42,7 @@ def observe(check_cli: Path, path: str) -> dict:
     return {'exit': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr}
 
 
-def main(check_cli: Path, output: Path) -> None:
+def document(check_cli: Path) -> dict:
     paths = sources()
     with ThreadPoolExecutor(max_workers=8) as pool:
         seen = list(pool.map(lambda p: observe(check_cli, p), paths))
@@ -58,7 +60,7 @@ def main(check_cli: Path, output: Path) -> None:
         table[path] = entry
     synthetic = R.codec.encode(X.plan(), R.DIGEST)
     baseline = json.loads((ROOT / 'tests/compiler-fields-wasm/enum-baseline.json').read_text())
-    document = {
+    frozen = {
         'schema': 'knot image gate expectations',
         'frozen': 'before src/image.bend existed; sources: main check-cli, images: tests/compiler-image/reference.py',
         'base_sha256': R.REGISTRY['base']['sha256'],
@@ -87,7 +89,13 @@ def main(check_cli: Path, output: Path) -> None:
                       'image_bytes': len(synthetic), 'image_sha256': sha(synthetic),
                       'minimum_image_bytes': 4 * 1024 * 1024},
     }
-    output.write_text(json.dumps(document, indent=1, sort_keys=True) + '\n')
+    return frozen
+
+
+def main(check_cli: Path, output: Path) -> None:
+    frozen = document(check_cli)
+    output.write_text(json.dumps(frozen, indent=1, sort_keys=True) + '\n')
+    table = frozen['sources']
     accepted = sum(1 for e in table.values() if 'image' in e)
     print(f'{len(table)} sources, {accepted} accepted, {sum(1 for e in table.values() if e.get("golden"))} golden')
 

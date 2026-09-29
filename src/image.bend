@@ -1303,3 +1303,18 @@ def words_onto(bytes: List<&2,U32>, acc: List<&2,U32>) -> Result<S.Error,List<&2
 
 def words_of(bytes: List<&2,U32>) -> Result<S.Error,List<&2,U32>>:
   words_onto(bytes,Nil{})
+
+# ---------------------------------------------------------------- the round trip
+
+def flatten(encoded: Encoded) -> List<&2,U32>:
+  match encoded:
+    case Encoded{records,words}: List.concat(&2,U32,records)
+
+def decoded_image(result: Result<S.Error,Encoded>) -> Result<S.Error,Plan>:
+  match result:
+    case Fail{e}: Fail{e}
+    case Done{encoded}: decode(flatten(encoded))
+
+# What decoding the words of a book's image gives. The round-trip law says it is the book's erased plan.
+def recoded(fuel: Nat, book: C.Book) -> Result<S.Error,Plan>:
+  decoded_image(encode(fuel,book))

@@ -9,7 +9,7 @@ import ../../src/compile-cli.bend as CLI
 # can compare both with vm/serializer.py:
 #   image-cli decode IMAGE           prints the plan; the gate renders serializer.decode the same way
 #   image-cli recode IMAGE OUTPUT    encodes the decoded plan again and writes it through the chunked path
-# The image file is read whole: it is at most 16 MiB, the image limit.
+# The image file is read whole, up to one word past the 16 MiB image limit, so an oversize image is read as one.
 
 def numbers(values: List<&2,U32>) -> String:
   match values:
@@ -132,7 +132,7 @@ def pair_read(mode: Then, pair: File & Result<&1,&1,U32 & String,List<&2,U32>>) 
 def opened(mode: Then, result: Result<&1,&1,U32 & String,File>) -> IO(Unit):
   match result:
     case Fail{(code,message)}: IO.die(Unit,5,String.concat(["HostFailure\topen\t",U32.show(code),"\t",message]))
-    case Done{file}: IO.bind(File & Result<&1,&1,U32 & String,List<&2,U32>>,Unit,File.read_bytes(file,16777217),pair => pair_read(mode,pair))
+    case Done{file}: IO.bind(File & Result<&1,&1,U32 & String,List<&2,U32>>,Unit,File.read_bytes(file,16777220),pair => pair_read(mode,pair))
 
 def arguments(args: List<String>) -> IO(Unit):
   match args:
