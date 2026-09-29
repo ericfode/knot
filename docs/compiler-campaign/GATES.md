@@ -144,6 +144,25 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   count, bump pointer and line, and the reference evaluation at a fill of 3
   gives the line and the calls. The test build pins `bump` and `grows` (boot's
   grow, and one for the text that starts at the memory's end).
+- The scope tables (CORE.md choice 16; `vm/scope.py`; `scope` in `fixtures.json`).
+  The validator holds each slot's type and use mark at the sum of the depths of
+  the Closures around it, in tables of W + 4200 indices at first, which the
+  reviewer's images outgrew: valid images were refused or trapped, and a
+  malformed one was accepted and run. Twenty-four rows, each frozen with its
+  words, `need` (the indices validation holds, derived from the plan alone),
+  SHA-256, the reference codec's verdict and the reference evaluation's run,
+  before the VM changed: the reviewer's four saved images (two valid, two
+  refused), rows one short of, at and one past the tables' size and after one,
+  two and three doublings (K's fields typed, so a slot read after a doubling
+  shows its type was carried over), a Closure whose capture sits where the
+  tables must grow, two units of 65,535 slots, and a unit deeper than its
+  `slots` with a defect after that depth (the reference codec reports the defect,
+  not the slots: no early refusal). One row is valid but needs more scratch than
+  4 GiB holds (`scope.scratch`): it stops `Exhausted` kind 2 (heap), not a trap.
+  Then a seeded corpus of 300 such images, most with one small change, which the
+  VM must judge as the reference codec does, in the test build and in `vm.wasm`.
+  The rows bound the test build's `memory.grow` count, which tables that grow
+  one index at a time would break.
 - Three growth rows on one Book whose every entry allocates a 16-byte Activation,
   each stop derived from SPEC sections 5 and 7 in closed form: a heap lowered to
   256 MiB (`Exhausted` kind 2 in at most 24 `memory.grow` calls of the test
@@ -171,7 +190,7 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Seventy-nine WAT mutants are each killed by a wrong observation. One restores the
+- Eighty-six WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right; two restore the immediate tests that trapped
   (group `traps`), and three copy or bind past a cell's end (group
@@ -192,8 +211,13 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   (CORE.md choice 15) and keep every outcome: memory grown one page at a time,
   killed by the test build's `memory.grow` count (a timeout never kills, SPEC
   section 11), and a refused step that traps, killed by the run whose host caps
-  memory.
-- `python3 vm/check-core.py --study [--heavy]` runs the 567 systematic
+  memory. Seven guard the scope tables: they never grow (W + 4200 restored),
+  a write holds one index short, a doubling drops the types, carries a
+  quarter of them, or drops the use marks, a table grows to the index that
+  passed it and not to twice its size (killed by the memory.grow count), and a
+  unit is refused as soon as its depth passes its `slots`, which names another
+  first defect than the reference codec's.
+- `python3 vm/check-core.py --study [--heavy]` runs the 582 systematic
   single-token mutants of `vm/study.py` against these rows instead, and writes
   `vm/receipts/study.json`; `vm/CORE.md` gives its result and why each survivor
   survives. The gate prints the time of each stage on stderr.

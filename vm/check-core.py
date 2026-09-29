@@ -1043,7 +1043,7 @@ STUDY_ORDER = ['keys', 'describe', 'tags', 'display', 'inspection', 'goldens', '
                'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'memory-end', 'scope', 'controls']  # cheap and telling first
 HEAVY = ['ceiling']  # about 4 GiB a row: only a study's survivors run them (`--heavy`)
 GUARD = {'fixtures': 120_000, 'limited': 120_000, 'programs': 120_000, 'ceiling': 600_000, 'full-heap': 600_000,
-         'trap': 600_000, 'growth': 600_000, 'refused': 600_000, 'scope': 5_000}  # ms a row may take before it is stopped, else 30,000
+         'trap': 600_000, 'growth': 600_000, 'refused': 600_000, 'scope': 10_000}  # ms a row may take before it is stopped, else 30,000
 
 
 BASELINE = ['keys', 'describe', 'tags', 'display', 'inspection', 'sweeps', 'writers', 'programs', 'hang', 'fuzz-admitted', 'dumps', 'scope']
@@ -1649,6 +1649,26 @@ MUTANTS = [
     ('describe-tag-at-count', "a result whose tag equals its type's constructor count is in range",
      [('        (if (i32.ge_u (local.get $tag) (call $ty (local.get $t) (i32.const 3)))\n          (then (call $refuse (global.get $R_ill_typed))))',
        '        (if (i32.gt_u (local.get $tag) (call $ty (local.get $t) (i32.const 3)))\n          (then (call $refuse (global.get $R_ill_typed))))')], 'tags'),
+    # the validator's scope tables (CORE.md choice 16): each survives every other row, and dies by the scope rows
+    ('scope-tables-fixed', 'the scope tables keep their first size, W + 4200 indices, and a slot past them lands on the next table',
+     [('    (call $holdscope (i32.add (local.get $s) (i32.const 1)))\n', '    (nop)\n')], 'scope'),
+    ('scope-holds-one-short', 'a write at index s holds s indices, not s + 1: the index at the tables\' size lands on the next table',
+     [('    (call $holdscope (i32.add (local.get $s) (i32.const 1)))\n', '    (call $holdscope (local.get $s))\n')], 'scope'),
+    ('scope-types-not-carried', 'a doubling of the tables drops the types the old table held',
+     [('    (memory.copy (global.get $sc) (local.get $old) (i32.shl (global.get $scCap) (i32.const 2)))\n', '    (nop)\n')], 'scope'),
+    ('scope-types-carried-short', 'a doubling carries a quarter of the types the old table held',
+     [('    (memory.copy (global.get $sc) (local.get $old) (i32.shl (global.get $scCap) (i32.const 2)))\n',
+       '    (memory.copy (global.get $sc) (local.get $old) (global.get $scCap))\n')], 'scope'),
+    ('scope-marks-not-carried', 'a doubling of the tables drops the use marks the old table held',
+     [('    (memory.copy (global.get $us) (local.get $old) (global.get $scCap))\n', '    (nop)\n')], 'scope'),
+    ('scope-no-doubling', 'a table grows to the index that passed it, not to twice its size: each further slot moves it again',
+     [('    (local.set $cap (i64.shl (i64.extend_i32_u (global.get $scCap)) (i64.const 1)))\n',
+       '    (local.set $cap (i64.extend_i32_u (global.get $scCap)))\n')], 'scope-growth'),
+    ('scope-slots-refused-early', 'a function body deeper than its `slots` is refused at that depth, not when the unit ends, so a later defect goes unreported',
+     [('    (if (i32.gt_u (local.get $d) (global.get $vdeep)) (then (global.set $vdeep (local.get $d))))\n',
+       '    (if (i32.gt_u (local.get $d) (global.get $vdeep)) (then (global.set $vdeep (local.get $d))))\n'
+       '    (if (i32.and (i32.eqz (global.get $vbase)) (i32.gt_u (local.get $d) (call $w (i32.add (local.get $fn) (i32.const 4)))))\n'
+       '      (then (call $refuse (global.get $R_function_slots))))\n')], 'scope'),
 ]
 
 
@@ -2043,7 +2063,7 @@ def main(args: list) -> int:
     stage('controls')
 
     # the validator's scope tables at the depths where they grow: fixtures.json's `scope` rows, then a seeded corpus
-    record['scope'], scope_jobs = check_scope(fixtures['scope'], module, test, BUILD / 'scope', reg, digest)
+    record['scope_tables'], scope_jobs = check_scope(fixtures['scope'], module, test, BUILD / 'scope', reg, digest)
     stage('scope tables')
 
     fuzz = BUILD / 'fuzz'
@@ -2194,7 +2214,7 @@ def main(args: list) -> int:
           f"{record['lane']['sample']['rows']} run again through the seed), {sum(record['both'].values())} admitted images "
           f"through both, {len(high)} ceiling runs, {len(ends)} memory-end runs, {len(growth)} growth runs, {len(stack)} small-stack runs, "
           f"{len(refused)} refused and {len(admissions)} admitted controls, "
-          f"{len(record['scope']['rows'])} scope rows and {record['scope']['corpus']['images']} scope images, "
+          f"{len(record['scope_tables']['rows'])} scope rows and {record['scope_tables']['corpus']['images']} scope images, "
           f"{len(word_rows)} argument controls, "
           f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted), "

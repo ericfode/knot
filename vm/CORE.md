@@ -13,7 +13,7 @@ BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FN 
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FUEL -- [ARGS...]
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py --freeze         # rewrite core/seeded.json and core/lane.json from the seed
-BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 567 systematic mutants (about 17 minutes)
+BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 582 systematic mutants (about 20 minutes)
 ```
 
 ## Build and pins
@@ -91,7 +91,8 @@ did not refuse the image.
   - the arrow-fit stack at F0 + 8 MiB;
   - Book ordinals at F0 + 64.
 - **Boot scratch** starts above both H0 and the arguments: node marks, scope
-  types and uses, the task stack, the arrow-pair memo, the describe domain.
+  types and uses (W + 4200 indices at first, and doubled where an image needs more,
+  choice 16), the task stack, the arrow-pair memo, the describe domain.
   Constants are then materialized from H0, so cell addresses follow SPEC §5
   exactly.
 - **Linking in place.** After validation the loaded copy is rewritten:
@@ -320,7 +321,77 @@ adopt them or record its own, so that lockstep compares like with like.
     where the host grants the step there is one call per 16 MiB (254 up to 4 GiB
     on the real host, 16 to a 256 MiB heap).
 
+16. **The validator's scope tables grow (review round 1 of round 6).** `$check`
+    keeps each slot's type (`sc`, a word) and use mark (`us`, a byte) at an absolute
+    scope index: a function's slots start at 0 and a Closure's at its enclosing
+    unit's base plus the depth at the Closure, so an index is the sum of the depths
+    of the Closures around it. No image size bounds that sum. A Branch binds every
+    field of its constructor, whose one record serves every Case that matches it,
+    so a few hundred words of image reach depths of thousands, and each nested
+    Closure adds the depth it sits at. The tables held W + 4200 indices, and a
+    slot past them fell on the next table (`us`, then the fits memo): the
+    reviewer's images (`fixtures.json` section `scope`) were refused as
+    `capture-use` (`valid-nest-1000-60-60`, 3,600,060 indices), trapped
+    (`valid-nest-20000-3-200`, 12,000,200) and, for a malformed one, accepted and
+    run (`falseaccept-100-60`: slot 5,394 = W + 4200 landed on the use marks,
+    where the mark of an earlier Reference made it read as its declared type).
+
+    `$holdscope` holds `n` indices. At an `n` past the tables' `scCap` it takes
+    fresh scratch for both tables, twice as large or `n` if that is more, copies
+    what the old ones held and leaves them (scratch has no free). `$setscope`
+    calls it with `s + 1` before every write, and it is the one writer: a read or
+    a mark of an index comes after the slot's own write (every slot below a depth
+    was bound), and a write is never past the tables' size by more than the slot
+    just before it. So no table can be indexed past its size, and no table can
+    reach another. The first call, from `$validate`, holds W + 4200 as before, so
+    the scratch and every row of the gate are as they were for an image that does
+    not pass it. Doubling makes the copies sum to less than the last table; tables
+    that grew by one index at a time would take gigabytes (the rows bound the test
+    build's `memory.grow` count at boot's one). A doubling that `$take` cannot
+    place, past the 4 GiB that scratch may reach, stops the image as `Exhausted`
+    kind 2, cause `heap`, as it does any table of the loader; the guard on a table
+    of 2^30 indices is unreachable, because the earlier tables stay in scratch and
+    `$take` stops the image before one passes 2^29.
+
+    Three consequences.
+    - A valid image can need more scope indices than scratch holds: the sum of the
+      depths of the units along one chain of Closures, each up to §4's 65,536
+      `slots`, over as many Closures as the image's 16 MiB hold. The VM then stops it
+      `Exhausted` kind 2 (heap) where the reference codec admits it: `exhausted-32767-2-8000`,
+      8,000 units of 65,535 slots (400,863 words, 524,280,000 indices, tables of at
+      least 8.29 GB of scratch), stops in 2 s, 4.2 GB resident, on the real host. §4 states
+      no limit for it (a finding below); the review allowed the stop.
+    - The review also proposed refusing a unit as soon as its depth passes its
+      declared `slots`, "since exactness already requires equality". That is not
+      taken. The reference codec checks a unit's `slots` when the unit ends, after its
+      body, so a defect in the body after that depth is the first defect, and the
+      first defect is what the gate compares (SPEC §4, and `$check`'s own order). `excess-function` and
+      `excess-closure` are such units (`slots` 0, a Let, then a Reference to slot 5):
+      the reference codec reports `slot 5 beyond depth 1`, not the slots. A validator that
+      refused early would name the slots (mutant `scope-slots-refused-early`,
+      killed by both). The tables grow instead.
+    - "Allocate them last in scratch, so they can extend" is met by moving, not
+      extending: the fits memo grows by `$take` while validation runs, so nothing can be
+      last, and a table that moves keeps no neighbour to run into.
+    - The tables are not sized up front from the image. An exact size is what `$check`
+      itself reaches, and a bound needs a walk that repeats its rules. A bound from the
+      declared `slots` is words the image chooses freely: each Closure would cost 65,536
+      indices whatever its body reaches, and the VM would stop as `Exhausted` images the
+      reference codec refuses for a defect. The tables hold what validation has reached.
+
+    The fix changes `vm.wat`, so `vm.wasm` is re-pinned: sha256 `407cb872…a7a2`
+    (19,697 bytes; was `41ca972b…cddc`, 19,581). The 21 lines it adds sit above every
+    function of the study, whose survivors' names moved by 21.
+
 ## Findings for the spec owner
+
+- **A chain of Closures has no §4 limit on its scope depth (open).** §4 limits one
+  unit's `slots` (65,536) and no sum. The validator's scope tables need one index per
+  slot along a chain of nested Closures (choice 16), so a valid image of 16 MiB can need
+  more indices than the 4 GiB of scratch holds, and the VM stops it `Exhausted` kind 2
+  (heap), a stop no §4 row names, where the reference codec admits it. A limit on the
+  sum of the `slots` of a chain of Closures, or on their nesting, with its own cause (D16),
+  would make it a §4 limit that both sides give alike.
 
 - **String constants above U+10FFFF (resolved).** At the branch base,
   `serializer.decode` refused a code above `0x10FFFF`, against §2, and vm-core
@@ -597,6 +668,49 @@ adopt them or record its own, so that lockstep compares like with like.
   each row's outcome, on either side of 4 GiB and at
   it, follows from §5 and choice 12, not from a VM. Each row's `basis` records
   the arithmetic.
+- **Scope tables (choice 16; [scope.py](scope.py), `fixtures.json` section `scope`).**
+  The validator's tables of slot types and use marks began at W + 4200 indices. A
+  slot sits at the sum of the depths of the Closures around it, and one wide
+  constructor serves every Case, so the reviewer's images reached 3.6 and 12 million
+  indices from a few dozen thousand words. Twenty-four rows, each frozen before the VM
+  changed (D7) with its words, `need` (the indices validation holds, from the plan
+  alone), SHA-256, the reference codec's verdict and the reference evaluation's run,
+  which the gate derives again:
+  - the reviewer's four saved images, rebuilt byte for byte: `valid-nest-1000-60-60`
+    and `valid-nest-20000-3-200` (valid: refused `capture-use` and a trap before),
+    `falseaccept-100-60` (refused `reference-type`: accepted and run before, its slot
+    W + 4200 on a use mark) and its control `control-100-60-target-5395`;
+  - `edge-t0` to `edge-t3`: a `chain` of nested Cases over a constructor whose
+    fields cycle four types, so that a slot read after a doubling shows its type was
+    carried over (type 0 is also what an uncopied table reads); its `need` is one
+    short of, exactly at, and one past the tables' size after 0, 1, 2 and 3 doublings
+    (`tuned` sets W with an unused constructor's words and `need` with Lets), with
+    references at the parameter, the first slots, the last two and below, at and above
+    each size; each `-past` row has a `-wrong` twin, refused `reference-type` at the
+    deepest slot;
+  - `nest-mark`, `nest-capture`, `nest-unused`: a Closure whose capture sits where the
+    tables grow, at its own slot or just after its use mark (which a doubling must
+    carry), and one with an unused second capture;
+  - `nest-32767-2-20`, 20 units of 65,535 slots, and `exhausted-32767-2-8000`, 8,000
+    of them: valid, and needing 8.29 GB of tables in scratch, so `Exhausted` kind 2
+    (heap) and no trap (the reference codec is not run on it; the frozen stop is
+    `scope.scratch`'s arithmetic);
+  - `excess-function`, `excess-closure`: see choice 16.
+
+  `at_most` bounds the test build's `memory.grow` count at boot's one on the `edge`
+  and `nest-` rows, whose scratch (under 20 * need + 64 * W + 64 KiB, about 2 MB)
+  boot's 48 MiB holds; tables that grew by one index at a time take gigabytes.
+  Then a corpus of 300 (seed 20260930, [scope.py](scope.py)`.corpus`): `chain` and
+  `nest` shapes with `need` at, just short of and just past a table size after 0 to 3
+  doublings, typed or untyped fields, one to six references at the edges of those
+  sizes (some at another type, some past the depth), one or two captures, and, in
+  two rows of three, one small change (`poke`: a slot, a declared type, a Case's
+  slot, a Branch's first slot or field count, a Closure's `slots` or a capture, a
+  function's `slots`). Each is judged by the reference codec and by the VM, in the
+  test build and in `vm.wasm`: 106 admitted and 194 refused with eight different first
+  defects, 126 of them past the first size, and none differs. The unchanged VM
+  differed on 12 of the 22 first rows and 30 of the 300 (.local/vm-core/logs/r10-scope-prefix.log,
+  r10-corpus-prefix.log).
 - **Growth (choice 15).** Three rows on `core/loop-cells` (`loop() = call loop`,
   `main() = call loop`, review round 1's probe byte for byte), each stop derived
   from §5 and §7 in closed form (`loop_stop`, which agrees with the
@@ -651,7 +765,7 @@ adopt them or record its own, so that lockstep compares like with like.
   reference codec: 1,674 counts that the remaining words cannot hold (it read
   `record-length`), 468 `limits` and 48 Closure `closure-slots`
   (.local/vm-core/logs/r6-limit-words-prefix.log).
-- **Mutants.** Seventy-nine, each killed by a wrong observation in a named group
+- **Mutants.** Eighty-six, each killed by a wrong observation in a named group
   (six by a trap and one by a hang, below):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
@@ -734,6 +848,18 @@ adopt them or record its own, so that lockstep compares like with like.
     and a Book result whose tag equals its type's constructor count
     (`ill-describe-at-count`) (group `tags`).
 
+  - the scope tables (seven, choice 16; groups `scope` and `scope-growth`). The tables
+    that never grow, W + 4200 restored (41 rows differ; the 20,000-Closure nest
+    traps); a write that holds `s` indices, not `s + 1` (the slot at the tables' size
+    lands on the use marks; killed by the edge rows whose size is even, where the two
+    tables abut); a doubling that drops the types, carries a quarter of them, or
+    drops the use marks (the typed edge rows; `nest-mark` and the 20,000-Closure
+    nest); a table that grows to the index that passed it, not to twice its size (the
+    result is right and the scratch gigabytes: killed by the `memory.grow` bound of
+    `nest-mark` and `edge-t1-past`, in a group of their own, in 0.2 s, where the whole
+    group took a minute); and a validator that refuses a unit as soon as its depth
+    passes its `slots` (`excess-function`, `excess-closure` and corpus rows whose
+    first defect is another).
   - an immediate tested in the same `or` as the loads through it (group `traps`):
     `$scell` and `$finish` as the VM of `2e0c9b1` had them. Its defect is the trap
     (like `top-trap`): the mutant is killed when a row of the inspection matrix
@@ -782,8 +908,8 @@ adopt them or record its own, so that lockstep compares like with like.
   trap. That reading is the study's, confirmed by installing five of them in a
   scratch copy, re-pinned, and running the whole gate, which exits 1 on each: the
   three memory-end mutants (7 s, a trap on their row), one the study finds only by a
-  trap (`$append:1964:i32.add->i32.sub@19`: golden `string-codes` traps, 2 s) and
-  one only by a hang (`$select:2191:i32.ge_u->i32.gt_u@26`: a golden outlives the
+  trap (`$append:1985:i32.add->i32.sub@19`: golden `string-codes` traps, 2 s) and
+  one only by a hang (`$select:2212:i32.ge_u->i32.gt_u@26`: a golden outlives the
   host's 120 s timeout). Review round 6's earlier acceptance did the same for ten
   of the reviewer's mutants.
   The fix of `$scell` moved 9 of the 567 (the reviewer's
@@ -795,7 +921,7 @@ adopt them or record its own, so that lockstep compares like with like.
   first, and `by_group` in the receipt counts each result by the group of its first
   wrong observation, hang or trap. The 508 were first killed by: keys 181,
   goldens 88, inspection 56, tags 51, display 47, writers 39, sweeps 20, limited 10,
-  runs 6, programs 5, ceiling 3, describe 2 (`$ctor:1865`'s `sub -> add` counts a
+  runs 6, programs 5, ceiling 3, describe 2 (`$ctor:1886`'s `sub -> add` counts a
   tag up, not down, so its walk ends only when the tag wraps, about 2^32 steps
   later: under heavy load that outlives a row's deadline and the group's later rows
   are skipped, so its first group moved from inspection to tags between the last
@@ -803,9 +929,9 @@ adopt them or record its own, so that lockstep compares like with like.
   by goldens 5, keys 4, display 3, memory-end 3, tags 2 and ceiling 1.
 
   An earlier reading filed three of the survivors as differing only at 4 GiB: an
-  Object's and an Action's operands copied 8 bytes each (`$complete:2163` and
-  `:2170`, `const 2 -> 3`) and a Branch that binds one word past its constructor's
-  fields (`$select:2248`, `ge_u -> gt_u`). Memory grows to the next 16 MiB boundary
+  Object's and an Action's operands copied 8 bytes each (`$complete:2184` and
+  `:2191`, `const 2 -> 3`) and a Branch that binds one word past its constructor's
+  fields (`$select:2269`, `ge_u -> gt_u`). Memory grows to the next 16 MiB boundary
   at or above a cell's end (choice 15), so it ends where a cell does at every
   boundary a cell ends on, from 48 MiB up. The memory-end rows sit on the first;
   each of the three traps there and nowhere else, and the gate registers them
@@ -825,7 +951,7 @@ adopt them or record its own, so that lockstep compares like with like.
     read only by the state audit; the half of an append block cleared first
     (1), every word of which that is read is written after it; the `tfn` flag (1)
     and the `imm` flag (1), tested only for truth; and the mode register after a
-    finished run (2, `$describe:2706`: `$run` returns at once);
+    finished run (2, `$describe:2727`: `$run` returns at once);
   - *a guard another check makes redundant* (3): three class masks (`7 -> 6`), where
     a Closure passes the class test and the type test refuses it, since its word at
     offset 8 is a node's word offset and every node follows every type record;

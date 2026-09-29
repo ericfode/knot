@@ -506,12 +506,13 @@
   (global $tF (mut i32) (i32.const 0))
   (global $tK (mut i32) (i32.const 0))
   ;; boot scratch: node marks (1 record start, 2 child, 4 root), representation
-  ;; of each type, scope types and uses, the task stack, the fits stack and its
-  ;; pair memo
+  ;; of each type, scope types and uses (`scCap` indices each), the task stack,
+  ;; the fits stack and its pair memo
   (global $mk (mut i32) (i32.const 0))
   (global $ro (mut i32) (i32.const 0))
   (global $sc (mut i32) (i32.const 0))
   (global $us (mut i32) (i32.const 0))
+  (global $scCap (mut i32) (i32.const 0))
   (global $tk (mut i32) (i32.const 0))
   (global $tkEnd (mut i32) (i32.const 0))
   (global $tp (mut i32) (i32.const 0))
@@ -1250,8 +1251,7 @@
       (if (i32.ne (local.get $t) (i32.const -1))
         (then (i32.store8 (i32.add (global.get $ro) (local.get $t)) (local.get $r))))
       (br_if $each (local.get $r)))
-    (global.set $sc (call $take (i32.shl (i32.add (global.get $W) (i32.const 4200)) (i32.const 2))))
-    (global.set $us (call $take (i32.add (global.get $W) (i32.const 4200))))
+    (call $holdscope (i32.add (global.get $W) (i32.const 4200)))
     (global.set $fs (i32.add (global.get $F0) (i32.const 0x800000)))
     (global.set $psCap (i32.const 1024))
     (global.set $psT (call $take (i32.const 8192)))
@@ -1386,13 +1386,34 @@
         (local.set $i (i32.add (local.get $i) (i32.const 1)))
         (br $each))))
 
-  ;; scope type and use marks at absolute scope index
+  ;; scope type and use marks at absolute scope index. A slot is written before any read or mark
+  ;; (every slot below a depth was bound), so writing holds the tables.
   (func $scope (param $s i32) (result i32)
     (i32.load (i32.add (global.get $sc) (i32.shl (local.get $s) (i32.const 2)))))
   (func $setscope (param $s i32) (param $t i32)
+    (call $holdscope (i32.add (local.get $s) (i32.const 1)))
     (i32.store (i32.add (global.get $sc) (i32.shl (local.get $s) (i32.const 2))) (local.get $t)))
   (func $use (param $s i32)
     (i32.store8 (i32.add (global.get $us) (local.get $s)) (i32.const 1)))
+
+  ;; Hold `n` scope indices in `sc` and `us`. They begin at W + 4200 and, at an index past them, move with what they
+  ;; hold into fresh scratch, twice as large or `n` if that is more: a slot sits at the sum of the depths of the
+  ;; Closures around it (§3), which no image size bounds (CORE.md choice 16). Past the scratch that 4 GiB holds, `$take`
+  ;; stops the image as Exhausted kind 2, as it does any table.
+  (func $holdscope (param $n i32)
+    (local $cap i64) (local $old i32)
+    (if (i32.le_u (local.get $n) (global.get $scCap)) (then (return)))
+    (local.set $cap (i64.shl (i64.extend_i32_u (global.get $scCap)) (i64.const 1)))
+    (if (i64.lt_u (local.get $cap) (i64.extend_i32_u (local.get $n)))
+      (then (local.set $cap (i64.extend_i32_u (local.get $n)))))
+    (if (i64.gt_u (local.get $cap) (i64.const 0x3fffffff)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))
+    (local.set $old (global.get $sc))
+    (global.set $sc (call $take (i32.shl (i32.wrap_i64 (local.get $cap)) (i32.const 2))))
+    (memory.copy (global.get $sc) (local.get $old) (i32.shl (global.get $scCap) (i32.const 2)))
+    (local.set $old (global.get $us))
+    (global.set $us (call $take (i32.wrap_i64 (local.get $cap))))
+    (memory.copy (global.get $us) (local.get $old) (global.get $scCap))
+    (global.set $scCap (i32.wrap_i64 (local.get $cap))))
   (func $nodetype (param $n i32) (result i32)
     (call $w (i32.add (local.get $n) (i32.const 2))))
 

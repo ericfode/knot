@@ -56,10 +56,10 @@ def slot_type(nf: int, m: int, typed: bool, slot: int) -> int:
 
 
 def chain(nf: int, m: int, refs: list, typed: bool = False, pad: int | None = None, lets: int = 0) -> dict:
-    """f(x: K) -> Pair. m nested Cases: Case 0 on x, Case k on the first field of Case k - 1's binding (a `K`, as is field 0
-    of every `K`). Then `lets` Lets of Off, then a Construct of `refs`, pairs (slot, declared type). The slots are 0,
-    1 + k * nf + j (k < m, j < nf) and the Lets', so `slots` is 1 + m * nf + lets. Typed, K's field j has type CYCLE[j % 4],
-    else `K`. `pad` adds an unused type (see `extras`)."""
+    """f(x: K) -> Pair. m nested Cases: Case 0 on x, Case k on field 0 of Case k - 1's binding (field 0 is a `K` in every
+    `K`). Then `lets` Lets of Off, then a Construct of `refs`, pairs (slot, declared type). The slots are 0, 1 + k * nf + j
+    (k < m, j < nf) and the Lets', so `slots` is 1 + m * nf + lets. Typed, K's field j has type CYCLE[j % 4], else `K`.
+    `pad` adds an unused type (see `extras`)."""
     fields = [CYCLE[j % 4] if typed else BIG for j in range(nf)]
     first = [1 + k * nf for k in range(m)]
     scrutinee = [0] + first[:-1]
@@ -99,7 +99,7 @@ def nest(nf: int, m: int, L: int, caps: int = 1, pad: int | None = None) -> dict
 
 
 def excess(kind: str) -> dict:
-    """A unit that reaches depth 1 with `slots` 0, and a Reference to slot 5 below that depth. The reference codec checks the
+    """A unit of `slots` 0 that reaches depth 1, and a Reference to slot 5, beyond that depth. The reference codec checks the
     body before the unit's `slots`, so it reports `slot 5 beyond depth 1` and not the slots; a validator that refused at the
     first depth beyond `slots` would report the slots. `function`: f's own body (a Let, then the Reference); `closure`: the
     same in the body of an erased Closure that f invokes."""
@@ -116,7 +116,7 @@ BUILDERS = {'chain': chain, 'nest': nest, 'excess': excess}
 
 def build(row: dict) -> dict:
     """The plan a frozen row names: {'family': 'chain' | 'nest', 'args': {...}} (refs as [slot, type] pairs)."""
-    return BUILDERS[row['family']](**{k: v for k, v in row['args'].items()})
+    return BUILDERS[row['family']](**row['args'])
 
 
 def need(plan: dict) -> int:
