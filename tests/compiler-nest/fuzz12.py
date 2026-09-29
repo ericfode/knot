@@ -11,17 +11,17 @@ Every program carries a class `family:...`, and the summary counts seed and Knot
   the time. `+` may stand in any row and any slot, so the seed's rule (the first row of a constructor's split
   marks its fields for every row below; a variable row marks its column) is drawn across every split.
 - suffix: a complete term (a name, a constructor, a call) followed by one of the seed's term suffixes (each
-  infix operator, a call, an index, an offload, a lambda), a junk token the seed rejects, or a `+name` term,
-  after a gap of nothing, a space, a line break at a column, a comment or a blank line. It stands as an
-  inline or own-line arm body, a let value (on the line of its `=` or the line after it), a call argument or a def
-  body, in a row the lowering keeps or discards, in a one- or two-column match.
+  infix operator, a call, an index, an offload, a lambda), a junk token the seed rejects, a `+name` term, or a
+  tail that opens another term (`+name`, glued `x+y`, `?name`, `+ name`), after a gap of nothing, a space, a line
+  break at a column, a comment or a blank line. It stands as an inline or own-line arm body, a let value (on the
+  line of its `=` or the line after it, where a spaced `+` or `-` that starts the line continues the value with an
+  operator), a call argument or a def body, in a row the lowering keeps or discards, in a one- or two-column match.
+- start: an arm body on the line after its `case`, or a statement after a let, that starts with a token (a
+  bracket, a numeral, a hole, a name, a marker, a keyword, a closer, `!`, `@`, a backslash) at another column, in a
+  one- or two-column match, in a row the lowering keeps or discards.
 
 A false acceptance (seed rejects, Knot accepts), a false Invalid (seed accepts, Knot Invalid) or a host or
 internal failure fails the gate. Accepted programs also run through the Bend evaluator, in both lanes.
-
-Two seed-accepted shapes are open D4 families and are not drawn (src/SPEC.md): a spaced `+` or `-` that starts
-the line after a let's value, which round 10's `detached_marker` law pins as `Invalid detached-marker`, and a term that starts with `?`, `@`
-or a backslash, or a `+` marker, as the next argument after whitespace.
 """
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
@@ -214,6 +214,9 @@ OPERATORS = ['->', '&', '|', '||', '&&', '<', '<=', '>', '>=', '<>', '++', '<&>'
 CALLS = ['(a)', '(a, a)', '[0n]', '!(a)', '=> a', '<- a']
 # tokens the seed rejects after a term, and markers that touch a name
 JUNK = ['== a', '= a', ', a', '. a', '~ a', ': Flag', ')', '}', '-a', '^ a', '@ a', '$ a', '!', ']']
+# tails that open another term after a complete one: a touching `+name` (glued to the term when the gap is empty),
+# a hole, a spaced operator
+OPENERS = ['+a', '+x0', '?a', '?x0', '? a', '+ a', '+(a)', '?']
 PLUS_TERMS = ['+x0', '+ x0', '-x0', '+x0 y', '+h(a)', '+x0(a)', '+(a)', '+ (a)', '+\n      (a)', '+ # c\n      (a)', '+\n      +a', '-\n      (a)']
 GAP_COLUMNS = [0, 2, 4, 6, 8, 12]
 
@@ -224,19 +227,19 @@ def suffix_text(d, site):
     column = d.pick(GAP_COLUMNS)
     joint = {'space': ' ', 'none': '', 'break': '\n' + ' ' * column, 'comment': ' # c\n' + ' ' * column,
              'blank': '\n\n' + ' ' * column}[gap]
-    # After a let's value, a spaced `+` or `-` at the start of the next line reads as an operator to the seed and
-    # as a detached marker here: round 10's `detached_marker` law pins `Invalid`, an open D4 family (SPEC).
-    operators = [o for o in OPERATORS if not (site == 'let' and gap in ('break', 'comment', 'blank') and o[0] in '+-')]
     roll = d.rng.random()
     if roll < 0.12:
         lead = d.pick(PLUS_TERMS)
         if d.chance(3):
             return 'suffix:plus-term:alone', lead
-        return f'suffix:plus-term:{gap}', lead + joint + d.pick(operators) + ' a'
+        return f'suffix:plus-term:{gap}', lead + joint + d.pick(OPERATORS) + ' a'
     left = d.pick(LEFTS)
-    if roll < 0.62:
-        return f'suffix:operator:{gap}', left + joint + d.pick(operators) + ' a'
-    if roll < 0.82:
+    if roll < 0.52:
+        return f'suffix:operator:{gap}', left + joint + d.pick(OPERATORS) + ' a'
+    if roll < 0.66:
+        tail = d.pick(OPENERS)
+        return f'suffix:opener-{"hole" if tail[0] == "?" else "plus"}:{gap}', left + joint + tail
+    if roll < 0.84:
         return f'suffix:call:{gap}', left + joint + d.pick(CALLS)
     return f'suffix:junk:{gap}', left + joint + d.pick(JUNK)
 
@@ -262,7 +265,39 @@ def suffix_program(d):
     return f'{klass}:{site}:{reach}', SUFFIX_PRE + head + rows + f'\ndef main() -> Flag:\n  {call}\n'
 
 
-FAMILIES = [('plus', plus_program, 1800), ('suffix', suffix_program, 1200)]
+# ---------------------------------------------------------------------------------------- start
+START_TOKENS = ['(a)', '((a))', '(On{})', '[a]', '[]', '0n', '1n', '0', '?a', '?', '(', ')', ',', ':', '=', 'case', 'def', 'type',
+                '!a', '@a', '\\', 'a', 'On{}', '+a', '- a', 'match a:', 'k(a)', '_', '*a', '<a', '->', '=>', '==']
+START_COLUMNS = [0, 2, 4, 6, 8]
+
+
+def start_program(d):
+    """A body or a statement that starts with `token` on its own line at another column."""
+    token = d.pick(START_TOKENS)
+    shape = d.pick(['single', 'multi'])
+    form = d.pick(['body', 'stmt'])
+    live = d.chance(3) and token in ('(a)', '((a))', '(On{})', 'k(a)', 'a', 'On{}')
+    column = d.pick(START_COLUMNS)
+    ind = ' ' * column
+    single_row = shape == 'single'
+    head = 'def f(a: Flag) -> Flag:\n  match a:\n' if single_row else 'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n'
+    catch, row = ('x', 'On{}') if single_row else ('x y', 'On{} z')
+    tail = 'def main() -> Flag:\n  f(On{})\n' if single_row else 'def main() -> Flag:\n  f(On{}, Off{})\n'
+    binder = 'a' if single_row else 'z'
+    let = f'      u : Flag = {binder}\n'
+    if live:
+        rows = ((f'    case On{{}}: a\n    case Off{{}}:\n{ind}{token}\n' if form == 'body' else
+                 f'    case Off{{}}: a\n    case On{{}}:\n{let}{ind}{token}\n') if single_row else
+                (f'    case On{{}} x: a\n    case Off{{}} y:\n{ind}{token}\n' if form == 'body' else
+                 f'    case On{{}} x: a\n    case Off{{}} y:\n      u : Flag = y\n{ind}{token}\n'))
+    else:
+        rows = f'    case {catch}: {"x" if single_row else "x"}\n    case {row}:\n' + (f'{ind}{token}\n' if form == 'body' else f'{let}{ind}{token}\n')
+    return f'start:{form}:{shape}:{"live" if live else "dead"}', START_PRE + head + rows + '\n' + tail
+
+
+START_PRE = SUFFIX_PRE.replace('def h(a: Flag) -> Flag:\n  a\n', 'def k(a: Flag) -> Flag:\n  a\n')
+
+FAMILIES = [('plus', plus_program, 1500), ('suffix', suffix_program, 1100), ('start', start_program, 400)]
 
 
 def programs(count=COUNT):

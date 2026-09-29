@@ -121,11 +121,17 @@ law line_broken_scrutinees_witness:
       [indented("<eof>")]}} : Result<S.Error,P.Parsed>}
 
 # After a let the seed reads a spaced `+` as an operator on its value; first in
-# a body it follows no value and may be spaced.
+# a body it follows no value and may be spaced. A name and `=` or `:` after the operator
+# end the statement in error; any other operand is a term that Knot does not read.
 law detached_marker:
   for +rest: List<&2,S.Token>
-  {P.run(1n,P.BodyAt{2,False{}},Con{S.Token{"+",S.At{20,21,3,2}},Con{S.Token{"u",S.At{22,23,3,4}},rest}})
+  {P.run(1n,P.BodyAt{2,False{}},Con{S.Token{"+",S.At{20,21,3,2}},Con{S.Token{"u",S.At{22,23,3,4}},Con{S.Token{":",S.At{23,24,3,5}},rest}}})
     == Fail{S.Invalid{"parse","detached-marker",S.At{20,21,3,2}}} : Result<S.Error,P.Parsed>}
+
+law spaced_operator_after_a_let:
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.BodyAt{2,False{}},Con{S.Token{"+",S.At{20,21,3,2}},Con{S.Token{"u",S.At{22,23,3,4}},Con{S.Token{"\n",S.At{23,24,3,5}},rest}}})
+    == Fail{S.Unsupported{"parse","operator",S.At{20,21,3,2}}} : Result<S.Error,P.Parsed>}
 
 law first_marker:
   for +rest: List<&2,S.Token>
@@ -344,7 +350,13 @@ law suffix_ends_a_body:
   for +at: S.At
   for +value: S.Node
   for +rest: List<&2,S.Token>
-  {P.reply(value,Con{S.Token{"|",at},rest}) == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,P.Parsed>}
+  {P.reply(value,Con{S.Token{"|",at},rest}) == Fail{S.Unsupported{"parse","operator",at}} : Result<S.Error,P.Parsed>}
+
+law call_ends_a_body:
+  for +at: S.At
+  for +value: S.Node
+  for +rest: List<&2,S.Token>
+  {P.reply(value,Con{S.Token{"(",at},rest}) == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,P.Parsed>}
 
 law marker_ends_no_body:
   {P.reply(S.Variable{tok("a",5)},[tok("+",9),tok("x",10),tok("<eof>",11)]) ==
@@ -353,8 +365,56 @@ law marker_ends_no_body:
 law suffix_ends_a_let:
   for +at: S.At
   for +rest: List<&2,S.Token>
-  {P.line_end(Con{S.Token{"|",at},rest}) == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,List<&2,S.Token>>}
+  {P.line_end(Con{S.Token{"|",at},rest}) == Fail{S.Unsupported{"parse","operator",at}} : Result<S.Error,List<&2,S.Token>>}
+
+law call_ends_a_let:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.line_end(Con{S.Token{"(",at},rest}) == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,List<&2,S.Token>>}
 
 law promoted_term_is_unsupported:
   {P.run(1n,P.BindingStart{2,0},[tok("x0",5),tok("\n",7),tok("<eof>",8)]) ==
     Fail{S.Unsupported{"parse","term-form",S.At{5,6,1,5}}} : Result<S.Error,P.Parsed>}
+
+# After an expression argument `+name` is a promoted term the seed reads and Knot does not; touching the
+# argument it is a `+` operator. A hole is a term too. `@`, a backslash or a closer is no term at all.
+law argument_promotion_is_unsupported:
+  for +rest: List<&2,S.Token>
+  {P.run(4n,P.Arguments{")",False{}},Con{tok("x",9),Con{tok("+",11),Con{tok("y",12),rest}}})
+    == Fail{S.Unsupported{"parse","term-form",S.At{11,12,1,11}}} : Result<S.Error,P.Parsed>}
+
+law glued_argument_operator_is_unsupported:
+  for +rest: List<&2,S.Token>
+  {P.run(4n,P.Arguments{")",False{}},Con{tok("x",9),Con{tok("+",10),Con{tok("y",11),rest}}})
+    == Fail{S.Unsupported{"parse","operator",S.At{10,11,1,10}}} : Result<S.Error,P.Parsed>}
+
+law argument_hole_is_unsupported:
+  for +at: S.At
+  for +head: S.Node
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.ListTail{")",head,False{},False{}},Con{S.Token{"?",at},rest})
+    == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,P.Parsed>}
+
+law argument_at_is_invalid:
+  for +at: S.At
+  for +head: S.Node
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.ListTail{")",head,False{},False{}},Con{S.Token{"@",at},rest})
+    == Fail{S.Invalid{"parse","argument-separator",at}} : Result<S.Error,P.Parsed>}
+
+# The seed lays a term out at any column, so an arm body or a later statement may open with a bracket,
+# a numeral or a hole; a closer, a separator and a keyword open none.
+law body_start_witness:
+  {[S.body_start(tok("(",9)),S.body_start(tok("[",9)),S.body_start(tok("0n",9)),S.body_start(tok("?",9)),S.body_start(tok("a",9)),
+    S.body_start(tok(")",9)),S.body_start(tok(",",9)),S.body_start(tok("!",9)),S.body_start(tok("@",9)),S.body_start(tok("case",9))] ==
+    [True{},True{},True{},True{},True{},False{},False{},False{},False{},False{}] : List<&2,Bool>}
+
+law arm_body_may_start_with_a_term:
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.StartBody{4},Con{S.Token{"(",S.At{20,21,3,2}},rest})
+    == Fail{S.Unsupported{"parse","body-indentation",S.At{20,21,3,2}}} : Result<S.Error,P.Parsed>}
+
+law closer_starts_no_body:
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.StartBody{4},Con{S.Token{")",S.At{20,21,3,2}},rest})
+    == Fail{S.Invalid{"parse","body-indentation",S.At{20,21,3,2}}} : Result<S.Error,P.Parsed>}

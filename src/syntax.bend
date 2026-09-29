@@ -136,6 +136,11 @@ def closes(+t: Token) -> Bool:
 def statement(+t: Token) -> Bool:
   Bool.or(identifier(t),Bool.or(matches(t,"match"),Bool.or(matches(t,"+"),matches(t,"-"))))
 
+# A body or a later statement may also open with a bracket, a numeral or a hole: the seed lays
+# any term out at any column.
+def body_start(+t: Token) -> Bool:
+  Bool.or(statement(t),Bool.or(matches(t,"("),Bool.or(matches(t,"["),Bool.or(numeral(text(t)),matches(t,"?")))))
+
 # The seed's infix operators, `+` and `-` aside, begin with one of these tokens.
 def infix(+t: Token) -> Bool:
   Bool.or(matches(t,"*"),Bool.or(matches(t,"/"),Bool.or(matches(t,"%"),Bool.or(matches(t,"<"),

@@ -32,9 +32,10 @@ def unsupported(code):
 
 LEADING = 'case Con{S.Arm{arm,S.Sequence{Con{S.Constructor{token,args},rest}},body},tail}: args'
 MARKED = 'case Con{S.Variable{name},rest} Con{S.Promotion{binder},more}: Con{S.Promotion{name},marked(rest,more)}'
-REPLY = 'S.choose(Result<S.Error,Parsed>,suffix(ts),u => unsupported(ts,"term-form"),u => terminated(value,ts))'
+REPLY = 'S.choose(Result<S.Error,Parsed>,suffix(ts),u => unsupported(ts,form(ts)),u => terminated(value,ts))'
 LINE_END = 'S.choose(Result<S.Error,List<&2,S.Token>>,suffix(ts),u =>'
-BINDING = 'Bool.or(continues(tokens),Bool.and(U32.is_eq(quantity,2),starts(S.skip_lines(tokens),"(")))'
+BINDING = 'Bool.and(U32.is_eq(quantity,2),starts(S.skip_lines(tokens),"("))'
+LINE_OPERATOR = 'S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(first),operator(tokens)),u => unsupported(tokens,"operator"),u =>'
 BINDING_BREAK = 'Bool.and(U32.is_eq(quantity,2),Bool.and(starts(tokens,"\\n"),starts(S.skip_lines(tokens),"+")))'
 VALUE_BREAK = 'Bool.and(starts(rhs,"\\n"),Bool.and(Bool.not(scrutinee(S.skip_lines(rhs))),term_start(S.skip_lines(rhs))))'
 ARGUMENT = 'Bool.and(Bool.not(Bool.or(parameters,pattern)),Bool.or(suffix(tokens),lambda(head,tokens)))'
@@ -59,7 +60,7 @@ MUTANTS = [
     {'name': 'body-suffix-invalid', 'file': 'parse.bend', 'old': REPLY, 'new': 'terminated(value,ts)',
      'witness': 'suffix-or-dead', 'phase': 'check', 'wrong': invalid('parse', 'end-of-body')},
     {'name': 'let-suffix-invalid', 'file': 'parse.bend', 'old': LINE_END,
-     'new': LINE_END.replace('suffix(ts)', 'False{}'), 'witness': 'suffix-or-dead-let', 'phase': 'check',
+     'new': LINE_END.replace('suffix(ts)', 'False{}'), 'witness': 'suffix-index-dead-let', 'phase': 'check',
      'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-\n'}},
     {'name': 'argument-suffix-invalid', 'file': 'parse.bend', 'old': ARGUMENT,
      'new': ARGUMENT.replace('Bool.or(suffix(tokens),lambda(head,tokens))', 'lambda(head,tokens)'),
@@ -79,9 +80,9 @@ MUTANTS = [
     {'name': 'every-token-a-suffix', 'file': 'parse.bend', 'old': 'Bool.or(Bool.or(S.matches(h,"("),S.matches(h,"[")),Bool.or(bang(Con{h,t}),operator(Con{h,t})))',
      'new': 'True{}', 'witness': 'suffix-ctl-eqeq', 'phase': 'check', 'wrong': unsupported('term-form')},
     {'name': 'marker-an-operator', 'file': 'parse.bend', 'old': 'Bool.not(marker(Con{h,t}))', 'new': 'True{}',
-     'witness': 'suffix-ctl-marker-plus', 'phase': 'check', 'wrong': unsupported('term-form')},
+     'witness': 'suffix-ctl-marker-plus', 'phase': 'check', 'wrong': unsupported('operator')},
     {'name': 'dot-an-operator', 'file': 'parse.bend', 'old': 'u => Bool.or(starts(t,"|"),Bool.or(starts(t,"^"),starts(t,"&"))),u =>',
-     'new': 'u => True{},u =>', 'witness': 'suffix-ctl-dot', 'phase': 'check', 'wrong': unsupported('term-form')},
+     'new': 'u => True{},u =>', 'witness': 'suffix-ctl-dot', 'phase': 'check', 'wrong': unsupported('operator')},
     {'name': 'bang-without-paren', 'file': 'parse.bend', 'old': 'Bool.and(S.matches(h,"!"),starts(t,"("))', 'new': 'S.matches(h,"!")',
      'witness': 'suffix-ctl-bang', 'phase': 'check', 'wrong': unsupported('term-form')},
     {'name': 'margin-operator-invalid', 'file': 'parse.bend',
@@ -89,14 +90,14 @@ MUTANTS = [
      'new': 'S.choose(Result<S.Error,Parsed>,False{},u =>', 'witness': 'suffix-cont-margin', 'phase': 'check',
      'wrong': invalid('parse', 'declaration-name')},
     {'name': 'left-operator-invalid', 'file': 'parse.bend',
-     'old': 'S.choose(Result<S.Error,Parsed>,continues(tokens),u =>\n            unsupported(tokens,"term-form"),u => invalid(tokens,"top-level-indentation"))',
-     'new': 'S.choose(Result<S.Error,Parsed>,False{},u =>\n            unsupported(tokens,"term-form"),u => invalid(tokens,"top-level-indentation"))',
+     'old': 'S.choose(Result<S.Error,Parsed>,continues(tokens),u =>\n            unsupported(tokens,form(tokens)),u => invalid(tokens,"top-level-indentation"))',
+     'new': 'S.choose(Result<S.Error,Parsed>,False{},u =>\n            unsupported(tokens,form(tokens)),u => invalid(tokens,"top-level-indentation"))',
      'witness': 'suffix-cont-left', 'phase': 'check', 'wrong': invalid('parse', 'top-level-indentation')},
     {'name': 'let-operator-invalid', 'file': 'parse.bend',
-     'old': 'S.choose(Result<S.Error,Parsed>,continues(tokens),u =>\n            unsupported(tokens,"term-form"),u => invalid(tokens,"body-indentation"))',
-     'new': 'S.choose(Result<S.Error,Parsed>,False{},u =>\n            unsupported(tokens,"term-form"),u => invalid(tokens,"body-indentation"))',
+     'old': 'S.choose(Result<S.Error,Parsed>,continues(tokens),u =>\n            unsupported(tokens,form(tokens)),u => invalid(tokens,"body-indentation"))',
+     'new': 'S.choose(Result<S.Error,Parsed>,False{},u =>\n            unsupported(tokens,form(tokens)),u => invalid(tokens,"body-indentation"))',
      'witness': 'suffix-cont-let-margin', 'phase': 'check', 'wrong': invalid('parse', 'body-indentation')},
-    {'name': 'binding-operator-invalid', 'file': 'parse.bend', 'old': BINDING, 'new': BINDING.replace('continues(tokens)', 'False{}'),
+    {'name': 'binding-operator-invalid', 'file': 'parse.bend', 'old': LINE_OPERATOR, 'new': LINE_OPERATOR.replace('Bool.and(Bool.not(first),operator(tokens))', 'False{}'),
      'witness': 'suffix-cont-let-le', 'phase': 'check', 'wrong': invalid('parse', 'binding-name')},
     {'name': 'binding-paren-invalid', 'file': 'parse.bend', 'old': BINDING,
      'new': BINDING.replace('Bool.and(U32.is_eq(quantity,2),starts(S.skip_lines(tokens),"("))', 'False{}'),

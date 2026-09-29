@@ -172,3 +172,23 @@ def L.marker_ends_no_body(): {==}
 def L.suffix_ends_a_let(at,rest): {==}
 
 def L.promoted_term_is_unsupported(): {==}
+
+def L.spaced_operator_after_a_let(rest): {==}
+
+def L.call_ends_a_body(at,value,rest): {==}
+
+def L.call_ends_a_let(at,rest): {==}
+
+def L.argument_promotion_is_unsupported(rest): {==}
+
+def L.glued_argument_operator_is_unsupported(rest): {==}
+
+def L.argument_hole_is_unsupported(at,head,rest): {==}
+
+def L.argument_at_is_invalid(at,head,rest): {==}
+
+def L.body_start_witness(): {==}
+
+def L.arm_body_may_start_with_a_term(rest): {==}
+
+def L.closer_starts_no_body(rest): {==}
