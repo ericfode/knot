@@ -138,3 +138,15 @@ def L.local_import(at,rest):
 
 def L.hash_import(at,rest):
   {==}
+
+def L.numeral_witness(): {==}
+
+def L.statement_witness(): {==}
+
+def L.numeral_column_is_unsupported(at,rest): {==}
+
+def L.same_line_statement(at,rest): {==}
+
+def L.let_ends_at_line_break(at,rest): {==}
+
+def L.split_before_colon_witness(): {==}

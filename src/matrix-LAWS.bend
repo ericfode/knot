@@ -406,3 +406,24 @@ law rebuilt_descendant_call_witness:
   for +uses: List<&2,U32>
   {K.call_result(C.Checked{C.Sequence{[rebuilt_l()]},0,uses},token,0,0,0,E.Scope{descent(),5,Nil{},True{},[3,4,1,2]}) ==
     Done{C.Checked{C.Application{token,0,0,[rebuilt_l()]},0,uses}} : Result<S.Error,C.Checked>}
+
+# The seed reads every row: a discarded row's nested match is audited for its
+# width and patterns, and a valid one passes.
+def discarded(inner: S.Node) -> Result<S.Error,C.Checked>:
+  lower([row(wild(),wild(),"On"),S.Arm{token("case"),S.Sequence{[wild(),wild()]},
+    S.Match{token("match"),S.Variable{token("x")},[S.Arm{token("case"),inner,ctor("On")}]}}])
+def audited(rows: List<&2,S.Node>) -> Result<S.Error,Unit>: M.audit(16n,S.Sequence{rows},2n,[flag()])
+def rejected_row(code: String) -> Result<S.Error,Unit>: Fail{S.Invalid{"check",code,S.At{0,0,1,0}}}
+
+law discarded_unknown_constructor_witness:
+  {discarded(ctor("Nope")) == Fail{S.Invalid{"check","unknown-constructor",S.At{0,0,1,0}}} : Result<S.Error,C.Checked>}
+
+law discarded_valid_row_witness:
+  {accepted(discarded(ctor("Off"))) == True{} : Bool}
+
+law short_row_witness:
+  {audited([S.Arm{token("case"),S.Sequence{[wild()]},ctor("On")}]) == rejected_row("pattern-arity") : Result<S.Error,Unit>}
+
+law extra_field_witness:
+  {audited([S.Arm{token("case"),S.Sequence{[S.Constructor{token("On"),[wild()]},wild()]},ctor("On")}]) ==
+    rejected_row("pattern-arity") : Result<S.Error,Unit>}

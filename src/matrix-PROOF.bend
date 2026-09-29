@@ -130,3 +130,7 @@ def L.rebuilt_root_witness(): {==}
 def L.changed_field_witness(): {==}
 def L.retyped_constant_witness(): {==}
 def L.rebuilt_descendant_call_witness(token,uses): {==}
+def L.discarded_unknown_constructor_witness(): {==}
+def L.discarded_valid_row_witness(): {==}
+def L.short_row_witness(): {==}
+def L.extra_field_witness(): {==}

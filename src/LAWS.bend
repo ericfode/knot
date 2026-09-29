@@ -269,3 +269,34 @@ law hash_import:
   for +rest: List<&2,S.Token>
   {P.run(1n,P.Header{S.Token{"import",at},S.Token{"0x77a1a37baca5d86f62241cab956a1fb1",at}},Con{S.Token{"/",at},rest})
     == Fail{S.Unsupported{"parse","import",at}} : Result<S.Error,P.Parsed>}
+
+# A numeral opens a literal pattern and a line's first token a statement only at a
+# name, `match` or a marker; Knot answers Unsupported where the seed accepts more.
+law numeral_witness:
+  {[S.numeral("0n"),S.numeral("10n"),S.numeral("n0"),S.numeral("+"),S.numeral("")] ==
+    [True{},True{},False{},False{},False{}] : List<&2,Bool>}
+
+law statement_witness:
+  {[S.statement(S.Token{"v",S.At{9,10,1,9}}),S.statement(S.Token{"match",S.At{9,10,1,9}}),S.statement(S.Token{"+",S.At{9,10,1,9}}),
+    S.statement(S.Token{"case",S.At{9,10,1,9}}),S.statement(S.Token{"def",S.At{9,10,1,9}}),S.statement(S.Token{")",S.At{9,10,1,9}})] ==
+    [True{},True{},True{},False{},False{},False{}] : List<&2,Bool>}
+
+law numeral_column_is_unsupported:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Term{True{}},Con{S.Token{"0n",at},Con{S.Token{":",at},rest}}) == Fail{S.Unsupported{"parse","term-form",at}} : Result<S.Error,P.Parsed>}
+
+law same_line_statement:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.line_end(Con{S.Token{"v",at},rest}) == Fail{S.Unsupported{"parse","same-line-statement",at}} : Result<S.Error,List<&2,S.Token>>}
+
+law let_ends_at_line_break:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.line_end(Con{S.Token{"\n",at},rest}) == Done{rest} : Result<S.Error,List<&2,S.Token>>}
+
+law split_before_colon_witness:
+  {[P.split([S.Token{"\n",S.At{9,10,1,9}},S.Token{":",S.At{20,21,2,8}}]),P.split([S.Token{"\n",S.At{9,10,1,9}},S.Token{"=",S.At{20,21,2,8}}]),
+    P.split([S.Token{"\n",S.At{9,10,1,9}},S.Token{"v",S.At{20,21,2,8}}]),P.split([S.Token{":",S.At{9,10,1,9}}])] ==
+    [True{},True{},False{},False{}] : List<&2,Bool>}
