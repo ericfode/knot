@@ -1,0 +1,646 @@
+{
+  "suite": "compiler-generics/token-gaps",
+  "increment": "6: generics, review round 5",
+  "basis": "D7: pinned seed observations frozen in their own commit before the spacing repair. Knot refusal is the review-requested literal Unsupported parse spacing.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "arrow-gap-generic",
+      "file": "fixtures/arrow-gap-generic.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A gap inside the generic function arrow.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- observed : '-'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "D4/D7: the seed rejects a gap inside -> or between a constructor name and its term/pattern brace. Source adjacency must be checked before constructing a term; unmodeled token spacing is Unsupported. Declaration braces are a separate accepted position."
+      }
+    },
+    {
+      "name": "arrow-gap-typed-result",
+      "file": "fixtures/arrow-gap-typed-result.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A gap inside an arrow before an applied result type.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- observed : '-'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "D4/D7: the seed rejects a gap inside -> or between a constructor name and its term/pattern brace. Source adjacency must be checked before constructing a term; unmodeled token spacing is Unsupported. Declaration braces are a separate accepted position."
+      }
+    },
+    {
+      "name": "term-brace-gap-generic",
+      "file": "fixtures/term-brace-gap-generic.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A detached constructor brace in a generic term.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : ':'\n",
+        "- observed : '}'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "D4/D7: the seed rejects a gap inside -> or between a constructor name and its term/pattern brace. Source adjacency must be checked before constructing a term; unmodeled token spacing is Unsupported. Declaration braces are a separate accepted position."
+      }
+    },
+    {
+      "name": "pattern-brace-gap-generic",
+      "file": "fixtures/pattern-brace-gap-generic.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "A detached constructor brace in a generic pattern.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : ':'\n",
+        "- observed : '}'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "D4/D7: the seed rejects a gap inside -> or between a constructor name and its term/pattern brace. Source adjacency must be checked before constructing a term; unmodeled token spacing is Unsupported. Declaration braces are a separate accepted position."
+      }
+    },
+    {
+      "name": "arrow-gap-monomorphic",
+      "file": "fixtures/arrow-gap-monomorphic.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "The same arrow gap without generic dispatch.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- observed : '-'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "D4/D7: the seed rejects a gap inside -> or between a constructor name and its term/pattern brace. Source adjacency must be checked before constructing a term; unmodeled token spacing is Unsupported. Declaration braces are a separate accepted position."
+      }
+    },
+    {
+      "name": "term-brace-gap-monomorphic",
+      "file": "fixtures/term-brace-gap-monomorphic.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "The same term gap without generic dispatch.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a term\n",
+        "- observed : '}'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "D4/D7: the seed rejects a gap inside -> or between a constructor name and its term/pattern brace. Source adjacency must be checked before constructing a term; unmodeled token spacing is Unsupported. Declaration braces are a separate accepted position."
+      }
+    },
+    {
+      "name": "pattern-brace-gap-monomorphic",
+      "file": "fixtures/pattern-brace-gap-monomorphic.bend",
+      "class": "negative",
+      "feature": "token-spacing",
+      "intent": "The same pattern gap without generic dispatch.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a term\n",
+        "- observed : '}'\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tspacing\t",
+        "knot_expected": true,
+        "justification": "D4/D7: the seed rejects a gap inside -> or between a constructor name and its term/pattern brace. Source adjacency must be checked before constructing a term; unmodeled token spacing is Unsupported. Declaration braces are a separate accepted position."
+      }
+    },
+    {
+      "name": "declaration-brace-gaps",
+      "file": "fixtures/declaration-brace-gaps.bend",
+      "class": "edge",
+      "feature": "token-spacing",
+      "intent": "A spaced brace remains valid in datatype declarations.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "D7: declaration braces may have a gap; glued term and pattern tokens agree with the seed in the evaluator and Wasm."
+      }
+    },
+    {
+      "name": "glued-term-tokens",
+      "file": "fixtures/glued-term-tokens.bend",
+      "class": "edge",
+      "feature": "token-spacing",
+      "intent": "The glued arrow, constructor term and pattern remain accepted.",
+      "twin": "glued-term-tokens",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "D7: declaration braces may have a gap; glued term and pattern tokens agree with the seed in the evaluator and Wasm."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "arrow-gap-generic",
+        "source_sha256": "f2fa9ff736d0b3302cfe69c506dd9dbca4de3baec84bf1cb91ffa4ff979a7688",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/arrow-gap-generic.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named unbox is in scope)\n- observed : '-'\nLocation:\n 8 | \n 9>| def unbox(-A: Type, b: Box<A>) - > A:\n   |                                ^\n10 |   match b:\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/arrow-gap-generic.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named unbox is in scope)\n- observed : '-'\nLocation:\n 8 | \n 9>| def unbox(-A: Type, b: Box<A>) - > A:\n   |                                ^\n10 |   match b:\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "arrow-gap-typed-result",
+        "source_sha256": "b40196b763d9fde9fe24e343d3efbfe6ca256310008e27cf8c152751abaec63b",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/arrow-gap-typed-result.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named boxed is in scope)\n- observed : '-'\nLocation:\n13 | \n14>| def boxed(x: Flag) - > Box<Flag>:\n   |                    ^\n15 |   Box{x}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/arrow-gap-typed-result.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named boxed is in scope)\n- observed : '-'\nLocation:\n13 | \n14>| def boxed(x: Flag) - > Box<Flag>:\n   |                    ^\n15 |   Box{x}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "term-brace-gap-generic",
+        "source_sha256": "238435193180e4dd4fdb862605bf1946b4bd426715bf76bf7bf4ffda5872efa2",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/term-brace-gap-generic.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : '}'\nLocation:\n14 | def round(x: Flag) -> Flag:\n15>|   unbox(Flag, Box {x})\n   |                     ^\n16 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/term-brace-gap-generic.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : '}'\nLocation:\n14 | def round(x: Flag) -> Flag:\n15>|   unbox(Flag, Box {x})\n   |                     ^\n16 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "pattern-brace-gap-generic",
+        "source_sha256": "3bd388e5f0957e304d6f1f470f241633184da6ce5474c297181dfcecaf793cde",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/pattern-brace-gap-generic.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : '}'\nLocation:\n10 |   match b:\n11>|     case Box {v}:\n   |                ^\n12 |       v\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/pattern-brace-gap-generic.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : '}'\nLocation:\n10 |   match b:\n11>|     case Box {v}:\n   |                ^\n12 |       v\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "arrow-gap-monomorphic",
+        "source_sha256": "e994c1ed4d7ec1bc5932c66af73ade13188d31d20e8c92206e175fcb2c680839",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/arrow-gap-monomorphic.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named main is in scope)\n- observed : '-'\nLocation:\n11 | \n12>| def main() - > Flag:\n   |            ^\n13 |   flip(Off{})\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/arrow-gap-monomorphic.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named main is in scope)\n- observed : '-'\nLocation:\n11 | \n12>| def main() - > Flag:\n   |            ^\n13 |   flip(Off{})\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "term-brace-gap-monomorphic",
+        "source_sha256": "4cd5d2fbf6ed8ac943215301421970e5c47761c267c4ede55bb85c45f520aef3",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/term-brace-gap-monomorphic.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n12 | def main() -> Flag:\n13>|   flip(Off {})\n   |             ^\n14 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/term-brace-gap-monomorphic.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n12 | def main() -> Flag:\n13>|   flip(Off {})\n   |             ^\n14 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "pattern-brace-gap-monomorphic",
+        "source_sha256": "697ddcd84c9d9ee06ef7a9047e892905de56aa8da9692bf85eac57549680d6bc",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/pattern-brace-gap-monomorphic.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n6 |   match x:\n7>|     case Off {}:\n  |               ^\n8 |       On{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/pattern-brace-gap-monomorphic.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n6 |   match x:\n7>|     case Off {}:\n  |               ^\n8 |       On{}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "declaration-brace-gaps",
+        "source_sha256": "b91a57580e953132ecf29791a4dc0c6fa519fbb4d72c46f227d47cf7c3b66759",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/declaration-brace-gaps.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/declaration-brace-gaps.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/token-gaps/fixtures/declaration-brace-gaps.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/token-gaps-wrappers/declaration-brace-gaps--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/token-gaps/fixtures/declaration-brace-gaps.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/token-gaps-wrappers/declaration-brace-gaps--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/token-gaps/fixtures/declaration-brace-gaps.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/token-gaps-wrappers/declaration-brace-gaps--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/token-gaps/fixtures/declaration-brace-gaps.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/token-gaps-wrappers/declaration-brace-gaps--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/token-gaps/fixtures/declaration-brace-gaps.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "glued-term-tokens",
+        "source_sha256": "7363aecf8413c2abea8fb90f2ea9c30b41d7e0b71bfdfbe7eca6981db8bee5c7",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/glued-term-tokens.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/token-gaps/fixtures/glued-term-tokens.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/token-gaps/fixtures/glued-term-tokens.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/token-gaps-wrappers/glued-term-tokens--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/token-gaps/fixtures/glued-term-tokens.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/token-gaps-wrappers/glued-term-tokens--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/token-gaps/fixtures/glued-term-tokens.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/token-gaps-wrappers/glued-term-tokens--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/token-gaps/fixtures/glued-term-tokens.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/token-gaps-wrappers/glued-term-tokens--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/token-gaps/fixtures/glued-term-tokens.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
