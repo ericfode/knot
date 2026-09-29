@@ -124,4 +124,7 @@ existed; entries inserted out of size order, with two equal-size entries inserte
 in reverse path and name order, are cut in exactly the specified order. Four
 syntax-valid semantic mutants must be rejected by these controls:
 `names-only-marker-dropped`, `primary-source-shortened`, `names-only-tier-skipped`
-and `names-only-order-nondeterministic`. Infrastructure errors are not kills.
+and `names-only-order-nondeterministic` (its mutation drops the path and name
+tie-break, so the choice depends on the order the entries were filled in). A fifth,
+`names-only-row-not-recorded`, was added during implementation to hold item 12's
+one-row requirement. Infrastructure errors are not kills.
