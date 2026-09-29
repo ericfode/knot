@@ -1106,7 +1106,10 @@ follows it (§5, §10, §11) without a new image header word.
      goldens and twenty-four run controls, which round 13's three goldens and later controls had already outgrown) and of `book-enters-k-without-effect`
      (fourteen Book run controls), were re-measured on the tree: thirteen goldens and forty-six run controls, and thirty. The count of images on which
      the canonicality clauses are held against re-encoding (SPEC §12 and GATES.md said 5,797, stale since the atomic controls added admitted images) is the
-     receipt's 5,843: 211 refusals, the 166 admitted controls, 111 goldens, 480 layouts and 4,875 perturbations, 527 of them noncanonical.
+     receipt's 5,843: 211 refusals, the 166 admitted controls, 111 goldens, 480 layouts and 4,875 perturbations, 527 of them noncanonical. Two more
+     "alone" of SPEC §12 that the atomic twins of round 14 had outdated name their twin now: `book-runs-loop` (`book-request-rendered` and
+     `atomic-request-rendered`) and `halt-message-unchecked` (`halt-surrogate` and `atomic-halt-non-scalar`). Every other "alone" or "only" of §12 that
+     names an evaluator mutant was checked against the kill sets of the tree and holds, and no codec mutant's receipt row changed.
    - **Two survivors of the review that are no mutants.** `construct-nat-limit-first` (a Succ that tests the range before it inspects its word: an int always passes
      the inspection, and a non-int never reaches the range test) and `book-stop-discards-effects` (a Book's `effects` is always 0). Neither changes anything that
      the reference evaluation reports, so neither is added; the review's own other mutants (`view-type-before-request`, `word-type-before-request`,

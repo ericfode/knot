@@ -1579,8 +1579,8 @@ lane and requires:
   predecessor narrowed to 31 bits dies only by `nat-case-big`. Eighteen read less
   than their inspection extent, and exactly as much on a well-typed word, so they
   survive every golden and each dies by the inspection controls of its own point and by
-  no other (a Halt's message unread also by the two Halt controls that carry one, and `reverse` and `eq` unread also by the
-  order controls of their prim): Chr passing its operand through; Succ passing an Object, or
+  no other (a Halt's message unread also by the two Halt controls that carry one, `reverse` leaving the Char words unread also by the
+  two order controls of a String's own reads, and `eq` reading `a` only one cell past `b`'s length also by the two of `String.eq`): Chr passing its operand through; Succ passing an Object, or
   a Closure; each move prim returning its operand unread; `append` moving `b`
   unread, or copying `a`'s Char words unread; `length` and `reverse` leaving the
   Char words unread; `is_empty` reading one cell; `eq` stopping at the first
@@ -1628,11 +1628,11 @@ lane and requires:
   and `print-non-scalar-second`); a loop that refuses its request (by every Program golden that prints), performs
   only the first (by `spine`, `io-bind`, `non-scalar-unprinted` and `print-non-scalar-second`) or performs the
   request that an Emit holds (by `program-request-in-emit` alone); a Book that runs the loop (by
-  `book-request-rendered` alone), refuses where it builds the request, D22's rule of round 9 (by `book-drop`
+  `book-request-rendered` and its atomic twin `atomic-request-rendered`), refuses where it builds the request, D22's rule of round 9 (by `book-drop`
   and the Book controls that build one), enters `k` without the effect (by thirty Book run controls that build a request, not by `book-drop` or
   `fuel-book-request-short`),
   or refuses where it builds the Action or applies it to its erased `R` (by `book-drop`, `book-action-dropped`
-  and `book-action-erased`); a Halt message never checked (by `halt-surrogate` alone), refused whatever it holds
+  and `book-action-erased`); a Halt message never checked (by `halt-surrogate` and its atomic twin `atomic-halt-non-scalar`), refused whatever it holds
   or above ASCII (by `halt-scalar` alone), checked as it is read (by
   `inspect-halt-after-surrogate` alone) or before the code
   (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
