@@ -9,7 +9,7 @@ fixed for all seven of its shapes, with the limits listed under Open.
 |---|---|
 | 1 (blocking): a `+` detached from its binder between row columns is Checked | **Fixed.** `a + b`, `a+ b` and a line break before `+ b` end the row: `Invalid parse expected-:` |
 | 2 (major): the nest gates ignore `KNOT_GATE_TIMEOUT_SCALE` | **Fixed** in `check.py`, `regen.py` and `typekind.py`, with a runner self-test |
-| 3 (major): main-era whitespace gaps, newly Invalid in multi-scrutinee matches | **Fixed** for all seven shapes, flat and multi: `Unsupported` (46 fixtures, 13 mutants). Open: a def body at column 0 (pinned Invalid by the frontend gate), bodies that start with `match`, `+` or `-`, an untyped let split before its `=` or `:` |
+| 3 (major): main-era whitespace gaps, newly Invalid in multi-scrutinee matches | **Fixed** for all seven shapes, flat and multi: `Unsupported` (46 fixtures, 13 mutants). Open: other layout variants of the same cause, of which the reviewer's edit grids still hold 71 that this branch introduced and 454 that main already had (see Open) |
 | 4 (major): a `+`/`-` let marker apart from its name after another statement | **Fixed.** `Invalid parse detached-marker`; a marker first in a body stays spaced |
 | 5 (major): a split return arrow `- >` is accepted | **Fixed.** `Invalid parse function-result` |
 
@@ -120,8 +120,8 @@ so the ordinary colon expectation reports `Invalid parse expected-:` at the `+`.
   acceptances**, 0 false Invalid; with the repairs **0 and 0**. The seed reports 221
   Accepted and 2,779 Invalid; Knot reports 221, 2,461 and 318 Unsupported (the dotted
   and repeated-promotion atoms); 221 values are evaluated (`nest-review`).
-- **Reviewer's row grids.** `rowtokgrid` (840 programs): 30 seed-rejected Checked
-  before, 0 after. `plusgrid`: nine flagged before, none after.
+- **Reviewer's row grids**, on the final tree. `rowtokgrid` (840 programs): 30 seed-rejected
+  Checked before, 0 after. `plusgrid`: nine flagged before, none after.
 - **Edit grids** (`editgrid`, `editgrid2`, `editgrid3`, about 37,800 one-character
   variants of the reviewer's canonical programs; `layoutgrid` 575 and `letgrid` 483
   programs): 14 seed-rejected Checked programs on `5ef36ae6` (the three classes of
@@ -231,22 +231,43 @@ round-10 fixtures changes outcome (see the scan).
 
 ### Open
 
-All of these are seed-accepted programs that Knot still reports Invalid; the reviewer's
-edit grids count them, and none is new (the sets before and after are identical apart
-from the removals above).
+All of these are seed-accepted programs that Knot still reports Invalid. The reviewer's edit
+grids count 525 of them after the round (986 before it); the set after is contained in the
+set before, so none is new. **454 are main-era gaps** (the checker of the merge base
+`43a394a4` reports them Invalid too) and **71 were introduced by this branch**: main stopped
+at `Unsupported parse match-scrutinees`, and the branch parses through the multi-scrutinee
+match to a layout rule stricter than the seed's, the same regression as finding 3. The 71
+are all layout, in the `lets` and `empty` programs:
 
-- **A def body at column 0** (`def main() -> Flag:` then `On{}` at the margin). The
-  frontend gate pins `Invalid parse body-indentation` for it
-  (`tests/subsets/check_frontend.py`, case `indent`), though the seed accepts it, so it
-  cannot move without amending that assertion. `StartBody` leaves parent 0 alone.
-- **Arm bodies that start with `match`, `+` or `-` at or below the case column**, and
-  the nested-match layouts of the edit grids (110 variants of `body-indentation` remain,
-  from 476), plus top-level layout (`top-level-indentation`, 116, unchanged).
-- **A let split before its `:`** (`+u` then ` : F = ..`, 16 variants of `expected-=`) and
-  an untyped `w` then `= x` (`top-level-indentation`).
+| Family (seed-accepted, Knot Invalid) | Programs | Code |
+|---|---|---|
+| A later statement at a column other than the first statement's | 27 | `body-indentation` |
+| A body that starts with `+` or `-` at or below the case column | 13 | `body-indentation` |
+| A body's first token at another column (`match` after a def header) | 1 | `body-indentation` |
+| A `case` at or left of its `match` column | 20 | `top-level-indentation` |
+| A let split before its `:` (`+u` then ` : F = ..`, or `w` then ` : F = ..`) | 10 | `expected-=` 8, `top-level-indentation` 2 |
+
+What would close them. The seed checks no column for a statement, so a later statement that
+starts with a name, `+`, `-` or `match` at another column could report `Unsupported
+body-indentation` in `BodyAt`'s column check (the 27), and `StartBody`'s name test could widen to
+the same predicate (the 14). That predicate and its two uses cost about 240 bytes, and
+`frontend-laws` has 84 left (see sign-off), so both wait for a parser-law file. A `case` at the
+match column needs `Arms` to take the seed's rule (the first arm may sit at the match's column),
+and a let split before its `:` needs one more line-break site in `BindingStart`; neither is a
+stopgap that fits.
+
+The 454 main-era gaps, unchanged by the round:
+
+- **A def body at column 0** (`def main() -> Flag:` then `On{}` at the margin). The frontend
+  gate pins `Invalid parse body-indentation` for it (`tests/subsets/check_frontend.py`, case
+  `indent`), though the seed accepts it, so it cannot move without amending that assertion.
+  `StartBody` leaves parent 0 alone.
+- **Other layout**: nested-match arm bodies and statements at other columns (`body-indentation`
+  69), a `case` at the match column or a top-level line at another column
+  (`top-level-indentation` 94), a let split before its `:` (`expected-=` 8).
 - **A def header's parameters and a type's fields with whitespace or line breaks** (the
   selfhost `layout` need; `argument-separator` 30, `parameter` 95, `declaration-name` 48,
-  `expected-is` 16, `{` 14, `(` 12, `:` 8, unchanged) and a function type as a def's result
+  `expected-is` 16, `{` 14, `(` 12, `:` 8) and a function type as a def's result
   (`function-result` 60, the closures increment).
 
 ## The mutants
@@ -345,8 +366,9 @@ under its context bound. The manifest's task for the frontend groups, `src/SPEC.
   runner limit.
 - A parser-law file and manifest group, before the modules round restates the dotted laws,
   and laws for the finding-3 stopgaps.
-- The open D4 families above: the def-body pin (an amendment to the frontend gate), `match`,
-  `+` and `-` bodies at the case column, a let split before its `:`, and the def-header and
-  type-field layout need.
+- The open D4 families above: the 71 branch-introduced layout cases (a statement-column and
+  marker-body stopgap once the parser-law file exists, `case` at the match column, a let
+  split before its `:`), the def-body pin (an amendment to the frontend gate), and the
+  def-header and type-field layout need.
 - The modules round's scope-aware dotted-binder rule (`REVIEW-9.md`), unchanged.
 - Both D21 laws are unchanged and remain required open obligations.
