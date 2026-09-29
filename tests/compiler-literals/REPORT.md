@@ -68,7 +68,7 @@ fallback was taken, with the evidence.
 | 6 | Byte offsets of different files are compared | **Fixed.** `functions` counts the datatypes before each body and `G.before` places them before every offset; a metamorphic stage of the gate (a comment before any module or entry of the modules fixtures changes no verdict, 84 pairs) guards it | `52d93fe`, `623afef` |
 | 8 | A `+` binder spelled like a datatype is accepted | **Fixed** where the checker can place the type (`Invalid check promoted-type`); **Unsupported** where it cannot (imported, spelled with its module; Base's types outside the reachable slice). A parameter named like an annotation after it, and (an extension) a binder in scope that a later annotation spells, are `Unsupported`, as the seed reads the variable | `623afef`, `8ea6faf`, `69851f3` |
 | 9, 11 | Nest's harness accepts any foreign-def list | **Fixed.** `successful` and `proved` compare the note exactly with the entry the modules suite pins for that CLI. **Owner sign-off pending** | `ea3577a` |
-| 10 | `checking.md` is authored prose; two other tasks drop most of their SPEC | **Disputed, under the finding's own fallback** ("if an excerpt is unavoidable"). `checking.md` is now a verbatim excerpt with the siblings' header. The original tasks do not fit: with `research/compiler-fields/SPEC.md`, `check.bend::run` is 69,092; with `tests/compiler-modules/SPEC.md`, `load.bend::body` is 62,856; with `tests/compiler-nest/SPEC.md`, several units of `matrix-LAWS.bend` (`flag`, `ctor`, ...) exceed 60,000. **Owner sign-off pending** for all three excerpts | `84c24df`, `8ea6faf` |
+| 10 | `checking.md` is authored prose; two other tasks drop most of their SPEC | **Disputed, under the finding's own fallback** ("if an excerpt is unavoidable"). `checking.md` is now a verbatim excerpt with the siblings' header. The original tasks do not fit, measured on this tree: with `research/compiler-fields/SPEC.md`, `check.bend::run` is 65,368 (69,092 before the fit of the Perch section); with `tests/compiler-modules/SPEC.md`, `load.bend::body` is 62,856; with `tests/compiler-nest/SPEC.md`, `matrix-LAWS.bend::flag` is 67,870, `ctor` 67,478, `named` 65,835 and `modes` 65,646. **Owner sign-off pending** for all three excerpts | `84c24df`, `8ea6faf` |
 | 12 | Lone-target preflight has 136 blockers | **Reported.** That mode is unavailable for these files (its composition is the import closure); the manifest preflight governs and exits 0. On the 25 changed files the lone-target form now has 138 blockers, 137 truncated units and no composition | (this section) |
 | 13 | A literal in a later column is `Invalid parse expected-:` | **Fixed.** A literal starts a term as a name does, so it reaches `Unsupported check literal-column`; juxtaposed literals in arguments, fields and patterns are `Unsupported parse argument-whitespace` | `623afef` |
 | 14 | InternalFailure for a row of the wrong width | **Fixed.** A match takes the literal matrix only with one scrutinee and rows of one pattern; every other width is `Invalid check pattern-arity`. The selfhost twin is run in bundle mode by the gate | `623afef`, `a9e740d` |
@@ -187,9 +187,9 @@ search over block order found 61,390 without the task and inline steps. **The ma
 reached partly by measure-chosen levers (the row order, the inline, the task paragraph), every later row of
 `run` (a modules merge adds some) will exceed it, and the comment on `run` counts against it: re-run the real
 preflight after any edit of a file `run` reaches, and read a failure as a search, not a size problem. The
-original tasks do not fit either (`run` 69,092 with the fields SPEC, `load.bend::body` 62,856 with the
-modules SPEC, several units of `matrix-LAWS.bend` with the nest SPEC), which is why the three tasks stay
-verbatim excerpts.
+original tasks do not fit either (measured on this tree: `run` 65,368 with the fields SPEC, `load.bend::body`
+62,856 with the modules SPEC, `matrix-LAWS.bend::flag` 67,870 and three more units with the nest SPEC), which is
+why the three tasks stay verbatim excerpts.
 
 ### What a re-merge of a newer nest tip, or of modules, must redo
 
