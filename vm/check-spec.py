@@ -1686,6 +1686,10 @@ def effect_controls(plans: dict) -> list:
          {**unsupported, 'calls': 10}),
         ('enter-request-target', image('book', ['invoke', 8, through_id(request, 9), [['value', 8, 1]]]),
          {**unsupported, 'calls': 5}),
+        # The class check precedes the fuel test at an Enter, as the operand check does (fuel-zero-ill-typed-invoke):
+        # with fuel 5 the Invoke of the request meets fuel 0, and is refused, not exhausted.
+        ('fuel-zero-request-target', image('book', ['invoke', 8, through_id(request, 9), [['value', 8, 1]]]),
+         {'fuel': 5, **unsupported, 'calls': 5}),
         # The Action's application is debited, and the loop's k after it: at fuel 4 book-print's got is entered
         # with fuel 0, after the 4 entries that built the request.
         ('fuel-book-request-short', image('book', bound(text('x'))),
@@ -2534,6 +2538,9 @@ EVALUATOR_MUTANTS = [
                                     "        if t == self.rep.get('Nat') and isinstance(w, int):")]),
     ('word-request-as-ill-typed', [("        self.read(w)\n        if not isinstance(w, int):", "        if not isinstance(w, int):")]),
     ('enter-request-as-ill-typed', [("        self.read(f)\n", "")]),
+    ('fuel-test-before-request-check',
+     [("        self.read(f)\n",
+       "        if self.fuel == 0 and isinstance(f, tuple) and f[0] == 'request':\n            self.debit()\n        self.read(f)\n")]),
     ('describe-request-word-admitted',
      [("            tag, fields = self.view(v, u)\n            if u == nat:",
        "            tag, fields = (0, ()) if isinstance(v, tuple) and v[0] == 'request' else self.view(v, u)\n            if u == nat:")]),

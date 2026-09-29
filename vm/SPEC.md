@@ -300,7 +300,7 @@ a malformed record, and a `slots` of 65,536 that its body does not reach. vm-cor
 MUST refuse the same controls, and MUST admit its six admitted plan controls (three
 Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
 Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 99 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 100 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -452,8 +452,7 @@ validator cannot exclude every ill-typed word. The VM therefore checks a word
 against the type it is read at, at exactly these points: a Case scrutinee (§6.1);
 the operand of Succ and of Chr (above); every operand of every prim, over the
 extent §9's table gives it, the moved operands included; an Enter's target, whose
-class and operand count §7 checks; every word §8 renders; every Action operand §10
-converts, whole; and the final IO.OP with a Halt's code and message (§8). Nothing
+class and operand count §7 checks; every word §8 renders; every operand of a request that the loop performs, whole (§8, §10); and the final IO.OP with a Halt's code and message (§8). Nothing
 else is inspected: a Let, a Reference, any other Construct, a Foreign, a Closure's
 captures and an Enter's operands move or share their words unread. An algebraic type admits an immediate naming one of its nullary
 constructors, or an Object (class 0) whose `type` is that type and whose tag
@@ -576,7 +575,7 @@ paid for its entry. A Book has no loop and performs nothing, and the same debits
 `book-print` makes 5 entries (main, IO.print, `R`, the Action applied to `k`, and `got`,
 whose Case refuses the request), at fuel 4 its fifth meets fuel 0, and at fuel 3 the
 Action's second application does (§8). Eleven fuel run controls freeze each side (§12),
-and three more the Book case.
+and four more, three of the Book case and the request target at fuel 0.
 
 **Quantum.** When a debit makes `quantum` reach 65,536, the Enter step completes
 (the new body is ready to Eval, or the request that an Action's second application
@@ -1089,7 +1088,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 99 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 100 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1145,7 +1144,7 @@ lane and requires:
   control, and not each instance: the prim ids that no control names (U32 `mul` … `shrn`
   but `shln`, and Nat `mul` … `is_ge`) are vm-prims' to witness, one control per id and
   operand (§9), and the byte List and the operands of every foreign but `IO.print` are
-  vm-io's. Thirty effect controls (`effect_controls`) freeze
+  vm-io's. Thirty-one effect controls (`effect_controls`) freeze
   D23 (§8), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`, which builds a
   request that `got` receives: `book-print`, `book-print-continuation-call` (`k` a function) and
@@ -1173,7 +1172,8 @@ lane and requires:
   `book-request-field`, after 5); a request handed through `id` to a Chr operand (`inspect-request-chr`,
   after 5), a prim operand (`inspect-request-prim`, `U32.add`, after 6), a key-mode Case
   (`inspect-request-keys`, after 6) and an Enter's target (`enter-request-target`, after 5, the Enter
-  refused before it is debited); and a String whose tail is a request, which the loop reads whole when it
+  refused before it is debited, and with fuel 5 the same Enter meets fuel 0 and is refused all the same,
+  `fuel-zero-request-target`); and a String whose tail is a request, which the loop reads whole when it
   performs the print (`inspect-request-print`, after 10, nothing written). The same Action prints under a
   Program entry from inside an argument of a call (`program-print-through-id`, whose source the seed
   prints `x` for on both lanes), `x\n` after 9; a Halt whose message is a lone surrogate (`halt-surrogate`)
@@ -1194,7 +1194,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 86 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 91 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 92 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1246,7 +1246,7 @@ lane and requires:
   takes an immediate for an Action, or an Object for its target; a request's continuation read when the
   request is built, or by the loop before its effect, or left unread and taken for the terminal
   continuation; and a last word that is no IO.OP taken for `Emit`. Four more, of §10's UTF-8 of a scalar (the one-byte edge, the two-byte
-  lead, and the edges of two and three bytes), die by the two print controls. Twenty-seven more,
+  lead, and the edges of two and three bytes), die by the two print controls. Twenty-eight more,
   of D23, a Halt's message, keys and the debit, die
   by the controls above: the eager rule of round 10, performing at the Action's application (by the goldens
   `keep-swapped`, `keep-first`, `run2-flag`, `keep-non-scalar` and `book-drop`, and twenty run controls); a
@@ -1258,7 +1258,8 @@ lane and requires:
   picks an arm of a request, and a request taken for an ill-typed word at a Case (each by the seven Book
   controls that hand `got` a request, `program-case-request`, `book-request-rendered`, `book-request-field` and
   `inspect-request-print`), at a scalar (by `inspect-request-chr`, `-prim` and `-keys` alone) or at an
-  Enter's target (by `enter-request-target` alone); a rendered field that admits a request (by
+  Enter's target (by `enter-request-target` and `fuel-zero-request-target`); an Enter that tests fuel before it
+  reads a request (by `fuel-zero-request-target` alone); a rendered field that admits a request (by
   `book-request-field` alone); a request's operands read when it is built (by `book-print-ill-typed` and
   `program-request-dropped-ill-typed`) and D20's check made then (also by `keep-non-scalar`, `book-print-non-scalar`
   and `print-non-scalar-second`); a loop that refuses its request (by every Program golden that prints), performs

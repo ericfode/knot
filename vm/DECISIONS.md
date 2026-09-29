@@ -28,7 +28,9 @@ follows it (§5, §10, §11) without a new image header word.
   completes and dispatch returns to `knot_main`, which resets the count and
   re-enters. For an Action applied to its continuation, that step performs the one
   effect and leaves the continuation's entry pending; there is no separate
-  "perform" state, so the effect still runs exactly once across the yield.
+  "perform" state, so the effect still runs exactly once across the yield. *(Round 11, D23: an
+  Action's application builds a request instead, and Top's loop performs it in one Return-to-Top step that
+  ends with `Enter(k, [r])` pending. The effect still runs exactly once across a yield; SPEC §7 has the text.)*
 - **D17 (knot-io-2).** knot-io-1 plus `read_bytes` (raw bytes, no decoding),
   `path_identity` (modules' `path-host.bend` `inspect`, whose C and JS bodies at
   `0111f133` are hash-pinned in `vm/registry.json`), and `exhausted(3)`. io-abi-2
@@ -65,7 +67,7 @@ follows it (§5, §10, §11) without a new image header word.
    substep order is fixed in SPEC §5–§7 because lockstep compares addresses.
 6. **Program driver.** A Top frame sequences the Program: `main`, its erased `R`
    application, its application to the immortal terminal continuation, then
-   Emit (exit 0) or Halt (`die`). Program images must carry the Unit, String and
+   the loop that performs each request the run returns and enters its `k` (D23), until Emit (exit 0) or Halt (`die`). Program images must carry the Unit, String and
    IO.OP representations; the reference validator enforces it.
 7. **Seed lanes.** The seed's native lane is the reference, as for C1. Its Bun
    lane is a cross-check whose documented bounds now include unary Nat
@@ -690,7 +692,9 @@ follows it (§5, §10, §11) without a new image header word.
    Frozen before the evaluator moved (D7): the goldens `keep-swapped`, `keep-first`, `run2-flag`, `spine`,
    `keep-non-scalar` and `book-drop`, which both seed lanes run to the same bytes (five failed the committed
    evaluator; `spine`, IO.bind's shape, agrees before and after and is the loop's control), and fourteen run
-   controls by literal review. Seven controls of entries 21 and 28 changed value and were re-frozen, each in its own
+   controls by literal review. A fifteenth, `fuel-zero-request-target` (the Enter of a request at fuel 5), was
+   added after the review of §7 step 1's claim that a request target is refused at fuel 0 too, which no control
+   pinned; its value was walked before it was run. Seven controls of entries 21 and 28 changed value and were re-frozen, each in its own
    commit with its reason: `book-print`, `book-print-continuation-call`, `book-print-twice`,
    `book-print-non-scalar` and `book-args` from 4 to 5 entries, `book-print-ill-typed` from 5 to 6 (the request now
    reaches `got` before its Case refuses it), and `fuel-book-effect-exact` from fuel 4 to fuel 5, since at 4 the
@@ -698,10 +702,10 @@ follows it (§5, §10, §11) without a new image header word.
    before. Every other frozen value held: 96 goldens and 78 run controls needed no change. `book-drop`, which
    the seed runs on both lanes (`On{}`), is a Book that round 9's rule refused, so that rule broke §11.
 
-   Evaluator mutants are 91. New for D23, each killed by the controls that name it (SPEC §12): the eager rule;
+   Evaluator mutants are 92. New for D23, each killed by the controls that name it (SPEC §12): the eager rule;
    a dropped request performed by its function or by its let; the loop entering `k` before the effect;
    a Case that picks an arm of a request, and a request taken for an ill-typed word at a Case, a scalar
-   or an Enter's target; a rendered field that admits one; operands read, or D20 checked, when the request
+   or an Enter's target; an Enter that tests fuel before it reads a request; a rendered field that admits one; operands read, or D20 checked, when the request
    is built; a loop that refuses, performs only the first, or performs the request an Emit holds; a Book
    that runs the loop, refuses where it builds the request (round 9's rule) or enters `k` without the effect;
    a continuation read when the request is built. Twelve mutants of entries 21 and 28 are retired because the
@@ -719,8 +723,8 @@ follows it (§5, §10, §11) without a new image header word.
    `enter-immediate-target-as-action` now supplies an Action tuple, so that it changes an outcome
    instead of crashing on a request that it cannot index (a crash is no kill).
    Measured on the reviewer's builds, vm-core `dcc7c095` and vm-model `07e6db73`, which perform the
-   effect where the Action meets `k`: five of the six new goldens and 21 of the 99 run controls (the seven
-   re-frozen and the fourteen new) disagree, besides the halt rows of round 9.
+   effect where the Action meets `k`: five of the six new goldens and 22 of the 100 run controls (the seven
+   re-frozen and the fifteen new) disagree, besides the halt rows of round 9.
    `docs/compiler-campaign/VM-DESIGN.md` (section 2, IO) still says that invoking an Action with its
    continuation performs the call; D23 supersedes that sentence, and the file is the coordinator's to amend.
 
@@ -775,7 +779,7 @@ branch brings all of them.
    Char, immediate and Big), `list-head-match` and `nat-transitions`, each owing the
    seed's `Evaluated 0 1 True{}`. Their vm-expected.json rows carry `eval_unavailable`
    or `eval_bound` beside `basis` `seed`; harnesses that read rows by key are
-   unaffected. The counts are 96 goldens and 60 run controls (85 after round 10, 99 and 102 goldens after round 11, below), which vm-core's gate reads
+   unaffected. The counts are 96 goldens and 60 run controls (85 after round 10, 100 and 102 goldens after round 11, below), which vm-core's gate reads
    from SPEC §12.
 
 ## What vm-model and vm-core must now follow (round 10)
@@ -834,7 +838,8 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    state changes, and at an Enter's target before the operand count and the debit. A Let, Reference,
    Construct, Foreign, a Closure's captures, an Enter's operands and an Emit's field do not read a request.
    Controls: `program-case-request`, `book-request-rendered`, `book-request-field`, `inspect-request-chr`,
-   `inspect-request-prim`, `inspect-request-keys`, `inspect-request-print`, `enter-request-target`.
+   `inspect-request-prim`, `inspect-request-keys`, `inspect-request-print`, `enter-request-target` and
+   `fuel-zero-request-target` (the same Enter at fuel 5, which meets fuel 0 and is refused, not exhausted).
 4. **Seven frozen values move (each re-frozen in its own commit).**
 
    | control | before | now | why |
@@ -849,13 +854,14 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    earlier goldens.
 5. **New expectations.** Goldens: `keep-swapped`, `keep-first`, `run2-flag` and `keep-non-scalar` (the seed's
    bytes, `kept`, `kept`, `first`, `kept`), `spine` (`first`, `second`) and `book-drop` (`On{}`, a Book,
-   its lane declared `Unsupported parse parameter-type`). Fourteen run controls: `book-request-dropped`,
+   its lane declared `Unsupported parse parameter-type`). Fifteen run controls: `book-request-dropped`,
    `program-request-in-emit`, `program-request-dropped-let`, `program-request-dropped-argument`,
    `program-request-dropped-ill-typed`, `program-case-request`, `book-request-rendered`, `book-request-field`,
-   `inspect-request-chr`, `-prim`, `-keys`, `-print`, `enter-request-target` and `fuel-book-request-short`.
-6. **Counts (§12, GATES.md).** 102 goldens; 99 admitted run controls, which vm-core's `run_control_count`
+   `inspect-request-chr`, `-prim`, `-keys`, `-print`, `enter-request-target`, `fuel-zero-request-target` and
+   `fuel-book-request-short`.
+6. **Counts (§12, GATES.md).** 102 goldens; 100 admitted run controls, which vm-core's `run_control_count`
    reads from §12; refusals unchanged at 87 (22 byte-level, 9 at the limits, 56 plan-level); mutants 86 codec, 4
-   source, 91 evaluator and 10 rule.
+   source, 92 evaluator and 10 rule.
 7. **Harness.** `stdout` and `effects` are compared as in round 10, and `effects` is now frozen on Programs
    too: 1 on `program-request-dropped-let`, `-argument` and `-ill-typed` (the one request the loop performs),
    0 on `program-request-in-emit`, `program-case-request` and `inspect-request-print`. The reference

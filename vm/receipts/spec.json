@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T03:25:45.241797+00:00",
+ "date": "2026-09-29T03:32:18.225840+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "aa2df07d11aae3b2107203743403158ee0fc26ec98c55b681a17b62b81704ef0",
-  "vm/SPEC.md": "7756e3f759393b87f7ab57cad22ed8da1286ae0939e9e8890c218cc9961a9301",
+  "vm/DECISIONS.md": "bca8072c1c62c5c062bcf1fd938422fe96f364bc920bb37a33cd1c47480e368a",
+  "vm/SPEC.md": "4dc0b62b4fbd52d976bbfe73af0f9770ba77f7c4af28f77a1970a4a8704fa145",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "51343ab1eda4a4c62732f2d454a29371375976465e231969f87a4951e29295e2",
+  "vm/check-spec.py": "003fc3da7502a1e8d19ac366e5fced81ece5f4bb66cd7443374972ebf0889935",
   "vm/evaluate.py": "0e8de3f917bd614b9778059a94c477eff4bfe39fdbdbf4bb1ae6884ad330c74b",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
@@ -3779,6 +3779,7 @@
   "run:inspect-request-keys",
   "run:inspect-request-print",
   "run:enter-request-target",
+  "run:fuel-zero-request-target",
   "run:fuel-book-request-short",
   "run:key-max",
   "run:key-max-miss",
@@ -4912,6 +4913,20 @@
    "calls": 5,
    "image_sha256": "7e334b85ce11d6cc270724db22e435fc7c4cf960e81125dd3e9b54bb5484c9fb"
   },
+  "fuel-zero-request-target": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "5"
+   ],
+   "fuel": 5,
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 5,
+   "image_sha256": "7e334b85ce11d6cc270724db22e435fc7c4cf960e81125dd3e9b54bb5484c9fb"
+  },
   "fuel-book-request-short": {
    "argv": [
     "IMAGE",
@@ -5940,6 +5955,11 @@
    "mutant": "evaluator:enter-request-as-ill-typed",
    "killed": true,
    "by": "run control enter-request-target: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'stdout': '', 'effects': 0, 'calls': 5}"
+  },
+  {
+   "mutant": "evaluator:fuel-test-before-request-check",
+   "killed": true,
+   "by": "run control fuel-zero-request-target: {'fuel': 5, 'outcome': 'Exhausted', 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 5}"
   },
   {
    "mutant": "evaluator:describe-request-word-admitted",
