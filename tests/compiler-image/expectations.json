@@ -1,0 +1,5189 @@
+{
+ "base_sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+ "character_cap": {
+  "book": "vm/golden/let.bend",
+  "padded_characters": 67190
+ },
+ "default_module_hashes": {
+  "tests/compiler-checker/fixtures/branch-maximum.bend": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+  "tests/compiler-checker/fixtures/data-argument.bend": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+  "tests/compiler-checker/fixtures/data-promote.bend": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+  "tests/compiler-checker/fixtures/duplicate-parameters.bend": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+  "tests/compiler-checker/fixtures/erased-affine-copy.bend": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+  "tests/compiler-checker/fixtures/erased-binding.bend": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+  "tests/compiler-checker/fixtures/erased-forward-call.bend": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+  "tests/compiler-checker/fixtures/matched-duplicate.bend": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+  "tests/compiler-checker/fixtures/matched-return.bend": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+  "tests/compiler-checker/fixtures/renamed.bend": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+  "tests/compiler-checker/fixtures/reordered-arms.bend": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+  "tests/compiler-wasm/fixtures/argument-order.bend": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+  "tests/compiler-wasm/fixtures/branch-locals.bend": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+  "tests/compiler-wasm/fixtures/erased-cost.bend": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+  "tests/compiler-wasm/fixtures/high-function-index.bend": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+  "tests/compiler-wasm/fixtures/high-local-index.bend": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+  "tests/compiler-wasm/fixtures/high-tags.bend": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+  "tests/compiler-wasm/fixtures/mixed-types.bend": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+  "tests/compiler-wasm/fixtures/three-colors.bend": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+  "tests/subsets/s1/data-reuse.bend": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+  "tests/subsets/s1/erased-forward.bend": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+  "tests/subsets/s1/flag.bend": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+  "tests/subsets/s1/forward-type.bend": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+  "tests/subsets/s1/nested-match.bend": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+  "tests/subsets/s1/shadowing.bend": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803"
+ },
+ "frozen": "before src/image.bend existed; sources: main check-cli, images: tests/compiler-image/reference.py",
+ "profile": {
+  "arguments": "--profile=knot-image-1 source output [characters parser-depth checker-depth emitter-depth output-bytes]",
+  "built_record": "Built<TAB>byte-count",
+  "chunk_bytes": 65536,
+  "default_arguments_unchanged": "source output [characters parser-depth checker-depth emitter-depth output-bytes]",
+  "default_profile": {
+   "characters": 65536,
+   "output_bytes_maximum": 1048576
+  },
+  "defaults": {
+   "characters": 1048576,
+   "checker_depth": 512,
+   "emitter_depth": 4096,
+   "output_bytes": 16777216,
+   "parser_depth": 512
+  },
+  "exhausted_phase": "compile",
+  "flag": "--profile=knot-image-1",
+  "maximum_overrides": {
+   "characters": 4194304,
+   "checker_depth": 4096,
+   "emitter_depth": 4096,
+   "output_bytes": 16777216,
+   "parser_depth": 4096
+  }
+ },
+ "schema": "knot image gate expectations",
+ "sources": {
+  "tests/compiler-baseslice/fixtures/bind-missing-types.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t701:702:33:86\n"
+   },
+   "sha256": "5a97dec8b1ec0b361c13373fc1943316aca3683ad52afa3861cd5a78fdf023e7"
+  },
+  "tests/compiler-baseslice/fixtures/bool-gates.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "52d8b83efe7dfef2e70a2693d0c4f7edc61dfc630aa08433c7ffd6f43cf1b8c8"
+  },
+  "tests/compiler-baseslice/fixtures/bool-pick-values.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t933:934:42:58\n"
+   },
+   "sha256": "ba8264d53915be71a9c4d6e8314a853fd566ce205617bd1bf563d02dec24b146"
+  },
+  "tests/compiler-baseslice/fixtures/char-as-u32.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t410:411:35:20\n"
+   },
+   "sha256": "35fe79b43e8036e44cfb9b54ca0925c60a6d29a742799863cf930bf14ddaf84f"
+  },
+  "tests/compiler-baseslice/fixtures/char-cmp-rebuild.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t180:181:16:17\n"
+   },
+   "sha256": "bb4959df3f6694cc44ab4adfe4fa2fedba77e9ba15b8c090e7130094f0a566d1"
+  },
+  "tests/compiler-baseslice/fixtures/char-lex-classes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t410:411:35:20\n"
+   },
+   "sha256": "d213ff8bf9c3db40b4db3823bdcae7f383c005de092aaaa82132fb55d7dcd907"
+  },
+  "tests/compiler-baseslice/fixtures/char-word-bounds.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t543:544:39:15\n"
+   },
+   "sha256": "baca8b689cdf078790f886eb57891ab43fbc1e99ea12f346d8457116f1c64100"
+  },
+  "tests/compiler-baseslice/fixtures/cmp-string-reuse.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t310:311:23:18\n"
+   },
+   "sha256": "5f78729d830fdab06a822d57c1d3254871b1eb689d1396cf3b664f2d406b4f27"
+  },
+  "tests/compiler-baseslice/fixtures/concat-list-quantity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t257:258:22:20\n"
+   },
+   "sha256": "4fd53c6e85eeee683d979ff63254e21eb7f740ab87b98efd899ee9e9378652df"
+  },
+  "tests/compiler-baseslice/fixtures/io-args-helper.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t144:145:9:32\n"
+   },
+   "sha256": "ba7941dcd87f4721e4e8a8965f7ee34d586d3361c2a45517f516331089c4abbf"
+  },
+  "tests/compiler-baseslice/fixtures/io-do-sequence.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t534:535:29:27\n"
+   },
+   "sha256": "0f82509f8d20a44877c7a503984bff7d988f1a7829e00ce7285bdaf56ceb8eee"
+  },
+  "tests/compiler-baseslice/fixtures/io-file-read-helper.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t205:206:9:63\n"
+   },
+   "sha256": "2442587dea85f703d90d9dd89d247c99da9323ab4264db45befd8352afc00427"
+  },
+  "tests/compiler-baseslice/fixtures/io-file-write-helper.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t211:212:9:63\n"
+   },
+   "sha256": "e27a23c249495b7ce11ddfa239a55c699f70a3292389fab8af871930a8cd31c6"
+  },
+  "tests/compiler-baseslice/fixtures/io-print-helper.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t270:271:10:63\n"
+   },
+   "sha256": "b0b76ba31638a69e1c1db704087d536514c48a4de3e1c4cc3a9c6c319d612ce7"
+  },
+  "tests/compiler-baseslice/fixtures/io-pure-bind.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t701:702:33:86\n"
+   },
+   "sha256": "e470f1373e9ad604ae68da5b05e4ba1ea8bcf5825acf534521590bdf5059cb13"
+  },
+  "tests/compiler-baseslice/fixtures/length-missing-quantity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t350:351:26:22\n"
+   },
+   "sha256": "8b7f7215c3b0a3618bc9e5c3c73a43b9bb77d63b5cf8c889dd9d3fc7867fdb45"
+  },
+  "tests/compiler-baseslice/fixtures/list-append-levels.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "183de95f2d7df3382bc746c72d9019f39c73aecc17c424ddf779f2ec1c8dcf70"
+  },
+  "tests/compiler-baseslice/fixtures/list-length-arity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t350:351:26:22\n"
+   },
+   "sha256": "f8d06fdaeaecdd55e9a9ec628679c02df58c79f28a673ecec7155d6b58e2d708"
+  },
+  "tests/compiler-baseslice/fixtures/list-quantity-instances.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "f6fd7b4895744b76d556136d7366a9dc06aa11f93b9b128e27ca12c9a5feaf74"
+  },
+  "tests/compiler-baseslice/fixtures/list-reverse-tokens.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t420:421:27:31\n"
+   },
+   "sha256": "0e2a2aa73755ef230af0d2e3b2fd3e2aaaca6f8cabd0171cc516cd26bed94127"
+  },
+  "tests/compiler-baseslice/fixtures/maybe-annotation.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t444:445:25:27\n"
+   },
+   "sha256": "319dbe0d448eefab78117ecdfd110a4a4937da8e6d01ef04d82e0edac9c1ba9c"
+  },
+  "tests/compiler-baseslice/fixtures/pick-missing-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t925:926:42:50\n"
+   },
+   "sha256": "37aeb003235d09a5c5e3258cf321c03b67d624e44ddf9aa757f6c6462f061f41"
+  },
+  "tests/compiler-baseslice/fixtures/read-maybe-quantity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t352:353:28:21\n"
+   },
+   "sha256": "0a4c1cecb70708ae5e4d89f2f5ce9e08384c91650eab371a4056486a8e989cc7"
+  },
+  "tests/compiler-baseslice/fixtures/reserved-affine.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t245:246:21:19\n"
+   },
+   "sha256": "b1e396cd7e0d764fe5902668191e5fa214091c1b1748dde65ffbb1561edd6d66"
+  },
+  "tests/compiler-baseslice/fixtures/result-bind-chain.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t1001:1002:47:64\n"
+   },
+   "sha256": "81cf78fbd64a9b974afa32684f36924914088b7a095dab05e42e3c79ae731d48"
+  },
+  "tests/compiler-baseslice/fixtures/result-host-failure.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t380:381:20:41\n"
+   },
+   "sha256": "01939b87f50f0810e57d6ce9f66aeb815d50ea4cfefd116b47d454cdd7402a77"
+  },
+  "tests/compiler-baseslice/fixtures/reverse-quantity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t420:421:27:31\n"
+   },
+   "sha256": "f5acdb085555b6eca02588a0248051e927ad2ac1010dd9d9dc0879acac8eb9d4"
+  },
+  "tests/compiler-baseslice/fixtures/shrn-u32-count.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "3a2322c9d730e3dfc09b312e0319ba73399290b1efe65f1069c66f12bb88c4d1"
+  },
+  "tests/compiler-baseslice/fixtures/string-append-order.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t226:227:20:18\n"
+   },
+   "sha256": "1a490e6e152dd079c07d16c5d2095f7857ff2b61ab6dbdc23934ad13b4d339cf"
+  },
+  "tests/compiler-baseslice/fixtures/string-compare.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t310:311:23:18\n"
+   },
+   "sha256": "8c16b3724cae78fd81a658059f84cf3d0638cf745d55e98a2ec1750d27889746"
+  },
+  "tests/compiler-baseslice/fixtures/string-concat-diagnostic.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t257:258:22:20\n"
+   },
+   "sha256": "9df961401cf5bb5943c8c67bacb489762c9f03b1c3e99a640cf4b603bb9b379b"
+  },
+  "tests/compiler-baseslice/fixtures/string-reserved.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t245:246:21:19\n"
+   },
+   "sha256": "db31102472ba04ce5dc87b04ed14294111313b956bd99738ec325bfb4bd6c553"
+  },
+  "tests/compiler-baseslice/fixtures/string-reverse-word.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t219:220:20:17\n"
+   },
+   "sha256": "f77c255f27ac5505eff5e7ddab1c3ccb11cbb0f1ac91f1a216cbf567c331f3c6"
+  },
+  "tests/compiler-baseslice/fixtures/string-starts-with.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t267:268:23:22\n"
+   },
+   "sha256": "ffe24e73f69d0de169f6da913010f6bb96767be20ac9dc0d3484e2dcfe00c8c8"
+  },
+  "tests/compiler-baseslice/fixtures/u32-index-walk.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t269:270:22:21\n"
+   },
+   "sha256": "2a460a719ad77158ee92276c4c70a9e4c5c6c2944f1f328812178c214b2b1d1e"
+  },
+  "tests/compiler-baseslice/fixtures/u32-leb128.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "de6ab0bba50f8c166157a456dc7940a60a1d229441902738384ec508b2b68c14"
+  },
+  "tests/compiler-baseslice/fixtures/u32-nat-bridge.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "6d967ec560279340785ab32aa77712c9ca9ebeb5b27098d8b4f8ea644cf928dc"
+  },
+  "tests/compiler-baseslice/fixtures/u32-natural-budget.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t352:353:28:21\n"
+   },
+   "sha256": "eac5315f94e2d80f2d3264fcc3995c38473850f3cf564b02d21bcf4ddb53126c"
+  },
+  "tests/compiler-baseslice/fixtures/u32-read-edges.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t322:323:25:20\n"
+   },
+   "sha256": "7d528f2496a0d1dd920936ddf2b21808843103e39ffd665c241ec4e47d0314df"
+  },
+  "tests/compiler-baseslice/fixtures/u32-show-digits.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t546:547:36:32\n"
+   },
+   "sha256": "0f9eab4649ad47d2511611e3b70d797402cf37e0420ca1a43a31f9c1e8aea102"
+  },
+  "tests/compiler-checker/fixtures/branch-duplicate.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t133:138:8:16\n"
+   },
+   "sha256": "1d3cb783f5d51fe9ffd4b5b72affb486873a15f884a9758b82ee958efce44425"
+  },
+  "tests/compiler-checker/fixtures/branch-maximum.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 516,
+    "sha256": "13bc42a5a500d2afe2d8f8de618e6cb53d42b6463887d1ad1504756d7f9cca2f"
+   },
+   "sha256": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585"
+  },
+  "tests/compiler-checker/fixtures/call-arity.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tcall-arity\t91:99:7:2\n"
+   },
+   "sha256": "02aee651f9db068d36ef57d95efe101ef40e916c5b9187c24099a536983a7c94"
+  },
+  "tests/compiler-checker/fixtures/data-affine-reuse.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t100:105:7:2\n"
+   },
+   "sha256": "31f01662702e4c65471bd86fd5143ec17a6209a93ea7cbbaea09e9200a01ddd1"
+  },
+  "tests/compiler-checker/fixtures/data-argument.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 464,
+    "sha256": "3117bf3899ed028b91f46dddc9942dab587932878e366613b551831367b3bfcc"
+   },
+   "sha256": "6f8987a5c8f091f6175eab46f82c96ce5a1820de6b2824c5d9fd485ae05c9a2a"
+  },
+  "tests/compiler-checker/fixtures/data-promote.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 528,
+    "sha256": "3027b75cd501f5014ee0371603204441fd9a2f1bb2daf3a2fae5c5a4193e9d4e"
+   },
+   "sha256": "e8cad8cc7d508d6c3b1779c86a8aa7c86942c1ff6981c6a5d77474354b27d41c"
+  },
+  "tests/compiler-checker/fixtures/duplicate-arm.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\tduplicate-arm\t94:98:7:4\n"
+   },
+   "sha256": "31b211aaba2a981b225d17a17eac970926c7833edfef9e3d711f2d0f4fb4289f"
+  },
+  "tests/compiler-checker/fixtures/duplicate-constructor.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tduplicate-constructor\t29:32:3:2\n"
+   },
+   "sha256": "14a7890d178f4241e3895612448e736d58c3aa0e2078fad0f0b7150488eb6ad4"
+  },
+  "tests/compiler-checker/fixtures/duplicate-global.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tduplicate-global\t63:64:6:4\n"
+   },
+   "sha256": "40fa03b65177ab33127d174b6dd45c5368cac55b4ef3e5c8e560a9d975861e7e"
+  },
+  "tests/compiler-checker/fixtures/duplicate-parameters.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 404,
+    "sha256": "c2a44546ecbd2eeded8127d21839e50024589f73dd224108f8823f56d48e5842"
+   },
+   "sha256": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68"
+  },
+  "tests/compiler-checker/fixtures/erased-affine-copy.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 460,
+    "sha256": "4a97c7a4a9dca8737766437970a0ff10c4499a8e2e24cd3e43beefb83c19f36b"
+   },
+   "sha256": "bc0c7cc519e526264f9bad4fbfb0917dc9a1b7e880a808b38ccb4e7646a57393"
+  },
+  "tests/compiler-checker/fixtures/erased-binding.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 356,
+    "sha256": "c279546db0e0469c769b6a2ef698e5e3ba7842858b1b3230787d29d5dfe5743f"
+   },
+   "sha256": "c67c9978aecfe8fa9523becbca5303700b4c87ca714613f35e21201f9c50e895"
+  },
+  "tests/compiler-checker/fixtures/erased-forward-call.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 492,
+    "sha256": "7f87baf98ec98107ac6603b06618d433d655d6fd116019c1f47a528174152027"
+   },
+   "sha256": "51e479f5525fdfdef374e71af730e812a0fa0a92560bf10c68df374f624bd5ce"
+  },
+  "tests/compiler-checker/fixtures/erased-free-name.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tfree-name\t101:108:7:7\n"
+   },
+   "sha256": "10fc5882fac28624cc195f3f8461c99c4bcda2cb1b9ce2d94197bfb07985b531"
+  },
+  "tests/compiler-checker/fixtures/erased-live-in-erased.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\terased-live\t110:111:8:9\n"
+   },
+   "sha256": "30bc1155ebc8cb0a3fc39911d8cbb9c1c73b0dcb5dd0782863e4c7c0d0a2894a"
+  },
+  "tests/compiler-checker/fixtures/erased-type-live.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\terased-live\t109:110:8:2\n"
+   },
+   "sha256": "4e4a79f49131870f5b5dd1826cba520d0de8f1534d99ae24ef8745f6b207d5a3"
+  },
+  "tests/compiler-checker/fixtures/erased-type-mismatch.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\ttype-mismatch\t134:142:9:7\n"
+   },
+   "sha256": "35461fe8915be82fb3b18b0ada2896cb1a610edbb6eeeee8f2f6dec566d1aa6e"
+  },
+  "tests/compiler-checker/fixtures/local-reusable-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\treusable-type\t61:62:5:3\n"
+   },
+   "sha256": "c67f31d70ec6034c0e002c35565277db64369cbd1de115e9404cb6e46d1a561a"
+  },
+  "tests/compiler-checker/fixtures/local-shadow-call.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tnot-callable\t90:92:7:2\n"
+   },
+   "sha256": "5bda36b3c9ed5a33e206ff67c540d8a693230426aad6fec5e1a334a9de41bd4b"
+  },
+  "tests/compiler-checker/fixtures/match-after-let.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tunmatchable-binder\t86:87:7:8\n"
+   },
+   "sha256": "2c80c66d0811ac05fa02eda5bd182abba560c6645b136db2d1fed622baebf582"
+  },
+  "tests/compiler-checker/fixtures/match-again.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\talready-matched\t98:99:8:12\n"
+   },
+   "sha256": "984eb475db78740701f3114dd2e8794a7deceac7540d810196de8d66f4e228a5"
+  },
+  "tests/compiler-checker/fixtures/match-backwards.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tunmatchable-binder\t107:108:8:12\n"
+   },
+   "sha256": "61b3385cc04e87597a741721cc216c5493bb9c216f47729e7bc98ffa525a331f"
+  },
+  "tests/compiler-checker/fixtures/matched-duplicate.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 644,
+    "sha256": "241984398a36c479a784a8506e2e6a5f5bcd3b60f3d6e22c7f18a09f6c06e306"
+   },
+   "sha256": "62ae6ffd0541174e41bb53a74281f531b75b558de55b3ad0ce70a3baedbcf799"
+  },
+  "tests/compiler-checker/fixtures/matched-return.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 492,
+    "sha256": "954c5875b45535d7b3f2a52b872f988ea50c6f8de945986b328195ddf39a31c8"
+   },
+   "sha256": "49ff74b3ec4369b5c5e452689dcdddb2df794523623b2335cf3fe73c25a6fc6f"
+  },
+  "tests/compiler-checker/fixtures/overloaded-constructor.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tduplicate-constructor\t56:58:5:2\n"
+   },
+   "sha256": "2144d70ce3e298b20382d174fbad2b2afa22462db33c98acd6a01c821f798a1c"
+  },
+  "tests/compiler-checker/fixtures/recursive-call.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\trecursive-call\t60:61:5:2\n"
+   },
+   "sha256": "949f6edea1b6beb7ca9a560cdd47bb5ed17a3d71ef7e2bb9800ba70008a22119"
+  },
+  "tests/compiler-checker/fixtures/renamed.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 496,
+    "sha256": "cafa5f205df703777bda73fb8f5e9d36af1092ad011a58e1d184ab9aaa15f4fa"
+   },
+   "sha256": "48ec0a0b92508402f64eccd5f2e253e43cfd4051d8eb5e82a9cad71ba89d1b2e"
+  },
+  "tests/compiler-checker/fixtures/reordered-arms.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 492,
+    "sha256": "92460d1aeef037d5fa755a377984ff0004aa1ace2af439bc78e02ded03fc6210"
+   },
+   "sha256": "1ea8a66f3aec3709a6896503c783b0e69f98e9f61a521448ea906e7f939b0d63"
+  },
+  "tests/compiler-checker/fixtures/reusable-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\treusable-type\t41:42:4:7\n"
+   },
+   "sha256": "58ab03fa06b8231935b3ceae56dd99bba0deba6f4f36cacff48b860d5c64ebee"
+  },
+  "tests/compiler-checker/fixtures/unknown-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tunknown-type\t43:50:4:9\n"
+   },
+   "sha256": "184416e8d3e1ce1c61307ea4bb8fa4e4bf3c621b2fd1531c692824b977059a1a"
+  },
+  "tests/compiler-checker/fixtures/unused-affine-let.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t100:101:7:2\n"
+   },
+   "sha256": "84376de2ba091a0ec40e9cdcf5878f402f8e0fe6764f21f1e21203c805ff7242"
+  },
+  "tests/compiler-checker/fixtures/unused-bad-function.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\ttype-mismatch\t88:96:7:2\n"
+   },
+   "sha256": "c3991b526141b75d2893a4ea6bec93a0194ddfc9f16dcf2c9c0314aa76563dd1"
+  },
+  "tests/compiler-checker/fixtures/unused-erased-use.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\terased-live\t109:114:7:6\n"
+   },
+   "sha256": "8906cbfd42091b91a4e903248276d7a027959ab4d2dbdeccfe269b77709139ff"
+  },
+  "tests/compiler-checker/fixtures/used-affine-let.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t100:101:7:2\n"
+   },
+   "sha256": "e986cb82a8447f2214de2e762770aa633064cc6789773c730afa0a4723e9161a"
+  },
+  "tests/compiler-checker/fixtures/wrong-pattern-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tpattern-type\t106:110:8:4\n"
+   },
+   "sha256": "b561673d06f79c7183c8ba710494e11a140a90f86b4ffc79c8174c6a8b574e98"
+  },
+  "tests/compiler-closures/fixtures/apply-non-function.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tunknown-function\t128:129:7:2\n"
+   },
+   "sha256": "e58f5b7ddd4bffdd8e93fdd6221e7c8265db20f523361b5296cbf2d1fec56a63"
+  },
+  "tests/compiler-closures/fixtures/bind-continuation.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t503:504:28:28\n"
+   },
+   "sha256": "a3ed9ff9eec2257f2ac06ba16d2104427910350ec152d35ab330c621c02f0409"
+  },
+  "tests/compiler-closures/fixtures/capture-affine-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t195:196:9:30\n"
+   },
+   "sha256": "75ebe61c31d3a6d3cd78c38b60ba5c5b68a32e646dd534dd78b2a19b5b042e79"
+  },
+  "tests/compiler-closures/fixtures/capture-field-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t397:398:22:30\n"
+   },
+   "sha256": "1094eb0e3fe72211313e66b722d96ba4b7b63ee9c83e2fe9962f410e97043fe8"
+  },
+  "tests/compiler-closures/fixtures/capture-then-use.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-=\t257:258:12:11\n"
+   },
+   "sha256": "545b5ef41b9a9df00167820f62e77e60bf14190b034cde94c4b774d26d1ffe11"
+  },
+  "tests/compiler-closures/fixtures/choose-promoted.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t421:422:22:30\n"
+   },
+   "sha256": "0acf008b30b0b198dfd21ea397a378d8a5e3e767fd6f81dcfce31628d1aaef1d"
+  },
+  "tests/compiler-closures/fixtures/choose-thunks.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t449:450:24:30\n"
+   },
+   "sha256": "fd3f3aaae66dd80244ad034127496796b798e7b7eebdb9c355bec6346d10ad06"
+  },
+  "tests/compiler-closures/fixtures/closure-call-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t202:203:11:18\n"
+   },
+   "sha256": "0ccb3df7eaa1e5453f74bfae2b85cc8188315e8166c7642894dc7793cc60dd86"
+  },
+  "tests/compiler-closures/fixtures/closure-domain-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t198:199:13:18\n"
+   },
+   "sha256": "8c51ca8cc1aeb8e7f04b2da1ca77342ccf739171b435d11d374d8b9c9f098eee"
+  },
+  "tests/compiler-closures/fixtures/closure-drop.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-=\t371:372:17:11\n"
+   },
+   "sha256": "6979f7d42a4df15866f546b7e1f12e6b35e62d556e789d32b9097fbae70876ac"
+  },
+  "tests/compiler-closures/fixtures/closure-field.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t155:156:7:15\n"
+   },
+   "sha256": "83c6b0d01e46d1114a248f2492f7316c27449b2342f7bcc3c3e6a3cc480ce805"
+  },
+  "tests/compiler-closures/fixtures/closure-in-arm.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t362:363:20:18\n"
+   },
+   "sha256": "7adaf660339b580741b356ab304c53150455df906b71a1ac839b189fa8cda747"
+  },
+  "tests/compiler-closures/fixtures/closure-list.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t180:181:8:15\n"
+   },
+   "sha256": "cfd5e93266be2fa6589a63b661a35a62a58c8a231992f0195975fb043563a6cf"
+  },
+  "tests/compiler-closures/fixtures/closure-over-applied.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t142:143:6:18\n"
+   },
+   "sha256": "ef202308bb9a5202f56c36b89aef3caae122340fe3178fbe351b60f07dfffc12"
+  },
+  "tests/compiler-closures/fixtures/closure-twice-data.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t214:215:11:19\n"
+   },
+   "sha256": "150efbdd283b72965d201554a5ab30b31aaf402879c5c1615386d885b78b1703"
+  },
+  "tests/compiler-closures/fixtures/compose.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t300:301:16:20\n"
+   },
+   "sha256": "0cc880821455828e878d5f1f9cf8674b6cc49ae9c7c30327878e1508c7efe765"
+  },
+  "tests/compiler-closures/fixtures/cps-fold.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t392:393:20:29\n"
+   },
+   "sha256": "1ead48e3de781599250444f48a815f9913be6f85007b19f6afd58aab66610a35"
+  },
+  "tests/compiler-closures/fixtures/curried-arities.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t233:234:11:18\n"
+   },
+   "sha256": "0f58584af7b5717f955e1f4f51825efce9285f597d4300eec70674e3a4e88682"
+  },
+  "tests/compiler-closures/fixtures/curried-continuation.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t585:586:28:50\n"
+   },
+   "sha256": "dcbb898a123c8322d5dcaa32ec6c877ccd4619f4169e0a613b8657d75654031e"
+  },
+  "tests/compiler-closures/fixtures/defunc-sites.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t500:501:29:18\n"
+   },
+   "sha256": "15aa7bdacab19f0081c2102bd9eef881a328037a56bc43ad43608038c7daf0b5"
+  },
+  "tests/compiler-closures/fixtures/dependent-arrow.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t193:194:11:12\n"
+   },
+   "sha256": "c3e159085d45e25cf6ce521bec4b79c21670ecd24b089791300bf20572808941"
+  },
+  "tests/compiler-closures/fixtures/do-block.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t322:326:18:17\n"
+   },
+   "sha256": "9269b00a96b48a2001f6a00708ca371e1ca1ac45a6995472b61ec4fa78f537ec"
+  },
+  "tests/compiler-closures/fixtures/erased-capture-live.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t99:100:6:19\n"
+   },
+   "sha256": "7e369b8d378d6de3802aebbd58631412fd904999a8e4633b33776f7ca4a3e061"
+  },
+  "tests/compiler-closures/fixtures/erased-closure-arg.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t252:253:11:19\n"
+   },
+   "sha256": "6353f55208a78840cf395ac34d025a968fce45010fde32b9115f84d2f20407fd"
+  },
+  "tests/compiler-closures/fixtures/function-field-data.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t149:150:7:15\n"
+   },
+   "sha256": "ae0854e23d8daa13ff9f815ad80e66f3bd42c7929d68ba81cc73ef96e402b4b0"
+  },
+  "tests/compiler-closures/fixtures/generic-choose-bind.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t229:230:14:8\n"
+   },
+   "sha256": "c29654833fb612f629d334fd24b9fb3168036c727f60f46712a6df4f9e139dd7"
+  },
+  "tests/compiler-closures/fixtures/lambda-apply.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t215:216:11:18\n"
+   },
+   "sha256": "af0d51c583f68df98143cb0e6d7f108c1555e81781cbdabdfc654fbdcf8b174c"
+  },
+  "tests/compiler-closures/fixtures/lambda-forward-call.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t107:108:6:18\n"
+   },
+   "sha256": "0bc17f96b8c47996e6839e4a3a33543e78a46d535ceccaf3afd5ec9d3f39b414"
+  },
+  "tests/compiler-closures/fixtures/lambda-match.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t140:141:6:18\n"
+   },
+   "sha256": "21a88792059130c2023c9b0b89de32ea72d9c099fc72ff10798bda8fe5296565"
+  },
+  "tests/compiler-closures/fixtures/lambda-matches-binder.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t145:146:6:18\n"
+   },
+   "sha256": "a07451563f48a00d95753ab8604cc1bb21f91989b301e22cc3d5d848c7d5ea98"
+  },
+  "tests/compiler-closures/fixtures/lambda-matches-capture.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t221:222:11:18\n"
+   },
+   "sha256": "34e792f5e8fae33a6037e913d4405847323d7b884eb19ff9ffb3801429dd7102"
+  },
+  "tests/compiler-closures/fixtures/lambda-reusable-binder.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t321:322:14:17\n"
+   },
+   "sha256": "0ce950b581ab8ecaab5af14ab7f020c09024eca5b8df7ab31bae0e96cf07475f"
+  },
+  "tests/compiler-closures/fixtures/map-reuses-function.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t312:313:15:26\n"
+   },
+   "sha256": "9bb8cee10ef607ebeed329c1895ebb31bdaa8307be66afafb1e002749db4be8b"
+  },
+  "tests/compiler-closures/fixtures/nested-capture.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t609:610:31:18\n"
+   },
+   "sha256": "9902998b647d360c8b8f4ac442299383e8feef2700b4da4d7d63249c79b303eb"
+  },
+  "tests/compiler-closures/fixtures/partial-application.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t701:702:38:18\n"
+   },
+   "sha256": "57812bf2d37fdaa39d842281036920077f720da28ef28135f1a32084105e3f8c"
+  },
+  "tests/compiler-closures/fixtures/partial-self-call.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t387:388:20:18\n"
+   },
+   "sha256": "3fee73846101b046a3acc0321608f7bb5a8909fefbf129c24ff1de9ff133f070"
+  },
+  "tests/compiler-closures/fixtures/partial-self-same.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t348:349:20:18\n"
+   },
+   "sha256": "3d973cf61d3a828d0544397c6e527d6e4b715d699ff6f3a25ec4c576d5b91392"
+  },
+  "tests/compiler-closures/fixtures/return-closure.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t228:229:11:18\n"
+   },
+   "sha256": "14fa385eaac038407c3b504743f8dab0f9836ab0b5c10a44f9914148d7fc7754"
+  },
+  "tests/compiler-closures/fixtures/reusable-closure-binder.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t218:219:11:12\n"
+   },
+   "sha256": "7785a32a175791434452cff30249d34f71e1800833fca8df116281eb70137baa"
+  },
+  "tests/compiler-closures/fixtures/reusable-function-param.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t202:203:11:19\n"
+   },
+   "sha256": "28080a0414bf83856e496393211562438da613b343afa755a40f2b185ed09e25"
+  },
+  "tests/compiler-closures/fixtures/template-map.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t214:215:10:8\n"
+   },
+   "sha256": "4fd35e56cf4cd73c87fd059502a6e3f25f9155ab1543eb8610efd28307fef06d"
+  },
+  "tests/compiler-closures/fixtures/unannotated-let-lambda.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-\n\t245:246:12:8\n"
+   },
+   "sha256": "e099dad3f446bacaf29ff760aecd9e9b153741998bb4b25a9ed190b84fa55950"
+  },
+  "tests/compiler-fields-wasm/fixtures/aliasing.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 684,
+    "sha256": "a33a96f09f71426a5e35048b4f3969e470bbd3f5d8095a66cf59bb9e84e899ea"
+   },
+   "sha256": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3"
+  },
+  "tests/compiler-fields-wasm/fixtures/arena-overflow.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 1980,
+    "sha256": "fd5b66624e8c8ed5f66810e4cee7ebc87d940f425c73d996e89f093a329000c6"
+   },
+   "sha256": "894223d307a63359f40dbd052f43c5c40b6810215b14fccc9056ca88bd71e569"
+  },
+  "tests/compiler-fields-wasm/fixtures/deep-call.bend": {
+   "check": {
+    "exit": 4,
+    "stderr": "Exhausted\tparse\tbudget\t11080:11081:754:10\n"
+   },
+   "sha256": "30ecb9719a3dc1a0793cfd94e20a130b4b0a1176756227fbba855ef52c8ce1cc"
+  },
+  "tests/compiler-fields-wasm/fixtures/deep-stack.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 199940,
+    "sha256": "055ddf30820efb7af491cac31c757df61f83c9b82c47ff9b80c4cba2e51bcd6f"
+   },
+   "sha256": "bfb5dbb7eeda23ad0a20b32c3c37cf23bd413450d9949998d104944e05ca525f"
+  },
+  "tests/compiler-fields-wasm/fixtures/erased.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 1064,
+    "sha256": "a488fb3350119fb495bf7297725c6176dd682062914da28b66b0eb6d2f09ffd4"
+   },
+   "sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d"
+  },
+  "tests/compiler-fields-wasm/fixtures/nested.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 916,
+    "sha256": "d28cfe42cf1b317aace9f4453005d090694306310cf927881f38319870c617c3"
+   },
+   "sha256": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d"
+  },
+  "tests/compiler-fields-wasm/fixtures/pair.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 980,
+    "sha256": "469b13f5f3c3a8d31481b647825f5e3c43a973dc9464396cab608efc49a9e822"
+   },
+   "sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678"
+  },
+  "tests/compiler-fields-wasm/fixtures/peano.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 1020,
+    "sha256": "fdd10845aa1a56377ed26d985e4df059684f9bf4f239116a175e477b115a686d"
+   },
+   "sha256": "2bb48f935fec9a37ac6cf5c3cc68d002ef5b6b629ebd620180e8b718e5780a6d"
+  },
+  "tests/compiler-fields/fixtures/affine-field-reuse.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t173:178:11:6\n"
+   },
+   "sha256": "f98f7cb99901c31c2dc5c082f18d7c94bbbc127f3ae86f4bf5b124d15584c500"
+  },
+  "tests/compiler-fields/fixtures/all-erased-return.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 356,
+    "sha256": "205c984050cb8b5bd739bd08cddb9aea609fc672e9ec1cb1bdd919225ec35b50"
+   },
+   "sha256": "d6e205013ff334d518b6d04dc4e53bb6b6bcb2673b06e8ff9dc8c2e7d4a54b07"
+  },
+  "tests/compiler-fields/fixtures/branch-use-union.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 664,
+    "sha256": "9b59cb518bf2e6a56104608c685b377035d5b3c6e7ed4201a11720e556a037ca"
+   },
+   "sha256": "87e912f30d41ece6cea3c459541c93dc81cfb8ede108f5896ee4400e72920f9b"
+  },
+  "tests/compiler-fields/fixtures/constructor-affine-reuse.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t114:118:7:2\n"
+   },
+   "sha256": "8e7784a332bbb2e378d70e5552b3c3487e48cc81c0943b6267e360ed4e0eef3d"
+  },
+  "tests/compiler-fields/fixtures/constructor-arity.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tconstructor-arity\t92:95:7:2\n"
+   },
+   "sha256": "523c2d59dc8c145d5a2a419933c595db56c463b55ac04546db976caed4eb86d0"
+  },
+  "tests/compiler-fields/fixtures/constructor-name-binder.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t121:123:8:13\n"
+   },
+   "sha256": "5d9e28128bd02b7d76c095203c1820b1b96a6f66ae5996ae6bdea9248210a937"
+  },
+  "tests/compiler-fields/fixtures/constructor-promotion-once.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 460,
+    "sha256": "e7923e63492b38f65124be9b9b866cc10d9df9cbc2afec7666010e7a28a67b28"
+   },
+   "sha256": "d096378882e66e7d373d10c594d1564fb154f4dad98ecd3ff3c413dced75e2c1"
+  },
+  "tests/compiler-fields/fixtures/constructor-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\ttype-mismatch\t126:131:9:6\n"
+   },
+   "sha256": "96826b1acb146f491e4fad535d4bd0efec55c146875d00ca8af7bd4b467452d3"
+  },
+  "tests/compiler-fields/fixtures/data-parent.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 636,
+    "sha256": "a055b2b41b3600956b4f26839378bed4508adfd841e1e94fb915f631e1269729"
+   },
+   "sha256": "d8e3d28e808e81cf4a86874d37f1b2564f12ab51fcf848f768faf676719d05c3"
+  },
+  "tests/compiler-fields/fixtures/duplicate-pattern-names.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 552,
+    "sha256": "127c848f584c6eff211571093f484f084be37d8973b5cb116b900738aa03c17f"
+   },
+   "sha256": "8dde0b47c57f066ec139e3978d0451cdddc6fed2880537b666a82998625ee4ed"
+  },
+  "tests/compiler-fields/fixtures/erased-field-live.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\terased-live\t132:133:9:6\n"
+   },
+   "sha256": "2241ea37a40057d51187c21815007395c2a3bae3a205dc170345bb6ad8bbe34b"
+  },
+  "tests/compiler-fields/fixtures/erased-field-promote.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\terased-live\t181:182:11:12\n"
+   },
+   "sha256": "6d9e9732604978d6b6ef673a45c23c0daeca921d5548f69294e34801a8be4ae2"
+  },
+  "tests/compiler-fields/fixtures/erased-field-typechecked.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\ttype-mismatch\t140:145:9:6\n"
+   },
+   "sha256": "2ca7383880f190f1dfe7b4b49a9611b4a5eb4b85c194b8c274d739a69f9f2284"
+  },
+  "tests/compiler-fields/fixtures/erased-forward.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 580,
+    "sha256": "d0140f7efd9394a3f46cd2428e80daf0efc3f9253fdc75b5ca849dc554cd1f88"
+   },
+   "sha256": "82954950eb8cdbcd8a872e111c4ba12c6dee974e42b2b227d75ad4fdea62f2c2"
+  },
+  "tests/compiler-fields/fixtures/erased-parent-reconstruction.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 696,
+    "sha256": "68dc0aaf72934f37226de2e8145a2a28b1c25f9b2bc9914f8dd1d59d531feaf2"
+   },
+   "sha256": "46490c6b1b86557cbb69ab5bd14f07bad00b466df799cb72a2a08b453f493435"
+  },
+  "tests/compiler-fields/fixtures/field-before-parameter.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 776,
+    "sha256": "fb2507bf9bb2b33489fabd31bc7007415283f3b1554c6f6b759827c8f02935b5"
+   },
+   "sha256": "68b77a2c662d0987c29d74ffee84f4b1aa2e5decafedf3b9a2df9068d19e5ee6"
+  },
+  "tests/compiler-fields/fixtures/field-let-closes-frontier.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tunmatchable-binder\t159:160:10:12\n"
+   },
+   "sha256": "244ca27ec1619c5543b6141926443a9b2569941e457a38d4f71c4edfa2ddac00"
+  },
+  "tests/compiler-fields/fixtures/field-missing-arm.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tmissing-arm\t115:120:8:2\n"
+   },
+   "sha256": "c3bc9945820e2fd69549c887b121f6c162c19c926f6188c41a8501a8dbbe00bb"
+  },
+  "tests/compiler-fields/fixtures/field-then-parent-refinement.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 688,
+    "sha256": "d933c149568876ca342e453ee8df6e063253ff4cff5728c923ee55ac8a9fc688"
+   },
+   "sha256": "3dd85307fc5ac057215fb72bbb806d0c16cfc68e323149ad6597c01979e89663"
+  },
+  "tests/compiler-fields/fixtures/inspection-shared-tree.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 988,
+    "sha256": "60a09943ee723322645edda9edaff3b522508422f49db7984bc57cce82d561ac"
+   },
+   "sha256": "909e65febd5ecee1cc5e7d7a4b0a501e283a7a1863bb9f26e0b50dfaffd78248"
+  },
+  "tests/compiler-fields/fixtures/live-forward.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tforward-live-call\t179:184:11:11\n"
+   },
+   "sha256": "3f42d87e63f738d4a8af2092fd1b739b2ff217ca16c6aea42bc8526a13873317"
+  },
+  "tests/compiler-fields/fixtures/minus-pattern.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tterm-form\t122:123:8:13\n"
+   },
+   "sha256": "5fd42323ab07806adde74c40efcad79b06ac7c93f0b559a503cd605f04283b22"
+  },
+  "tests/compiler-fields/fixtures/mixed-live-order.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 548,
+    "sha256": "980b50300259bc929c0a68ccca0bb62a59313305c8163663148c7911ef0beebc"
+   },
+   "sha256": "20d05183f85909d496c1667b1d1195cd201fba0c08875f8b77cdf9134ecd6e4f"
+  },
+  "tests/compiler-fields/fixtures/multi-constructor.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 732,
+    "sha256": "f1d98878fa46d4420288c7f50c719655bd411750f223310f56eb9d327a0ab7c1"
+   },
+   "sha256": "9d7724a8b5843763be142d79cf021dd700aa0d836d482340f831991667e75e9f"
+  },
+  "tests/compiler-fields/fixtures/nested-pattern.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\tduplicate-arm\t144:148:10:4\n"
+   },
+   "sha256": "5b1bf90f5a8c26a57c49345fd8dc6f9d88b44d377843d7ab347b496cb255f658"
+  },
+  "tests/compiler-fields/fixtures/nested-reconstruction.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 888,
+    "sha256": "add684d1e7457c50c427d7755210a8b186d9fdbd8f59ff4f902c5f0bdf7b26b3"
+   },
+   "sha256": "cea78ff4c5a19f4d0eff162a3cd4bfcf45d44ce46593743127a75885e0668aab"
+  },
+  "tests/compiler-fields/fixtures/nested-single-pattern.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\tnested-field-pattern\t171:176:10:15\n"
+   },
+   "sha256": "7921cd7a274547f3497da879b8382b654aab012d904e6ee706c980a1c1a562ed"
+  },
+  "tests/compiler-fields/fixtures/open.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 524,
+    "sha256": "9886105eb894f77ce522618ae42d9922327ee4dd8ce3855ac0bcb195b3e3561e"
+   },
+   "sha256": "ea647c77ac7c70ec6dfc9885ce6560622a1bb7d2c670264cd30d88446c1a89e5"
+  },
+  "tests/compiler-fields/fixtures/owned-field-drop.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 580,
+    "sha256": "dfc3eacbde9b24b70921187d957120cdb5d18d0ccc5c8c9ad4797331042fe30c"
+   },
+   "sha256": "2a29eeb1f84e967bc81794adef5cf70148f2b6c851cfbfe4603d4a1bd607f4fd"
+  },
+  "tests/compiler-fields/fixtures/owned-field-promotion.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\treusable-type\t122:123:8:14\n"
+   },
+   "sha256": "30e1418be8f3cab86188a61fc3b6aa589230c50a36131da210fce7fd2aff7728"
+  },
+  "tests/compiler-fields/fixtures/parameter-before-field.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16\n"
+   },
+   "sha256": "1ecaae1f68cee65d900325e4f4b00954291e7ec1b9a4a5e13b8f14cc1b341eac"
+  },
+  "tests/compiler-fields/fixtures/parent-and-field.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t172:177:11:6\n"
+   },
+   "sha256": "c18afc481cb451662263a3f7176811e2294f9bbe0c9ab83f6bc62680439cdcfc"
+  },
+  "tests/compiler-fields/fixtures/parent-twice.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t169:174:11:6\n"
+   },
+   "sha256": "aba6dad90a5352cec590c650b42c3c6f8631cf0d05046695de836ad96d24ab5b"
+  },
+  "tests/compiler-fields/fixtures/pattern-arity.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tpattern-arity\t117:120:8:9\n"
+   },
+   "sha256": "98c627776a72c4e43a4602d24fc3e8e8d62c9e8380fbddcb6de93c8244ba3f74"
+  },
+  "tests/compiler-fields/fixtures/promote-field.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 636,
+    "sha256": "a055b2b41b3600956b4f26839378bed4508adfd841e1e94fb915f631e1269729"
+   },
+   "sha256": "54a40f7b0de7e3f7ed2beb90e71f1109c69093bea6e160944a7558bc6b873537"
+  },
+  "tests/compiler-fields/fixtures/reconstruct.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 552,
+    "sha256": "18fabdc29036f1b7941501ecb7d84a8e2ae92db3f09f568b6111b3a221745bb0"
+   },
+   "sha256": "9d64af15a1331b57339de5e5de3280e3f49da74d746608caacd35b0229c589a0"
+  },
+  "tests/compiler-fields/fixtures/reconstruction-shadow.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 832,
+    "sha256": "c1fd39dbde582d7000f207f31214cc414f6b95f97f18ac75e6df9eca31bdfb5e"
+   },
+   "sha256": "1595602abdf33aa639f42288cecd6ec02cc187320775fc49c9af7010c113c59d"
+  },
+  "tests/compiler-fields/fixtures/reusable-field.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 636,
+    "sha256": "a055b2b41b3600956b4f26839378bed4508adfd841e1e94fb915f631e1269729"
+   },
+   "sha256": "ecb91d079340263264d1f9dfdd24abc84e068f4b8db21ee3f20843e3853831b2"
+  },
+  "tests/compiler-fields/fixtures/sibling-order.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 772,
+    "sha256": "d9080daaa1076f229ed59b1229e44b24ad75ecce2f9803ab3135034027332502"
+   },
+   "sha256": "4500c8249ad4959681056dd3eb52b8ae5a15d35b6296f69bee6af6f1b7def86d"
+  },
+  "tests/compiler-fields/fixtures/sibling-reversed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tunmatchable-binder\t225:226:13:16\n"
+   },
+   "sha256": "3d73a47b9826d24cb5547c5fed634c738c2185c07c0f3f1678815392e1a9ff54"
+  },
+  "tests/compiler-generics/fixtures/affine-dup-data.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t135:136:7:9\n"
+   },
+   "sha256": "150fccee98e9b08ee7013390a059a73c3e0953468d64d7e677246697bd6faa12"
+  },
+  "tests/compiler-generics/fixtures/affine-dup-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t139:140:7:9\n"
+   },
+   "sha256": "e6c1dcda6ed3ed40266fcad2f474112f7988997f3c7eb0e0639f7b422561f80f"
+  },
+  "tests/compiler-generics/fixtures/alias-misuse.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t124:125:6:8\n"
+   },
+   "sha256": "47018634346db62f65df9006fa514c7bc42991e1ef18786d64cc91977486c0ca"
+  },
+  "tests/compiler-generics/fixtures/alias-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t124:125:6:8\n"
+   },
+   "sha256": "1eb19695f67807ce039f9acb83d272d361893801abf2d6570e8bdfeeea3002cd"
+  },
+  "tests/compiler-generics/fixtures/box-instances.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t170:171:11:8\n"
+   },
+   "sha256": "5e633ddf43750ccf5ec553ba5e410ee9221ffbb8823010c4bba41079f6bb9808"
+  },
+  "tests/compiler-generics/fixtures/box-unbox.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t113:114:6:8\n"
+   },
+   "sha256": "7363aecf8413c2abea8fb90f2ea9c30b41d7e0b71bfdfbe7eca6981db8bee5c7"
+  },
+  "tests/compiler-generics/fixtures/closure-apply.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t127:131:6:14\n"
+   },
+   "sha256": "1c9624204a93f3103ab03cc4e01feb7a85ddf2fb5d9f00e9f97f03d61904dc39"
+  },
+  "tests/compiler-generics/fixtures/data-cell.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t124:125:6:9\n"
+   },
+   "sha256": "9b6dc62ed2a04e1ed88eff2c3702e7938b21c107c1b1c7463ae41f6abf8c9b72"
+  },
+  "tests/compiler-generics/fixtures/data-holds-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t129:130:6:9\n"
+   },
+   "sha256": "3b26afd895b8b71e13c11d2cb3d8e0eec5d618594fdf1c94ce7b1b14cfcf9321"
+  },
+  "tests/compiler-generics/fixtures/erased-interleaved.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t189:193:11:24\n"
+   },
+   "sha256": "b879aa29ef3d206d4b8f396ba146b6f249da0b98c73b8db4a8e1e1e136281a6c"
+  },
+  "tests/compiler-generics/fixtures/erased-scrutinee.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t125:126:6:8\n"
+   },
+   "sha256": "b807ba3691168b95f1b7629b9d0f2ffc70af0b089039d0828f855b7b2b070420"
+  },
+  "tests/compiler-generics/fixtures/erased-type-live.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t168:172:11:12\n"
+   },
+   "sha256": "4a08cca5ed9ea1dd17c74f943408a9bef907304ac096eccd6b89a26012907a89"
+  },
+  "tests/compiler-generics/fixtures/erased-value-arg.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t184:188:11:14\n"
+   },
+   "sha256": "01a25fc89d40273f333c7ae6a0d00076d4e5215690c80b65249d9d436bf96f33"
+  },
+  "tests/compiler-generics/fixtures/erased-value-live.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t135:139:6:13\n"
+   },
+   "sha256": "18bb9465bb597caed9b28ae9f07208918f5ec8ff3f2f351ce1b3e1657fd6991b"
+  },
+  "tests/compiler-generics/fixtures/forward-generic-types.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t189:190:7:27\n"
+   },
+   "sha256": "ffaa3545a0685bed5ca5cbceb2bec3b070b88ec1c9ef3c40930d10e0d0c1a22c"
+  },
+  "tests/compiler-generics/fixtures/forward-short-form.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t143:144:6:26\n"
+   },
+   "sha256": "7840a7f1e5c7b0947749d76e67f54ee24322320d49f63be031473305fc1c01cd"
+  },
+  "tests/compiler-generics/fixtures/generic-let.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t101:102:6:8\n"
+   },
+   "sha256": "f61d4593d8d43cb785180d8bd22dfa49c6601a520f91118b2ad5cb3a137b721c"
+  },
+  "tests/compiler-generics/fixtures/ghost-bad.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t176:180:11:14\n"
+   },
+   "sha256": "134c5d3b9a8a001ce7672c9f6a711fdd1ecf2600928cfd8a2f9aed9a66b8a663"
+  },
+  "tests/compiler-generics/fixtures/kind-type-for-data.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t125:126:6:8\n"
+   },
+   "sha256": "590d60b32b89dfaff5279306f03a59120b99d715695a7a79b2e12ebd0d49487d"
+  },
+  "tests/compiler-generics/fixtures/match-erased-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t180:184:11:16\n"
+   },
+   "sha256": "0ff8c32966ae143e0e88470d54e25d3ca41bd8962f990a08102b7a5011db4f06"
+  },
+  "tests/compiler-generics/fixtures/meet-not-reusable.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t170:171:11:9\n"
+   },
+   "sha256": "ec3d188424353484f2d74fff3ebdd189fff3bf23378fb1f482c9f48337c2085c"
+  },
+  "tests/compiler-generics/fixtures/opt-default.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t165:166:11:8\n"
+   },
+   "sha256": "2de121478b4a3bafd0b162d3fd7fc1a13df613fec3b3e4f3a0ed392474d41ded"
+  },
+  "tests/compiler-generics/fixtures/pair-swap.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t175:176:11:9\n"
+   },
+   "sha256": "5972ec4e523abdf08a67027a4b16686011c964b911c2151126d3bdf596db95a9"
+  },
+  "tests/compiler-generics/fixtures/phantom-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t182:183:11:11\n"
+   },
+   "sha256": "91ad9536da9904c58657aa5d32dcacef79970b176046c9054c84704a19de7afc"
+  },
+  "tests/compiler-generics/fixtures/phantom-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t175:176:11:11\n"
+   },
+   "sha256": "5f7ebb710906a4b8bf41c43c05145b428d51c367996b85776941bc1e970c1179"
+  },
+  "tests/compiler-generics/fixtures/quantity-data-fits-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t118:119:6:8\n"
+   },
+   "sha256": "15183483a70bc85bb4feac1d18079610b4436287714136bfa3df86267d65e513"
+  },
+  "tests/compiler-generics/fixtures/quantity-invariant.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t122:123:6:8\n"
+   },
+   "sha256": "8b07e624831a28ad17d7926a2c1602e9f3378925bc91abde96e64d9c3cecbb15"
+  },
+  "tests/compiler-generics/fixtures/quantity-meet.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t170:171:11:9\n"
+   },
+   "sha256": "7c12eb04b3e3983fcdb7c916b55ae7cdbb124608c1d46eedd6fe84054ad29c24"
+  },
+  "tests/compiler-generics/fixtures/quantity-parity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t238:239:11:8\n"
+   },
+   "sha256": "8c949440f0f3d3aa3abf7acd6f97593aa97ae72a73ce527128c40098fcc6855e"
+  },
+  "tests/compiler-generics/fixtures/quantity-short-form.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t121:122:6:8\n"
+   },
+   "sha256": "a2e5e819c3ece650f0a1b3a7075c83e90d19ca2b51175f7a5429dd57f7cafd63"
+  },
+  "tests/compiler-generics/fixtures/quantity-zero.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t127:128:6:8\n"
+   },
+   "sha256": "633b901cd64cff0a49023da3fcb274e98c556c3532680403cb9d42c6448727ce"
+  },
+  "tests/compiler-generics/fixtures/reusable-generic.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t137:138:7:9\n"
+   },
+   "sha256": "e95208111c7eef16c8948376bb1b21eab9de8dc17bc28e0b38de4a726b62755e"
+  },
+  "tests/compiler-generics/fixtures/reusable-kind-var.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tbare-quantity-field\t131:132:7:9\n"
+   },
+   "sha256": "5469afc439bbe68772ddb6c33ace367c8e8233b3176d6f01779f1b4922788329"
+  },
+  "tests/compiler-generics/fixtures/reusable-type-param.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t137:138:7:9\n"
+   },
+   "sha256": "be2bf6430f066339f2d084a0fe0e3a55bc61f06729074b85486def6798cebac0"
+  },
+  "tests/compiler-generics/fixtures/rigid-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t126:130:6:15\n"
+   },
+   "sha256": "0c1b893acda449b7fb7257f0f6d980ff37012df1eeb3c3b2afa5e670f49e4d1a"
+  },
+  "tests/compiler-generics/fixtures/seq-parity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t158:159:10:8\n"
+   },
+   "sha256": "ac48a1656e28a53d57f0b6ebb7124947758355b9fd56f0eef2aa458a55d53841"
+  },
+  "tests/compiler-generics/fixtures/shadow-type-name.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t168:172:11:16\n"
+   },
+   "sha256": "148ddb7b51b967da45d1033ed2616ab4c9dd26644b47816c7909d6f658dd1cc2"
+  },
+  "tests/compiler-generics/fixtures/template-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t120:121:6:10\n"
+   },
+   "sha256": "e785375040c151fe24f2c8499e3016067a3913422c2e432dc179cbbc21f39221"
+  },
+  "tests/compiler-generics/fixtures/type-arity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t99:100:6:8\n"
+   },
+   "sha256": "c5e8097d68d567fbeb8e2ab713acf26ede252ac126c73d381c76c90908dbb306"
+  },
+  "tests/compiler-generics/fixtures/wrong-type-arg.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t172:173:11:8\n"
+   },
+   "sha256": "7b70a1bcaac7f4f2441adc0d667e3ae06efb4396f9a80b2cfed5c6a7c4514b40"
+  },
+  "tests/compiler-io/fixtures/args-echo.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t73:74:5:17\n"
+   },
+   "sha256": "383fe2af4e65d7a99e372078fddc5d6dacd7ab566697708e7ecf277ed564c4c2"
+  },
+  "tests/compiler-io/fixtures/bind-deep.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t424:425:14:32\n"
+   },
+   "sha256": "44502f5d3839d6f6317ed309b0df3e532d0de8845b4ba7b029e55633cd950735"
+  },
+  "tests/compiler-io/fixtures/bind-lazy.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t166:167:6:13\n"
+   },
+   "sha256": "e41e073a6412df54612bca25862b189f4389ae3607ce02b547d5b09597d10be0"
+  },
+  "tests/compiler-io/fixtures/bind-non-io-continuation.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "5591c16580ed78a2efe4b4865423a6a0a26cde725836c1cd7c5971aa184ea1b3"
+  },
+  "tests/compiler-io/fixtures/bind-order.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t178:179:7:29\n"
+   },
+   "sha256": "9ef4657dac179a04c270e0267d493bae199ea1944b28e2a9f97cd712ae8fe13a"
+  },
+  "tests/compiler-io/fixtures/die-after-write.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t354:355:11:16\n"
+   },
+   "sha256": "c98e1a0fb28c5f3d6fd7c19b76f09238b0b3d47c934a8c95d19751997330abba"
+  },
+  "tests/compiler-io/fixtures/die-codes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t223:224:10:59\n"
+   },
+   "sha256": "714e82da31c7db5cad8656a9e60c33259dbaf20c7e81f5ce8085ea1a1292d9c1"
+  },
+  "tests/compiler-io/fixtures/die-messages.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t166:167:6:45\n"
+   },
+   "sha256": "288259ddf7192ce904261b975ab1ae31b04b6aeaf8898900a51dc98538d3021e"
+  },
+  "tests/compiler-io/fixtures/die-nat-code.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t91:92:5:17\n"
+   },
+   "sha256": "f0b3a037b4a796be0c6a1fe33c2d12826acb344793ff48330b4b2ad4dc3fe35b"
+  },
+  "tests/compiler-io/fixtures/die-stops-effects.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t144:145:6:13\n"
+   },
+   "sha256": "1a828562c8b4ff265095f7377ed370099274afe4adccea17300ec9ca9c6d5ac9"
+  },
+  "tests/compiler-io/fixtures/do-bind-arrow.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t193:194:7:27\n"
+   },
+   "sha256": "4becaa7f090ae3eda7300ce32abf8f333cf0c83225f76d60842212fe16a3a765"
+  },
+  "tests/compiler-io/fixtures/do-bind-type-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t137:138:6:24\n"
+   },
+   "sha256": "f739ac83c6a293ae7e35f8a02abb232c7222b9e3bd16b4a30adc064e60d58cf3"
+  },
+  "tests/compiler-io/fixtures/effect-file-write.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t156:157:7:13\n"
+   },
+   "sha256": "3f1bb60a6f4d415f0b7080a9b80ac9f34515c2a99910fc44d6a9d84e3f6eb6e8"
+  },
+  "tests/compiler-io/fixtures/effect-get-env.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t150:151:5:55\n"
+   },
+   "sha256": "3f77f70ab2907634cdc7860ebd6b5f29d507718eefe3fb0aa859eeef72038c82"
+  },
+  "tests/compiler-io/fixtures/effect-print-err.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t134:135:6:13\n"
+   },
+   "sha256": "ec2157339679dc348cb425b4eee9833a6b4f6003ff58dd8feffdbd49ddce95ef"
+  },
+  "tests/compiler-io/fixtures/effect-write.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t130:131:6:13\n"
+   },
+   "sha256": "7203cd7c92728c46798afb184c7ef38a0f7ab972439baad722243402547b200e"
+  },
+  "tests/compiler-io/fixtures/forge-file.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t178:179:5:88\n"
+   },
+   "sha256": "9868d1f41376a134eeb53c14d0ec3313d0d09895039f8950804046257714bcb3"
+  },
+  "tests/compiler-io/fixtures/handle-dropped.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t188:189:6:11\n"
+   },
+   "sha256": "c061a40e9548ea84af27fbed089565eec9f3db94809ea2078dbd2a2795817971"
+  },
+  "tests/compiler-io/fixtures/main-value.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t128:129:5:28\n"
+   },
+   "sha256": "0204a1bfc41f6ef37e792e89959802a9e4cfc591764e8ca01faac8f1e4746e1e"
+  },
+  "tests/compiler-io/fixtures/mini-driver.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t194:195:5:31\n"
+   },
+   "sha256": "bd75a4e14cd8268f4825298d163625bcb5463f7f88ec7b9467ceaae14fa0aadc"
+  },
+  "tests/compiler-io/fixtures/open-modes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t155:156:5:55\n"
+   },
+   "sha256": "9d03104a12ec72da7d9740ab0bdf958963d59f28a85144c63285916fc16f0833"
+  },
+  "tests/compiler-io/fixtures/open-nul-path.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t148:149:5:55\n"
+   },
+   "sha256": "73e4b488e0fee32a24e9fd036de5de4f6c13a275e6cacb0eeb13c970cff1f8e9"
+  },
+  "tests/compiler-io/fixtures/print-large.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t146:147:5:25\n"
+   },
+   "sha256": "3ccb06dcc0ba7b3ccfef687fe7b5820ca541e27e973460b6cf683c232d205f90"
+  },
+  "tests/compiler-io/fixtures/print-lines.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t135:136:6:13\n"
+   },
+   "sha256": "1e8410225b7073aab45723d03998b62094d1fa9d1f34c17becb8225f597197cc"
+  },
+  "tests/compiler-io/fixtures/print-many.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t100:101:5:36\n"
+   },
+   "sha256": "4406f6c0efb5328f426642e28c73d393064e5a6ec6cb6104d4faa6c4922b32e8"
+  },
+  "tests/compiler-io/fixtures/print-non-string.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "f62f701fbbc8a60a52ac9168db2d1ca13c4f6af6cfdd1fe3fac3f47811cfd032"
+  },
+  "tests/compiler-io/fixtures/read-decode.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t73:74:5:17\n"
+   },
+   "sha256": "9263b836d57b8628ee63cde33f8399376402028fa9c96dabda177b8936ca335e"
+  },
+  "tests/compiler-io/fixtures/read-limit.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t185:186:9:17\n"
+   },
+   "sha256": "31732b0cbc50177f2372a83fceed281ee4169eded78f637fc4a5573d6bb25532"
+  },
+  "tests/compiler-io/fixtures/read-result-without-handle.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t88:89:4:11\n"
+   },
+   "sha256": "11c5730b5dcee8bbc699e14ff9759248f70b787e6127727e7c74fc5ed1f673c7"
+  },
+  "tests/compiler-io/fixtures/read-text.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t188:189:5:31\n"
+   },
+   "sha256": "fde867b8012aa987cd65b43cd7f00184809182df1b76e4b2d2355630b26ea72c"
+  },
+  "tests/compiler-io/fixtures/result-bind.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t562:563:19:46\n"
+   },
+   "sha256": "34c63fae31c021646a1e2ce805f693dbc643823c8e5c5862966a665b5fe4f0a2"
+  },
+  "tests/compiler-io/fixtures/result-missing-fail.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t252:253:9:57\n"
+   },
+   "sha256": "cce92d77a9ad74769799f395b00077f333ea112bef48f1343dd864e9b8de4ad5"
+  },
+  "tests/compiler-io/fixtures/result-try.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t562:563:15:71\n"
+   },
+   "sha256": "38092ab89983e01aa2f08b042cf84babd417e1542443946a6d053e99622cabdc"
+  },
+  "tests/compiler-io/fixtures/reuse-file.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t592:593:16:57\n"
+   },
+   "sha256": "679e1ca806b2860af42b7a560bc6d730a7380367103944a369149abbba272cd0"
+  },
+  "tests/compiler-io/fixtures/reuse-io.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t210:211:8:17\n"
+   },
+   "sha256": "e84ce2ea549c859b00a780eb9c62578898325e8fd9b371466cc561bfe05ffaf0"
+  },
+  "tests/compiler-io/fixtures/write-bytes-affine-list.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t361:362:7:119\n"
+   },
+   "sha256": "f6d68d80fb29021516e4c28ef5928da42ed65c4f1d36203f3c0fea335d130e75"
+  },
+  "tests/compiler-io/fixtures/write-bytes-string.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t295:296:7:95\n"
+   },
+   "sha256": "60cae4075c4218353aa2f70fbae5355a24063e68735dbe6f82091b018095c653"
+  },
+  "tests/compiler-io/fixtures/write-bytes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t200:201:5:31\n"
+   },
+   "sha256": "828f42ecb4ff0bce0f6aaacce5dbab1ed8fd46a34178f75be6653b2db49eb04a"
+  },
+  "tests/compiler-io/fixtures/write-read-back.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t73:74:5:17\n"
+   },
+   "sha256": "401104c2408ddc460624e59e50fca61fe18f7a1aa743b90761f35a0107974c9f"
+  },
+  "tests/compiler-io/fixtures/write-values.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t492:493:15:55\n"
+   },
+   "sha256": "3de28f485e87f7b4578d3b8f6dc920b4fbf01ad33527871c5cac1c0ea7dae424"
+  },
+  "tests/compiler-literals/fixtures/char-bad-escape.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t251:252:14:32\n"
+   },
+   "sha256": "635cf183ec3f9adc142af658a902a80bd950a64a070a0eb4c60c572690e9023d"
+  },
+  "tests/compiler-literals/fixtures/char-empty.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t260:261:14:32\n"
+   },
+   "sha256": "7d29c371620476c901c3bd15308e4fc7e563793f11172f5cf72d47ad1ea1da9f"
+  },
+  "tests/compiler-literals/fixtures/char-escapes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t363:364:24:20\n"
+   },
+   "sha256": "8016141f5a9257bd170bbd7b32221337a1da7c998031d23f5781b2f0beee6067"
+  },
+  "tests/compiler-literals/fixtures/char-lexer-traps.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t346:347:21:23\n"
+   },
+   "sha256": "dab83cb96f58ce453b0a0eb75c7644a557775a154cc2e4cb27b6768b561d118b"
+  },
+  "tests/compiler-literals/fixtures/char-pattern.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t238:239:16:15\n"
+   },
+   "sha256": "a8e710fab71941ef7c2d83ff6915493168257f6c7ee9efc1278847c9821bb9dc"
+  },
+  "tests/compiler-literals/fixtures/char-unicode-escape-width.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t268:269:14:32\n"
+   },
+   "sha256": "e05c2fc2c45306eca526a40dc4cfe1b4a5858b5728cc99168e52e08fe646e9aa"
+  },
+  "tests/compiler-literals/fixtures/char-unicode-escapes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t405:406:25:19\n"
+   },
+   "sha256": "b398ce58ee75869b3defac698b27afdb55f316c222a9de5bbf0f204eeb6eea25"
+  },
+  "tests/compiler-literals/fixtures/conversions.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t554:555:27:51\n"
+   },
+   "sha256": "b756ccd195cdd74ed774587cc8ace69f5c6c9abcaa81277ab9af8c9a9ce829b9"
+  },
+  "tests/compiler-literals/fixtures/f32-literal.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+   },
+   "sha256": "e1b5fd3bc2a9c9291ce6c18d3e6115d742d3466113d29ea720881abec19dedf4"
+  },
+  "tests/compiler-literals/fixtures/literal-views.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t519:520:25:46\n"
+   },
+   "sha256": "b0048f2d559b8d10426d42e17e681e45c310a9bdb2e62a98fe11b3823f30bc4c"
+  },
+  "tests/compiler-literals/fixtures/literal-without-base.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tterm-form\t146:147:7:6\n"
+   },
+   "sha256": "f447aca3bc962e0ac536261fbf66241fa334b59b605e38fcf5062d2e72713cdf"
+  },
+  "tests/compiler-literals/fixtures/nat-arithmetic.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t47:53:2:0\n"
+   },
+   "sha256": "87009c64f0f53ffd355ff540a14e460d8f2bc100de37b20876e693430e27f419"
+  },
+  "tests/compiler-literals/fixtures/nat-literal-overflow.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t69:75:2:0\n"
+   },
+   "sha256": "491d78fc45bbf169d454fc763ac68ac0f927a65d85e58ce1b00ad8682c15b0df"
+  },
+  "tests/compiler-literals/fixtures/nat-literals.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t79:85:2:0\n"
+   },
+   "sha256": "c3484c98725e36ba86f8945468c15a05a11db942d81c09f43f503840e43f6456"
+  },
+  "tests/compiler-literals/fixtures/nat-pattern-offset-limit.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t69:75:2:0\n"
+   },
+   "sha256": "44896d669761581ba82e38b4a090fb7921dc08f5bd5d3bbf531271e31ced03ad"
+  },
+  "tests/compiler-literals/fixtures/nat-pattern-offset.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t77:83:2:0\n"
+   },
+   "sha256": "948b3c5a00bccbb4087ba1f6ad9ced7686b6ba6dac6147eb740502a35f9ba98f"
+  },
+  "tests/compiler-literals/fixtures/nat-recursion.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t62:68:2:0\n"
+   },
+   "sha256": "02897b9c5770a2740d48cb1d79f6103280f1f60a5136badeee33a8de90c6ce9e"
+  },
+  "tests/compiler-literals/fixtures/nat-u32-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t72:78:2:0\n"
+   },
+   "sha256": "9a4675b9d9b9d0dc50a0909b6fb6573862bea8ba138c9d00ae137d3b0dcb4c8f"
+  },
+  "tests/compiler-literals/fixtures/string-append.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t325:326:21:18\n"
+   },
+   "sha256": "1285e68f6241b28de6c48b4fa84e589990168599119676641aa172b1873ad2a6"
+  },
+  "tests/compiler-literals/fixtures/string-concat-operator.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t243:244:14:20\n"
+   },
+   "sha256": "8dd0569b6aae4724167b185730ff1213e6b8b3013cd6d31ffa686281dee9fb75"
+  },
+  "tests/compiler-literals/fixtures/string-equality.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t315:316:21:18\n"
+   },
+   "sha256": "d7645448dca9176d70b8fdf2ff8418260e67c521911b120c76654e7b0b5a1b5a"
+  },
+  "tests/compiler-literals/fixtures/string-escapes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t352:353:21:24\n"
+   },
+   "sha256": "ab52acd3fcf1468c24bf18a329a5b5ed6a59d64aaca45f9e54584d72e2a4ea4d"
+  },
+  "tests/compiler-literals/fixtures/string-lexer-traps.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t382:383:22:35\n"
+   },
+   "sha256": "3b7db875d7c6e1dab7a75c9fad05302274b9768af82cc916884562d72321cdcc"
+  },
+  "tests/compiler-literals/fixtures/string-nul.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t372:373:21:51\n"
+   },
+   "sha256": "d8860c03a0ae4758e50dcf4cab00a0f3a5b19543b5ed1cb889e9092c39338e4a"
+  },
+  "tests/compiler-literals/fixtures/string-pattern.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t255:256:17:18\n"
+   },
+   "sha256": "ff3bdad5f561a579896ebf56147acd9a5bf2d4f03b4526b1b17a5732076a2f20"
+  },
+  "tests/compiler-literals/fixtures/string-raw-non-ascii.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t263:264:14:20\n"
+   },
+   "sha256": "d3a83b0f75016a17b077522179755de5e6cd0636356d22eb2fb5f2bfaca1d8fb"
+  },
+  "tests/compiler-literals/fixtures/string-unclosed.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t244:245:14:26\n"
+   },
+   "sha256": "7a42f114fc72eb51ce0d6b8c90d2ccab83db4f75d9127f376d4856abdc68b66b"
+  },
+  "tests/compiler-literals/fixtures/string-unicode.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t384:385:21:51\n"
+   },
+   "sha256": "99136b7caf808bc23d4aff7e04106c4422fffaea368bf70a318d44a85c37ddf7"
+  },
+  "tests/compiler-literals/fixtures/u32-division.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t77:83:2:0\n"
+   },
+   "sha256": "2af01bb33418f3acaeb95d6b2e3c1c1e8e5b9cd53d722afb1dec83945351a66f"
+  },
+  "tests/compiler-literals/fixtures/u32-hex.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t60:66:2:0\n"
+   },
+   "sha256": "6369b80d9a3cc5980968854ccbc2c9979b505f8e606af0fe1e0f8af65d0b3b0b"
+  },
+  "tests/compiler-literals/fixtures/u32-literal-overflow.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t75:81:2:0\n"
+   },
+   "sha256": "35d482671f1113c3b2fad7e1398b19b2a0d1d70ac1c9e483eac5d53c1d659b9e"
+  },
+  "tests/compiler-literals/fixtures/u32-literals.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t77:83:2:0\n"
+   },
+   "sha256": "9b4938474b8c7229d3975c23b02e72893372579852e9c58964938a1d78e807af"
+  },
+  "tests/compiler-literals/fixtures/u32-operator-unannotated.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t66:72:2:0\n"
+   },
+   "sha256": "0a60060352810aa469562cffdb92d99e1c9ab7a728cb24b51dd2dea195dd2589"
+  },
+  "tests/compiler-literals/fixtures/u32-operators.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t75:81:2:0\n"
+   },
+   "sha256": "e26fa94820d81e8a755ea2e375e1ed56ac98da07832ae75777cb12b3cfb95dfc"
+  },
+  "tests/compiler-literals/fixtures/u32-pattern-first-match.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t57:63:2:0\n"
+   },
+   "sha256": "94ff3a67416a0b1b0d03bfcb22433d49cd12b64cca6dacc9355f24b24113b522"
+  },
+  "tests/compiler-literals/fixtures/u32-pattern-missing-default.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t65:71:2:0\n"
+   },
+   "sha256": "ed8f695a47b0e3be29653f6b8ff2c2cfa995e46ce375760fbc9fbbe2d12552b8"
+  },
+  "tests/compiler-literals/fixtures/u32-pattern.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t74:80:2:0\n"
+   },
+   "sha256": "276f3621b06eebc3edc81fac78bd618210245ccdabcfa233b917433f5a09d10f"
+  },
+  "tests/compiler-literals/fixtures/u32-shifts.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t73:79:2:0\n"
+   },
+   "sha256": "9235ca3686d144514e1ee9412de90d0e88c92d130e9e3e0fe716323a16f123e0"
+  },
+  "tests/compiler-literals/fixtures/u32-unsigned-order.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t72:78:2:0\n"
+   },
+   "sha256": "63e9b4ef51191cac758689c031ff45df44bd23e5b7b069b6a9a76096c9c34d99"
+  },
+  "tests/compiler-literals/fixtures/u32-wraparound.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t41:47:2:0\n"
+   },
+   "sha256": "397a5554e58308d676030d0e953397a91aa3581f3e40fe602c7600c0a21a245c"
+  },
+  "tests/compiler-poly/fixtures/bind-arrow-instance.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t226:227:15:8\n"
+   },
+   "sha256": "688f5fc9e4dbe34024c8e4dc97a9edf403741927f432b7f5fa10b43dd3579cdc"
+  },
+  "tests/compiler-poly/fixtures/bind-instance-chain.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t267:268:15:8\n"
+   },
+   "sha256": "beaaee640f912c7d879b0514917378fbe3ff1d1f99d39eeb11317c92deafc15b"
+  },
+  "tests/compiler-poly/fixtures/bind-promoted-instance.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t256:257:14:8\n"
+   },
+   "sha256": "a89c126bff945df3830fa2a20b4be0cdd3d33249f957fa70e91d3d5dff95b5fc"
+  },
+  "tests/compiler-poly/fixtures/bind-rigid-caller.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t233:234:14:8\n"
+   },
+   "sha256": "b37908320d5e1f76826d9068ac6be27c02f70f030a26f8e2e7e4fa2463d563dc"
+  },
+  "tests/compiler-poly/fixtures/choose-branch-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t455:456:35:8\n"
+   },
+   "sha256": "f8e32821d591d3c3064048e9a6d65e8b259162bb585b4d270fea0bcafcb7c1f4"
+  },
+  "tests/compiler-poly/fixtures/choose-result-chain.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t484:485:35:8\n"
+   },
+   "sha256": "c350019bbfdf1cbc3b2874e0c0a55ecc2898d7b73b5ec4a0b74071046b43a01c"
+  },
+  "tests/compiler-poly/fixtures/choose-rigid.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t214:215:13:8\n"
+   },
+   "sha256": "ecc6274f98e2f08ea099b047cefad25f042ec05753dbf555d69fc0fcba895ea5"
+  },
+  "tests/compiler-poly/fixtures/curried-generic-continuation.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t277:278:17:8\n"
+   },
+   "sha256": "2e60525722814e1409fd452daf954a7dc58842e00555bc5d7e85b083180baff5"
+  },
+  "tests/compiler-poly/fixtures/generic-arrow-instances.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t197:198:10:8\n"
+   },
+   "sha256": "1fb9c3c9deb1bc987dcc622b0181f28e4c0ae024293dd5a1245414c21020bef8"
+  },
+  "tests/compiler-poly/fixtures/generic-capture.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t206:210:10:14\n"
+   },
+   "sha256": "145a5b1a29947172b4008d51488a0c559a6e06458345f885dfa6ceb9321c4b30"
+  },
+  "tests/compiler-poly/fixtures/generic-compose.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t197:201:10:16\n"
+   },
+   "sha256": "3972f5503d38631f701bc49741813a6ad20219fcee676b6badd024ee2e54ae77"
+  },
+  "tests/compiler-poly/fixtures/kind-closure-at-data.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t159:160:10:8\n"
+   },
+   "sha256": "6158a126749309ecc117e8e872ec260fb0abdcbde15416ca4d5a49565dcb6640"
+  },
+  "tests/compiler-poly/fixtures/kind-closure-list.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t202:203:10:8\n"
+   },
+   "sha256": "4024f1f78c9f2807ef8cc923210166839ea77a66dce8ab686dfc418cb73fe480"
+  },
+  "tests/compiler-poly/fixtures/kind-closure-reuse.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t144:145:10:8\n"
+   },
+   "sha256": "b9901eb57cc2fd6726d383485db19f16de43ef720415c74a8d14218c3eb3e460"
+  },
+  "tests/compiler-poly/fixtures/kind-forward.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t155:156:6:8\n"
+   },
+   "sha256": "b08ebac602ac62ffbbcaba8173cb3e0594c5ec7b515c04c6fae4e2e7347a94f6"
+  },
+  "tests/compiler-poly/fixtures/kind-higher-order.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t200:201:11:8\n"
+   },
+   "sha256": "3610f901ee5250f429b1b9d6de8635b1e318c0310ecee1f23a76fc76c8577ea4"
+  },
+  "tests/compiler-poly/fixtures/kind-meet-reuse.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t168:169:10:8\n"
+   },
+   "sha256": "8ba94cfbd33677a630d2c4c4b32fec7ec7941624429b03756bb830dc1a84533b"
+  },
+  "tests/compiler-poly/fixtures/kind-quantity-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t130:131:6:8\n"
+   },
+   "sha256": "0e7d1ecf0e1b7485ce8b54db850f148435e1b085443cf20f4a52c2e5dff415e0"
+  },
+  "tests/compiler-poly/fixtures/kind-result-list.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t278:279:16:8\n"
+   },
+   "sha256": "842d9da836b2fb9f9d638eb0f5892286ab85b8e803cbbbecb0c2059cbc14da73"
+  },
+  "tests/compiler-poly/fixtures/kind-reuse-affine-result.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t104:105:6:8\n"
+   },
+   "sha256": "e25604f36b57b43243216f9dd306c22e7bc5a7059c721ad4ded4458c7d7e7403"
+  },
+  "tests/compiler-poly/fixtures/kind-two-quantities.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t204:205:10:8\n"
+   },
+   "sha256": "7e21f646c5c2a62608d9fc5fce778197db3c38992e6e51cf484189ef0cc6bce9"
+  },
+  "tests/compiler-poly/fixtures/kind-zero-arrow.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t189:190:10:8\n"
+   },
+   "sha256": "1c0e29e2a311e7ab846ced9c491a79e8d2038220d6f40d0b669c985f6dc60dc9"
+  },
+  "tests/compiler-poly/fixtures/promoted-affine-instance.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t230:231:14:8\n"
+   },
+   "sha256": "98b4e72b5cc1651d0d985936f8a8367c8c45f45e6ce912110375b25774c36260"
+  },
+  "tests/compiler-poly/fixtures/rank2-choose-action.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t345:346:21:8\n"
+   },
+   "sha256": "9a1a7df3bbe636a5f7acbe23f3e5b1dccbde65f88b31e7222c5eedfc881e2835"
+  },
+  "tests/compiler-poly/fixtures/rank2-choose-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t307:308:21:8\n"
+   },
+   "sha256": "328f78cf1ac6b7410d84061d5bac4c2a176cab1302b33342be4f3da9604fe652"
+  },
+  "tests/compiler-poly/fixtures/rank2-continuation-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t188:189:15:7\n"
+   },
+   "sha256": "66329fbeefd6be3cb988965eb058619cfece9deb218904438b765c22b7b56eec"
+  },
+  "tests/compiler-poly/fixtures/rank2-continuation.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t289:290:18:8\n"
+   },
+   "sha256": "357c98e1346d4b4b348ee7826f88361ba054ddc717d22450b0431918109d4ce6"
+  },
+  "tests/compiler-poly/fixtures/rank2-do-block.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t288:289:18:7\n"
+   },
+   "sha256": "af50e73ad5ead7042c32068d466554bb8fef80931009a2256401854ae8604299"
+  },
+  "tests/compiler-poly/fixtures/rank2-monomorphic-arg.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t217:218:15:7\n"
+   },
+   "sha256": "894461ebeaaf66d7cd04fc204d9a2d4f830ff36d3f8cd3dce21c88f6be9f5272"
+  },
+  "tests/compiler-poly/fixtures/rank2-param.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t259:260:15:7\n"
+   },
+   "sha256": "f29488da55a8b64cac62e1b958672e98493806b774310abad0dec1da4adc2690"
+  },
+  "tests/compiler-poly/fixtures/rank2-partial-bind.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t286:287:18:8\n"
+   },
+   "sha256": "3ca51b97571477dd7166ce77a0c83ee793ee589cb995423eb9bb19c78b2b582c"
+  },
+  "tests/compiler-poly/fixtures/rank2-pure-bind.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t256:257:15:7\n"
+   },
+   "sha256": "835e694c26dceee94740954b652bfe12b99d4bfa4be2b9c23941da56d8c56707"
+  },
+  "tests/compiler-poly/fixtures/rank2-rigid-answer.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t212:213:15:7\n"
+   },
+   "sha256": "762d99092588522cec28001e21fd0f1d9f25025a04e092a7851b49a72720d3d6"
+  },
+  "tests/compiler-poly/fixtures/rank2-run-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t214:215:15:7\n"
+   },
+   "sha256": "52c1ba2561b58b11d6e40470102e6ca1bc1853efbcdaf6523d56ed04f8246e25"
+  },
+  "tests/compiler-poly/fixtures/rank2-try.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t281:282:15:8\n"
+   },
+   "sha256": "f8ad5d0f2f7353a5c8e5194b4f322ec3e6299cdc51bfaafa9a21774d8d5ae015"
+  },
+  "tests/compiler-poly/fixtures/rank2-two-answers.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t254:255:15:7\n"
+   },
+   "sha256": "42d50017c0b2d7bb6a0432ac818fb8b065754bdef1259a939c6d3832c1f94cda"
+  },
+  "tests/compiler-poly/fixtures/rigid-capture-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t172:173:13:8\n"
+   },
+   "sha256": "2b61766b0bf4ca9118a770eb98e18be99312649e5ba9102fee6d7e3598c21b88"
+  },
+  "tests/compiler-poly/fixtures/rigid-closure-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t170:174:10:16\n"
+   },
+   "sha256": "58c920ab558e4ce9b6f8bc7884576c2ebadb87c453c1ee77b1aa945bd41e0c6e"
+  },
+  "tests/compiler-poly/fixtures/rigid-domain-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t156:160:10:16\n"
+   },
+   "sha256": "ed48ae4bcafa1e34ff4d86507fd6b39870ee53a123db7b3d2984688cce819b70"
+  },
+  "tests/compiler-poly/fixtures/rigid-reusable-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t186:187:13:8\n"
+   },
+   "sha256": "5949fedb9250cd2127645c396c1c4d9c75a7c712f423d026773df966e6db02ed"
+  },
+  "tests/compiler-poly/fixtures/sigma-affine-twice.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t153:154:10:8\n"
+   },
+   "sha256": "1b6ca6aca0c3b8073f588c5df971ddec7778302fe6d98466e8449c9e18b94a88"
+  },
+  "tests/compiler-poly/fixtures/sigma-dependent.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t190:191:10:8\n"
+   },
+   "sha256": "174f92ed192d680b47b3fc1071a3707337da2844beadff41de7a249f0962f29b"
+  },
+  "tests/compiler-poly/fixtures/sigma-family-live-binder.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t162:163:10:8\n"
+   },
+   "sha256": "361e38b9eed4d88b8084588b39b6f8e82b660be903b45f91c90b56850ae3aba2"
+  },
+  "tests/compiler-poly/fixtures/sigma-in-result-action.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t369:370:22:8\n"
+   },
+   "sha256": "796bf94263ec6909329c5d375a4394758a22cfb3cef1c3209c00da1e44c7828c"
+  },
+  "tests/compiler-poly/fixtures/sigma-pair.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t200:201:10:8\n"
+   },
+   "sha256": "322297eaba80c5c2353534bec5332526d4eb7214516a0f56ef770646c3e7dc70"
+  },
+  "tests/compiler-poly/fixtures/sigma-reusable.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t189:190:10:8\n"
+   },
+   "sha256": "271eaad2086014e49186fe58c535a7717357e46931cf7ab76cbdbb2cc164d0ba"
+  },
+  "tests/compiler-poly/fixtures/sigma-reuse-affine.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t150:151:10:8\n"
+   },
+   "sha256": "9d1bea25b1a1b0159e6da3867cec224c417144693ef8fb98fa699b9697850726"
+  },
+  "tests/compiler-poly/fixtures/sigma-snd-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t147:148:10:8\n"
+   },
+   "sha256": "290fe9fb5c11ad6c8d86ccc24085e9cb22408d1245de78e8186b5b51ec729428"
+  },
+  "tests/compiler-poly/fixtures/sigma-unpack.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t193:194:10:8\n"
+   },
+   "sha256": "5da7302a01aed59d069ee6f92383bf1ed505fde838d1b26e71fb75a67248b829"
+  },
+  "tests/compiler-poly/fixtures/sigma-unrefined.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t158:159:10:8\n"
+   },
+   "sha256": "6e2aa3b5431e1454050812edaaf42fe9a7cb23f93b329af6bc64cf45f1c1d450"
+  },
+  "tests/compiler-poly/fixtures/template-any-forward.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t187:188:10:8\n"
+   },
+   "sha256": "17016ab13f1a2d4c45e88f843c37854ccf64ed0f038cf0e203e620a8947848ac"
+  },
+  "tests/compiler-poly/fixtures/template-filter-data.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t198:199:10:8\n"
+   },
+   "sha256": "02518b65cd484b4728745a2fb9f43a13077c289fbbe3a2bd8e21fa4569c1590b"
+  },
+  "tests/compiler-poly/fixtures/template-fold-quant.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t162:163:6:8\n"
+   },
+   "sha256": "7a5878f8e63f680f3434b2013d8f33a3ad5852793acca7b414f675494e480c7a"
+  },
+  "tests/compiler-poly/fixtures/template-generic-arg.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t155:156:6:8\n"
+   },
+   "sha256": "8da3e285de3ed9a28b1ff49b410aa2635a9715684fa380233675c39cae381375"
+  },
+  "tests/compiler-poly/fixtures/template-map-types.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t195:196:10:8\n"
+   },
+   "sha256": "726b4d19a2ff22c7e521cb8f34d5a064e2bd05f59d57f9cb862c6af3cf0d3f70"
+  },
+  "tests/compiler-poly/fixtures/template-open-type.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t150:151:10:8\n"
+   },
+   "sha256": "449ad3b005c376f0f653f7a4715f4ccc0611b402bdd532d9fad1b64aae03c10a"
+  },
+  "tests/compiler-poly/fixtures/template-plain-param.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t151:152:10:8\n"
+   },
+   "sha256": "cf74a876372c047e0de60634f3200b9834047b6f2f9c17cf3a85be93025ebb18"
+  },
+  "tests/compiler-poly/fixtures/template-quant-kind.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t112:113:6:8\n"
+   },
+   "sha256": "fb005743765c2956a98682e988cf340ba6030df1a8fb95c5c75e3f880b7ab2e8"
+  },
+  "tests/compiler-poly/fixtures/template-set-known-thunk.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t339:340:23:8\n"
+   },
+   "sha256": "f0519997f67af6246632be307659c8457638dd33963535a2adec9c28532bed54"
+  },
+  "tests/compiler-poly/fixtures/template-thunk-affine.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t309:310:23:8\n"
+   },
+   "sha256": "f4173fd2784bc9db5a74fc8078b13085c72de7e2602ff24e6ee6236e23b632e7"
+  },
+  "tests/compiler-poly/fixtures/template-type-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t153:154:10:8\n"
+   },
+   "sha256": "710f645badea2eef95a4e1f4dc887e0b8d2ece6d0397be9effddf63118c72ab6"
+  },
+  "tests/compiler-recursion/fixtures/add.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 1144,
+    "sha256": "4dc59cae6fcaf2075e5148be2f1818692fac78f98cf38b604f7848bf29e475f8"
+   },
+   "sha256": "e123fed65190aa4460bbd21ad82de0f6d6cf79cf2c3747e9a3fa34f0a93fbd24"
+  },
+  "tests/compiler-recursion/fixtures/after-let.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 612,
+    "sha256": "ff9bb5de7496f2efbf403a6771ab6bbe8be37581dc04ee7a6c16dbce362a4847"
+   },
+   "sha256": "f68a22f6b50a4ee80f220848bdbf5fba5f0791897cb8bd050f30bd2b898c5f5e"
+  },
+  "tests/compiler-recursion/fixtures/computed.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\trecursive-call\t158:159:9:18\n"
+   },
+   "sha256": "6bdd0c955058cd9e63c6e7c918a71a45237208ef61f8f7ea9fdc4eb095a39eda"
+  },
+  "tests/compiler-recursion/fixtures/deep-input.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 2096,
+    "sha256": "1a0b6745ff78ab52eeb49a1f8390ea05a15595cd1978903adce4fa6ea081f9b1"
+   },
+   "sha256": "33ed66442b3db562d311df09b31fa43d1458791775a49edd409a954ee3dcf998"
+  },
+  "tests/compiler-recursion/fixtures/deep.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 2120,
+    "sha256": "b28c527ce6b1b8330ce282a79a24c270e176b1afe6194e39b486c8a873318646"
+   },
+   "sha256": "2881538c3abb517f2eb82c052a90bffa88f3bb201648205beea70b2df6ee76df"
+  },
+  "tests/compiler-recursion/fixtures/direct.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 572,
+    "sha256": "1ca5869fbe3061b78103bb8d5f673b2b2bd50953135efcb38f71f4bd18fdd516"
+   },
+   "sha256": "0fc28a947a1dbd42f57231cd285ddb19c7314683841f825a02b254b2e18fea02"
+  },
+  "tests/compiler-recursion/fixtures/even.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 1344,
+    "sha256": "33a9e09f3029576c6afa63e536fc015fddf048a43e81a93fb025cdc39145d051"
+   },
+   "sha256": "3511007717f5bb8f5e12514a7e133984b2665fc3cd54d390d7ecf9febb73ab41"
+  },
+  "tests/compiler-recursion/fixtures/first-parameter.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 616,
+    "sha256": "a066ed61371e51f44f70f2867f322984940d8dd64e5206ba60a2f0c338bc222c"
+   },
+   "sha256": "ad32451581720603e9d75c00498f884c5fd73e9ac2aac3efb4d7a41fd3ea6e96"
+  },
+  "tests/compiler-recursion/fixtures/length.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 1020,
+    "sha256": "7a0d16cbcc026be69b018e4a79ccb88f63c8f6c986c006c4eadf10548875f507"
+   },
+   "sha256": "2a473085fead71d45116ab59f33b10f059f7d25b00790dd52031a901b675ccc4"
+  },
+  "tests/compiler-recursion/fixtures/mirror.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 880,
+    "sha256": "23452b3cca8cb6ec14b02e9f1d6be7fbde2f6907159c6c74f357b39bdc6d1606"
+   },
+   "sha256": "78c9177fba5e9462326025b09781204a4b7b89786fc7b19f692b85858b3d09fb"
+  },
+  "tests/compiler-recursion/fixtures/mutual.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tforward-live-call\t77:78:5:2\n"
+   },
+   "sha256": "db229b6b80a0175af909d13dd4dfb6a7b2172aba03cb0494219c0c282144b1a4"
+  },
+  "tests/compiler-recursion/fixtures/ordered-calls.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 492,
+    "sha256": "d2d8235d7e14db6903c39211b6708bec6f364dd7d233288947e4138268c8e78d"
+   },
+   "sha256": "4bfa2844b2bce35465b1e1c2e47792fbd78cdab01e61dd1786aab753e790b1a3"
+  },
+  "tests/compiler-recursion/fixtures/other-parameter.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\trecursive-call\t133:134:7:18\n"
+   },
+   "sha256": "c5252c14ba1f2dc4ad12c496321fe247d279c19434e9162c6d1d6340976c42e5"
+  },
+  "tests/compiler-recursion/fixtures/rebuilt-constructor.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\trecursive-call\t128:129:7:18\n"
+   },
+   "sha256": "7ba3e48f12a5c309e3ed215ccded13e7e4dd0126c594d0d7ea125bbd0c1edeb5"
+  },
+  "tests/compiler-recursion/fixtures/rebuilt-parent.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\trecursive-call\t128:129:7:18\n"
+   },
+   "sha256": "7f9ee29b2ce6e2f8fc607fc1a6aff54035f54475d312e0da7928ab8de6e3bcaa"
+  },
+  "tests/compiler-recursion/fixtures/same-parameter.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\trecursive-call\t77:78:5:2\n"
+   },
+   "sha256": "3aa67d0b3ccb3d9d545404959036d2eaa0871f63cb17700a638eead095fb2e4c"
+  },
+  "tests/compiler-recursion/fixtures/second-descent.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\trecursive-call\t133:134:7:18\n"
+   },
+   "sha256": "c80d1224a2d05935d2614029f169f74ed6bc00c0b640f1d6a852f4f7d996d6d6"
+  },
+  "tests/compiler-recursion/fixtures/shadow-field.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 572,
+    "sha256": "1ca5869fbe3061b78103bb8d5f673b2b2bd50953135efcb38f71f4bd18fdd516"
+   },
+   "sha256": "2f016ad017775613d7cfd2d0dab6b68930de1a2f27b42eab938d8ae92008c41c"
+  },
+  "tests/compiler-recursion/fixtures/shadow-let.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tcheck\trecursive-call\t160:161:9:6\n"
+   },
+   "sha256": "568cdf41693687228d467d2cd1c9329b697d2f0b3fd6b41f6b816b67b4d3cb2e"
+  },
+  "tests/compiler-selfhost/fixtures/cross-module-hof-type-arg/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t88:94:2:0\n"
+   },
+   "sha256": "a2772d7c6dc164f0a19e6acf41c152610c2545c31056c59ed37c67e454180abd"
+  },
+  "tests/compiler-selfhost/fixtures/cross-module-hof-type-arg/syntax.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t85:91:2:0\n"
+   },
+   "sha256": "3e33d724352381b6094033be867319f3d37ed10d3a9ec273d540f91227d85d6f"
+  },
+  "tests/compiler-selfhost/fixtures/cross-module-hof/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t146:152:3:0\n"
+   },
+   "sha256": "70fed06b80b589b6eea8cd9a9faeb79cb4679686b266249a123cb84d72782231"
+  },
+  "tests/compiler-selfhost/fixtures/cross-module-hof/syntax.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t85:91:2:0\n"
+   },
+   "sha256": "3e33d724352381b6094033be867319f3d37ed10d3a9ec273d540f91227d85d6f"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-continuation-capture/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t634:635:39:22\n"
+   },
+   "sha256": "635b193b391a7604f4d193512cb11f563ec9bf5fa898eb46b2b939db39f3eff7"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-continuation/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t733:734:41:22\n"
+   },
+   "sha256": "ec7f9bcf7dbd98ba70114a952e97a751cd18fdc7f79506931278b77b09c87721"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-four-columns-column-type/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t75:81:2:0\n"
+   },
+   "sha256": "62c04f9378d1e9b5f49788a2414f0db8e59ca7bfde7df6c07aa84902f8b4a10d"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-four-columns/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t183:189:4:0\n"
+   },
+   "sha256": "89b88b27d21b1df33d2f6f0481318b67551ccb8e4f7819e73c24808b69e4c67a"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-rows-missing-zero/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t60:66:2:0\n"
+   },
+   "sha256": "9ead8831cd4882991ff3cc09e86251f3d5413f53b48bd12a525a826941b66deb"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-rows/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t149:155:3:0\n"
+   },
+   "sha256": "fdb2c589fbc623baddd5764e80b9de26e5c1ca6f74fffcff3b3b80a988a5c58e"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-string-columns-arity/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t805:806:47:18\n"
+   },
+   "sha256": "9267de007ee93de5014191f3998cc9d8ae2fb1325f8d027168ce378ed19ae24f"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-string-columns/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t889:890:48:18\n"
+   },
+   "sha256": "1e10166ee6014aa75b27fcdbcb31bc8eb2465d9d12c7cd82745b2b718a9ba46f"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-wildcard-first-reuse/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+   },
+   "sha256": "250dcf90c14fe13aa15809fc30386c7da36acace74805635c6f303c786fe470a"
+  },
+  "tests/compiler-selfhost/fixtures/fuel-wildcard-first/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t154:160:3:0\n"
+   },
+   "sha256": "36e74fb63882bf2d785c9251c0636b7badda145d2c64d8a6f1063d37c9e40166"
+  },
+  "tests/compiler-selfhost/fixtures/io-do-imported-statement/lib.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t164:165:5:25\n"
+   },
+   "sha256": "04a7f6f3cc4912e8c12c047d82c327112d9c23dd3bb97cf5a45303d1fe27bbe1"
+  },
+  "tests/compiler-selfhost/fixtures/io-do-imported-statement/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t207:208:7:25\n"
+   },
+   "sha256": "2ee1b2c31c63da23c41cb68a708e987e779ca06c6bc846fa7f9dcce2ea979051"
+  },
+  "tests/compiler-selfhost/fixtures/io-do-imported/lib.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t188:189:6:25\n"
+   },
+   "sha256": "fcf4e73e1f4900fe31283c04f1897fffba94a884186da252e2a142e9457b11b1"
+  },
+  "tests/compiler-selfhost/fixtures/io-do-imported/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t208:209:7:25\n"
+   },
+   "sha256": "d02353e6eb31f96c82bcce7f5e78b718cd49498e12109caa9da4c0163c86ccbd"
+  },
+  "tests/compiler-selfhost/fixtures/io-fuel-loader-missing-zero/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t1220:1221:32:62\n"
+   },
+   "sha256": "05f66119df5bdef69d4b0566e311fc1fa20290d68f1ae3e275e40001e002d564"
+  },
+  "tests/compiler-selfhost/fixtures/io-fuel-loader/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t1385:1386:34:62\n"
+   },
+   "sha256": "277f0f9b1eb8feeb77a3996338215da592dd953c828cce53a69d0f9c60476d80"
+  },
+  "tests/compiler-selfhost/fixtures/io-load-continuation-type/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t1036:1037:26:62\n"
+   },
+   "sha256": "a63de834462a8674ef5ebf3df41660ba0c2cc322242ef5507fb9d39c9535afaa"
+  },
+  "tests/compiler-selfhost/fixtures/io-load-continuation/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t1154:1155:28:62\n"
+   },
+   "sha256": "66f0b7a6ed5e5ff6b816c735aae45701f1a12f1d6410e94d3535a5202f4a4ef0"
+  },
+  "tests/compiler-selfhost/fixtures/layout-braces-comma/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-term\t231:232:11:16\n"
+   },
+   "sha256": "dcb5d0ba4c514a8bc7af3ac3661c3100d471ec23bf7f801f3e81f630c86af4ff"
+  },
+  "tests/compiler-selfhost/fixtures/layout-braces/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-term\t454:455:19:18\n"
+   },
+   "sha256": "0a5f4825f6446b9522a3cec2d3363bccf69351d16082a461b1b8bc17b69ac348"
+  },
+  "tests/compiler-selfhost/fixtures/layout-brackets-comma/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t76:82:2:0\n"
+   },
+   "sha256": "230e974e4ac11ae109f667ba8c2b0a273f450bba605fc1e3e7610ea9c49a9b9b"
+  },
+  "tests/compiler-selfhost/fixtures/layout-brackets/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t136:142:3:0\n"
+   },
+   "sha256": "36d70f5ca24756640a5f88eb6342e1d5a13fa6ae8f2cd4ab78445d944376c7c7"
+  },
+  "tests/compiler-selfhost/fixtures/layout-call-args-comma/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-term\t374:375:17:26\n"
+   },
+   "sha256": "fb3610493559090464113bbf11211629e60454446d852d493db1052235361aef"
+  },
+  "tests/compiler-selfhost/fixtures/layout-call-args/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-term\t527:528:23:26\n"
+   },
+   "sha256": "0ec29b059f6c44b23b619f41693c676416331d907cacf178cc208717a0e00e08"
+  },
+  "tests/compiler-selfhost/fixtures/layout-choose-ladder-comma/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t224:225:15:32\n"
+   },
+   "sha256": "807063df5f9547b2373e2fbfe75c560970d9bbaefd1598bde531387e39d7bca6"
+  },
+  "tests/compiler-selfhost/fixtures/layout-choose-ladder/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t305:306:16:32\n"
+   },
+   "sha256": "8b6d84860bf53120b8543db579121b4d511c6c56d8116cacbdf9b4cda8033278"
+  },
+  "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-term\t399:400:20:9\n"
+   },
+   "sha256": "605532e690b0d29138fae3cfb51c115e05ae89295a02b8f48f26517074668e4b"
+  },
+  "tests/compiler-selfhost/fixtures/layout-comments/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-term\t406:407:20:9\n"
+   },
+   "sha256": "d19146f14af301c30df5814aeda4a46e1dd7c0cd923e5728f8bfa92a94adaecd"
+  },
+  "tests/compiler-selfhost/fixtures/layout-dedent-close-extra/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-term\t272:273:12:7\n"
+   },
+   "sha256": "01f8d829ad38f87e4eb6e840a9aeff5ae24a009e55389481aa6df68dd129c419"
+  },
+  "tests/compiler-selfhost/fixtures/layout-dedent-close/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-term\t497:498:23:7\n"
+   },
+   "sha256": "b90fcd3e6e47b370e9be66c9a36b9341e1b283512e715be61f9eb0a763913620"
+  },
+  "tests/compiler-selfhost/fixtures/layout-def-header-comma/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tparameter\t148:149:6:31\n"
+   },
+   "sha256": "63c30828b51330b3d51bf4f81212adca92bd4575dfe417201a684e86d17f7c60"
+  },
+  "tests/compiler-selfhost/fixtures/layout-def-header/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tparameter\t450:451:18:31\n"
+   },
+   "sha256": "7b641585ae87da204f875ad91da8019538db66baeb40f199f4d7745d38acb38d"
+  },
+  "tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t477:478:25:31\n"
+   },
+   "sha256": "96b0e07e64c2876a02bf2718daa1bfcbfc20275f2ffd37c499e1ffe6faac3c64"
+  },
+  "tests/compiler-selfhost/fixtures/layout-lambda-statements/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t662:663:28:31\n"
+   },
+   "sha256": "03f6ca08e9ac7a93acb91f71383ca7bc7ee5eac56cb6db0138b359bc192f4848"
+  },
+  "tests/compiler-selfhost/fixtures/list-generic-field-element/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t79:85:2:0\n"
+   },
+   "sha256": "9e85b6a99e4b0fdf5b460e5113e4853a48b6bd565d8f642fdf0980e73e9320f6"
+  },
+  "tests/compiler-selfhost/fixtures/list-generic-field/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t204:210:4:0\n"
+   },
+   "sha256": "afd6b7dc13a105ea046b61ea2dcf5a149ece9784f95cba2ba3cbb197183b828f"
+  },
+  "tests/compiler-selfhost/fixtures/list-lambda-body-scalar/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+   },
+   "sha256": "8a9a5022805b0d985c046385b338e8cab5b3b84697e40a92f010c4e0cc4f1020"
+  },
+  "tests/compiler-selfhost/fixtures/list-lambda-body/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t65:71:2:0\n"
+   },
+   "sha256": "7f084a24ff6252b9ec7b917c0648ed7c291890a440f45ac45b350034b3a7833b"
+  },
+  "tests/compiler-selfhost/fixtures/list-literal-imported-element/flags.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t79:85:2:0\n"
+   },
+   "sha256": "1849f513f2cb39a0167583f4308f9ad223365886bf730e43e16260e0a3080534"
+  },
+  "tests/compiler-selfhost/fixtures/list-literal-imported-element/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+   },
+   "sha256": "c6493fcc4a5aa7acdbe687fc83f0f70c5f4b9191a3bd3e64cfd67d3bc23780fa"
+  },
+  "tests/compiler-selfhost/fixtures/list-literal-imported/flags.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t79:85:2:0\n"
+   },
+   "sha256": "1849f513f2cb39a0167583f4308f9ad223365886bf730e43e16260e0a3080534"
+  },
+  "tests/compiler-selfhost/fixtures/list-literal-imported/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t121:127:3:0\n"
+   },
+   "sha256": "29a1ce04170b53a1f1110d9dcff2ce2d39926abd9ab2da89e5d8396ec94d51be"
+  },
+  "tests/compiler-selfhost/fixtures/list-of-results-element/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t66:72:2:0\n"
+   },
+   "sha256": "0de75b8315ff5ba33c952b469e43f58f595cfea8a451cdfbde50bbc0cf89f9f0"
+  },
+  "tests/compiler-selfhost/fixtures/list-of-results/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t156:162:3:0\n"
+   },
+   "sha256": "4d6a5905ee7fd9d27239200b2b7cfb508e3dff142cdb7b02066bebacf8cf6818"
+  },
+  "tests/compiler-selfhost/fixtures/mutual-term-bind-defs/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t83:89:2:0\n"
+   },
+   "sha256": "da3c66116913f325fce1d61f5116f9bd50bc057e2f4faa90ec4e99d31e736547"
+  },
+  "tests/compiler-selfhost/fixtures/mutual-term-bind/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t136:142:3:0\n"
+   },
+   "sha256": "4ae51c67df6c18fb667fc360674b39f905313d2b4805ca52aeeaa0188b69b3e6"
+  },
+  "tests/compiler-selfhost/fixtures/nat-65536-as-word/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t69:75:2:0\n"
+   },
+   "sha256": "396bbbab265c41403984fc0f18957389bd6711f8dcdcbe1ece01f8103bf8d551"
+  },
+  "tests/compiler-selfhost/fixtures/nat-65536/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t100:106:3:0\n"
+   },
+   "sha256": "95432e20404407f78c76ca6a1fb884669dfa9781d22cadaeb6fbba98ce7f939e"
+  },
+  "tests/compiler-selfhost/fixtures/nested-self-call-list-suffix/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t95:101:2:0\n"
+   },
+   "sha256": "c42a83f47022626eadc4e7b96d2f9c45b63c4c311b24562df1aecd2e9873818f"
+  },
+  "tests/compiler-selfhost/fixtures/nested-self-call-list/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t125:131:3:0\n"
+   },
+   "sha256": "f3e1a6f27a8647b21dbb68e41bf3a51aec24efab95081f4230cf0adbd12f089c"
+  },
+  "tests/compiler-selfhost/fixtures/nested-self-call-mistyped/main.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\ttype-mismatch\t424:428:19:48\n"
+   },
+   "sha256": "9601fe13b998c6a97c8b4bfea7368be9b1ed46530df4a9e89ecb07e84247cccd"
+  },
+  "tests/compiler-selfhost/fixtures/nested-self-call/main.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 2492,
+    "sha256": "58c9c7d2660b84ab466c69cac73058e0849904506dc951eb678c54474341273c"
+   },
+   "sha256": "caa61e62b0490c7805d09cc8ac425bdd7cfb0ee7d27b502c5ac5c9b65472100f"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-collision-bare/lib.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t151:157:3:0\n"
+   },
+   "sha256": "8d2acb10073ca2d3f1797ab3dd7ba974972699a4f3c2ebffdd436468af45fb4a"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-collision-bare/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t85:91:2:0\n"
+   },
+   "sha256": "d53330bdfef635d06c6bbdc0d3d6af8e88819119d4e6cf6e18381cf507675337"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-collision/lib.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t151:157:3:0\n"
+   },
+   "sha256": "8d2acb10073ca2d3f1797ab3dd7ba974972699a4f3c2ebffdd436468af45fb4a"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-collision/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t160:166:3:0\n"
+   },
+   "sha256": "ab043b1a2b223f83ea7026a844ab9596e1b924dcfef4dbd12b78c3d177d79218"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-fields-unknown/flags.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t37:43:2:0\n"
+   },
+   "sha256": "629ce82b71c994dcea03e4bb6b882472bc6a4ff715427111c1702963feeaa312"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-fields-unknown/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t78:84:2:0\n"
+   },
+   "sha256": "44678b8e1c3bb4939d88f82116880ecc87c1f373bcbe4dd32e07587e62e52b4c"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-fields/flags.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t37:43:2:0\n"
+   },
+   "sha256": "629ce82b71c994dcea03e4bb6b882472bc6a4ff715427111c1702963feeaa312"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-fields/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t157:163:3:0\n"
+   },
+   "sha256": "31eac1409a89509baa92824e71e63486879d1870f0d82ed6c87dc58982f6e5f1"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-nested-ctors-foreign/core.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t78:84:2:0\n"
+   },
+   "sha256": "6e2b3be0da9659e78c187510dc150a22adc0f7591cb86b446be970212df3d913"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-nested-ctors-foreign/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t115:121:3:0\n"
+   },
+   "sha256": "1f0fcdba7eb6549eb4daf8178535d6382eee47b1d0d048bc9157b5d1b85c4ec7"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-nested-ctors/core.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t78:84:2:0\n"
+   },
+   "sha256": "6e2b3be0da9659e78c187510dc150a22adc0f7591cb86b446be970212df3d913"
+  },
+  "tests/compiler-selfhost/fixtures/qualified-nested-ctors/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t224:230:4:0\n"
+   },
+   "sha256": "a1f58f7c1021c57dd97b7af20b116609e41967cceb15d8070b22deb6fa333b63"
+  },
+  "tests/compiler-selfhost/fixtures/rose-tree-kids/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t58:64:2:0\n"
+   },
+   "sha256": "307c0980abb95348c97e746560bd054c5368b815f371b9c6761804c27fef2d03"
+  },
+  "tests/compiler-selfhost/fixtures/rose-tree/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t113:119:3:0\n"
+   },
+   "sha256": "a789e0c404afd72e9b5fcef08d02a1adfc51e75e3799214767b266954f943a09"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m00.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "45f19f9c072ea39e1903c86141781e1bb9546a6176b1169c1f2499636e802a6b"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m01.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "e43278effd00841ef27a36dc99c4c5d7473563371f10658d04e39c976feb8d00"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m02.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "7b9ab30b5ea538f7bdf7075b6b97a49b90a66d8e7ef25b2513c33c53c003bad1"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m03.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "df6d4832b1ad7473c63119244d9222f646a4107ea816cb78ce6841f01c16404f"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m04.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "61109117af3c5f2ef5ac8a54c1d64d874975a5a0aa7e5e635c95e3a90ccaaec6"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m05.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "4e30be955fdb28b850c59d4bf35e0c2a8ed12a9bb8092844caef4e806ecfed50"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m06.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "ce0361250177cc55528c1a01bf8e7bcee64e24799eb0dc02f8da23fc23224a30"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m07.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "96fb769cf453c5a49858cff93e8f7f6f11bf31537c4347c8b4a0e167701f5e91"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m08.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "1c2f09b61928d89361411192219c81cbd242f85054f734fa11db765b2607355e"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m09.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "f7bd4c2d62a020af70c37d7ed25c51e26dac6faef05202da3da0b2b06ad8dd7d"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m10.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "aa68e92949d3ee8112270d13ee49f12b6d472e9e44081efbff855c217ebffb89"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m11.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "c643deacd036511858be79bb4ee7a6061277ff62c82b898fe2c5935e2fab87b0"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m12.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "ff9ae988cca622a3e10f37c85cd08b906afa1781e7fcfbad7ea589ef970fd51d"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m13.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "a8fd08829568747f7e72a78d7a6d2c8c1a646563a87335179be1cdd2acef9c7f"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m14.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "b26f80093e9b8635ee37c5240180020bf7ab7a1a70295f68125b0802d1a13b21"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m15.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "c6d50119148f9691f095ff19865017d434efac5dc8254dfb8f187dad0421d6c3"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m16.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "d3b84bc0979899171d2fbc3d41d450bfa91dd676c32bf72d679c80ba69b21ed1"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m17.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "0ec6eda98c81f30c3b2a74721a769ec8e13ccbd81198ae078f832c1f52702403"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m18.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "e3761f1a194b0a5d65659f70b09ededade7c10b26dac525d28611d87051461c4"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/m19.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t53:59:2:0\n"
+   },
+   "sha256": "219bb6b393c87e5fc0648fbb5cb2adc6bcee384dbf9bd730002d9262fe0bf567"
+  },
+  "tests/compiler-selfhost/fixtures/scale-bundle/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t123:129:3:0\n"
+   },
+   "sha256": "d4a8e9714f500e58c2fb4762d058aeb98cdafc73066f3004b37c1deaf1026079"
+  },
+  "tests/compiler-selfhost/fixtures/scale-catalog/main.bend": {
+   "check": {
+    "exit": 4,
+    "stderr": "Exhausted\tparse\tbudget\t9755:9756:764:7\n"
+   },
+   "sha256": "dad13afc5796f72948ce0eca2797c2615222e5f5ca4cf2bcec63a786bfd2e8bb"
+  },
+  "tests/compiler-selfhost/fixtures/template-qualified-arg-type/core.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t78:84:2:0\n"
+   },
+   "sha256": "987475966798b33c15c32633357bae37821a293ce2d94782c9451352db9c1f55"
+  },
+  "tests/compiler-selfhost/fixtures/template-qualified-arg-type/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t94:100:2:0\n"
+   },
+   "sha256": "ed1a08467210ead063319934355d611adc18ca9617c82b1442a81362a6b42976"
+  },
+  "tests/compiler-selfhost/fixtures/template-qualified-arg/core.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t78:84:2:0\n"
+   },
+   "sha256": "987475966798b33c15c32633357bae37821a293ce2d94782c9451352db9c1f55"
+  },
+  "tests/compiler-selfhost/fixtures/template-qualified-arg/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t138:144:3:0\n"
+   },
+   "sha256": "2cc2f9baa106afb0756f0327dba0795cba25fc5bf4a4817c2c8fd43f2d48f105"
+  },
+  "tests/compiler-selfhost/fixtures/u32-bitwise-edges/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t141:147:3:0\n"
+   },
+   "sha256": "e1edae1e30a086e8f16990a22663ba517e8b9786abb9beb8f4496d95140713c1"
+  },
+  "tests/compiler-selfhost/fixtures/u32-bitwise-word-count/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t86:92:2:0\n"
+   },
+   "sha256": "a4506fbc2c6a0ab0fcf585a52f4c66b116732146ceb2f79ed26e90403ec4621f"
+  },
+  "tests/compiler-selfhost/fixtures/u32-nat-roundtrip/main.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t125:131:3:0\n"
+   },
+   "sha256": "9a25220e7172e32e9c20c7f5877cf3e50d140e34d65caf06514164adbb0692cf"
+  },
+  "tests/compiler-structural/fixtures/bare-quantity-field.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tbare-quantity-field\t58:59:5:6\n"
+   },
+   "sha256": "c8554f2846c1fcb323f961820382ce53935566c795a61d621b9536db1296c910"
+  },
+  "tests/compiler-structural/fixtures/data-erased-type.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 408,
+    "sha256": "8e680c59c472109bbf335bdf4f6c13228376a091172df0d5950aa3582266c187"
+   },
+   "sha256": "4d92b723477f8673e82e0b855612fd48667828a8d657abbe5dd96b6cb67dcb8e"
+  },
+  "tests/compiler-structural/fixtures/data-owns-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tdata-field-kind\t92:93:7:6\n"
+   },
+   "sha256": "bad15c6ae2c30b1239d35d1786775cb1085d56b7e72e6d97c036605966bfb1ef"
+  },
+  "tests/compiler-structural/fixtures/duplicate-field-across-constructors.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 408,
+    "sha256": "89f74c273a2c8eebd9c9491a278bd934d712ebfa9ec350ab4af3bbb786be765d"
+   },
+   "sha256": "0040bf176744762c03b7a5de18adf58531a48aade1786c6e463ba18904f66c4e"
+  },
+  "tests/compiler-structural/fixtures/duplicate-field.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tduplicate-field\t67:68:5:15\n"
+   },
+   "sha256": "4da623b33ddd703abfd4a36d3dadee09a1485a4740a4bc9c146570f3cfe18a24"
+  },
+  "tests/compiler-structural/fixtures/field-quantities.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 416,
+    "sha256": "53ebcf1db443fe092485f3a1096ae2fc88513cfbb6a4f1e2edd765e016d44739"
+   },
+   "sha256": "1811a2d0fcd4bfc66cf10e29d8e3ec42e3518fe6a2c4c9e46488689e6402a8ad"
+  },
+  "tests/compiler-structural/fixtures/forward-field-type.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 356,
+    "sha256": "288fd181958377a6973bfb0aedb53f392804b0734d6de76738e3ea43dce9fc83"
+   },
+   "sha256": "4e0390963702285456506b7b892b66805bfff0e25e9820d3555d8d37b32de709"
+  },
+  "tests/compiler-structural/fixtures/function-field.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t66:67:5:14\n"
+   },
+   "sha256": "27cadd39f30c895da31bdf7871f9140d5df4ad89fdf94f52694042ee41290259"
+  },
+  "tests/compiler-structural/fixtures/many-owns-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\treusable-type\t93:94:7:7\n"
+   },
+   "sha256": "18a353b3c5faee5e95eface31813e722cdd810ddfd93788f85f498ff3cb49e6b"
+  },
+  "tests/compiler-structural/fixtures/mutual-types.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 516,
+    "sha256": "d95ca29465308a6bf4f879d58eb0f4d710ad2a434c7b09f8a14f387594444b03"
+   },
+   "sha256": "207c8c569c449aa9e25a3eeccf3c32abc0c2611b962d00d7af61d9e696fd6e28"
+  },
+  "tests/compiler-structural/fixtures/nested-type-kind.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tdata-field-kind\t132:133:9:8\n"
+   },
+   "sha256": "c7fb244217f50732dd17916dc5037654330d77f4273fd3d2935cd51727d50c6c"
+  },
+  "tests/compiler-structural/fixtures/plain-field.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 356,
+    "sha256": "f4f8c14c3e0e9383f0488519c30ec0b66611e7580b732e9cef2ef6200fb60eae"
+   },
+   "sha256": "bf1107eef9904d5e85147a4133e57438535a89aa9ae6b4199479c948da65ae87"
+  },
+  "tests/compiler-structural/fixtures/recursive-tree.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 408,
+    "sha256": "7250587018a77dfdceb89283e14ba900594868b8c97496c84c7d8e940901858d"
+   },
+   "sha256": "0c98afb2c49c9a9f8f5b51d0c491a7f7be44d715a73516a5881dbac60b7c6c72"
+  },
+  "tests/compiler-structural/fixtures/type-field.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t62:66:5:10\n"
+   },
+   "sha256": "84cff2a024c4e6f23fc9773414be3d2af320a1f9f6f90fd6429a344e034ee184"
+  },
+  "tests/compiler-structural/fixtures/unknown-field-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tunknown-type\t61:68:5:9\n"
+   },
+   "sha256": "55512dc7b80e94a2dd033b377c3c32a6183c78b9afde1941b95cc3320e9cdd54"
+  },
+  "tests/compiler-structural/fixtures/unused-invalid-fields.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tdata-field-kind\t64:65:5:9\n"
+   },
+   "sha256": "22880245af9b1a57d71ce988b4d7caef89bbd407bcddd1065cd37237ecad6f08"
+  },
+  "tests/compiler-sugar/fixtures/annotation-brace.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tterm-form\t248:249:12:7\n"
+   },
+   "sha256": "e7e68f210d88aafecd5e583f51613c22d882ff0de5635cad36c8ea61a1d5731e"
+  },
+  "tests/compiler-sugar/fixtures/annotation-list-let.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t91:97:2:0\n"
+   },
+   "sha256": "5477eae278dd0d5b9b037f831caa05fdbd9f82e9775641f08c671ec06541142b"
+  },
+  "tests/compiler-sugar/fixtures/annotation-reusable-quantity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t69:75:2:0\n"
+   },
+   "sha256": "6d149aa69a10279f5f7435df7d3b0188b20afd31f96df0390370320c2ef2e5cc"
+  },
+  "tests/compiler-sugar/fixtures/annotation-unannotated-list.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t54:60:2:0\n"
+   },
+   "sha256": "135cdc8b4f2d0aa456fbbb2a0312708f4fe858a91c75f9f208f960894b558734"
+  },
+  "tests/compiler-sugar/fixtures/char-compare.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t263:264:16:20\n"
+   },
+   "sha256": "577b9d8a733282f6199ad6fbf7b7002f323f7fe15d55d0bf970e25930efa7069"
+  },
+  "tests/compiler-sugar/fixtures/char-u32-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t279:280:14:35\n"
+   },
+   "sha256": "fb1189ab3655c5f5a918c6dd71e2a6322c3921ed8b5937c888b0de897bc44fc7"
+  },
+  "tests/compiler-sugar/fixtures/cons-operator.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t47:53:2:0\n"
+   },
+   "sha256": "bb43924828abedba0d240796d3cdf9a535624837e36da8d9eb55fb19e0a3ef53"
+  },
+  "tests/compiler-sugar/fixtures/dependent-bind.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t167:168:10:12\n"
+   },
+   "sha256": "44df9fcb13645209b06a04aa02e387208e3797548bcf544bed0597a97de4a991"
+  },
+  "tests/compiler-sugar/fixtures/dependent-choose.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t215:219:13:15\n"
+   },
+   "sha256": "de451c7130d816fe256fc9e7d9c06eea6fbe8d155fc020c1d0a21a03f8edac1a"
+  },
+  "tests/compiler-sugar/fixtures/dependent-forward.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t105:106:6:12\n"
+   },
+   "sha256": "d6222610bb55eac497f722a9ccb311ade19c87fd37ba3b149d497f4db1171eca"
+  },
+  "tests/compiler-sugar/fixtures/dependent-result.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t191:192:10:12\n"
+   },
+   "sha256": "59dca49d166016ad190b3095468ef2cbbf0952614f5b1ef80e0bd1542de1dc5c"
+  },
+  "tests/compiler-sugar/fixtures/destructure-computed.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdestructuring-binding\t257:258:17:18\n"
+   },
+   "sha256": "e930e7a07d640d00465638bc2f5d0153678d0503776d9d61964720b6d8622d14"
+  },
+  "tests/compiler-sugar/fixtures/destructure-constructor.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdestructuring-binding\t343:344:19:18\n"
+   },
+   "sha256": "228073d68600cbd976a026684ecbbab1ac96c76afb84c3a5f87ae519fa74151b"
+  },
+  "tests/compiler-sugar/fixtures/destructure-order.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdestructuring-binding\t248:249:14:18\n"
+   },
+   "sha256": "1e9d1402e0158916777185dd062d509cb00eab129aea610504d5b4f4fe6145f2"
+  },
+  "tests/compiler-sugar/fixtures/destructure-sum.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdestructuring-binding\t178:179:11:7\n"
+   },
+   "sha256": "bab484e15a67648b368b3b59ec6474d71d627abf39275cefb43af77930a4ddbf"
+  },
+  "tests/compiler-sugar/fixtures/destructure-then-match.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdestructuring-binding\t267:268:14:18\n"
+   },
+   "sha256": "7dc94b9a95ff65d247e6adbbddc4be5eb94fdf24cb7a5e51a5b334894a5d7eec"
+  },
+  "tests/compiler-sugar/fixtures/destructure-typed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tend-of-body\t219:220:14:18\n"
+   },
+   "sha256": "5bc2bf72ae01a179bf6162af85303f272ab9ca0768b8b37f8d489145372f3997"
+  },
+  "tests/compiler-sugar/fixtures/function-value-arity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t162:166:10:13\n"
+   },
+   "sha256": "17df3d3480cdab45f5b527ef5f8dd1a03276795ae19b2e840f49aff3d4918c42"
+  },
+  "tests/compiler-sugar/fixtures/function-value.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t170:174:10:13\n"
+   },
+   "sha256": "f6031d67c553ec26dc3c6e021c40587b27eea6c6f02d048a5c44cfc4a559d35d"
+  },
+  "tests/compiler-sugar/fixtures/list-as-scalar.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t43:49:2:0\n"
+   },
+   "sha256": "76ba6f2b6190f78fa5fcbf4fb2e6fbacc820c9b0613943d14ab1641b8da657f1"
+  },
+  "tests/compiler-sugar/fixtures/list-element-mismatch.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t56:62:2:0\n"
+   },
+   "sha256": "0f4b00b1116123b8f036abc877fa097c202d7a069a1813f87450df13bcca9652"
+  },
+  "tests/compiler-sugar/fixtures/list-literal-affine.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t89:95:2:0\n"
+   },
+   "sha256": "12424033b6edb43afa2fc8905660ab7ba09f686229ac672902ab84cbfd474940"
+  },
+  "tests/compiler-sugar/fixtures/list-literal.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t91:97:2:0\n"
+   },
+   "sha256": "cdd4896394378d1ed1eb8726acfbdd1fde44546fd67190c44d84afdc82c1243d"
+  },
+  "tests/compiler-sugar/fixtures/list-nested.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t85:91:2:0\n"
+   },
+   "sha256": "819f873d166a6fd0e477c950178ee4aad08783aa91388645d6fedba6669fc613"
+  },
+  "tests/compiler-sugar/fixtures/list-separators.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t92:98:2:0\n"
+   },
+   "sha256": "fecd1e39c58466e6a7caf8baeb095e00de77fe71792ad18c7fc8801614034b8b"
+  },
+  "tests/compiler-sugar/fixtures/parallel-let.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tend-of-body\t245:246:16:4\n"
+   },
+   "sha256": "d2fe45f8b7f27ddbe7436f94bfb9124245a35d92a4d538362116db9ff13ed99a"
+  },
+  "tests/compiler-sugar/fixtures/partial-call-reuse.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t139:140:10:17\n"
+   },
+   "sha256": "4c64d4d78060e19b600e4106352e66b06055bfc454d1fb483d992d665cacc0d6"
+  },
+  "tests/compiler-sugar/fixtures/partial-call.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t179:183:10:13\n"
+   },
+   "sha256": "3f191b891423646c99a26da2ce0b3af3b98dfd643887cc1e7188b9517b41c062"
+  },
+  "tests/compiler-sugar/fixtures/template-bare-call.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t160:161:10:9\n"
+   },
+   "sha256": "ffde594d9702cb513187278cbc13c1977e55d46c541d745b9e8fb9beea50c8a9"
+  },
+  "tests/compiler-sugar/fixtures/template-forward.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t132:133:10:10\n"
+   },
+   "sha256": "11ca73bc676b06599f1780f3302433f2c9504f2dac964e37dfc3903c4c88f406"
+  },
+  "tests/compiler-sugar/fixtures/template-function-arg.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t218:219:11:10\n"
+   },
+   "sha256": "f90d0caeb1be59e6301312cc6d88e6f9586bc6e696d7e028b40e5b05fc7d0b6c"
+  },
+  "tests/compiler-sugar/fixtures/template-late-binder.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tparameter\t126:127:10:18\n"
+   },
+   "sha256": "0ea2a9e51fbc29181babb9a219dd984b40784096fc43fed0de6d9d98599c2f81"
+  },
+  "tests/compiler-sugar/fixtures/template-open-argument.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t135:136:10:9\n"
+   },
+   "sha256": "3254cff6dfe7bc19be6f65176dad24bd3acd7ba6f529615c66ac426a55c7d384"
+  },
+  "tests/compiler-sugar/fixtures/template-set-known.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t239:240:14:12\n"
+   },
+   "sha256": "4c8ff7874cf010797d7b93321bbb62420433008edadfaaf1d93a67965c6b3487"
+  },
+  "tests/compiler-sugar/fixtures/template-value-arg.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t162:163:10:9\n"
+   },
+   "sha256": "d280e8ba7052e7b805b768d1a849846fcfd65fa83a112a4afca7744eb5e282d2"
+  },
+  "tests/compiler-sugar/fixtures/tuple-affine-reuse.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t45:51:2:0\n"
+   },
+   "sha256": "2eecb1d1d9030cdd9a9647a1f5ad93c4c2fccfe14dc6c90c23db6e1d338fe735"
+  },
+  "tests/compiler-sugar/fixtures/tuple-arity.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t64:70:2:0\n"
+   },
+   "sha256": "ec6ebc5ca4147e1d5ec4c3957d79f8a7f400ae1cdbbfd63ae609014deba835ed"
+  },
+  "tests/compiler-sugar/fixtures/tuple-constructor-pattern.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+   },
+   "sha256": "3be4878f95c4a4edf40424364349f329d4c1a003a8c33b97a38ba059e7d0fc8e"
+  },
+  "tests/compiler-sugar/fixtures/tuple-read-pair.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t83:89:2:0\n"
+   },
+   "sha256": "3d3e0f972defe3c579da53f8ced8081a466e1355fab258b44907c5120abf036e"
+  },
+  "tests/compiler-sugar/fixtures/tuple-right-nested.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t89:95:2:0\n"
+   },
+   "sha256": "6f8e20be36d448eb783e6b10f638a9baf59d6976e0568c36e0f424bd66ed57f1"
+  },
+  "tests/compiler-wasm/fixtures/argument-order.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 472,
+    "sha256": "1d4d9bf0937ad094dbec73b68c9f695aaec782ff6edcf289f8d211e1d43fc8a5"
+   },
+   "sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8"
+  },
+  "tests/compiler-wasm/fixtures/branch-locals.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 720,
+    "sha256": "49aaaf345133e6246fbc9402f6bacf64b9c11bee1c3e85532b9f32484ec7c3a2"
+   },
+   "sha256": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84"
+  },
+  "tests/compiler-wasm/fixtures/erased-cost.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 420,
+    "sha256": "775677779f32931981fd4dcd477419dfc7deb7071f938fdffd4eb0c210ccb484"
+   },
+   "sha256": "2b922e02325ae9884e8120956d32be8e7629deac3fe9cb94ba67c44e17c6d983"
+  },
+  "tests/compiler-wasm/fixtures/high-function-index.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 7012,
+    "sha256": "75a3656475e8c5279171c62d1af2364a54a2fb53328557fbe2e43573a2e9868f"
+   },
+   "sha256": "9b5765800381e3ad1cc2f3279d49d7626c45454a22ad9bf8161022af56096ace"
+  },
+  "tests/compiler-wasm/fixtures/high-local-index.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 3452,
+    "sha256": "5ae899ff693632a9a7480bb8c94f8120398b2370771221db13372ca5b65f8cc8"
+   },
+   "sha256": "9fc6330c2b1a6c6de299880b043343ade92a42eb988621acca976a1aec2ee738"
+  },
+  "tests/compiler-wasm/fixtures/high-tags.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 8604,
+    "sha256": "f4419aae88cdb18b4136d70ea89cc0512eadd57e838d1049e61b5900be9ef8d5"
+   },
+   "sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e"
+  },
+  "tests/compiler-wasm/fixtures/mixed-types.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 656,
+    "sha256": "0aaecb8066853fe888ed081eb1c89de3e56e55ac9a86d9ea005ad76e2775fe2c"
+   },
+   "sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c"
+  },
+  "tests/compiler-wasm/fixtures/three-colors.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 584,
+    "sha256": "f6d76299abbe048b526638be04bd67b54cf1d917b46603c443b4a11083066bf1"
+   },
+   "sha256": "e5fbbca409af89fac9e860eec557b5091d40462ef8b75eba079aef7d965c9b43"
+  },
+  "tests/perch-context/fixtures/signatures.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t169:170:10:30\n"
+   },
+   "sha256": "1298f9f2ea019c70c9b5ab5e1f9729381671ac3f1c3a4c3147c290a8457aca16"
+  },
+  "tests/subsets/classification/application-binding-after-prefix.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttype-application\t65:66:6:10\n"
+   },
+   "sha256": "ec0f431d89bdf0c80f2425ae5b3ac45624e86c1a5e69448ed09b7055d5b27a91"
+  },
+  "tests/subsets/classification/application-binding.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttype-application\t65:66:6:10\n"
+   },
+   "sha256": "077e81a60d8e4e8a724ff8199e4ccda92ef5348f6cde64ca85137fd85a20294d"
+  },
+  "tests/subsets/classification/application-parameter-after-prefix.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t52:53:5:17\n"
+   },
+   "sha256": "e31406e1bfe62e3cfec190038a9a943e2c18ab56b9df5ae3e5b8ffd4885faef0"
+  },
+  "tests/subsets/classification/application-parameter.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t52:53:5:17\n"
+   },
+   "sha256": "a6732313a9a28f2d6529d9aa42ec1679310be273047f91cffee9a278add99e28"
+  },
+  "tests/subsets/classification/application-return-after-prefix.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttype-application\t53:54:5:18\n"
+   },
+   "sha256": "034f6b0a8ed661efb2f39d25ec7df1c11163b1de688dd01a86110364067844ec"
+  },
+  "tests/subsets/classification/application-return.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttype-application\t53:54:5:18\n"
+   },
+   "sha256": "8f78e510562ae976e93621cb8b8a268f72982db988324552b676ab6971b436f1"
+  },
+  "tests/subsets/classification/destructure-after-prefix.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n"
+   },
+   "sha256": "c8ecbd11055ce79403ba44a1bd0ff8526ccff263c2eee27a77a4fe8f18cd10d7"
+  },
+  "tests/subsets/classification/destructure-arrow-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n"
+   },
+   "sha256": "5d053c09548fd7adc6be4e0263e3614fe5a504e280cac9c1ff70aa481371eff6"
+  },
+  "tests/subsets/classification/destructure-arrow.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n"
+   },
+   "sha256": "eebecf75c69fcb1e07cb00063c818ac2e791e28969d571f8df0093cfe93e6f3c"
+  },
+  "tests/subsets/classification/destructure-equality-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n"
+   },
+   "sha256": "f410c28a63657cc3b57b542db87cb8fcbd408da23cff727a781c2dc2da285fd9"
+  },
+  "tests/subsets/classification/destructure-equality.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n"
+   },
+   "sha256": "9714c019351bc4acb95fa6208aaaa4f1d12e6d135f6396017995f19db5ae882e"
+  },
+  "tests/subsets/classification/destructure-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n"
+   },
+   "sha256": "4bb247c50405472be392515923fd093c7ac2fc08b8c7b2f6620d91504f8ac939"
+  },
+  "tests/subsets/classification/destructure.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n"
+   },
+   "sha256": "90845487bd821c25e5b8915aed37c398eaeefe54397385d53e181a1b9c62b288"
+  },
+  "tests/subsets/classification/generic-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n"
+   },
+   "sha256": "4bc35fbdc39211ae5e7cabf4e8a644a892d8e99b3765083a4fb327b0a7092595"
+  },
+  "tests/subsets/classification/generic.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n"
+   },
+   "sha256": "7c3e2486808268da160b6d519c8027a5e130a44c62d8cb53aa23a46b8a4ab21b"
+  },
+  "tests/subsets/classification/hash-import-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n"
+   },
+   "sha256": "2fc83ec12e41b629e98112de7199f26e049c3e6121b89b1867be48f5e17aa647"
+  },
+  "tests/subsets/classification/hash-import.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\timport\t7:41:1:7\n"
+   },
+   "sha256": "a64cd73eea637f6e15f2f68219f7d3873452220ebcab5088aa407742e19f649d"
+  },
+  "tests/subsets/classification/local-import-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n"
+   },
+   "sha256": "46f5c25928e82b9ea3804e7b05a29777b0b78a28792b8de7429c04e7d69c3dce"
+  },
+  "tests/subsets/classification/local-import.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\timport\t7:8:1:7\n"
+   },
+   "sha256": "9ad9c76011419fd247b4772b4308c2a96f01c653028ec9f1e464ecf8ec848044"
+  },
+  "tests/subsets/classification/match-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n"
+   },
+   "sha256": "4bb367ee201573cdce32f6eda69a46081113dd426cd084b8a1f5b43a1b25abdb"
+  },
+  "tests/subsets/classification/match.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n"
+   },
+   "sha256": "a4dea9fdf7df79d8f61b7b22af027ab147d9f40f9561c23f77a5bf6496f64955"
+  },
+  "tests/subsets/classification/module.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 248,
+    "sha256": "383b3ab03770b768e162ed88d0b561b52fc3a9378aff33238beb27d225cfdbe7"
+   },
+   "sha256": "ecc42e46188f2d9bbc568ef50c92f9f0c5412e108a053b3d408544ce06885f1e"
+  },
+  "tests/subsets/classification/template-after-prefix.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n"
+   },
+   "sha256": "925eeb336266751600e84fb1c50a49e91d4ff9d3fcec10942cf541f72f3c70dc"
+  },
+  "tests/subsets/classification/template-leading-pair.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n"
+   },
+   "sha256": "11a504bcec3c58719a62359b6658482535d6a4ba7ac0c880059207c92670adb0"
+  },
+  "tests/subsets/classification/template-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n"
+   },
+   "sha256": "4ffd5c4a350d551931dab406adcbec585cdffb076a2ce4f4f04875a64e9044fb"
+  },
+  "tests/subsets/classification/template-nonleading-erased.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tparameter\t58:59:5:23\n"
+   },
+   "sha256": "635dd5b4e54591af3cc5a70efef7d7811b13118cda04acc0e615c83f5b694906"
+  },
+  "tests/subsets/classification/template-nonleading-malformed.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tparameter\t57:58:5:22\n"
+   },
+   "sha256": "5704f5c156763a19a4bbd30f1d29184b2013854adbcbe751a5f55bce74096c1b"
+  },
+  "tests/subsets/classification/template-nonleading-reusable.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tparameter\t58:59:5:23\n"
+   },
+   "sha256": "2f690542b3a0fea4bacdde27f08facd400fdc496332e45be636a51856de09d70"
+  },
+  "tests/subsets/classification/template-nonleading.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tparameter\t57:58:5:22\n"
+   },
+   "sha256": "8a42cef188fcfdd9043e73cae88ad691de6ac4a016b4a5a33b1505ad30575a85"
+  },
+  "tests/subsets/classification/template.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n"
+   },
+   "sha256": "d85156031510250462ab376852f3c0d2246e78fc58d059dfbb278e339a936d3d"
+  },
+  "tests/subsets/lexer-observe.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t188:189:8:16\n"
+   },
+   "sha256": "e96860f0fb4f77f17c78de0424215042d4d8f8cb8f1dc040ab7134912c5bc220"
+  },
+  "tests/subsets/s1/affine-reuse.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\taffine-reuse\t107:112:9:2\n"
+   },
+   "sha256": "10ca59993f373c7598a4962b82e46708c89c5bee222d52c4a8ee0e5d8ae46b6c"
+  },
+  "tests/subsets/s1/constructor-arity.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tconstructor-arity\t57:60:6:2\n"
+   },
+   "sha256": "8e004fc31333088b84bd9b72ea59d466d247afd1751698b17c2ff1fd4a07f9a4"
+  },
+  "tests/subsets/s1/constructor-mismatch.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\ttype-mismatch\t91:99:9:2\n"
+   },
+   "sha256": "69c0a6495de5de23fb46f5f58fbad817c060f811f8f4300002f92f0ae65e71d5"
+  },
+  "tests/subsets/s1/data-reuse.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 492,
+    "sha256": "eba24626d08b42d93b1442712b4c5dd5d721ab6263b48b0bd3cfff2ee8a63a02"
+   },
+   "sha256": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce"
+  },
+  "tests/subsets/s1/erased-forward.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 440,
+    "sha256": "2b06818c55a11a49e70f0e85880f2bbc107abe28f61b0ef272e0086d07c92244"
+   },
+   "sha256": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e"
+  },
+  "tests/subsets/s1/erased-live.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\terased-scrutinee\t78:83:6:8\n"
+   },
+   "sha256": "de551e3db9e82200ea5b409cce9e1b4099062026d2c4972ff6561eb46e54d03e"
+  },
+  "tests/subsets/s1/flag.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 492,
+    "sha256": "92460d1aeef037d5fa755a377984ff0004aa1ace2af439bc78e02ded03fc6210"
+   },
+   "sha256": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673"
+  },
+  "tests/subsets/s1/forward-call.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tforward-live-call\t67:71:6:2\n"
+   },
+   "sha256": "f46ecf0b6433eaee50ce2558855704abf752e1aa500ff4e5b8ffddf25baf213a"
+  },
+  "tests/subsets/s1/forward-type.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 356,
+    "sha256": "3a09b7675fe85928cb627092dadebcba458c135164b9c5333f90d6a8a69a6322"
+   },
+   "sha256": "d819b2460f350736fe9e58415fe733acdcb9276c86ace267a5ad4774f0b62195"
+  },
+  "tests/subsets/s1/missing-arm.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tmissing-arm\t64:69:6:2\n"
+   },
+   "sha256": "160b08f6ab6b1919b2003d1d1def7d17e8d81ba94e076b9b2c789acaa94db330"
+  },
+  "tests/subsets/s1/nested-match.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 628,
+    "sha256": "54a9c81e38107926a03f7b1c961fc628d2709ae05d105a07a17dd8eff8dcdf90"
+   },
+   "sha256": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb"
+  },
+  "tests/subsets/s1/shadowing-type.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\ttype-mismatch\t170:171:13:11\n"
+   },
+   "sha256": "2960eb8870b605fe8c1c91a18e3d2c4bdf862f2545cb828b978bf4ff6232264a"
+  },
+  "tests/subsets/s1/shadowing.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "image": {
+    "bytes": 656,
+    "sha256": "2c02a63f088265aa8197778cca34c815c4c0ea86948207ffc4a570de6c6a54e2"
+   },
+   "sha256": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340"
+  },
+  "tests/subsets/s1/unannotated-constructor.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tcheck\tannotation-required\t61:63:6:6\n"
+   },
+   "sha256": "3d5d8eb5312c094c62ec594213e7e3a36f98435c280e86f146f83cde26797020"
+  },
+  "vm/golden/book-drop.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t212:213:14:14\n"
+   },
+   "sha256": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226"
+  },
+  "vm/golden/case-char.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t96:97:9:9\n"
+   },
+   "sha256": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f"
+  },
+  "vm/golden/case-off.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 492,
+    "sha256": "92460d1aeef037d5fa755a377984ff0004aa1ace2af439bc78e02ded03fc6210"
+   },
+   "sha256": "5808d9983778bd0a9604c1665007e5be940698804a765cc8b9566888adcca998"
+  },
+  "vm/golden/case-on.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 492,
+    "sha256": "e60959551912d0acd2da9a42f36f33daee083fe3f05635014db6516dc34b8738"
+   },
+   "sha256": "84c402b267b2c98f040f3b66e4c810e81e82ddebd2b2d1f465c561a393b0a338"
+  },
+  "vm/golden/char-code.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t57:58:4:24\n"
+   },
+   "sha256": "2559b91db0af5dfe9be5452220f6b7e5a71e7fa1b5e40fc8ac481b7829503800"
+  },
+  "vm/golden/char-eq.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t46:47:4:13\n"
+   },
+   "sha256": "e54b28c421450c0ca6880246da39df85513c2d5953b35a0a1ebc7755fa131ff8"
+  },
+  "vm/golden/char-ne.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t46:47:4:13\n"
+   },
+   "sha256": "8bafce948ab70db324aa83a420a2133097a06a516dd1fa773e7861f66586d498"
+  },
+  "vm/golden/char-space.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "749b879970d22ca52cf158aa50325401a20342888f969cf0bdb190f2c26e50ea"
+  },
+  "vm/golden/chr-pattern.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t141:142:9:19\n"
+   },
+   "sha256": "fc9133c0e68b433b32188b72037f003b975a8304b476fcdc15e16e4738ea548d"
+  },
+  "vm/golden/closure-capture-off.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-=\t76:77:6:11\n"
+   },
+   "sha256": "a2982f956e5d80d1f0a5948efedc3f259ea0cafb6e52ba6c6efda8d65950cfb4"
+  },
+  "vm/golden/closure-capture-on.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-=\t76:77:6:11\n"
+   },
+   "sha256": "e7de301bfaf92728ca87187f300d5bde3645af09d1fd2a53aeb99ddebcf814a0"
+  },
+  "vm/golden/closure-captures.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-=\t134:135:9:11\n"
+   },
+   "sha256": "c1562715236ee2ce37e471130b5ccc53d23f84c2fba3510d1021d92f79c5eb34"
+  },
+  "vm/golden/closure-id.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t53:54:5:18\n"
+   },
+   "sha256": "59c6180dbc3de22a3c3ae43ba7b62e4dc87bcd078460d7b06b89ab5b7f2dec95"
+  },
+  "vm/golden/closure-nested.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t53:54:5:18\n"
+   },
+   "sha256": "cbddd799d892dd0a490eb3e29a8ca528f5ba91df07d37d810a059e759b5e8887"
+  },
+  "vm/golden/closure-return.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\tfunction-result\t53:54:5:18\n"
+   },
+   "sha256": "3009d6615092c4b964f28538a8b61e7624d9687d5b16a16bab9f48cee2f32f3d"
+  },
+  "vm/golden/closure-shadow.bend": {
+   "check": {
+    "exit": 2,
+    "stderr": "Invalid\tparse\texpected-=\t85:86:7:11\n"
+   },
+   "sha256": "133e4fe9da41e9d19e3939e51e0640e9c6bddb7ff948ffce97b5ced3258311ae"
+  },
+  "vm/golden/construct.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 380,
+    "sha256": "5d5e9f4f4c276148df809210b14984f258c68349dbca468239cecf854012cc6f"
+   },
+   "sha256": "844619acfdc40758b7722eaaf3514d69872b66caff4e460400e9d70a67f9f801"
+  },
+  "vm/golden/default-hit.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "8810a50ee5168885ca597aedb3cff79a4df7e2ba54ac73e06b105f2decb58675"
+  },
+  "vm/golden/default-miss.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "856a1767428bed2c304ba66a2acc35b1a93b1d0337d77f0b4a73e38fee0eddd1"
+  },
+  "vm/golden/erased-argument.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 380,
+    "sha256": "a93cd85710967e27c9369987b416fa052a4c96828b30295b08479aba69840eff"
+   },
+   "sha256": "b3ee8e4367d78d9e9c26020233d3f3e6a490da25b7eec8915147e1f2e1fe750f"
+  },
+  "vm/golden/erased-construct.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 384,
+    "sha256": "75ee9c3dbae09a4da0ec5a5e7c948ba74b98d6dab561aeb4eaa068396fa273c7"
+   },
+   "sha256": "3843fa596feeba33415c45c14bb9cf0d4b0c41a1e31eb3ec886129add1e35767"
+  },
+  "vm/golden/erased-field.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 528,
+    "sha256": "f8aab37239b16a5364850c89425568e51c39e16b1cfe55bc74f0c7910de9db0a"
+   },
+   "sha256": "a1430c284d46746fee43130432ad38de762e4532250bd26dd875d2cf13c001d6"
+  },
+  "vm/golden/erased-let.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 300,
+    "sha256": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27"
+   },
+   "sha256": "d6612eae198742f4c24e3b28fb5627e98c104f1c3cff06c4a4614f9b884ca2b1"
+  },
+  "vm/golden/foreign-print.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t48:49:4:11\n"
+   },
+   "sha256": "84b4e5fbee2bfc11a969873e55960dc377e62c901031720df869086efb809f23"
+  },
+  "vm/golden/invoke-args.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t517:518:35:2\n"
+   },
+   "sha256": "c051337c36f19756ba57a437254408a6d06bb1c05d82f641ca88e62432e72491"
+  },
+  "vm/golden/invoke-arrow.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tparameter-type\t61:62:5:26\n"
+   },
+   "sha256": "62eb7b66d824b393a5e7fd0ab14b6d53bea37dbb3abda8517d223039a63c9132"
+  },
+  "vm/golden/invoke-words.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 508,
+    "sha256": "c95425fc61846e5167b668078646327ee442a6db27c80d4bcf962f4584243995"
+   },
+   "sha256": "48b6f6f92d48248f4b361eff1b3ba5a3c03779ceb9ec6e308ddebf4c2de22493"
+  },
+  "vm/golden/io-bind.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t66:67:4:29\n"
+   },
+   "sha256": "19f53a639ccbdb375f534346520778dee4583a253238f36cbaeaca8ecaa10e08"
+  },
+  "vm/golden/keep-first.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t175:176:7:49\n"
+   },
+   "sha256": "5fda912b2c47c17e3b54cf3bc1e784d1b9acf613e5837d4396dd638af6e5cff2"
+  },
+  "vm/golden/keep-non-scalar.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t165:166:7:39\n"
+   },
+   "sha256": "44a9e37cff11c41cc5f6edf7aa7db7729fc3b211c855e27adfab591c707bc37d"
+  },
+  "vm/golden/keep-swapped.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t165:166:7:39\n"
+   },
+   "sha256": "acb6cd196803fcc53e4fe885d4c143e37512582fa23bea1236343ff3fdbe8e55"
+  },
+  "vm/golden/let.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 340,
+    "sha256": "536b67a804773ec463309e7c054937d831e48cf854b4155883f1e456f3f0d119"
+   },
+   "sha256": "9acfa26d80240137d6dd226ed4e8253ac4adb2539e9c38afb2ce8803fba7d694"
+  },
+  "vm/golden/list-head-match.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "84010bf42ff3dc9a28a7830c077d0398866915543f26562e999d14966b41e007"
+  },
+  "vm/golden/nat-add.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "7007600ac06dfc27d6041be83ca1d1a3b000f478a34299dcd3d1fe0a7c4ed775"
+  },
+  "vm/golden/nat-big.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "6aca8d5c80b6bee3b84d447c1137803d069c6586cac5cc697ec491146169b615"
+  },
+  "vm/golden/nat-case-big.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "4832e0ad9e4c93ba8aa5011b4247f60adde046af8c08aa7f494faabe2df85dbb"
+  },
+  "vm/golden/nat-cmp.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "79d568c02457db45285d61e23a82363d075681cfb34395a182ce417bc3d133f4"
+  },
+  "vm/golden/nat-mul-range.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "ff1d4c23352909673c09b6aa983debf7e4526d83207b5cdfc7818717b8808715"
+  },
+  "vm/golden/nat-mul.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "57bc5363c5e7ae0373d685d201e2528387845a421275de280a0ad4d74f708371"
+  },
+  "vm/golden/nat-ne.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "cea34a16c4c8f7ece78766afcc9147aa1e8c421411bb66dc60d366418fe5323b"
+  },
+  "vm/golden/nat-pred.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "b47a4b431aa7777da39be14151e58de21334a2e8203e375979c6acd56d88aeea"
+  },
+  "vm/golden/nat-range.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "940d9dba401f8d1c5151a2d4e9d67310a0f93e8325659d8049a8c494d7356a13"
+  },
+  "vm/golden/nat-show-codes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "fd24556dfd39417a3f242cba2be684c0c098080bb211769135662c1a99ad1e3b"
+  },
+  "vm/golden/nat-show.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t59:60:4:26\n"
+   },
+   "sha256": "157c241bde653b3abcb810e78d301f4dbd5d247b58057fcb0e66a4ee467faaa5"
+  },
+  "vm/golden/nat-sub-floor.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "658e16a0494057b53c133d954863bfbe7794e2ad365479f00545292cb7eecbfd"
+  },
+  "vm/golden/nat-succ-range.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "105859904ad00c58170db7e23c448a66ea246a926f64418e6032e0215b16cdd2"
+  },
+  "vm/golden/nat-succ.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "6ccd536aede61595059fd5d715bcb1519b7d78f396904564b53b5a82a3a42f25"
+  },
+  "vm/golden/nat-transitions.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "ea0205e7e046128e8f8911c3bf897556daf4ac58e0db23e14fc6a4f9235d2e31"
+  },
+  "vm/golden/nat-unpack.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "099577a5effd238fc08fb57781ceb5d32edb9579728a4ce1cd3f51ec72fbb1f8"
+  },
+  "vm/golden/nested-call.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 404,
+    "sha256": "7e995aa8f3ee2e69deeff7e88c91296d5eaec6debe157b222800c93d2c5841b3"
+   },
+   "sha256": "c7b2cf22a65ca56f4e73d075a4e9b93e44af1cae4af26dccda3b8c405336a411"
+  },
+  "vm/golden/non-scalar-code.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "32a269c6dde771bc15a54d60f4f08f8fb589bf2fb702018ac57efc023e2a4992"
+  },
+  "vm/golden/non-scalar-unprinted.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t73:74:5:17\n"
+   },
+   "sha256": "7480d8a077d990df7e43005115344c062b5240e98e2f5f954d65050d45a19559"
+  },
+  "vm/golden/pair.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 404,
+    "sha256": "06a2caee911d17805e1fb1ca8efc6953037a5105e57f37cc5964f93856dd8169"
+   },
+   "sha256": "e49c711270c64181a864ea821943ee760ead6ba96a603fa412addca4c73222cb"
+  },
+  "vm/golden/print-non-scalar-mid.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t48:49:4:11\n"
+   },
+   "sha256": "743b007555153ecaad8e2d4f30a90239476587264b278943459c7111c8e9600c"
+  },
+  "vm/golden/print-non-scalar-second.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t74:75:4:29\n"
+   },
+   "sha256": "9d3ea7ee9677db310a11e833bfb02236c491344ceac8bde60bb93c93115dc2b4"
+  },
+  "vm/golden/print-non-scalar-wide.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "080630b363ff64626cbce9c294481072808a277e31816788e788557c7d5a4f3c"
+  },
+  "vm/golden/print-non-scalar.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "24ccb1ae678a33c0bfcacc36961c177f68061d6a94f1ab1bcf73f2e8df27550d"
+  },
+  "vm/golden/recursion-map.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 952,
+    "sha256": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08"
+   },
+   "sha256": "e3934c3524b4d71854e4817aa22d8c53180bfe4b0de8f9e8f779a9a754b9ddda"
+  },
+  "vm/golden/recursion-tail.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 756,
+    "sha256": "fede17445cfe3e4e4cf0b81a02b426f40c06286d820eabca84c34d27ed6d67ad"
+   },
+   "sha256": "cd57b29b4e451554bf319f55fdccec28b5effeb63f78c8c59365257f93c8838a"
+  },
+  "vm/golden/reference.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 380,
+    "sha256": "b896240530b237df02a92bb129b76eba80170bb7ab4b4f5405c313f0b631cc08"
+   },
+   "sha256": "c5cc0031061ed0f58be5c9ed1c069181741fcc77650aa6da1596078bf5b9f06d"
+  },
+  "vm/golden/result-char.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t35:36:4:2\n"
+   },
+   "sha256": "2f93afdc9e61767c79a434dcb077c85764a7c2c72f4aa4d4483e9cd12a1d8134"
+  },
+  "vm/golden/result-string.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t37:38:4:2\n"
+   },
+   "sha256": "af3b1267f859c617faaa08bbcb8274f00efab7baa7a6da431df6ebe847c8a35b"
+  },
+  "vm/golden/result-u32-field.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "9ff36e35e7a93c0c294863ee7d09ce33d21b8288f4eed196b4555247450004c2"
+  },
+  "vm/golden/result-u32.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "0a43d41e8fc4a9e3227dfc707f5ce2eccd45977ebf08bb0a89696c5524f42e0a"
+  },
+  "vm/golden/run2-flag.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t279:280:15:55\n"
+   },
+   "sha256": "b768243d508ac992e61271d3306c77f655af4a21c5d6042957b7c4395055a5d5"
+  },
+  "vm/golden/second.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 552,
+    "sha256": "127c848f584c6eff211571093f484f084be37d8973b5cb116b900738aa03c17f"
+   },
+   "sha256": "5923178aed3fe1c3d31438152b6d4369e9e8cad7a78db2e98fad06d3c23c3f11"
+  },
+  "vm/golden/shadow.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 380,
+    "sha256": "b05d7cb23a2e72ec74f0a37d9bccb6cc5904a17f9391053ce9ba3c9b582dff06"
+   },
+   "sha256": "49e5e8e92b73770b3fbbc774371e776ff261ccbae03011b64b7f76911474c871"
+  },
+  "vm/golden/spine.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t137:138:7:16\n"
+   },
+   "sha256": "1dec1c0cab3c7e9d0e63ac54381d955785531e9378af12e997c44c5f218e17ca"
+  },
+  "vm/golden/string-append-mortal.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t59:60:4:26\n"
+   },
+   "sha256": "afbbc7bb5113f58977c544b16340a24161fd07f7d250f3025329c78769700819"
+  },
+  "vm/golden/string-append.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t59:60:4:26\n"
+   },
+   "sha256": "069a97e754e4225c28b10a589bb471c342194582c15099773654ab8fca317ced"
+  },
+  "vm/golden/string-beyond-unicode.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t48:49:4:16\n"
+   },
+   "sha256": "9ab0b833d9b820c514c2128a529fe5a9640e56916620450420ceef005835da8c"
+  },
+  "vm/golden/string-codes.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t258:259:13:37\n"
+   },
+   "sha256": "3afc4a789c6989e489304a6a9b1b8137f7800e6aff4a8cad5405698c27f38b22"
+  },
+  "vm/golden/string-empty.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t51:52:4:18\n"
+   },
+   "sha256": "aa4eee7eece080bc550db970316f7e1ba8eb3e586977271e168b08140bfdee89"
+  },
+  "vm/golden/string-eq.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t45:46:4:12\n"
+   },
+   "sha256": "2f0270496b12fab28901a5ebb2de1afafcb254bf50a5902fb87c9c30b6d40dad"
+  },
+  "vm/golden/string-length.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t59:60:4:26\n"
+   },
+   "sha256": "3e70d7b1cf6ecba905cad84d3d7151d1378b2e87c1de5c463db206d4d8c5c238"
+  },
+  "vm/golden/string-ne-length.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t45:46:4:12\n"
+   },
+   "sha256": "1e28892eb03834c6b342e8707dcee436b7f727cc2b232426088f45c0c7ed3d33"
+  },
+  "vm/golden/string-ne-order.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t45:46:4:12\n"
+   },
+   "sha256": "b6c55a4d3334012097774203ecdf0de2080569dfba79bf618d7c143392bc48a0"
+  },
+  "vm/golden/string-reverse.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t60:61:4:27\n"
+   },
+   "sha256": "cffc0f330a804b52e9d385cda62e063f35aa750d5b33e782fcdf5d784d85fb4d"
+  },
+  "vm/golden/string-surrogate-pair.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t45:46:4:12\n"
+   },
+   "sha256": "1e4e42975abf5f78f652176fe6a2856dcd46bc55cb8e8ef6f616cf38db4bccb2"
+  },
+  "vm/golden/u32-and.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "da0c68a58ec12c8e4f50857d4a0b619d52ec1e9d84f59118c866ff8e246181a8"
+  },
+  "vm/golden/u32-big.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "d61f179a913793df59f601eaca4683553da7dbabce062b425b003c3b90a71aa2"
+  },
+  "vm/golden/u32-cmp.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "620acc84f52dab838747e7e62445880f3fc5d31e1e73544cdc43c39937ac5055"
+  },
+  "vm/golden/u32-div-zero.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "8c1ed70cd0d5879753aee8fdb6335dbfe8e117d039f0f4e2a05e5af7632a1c8a"
+  },
+  "vm/golden/u32-lt-unsigned.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "8cc99d03e3eee34b84d728db4dc97e2966b6d41b88f4cb65594545277f7784b4"
+  },
+  "vm/golden/u32-mul-wrap.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "4d375aa6aa092195843b940cbc4cbe6a1cb5947ffb5e85af7c08f2d859c6db08"
+  },
+  "vm/golden/u32-ne.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "ef289fe911855963926ca215c1c41cdacdf2c3931057ecb5746480d2682b8fc2"
+  },
+  "vm/golden/u32-not.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "1b831fdb2df9a8bb1059ea0321e4e23bd92cdc1ec5424408251a63368a913d0c"
+  },
+  "vm/golden/u32-rem-zero.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "0dc335c931d8d1ffcf9635c172af2e588b93e345770d74d40d18816ec31a72e9"
+  },
+  "vm/golden/u32-shift.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "c16582d2e188a739021db4e17c2837e0ddb802ee762bf032dc882acc9411b06e"
+  },
+  "vm/golden/u32-shl-33.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "166337863324371705b4b32dfa03dc61d48e299c747ab352d5d64bce03238519"
+  },
+  "vm/golden/u32-show.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tlex\tliteral\t66:67:4:33\n"
+   },
+   "sha256": "c6c753c3dff79d4887ecebdfa1e6f112a3feff8fad6a10d4ad77e8309736fea6"
+  },
+  "vm/golden/u32-shr-32.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "0a85a14b6f70e1e70cf17779af1219c293830a4df48637398b02e993df4abcc8"
+  },
+  "vm/golden/u32-shr-33.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "03aac35b5410b9b1672ccbb91b187ca2c6db4a37e4b6273a0eec264f1d2d8312"
+  },
+  "vm/golden/u32-shr.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "65f1b1f3492787ecb719f03dbe5622a384a50677acec7c59c93e26e1040270cb"
+  },
+  "vm/golden/u32-sub-wrap.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "72e3215d5d0ee98e7508732e65462f682b6fafdf25831004005454d52de0c9b4"
+  },
+  "vm/golden/u32-to-nat-big.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "071b9b083d56dc30c748b4c7d4178f6f2f9e35e32d7555ad6d690157ff9dd815"
+  },
+  "vm/golden/u32-unsigned.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "818e4117b69c6b30931574968407406abccc5ba89569bf61c0920df4bdf4d270"
+  },
+  "vm/golden/u32-wrap.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "680946c5690e405a504b6e583defba73baecd71ec432f07a68a1edd78a4118e1"
+  },
+  "vm/golden/u32-zero.bend": {
+   "check": {
+    "exit": 3,
+    "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+   },
+   "sha256": "9514905b2ada5e8a0bb0606d77303227b24a9d0d8f8303772d3df71db524c8c9"
+  },
+  "vm/golden/unpack.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 524,
+    "sha256": "aebc8cd0780fb27857f16cb381ce6793fe21d1332ccb315b409aaca7f4a2b34a"
+   },
+   "sha256": "afb2e4f5acd7918dae20bfeff873c4fab0844570048ffede20b4222fefbc2007"
+  },
+  "vm/golden/value-off.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 300,
+    "sha256": "c36d57738cc28f4a46b9c962fd512cc8ea99232ad91792d9b1d2051519f65803"
+   },
+   "sha256": "0cea3f05e3d0583f12d91825f0f19a0abe450f888f08e663b09558cafd6fc8fa"
+  },
+  "vm/golden/value-on.bend": {
+   "check": {
+    "exit": 0,
+    "stderr": ""
+   },
+   "golden": true,
+   "image": {
+    "bytes": 300,
+    "sha256": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27"
+   },
+   "sha256": "68f9c5675b153f1f72913e68254caa4779bb383a63e7b8b477e3f65500847ce3"
+  }
+ },
+ "synthetic": {
+  "fields": 256,
+  "functions": 250,
+  "image_bytes": 5170376,
+  "image_sha256": "04d5665c9994b432272e4424bdcd88e8aaf96211cf4cb6a8cedb66e26e23e217",
+  "lets": 3,
+  "minimum_image_bytes": 4194304,
+  "source_bytes": 537939,
+  "source_sha256": "1aadd361004d5677edc576e6dfcb1f540792f6e7de93b8fed965c1aaa6891e2c"
+ }
+}
