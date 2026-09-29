@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T02:02:44.825505+00:00",
+ "date": "2026-09-29T06:01:44.913097+00:00",
  "status": "passed",
  "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
  "inputs": {
@@ -7,8 +7,12 @@
   "vm/SPEC.md": "66a6a69b70833beafc31ae0e8924e7f9394ab62e39ca9aa4bb5d7a78446711b5",
   "vm/build.json": "0ebc71a1da50057d647b45df550de73988a1f2cc9e75804871907b9a10286a5f",
   "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
-  "vm/check-core.py": "e03d43f96665b1152b958b8d1c157e1fab13cad05d953a53f9c7373d9be82482",
+  "vm/check-core.py": "5e55a7739747abf3097b973b45d0a865702559dad392363374a407ce57868525",
   "vm/check-spec.py": "9eb0d4ae01df310d01c91b7b88410c18f149a22d6de2692d036ec5dee87d2e7c",
+  "vm/core/action-cell.kimg": "780298db289ee6963858c3ed516afb1fcdf33279d0fea7c1ce2d5ac4abee2bd7",
+  "vm/core/action-cell.plan.json": "d4bb0a437c5cc7e94e5cf7cdf5b08f2e5f7273c60ec0b8be68d19b29cf34d6ed",
+  "vm/core/append-let.kimg": "5a08b076bee037b7306e299d600acd511e929724a96cb1acf949436b88d9354f",
+  "vm/core/append-let.plan.json": "812ce5cf76114805215ea72c36640bc970327b570afdc674f1c78f611ab2ad8a",
   "vm/core/ceiling-append-top.kimg": "6218878b405984ad47e4664ae542743fd168e40eee11ab7e090740e8e38b6b47",
   "vm/core/ceiling-append-top.plan.json": "b7e0b093d587dad40cc8595af23b09a063c142fc3ced688e483936caeab56009",
   "vm/core/ceiling-band.kimg": "26c6ebdcdcc807b4671d67deb34a87a0edf345f77e83e92a16f8fc270bd2e720",
@@ -37,15 +41,18 @@
   "vm/core/chr-unchecked.plan.json": "fb65caad2d92eb2ab23d5dfb8511bd4401aef0dbc1e4ec566de5eabcb28c8d7b",
   "vm/core/deep-250k.kimg": "dd6cfde50089d4a1910de291be88512546bb0c22948c1f242952fb5eb57b57a6",
   "vm/core/deep-250k.plan.json": "28f0b7b4f6d718030a8ce3796ac47f2ee09c39bc6d1fd35685a6152d5e8f3149",
+  "vm/core/describe-deep.kimg": "d556aaec864f3028579e0b65c1b555c8ffb5d54b5598db48a7315ad605f9e892",
+  "vm/core/describe-deep.plan.json": "073f59d0504476ab74db4b428c229b6726bcc405ecc7f3898cc5d2601c7b866e",
   "vm/core/display-text.kimg": "a05bfcfaae116c91916d2490c18045ae8ba14cbcb1d8c2a48dc3522122612c60",
   "vm/core/display-text.plan.json": "c2b0fd6dbf15d7fbadb334edac815b0c2597b21f853994a1fd9678998bf4bcea",
   "vm/core/display-visits.kimg": "bd9d4ad0f6fdec25eabadd30dc55d2c315dadfd19ba8aefbbe4d3fa39fa3cea9",
   "vm/core/display-visits.plan.json": "7cece90ecaaf46453c533ea58e65d478863f02ebb0a245afeabd1181f5436c60",
-  "vm/core/fixtures.json": "54b58ec29da19857fe9338f61206ba35c7f59c7e0bb7fe799168881cb1202ef9",
+  "vm/core/fixtures.json": "dc6b1bc4f3e10e7fcf6db69dd49915f0835b08a38df547174cf1ad17fd1494fb",
   "vm/core/frames-400k.kimg": "6d6299ef33e368eb0e92c90b730b4b12406963e966ed68e438ac3af1e8e04dea",
   "vm/core/frames-400k.plan.json": "e5c8beb4e39fc394e7f2b18bf7402875de5a1fdd5b72b130b61821902cb73e93",
   "vm/core/ill-typed.kimg": "ab4119c7808fa5dde9d63194eeb639dee25aadff9ce5adb1c6df03ba0e145412",
   "vm/core/ill-typed.plan.json": "099a9f3cfa8f97a902e68d5b172bb6114bc916f903c01163a0f4b7edbb4aa287",
+  "vm/core/lane.json": "8d4e05d6926f25a39240637f75528b126c58209794aa6fa7a52ec2f1dd4cfc62",
   "vm/core/loop-cells.kimg": "c5cbf106d185eea3799c76fec65eba91d8c66932e675309b92e295df648939b5",
   "vm/core/loop-cells.plan.json": "ed83bc6eb3b5be902319bc83be031b64712885c8b382fa8aa27b8ada5465c6b6",
   "vm/core/nat-pred-big.kimg": "562dd398b8dd6a32c0a417dd2bbaa95fe86d9c71762c564df4fd3e0c15ea88ab",
@@ -56,16 +63,69 @@
   "vm/core/render-list.plan.json": "bcba90d782e2e19df0a271701473c5af8b281df17714c5ef321a1553c1f62664",
   "vm/core/render-nat.kimg": "2693a720c83a13d65e51b6bd953d1fa1f022730089b2f5300ea85c774d7c63f1",
   "vm/core/render-nat.plan.json": "badeb34410d36b267ba0a5f722a9f27746dce2b8f70f697bf7b250f69215745b",
+  "vm/core/seeded.json": "faf289986e64bbc440c1facfc40f2d3e4e226d88100f36485c233dcd47ea206f",
   "vm/core/unsupported-foreign.kimg": "ab7e2eda7b5b2de10ff0e713d85489055352a894c8bbf7d8386e8b1cb9b36bab",
   "vm/core/unsupported-foreign.plan.json": "48b7962552cfc0f7723ee3fbddf5a93acd79712c710f4e6516eba9ba5938d93b",
   "vm/evaluate.py": "b4c5754ad7b09ad75a355c60aaa0869c0ca951f26735c96f342d36a6e2134c2c",
   "vm/golden/vm-expected.json": "6e5befe6a39b3922901633282002d5065a7e9829deb54cbd1fe76aec986083e1",
-  "vm/harness.mjs": "8a6cd3567f2e7f5e1b16e7da2aff224fd8df8bf4c23868f98e5684f255b5e156",
+  "vm/harness.mjs": "cdd0f68a39314e2cacd143dbf3cf6adf250b44b3eda8622be97e6801f525fbf1",
+  "vm/lane.py": "f9fab6819097bbed07417d67d2b0481228a439b34e3c36ad08222ff79dc6e1f9",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
   "vm/serializer.py": "f28aef2493968d3729388c75909037dc4a3a56fc63a9b1bca885a1ff825279db",
+  "vm/study.py": "e7b9442a9da9834d8cb987000cae47c31be218ff7d6583020c309d2b3d8ef9c2",
   "vm/vm.wasm": "9c483defc5c68545ff204b5bea2be94799e1640904f0ce01d15ef247e887817c",
   "vm/vm.wat": "1c7eb650994496d2983e3d25fd5ae57ff8064eabb61118fc2ff95a6aa00e4416"
  },
+ "stages": [
+  {
+   "stage": "goldens",
+   "elapsed_seconds": 0.9
+  },
+  {
+   "stage": "invocations",
+   "elapsed_seconds": 0.4
+  },
+  {
+   "stage": "fixtures",
+   "elapsed_seconds": 0.7
+  },
+  {
+   "stage": "reference rows",
+   "elapsed_seconds": 0.1
+  },
+  {
+   "stage": "lane",
+   "elapsed_seconds": 29.6
+  },
+  {
+   "stage": "ceiling",
+   "elapsed_seconds": 31.8
+  },
+  {
+   "stage": "growth",
+   "elapsed_seconds": 6.7
+  },
+  {
+   "stage": "host stack",
+   "elapsed_seconds": 0.5
+  },
+  {
+   "stage": "controls",
+   "elapsed_seconds": 1.7
+  },
+  {
+   "stage": "fuzz and limit-word corpora",
+   "elapsed_seconds": 53.7
+  },
+  {
+   "stage": "admitted images through both",
+   "elapsed_seconds": 0.0
+  },
+  {
+   "stage": "baseline of the mutant groups",
+   "elapsed_seconds": 4.3
+  }
+ ],
  "pins": {
   "tool": "wat2wasm",
   "version": "1.0.41",
@@ -1668,6 +1728,38 @@
     "calls": 1,
     "top": 65572,
     "bump": 16842800
+   },
+   {
+    "name": "describe-frames-fit",
+    "outcome": "Completed",
+    "calls": 12
+   },
+   {
+    "name": "describe-frames-short",
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames",
+    "calls": 12
+   },
+   {
+    "name": "append-heap-fit",
+    "outcome": "Completed",
+    "calls": 2,
+    "bump": 16842976
+   },
+   {
+    "name": "append-heap-short",
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "heap",
+    "calls": 2,
+    "bump": 16842912
+   },
+   {
+    "name": "action-cell",
+    "outcome": "Completed",
+    "calls": 2,
+    "bump": 16842864
    }
   ]
  },
@@ -1699,6 +1791,112 @@
    "calls": 1
   }
  ],
+ "lane": {
+  "seed": 20260929,
+  "rows": 2472,
+  "corpus_sha256": "0fb29bb7ac18e6db75b18be6268201f20df64dd6a7128face29a1c12b77ea683",
+  "families": {
+   "keys": {
+    "rows": 207,
+    "outcomes": {
+     "Completed": 207
+    }
+   },
+   "wide": {
+    "rows": 6,
+    "outcomes": {
+     "Completed": 6
+    }
+   },
+   "tags": {
+    "rows": 1,
+    "outcomes": {
+     "Completed": 1
+    }
+   },
+   "ill-typed": {
+    "rows": 8,
+    "outcomes": {
+     "HostFailure:ill-typed": 7,
+     "Completed": 1
+    }
+   },
+   "sweep": {
+    "rows": 76,
+    "outcomes": {
+     "Completed": 76
+    }
+   },
+   "print": {
+    "rows": 54,
+    "outcomes": {
+     "Completed": 48,
+     "HostFailure:abi": 6
+    }
+   },
+   "halt": {
+    "rows": 48,
+    "outcomes": {
+     "Halted": 40,
+     "HostFailure:abi": 8
+    }
+   },
+   "digits": {
+    "rows": 60,
+    "outcomes": {
+     "Completed": 60
+    }
+   },
+   "nat": {
+    "rows": 10,
+    "outcomes": {
+     "Completed": 10
+    }
+   },
+   "display": {
+    "rows": 2,
+    "outcomes": {
+     "Completed": 1,
+     "Exhausted:display": 1
+    }
+   },
+   "program": {
+    "rows": 2000,
+    "outcomes": {
+     "Completed": 2000
+    }
+   }
+  },
+  "seeded": [
+   "ill-at-count",
+   "ill-at-count-default",
+   "ill-describe-at-count",
+   "ill-fielded-branch",
+   "ill-fielded-default",
+   "ill-nullary",
+   "ill-past-count",
+   "ill-scalar-action",
+   "keys-char-3",
+   "keys-char-5",
+   "keys-char-nonscalar",
+   "keys-u32-3",
+   "keys-u32-5",
+   "keys-u32-big-3",
+   "keys-u32-big-5",
+   "tags-shape",
+   "wide-3-flat",
+   "wide-3-nested",
+   "wide-5-flat",
+   "wide-5-nested",
+   "wide-9-flat",
+   "wide-9-nested"
+  ],
+  "on_real_host": 106,
+  "sample": {
+   "rows": 84,
+   "seed_bytes_sha256": "9ffa190dbd777ffbe1b62649091c09a753d4649b221ff4276945782952405505"
+  }
+ },
  "ceiling": [
   {
    "name": "ceiling-wrap-name",
@@ -2918,6 +3116,13 @@
    "accepted": 0
   }
  },
+ "both": {
+  "goldens": 93,
+  "invocations": 44,
+  "admitted_controls": 14,
+  "run_controls": 71,
+  "fuzz_admitted": 289
+ },
  "mutants": [
   {
    "mutant": "arm-selection",
@@ -3514,6 +3719,246 @@
    "group": "refused",
    "killed_by": [
     "growth:loop-refused"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "key-search-inverted",
+   "breaks": "the key search steps toward the wrong half",
+   "group": "keys",
+   "killed_by": [
+    "lane:keys-u32-3",
+    "lane:keys-u32-5",
+    "lane:keys-u32-big-3",
+    "lane:keys-u32-big-5",
+    "lane:keys-char-3"
+   ],
+   "wrong_observations": 27,
+   "crashes": 0
+  },
+  {
+   "mutant": "key-lo-stalls",
+   "breaks": "the key search steps to the middle, not past it: a miss above a key never ends",
+   "group": "hang",
+   "killed_by": [
+    "lane:keys-u32-3"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "key-hi-drops-last",
+   "breaks": "the key search never looks at the last key",
+   "group": "keys",
+   "killed_by": [
+    "lane:keys-u32-3",
+    "lane:keys-u32-5",
+    "lane:keys-u32-big-3",
+    "lane:keys-u32-big-5",
+    "lane:keys-char-3"
+   ],
+   "wrong_observations": 29,
+   "crashes": 0
+  },
+  {
+   "mutant": "default-immediate-flip",
+   "breaks": "an immediate that reaches a tag Default is checked as if it named a Branch, and a Branch as a Default",
+   "group": "tags",
+   "killed_by": [
+    "lane:tags-shape"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "tag-range-off-by-one",
+   "breaks": "a tag equal to its Case's constructor count is in range",
+   "group": "tags",
+   "killed_by": [
+    "lane:ill-at-count"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "describe-comma-first-only",
+   "breaks": "only the second field is preceded by a separator",
+   "group": "describe",
+   "killed_by": [
+    "lane:wide-3-flat",
+    "lane:wide-3-nested",
+    "lane:wide-5-flat",
+    "lane:wide-5-nested",
+    "lane:wide-9-flat"
+   ],
+   "wrong_observations": 6,
+   "crashes": 0
+  },
+  {
+   "mutant": "describe-comma-odd-only",
+   "breaks": "every second field is preceded by a separator",
+   "group": "describe",
+   "killed_by": [
+    "lane:wide-3-flat",
+    "lane:wide-3-nested",
+    "lane:wide-5-flat",
+    "lane:wide-5-nested",
+    "lane:wide-9-flat"
+   ],
+   "wrong_observations": 6,
+   "crashes": 0
+  },
+  {
+   "mutant": "describe-close-after-two",
+   "breaks": "an Object is closed after its second field, whatever it has",
+   "group": "describe",
+   "killed_by": [
+    "lane:wide-3-flat",
+    "lane:wide-3-nested",
+    "lane:wide-5-flat",
+    "lane:wide-5-nested",
+    "lane:wide-9-flat"
+   ],
+   "wrong_observations": 6,
+   "crashes": 0
+  },
+  {
+   "mutant": "nat-visits-undercount",
+   "breaks": "a Nat word adds n visits to the running count, not n + 1",
+   "group": "display",
+   "killed_by": [
+    "lane:display-over-bound"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "nat-visits-overcount",
+   "breaks": "a Nat word adds n + 2 visits to the running count",
+   "group": "display",
+   "killed_by": [
+    "lane:display-at-bound"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "object-visits-twice",
+   "breaks": "a constructor costs two visits",
+   "group": "display",
+   "killed_by": [
+    "lane:display-at-bound"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "visits-bound-inclusive",
+   "breaks": "a result of exactly 1,048,576 visits is past the bound",
+   "group": "display",
+   "killed_by": [
+    "lane:display-at-bound"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "worklist-frames-inclusive",
+   "breaks": "a worklist triple that ends exactly at the frame region's end does not fit",
+   "group": "limited",
+   "killed_by": [
+    "limited:describe-frames-fit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "worklist-triple-13",
+   "breaks": "the worklist checks room for a 13-byte triple",
+   "group": "limited",
+   "killed_by": [
+    "limited:describe-frames-fit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "worklist-triple-11",
+   "breaks": "the worklist checks room for an 11-byte triple",
+   "group": "limited",
+   "killed_by": [
+    "limited:describe-frames-short"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "worklist-frames-unchecked",
+   "breaks": "the worklist never runs out of frames",
+   "group": "limited",
+   "killed_by": [
+    "limited:describe-frames-short"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "worklist-frames-kind",
+   "breaks": "a worklist that does not fit stops as a heap exhaustion",
+   "group": "limited",
+   "killed_by": [
+    "limited:describe-frames-short"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "append-block-fits-heap",
+   "breaks": "an append block ending exactly at a lowered heap limit is Exhausted",
+   "group": "limited",
+   "killed_by": [
+    "limited:append-heap-fit"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "append-heap-kind",
+   "breaks": "an append block that does not fit the heap stops as a frame exhaustion",
+   "group": "limited",
+   "killed_by": [
+    "limited:append-heap-short"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "action-cell-oversize",
+   "breaks": "an Action takes one payload word more than its id and operands",
+   "group": "limited",
+   "killed_by": [
+    "limited:action-cell"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "scalar-reads-action",
+   "breaks": "a scalar operand that is an Action (class 3) passes as a Big cell",
+   "group": "tags",
+   "killed_by": [
+    "lane:ill-scalar-action"
+   ],
+   "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "describe-tag-at-count",
+   "breaks": "a result whose tag equals its type's constructor count is in range",
+   "group": "tags",
+   "killed_by": [
+    "lane:ill-describe-at-count"
    ],
    "wrong_observations": 1,
    "crashes": 0
