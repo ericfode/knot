@@ -1,0 +1,423 @@
+{
+ "schema": 1,
+ "rule": "Rows whose expected results the pinned seed's native lane fixed (D7), written by `--freeze` before the VM ran them: the seed's bytes, the model tree they must equal, the source, the image and the run they give the VM (SPEC section 8) with the reference evaluation's calls. A row with no `seed` is by literal review: the seed cannot spell its Char keys, and types every program.",
+ "rows": [
+  {
+   "name": "keys-u32-3",
+   "family": "keys",
+   "basis": "a U32 Case with keys [10, 200, 30000] answers R0.. for them and R3 for any other word; queried at [0, 10, 11, 200, 201, 30000, 30001, 4294967295], of which 4 are computed",
+   "source": "import Base\n\ntype Rs is Data:\n  R0{}\n  R1{}\n  R2{}\n  R3{}\n\ntype Ch is Data:\n  End{}\n  Ok{h: Rs, t: Ch}\n\ndef cls(x: U32) -> Rs:\n  match x:\n    case 10: R0{}\n    case 200: R1{}\n    case 30000: R2{}\n    case _: R3{}\n\ndef main() -> Ch:\n  Ok{cls(0), Ok{cls(U32.add(5, 5)), Ok{cls(11), Ok{cls(U32.add(100, 100)), Ok{cls(201), Ok{cls(U32.add(15000, 15000)), Ok{cls(30001), Ok{cls(U32.add(2147483647, 2147483648)), End{}}}}}}}}}\n",
+   "source_sha256": "800bf777eeb97962540ecbc6e1d6e69c7298a902aece9334c6b50fa918d6458d",
+   "image_sha256": "0501318b03fc1a2dc4b15c6c086eaffbb5a04eb87d7c844bddbe69d7779eb1ba",
+   "seed": {
+    "exit": 0,
+    "stdout": "Ok{R3{}, Ok{R0{}, Ok{R3{}, Ok{R1{}, Ok{R3{}, Ok{R2{}, Ok{R3{}, Ok{R3{}, End{}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOk{R3{},Ok{R0{},Ok{R3{},Ok{R1{},Ok{R3{},Ok{R2{},Ok{R3{},Ok{R3{},End{}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 13
+   }
+  },
+  {
+   "name": "keys-u32-5",
+   "family": "keys",
+   "basis": "a U32 Case with keys [10, 200, 3000, 40000, 500000] answers R0.. for them and R5 for any other word; queried at [0, 10, 11, 200, 201, 3000, 3001, 40000, 40001, 500000, 500001, 4294967295], of which 6 are computed",
+   "source": "import Base\n\ntype Rs is Data:\n  R0{}\n  R1{}\n  R2{}\n  R3{}\n  R4{}\n  R5{}\n\ntype Ch is Data:\n  End{}\n  Ok{h: Rs, t: Ch}\n\ndef cls(x: U32) -> Rs:\n  match x:\n    case 10: R0{}\n    case 200: R1{}\n    case 3000: R2{}\n    case 40000: R3{}\n    case 500000: R4{}\n    case _: R5{}\n\ndef main() -> Ch:\n  Ok{cls(0), Ok{cls(U32.add(5, 5)), Ok{cls(11), Ok{cls(U32.add(100, 100)), Ok{cls(201), Ok{cls(U32.add(1500, 1500)), Ok{cls(3001), Ok{cls(U32.add(20000, 20000)), Ok{cls(40001), Ok{cls(U32.add(250000, 250000)), Ok{cls(500001), Ok{cls(U32.add(2147483647, 2147483648)), End{}}}}}}}}}}}}}\n",
+   "source_sha256": "c0de728b3713d25363b171969963d8d176bed412e4516496bf514193a774c62a",
+   "image_sha256": "6bad9f292d012ef8d393daf8e0c4bc33d5d07a0bfdca4d39fde6da79f6e9b11d",
+   "seed": {
+    "exit": 0,
+    "stdout": "Ok{R5{}, Ok{R0{}, Ok{R5{}, Ok{R1{}, Ok{R5{}, Ok{R2{}, Ok{R5{}, Ok{R3{}, Ok{R5{}, Ok{R4{}, Ok{R5{}, Ok{R5{}, End{}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOk{R5{},Ok{R0{},Ok{R5{},Ok{R1{},Ok{R5{},Ok{R2{},Ok{R5{},Ok{R3{},Ok{R5{},Ok{R4{},Ok{R5{},Ok{R5{},End{}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 19
+   }
+  },
+  {
+   "name": "keys-u32-big-3",
+   "family": "keys",
+   "basis": "a U32 Case with keys [1073741824, 2147483648, 4294967295] answers R0.. for them and R3 for any other word; queried at [1073741823, 1073741824, 1073741825, 2147483647, 2147483648, 2147483649, 4294967294, 4294967295, 1073741823, 1073741824, 1073741825, 2147483647, 2147483648, 2147483649, 4294967294, 4294967295], of which 8 are computed",
+   "source": "import Base\n\ntype Rs is Data:\n  R0{}\n  R1{}\n  R2{}\n  R3{}\n\ntype Ch is Data:\n  End{}\n  Ok{h: Rs, t: Ch}\n\ndef cls(x: U32) -> Rs:\n  match x:\n    case 1073741824: R0{}\n    case 2147483648: R1{}\n    case 4294967295: R2{}\n    case _: R3{}\n\ndef main() -> Ch:\n  Ok{cls(1073741823), Ok{cls(1073741824), Ok{cls(1073741825), Ok{cls(2147483647), Ok{cls(2147483648), Ok{cls(2147483649), Ok{cls(4294967294), Ok{cls(4294967295), Ok{cls(U32.add(536870911, 536870912)), Ok{cls(U32.add(536870912, 536870912)), Ok{cls(U32.add(536870912, 536870913)), Ok{cls(U32.add(1073741823, 1073741824)), Ok{cls(U32.add(1073741824, 1073741824)), Ok{cls(U32.add(1073741824, 1073741825)), Ok{cls(U32.add(2147483647, 2147483647)), Ok{cls(U32.add(2147483647, 2147483648)), End{}}}}}}}}}}}}}}}}}\n",
+   "source_sha256": "35e4fd91cd9e9669d04101ec4c31733204740a593e7920ffa47d1738c6adc8d7",
+   "image_sha256": "9c5384844fa55ef3ca05f0ffb593bdb6d78c082bfd3bc50705ededfa1bbaca15",
+   "seed": {
+    "exit": 0,
+    "stdout": "Ok{R3{}, Ok{R0{}, Ok{R3{}, Ok{R3{}, Ok{R1{}, Ok{R3{}, Ok{R3{}, Ok{R2{}, Ok{R3{}, Ok{R0{}, Ok{R3{}, Ok{R3{}, Ok{R1{}, Ok{R3{}, Ok{R3{}, Ok{R2{}, End{}}}}}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOk{R3{},Ok{R0{},Ok{R3{},Ok{R3{},Ok{R1{},Ok{R3{},Ok{R3{},Ok{R2{},Ok{R3{},Ok{R0{},Ok{R3{},Ok{R3{},Ok{R1{},Ok{R3{},Ok{R3{},Ok{R2{},End{}}}}}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 25
+   }
+  },
+  {
+   "name": "keys-u32-big-5",
+   "family": "keys",
+   "basis": "a U32 Case with keys [1073741823, 1073741824, 2147483647, 2147483648, 4294967294] answers R0.. for them and R5 for any other word; queried at [1073741822, 1073741823, 1073741824, 1073741825, 2147483646, 2147483647, 2147483648, 2147483649, 4294967293, 4294967294, 4294967295, 1073741822, 1073741823, 1073741824, 1073741825, 2147483646, 2147483647, 2147483648, 2147483649, 4294967293, 4294967294, 4294967295], of which 11 are computed",
+   "source": "import Base\n\ntype Rs is Data:\n  R0{}\n  R1{}\n  R2{}\n  R3{}\n  R4{}\n  R5{}\n\ntype Ch is Data:\n  End{}\n  Ok{h: Rs, t: Ch}\n\ndef cls(x: U32) -> Rs:\n  match x:\n    case 1073741823: R0{}\n    case 1073741824: R1{}\n    case 2147483647: R2{}\n    case 2147483648: R3{}\n    case 4294967294: R4{}\n    case _: R5{}\n\ndef main() -> Ch:\n  Ok{cls(1073741822), Ok{cls(1073741823), Ok{cls(1073741824), Ok{cls(1073741825), Ok{cls(2147483646), Ok{cls(2147483647), Ok{cls(2147483648), Ok{cls(2147483649), Ok{cls(4294967293), Ok{cls(4294967294), Ok{cls(4294967295), Ok{cls(U32.add(536870911, 536870911)), Ok{cls(U32.add(536870911, 536870912)), Ok{cls(U32.add(536870912, 536870912)), Ok{cls(U32.add(536870912, 536870913)), Ok{cls(U32.add(1073741823, 1073741823)), Ok{cls(U32.add(1073741823, 1073741824)), Ok{cls(U32.add(1073741824, 1073741824)), Ok{cls(U32.add(1073741824, 1073741825)), Ok{cls(U32.add(2147483646, 2147483647)), Ok{cls(U32.add(2147483647, 2147483647)), Ok{cls(U32.add(2147483647, 2147483648)), End{}}}}}}}}}}}}}}}}}}}}}}}\n",
+   "source_sha256": "1e1703922bd0b5783317f86366f2c19ae831f0c8b3919ee47f7f09a0e30f5dca",
+   "image_sha256": "f7b720d04e6f33971bd628e112886ae63d2b52a3cc1b7a815f1409d832a15c85",
+   "seed": {
+    "exit": 0,
+    "stdout": "Ok{R5{}, Ok{R0{}, Ok{R1{}, Ok{R5{}, Ok{R5{}, Ok{R2{}, Ok{R3{}, Ok{R5{}, Ok{R5{}, Ok{R4{}, Ok{R5{}, Ok{R5{}, Ok{R0{}, Ok{R1{}, Ok{R5{}, Ok{R5{}, Ok{R2{}, Ok{R3{}, Ok{R5{}, Ok{R5{}, Ok{R4{}, Ok{R5{}, End{}}}}}}}}}}}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOk{R5{},Ok{R0{},Ok{R1{},Ok{R5{},Ok{R5{},Ok{R2{},Ok{R3{},Ok{R5{},Ok{R5{},Ok{R4{},Ok{R5{},Ok{R5{},Ok{R0{},Ok{R1{},Ok{R5{},Ok{R5{},Ok{R2{},Ok{R3{},Ok{R5{},Ok{R5{},Ok{R4{},Ok{R5{},End{}}}}}}}}}}}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 34
+   }
+  },
+  {
+   "name": "keys-char-3",
+   "family": "keys",
+   "basis": "a Char Case with keys [65, 2048, 128512] answers R0.. for them and R3 for any other word; queried at [0, 65, 66, 2048, 2049, 128512, 128513, 1114111, 55296, 1114112, 4294967295], of which 7 are computed",
+   "source": "import Base\n\ntype Rs is Data:\n  R0{}\n  R1{}\n  R2{}\n  R3{}\n\ntype Ch is Data:\n  End{}\n  Ok{h: Rs, t: Ch}\n\ndef cls(x: Char) -> Rs:\n  match x:\n    case '\\u{41}': R0{}\n    case '\\u{800}': R1{}\n    case '\\u{1F600}': R2{}\n    case _: R3{}\n\ndef main() -> Ch:\n  Ok{cls('\\u{0}'), Ok{cls(Char.from_u32(U32.add(32, 33))), Ok{cls('\\u{42}'), Ok{cls(Char.from_u32(U32.add(1024, 1024))), Ok{cls('\\u{801}'), Ok{cls(Char.from_u32(U32.add(64256, 64256))), Ok{cls('\\u{1F601}'), Ok{cls(Char.from_u32(U32.add(557055, 557056))), Ok{cls(Char.from_u32(U32.add(27648, 27648))), Ok{cls(Char.from_u32(U32.add(557056, 557056))), Ok{cls(Char.from_u32(U32.add(2147483647, 2147483648))), End{}}}}}}}}}}}}\n",
+   "source_sha256": "08007302f29b69bc91f571da9b88f67dd0351c3687b70d9ad8b1c30dc39e66a8",
+   "image_sha256": "2884f7ba2add78360d58867b1b34decbb80313c94631ce423925e29b9846ba2c",
+   "seed": {
+    "exit": 0,
+    "stdout": "Ok{R3{}, Ok{R0{}, Ok{R3{}, Ok{R1{}, Ok{R3{}, Ok{R2{}, Ok{R3{}, Ok{R3{}, Ok{R3{}, Ok{R3{}, Ok{R3{}, End{}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOk{R3{},Ok{R0{},Ok{R3{},Ok{R1{},Ok{R3{},Ok{R2{},Ok{R3{},Ok{R3{},Ok{R3{},Ok{R3{},Ok{R3{},End{}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 26
+   }
+  },
+  {
+   "name": "keys-char-5",
+   "family": "keys",
+   "basis": "a Char Case with keys [9, 32, 127, 128, 2047] answers R0.. for them and R5 for any other word; queried at [0, 9, 10, 32, 33, 127, 128, 129, 2047, 2048, 1114111, 57343], of which 6 are computed",
+   "source": "import Base\n\ntype Rs is Data:\n  R0{}\n  R1{}\n  R2{}\n  R3{}\n  R4{}\n  R5{}\n\ntype Ch is Data:\n  End{}\n  Ok{h: Rs, t: Ch}\n\ndef cls(x: Char) -> Rs:\n  match x:\n    case '\\u{9}': R0{}\n    case '\\u{20}': R1{}\n    case '\\u{7F}': R2{}\n    case '\\u{80}': R3{}\n    case '\\u{7FF}': R4{}\n    case _: R5{}\n\ndef main() -> Ch:\n  Ok{cls('\\u{0}'), Ok{cls(Char.from_u32(U32.add(4, 5))), Ok{cls('\\u{A}'), Ok{cls(Char.from_u32(U32.add(16, 16))), Ok{cls('\\u{21}'), Ok{cls(Char.from_u32(U32.add(63, 64))), Ok{cls('\\u{80}'), Ok{cls(Char.from_u32(U32.add(64, 65))), Ok{cls('\\u{7FF}'), Ok{cls(Char.from_u32(U32.add(1024, 1024))), Ok{cls('\\u{10FFFF}'), Ok{cls(Char.from_u32(U32.add(28671, 28672))), End{}}}}}}}}}}}}}\n",
+   "source_sha256": "0f17275571686199ef0712a78602484f292521e56736125b59a1c987d69d8654",
+   "image_sha256": "468ea8564fe9f31e17375258f54f9665e4678837d03f411299e4eb2bada65806",
+   "seed": {
+    "exit": 0,
+    "stdout": "Ok{R5{}, Ok{R0{}, Ok{R5{}, Ok{R1{}, Ok{R5{}, Ok{R2{}, Ok{R3{}, Ok{R5{}, Ok{R4{}, Ok{R5{}, Ok{R5{}, Ok{R5{}, End{}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOk{R5{},Ok{R0{},Ok{R5{},Ok{R1{},Ok{R5{},Ok{R2{},Ok{R3{},Ok{R5{},Ok{R4{},Ok{R5{},Ok{R5{},Ok{R5{},End{}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 25
+   }
+  },
+  {
+   "name": "keys-char-nonscalar",
+   "family": "keys",
+   "basis": "a Char Case with keys [55296, 57343, 1114112, 4294967295] answers R0.. for them and R4 for any other word; queried at [0, 55295, 55296, 55297, 57343, 57344, 1114111, 1114112, 1114113, 4294967294, 4294967295], of which 11 are computed",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "2c16765fc1a8a3d7bacfee504d3254325bbbd25db99eb22190eb2f87e059655e",
+   "seed": null,
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOk{R4{},Ok{R4{},Ok{R0{},Ok{R4{},Ok{R1{},Ok{R4{},Ok{R4{},Ok{R2{},Ok{R4{},Ok{R4{},Ok{R3{},End{}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 34
+   }
+  },
+  {
+   "name": "wide-3-flat",
+   "family": "wide",
+   "basis": "a constructor of 3 fields, the result itself, a different constructor at each position",
+   "source": "import Base\n\ntype F is Data:\n  F0{}\n  F1{}\n  F2{}\n  F3{}\n  F4{}\n  F5{}\n  F6{}\n  F7{}\n  F8{}\n  F9{}\n\ntype W3 is Data:\n  W3{f0: F, f1: F, f2: F}\n\ndef main() -> W3:\n  W3{F1{}, F8{}, F5{}}\n",
+   "source_sha256": "563760312bf052c75a8eea331beb28eb37421e2b55f2a4521b9a3241de10de8b",
+   "image_sha256": "ddbd39cb2c88c89de9ac83e4e9bc426d21ee22cd66899faf194d7b0e852ac399",
+   "seed": {
+    "exit": 0,
+    "stdout": "W3{F1{}, F8{}, F5{}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tW3{F1{},F8{},F5{}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 1
+   }
+  },
+  {
+   "name": "wide-3-nested",
+   "family": "wide",
+   "basis": "a constructor of 3 fields, first and last inside a constructor of 4, a different constructor at each position",
+   "source": "import Base\n\ntype F is Data:\n  F0{}\n  F1{}\n  F2{}\n  F3{}\n  F4{}\n  F5{}\n  F6{}\n  F7{}\n  F8{}\n  F9{}\n\ntype W3 is Data:\n  W3{f0: F, f1: F, f2: F}\n\ntype V3 is Data:\n  V3{g0: W3, g1: F, g2: F, g3: W3}\n\ndef main() -> V3:\n  V3{W3{F1{}, F8{}, F5{}}, F2{}, F5{}, W3{F5{}, F8{}, F1{}}}\n",
+   "source_sha256": "af3d4b3b0c8e79289d60f757092c6fe5ab1a0b30da9a37816c4ec5f9754cfcb5",
+   "image_sha256": "55fa874443ba496e5d7b11ff4e7aeb6f5a3bec0cb6778537db3cf79fc069fcd9",
+   "seed": {
+    "exit": 0,
+    "stdout": "V3{W3{F1{}, F8{}, F5{}}, F2{}, F5{}, W3{F5{}, F8{}, F1{}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t2\t0\tV3{W3{F1{},F8{},F5{}},F2{},F5{},W3{F5{},F8{},F1{}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 1
+   }
+  },
+  {
+   "name": "wide-5-flat",
+   "family": "wide",
+   "basis": "a constructor of 5 fields, the result itself, a different constructor at each position",
+   "source": "import Base\n\ntype F is Data:\n  F0{}\n  F1{}\n  F2{}\n  F3{}\n  F4{}\n  F5{}\n  F6{}\n  F7{}\n  F8{}\n  F9{}\n\ntype W5 is Data:\n  W5{f0: F, f1: F, f2: F, f3: F, f4: F}\n\ndef main() -> W5:\n  W5{F1{}, F8{}, F5{}, F2{}, F9{}}\n",
+   "source_sha256": "6d5b6fbd16a07538d8bcb25214b1056ef35d645c3cab4ebcdbd20d526ffca61b",
+   "image_sha256": "0dbae9fe0eaa87c9d9d76738360e159d5cfcf8203920c8d9be899e1135b50780",
+   "seed": {
+    "exit": 0,
+    "stdout": "W5{F1{}, F8{}, F5{}, F2{}, F9{}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tW5{F1{},F8{},F5{},F2{},F9{}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 1
+   }
+  },
+  {
+   "name": "wide-5-nested",
+   "family": "wide",
+   "basis": "a constructor of 5 fields, first and last inside a constructor of 6, a different constructor at each position",
+   "source": "import Base\n\ntype F is Data:\n  F0{}\n  F1{}\n  F2{}\n  F3{}\n  F4{}\n  F5{}\n  F6{}\n  F7{}\n  F8{}\n  F9{}\n\ntype W5 is Data:\n  W5{f0: F, f1: F, f2: F, f3: F, f4: F}\n\ntype V5 is Data:\n  V5{g0: W5, g1: F, g2: F, g3: F, g4: F, g5: W5}\n\ndef main() -> V5:\n  V5{W5{F1{}, F8{}, F5{}, F2{}, F9{}}, F2{}, F5{}, F8{}, F1{}, W5{F9{}, F2{}, F5{}, F8{}, F1{}}}\n",
+   "source_sha256": "b2c72ccd8935fbe22ddff5ea0abaaf942c593e9ee338a2fc6b513905bdaded93",
+   "image_sha256": "ca5882a3b144b691c62815df69953086b73a71b09a18c8f75282fac0094255f5",
+   "seed": {
+    "exit": 0,
+    "stdout": "V5{W5{F1{}, F8{}, F5{}, F2{}, F9{}}, F2{}, F5{}, F8{}, F1{}, W5{F9{}, F2{}, F5{}, F8{}, F1{}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t2\t0\tV5{W5{F1{},F8{},F5{},F2{},F9{}},F2{},F5{},F8{},F1{},W5{F9{},F2{},F5{},F8{},F1{}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 1
+   }
+  },
+  {
+   "name": "wide-9-flat",
+   "family": "wide",
+   "basis": "a constructor of 9 fields, the result itself, a different constructor at each position",
+   "source": "import Base\n\ntype F is Data:\n  F0{}\n  F1{}\n  F2{}\n  F3{}\n  F4{}\n  F5{}\n  F6{}\n  F7{}\n  F8{}\n  F9{}\n\ntype W9 is Data:\n  W9{f0: F, f1: F, f2: F, f3: F, f4: F, f5: F, f6: F, f7: F, f8: F}\n\ndef main() -> W9:\n  W9{F1{}, F8{}, F5{}, F2{}, F9{}, F6{}, F3{}, F0{}, F7{}}\n",
+   "source_sha256": "9f1ae6893ae6e7bd1115a0939ed783a97a56f86180c3761f0f7d2aff58b2dd24",
+   "image_sha256": "62ee496f6c802a3fed9a8cd3e9d790307460d258840a9e84a18f5d9189be5fd4",
+   "seed": {
+    "exit": 0,
+    "stdout": "W9{F1{}, F8{}, F5{}, F2{}, F9{}, F6{}, F3{}, F0{}, F7{}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tW9{F1{},F8{},F5{},F2{},F9{},F6{},F3{},F0{},F7{}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 1
+   }
+  },
+  {
+   "name": "wide-9-nested",
+   "family": "wide",
+   "basis": "a constructor of 9 fields, first and last inside a constructor of 10, a different constructor at each position",
+   "source": "import Base\n\ntype F is Data:\n  F0{}\n  F1{}\n  F2{}\n  F3{}\n  F4{}\n  F5{}\n  F6{}\n  F7{}\n  F8{}\n  F9{}\n\ntype W9 is Data:\n  W9{f0: F, f1: F, f2: F, f3: F, f4: F, f5: F, f6: F, f7: F, f8: F}\n\ntype V9 is Data:\n  V9{g0: W9, g1: F, g2: F, g3: F, g4: F, g5: F, g6: F, g7: F, g8: F, g9: W9}\n\ndef main() -> V9:\n  V9{W9{F1{}, F8{}, F5{}, F2{}, F9{}, F6{}, F3{}, F0{}, F7{}}, F2{}, F5{}, F8{}, F1{}, F4{}, F7{}, F0{}, F3{}, W9{F7{}, F0{}, F3{}, F6{}, F9{}, F2{}, F5{}, F8{}, F1{}}}\n",
+   "source_sha256": "907331629b600fce72eb4731570670fd6fcfdb12a5ac404fe8c517fcc59e8092",
+   "image_sha256": "e2ead3def89bff5bc00def22fdc2e5c3a0da5809b8a008f4759369bbbe0c56f8",
+   "seed": {
+    "exit": 0,
+    "stdout": "V9{W9{F1{}, F8{}, F5{}, F2{}, F9{}, F6{}, F3{}, F0{}, F7{}}, F2{}, F5{}, F8{}, F1{}, F4{}, F7{}, F0{}, F3{}, W9{F7{}, F0{}, F3{}, F6{}, F9{}, F2{}, F5{}, F8{}, F1{}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t2\t0\tV9{W9{F1{},F8{},F5{},F2{},F9{},F6{},F3{},F0{},F7{}},F2{},F5{},F8{},F1{},F4{},F7{},F0{},F3{},W9{F7{},F0{},F3{},F6{},F9{},F2{},F5{},F8{},F1{}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 1
+   }
+  },
+  {
+   "name": "tags-shape",
+   "family": "tags",
+   "basis": "Shape has A and B without fields, C and D with; each of three tag Cases (all named, and two whose Default covers B and D, or A and C) is queried at A, B, C{On} and D{Off, On}, so a Default is reached by an immediate and by an Object",
+   "source": "import Base\n\ntype Rs is Data:\n  R0{}\n  R1{}\n  R2{}\n  R3{}\n\ntype Ch is Data:\n  End{}\n  Ok{h: Rs, t: Ch}\n\ntype Flag is Data:\n  Off{}\n  On{}\n\ntype Shape is Data:\n  A{}\n  B{}\n  C{x: Flag}\n  D{x: Flag, y: Flag}\n\ndef dense(s: Shape) -> Rs:\n  match s:\n    case A{}: R0{}\n    case B{}: R1{}\n    case C{+x}: R2{}\n    case D{+x, +y}: R3{}\n\ndef tail(s: Shape) -> Rs:\n  match s:\n    case A{}: R0{}\n    case C{+x}: R1{}\n    case _: R2{}\n\ndef head(s: Shape) -> Rs:\n  match s:\n    case B{}: R0{}\n    case D{+x, +y}: R1{}\n    case _: R2{}\n\ndef main() -> Ch:\n  Ok{dense(A{}), Ok{dense(B{}), Ok{dense(C{On{}}), Ok{dense(D{Off{}, On{}}), Ok{tail(A{}), Ok{tail(B{}), Ok{tail(C{On{}}), Ok{tail(D{Off{}, On{}}), Ok{head(A{}), Ok{head(B{}), Ok{head(C{On{}}), Ok{head(D{Off{}, On{}}), End{}}}}}}}}}}}}}\n",
+   "source_sha256": "39202a0bc51954982ac7753fa3ddb7c7f2513dabc48f0a750ce900cb41e451c6",
+   "image_sha256": "ac80d5d96b739be70a5efed4cbe4df147941ec2481d2fa1374eff133095e2c6b",
+   "seed": {
+    "exit": 0,
+    "stdout": "Ok{R0{}, Ok{R1{}, Ok{R2{}, Ok{R3{}, Ok{R0{}, Ok{R2{}, Ok{R1{}, Ok{R2{}, Ok{R2{}, Ok{R0{}, Ok{R2{}, Ok{R1{}, End{}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOk{R0{},Ok{R1{},Ok{R2{},Ok{R3{},Ok{R0{},Ok{R2{},Ok{R1{},Ok{R2{},Ok{R2{},Ok{R0{},Ok{R2{},Ok{R1{},End{}}}}}}}}}}}}}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 13
+   }
+  },
+  {
+   "name": "ill-at-count",
+   "family": "ill-typed",
+   "basis": "pick cases on a word `id` launders from Tri's C{} (an immediate of tag 2) at Flag, which has 2 constructors and no Default: section 6.1 inspects it as ill-typed",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "2ec42f6b9901931feceb873b5ab111ed5d06e1b69228a199c1cb75100964c64a",
+   "seed": null,
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\timage\till-typed\n"
+   },
+   "dump": {
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3
+   }
+  },
+  {
+   "name": "ill-at-count-default",
+   "family": "ill-typed",
+   "basis": "the same with a Default over On: the tag is still past the table",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "20d0ce381d7ad84cb8f7d0183411184e9e439a3279baf84fc09947d3679bb9f9",
+   "seed": null,
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\timage\till-typed\n"
+   },
+   "dump": {
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3
+   }
+  },
+  {
+   "name": "ill-past-count",
+   "family": "ill-typed",
+   "basis": "Tri's C{} at Solo, a one-constructor type: tag 2 is 2 past its end",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "33151ecc17d7e4495386c37218e1936509e3a80e797da35320b8b0788becfe77",
+   "seed": null,
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\timage\till-typed\n"
+   },
+   "dump": {
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3
+   }
+  },
+  {
+   "name": "ill-fielded-branch",
+   "family": "ill-typed",
+   "basis": "Tri's C{} at Shape, whose tag 2 has a field, named by a Branch: an immediate cannot name a constructor with fields",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "cd06496f4ed1e9c85b2627c1b26b83236ce8bd0c005b4e9c953e3c94f48f4009",
+   "seed": null,
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\timage\till-typed\n"
+   },
+   "dump": {
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3
+   }
+  },
+  {
+   "name": "ill-fielded-default",
+   "family": "ill-typed",
+   "basis": "the same, named by the Default",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "90ab0c08b124248f69eabf655fb96d4d6628e2d329a82252c56955cf84fd1c98",
+   "seed": null,
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\timage\till-typed\n"
+   },
+   "dump": {
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3
+   }
+  },
+  {
+   "name": "ill-nullary",
+   "family": "ill-typed",
+   "basis": "Tri's B{} at Shape's nullary B: the control, admitted",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "a5ed9e9e7f41ed4e21de72ff9a04f9458636a48b3c9c31b9b240208f09b2ba1c",
+   "seed": null,
+   "expect": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tR1{}\n",
+    "stderr": ""
+   },
+   "dump": {
+    "outcome": "Completed",
+    "calls": 3
+   }
+  }
+ ]
+}

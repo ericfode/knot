@@ -42,11 +42,25 @@ Checks, in order:
   seeded fuzz corpus of mutated goldens, and another that varies every word of
   section 4's limits, where every refusal matches the reference and no run traps
   (a crash of the reference codec on any image fails the gate, it is never skipped);
+- the seeded rows of vm/core/seeded.json: Books whose expected results the pinned seed's native lane fixed
+  before any VM run them (D7), and the reference evaluation and the VM must both give them: U32 and Char key
+  Cases of 3 and 5 keys queried below, at, between and above their keys, with keys and computed scrutinees at
+  2^30, 2^31 and 2^32-1; constructors of 3, 5 and 9 fields, flat and inside a wider one; tag Cases whose Default
+  is reached by an immediate and by an Object; and, by literal review, the edges of section 6.1's inspection;
+- the differential lane (vm/lane.py, parameters and seed frozen in vm/core/lane.json): a seeded corpus of
+  generated programs (every second one laundered through `none`), random key Cases, prim sweeps and the
+  print, Halt, digit and Nat writers' boundaries, each run through vm.wasm (test build and production module) and
+  through vm/evaluate.py, which must agree on stdout, exit, stderr, outcome, cause and calls; a fixed
+  sample of it also through the seed's native lane, with the seed's bytes frozen; and every admitted golden,
+  control and fuzz image through both;
 - WAT mutants, each killed by a named fixture group through a wrong
-  observation (a trap, host stack failure or timeout never counts, except for
-  group `trap`, whose defect is the trap).
+  observation (a trap, host stack failure or timeout never counts, except for group `trap`, whose defect
+  is the trap, and group `hang`, whose defect is a search that never ends: a row that outlives its
+  deadline is the wrong observation there).
 
-It writes only vm/receipts/core.json.
+`--study` runs the systematic mutants of vm/study.py against these rows instead (vm/receipts/study.json);
+`--freeze` rewrites vm/core/seeded.json and vm/core/lane.json from the seed. It writes only
+vm/receipts/core.json.
 """
 from __future__ import annotations
 
@@ -62,6 +76,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 
 ROOT = Path(__file__).resolve().parents[1]
 HERE = ROOT / 'vm'
@@ -85,7 +100,10 @@ def load(name: str, path: Path):
 
 build = load('vm_build', HERE / 'build.py')
 spec = load('check_spec', HERE / 'check-spec.py')
+lane = load('vm_lane', HERE / 'lane.py')
+study = load('vm_study', HERE / 'study.py')
 codec = spec.codec
+reference = spec.reference
 
 
 def require(condition, detail):
@@ -448,9 +466,10 @@ def host(module: Path, sandbox: Path, argv: list, node_flags=()) -> dict:
     return {'exit': p.returncode, 'stdout': p.stdout.decode(), 'stderr': p.stderr.decode()}
 
 
-def harness(jobs: list, timeout=600, node_flags=()) -> dict:
+def harness(jobs: list, timeout=600, node_flags=(), max_timeouts=None) -> dict:
+    env = {**os.environ, 'KNOT_HARNESS_MAX_TIMEOUTS': str(max_timeouts)} if max_timeouts is not None else None
     p = subprocess.run(['node', *node_flags, str(HARNESS)], input=json.dumps(jobs), capture_output=True, text=True,
-                       timeout=timeout * SCALE)
+                       timeout=timeout * SCALE, env=env)
     require(p.returncode == 0, f'harness failed: {p.stderr[-2000:]}')
     return {r['id']: r for r in map(json.loads, p.stdout.splitlines())}
 
@@ -458,8 +477,14 @@ def harness(jobs: list, timeout=600, node_flags=()) -> dict:
 def clean(result: dict) -> bool:
     """A reported outcome, not an engine trap, host stack failure or host error."""
     stderr = result['stderr']
-    return result.get('status') not in ('Trap', 'HostStack') and not any(
+    return result.get('status') not in ('Trap', 'HostStack', 'Timeout', 'Skipped') and not any(
         s in stderr for s in ('HostFailure\tio\ttrap', 'HostFailure\tio\thost', 'Exhausted\tio\tcall-stack'))
+
+
+def observed_wrong(job: dict, out: dict) -> bool:
+    """The run `out` differs from the row's frozen run, its registers, or exceeds a bound the row states."""
+    return (shown(out, job['want']) != job['want'] or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
+            or any(out['state'][k] > most for k, most in job.get('at_most', {}).items()))
 
 
 def pool(fn, items, workers=8):
@@ -755,6 +780,334 @@ def check_growth(jobs: list, module: Path, test: Path) -> list:
     return [record[j['id']] for j in jobs]
 
 
+# ------------------------------------------------------------------ the differential lane
+# Seeded rows (vm/core/seeded.json) and a generated corpus (vm/lane.py) run through vm.wasm and the
+# reference evaluation, which must agree on stdout, outcome, cause and calls. A fixed sample also runs
+# through the seed's native lane, and its bytes are frozen (D7; vm/core/lane.json).
+SEED_BIN = ROOT / 'scripts/bend-reference'
+SEEDED = HERE / 'core/seeded.json'
+LANE = HERE / 'core/lane.json'
+DEADLINE = 5000  # ms: rows that end in microseconds, run under a mutant that may never end
+
+
+def book_line(row: dict) -> str:
+    """The `Evaluated` line of a Book row with a model tree: main's result type and the root's tag (SPEC section 8)."""
+    plan = row['plan']
+    main = next(f for f in plan['functions'] if f['name'] == 'main')
+    root = re.match(r'[\w.]+', row['tree'])[0]
+    tag = [c['name'] for c in plan['types'][main['result']]['constructors']].index(root)
+    return f"Evaluated\t{main['result']}\t{tag}\t{row['tree']}\n"
+
+
+def foreign_ids(node) -> set:
+    """Every foreign id a plan applies: the VM performs only IO.print (CORE.md choice 2) and refuses an image with another."""
+    if isinstance(node, list):
+        found = {node[2]} if len(node) > 3 and node[0] == 'foreign' and isinstance(node[2], int) else set()
+        return found.union(*(foreign_ids(k) for k in node if isinstance(k, list)))
+    if isinstance(node, dict):
+        return set().union(*(foreign_ids(v) for v in node.values()))
+    return set()
+
+
+def book_result(plan: dict, argv: list) -> tuple[dict, dict]:
+    got = reference.book(plan, argv[0], [codec.decimal(w) for w in argv[2:]], codec.decimal(argv[1]))
+    run = {'stderr': '', **got} if 'exit' in got else got
+    return expected_run(run), {**expected_dump(run), 'calls': got['calls']}
+
+
+def reference_result(plan: dict, argv: list) -> tuple[dict, dict]:
+    """(host run, outcome registers) that SPEC sections 4 and 8 and vm/evaluate.py give for `IMAGE argv`: the argument
+    checks first, then the evaluation of a Book or a Program. Two readings stand in for what the evaluation does not
+    model, each a documented behaviour of the VM: an image with a foreign leaf other than IO.print is `Unsupported vm
+    foreign` before any entry (choice 2), and a Halt whose message holds a non-scalar Char is refused as `io abi`
+    (CORE.md, open for vm-io)."""
+    bad = codec.arguments(plan, argv)
+    if bad:
+        outcome, cause = bad.split(' ', 1)
+        case = {'outcome': outcome, 'cause': cause}
+        return expected_run(case), expected_dump(case)
+    if foreign_ids(plan['functions']) - {1}:
+        case = {'outcome': 'Unsupported', 'cause': 'vm foreign'}
+        return expected_run(case), expected_dump(case)
+    if plan['entry'] == 'book':
+        return book_result(plan, argv)
+    got = reference.program(plan, codec.decimal(argv[0]))
+    written = got['stdout'].decode()
+    if 'halt' in got:
+        message = got['message']
+        if all(map(reference.scalar, message)):
+            return ({'exit': got['halt'] % 256, 'stdout': written, 'stderr': b''.join(map(reference.utf8, message)).decode() + '\n'},
+                    {'outcome': 'Halted', 'calls': got['calls']})
+        return {'exit': 5, 'stdout': written, 'stderr': 'HostFailure\tio\tabi\n'}, {'outcome': 'HostFailure', 'cause': 'abi', 'calls': got['calls']}
+    case = {'exit': 0, 'stdout': written, 'stderr': ''} if 'exit' in got else {**got, 'stdout': written}
+    return expected_run(case), {**expected_dump(case), 'calls': got['calls']}
+
+
+def disagreement(plan: dict, argv: list, out: dict) -> str | None:
+    """None where the test build's run `out` equals the reference's in stdout, exit, stderr, outcome, cause and calls."""
+    run, dump = reference_result(plan, argv)
+    if not clean(out) or shown(out, run) != run:
+        return f"the VM ran {shown(out, run)} ({out['status']}), the reference {run}"
+    wrong = {k: (out['state'][k], v) for k, v in dump.items() if out['state'][k] != v}
+    return f'registers (VM, reference) {wrong}' if wrong else None
+
+
+def seeded_expectation(row: dict) -> tuple[dict, dict]:
+    """A seeded row's frozen run: its model tree's `Evaluated` line or its literal refusal, with the reference's calls."""
+    if 'refusal' in row:
+        return expected_run(row['refusal']), {**expected_dump(row['refusal']), 'calls': row['calls']}
+    return ({'exit': 0, 'stdout': book_line(row), 'stderr': ''},
+            {'outcome': 'Completed', 'calls': reference_run(row['plan'], lane.FUEL)[1]['calls']})
+
+
+def seed_native(rows: list, where: Path) -> dict:
+    """The pinned seed's native lane on each row's source: {name: {exit, stdout, stderr}}. A row the seed cannot build
+    fails the gate; it is never skipped."""
+    def one(row):
+        source, exe = where / f"{row['name']}.bend", where / f"{row['name']}.exe"
+        source.write_text(row['source'])
+        for _ in range(5):  # macOS's clang shim intermittently prints nothing under load, which the seed reports as no clang
+            built = subprocess.run([str(SEED_BIN), str(source), '-o', str(exe)], cwd=ROOT, capture_output=True,
+                                   env={**os.environ, 'BEND_NO_TELEMETRY': '1'}, timeout=900 * SCALE)
+            if built.returncode == 0 or b'found no clang' not in built.stderr:
+                break
+            time.sleep(1)
+        require(built.returncode == 0, f"seed native build of {row['name']}: {built.stderr.decode()[-300:]}")
+        ran = subprocess.run([str(exe)], capture_output=True, timeout=120 * SCALE)
+        return {'exit': ran.returncode, 'stdout': ran.stdout.decode(), 'stderr': ran.stderr.decode()}
+    where.mkdir(parents=True, exist_ok=True)
+    return dict(zip([r['name'] for r in rows], pool(one, rows, workers=6)))
+
+
+def seed_tree(seen: dict) -> str:
+    """A Book's tree as the seed printed it, in SPEC section 8's spelling: the printed value without spaces."""
+    return seen['stdout'].strip().replace(' ', '')
+
+
+def lane_rows(cfg: dict) -> list:
+    """Every row of the lane: the seeded and ill-typed rows (`frozen`), sweeps, writers, random key Cases, programs."""
+    frozen = [*lane.seeded(), *lane.ill_typed()]
+    for r in frozen:
+        r['frozen'] = True
+    rows = [*frozen, *lane.sweep_items(), *lane.print_items(), *lane.digit_items(),
+            *(lane.random_keys(i, cfg['seed']) for i in range(cfg['keys'])),
+            *(lane.program(i, cfg['seed']) for i in range(cfg['programs']))]
+    names = [r['name'] for r in rows]
+    require(len(set(names)) == len(names), 'the lane rows have distinct names')
+    return rows
+
+
+def sample_rows(rows: list, cfg: dict) -> list:
+    """The fixed sample the seed runs: rows of each family with a Bend source, spread evenly, never a seeded row."""
+    out = []
+    for family, count in cfg['sample'].items():
+        pool_ = [r for r in rows if r['family'] == family and r['source'] and not r.get('frozen')]
+        out += [pool_[i * len(pool_) // count] for i in range(count)]
+    return out
+
+
+def lane_job(row: dict, wasm: Path, where: Path, trace=None) -> dict:
+    return {'id': row['name'], 'wasm': str(wasm), 'files': {row['file']: str(where / row['file'])},
+            'argv': [row['file'], *row['argv']], **({'trace': trace} if trace else {})}
+
+
+def check_lane(cfg: dict, seeded: dict, module: Path, test: Path, where: Path, reg: dict, digest: bytes) -> tuple[dict, list]:
+    """The lane rows through the test build and the production module, each compared with the reference evaluation
+    (and a model tree, where the row has one); the seeded rows with their frozen source, image, seed bytes, run and
+    registers, also on the real host; the sample with the seed's native lane run again. Returns the receipt's record
+    and the rows, each with its image, for the mutant groups."""
+    rows = lane_rows(cfg)
+    where.mkdir()
+    for r in rows:
+        r['image'], r['file'] = codec.encode(r['plan'], digest), f"{r['name']}.kimg"
+        (where / r['file']).write_bytes(r['image'])
+    refused = [r['name'] for r in rows if spec.rejected(r['image'], reg, digest) is not None]
+    require(not refused, f'the reference codec refuses lane rows: {refused[:5]}')
+    frozen = {r['name']: r for r in seeded['rows']}
+    fixed = {r['name']: r for r in rows if r.get('frozen')}
+    require(sorted(frozen) == sorted(fixed), f'seeded rows {sorted(frozen)} vs the lane {sorted(fixed)}')
+    sample = sample_rows(rows, cfg)
+    audited = set(fixed) | {r['name'] for r in sample}
+    ran = harness([lane_job(r, test, where, 'audit' if r['name'] in audited else None) for r in rows], timeout=1800)
+    made = harness([lane_job(r, module, where) for r in rows], timeout=1800)
+    tally, failures = {}, []
+    for r in rows:
+        out, prod = ran[r['name']], made[r['name']]
+        why = disagreement(r['plan'], r['argv'], out)
+        if why is None and (prod['exit'], prod['stdout'], prod['stderr']) != (out['exit'], out['stdout'], out['stderr']):
+            why = f"vm.wasm ran {(prod['exit'], prod['stdout'][:60], prod['stderr'])}, the test build {(out['exit'], out['stdout'][:60], out['stderr'])}"
+        if why is None and out['broken'] is not None:
+            why = f"state audit {out['broken']}"
+        if why is None and r.get('tree') is not None and reference_result(r['plan'], r['argv'])[0]['stdout'] != book_line(r):
+            why = f"the model tree gives {book_line(r)!r}, the reference {reference_result(r['plan'], r['argv'])[0]['stdout']!r}"
+        if why:
+            failures.append(f"{r['name']}: {why}")
+        state = out['state']
+        seen = tally.setdefault(r['family'], {'rows': 0, 'outcomes': {}})
+        seen['rows'] += 1
+        key = state['outcome'] + (f":{state['cause']}" if state['cause'] else '')
+        seen['outcomes'][key] = seen['outcomes'].get(key, 0) + 1
+    require(not failures, f'{len(failures)} lane rows disagree with the reference, first: {failures[:3]}')
+
+    wanted = {r['name']: r for r in [*fixed.values(), *sample] if r['source']}
+    seeds = seed_native(list(wanted.values()), where / 'seed')
+    by_name = {r['name']: r for r in rows}
+    on_host = dict(zip(sorted(audited), pool(lambda n: host(module, where, [by_name[n]['file'], *by_name[n]['argv']]), sorted(audited))))
+    for name in sorted(fixed):
+        r, f = fixed[name], frozen[name]
+        require(r['source'] == f['source'] and sha((r['source'] or '').encode()) == f['source_sha256'],
+                f'seeded {name}: the source differs from the frozen one')
+        require(sha(r['image']) == f['image_sha256'], f'seeded {name}: the image differs from the frozen one')
+        run, dump = seeded_expectation(r)
+        require((run, dump) == (f['expect'], f['dump']), f"seeded {name}: frozen {f['expect']} {f['dump']}, derived {run} {dump}")
+        require(on_host[name] == f['expect'], f"seeded {name}: the real host shows {on_host[name]}, frozen {f['expect']}")
+        require(all(ran[name]['state'][k] == v for k, v in f['dump'].items()), f"seeded {name}: registers {ran[name]['state']} vs {f['dump']}")
+        if f['seed'] is None:
+            require(r['source'] is None, f'seeded {name} has a source but no frozen seed run')
+        else:
+            require(seeds[name] == f['seed'], f"seeded {name}: the seed now gives {seeds[name]}, frozen {f['seed']}")
+            require(seed_tree(f['seed']) == r['tree'], f'seeded {name}: the seed prints another tree than the model')
+    frozen_sample = {r['name']: r for r in cfg['sample_rows']}
+    require(sorted(frozen_sample) == sorted(r['name'] for r in sample), 'the frozen sample is the one the configuration picks')
+    for r in sample:
+        f, seen, out = frozen_sample[r['name']], seeds[r['name']], ran[r['name']]
+        require(sha(r['source'].encode()) == f['source_sha256'], f"sample {r['name']}: the source differs from the frozen one")
+        require(seen == f['seed'], f"sample {r['name']}: the seed now gives {seen}, frozen {f['seed']}")
+        got = out['stdout'].rstrip('\n').split('\t', 3)[3] if r['plan']['entry'] == 'book' else None
+        require((got == seed_tree(seen)) if got is not None else
+                ((out['exit'], out['stdout'], out['stderr']) == (seen['exit'], seen['stdout'], seen['stderr'])),
+                f"sample {r['name']}: the VM gives {out['stdout'][:80]!r} (exit {out['exit']}), the seed {seen}")
+        require((on_host[r['name']]['exit'], on_host[r['name']]['stdout']) == (out['exit'], out['stdout']), f"sample {r['name']}: the real host differs")
+    record = {'seed': cfg['seed'], 'rows': len(rows), 'corpus_sha256': sha(json.dumps([sha(r['image']) for r in rows]).encode()),
+              'families': tally, 'seeded': sorted(fixed), 'on_real_host': len(on_host),
+              'sample': {'rows': len(sample), 'seed_bytes_sha256': sha(json.dumps([frozen_sample[r['name']]['seed'] for r in sample],
+                                                                                     sort_keys=True).encode())}}
+    return record, rows
+
+
+def lane_groups(rows: list, where: Path) -> dict:
+    """Mutant groups from the lane rows: each job's expectation is the reference evaluation's, which check_lane
+    showed equal to the frozen and model ones. `keys` holds the seeded key Cases and the first random ones,
+    `describe` the wide constructors, `tags` the tag Cases and the edges of section 6.1's inspection."""
+    def job(r, deadline=20_000):
+        want, dump = reference_result(r['plan'], r['argv'])
+        return {'id': f"lane:{r['name']}", 'files': {r['file']: str(where / r['file'])}, 'argv': [r['file'], *r['argv']],
+                'want': want, 'dump': dump, 'deadline': deadline}
+    keys = [r for r in rows if r['family'] == 'keys']
+    fixed = [r for r in keys if r.get('frozen')]
+    return {'keys': [job(r) for r in fixed + [r for r in keys if not r.get('frozen')][:24]],
+            'describe': [job(r) for r in rows if r['family'] == 'wide'],
+            'tags': [job(r) for r in rows if r['family'] in ('tags', 'ill-typed')],
+            'sweeps': [job(r) for r in rows if r['family'] == 'sweep'],
+            'writers': [job(r) for r in rows if r['family'] in ('print', 'halt', 'digits', 'nat')],
+            'programs': [job(r) for r in rows if r['family'] == 'program' or (r['family'] == 'keys' and not r.get('frozen'))],
+            'hang': [job(r, 3_000) for r in fixed]}
+
+
+STUDY = HERE / 'receipts/study.json'
+STUDY_ORDER = ['keys', 'describe', 'tags', 'goldens', 'invocations', 'runs', 'reference', 'sweeps', 'writers',
+               'fuzz-admitted', 'programs', 'fixtures', 'limited', 'controls']  # cheap and telling first
+GUARD = {'fixtures': 120_000, 'limited': 120_000, 'programs': 120_000, 'ceiling': 600_000, 'full-heap': 600_000,
+         'trap': 600_000, 'growth': 600_000, 'refused': 600_000}  # ms a row may take before it is stopped, else 30,000
+
+
+def run_study(groups: dict, source: str, args: list) -> int:
+    """Each systematic mutant of vm/study.py against the gate's own rows, group by group in STUDY_ORDER, until a row
+    shows a wrong observation (the gate's `observed_wrong`) or outlives its deadline (a hang). A mutant no row
+    kills must be explained in `study.EQUIVALENT`, and each explanation must name a survivor. Writes vm/receipts/study.json."""
+    workers = int(args[args.index('--jobs') + 1]) if '--jobs' in args else 6
+    only = args[args.index('--only') + 1] if '--only' in args else ''
+    mutants = [m for m in study.mutants(source) if only in m[0]]
+    started = time.monotonic()
+
+    def strike(item):
+        index, mutant = item
+        row = {'mutant': mutant[0]}
+        wasm = BUILD / f'study-{index}.wasm'
+        try:
+            wasm.write_bytes(build.assemble(build.test_source(study.apply(source, mutant))))
+        except subprocess.CalledProcessError:
+            return {**row, 'result': 'unassemblable'}
+        for group in STUDY_ORDER:
+            jobs = groups[group]
+            batch = [{**{k: v for k, v in j.items() if k not in ('want', 'dump', 'at_most')}, 'wasm': str(wasm),
+                      'deadline': j.get('deadline') or GUARD.get(group, 30_000)} for j in jobs]
+            try:
+                out = harness(batch, timeout=1200, max_timeouts=1)
+            except AssertionError as failure:
+                return {**row, 'result': 'crashed', 'group': group, 'by': str(failure)[-120:]}
+            hung = [j['id'] for j in jobs if out[j['id']]['status'] == 'Timeout']
+            broken = [j['id'] for j in jobs if out[j['id']]['status'] in ('Trap', 'HostStack')]
+            wrong = [j['id'] for j in jobs if clean(out[j['id']]) and observed_wrong(j, out[j['id']])]
+            for result, ids in (('hang', hung), ('trap', broken), ('killed', wrong)):
+                if ids:
+                    return {**row, 'result': result, 'group': group, 'by': ids[0]}
+        return {**row, 'result': 'survived'}
+    rows = pool(strike, list(enumerate(mutants)), workers=workers)
+    tally = {}
+    for r in rows:
+        tally[r['result']] = tally.get(r['result'], 0) + 1
+    survivors = [r['mutant'] for r in rows if r['result'] == 'survived']
+    unexplained = [m for m in survivors if m not in study.EQUIVALENT]
+    stale = [m for m in study.EQUIVALENT if m not in survivors and not only]
+    by_group = {}
+    for r in rows:
+        if 'group' in r:
+            by_group[r['group']] = by_group.get(r['group'], 0) + 1
+    receipt = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'vm_wat_sha256': sha(source.encode()),
+               'mutants': len(rows), 'tally': tally, 'killed_by_group': by_group,
+               'survivors': [{'mutant': m, 'reason': study.EQUIVALENT.get(m)} for m in survivors],
+               'elapsed_seconds': round(time.monotonic() - started), 'rows': rows}
+    if not only:
+        STUDY.write_text(json.dumps(receipt, indent=1) + '\n')
+    print(f"study: {len(rows)} mutants, {tally}; {len(survivors)} survivors, {len(unexplained)} unexplained, {len(stale)} stale explanations")
+    for m in unexplained:
+        print('  unexplained survivor:', m)
+    for m in stale:
+        print('  explained but not a survivor:', m)
+    return 1 if unexplained or stale else 0
+
+
+LANE_RULE = ("Parameters of the differential lane (vm/lane.py) and the frozen sample the seed's native lane runs: `sample` "
+             "counts the rows of each family (with a Bend source, never a seeded row) spread evenly through the corpus, and "
+             "`sample_rows` freeze each one's source hash and the seed's exit, stdout and stderr. Regenerate with "
+             "`python3 vm/check-core.py --freeze`.")
+SEEDED_RULE = ("Rows whose expected results the pinned seed's native lane fixed (D7), written by `--freeze` before the VM ran "
+               "them: the seed's bytes, the model tree they must equal, the source, the image and the run they give "
+               "the VM (SPEC section 8) with the reference evaluation's calls. A row with no `seed` is by literal review: "
+               "the seed cannot spell its Char keys, and types every program.")
+DEFAULT_LANE = {'schema': 1, 'rule': LANE_RULE, 'seed': 20260929, 'programs': 2000, 'keys': 200,
+                'sample': {'program': 40, 'keys': 12, 'sweep': 12, 'print': 10, 'halt': 10}, 'sample_rows': []}
+
+
+def freeze() -> int:
+    """Write vm/core/seeded.json and vm/core/lane.json from the seed's native lane (D7): its bytes are the expectation."""
+    cfg = json.loads(LANE.read_text()) if LANE.exists() else DEFAULT_LANE
+    reg = codec.registry()
+    digest = codec.base_digest(reg)
+    rows = lane_rows(cfg)
+    for r in rows:
+        r['image'] = codec.encode(r['plan'], digest)
+    fixed, sample = [r for r in rows if r.get('frozen')], sample_rows(rows, cfg)
+    where = BUILD / 'freeze'
+    if where.exists():
+        shutil.rmtree(where)
+    seeds = seed_native([r for r in {r['name']: r for r in [*fixed, *sample] if r['source']}.values()], where)
+    seeded = []
+    for r in fixed:
+        run, dump = seeded_expectation(r)
+        require(r['source'] is None or seed_tree(seeds[r['name']]) == r['tree'], f"seeded {r['name']}: the seed prints another tree than the model")
+        seeded.append({'name': r['name'], 'family': r['family'], 'basis': r['basis'], 'source': r['source'],
+                       'source_sha256': sha((r['source'] or '').encode()), 'image_sha256': sha(r['image']),
+                       'seed': seeds.get(r['name']), 'expect': run, 'dump': dump})
+    SEEDED.write_text(json.dumps({'schema': 1, 'rule': SEEDED_RULE, 'rows': seeded}, indent=1) + '\n')
+    cfg = {**cfg, 'rule': LANE_RULE, 'sample_rows': [{'name': r['name'], 'source_sha256': sha(r['source'].encode()), 'seed': seeds[r['name']]}
+                                                      for r in sample]}
+    LANE.write_text(json.dumps(cfg, indent=1) + '\n')
+    print(f'froze {len(seeded)} seeded rows ({sum(1 for s in seeded if s["seed"])} with seed bytes) and a sample of {len(sample)}')
+    return 0
+
+
 # ------------------------------------------------------------------ mutants
 # (name, what it breaks, [(old, new)], kill group). Each edit must apply once.
 MUTANTS = [
@@ -988,11 +1341,39 @@ MUTANTS = [
      [('        (drop (memory.grow (i32.wrap_i64 (i64.shr_u (i64.sub (local.get $to) (local.get $have)) (i64.const 16)))))\n',
        '        (if (i32.lt_s (memory.grow (i32.wrap_i64 (i64.shr_u (i64.sub (local.get $to) (local.get $have)) (i64.const 16)))) (i32.const 0))\n'
        '          (then unreachable))\n')], 'refused'),
+    # review round 6, gate adequacy: Case arm selection and describe were pinned only at trivial shapes. Each of the
+    # first five passed gate 2e0c9b1 whole, or (`key-lo-stalls`) only hung it; the seeded rows kill them.
+    ('key-search-inverted', 'the key search steps toward the wrong half',
+     [('(if (i32.lt_u (local.get $key) (local.get $v))\n              (then (local.set $lo (i32.add (local.get $mid) (i32.const 1))))',
+       '(if (i32.lt_u (local.get $v) (local.get $key))\n              (then (local.set $lo (i32.add (local.get $mid) (i32.const 1))))')], 'keys'),
+    ('key-lo-stalls', 'the key search steps to the middle, not past it: a miss above a key never ends',
+     [('(then (local.set $lo (i32.add (local.get $mid) (i32.const 1))))', '(then (local.set $lo (local.get $mid)))')], 'hang'),
+    ('key-hi-drops-last', 'the key search never looks at the last key',
+     [('(local.set $hi (local.get $cnt))', '(local.set $hi (i32.sub (local.get $cnt) (i32.const 1)))')], 'keys'),
+    ('default-immediate-flip', 'an immediate that reaches a tag Default is checked as if it named a Branch, and a Branch as a Default',
+     [('(then (if (if (result i32) (i32.eq (local.get $arm) (i32.const -1))', '(then (if (if (result i32) (i32.ne (local.get $arm) (i32.const -1))')], 'tags'),
+    ('tag-range-off-by-one', "a tag equal to its Case's constructor count is in range",
+     [('(if (i32.ge_u (local.get $tag) (local.get $cnt)) (then (call $refuse (global.get $R_ill_typed))))',
+       '(if (i32.gt_u (local.get $tag) (local.get $cnt)) (then (call $refuse (global.get $R_ill_typed))))')], 'tags'),
+    # describe of an Object with three or more fields: no earlier row has more than two
+    ('describe-comma-first-only', 'only the second field is preceded by a separator',
+     [('(if (local.get $j) (then (call $emitc (i32.const 44))))',
+       '(if (i32.eq (local.get $j) (i32.const 1)) (then (call $emitc (i32.const 44))))')], 'describe'),
+    ('describe-comma-odd-only', 'every second field is preceded by a separator',
+     [('(if (local.get $j) (then (call $emitc (i32.const 44))))',
+       '(if (i32.and (local.get $j) (i32.const 1)) (then (call $emitc (i32.const 44))))')], 'describe'),
+    ('describe-close-after-two', 'an Object is closed after its second field, whatever it has',
+     [('(if (i32.eq (local.get $j) (i32.sub (i32.shr_u (i32.load offset=4 (local.get $w)) (i32.const 3)) (i32.const 2)))',
+       '(if (i32.or (i32.eq (local.get $j) (i32.sub (i32.shr_u (i32.load offset=4 (local.get $w)) (i32.const 3)) (i32.const 2)))'
+       ' (i32.eq (local.get $j) (i32.const 2)))')], 'describe'),
 ]
 
 
 # ------------------------------------------------------------------ main
-def main() -> int:
+def main(args: list) -> int:
+    if args[:1] == ['--freeze']:
+        return freeze()
+    study = args[:1] == ['--study']
     started = datetime.datetime.now(datetime.timezone.utc)
     if BUILD.exists():
         shutil.rmtree(BUILD)
@@ -1004,9 +1385,17 @@ def main() -> int:
               'scope': 'knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10',
               'inputs': {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in sorted(
                   [HERE / 'vm.wat', HERE / 'vm.wasm', HERE / 'build.json', HERE / 'build.py', HERE / 'harness.mjs',
-                   HERE / 'check-core.py', HERE / 'SPEC.md', HERE / 'serializer.py', HERE / 'registry.json', HOST,
-                   HERE / 'check-spec.py', HERE / 'evaluate.py', HERE / 'golden/vm-expected.json',
-                   *(HERE / 'core').glob('*')])}}
+                   HERE / 'check-core.py', HERE / 'lane.py', HERE / 'study.py', HERE / 'SPEC.md', HERE / 'serializer.py',
+                   HERE / 'registry.json', HOST, HERE / 'check-spec.py', HERE / 'evaluate.py', HERE / 'golden/vm-expected.json',
+                   *(HERE / 'core').glob('*')])}, 'stages': []}
+    clock = [time.monotonic()]
+
+    def stage(name: str):
+        """Note the time since the last stage, on stderr and in the receipt (where the runner treats it as volatile)."""
+        now = time.monotonic()
+        record['stages'].append({'stage': name, 'elapsed_seconds': round(now - clock[0], 1)})
+        print(f'[{now - clock[0]:7.1f} s] {name}', file=sys.stderr, flush=True)
+        clock[0] = now
 
     # pins and module shape
     pins, module_bytes, test_bytes = build.build()
@@ -1032,6 +1421,7 @@ def main() -> int:
     results = dict(zip(names, pool(lambda n: host(module, golden, golden_argv(n)), names)))
     traced = harness([{'id': n, 'wasm': str(test), 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')},
                        'argv': golden_argv(n), 'trace': 'audit'} for n in names])
+    golden_out = traced
     goldens = []
     for name in names:
         case, got, dump = expected['cases'][name], results[name], traced[name]
@@ -1044,6 +1434,7 @@ def main() -> int:
                         'outcome': state['outcome'], 'cause': state['cause'], 'calls': state['calls'],
                         'transitions': dump['steps'], 'audited': dump['audited']})
     record['goldens'] = goldens
+    stage('goldens')
 
     # the Book invocations vm-spec froze with the goldens (SPEC section 8's walk)
     invoked = [(f"{n} {' '.join(row['argv'][1:])}", n, row) for n in sorted(expected.get('invocations', {}))
@@ -1052,6 +1443,7 @@ def main() -> int:
     got = dict(zip([c[0] for c in invoked], pool(lambda c: host(module, golden, invocation_argv[c[0]]), invoked)))
     traced = harness([{'id': label, 'wasm': str(test), 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')},
                        'argv': invocation_argv[label], 'trace': 'audit'} for label, n, _ in invoked])
+    invocation_out = traced
     invocations = []
     for label, n, row in invoked:
         dump, state = traced[label], traced[label]['state']
@@ -1063,6 +1455,7 @@ def main() -> int:
         invocations.append({'invocation': label, 'exit': got[label]['exit'], 'outcome': state['outcome'],
                             'cause': state['cause'], 'calls': state['calls']})
     record['invocations'] = invocations
+    stage('invocations')
 
     # vm/core fixtures: literal-review runs, dumps and lowered limits
     fixtures = json.loads((HERE / 'core/fixtures.json').read_text())
@@ -1107,6 +1500,7 @@ def main() -> int:
         require(all(seen[k] == v for k, v in want.items()), f'dump {name}: {seen} vs {want}')
         dumps.append({'name': name, **{k: seen[k] for k in want}})
     record['fixtures'] = {'runs': core, 'dumps': dumps}
+    stage('fixtures')
 
     # Books compared with the reference evaluation: the frozen run is literal review, and
     # vm/evaluate.py and the VM must each give it (review round 3: Chr's operand)
@@ -1132,6 +1526,14 @@ def main() -> int:
         require(all(state[k] == v for k, v in j['dump'].items()), f"{j['id']}: {state} vs {j['dump']}")
         agreed.append({'name': j['id'].split(':', 1)[1], 'exit': got['exit'], **j['dump']})
     record['reference'] = agreed
+    stage('reference rows')
+
+    # the differential lane: seeded rows, generated programs, sweeps and writers through vm.wasm and the reference
+    # evaluation, the frozen seed sample through the seed's native lane (vm/lane.py, vm/core/lane.json)
+    lane_cfg = json.loads(LANE.read_text())
+    seeded_rows = json.loads(SEEDED.read_text())
+    record['lane'], lane_all = check_lane(lane_cfg, seeded_rows, module, test, BUILD / 'lane', reg, digest)
+    stage('lane')
 
     # the bump pointer near 4 GiB: each run touches about 4 GiB, so two at a time,
     # each in its own process
@@ -1145,16 +1547,18 @@ def main() -> int:
                                                       f"section 5 gives {derived}")
     ceiling_jobs = [{'id': r['name'], 'wasm': str(test), 'files': {staged(r['image']): str(sandbox / staged(r['image']))},
                      'argv': [staged(r['image']), *r['argv']]} for r in ceiling]
-    ran = pool(lambda r: host(module, sandbox, [staged(r['image']), *r['argv']]), ceiling, workers=2)
-    dumped = {j['id']: harness([j])[j['id']] for j in ceiling_jobs}
     high = []
-    for r, got in zip(ceiling, ran):
-        dump, state = dumped[r['name']], dumped[r['name']]['state']
-        require(got == r['expect'], f"ceiling {r['name']}: {got} vs {r['expect']}")
-        require((dump['exit'], dump['stdout']) == (got['exit'], got['stdout']), f"ceiling {r['name']}: harness and host differ")
-        require(all(state[k] == v for k, v in r['dump'].items()), f"ceiling {r['name']}: {state} vs {r['dump']}")
-        high.append({'name': r['name'], 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode()), **r['dump']})
-    record['ceiling'] = high
+    if not study:
+        ran = pool(lambda r: host(module, sandbox, [staged(r['image']), *r['argv']]), ceiling, workers=2)
+        dumped = {j['id']: harness([j])[j['id']] for j in ceiling_jobs}
+        for r, got in zip(ceiling, ran):
+            dump, state = dumped[r['name']], dumped[r['name']]['state']
+            require(got == r['expect'], f"ceiling {r['name']}: {got} vs {r['expect']}")
+            require((dump['exit'], dump['stdout']) == (got['exit'], got['stdout']), f"ceiling {r['name']}: harness and host differ")
+            require(all(state[k] == v for k, v in r['dump'].items()), f"ceiling {r['name']}: {state} vs {r['dump']}")
+            high.append({'name': r['name'], 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode()), **r['dump']})
+        record['ceiling'] = high
+        stage('ceiling')
 
     # heap growth (CORE.md choice 15): a stream of small cells reaches the heap's end, or a host's refusal
     # to grow, in bounded time. SPEC section 5 leaves the timing of memory.grow free; growing one 64 KiB
@@ -1163,23 +1567,27 @@ def main() -> int:
     loop_image = (HERE / 'core/loop-cells.kimg').read_bytes()
     require(codec.encode(loop_plan, digest) == loop_image, "growth: the image is its plan's encoding")
     growth = growth_jobs(fixtures['growth']['rows'], loop_plan, loop_image, staged('core/loop-cells'), sandbox)
-    record['growth'] = check_growth(growth, module, test)
+    if not study:
+        record['growth'] = check_growth(growth, module, test)
+        stage('growth')
 
     # nothing recurses: a 200,000-deep nested expression, and the deep runs on a 64 KiB host stack
-    small = nested_plan(40)
-    require(nested_image(40, digest) == codec.encode(small, digest), 'the nested generator matches serializer.encode')
-    deep = nested_image(NEST, digest)
-    (sandbox / 'nested.kimg').write_bytes(deep)
     stack = {}
-    for label, argv in [('nested-200k', ['nested.kimg', 'main', str(NEST + 2)]),
-                        ('deep-250k', [staged('core/deep-250k'), 'main', '500003']),
-                        ('render-list', [staged('core/render-list'), 'main', '1000000'])]:
-        got = host(module, sandbox, argv, (SMALL_STACK,))
-        want = by_name.get(label, {}).get('expect') or {'exit': 0, 'stdout': 'Evaluated\t1\t1\tTrue{}\n', 'stderr': ''}
-        require(got == want, f'{label} under {SMALL_STACK}: {got}')
-        stack[label] = {'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode())}
-    stack['nested-200k'].update(words=len(deep) // 4, sha256=sha(deep), fuel=NEST + 2)
-    record['host_stack'] = {'node_flag': SMALL_STACK, 'runs': stack}
+    if not study:
+        small = nested_plan(40)
+        require(nested_image(40, digest) == codec.encode(small, digest), 'the nested generator matches serializer.encode')
+        deep = nested_image(NEST, digest)
+        (sandbox / 'nested.kimg').write_bytes(deep)
+        for label, argv in [('nested-200k', ['nested.kimg', 'main', str(NEST + 2)]),
+                            ('deep-250k', [staged('core/deep-250k'), 'main', '500003']),
+                            ('render-list', [staged('core/render-list'), 'main', '1000000'])]:
+            got = host(module, sandbox, argv, (SMALL_STACK,))
+            want = by_name.get(label, {}).get('expect') or {'exit': 0, 'stdout': 'Evaluated\t1\t1\tTrue{}\n', 'stderr': ''}
+            require(got == want, f'{label} under {SMALL_STACK}: {got}')
+            stack[label] = {'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode())}
+        stack['nested-200k'].update(words=len(deep) // 4, sha256=sha(deep), fuel=NEST + 2)
+        record['host_stack'] = {'node_flag': SMALL_STACK, 'runs': stack}
+        stage('host stack')
 
     # malformed images: the frozen controls, then a seeded fuzz corpus
     plans = {p.name[:-len('.plan.json')]: json.loads(p.read_text()) for p in golden.glob('*.plan.json')}
@@ -1245,6 +1653,7 @@ def main() -> int:
         welcome.append({'label': label, 'sha256': sha(data), 'argv': [f'a{i}.kimg', *frozen[label]['argv']]})
     ran = pool(lambda r: host(module, loaded, r['argv']), welcome)
     dumped = traced(welcome, loaded)
+    admitted_out, admitted_plan = dumped, dict(admitted)
     admissions = []
     for r, g in zip(welcome, ran):
         row, dump = frozen[r['label']], dumped[r['label']]
@@ -1278,6 +1687,7 @@ def main() -> int:
                              'want': want, 'dump': dump})
     ran = pool(lambda r: host(module, loaded, r['argv']), run_rows)
     dumped = traced(run_rows, loaded)
+    run_out, run_plan = dumped, {f'run:{label}': plan for label, plan, _ in runs_frozen}
     for r, g in zip(run_rows, ran):
         dump, state = dumped[r['label']], dumped[r['label']]['state']
         require(shown(g, r['want']) == r['want'], f"run control {r['label']}: {shown(g, r['want'])} vs {r['want']}")
@@ -1314,23 +1724,41 @@ def main() -> int:
     for r, g in zip(word_rows, pool(lambda r: host(module, argued, r['argv']), word_rows)):
         require(g == r['want'], f"argument control {r['label']}: {g} vs {r['want']}")
     record['arguments'] = [{'control': r['label'], 'verdict': r['verdict'], 'exit': r['want']['exit']} for r in word_rows]
+    stage('controls')
 
     fuzz = BUILD / 'fuzz'
     fuzz.mkdir()
     corpus = fuzz_corpus(images, reg, digest, fuzz)
-    fuzzed = traced(corpus, fuzz, timeout=1200)
-    tally = compare('fuzz', corpus, fuzzed)
-    limit_words = BUILD / 'limit-words'
-    limit_words.mkdir()
-    words_corpus = limit_corpus(images, reg, digest, limit_words)
-    words_seen = traced(words_corpus, limit_words, timeout=1200)
-    words_tally = compare('limit word', words_corpus, words_seen)
-    record['malformed'] = {'controls': refused, 'admitted': admissions,
-                           'fuzz': {'seed': FUZZ_SEED, 'per_image': FUZZ_PER_IMAGE, 'images': len(corpus),
-                                    'corpus_sha256': sha(json.dumps([r['sha256'] for r in corpus]).encode()), **tally},
-                           'limit_words': {'images': len(words_corpus),
-                                           'corpus_sha256': sha(json.dumps([r['sha256'] for r in words_corpus]).encode()),
-                                           **words_tally}}
+    fuzz_plans = [(r, codec.decode((fuzz / r['argv'][0]).read_bytes(), digest)) for r in corpus if r['reference'] is None]
+    words_corpus, word_jobs = [], []
+    if not study:
+        fuzzed = traced(corpus, fuzz, timeout=1200)
+        tally = compare('fuzz', corpus, fuzzed)
+        limit_words = BUILD / 'limit-words'
+        limit_words.mkdir()
+        words_corpus = limit_corpus(images, reg, digest, limit_words)
+        words_seen = traced(words_corpus, limit_words, timeout=1200)
+        words_tally = compare('limit word', words_corpus, words_seen)
+        record['malformed'] = {'controls': refused, 'admitted': admissions,
+                               'fuzz': {'seed': FUZZ_SEED, 'per_image': FUZZ_PER_IMAGE, 'images': len(corpus),
+                                        'corpus_sha256': sha(json.dumps([r['sha256'] for r in corpus]).encode()), **tally},
+                               'limit_words': {'images': len(words_corpus),
+                                               'corpus_sha256': sha(json.dumps([r['sha256'] for r in words_corpus]).encode()),
+                                               **words_tally}}
+        stage('fuzz and limit-word corpora')
+
+        # every admitted image through both the VM and the reference evaluation: the goldens, the invocations,
+        # the admitted and run controls and the mutated goldens the reference admits
+        seen = [(f'golden:{n}', plans[n], golden_argv(n)[1:], golden_out[n]) for n in names] + \
+            [(f'invocation:{label}', plans[n], invocation_argv[label][1:], invocation_out[label]) for label, n, _ in invoked] + \
+            [(f"admitted:{r['label']}", admitted_plan[r['label']], r['argv'][1:], admitted_out[r['label']]) for r in welcome] + \
+            [(r['label'], run_plan[r['label'].split('@')[0]], r['argv'][1:], run_out[r['label']]) for r in run_rows] + \
+            [(f"fuzz:{r['label']}", plan, r['argv'][1:], fuzzed[r['label']]) for r, plan in fuzz_plans]
+        failures = [f'{label}: {why}' for label, plan, words, out in seen if (why := disagreement(plan, words, out))]
+        require(not failures, f'{len(failures)} admitted images run otherwise than the reference evaluation says, first: {failures[:3]}')
+        record['both'] = {'goldens': len(names), 'invocations': len(invoked), 'admitted_controls': len(welcome),
+                          'run_controls': len(run_rows), 'fuzz_admitted': len(fuzz_plans)}
+        stage('admitted images through both')
 
     # mutants: a changed observation in their group, never a crash, except group `trap`, whose
     # defect is a trap where section 5 gives an outcome. Runs use the test build, so a golden
@@ -1374,10 +1802,14 @@ def main() -> int:
               'image-limits': image_limits, 'limit-words': word_jobs,
               'growth': [j for j in growth if j['at_most']], 'refused': [j for j in growth if j['dump']['outcome'] is None]}
     require(all(groups[g] for g in ('growth', 'refused')), 'the growth rows have a bounded count and a refusal')
-
-    def observed_wrong(job, out):
-        return (shown(out, job['want']) != job['want'] or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
-                or any(out['state'][k] > most for k, most in job.get('at_most', {}).items()))
+    groups.update(lane_groups(lane_all, BUILD / 'lane'))
+    groups['fuzz-admitted'] = [{'id': f"fuzz:{r['label']}", 'files': {r['argv'][0]: str(fuzz / r['argv'][0])}, 'argv': r['argv'],
+                                'want': reference_result(plan, r['argv'][1:])[0], 'dump': reference_result(plan, r['argv'][1:])[1]}
+                               for r, plan in fuzz_plans]
+    # a search that never ends is the defect of group `hang`: the goldens' one-key Default miss joins the lane's key rows
+    groups['hang'] += [{**j, 'deadline': 3_000} for j in goldens_jobs if j['id'] == 'golden:default-miss']
+    if study:
+        return run_study(groups, source, args[1:])
 
     killed = []
     for name, breaks, edits, group in MUTANTS:
@@ -1394,14 +1826,18 @@ def main() -> int:
                            'killed_by': [f'function {reached} reaches itself'], 'wrong_observations': 1, 'crashes': 0})
             continue
         wasm.write_bytes(build.assemble(build.test_source(text)))
-        batch = [{**{k: v for k, v in j.items() if k not in ('want', 'dump')}, 'wasm': str(wasm)} for j in groups[group]]
+        batch = [{**{k: v for k, v in j.items() if k not in ('want', 'dump')}, 'wasm': str(wasm),
+                  'deadline': j.get('deadline') or GUARD.get(group, 30_000)} for j in groups[group]]  # a hang ends as a Timeout
         if group in ('ceiling', 'full-heap', 'trap'):  # about 4 GiB each: one process per run
             out = {k: v for part in pool(lambda j: harness([j]), batch, workers=2) for k, v in part.items()}
         else:
-            out = harness(batch, node_flags=next(iter(groups[group]), {}).get('flags', ()))
+            out = harness(batch, node_flags=next(iter(groups[group]), {}).get('flags', ()), max_timeouts=1 if group == 'hang' else None)
         refusal = group == 'refused'  # the frozen outcome is the host's refusal: a trap, whose registers are the observation
-        crashed = [j['id'] for j in groups[group] if not (out[j['id']]['status'] == 'Trap' if refusal else clean(out[j['id']]))]
-        if group == 'trap':  # the frozen outcome is never a trap, so a trap is the wrong observation
+        crashed = [j['id'] for j in groups[group] if not (out[j['id']]['status'] == 'Trap' if refusal else
+                                                          clean(out[j['id']]) or out[j['id']]['status'] in ('Timeout', 'Skipped') and group == 'hang')]
+        if group == 'hang':  # the frozen outcome always ends: a row that outlives its deadline is the wrong observation
+            wrong = [j['id'] for j in groups[group] if out[j['id']]['status'] == 'Timeout']
+        elif group == 'trap':  # the frozen outcome is never a trap, so a trap is the wrong observation
             wrong = [j['id'] for j in full_heap if out[j['id']]['status'] == 'Trap']
             right = [j['id'] for j in groups[group] if j not in full_heap
                      and clean(out[j['id']]) and not observed_wrong(j, out[j['id']])]
@@ -1431,4 +1867,4 @@ def main() -> int:
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

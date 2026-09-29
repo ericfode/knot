@@ -6,11 +6,14 @@
 // acceptance runs of the production module go through the real host.
 //
 // Batch mode: a JSON array of jobs on stdin, one JSON result per line.
-//   {id, wasm, files: {name: path}, argv, limits?: {frames, heap}, trace?: 'yields' | 'audit'}
+//   {id, wasm, files: {name: path}, argv, limits?: {frames, heap}, trace?: 'yields' | 'audit', deadline?: ms}
 // A traced result says whether vm_boot returned (`booted`): an image refusal
-// happens before, a run-time failure after.
+// happens before, a run-time failure after. A job with a `deadline` that outlives it is stopped and
+// reported as status `Timeout` (a run that does not end is a defect only where the row promises an
+// end); with KNOT_HARNESS_MAX_TIMEOUTS set, the jobs after that many timeouts are `Skipped`.
 import fs from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 import {fileURLToPath} from 'node:url';
 
 class Stop extends Error {
@@ -82,12 +85,18 @@ export function audit(x) {
   return null;
 }
 
-export async function runVM({module, files = {}, argv = [], limits = null, trace = null}) {
+export async function runVM({module, files = {}, argv = [], limits = null, trace = null, deadline = null}) {
   const stdout = [], stderr = [], handles = new Map(), yields = [];
   let instance, next = 1, steps = 0, audited = 0, broken = null, booted = null;
   const mem = () => new Uint8Array(instance.exports.memory.buffer);
-  // the VM passes u32 addresses and lengths, which arrive as signed numbers
-  const text = (p, n) => strict.decode(mem().subarray(p >>> 0, (p >>> 0) + (n >>> 0)));
+  // the VM passes u32 addresses and lengths, which arrive as signed numbers. As the real host: text that
+  // is not scalar UTF-8 is an ABI fault, in a print, a Halt message or a name alike.
+  const text = (p, n) => {
+    try { return strict.decode(mem().subarray(p >>> 0, (p >>> 0) + (n >>> 0))); } catch {
+      stderr.push(Buffer.from('HostFailure\tio\tabi\n'));
+      throw new Stop('HostFailure', 5);
+    }
+  };
   const alloc = bytes => {
     const p = instance.exports.knot_alloc(bytes.length) >>> 0;
     mem().set(bytes, p);
@@ -109,13 +118,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
       result(out, 0, argv.length, table);
     },
     print(p, n) {
-      let line;
-      try { line = text(p, n); } catch {
-        // as the real host: text that is not scalar UTF-8 is an ABI fault
-        stderr.push(Buffer.from('HostFailure\tio\tabi\n'));
-        throw new Stop('HostFailure', 5);
-      }
-      stdout.push(Buffer.from(line + '\n'));
+      stdout.push(Buffer.from(text(p, n) + '\n'));
     },
     die(code, p, n) {
       stderr.push(Buffer.from(text(p, n) + '\n'));
@@ -143,30 +146,39 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
   instance = await WebAssembly.instantiate(module, {knot_io: io});
   const x = instance.exports;
   let status = 'Completed', exit = 0;
-  try {
-    if (limits) x.vm_limits(limits.frames, BigInt(limits.heap));
-    if (!trace) x.knot_main();
-    else {
-      booted = false;
-      x.vm_boot();
-      booted = true;
-      for (;;) {
-        if (trace === 'audit' && !broken) {
-          broken = audit(x);
-          audited++;
+  const execute = () => {
+    try {
+      if (limits) x.vm_limits(limits.frames, BigInt(limits.heap));
+      if (!trace) x.knot_main();
+      else {
+        booted = false;
+        x.vm_boot();
+        booted = true;
+        for (;;) {
+          if (trace === 'audit' && !broken) {
+            broken = audit(x);
+            audited++;
+          }
+          const r = x.vm_step();
+          steps++;
+          if (r === 1) yields.push(registers(x).calls);
+          if (r === 0) break;
         }
-        const r = x.vm_step();
-        steps++;
-        if (r === 1) yields.push(registers(x).calls);
-        if (r === 0) break;
       }
+    } catch (error) {
+      if (error instanceof Stop) ({status, exit} = error);
+      else if (error instanceof WebAssembly.RuntimeError) [status, exit] = ['Trap', 5];
+      else if (error instanceof RangeError) [status, exit] = ['HostStack', 4];
+      else throw error;
     }
-  } catch (error) {
-    if (error instanceof Stop) ({status, exit} = error);
-    else if (error instanceof WebAssembly.RuntimeError) [status, exit] = ['Trap', 5];
-    else if (error instanceof RangeError) [status, exit] = ['HostStack', 4];
-    else throw error;
-  }
+  };
+  if (deadline) {
+    globalThis.knotExecute = execute;  // the watchdog stops a loop that never ends, Wasm loops included
+    try { vm.runInThisContext('knotExecute()', {timeout: deadline}); } catch (error) {
+      if (error?.code !== 'ERR_SCRIPT_EXECUTION_TIMEOUT') throw error;
+      [status, exit] = ['Timeout', 4];
+    }
+  } else execute();
   const state = x.vm_dump ? registers(x) : null;
   return {status, exit, stdout: Buffer.concat(stdout).toString(), stderr: Buffer.concat(stderr).toString(),
     state, steps, yields, audited, broken, booted};
@@ -174,11 +186,17 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const jobs = JSON.parse(fs.readFileSync(0, 'utf8'));
-  const modules = new Map();
+  const modules = new Map(), most = Number(process.env.KNOT_HARNESS_MAX_TIMEOUTS ?? Infinity);
+  let timeouts = 0;
   for (const job of jobs) {
+    if (timeouts >= most) {
+      process.stdout.write(JSON.stringify({id: job.id, status: 'Skipped', exit: null, stdout: '', stderr: '', state: null}) + '\n');
+      continue;
+    }
     if (!modules.has(job.wasm)) modules.set(job.wasm, await WebAssembly.compile(fs.readFileSync(job.wasm)));
     const files = Object.fromEntries(Object.entries(job.files ?? {}).map(([k, p]) => [k, fs.readFileSync(p)]));
     const got = await runVM({...job, module: modules.get(job.wasm), files});
+    timeouts += got.status === 'Timeout';
     process.stdout.write(JSON.stringify({id: job.id, ...got}) + '\n');
   }
 }
