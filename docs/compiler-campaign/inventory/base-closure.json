@@ -9547,7 +9547,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 869,
+          "declarations": 867,
           "base": 103,
           "base_intrinsics": 27,
           "foreign": 7
@@ -13375,6 +13375,7 @@
               "Maybe",
               "U32",
               "src/core.Parameter",
+              "src/core.Term",
               "src/literal-matrix.Plan",
               "src/syntax.Node",
               "src/syntax.Token"
@@ -13589,39 +13590,9 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.rebuild",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Nat",
-              "Result",
-              "String",
-              "U32",
-              "src/check.Refine",
-              "src/check.prepend_argument",
-              "src/check.rebuilt",
-              "src/check.variable",
-              "src/core.Checked",
-              "src/core.Parameter",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.Scope",
-              "src/scope.find_level",
-              "src/scope.live_scope",
-              "src/syntax.At",
-              "src/syntax.Error",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
-            "via": "src/check.rebuild",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13636,21 +13607,6 @@
               "src/core.internal",
               "src/patterns.value",
               "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.Refine",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "ADT",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "src/core.Parameter",
-              "src/core.Term",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -13713,7 +13669,6 @@
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
-              "src/check.Refine",
               "src/check.annotated",
               "src/check.annotation",
               "src/check.arm_body",
@@ -13740,7 +13695,7 @@
               "src/check.prepend_argument",
               "src/check.prepend_arm",
               "src/check.primitive_match",
-              "src/check.rebuild",
+              "src/check.rebuilt",
               "src/check.variable",
               "src/core.Catalog",
               "src/core.Checked",
@@ -13770,6 +13725,7 @@
               "src/patterns.close",
               "src/primitive.output",
               "src/scope.Scope",
+              "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.residual",
@@ -21594,7 +21550,7 @@
           {
             "key": "src/patterns.value",
             "file": "src/patterns.bend",
-            "via": "src/check.constructor_result",
+            "via": "src/check.rebuilt",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -22874,7 +22830,7 @@
           {
             "key": "src/scope.find_level",
             "file": "src/scope.bend",
-            "via": "src/check.empty_remainder",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25600,7 +25556,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 869,
+          "declarations": 867,
           "base": 103,
           "base_intrinsics": 25,
           "foreign": 7
@@ -29428,6 +29384,7 @@
               "Maybe",
               "U32",
               "src/core.Parameter",
+              "src/core.Term",
               "src/literal-matrix.Plan",
               "src/syntax.Node",
               "src/syntax.Token"
@@ -29642,39 +29599,9 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.rebuild",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Nat",
-              "Result",
-              "String",
-              "U32",
-              "src/check.Refine",
-              "src/check.prepend_argument",
-              "src/check.rebuilt",
-              "src/check.variable",
-              "src/core.Checked",
-              "src/core.Parameter",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.Scope",
-              "src/scope.find_level",
-              "src/scope.live_scope",
-              "src/syntax.At",
-              "src/syntax.Error",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
-            "via": "src/check.rebuild",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29689,21 +29616,6 @@
               "src/core.internal",
               "src/patterns.value",
               "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.Refine",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "ADT",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "src/core.Parameter",
-              "src/core.Term",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -29766,7 +29678,6 @@
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
-              "src/check.Refine",
               "src/check.annotated",
               "src/check.annotation",
               "src/check.arm_body",
@@ -29793,7 +29704,7 @@
               "src/check.prepend_argument",
               "src/check.prepend_arm",
               "src/check.primitive_match",
-              "src/check.rebuild",
+              "src/check.rebuilt",
               "src/check.variable",
               "src/core.Catalog",
               "src/core.Checked",
@@ -29823,6 +29734,7 @@
               "src/patterns.close",
               "src/primitive.output",
               "src/scope.Scope",
+              "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.residual",
@@ -37647,7 +37559,7 @@
           {
             "key": "src/patterns.value",
             "file": "src/patterns.bend",
-            "via": "src/check.constructor_result",
+            "via": "src/check.rebuilt",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -38927,7 +38839,7 @@
           {
             "key": "src/scope.find_level",
             "file": "src/scope.bend",
-            "via": "src/check.empty_remainder",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -41653,7 +41565,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 782,
+          "declarations": 781,
           "base": 86,
           "base_intrinsics": 27,
           "foreign": 7
@@ -44350,27 +44262,9 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.rebuild",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/check.prepend_argument",
-              "src/check.rebuilt",
-              "src/check.variable",
-              "src/core.internal",
-              "src/scope.find_level",
-              "src/scope.live_scope",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
-            "via": "src/check.rebuild",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -44444,7 +44338,7 @@
               "src/check.prepend_argument",
               "src/check.prepend_arm",
               "src/check.primitive_match",
-              "src/check.rebuild",
+              "src/check.rebuilt",
               "src/check.variable",
               "src/core.exhausted",
               "src/core.internal",
@@ -44468,6 +44362,7 @@
               "src/patterns.branch",
               "src/patterns.close",
               "src/primitive.output",
+              "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.residual",
@@ -49827,7 +49722,7 @@
           {
             "key": "src/patterns.value",
             "file": "src/patterns.bend",
-            "via": "src/check.constructor_result",
+            "via": "src/check.rebuilt",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -50749,7 +50644,7 @@
           {
             "key": "src/scope.find_level",
             "file": "src/scope.bend",
-            "via": "src/check.empty_remainder",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -52676,7 +52571,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 907,
+          "declarations": 905,
           "base": 141,
           "base_intrinsics": 31,
           "foreign": 7
@@ -56549,6 +56444,7 @@
               "Maybe",
               "U32",
               "src/core.Parameter",
+              "src/core.Term",
               "src/literal-matrix.Plan",
               "src/syntax.Node",
               "src/syntax.Token"
@@ -56759,38 +56655,9 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.rebuild",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Nat",
-              "Result",
-              "src/check.Refine",
-              "src/check.prepend_argument",
-              "src/check.rebuilt",
-              "src/check.variable",
-              "src/core.Binding",
-              "src/core.Checked",
-              "src/core.Parameter",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.Scope",
-              "src/scope.find_level",
-              "src/scope.live_scope",
-              "src/syntax.At",
-              "src/syntax.Error",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
-            "via": "src/check.rebuild",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -56804,21 +56671,6 @@
               "src/core.internal",
               "src/patterns.value",
               "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.Refine",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "ADT",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "src/core.Parameter",
-              "src/core.Term",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -56882,7 +56734,6 @@
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
-              "src/check.Refine",
               "src/check.annotated",
               "src/check.annotation",
               "src/check.arm_body",
@@ -56909,7 +56760,7 @@
               "src/check.prepend_argument",
               "src/check.prepend_arm",
               "src/check.primitive_match",
-              "src/check.rebuild",
+              "src/check.rebuilt",
               "src/check.variable",
               "src/core.Binding",
               "src/core.Catalog",
@@ -56942,6 +56793,7 @@
               "src/patterns.close",
               "src/primitive.output",
               "src/scope.Scope",
+              "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.residual",
@@ -64681,7 +64533,7 @@
           {
             "key": "src/patterns.value",
             "file": "src/patterns.bend",
-            "via": "src/check.constructor_result",
+            "via": "src/check.rebuilt",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -65958,7 +65810,7 @@
           {
             "key": "src/scope.find_level",
             "file": "src/scope.bend",
-            "via": "src/check.empty_remainder",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,

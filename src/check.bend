@@ -19,8 +19,6 @@ type Mode is Data:
   Expression{node: S.Node, expected: Maybe<&2,U32>}
   Arguments{nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, token: S.Token}
   Arms{nodes: List<&2,S.Node>, token: S.Token, level: U32, expected: Maybe<&2,U32>}
-
-type Refine is Data:
   Rebuild{term: C.Term}
   RebuildArguments{terms: List<&2,C.Term>, parameters: List<&2,C.Parameter>, token: S.Token}
 
@@ -317,25 +315,6 @@ def empty_remainder(+tags: List<&2,S.Token>, +token: S.Token, +level: U32, types
           S.bind(C.Checked,C.Checked,E.reference(residual,token,scope),inspected =>
             case_result(C.Checked{C.Sequence{Nil{}},0,Nil{}},inspected,token,level,wanted))))
 
-# A refined binder's later occurrence is rebuilt from the fields its match opened.
-def rebuild(fuel: Nat, mode: Refine, +scope: E.Scope) -> Result<S.Error,C.Checked>:
-  match fuel mode scope:
-    case 0n _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
-    case 1n+ +n Rebuild{C.Value{token,+type_id,tag}} _:
-      Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
-    case 1n+ +n Rebuild{C.Reference{+token,level,type_id}} E.Scope{bindings,next,open,live,smaller}:
-      S.bind(C.Binding,C.Checked,E.find_level(bindings,level),binding =>
-        variable(binding,token,scope,term => rebuild(n,Rebuild{term},scope)))
-    case 1n+ +n Rebuild{C.Construct{+token,+type_id,+tag,+params,args}} _:
-      S.bind(C.Checked,C.Checked,rebuild(n,RebuildArguments{args,params,token},scope),value => rebuilt(value,token,type_id,tag,params))
-    case 1n+ +n Rebuild{other} _: C.internal(C.Checked,"refinement-node")
-    case 1n+ +n RebuildArguments{Nil{},Nil{},token} _:
-      Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
-    case 1n+ +n RebuildArguments{Con{head,+tail},Con{C.Parameter{name,q,type_id},+rest},+token} _:
-      S.bind(C.Checked,C.Checked,rebuild(n,Rebuild{head},E.live_scope(scope,q)),checked =>
-        S.bind(C.Checked,C.Checked,rebuild(n,RebuildArguments{tail,rest,token},scope),remaining => prepend_argument(checked,remaining,token)))
-    case 1n+ +n RebuildArguments{terms,params,token} _: C.internal(C.Checked,"refinement-arity")
-
 # A match takes the literal matrix when an arm spells a literal or Nat offset, or its scrutinee is an
 # installed primitive; every other match is a datatype match, flat or a binary matrix.
 def literal_pattern(fuel: Nat, node: S.Node) -> Bool:
@@ -419,7 +398,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Expression{S.Variable{+token},+wanted} C.Catalog{types,sigs} _:
       S.bind(E.Scope,C.Checked,P.close(scope,types),+scope =>
       S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>
-        S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => rebuild(n,Rebuild{term},scope)),value => expected(token,wanted,value))))
+        S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value))))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(E.Scope,C.Checked,P.close(scope,types),+scope =>
       S.bind(G.ConstructorRef,C.Checked,M.lookup(types,token),+reference =>
@@ -481,6 +460,20 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
               S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,bound),checked =>
                 S.bind(C.Checked,C.Checked,run(n,Arms{tail,token,level,wanted},catalog,current,scope),remaining => prepend_arm(tag,fields,checked,remaining)))))))
     case 1n+ +n Arms{nodes,token,level,wanted} _ _: C.internal(C.Checked,"arm-node")
+    case 1n+ +n Rebuild{C.Value{token,+type_id,tag}} _ _:
+      Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
+    case 1n+ +n Rebuild{C.Reference{+token,level,type_id}} _ E.Scope{bindings,next,open,live,smaller}:
+      S.bind(C.Binding,C.Checked,E.find_level(bindings,level),binding =>
+        variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)))
+    case 1n+ +n Rebuild{C.Construct{+token,+type_id,+tag,+params,args}} _ _:
+      S.bind(C.Checked,C.Checked,run(n,RebuildArguments{args,params,token},catalog,current,scope),value => rebuilt(value,token,type_id,tag,params))
+    case 1n+ +n Rebuild{other} _ _: C.internal(C.Checked,"refinement-node")
+    case 1n+ +n RebuildArguments{Nil{},Nil{},token} _ _:
+      Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
+    case 1n+ +n RebuildArguments{Con{head,+tail},Con{C.Parameter{name,q,type_id},+rest},+token} _ _:
+      S.bind(C.Checked,C.Checked,run(n,Rebuild{head},catalog,current,E.live_scope(scope,q)),checked =>
+        S.bind(C.Checked,C.Checked,run(n,RebuildArguments{tail,rest,token},catalog,current,scope),remaining => prepend_argument(checked,remaining,token)))
+    case 1n+ +n RebuildArguments{terms,params,token} _ _: C.internal(C.Checked,"refinement-arity")
 
 def checked_function(signature: C.Signature, checked: C.Checked) -> C.Function:
   match checked:
