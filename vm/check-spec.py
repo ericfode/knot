@@ -1396,6 +1396,10 @@ def structure_controls(images: dict) -> list:
     def sites(inner, outer):
         return lambda l: (l.nodes[1].__setitem__(2, inner), l.nodes[2].__setitem__(2, outer))
 
+    def key_row_not_branch(l):                                 # default-hit's key 7 becomes 1, and its row a Value typed 1
+        l.insert_node(0, [3, 1, 1])
+        l.nodes[5][6], l.nodes[5][7] = 1, Ref(0)
+
     utf8 = lambda label, text: (label, 'second', spell(0, text), 'name utf-8')      # noqa: E731  (Flag, at its own length)
     rows = [
         # names (section 5)
@@ -1451,6 +1455,8 @@ def structure_controls(images: dict) -> list:
         ('default-extra-word', 'default-hit', grow(4, 3, 0), 'default length'),
         ('branch-extra-word', 'second', grow(4, 1, 0), 'branch length'),
         ('let-extra-word', 'let', extend_first(7, 0), 'let length'),
+        ('con-record-short', 'second', replace(4, 5, [4, 1, 0]), 'con length'),
+        ('closure-record-short', 'closure-id', replace(4, 4, [10, 1, 0]), 'closure length'),
         ('con-count-word', 'second', put(4, 5, 3, 1), 'con length'),
         ('call-count-word', 'second', put(4, 6, 3, 2), 'call length'),
         ('prim-count-word', 'string-eq', put(4, 2, 3, 1), 'prim length'),
@@ -1463,11 +1469,13 @@ def structure_controls(images: dict) -> list:
         ('node-orphan', 'second', orphan, 'unreachable node'),
         ('arm-standalone', 'value-on', standalone, 'standalone arm'),
         ('case-key-row-mismatch', 'default-hit', put(4, 4, 6, 8), 'case key'),
+        ('case-key-row-not-branch', 'default-hit', key_row_not_branch, 'case key'),
         ('case-default-not-default', 'case-on', value_named_by(-1), 'case arm kind'),
         ('case-row-not-branch', 'case-on', value_named_by(7), 'case arm kind'),
         # functions (section 2)
         ('function-record-arity', 'second', put(2, 0, 2, 2), 'function record'),
         ('function-record-short', 'second', replace(2, 0, [4, 0, 1, 3]), 'function record'),
+        ('function-record-tiny', 'second', replace(2, 0, [4, 0]), 'function record'),
         ('function-root-not-node', 'second', put(2, 0, 4, 0), 'function root'),
         ('function-root-owned', 'second', put(2, 1, 4, Ref(0)), 'function root'),
         ('function-param-type-beyond', 'second', put(2, 0, 5, 5), 'type index'),
@@ -1497,6 +1505,8 @@ def structure_controls(images: dict) -> list:
     header = [(f'registry-digest-word-{i}', word_patch(second, i, word(second, i) ^ 1), 'registry digest') for i in range(25, 32)] + [
         ('length-misaligned', second + b'\0', 'length'),
         ('length-short-header', second[:4 * 31], 'length'),
+        ('names-count-beyond-image', word_patch(second, word(second, 10), 7), 'section 5 record length'),
+        ('record-overruns-image', word_patch(second, len(second) // 4 - 3, 4), 'section 5 record length'),
         ('main-index-beyond', word_patch(second, 4, 9), 'main index'),
         ('main-index-none', word_patch(second, 4, codec.NONE), 'noncanonical')]
     return out + [(label, data, 'HostFailure image: ' + reason, '') for label, data, reason in header]
@@ -1890,6 +1900,26 @@ def plan_controls(plans: dict) -> list:
         ('key-case-on-flag', edits('case-on', ([*body(0), 4], 'keys'), ([*body(0), 6], ['default', ['value', 0, 0]])),
          'key case on a non-scalar type'),
         ('tag-table-not-dense', edit('case-on', [*body(0), 5], case_rows[:1]), 'tag table is not dense'),
+        # The clauses that a test joins, each broken alone (the statement's other controls break another): a table that is
+        # too long, a representation that names an arrow, a Program with no `main`, a Value of a tag beyond its type or of
+        # a type with no constructors, a Construct of an arrow, a call or an Invoke whose operand does not fit, a capture
+        # beyond the depth, a key row whose first slot is not the depth, a closure that names a data type, and an Invoke of
+        # a data type.
+        ('tag-table-too-long', edit('case-on', [*body(0), 5], [*case_rows, ['branch', 2, 1, 0, ['value', 0, 0]]]),
+         'tag table is not dense'),
+        ('representation-of-arrow', edit('closure-id', ['representation'], {'Bool': 1}), 'Bool shape'),
+        ('program-without-main', edit('foreign-print', ['functions', 1, 'name'], 'entry'), 'main must exist with no live parameters'),
+        ('value-tag-beyond', edit('value-on', [*body(0), 2], 5), 'value is not a nullary constructor'),
+        ('value-of-opaque', edit('default-hit', [*body(0), 6, 1, 1], 0), 'value is not a nullary constructor'),
+        ('construct-of-arrow', edits('pair', (['types'], [*plans['pair']['types'], {'kind': 'arrow', 'domain': 0, 'result': 0}]),
+                                     ([*body(0), 1], 2)), 'construct tag'),
+        ('call-operand-type', edit('keep-swapped', ['functions', 1, 'parameters', 0], 0), 'call types'),
+        ('invoke-argument-type', edit('closure-id', [*body(0), 3], [['ref', 1, 0]]), 'invoke types'),
+        ('capture-beyond-depth', edit('closure-captures', [*body(0), 3, 4], [0, 5]), 'captures must increase strictly'),
+        ('key-branch-first-slot', edit('default-hit', [*body(0), 5, 0, 2], 2), 'key branch binds nothing'),
+        ('closure-erased-at-data-type', edits('closure-id', ([*body(1), 3, 0, 1], 0), ([*body(1), 3, 0, 2], 0)), 'closure arrow'),
+        ('invoke-non-arrow-without-argument', edits('closure-id', ([*body(0), 2], ['ref', 0, 1]), ([*body(0), 3], [])),
+         'invoke arity'),
         # Finding 3, the admit side: a name is any well-formed UTF-8 of section 2, at every length and at every edge of
         # a length, so a loader that refuses non-ASCII names, or one length of them, is refused by an admitted control.
         ('name-utf8-lengths', edit('value-on', ['types', 0, 'name'], '$\u00a2\u20ac\U00010348'), None),
@@ -2832,6 +2862,14 @@ CODEC_MUTANTS = [
     ('validator-tag-case-on-any-type', [("                    fail(where, 'tag case on a non-data type')\n", "                    pass\n")]),
     ('validator-key-case-on-any-type', [("                    fail(where, 'key case on a non-scalar type')\n", "                    pass\n")]),
     ('validator-tag-table-any-length', [("                    fail(where, 'tag table is not dense')\n", "                    pass\n")]),
+    ('validator-program-without-main-ok', [("        if not main or main[0]['parameters']:", "        if main and main[0]['parameters']:")]),
+    ('validator-call-operand-types-unchecked', [("            elif not fits(callee['result'], t) or not all(\n"
+                                                 "                    fits(p, k[1]) for p, k in zip(callee['parameters'], node[3])):\n",
+                                                 "            elif not fits(callee['result'], t):\n")]),
+    ('validator-invoke-argument-type-unchecked',
+     [("            elif not fits(types[f]['result'], t) or (node[3] and not fits(types[f]['domain'], node[3][0][1])):\n",
+       "            elif not fits(types[f]['result'], t):\n")]),
+    ('validator-key-branch-first-slot-unchecked', [("                    if r[2] != depth or r[3] != 0:", "                    if r[3] != 0:")]),
     ('decoder-empty-name-ok', [("if size == 0 or len(r) != 1 + (size + 3) // 4:", "if len(r) != 1 + (size + 3) // 4:")]),
     ('decoder-name-length-word-unchecked', [("if size == 0 or len(r) != 1 + (size + 3) // 4:", "if size == 0:")]),
     ('decoder-duplicate-names-ok', [("    if len(set(names)) != len(names):\n        raise Malformed('duplicate name')\n", "")]),
@@ -2968,11 +3006,13 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest, in
     return results
 
 
-def refusal_statements(source: str) -> list:
-    """(id, [(old, new)]) for each refusal of the reference codec, as a mutant that omits it. A refusal is a `raise`, or a call
-    of `fail` or `limit`, as a statement. The mutant turns it into `pass`, so whatever follows it in its block (a `return`
-    or a `continue`) stays, as a loader that forgot the check would go on; a refusal that opens an `if` is replaced
-    inside its guard. An id names the function and the message of the refusal, and counts repeats in source order."""
+def refusal_mutants(source: str) -> list:
+    """(id, [(old, new)]) for each refusal of the reference codec and for each clause of its test, as a mutant that omits it.
+    A refusal is a `raise`, or a call of `fail` or `limit`, as a statement. Omitting it turns it into `pass`, so whatever
+    follows it in its block (a `return` or a `continue`) stays, as a loader that forgot the check would go on; a refusal
+    that opens an `if` is replaced inside its guard. Omitting a clause drops one operand of a guard whose test is an `or`,
+    so that the guard refuses on the others. An id names the function and the message of the refusal, counts repeats in
+    source order, and ends `/i` for the i-th clause."""
     starts, at = [], 0
     for line in source.split('\n'):
         starts.append(at)
@@ -2994,20 +3034,57 @@ def refusal_statements(source: str) -> list:
         for stmt in sorted((n for n in ast.walk(fn) if refuses(n)), key=lambda n: (n.lineno, n.col_offset)):
             key = f'{fn.name}:{message(stmt)}'
             seen[key] = seen.get(key, 0) + 1
-            (a, _), (sa, sb) = span(guards.get(id(stmt), stmt)), span(stmt)
-            out.append((key if seen[key] == 1 else f'{key}#{seen[key]}', [(source[a:sb], source[a:sa] + 'pass')]))
+            key = key if seen[key] == 1 else f'{key}#{seen[key]}'
+            guard = guards.get(id(stmt))
+            (a, _), (sa, sb) = span(guard or stmt), span(stmt)
+            out.append((key, [(source[a:sb], source[a:sa] + 'pass')]))
+            if guard and isinstance(guard.test, ast.BoolOp) and isinstance(guard.test.op, ast.Or):
+                (ta, tb), operands = span(guard.test), guard.test.values
+                for i in range(len(operands)):
+                    rest = ' or '.join(f'({ast.get_source_segment(source, v)})' for j, v in enumerate(operands) if j != i)
+                    out.append((f'{key}/{i}', [(source[a:sb], source[a:ta] + rest + source[tb:sb])]))
     return out
 
 
-# The refusals that no frozen image makes a mutant admit or refuse differently, and why they hold anyway. Removing one
-# of the first kind makes the reference raise (an IndexError) on the control that pins it, which is no kill (section 11)
-# but shows that a loader without the check has nothing to read; nothing reaches the second kind; the third is the
-# encoder's own input check, which `text_spelling` holds and whose removal makes `encode` raise another error.
+# The refusals and clauses that no frozen image makes a mutant admit or refuse differently, and why they hold anyway.
+# Omitting one of the first kind makes the reference raise (an IndexError, a KeyError) on the control that pins it, which is
+# no kill (section 11) but shows that a loader without the check has nothing to read; nothing reaches the second kind; the
+# third is the encoder's own input check, which `text_spelling` holds and whose removal makes `encode` raise another error.
+# A clause is `/i`, the i-th operand of its refusal's `or`.
 CRASH_HELD = {
+    "decode:'length'/0": 'length-misaligned',
+    "decode:'header'/0": 'entry-kind',
+    "decode:f'section {s} record length'/0": 'names-count-beyond-image',
     "decode:'name index'": 'name-index-beyond',
+    "decode:'type record'/1": 'type-kind-unknown',
+    "decode:'constructor record'/0": 'constructor-record-short',
+    "decode:'constructor record'/2": 'constructor-type-beyond',
+    "decode:'constructor tag'/0": 'constructor-of-arrow',
+    "decode:'constructor tag'/1": 'constructor-tag-beyond',
+    "decode:'constant record'/0": 'constant-record-short',
+    "decode:'constant record'/1": 'constant-kind-unknown',
     "decode:'child offset'": 'child-not-record',
     "decode:'node record'": 'node-record-short',
+    "decode:'node record'/0": 'node-record-short',
+    "decode:'node record'/1": 'opcode',
+    "decode:f'{op} length'#2/0": 'con-record-short',
+    "decode:'closure length'/0": 'closure-record-short',
     "decode:'constant index'": 'constant-index-beyond',
+    "decode:'case arm kind'/1": 'case-default-not-default',
+    "decode:'function record'/0": 'function-record-tiny',
+    "decode:'function root'/0": 'function-root-not-node',
+    "validate:f'{r} shape'/0": 'plan:representation-of-arrow',
+    "validate:'main must exist with no live parameters'/0": 'plan:program-without-main',
+    "validate:'value is not a nullary constructor'/0": 'plan:value-of-opaque',
+    "validate:'value is not a nullary constructor'/1": 'plan:value-tag-beyond',
+    "validate:'construct tag'/0": 'plan:construct-of-arrow',
+    "validate:'construct tag'/1": 'plan:construct-tag',
+    "validate:f'unknown {op} id {node[2]}'/0": 'plan:prim-unknown',
+    "validate:f'{op} operand is not the pinned {name}'/0": 'plan:prim-on-flags',
+    "validate:'branch key'/1": 'plan:tag-table-too-long',
+    "validate:'closure arrow'/0": 'plan:closure-erased-at-data-type',
+    "validate:'captures must increase strictly below depth'/1": 'plan:capture-beyond-depth',
+    "validate:'invoke arity'/0": 'plan:invoke-non-arrow-without-argument',
 }
 UNREACHABLE = {
     "decode:'constructor order'": "every constructor record has a tag below its type's count and no tag repeats "
@@ -3022,6 +3099,8 @@ UNREACHABLE = {
 EXCUSED = {
     "u32_list:f'constant data is not a list of u32 words: {values!r}'":
         "the encoder's input check: `text_spelling` holds it, and without it `encode` fails on the text with another error",
+    "u32_list:f'constant data is not a list of u32 words: {values!r}'/0": "the same check, its first clause",
+    "u32_list:f'constant data is not a list of u32 words: {values!r}'/1": "the same check, its second clause",
     "encode:f'unknown plan node {op!r}'": "the encoder's input check: no decoded plan holds a form outside the table",
 }
 
@@ -3052,12 +3131,13 @@ def crash_held(plans, images, controls, admitted, describing, reg, digest, invok
 
 
 def statement_audit(plans, images, controls, admitted, describing, reg, digest, invoking, arguing) -> dict:
-    """Omit each refusal of the reference codec in turn (`refusal_statements`) and account for it: killed by a frozen image,
-    refusal or verdict, or listed above with what holds it. A refusal that a new statement adds and no control pins fails
-    here, and so does a listed one that a control has come to kill, or that no longer crashes where it is said to."""
+    """Omit each refusal of the reference codec, and each clause of its test, in turn (`refusal_mutants`) and account for it:
+    killed by a frozen image, refusal or verdict, or listed above with what holds it. A refusal that a new statement adds and no
+    control pins fails here, and so does a listed one that a control has come to kill, or that no longer raises where it is
+    said to."""
     source, killed, held, other = CODEC.read_text(), [], {}, {}
-    frozen = {label: reason for label, _, reason, _ in controls}
-    for name, edits in refusal_statements(source):
+    frozen = {label: reason + message for label, _, reason, message in controls}
+    for name, edits in refusal_mutants(source):
         by, crashed = codec_kill(edited_codec(name, edits, source), plans, images, controls, admitted, describing, reg, digest,
                                  invoking, arguing)
         if by:
@@ -3065,18 +3145,19 @@ def statement_audit(plans, images, controls, admitted, describing, reg, digest, 
                     f'refusal {name} is listed as held, but {by} kills its removal')
             killed.append(name)
         elif name in CRASH_HELD:
-            require(CRASH_HELD[name] in crashed, f'refusal {name}: its removal no longer raises on {CRASH_HELD[name]}')
-            require(frozen[CRASH_HELD[name]].endswith(name.split(':', 1)[1].strip("'")),
-                    f'refusal {name}: {CRASH_HELD[name]} does not freeze it')
-            held[name] = CRASH_HELD[name]
+            control = CRASH_HELD[name]
+            require(control in crashed, f'refusal {name}: its removal no longer raises on {control}')
+            literal = re.fullmatch(r"\w+:'([^']*)'", name)
+            require(not literal or frozen[control].endswith(literal[1]), f'refusal {name}: {control} does not freeze it')
+            held[name] = control
         elif name in UNREACHABLE or name in EXCUSED:
             require(not crashed, f'refusal {name}: its removal raises on {crashed}, so it is not unreached')
             other[name] = UNREACHABLE.get(name) or EXCUSED[name]
         else:
             raise AssertionError(f'refusal {name}: no frozen control makes its removal admit an image or refuse another way')
     listed = set(CRASH_HELD) | set(UNREACHABLE) | set(EXCUSED)
-    require(listed <= set(held) | set(other), f'refusals listed as held that the codec no longer holds: {sorted(listed - set(held) - set(other))}')
-    return {'refusals': len(killed) + len(held) + len(other), 'killed': len(killed), 'held_by_crash': held, 'unreached': other}
+    require(listed <= set(held) | set(other), f'listed refusals that the codec no longer holds: {sorted(listed - set(held) - set(other))}')
+    return {'omissions': len(killed) + len(held) + len(other), 'killed': len(killed), 'held_by_crash': held, 'unreached': other}
 
 
 # Lines of evaluate.py that several mutants replace: the Top loop's step, and the attribute that a Book
@@ -3861,9 +3942,10 @@ def main() -> int:
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
           f"{len(admitted)} admitted controls ({len(coded)} code lists, {len(runs)} runs), "
           f"{len(verdicts)} describe controls, {len(arguing)} argument controls, {len(excused)} excused controls, "
-          f"{len(witnessed)} seed witnesses, {len(mutants)} killed mutants, {audit['refusals']} codec refusals accounted for "
-          f"({audit['killed']} killed when omitted, {len(held)} of the reviewer's bounds and {len(audit['held_by_crash'])} refusals "
-          f"held by a raise, {len(audit['unreached'])} unreached or excused); {RECEIPT.relative_to(ROOT)}")
+          f"{len(witnessed)} seed witnesses, {len(mutants)} killed mutants, {audit['omissions']} omissions of a codec refusal "
+          f"or clause accounted for ({audit['killed']} killed, {len(audit['held_by_crash'])} held by a raise, "
+          f"{len(audit['unreached'])} unreached or excused; {len(held)} of the reviewer's bounds held by a raise); "
+          f"{RECEIPT.relative_to(ROOT)}")
     return 0
 
 
