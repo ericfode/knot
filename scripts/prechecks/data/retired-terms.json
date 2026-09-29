@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "note": "Literals that a decision superseded. The coordinator's docs/compiler-campaign/retired-terms.json (read from main) extends this seed. A hit in a changed live doc, source or script line is reported unless its line or a neighbour names an allowed context.",
+  "terms": [
+    {"id": "D19", "pattern": "\\b2,?048 pages?\\b", "allowed": ["superseded", "earlier draft", "D19", "was ", "previously"],
+     "reason": "D19 raised the VM memory maximum to 65,536 pages"},
+    {"id": "D19", "pattern": "\\b128 ?MiB\\b", "allowed": ["superseded", "earlier draft", "D19", "was ", "previously"],
+     "reason": "D19 replaced the 128 MiB bound with the 4 GiB wasm32 limit"},
+    {"id": "D19", "pattern": "\\bcap raise\\b", "allowed": ["superseded", "earlier draft", "D19"],
+     "reason": "D19 removed the cap-raise fallback"},
+    {"id": "D19", "pattern": "\\(memory[^)]*[^0-9]2048[^0-9]", "allowed": ["superseded", "earlier draft", "D19", "fixture"],
+     "reason": "a bare 2,048-page maximum in a Wasm memory declaration"},
+    {"id": "coordinator-pending", "pattern": "\\bawaiting (?:coordinator )?authori[sz]", "allowed": ["superseded"],
+     "reason": "an authorization wait is process narration that goes stale"}
+  ]
+}
