@@ -89,12 +89,12 @@ whose review declares the line. It also checks the frozen VM expectation table; 
 78 plan-level, and nine on either side of the resource limits that are `Exhausted` kind 2); 27
 expectation, seven invocation, two seed-display, three display-lane and two bench
 controls; two excused eval-bound controls; eight admitted plan controls (two of them names in every length of UTF-8),
-one admitted limit control, seven admitted code-list controls and 133 run controls with their frozen
+one admitted limit control, seven admitted code-list controls and 135 run controls with their frozen
 fuel, calls and outcomes (among them D23's requests: built by the Action's second application,
 performed only by the Program's Top loop, dropped without effect and refused as
 `Unsupported vm effect` wherever a read meets one, except a Case, whose Default takes it (D24; nest's lowering of a source
 catch-all emits none, so its five compiled twins are refused, and two plans that test the slot again take the request as the native lane does), with the
-bytes and host calls a Book makes, which are none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar; and 22 atomic controls
+bytes and host calls a Book makes, which are none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar; and 24 atomic controls
 (section 6.3): each stop of a step that is no Enter reports the meters, output and effects that the run held before the step, and is reached with exactly
 the fuel the run has spent); nine describe-domain controls; 13 argument controls;
 the lowering of two hand-written displays; 15 seed witnesses (sources whose two seed lanes, and for

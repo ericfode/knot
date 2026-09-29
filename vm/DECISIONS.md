@@ -1002,50 +1002,58 @@ follows it (§5, §10, §11) without a new image header word.
      with it at every halt once its two relations are removed. What the reference evaluation cannot reach at all is the heap, the frame region,
      `RCOverflow` and a release's worklist; vm-core's frame-region and heap-limit rows (`nat-pred-frames`, `nat-pred-heap`,
      `describe-frames-short`, `append-heap-short`) freeze `calls`, `top` and the bump pointer at such a stop and are where they are held.
-   - **The controls (22, D7).** `atomic_controls`, run controls 111 to 133. The expected values were written by literal review before any run
-     (entries walked by hand, `stdout` and `effects` from each source), and the reference evaluation reproduced all 22 on its first run, with the
-     unchanged evaluate.py. Sixteen are twins of existing controls or goldens at fuel = `calls`, freezing the `stdout` and `effects` that the first
+   - **The controls (24, D7).** `atomic_controls`, run controls 111 to 135. The expected values were written by literal review before any run
+     (entries walked by hand, `stdout` and `effects` from each source), and the reference evaluation reproduced all of them on its first run, with the
+     unchanged evaluate.py (the last two were added after review, the same way). Eighteen are twins of existing controls or goldens at fuel = `calls`, freezing the `stdout` and `effects` that the first
      freeze left out, one or more for each stop kind of the ruling: an ill-typed Chr, Succ, word prim, Case scrutinee and rendered field;
      `NatRange` at a Succ, `Nat.add` and `Nat.mul` (the plans of the goldens `nat-succ-range`, `nat-range` and `nat-mul-range`, which freeze no
      `calls`: 2 each, the callee's entry being the last); Return to Top refusing a Halt's code (`inspect-halt-code`) or message
-     (`inspect-halt-message`), an IO.OP that is a closure, and a Halt message with a surrogate; the loop refusing a String with a surrogate and one with an
-     ill-typed tail; a Case refusing a request; a display beyond its bound. Four stop after an effect and freeze what it wrote and called
+     (`inspect-halt-message`), an IO.OP that is a closure, and a Halt message with a surrogate; the loop refusing a String with a surrogate, one with a
+     scalar `a` before it (`print-non-scalar-mid`: nothing of the prefix is written) and one with an ill-typed tail; a Case refusing a request and a Book's
+     render of one (`book-request-rendered`, after 5); a display beyond its bound. Four stop after an effect and freeze what it wrote and called
      (`a\n` or `x\n`, 1 effect), and two order inspection before charge at the display bound (`Pair{1,048,574n, w}` has charged the whole visit bound
      when it reaches `w`: a Flag there is the 1,048,577th visit, `display`; a closure handed there as a Flag is `ill-typed` first). The last pair is
      the ordering of vm-core's round-7 finding 2 (describe counted a visit before it inspected the word, so an ill-typed word at the last visit
      was `Exhausted` display), at the reference's own outcome, with a Nat word for the visits instead of a chain of a million constructors.
-   - **The mutants (22).** Each mutates before it refuses (SPEC §12), and dies by a changed observation. Measured on the tree, each against
-     the 111 goldens, the 111 earlier run controls and the 22 atomic controls (a count is the controls that kill it):
+   - **The mutants (22).** Each mutates before it refuses (SPEC §12), and dies by a changed observation. The gate requires more than a kill:
+     at least one control of the atomic set (the 24 `atomic-*` controls and the three `fuel-zero-*` controls of a refused Enter, the same twin)
+     must change under each, since a mutant that only a golden or another run control kills is not held by the controls of the rule that it
+     violates (`ATOMIC_MUTANTS`, `SPENT_FUEL_TWINS`, and `atomic` in each mutant's receipt row; with the controls of three of them removed, the gate
+     reports those three as survivors). Measured on the tree, each against the 111 goldens, the 108 run controls outside the atomic set and the 27
+     inside it (a count is the controls that kill it):
 
-     | Mutant | goldens | earlier run controls | atomic controls |
+     | Mutant | goldens | run controls outside the atomic set | atomic set |
      |---|---:|---:|---:|
      | `nat-range-spends-entry` | 0 | 0 | 4 |
      | `ill-typed-spends-entry` | 0 | 40 | 11 |
      | `case-request-spends-entry` | 0 | 13 | 1 |
-     | `request-read-spends-entry` | 0 | 7 | 0 |
-     | `d20-refusal-spends-entry` | 4 | 1 | 3 |
+     | `request-read-spends-entry` | 0 | 6 | 2 |
+     | `d20-refusal-spends-entry` | 4 | 1 | 4 |
      | `display-refusal-spends-entry` | 0 | 2 | 2 |
-     | `enter-operand-check-after-debit` | 0 | 10 | 1 |
-     | `enter-request-target-after-debit` | 0 | 2 | 0 |
+     | `enter-operand-check-after-debit` | 0 | 8 | 3 |
+     | `enter-request-target-after-debit` | 0 | 1 | 1 |
      | `nat-range-tests-fuel` | 0 | 0 | 4 |
      | `ill-typed-tests-fuel` | 0 | 0 | 11 |
      | `case-request-tests-fuel` | 0 | 1 | 1 |
-     | `request-read-tests-fuel` | 0 | 1 | 0 |
-     | `d20-refusal-tests-fuel` | 0 | 0 | 3 |
+     | `request-read-tests-fuel` | 0 | 0 | 2 |
+     | `d20-refusal-tests-fuel` | 0 | 0 | 4 |
      | `display-refusal-tests-fuel` | 0 | 0 | 2 |
-     | `effect-counted-before-scalar-check` | 0 | 0 | 2 |
-     | `effect-counted-before-inspection` | 0 | 1 | 3 |
-     | `effect-writes-before-scalar-check` | 1 | 0 | 0 |
+     | `effect-counted-before-scalar-check` | 0 | 0 | 3 |
+     | `effect-counted-before-inspection` | 0 | 1 | 4 |
+     | `effect-writes-before-scalar-check` | 1 | 0 | 1 |
      | `describe-writes-header-before-stop` | 0 | 1 | 4 |
      | `describe-charges-before-inspecting` | 0 | 0 | 1 |
      | `stop-discards-output` | 1 | 2 | 4 |
      | `nat-range-deferred` | 0 | 0 | 4 |
      | `ill-typed-deferred` | 0 | 20 | 4 |
 
-     Eight survive every golden and every earlier run control (the three `nat-range-` mutants, `ill-typed-tests-fuel`, `d20-refusal-tests-fuel`,
-     `display-refusal-tests-fuel`, `effect-counted-before-scalar-check` and `describe-charges-before-inspecting`) and die by the atomic
-     controls alone. Four die by no atomic control: three that touch a read of a request (the earlier request controls kill them) and
-     `effect-writes-before-scalar-check` (the golden `print-non-scalar-mid`). Evaluator mutants 97 to 119, 283 in all.
+     Nine survive every golden and every run control outside the atomic set (the three `nat-range-` mutants, `ill-typed-tests-fuel`,
+     `request-read-tests-fuel`, `d20-refusal-tests-fuel`, `display-refusal-tests-fuel`, `effect-counted-before-scalar-check` and
+     `describe-charges-before-inspecting`) and die by that set alone; the other thirteen die by earlier controls too. Before the two
+     twins added after review (`atomic-print-non-scalar-mid`, `atomic-request-rendered`) and the three `fuel-zero-*` controls counted by name,
+     four of the 22 (`request-read-spends-entry`, `request-read-tests-fuel`, `enter-request-target-after-debit` and
+     `effect-writes-before-scalar-check`) were killed by no atomic control and only by earlier ones; the requirement above is what closes that.
+     Evaluator mutants 97 to 119, 283 in all.
    - **What this does not claim.** That a machine leaves its frames, `act`, `top`, cells and free lists as it found them: no vm-spec control
      sees them, and the text above says who does. That the release worklist and the tail entry's release-then-allocate can be made atomic
      cheaply: SPEC states the requirement and the fit rule (as if the release had happened), and a reclaiming VM (vm-rc) must size the release
@@ -1293,7 +1301,7 @@ This list is the one to work from; the earlier lists remain the detail behind ea
 
 Round 13's list stands in full (D22, D23 and D24, the loader controls and the counts it states move as item 6 below says). Round 14 adds one rule, and
 **the atomic stops of SPEC §6.3 (entry 38)**, which vm-core and vm-model follow together with D22, D23 and D24. `check-spec.py`'s `run_controls` is the
-shared harness, so merging this branch brings the 22 new controls.
+shared harness, so merging this branch brings the 24 new controls.
 
 1. **A step that stops changes nothing (§6.3).** The machine keeps the state in which the step began: control pending, `act`, frames and `top`, every cell,
    the free lists and the bump pointer, the meters and everything written or called; the one change a stop leaves is the debit of an Enter whose step 2 or 3
@@ -1312,17 +1320,17 @@ shared harness, so merging this branch brings the 22 new controls.
    - Describe inspects a word **before** it charges the visit (round-7 finding 2); `atomic-display-leaf-ill-typed` is the reference outcome of that ordering
      (the Nat word `1,048,574` and `Pair`: 1,048,576 visits, so an ill-typed `w` is refused, and a Flag `w` is `display`: `atomic-display-leaf-charged`).
    - §5's allocation-room rule holds for prims (`append`'s block) as it does at the ceiling rows.
-3. **vm-model.** Its steps are atomic already: run the 22 controls (they are run controls, at the fuel frozen with each), and check the three places where the text
+3. **vm-model.** Its steps are atomic already: run the 24 controls (they are run controls, at the fuel frozen with each), and check the three places where the text
    moved: a Book's description is part of the Return-to-Top step (the lockstep's trace folds it in, `advanced`; the model's own `run` ends at `Answered` after `act`
    is dropped, and a stop of the description must keep `act`), §6.1's stop leaves no Scope, and a tail entry's stop restores its Scopes and `act` (`body_entered` is
    atomic because a failure discards the whole transition).
 4. **vm-lockstep.** Delete `GATHER_POPPED`, `TOP_RELEASED` and their counts (`halting_relations` in `frozen.json`, 23 and 2); compare a halt as any state, frames, `top`,
    `act` and heap included. Say which stops compare the pending control: today only the fuel stop's pending Enter is compared (95 fuel stops), because vm-core's
-   registers cannot name any other. The display controls are `untraced`; the 22 controls and the `inspect-render-*` runs are witnesses for the description's
+   registers cannot name any other. The display controls are `untraced`; the 24 controls and the `inspect-render-*` runs are witnesses for the description's
    stop once they are traced.
-5. **New expectations.** Twenty-two run controls (§12): the 16 twins (fuel = `calls`; `stdout` and `effects` frozen), the four that stop after an effect, and the
+5. **New expectations.** Twenty-four run controls (§12): the 18 twins (fuel = `calls`; `stdout` and `effects` frozen), the four that stop after an effect, and the
    two of the display order. Both harnesses compare `stdout` and `effects` on every run control that freezes them and `calls` at every stop, as round 13's item 4 says.
-6. **Counts (§12, GATES.md).** 133 admitted run controls, 149 admitted controls in the gate line (7 code lists, 133 runs, 8 admitted plan controls, `arity-at-limit`);
+6. **Counts (§12, GATES.md).** 135 admitted run controls, 151 admitted controls in the gate line (7 code lists, 135 runs, 8 admitted plan controls, `arity-at-limit`);
    211 refusals (unchanged: 124 byte-level, 9 at the limits, 78 plan-level), 111 goldens, 15 seed witnesses; mutants 137 codec, 4 source, 119 evaluator and 23 rule
    (283). The two sentence shapes that vm-core reads (`N admitted **run controls**`, `freezes N refusals (...)`) are unchanged in form.
 7. **Witness states, by hand from §5 and §6 (not run on any machine: confirm them on the first run, D7).** At `nat-succ-range` the `NatRange` stop
