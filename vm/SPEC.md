@@ -287,7 +287,7 @@ a malformed record, and a `slots` of 65,536 that its body does not reach. vm-cor
 MUST refuse the same controls, and MUST admit its six admitted plan controls (three
 Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
 Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 60 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 85 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -1002,7 +1002,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 60 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 85 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1026,24 +1026,40 @@ lane and requires:
   stops at `k` at 4 after writing `vm\n`, and stops at the Action's second
   application at 3 having written nothing; a Book and a Program stop at fuel 0 after
   0 calls; and two ill-typed Enters (an erased closure invoked live, a live closure
-  at phase 1) meet fuel 0 after 2 calls and stay `HostFailure image`. Twenty
-  inspection controls (`inspection_controls`) pass a closure `λ`, or a Pair Object,
-  through the identity to one inspection point each (§6, §9's table); each halts
-  with `HostFailure image` (`ill-typed`). After 2 calls (main, id): a discarded
-  `Chr{id(λ)}`, `Succ{id(Pair{Off{},On{}})}` and `Succ{id(λ)}`. After 3 (main, id,
-  the prim's Base function): each move prim on `id(λ)`; `String.append("x", id(λ))`,
+  at phase 1) meet fuel 0 after 2 calls and stay `HostFailure image`. Forty-three
+  inspection controls (`inspection_controls`) hand a word of another type (a closure `λ`, a Pair
+  or Box Object, an immediate beyond a type's constructors) through the identity to one
+  inspection point each (§6, §9's table); each halts with `HostFailure image` (`ill-typed`).
+  After 2 calls (main, id): a discarded `Chr{id(λ)}`, `Succ{id(Pair{Off{},On{}})}` and
+  `Succ{id(λ)}`; a Book result that is `id(λ)`, or a Pair whose field is one, which §8 renders
+  through the same reads; and an Invoke of the immediate 5 or of a Pair Object, neither a Closure,
+  an Action nor the terminal continuation (§7 reads the target). After 3 (main, id, the prim's Base
+  function, or `pick`): each move prim on `id(λ)`; `String.append("x", id(λ))`,
   whose `b` it moves; `append(SCon{id(λ), SNil{}}, "y")`, and `length` and
   `reverse` of that String, whose Char words they copy or count;
   `is_empty(SCon{'a', id(λ)})`; and `eq` past a differing code (`"a"` against
   `SCon{'b', id(λ)}`) and past either list's end (`""` against `SCon{'a', id(λ)}`,
-  and the reverse). After 4 (main, the erased `R`, `k`'s closure, id): a Program's
-  Halt whose code is `id(λ)`, or whose message is `SCon{'a', id(λ)}`. After 5,
-  having written nothing: `IO.print(SCon{Chr{55296}, id(λ)})`, whose whole String
-  is read before the scalar check, so the cause is not `io abi`. A Halt's message is an
+  and the reverse); the word prims, each family in each operand position, through
+  `U32.add` (first operand), `U32.sub` (second), `U32.shln` (its Nat amount),
+  `Char.is_space`, `Char.is_eq` (second), `Nat.add`, `Nat.sub` (second), `U32.show` and
+  `Nat.show`; and `pick(id(w))`, which cases on the word `w` (§6.1): `λ` at a Flag, a Nat
+  and a Char in tag mode and at a U32 and a Char in key mode, a Box Object at a Pair (whose
+  tag 0 also has fields), and the immediate 5 at a Flag. After 4 (main, the erased `R`, `k`'s
+  closure, id): a Program's Halt whose code is `id(λ)`, or whose message is `SCon{'a', id(λ)}`,
+  and a Program whose `k` answers `id(λ)`, or `id(5)`, for its IO.OP (§8's phase 3 reads the last
+  word), writing nothing. After 5, having written nothing: `IO.print(SCon{Chr{55296}, id(λ)})`,
+  whose whole String is read before the scalar check, so the cause is not `io abi`. After 7,
+  having written `x\n`: `IO.print("x")(R)(id(5))`, whose Action meets an immediate for `k`: the
+  effect comes first, and `k`'s Enter reads its target only then (main, the two closures,
+  IO.print, the erased `R`, id, the Action's second application). A Halt's message is an
   outgoing String too: a surrogate then `id(λ)`, and `id(λ)` for the code beside a
   surrogate message, each halt `ill-typed` after 4, the code and then the whole message
-  being read before D20's scalar check. Fourteen effect controls (`effect_controls`) freeze
-  D22 (§8) and D20 on a Halt's message. In a Book image, `got` returns what an IO.OP
+  being read before D20's scalar check. Each kind of point in §6's list has a frozen
+  control, and not each instance: the prim ids that no control names (U32 `mul` … `shrn`
+  but `shln`, and Nat `mul` … `is_ge`) are vm-prims' to witness, one control per id and
+  operand (§9), and the byte List and the operands of every foreign but `IO.print` are
+  vm-io's. Sixteen effect controls (`effect_controls`) freeze
+  D22 (§8), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`:
   `book-print`, `book-print-continuation-call` (`k` a function) and
   `book-print-twice` (the reviewers' bookio-1, bk-print and bookio-2) stop
@@ -1063,7 +1079,11 @@ lane and requires:
   `HostFailure io abi` before `die` after 3; and one whose message is scalar
   (`halt-scalar`, `x` and U+1F600) ends with `halt` 1 and that `message` after 3, the
   reference evaluation's view of a `die` whose exit status and stderr are the host's
-  (IO-ABI.md). Three key controls (`key_controls`)
+  (IO-ABI.md). A scalar String is written as canonical UTF-8 (§10): `print-utf8-lengths` prints
+  U+0024, U+00A2, U+20AC and U+10348 and `print-utf8-boundaries` the edges of every length (U+007F,
+  U+0080, U+07FF, U+0800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF), each after 5 entries; the
+  expected text is Python's own encoding, and the pinned seed writes the same 11 and 26 bytes on
+  both lanes. Three key controls (`key_controls`)
   freeze §3's key: `pick` answers `On{}` from a key Branch at 0xffffffff for the U32
   and the Char `4294967295` (`key-max`, `char-key-max`) and `Off{}` from its Default for
   0xfffffffe (`key-max-miss`), each after 2 calls;
@@ -1073,7 +1093,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 70 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 57 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 83 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1093,14 +1113,26 @@ lane and requires:
   it after 4 calls. A
   predecessor narrowed to 31 bits dies only by `nat-case-big`. Eighteen read less
   than their inspection extent, and exactly as much on a well-typed word, so they
-  survive every golden and every other control and each dies only by its
-  inspection control: Chr passing its operand through; Succ passing an Object, or
+  survive every golden and each dies by the inspection controls of its own point and by
+  no other (a Halt's message unread also by the two Halt controls that carry one): Chr passing its operand through; Succ passing an Object, or
   a Closure; each move prim returning its operand unread; `append` moving `b`
   unread, or copying `a`'s Char words unread; `length` and `reverse` leaving the
   Char words unread; `is_empty` reading one cell; `eq` stopping at the first
   difference, or reading one list only one cell past the other's length (either
   way round); a Halt's code, or its message, unread; and a print that checks each
-  Char as it reads it. Twenty more, of D22, a Halt's message, keys and the debit, die
+  Char as it reads it. Twenty more of that kind, read less or read too early, were the points that
+  no control reached before the review of round 9, and each dies by the controls of its own point and
+  by no golden: a tag-mode Case that admits a closure for its scrutinee (at a Flag, a Nat or a
+  Char), one that reads a Char scrutinee unread, an Object of another type, a Nat that is no word or
+  an immediate beyond the constructors, and a key-mode Case that reads its scrutinee unread (at a
+  U32 or a Char, and at a Char alone); a U32 prim with its first operand unread, or its second (the
+  shift's amount included), a Char prim with its first, `Char.is_eq` with its second, a Nat prim with
+  its first, or its second, and `show` with its operand; a rendered closure admitted; an Enter that
+  takes an immediate for an Action, or an Object for its target; an Action's continuation read before
+  its effect, or left unread and taken for the terminal continuation; and a last word that is no
+  IO.OP taken for `Emit`. Four more, of §10's UTF-8 of a scalar (the one-byte edge, the two-byte
+  lead, and the edges of two and three bytes), die by the two print controls. Twenty more,
+  of D22, a Halt's message, keys and the debit, die
   by the controls above: a Book that performs the effect and one that drops it silently
   (by every `book-print*` control); one that writes and then refuses (by every `book-print*`
   control's empty `stdout`) or writes as its Action meets fuel 0 (by `fuel-book-effect-short`

@@ -91,7 +91,9 @@ follows it (§5, §10, §11) without a new image header word.
    S's files, such as `catalog.bend`'s `case Con{+head,+tail}: match head: …` and
    `check-cli.bend`'s `case Done{P.Parsed{value,rest}}`. The Case still inspects
    the word against its scrutinee type (§6.1), so this admits no new unsoundness
-   beyond what `none` instantiation already allows. Neither pinned head checks a
+   beyond what `none` instantiation already allows. That reading of a scrutinee was
+   frozen by no control until the review of round 9 (entry 29): the reference evaluation
+   refused a closure or an Object of another type there, and nothing checked it. Neither pinned head checks a
    `List<T>` parameter (literals: `Unsupported parse parameter-type`), so the
    shape is witnessed by the admitted control `list-head-match` until a golden can
    be frozen (round 9: the golden `list-head-match`, entry 25, with its lane declared
@@ -301,7 +303,10 @@ follows it (§5, §10, §11) without a new image header word.
    The list also names §7's check of an Enter's target, and a byte List's whole
    extent for `File.write_bytes`; the reference evaluation performs only
    `IO.print`, so vm-io owes that List's control and mutant (§12).
-   Eighteen run controls freeze those points by literal review, the reviewer's
+   Eighteen run controls froze the Succ and Chr operands, the moved and String prims,
+   a Halt's code and message and the print (not the Case scrutinees, the word prims,
+   `show`, the Enter targets, the rendered words, the Action's continuation or the run's
+   last word, which entry 29 adds) by literal review, the reviewer's
    seven probes among them (each Succ discarded by a `let`, as the Chr is, so that
    only its read can halt), with the calls §7 counts: 2 for Succ and Chr, whose
    construction is free; 3 for a prim, which sits in its Base function; 4 for a
@@ -568,6 +573,40 @@ follows it (§5, §10, §11) without a new image header word.
    outcome and vm-model's `agrees` requires an empty stdout of an Unsupported run, so neither
    changes for the key; neither compares a host trace for `book-args` today (vm-core
    refuses every foreign but IO.print at load, round-9 item 1 below).
+
+29. **Every kind of inspection point has a control, and the UTF-8 of a scalar has two.**
+   Review of the round-9 branch instrumented the reference evaluation's `word`, `view`
+   and `apply` and found 13 of its 22 inspection call sites never refusing in any golden
+   or run control: a Case scrutinee in tag and in key mode, the Action's continuation,
+   U32 arithmetic, the two Char prims, the Nat prims, `show`, a rendered root and a rendered
+   field, and the run's last word. Twelve reviewer-written mutants that read less than
+   §6 requires, and are exact on every well-typed word, survived all 96 goldens and 60 run
+   controls. Entries 9 and 18 had implied otherwise (9 that a Case's reading of an erased
+   position admits "no new unsoundness", 18 that eighteen controls froze the points of
+   §6's list, which they froze only for the Succ and Chr operands, the moved and String
+   prims, a Halt's code and message and the print); both now say which points were
+   witnessed. The reviewer's controls were adopted, extended and frozen first (`79e6a113`):
+   the calls come from walking §7, and the reference evaluation reproduced every count as
+   written. Forty-three inspection controls now hand a word of another type through
+   the `none`-typed `id`: `pick(id(w))` cases on `λ` at a Flag, a Nat and a Char (tag
+   mode) and at a U32 and a Char (key mode), on a Box Object at a Pair and on the immediate 5
+   at a Flag; the word prims through U32 `add` (first operand), `sub` (second), `shln` (its
+   Nat amount), Char `is_space` and `is_eq` (second), Nat `add` and `sub` (second), and both
+   `show` prims, each after 3 calls; an Invoke of an immediate or of an Object, after 2; an
+   Action whose `k` is an immediate, which writes `x` first and halts after 7, because the
+   target is read when its Enter comes; a Program whose `k` answers a closure or an
+   immediate for its IO.OP, after 4; and a rendered closure and a Pair's closure field, after 2.
+   Two more, `print-utf8-lengths` and `print-utf8-boundaries`, freeze the encoding that the
+   goldens leave unwitnessed (they write ASCII beside the codes the native lane truncates): the
+   expected text is Python's own, and the pinned seed writes the same 11 and 26 bytes for
+   the same String constants on both lanes. Twenty inspection mutants and four UTF-8 mutants
+   (83 evaluator mutants in all) are killed, each by the controls of its own point; the
+   reviewer's `utf8-two-byte-wrong-lead` was a survivor too. What stays unwitnessed, and is
+   named in §12: the prim ids that no control names (U32 `mul`, `div`, `mod`, `not`, `and`,
+   `cmp`, the six comparisons and `shrn`, and Nat `mul` … `is_ge`), which vm-prims owes one
+   control per id and operand, and the byte List and the operands of every foreign but
+   `IO.print`, which vm-io owes. The reviewer's builds of vm-core (`dcc7c095`) and vm-model
+   (`07e6db73`) agree with all 25 new controls, so neither has to change for them.
 
 ## What vm-model and vm-core must now follow (round 9)
 

@@ -2303,6 +2303,83 @@ EVALUATOR_MUTANTS = [
                            '            code, message = fields[0], m.codes(fields[1])\n')]),
     ('halt-message-unread', [('            code, message = m.word(fields[0]), m.codes(fields[1])\n            m.outgoing(message)\n',
                               '            code, message = m.word(fields[0]), fields[1]\n')]),
+    # Section 10 (effect_controls): a scalar String is written as canonical UTF-8; the goldens write only
+    # ASCII beside the non-scalar codes, whose lead byte the native lane truncates, so the two-byte form and
+    # every boundary are frozen by the two print controls.
+    ('utf8-one-byte-threshold', [("    if code < 0x80:", "    if code < 0x7F:")]),
+    ('utf8-two-byte-wrong-lead',
+     [("        return bytes([0xC0 | code >> 6, 0x80 | code & 0x3F])", "        return bytes([0xC0 | code >> 7, 0x80 | code & 0x3F])")]),
+    ('utf8-two-byte-threshold', [("    if code < 0x800:", "    if code <= 0x800:")]),
+    ('utf8-three-byte-threshold', [("    if code < 0x10000:", "    if code <= 0x10000:")]),
+    # Sections 6, 7, 8 and 9 (inspection_controls): a Case's scrutinee, each prim operand, an Enter's
+    # target (the Action's continuation among them), the run's last word and a rendered word are read
+    # like the rest. Each reads less than section 6 requires and is exact on a well-typed word, so no golden
+    # changes, and each dies by the control of its own point.
+    ('case-tags-closure-scrutinee-admitted',
+     [("            tag, fields = self.view(env[slot], t)\n            arm = rows[tag] or default",
+       "            tag, fields = (0, ()) if isinstance(env[slot], tuple) and env[slot][0] == 'closure' else self.view(env[slot], t)\n"
+       "            arm = rows[tag] or default")]),
+    ('case-char-scrutinee-unread',
+     [("            tag, fields = self.view(env[slot], t)\n            arm = rows[tag] or default",
+       "            tag, fields = (0, (0,)) if t == self.rep.get('Char') and not isinstance(env[slot], int) "
+       "else self.view(env[slot], t)\n            arm = rows[tag] or default")]),
+    ('view-object-type-unchecked',
+     [("isinstance(w, tuple) and w[0] == 'obj' and w[1] == t and ctors[w[2]]['fields']",
+       "isinstance(w, tuple) and w[0] == 'obj' and ctors[w[2]]['fields']")]),
+    ('view-nat-non-word-as-zero',
+     [("        if t == self.rep.get('Nat') and isinstance(w, int):\n            return (0, ()) if w == 0 else (1, (w - 1,))",
+       "        if t == self.rep.get('Nat'):\n            return (0, ()) if not isinstance(w, int) or w == 0 else (1, (w - 1,))")]),
+    ('view-immediate-tag-out-of-range-as-zero',
+     [("        if ctors and isinstance(w, int) and w < len(ctors) and not ctors[w]['fields']:\n            return w, ()",
+       "        if ctors and isinstance(w, int) and not ctors[min(w, len(ctors) - 1)]['fields']:\n"
+       "            return min(w, len(ctors) - 1), ()")]),
+    ('keys-case-scrutinee-uninspected',
+     [("            key = self.word(env[slot])\n",
+       "            key = env[slot] if isinstance(env[slot], tuple) else self.word(env[slot])\n")]),
+    ('keys-case-char-scrutinee-unread',
+     [("            key = self.word(env[slot])\n",
+       "            key = env[slot] if t == self.rep.get('Char') and not isinstance(env[slot], int) else self.word(env[slot])\n")]),
+    ('u32-arith-first-unread',
+     [("            x, y = self.word(a[0]), self.word(a[-1])\n",
+       "            x, y = (a[0] if isinstance(a[0], int) else 0), self.word(a[-1])\n")]),
+    ('u32-arith-second-unread',
+     [("            x, y = self.word(a[0]), self.word(a[-1])\n",
+       "            x, y = self.word(a[0]), (a[-1] if isinstance(a[-1], int) else 0)\n")]),
+    ('char-prim-first-unread',
+     [("            x = self.word(a[0])\n            return int(x == self.word(a[1])) if p == 20",
+       "            x = a[0] if isinstance(a[0], int) else 0\n            return int(x == self.word(a[1])) if p == 20")]),
+    ('char-eq-second-unread',
+     [("            return int(x == self.word(a[1])) if p == 20 else",
+       "            return int(x == (a[1] if isinstance(a[1], int) else 0)) if p == 20 else")]),
+    ('nat-prim-first-unread',
+     [("            x, y = self.word(a[0]), self.word(a[1])\n",
+       "            x, y = (a[0] if isinstance(a[0], int) else 0), self.word(a[1])\n")]),
+    ('nat-prim-second-unread',
+     [("            x, y = self.word(a[0]), self.word(a[1])\n",
+       "            x, y = self.word(a[0]), (a[1] if isinstance(a[1], int) else 0)\n")]),
+    ('show-operand-unread',
+     [("            return self.string(show(self.word(a[0])))",
+       "            return self.string(show(a[0] if isinstance(a[0], int) else 0))")]),
+    ('describe-closure-word-admitted',
+     [("            tag, fields = self.view(v, u)\n            if u == nat:",
+       "            tag, fields = (0, ()) if isinstance(v, tuple) and v[0] == 'closure' else self.view(v, u)\n            if u == nat:")]),
+    ('enter-immediate-target-as-action',
+     [("        kind = f[0] if isinstance(f, tuple) else None\n", "        kind = f[0] if isinstance(f, tuple) else 'action'\n")]),
+    ('enter-object-target-admitted',
+     [("'terminal': lambda: len(operands) == 1}", "'terminal': lambda: len(operands) == 1, 'obj': lambda: True}")]),
+    # The Action's continuation is entered after its effect, and read only then.
+    ('continuation-read-before-effect',
+     [("        return self.apply(operands[0], [self.effect(f)])",
+       "        if not (isinstance(operands[0], tuple) and operands[0][0] in ('closure', 'action', 'terminal')):\n"
+       "            raise Halt(ILL_TYPED)\n"
+       "        return self.apply(operands[0], [self.effect(f)])")]),
+    ('continuation-unread-as-terminal',
+     [("        return self.apply(operands[0], [self.effect(f)])",
+       "        r = self.effect(f)\n        if not isinstance(operands[0], tuple):\n"
+       "            return ('obj', self.rep['IO.OP'], 0, (r,))\n        return self.apply(operands[0], [r])")]),
+    ('final-word-unread-as-emit',
+     [("        tag, fields = m.view(w, m.rep['IO.OP'])",
+       "        tag, fields = m.view(w, m.rep['IO.OP']) if isinstance(w, tuple) and w[0] == 'obj' else (0, ())")]),
     # A print that checks each Char as it reads refuses the surrogate before the ill-typed cell.
     ('print-checks-while-reading', [('        codes = self.codes(operands[0])\n',
                                      '        codes, s = [], operands[0]\n'
