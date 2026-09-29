@@ -236,9 +236,11 @@ class Machine:
         """`Evaluated<TAB>type<TAB>tag<TAB>tree<LF>`, rendered iteratively within section 8's
         bounds. A visit is one rendered constructor, so a Nat word n costs n + 1; the tree's
         bytes, separators included, are its text. Both bounds are inclusive, and each charge
-        is checked before its text is built. The result's own tag is that of its first visit."""
+        is checked before its text is built. The result's own word is read first: its tag heads the
+        line, and an ill-typed result is refused before anything is rendered."""
         nat = self.rep.get('Nat')
-        out, cost, work, root = [], [0, 0], [(w, t)], []
+        head = self.view(w, t)[0]
+        out, cost, work = [], [0, 0], [(w, t)]
 
         def charge(visits: int, size: int):
             cost[0] += visits
@@ -253,7 +255,6 @@ class Machine:
                 continue
             v, u = item
             tag, fields = self.view(v, u)
-            root = root or [tag]
             if u == nat:
                 zero, succ = (c['name'] for c in self.types[nat]['constructors'])
                 charge(v + 1, v * (len(succ.encode()) + 2) + len(zero.encode()) + 2)
@@ -264,7 +265,7 @@ class Machine:
             out.append(ctor['name'] + '{')
             parts = [p for i, f in enumerate(zip(fields, ctor['fields'])) for p in ((',',) if i else ()) + (f,)]
             work += ['}'] + parts[::-1]
-        return f'Evaluated\t{t}\t{root[0]}\t{"".join(out)}\n'
+        return f'Evaluated\t{t}\t{head}\t{"".join(out)}\n'
 
 
 def book(plan: dict, name: str, ordinals: list, fuel: int) -> dict:

@@ -587,8 +587,9 @@ follows it (§5, §10, §11) without a new image header word.
    or run control: a Case scrutinee in tag and in key mode, the Action's continuation,
    U32 arithmetic, the two Char prims, the Nat prims, `show`, a rendered root and a rendered
    field, and the run's last word (the twenty-second, the root's tag in `describe`'s header, viewed a
-   word that the loop had just read, so it could not refuse; it now takes the tag of that first
-   visit, and every remaining site refuses in some control). Twelve reviewer-written mutants that read less than
+   word that the loop had already read, so it could not refuse; `describe` now reads the result's
+   word first, where `inspect-render-closure` refuses it, and every remaining site refuses in some
+   control). Twelve reviewer-written mutants that read less than
    §6 requires, and are exact on every well-typed word, survived all 96 goldens and 60 run
    controls. Entries 9 and 18 had implied otherwise (9 that a Case's reading of an erased
    position admits "no new unsoundness", 18 that eighteen controls froze the points of

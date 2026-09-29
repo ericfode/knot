@@ -2408,9 +2408,8 @@ EVALUATOR_MUTANTS = [
      [("            return self.string(show(self.word(a[0])))",
        "            return self.string(show(a[0] if isinstance(a[0], int) else 0))")]),
     ('describe-closure-word-admitted',
-     [("            tag, fields = self.view(v, u)\n            root = root or [tag]\n            if u == nat:",
-       "            tag, fields = (0, ()) if isinstance(v, tuple) and v[0] == 'closure' else self.view(v, u)\n"
-       "            root = root or [tag]\n            if u == nat:")]),
+     [("            tag, fields = self.view(v, u)\n            if u == nat:",
+       "            tag, fields = (0, ()) if isinstance(v, tuple) and v[0] == 'closure' else self.view(v, u)\n            if u == nat:")]),
     ('enter-immediate-target-as-action',
      [("        kind = f[0] if isinstance(f, tuple) else None\n", "        kind = f[0] if isinstance(f, tuple) else 'action'\n")]),
     ('enter-object-target-admitted',
