@@ -8,7 +8,6 @@ import importlib.util
 import json
 import os
 from pathlib import Path
-import re
 import shutil
 import subprocess
 
@@ -48,19 +47,24 @@ def run(argv, timeout=120*TIMEOUT_SCALE):
                 'outcome': 'harness-timeout', 'stdout': '', 'stderr': ''}
 
 
-# The seed notes when a def relies on foreign code, as the bundle CLIs do through the host path-identity
-# module: on stderr when it builds, on stdout when it only checks. The note is not a failure.
-FOREIGN_NOTE = re.compile(r'All terms check, but \d+ defs? rel(?:y|ies) on unsafe or foreign code:\n(?:- \w+\n)+')
+# The modules suite pins the seed's note for each bundle CLI: the five defs that call the host path-identity
+# module. A build prints it on stderr and a check on stdout; no other program has one.
+HOST_CHECKS = json.loads((ROOT / 'tests/compiler-modules/host-check-expectations.json').read_text())['entries']
+
+
+def foreign(argv):
+    return next((HOST_CHECKS[Path(a).name]['stdout'] for a in map(str, argv) if Path(a).name in HOST_CHECKS), '')
 
 
 def successful(argv):
     result = run(argv)
-    require(result['exit'] == 0 and (not result['stderr'] or FOREIGN_NOTE.fullmatch(result['stderr'])), result)
+    require(result['exit'] == 0 and result['stderr'] == (foreign(result['argv']) if '-o' in result['argv'] else ''), result)
     return result
 
 
 def proved(result):
-    return result['stdout'].strip() == 'All terms check.' or FOREIGN_NOTE.fullmatch(result['stdout']) is not None
+    note = foreign(result['argv'])
+    return result['stdout'] == note if note else result['stdout'].strip() == 'All terms check.'
 
 
 def diagnostic(result, expected):
