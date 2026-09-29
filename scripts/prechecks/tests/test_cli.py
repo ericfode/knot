@@ -1,0 +1,133 @@
+import contextlib
+import io
+import json
+import unittest
+from unittest import mock
+
+import checks as checks_mod
+import run as run_mod
+from lib.gitx import GitError, Repo
+from lib.model import CheckResult, Condition
+from lib.runner import Check
+from .helpers import RepoTest
+
+
+def cli(*argv):
+    out, err = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+        code = run_mod.main(list(argv))
+    return code, out.getvalue(), err.getvalue()
+
+
+class CliTests(RepoTest):
+    def branch_with_host_path(self):
+        self.fx.commit('main', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('receipt', {'tests/compiler-x/receipts/x.json': json.dumps({'status': 'passed', 'out': '/private/tmp/x/build'})})
+
+    def base_args(self):
+        return ['--repo', str(self.fx.root), '--out', str(self.fx.scratch / 'out'), '--only', 'C4', '--json']
+
+    def test_exit_3_on_a_new_executor_condition_and_json_is_the_only_stdout(self):
+        self.branch_with_host_path()
+        code, out, err = cli(*self.base_args())
+        self.assertEqual(3, code)
+        report = json.loads(out)                           # nothing but the report on stdout
+        self.assertEqual(3, report['exit'])
+        self.assertEqual('conditions', report['checks'][0]['outcome'])
+        self.assertIn('C4 receipt-integrity', err)         # progress goes to stderr
+        for name in ('report.json', 'report.md', 'facts.json', 'known.txt'):
+            self.assertTrue((self.fx.scratch / 'out' / name).is_file(), name)
+
+    def test_fail_on_and_the_actor_decide_the_exit_code(self):
+        self.branch_with_host_path()
+        self.assertEqual(0, cli(*self.base_args(), '--fail-on', 'blocking')[0])
+        self.assertEqual(0, cli(*self.base_args(), '--fail-on', 'none')[0])
+        self.assertEqual(3, cli(*self.base_args(), '--fail-on', 'minor')[0])
+
+    def test_known_conditions_are_subtracted_by_the_ledger_from_main(self):
+        self.branch_with_host_path()
+        code, out, _ = cli(*self.base_args())
+        entries = json.loads(cli(*self.base_args(), '--emit-ledger')[1])
+        self.assertTrue(entries and all(e['fingerprint'] and e['owner'] == 'coordinator' for e in entries))
+        ledger = self.fx.root.parent / 'ledger.json'
+        ledger.write_text(json.dumps({'entries': entries}))
+        code, out, _ = cli(*self.base_args(), '--ledger', str(ledger))
+        self.assertEqual(0, code)
+        self.assertEqual({'known'}, {c['ledger']['status'] for c in json.loads(out)['checks'][0]['conditions']})
+
+    def test_coordinator_conditions_never_fail_the_run(self):
+        self.fx.commit('base', {'src/parse.bend': 'v0\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('mine', {'src/parse.bend': 'mine\n'})
+        self.fx.checkout('main')
+        self.fx.commit('theirs', {'src/parse.bend': 'theirs\n'})
+        self.fx.checkout('campaign/x')
+        code, out, _ = cli('--repo', str(self.fx.root), '--only', 'C2', '--json', '--no-write')
+        report = json.loads(out)
+        conflicts = [c for c in report['checks'][0]['conditions'] if c['rule'] == 'conflict']
+        self.assertEqual(('major', 'coordinator'), (conflicts[0]['severity'], conflicts[0]['actor']))
+        self.assertEqual(0, code)
+
+    def test_a_crashing_check_is_exit_1_never_a_silent_pass(self):
+        self.fx.commit('main', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'b.txt': 'b\n'})
+
+        def boom(ctx):
+            raise RuntimeError('boom')
+        broken = Check('C4', 'receipt-integrity', 'x', boom)
+        with mock.patch.object(checks_mod, 'load', lambda only=None, skip=None: [broken]):
+            code, out, _ = cli('--repo', str(self.fx.root), '--json', '--no-write')
+        self.assertEqual(1, code)
+        self.assertEqual('error', json.loads(out)['checks'][0]['outcome'])
+
+    def test_usage_errors_and_listing(self):
+        # A directory that git cannot resolve to a repository is a usage error. The check patches the resolution: the
+        # gate's TMPDIR lies inside the checkout, where a temporary directory has an enclosing repository, and the tool
+        # strips GIT_CEILING_DIRECTORIES from the environment it gives git.
+        with mock.patch.object(Repo, 'top', side_effect=GitError('fatal: not a git repository')):
+            code, out, err = cli('--repo', str(self.fx.root.parent), '--json')
+        self.assertEqual((2, ''), (code, out))
+        self.assertIn('not inside a git repository', err)
+        self.fx.commit('main', {'a.txt': 'a\n'})
+        self.assertEqual(2, cli('--repo', str(self.fx.root), '--head', 'no-such-rev', '--json')[0])
+        code, out, _ = cli('--list')
+        self.assertEqual(0, code)
+        self.assertEqual(['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'], [line.split()[0] for line in out.strip().splitlines()])
+
+    def test_a_gap_is_reported_by_name_and_only_strict_makes_it_exit_4(self):
+        self.fx.commit('main', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'b.txt': 'b\n'})
+        args = ['--repo', str(self.fx.root), '--only', 'C3', '--no-write']
+        code, out, _ = cli(*args, '--json')
+        report = json.loads(out)
+        self.assertEqual(0, code)                                       # no condition: the run passes on the rules that could run
+        self.assertEqual('partial', report['checks'][0]['outcome'])     # ... but it is not a pass, and the report says which rule did not run
+        self.assertIn('out-of-scope-edit', report['checks'][0]['rules_unavailable'])
+        self.assertEqual(1, report['summary']['incomplete'])
+        code, out, _ = cli(*args)
+        self.assertIn('not run  out-of-scope-edit', out)
+        self.assertEqual(4, cli(*args, '--strict')[0])
+
+    def test_head_without_a_campaign_ref_says_so_and_none_silences_it(self):
+        first = self.fx.commit('main', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.commit('work', {'b.txt': 'b\n'})
+        args = ['--repo', str(self.fx.root), '--head', first, '--only', 'C3', '--no-write', '--json']
+        self.assertIn('running without an increment', cli(*args)[2])
+        self.assertNotIn('running without an increment', cli(*args, '--inc', 'none')[2])
+        self.assertIsNone(json.loads(cli(*args)[1])['increment'])
+
+    def test_uncommitted_and_untracked_files_are_judged(self):
+        self.fx.commit('main', {'a.txt': 'a\n'})
+        self.fx.branch('campaign/x')
+        self.fx.write('tests/compiler-x/receipts/x.json', json.dumps({'status': 'passed', 'out': '/private/tmp/x'}))   # never committed
+        code, out, _ = cli(*self.base_args())
+        self.assertEqual(3, code)
+        self.assertTrue(json.loads(out)['head']['worktree'])
+
+
+if __name__ == '__main__':
+    unittest.main()

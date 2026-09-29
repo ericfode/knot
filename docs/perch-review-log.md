@@ -1058,6 +1058,67 @@ now supplement the original suite. The three restored-defect mutants are
 killed without infrastructure failures. Original expectations are unchanged;
 live Perch review remains with the coordinator.
 
+## 2026-09-28 — prechecks: seven advisory rules for claim-against-evidence review
+
+Date / scope / source revision: 2026-09-28, the pre-review suite of [docs/prechecks.md](prechecks.md), branch
+`campaign/prechecks` on main `43a394a4`. Rules: `.perch/rules/prechecks.yaml`, sha256 prefix `c2085179a50a7b64` at the
+time of writing (the file is the identity; this prefix is not recomputed).
+
+Waste addressed: about 72 of 1,100 review findings (the mined classes doc-prose-vs-code-drift, prose-vs-authoritative-text,
+outcome-table-vs-d4-and-bounds, contract-clause-contradicted-by-change, required-law-unmet-or-unrecorded, and the Perch halves
+of oracle-from-implementation and mutant-kill-credit) were claims that a document made and the code or diff contradicted.
+Reviewers found them by reading; the deterministic checks cannot, because the claim is prose.
+
+Rule + model: `claim-holds-against-evidence`, `passages-agree`, `outcome-follows-d4`, `clause-vs-delta`,
+`expectation-independent`, `kill-is-semantic`, `required-laws-met`; each `each: file`, `min: 80`, `gate: false`, reading only its
+own packet directory under `.local/prechecks/packets/`. No model was asked: requested and resolved model are unknown.
+
+Judgment: **blocked**. Live calibration needs the main checkout's credentials, which no workflow has; no probability exists,
+and none is claimed. The built-in `docs` category selects zero checks on a packet, so it cannot serve as the baseline arm.
+
+Change and why: the rules are new and advisory. A deterministic builder selects claims by mechanical triggers and ranks the
+evidence that decides them; a stubbed-provider wiring test proves that each packet selects exactly its own rule, that an
+advisory verdict exits 3 and that unrelated files select nothing; a live runner (dry run by default, main checkout only) is
+written and has not been run.
+
+Clean / broken / held-out evidence: 22 calibration packets under `tests/prechecks/perch-controls/` (every rule has a broken
+control; gaps are documented with reasons). Two disclosed exposures: vm-spec `5517f263` moved from held-out to dev when its
+passages were read to fix the P3 builder, and one held-out literals finding was printed during orientation and used for nothing.
+
+Remaining uncertainty / next trigger: the coordinator runs `node scripts/prechecks-perch-run.mjs --controls --live` from the main
+checkout, records model, probabilities and hashes here, freezes the rule text if every broken packet is at or above 0.8 and every
+clean one below, then runs the held-out packets. A rule that does not separate is rewritten or narrowed, never floor-raised.
+Selection recall is bounded (two calibration defects are not reached by any builder); replay measures it.
+
+## 2026-09-29 — prechecks runner: the cap, the staging and the controls, found by the fix-round review
+
+Date / scope / source revision: 2026-09-29, `scripts/prechecks-perch-run.mjs` and the packet builder of the pre-review suite
+([docs/prechecks.md](prechecks.md)), branch `campaign/prechecks`; found offline by the speed-scope reviewer with dry runs (zero requests).
+
+Waste addressed: the runner had never run live, and its first live use would have spent the coordinator's calibration and production
+runs on packets chosen by path order. Over the replay's 7,949 packets for 71 heads a default plan dropped 5,135 (65%) and asked only
+`claim-holds-against-evidence` on 63 of 71 heads (`outcome-follows-d4` on 1 of 49), and 11 of the 33 packets labelled broken were never
+asked; staged calibration controls leaked into the next production run (22 extra requests each time); a packet directory built
+anywhere else (`--out <dir>`) was never asked; a working-copy build carried HEAD's name and a hash HEAD does not have. The calibration
+itself (`--controls`) is exempt from the cap and would never have shown the first defect.
+
+Rule + model: no rule changed (the seven advisory `gate: false` rules of `.perch/rules/prechecks.yaml`); no model was asked.
+
+Judgment: **blocked**, unchanged: live calibration needs the main checkout's credentials. No probability exists and none is claimed.
+
+Change and why: the cap is per rule and per (increment, head) as each packet's header names them, and it is one number shared with the
+builder (`scripts/prechecks/packets/limits.json`), with the skipped packets counted by rule; packets outside the rules' glob are staged
+into `.local/prechecks/packets/staged/` before they are asked (the dry run says so); staged controls are skipped by production plans
+and removed after a live calibration; snapshot builds are labelled `<HEAD>+worktree.<tree>`. The stubbed-provider wiring test asserts each
+of them (it proves plumbing, never calibration).
+
+Clean / broken / held-out evidence: unchanged (22 calibration packets under `tests/prechecks/perch-controls/`).
+
+Remaining uncertainty / next trigger: what would have prevented the waste is a dry run over one real built increment that counted asked
+and skipped packets per rule before the runner was trusted; it was run in this round (zero requests): vm-spec `d2fe0f20` builds 130
+packets in six rules, the previous plan asked 40 of them (all one rule) and the fixed plan asks all 130 (40, 33, 14, 40, 2, 1 by rule); over
+the replay's 7,949 packets it asks all of them. The coordinator's first `--live` run should start with the same dry run on its own packets
+and read the per-rule counts.
 ## 2026-09-28 — Live review of the compiler-campaign backlog (`185b7d5..a6367eb9`)
 
 Date / scope / source revision: 2026-09-28 (receipts UTC 2026-09-29T04:50:55Z to
@@ -1209,3 +1270,27 @@ tests assert those requests, so the change needs its own decision, controls and
 cache-identity note rather than a rule edit. Prevention: give every source rule an
 explicit applicability sentence and include a no-arithmetic control before
 accepting its floor.
+
+## 2026-09-29 — prechecks rules: first live calibration
+
+Date / scope / source revision: 2026-09-29. The seven advisory prechecks rules (`.perch/rules/prechecks.yaml`) on main
+`46f2cdd4`, asked from the main checkout with `node scripts/prechecks-perch-run.mjs --live --controls` over the 22
+calibration packets in `tests/prechecks/perch-controls/`. That is 18 expected broken (15 dev, 3 held-out) and 4
+expected clean. 22 requests; 4.5 s wall.
+Evidence: the runner's report (scratchpad `prechecks/calibration-live-1.json`) and the wrapper receipts under
+`.perch/usage/`.
+Rule / model: the rules as merged; the model is the configured default (identity in the receipts).
+Result: at the 0.80 floor, 2 of 18 broken controls are flagged (claim-holds 0.89, outcome-follows-d4 0.84), and 0 of 4
+clean controls. Pooled separation is weak: broken 0.28 to 0.89 (median 0.57), clean 0.25 to 0.70 (median 0.44), AUC
+0.66. Per rule:
+- kill-is-semantic separates: broken 0.68 and 0.70 against clean 0.30.
+- outcome-follows-d4 separates: broken 0.76, 0.76 and 0.84 against clean 0.57.
+- claim-holds-against-evidence is marginal: broken 0.75 and 0.89 against clean 0.70.
+- passages-agree does not separate: broken 0.28 and 0.29 against clean 0.25.
+- clause-vs-delta (0.28 to 0.48), required-laws-met (0.39 to 0.55) and expectation-independent (0.60 and 0.69) have no
+  clean control. The first two never approach the floor on their broken controls.
+Judgment: uncalibrated. Every rule stays `gate: false`, and none is promoted into the pipeline.
+Change: none in this entry.
+Next trigger: narrow the questions as the 2026-09-28 bend-machine-arithmetic repair did: an applicability sentence,
+concrete violation shapes and explicit exemptions. Add clean controls to every rule (at least 3 each) and a held-out
+clean set, rerun, and set floors only from separated controls. Retire passages-agree if a rewrite still cannot separate.
