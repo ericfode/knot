@@ -38,6 +38,7 @@ EVAL_BUDGET = '1048576'
 VM_FUEL = 1_000_000
 RECEIPT = HERE / 'receipts/spec.json'
 EXPECTED = GOLDEN / 'vm-expected.json'
+WITNESSES = GOLDEN / 'witnesses.json'
 CODEC = HERE / 'serializer.py'
 EVALUATOR = HERE / 'evaluate.py'
 RULE = Path(__file__).resolve()
@@ -2693,6 +2694,10 @@ RULE_MUTANTS = [
     ('inspect-steps-as-visits', [("'steps': 4 * value.count('{') - 2,\n", "'steps': value.count('{'),\n")]),
     ('transitions-without-materialization', [("            self.transitions += 1 + (size if node[0] in ('lit', 'prim') else 0)\n",
                                               "            self.transitions += 1\n")]),
+    # Review of round 11: a witness is held to its source's hash, both lanes' bytes and its literal review.
+    ('witness-source-unchecked', [("    require(source_sha == entry['sha256'], f'witness {name}: source hash')\n", "")]),
+    ('witness-lane-unchecked', [("        require(got[lane] == entry[lane], f'witness {name}: {lane} lane {got[lane]}, frozen {entry[lane]}')\n", "")]),
+    ('witness-review-unchecked', [("        require(seen == entry['review'][lane], f\"witness {name}: literal review {entry['review'][lane]}, {lane} lane {seen}\")\n", "")]),
 ]
 
 
@@ -2737,6 +2742,13 @@ def rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest, di
         if not killed_by:
             try:
                 mutant.core_controls(cases, plans, sources, displays, reg)
+            except AssertionError as changed:
+                killed_by = str(changed)
+            except Exception:
+                pass
+        if not killed_by:
+            try:
+                mutant.witness_refusals()
             except AssertionError as changed:
                 killed_by = str(changed)
             except Exception:
@@ -2804,6 +2816,66 @@ def bench_controls(built: dict) -> list:
 
 # ------------------------------------------------------------------ main
 
+def witness_lanes(entry) -> dict:
+    """Both seed lanes on a witness source: the native lane is the reference, the Bun lane a cross-check."""
+    case = {'name': f"witness-{entry['name']}", 'source': entry['source'], 'seed_lane': 'native'}
+    return {'native': observed(seed_observation(case)), 'bun': observed(run([SEED, entry['source']], 120))}
+
+
+def check_witness(entry, got, source_sha):
+    """One witness against its frozen row: the source's hash, each lane's bytes and the literal review."""
+    name = entry['name']
+    require(source_sha == entry['sha256'], f'witness {name}: source hash')
+    for lane in ('native', 'bun'):
+        require(got[lane] == entry[lane], f'witness {name}: {lane} lane {got[lane]}, frozen {entry[lane]}')
+        seen = {k: entry[lane][k] for k in entry['review'][lane]}
+        require(seen == entry['review'][lane], f"witness {name}: literal review {entry['review'][lane]}, {lane} lane {seen}")
+
+
+def witness_controls() -> dict:
+    """The seed's lanes on the sources that section 8 cites and no golden can carry, because the seed fails,
+    or its lanes disagree, or it succeeds where D23 refuses. Each source's hash, and both lanes' exit, stdout
+    and stderr, are re-observed and must equal `witnesses.json`; the literal review of each lane's exit and
+    stdout was written before the observation. A witness is evidence for SPEC's text and never a VM expectation."""
+    frozen = json.loads(WITNESSES.read_text())['witnesses']
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        fresh = list(pool.map(witness_lanes, frozen))
+    rows = {}
+    for entry, got in zip(frozen, fresh):
+        check_witness(entry, got, sha((ROOT / entry['source']).read_bytes()))
+        rows[entry['name']] = {lane: {k: got[lane][k] for k in ('exit', 'stdout', 'stderr')} for lane in got}
+    return rows
+
+
+def witness_refusals() -> list:
+    """Frozen refusals of `check_witness`: a source that drifted, a lane that drifted, and a frozen lane
+    that contradicts its literal review. Each is refused by name, so a check that is dropped admits one."""
+    entry = next(w for w in json.loads(WITNESSES.read_text())['witnesses'] if w['name'] == 'case-request-emit-default-u32')
+    got = {lane: entry[lane] for lane in ('native', 'bun')}
+    other = {**got['native'], 'stdout': '1\n'}
+    out = []
+    for label, frozen, seen, source_sha in [('source-drift', entry, got, '0' * 64),
+                                            ('lane-drift', entry, {**got, 'native': other}, entry['sha256']),
+                                            ('review-drift', {**entry, 'native': other}, {**got, 'native': other}, entry['sha256'])]:
+        try:
+            check_witness(frozen, seen, source_sha)
+        except AssertionError as refusal:
+            out.append({'control': f'witness:{label}', 'refused': str(refusal)})
+            continue
+        raise AssertionError(f'witness control {label} was admitted')
+    return out
+
+
+def freeze_witnesses():
+    """Observe the witnesses that have no frozen lanes yet. Never rewrites a frozen row."""
+    data = json.loads(WITNESSES.read_text())
+    for entry in data['witnesses']:
+        if 'native' not in entry:
+            entry['sha256'] = sha((ROOT / entry['source']).read_bytes())
+            entry.update(witness_lanes(entry))
+    WITNESSES.write_text(json.dumps(data, indent=2) + '\n')
+
+
 def freeze(built):
     """Append observations for planned cases not yet frozen. Never rewrites a frozen row."""
     plan = json.loads((GOLDEN / 'plan.json').read_text())
@@ -2819,6 +2891,7 @@ def freeze(built):
         row.update(got)
         frozen['cases'].append(row)
     path.write_text(json.dumps(frozen, indent=2) + '\n')
+    freeze_witnesses()
 
 
 def main() -> int:
@@ -2991,7 +3064,9 @@ def main() -> int:
 
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
-    record.update(status='passed', fixtures=fixtures, boundaries=boundaries, excused=excused,
+    witnessed = witness_controls()
+    boundaries += witness_refusals()
+    record.update(status='passed', fixtures=fixtures, boundaries=boundaries, excused=excused, witnesses=witnessed,
                   admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts,
                   arguments={label: {'argv': ['IMAGE', *argv], 'verdict': verdict} for label, _, argv, verdict in arguing},
                   mutants=mutants,
@@ -3004,7 +3079,7 @@ def main() -> int:
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
           f"{len(admitted)} admitted controls ({len(coded)} code lists, {len(runs)} runs), "
           f"{len(verdicts)} describe controls, {len(arguing)} argument controls, {len(excused)} excused controls, "
-          f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
+          f"{len(witnessed)} seed witnesses, {len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 
 

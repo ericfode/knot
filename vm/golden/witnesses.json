@@ -1,0 +1,291 @@
+{
+  "basis": "Seed observations that vm/SPEC.md section 8 cites and no golden can carry: the seed fails, its two lanes disagree, or it succeeds where D23 refuses. Each source runs on both lanes; the native lane is the reference. The review of each lane's exit and stdout is fixed before observation, from the review of round 11; the lanes' bytes are frozen by `check-spec.py --freeze-new`. A witness is evidence for the text and never a VM expectation.",
+  "witnesses": [
+    {
+      "name": "main-lambda-print",
+      "source": "vm/golden/witness/main-lambda-print.bend",
+      "note": "main is a bare `R => k => ...`: `IO.print(\"direct\")(R, k)`. Both lanes crash.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "f6dbd0f93fd632ad5c4325a8904b2f1e2d69d255435ed174c954731b15e4a965",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)\n"
+      }
+    },
+    {
+      "name": "main-lambda-continue",
+      "source": "vm/golden/witness/main-lambda-continue.bend",
+      "note": "main = `R => k => k(Unit{})`. Both lanes crash.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "e0598301d5300da2c16e19eae099547514a30d86ec1c90139af4a9d20d9a8bf9",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: undefined is not an object (evaluating 'f.j')\n"
+      }
+    },
+    {
+      "name": "main-lambda-halt",
+      "source": "vm/golden/witness/main-lambda-halt.bend",
+      "note": "main = `R => k => Halt{1, \"boom\"}`. Both lanes crash.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "6e97e3c55fb4837eb5dd4456fd77d558159c462a3bfd504311f4411459572039",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)\n"
+      }
+    },
+    {
+      "name": "main-lambda-let",
+      "source": "vm/golden/witness/main-lambda-let.bend",
+      "note": "a let-bound dead request beside a bare lambda main (DECISIONS finding 13 as first reported). Both lanes crash.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "3983174374b3d69755c03c3ac9f9079c7f1b3763d877b331856e4bf3ea926209",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)\n"
+      }
+    },
+    {
+      "name": "main-lambda-nolet",
+      "source": "vm/golden/witness/main-lambda-nolet.bend",
+      "note": "the same source without the let: the crash is main's form, not the let. Its call-shaped twin with the let is the golden `let-dropped-request`.",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "5155609d05e831760bf514c8729eadcc364373c800f2d22d2c0f787cadf43cbf",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: memory fault (machine stack overflow?)\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "TypeError: s.fun is not a function. (In 's.fun(s.arg)', 's.fun' is an instance of Object)\n"
+      }
+    },
+    {
+      "name": "case-request-default-only",
+      "source": "vm/golden/witness/case-request-default-only.bend",
+      "note": "`case _: d` over a request: never read, both lanes run and the request is never performed.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": ""
+        }
+      },
+      "sha256": "39a1c394fd3db71d8b826c92072a9d786f49e619451c21ae27586eb9b52f3e10",
+      "native": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "case-request-binder",
+      "source": "vm/golden/witness/case-request-binder.bend",
+      "note": "`case y: d` over a request: never read, both lanes run.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": ""
+        }
+      },
+      "sha256": "46c7f7bdc32ffbca7f101892d13e1bbebe54672ff2b84c1cbed9337812a7ca6b",
+      "native": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "case-request-emit-default",
+      "source": "vm/golden/witness/case-request-emit-default.bend",
+      "note": "an Emit arm and a catch-all over a request: the native lane takes the catch-all, the Bun lane fail-stops.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "f954c78c88b0d3132a15fb208c17f8b5dee22e6ea4ceca4f77c4a96462f73b98",
+      "native": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-both-arms",
+      "source": "vm/golden/witness/case-request-both-arms.bend",
+      "note": "arms for Emit and Halt over a request: both lanes fail-stop (the seed's own tests/io/request_out_of_band.bend).",
+      "review": {
+        "native": {
+          "exit": 1,
+          "stdout": ""
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "bcb1903ab848d84f14a595b66c7727c1bef096e88233bd732af62bfe410054ab",
+      "native": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-emit-default-u32",
+      "source": "vm/golden/witness/case-request-emit-default-u32.bend",
+      "note": "an Emit arm (1) and a catch-all (2) over a request, printed: the native lane prints 2, the Bun lane fail-stops.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "2\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "e15e4c1b1deb3217165d7068de335b319d211f7eeed8925adb7f5dc4e2f20b35",
+      "native": {
+        "exit": 0,
+        "stdout": "2\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    },
+    {
+      "name": "case-request-halt-default-u32",
+      "source": "vm/golden/witness/case-request-halt-default-u32.bend",
+      "note": "a Halt arm (3) and a catch-all (4) over a request, printed: the native lane prints 4, the Bun lane fail-stops.",
+      "review": {
+        "native": {
+          "exit": 0,
+          "stdout": "4\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": ""
+        }
+      },
+      "sha256": "0405abcfe6b2ee88f963c320cc28adf8cca71cef719ea832d08c99d2c0818478",
+      "native": {
+        "exit": 0,
+        "stdout": "4\n",
+        "stderr": ""
+      },
+      "bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: runtime fail-stop\n"
+      }
+    }
+  ]
+}
