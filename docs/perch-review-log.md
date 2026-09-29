@@ -1322,6 +1322,80 @@ Prevention:
   `nest-round10` takes 13 minutes under campaign load and 4 unloaded, so the
   runner's per-gate limit is now 1,800 s.
 
+## 2026-09-29 — nest review round 11: rows in discarded bodies, `+D` binders, hidden type names
+
+Confirmed:
+- A match nested in a row body that no leaf selects was never pattern-validated:
+  an unknown constructor, a wrong field count, a bare constructor binder, a call
+  as a pattern and a wrong pattern count were Checked, evaluated and emitted.
+  The seed parses every row before it checks any body. The branch's `prepare`
+  ran where the checker reached a match, so the discarded body was never reached
+  (main reported Unsupported for these; the branch's multi-column rows moved the
+  count check from parse time to check time).
+- `+Flag` (a datatype declared earlier) as a pattern binder was accepted; the
+  seed reads `+D` as a quantified datatype and fails. A bare binder named after a
+  datatype then used as a type in the body was accepted; the seed has one
+  namespace, so the annotation names the binder. Both were branch-introduced for
+  variable rows, multi-column rows and nested fields, and main-era for lets,
+  parameters and type fields.
+- Seed-accepted multi-scrutinee layouts and a Nat literal in a later column were
+  Invalid where main stopped at Unsupported (D4).
+- No gate could tell a working row-width or field-count check from a deleted one.
+
+See the [round-11 dispositions](../tests/compiler-nest/receipts/REVIEW-11.md).
+
+Prevention:
+- A rule the seed applies at parse time applies to the whole tree, not to the
+  part the checker reaches. State it as an audit that walks discarded bodies too,
+  and give it lax controls (type errors, unbound names in a dead body are
+  accepted) so it does not over-reject.
+- State a name rule as a table, kind of name by kind of site, and generate from
+  the table: binder names from a datatype, a constructor, both, a name declared
+  later, a function and Base's names, at a row, a later column, a field, a nested
+  field, a let, a parameter and a type field. Constructors had a rule since round
+  3; datatypes had none until a reviewer tried `+Flag`.
+- A generator must be told to draw the accepted side of every class, and the gate
+  must check that it did (at least 50 seed-accepted and 50 seed-rejected programs
+  per family), or "0 false Invalid" says nothing. The first sweep also drew
+  constructor-named lets, the literals branch's rule: it reported 19 false
+  acceptances, all of that class. Exclude a rule you do not own by construction.
+- A token-mutation fuzz is the fastest way to find a layout gap the grids miss (it
+  found six shapes in its first 72,000 mutants, minutes of CPU). Build the
+  merge-base checker and label each false Invalid main-era or branch-introduced,
+  or the main-era noise (87 of 97 in the 60,000-mutant run) hides the signal.
+- Put a new check beside the functions older gates call, not inside them:
+  threading the earlier names through `G.parameters` broke the checker gate's
+  bounds program (its parameters `N0..` share a name with the datatype `N0`) and
+  moved the text a structural mutant anchors on. Run the older gates on an
+  exported snapshot before the first full run.
+- A declaration's Perch state (`matrix-LAWS::flag`) sat 50 bytes under its bound;
+  each helper reachable from it adds about 200 bytes (its interface and its
+  summarized note). Keep a group's task text to the contract and move per-round
+  evidence to a separate file (SPEC.md 14,727 to 9,120 bytes, ROUNDS.md).
+- Gates hash their inputs and fail if one changes during a run: run them in an
+  exported snapshot (rsync of `git ls-files`, `.toolchain` and `node_modules`
+  linked) while editing continues.
+- Replay the reviewers' own probe directories as a regression corpus: 48,517
+  programs, unique by content, classified by the seed once (cached) and by the
+  previous tip, the merge base and the new tree. It ranked the residual classes
+  in minutes (false acceptances 157, 104 and 57; seed-accepted Invalid 254, 951
+  and 115) and shows which are main-era.
+- "Every pair of adjacent tokens" is a finite search; run it exhaustively. A generator
+  that draws gaps at random found nothing new in header shapes until its alphabet held
+  a `(`; inserting eight gaps between every adjacent pair of forty-three bases found the
+  last false acceptance in minutes (a header joins its lines, and the seed never reads a
+  `(` that starts a line as a call). Keep the tool (`gapsearch.py`) and grow its bases
+  whenever a review names a token class the bases lack.
+- A stopgap that answers Unsupported for a seed-accepted layout must also say what the
+  seed does with the same tokens when the program is dead: the audit moved the width
+  check to every row, so a header that Knot read as one column and the seed as two turned
+  a benign acceptance into a false Invalid. Freeze the dead and live pair together.
+- A gap that follows a construct main did not parse looks branch-introduced when
+  it is only compared with main: main stopped at `Unsupported match-scrutinees`,
+  so every main-era gap after a multi-scrutinee header changed from Unsupported
+  to Invalid. Label a difference by the construct before it as well as by main's
+  answer, and freeze the gap once instead of recounting it.
+
 ## 2026-09-28 — Live review of the compiler-campaign backlog (`185b7d5..a6367eb9`)
 
 Date / scope / source revision: 2026-09-28 (receipts UTC 2026-09-29T04:50:55Z to
