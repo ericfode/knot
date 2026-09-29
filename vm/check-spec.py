@@ -598,9 +598,10 @@ def print_argument(name: str, source: str, plan: dict, strings: dict, built: dic
 # ------------------------------------------------------------------ images
 
 def check_declarations(plan: dict, source: str):
-    """The source's own datatypes: names, constructor order and live field counts."""
+    """The source's own datatypes: names, constructor order and live field counts. A generic
+    declaration (`type Box<-R: Type> is Type:`) counts, as Base's own do."""
     pinned = set(plan.get('representation', {}).values())
-    declared = re.findall(r'^type (\w+) is Data:\n((?:  \w+\{[^}]*\}\n)+)', source, re.M)
+    declared = re.findall(r'^type (\w+)(?:<[^>]*>)? is (?:Data|Type):\n((?:  \w+\{[^}]*\}\n)+)', source, re.M)
     fields = erased_fields(source)
     for t in (t for i, t in enumerate(plan['types']) if t['kind'] == 'data' and i not in pinned):
         ctors = next((re.findall(r'^  (\w+)\{', block, re.M) for n, block in declared if n == t['name']), None)
