@@ -59,3 +59,5 @@ def L.offset_bound(token,count,tail,current,scope,n,term,uses,beyond,tailed):
       Done{C.Checked{N.successors(U32.to_nat(count),term,S.Token{"Succ",S.at(token)},0,1,[C.Parameter{S.Token{"pred",S.At{0,0,0,0}},1,0}]),0,uses}}) ==
     Fail{S.Exhausted{"check",S.at(token)}} : Result<S.Error,C.Checked>}
   {==}
+
+def L.binders_meet_registered_constructors(at): {==}

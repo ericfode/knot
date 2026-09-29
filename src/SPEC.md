@@ -195,18 +195,27 @@ A pattern or let binder names one value. The seed reads a dotted name as a refer
 global, so a dotted binder is `Invalid parse pattern-binder` (`binding-name` for a let)
 unless a parameter of the same function binds that exact name, which the binder then repeats;
 the parser checks this for the single-file and the bundle entry alike. A constructor is no
-binder once it is declared: a let binder that names a constructor of Base, of an import or of
-the book's own earlier declarations is `Invalid check constructor-pattern-binder`, as a
-pattern binder already was. The seed registers constructors in source order, so a let binder
-may name a constructor declared later, as a parameter, a function or a type may. The let rule
-lives in qualification, which orders registration, so it is a `--bundle` rule. Known
-imprecisions, each Invalid where the seed accepts and inherited: the single-file entry does not
-test let binders against constructors; the checker's catalog-wide test also rejects a pattern
-binder named like a constructor declared later in the book (`constructor-pattern-binder`);
-an arm body must start right of its `case` keyword (`Invalid parse body-indentation`), so an
-offset tail dedented left of `case` with the body on the same line is rejected; and a newline
-after `case` or inside call or constructor arguments, other than after an offset's `+`, is
-`Invalid parse expected-term`.
+binder once it is registered, and the seed registers constructors in source order: a pattern
+or let binder that names a constructor of Base, of an import or of the book's own earlier
+declarations is `Invalid check constructor-pattern-binder`, while one may name a constructor
+declared later, as a parameter, a function or a type may. Qualification orders registration
+for a `--bundle` book. For a single file the parser's `registered` judges each body against
+the constructors declared before it, and the driver runs it before checking; the checker
+tests no binder against constructors.
+
+Layout follows the seed's term reader, which skips line breaks between a term's tokens. A line
+break may follow `case`, `match`, a let's `=` and an offset's `+`, may precede the `:` that
+closes a case pattern or a match scrutinee, and may stand around any item of a `(..)` or
+`{..}` list: arguments, constructor values and patterns, parameters and constructor fields.
+A newline still ends a term body and a let's value. The seed checks no body column: an arm body
+may start anywhere, left of its `case` or in column 0, and a let's next line may stand in any
+column. A match takes only cases right of both its own keyword and the `case` whose body holds
+it, so a match in a dedented body leaves the enclosing match's cases alone; the seed reads such
+a match with no rows. Known imprecisions, each Invalid where the seed accepts: a function body's
+first line must leave column 0 (`Invalid parse body-indentation`, pinned by the frontend
+gate); a function body's match must put its cases right of `match`; a line break inside a
+parameter, in a function header outside its parentheses, after a promotion's `+` or before a
+let's `=` or `:`; and a list item without its comma (`Invalid parse argument-separator`).
 
 Resolved occurrences use lexical levels within a function environment, never
 display-name lookup. New bindings append a level; shadowing resolves to the

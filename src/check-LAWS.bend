@@ -6,6 +6,7 @@ import ./check.bend as K
 import ./literal-check.bend as L
 import ./literal-matrix.bend as M
 import ./literal-offset.bend as N
+import ./parse.bend as P
 
 # These are helper/boundary laws. They are not a checker soundness theorem.
 law empty_sequence_preserves_uses:
@@ -156,3 +157,14 @@ law offset_bound:
   for tailed: {Done{C.Checked{term,0,uses}} == K.run(n,K.Expression{M.literal(tail),Some{0}},nat(),current,scope) : Result<S.Error,C.Checked>}
   {K.run(1n+n,K.Expression{S.Offset{token,count,tail},Some{0}},nat(),current,scope)
    == Fail{S.Exhausted{"check",S.at(token)}} : Result<S.Error,C.Checked>}
+
+# A single file registers constructors in source order: `Late` is a binder before its type and
+# no binder after it, wherever the tokens stand.
+law binders_meet_registered_constructors:
+  for +at: S.At
+  {(P.registered([S.Function{S.Token{"f",at},Nil{},S.Token{"T",at},S.Match{S.Token{"match",at},S.Variable{S.Token{"x",at}},
+      [S.Arm{S.Token{"case",at},S.Variable{S.Token{"Late",at}},S.Variable{S.Token{"Late",at}}}]}},
+      S.Datatype{S.Token{"Later",at},False{},[S.Constructor{S.Token{"Late",at},Nil{}}]}],Nil{}),
+    P.registered([S.Datatype{S.Token{"Later",at},False{},[S.Constructor{S.Token{"Late",at},Nil{}}]},
+      S.Function{S.Token{"f",at},Nil{},S.Token{"T",at},S.Binding{S.Token{"Late",at},1,None{},S.Variable{S.Token{"x",at}},S.Variable{S.Token{"Late",at}}}}],Nil{}))
+    == (Done{Unit{}},Fail{S.Invalid{"check","constructor-pattern-binder",at}}) : Result<S.Error,Unit> & Result<S.Error,Unit>}

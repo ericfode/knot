@@ -416,6 +416,31 @@ MUTANTS = [
      'old': 'Bool.and(known(S.text(resolved),names),contains(ctors,S.text(resolved)))',
      'new': 'contains(ctors,S.text(resolved))',
      'fixture': 'binder-scope', 'verdict': (2, 'Invalid\tcheck\tconstructor-pattern-binder\t')},
+    # Layout and binder order. Each mutant undoes one rule the frozen books pin: a line break
+    # after `case`, around a list item and inside a parameter list, the unchecked arm-body
+    # column, the enclosing `case` as a nested match's floor, and the checker's deference to
+    # qualification's registration order.
+    {'name': 'case-line-kept', 'file': 'parse.bend',
+     'old': 'run(n,Term{True{}},S.skip_lines(tail))', 'new': 'run(n,Term{True{}},tail)',
+     'fixture': 'layout-term-newline', 'verdict': (2, 'Invalid\tparse\texpected-term\t')},
+    {'name': 'item-line-kept', 'file': 'parse.bend',
+     'old': 'run(n,ListTail{close,arg,False{},pattern},S.skip_lines(rest))',
+     'new': 'run(n,ListTail{close,arg,False{},pattern},rest)',
+     'fixture': 'layout-list-newline', 'verdict': (2, 'Invalid\tparse\targument-separator\t')},
+    {'name': 'parameter-line-kept', 'file': 'parse.bend',
+     'old': 'run(n,Parameters{")"},S.skip_lines(args))', 'new': 'run(n,Parameters{")"},args)',
+     'fixture': 'layout-list-newline', 'verdict': (2, 'Invalid\tparse\tparameter\t')},
+    {'name': 'arm-column-checked', 'file': 'parse.bend',
+     'old': 'Bool.or(U32.is_gt(parent,0),U32.is_gt(S.column(h),0))', 'new': 'U32.is_gt(S.column(h),parent)',
+     'fixture': 'layout-body-column', 'verdict': (2, 'Invalid\tparse\tbody-indentation\t')},
+    {'name': 'floorless-match', 'file': 'parse.bend',
+     'old': 'U32.max(S.column(h),parent)', 'new': 'S.column(h)',
+     'fixture': 'layout-body-floor', 'verdict': (0, 'Built\t')},
+    {'name': 'binder-looked-up', 'file': 'literal-matrix.bend',
+     'old': 'case 1n+n S.Variable{token}: Done{S.Variable{token}}',
+     'new': 'case 1n+n S.Variable{+token}: S.bind(G.ConstructorRef,S.Node,lookup(types,token),r => '
+            'C.invalid(S.Node,"constructor-pattern-binder",token))',
+     'fixture': 'later-constructor-binder', 'verdict': (2, 'Invalid\tcheck\tconstructor-pattern-binder\t')},
 ]
 
 

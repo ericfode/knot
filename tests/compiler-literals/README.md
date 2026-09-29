@@ -41,6 +41,13 @@ x.y`, `1n+x.y`, `case U32.add`, `x.y : U32 = 3`); a let binder named like a
 constructor of Base or of the book itself; and one agreeing control book for
 the scope of those rules, where the seed accepts a dotted binder that repeats
 a dotted parameter and a let binder named like a constructor declared later.
+The layout round (six books, committed as `b27383d` before its fix): line
+breaks after `case`, `match` and a let's `=` and around list items, parameters
+and constructor fields; arm bodies left of their `case` (own line, dedented
+offset tail, column 0) and let lines in other columns; pattern binders named
+like a constructor declared later; and two controls, a dedented match whose
+cases stand in the enclosing `case`'s column (the seed reads it with no rows)
+and a field binder named like the book's own earlier constructor.
 All five freezes are verified against seed 2.0.29,
 commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on every gate run.
 
@@ -156,20 +163,26 @@ U32 = 3` are `Invalid\tparse\tpattern-binder` (`binding-name` for a let),
 while a dotted parameter may be rebound by a default, promoted, offset or field
 pattern and by a typed, promoted or plain let; the review's proposed "one
 unqualified identifier" would have rejected those seed-valid books. A
-constructor is no binder once declared: a let binder that names a constructor
-of Base, of an import or of the book's own earlier declarations is
-`Invalid\tcheck\tconstructor-pattern-binder`, the rule pattern binders
-already had, decided in `qualify.bend` where registration is ordered. The seed
-registers constructors in source order, so a let binder may name a constructor
-declared later, and a parameter, a function or a type may take any name.
-Inherited imprecisions, each Invalid where the seed accepts: the single-file
-entry checks let binders against no constructors; the checker's catalog-wide
-test also rejects a pattern binder named like a constructor declared later;
-an arm body must start right of its `case` keyword
-(`Invalid\tparse\tbody-indentation`), so an offset tail dedented past `case`
-with the body on its line is rejected; and a newline after `case` or inside
-call or constructor arguments (other than after an offset's `+`) is
-`Invalid\tparse\texpected-term`.
+constructor is no binder once registered, and the seed registers constructors
+in source order: a pattern or let binder that names a constructor of Base, of
+an import or of the book's own earlier declarations is
+`Invalid\tcheck\tconstructor-pattern-binder`, while one may name a
+constructor declared later, as a parameter, a function or a type may.
+`qualify.bend` orders registration for a bundle book; for a single file the
+parser's `registered` judges each body against the constructors declared
+before it. The checker no longer tests binders against its whole catalog.
+
+Layout follows the seed's term reader, which skips line breaks between a
+term's tokens: after `case`, `match`, a let's `=` and an offset's `+`, before
+the `:` of a case pattern or match scrutinee, and around the items of every
+`(..)` and `{..}` list. The seed checks no body column, so an arm body may
+start left of its `case` (even in column 0) and a let's next line may stand in
+any column; a match still takes only cases right of both its keyword and the
+enclosing `case`. Remaining imprecisions, each Invalid where the seed accepts:
+a function body's first line in column 0 (pinned by the frontend gate), a
+function body's cases in its `match` column, a line break inside a parameter,
+in a function header, after a promotion's `+` or before a let's `=` or `:`,
+and a list item without its comma.
 
 The checked core gains Literal, Intrinsic and Default. U32/Char expressions use
 the existing scalar Value term. The independent evaluator interprets this core
@@ -348,7 +361,15 @@ dotted binder turns binder-scope into `Invalid parse pattern-binder`, as a
 rule without the parameter's scope would; dropping the let binder's
 constructor test turns let-constructor-binder into `Built`; and a constructor
 test that ignores source order turns binder-scope into `Invalid check
-constructor-pattern-binder`. The
+constructor-pattern-binder`. The layout round adds six: keeping the line break
+after `case` turns layout-term-newline into `Invalid parse expected-term`;
+keeping it after a list item or after a parameter list's `(` turns
+layout-list-newline into `Invalid parse argument-separator` or `Invalid parse
+parameter`; checking an arm body's column again turns layout-body-column into
+`Invalid parse body-indentation`; dropping the enclosing `case` as a nested
+match's floor compiles the seed-invalid layout-body-floor to `Built`; and a
+checker that looks a default binder up among all constructors turns
+later-constructor-binder into `Invalid check constructor-pattern-binder`. The
 exhaustion mutant offset-nat-add restores the `Nat.add(kn,t)` lowering of an
 expression offset (in the arm that now wraps the tail); `successor` in
 offset-expression-depth (frozen Yes) then

@@ -99,6 +99,22 @@ and the constructor test made independent of source order. The scope of the dott
 by `binder-scope` and by the `dotted-binder-anywhere` and `constructor-binder-anywhere` mutants,
 not by these laws.
 
+The layout round adds four ground-instance laws, also outside the 37. Three are in
+`src/PROOF.bend`: `list_across_lines` (a call whose items stand across line breaks after `(`,
+before and after `,` and before `)`), `arm_across_lines` (a line break after `case` and before
+the `:`, with the body at any position `at`, so no body column is checked) and
+`cases_right_of_parent` (under a `case` in column 4, a match written in column 2 takes no case
+in column 4). One is in `src/check-PROOF.bend`, run by the checker gate:
+`binders_meet_registered_constructors` (a single file's `Late` is a pattern binder before its
+type and not a let binder after it). Nine negative controls, one mutation each in a scratch
+copy, make the entry fail on the named law: the line break kept after an item, after `(` or
+after `,` (`list_across_lines`); after `case` or before its `:`, or the old arm-body column
+check restored (`arm_across_lines`); the floor dropped from a nested match
+(`cases_right_of_parent`); and the constructor test disabled or registration unordered
+(`binders_meet_registered_constructors`). These are instances, not a parser theorem: that
+every layout the seed accepts parses, or that the parser's structure equals the seed's for
+all dedented bodies, is not claimed. The frozen layout books and six mutants pin real books.
+
 These laws do not prove the whole parser/checker/emitter correct, the Wasm
 interpreter equivalent to the source evaluator, memory separation for all
 executions, totality of every intrinsic, or all-input equivalence to Base. U32
@@ -119,7 +135,9 @@ unspelled-own-target, offset-nat-add, offset-one-short, offset-unchecked-type,
 offset-extra-successor, unbounded-chunk, constructor-tag-display, quote-blind-escape, raw-delete,
 and the eight round-10 verdict mutants (offset-newline-kept, names-unread, name-may-end-in-dot,
 name-word-may-be-empty, name-word-may-start-with-digit, dotted-binder-anywhere,
-let-binder-unchecked and constructor-binder-anywhere). Mutants retain types and must produce the
+let-binder-unchecked and constructor-binder-anywhere), and the six layout-round verdict mutants
+(case-line-kept, item-line-kept, parameter-line-kept, arm-column-checked, floorless-match and
+binder-looked-up). Mutants retain types and must produce the
 designated runtime disagreement, classification change or, for
 offset-nat-add, resource exhaustion against the frozen value. unbounded-chunk
 must build the u32-literals book to the gate's bytes and fault its Bun lane

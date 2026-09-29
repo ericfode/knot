@@ -25,7 +25,8 @@ def parsed_root(value: P.Parsed) -> S.Node:
     case P.Parsed{root,rest}: root
 
 def legacy(depth: Nat, +root: S.Node) -> Result<S.Error,C.Book>:
-  S.bind(Unit,C.Book,Q.legacy(65536n,[root]),u => K.check(depth,root))
+  S.bind(Unit,C.Book,Q.legacy(65536n,[root]),u =>
+    S.bind(Unit,C.Book,P.registered(Q.children(root),Nil{}),u => K.check(depth,root)))
 
 def parsed(limits: Limits, result: Result<S.Error,P.Parsed>, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
