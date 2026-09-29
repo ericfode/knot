@@ -4,6 +4,214 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Layout and binder order
+
+Three seed-accepted layouts that Knot reported Invalid, recorded as inherited limits
+in round 10, now agree with the seed. Branch `campaign/literals-layout`, from `a60c4e4`.
+The freeze came first (D7); no earlier expectation changed, and the 103 earlier
+entries of `regressions.json` are byte-identical.
+
+| Commit | Content |
+| --- | --- |
+| `b27383d` | Freeze, before any fix: six books observed on the seed (`regressions.py --write`, two agreeing passes) |
+| `8a95453` | The parser's layout rules, the nested-match floor, the checker's deference to registration order, four laws, six mutants, SPEC, README, LAW_REVIEW; census approved |
+| `f52be51` | Restores the text the classification gate's nonleading-template mutant anchors on (below); census inventories follow |
+| this commit | This section, the gate run and the literals receipt from the run on `f52be51` |
+
+### What the seed does
+
+From `bend2/bend.ts` and probes, each frozen or recorded below:
+
+- `parse_term` begins with `parse_skip`, which skips spaces, newlines and comments, and
+  `parse_term_args`, `parse_tele` and `parse_terms` skip again around every item and
+  before `:`. A newline ends a term only before `(` or `[` (`parse_nl`) and where a body
+  reads it. So a pattern may follow `case` on the next line, and a call's, constructor's,
+  pattern's or parameter list's items may stand on any line.
+- `parse_body(p, col)` checks no body column. A match's rows start at the first `case`
+  column `ccol` and need `ccol > col`, where `col` is the enclosing `case`'s column for an
+  arm body (`parse_block` passes the body column minus one for a function body). An arm
+  body may therefore stand left of its `case`, even in column 0, and a let's next line
+  in any column; but a match in a dedented body whose cases stand in the enclosing
+  `case`'s column has no rows (`expected : cases for False, True`), and those cases
+  become rows of the enclosing match.
+- A constructor is registered when its declaration is parsed, and a registered
+  constructor is no binder, even where a parameter of that name is in scope (probe t1):
+  `a braced constructor pattern (Yes is a constructor ...)`. A constructor declared
+  later is no obstacle.
+
+### The fix
+
+1. **Line breaks.** `parse.bend` skips line breaks where the seed reads a term or a list
+   item: after `case`, `match` and a let's `=`, before the `:` of a case pattern or match
+   scrutinee, and after `(` and `{`, around each item and after each `,` of an argument or
+   parameter list (calls, constructor values and patterns, `def` headers, constructor
+   fields). Thirteen new `S.skip_lines` calls at those continuation points; the lexer keeps
+   its newline tokens (closures needs them inside lambda bodies, per SELF-HOSTING-PATH). The
+   non-leading `~` test after a parameter's comma keeps its original text, which the
+   classification gate's nonleading-template mutant anchors on, so a `~` binder on the
+   line after the comma reaches `Parameters` and reports `Unsupported parse
+   template-binder` instead of `Invalid parse parameter`; the seed rejects both.
+2. **Body column.** `StartBody` no longer checks an arm body's column; only a function
+   body (parent 0) must leave column 0, which the frontend gate pins. `BodyAt` and the
+   let modes carry the enclosing parent instead of their own column, so a let's next line
+   is read in any column. A match's cases must stand right of `U32.max(column of match,
+   parent)`: for a dedented body that is the enclosing `case`, the seed's floor, and for
+   every layout Knot accepted before it is the match's own column, unchanged. Without
+   the floor, the frozen layout-body-floor book (seed-invalid) compiles (`floorless-match`).
+3. **Binder order.** The checker's catalog-wide test (`G.constructor_named` in
+   `literal-matrix.bend`'s Variable and Promotion arms and in `patterns.bend`'s `fields`)
+   is gone, with `constructor_named` and `has_tag` in `catalog.bend`. For a bundle book,
+   `qualify.bend` already decides the ordered rule (`known` and `contains`), untouched
+   here. For a single file, the parser's binder walker now judges each binder against
+   the declarations in scope as nodes: parameters license a dotted name, and
+   constructor nodes registered before the function forbid the name. `registered`
+   walks a file's declarations in order and the driver runs it before checking. This
+   matches campaign/modules, which also removed the checker's test.
+
+### Evidence
+
+Seed against Knot (`check --bundle`, native lane) on the task's probes: g1, g2, g3, o2,
+c1 and c9 were Invalid and now check; the frozen books agree in the gate (below).
+Single-file: the fields gate's `constructor-name-binder` keeps its exact diagnostic
+(`121:123:8:13`); a later-constructor field binder now checks, as the seed accepts; and an
+earlier-constructor let binder, which Knot accepted while the seed rejects it, is now
+`Invalid check constructor-pattern-binder`, closing the single-file let limit of round 10.
+
+`check` over the 1044 tracked books, old build against new, single-file and bundle:
+2051 identical, 37 changed, every one from Invalid. None accepted before is rejected now.
+
+| Change | Books |
+| --- | --- |
+| Invalid to Checked | layout-term-newline, layout-list-newline, layout-body-column, later-constructor-binder (bundle); selfhost layout-call-args, layout-comments, layout-dedent-close, layout-def-header (both modes); baseslice bool-gates (bundle) |
+| Invalid to Unsupported | selfhost layout-braces (`nested-field-pattern`, both modes); nine baseslice fixtures, a perch-calibration control and perch-style-role H02 (`parameter-type`, bundle) |
+| Invalid to another Invalid | layout-body-floor (`pattern-type`, as frozen); the five selfhost layout twins, now at their pinned codes and positions (`layout-call-args-comma` 18:14, `layout-braces-comma` 12:11, `layout-def-header-comma` 7:12, `layout-dedent-close-extra` 16:6, `layout-comments-swallowed` argument-separator) |
+
+The floor control's code: the seed reads layout-body-floor's `case False{}` as a row of
+the Answer match, so its Knot code follows from the existing vocabulary for a constructor
+of another type (`pattern-type`, as pattern-u32-on-bool and dead-pattern-constructor pin
+it). It was cross-checked, before the fix, by running the pre-fix build on the same
+structure written with an indented match (`Invalid check pattern-type`); that run is the
+one Knot observation behind a frozen expectation here, and it is disclosed rather than
+hidden in `regressions.py`'s justification. The earlier Answer-only variant read as
+`Unsupported check duplicate-arm` and was not frozen.
+
+Laws (ground instances, outside the 37 literals entries): `src/PROOF.bend`
+`list_across_lines`, `arm_across_lines` and `cases_right_of_parent`;
+`src/check-PROOF.bend` `binders_meet_registered_constructors`. All 13 `src/*PROOF.bend`
+print `All terms check.`. Nine negative controls (one mutation each in a scratch tree)
+fail the named law ([LAW_REVIEW.md](LAW_REVIEW.md)).
+
+Mutants (42 in the gate, six new, all killed by verdict, pre-checked individually):
+case-line-kept, item-line-kept, parameter-line-kept, arm-column-checked, floorless-match
+(seed-invalid book to `Built`) and binder-looked-up.
+
+### Known limits (each Invalid where the seed accepts)
+
+Probed against the seed on the new build:
+
+- a function body's first line in column 0 (`body-indentation`; the frontend gate pins it);
+- a function body's cases in its `match` column (`top-level-indentation`);
+- a line break inside a parameter (`parameter`), in a header outside its parentheses
+  (`function-result`), after a promotion's `+` (`pattern-binder`), or before a let's
+  `=` (`expected-=`) or `:` (`top-level-indentation`);
+- a list item without its comma (`argument-separator`); the seed's commas are optional.
+
+None is a resource limit or a regression: each was Invalid before, and none is reachable
+through the frozen books.
+
+### Merge notes for the coordinator
+
+- **selfsource (SF-01, SF-02).** This increment implements the list continuation points
+  that SELF-HOSTING-PATH assigns to selfsource, in the way it prescribes (in `parse.bend`,
+  not the lexer). The selfhost gate passes with no blocked D4 gap; nine layout cases now
+  meet their requirement while blocked (`blocked_meeting_requirement`: the four positives
+  layout-call-args, layout-comments, layout-dedent-close, layout-def-header and their five
+  twins at the pinned codes and positions), and only layout-braces still stops, at
+  `Unsupported check nested-field-pattern`. The `layout` need is not flipped here. With no
+  gap showing, the judge's four gap-dependent self-tests (`if gap:`) no longer run, so it
+  reports 16 judge mutants where it reported 20; the selfhost owner may want a restated
+  gap control to keep them. The committed selfhost receipt is left for its owner.
+- **baseslice.** Ten baseslice fixtures change verdict in `--bundle` mode (bool-gates now
+  checks; nine now stop at `Unsupported parse parameter-type`, all Invalid before).
+  `tests/compiler-baseslice/expectations.json` pins no Knot parse diagnostic and the suite
+  is not a registered gate on this branch; re-run it when baseslice merges.
+- **Composition bytes.** frontend-laws is at 47959 of 48000. selfsource, closures and
+  modules all edit `parse.bend`, so the next merge there will need bytes: the comments on
+  `binder` and on `StartBody` are the first to reclaim.
+- **modules.** Take modules' `rebinds` in `qualify.bend` and its driver call, and drop
+  this branch's `registered` call in `driver.bend` (modules' pass also covers let
+  binders and field binders, the same rule). `registered`, `constructor_named` in
+  `parse.bend` and the law `binders_meet_registered_constructors` then go with it, or stay
+  as the parser's file-local form if the coordinator prefers one walker. The checker-side
+  removal matches modules. `binder-looked-up` anchors in `literal-matrix.bend`, which
+  modules does not have.
+- **closures.** `LambdaStatements` reads newline tokens inside an argument list. The skips
+  here sit only at list continuation points (after an opener, around a finished item,
+  after `,`), never inside an item, so a lambda body's statements keep their newlines;
+  re-run layout-list-newline and the selfhost layout cases after the merge.
+- **Trailers.** These commits carry `Co-Authored-By: Claude Sonnet 5.5`, as the run
+  instruction asked; the model that made them was Opus 5.5.
+
+### Gates on the fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `f52be51` passed all 22 registered gates
+(exit 0) in 909.7 seconds (`run-m26vl_zy`, four workers, load average about 48 to 61
+from other sessions on the host), and `npm run -s gates:verify` passed 19 tests.
+Counts are copied from the runner; categories overlap and are not summed.
+
+| Gate | Seconds | Exact counts |
+| --- | ---: | --- |
+| frontend | 214.2 | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | 118.6 | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | 138.4 | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | 225.3 | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | 141.3 | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | 2.8 | entries=3; proof holes=0 |
+| fields-trust | 3.5 | entries=4; proof holes=0 |
+| structural-trust | 0.6 | entries=2; proof holes=0 |
+| owned-store | 9.2 | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | 25.3 | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | 204.6 | fixtures=19; mutants=3 |
+| fields-wasm | 316.7 | boundaries=30; fixtures=8; mutants=4 |
+| modules | 409.0 | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | 15.5 | classes=42; declarations=1206; files=66 |
+| perch-context | 95.5 | fixtures=33; mutants=8 |
+| lint:verify | 8.1 | law rules=8; tests=168 |
+| bootstrap | 116.2 | corpus=1044; mutants=54; reached=2; stages=8 |
+| classification | 10.2 | fixtures=17; mutants=6 |
+| io-host | 25.7 | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| io-abi-2 | 116.5 | case mode=insensitive; fixtures=43; host boundaries=25; mutants=5; mutants killed=5; parity=153; read observations=21; reference observations=64; seed exhausted=2; seed observations=61 |
+| selfhost | 340.7 | blocked=63; cases=65; d4 gaps=0; judge mutants=16; mutants=3; passed=2 |
+| literals | 364.0 | agree eval observations=970; agree fixtures=43; artifact preservation probes=214; boundary probes=16; byte identity pairs=43; check observations=300; compile observations=300; eval observations=1184; execution lanes=2; fixtures=150; invalid fixtures=62; mutant eval observations=9; mutant fault observations=1; mutant verdict observations=29; mutant wasm observations=8; no artifact probes=214; proof entries=3; proof laws=37; reference calls=523; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=42; trust audits=86; unsupported fixtures=45; wasm observations=970 |
+
+Receipt drift: identical=64; semantic=17; volatile-only=9, the same shape as round 10.
+The 16 semantic drifts outside this gate are the shared receipts listed there, left for
+the coordinator. This gate's receipt is the run's normalized output, copied after all
+237 recorded input hashes were checked against the tree.
+
+Earlier runs on this branch: a direct literals run on `8a95453` passed (14.6 min wall,
+overlapping a direct selfhost run at load about 66; one earlier direct run failed only
+its final input check, because `src/SPEC.md`, a gate input, was edited during it). A
+first runner pass was stopped before any result when a scan showed that `8a95453` had
+rewritten the text the classification gate's nonleading-template mutant anchors on;
+`f52be51` restores it. `census:test` fails tests 28 and 60 on this head; both also fail,
+with 29 and 65, on `a60c4e4`, so neither is new.
+
+### Offline preflight
+
+`npm run lint:style -- --preflight --manifest=docs/compiler-campaign/manifest.json`:
+32 groups, 0 structural blockers, 0 provider requests. Changed groups, before and after,
+of 48000 composition bytes: checking 47937 to 47689, literal-patterns 47995 to 47220,
+frontend-parsing 33752 to 35275, frontend-laws 44795 to 47959, driver-pipeline 39639 to
+39892, checker-laws 28408 to 29514. Live semantic and style Perch review need the
+network, which this run forbids; no style pass is claimed.
+
+### Remaining
+
+- Live Perch semantic and style review of the changed files (network forbidden here).
+- The known limits above, for selfsource or a later increment.
+- Refresh of the shared receipts with semantic drift after the merge.
+
 ## Review round 10
 
 The coordinator's review workflow (round 1 on `a122239`) confirmed three major
