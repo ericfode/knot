@@ -1,28 +1,29 @@
 {
  "gate": "vm-model",
- "date": "2026-09-28T18:02:22+00:00",
+ "date": "2026-09-29T21:26:11+00:00",
  "status": "passed",
  "sources": {
   "model/word.bend": "4bec5f4d2f55b67758e1195c0bbf6d6d4d317ddd8cc0f0c5bda35973a2a6fabc",
-  "model/decode.bend": "fafae5ff52d8ce4d8de21423923961505ae0c6ca4b1e035ddc7d6fa0700f83a4",
+  "model/decode.bend": "d4501ecef77e9dca4f5e7cfd6437b5ce5a2b90fb29d74a1164a1e0bfdc74bf1a",
   "model/validate.bend": "4a95532418153b93475b3bcd37be9dd5f8f4aa8f30fc55c15699706937392b32",
   "model/encode.bend": "ad0842c6168b8f1a4c8a96bff2e4503d820b3098c1425a96daf9b9ac5a75a4d4",
-  "model/memory.bend": "288c3bbefe6cf5d5b90ad12159de774d2cbfb12b22e78fd37aa1597a6a1997af",
-  "model/machine.bend": "da767af160d081b421977e44b09f192c1d7755e84316f3566ff8b0b7e9a87fb8",
-  "model/audit.bend": "e18ff95e1ae98dc8a6a4581453d891bfffcfdba6e1e6bc78198b2f0db3033947",
-  "model-cli.bend": "a963b9568a1fb8658a42eb362b26d76dc1d1f71db531b28598166baacaea20d1",
+  "model/memory.bend": "0fd6ff3f9f16130b4af52a6b2de611c17818c825dd2478df4348ad9d8a0cdace",
+  "model/machine.bend": "50a1239dbe4e45f0caf18e3959563f2113024ba62e8620dd2408f0a50384a740",
+  "model/audit.bend": "8ac633a659d27dc71e03a9f80ff00bcddb8fd63b349a2392c19eb53a955cbfa9",
+  "model-cli.bend": "09c4bf5e40ca3929530f5ce9183b0c143059094bad6128d494cfe99866b2fb49",
   "model-audit.bend": "3675cf28ae8fb11574c2f67d74bd8c5f3046c67a26a2ed26b13582835e1df5a2",
   "model-sweep.bend": "bef3f6c9166a51878eb5b05621f423c55cee50909f190a6d5a49441f2d9fa6b2",
   "model-lanes.bend": "aa73565b26d180a7b570d7e9d60b49b3249cc33cc2c065fb19340f2f5bb501f4",
-  "LAWS.bend": "ff62c0f9b9dcfa2e1a506a1c435224a95d2a707ef0f430d3a2b51c0454c0fee9",
-  "PROOF.bend": "de294dee4ca6410d2afc360505cc1f8b95755570f6f8bc8e4373ca33b28c7650"
+  "LAWS.bend": "05129117c9c10e07ca6863e48967292bdd1c837524433a090551903c985a2af8",
+  "PROOF.bend": "a351f378fd2d1150ecba99755c7ec1abb36c9044fc368b2a55d961c85a8d0ea2"
  },
  "fixtures": {
   "value_on": 75,
   "closure_captures": 162,
   "recursion_map": 238,
   "string_append_mortal": 247,
-  "foreign_print": 191
+  "foreign_print": 191,
+  "nat_succ_range": 174
  },
  "registry": {
   "prims": 39,
@@ -30,7 +31,7 @@
  },
  "connectives": {
   "sources": 10,
-  "choices": 69
+  "choices": 72
  },
  "seed": {
   "char-pick": "On{}",
@@ -79,8 +80,8 @@
  },
  "harness_controls": {
   "concurrent": {
-   "workers": 3,
-   "rows": 157,
+   "workers": 8,
+   "rows": 396,
    "disagreements": 0
   },
   "torn": {
@@ -461,6 +462,78 @@
   "invoke-words": {
    "exit": 0,
    "outcome": "Evaluated\t1\t0\tTwo{On{},Off{}}"
+  },
+  "chr-pattern": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "list-head-match": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "nat-transitions": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "keep-swapped": {
+   "exit": 0,
+   "outcome": "kept"
+  },
+  "keep-first": {
+   "exit": 0,
+   "outcome": "kept"
+  },
+  "run2-flag": {
+   "exit": 0,
+   "outcome": "first"
+  },
+  "spine": {
+   "exit": 0,
+   "outcome": "first\nsecond"
+  },
+  "keep-non-scalar": {
+   "exit": 0,
+   "outcome": "kept"
+  },
+  "book-drop": {
+   "exit": 0,
+   "outcome": "Evaluated\t8\t1\tOn{}"
+  },
+  "let-dropped-request": {
+   "exit": 0,
+   "outcome": "live"
+  },
+  "let-live-request": {
+   "exit": 0,
+   "outcome": "live"
+  },
+  "field-request-returned": {
+   "exit": 0,
+   "outcome": "boxed-then-returned"
+  },
+  "field-request-dropped": {
+   "exit": 0,
+   "outcome": "live"
+  },
+  "emit-field-request-dropped": {
+   "exit": 0,
+   "outcome": "live"
+  },
+  "capture-request-dropped": {
+   "exit": 0,
+   "outcome": "live"
+  },
+  "case-request-emit-default-u32": {
+   "exit": 0,
+   "outcome": "2"
+  },
+  "case-request-halt-default-u32": {
+   "exit": 0,
+   "outcome": "4"
+  },
+  "case-request-emit-default": {
+   "exit": 0,
+   "outcome": ""
   }
  },
  "invocations": {
@@ -510,8 +583,8 @@
   "invoke-words:two 0001048576 1 0": "Evaluated\t1\t0\tTwo{On{},Off{}}"
  },
  "fuel": {
-  "agree": 90,
-  "total": 90,
+  "agree": 108,
+  "total": 108,
   "differ": []
  },
  "inspection": {
@@ -525,10 +598,10 @@
  "arguments": {
   "book-without-fuel": "HostFailure\targuments\tusage",
   "book-usage-before-lookup": "HostFailure\targuments\tusage",
-  "book-long-zeros": "audit\tpassed\t7\tDescribed\t0\t1",
+  "book-long-zeros": "audit\tpassed\t7\tDescribed\t0\t1\t0",
   "book-program-form": "HostFailure\targuments\texpected-u32",
-  "program-runs": "audit\tpassed\t14\tEmitted\t0\t5",
-  "program-args": "audit\tpassed\t14\tEmitted\t0\t5",
+  "program-runs": "audit\tpassed\t15\tEmitted\t0\t5\t1",
+  "program-args": "audit\tpassed\t15\tEmitted\t0\t5\t1",
   "program-fuel-word": "HostFailure\targuments\texpected-u32",
   "program-fuel-beyond": "HostFailure\targuments\texpected-u32",
   "program-without-fuel": "HostFailure\targuments\tusage",
@@ -551,6 +624,11 @@
   "opcode": "HostFailure image: node record",
   "main-index": "HostFailure image: main index",
   "name-utf8": "HostFailure image: name utf-8",
+  "name-nul": "HostFailure image: name padding",
+  "name-padding": "HostFailure image: name padding",
+  "type-grouping": "HostFailure image: constructor grouping",
+  "type-count-max": "HostFailure image: constructor count",
+  "type-count-short": "HostFailure image: constructor count",
   "function-root-shared": "HostFailure image: function root",
   "child-not-record": "HostFailure image: child offset",
   "child-after-parent": "HostFailure image: child after parent",
@@ -558,6 +636,105 @@
   "oversize": "Exhausted 2 image-size",
   "oversize-and-bad-magic": "Exhausted 2 image-size",
   "oversize-and-misaligned": "Exhausted 2 image-size",
+  "name-utf8-overlong-2": "HostFailure image: name utf-8",
+  "name-utf8-overlong-3": "HostFailure image: name utf-8",
+  "name-utf8-overlong-4": "HostFailure image: name utf-8",
+  "name-utf8-surrogate": "HostFailure image: name utf-8",
+  "name-utf8-beyond-unicode": "HostFailure image: name utf-8",
+  "name-utf8-lead-f5": "HostFailure image: name utf-8",
+  "name-utf8-truncated-inside": "HostFailure image: name utf-8",
+  "name-utf8-truncated-before-ascii": "HostFailure image: name utf-8",
+  "name-utf8-stray-continuation": "HostFailure image: name utf-8",
+  "name-nul-middle": "HostFailure image: name padding",
+  "name-padding-first": "HostFailure image: name padding",
+  "name-padding-both": "HostFailure image: name padding",
+  "name-length-extra-word": "HostFailure image: name length",
+  "name-length-missing-word": "HostFailure image: name length",
+  "name-empty": "HostFailure image: name length",
+  "name-duplicate": "HostFailure image: duplicate name",
+  "name-index-beyond": "HostFailure image: name index",
+  "type-record-long": "HostFailure image: type record",
+  "type-kind-unknown": "HostFailure image: type record",
+  "type-record-length-one": "HostFailure image: section 0 record length",
+  "opaque-first-word": "HostFailure image: opaque type",
+  "opaque-second-word": "HostFailure image: opaque type",
+  "arrow-named": "HostFailure image: arrow name",
+  "type-domain-beyond": "HostFailure image: type index",
+  "type-name-beyond": "HostFailure image: name index",
+  "constructor-record-short": "HostFailure image: constructor record",
+  "constructor-field-count": "HostFailure image: constructor record",
+  "constructor-type-beyond": "HostFailure image: constructor record",
+  "constructor-tag-repeated": "HostFailure image: constructor tag",
+  "constructor-tag-beyond": "HostFailure image: constructor tag",
+  "constructor-of-arrow": "HostFailure image: constructor tag",
+  "constructor-field-type-beyond": "HostFailure image: type index",
+  "constructor-name-beyond": "HostFailure image: name index",
+  "constant-kind-unknown": "HostFailure image: constant record",
+  "constant-record-short": "HostFailure image: constant record",
+  "constant-record-extra-word": "HostFailure image: constant record",
+  "constant-scalar-two-words": "HostFailure image: scalar constant width",
+  "constant-scalar-empty": "HostFailure image: scalar constant width",
+  "constant-string-missing-word": "HostFailure image: constant record",
+  "constant-index-beyond": "HostFailure image: constant index",
+  "node-record-short": "HostFailure image: node record",
+  "node-record-length-one": "HostFailure image: section 4 record length",
+  "lit-extra-word": "HostFailure image: lit length",
+  "value-extra-word": "HostFailure image: value length",
+  "ref-extra-word": "HostFailure image: ref length",
+  "default-extra-word": "HostFailure image: default length",
+  "branch-extra-word": "HostFailure image: branch length",
+  "let-extra-word": "HostFailure image: let length",
+  "con-record-short": "HostFailure image: con length",
+  "closure-record-short": "HostFailure image: closure length",
+  "con-count-word": "HostFailure image: con length",
+  "call-count-word": "HostFailure image: call length",
+  "prim-count-word": "HostFailure image: prim length",
+  "invoke-count-word": "HostFailure image: invoke length",
+  "foreign-count-word": "HostFailure image: foreign length",
+  "case-count-word": "HostFailure image: case length",
+  "case-mode-unknown": "HostFailure image: case length",
+  "closure-count-word": "HostFailure image: closure length",
+  "child-shared": "HostFailure image: shared node",
+  "node-orphan": "HostFailure image: unreachable node",
+  "arm-standalone": "HostFailure image: standalone arm",
+  "case-key-row-mismatch": "HostFailure image: case key",
+  "case-key-row-not-branch": "HostFailure image: case key",
+  "case-default-not-default": "HostFailure image: case arm kind",
+  "case-row-not-branch": "HostFailure image: case arm kind",
+  "function-record-arity": "HostFailure image: function record",
+  "function-record-short": "HostFailure image: function record",
+  "function-record-tiny": "HostFailure image: function record",
+  "function-root-not-node": "HostFailure image: function root",
+  "function-root-owned": "HostFailure image: function root",
+  "function-param-type-beyond": "HostFailure image: type index",
+  "function-result-type-beyond": "HostFailure image: type index",
+  "function-name-beyond": "HostFailure image: name index",
+  "node-type-beyond": "HostFailure image: type index",
+  "name-unused": "HostFailure image: noncanonical",
+  "names-out-of-order": "HostFailure image: noncanonical",
+  "constants-duplicate": "HostFailure image: noncanonical",
+  "constants-out-of-order": "HostFailure image: noncanonical",
+  "constructors-out-of-order": "HostFailure image: noncanonical",
+  "nodes-out-of-order": "HostFailure image: noncanonical",
+  "closure-site-first": "HostFailure image: noncanonical",
+  "closure-site-second": "HostFailure image: noncanonical",
+  "closure-sites-swapped": "HostFailure image: noncanonical",
+  "closure-sites-from-one": "HostFailure image: noncanonical",
+  "arm-type-branch": "HostFailure image: noncanonical",
+  "arm-type-default": "HostFailure image: noncanonical",
+  "registry-digest-word-25": "HostFailure image: registry digest",
+  "registry-digest-word-26": "HostFailure image: registry digest",
+  "registry-digest-word-27": "HostFailure image: registry digest",
+  "registry-digest-word-28": "HostFailure image: registry digest",
+  "registry-digest-word-29": "HostFailure image: registry digest",
+  "registry-digest-word-30": "HostFailure image: registry digest",
+  "registry-digest-word-31": "HostFailure image: registry digest",
+  "length-misaligned": "HostFailure image: length",
+  "length-short-header": "HostFailure image: length",
+  "names-count-beyond-image": "HostFailure image: section 5 record length",
+  "record-overruns-image": "HostFailure image: section 5 record length",
+  "main-index-beyond": "HostFailure image: main index",
+  "main-index-none": "HostFailure image: noncanonical",
   "limit:size-at-limit": "HostFailure image: total",
   "limit:records-over-limit": "Exhausted 2 records",
   "limit:records-beyond-image": "HostFailure image: record count",
@@ -609,278 +786,710 @@
   "plan:nat-field-type": "HostFailure image: validator: representation: Nat shape",
   "plan:reference-none-view": "HostFailure image: validator: id: reference type",
   "plan:arrow-cycle": "HostFailure image: validator: types: arrow cycle",
+  "plan:function-index": "HostFailure image: validator: main: function index",
+  "plan:case-slot-beyond-depth": "HostFailure image: validator: flip: case slot beyond depth",
+  "plan:construct-tag": "HostFailure image: validator: main: construct tag",
+  "plan:construct-field-type": "HostFailure image: validator: main: construct field type",
+  "plan:branch-key": "HostFailure image: validator: flip: branch key",
+  "plan:key-branch-binds-field": "HostFailure image: validator: vowel: key branch binds nothing",
+  "plan:closure-arrow": "HostFailure image: validator: main: closure arrow",
+  "plan:invoke-types": "HostFailure image: validator: apply: invoke types",
+  "plan:closure-result-type": "HostFailure image: validator: keep/closure: closure result type",
+  "plan:let-body-type": "HostFailure image: validator: main: let body type",
+  "plan:body-type": "HostFailure image: validator: main: body type",
+  "plan:u32-not-opaque": "HostFailure image: validator: representation: U32 must be opaque",
+  "plan:file-not-opaque": "HostFailure image: validator: representation: File must be opaque",
+  "plan:duplicate-function-name": "HostFailure image: validator: functions: duplicate function name",
+  "plan:keys-repeated": "HostFailure image: validator: select: keys must increase strictly, with a default",
+  "plan:construct-nullary": "HostFailure image: validator: main: construct arity",
+  "plan:invoke-live-without-argument": "HostFailure image: validator: apply: invoke arity",
+  "plan:invoke-live-two-arguments": "HostFailure image: validator: apply: invoke arity",
+  "plan:invoke-erased-with-argument": "HostFailure image: validator: go: invoke arity",
+  "plan:case-slot-type-mismatch": "HostFailure image: validator: flip: case scrutinee type",
+  "plan:captures-repeated": "HostFailure image: validator: swap: captures must increase strictly below depth",
+  "plan:tag-case-on-opaque": "HostFailure image: validator: select: tag case on a non-data type",
+  "plan:key-case-on-flag": "HostFailure image: validator: flip: key case on a non-scalar type",
+  "plan:tag-table-not-dense": "HostFailure image: validator: flip: tag table is not dense",
+  "plan:tag-table-too-long": "HostFailure image: validator: flip: tag table is not dense",
+  "plan:representation-of-arrow": "HostFailure image: validator: representation: Bool shape",
+  "plan:program-without-main": "HostFailure image: validator: program: main must exist with no live parameters",
+  "plan:value-tag-beyond": "HostFailure image: validator: main: value is not a nullary constructor",
+  "plan:value-of-opaque": "HostFailure image: validator: select: value is not a nullary constructor",
+  "plan:construct-of-arrow": "HostFailure image: validator: main: construct tag",
+  "plan:call-operand-type": "HostFailure image: validator: run2/closure/closure: call types",
+  "plan:invoke-argument-type": "HostFailure image: validator: apply: invoke types",
+  "plan:capture-beyond-depth": "HostFailure image: validator: swap: captures must increase strictly below depth",
+  "plan:key-branch-first-slot": "HostFailure image: validator: select: key branch binds nothing",
+  "plan:closure-erased-at-data-type": "HostFailure image: validator: main: closure arrow",
+  "plan:invoke-non-arrow-without-argument": "HostFailure image: validator: apply: invoke arity",
   "model:child-is-parent": "HostFailure image: child after parent"
  },
  "admitted_kinds": {
-  "plan": 6,
+  "plan": 8,
   "limit": 1,
   "codes": 7,
-  "run": 41,
+  "run": 138,
   "model": 11
  },
  "admitted": {
   "plan:case-none-parameter": {
-   "outcome": "audit\tpassed\t6\tHostFailure\t1\t2",
+   "outcome": "audit\tpassed\t6\tHostFailure\t1\t2\t0",
    "calls": 2
   },
   "plan:case-none-let": {
-   "outcome": "audit\tpassed\t10\tHostFailure\t1\t3",
+   "outcome": "audit\tpassed\t10\tHostFailure\t1\t3\t0",
    "calls": 3
   },
   "plan:list-head-match": {
-   "outcome": "audit\tpassed\t14\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t14\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "plan:first-code": {
-   "outcome": "audit\tpassed\t24\tDescribed\t0\t3",
+   "outcome": "audit\tpassed\t24\tDescribed\t0\t3\t0",
    "calls": 3
   },
   "plan:first-code-none-case": {
-   "outcome": "audit\tpassed\t24\tDescribed\t0\t3",
+   "outcome": "audit\tpassed\t24\tDescribed\t0\t3\t0",
    "calls": 3
   },
   "plan:key-arms-none": {
-   "outcome": "audit\tpassed\t21\tDescribed\t0\t3",
+   "outcome": "audit\tpassed\t21\tDescribed\t0\t3\t0",
    "calls": 3
   },
+  "plan:name-utf8-lengths": {
+   "outcome": "audit\tpassed\t3\tDescribed\t0\t1\t0",
+   "calls": 1
+  },
+  "plan:name-utf8-edges": {
+   "outcome": "audit\tpassed\t3\tDescribed\t0\t1\t0",
+   "calls": 1
+  },
   "limit:arity-at-limit": {
-   "outcome": "audit\tpassed\t3\tDescribed\t0\t1",
+   "outcome": "audit\tpassed\t3\tDescribed\t0\t1\t0",
    "calls": 1
   },
   "codes:surrogate-pair": {
-   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "codes:u1f600": {
-   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "codes:lone-surrogate": {
-   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "codes:u10ffff": {
-   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "codes:u110000": {
-   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "codes:u32-max": {
-   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "codes:pair-beside-u1f600": {
-   "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t13\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "run:arrow-through-identity": {
-   "outcome": "audit\tpassed\t14\tDescribed\t0\t3",
+   "outcome": "audit\tpassed\t14\tDescribed\t0\t3\t0",
    "calls": 3
   },
   "run:erased-closure-invoked-live": {
-   "outcome": "audit\tpassed\t12\tHostFailure\t2\t2",
+   "outcome": "audit\tpassed\t12\tHostFailure\t2\t2\t0",
    "calls": 2
   },
   "run:live-closure-invoked-erased": {
-   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2",
+   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2\t0",
    "calls": 2
   },
   "run:terminal-invoked-erased": {
-   "outcome": "audit\tpassed\t16\tHostFailure\t1\t4",
+   "outcome": "audit\tpassed\t16\tHostFailure\t1\t4\t0",
    "calls": 4
   },
   "run:phase-one-live": {
-   "outcome": "audit\tpassed\t8\tHostFailure\t1\t2",
+   "outcome": "audit\tpassed\t8\tHostFailure\t1\t2\t0",
    "calls": 2
   },
   "run:phase-two-erased": {
-   "outcome": "audit\tpassed\t11\tHostFailure\t1\t3",
+   "outcome": "audit\tpassed\t11\tHostFailure\t1\t3\t0",
    "calls": 3
   },
   "run:u32-file-alias": {
-   "outcome": "audit\tpassed\t7\tDescribed\t0\t1",
+   "outcome": "audit\tpassed\t7\tDescribed\t0\t1\t0",
    "calls": 1
   },
   "run:nat-default-big": {
-   "outcome": "audit\tpassed\t8\tDescribed\t0\t1",
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t1\t0",
    "calls": 1
   },
   "run:display-visits-at-bound": {
-   "outcome": "audit\tpassed\t3\tDescribed\t0\t1",
+   "outcome": "audit\tpassed\t3\tDescribed\t0\t1\t0",
    "calls": 1
   },
   "run:display-visits-beyond-bound": {
-   "outcome": "audit\tpassed\t3\tExhausted\t0\t1",
+   "outcome": "audit\tpassed\t3\tExhausted\t1\t1\t0",
    "calls": 1
   },
   "run:display-bytes-at-bound": {
-   "outcome": "audit\tpassed\t7\tDescribed\t0\t1",
+   "outcome": "audit\tpassed\t7\tDescribed\t0\t1\t0",
    "calls": 1
   },
   "run:display-bytes-beyond-bound": {
-   "outcome": "audit\tpassed\t7\tExhausted\t1\t1",
+   "outcome": "audit\tpassed\t7\tExhausted\t2\t1\t0",
    "calls": 1
   },
   "run:fuel-book-exact": {
-   "outcome": "audit\tpassed\t50\tDescribed\t0\t6",
+   "outcome": "audit\tpassed\t50\tDescribed\t0\t6\t0",
    "calls": 6
   },
   "run:fuel-book-short": {
-   "outcome": "audit\tpassed\t41\tExhausted\t4\t5",
+   "outcome": "audit\tpassed\t41\tExhausted\t4\t5\t0",
    "calls": 5
   },
   "run:fuel-invoke-exact": {
-   "outcome": "audit\tpassed\t21\tDescribed\t0\t4",
+   "outcome": "audit\tpassed\t21\tDescribed\t0\t4\t0",
    "calls": 4
   },
   "run:fuel-invoke-short": {
-   "outcome": "audit\tpassed\t19\tExhausted\t2\t3",
+   "outcome": "audit\tpassed\t19\tExhausted\t2\t3\t0",
    "calls": 3
   },
   "run:fuel-program-exact": {
-   "outcome": "audit\tpassed\t14\tEmitted\t0\t5",
+   "outcome": "audit\tpassed\t15\tEmitted\t0\t5\t1",
    "calls": 5
   },
   "run:fuel-continuation-short": {
-   "outcome": "audit\tpassed\t13\tExhausted\t0\t4",
+   "outcome": "audit\tpassed\t14\tExhausted\t0\t4\t1",
    "calls": 4
   },
   "run:fuel-action-short": {
-   "outcome": "audit\tpassed\t12\tExhausted\t1\t3",
+   "outcome": "audit\tpassed\t12\tExhausted\t1\t3\t0",
    "calls": 3
   },
   "run:fuel-zero-book": {
-   "outcome": "audit\tpassed\t1\tExhausted\t0\t0",
+   "outcome": "audit\tpassed\t1\tExhausted\t0\t0\t0",
    "calls": 0
   },
   "run:fuel-zero-program": {
-   "outcome": "audit\tpassed\t1\tExhausted\t0\t0",
+   "outcome": "audit\tpassed\t1\tExhausted\t0\t0\t0",
    "calls": 0
   },
   "run:fuel-zero-ill-typed-invoke": {
-   "outcome": "audit\tpassed\t12\tHostFailure\t2\t2",
+   "outcome": "audit\tpassed\t12\tHostFailure\t2\t2\t0",
    "calls": 2
   },
   "run:fuel-zero-ill-typed-phase": {
-   "outcome": "audit\tpassed\t8\tHostFailure\t1\t2",
+   "outcome": "audit\tpassed\t8\tHostFailure\t1\t2\t0",
    "calls": 2
   },
   "run:inspect-chr": {
-   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2",
+   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2\t0",
    "calls": 2
   },
   "run:inspect-succ-object": {
-   "outcome": "audit\tpassed\t14\tHostFailure\t2\t2",
+   "outcome": "audit\tpassed\t14\tHostFailure\t2\t2\t0",
    "calls": 2
   },
   "run:inspect-succ-closure": {
-   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2",
+   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2\t0",
    "calls": 2
   },
   "run:inspect-u32-to-nat": {
-   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-u32-from-nat": {
-   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-char-from-u32": {
-   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-char-to-u32": {
-   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-append-b": {
-   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-append-char": {
-   "outcome": "audit\tpassed\t22\tHostFailure\t4\t3",
+   "outcome": "audit\tpassed\t22\tHostFailure\t4\t3\t0",
    "calls": 3
   },
   "run:inspect-length-char": {
-   "outcome": "audit\tpassed\t17\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t17\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-reverse-char": {
-   "outcome": "audit\tpassed\t18\tHostFailure\t4\t3",
+   "outcome": "audit\tpassed\t18\tHostFailure\t4\t3\t0",
    "calls": 3
   },
   "run:inspect-is-empty": {
-   "outcome": "audit\tpassed\t17\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t17\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-eq-code": {
-   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-eq-a-ends": {
-   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-eq-b-ends": {
-   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3",
+   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3\t0",
    "calls": 3
   },
   "run:inspect-halt-code": {
-   "outcome": "audit\tpassed\t18\tHostFailure\t3\t4",
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t4\t0",
    "calls": 4
   },
   "run:inspect-halt-message": {
-   "outcome": "audit\tpassed\t22\tHostFailure\t4\t4",
+   "outcome": "audit\tpassed\t22\tHostFailure\t4\t4\t0",
+   "calls": 4
+  },
+  "run:inspect-halt-after-surrogate": {
+   "outcome": "audit\tpassed\t22\tHostFailure\t4\t4\t0",
+   "calls": 4
+  },
+  "run:inspect-halt-code-first": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t4\t0",
    "calls": 4
   },
   "run:inspect-print-after-surrogate": {
-   "outcome": "audit\tpassed\t21\tHostFailure\t3\t5",
+   "outcome": "audit\tpassed\t22\tHostFailure\t3\t5\t0",
    "calls": 5
   },
+  "run:inspect-case-closure-scrutinee": {
+   "outcome": "audit\tpassed\t11\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-case-nat-closure": {
+   "outcome": "audit\tpassed\t11\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-case-char-closure": {
+   "outcome": "audit\tpassed\t11\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-case-object-of-another-type": {
+   "outcome": "audit\tpassed\t13\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-case-tag-out-of-range": {
+   "outcome": "audit\tpassed\t11\tHostFailure\t1\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-case-keys-closure": {
+   "outcome": "audit\tpassed\t11\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-case-char-keys-closure": {
+   "outcome": "audit\tpassed\t11\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-u32-add": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-u32-sub-second": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-u32-shln-amount": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-char-is-space": {
+   "outcome": "audit\tpassed\t13\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-char-is-eq-second": {
+   "outcome": "audit\tpassed\t17\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-nat-add": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-nat-sub-second": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-u32-show": {
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3\t0",
+   "calls": 3
+  },
+  "run:inspect-nat-show": {
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3\t0",
+   "calls": 3
+  },
+  "run:enter-immediate-target": {
+   "outcome": "audit\tpassed\t12\tHostFailure\t1\t2\t0",
+   "calls": 2
+  },
+  "run:enter-object-target": {
+   "outcome": "audit\tpassed\t16\tHostFailure\t2\t2\t0",
+   "calls": 2
+  },
+  "run:inspect-continuation-target": {
+   "outcome": "audit\tpassed\t30\tHostFailure\t0\t7\t1",
+   "calls": 7
+  },
+  "run:inspect-io-op-closure": {
+   "outcome": "audit\tpassed\t13\tHostFailure\t2\t4\t0",
+   "calls": 4
+  },
+  "run:inspect-io-op-immediate": {
+   "outcome": "audit\tpassed\t13\tHostFailure\t1\t4\t0",
+   "calls": 4
+  },
+  "run:inspect-render-closure": {
+   "outcome": "audit\tpassed\t7\tHostFailure\t2\t2\t0",
+   "calls": 2
+  },
+  "run:inspect-render-field": {
+   "outcome": "audit\tpassed\t12\tHostFailure\t3\t2\t0",
+   "calls": 2
+  },
+  "run:book-print": {
+   "outcome": "audit\tpassed\t21\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:book-print-continuation-call": {
+   "outcome": "audit\tpassed\t21\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:book-print-twice": {
+   "outcome": "audit\tpassed\t22\tUnsupported\t4\t5\t0",
+   "calls": 5
+  },
+  "run:book-print-non-scalar": {
+   "outcome": "audit\tpassed\t21\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:book-print-ill-typed": {
+   "outcome": "audit\tpassed\t30\tUnsupported\t5\t6\t0",
+   "calls": 6
+  },
+  "run:book-args": {
+   "outcome": "audit\tpassed\t17\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:fuel-book-effect-exact": {
+   "outcome": "audit\tpassed\t21\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:fuel-book-effect-short": {
+   "outcome": "audit\tpassed\t18\tExhausted\t3\t3\t0",
+   "calls": 3
+  },
+  "run:book-continuation-called": {
+   "outcome": "audit\tpassed\t16\tDescribed\t0\t3\t0",
+   "calls": 3
+  },
+  "run:book-action-dropped": {
+   "outcome": "audit\tpassed\t14\tDescribed\t0\t2\t0",
+   "calls": 2
+  },
+  "run:book-action-erased": {
+   "outcome": "audit\tpassed\t17\tDescribed\t0\t3\t0",
+   "calls": 3
+  },
+  "run:program-print-through-id": {
+   "outcome": "audit\tpassed\t34\tEmitted\t0\t9\t1",
+   "calls": 9
+  },
+  "run:halt-surrogate": {
+   "outcome": "audit\tpassed\t13\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:halt-scalar": {
+   "outcome": "audit\tpassed\t13\tDied\t0\t3\t0",
+   "calls": 3
+  },
+  "run:print-utf8-lengths": {
+   "outcome": "audit\tpassed\t15\tEmitted\t0\t5\t1",
+   "calls": 5
+  },
+  "run:print-utf8-boundaries": {
+   "outcome": "audit\tpassed\t15\tEmitted\t0\t5\t1",
+   "calls": 5
+  },
+  "run:book-request-dropped": {
+   "outcome": "audit\tpassed\t22\tDescribed\t0\t4\t0",
+   "calls": 4
+  },
+  "run:program-request-in-emit": {
+   "outcome": "audit\tpassed\t26\tEmitted\t0\t6\t0",
+   "calls": 6
+  },
+  "run:program-request-dropped-let": {
+   "outcome": "audit\tpassed\t45\tEmitted\t0\t10\t1",
+   "calls": 10
+  },
+  "run:program-request-dropped-argument": {
+   "outcome": "audit\tpassed\t53\tEmitted\t0\t12\t1",
+   "calls": 12
+  },
+  "run:program-request-dropped-ill-typed": {
+   "outcome": "audit\tpassed\t56\tEmitted\t0\t12\t1",
+   "calls": 12
+  },
+  "run:program-case-request": {
+   "outcome": "audit\tpassed\t28\tUnsupported\t3\t7\t0",
+   "calls": 7
+  },
+  "run:program-case-request-emit-default": {
+   "outcome": "audit\tpassed\t32\tEmitted\t0\t7\t0",
+   "calls": 7
+  },
+  "run:program-case-request-halt-default": {
+   "outcome": "audit\tpassed\t32\tEmitted\t0\t7\t0",
+   "calls": 7
+  },
+  "run:program-case-request-default-only": {
+   "outcome": "audit\tpassed\t32\tEmitted\t0\t7\t0",
+   "calls": 7
+  },
+  "run:case-request-emit-default-u32-compiled": {
+   "outcome": "audit\tpassed\t37\tUnsupported\t5\t8\t0",
+   "calls": 8
+  },
+  "run:case-request-halt-default-u32-compiled": {
+   "outcome": "audit\tpassed\t35\tUnsupported\t5\t8\t0",
+   "calls": 8
+  },
+  "run:case-request-emit-default-compiled": {
+   "outcome": "audit\tpassed\t36\tUnsupported\t5\t8\t0",
+   "calls": 8
+  },
+  "run:case-request-nested-default-compiled": {
+   "outcome": "audit\tpassed\t37\tUnsupported\t5\t8\t0",
+   "calls": 8
+  },
+  "run:case-request-book-both-plus-default-compiled": {
+   "outcome": "audit\tpassed\t25\tUnsupported\t3\t6\t0",
+   "calls": 6
+  },
+  "run:case-request-both-plus-default-retested": {
+   "outcome": "audit\tpassed\t61\tEmitted\t0\t13\t1",
+   "calls": 13
+  },
+  "run:case-request-nested-default-retested": {
+   "outcome": "audit\tpassed\t61\tEmitted\t0\t13\t1",
+   "calls": 13
+  },
+  "run:case-request-default-at-flag": {
+   "outcome": "audit\tpassed\t28\tDescribed\t0\t6\t0",
+   "calls": 6
+  },
+  "run:book-request-rendered": {
+   "outcome": "audit\tpassed\t22\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:book-request-field": {
+   "outcome": "audit\tpassed\t27\tUnsupported\t4\t5\t0",
+   "calls": 5
+  },
+  "run:inspect-request-chr": {
+   "outcome": "audit\tpassed\t25\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:inspect-request-prim": {
+   "outcome": "audit\tpassed\t33\tUnsupported\t4\t6\t0",
+   "calls": 6
+  },
+  "run:case-request-default-keys": {
+   "outcome": "audit\tpassed\t28\tDescribed\t0\t6\t0",
+   "calls": 6
+  },
+  "run:inspect-request-print": {
+   "outcome": "audit\tpassed\t48\tUnsupported\t5\t10\t0",
+   "calls": 10
+  },
+  "run:enter-request-target": {
+   "outcome": "audit\tpassed\t27\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:fuel-zero-request-target": {
+   "outcome": "audit\tpassed\t27\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:fuel-book-request-short": {
+   "outcome": "audit\tpassed\t20\tExhausted\t3\t4\t0",
+   "calls": 4
+  },
+  "run:key-max": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2\t0",
+   "calls": 2
+  },
+  "run:key-max-miss": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2\t0",
+   "calls": 2
+  },
+  "run:char-key-max": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2\t0",
+   "calls": 2
+  },
+  "run:atomic-ill-typed-chr": {
+   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2\t0",
+   "calls": 2
+  },
+  "run:atomic-ill-typed-succ": {
+   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2\t0",
+   "calls": 2
+  },
+  "run:atomic-ill-typed-prim": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3\t0",
+   "calls": 3
+  },
+  "run:atomic-ill-typed-case": {
+   "outcome": "audit\tpassed\t11\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:atomic-ill-typed-render": {
+   "outcome": "audit\tpassed\t12\tHostFailure\t3\t2\t0",
+   "calls": 2
+  },
+  "run:atomic-nat-succ-range": {
+   "outcome": "audit\tpassed\t9\tExhausted\t2\t2\t0",
+   "calls": 2
+  },
+  "run:atomic-nat-add-range": {
+   "outcome": "audit\tpassed\t13\tExhausted\t2\t2\t0",
+   "calls": 2
+  },
+  "run:atomic-nat-mul-range": {
+   "outcome": "audit\tpassed\t13\tExhausted\t2\t2\t0",
+   "calls": 2
+  },
+  "run:atomic-halt-code": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t4\t0",
+   "calls": 4
+  },
+  "run:atomic-halt-message": {
+   "outcome": "audit\tpassed\t22\tHostFailure\t4\t4\t0",
+   "calls": 4
+  },
+  "run:atomic-io-op-closure": {
+   "outcome": "audit\tpassed\t13\tHostFailure\t2\t4\t0",
+   "calls": 4
+  },
+  "run:atomic-halt-non-scalar": {
+   "outcome": "audit\tpassed\t13\tHostFailure\t2\t3\t0",
+   "calls": 3
+  },
+  "run:atomic-print-non-scalar": {
+   "outcome": "audit\tpassed\t19\tHostFailure\t2\t4\t0",
+   "calls": 4
+  },
+  "run:atomic-print-non-scalar-mid": {
+   "outcome": "audit\tpassed\t13\tHostFailure\t1\t4\t0",
+   "calls": 4
+  },
+  "run:atomic-print-ill-typed": {
+   "outcome": "audit\tpassed\t22\tHostFailure\t3\t5\t0",
+   "calls": 5
+  },
+  "run:atomic-case-request": {
+   "outcome": "audit\tpassed\t28\tUnsupported\t3\t7\t0",
+   "calls": 7
+  },
+  "run:atomic-request-rendered": {
+   "outcome": "audit\tpassed\t22\tUnsupported\t3\t5\t0",
+   "calls": 5
+  },
+  "run:atomic-display-visits": {
+   "outcome": "audit\tpassed\t3\tExhausted\t1\t1\t0",
+   "calls": 1
+  },
+  "run:atomic-fuel-book": {
+   "outcome": "audit\tpassed\t41\tExhausted\t4\t5\t0",
+   "calls": 5
+  },
+  "run:atomic-fuel-action": {
+   "outcome": "audit\tpassed\t12\tExhausted\t1\t3\t0",
+   "calls": 3
+  },
+  "run:atomic-print-then-non-scalar": {
+   "outcome": "audit\tpassed\t64\tHostFailure\t4\t13\t1",
+   "calls": 13
+  },
+  "run:atomic-print-then-ill-typed-continuation": {
+   "outcome": "audit\tpassed\t30\tHostFailure\t0\t7\t1",
+   "calls": 7
+  },
+  "run:atomic-fuel-continuation": {
+   "outcome": "audit\tpassed\t14\tExhausted\t0\t4\t1",
+   "calls": 4
+  },
+  "run:atomic-print-then-io-op": {
+   "outcome": "audit\tpassed\t31\tHostFailure\t2\t8\t1",
+   "calls": 8
+  },
+  "run:atomic-print-then-nat-range": {
+   "outcome": "audit\tpassed\t29\tExhausted\t1\t7\t1",
+   "calls": 7
+  },
+  "run:atomic-display-leaf-charged": {
+   "outcome": "audit\tpassed\t7\tExhausted\t2\t1\t0",
+   "calls": 1
+  },
+  "run:atomic-display-leaf-ill-typed": {
+   "outcome": "audit\tpassed\t12\tHostFailure\t3\t2\t0",
+   "calls": 2
+  },
   "model:char-pick": {
-   "outcome": "audit\tpassed\t9\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t9\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "model:char-pick-big": {
-   "outcome": "audit\tpassed\t9\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t9\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "model:char-match": {
-   "outcome": "audit\tpassed\t20\tDescribed\t0\t3",
+   "outcome": "audit\tpassed\t20\tDescribed\t0\t3\t0",
    "calls": 3
   },
   "model:key-max": {
-   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "model:key-max-miss": {
-   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "model:key-below-max": {
-   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "model:char-key-max": {
-   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "model:char-key-max-miss": {
-   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2\t0",
    "calls": 2
   },
   "model:display-utf8-at-bound": {
-   "outcome": "audit\tpassed\t3\tDescribed\t0\t1",
+   "outcome": "audit\tpassed\t3\tDescribed\t0\t1\t0",
    "calls": 1
   },
   "model:display-utf8-beyond-bound": {
-   "outcome": "audit\tpassed\t3\tExhausted\t0\t1",
+   "outcome": "audit\tpassed\t3\tExhausted\t1\t1\t0",
    "calls": 1
   },
   "model:inspect-append-b-whole": {
-   "outcome": "audit\tpassed\t22\tHostFailure\t4\t3",
+   "outcome": "audit\tpassed\t22\tHostFailure\t4\t3\t0",
    "calls": 3
   }
  },
@@ -1071,7 +1680,7 @@
    "calls": 2
   },
   "foreign-print": {
-   "transitions": 14,
+   "transitions": 15,
    "live": 0,
    "calls": 5
   },
@@ -1266,17 +1875,17 @@
    "calls": 4
   },
   "io-bind": {
-   "transitions": 100,
+   "transitions": 102,
    "live": 0,
    "calls": 21
   },
   "print-non-scalar": {
-   "transitions": 18,
+   "transitions": 19,
    "live": 2,
    "calls": 4
   },
   "print-non-scalar-mid": {
-   "transitions": 12,
+   "transitions": 13,
    "live": 1,
    "calls": 4
   },
@@ -1291,22 +1900,22 @@
    "calls": 2
   },
   "print-non-scalar-wide": {
-   "transitions": 18,
+   "transitions": 19,
    "live": 2,
    "calls": 4
   },
   "non-scalar-code": {
-   "transitions": 35,
+   "transitions": 36,
    "live": 0,
    "calls": 8
   },
   "non-scalar-unprinted": {
-   "transitions": 67,
+   "transitions": 69,
    "live": 0,
    "calls": 14
   },
   "print-non-scalar-second": {
-   "transitions": 62,
+   "transitions": 64,
    "live": 4,
    "calls": 13
   },
@@ -1329,9 +1938,113 @@
    "transitions": 13,
    "live": 0,
    "calls": 2
+  },
+  "chr-pattern": {
+   "transitions": 53,
+   "live": 0,
+   "calls": 7
+  },
+  "list-head-match": {
+   "transitions": 14,
+   "live": 0,
+   "calls": 2
+  },
+  "nat-transitions": {
+   "transitions": 20,
+   "live": 0,
+   "calls": 3
+  },
+  "keep-swapped": {
+   "transitions": 53,
+   "live": 0,
+   "calls": 12
+  },
+  "keep-first": {
+   "transitions": 53,
+   "live": 0,
+   "calls": 12
+  },
+  "run2-flag": {
+   "transitions": 56,
+   "live": 0,
+   "calls": 12
+  },
+  "spine": {
+   "transitions": 50,
+   "live": 0,
+   "calls": 12
+  },
+  "keep-non-scalar": {
+   "transitions": 53,
+   "live": 0,
+   "calls": 12
+  },
+  "book-drop": {
+   "transitions": 28,
+   "live": 0,
+   "calls": 6
+  },
+  "let-dropped-request": {
+   "transitions": 59,
+   "live": 0,
+   "calls": 12
+  },
+  "let-live-request": {
+   "transitions": 63,
+   "live": 0,
+   "calls": 12
+  },
+  "field-request-returned": {
+   "transitions": 38,
+   "live": 0,
+   "calls": 9
+  },
+  "field-request-dropped": {
+   "transitions": 55,
+   "live": 0,
+   "calls": 12
+  },
+  "emit-field-request-dropped": {
+   "transitions": 60,
+   "live": 0,
+   "calls": 13
+  },
+  "capture-request-dropped": {
+   "transitions": 59,
+   "live": 0,
+   "calls": 13
+  },
+  "case-request-emit-default-u32": {
+   "transitions": 60,
+   "live": 0,
+   "calls": 13
+  },
+  "case-request-halt-default-u32": {
+   "transitions": 58,
+   "live": 0,
+   "calls": 13
+  },
+  "case-request-emit-default": {
+   "transitions": 41,
+   "live": 0,
+   "calls": 9
   }
  },
  "sweep": {
+  "book-drop": {
+   "mutations": 867,
+   "admitted": 82,
+   "refused": 785,
+   "unsound": 0,
+   "differ": 0
+  },
+  "capture-request-dropped": {
+   "mutations": 1155,
+   "admitted": 169,
+   "refused": 986,
+   "unsound": 0,
+   "differ": 0
+  },
   "case-char": {
    "mutations": 489,
    "admitted": 49,
@@ -1350,6 +2063,27 @@
    "mutations": 369,
    "admitted": 49,
    "refused": 320,
+   "unsound": 0,
+   "differ": 0
+  },
+  "case-request-emit-default": {
+   "mutations": 1017,
+   "admitted": 116,
+   "refused": 901,
+   "unsound": 0,
+   "differ": 0
+  },
+  "case-request-emit-default-u32": {
+   "mutations": 1167,
+   "admitted": 120,
+   "refused": 1047,
+   "unsound": 0,
+   "differ": 0
+  },
+  "case-request-halt-default-u32": {
+   "mutations": 1137,
+   "admitted": 119,
+   "refused": 1018,
    "unsound": 0,
    "differ": 0
   },
@@ -1378,6 +2112,13 @@
    "mutations": 849,
    "admitted": 122,
    "refused": 727,
+   "unsound": 0,
+   "differ": 0
+  },
+  "chr-pattern": {
+   "mutations": 870,
+   "admitted": 120,
+   "refused": 750,
    "unsound": 0,
    "differ": 0
   },
@@ -1451,6 +2192,13 @@
    "unsound": 0,
    "differ": 0
   },
+  "emit-field-request-dropped": {
+   "mutations": 1140,
+   "admitted": 164,
+   "refused": 976,
+   "unsound": 0,
+   "differ": 0
+  },
   "erased-argument": {
    "mutations": 285,
    "admitted": 35,
@@ -1476,6 +2224,20 @@
    "mutations": 225,
    "admitted": 26,
    "refused": 199,
+   "unsound": 0,
+   "differ": 0
+  },
+  "field-request-dropped": {
+   "mutations": 1125,
+   "admitted": 159,
+   "refused": 966,
+   "unsound": 0,
+   "differ": 0
+  },
+  "field-request-returned": {
+   "mutations": 963,
+   "admitted": 134,
+   "refused": 829,
    "unsound": 0,
    "differ": 0
   },
@@ -1514,10 +2276,52 @@
    "unsound": 0,
    "differ": 0
   },
+  "keep-first": {
+   "mutations": 1038,
+   "admitted": 136,
+   "refused": 902,
+   "unsound": 0,
+   "differ": 0
+  },
+  "keep-non-scalar": {
+   "mutations": 1020,
+   "admitted": 118,
+   "refused": 902,
+   "unsound": 0,
+   "differ": 0
+  },
+  "keep-swapped": {
+   "mutations": 1038,
+   "admitted": 136,
+   "refused": 902,
+   "unsound": 0,
+   "differ": 0
+  },
   "let": {
    "mutations": 255,
    "admitted": 29,
    "refused": 226,
+   "unsound": 0,
+   "differ": 0
+  },
+  "let-dropped-request": {
+   "mutations": 1077,
+   "admitted": 129,
+   "refused": 948,
+   "unsound": 0,
+   "differ": 0
+  },
+  "let-live-request": {
+   "mutations": 1107,
+   "admitted": 130,
+   "refused": 977,
+   "unsound": 0,
+   "differ": 0
+  },
+  "list-head-match": {
+   "mutations": 642,
+   "admitted": 80,
+   "refused": 562,
    "unsound": 0,
    "differ": 0
   },
@@ -1616,6 +2420,13 @@
    "mutations": 522,
    "admitted": 60,
    "refused": 462,
+   "unsound": 0,
+   "differ": 0
+  },
+  "nat-transitions": {
+   "mutations": 552,
+   "admitted": 71,
+   "refused": 481,
    "unsound": 0,
    "differ": 0
   },
@@ -1731,6 +2542,13 @@
    "unsound": 0,
    "differ": 0
   },
+  "run2-flag": {
+   "mutations": 1212,
+   "admitted": 153,
+   "refused": 1059,
+   "unsound": 0,
+   "differ": 0
+  },
   "second": {
    "mutations": 414,
    "admitted": 55,
@@ -1742,6 +2560,13 @@
    "mutations": 285,
    "admitted": 34,
    "refused": 251,
+   "unsound": 0,
+   "differ": 0
+  },
+  "spine": {
+   "mutations": 885,
+   "admitted": 100,
+   "refused": 785,
    "unsound": 0,
    "differ": 0
   },
@@ -1985,7 +2810,7 @@
   }
  },
  "proof": {
-  "laws": 32,
+  "laws": 45,
   "stdout": "All terms check."
  },
  "mutants": [
@@ -2003,7 +2828,7 @@
     "goldens:nat-show",
     "goldens:recursion-tail"
    ],
-   "kills": 67,
+   "kills": 32,
    "law": "closure_captures_runs",
    "crashes": 0,
    "crashed": []
@@ -2014,15 +2839,15 @@
    "killed": true,
    "by": [
     "admitted:run:fuel-book-exact",
-    "audit:string-append",
-    "audit:string-reverse",
-    "audit:u32-show",
-    "audit:u32-not",
-    "audit:nat-show",
-    "audit:recursion-map",
-    "audit:nat-big"
+    "admitted:run:program-print-through-id",
+    "admitted:run:program-request-dropped-argument",
+    "admitted:run:case-request-emit-default-u32-compiled",
+    "admitted:run:case-request-halt-default-u32-compiled",
+    "admitted:run:case-request-emit-default-compiled",
+    "admitted:run:case-request-nested-default-compiled",
+    "admitted:run:case-request-book-both-plus-default-compiled"
    ],
-   "kills": 16,
+   "kills": 11,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2033,11 +2858,9 @@
    "killed": true,
    "by": [
     "goldens:string-codes",
-    "goldens:string-append-mortal",
-    "audit:string-codes",
-    "audit:string-append-mortal"
+    "goldens:string-append-mortal"
    ],
-   "kills": 4,
+   "kills": 2,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2047,16 +2870,9 @@
    "breaks": "a tail entry does not release its caller",
    "killed": true,
    "by": [
-    "invocations:invoke-args:size 1000000 0",
-    "admitted:plan:case-none-parameter",
-    "admitted:plan:case-none-let",
-    "admitted:plan:list-head-match",
-    "admitted:plan:first-code",
-    "admitted:plan:first-code-none-case",
-    "admitted:plan:key-arms-none",
-    "admitted:codes:surrogate-pair"
+    "invocations:invoke-args:size 1000000 0"
    ],
-   "kills": 118,
+   "kills": 1,
    "law": "closure_captures_runs",
    "crashes": 0,
    "crashed": []
@@ -2072,10 +2888,10 @@
     "admitted:run:u32-file-alias",
     "admitted:run:nat-default-big",
     "admitted:run:fuel-book-exact",
-    "admitted:model:char-pick",
-    "admitted:model:char-pick-big"
+    "admitted:run:book-continuation-called",
+    "admitted:run:book-action-dropped"
    ],
-   "kills": 20,
+   "kills": 14,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2094,7 +2910,7 @@
     "goldens:char-space",
     "goldens:recursion-map"
    ],
-   "kills": 33,
+   "kills": 18,
    "law": "recursion_map_runs",
    "crashes": 0,
    "crashed": []
@@ -2113,7 +2929,7 @@
     "goldens:case-on",
     "goldens:unpack"
    ],
-   "kills": 198,
+   "kills": 101,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2132,7 +2948,7 @@
     "goldens:closure-captures",
     "goldens:io-bind"
    ],
-   "kills": 29,
+   "kills": 26,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2142,10 +2958,9 @@
    "breaks": "Nat.add wraps instead of exhausting",
    "killed": true,
    "by": [
-    "goldens:nat-range",
-    "audit:nat-range"
+    "goldens:nat-range"
    ],
-   "kills": 2,
+   "kills": 1,
    "law": "nat_sum_bound",
    "crashes": 0,
    "crashed": []
@@ -2155,10 +2970,9 @@
    "breaks": "Succ wraps instead of exhausting",
    "killed": true,
    "by": [
-    "goldens:nat-succ-range",
-    "audit:nat-succ-range"
+    "goldens:nat-succ-range"
    ],
-   "kills": 2,
+   "kills": 1,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2201,7 +3015,7 @@
     "fuel:erased-let",
     "fuel:erased-argument"
    ],
-   "kills": 95,
+   "kills": 107,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2236,37 +3050,25 @@
    "killed": true,
    "by": [
     "inspection:inspect-case",
+    "inspection:inspect-prim",
     "inspection:inspect-chr-unused",
     "inspection:inspect-chr-closure",
     "inspection:inspect-chr-used",
-    "inspection:inspect-before-charge",
-    "admitted:plan:case-none-parameter",
-    "admitted:plan:case-none-let",
-    "admitted:run:inspect-chr"
+    "inspection:inspect-before-charge"
    ],
-   "kills": 13,
+   "kills": 6,
    "law": null,
-   "crashes": 8,
-   "crashed": [
-    "admitted:run:inspect-is-empty",
-    "admitted:run:inspect-eq-code",
-    "admitted:run:inspect-eq-a-ends",
-    "admitted:run:inspect-eq-b-ends",
-    "admitted:run:inspect-halt-code",
-    "admitted:run:inspect-halt-message",
-    "admitted:run:inspect-print-after-surrogate",
-    "admitted:model:inspect-append-b-whole"
-   ]
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "char-tag",
    "breaks": "a Char dispatches on its code, not on Chr",
    "killed": true,
    "by": [
-    "admitted:model:char-pick",
-    "admitted:model:char-match"
+    "goldens:chr-pattern"
    ],
-   "kills": 2,
+   "kills": 1,
    "law": "char_case_selects_chr",
    "crashes": 0,
    "crashed": []
@@ -2276,12 +3078,15 @@
    "breaks": "the key 0xffffffff is refused",
    "killed": true,
    "by": [
+    "admitted:run:key-max",
+    "admitted:run:key-max-miss",
+    "admitted:run:char-key-max",
     "admitted:model:key-max",
     "admitted:model:key-max-miss",
     "admitted:model:char-key-max",
     "admitted:model:char-key-max-miss"
    ],
-   "kills": 4,
+   "kills": 7,
    "law": "key_max_selected",
    "crashes": 0,
    "crashed": []
@@ -2291,11 +3096,9 @@
    "breaks": "a Case on a none-typed slot is refused",
    "killed": true,
    "by": [
-    "admitted:plan:case-none-parameter",
-    "admitted:plan:case-none-let",
-    "admitted:plan:list-head-match"
+    "goldens:list-head-match"
    ],
-   "kills": 3,
+   "kills": 1,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2305,32 +3108,24 @@
    "breaks": "a target that stops the machine refunds its entry",
    "killed": true,
    "by": [
-    "admitted:run:inspect-print-after-surrogate",
-    "audit:print-non-scalar",
-    "audit:print-non-scalar-mid",
-    "audit:print-non-scalar-wide",
-    "audit:print-non-scalar-second"
+    "law:entry_past_region_keeps_its_debit"
    ],
-   "kills": 5,
-   "law": null,
+   "kills": 0,
+   "law": "entry_past_region_keeps_its_debit",
    "crashes": 0,
    "crashed": []
   },
   {
    "mutant": "non-scalar-printed",
-   "breaks": "a non-scalar Char is printed (D20)",
+   "breaks": "a non-scalar Char is printed or halted with (D20)",
    "killed": true,
    "by": [
     "goldens:print-non-scalar",
     "goldens:print-non-scalar-mid",
     "goldens:print-non-scalar-wide",
-    "goldens:print-non-scalar-second",
-    "audit:print-non-scalar",
-    "audit:print-non-scalar-mid",
-    "audit:print-non-scalar-wide",
-    "audit:print-non-scalar-second"
+    "goldens:print-non-scalar-second"
    ],
-   "kills": 8,
+   "kills": 4,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2340,13 +3135,11 @@
    "breaks": "a closure takes either operand count",
    "killed": true,
    "by": [
-    "admitted:run:live-closure-invoked-erased",
     "admitted:run:terminal-invoked-erased",
-    "admitted:run:phase-one-live",
     "admitted:run:fuel-zero-ill-typed-invoke",
     "admitted:run:fuel-zero-ill-typed-phase"
    ],
-   "kills": 5,
+   "kills": 3,
    "law": null,
    "crashes": 2,
    "crashed": [
@@ -2368,7 +3161,7 @@
     "invocations:invoke-words:two 1000000 000000000001 0",
     "invocations:invoke-words:two 0001048576 1 0"
    ],
-   "kills": 164,
+   "kills": 8,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2392,9 +3185,15 @@
    "killed": true,
    "by": [
     "admitted:plan:first-code",
-    "admitted:plan:first-code-none-case"
+    "admitted:plan:first-code-none-case",
+    "admitted:run:book-print",
+    "admitted:run:book-print-continuation-call",
+    "admitted:run:book-print-twice",
+    "admitted:run:book-print-non-scalar",
+    "admitted:run:book-print-ill-typed",
+    "admitted:run:book-args"
    ],
-   "kills": 2,
+   "kills": 37,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2417,10 +3216,9 @@
    "killed": true,
    "by": [
     "inspection:inspect-chr-unused",
-    "inspection:inspect-chr-closure",
-    "admitted:run:inspect-chr"
+    "inspection:inspect-chr-closure"
    ],
-   "kills": 3,
+   "kills": 2,
    "law": "chr_inspects_its_operand",
    "crashes": 0,
    "crashed": []
@@ -2430,10 +3228,9 @@
    "breaks": "the visit bound is exclusive",
    "killed": true,
    "by": [
-    "inspection:inspect-before-charge",
-    "admitted:run:display-visits-at-bound"
+    "inspection:inspect-before-charge"
    ],
-   "kills": 2,
+   "kills": 1,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2467,9 +3264,11 @@
    "breaks": "a Nat word is one visit",
    "killed": true,
    "by": [
-    "admitted:run:display-visits-beyond-bound"
+    "admitted:run:display-visits-beyond-bound",
+    "admitted:run:atomic-display-visits",
+    "admitted:run:atomic-display-leaf-charged"
    ],
-   "kills": 1,
+   "kills": 3,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2595,9 +3394,10 @@
    "breaks": "append reads only the head of the b it moves",
    "killed": true,
    "by": [
+    "admitted:run:inspect-append-b",
     "admitted:model:inspect-append-b-whole"
    ],
-   "kills": 1,
+   "kills": 2,
    "law": null,
    "crashes": 0,
    "crashed": []
@@ -2627,10 +3427,9 @@
    "by": [
     "controls:limit:size-at-limit",
     "controls:limit:records-at-limit",
-    "controls:limit:slots-at-limit",
-    "admitted:limit:arity-at-limit"
+    "controls:limit:slots-at-limit"
    ],
-   "kills": 4,
+   "kills": 3,
    "law": "slots_at_limit",
    "crashes": 0,
    "crashed": []
@@ -2670,6 +3469,241 @@
    "law": null,
    "crashes": 0,
    "crashed": []
+  },
+  {
+   "mutant": "constructor-count-unchecked",
+   "breaks": "a type record's constructor count is not checked against the table",
+   "killed": true,
+   "by": [
+    "controls:type-count-max"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "eager-effect",
+   "breaks": "an Action applied to its continuation performs at once, as round 8's eager rule did",
+   "killed": true,
+   "by": [
+    "goldens:keep-swapped",
+    "goldens:keep-first",
+    "goldens:run2-flag",
+    "goldens:keep-non-scalar",
+    "goldens:book-drop",
+    "goldens:let-dropped-request",
+    "goldens:let-live-request",
+    "goldens:field-request-dropped"
+   ],
+   "kills": 13,
+   "law": "dropped_request_writes_nothing",
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "let-performs-request",
+   "breaks": "a Let that binds a request performs it, though the request is only held",
+   "killed": true,
+   "by": [
+    "goldens:let-dropped-request",
+    "goldens:let-live-request"
+   ],
+   "kills": 2,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "default-refused",
+   "breaks": "a Case over a request refuses it although it has a Default (D23, before D24)",
+   "killed": true,
+   "by": [
+    "goldens:case-request-emit-default-u32",
+    "goldens:case-request-halt-default-u32",
+    "goldens:case-request-emit-default"
+   ],
+   "kills": 3,
+   "law": "case_takes_default_over_request",
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "request-picks-row",
+   "breaks": "a Case over a request takes the row of tag 1, not its Default",
+   "killed": true,
+   "by": [
+    "goldens:case-request-halt-default-u32"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "request-as-ill-typed",
+   "breaks": "a request that any read meets is ill-typed, not Unsupported",
+   "killed": true,
+   "by": [
+    "admitted:run:book-request-rendered",
+    "admitted:run:book-request-field",
+    "admitted:run:inspect-request-chr",
+    "admitted:run:inspect-request-prim",
+    "admitted:run:inspect-request-print",
+    "admitted:run:atomic-request-rendered"
+   ],
+   "kills": 6,
+   "law": "request_is_never_rendered",
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "fuel-before-request",
+   "breaks": "an Enter tests fuel before it reads its target, a request",
+   "killed": true,
+   "by": [
+    "admitted:run:fuel-zero-ill-typed-invoke",
+    "admitted:run:fuel-zero-ill-typed-phase",
+    "admitted:run:fuel-zero-request-target",
+    "admitted:run:atomic-print-then-ill-typed-continuation"
+   ],
+   "kills": 4,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "book-loop",
+   "breaks": "a Book's Top performs the request it is returned, as a Program's loop does",
+   "killed": true,
+   "by": [
+    "admitted:run:book-request-rendered",
+    "admitted:run:atomic-request-rendered"
+   ],
+   "kills": 2,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "halt-message-unchecked",
+   "breaks": "a Halt's message is not checked for D20",
+   "killed": true,
+   "by": [
+    "admitted:run:halt-surrogate",
+    "admitted:run:atomic-halt-non-scalar"
+   ],
+   "kills": 2,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "foreign-checked-at-build",
+   "breaks": "the Action applied to `k` checks its foreign id, as round 8 did",
+   "killed": true,
+   "by": [
+    "admitted:run:book-args"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "request-edges-lost",
+   "breaks": "a Request's operands are not owning edges of the cell",
+   "killed": true,
+   "by": [
+    "admitted:run:inspect-print-after-surrogate",
+    "admitted:run:book-print-ill-typed",
+    "admitted:run:book-args",
+    "admitted:run:program-request-dropped-ill-typed",
+    "admitted:run:case-request-both-plus-default-retested",
+    "admitted:run:case-request-nested-default-retested",
+    "admitted:run:inspect-request-print",
+    "admitted:run:atomic-print-non-scalar"
+   ],
+   "kills": 10,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "effects-uncounted",
+   "breaks": "the audit line reports no host call",
+   "killed": true,
+   "by": [
+    "admitted:run:fuel-program-exact",
+    "admitted:run:fuel-continuation-short",
+    "admitted:run:inspect-continuation-target",
+    "admitted:run:program-print-through-id",
+    "admitted:run:print-utf8-lengths",
+    "admitted:run:print-utf8-boundaries",
+    "admitted:run:program-request-dropped-let",
+    "admitted:run:program-request-dropped-argument"
+   ],
+   "kills": 16,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "top-drops-act-first",
+   "breaks": "Return to Top drops `act` before it refuses an ill-typed IO.OP",
+   "killed": true,
+   "by": [
+    "admitted:run:inspect-halt-code",
+    "admitted:run:inspect-halt-message",
+    "admitted:run:inspect-halt-after-surrogate",
+    "admitted:run:inspect-halt-code-first",
+    "admitted:run:inspect-io-op-closure",
+    "admitted:run:inspect-io-op-immediate",
+    "admitted:run:halt-surrogate",
+    "admitted:run:atomic-halt-code"
+   ],
+   "kills": 12,
+   "law": "refused_halt_keeps_its_activation",
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "gather-popped-first",
+   "breaks": "a Gather's operand check and NatRange test run after its frame is popped",
+   "killed": true,
+   "by": [
+    "admitted:run:inspect-chr",
+    "admitted:run:inspect-succ-object",
+    "admitted:run:inspect-succ-closure",
+    "admitted:run:inspect-u32-to-nat",
+    "admitted:run:inspect-u32-from-nat",
+    "admitted:run:inspect-char-from-u32",
+    "admitted:run:inspect-char-to-u32",
+    "admitted:run:inspect-append-b"
+   ],
+   "kills": 34,
+   "law": "nat_range_keeps_its_gather",
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "describe-after-drop",
+   "breaks": "Return to Top(0) drops `act` before the Book's answer is described",
+   "killed": true,
+   "by": [
+    "admitted:run:display-visits-beyond-bound",
+    "admitted:run:display-bytes-beyond-bound",
+    "admitted:run:inspect-render-closure",
+    "admitted:run:inspect-render-field",
+    "admitted:run:book-request-rendered",
+    "admitted:run:book-request-field",
+    "admitted:run:atomic-ill-typed-render",
+    "admitted:run:atomic-request-rendered"
+   ],
+   "kills": 12,
+   "law": "request_is_never_rendered",
+   "crashes": 0,
+   "crashed": []
   }
  ],
  "harness_mutants": [
@@ -2677,7 +3711,12 @@
    "mutant": "fuel-ignored",
    "breaks": "each run control runs at 1,000,000, not its frozen fuel",
    "by": [
+    "run:atomic-fuel-action",
+    "run:atomic-fuel-book",
+    "run:atomic-fuel-continuation",
     "run:fuel-action-short",
+    "run:fuel-book-effect-short",
+    "run:fuel-book-request-short",
     "run:fuel-book-short",
     "run:fuel-continuation-short",
     "run:fuel-invoke-short",
