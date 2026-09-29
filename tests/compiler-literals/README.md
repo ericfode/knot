@@ -33,6 +33,14 @@ bytes, past the size at which one section chunk faulted the Bun compiler.
 Round 9 (four books, committed as `9263b15` before its fix): `1364n+t`,
 `1365n+t` and `2000n+t` as single expressions with a No control, and three
 Invalid controls that pin the offset diagnostics the fix must keep.
+Round 10 (13 books, committed as `6cb406d` before its fix): the tail of an
+offset after a newline, a comment or a blank line, in patterns and expressions,
+with a keyword-line control; malformed names (`x.`, `a..b`, `A.1`) as a
+parameter, function, constructor and pattern binder; dotted binders (`case
+x.y`, `1n+x.y`, `case U32.add`, `x.y : U32 = 3`); a let binder named like a
+constructor of Base or of the book itself; and one agreeing control book for
+the scope of those rules, where the seed accepts a dotted binder that repeats
+a dotted parameter and a let binder named like a constructor declared later.
 All five freezes are verified against seed 2.0.29,
 commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on every gate run.
 
@@ -51,7 +59,11 @@ adds literal nodes and offsets, and reports the five frozen unsupported cases
 with their exact phase/code prefixes. An offset needs its `+` to touch the
 literal token (`1n+p`, `1n+ p`, `1n++p`); a separated `+` (`1n +p`, `3n + x`)
 is operator sugar and reports `Unsupported\tparse\toperator`, as bare
-operators do. The seed reads `kn+t` as k successors around t, so the parser
+operators do. The tail follows the `+` after a space, a newline, a comment or a
+blank line, exactly as the seed's term reader skips them, in patterns and in
+expressions (`1n+` then `p` on the next line, with or without `+p`); a keyword
+on a later line is no tail and reports `Unsupported\tparse\tterm-form`. The
+seed reads `kn+t` as k successors around t, so the parser
 reads `0n+t` as t itself, whatever t's type; every parsed offset therefore
 spells at least one `Succ`. Arithmetic operator sugar, F32 and raw
 non-ASCII quoted text remain Unsupported, including seed-invalid unannotated
@@ -130,6 +142,34 @@ or offset arm there reports `Invalid\tcheck\tpattern-type`; without it, the
 arm takes the spelled-constructor rule above. A literal inside a constructor
 field pattern reports `Unsupported\tcheck\tnested-field-pattern`, as a nested
 constructor does.
+
+Names and binders follow the seed's reading, not a simpler one. The parser
+reads every token that starts like a name before any structure: a name is words
+joined by single dots, each a letter or `_` and then letters, digits or `_`, so
+`x.`, `a..b` and `A.1` are `Invalid\tparse\tname` as a function, parameter,
+type, constructor, field, pattern binder or let name alike. A dotted name
+that is well formed (`x.y`) is a name too, and declares a function, type,
+constructor, field or parameter, but where a let or a pattern binds, the seed
+reads it as a reference to a global unless a parameter of the same function
+binds that exact name. So `case x.y`, `1n+x.y`, `case U32.add` and `x.y :
+U32 = 3` are `Invalid\tparse\tpattern-binder` (`binding-name` for a let),
+while a dotted parameter may be rebound by a default, promoted, offset or field
+pattern and by a typed, promoted or plain let; the review's proposed "one
+unqualified identifier" would have rejected those seed-valid books. A
+constructor is no binder once declared: a let binder that names a constructor
+of Base, of an import or of the book's own earlier declarations is
+`Invalid\tcheck\tconstructor-pattern-binder`, the rule pattern binders
+already had, decided in `qualify.bend` where registration is ordered. The seed
+registers constructors in source order, so a let binder may name a constructor
+declared later, and a parameter, a function or a type may take any name.
+Inherited imprecisions, each Invalid where the seed accepts: the single-file
+entry checks let binders against no constructors; the checker's catalog-wide
+test also rejects a pattern binder named like a constructor declared later;
+an arm body must start right of its `case` keyword
+(`Invalid\tparse\tbody-indentation`), so an offset tail dedented past `case`
+with the body on its line is rejected; and a newline after `case` or inside
+call or constructor arguments (other than after an offset's `+`) is
+`Invalid\tparse\texpected-term`.
 
 The checked core gains Literal, Intrinsic and Default. U32/Char expressions use
 the existing scalar Value term. The independent evaluator interprets this core
@@ -254,11 +294,11 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 131 fixture books, 499 fresh seed calls, 262 checks and 262 primary compilations.
-- 922 agreeing evaluator observations and 922 matching Node/Wasm observations;
-  188 additional evaluator rejections, giving 1110 evaluator observations total.
-- 37 byte-identical native/Bun module pairs and 74 complete Base trust audits.
-- 188 rejected-compilation output-preservation probes and 188 additional
+- 144 fixture books, 511 fresh seed calls, 288 checks and 288 primary compilations.
+- 946 agreeing evaluator observations and 946 matching Node/Wasm observations;
+  210 additional evaluator rejections, giving 1156 evaluator observations total.
+- 39 byte-identical native/Bun module pairs and 78 complete Base trust audits.
+- 210 rejected-compilation output-preservation probes and 210 additional
   compilations proving no artifact is created at an absent output path.
 - 5 result books and 61 frozen displays: 122 exact evaluator displays across
   both lanes, lane-equal, and 5 byte-identical native/Bun module pairs. The
@@ -267,9 +307,9 @@ The new gate builds native and Bun versions of check/eval/compile. It requires:
   probe the count of an expression offset in both lanes: 2047 successors
   builds and runs; 2048 and 4096 evaluate but are `Exhausted emit`; 4097 is
   `Exhausted check`.
-- Three complete proof entries, 37 filled laws; 28 type-correct semantic
+- Three complete proof entries, 37 filled laws; 36 type-correct semantic
   mutants: seven Wasm value kills, one exhaustion kill in both Wasm and the
-  evaluator, one Bun-lane fault kill, fifteen verdict kills and eight
+  evaluator, one Bun-lane fault kill, twenty-three verdict kills and eight
   evaluator kills.
   The two dead-arm laws, the five own-type literal laws and the four offset
   laws (spelling, lowering, bound, single argument) live in
@@ -298,7 +338,17 @@ restoring Invalid for a literal typed by a book's own datatype rejects the
 seed-valid own-nat-literal as `Invalid check literal-base-type`; skipping the
 literal-arm type check rejects the seed-valid own-nat-zero-pattern as
 `Invalid check pattern-type`; and ignoring the spelled constructor rejects the
-seed-valid own-n-literal-expr as `Invalid check unknown-type`. The
+seed-valid own-n-literal-expr as `Invalid check unknown-type`. Round 10
+adds eight verdict mutants: dropping the newline skip after an offset's `+`
+turns offset-layout into `Invalid parse expected-term`; not reading names
+turns name-parameter-trailing-dot into `Built`, and three shape mutants (a
+name may end in a dot, a word may be empty, a word may start with a digit) do
+the same to the trailing-dot, double-dot and digit-word books; rejecting every
+dotted binder turns binder-scope into `Invalid parse pattern-binder`, as a
+rule without the parameter's scope would; dropping the let binder's
+constructor test turns let-constructor-binder into `Built`; and a constructor
+test that ignores source order turns binder-scope into `Invalid check
+constructor-pattern-binder`. The
 exhaustion mutant offset-nat-add restores the `Nat.add(kn,t)` lowering of an
 expression offset (in the arm that now wraps the tail); `successor` in
 offset-expression-depth (frozen Yes) then
@@ -332,6 +382,13 @@ foreign-dependency verdict for the modules host query
 (`tests/compiler-modules/host-check-expectations.json`), and harness timeouts
 scale with `KNOT_GATE_TIMEOUT_SCALE`.
 Existing gate assertions and shared receipts belong to their owners.
+The gate's independent observations (its four verification scripts, its
+fixture and result books and its mutants) run on four threads, `WORKERS` in
+`check.py`; `map` keeps the frozen order and no assertion depends on the
+schedule. In a full runner pass over identical content the gate took 481.6 s
+in sequence and 206 s threaded, with a receipt equal observation for
+observation; the review measured 650 to 717 s in sequence under load, against
+the runner's 900-second limit per gate.
 
 Nine new style families close local imports and each stays below 48000 source
 bytes. Offline Perch preflight reports context blockers independently of the

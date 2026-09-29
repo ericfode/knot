@@ -4,6 +4,221 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Review round 10
+
+The coordinator's review workflow (round 1 on `a122239`) confirmed three major
+findings. Two are fixed in new commits; the third is disputed as runner-owned,
+with a tested patch for the coordinator. No history was rewritten and no earlier
+expectation changed: the 90 earlier regression books are byte-identical in
+`regressions.json`, and every earlier frozen result still holds.
+
+| Commit | Content |
+| --- | --- |
+| `6cb406d` | Freeze, before any fix: 13 books observed on the seed (`regressions.py --write`, two agreeing passes) |
+| `b4b86fd` | Offset layout: `S.skip_lines` after an offset's `+` (one call in `parse.bend`); law `offset_tail_after_newline`; mutant offset-newline-kept |
+| `abda387` | Names read whole (`names`, `malformed`, `name_text`); dotted binders scoped to parameters (`binders`, `binder`, `parameter_named`); let binders tested against constructors (`qualify.bend`); seven laws; seven more mutants; SPEC and CONTRACT; census approved, inventories regenerated |
+| `ff8d4ef` | The gate's independent observations on four threads (not requested; see below) |
+| `74ceb20` | Census inventories follow the gate script's hash |
+| this commit | README, LAW_REVIEW, this section; the literals receipt from the run on the fix head |
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [major] "found no clang" flake recurs despite the runner's PATH wrapper (shared harness, not literals code) | **Disputed: runner-owned, so not changed here.** The finding's own fix field says "Coordinator/runner-owned, outside campaign/literals", the failing step (`src/parse-cli.bend` built by the seed in the bootstrap gate) does not depend on literals content, and `GATES.md` records that the runner does not retry. The seed's message is produced by any failure to obtain `clang --version` output, which a PATH wrapper cannot intercept (below). A tested patch is offered, not applied. | Mechanism reproduced (below); both full runner passes of this round passed `bootstrap` (46.9 s, 47.8 s); patch: `/Users/ericfode/src/knot/.claude/worktrees/campaign-literals/.local/literals/runner-retry.patch` |
+| [major] Dotted, trailing-dot and constructor-named identifiers are accepted where the seed rejects them | **Fixed in `abda387`**, with the review's proposed fix corrected: a dotted binder is valid where a parameter binds that name, and a let binder may name a constructor declared later. | 13 frozen books; 176-book names matrix, 0 accept/reject differences (61 before); 1026 tracked books, 12 verdict changes, all frozen books |
+| [major] A newline or a comment after an offset `+` is Invalid; the seed accepts the same spelling | **Fixed in `b4b86fd`.** | offset-layout: 7 calls agree seed, evaluator and Wasm in both lanes; r2a, r2b, r2c agree |
+
+### Finding 1: the clang flake
+
+The seed's native build picks its compiler in `cc_find` (`bend2/main.ts`, about
+line 370): for `$CC`, `clang` and each `clang-NN` on PATH it runs
+`spawnSync(cc, ["--version"], {encoding: "utf8"}).stdout ?? ""` and matches
+`clang version N`. A spawn that fails to start has a null `stdout`, which reads as
+empty output, and the message is "found no clang". So the message says that no
+candidate printed a version, not that none is installed, and the runner's `clang`
+wrapper cannot help when the process never starts. Reproduced: with process
+creation failing in one process tree only (`.local/literals/rv1/flake/nproc.py`
+sets `RLIMIT_NPROC` to 1 and `exec`s the seed), the seed's native build of
+`src/parse-cli.bend` prints exactly `Error: bend needs clang 14 or newer to
+build binaries (found no clang); on Debian/Ubuntu: curl -fsSL ...`, with clang and
+the wrapper present. The natural cause of the one failure in eight bootstrap runs
+is not established (fork failure under `kern.maxprocperuid` = 10666, memory
+pressure and a killed child are all consistent with it) and remains untested.
+
+The proposed patch (`scripts/gates/run.py`, its tests and one paragraph of
+`GATES.md`; 139 lines, `git apply --check` clean on this tree, 20 of 20 runner
+tests pass with it in a scratch copy) reruns a gate once when its stderr holds
+that exact message, keeps both attempts' logs (`NAME.attempt1.*`), records
+`host_flake` and the load average outside the normalized summary, and reports a
+second identical failure as `host-failure`, never `failed`. It changes a
+documented runner decision ("does not retry"), so it is left to the coordinator,
+who should also confirm that a first bootstrap attempt leaves nothing in the
+scratch tree that the second reuses. Until it lands, rerun and record both runs
+rather than triaging a merge-time exit 1 whose only failure carries this message.
+
+### Finding 3: offset layout
+
+The seed reads an offset's tail with a free `parse_term`, whose first act is to
+skip spaces, newlines, comments and blank lines. Knot's lexer already drops
+comment text and emits one `"\n"` token per line, so the fix is one call in the
+`LiteralTail` arm: `run(n,Term{pattern},S.skip_lines(tail))`. The reviewer's
+r2a (`case 1n+` then `p:`), r2b (a comment after the `+`) and r2c (`1n+` then
+`p` as an expression) now agree with the seed in check, evaluation and Wasm.
+The frozen book `offset-layout` adds `+p` on the next line, a stacked `1n+` `1n+`
+`p`, a blank and a comment line between `+` and tail, a tail in column 0 in an
+expression, and a commented `2n+`: seven calls agree seed, evaluator and Wasm in
+both lanes (byte-identical modules); before the fix the whole book was `Invalid
+parse expected-term`. `offset-layout-keyword` pins the other side: a `def` line
+after `1n+` is no tail, the seed rejects it, and Knot reports `Unsupported parse
+term-form`, never Invalid.
+
+Not fixed, and not part of this finding (inherited from `main`, in README and
+SPEC): an arm body must start right of its `case` keyword, so an offset tail
+dedented left of `case` with the body on the same line is `Invalid parse
+body-indentation` where the seed accepts (a dedented body on its own line trips
+the same rule without any offset); a newline after `case`, or inside call or
+constructor arguments other than after an offset's `+`, is `Invalid parse
+expected-term`. The frontend gate pins `body-indentation` for a `def` body in
+column 0, so the rule is not loosened here.
+
+### Finding 2: names and binders
+
+What the seed does, from probes (frozen as books, each committed at `6cb406d`
+before the fix):
+
+- Every token that starts like a name is read by `parse_lexeme` and must match
+  `^[A-Za-z_]\w*(\.[A-Za-z_]\w*)*$`: `x.`, `a..b`, `x.1`, `x.1a`, `A.1` fail in
+  every position (function, parameter, type, constructor, field, binder, let).
+  A dotted name that matches is a name: it may declare a function, type,
+  constructor, field or parameter. Knot accepted all of them before; it now reads
+  names whole in `parse` (`Invalid parse name`), and `parse` still returns
+  `Exhausted` at budget 0 for every token list, so `no_parser_budget` holds.
+- Where a let or a pattern binds, `parse_var` returns a Var for a name on the
+  seed's scope stack and a Ref for any other dotted name, and a Ref is no
+  pattern. A dotted parameter is the only way a dotted name reaches the stack.
+  So `case x.y`, `1n+x.y`, `+x.y`, `case U32.add`, `case Bool.True` and `x.y :
+  U32 = 3` are rejected, while a default, promoted, offset or field pattern, and a
+  typed, promoted or plain let, that repeats a dotted parameter are accepted (the
+  reviewer's "one unqualified identifier" would reject them: a new D4 violation).
+  Knot checks this in the parser (`binders` over each function body against its
+  parameters), so the single-file and bundle entries share it. Codes: `Invalid
+  parse pattern-binder`, and `binding-name` for a let.
+- A constructor is no binder once registered, and the seed registers in source
+  order: a let binder naming a constructor of Base, of an import or of the book's
+  own earlier declarations is rejected, one naming a constructor declared later
+  is accepted, and a parameter, a function or a type may take any name.
+  `qualify.bend` orders registration and already decided this for pattern
+  binders; the Binding arm now asks it too (`Invalid check
+  constructor-pattern-binder`). `--bundle` only.
+
+Frozen books (13): offset-layout, offset-layout-keyword, name-parameter-trailing-dot,
+name-function-double-dot, name-constructor-digit-word, name-binder-trailing-dot,
+dotted-default-binder, dotted-offset-binder, dotted-shadows-intrinsic,
+dotted-let-binder, let-constructor-binder, let-own-constructor-binder and the
+agreeing control binder-scope (a dotted parameter rebound by default, promoted,
+offset and field patterns and by typed, promoted and plain lets; a later
+constructor, a parameter, a function and a type naming binders).
+
+Differentials, seed against Knot (all native lane; the Bun lane agrees on the
+frozen books and on byte-identical modules):
+
+| Set | Result |
+| --- | --- |
+| Reviewer's r1a to r1e, r2a to r2c | all as the seed |
+| 29 further probes: constructor order c1 to c9, dotted parameters e1 to e7, lets and promotions l1 to l13 | accept/reject equal in all but c1 and c9 (below) |
+| Names matrix: 16 positions by 11 names (`x.`, `x..y`, `a.b.`, `X.`, `x.1`, `x.y`, `x.y.z`, `x.1a`, `True`, `_.`, `a1.b`), 176 generated books | 0 differences; the build before the fix differed on 61 of the 144 rows it was run on |
+| `check` over the 1026 tracked books, old against new | 1014 identical; the 12 changes are exactly the frozen books (10 Built to Invalid, offset-layout Invalid to Built, offset-layout-keyword Invalid to Unsupported) |
+
+Laws (ground instances; eight, outside the 37 counted for the literals entries):
+`src/PROOF.bend` malformed_name, name_shapes, dotted_binder_needs_a_parameter,
+dotted_binder_repeats_a_parameter, dotted_reference_binds_nothing and
+offset_tail_after_newline; `src/qualify-PROOF.bend` constructor_is_not_a_let_binder
+and later_constructor_can_be_a_let_binder. All 13 `src/*PROOF.bend` print `All
+terms check.`. Eleven negative controls (one mutation each in a scratch tree)
+fail the named law ([LAW_REVIEW.md](LAW_REVIEW.md)).
+
+Mutants (36 in the gate, eight new, all killed by verdict): offset-newline-kept,
+names-unread, name-may-end-in-dot, name-word-may-be-empty,
+name-word-may-start-with-digit, dotted-binder-anywhere (binder-scope: rejecting
+every dotted binder is unsound), let-binder-unchecked and
+constructor-binder-anywhere (binder-scope: a constructor test that ignores source
+order rejects the later-constructor let).
+
+### Merge notes for the coordinator
+
+- **`qualify.bend` overlaps `campaign/modules`.** modules has independently put
+  the let-binder test in its Binding arm (`then(pattern(...),binder => binders =>`)
+  and added a single-file `rebinds` pass in source order. When `main` is re-merged
+  after modules lands, take modules' form. Then: my mutant `let-binder-unchecked`
+  anchors on my line (`S.bind(Qualified,Qualified,pattern(token,S.Variable{token},names,ctors),u =>`)
+  and must be re-anchored to modules' text, or the gate fails on its anchor check;
+  `constructor-binder-anywhere` anchors on `pattern`'s test, which modules keeps,
+  but modules passes a different constructor list (`visible`), so re-confirm it
+  is still killed; the laws `constructor_is_not_a_let_binder` and
+  `later_constructor_can_be_a_let_binder` call `Q.walk_in` and need a re-run. The
+  three frozen let books and binder-scope hold for either form. The single-file
+  let-binder limit recorded here is closed by modules' `rebinds`; do not duplicate
+  it. modules' `qualify.bend` does not typecheck against this branch alone (it
+  has no `S.Literal`, `S.Offset` or `S.Intrinsic` arms), so the two were not
+  tried together.
+- **The gate now runs on four threads (`ff8d4ef`, not requested).** The round-10
+  books and mutants add about 65 s, and the gate took 481.6 s sequentially in a
+  full runner pass on identical content and 650 to 717 s under the review's load
+  average, against the runner's 900 s limit per gate. Threaded it took 206 s in
+  the runner (232 s directly), with a receipt equal observation for observation
+  (only the date, three input hashes and the runner's path normalization
+  differ). It reverts together with `74ceb20` (the census inventory hash of
+  `check.py`). It raises the number of concurrent child processes while other
+  gates run, which is the condition the flake reproduction above implicates;
+  the gain is the margin against the wall limit.
+- **Erratum.** The `ff8d4ef` commit message compares 232 s with "about 410 s
+  sequentially on the same host at load 10". That 410 s was measured on
+  `a122239`, before the 13 books and 8 mutants. The comparison on identical
+  content is 481.6 s (run g1, sequential) against 206 s (run g2, threaded), in
+  the runner.
+- **Trailers.** These commits carry `Co-Authored-By: Claude Sonnet 5.5`, the
+  model that made them, as the earlier round-9 implementer commits do; the run
+  instruction named Opus 5.5.
+
+### Known limits (all Invalid where the seed accepts, all inherited)
+
+- A pattern binder named like a constructor declared later in the book (c1, c9)
+  is `Invalid check constructor-pattern-binder` from the checker's catalog-wide
+  test. Changing it in `literal-matrix.bend` is byte-blocked (literal-patterns is
+  at 47995 of 48000 composition bytes), and the legacy fields gate pins the code.
+- The single-file entry does not test let binders against constructors
+  (closed by modules' `rebinds`, above).
+- An arm body starting left of its `case` keyword; a newline after `case` or
+  inside call or constructor arguments (Finding 3).
+- None of these is a resource limit or a new regression: each was Invalid before
+  this round, and none is reachable through the new books.
+
+### Gates on the fix head
+
+The full `npm run -s gates` pass on this head and the literals receipt from it are recorded in the next commit.
+
+### Offline preflight
+
+`npm run lint:style -- --preflight --manifest=docs/compiler-campaign/manifest.json`:
+32 groups, 0 structural blockers, 0 provider requests (frontend-parsing 33752,
+frontend-laws 44795, module-qualification 26279 of 48000 composition bytes;
+`checking` 47937 and literal-patterns 47995 are unchanged). The six changed Bend
+files (parse, qualify, LAWS, PROOF, qualify-LAWS, qualify-PROOF) report 32
+truncated contexts (context-helper, context-file and caller limits, 7 + 3 + 22;
+`parse` and the law `offset_tail_after_newline` are cut by the helper limit
+because they call `run`) and the ad-hoc composition bound over the six together
+(68893/48000); none of the seven new definitions in `parse.bend` is truncated. Live semantic and style Perch review remain the
+coordinator's; no style pass is claimed.
+
+### Remaining
+
+- The runner patch for finding 1 (`.local/literals/runner-retry.patch`, not applied).
+- Live Perch review of the changed files.
+- The `modules` re-merge items above (take modules' Binding arm, re-anchor
+  `let-binder-unchecked`, re-confirm `constructor-binder-anywhere`).
+- Refresh of the shared receipts with semantic drift after the merge.
+- The parser layout limits under Known limits, and c1/c9, for a separate
+  increment.
+
 ## Review round 9
 
 The coordinator's review of `943104f` confirmed one major finding: the law that

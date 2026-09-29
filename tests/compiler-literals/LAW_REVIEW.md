@@ -2,7 +2,7 @@
 
 Contract: [README.md](README.md), unchanged [expectations.json](expectations.json),
 the separately committed [supplemental.json](supplemental.json), the
-review-round-1 to round-9 [regressions.json](regressions.json) and the result
+review-round-1 to round-10 [regressions.json](regressions.json) and the result
 displays in [results.json](results.json). No law changes the seed oracle or
 weakens an existing compiler gate.
 
@@ -14,6 +14,8 @@ weakens an existing compiler gate.
 | Dead leaves | 2 | `src/check-PROOF.bend` | A dead leaf's Invalid becomes `Unsupported check dead-arm` at the same phase and location; its Exhausted stays Exhausted |
 | Offset expressions | 4 | `src/check-PROOF.bend` | The checker lowers `2n+Zero{}` against an installed Nat to its matrix spelling: two Succ constructs around the checked tail, in any scope (the k = 2 witness `offset_spelling`); **for every count up to 4096 and every tail that checks to a term and its uses, it returns `successors(to_nat(count), term)` with those uses (`offset_lowering`); above 4096 it is `Exhausted check` at the offset (`offset_bound`)**; a constructor of one argument keeps its uses (`single_argument_keeps_uses`, induction on the list) |
 | Own-type literals | 5 | `src/check-PROOF.bend` | `primitive_type`'s cases: an installed primitive wins for any target and spelling; without it, a Nat literal spelled `Succ` against a target declaring Zero/Succ is `Unsupported check literal-base-type`, one spelled `Zero` against a target declaring only Z/S is `Invalid check unknown-type`, a U32 word is Unsupported against any target, and a literal with no target is Invalid unknown-type, each at the literal's location |
+| Names and offset layout (round 10) | 6 | `src/PROOF.bend` | `parse.bend`'s name and binder rules on concrete tokens: a malformed name (`x.`) is `Invalid parse name` at its token; `malformed` holds for `x.`, `x..y`, `x.1` and `x.1a` and fails for `a.b_1`, `_`, `1.5` and `<eof>`; a dotted pattern binder with no parameter of that name is `Invalid parse pattern-binder`, repeats one without error, and a dotted variable at an expression position binds nothing; the tail of an offset after a newline is skipped (`LiteralTail` on `1n`, `+`, newline, `p`, `:`). Ground instances, not a parser soundness theorem |
+| Let binders (round 10) | 2 | `src/qualify-PROOF.bend` | A let binder naming a constructor already registered is `Invalid check constructor-pattern-binder` at its token; one naming a constructor declared later (present in the constructor list, not yet in scope) is accepted and the binding is rebuilt unchanged |
 
 Every declaration is a `law` with a filled implementation in its complete proof
 entry. The wide-shift proofs use congruence over the guard's Bool decision. The
@@ -83,6 +85,20 @@ claimed. The stack bound at module scale rests on the frozen module-width
 book and the unbounded-chunk mutant. `runs_are_bounded` fails on a changed
 right-hand side and against a `split` that closes a run without reversing it.
 
+The eight round-10 laws sit outside the 37 counted above, in the proof entries of the
+frontend and the module loader (`src/PROOF.bend`, run by the classification gate;
+`src/qualify-PROOF.bend`, run by the modules gate), beside the parser and the qualifier they
+describe; the literals gate runs neither. Each has a negative control, eleven single
+mutations in a scratch copy of the tree that each make the entry fail on the named law:
+the name diagnostic renamed; a name allowed to end in a dot, to have an empty word, or a word
+to start with a digit; the guard that spares a token that does not start like a name (a
+number, `<eof>`) removed; the binder diagnostic dropped; `parameter_named` ignoring the head; the pattern flag
+ignored at a variable; the offset tail read without skipping newlines; the let binder not tested;
+and the constructor test made independent of source order. The scope of the dotted-binder rule
+(a parameter's own name) and the source order of the constructor rule are pinned on real books
+by `binder-scope` and by the `dotted-binder-anywhere` and `constructor-binder-anywhere` mutants,
+not by these laws.
+
 These laws do not prove the whole parser/checker/emitter correct, the Wasm
 interpreter equivalent to the source evaluator, memory separation for all
 executions, totality of every intrinsic, or all-input equivalence to Base. U32
@@ -100,8 +116,10 @@ internal-literal-scrutinee, unsupported-literal-pattern, broad-unicode-escape,
 unlifted-promoted-column, refined-default-binder, all-leaf-invalid,
 dead-before-live, invalid-own-primitive, invalid-own-pattern,
 unspelled-own-target, offset-nat-add, offset-one-short, offset-unchecked-type,
-offset-extra-successor, unbounded-chunk, constructor-tag-display, quote-blind-escape and raw-delete
-mutants. Mutants retain types and must produce the
+offset-extra-successor, unbounded-chunk, constructor-tag-display, quote-blind-escape, raw-delete,
+and the eight round-10 verdict mutants (offset-newline-kept, names-unread, name-may-end-in-dot,
+name-word-may-be-empty, name-word-may-start-with-digit, dotted-binder-anywhere,
+let-binder-unchecked and constructor-binder-anywhere). Mutants retain types and must produce the
 designated runtime disagreement, classification change or, for
 offset-nat-add, resource exhaustion against the frozen value. unbounded-chunk
 must build the u32-literals book to the gate's bytes and fault its Bun lane
