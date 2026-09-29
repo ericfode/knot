@@ -36,6 +36,11 @@ def starts(ts: List<&2,S.Token>, word: String) -> Bool:
     case Nil{}: False{}
     case Con{head,tail}: S.matches(head,word)
 
+def touching(name: S.Token, ts: List<&2,S.Token>) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{head,tail}: S.touches(name,head)
+
 def scrutinee(ts: List<&2,S.Token>) -> Bool:
   match ts:
     case Nil{}: False{}
@@ -84,13 +89,16 @@ def suffix(+ts: List<&2,S.Token>) -> Bool:
 
 def arrow(ts: List<&2,S.Token>) -> Bool:
   match ts:
-    case Con{+eq,Con{+gt,rest}}: Bool.and(S.matches(eq,"="),Bool.and(S.matches(gt,">"),S.touches(eq,gt)))
+    case Con{+eq,+t}: Bool.and(S.matches(eq,"="),Bool.and(starts(t,">"),touching(eq,t)))
+    case _: False{}
+
+def variable(node: S.Node) -> Bool:
+  match node:
+    case S.Variable{token}: True{}
     case _: False{}
 
 def lambda(value: S.Node, ts: List<&2,S.Token>) -> Bool:
-  match value:
-    case S.Variable{name}: arrow(ts)
-    case _: False{}
+  Bool.and(arrow(ts),variable(value))
 
 # A line that starts with an operator, `!(` or `=>` continues the term before it; one with `(` or `[` does not.
 def continues(+ts: List<&2,S.Token>) -> Bool:
@@ -334,8 +342,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
               invalid(t,"parameter"),u =>
               then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
             S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),Bool.or(scrutinee(tokens),Bool.or(numeral(tokens),Bool.or(starts(tokens,"("),Bool.and(pattern,promotes(tokens)))))),u => unsupported(tokens,"argument-whitespace"),u =>
-            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),S.matches(h,"\n")),u => unsupported(tokens,"line-break"),u =>
             S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(Bool.or(parameters,pattern)),Bool.or(suffix(tokens),lambda(head,tokens))),u => unsupported(tokens,"term-form"),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.and(Bool.not(parameters),S.matches(h,"\n")),u => unsupported(tokens,"line-break"),u =>
               invalid(tokens,"argument-separator"))))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{+pattern}:
