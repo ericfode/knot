@@ -1629,7 +1629,7 @@ def effect_controls(plans: dict) -> list:
          {**unsupported, 'calls': 5}),
         ('book-print-ill-typed', image('book', bound(laundered)), {**unsupported, 'calls': 6}),
         ('book-args', {**image('book', ['call', 8, got, [listed]], 0, args), 'types': [*types, *args_types],
-                       'representation': {**fp['representation'], 'List': 10}}, refused),
+                       'representation': {**fp['representation'], 'List': 10}}, {**unsupported, 'calls': 5}),
         ('fuel-book-effect-exact', image('book', bound(text('x'))), {'fuel': 4, **refused}),
         ('fuel-book-effect-short', image('book', bound(text('x'))),
          {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 3}),
