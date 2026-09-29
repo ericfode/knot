@@ -640,7 +640,7 @@ and `act` as they were (§6.3, §7).
 display and the heap, kind 2; the frame region and a release's worklist, kind 3) or an `Unsupported` (a request that a
 read meets, D23). A broken invariant is a defect (§11) and no stop. The step that stops has no post-state: the
 machine keeps the state in which the step began, whichever of its substeps had been tried. The control that could not
-advance stays pending with the words it owns (an Enter its target and operands, a Return its word); `act`, `depth`,
+advance stays pending with the words it owns (an Enter its target and operands, a Return its word, an Eval its node); `act`, `depth`,
 every frame and `top`, every cell (each rc and payload word), the free lists, the bump pointer, the counters, the
 constants and everything written or called on the host are as the step found them. A pop, a move into a slot, a `dup`,
 a `drop`, a release, an allocation, a push, a byte written and a host call that the step would have made are none of
