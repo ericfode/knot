@@ -1517,6 +1517,9 @@ def effect_controls(plans: dict) -> list:
       refuses the shape that a Case reads the answer of (`got(IO.print("x")(R)(k))`, its own
       test request_out_of_band.bend), so nothing here claims the machine agrees with the seed
       there, and no control freezes that shape (section 8).
+    - A scalar String is written as canonical UTF-8 (section 10): `foreign-print`'s plan prints the four
+      examples of each length (U+0024, U+00A2, U+20AC, U+10348) and the edges of every length
+      (U+007F, U+0080, U+07FF, U+0800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF), after 5 entries.
     - A Halt's message is an outgoing String (D20): a lone surrogate in it stops the run as
       `HostFailure io abi` before `die`, at the third entry (main, R, k's closure). A scalar one,
       `x` and U+1F600, reaches `die` after the same 3 entries, so the run ends with `halt` 1 and
@@ -1564,6 +1567,14 @@ def effect_controls(plans: dict) -> list:
     def halting(message):
         """main = λ@R. λk. Halt{1, message}"""
         return ['closure', 7, 0, 0, [], ['closure', 6, 1, 1, [], ['con', 4, 1, [['lit', 1, 'U32', 1], message]]]]
+
+    def printing_codes(codes):
+        """foreign-print's plan, printing a String of these Chr codes"""
+        plan = json.loads(json.dumps(fp))
+        plan['functions'][1]['body'][3][0][3] = codes
+        return plan
+    # The canonical UTF-8 examples, and each length's boundary; Python's own encoder is the literal review.
+    lengths, edges = [0x24, 0xA2, 0x20AC, 0x10348], [0x7F, 0x80, 0x7FF, 0x800, 0xD7FF, 0xE000, 0xFFFF, 0x10000, 0x10FFFF]
     return [
         ('book-print', image('book', bound(text('x'))), refused),
         ('book-print-continuation-call', image('book', bound(text('x'), calling)), refused),
@@ -1587,6 +1598,8 @@ def effect_controls(plans: dict) -> list:
          {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'calls': 3}),
         ('halt-scalar', image('program', halting(['lit', 3, 'String', [0x78, 0x1F600]])),
          {'halt': 1, 'message': [0x78, 0x1F600], 'stdout': '', 'calls': 3}),
+        ('print-utf8-lengths', printing_codes(lengths), {'exit': 0, 'stdout': ''.join(map(chr, lengths)) + '\n', 'calls': 5}),
+        ('print-utf8-boundaries', printing_codes(edges), {'exit': 0, 'stdout': ''.join(map(chr, edges)) + '\n', 'calls': 5}),
     ]
 
 
@@ -1631,7 +1644,24 @@ def inspection_controls(plans: dict) -> list:
       after 5 (main, id, IO.print, both applications of the Action), writing nothing: the
       whole String is read before the scalar check, so the cause is not `io abi`. A Halt's
       message is an outgoing String too: a surrogate then a closure halts `ill-typed` after 4,
-      and so does a closure code beside a surrogate message, the code being read first."""
+      and so does a closure code beside a surrogate message, the code being read first.
+    - A Case reads its scrutinee at the Case's type (section 6.1). `pick(x: none)` cases on
+      the word that `id` hands it: 3 calls (main, id, pick). A closure is no Flag, Nat, Char, U32
+      or Pair; nor is the Object of another type (a Box, whose tag 0 also has fields), nor an
+      immediate beyond the constructors (5 at a Flag). Key mode reads a U32 or a Char the same way.
+    - Every prim reads each operand (section 9), a second one as well as a first: the word
+      prims through U32.add (its first), U32.sub (its second), U32.shln (its Nat amount),
+      Char.is_space, Char.is_eq (its second), Nat.add, Nat.sub (its second) and both show
+      prims, each after 3 calls. The other ids of a family are vm-prims' to witness (section 9).
+    - An Enter checks its target (section 7): an immediate or an Object handed to an Invoke halts
+      after 2 calls (main, id). The Action's continuation is entered after its effect: a Program
+      whose Action meets an immediate for `k` writes `x`, then halts after 7 calls (main, the two
+      closures, IO.print, the erased R, id, the Action's second application), the target being read
+      when its Enter comes and not before the effect. The last word is read too: a Program whose
+      k answers a closure, or an immediate, for its IO.OP halts after 4 (main, the erased R, k's
+      closure, id) writing nothing.
+    - Rendering reads every word (section 8): a Book result that is a closure, or a Pair whose
+      field is one, halts after 2 (main, id)."""
     nat, u32, char, string, boolean, flag, pair, arrow = range(8)
     types = [*plans['string-codes']['types'][:4], plans['string-eq']['types'][0], plans['value-on']['types'][0],
              {'kind': 'data', 'name': 'Pair', 'constructors': [{'name': 'Pair', 'fields': [flag, flag]}]},
@@ -1663,10 +1693,10 @@ def inspection_controls(plans: dict) -> list:
     def applied(p, *operands):
         return ['call', rep[prims[p]['output']], 1, list(operands)]
 
-    def book(body, result=flag, prim=None):
+    def book(body, result=flag, prim=None, extra=(), more=()):
         main = {'name': 'main', 'parameters': [], 'result': result, 'slots': int(body[0] == 'let'), 'body': body}
-        return {'entry': 'book', 'representation': rep, 'types': types,
-                'functions': [ident, *([base(prim)] if prim is not None else []), main]}
+        return {'entry': 'book', 'representation': rep, 'types': [*types, *more],
+                'functions': [ident, *([base(prim)] if prim is not None else []), *extra, main]}
 
     def dropped(node, result=flag):
         return ['let', result, 0, node, ['value', result, 1]]
@@ -1682,7 +1712,31 @@ def inspection_controls(plans: dict) -> list:
 
     def ill(calls, **more):
         return {**ILL_TYPED, **more, 'calls': calls}
+
+    def pick(scrutinee, rows, default=None, mode='tags', slots=1):
+        """pick(x: none) -> Flag cases on its erased parameter at a concrete type (section 6.1)."""
+        return {'name': 'pick', 'parameters': [None], 'result': flag, 'slots': slots,
+                'body': ['case', flag, 0, scrutinee, mode, rows, default]}
+
+    def picking(word, *function):
+        """main = pick(id(word)), pick being function index 1"""
+        return book(['call', flag, 1, [via_id(None, word)]], extra=function)
+
+    def answering(node):
+        """main = λ@R. λk. node: the IO.OP that k's body answers is the run's last word"""
+        return program(['closure', 7, 0, 0, [], ['closure', 6, 1, 1, [], node]])
+
+    def continuing(k):
+        """main = λ@R. λk. IO.print("x")(R)(k'), IO.print being function index 1"""
+        applied_to = ['invoke', 4, ['invoke', 6, ['call', 7, 1, [text(120)]], []], [k]]
+        return program(['closure', 7, 0, 0, [], ['closure', 6, 1, 1, [], applied_to]], fp['functions'][0])
     snil, closure_tail = ['value', string, 0], via_id(string)
+    on, off = ['value', flag, 1], ['value', flag, 0]
+    one_u32, one_nat, a_char = ['lit', u32, 'U32', 1], ['lit', nat, 'Nat', 1], ['lit', char, 'Char', 97]
+    box = {'kind': 'data', 'name': 'Box', 'constructors': [{'name': 'Box', 'fields': [flag]}]}
+    flag_rows = [['branch', 0, 1, 0, off], ['branch', 1, 1, 0, on]]
+    key_rows = [['branch', 7, 1, 0, on]]
+    keys_default = ['default', off]
     return [
         ('inspect-chr', book(dropped(['con', char, 0, [via_id(u32)]])), ill(2)),
         ('inspect-succ-object',
@@ -1709,6 +1763,38 @@ def inspection_controls(plans: dict) -> list:
         ('inspect-print-after-surrogate',
          program(['call', 7, 1, [text(0xD800, tail=via_id(string, unit_identity))]], fp['functions'][0]),
          ill(5, stdout='')),
+        # A Case's scrutinee, at each type it can be read at (section 6.1).
+        ('inspect-case-closure-scrutinee', picking(identity, pick(flag, flag_rows)), ill(3)),
+        ('inspect-case-nat-closure',
+         picking(identity, pick(nat, [['branch', 0, 1, 0, off], ['branch', 1, 1, 1, on]], slots=2)), ill(3)),
+        ('inspect-case-char-closure', picking(identity, pick(char, [['branch', 0, 1, 1, on]], slots=2)), ill(3)),
+        ('inspect-case-object-of-another-type',
+         book(['call', flag, 1, [via_id(None, ['con', 8, 0, [on]])]], extra=[pick(pair, [['branch', 0, 1, 2, on]], slots=3)],
+              more=[box]), ill(3)),
+        ('inspect-case-tag-out-of-range', picking(['lit', u32, 'U32', 5], pick(flag, flag_rows)), ill(3)),
+        ('inspect-case-keys-closure', picking(identity, pick(u32, key_rows, keys_default, 'keys')), ill(3)),
+        ('inspect-case-char-keys-closure', picking(identity, pick(char, key_rows, keys_default, 'keys')), ill(3)),
+        # Every prim reads each operand: a first, a second, a Nat amount and a show.
+        ('inspect-u32-add', book(dropped(applied(0, via_id(u32), one_u32)), prim=0), ill(3)),
+        ('inspect-u32-sub-second', book(dropped(applied(1, one_u32, via_id(u32))), prim=1), ill(3)),
+        ('inspect-u32-shln-amount', book(dropped(applied(14, one_u32, via_id(nat))), prim=14), ill(3)),
+        ('inspect-char-is-space', book(applied(21, via_id(char)), boolean, 21), ill(3)),
+        ('inspect-char-is-eq-second', book(applied(20, a_char, via_id(char)), boolean, 20), ill(3)),
+        ('inspect-nat-add', book(dropped(applied(22, via_id(nat), one_nat)), prim=22), ill(3)),
+        ('inspect-nat-sub-second', book(dropped(applied(23, one_nat, via_id(nat))), prim=23), ill(3)),
+        ('inspect-u32-show', book(dropped(applied(32, via_id(u32))), prim=32), ill(3)),
+        ('inspect-nat-show', book(dropped(applied(33, via_id(nat))), prim=33), ill(3)),
+        # An Enter reads its target, an Action's continuation included, and the run's last word.
+        ('enter-immediate-target',
+         book(['invoke', flag, ['call', arrow, 0, [['lit', u32, 'U32', 5]]], [on]]), ill(2)),
+        ('enter-object-target',
+         book(['invoke', flag, ['call', arrow, 0, [['con', pair, 0, [off, on]]]], [on]]), ill(2)),
+        ('inspect-continuation-target', continuing(via_id(5, ['lit', u32, 'U32', 5])), ill(7, stdout='x\n')),
+        ('inspect-io-op-closure', answering(via_id(4, unit_identity)), ill(4, stdout='')),
+        ('inspect-io-op-immediate', answering(via_id(4, ['lit', u32, 'U32', 5])), ill(4, stdout='')),
+        # Rendering reads every word it prints (section 8).
+        ('inspect-render-closure', book(['call', flag, 0, [identity]]), ill(2)),
+        ('inspect-render-field', book(['con', pair, 0, [on, via_id(flag)]], result=pair), ill(2)),
     ]
 
 
