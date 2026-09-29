@@ -6,9 +6,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeBendSource } from '../scripts/perch-bend.mjs';
-const { createPackageStore, declarationInterface, buildInterface, createInterfaceReview, prepareInterfaceComposition } =
+const { createPackageStore, declarationInterface, buildInterface, createInterfaceReview, prepareInterfaceComposition, fitInterfaceContext } =
   await import(process.env.KNOT_CONTEXT_TEST_MODULE ?? '../scripts/perch-context-interfaces.mjs');
-import { createBendSourceSnapshot } from '../scripts/perch-bend-context.mjs';
+import { bendDeclarationSource, createBendSourceSnapshot } from '../scripts/perch-bend-context.mjs';
 import { prepareStyleTargets } from '../scripts/perch-style.mjs';
 const sha = s => createHash('sha256').update(s).digest('hex');
 const config = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url), 'utf8'));
@@ -278,4 +278,142 @@ test('default candidate store verifies BEND_LIB without an explicit option', asy
   } finally {
     if (previous === undefined) delete process.env.BEND_LIB; else process.env.BEND_LIB = previous;
   }
+});
+
+// Encoded-state fitting: the names-only tier, driven at a small computed cap. Each witness calls the module
+// the mutant harness swaps in and fails by assertion, never by a bare thrown Error. The oracle below states
+// the contract (tests/perch-context/CONTRACT.md, items 10 to 14) independently of the tool.
+const enc = value => Buffer.byteLength(JSON.stringify(value));
+const byCode = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+const REASON = 'context-state-names-only';
+const label = item => `${item.path}::${item.name}`;
+const parameters = count => Array.from({ length: count }, (_, i) => `p${i}: U32`).join(', ');
+async function reviewed(root, name, limits = {}, cohort = 'the fixed contract') {
+  const snapshot = await createBendSourceSnapshot(root, { contextPolicy: 'interfaces-v1' });
+  const file = await snapshot.load('main.bend');
+  const context = await (await createInterfaceReview({ root, path: 'main.bend', ...file, snapshot, limits })).forUnit(name);
+  const decl = file.analysis.declarations.find(d => d.qualified_name === name);
+  const prefix = { cohort, name, path: 'main.bend', declaration_kind: decl.syntax_kind, source: bendDeclarationSource(file.source, decl) };
+  return { context, snapshot, prefix };
+}
+const stateOf = ({ prefix, context }) => ({ ...prefix, ...context.seen });
+const collaborators = state => [...state.calls, ...state.called_by];
+const supplied = state => ['calls', 'called_by', 'laws', 'datatypes'].reduce((n, list) =>
+  n + state[list].reduce((sum, item) => sum + Buffer.byteLength(item.source ?? ''), 0), Buffer.byteLength(state.source));
+/** Cuttable entries, largest encoded saving first, then path, then name. */
+function ranked(state) {
+  const rows = state.context_notes.summarized;
+  return collaborators(state).map(item => {
+    const cut = { path: item.path, name: item.name, representation: 'names-only' };
+    const row = { path: item.path, name: item.name, reason: REASON };
+    const old = rows.find(r => r.path === item.path && r.name === item.name);
+    return { item, saving: enc(item) - enc(cut) - (old ? enc(row) - enc(old) : enc(row) + 1) };
+  }).filter(entry => entry.saving > 0)
+    .sort((a, b) => b.saving - a.saving || byCode(a.item.path, b.item.path) || byCode(a.item.name, b.item.name));
+}
+/** The state after the first `count` cuts, built from a copy taken before fitting. */
+function afterCuts(state, order, count, note) {
+  const expected = structuredClone(state), notes = expected.context_notes;
+  for (const { item } of order.slice(0, count)) {
+    const entry = collaborators(expected).find(e => e.path === item.path && e.name === item.name);
+    notes.source_bytes -= Buffer.byteLength(entry.source);
+    for (const key of ['line', 'end_line', 'source']) delete entry[key];
+    entry.representation = 'names-only';
+    const row = notes.summarized.find(r => r.path === item.path && r.name === item.name);
+    if (row) row.reason = REASON; else notes.summarized.push({ path: item.path, name: item.name, reason: REASON });
+  }
+  if (count) notes.names_only = { count, note };
+  return expected;
+}
+// Two files, equal-size heads in both, and a main that names them out of size, path and name order.
+const cutFiles = {
+  'a.bend': `import Base\ndef pa(x: U32) -> U32: x\ndef pb(x: U32) -> U32: x\n`,
+  'b.bend': `import Base\ndef pa(x: U32) -> U32: x\ndef big(x: U32, y: U32, z: U32) -> U32: x\n`,
+  'main.bend': 'import Base\nimport ./a.bend as A\nimport ./b.bend as B\ndef small(x: U32) -> U32: x\n'
+    + 'def main(x: U32) -> U32: A.pb(B.pa(small(A.pa(B.big(x, x, x)))))\n',
+};
+test('names-only tier fits a state the interface tier cannot and marks every cut', async t => {
+  const wide = ['ha', 'hb', 'hc', 'hd', 'he'];
+  const root = await fixture(t, { 'main.bend': `import Base\n${wide.map(n => `def ${n}(${parameters(12)}) -> U32: p0\n`).join('')}`
+    + 'def main(x: U32) -> U32: ha(hb(hc(hd(he(x)))))\n' });
+  const { context, snapshot, prefix } = await reviewed(root, 'main', { helpers: 0 });
+  const before = structuredClone(stateOf({ prefix, context })), files = structuredClone(context.provenance.files);
+  const cap = enc(before) - 300;
+  assert.ok(collaborators(before).every(e => e.representation === 'interface'), 'every collaborator is already an interface summary');
+  await assert.doesNotReject(fitInterfaceContext(context, snapshot, prefix, cap));
+  const state = stateOf({ prefix, context }), cut = collaborators(state).filter(e => e.representation === 'names-only');
+  assert.ok(enc(state) <= cap);
+  assert.ok(cut.length >= 1 && cut.length < collaborators(state).length, 'some, not all, collaborators are cut');
+  for (const entry of cut) assert.deepEqual(Object.keys(entry), ['path', 'name', 'representation']);
+  const marker = state.context_notes.names_only;
+  assert.ok(marker, 'the judge-visible state says which context was cut to names');
+  assert.equal(marker.count, cut.length);
+  assert.match(marker.note, /names-only/);
+  const rows = state.context_notes.summarized;
+  assert.equal(rows, context.provenance.summarized, 'the judge sees the recorded rows');
+  assert.equal(rows.length, before.context_notes.summarized.length, 'one row per summarized declaration');
+  for (const entry of collaborators(state)) {
+    const own = rows.filter(r => r.path === entry.path && r.name === entry.name);
+    assert.equal(own.length, 1);
+    if (entry.representation === 'names-only') assert.equal(own[0].reason, REASON);
+    else assert.deepEqual(entry, collaborators(before).find(e => e.path === entry.path && e.name === entry.name));
+  }
+  assert.equal(context.provenance.truncated, false);
+  assert.equal(state.context_notes.truncated, false);
+  assert.deepEqual(context.provenance.files, files, 'the files behind the names stay hash-pinned');
+  assert.equal(prefix.source, before.source);
+  assert.equal(prefix.cohort, before.cohort);
+  for (const list of ['laws', 'datatypes', 'imports']) assert.deepEqual(state[list], before[list]);
+  assert.equal(context.provenance.source_bytes, state.context_notes.source_bytes);
+  assert.equal(context.provenance.source_bytes, supplied(state));
+});
+test('names-only tier never shortens the primary source or the task', async t => {
+  const bulk = '# ' + 'x'.repeat(3000) + '\n';
+  const root = await fixture(t, { 'main.bend': `import Base\ndef help(x: U32, y: U32) -> U32: x\n${bulk}def main(x: U32) -> U32: help(x, x)\n` });
+  const { context, snapshot, prefix } = await reviewed(root, 'main', { helpers: 0 }, 'c'.repeat(500));
+  const primary = prefix.source, task = prefix.cohort;
+  assert.ok(Buffer.byteLength(primary) > 2000);
+  await assert.rejects(fitInterfaceContext(context, snapshot, prefix, 2000),
+    /after names-only summaries: \d+ of 2000 bytes remain: primary source \d+, task 502, collaborator list \d+ \(1 of 1 entries names-only\)/);
+  assert.equal(prefix.source, primary);
+  assert.equal(prefix.cohort, task);
+  const alone = await reviewed(root, 'main', { helpers: 0 }, 'c'.repeat(4000));
+  await assert.rejects(fitInterfaceContext(alone.context, alone.snapshot, alone.prefix, 5000), /after names-only summaries/);
+});
+test('names-only cuts follow largest saving, then path, then name', async t => {
+  const root = await fixture(t, cutFiles);
+  const probe = await reviewed(root, 'main', { helpers: 0 });
+  await fitInterfaceContext(probe.context, probe.snapshot, probe.prefix, enc(stateOf(probe)) - 1);
+  const { note } = stateOf(probe).context_notes.names_only;
+  assert.equal(typeof note, 'string');
+  const target = await reviewed(root, 'main', { helpers: 0 });
+  const before = structuredClone(stateOf(target)), order = ranked(before);
+  assert.deepEqual(order.map(e => label(e.item)), ['b.bend::big', 'main.bend::small', 'a.bend::pa', 'a.bend::pb', 'b.bend::pa']);
+  assert.deepEqual(before.calls.filter(e => e.name.startsWith('p')).map(label), ['a.bend::pb', 'b.bend::pa', 'a.bend::pa'],
+    'the equal-size entries were filled in an order that is neither path nor name order');
+  assert.equal(order[2].saving, order[4].saving, 'three equal savings, cut two of them');
+  const expected = afterCuts(before, order, 4, note), cap = enc(expected);
+  assert.ok(enc(afterCuts(before, order, 3, note)) > cap);
+  await assert.doesNotReject(fitInterfaceContext(target.context, target.snapshot, target.prefix, cap));
+  assert.deepEqual(stateOf(target), expected);
+  assert.equal(JSON.stringify(stateOf(target)), JSON.stringify(expected));
+});
+test('names-only tier also cuts a body the interface tier kept, adding its row', async t => {
+  const names = ['ka', 'kb', 'kc'];
+  const root = await fixture(t, { 'main.bend': `import Base\n${names.map(n => `def ${n}(${parameters(12)}) -> U32: p0\n`).join('')}`
+    + 'def main(x: U32) -> U32: ka(kb(kc(x)))\n' });
+  const probe = await reviewed(root, 'main');
+  const before = structuredClone(stateOf(probe));
+  assert.deepEqual(collaborators(before).map(e => e.representation), ['full', 'full', 'full']);
+  assert.equal(before.context_notes.summarized.length, 0, 'a kept body has no summary row yet');
+  const order = ranked(before);
+  assert.equal(order.length, 3);
+  await fitInterfaceContext(probe.context, probe.snapshot, probe.prefix, enc(before) - 1);
+  const { note } = stateOf(probe).context_notes.names_only;
+  const target = await reviewed(root, 'main'), expected = afterCuts(before, order, 3, note), cap = enc(expected);
+  assert.ok(enc(afterCuts(before, order, 2, note)) > cap, 'all three cuts are needed');
+  await assert.doesNotReject(fitInterfaceContext(target.context, target.snapshot, target.prefix, cap));
+  assert.deepEqual(stateOf(target), expected);
+  assert.deepEqual(target.context.provenance.summarized.map(r => r.reason), [REASON, REASON, REASON]);
+  assert.equal(target.context.provenance.source_bytes, supplied(stateOf(target)));
 });

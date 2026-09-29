@@ -195,3 +195,59 @@ test('apostrophe parameter types and body punctuation cannot crash manifest pref
   assert.equal(result.report.structural_blockers, 0);
   assert.equal(result.report.summary.supporting_role_impossible, 0);
 });
+
+// The names-only tier through the whole preparation, at the real 60,000-byte cap.
+const helperName = i => `h${String(i).padStart(3, '0')}`;
+const chain = count => Array.from({ length: count }, (_, i) => `${helperName(i)}(`).join('') + 'x' + ')'.repeat(count);
+const crowd = count => 'import Base\n' + Array.from({ length: count }, (_, i) => `# ${'c'.repeat(150 + (i % 7) * 10)}\n`
+  + `def ${helperName(i)}(a: U32, b: U32, c: U32, d: U32) -> U32: (a + b + c + d : U32)\n`).join('')
+  + `def main(x: U32) -> U32: ${chain(count)}\n`;
+test('encoded-state budget past the interface tier keeps names, fits the real cap and leaves task and primary intact', async t => {
+  const root = await fixture(t, { 'main.bend': crowd(190) });
+  const snapshot = await createBendSourceSnapshot(root, { contextPolicy: 'interfaces-v1' });
+  const task = 'a'.repeat(16000);
+  const [c] = await prepareStyleTargets(['main.bend::main'], task, config, root, snapshot);
+  const cut = c.state.calls.filter(item => item.representation === 'names-only');
+  assert.ok(Buffer.byteLength(JSON.stringify(c.state)) <= 60000);
+  assert.ok(cut.length > 0 && cut.length < c.state.calls.length, `${cut.length} of ${c.state.calls.length} collaborators are names`);
+  assert.equal(c.state.cohort, task);
+  assert.equal(c.state.source, `def main(x: U32) -> U32: ${chain(190)}`);
+  assert.equal(c.context.truncated, false);
+  assert.equal(c.state.context_notes.names_only.count, cut.length);
+  assert.equal(c.context.summarized.filter(r => r.reason === 'context-state-names-only').length, cut.length);
+  assert.ok(c.context.summarized.some(r => r.reason === 'context-state-interface'), 'the interface tier ran first');
+  assert.ok(c.state.calls.some(item => item.representation === 'interface'), 'entries the cap did not need stay interfaces');
+  for (const item of cut) assert.deepEqual(Object.keys(item), ['path', 'name', 'representation']);
+  const supplied = ['calls', 'called_by', 'laws', 'datatypes'].reduce((n, k) => n + c.state[k].reduce((s, d) => s + Buffer.byteLength(d.source ?? ''), 0), Buffer.byteLength(c.state.source));
+  assert.equal(c.context.source_bytes, supplied);
+  assert.equal(c.context.files.length, 1);
+});
+test('a primary source over the state cap still fails with the names-only error', async t => {
+  const root = await fixture(t, { 'main.bend': `import Base\ndef help(x: U32) -> U32: x\n# ${'x'.repeat(61000)}\ndef main(x: U32) -> U32: help(x)\n` });
+  const snapshot = await createBendSourceSnapshot(root, { contextPolicy: 'interfaces-v1' });
+  await assert.rejects(prepareStyleTargets(['main.bend::main'], 'the task', config, root, snapshot),
+    /Style context too large after names-only summaries: \d+ of 60000 bytes remain: primary source 610\d\d, task 10,/);
+});
+test('states that fit are byte-identical to the hashes taken before the names-only tier existed', async t => {
+  const large = '# ' + 'x'.repeat(22000) + '\n';
+  const fixtures = {
+    fits: { 'main.bend': 'import Base\nimport ./lib.bend as L\ndef target(x: U32) -> U32: x\n'
+      + Array.from({ length: 5 }, (_, i) => `def use${i}(x: U32, y: L.Box) -> U32: target(x)\n`).join(''),
+      'lib.bend': 'import Base\ntype Box is Data:\n  Box{}\ndef unused(x: U32) -> U32: (x + 31337 : U32)\n', unit: 'target', task: null },
+    interfaces: { 'main.bend': 'import Base\n' + large + 'def first(x: U32) -> U32: x\n' + large
+      + 'def second(x: U32) -> U32: x\ndef main(x: U32) -> U32: first(second(x))\n', unit: 'main', task: 'a'.repeat(16000) },
+  };
+  const actual = {};
+  for (const [name, { unit, task, ...files }] of Object.entries(fixtures)) {
+    const root = await fixture(t, files);
+    const snapshot = await createBendSourceSnapshot(root, { contextPolicy: 'interfaces-v1' });
+    const [c] = await prepareStyleTargets([`main.bend::${unit}`], task, config, root, snapshot);
+    assert.ok(!('names_only' in c.state.context_notes), `${name}: no marker when nothing is cut`);
+    assert.ok(!c.context.summarized.some(r => r.reason === 'context-state-names-only'));
+    assert.equal(c.context.summarized.some(r => r.reason === 'context-state-interface'), name === 'interfaces', `${name}: the interface tier ran only where needed`);
+    actual[name] = c.state_sha256;
+  }
+  // Both hashes were measured with the tool as it was before the names-only tier.
+  assert.deepEqual(actual, { fits: '76a416f00784e6e3660112c2cf9e1b20c0314ea2f1816fb95e83bbb130855c10',
+    interfaces: 'a10406e5da001d0df35a81eea7b7d76b5984d243d3b42314af73fd757167092f' });
+});

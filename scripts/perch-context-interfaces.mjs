@@ -154,7 +154,27 @@ export function buildInterface(path, file, names = null) {
       .sort((a, b) => a.line - b.line).map(d => declarationInterface(file.source, d)), ''].join('\n');
 }
 
-/** Preserve the source cap and the independent encoded-state cap (task included). */
+const largestSavingFirst = (a, b) => b.saving - a.saving
+  || a.item.path.localeCompare(b.item.path) || a.item.name.localeCompare(b.item.name);
+const encoded = value => Buffer.byteLength(JSON.stringify(value));
+const NAMES_ONLY = 'names-only', NAMES_ONLY_REASON = 'context-state-names-only';
+const NAMES_ONLY_NOTE = 'Cut to qualified names by the encoded-state cap: an entry marked names-only shows no signature and no body. Do not infer its type, contract or behavior from the name.';
+
+/** Where the bytes of a state that cannot fit are, once every collaborator is as short as it gets. */
+function tooLarge(prefix, { seen }, maxBytes) {
+  const state = encoded({ ...prefix, ...seen }), list = [...seen.calls, ...seen.called_by];
+  const primary = encoded(prefix.source), task = encoded(prefix.cohort), names = encoded(seen.calls) + encoded(seen.called_by);
+  return `Style context too large after names-only summaries: ${state} of ${maxBytes} bytes remain: primary source ${primary}, task ${task}, `
+    + `collaborator list ${names} (${list.filter(item => item.representation === NAMES_ONLY).length} of ${list.length} entries names-only), `
+    + `retained datatypes, laws and notes ${state - primary - task - names}: ${prefix.path}::${prefix.name}`;
+}
+
+/**
+ * Preserve the source cap and the independent encoded-state cap (task included). Two tiers,
+ * each taking the largest saving first, then path, then name: a full body becomes an interface
+ * summary, and an interface summary becomes its qualified name. The primary source, the task,
+ * datatypes and laws are never shortened.
+ */
 export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 60000) {
   const size = () => Buffer.byteLength(JSON.stringify({ ...prefix, ...context.seen }));
   if (size() <= maxBytes) return;
@@ -165,7 +185,7 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
     const source = declarationInterface(file.source, decl);
     options.push({ item, source, saving: Buffer.byteLength(item.source) - Buffer.byteLength(source) });
   }
-  options.sort((a, b) => b.saving - a.saving || a.item.path.localeCompare(b.item.path) || a.item.name.localeCompare(b.item.name));
+  options.sort(largestSavingFirst);
   for (const { item, source, saving } of options) {
     if (saving <= 0) continue;
     item.source = source; item.representation = 'interface';
@@ -174,8 +194,32 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
     context.provenance.summarized.push({ path: item.path, name: item.name, reason: 'context-state-interface' });
     if (size() <= maxBytes) return;
   }
-  // No selected source is shortened to satisfy an encoded-state bound.
-  throw new Error(`Style context too large after interface summaries: ${prefix.path}::${prefix.name}`);
+  // The interface tier is exhausted. A collaborator keeps only its path and qualified name, and so does
+  // a body the interface tier kept because its interface was no smaller. Its one summary row changes
+  // reason (a kept body gets its row now); the saving is the exact drop in encoded bytes.
+  const { summarized } = context.provenance, notes = context.seen.context_notes;
+  const rowOf = item => summarized.find(row => row.path === item.path && row.name === item.name);
+  const cuts = [];
+  for (const item of [...context.seen.calls, ...context.seen.called_by]) {
+    if (item.representation === NAMES_ONLY) continue;
+    const cut = { path: item.path, name: item.name, representation: NAMES_ONLY };
+    const row = { path: item.path, name: item.name, reason: NAMES_ONLY_REASON }, old = rowOf(item);
+    const saving = encoded(item) - encoded(cut) - (old ? encoded(row) - encoded(old) : encoded(row) + 1);
+    if (saving > 0) cuts.push({ item, saving });
+  }
+  cuts.sort(largestSavingFirst);
+  for (const { item } of cuts) {
+    context.provenance.source_bytes -= Buffer.byteLength(item.source);
+    notes.source_bytes = context.provenance.source_bytes;
+    for (const key of ['line', 'end_line', 'source']) delete item[key];
+    item.representation = NAMES_ONLY;
+    const row = rowOf(item);
+    if (row) row.reason = NAMES_ONLY_REASON; else summarized.push({ path: item.path, name: item.name, reason: NAMES_ONLY_REASON });
+    notes.names_only = { count: (notes.names_only?.count ?? 0) + 1, note: NAMES_ONLY_NOTE };
+    if (size() <= maxBytes) return;
+  }
+  // No primary source or task is shortened to satisfy an encoded-state bound.
+  throw new Error(tooLarge(prefix, context, maxBytes));
 }
 
 async function dependency(snapshot, from, module) {
