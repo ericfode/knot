@@ -23,6 +23,7 @@ import json
 import os
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+import random
 import re
 import shlex
 import subprocess
@@ -1090,9 +1091,11 @@ def word(data: bytes, index: int) -> int:
     return int.from_bytes(data[4 * index:4 * index + 4], 'little')
 
 
-def rejected(data: bytes, reg: dict, digest: bytes, c=None) -> str | None:
+def rejected(data: bytes, reg: dict, digest: bytes, c=None, clauses=False) -> str | None:
     """None when the image is admitted; otherwise the refusal, as the VM loader must classify it:
-    a resource limit of section 4 is Exhausted kind 2, any other refusal HostFailure image."""
+    a resource limit of section 4 is Exhausted kind 2, any other refusal HostFailure image. Canonicality is decided by
+    encoding the decoded plan again, or, with `clauses`, by the clauses of `canonical_violations`, as a loader
+    that has no encoder decides it."""
     c = c or codec
     try:
         plan = c.decode(data, digest)
@@ -1103,7 +1106,13 @@ def rejected(data: bytes, reg: dict, digest: bytes, c=None) -> str | None:
     problems = c.validate(plan, reg)
     if problems:
         return 'HostFailure image: validator: ' + problems[0]
-    if c.encode(plan, digest) != data:
+    if clauses:
+        return 'HostFailure image: noncanonical' if canonical_violations(data) else None
+    try:
+        again = c.encode(plan, digest)
+    except ValueError:
+        again = None        # a plan that the encoder refuses (a name with a surrogate) is the decoding of no image
+    if again != data:
         return 'HostFailure image: noncanonical'
     return None
 
@@ -1156,7 +1165,7 @@ def byte_controls(images: dict, digest: bytes) -> list:
         ('oversize-and-misaligned', second + oversize + b'\0', 'image-size'),
     ]
     return [(label, data, 'HostFailure image: ' + reason, '') for label, data, reason in out] + \
-        [(label, data, 'Exhausted 2 ' + cause, '') for label, data, cause in exhausted]
+        [(label, data, 'Exhausted 2 ' + cause, '') for label, data, cause in exhausted] + structure_controls(images)
 
 
 def limit_controls(plans: dict, images: dict, digest: bytes) -> list:
@@ -1243,6 +1252,441 @@ def children(w: list, at: int) -> list:
     return []
 
 
+# ------------------------------------------------------------------ record layout
+
+class Ref(int):
+    """A node index standing where the image holds a node record's offset."""
+
+
+class Layout:
+    """A valid image cut into the payload words of its records (the words after each record's length word), with child
+    offsets and function roots as `Ref`s. A control changes one record and lays the image out again, every length,
+    section offset and node offset recomputed, so that the image breaks exactly one rule."""
+
+    def __init__(self, image: bytes):
+        w = [word(image, i) for i in range(len(image) // 4)]
+        self.header, self.sections, at = w[:32], [], 32
+        for _ in range(6):
+            count, at, records = w[at], at + 1, []
+            for _ in range(count):
+                records.append(w[at + 1:at + w[at]])
+                at += w[at]
+            self.sections.append(records)
+        require(at == len(w), 'a valid image ends with its names')
+        starts, cursor = [], w[9] + 1
+        for _ in range(w[w[9]]):
+            starts.append(cursor)
+            cursor += w[cursor]
+        index = {start: i for i, start in enumerate(starts)}
+        for i, start in enumerate(starts):
+            for p in children(w, start):
+                if w[p] != codec.NONE:
+                    self.sections[4][i][p - start - 1] = Ref(index[w[p]])
+        for f in self.functions:
+            f[4] = Ref(index[f[4]])
+
+    types = property(lambda self: self.sections[0])
+    constructors = property(lambda self: self.sections[1])
+    functions = property(lambda self: self.sections[2])
+    constants = property(lambda self: self.sections[3])
+    nodes = property(lambda self: self.sections[4])
+    names = property(lambda self: self.sections[5])
+
+    def insert_node(self, index: int, payload: list):
+        """A node record before position `index`; every reference at or beyond it moves up one."""
+        for record in self.nodes:
+            record[:] = [Ref(x + 1) if isinstance(x, Ref) and x >= index else x for x in record]
+        for f in self.functions:
+            if f[4] >= index:
+                f[4] = Ref(f[4] + 1)
+        self.nodes.insert(index, payload)
+
+    def dump(self) -> bytes:
+        offsets, at = [], 32
+        for records in self.sections:
+            offsets.append(at)
+            at += 1 + sum(len(r) + 1 for r in records)
+        place, cursor = [], offsets[4] + 1
+        for r in self.nodes:
+            place.append(cursor)
+            cursor += len(r) + 1
+        out = [*self.header[:2], at, *self.header[3:5], *offsets, *self.header[11:]]
+        for records in self.sections:
+            out.append(len(records))
+            for r in records:
+                out += [len(r) + 1, *(place[x] if isinstance(x, Ref) else x for x in r)]
+        return b''.join(v.to_bytes(4, 'little') for v in out)
+
+
+def packed(text: bytes) -> list:
+    """The words of a name record's bytes, the last padded with zeros."""
+    return [int.from_bytes(text[i:i + 4].ljust(4, b'\0'), 'little') for i in range(0, len(text), 4)]
+
+
+def structure_controls(images: dict) -> list:
+    """(label, bytes, frozen refusal, '') for a golden's image with one record changed so that it breaks one clause of
+    SPEC section 2 or 4 (round 13, review findings 1 to 3). Every control changes one record of a valid image and
+    breaks no second clause, so its refusal is the first that any loader gives. Where a loader that omits the clause
+    misses the image (a name of no bytes), the image is otherwise valid and canonical; the canonicality controls
+    break one clause of section 4 step 5 each (`canonical_violations`)."""
+    second = images['second']
+
+    def put(section, record, index, value):
+        return lambda l: l.sections[section][record].__setitem__(index, value)
+
+    def grow(section, record, *words):
+        return lambda l: l.sections[section][record].extend(words)
+
+    def replace(section, record, payload):
+        return lambda l: l.sections[section].__setitem__(record, payload)
+
+    def spell(record, text: bytes):
+        return replace(5, record, [len(text), *packed(text)])
+
+    def word_of(opcode, index, at):
+        return lambda l: l.nodes[next(i for i, n in enumerate(l.nodes) if n[0] == opcode)].__setitem__(index, at)
+
+    def extend_first(opcode, *words):
+        return lambda l: l.nodes[next(i for i, n in enumerate(l.nodes) if n[0] == opcode)].extend(words)
+
+    def orphan(l):                                             # a Value that nothing holds
+        l.nodes.append([3, 0, 0])
+
+    def standalone(l):                                         # a Default that a function's root names
+        l.nodes.append([2, 0, Ref(0)])
+        l.functions[0][4] = Ref(1)
+
+    def value_named_by(word_at):
+        """`case-on`'s Case, with a Value node before it that its default word (-1) or a row names instead of an arm"""
+        def change(l):
+            l.insert_node(0, [3, 0, 1])
+            l.nodes[5][word_at] = Ref(0)
+        return change
+
+    def constant_twice(l):                                     # string-eq's constant, and a copy that the second literal names
+        l.constants.append(list(l.constants[0]))
+        l.nodes[4][2] = 1
+
+    def constants_swapped(l):                                  # char-code's two constants in the other order
+        l.constants[0], l.constants[1] = l.constants[1], l.constants[0]
+        l.nodes[5][2], l.nodes[7][2] = 1, 0
+
+    def on_off_swapped(l):                                     # `Off` and `On` swapped in the table, every name word re-pointed
+        l.names[2], l.names[3] = l.names[3], l.names[2]
+        moved = {2: 3, 3: 2}
+        for t in l.types:
+            t[1] = moved.get(t[1], t[1]) if t[0] in (0, 3) else t[1]
+        for c in l.constructors:
+            c[2] = moved.get(c[2], c[2])
+        for f in l.functions:
+            f[0] = moved.get(f[0], f[0])
+
+    def flag_constructors_swapped(l):                          # Flag's two constructor records, and their names with them
+        c = l.constructors
+        c[0], c[1] = c[1], c[0]
+        l.names[2], l.names[3] = l.names[3], l.names[2]
+        c[0][2], c[1][2] = 2, 3
+
+    def pair_operands_swapped(l):                              # the two Values that Pair takes, emitted in the other order
+        l.nodes[3], l.nodes[4] = l.nodes[4], l.nodes[3]
+        l.nodes[5][4], l.nodes[5][5] = Ref(4), Ref(3)
+
+    def sites(inner, outer):
+        return lambda l: (l.nodes[1].__setitem__(2, inner), l.nodes[2].__setitem__(2, outer))
+
+    utf8 = lambda label, text: (label, 'second', spell(0, text), 'name utf-8')      # noqa: E731  (Flag, at its own length)
+    rows = [
+        # names (section 5)
+        utf8('name-utf8-overlong-2', b'\xC0\x80ag'),
+        utf8('name-utf8-overlong-3', b'\xE0\x80\x80g'),
+        utf8('name-utf8-overlong-4', b'\xF0\x80\x80\x80'),
+        utf8('name-utf8-surrogate', b'\xED\xA0\x80g'),
+        utf8('name-utf8-beyond-unicode', b'\xF4\x90\x80\x80'),
+        utf8('name-utf8-lead-f5', b'\xF5\x80\x80\x80'),
+        utf8('name-utf8-truncated-inside', b'Fl\xE2\x82'),
+        utf8('name-utf8-truncated-before-ascii', b'\xE2\x82ag'),
+        utf8('name-utf8-stray-continuation', b'\x80lag'),
+        ('name-nul-middle', 'second', spell(2, b'O\0f'), 'name padding'),
+        ('name-padding-first', 'second', put(5, 3, 1, int.from_bytes(b'On\x01\0', 'little')), 'name padding'),
+        ('name-padding-both', 'second', put(5, 3, 1, int.from_bytes(b'On\x01\x01', 'little')), 'name padding'),
+        ('name-length-extra-word', 'second', grow(5, 3, 0), 'name length'),
+        ('name-length-missing-word', 'second', lambda l: l.names[4].pop(), 'name length'),
+        ('name-empty', 'second', replace(5, 0, [0]), 'name length'),
+        ('name-duplicate', 'second', lambda l: l.names.append(list(l.names[0])), 'duplicate name'),
+        ('name-index-beyond', 'second', put(1, 0, 2, 6), 'name index'),
+        # types (section 0)
+        ('type-record-long', 'second', grow(0, 0, 0), 'type record'),
+        ('type-kind-unknown', 'second', put(0, 0, 0, 4), 'type record'),
+        ('type-record-length-one', 'second', replace(0, 0, []), 'section 0 record length'),
+        ('opaque-first-word', 'default-hit', put(0, 0, 2, 1), 'opaque type'),
+        ('opaque-second-word', 'default-hit', put(0, 0, 3, 1), 'opaque type'),
+        ('arrow-named', 'closure-id', put(0, 1, 1, 0), 'arrow name'),
+        ('type-domain-beyond', 'closure-id', put(0, 1, 2, 2), 'type index'),
+        ('type-name-beyond', 'second', put(0, 0, 1, 6), 'name index'),
+        # constructors (section 1)
+        ('constructor-record-short', 'second', replace(1, 0, [0, 0, 2]), 'constructor record'),
+        ('constructor-field-count', 'second', put(1, 2, 3, 3), 'constructor record'),
+        ('constructor-type-beyond', 'second', put(1, 0, 0, 2), 'constructor record'),
+        ('constructor-tag-repeated', 'second', put(1, 1, 1, 0), 'constructor tag'),
+        ('constructor-tag-beyond', 'second', put(1, 1, 1, 2), 'constructor tag'),
+        ('constructor-of-arrow', 'closure-id', put(1, 0, 0, 1), 'constructor tag'),
+        ('constructor-field-type-beyond', 'construct', put(1, 2, 4, 5), 'type index'),
+        ('constructor-name-beyond', 'second', put(1, 0, 2, 7), 'name index'),
+        # constants (section 3)
+        ('constant-kind-unknown', 'default-hit', put(3, 0, 0, 4), 'constant record'),
+        ('constant-record-short', 'default-hit', replace(3, 0, [0]), 'constant record'),
+        ('constant-record-extra-word', 'default-hit', grow(3, 0, 0), 'constant record'),
+        ('constant-scalar-two-words', 'default-hit', replace(3, 0, [0, 2, 7, 8]), 'scalar constant width'),
+        ('constant-scalar-empty', 'default-hit', replace(3, 0, [0, 0]), 'scalar constant width'),
+        ('constant-string-missing-word', 'string-eq', lambda l: l.constants[0].pop(), 'constant record'),
+        ('constant-index-beyond', 'default-hit', put(4, 5, 2, 1), 'constant index'),
+        # nodes (section 4): a payload is opcode, type, operands
+        ('node-record-short', 'second', replace(4, 0, [5]), 'node record'),
+        ('node-record-length-one', 'second', replace(4, 0, []), 'section 4 record length'),
+        ('lit-extra-word', 'default-hit', grow(4, 5, 0), 'lit length'),
+        ('value-extra-word', 'second', grow(4, 3, 0), 'value length'),
+        ('ref-extra-word', 'second', grow(4, 0, 0), 'ref length'),
+        ('default-extra-word', 'default-hit', grow(4, 3, 0), 'default length'),
+        ('branch-extra-word', 'second', grow(4, 1, 0), 'branch length'),
+        ('let-extra-word', 'let', extend_first(7, 0), 'let length'),
+        ('con-count-word', 'second', put(4, 5, 3, 1), 'con length'),
+        ('call-count-word', 'second', put(4, 6, 3, 2), 'call length'),
+        ('prim-count-word', 'string-eq', put(4, 2, 3, 1), 'prim length'),
+        ('invoke-count-word', 'closure-id', put(4, 2, 3, 0), 'invoke length'),
+        ('foreign-count-word', 'foreign-print', word_of(12, 3, 0), 'foreign length'),
+        ('case-count-word', 'case-on', put(4, 4, 5, 3), 'case length'),
+        ('case-mode-unknown', 'case-on', put(4, 4, 4, 2), 'case length'),
+        ('closure-count-word', 'closure-id', put(4, 4, 5, 1), 'closure length'),
+        ('child-shared', 'second', put(4, 5, 5, Ref(3)), 'shared node'),
+        ('node-orphan', 'second', orphan, 'unreachable node'),
+        ('arm-standalone', 'value-on', standalone, 'standalone arm'),
+        ('case-key-row-mismatch', 'default-hit', put(4, 4, 6, 8), 'case key'),
+        ('case-default-not-default', 'case-on', value_named_by(-1), 'case arm kind'),
+        ('case-row-not-branch', 'case-on', value_named_by(7), 'case arm kind'),
+        # functions (section 2)
+        ('function-record-arity', 'second', put(2, 0, 2, 2), 'function record'),
+        ('function-record-short', 'second', replace(2, 0, [4, 0, 1, 3]), 'function record'),
+        ('function-root-not-node', 'second', put(2, 0, 4, 0), 'function root'),
+        ('function-root-owned', 'second', put(2, 1, 4, Ref(0)), 'function root'),
+        ('function-param-type-beyond', 'second', put(2, 0, 5, 5), 'type index'),
+        ('function-result-type-beyond', 'second', put(2, 0, 1, 5), 'type index'),
+        ('function-name-beyond', 'second', put(2, 0, 0, 9), 'name index'),
+        ('node-type-beyond', 'second', put(4, 0, 1, 9), 'type index'),
+        # canonicality (section 4 step 5): one clause of `canonical_violations` each
+        ('name-unused', 'second', lambda l: l.names.append([3, *packed(b'Zed')]), 'noncanonical'),
+        ('names-out-of-order', 'second', on_off_swapped, 'noncanonical'),
+        ('constants-duplicate', 'string-eq', constant_twice, 'noncanonical'),
+        ('constants-out-of-order', 'char-code', constants_swapped, 'noncanonical'),
+        ('constructors-out-of-order', 'second', flag_constructors_swapped, 'noncanonical'),
+        ('nodes-out-of-order', 'second', pair_operands_swapped, 'noncanonical'),
+        ('closure-site-first', 'closure-nested', sites(7, 1), 'noncanonical'),
+        ('closure-site-second', 'closure-nested', sites(0, 8), 'noncanonical'),
+        ('closure-sites-swapped', 'closure-nested', sites(1, 0), 'noncanonical'),
+        ('closure-sites-from-one', 'closure-nested', sites(1, 2), 'noncanonical'),
+        ('arm-type-branch', 'second', put(4, 1, 1, 1), 'noncanonical'),
+        ('arm-type-default', 'default-hit', put(4, 3, 1, 0), 'noncanonical'),
+    ]
+
+    def laid_out(image, change):
+        layout = Layout(images[image])
+        change(layout)
+        return layout.dump()
+    out = [(label, laid_out(image, change), 'HostFailure image: ' + reason, '') for label, image, change, reason in rows]
+    header = [(f'registry-digest-word-{i}', word_patch(second, i, word(second, i) ^ 1), 'registry digest') for i in range(25, 32)] + [
+        ('length-misaligned', second + b'\0', 'length'),
+        ('length-short-header', second[:4 * 31], 'length'),
+        ('main-index-beyond', word_patch(second, 4, 9), 'main index'),
+        ('main-index-none', word_patch(second, 4, codec.NONE), 'noncanonical')]
+    return out + [(label, data, 'HostFailure image: ' + reason, '') for label, data, reason in header]
+
+
+# ------------------------------------------------------------------ canonicality as clauses
+
+CANONICAL_CLAUSES = ('main-word', 'names-order', 'names-unused', 'constants-order', 'constants-unused',
+                     'constants-duplicate', 'constructors-order', 'nodes-order', 'closure-sites', 'arm-types')
+
+
+def canonical_violations(image: bytes) -> set:
+    """The clauses of section 4 step 5 that a decodable image breaks, read from its own words and never by encoding it
+    again: a loader that has no encoder checks these. Each clause is about words that `decode` drops or takes by
+    position (the header's main word, the order and the use of names and constants, the order of constructor and node
+    records, the sites of Closures, and the result type that a Branch or a Default repeats from its Case), so a
+    layout can differ from the canonical one and decode to the same plan."""
+    layout = Layout(image)
+    bad, none = set(), codec.NONE
+    spelled = [b''.join(x.to_bytes(4, 'little') for x in r[1:])[:r[0]] for r in layout.names]
+    mains = [i for i, f in enumerate(layout.functions) if spelled[f[0]] == b'main']
+    if layout.header[4] != (mains[0] if mains else none):
+        bad.add('main-word')
+
+    def first_used(indices):
+        seen = []
+        for i in indices:
+            if i != none and i not in seen:
+                seen.append(i)
+        return seen
+    # names in first-use order over type names, then constructor names, then function names, and every name used
+    used = first_used([t[1] for t in layout.types if t[0] in (0, 3)] + [c[2] for c in layout.constructors] +
+                      [f[0] for f in layout.functions])
+    if used != list(range(len(used))):
+        bad.add('names-order')
+    if len(used) < len(layout.names):
+        bad.add('names-unused')
+    # constants in first-use order over the node stream, each used once, none twice
+    literal = first_used([n[2] for n in layout.nodes if n[0] == 0])
+    if literal != list(range(len(literal))):
+        bad.add('constants-order')
+    if len(literal) < len(layout.constants):
+        bad.add('constants-unused')
+    if len({(c[0], *c[2:]) for c in layout.constants}) < len(layout.constants):
+        bad.add('constants-duplicate')
+    if [(c[0], c[1]) for c in layout.constructors] != sorted((c[0], c[1]) for c in layout.constructors):
+        bad.add('constructors-order')
+    # nodes in post-order over the function bodies in table order, children in the order of section 3
+    stream = []
+    for f in layout.functions:
+        work = [(f[4], False)]
+        while work:
+            at, done = work.pop()
+            if done:
+                stream.append(at)
+                continue
+            work += [(at, True)] + [(x, False) for x in reversed([x for x in layout.nodes[at][1:] if isinstance(x, Ref)])]
+    if stream != list(range(len(layout.nodes))):
+        bad.add('nodes-order')
+    sites = [n[2] for n in layout.nodes if n[0] == 10]
+    if sites != list(range(len(sites))):
+        bad.add('closure-sites')
+    for n in layout.nodes:
+        if n[0] == 8 and any(layout.nodes[x][1] != n[1] for x in n[1:] if isinstance(x, Ref)):
+            bad.add('arm-types')
+    return bad
+
+
+def piecewise_rejected(data: bytes, reg: dict, digest: bytes, c=None) -> str | None:
+    return rejected(data, reg, digest, c, clauses=True)
+
+
+def layout_variants(images: dict) -> list:
+    """(label, bytes) for seeded random layouts of goldens that decode to the goldens' own plans: names and constants
+    permuted, nodes emitted in another order that keeps children before parents, Closure sites renumbered, unused and
+    repeated names and constants added, a pair of constructor records swapped, and result types that a Case's arms do not
+    repeat. `piecewise_rejected` and `rejected` must agree on each: the clauses are the whole of step 5."""
+    rng, out = random.Random(13), []
+
+    def permuted(records, references):
+        order = list(range(len(records)))
+        rng.shuffle(order)
+        moved = [None] * len(records)
+        for old, new in enumerate(order):
+            moved[new] = records[old]
+        records[:] = moved
+        references(order)
+
+    def nodes_shuffled(l):
+        kids = [[x for x in r[1:] if isinstance(x, Ref)] for r in l.nodes]
+        done, order, todo = set(), [], list(range(len(kids)))
+        while todo:
+            i = rng.choice([j for j in todo if all(k in done for k in kids[j])])
+            done.add(i)
+            order.append(i)
+            todo.remove(i)
+        new = {old: at for at, old in enumerate(order)}
+        l.nodes[:] = [[Ref(new[x]) if isinstance(x, Ref) else x for x in l.nodes[old]] for old in order]
+        for f in l.functions:
+            f[4] = Ref(new[f[4]])
+
+    def names_shuffled(l):
+        def repoint(order):
+            for t in l.types:
+                t[1] = order[t[1]] if t[0] in (0, 3) else t[1]
+            for c in l.constructors:
+                c[2] = order[c[2]]
+            for f in l.functions:
+                f[0] = order[f[0]]
+        permuted(l.names, repoint)
+
+    def constants_shuffled(l):
+        def repoint(order):
+            for n in l.nodes:
+                if n[0] == 0:
+                    n[2] = order[n[2]]
+        permuted(l.constants, repoint)
+
+    def sites_renumbered(l):
+        closures = [n for n in l.nodes if n[0] == 10]
+        for n, site in zip(closures, rng.sample(range(12), len(closures))):
+            n[2] = site
+
+    def names_added(l):
+        l.names.append([3, *packed(bytes([rng.randrange(65, 90)]) * 3)])
+        if rng.random() < .3:
+            l.names.append(list(l.names[rng.randrange(len(l.names) - 1)]))
+
+    def constant_repeated(l):
+        if l.constants:
+            l.constants.append(list(l.constants[0]))
+
+    def constructors_swapped(l):
+        c = l.constructors
+        i = rng.randrange(len(c) - 1)
+        if c[i][0] == c[i + 1][0]:
+            c[i], c[i + 1] = c[i + 1], c[i]
+
+    def arms_retyped(l):
+        for n in l.nodes:
+            if n[0] == 8:
+                for x in n[1:]:
+                    if isinstance(x, Ref) and rng.random() < .5:
+                        l.nodes[x][1] = rng.choice([l.nodes[x][1], 0, 1])
+    edits = [nodes_shuffled, names_shuffled, constants_shuffled, sites_renumbered, names_added, constant_repeated,
+             constructors_swapped, arms_retyped]
+    for name in ('second', 'closure-nested', 'default-hit', 'string-eq', 'case-on', 'closure-captures', 'char-code', 'invoke-args'):
+        for n in range(60):
+            layout = Layout(images[name])
+            for edit in rng.sample(edits, rng.randrange(1, 4)):
+                edit(layout)
+            out.append((f'{name}#{n}', layout.dump()))
+    return out
+
+
+def perturbations(images: dict) -> list:
+    """(label, bytes) for every word of a few goldens set to its neighbours, 0, 1, 2 and none: most are refused for
+    another reason, and the rest are the images whose canonicality the clauses must decide as re-encoding does."""
+    out = []
+    for name in ('second', 'closure-nested', 'default-hit', 'string-eq', 'case-on', 'closure-captures', 'char-code'):
+        image = images[name]
+        for i in range(len(image) // 4):
+            here = word(image, i)
+            for value in sorted({(here + 1) & 0xFFFFFFFF, (here - 1) & 0xFFFFFFFF, 0, 1, 2, codec.NONE} - {here}):
+                out.append((f'{name}[{i}]={value}', word_patch(image, i, value)))
+    return out
+
+
+def canonical_differential(images: dict, controls: list, admitted: list, reg: dict, digest: bytes) -> dict:
+    """Section 4 step 5 as clauses, held against re-encoding. Every frozen control, admitted image, golden, layout
+    variant and perturbation is decided both ways and the two must give one answer, so the clauses are the whole of step 5
+    on this corpus; and each clause has a frozen control that breaks it alone, so that a loader without the clause
+    admits an image (`piecewise_rejected` without the clause, in the rule mutants)."""
+    corpus = [(label, data) for label, data, _, _ in controls] + admitted + [(f'golden {k}', d) for k, d in images.items()] + \
+        layout_variants(images) + perturbations(images)
+    decided = {'noncanonical': 0, 'admitted': 0}
+    for label, data in corpus:
+        reencoded, clauses = rejected(data, reg, digest), piecewise_rejected(data, reg, digest)
+        require(reencoded == clauses, f'{label}: encoding again gives {reencoded!r}, the clauses give {clauses!r}')
+        decided['noncanonical'] += reencoded == 'HostFailure image: noncanonical'
+        decided['admitted'] += reencoded is None
+    require(all(decided.values()), f'the corpus must hold canonical and noncanonical images: {decided}')
+    alone = {clause: [] for clause in CANONICAL_CLAUSES}
+    for label, data, reason, _ in controls:
+        if reason.endswith('noncanonical'):
+            broken = canonical_violations(data)
+            if len(broken) == 1:
+                alone[next(iter(broken))].append(label)
+    require(all(alone.values()), f'a canonicality clause with no control that breaks it alone: {alone}')
+    return {'corpus': len(corpus), **decided, 'controls_by_clause': alone}
+
+
 def plan_controls(plans: dict) -> list:
     """(label, plan, frozen validator message) for type-correct plan mutants; a message of
     None marks a plan the validator MUST admit."""
@@ -1267,7 +1711,9 @@ def plan_controls(plans: dict) -> list:
         return plan
 
     char_rows = plans['case-char']['functions'][0]['body'][5]
+    key_row, case_rows = plans['default-hit']['functions'][0]['body'][5][0], plans['case-on']['functions'][0]['body'][5]
     flag = {'kind': 'data', 'name': 'Flag', 'constructors': [{'name': 'Off', 'fields': []}, {'name': 'On', 'fields': []}]}
+    duo = {'kind': 'data', 'name': 'Duo', 'constructors': [{'name': 'Lo', 'fields': []}, {'name': 'Hi', 'fields': []}]}
 
     def flag_rows(depth):
         """A tag table over a Flag at type index 1 answering its own value."""
@@ -1421,6 +1867,32 @@ def plan_controls(plans: dict) -> list:
         ('u32-not-opaque', edit('u32-zero', ['representation', 'U32'], 0), 'U32 must be opaque'),
         ('file-not-opaque', edit('value-on', ['representation'], {'File': 0}), 'File must be opaque'),
         ('duplicate-function-name', edit('reference', ['functions', 1, 'name'], 'id'), 'duplicate function name'),
+        # Round 13, review finding 1: the conditions of section 4 step 4 that a one-condition mutant admitted. A keys row
+        # repeats (a first-match scan and a binary search would answer differently), a Construct names a nullary
+        # constructor (a Value's job, and the Object it allocates has no field for section 6 to inspect), an Invoke passes
+        # the other number of operands than its arrow kind takes (a live arrow one, an erased arrow none), a Case's slot
+        # and its scrutinee are two different concrete types, and a Closure captures a slot twice.
+        ('keys-repeated', edit('default-hit', [*body(0), 5], [key_row, json.loads(json.dumps(key_row))]),
+         'keys must increase strictly'),
+        ('construct-nullary', edit('value-on', body(0), ['con', 0, 1, []]), 'construct arity'),
+        ('invoke-live-without-argument', edit('closure-id', [*body(0), 3], []), 'invoke arity'),
+        ('invoke-live-two-arguments', edit('closure-id', [*body(0), 3], [['ref', 0, 1], ['ref', 0, 1]]), 'invoke arity'),
+        ('invoke-erased-with-argument', edit('book-drop', [*body(2), 3, 0, 2, 3], [['value', 8, 1]]), 'invoke arity'),
+        ('case-slot-type-mismatch', edits('case-on', (['types'], [flag, duo]), ([*body(0), 3], 1)), 'case scrutinee type'),
+        ('captures-repeated', edit('closure-captures', [*body(0), 3, 4], [0, 0]), 'captures must increase strictly'),
+        # Review finding 2: statements that no control pinned. Each control keeps every other rule, so a validator that
+        # omits the statement admits it: a Case tags a type that has no constructors, keys a Flag, or leaves a Flag's
+        # table short.
+        ('tag-case-on-opaque', edits('default-hit', ([*body(0), 4], 'tags'), ([*body(0), 5], []), ([*body(0), 6], None)),
+         'tag case on a non-data type'),
+        ('key-case-on-flag', edits('case-on', ([*body(0), 4], 'keys'), ([*body(0), 6], ['default', ['value', 0, 0]])),
+         'key case on a non-scalar type'),
+        ('tag-table-not-dense', edit('case-on', [*body(0), 5], case_rows[:1]), 'tag table is not dense'),
+        # Finding 3, the admit side: a name is any well-formed UTF-8 of section 2, at every length and at every edge of
+        # a length, so a loader that refuses non-ASCII names, or one length of them, is refused by an admitted control.
+        ('name-utf8-lengths', edit('value-on', ['types', 0, 'name'], '$\u00a2\u20ac\U00010348'), None),
+        ('name-utf8-edges', edit('value-on', ['types', 0, 'name'],
+                                 '\u0080\u07ff\u0800\ud7ff\ue000\uffff\U00010000\U0010ffff'), None),
     ]
 
 
@@ -2110,6 +2582,50 @@ def text_spelling(plans: dict, digest: bytes, c=None) -> str | None:
     return 'a text-spelled String constant was encoded'
 
 
+# A name's bytes read as Unicode's table 3-7 reads them, except for the rows that `skipped` leaves out: what a loader
+# does that checks the shape of UTF-8 and not all of its ranges. The mutants below splice it into serializer.py; it keeps
+# the bytes (Latin-1 text stands for them), so an image that it admits comes back from `encode` unchanged.
+LAX_UTF8 = """
+def lax_utf8(raw, skipped):
+    rows = [(0xC2, 0xDF, 1, 0x80, 0xBF), (0xE0, 0xE0, 2, 0xA0, 0xBF), (0xE1, 0xEC, 2, 0x80, 0xBF), (0xED, 0xED, 2, 0x80, 0x9F),
+            (0xEE, 0xEF, 2, 0x80, 0xBF), (0xF0, 0xF0, 3, 0x90, 0xBF), (0xF1, 0xF3, 3, 0x80, 0xBF), (0xF4, 0xF4, 3, 0x80, 0x8F)]
+    if 'overlong' in skipped:
+        rows += [(0xC0, 0xC1, 1, 0x80, 0xBF), (0xE0, 0xE0, 2, 0x80, 0x9F), (0xF0, 0xF0, 3, 0x80, 0x8F)]
+    if 'surrogate' in skipped:
+        rows += [(0xED, 0xED, 2, 0xA0, 0xBF)]
+    if 'range' in skipped:
+        rows += [(0xF4, 0xF4, 3, 0x90, 0xBF), (0xF5, 0xF7, 3, 0x80, 0xBF)]
+    if 'stray' in skipped:
+        rows += [(0x80, 0xBF, 0, 0, 0)]
+
+    def take(row, i):
+        for k in range(row[2]):
+            if i >= len(raw) or not 0x80 <= raw[i] <= 0xBF:
+                return -1
+            if k == 0 and not row[3] <= raw[i] <= row[4]:
+                return None
+            i += 1
+        return i
+    i = 0
+    while i < len(raw):
+        lead = raw[i]
+        if lead < 0x80:
+            i += 1
+            continue
+        if 'ascii' in skipped:
+            raise UnicodeDecodeError('utf-8', raw, i, i + 1, 'not ASCII')
+        rest = [take(r, i + 1) for r in rows if r[0] <= lead <= r[1]]
+        after = next((j for j in rest if j is not None and j >= 0), None)
+        if after is None and -1 in rest and 'truncated' in skipped:
+            after = i + 1
+            while after < len(raw) and 0x80 <= raw[after] <= 0xBF:
+                after += 1
+        if after is None:
+            raise UnicodeDecodeError('utf-8', raw, i, i + 1, 'malformed')
+        i = after
+    return raw.decode('latin-1')
+"""
+
 # Semantic mutants of the reference codec: (name, [(old, new), ...]). Each must change a
 # committed image, a frozen refusal, an admitted control or a frozen describe verdict; a crash
 # is never a kill.
@@ -2294,6 +2810,67 @@ CODEC_MUTANTS = [
     ('constructor-count-exclusive', [("            if r[3] > len(ctors) - expect:", "            if r[3] >= len(ctors) - expect:")]),
     ('constructor-grouping-unchecked', [("            if r[2] != expect:\n                raise Malformed('constructor grouping')\n", "")]),
     ('constructor-count-sum-unchecked', [("    if expect != len(ctors):\n        raise Malformed('constructor count')\n", "")]),
+    # Round 13, review findings 1 to 3: a mutant for each condition that no control pinned. Each omits one clause of the
+    # validator or the decoder, keeps what follows it (the `return` after a `fail` stays), and dies by an admission or a
+    # changed refusal of the frozen control that breaks that clause alone.
+    ('validator-keys-may-repeat', [("                if keys != sorted(set(keys)) or default is None:",
+                                    "                if keys != sorted(keys) or default is None:")]),
+    ('validator-construct-nullary-ok', [("                if not fields or len(fields) != len(node[3]):",
+                                         "                if len(fields) != len(node[3]):")]),
+    ('validator-invoke-count-any', [("            if arrow not in arrows or len(node[3]) != (1 if arrow == 'arrow' else 0):",
+                                     "            if arrow not in arrows:")]),
+    ('validator-invoke-live-count-unchecked', [("            if arrow not in arrows or len(node[3]) != (1 if arrow == 'arrow' else 0):",
+                                                "            if arrow not in arrows or (arrow == 'erased-arrow' and node[3]):")]),
+    ('validator-invoke-erased-count-unchecked', [("            if arrow not in arrows or len(node[3]) != (1 if arrow == 'arrow' else 0):",
+                                                  "            if arrow not in arrows or (arrow == 'arrow' and len(node[3]) != 1):")]),
+    ('validator-case-slot-any-type', [("            if scrutinee is None or scope[slot] not in (None, scrutinee):",
+                                       "            if scrutinee is None:")]),
+    ('validator-captures-may-repeat', [("            if captures != sorted(set(captures)) or any(c >= depth for c in captures):",
+                                        "            if captures != sorted(captures) or any(c >= depth for c in captures):")]),
+    ('validator-tag-case-on-any-type', [("                    fail(where, 'tag case on a non-data type')\n", "                    pass\n")]),
+    ('validator-key-case-on-any-type', [("                    fail(where, 'key case on a non-scalar type')\n", "                    pass\n")]),
+    ('validator-tag-table-any-length', [("                    fail(where, 'tag table is not dense')\n", "                    pass\n")]),
+    ('decoder-empty-name-ok', [("if size == 0 or len(r) != 1 + (size + 3) // 4:", "if len(r) != 1 + (size + 3) // 4:")]),
+    ('decoder-name-length-word-unchecked', [("if size == 0 or len(r) != 1 + (size + 3) // 4:", "if size == 0:")]),
+    ('decoder-duplicate-names-ok', [("    if len(set(names)) != len(names):\n        raise Malformed('duplicate name')\n", "")]),
+    ('decoder-shared-child-ok', [("        if offset in owner:\n            raise Malformed('shared node')\n", "")]),
+    ('decoder-unreachable-node-ok', [("    if len(owner) + len(roots) != len(node_records):\n        raise Malformed('unreachable node')\n", "")]),
+    ('decoder-opaque-payload-ok', [("            if r[2] or r[3]:\n                raise Malformed('opaque type')\n", "")]),
+    ('decoder-arrow-name-ok', [("            if r[1] != NONE:\n                raise Malformed('arrow name')\n", "")]),
+    ('decoder-scalar-width-any', [("if kind != 'String' and r[1] != 1:", "if kind != 'String' and r[1] < 1:")]),
+    ('decoder-record-length-one-ok', [("if at >= len(w) or w[at] < 2 or at + w[at] > len(w):", "if at >= len(w) or w[at] < 1 or at + w[at] > len(w):")]),
+    ('decoder-type-record-length-unchecked', [("if len(r) != 4 or r[0] >= len(TYPE_KINDS):", "if r[0] >= len(TYPE_KINDS):")]),
+    ('decoder-constructor-field-count-unchecked', [("if len(r) < 4 or len(r) != 4 + r[3] or r[0] >= len(plan_types):",
+                                                    "if len(r) < 4 or r[0] >= len(plan_types):")]),
+    ('decoder-constant-length-unchecked', [("if len(r) < 2 or r[0] >= len(CONSTANT_KINDS) or len(r) != 2 + r[1]:",
+                                            "if len(r) < 2 or r[0] >= len(CONSTANT_KINDS):")]),
+    ('decoder-function-arity-word-unchecked', [("if len(r) < 5 or len(r) != 5 + r[2]:", "if len(r) < 5:")]),
+    # The two decoders that would crash without their guard read the kind modulo the table instead: what a loader that
+    # forgets the bound does, and a refusal that changes (the re-encoded image holds the kind that the table names).
+    ('decoder-entry-kind-mod-2', [("if w[3] >= len(ENTRIES) or w[11] != 0:", "if w[11] != 0:"),
+                                  ("'entry': ENTRIES[w[3]]", "'entry': ENTRIES[w[3] % 2]")]),
+    ('decoder-constant-kind-mod-4', [("if len(r) < 2 or r[0] >= len(CONSTANT_KINDS) or len(r) != 2 + r[1]:", "if len(r) < 2 or len(r) != 2 + r[1]:"),
+                                     ("kind = CONSTANT_KINDS[r[0]]", "kind = CONSTANT_KINDS[r[0] % 4]")]),
+    # Section 2: the registry digest is eight words, and each is compared; a name's unused bytes are each zero.
+    *[(f'decoder-digest-word-{i}-unchecked',
+       [("    if bytes(b for x in w[24:32] for b in x.to_bytes(4, 'little')) != digest:",
+         f"    if bytes(b for j, x in enumerate(w[24:32]) if j != {i - 24} for b in x.to_bytes(4, 'little')) != "
+         f"b''.join(digest[4 * j:4 * j + 4] for j in range(8) if j != {i - 24}):")]) for i in range(24, 32)],
+    *[(f'decoder-name-padding-byte-{k}-unchecked',
+       [("if any(raw[size:]) or 0 in raw[:size]:",
+         f"if any(b for j, b in enumerate(raw[size:]) if j != {k}) or 0 in raw[:size]:")]) for k in (0, 1)],
+    ('decoder-name-padding-last-byte-only', [("if any(raw[size:]) or 0 in raw[:size]:", "if raw[size:][-1:].strip(b'\\0') or 0 in raw[:size]:")]),
+    # Section 2: a name is well-formed UTF-8 (Unicode, table 3-7). A loader that reads names as opaque bytes after a check
+    # of some part of that table (`lax_utf8`, which skips the rows named) admits the malformed forms that part misses,
+    # and the image comes back unchanged, so each admission is a change of the frozen refusal.
+    *[(f'decoder-name-utf8-{label}',
+       [("def decode(data: bytes, digest: bytes) -> dict:\n", LAX_UTF8 + "\ndef decode(data: bytes, digest: bytes) -> dict:\n"),
+        ("            names.append(raw[:size].decode('utf-8'))\n", f"            names.append(lax_utf8(raw[:size], {skipped!r}))\n"),
+        ("        return names.setdefault(text.encode('utf-8'), len(names))", "        return names.setdefault(text.encode('latin-1'), len(names))")])
+      for label, skipped in (('overlong-ok', ('overlong',)), ('surrogates-ok', ('surrogate',)), ('beyond-unicode-ok', ('range',)),
+                             ('truncated-ok', ('truncated',)), ('stray-continuation-ok', ('stray',)),
+                             ('structure-only', ('overlong', 'surrogate', 'range')), ('ascii-only', ('ascii',)))],
+    ('decoder-name-utf8-surrogatepass', [("raw[:size].decode('utf-8')", "raw[:size].decode('utf-8', 'surrogatepass')")]),
 ]
 
 
@@ -2303,75 +2880,88 @@ def invocation_verdicts(invoking: list, c=None) -> dict:
     return {label: c.invocation(plan, words) for label, plan, words in invoking}
 
 
+def codec_kill(mutant, plans, images, controls, admitted, describing, reg, digest, invoking, arguing):
+    """(what changed, where the mutant crashed): the first frozen image, refusal, verdict or control that the mutant changes,
+    or None; and every control on which it raised, which is no kill (section 11) but holds the clause it omits when the
+    control is the one that pins it."""
+    killed_by, crashed = None, []
+    for case, plan in plans.items():
+        try:
+            if mutant.encode(plan, digest) != images[case]:
+                killed_by = f'image {case} differs'
+                break
+            lost = round_trip(plan, images[case], digest, mutant)
+            if lost:
+                killed_by = f'image {case} {lost}'
+                break
+        except Exception:
+            crashed.append(case)
+    if not killed_by:
+        try:
+            killed_by = text_spelling(plans, digest, mutant)
+        except Exception:
+            pass
+    for label, data, reason, message in [] if killed_by else controls:
+        try:
+            got = rejected(data, reg, digest, mutant)
+        except Exception:
+            crashed.append(label)
+            continue
+        if got is None or not got.startswith(reason) or message not in got:
+            killed_by = f'control {label}: {got}'
+            break
+    for label, data in [] if killed_by else admitted:
+        try:
+            got = rejected(data, reg, digest, mutant)
+        except Exception:
+            crashed.append(label)
+            continue
+        if got is not None:
+            killed_by = f'admitted control {label}: {got}'
+            break
+    if not killed_by:
+        try:
+            verdicts = describe_verdicts(describing, mutant)
+        except Exception:
+            verdicts = None
+        changed = [label for label, _, _, verdict in describing if verdicts and verdicts[label] != verdict]
+        if changed:
+            killed_by = f'describe control {changed[0]}: {verdicts[changed[0]]}'
+    if not killed_by:
+        frozen = invocation_verdicts(invoking)
+        try:
+            verdicts = invocation_verdicts(invoking, mutant)
+        except Exception:
+            verdicts = frozen
+        changed = [label for label in frozen if verdicts[label] != frozen[label]]
+        if changed:
+            killed_by = f'invocation {changed[0]}: {verdicts[changed[0]]}'
+    for label, data, argv, verdict in [] if killed_by else arguing:
+        try:
+            got = argument_verdict(data, argv, reg, digest, mutant)
+        except Exception:
+            continue
+        if got != verdict:
+            killed_by = f'argument control {label}: {got}'
+            break
+    return killed_by, crashed
+
+
+def edited_codec(name, edits, source):
+    text = source
+    for old, new in edits:
+        require(text.count(old) == 1, f'codec mutant {name} is not uniquely located')
+        text = text.replace(old, new)
+    return load_codec(text)
+
+
 def codec_mutants(plans, images, controls, admitted, describing, reg, digest, invoking, arguing) -> list:
     """`plans` and `images` include the code-list controls; a decode that differs from its
     plan kills as surely as an encode that differs from its image."""
-    source = CODEC.read_text()
-    results = []
+    source, results = CODEC.read_text(), []
     for name, edits in CODEC_MUTANTS:
-        text = source
-        for old, new in edits:
-            require(text.count(old) == 1, f'codec mutant {name} is not uniquely located')
-            text = text.replace(old, new)
-        mutant = load_codec(text)
-        killed_by = None
-        for case, plan in plans.items():
-            try:
-                if mutant.encode(plan, digest) != images[case]:
-                    killed_by = f'image {case} differs'
-                    break
-                lost = round_trip(plan, images[case], digest, mutant)
-                if lost:
-                    killed_by = f'image {case} {lost}'
-                    break
-            except Exception:
-                continue
-        if not killed_by:
-            try:
-                killed_by = text_spelling(plans, digest, mutant)
-            except Exception:
-                pass
-        for label, data, reason, message in [] if killed_by else controls:
-            try:
-                got = rejected(data, reg, digest, mutant)
-            except Exception:
-                continue
-            if got is None or not got.startswith(reason) or message not in got:
-                killed_by = f'control {label}: {got}'
-                break
-        for label, data in [] if killed_by else admitted:
-            try:
-                got = rejected(data, reg, digest, mutant)
-            except Exception:
-                continue
-            if got is not None:
-                killed_by = f'admitted control {label}: {got}'
-                break
-        if not killed_by:
-            try:
-                verdicts = describe_verdicts(describing, mutant)
-            except Exception:
-                verdicts = None
-            changed = [label for label, _, _, verdict in describing if verdicts and verdicts[label] != verdict]
-            if changed:
-                killed_by = f'describe control {changed[0]}: {verdicts[changed[0]]}'
-        if not killed_by:
-            frozen = invocation_verdicts(invoking)
-            try:
-                verdicts = invocation_verdicts(invoking, mutant)
-            except Exception:
-                verdicts = frozen
-            changed = [label for label in frozen if verdicts[label] != frozen[label]]
-            if changed:
-                killed_by = f'invocation {changed[0]}: {verdicts[changed[0]]}'
-        for label, data, argv, verdict in [] if killed_by else arguing:
-            try:
-                got = argument_verdict(data, argv, reg, digest, mutant)
-            except Exception:
-                continue
-            if got != verdict:
-                killed_by = f'argument control {label}: {got}'
-                break
+        killed_by, _ = codec_kill(edited_codec(name, edits, source), plans, images, controls, admitted, describing, reg,
+                                  digest, invoking, arguing)
         results.append({'mutant': name, 'killed': killed_by is not None, 'by': killed_by})
     return results
 
@@ -2755,6 +3345,9 @@ RULE_MUTANTS = [
     ('witness-source-unchecked', [("    require(source_sha == entry['sha256'], f'witness {name}: source hash')\n", "")]),
     ('witness-lane-unchecked', [("        require(got[lane] == entry[lane], f'witness {name}: {lane} lane {got[lane]}, frozen {entry[lane]}')\n", "")]),
     ('witness-review-unchecked', [("        require(seen == entry['review'][lane], f\"witness {name}: literal review {entry['review'][lane]}, {lane} lane {seen}\")\n", "")]),
+    # Round 13, review finding 3: each clause of section 4 step 5 is held by a control that breaks it alone. A loader
+    # without one clause (`piecewise_rejected` with its `bad.add` removed) admits that control.
+    *[(f'canonicality-without-{clause}', [(f"        bad.add('{clause}')\n", "        pass\n")]) for clause in CANONICAL_CLAUSES],
 ]
 
 
@@ -2776,6 +3369,14 @@ def rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest, di
                 continue
             if got is None or not got.startswith(reason) or message not in got:
                 killed_by = f'control {label}: {got}'
+                break
+        for label, data, reason, message in [] if killed_by else controls:
+            try:
+                got = mutant.piecewise_rejected(data, reg, digest)
+            except Exception:
+                continue
+            if got is None or not got.startswith(reason) or message not in got:
+                killed_by = f'control {label}: {got} (by clauses)'
                 break
         for case_name, case in [] if killed_by else cases.items():
             try:
@@ -3118,6 +3719,7 @@ def main() -> int:
     for label, data, argv, verdict in arguing:
         got = argument_verdict(data, argv, reg, digest)
         require(got == verdict, f'argument control {label}: {got!r}, frozen {verdict!r}')
+    canonical = canonical_differential(images, controls, admitted, reg, digest)
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
                             controls, admitted, describing, reg, digest, invoking, arguing) + source_mutants(cases, built) + \
         evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans)) + \
@@ -3132,7 +3734,7 @@ def main() -> int:
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries, excused=excused, witnesses=witnessed,
                   admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts,
                   arguments={label: {'argv': ['IMAGE', *argv], 'verdict': verdict} for label, _, argv, verdict in arguing},
-                  mutants=mutants,
+                  mutants=mutants, canonical=canonical,
                   code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
