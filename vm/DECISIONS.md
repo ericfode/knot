@@ -1325,7 +1325,12 @@ shared harness, so merging this branch brings the 22 new controls.
 6. **Counts (§12, GATES.md).** 133 admitted run controls, 149 admitted controls in the gate line (7 code lists, 133 runs, 8 admitted plan controls, `arity-at-limit`);
    211 refusals (unchanged: 124 byte-level, 9 at the limits, 78 plan-level), 111 goldens, 15 seed witnesses; mutants 137 codec, 4 source, 119 evaluator and 23 rule
    (283). The two sentence shapes that vm-core reads (`N admitted **run controls**`, `freezes N refusals (...)`) are unchanged in form.
-7. **Not obligations, and later.** The release worklist and the tail entry's release-then-allocate are atomic in the model and required by §6.3 of any reclaiming VM
+7. **Witness states, by hand from §5 and §6 (not run on any machine: confirm them on the first run, D7).** At `nat-succ-range` the `NatRange` stop
+   happens with four frames on the region: Top(0) (3 words), the Gather of `Nat.is_gt` (5), the Call frame of `succ`'s entry (4; the entry is not a tail entry,
+   since a Gather lies between it and Top) and the Gather of the Succ with its operand (4), so `top` = F0 + 64 = 65,600 for this 696-byte image (F0 = 65,536).
+   A machine that pops the Gather first shows 65,584. At `inspect-halt-code` and `inspect-halt-message` Return to Top(3) refuses with the Top frame alone (`top` =
+   F0 + 12) and `act` the Activation of the closure whose body built the Halt, where a machine that drops `act` first shows 0.
+8. **Not obligations, and later.** The release worklist and the tail entry's release-then-allocate are atomic in the model and required by §6.3 of any reclaiming VM
    (vm-rc: size the release first, or undo it); the room for a foreign's Result and for a conversion's blocks before the host call is vm-io's, with CORE.md choice 11
    (D20's check, then the room, then the call).
 
