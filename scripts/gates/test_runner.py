@@ -290,7 +290,7 @@ class ExecutionTests(unittest.TestCase):
                               'fields-trust', 'structural-trust', 'owned-store', 'flat-store',
                               'recursion', 'fields-wasm', 'census', 'lint:verify', 'perch-context',
                               'bootstrap', 'classification', 'io-host', 'io-abi-2',
-                              'selfhost', 'vm-spec'}, set(names))
+                              'selfhost', 'vm-spec', 'image'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})

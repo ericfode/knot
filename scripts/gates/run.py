@@ -75,6 +75,7 @@ GATES = (
     Gate('selfhost', ('python3', 'tests/compiler-selfhost/check.py'),
          ('tests/compiler-selfhost/receipts/selfhost.json',)),
     Gate('vm-spec', ('python3', 'vm/check-spec.py'), ('vm/receipts/spec.json',)),
+    Gate('image', ('python3', '-B', 'tests/compiler-image/check.py'), ('tests/compiler-image/receipts/image.json',)),
 )
 
 
@@ -293,6 +294,12 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
             result[key] = record[key]
         result['review'] = record['review_counts']
+    if gate.name == 'image':
+        result.update(sources=record['sources']['frozen'], encoded=record['sources']['accepted'], goldens=len(record['goldens']),
+                      codec_images=record['codec']['images'], refusals=len(record['refusals']),
+                      default_modules=record['default_profile_modules'], profile_controls=len(record['profile']),
+                      synthetic_bytes=record['synthetic']['native']['bytes'], synthetic_writes=record['synthetic']['native']['writes'],
+                      exhaustive=len(record['exhaustive']), laws=record['proof']['laws'])
     if gate.name == 'io-abi-2':
         for key in ('read_observations', 'reference_observations', 'seed_observations', 'seed_exhausted',
                     'mutants_killed', 'case_mode'):

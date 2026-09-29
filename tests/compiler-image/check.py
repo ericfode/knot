@@ -54,11 +54,28 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def toolchain() -> dict:
+    """The seed's native lane probes $CC, then `clang`. On macOS /usr/bin/clang is an xcrun shim that
+    intermittently prints nothing under parallel load, which the seed reports as "found no clang" (see
+    docs/compiler-campaign/GATES.md). The runner passes the resolved compiler; a direct run does the same."""
+    env = {}
+    if sys.platform == 'darwin':
+        for key, argv in (('CC', ['xcrun', '--find', 'clang']), ('SDKROOT', ['xcrun', '--show-sdk-path'])):
+            if not os.environ.get(key):
+                found = subprocess.run(argv, capture_output=True, text=True, timeout=60)
+                if found.returncode == 0 and found.stdout.strip():
+                    env[key] = found.stdout.strip()
+    return env
+
+
+TOOLCHAIN = toolchain()
+
+
 def run(argv, timeout=60, env=None):
     argv = [str(x) for x in argv]
     try:
         p = subprocess.run(argv, cwd=ROOT, capture_output=True, timeout=timeout * TIMEOUT_SCALE,
-                           env={**os.environ, 'BEND_NO_TELEMETRY': '1', **(env or {})})
+                           env={**os.environ, 'BEND_NO_TELEMETRY': '1', **TOOLCHAIN, **(env or {})})
     except subprocess.TimeoutExpired:
         raise AssertionError(f'harness timeout: {argv[:3]}')
     return {'argv': argv, 'exit': p.returncode, 'stdout': p.stdout, 'stderr': p.stderr}
@@ -261,6 +278,14 @@ def profile_controls(tools, expectations, spec) -> list:
     default_usage = usage + 'expected ' + spec['profile']['default_arguments_unchanged']
     line = padded.read_text()[:65536].count('\n') + 1
     column = 65536 - (padded.read_text()[:65536].rfind('\n') + 1)
+    # The profile's own character maximum: a book of exactly 4,194,304 characters is admitted at that
+    # budget, and one character more is exhausted by the lexer at the last admitted offset.
+    ceiling = budgets['characters']
+    at_ceiling, over_ceiling = BUILD / 'ceiling.bend', BUILD / 'over-ceiling.bend'
+    at_ceiling.write_text(text + '#' + 'x' * (ceiling - len(text) - 2) + '\n')
+    over_ceiling.write_text(text + '#' + 'x' * (ceiling + 1 - len(text) - 2) + '\n')
+    cut = over_ceiling.read_text()[:ceiling]
+    ceiling_line, ceiling_column = cut.count('\n') + 1, ceiling - (cut.rfind('\n') + 1)
     controls = [
         # (label, argv, exit, stderr, stdout)
         ('default-profile-usage', [good], 5, default_usage, ''),
@@ -284,6 +309,9 @@ def profile_controls(tools, expectations, spec) -> list:
         ('default-profile-cap-override-unchanged', [padded, out, '65537', '512', '512', '4096', '65536'], 5, usage + 'budget-out-of-range', ''),
         ('characters-at-budget', [PROFILE, tiny, out, str(len(text)), '512', '512', '1048576', '16777216'], 0, '', f'Built\t{expectations["sources"][spec["character_cap"]["book"]]["image"]["bytes"]}'),
         ('characters-over-budget', [PROFILE, tiny, out, str(len(text) - 1), '512', '512', '1048576', '16777216'], 4, None, ''),
+        ('characters-at-maximum', [PROFILE, at_ceiling, out, str(ceiling), '512', '512', '1048576', '16777216'], 0, '', f'Built\t{expectations["sources"][spec["character_cap"]["book"]]["image"]["bytes"]}'),
+        ('characters-over-maximum-source', [PROFILE, over_ceiling, out, str(ceiling), '512', '512', '1048576', '16777216'], 4,
+         f'Exhausted\tlex\tbudget\t{ceiling}:{ceiling}:{ceiling_line}:{ceiling_column}', ''),
     ]
     results = []
     for label, argv, code, message, printed in controls:
@@ -345,7 +373,7 @@ def chunk_evidence(tools, spec) -> dict:
     require(sha(sample.read_bytes()) == spec['source_sha256'], 'synthetic source drifted')
     budgets = ['1048576', '4096', '4096', '1048576', '16777216']
     shim = BUILD / 'writes.dylib'
-    shim_run = run(['clang', '-dynamiclib', '-o', shim, HERE / 'writes.c'])
+    shim_run = run([TOOLCHAIN.get('CC') or os.environ.get('CC') or 'clang', '-dynamiclib', '-o', shim, HERE / 'writes.c'])
     require(shim_run['exit'] == 0, ('shim', shown(shim_run)))
     record = {}
     for lane, command, env in (('native', [tools['compile']], {'DYLD_INSERT_LIBRARIES': str(shim)}),
@@ -451,11 +479,7 @@ MUTANTS = [
 ]
 
 # The exhaustive match over C.Term: deleting any of its eight forms must fail the seed's own check.
-EXHAUSTIVE = [
-    ('term-value', 'case 1n+ +n Term{C.Value{token,+type_id,+tag}}: Done{one(Value{type_id,tag},depth)}\n'),
-    ('term-branch', 'case 1n+ +n Term{C.Branch{tag,fields,body}}: diagnostic(Lowered,"image-branch-node")\n'),
-    ('term-sequence', 'case 1n+ +n Term{C.Sequence{items}}: diagnostic(Lowered,"image-sequence-node")\n'),
-]
+FORMS = ('Value', 'Construct', 'Reference', 'Application', 'Let', 'Case', 'Branch', 'Sequence')
 
 
 def mutant_tree(name, replacements):
@@ -515,20 +539,26 @@ def mutant_case(expectations, crafted_images, item):
         require(result['exit'] is not None and result['exit'] >= 0, (name, witness, 'a mutant crashed instead of misbehaving', shown(result)))
         require(killed, (name, witness, 'mutant survived', shown(result)))
         outcomes.append({'witness': witness, 'exit': result['exit'], 'outcome': 'semantic-kill'})
-    return {'name': name, 'driver': driver, 'replacements': len(replacements), 'witnesses': outcomes}
+    # The laws are a second, independent way to kill it: does the seed's checker still accept the proofs?
+    proved = run([SEED, tree / 'src/image-PROOF.bend'], 300)
+    return {'name': name, 'driver': driver, 'replacements': len(replacements), 'witnesses': outcomes,
+            'laws_refuse': not (proved['exit'] == 0 and proved['stdout'].strip() == b'All terms check.')}
 
 
-def exhaustive_case(name, line):
+def exhaustive_case(form):
     text = (ROOT / 'src/image.bend').read_text()
-    require(text.count(line) == 1, (name, 'arm site'))
-    tree = BUILD / 'exhaustive' / name
+    marker = f'    case 1n+ +n Term{{C.{form}{{'
+    require(text.count(marker) == 1, (form, 'arm site'))
+    start = text.index(marker)
+    end = text.index('\n    case ', start + 1) + 1
+    tree = BUILD / 'exhaustive' / form
     (tree / 'src').mkdir(parents=True, exist_ok=True)
     for source in (ROOT / 'src').glob('*.bend'):
         shutil.copy2(source, tree / 'src' / source.name)
-    (tree / 'src/image.bend').write_text(text.replace(line, ''))
+    (tree / 'src/image.bend').write_text(text[:start] + text[end:])
     result = run([SEED, tree / 'src/image.bend', '--check-only'], 120)
-    require(result['exit'] != 0 and b'All terms check.' not in result['stdout'], (name, 'a missing arm must fail the check', shown(result)))
-    return name
+    require(result['exit'] != 0 and b'All terms check.' not in result['stdout'], (form, 'a missing arm must fail the check', shown(result)))
+    return form
 
 
 # ---------------------------------------------------------------- the proofs
@@ -598,7 +628,7 @@ def main():
         record['profile'] = profile_controls(tools, frozen, frozen)
         record['synthetic'] = chunk_evidence(tools, frozen['synthetic'])
         record['synthetic_plan'] = deep_reference(frozen)
-        record['exhaustive'] = pmap(lambda e: exhaustive_case(*e), EXHAUSTIVE)
+        record['exhaustive'] = pmap(exhaustive_case, FORMS)
         record['mutants'] = pmap(lambda m: mutant_case(frozen, crafted_images, m), MUTANTS)
         require(all(digest_inputs()[p] == h for p, h in record['inputs'].items()), 'inputs changed during the gate')
         record['status'] = 'passed'
@@ -613,7 +643,8 @@ def main():
           f"{len(record['refusals'])} decoder refusals, {record['default_profile_modules']} default module hashes unchanged, "
           f"{len(record['profile'])} profile controls, synthetic {record['synthetic']['native']['bytes']}-byte image in "
           f"{record['synthetic']['native']['writes']} chunked writes, {len(record['exhaustive'])} exhaustiveness controls, "
-          f"{len(record['mutants'])} mutants killed; {record['proof']['laws']} checked laws. {RECEIPT}")
+          f"{len(record['mutants'])} mutants killed ({sum(m['laws_refuse'] for m in record['mutants'])} also refused by the laws); "
+          f"{record['proof']['laws']} checked laws. {RECEIPT}")
 
 
 if __name__ == '__main__':

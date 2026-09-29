@@ -214,5 +214,64 @@
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+  },
+  "knot_image": {
+    "profile": "knot-image-1",
+    "contract": "vm/SPEC.md",
+    "selection": "Explicit only: compile-cli --profile=knot-image-1. The default profile and its arguments are unchanged; any other --profile= value is HostFailure arguments unknown-profile.",
+    "entry": "src/compile-cli.bend",
+    "encoder": "src/image.bend",
+    "arguments": "--profile=knot-image-1 source output [characters parser-depth checker-depth emitter-depth output-bytes]",
+    "defaults": {
+      "characters": 1048576,
+      "parser_depth": 512,
+      "checker_depth": 512,
+      "emitter_depth": 1048576,
+      "output_bytes": 16777216
+    },
+    "maximum_overrides": {
+      "characters": 4194304,
+      "parser_depth": 4096,
+      "checker_depth": 4096,
+      "emitter_depth": 1048576,
+      "output_bytes": 16777216
+    },
+    "budget_note": "Raised for this profile only. The default profile keeps 65536 characters and 1048576 output bytes. The characters default admits base.bend (67190 characters). emitter_depth bounds the encoder's recursion: one source nesting level costs several steps, so its default and maximum are the largest Nat the budget parser accepts.",
+    "image_limits": {
+      "words": 4194304,
+      "bytes": 16777216,
+      "records_per_table": 1048576,
+      "arity": 4096,
+      "slots": 65536
+    },
+    "limit_outcome": "Exhausted compile budget, exit 4, before the output is opened; a failing compile leaves an existing output untouched.",
+    "success_record": "Built<TAB>byte-count",
+    "output": "The image is written in chunks of at most 65536 bytes by File.write_bytes; no byte list of the whole image exists. The output is opened only after the whole image is laid out and fits.",
+    "base_sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+    "representation_types": "None are declared: this base accepts no Base import, so header words 12..23 are none.",
+    "encoded_forms": [
+      "Value",
+      "Construct",
+      "Reference",
+      "Application",
+      "Let",
+      "Case",
+      "Branch"
+    ],
+    "term_match": "src/image.bend::lower is an exhaustive match over the eight C.Term constructors with no wildcard; Branch outside a Case and Sequence are InternalFailure compile.",
+    "forms_after_the_merge_wave": [
+      "Literal, Intrinsic, Default and keys-mode Case (literals)",
+      "Closure and Invoke (closures)",
+      "Foreign (io)",
+      "positional none types (generics)",
+      "pattern-matrix lowering (nest)",
+      "representation words and the constants pool (modules and literals)"
+    ],
+    "codec": "image.decode inverts image.layout over all thirteen opcodes; image-cli decode|recode is the test driver.",
+    "gate": "python3 tests/compiler-image/check.py",
+    "evidence": "tests/compiler-image/receipts/image.json",
+    "frozen_expectations": "tests/compiler-image/expectations.json",
+    "proof_entry": "src/image-PROOF.bend",
+    "round_trip_law": "decode(encode(b)) = erase_tokens(b): fifteen checked laws on ground books quantified over every source position; the law over all books is an open obligation under D21."
   }
 }

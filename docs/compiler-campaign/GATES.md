@@ -91,6 +91,26 @@ rule mutants of `check-spec.py` itself; and the bench freeze: sources, guards, o
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.
 
+The image increment adds gate `image` (`python3 -B tests/compiler-image/check.py`), the
+[image encoder gate](../../tests/compiler-image/README.md) for `compile-cli --profile=knot-image-1`.
+
+- It builds `check-cli`, `compile-cli` and its own codec driver `image-cli` with the seed's native and
+  Bun lanes, recomputes the independent reference (`reference.py`) and requires `expectations.json`,
+  frozen before `src/image.bend` existed, unchanged.
+- It holds all 681 frozen sources to it: the 96 books that `check-cli` accepts encode to the reference
+  bytes on both lanes, validate and re-encode under `vm/serializer.py`, and the 585 others answer exactly as
+  `check-cli` does. The 19 golden sources the current core can express are byte-identical to their committed
+  images and run under `vm/evaluate.py` against the frozen VM expectations.
+- `image-cli` decodes each of 198 images (102 golden, 96 compiled) to the text of `serializer.decode` and
+  re-encodes it byte for byte, on both lanes; ten crafted images refuse with the frozen reason.
+- The profile's budgets, its 4,194,304-character maximum, its caps and the untouched output after each
+  failure have literal controls; the default profile's 25 module hashes are unchanged.
+- A 5.2 MB synthetic book is written in bounded chunks, observed from outside the program (a DYLD shim
+  for the native lane, a Bun preload for the JS lane); a larger one is `Exhausted` before the output opens.
+- Nineteen mutants of `src/image.bend` are killed by wrong observations, and deleting any of the eight
+  `C.Term` arms fails the seed's check. `src/image-PROOF.bend` (fifteen laws) must print `All terms check.`
+- It writes only `tests/compiler-image/receipts/image.json`.
+
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
 

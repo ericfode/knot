@@ -228,6 +228,74 @@ instruction whitelist, persistent-instance arena boundaries and four
 type-correct semantic mutants are independent evidence, not a general compiler
 correctness or memory-refinement theorem. See its [report and limits](../tests/compiler-fields-wasm/README.md).
 
+## Image profile: `knot-image-1`
+
+Under D14 the self-hosting route compiles a checked book to a serialized image that one VM runs. The
+image format is [vm/SPEC.md](../vm/SPEC.md) and its reference codec is `vm/serializer.py`; this profile
+is the Bend side. It is selected only by an explicit flag and changes nothing of the default profile:
+
+```sh
+compile-cli --profile=knot-image-1 source output [characters parser-depth checker-depth emitter-depth output-bytes]
+```
+
+Any other `--profile=` value is `HostFailure arguments unknown-profile`; the default arguments, budgets,
+usage text and the 25 frozen module hashes are as before. The profile has its own budgets, raised for it
+alone (`CONTRACT.json` `knot_image`): 1,048,576 characters by default and 4,194,304 at most (base.bend is
+67,190), parser and checker depth as before, an encoder depth of 1,048,576 and an output of at most
+16,777,216 bytes, which is exactly the VM's image ceiling of 4,194,304 words. The lexer's own offset
+cap moved from 65,536 to 4,194,304 with it; the default profile's fuel stops it at 65,536 first, so its
+behaviour is identical.
+
+**The encoder** is `src/image.bend`. `erase_tokens` projects a checked `C.Book` into a `Plan`, the image's
+own tree of records; `layout` writes a plan as words; `decode` inverts `layout`. Erasure drops tokens,
+every quantity-0 parameter, field, let, argument and binder, the level numbering, datatype kinds and the
+Type/Data split, and renumbers the surviving binders as frame slots: a function's live parameters are
+slots `0..arity-1`, a live `Let` and each live branch field take the next slot, and `slots` is the exact
+maximum depth. A Case becomes a dense table in tag order whatever the order of its arms; a constructor
+whose fields are all erased becomes a `Value`. A `Let` has its body's type and a Case the type of the
+position it fills. `lower`, the erasing match, has one arm for each of the eight `C.Term` constructors
+and no wildcard: a new constructor does not compile until it is encoded or refused, which is the D4
+guarantee that no unchecked term passes through. A `Sequence`, or a `Branch` outside a Case, is
+`InternalFailure compile`.
+
+The image is laid out as vm/SPEC.md sections 2 and 3 say: 32 header words, six sections, names interned in
+first-use order over types, constructors and functions, and post-order nodes with absolute word offsets.
+This base declares no representation type (it accepts no Base import), so header words 12..23 are `none`
+and the constants pool is empty. Nodes are placed twice, once to size the constants section that precedes
+them and once at their final offsets.
+
+**The output path** never holds the image as a byte list. Checking, erasure, layout and the size test
+finish first; only then is the output opened, and the image is written by `File.write_bytes` in chunks of
+at most 65,536 bytes. An image over 4,194,304 words, a table over 1,048,576 records, an arity over 4,096 or
+`slots` over 65,536 is `Exhausted compile budget` (exit 4) before any output exists, and a failing compile
+leaves an existing output untouched. `Built<TAB>bytes` is the success record.
+
+**Forms this base does not have.** The core of this base has no literal, intrinsic, default, closure,
+invoke or foreign term, no generic (positional `none`) type and no pattern matrix, so none is encoded and none
+is reachable. The codec already carries all thirteen opcodes, the constants pool and both Case modes, which
+the 102 golden images exercise, and `erase_tokens` is where the merge wave adds their arms: literals'
+Literal, Intrinsic and Default (with keys-mode Case, sorted keys and first-match arms), closures' Closure and
+Invoke (captures renamed to ascending slots, `site` numbering), the io branch's Foreign, generics' `none`
+types, nest's lowered matrix, and the header's representation words. A form still without an encoding must
+be reported `Unsupported compile image-term`, never passed through.
+
+**Decoding** is structural. It reads the header, the six sections and the node stream (children are the
+newest entries of a stack, so it is linear), and refuses a malformed image as `HostFailure image` with the
+reason of `serializer.py` (the size limit and the record limits as `Exhausted`). Scope, type and arity rules
+are the VM validator's, and `vm/serializer.py` `validate` is checked by the gate on every image written.
+Names are ASCII; a wider name is `Unsupported compile image-name`.
+
+**Round-trip law.** `image-LAWS.bend` states `decode(encode(b)) = erase_tokens(b)` on hand-written books,
+quantified over every source position, and on a plan that carries all thirteen forms, with erasure laws over
+every token, level, type and depth; `image-PROOF.bend` proves them and prints `All terms check.` The
+statement for every checked book is a **required law with an open proof obligation (D21)**: it is not weakened
+and has no induction proof yet. Its evidence is those ground laws, the byte-for-byte comparison of 96 books'
+images with an independent reference, the 102 golden images decoded and re-encoded, and mutants killed by
+wrong observations. The obligation stays here and in `tests/compiler-image/REPORT.md` until discharged.
+
+The gate is `BEND_NO_TELEMETRY=1 python3 tests/compiler-image/check.py`; see its
+[report](../tests/compiler-image/REPORT.md).
+
 ## Outcomes and budgets
 
 Return stable phase/code diagnostics with source offsets where available:
