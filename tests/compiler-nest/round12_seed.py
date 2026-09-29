@@ -21,7 +21,9 @@ The reviewed Knot outcomes: `Accepted` for finding 3's programs and `Invalid che
 `reusable-type` for the controls the seed rejects; `Unsupported parse term-form` for a term suffix
 and a `+name` term wherever they stand, since the parser cannot tell a discarded body from a live one
 and never judges the operands; `Invalid` where no term can continue (a closer, `==`, `=>` after a
-constructor, an erased `-name`).
+constructor, an erased `-name`). Round 13 (the coordinator's code ruling) names an operator token that
+continues a term `Unsupported parse operator`, the seed's sugar that Knot does not model, and keeps
+`term-form` for every other unmodeled form (a call, an index, an offload, a lambda, a `+name` term).
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -219,19 +221,18 @@ def stem(form, site):
     return f'suffix-{form}-{site}'
 
 
-# The seed accepts every discarded body below. After a let's value a `+` or `-` reads as a statement on
-# the let's line, an existing outcome; after an argument a `(` reads as another argument; every other
-# suffix is a term the parser leaves unread.
-STATEMENT = {'arrow', 'append', 'add', 'sub', 'call-op'}
+# The seed accepts every discarded body below. After an argument a `(` reads as another argument; an
+# operator token that continues the term is `operator` (round 13: also after a let's value, where a `+`
+# or `-` was `same-line-statement`); every other suffix is a term the parser leaves unread.
 ARGUMENT = {'chain', 'call-ctor'}
+OPERATOR = {'arrow', 'or', 'amp', 'diamond', 'and', 'bar', 'lt', 'le', 'gt', 'ge', 'append', 'min', 'dor', 'dxor', 'dand',
+            'shl', 'shr', 'add', 'sub', 'mul', 'div', 'mod', 'call-op', 'lt-glue'}
 
 
 def dead_outcome(form, site):
-    if site == 'dead-let' and form in STATEMENT:
-        return unsupported('same-line-statement')
     if site == 'dead-arg' and form in ARGUMENT:
         return unsupported('argument-whitespace')
-    return unsupported('term-form')
+    return unsupported('operator' if form in OPERATOR else 'term-form')
 
 
 def dead_group(site, forms):
@@ -249,15 +250,17 @@ for site in ('dead', 'dead-own', 'dead-single', 'dead-let', 'dead-arg'):
 # The same text in a row the lowering keeps: the seed rejects it for a reason the parser cannot see (an
 # undefined operator target, a type), so the program is unsupported, not invalid. An offload `h!(a)` is
 # accepted there.
-group('suffix-live', unsupported('term-form'), None,
-      *[(stem(form, 'live'), term('live', text), reason) for form, (text, reason) in FORMS.items() if reason])
+for code, wanted in (('operator', True), ('term-form', False)):
+    group('suffix-live-operator' if wanted else 'suffix-live', unsupported(code), None,
+          *[(stem(form, 'live'), term('live', text), reason) for form, (text, reason) in FORMS.items()
+            if reason and (form in OPERATOR) == wanted])
 group('suffix-live-accepted', unsupported('term-form'), None, (stem('bang', 'live'), term('live', FORMS['bang'][0])))
 # A live row whose operator target the program defines: the seed accepts these.
 DEFINED = {
     'or': ('def Bool.or(a: Flag, b: Flag) -> Flag:\n  match a:\n    case On{}: On{}\n    case Off{}: b\n\n', 'On{} || Off{}'),
     'amp': ('def Pair(a: Flag, b: Flag) -> Flag:\n  match a:\n    case On{}: On{}\n    case Off{}: b\n\n', 'a & a'),
 }
-group('suffix-live-defined', unsupported('term-form'), None,
+group('suffix-live-defined', unsupported('operator'), None,
       *[(f'suffix-{form}-defined', TERM_PRE + defs + term('live', body)[len(TERM_PRE):]) for form, (defs, body) in DEFINED.items()])
 # What the parser still reads as invalid: nothing can continue the term, or the seed rejects it even unread.
 CLOSED = {
@@ -295,7 +298,12 @@ def continues(rows):
             + '\ndef main() -> Flag:\n  f(On{}, On{})\n')
 
 
-group('suffix-continues', unsupported('term-form'), None, *[(f'suffix-{name}', continues(rows)) for name, rows in CONTINUES.items()])
+# `!(` and `=>` continue as forms Knot does not read; an operator is `operator`.
+LINE_OPERATORS = {'cont-margin', 'cont-left', 'cont-let-margin', 'cont-let-deeper', 'cont-let-le', 'cont-let-ge'}
+group('suffix-continues-operator', unsupported('operator'), None,
+      *[(f'suffix-{name}', continues(rows)) for name, rows in CONTINUES.items() if name in LINE_OPERATORS])
+group('suffix-continues', unsupported('term-form'), None,
+      *[(f'suffix-{name}', continues(rows)) for name, rows in CONTINUES.items() if name not in LINE_OPERATORS])
 group('suffix-continues-arrow', unsupported('line-break'), None, ('suffix-cont-arrow-margin', continues('case Off{} Off{}: x0\n=> a\n')))
 group('suffix-continues-index', invalid('declaration-name'), "expected : 'def', 'type' or 'law'",
       ('suffix-ctl-index-margin', continues('case Off{} Off{}: x0\n[0n]\n')))
