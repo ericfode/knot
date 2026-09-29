@@ -1525,10 +1525,12 @@ def effect_controls(plans: dict) -> list:
     `got` returns what an IO.OP carries, and `printing(t)` is `IO.print(t)` applied to R and
     then to a continuation: main, IO.print, R and the Action are 4 entries, where a Book stops,
     5 when an `id` call builds the String first. Every Book control that stops at the Action
-    freezes `stdout` empty: D22's step reads and converts no operand and calls no host, so a
-    run writes nothing before it stops, and a `print` that wrote and then refused would
-    differ. (`IO.args` writes nothing either way; its control freezes the cause, which
-    precedes the check of the foreign id.)
+    freezes `stdout` empty and `effects` 0: D22's step reads and converts no operand and calls
+    no host, so a run writes nothing before it stops, and a `print` that wrote and then refused
+    would differ by its `stdout`. `effects` counts the host calls the reference evaluation makes
+    (an Action's effect, after D22's guard and D20's check, just before its write), so it also
+    shows a call that writes nothing: `IO.args` under a Book, whose control froze only the cause,
+    which precedes the check of the foreign id.
     - `IO.args` under a Book stops the same way: D22 precedes the check of the foreign id, whatever it is.
     - D22 follows step 1: `book-print` completes its refusal with fuel 4, its debited entries, and at fuel
       3 its Action meets fuel 0 and stops `Exhausted` kind 1 after 3, where the fuel test precedes it.
@@ -1573,7 +1575,8 @@ def effect_controls(plans: dict) -> list:
     def bound(*string_and_k):
         return ['call', 8, got, [printing(*string_and_k)]]
     laundered = ['con', 3, 1, [['lit', 2, 'Char', 97], ['call', 3, ident, [['closure', 9, 1, 1, [], ['ref', 8, 0]]]]]]
-    refused, on = {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'calls': 4}, 'Evaluated\t8\t1\tOn{}\n'
+    refused = {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 4}
+    on = 'Evaluated\t8\t1\tOn{}\n'
     # IO.args (foreign 0) is IO(List<String>): a List of Strings' continuation type 11, applied to 12.
     args_types = [{'kind': 'data', 'name': 'List', 'constructors': [{'name': 'Nil', 'fields': []}, {'name': 'Con', 'fields': [None, 10]}]},
                   {'kind': 'arrow', 'domain': 10, 'result': 4}, {'kind': 'arrow', 'domain': 11, 'result': 4},
@@ -1607,7 +1610,7 @@ def effect_controls(plans: dict) -> list:
                        'representation': {**fp['representation'], 'List': 10}}, refused),
         ('fuel-book-effect-exact', image('book', bound(text('x'))), {'fuel': 4, **refused}),
         ('fuel-book-effect-short', image('book', bound(text('x'))),
-         {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'calls': 3}),
+         {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'stdout': '', 'effects': 0, 'calls': 3}),
         ('book-continuation-called', image('book', ['call', 8, got, [['call', 4, resume, [['value', 0, 0]]]]]),
          {'exit': 0, 'stdout': on, 'calls': 3}),
         ('book-action-dropped', image('book', ['let', 8, 0, ['call', 7, print_, [text('x')]], ['value', 8, 1]], 1),
