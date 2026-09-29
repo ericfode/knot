@@ -374,21 +374,32 @@
   (global $scratch (mut i32) (i32.const 0))
 
   ;; ---------------------------------------------------------------- memory and reporting
-  ;; Grow linear memory to cover [0, end). The callers bound `end` by 4 GiB; a
-  ;; host that refuses growth below the maximum traps, which the host reports
-  ;; as HostFailure (§5).
+  ;; Cover [0, end) with linear memory. The callers bound `end` by 4 GiB. Memory
+  ;; grows to the next 16 MiB boundary at or above `end`, at most to 4 GiB, so a
+  ;; stream of small cells costs one memory.grow per 16 MiB, not one per 64 KiB page:
+  ;; V8 pays each grow in the size of the memory (CORE.md choice 15; §5 leaves the
+  ;; timing of growth free). A host that refuses that target is asked for exactly
+  ;; `end`; one that refuses that too traps, which the host reports as HostFailure
+  ;; (§5).
   (func $grow (param $end i64)
-    (local $have i64)
+    (local $have i64) (local $to i64)
     (local.set $have (i64.shl (i64.extend_i32_u (memory.size)) (i64.const 16)))
     (if (i64.gt_u (local.get $end) (local.get $have))
       (then
+        (local.set $to (i64.and (i64.add (local.get $end) (i64.const 0xffffff)) (i64.const -16777216)))
+        (if (i64.gt_u (local.get $to) (i64.const 0x100000000)) (then (local.set $to (i64.const 0x100000000))))
         ;;TEST (global.set $grows (i32.add (global.get $grows) (i32.const 1)))
-        (if (i32.lt_s
-              (memory.grow (i32.wrap_i64 (i64.shr_u
-                (i64.add (i64.sub (local.get $end) (local.get $have)) (i64.const 65535))
-                (i64.const 16))))
-              (i32.const 0))
-          (then unreachable)))))
+        (drop (memory.grow (i32.wrap_i64 (i64.shr_u (i64.sub (local.get $to) (local.get $have)) (i64.const 16)))))
+        (local.set $have (i64.shl (i64.extend_i32_u (memory.size)) (i64.const 16)))
+        (if (i64.gt_u (local.get $end) (local.get $have))
+          (then
+            ;;TEST (global.set $grows (i32.add (global.get $grows) (i32.const 1)))
+            (if (i32.lt_s
+                  (memory.grow (i32.wrap_i64 (i64.shr_u
+                    (i64.add (i64.sub (local.get $end) (local.get $have)) (i64.const 65535))
+                    (i64.const 16))))
+                  (i32.const 0))
+              (then unreachable)))))))
 
   ;; The host's allocator entry: disjoint ranges at `$hbump`, which boot aims
   ;; at the argument area and then at the image's next chunk.
