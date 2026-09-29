@@ -842,19 +842,26 @@ def proof() -> dict:
             'laws': laws}
 
 
-def observations(bins: dict, tree: Path, expected: dict, shared: dict) -> dict:
-    """Every check's rows for one build of the model; `shared` holds the staged controls."""
+def observing(bins: dict, tree: Path, expected: dict, shared: dict):
+    """Each check's (name, rows) for one build of the model, one check at a time; `shared` holds the
+    staged controls."""
     model, audit = bins['model'], bins.get('audit')
-    return {'goldens': golden_runs(model, expected),
-            'invocations': invocation_runs(model, audit, expected),
-            'inspection': inspection_runs(model, shared['inspection']),
-            **({'lanes': lane_runs(bins['lanes'])} if 'lanes' in bins else {}),
-            'connectives': connective_runs(tree),
-            'fuel': fuel_runs(model, expected),
-            'controls': control_runs(model, shared['controls']),
-            'admitted': admitted_runs(model, audit, shared['admitted']),
-            'arguments': argument_runs(model, audit, shared['arguments']),
-            'audit': audit_runs(audit, expected)}
+    yield 'goldens', golden_runs(model, expected)
+    yield 'invocations', invocation_runs(model, audit, expected)
+    yield 'inspection', inspection_runs(model, shared['inspection'])
+    if 'lanes' in bins:
+        yield 'lanes', lane_runs(bins['lanes'])
+    yield 'connectives', connective_runs(tree)
+    yield 'fuel', fuel_runs(model, expected)
+    yield 'controls', control_runs(model, shared['controls'])
+    yield 'admitted', admitted_runs(model, audit, shared['admitted'])
+    yield 'arguments', argument_runs(model, audit, shared['arguments'])
+    yield 'audit', audit_runs(audit, expected)
+
+
+def observations(bins: dict, tree: Path, expected: dict, shared: dict) -> dict:
+    """Every check's rows for one build of the model."""
+    return dict(observing(bins, tree, expected, shared))
 
 
 def staged_runs(bins: dict, shared: dict) -> dict:
@@ -1191,13 +1198,23 @@ def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
     def one(entry):
         name, section, mutation, meaning = entry
         tree = trees[name]
-        # The audit is built only when the model's own runs leave the mutant alive: most die by a golden
-        # or a control. vm/model-lanes.bend imports word.bend alone: only a word mutant can change it.
+
+        def observed_until_killed(bins):
+            """Checks in `observing`'s order, up to the first that a well-formed wrong observation kills."""
+            found = {}
+            for check, rows in observing(bins, tree, expected, shared):
+                found[check] = rows
+                if kills(base, {check: rows}):
+                    break
+            return found
+        # Most mutants die by a golden or an early control, so nothing later runs, and the audit is built
+        # only when the model's own runs leave the mutant alive. vm/model-lanes.bend imports word.bend
+        # alone: only a word mutant can change it.
         bins = built(tree, ('model', 'lanes') if section == 'word' else ('model',))
-        observed = observations(bins, tree, expected, shared)
+        observed = observed_until_killed(bins)
         if not kills(base, observed):
             bins = {**bins, **built(tree, ('audit',))}
-            observed = observations(bins, tree, expected, shared)
+            observed = observed_until_killed(bins)
         crashes = [f'{c}:{n}' for c, rows in observed.items() for n, r in rows.items()
                    if not r['agrees'] and not well_formed(r)]
         return kills(base, observed), crashes, harness_faults(observed)
@@ -1211,7 +1228,7 @@ def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
     for (name, section, mutation, meaning), (killed, crashes, faults) in zip(MUTANTS, observed):
         require(not faults, f'mutant {name}: harness faults, not kills, at {faults[:8]}')
         require(name not in LAW_MUTANTS or laws[name] == LAW_MUTANTS[name],
-                f'mutant {name}: PROOF.bend failed at {laws[name]}, not at the law {LAW_MUTANTS.get(name)}')
+                f'mutant {name}: PROOF.bend failed at {laws.get(name)}, not at the law {LAW_MUTANTS.get(name)}')
         out.append({'mutant': name, 'breaks': meaning, 'killed': bool(killed), 'by': killed[:8],
                     'kills': len(killed), 'law': laws.get(name), 'crashes': len(crashes), 'crashed': crashes[:8]})
     return out

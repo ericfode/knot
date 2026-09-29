@@ -199,4 +199,7 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   run, and torn reads from concurrent mutants were counted as kills.
 - Deep lists recurse without a tail call (`pack`, `slice`); compiler-sized
   images are unmeasured. The checker's evaluator is slow: PROOF.bend takes
-  about 95 s, most of it in the audited runs.
+  about 190 s of CPU, most of it in the audited runs (the laws of requests run
+  their plans with `run_words_final`, balanced after the last step alone, which
+  costs a fifth of auditing each step). A law mutant is proved on a proof cut to
+  the one law that must refute it, not on all 44.

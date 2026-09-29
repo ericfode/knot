@@ -113,27 +113,33 @@ with the seed's native lane and requires: the goldens to be their frozen
 plans' encodings and the `vm/LAWS.bend` fixtures their words; the model's prim and
 foreign tables to equal `vm/registry.json`; no Base `Bool.or` or `Bool.xor` in the
 natively built model, and `vm/model-lanes.bend` to print W's connectives as the
-comparisons' values on both seed lanes; all 93 golden runs and 44 frozen Book
-invocations to agree with `vm/golden/vm-expected.json`; 90 literal fuel controls and
-six inspection controls; the 72 frozen refusal controls (byte-level, both sides of
+comparisons' values on both seed lanes; all 111 golden runs and 44 frozen Book
+invocations to agree with `vm/golden/vm-expected.json`; 108 literal fuel controls and
+six inspection controls; the 212 frozen refusal controls (byte-level, both sides of
 SPEC section 4's resource limits, `Exhausted` kind 2 past one, and plan-level) and a
 child-at-parent boundary refused with check-spec's exact reason; the 13 argument
-controls; 66 admitted controls (vm-spec's six admitted plan, one limit, seven
-code-list and 41 run controls, each run control at its frozen fuel, and the model's
+controls; 165 admitted controls (vm-spec's eight admitted plan, one limit, seven
+code-list and 138 run controls, each run control at its frozen fuel, and the model's
 own eleven, eight of them in `vm/model-controls/`, whose values the seed prints) run
-to their frozen or reference outcome and call count; the RC audit before every
-transition of every golden and zero live mortal cells after each completed run,
-with the reference evaluation's call count; the bounded soundness sweep, every
-single-word mutation of every golden refused exactly when the reference codec
-refuses it, for the same reason, and otherwise run soundly; `vm/PROOF.bend`
-printing `All terms check.` (32 laws); 46 model mutants killed by a wrong
-observation, never a crash or a harness fault, 14 of them also refuted by a law;
-and the harness mutant `fuel-ignored` killed by exactly the fuel controls. Every
-image its runs share is staged once, read-only, before any run; a refusal of an
-image the reference codec admits as `length`, `magic`, `total` or `noncanonical` is
-a harness fault that fails the gate, and a harness control runs every staged run
-three at once on the unmutated model and requires every row to agree. It writes
-only `vm/receipts/model.json`.
+to their frozen or reference outcome, written output, call count and host-call count
+(D23: an Action applied to its continuation builds a request, and only Top's loop
+performs one; D24: a Case over a request takes its Default); the RC audit before every
+transition of every golden and admitted control, zero live mortal cells after each
+completed run, the reference evaluation's call and host-call counts, and atomic stops
+(SPEC section 6.3: a step that stops the machine leaves its frames, `act`, `top`,
+allocation state and output as they were, and its meters too but for an Enter's debit,
+a Book's description included); the bounded soundness sweep, every single-word
+mutation of every golden refused exactly when the reference codec refuses it, for the
+same reason, and otherwise run soundly and atomically; `vm/PROOF.bend` printing `All
+terms check.` (44 laws); 61 model mutants killed by a wrong observation, never a crash
+or a harness fault, 20 of them also refuted by the law named, on a proof cut to that law
+(the unmutated model proves every law); and the harness mutant `fuel-ignored` killed by
+exactly the fuel controls. A mutant's audit binary is built only when its model runs
+leave it alive. Every image its runs share is staged once, read-only, before any run; a
+refusal of an image the reference codec admits as `length`, `magic`, `total` or
+`noncanonical` is a harness fault that fails the gate, and a harness control runs every
+staged run three at once on the unmutated model and requires every row to agree. It
+writes only `vm/receipts/model.json`.
 
 The prechecks suite's own verification (`npm run -s prechecks:verify`: its unit tests against synthetic clean and broken repositories, its semantic mutants and the Perch wiring test for its seven advisory rules, receipt `tests/prechecks/receipts/prechecks.json`) is deliberately not a registered gate: it takes 150 to 390 seconds, and every increment's full gate run would pay for it while only a change to `scripts/prechecks/` or `tests/prechecks/` can affect it. Run it whenever either changes; the coordinator runs it before merging such a change. The suite itself is not a gate either: `npm run -s prechecks` reports conditions for the
 implementer and the reviewers and is not part of `npm run gates`. Its historical controls (accepted tips as clean controls, confirmed
