@@ -16,9 +16,9 @@ Seven sections, each importing only earlier ones, under the alias it is read by:
 | `decode.bend` (`D`) | the §2 decoder, refusing in `serializer.decode`'s order and wording |
 | `validate.bend` (`V`) | the registry tables and §4 rules 1-5, refusing in `serializer.validate`'s order and wording |
 | `encode.bend` (`E`) | the §2 encoder, and the loader: decoded, validated and canonical |
-| `memory.bend` (`H`) | §5 words and cells, power-of-two classes, LIFO free lists, bump allocation at the §5 heap base, uniform RC, the iterative release worklist bounded by the frame region, the loaded code, frames, §6 inspection, §9 prims |
-| `machine.bend` (`M`) | §6's Eval/Return/Enter table, tail entry, Case selection, §7 fuel and quantum, §8 describe, booting (immortal constants, the terminal continuation), the Book invocation walk and Program phases, IO.print Actions |
-| `audit.bend` (`A`) | `balanced` (rc equals owners among roots and edges; no word above an Activation's depth), `leaked` (mortal cells still live), and the law predicates |
+| `memory.bend` (`H`) | §5 words and cells (class 5 is a Request), power-of-two classes, LIFO free lists, bump allocation at the §5 heap base, uniform RC, the iterative release worklist bounded by the frame region, the loaded code, frames, §6 inspection (the class is read first: a request is `Unsupported vm effect`), §9 prims |
+| `machine.bend` (`M`) | §6's Eval/Return/Enter table, tail entry, Case selection (a request takes its Default, D24), §7 fuel and quantum, requests (D23: an Action applied to `k` builds one) and Top's loop that performs them, §8 describe, booting (immortal constants, the terminal continuation), the Book invocation walk and Program phases |
+| `audit.bend` (`A`) | `balanced` (rc equals owners among roots and edges; no word above an Activation's depth), `atomic` (a step that stops the machine changes no state), `leaked` (mortal cells still live), and the law predicates |
 
 [perch-manifest.json](perch-manifest.json) gives each section, the entries and
 the laws a Perch composition group: the section in full, its collaborators as
@@ -46,7 +46,7 @@ on transitions: a harness limit, never VM exhaustion.
 
 ## Laws
 
-[LAWS.bend](LAWS.bend) states 32 laws, proved by [PROOF.bend](PROOF.bend):
+[LAWS.bend](LAWS.bend) states 44 laws, proved by [PROOF.bend](PROOF.bend):
 - the codec round trip, on a hand-written plan and on five golden images;
 - four refusal reasons, and bounded validator soundness: every single-word
   mutation of `value-on`'s function, constant and node sections is refused or
@@ -66,7 +66,20 @@ on transitions: a harness limit, never VM exhaustion.
   (arm fit, §3); a Nat word spells its type's own constructor names; and
   completing Chr on a laundered Pair stops `HostFailure image ill-typed` with
   every count balanced;
-- §8's byte measure: `text_size` counts UTF-8 bytes, not scalars.
+- §8's byte measure: `text_size` counts UTF-8 bytes, not scalars;
+- requests (D23) and Cases over them (D24), by audited runs of plans encoded in
+  the law: a request that a let holds is built and dropped, and only the one that
+  `main` returns is written; Top's loop performs each request that a run returns
+  to it, in order, entering `k` after each; a Case with a Default takes a request
+  unread, and one that names every constructor refuses it `Unsupported vm effect`,
+  in a Book that writes nothing, as does describing a Book whose answer is a request;
+- atomic stops, the coordinator's ruling on SPEC §6: a refused step leaves the
+  machine as it was, and only an Enter's debit stands (symbolic laws over `settled`
+  and `paid`); a frame that does not fit the region is `Exhausted` kind 3, and a
+  cell past the declared memory kind 2, before anything is written; and a stopped
+  run holds what the step could not advance: `Succ{4294967295}` its Gather frame
+  under `succ`'s Call and `Nat.is_gt`'s Gather, and a refused Halt or print its
+  `act` under Top.
 
 These are bounded computed equations, not a refinement proof. The gate
 evaluates the same predicates natively on more images: the audit on every
@@ -84,8 +97,19 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   structure and before what it governs, in `serializer.decode`'s order. The
   validator no longer checks limits. vm-spec's ten limit controls run in the
   gate; the 8 and 16 MiB ones take seconds and up to 0.8 GB each natively.
-- Effects: only `IO.print` is modelled. Applying any other foreign Action is
-  `Unsupported vm foreign N`; vm-io adds the pure World.
+- Effects: only `IO.print` is modelled. An Action applied to its continuation
+  builds a request (a class-5 cell holding `foreign`, the duplicated operands, then
+  `k`) and reads nothing; only Top's phase-3 loop performs it (D23), so a request
+  that is dropped is no effect, and a Book, which has no loop, performs none. The
+  loop names a foreign that is not IO.print `Unsupported vm foreign N`; vm-io adds
+  the pure World. The audit line's `effects` is the host calls made, which here are
+  the lines written.
+- A request is never inspected (§6, D23): the class is read first, at a Case, a
+  Chr or Succ operand, a prim operand, a rendered word, an Enter's target, and a
+  Halt's or a print's operand, and stops the run `Unsupported vm effect` before the
+  type test, before the step changes anything and, at an Enter, before its operand
+  count and its debit. A Case matches no row of a request, in either mode, so its
+  Default takes it and binds nothing, and a Case without one refuses it (D24).
 - Inspection happens at §6's points only, over §9's extents: every prim
   operand at its pinned type, a String whole (each SCon cell and its Char
   word, `a` then `b`), the `b` that `String.append` moves included. The
@@ -111,14 +135,21 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   arguments usage` before any word is read; FUEL and each ordinal are Base's
   `U32.read` words (`expected-u32`). check-spec's 13 argument controls run in
   the gate.
-- A refused transition leaves the machine as it was: the model's steps are
-  atomic, including one refused mid-way by an allocation. An Enter's debit
-  stands once paid (§7): a target that then stops the machine, such as D20's
-  refused print, leaves its fuel and call spent.
+- A refused transition leaves the machine as it was: every step is a `Fail` that
+  `settled` turns back into the state before it, so no refusal, halt or exhaustion
+  changes the frames, `act`, `top`, heap, meters or output, including one refused
+  mid-way by an allocation. The one exception is SPEC §7's debit: an Enter that
+  stops after its target check keeps its fuel and call spent (`paid`). The audit
+  checks this at every stop of every audited run (`atomic`), and laws pin it. This
+  follows the coordinator's ruling on vm-lockstep's findings 1 and 2 (Return to Top
+  refuses an ill-typed IO.OP, or a request it cannot perform, before it drops `act`;
+  no Gather frame is popped before its operands are inspected or NatRange is
+  tested). SPEC §6's transition table still says Return to Top drops `act` first,
+  and where it differs the model follows the ruling.
 - A stopped machine keeps the control it could not advance, so the words of a
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
-  model's differential covers the 93 goldens, their 44 frozen Book invocations,
+  model's differential covers the 111 goldens, their 44 frozen Book invocations,
   vm-spec's admitted plan, limit, code-list and run controls (counted from
   `check-spec.py`: 6, 1, 7 and 41 at vm-spec ec96ae8, each run control at the fuel
   frozen with it), its 13 argument controls, the model's own eight controls in

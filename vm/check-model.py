@@ -26,8 +26,9 @@ seed's native lane and requires:
   `none`-typed identity is refused ill-typed where it is read (a Case scrutinee,
   a prim operand, Chr's operand, a rendered word before its visit is charged),
   as the reference evaluation refuses it;
-- every admitted control run to its outcome, its written output and its call
-  count (SPEC sections 4 and 7): check-spec's admitted plan controls and
+- every admitted control run to its outcome, its written output, its call
+  count and its host calls (SPEC sections 4, 7 and 8; the audit line reports the
+  last): check-spec's admitted plan controls and
   code-list controls, as the reference evaluation (vm/evaluate.py) runs them,
   its run controls at the fuel frozen with each and to the run frozen with it
   (a display line by its SHA-256), and the model's own controls in
@@ -39,14 +40,17 @@ seed's native lane and requires:
 - the harness mutant `fuel-ignored`, which runs every run control at 1,000,000,
   killed by exactly the fuel controls whose frozen run differs there;
 - the RC audit before every transition of every golden and admitted control, no
-  live mortal cell after each completed run, and the reference evaluation's call
-  count at the end of each run;
+  live mortal cell after each completed run, the reference evaluation's call and
+  host-call counts at the end of each run, and atomic stops: a step that stops
+  the machine leaves its frames, `act`, `top`, allocation state and output as
+  they were, and its meters too but for an Enter's debit (SPEC sections 6 and 7);
 - the bounded soundness sweep: every single-word mutation of the swept goldens
   is refused exactly when the reference codec refuses it, for the same reason,
   and every admitted mutation runs soundly;
 - vm/PROOF.bend to print 'All terms check.';
 - every model mutant killed by a wrong observation of those checks, never by a
-  crash or a timeout, and those in LAW_MUTANTS also refuted by a law of PROOF.bend;
+  crash or a timeout, and those in LAW_MUTANTS also refuted by the law named, on
+  a PROOF.bend cut to that law;
 - the images its runs share staged once, read-only, before any run; a refusal as
   `length`, `magic`, `total` or `noncanonical` of an image the reference codec
   admits is a harness fault, never a kill, and fails the gate; and the harness
@@ -298,9 +302,12 @@ def harness_faults(observed: dict) -> list:
 KNOWN_EXITS = {0, 3, 4, 5, 6, 7}
 
 
-def well_formed(result) -> bool:
-    """A model answer, not a crash, trap or timeout: those never count as a kill."""
-    return result['exit'] in KNOWN_EXITS and 'bend:' not in result['stderr']
+def well_formed(row: dict) -> bool:
+    """A model answer, not a crash, trap or timeout: those never count as a kill. A Program's Halt ends
+    the run through the host's `die` with the Halt's own code, so a control that freezes one may exit
+    with any status."""
+    result = row['result']
+    return result['exit'] in (range(256) if row.get('died') else KNOWN_EXITS) and 'bend:' not in result['stderr']
 
 
 def argv_of(model: Path, name: str, argv: list) -> list:
@@ -341,9 +348,10 @@ def golden_runs(model: Path, expected: dict) -> dict:
     return {n: {'result': got[n], 'agrees': agrees(cases[n], got[n]), 'admitted': True} for n in cases}
 
 
-def invocation_runs(model: Path, audit: Path, expected: dict) -> dict:
+def invocation_runs(model: Path, audit: Path | None, expected: dict) -> dict:
     """SPEC section 8's frozen Book invocations: each refusal or describe line, and for an
-    entered one the RC audit and the reference evaluation's call count."""
+    entered one the RC audit and the reference evaluation's call count (`audit` is none for a
+    mutant that its model run alone has not yet killed: it is built when needed)."""
     plans = golden_plans()
     rows = {f"{n}:{' '.join(r['argv'][1:])}": (n, r) for n, listed in expected['invocations'].items() for r in listed}
 
@@ -351,7 +359,7 @@ def invocation_runs(model: Path, audit: Path, expected: dict) -> dict:
         n, row = rows[label]
         result = run(argv_of(model, n, row['argv']), 120)
         good = agrees(row, result)
-        if good and row.get('exit') == 0:
+        if good and row.get('exit') == 0 and audit is not None:
             audited = run(argv_of(audit, n, row['argv']), 300)
             m = AUDIT.match(audited['stdout'].strip())
             counts = reference_counts(plans[n], row['argv'])
@@ -434,7 +442,7 @@ def argument_controls() -> list:
     return out
 
 
-def argument_runs(model: Path, audit: Path, listed: list) -> dict:
+def argument_runs(model: Path, audit: Path | None, listed: list) -> dict:
     """The image first, then its entry kind's form and words: a refused control halts with
     check-spec's verdict; an admitted one runs as the reference evaluation ran it, and its RC
     audit passes."""
@@ -446,11 +454,12 @@ def argument_runs(model: Path, audit: Path, listed: list) -> dict:
         if verdict is not None:
             return label, {'result': result, 'admitted': admitted,
                            'agrees': agrees({'outcome': 'HostFailure', 'cause': verdict.split(' ', 1)[1]}, result)}
-        audited = run([audit, '--', path, *words], 300)
-        m = AUDIT.match(audited['stdout'].strip())
         good = agrees(expected_run(got), result)
-        balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and (int(m.group(5)), int(m.group(6))) == (got['calls'], got['effects'])
-        return label, {'result': audited if good else result, 'agrees': good and balanced, 'admitted': admitted}
+        audited = run([audit, '--', path, *words], 300) if audit is not None else None
+        m = AUDIT.match(audited['stdout'].strip()) if audited else None
+        balanced = audit is None or (bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0'
+                                     and (int(m.group(5)), int(m.group(6))) == (got['calls'], got['effects']))
+        return label, {'result': audited if good and audited else result, 'agrees': good and balanced, 'admitted': admitted}
     with ThreadPoolExecutor(max_workers=8) as pool:
         return dict(pool.map(one, listed))
 
@@ -528,17 +537,17 @@ def control_argv(binary: Path, path: Path, plan: dict, fuel: int) -> list:
     return [binary, '--', path, *cs.run_argv(plan, {'fuel': fuel})[1:]]
 
 
-def admitted_runs(model: Path, audit: Path, listed: list, argv=control_argv) -> dict:
+def admitted_runs(model: Path, audit: Path | None, listed: list, argv=control_argv) -> dict:
     """Each admitted control's run at its fuel, its RC audit, its entries paid for and its host calls."""
     def one(item):
         label, path, plan, fuel, want, calls, effects = item
         result = run(argv(model, path, plan, fuel), 120)
-        audited = run(argv(audit, path, plan, fuel), 300)
-        m = AUDIT.match(audited['stdout'].strip())
-        balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and (
-            'exit' not in want or m.group(4) == '0') and (int(m.group(5)), int(m.group(6))) == (calls, effects)
+        audited = run(argv(audit, path, plan, fuel), 300) if audit is not None else None
+        m = AUDIT.match(audited['stdout'].strip()) if audited else None
+        balanced = audit is None or (bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and (
+            'exit' not in want or m.group(4) == '0') and (int(m.group(5)), int(m.group(6))) == (calls, effects))
         # A kill is judged on the observation that went wrong.
-        return label, {'result': audited if agrees(want, result) else result, 'admitted': True,
+        return label, {'result': audited if audited and agrees(want, result) else result, 'admitted': True, 'died': 'halt' in want,
                        'agrees': agrees(want, result) and balanced, 'calls': int(m.group(5)) if m else None,
                        'effects': int(m.group(6)) if m else None}
     with ThreadPoolExecutor(max_workers=8) as pool:
@@ -578,11 +587,13 @@ def reference_counts(plan: dict, argv: list) -> tuple:
     return got['calls'], got['effects']
 
 
-def audit_runs(audit: Path, expected: dict) -> dict:
+def audit_runs(audit: Path | None, expected: dict) -> dict:
     """The RC audit before every transition; a completed run ends with no live
     mortal cell, while a stopped one keeps its pending words. Every run pays for
     the entries the reference evaluation pays for. An Unsupported result type is
     refused before any transition."""
+    if audit is None:
+        return {}
     cases = {n: c for n, c in expected['cases'].items() if c.get('outcome') != 'Unsupported'}
     plans = golden_plans()
     counts = {n: reference_counts(plans[n], cases[n]['argv']) for n in cases}
@@ -833,7 +844,7 @@ def proof() -> dict:
 
 def observations(bins: dict, tree: Path, expected: dict, shared: dict) -> dict:
     """Every check's rows for one build of the model; `shared` holds the staged controls."""
-    model, audit = bins['model'], bins['audit']
+    model, audit = bins['model'], bins.get('audit')
     return {'goldens': golden_runs(model, expected),
             'invocations': invocation_runs(model, audit, expected),
             'inspection': inspection_runs(model, shared['inspection']),
@@ -1037,22 +1048,121 @@ MUTANTS = [
      "the arity limit precedes its record's length"),
     ('closure-slots-unlimited', 'decode', [('      W.limit(W.Store,closure_slots(op,image,a),65536,"slots",u =>\n',
                                             '      W.limit(W.Store,0,65536,"slots",u =>\n')],
-     "a Closure's slots is unlimited"),    # vm-spec 137ca0e (round 12): a type record's constructor count must fit the constructor table,
+     "a Closure's slots is unlimited"),
+    # vm-spec 137ca0e (round 12): a type record's constructor count must fit the constructor table,
     # checked before the record's name and before the count sizes anything.
     ('constructor-count-unchecked', 'decode', [('W.unless(Row,U32.is_gt(b,U32.sub(size,expect)),', 'W.unless(Row,False{},')],
      "a type record's constructor count is not checked against the table"),
+    # vm-spec round 13, D23 and D24: a request is a value that only Top's loop performs, and a Case over
+    # one takes its Default. Each mutant breaks one rule of section 6, 7 or 8 and is killed by the
+    # goldens and run controls that freeze it (SPEC section 12 names each).
+    ('eager-effect', 'machine', [('      u => requested(w,W.nth(ops,0),stack,heap,meter,out)),',
+                                  '      u => performed(code,w,W.nth(ops,0),stack,heap,meter,out)),')],
+     "an Action applied to its continuation performs at once, as round 8's eager rule did"),
+    ('let-performs-request', 'machine', [(
+        '    case _: machine_of(returned(code,w,stack,heap),meter,out)',
+        '    case H.Stack{act,Con{H.Bind{node},rest},top}:\n'
+        '      W.choose(Result<W.Stop,Machine>,H.is_request(heap,w),u => H.bind(List<&2,U32>,Machine,outgoing(code,heap,H.load_word(heap,w,3)),line =>\n'
+        '        machine_of(returned(code,w,stack,heap),meter,Con{line,out})),u => machine_of(returned(code,w,stack,heap),meter,out))\n'
+        '    case _: machine_of(returned(code,w,stack,heap),meter,out)')],
+     'a Let that binds a request performs it, though the request is only held'),
+    ('default-refused', 'machine', [('W.choose(Result<W.Stop,Next>,W.is_none(arm),u => H.unsupported(Next),',
+                                     'W.choose(Result<W.Stop,Next>,True{},u => H.unsupported(Next),')],
+     'a Case over a request refuses it although it has a Default (D23, before D24)'),
+    ('request-picks-row', 'machine', [('  +arm = H.node_last(code,node)\n', '  +arm = row_arm(code,node,1)\n')],
+     'a Case over a request takes the row of tag 1, not its Default'),
+    ('request-as-ill-typed', 'memory', [('is_request(heap,w),u => unsupported(A),u =>', 'is_request(heap,w),u => ill_typed(A),u =>')],
+     'a request that any read meets is ill-typed, not Unsupported'),
+    ('fuel-before-request', 'machine', [(
+        '  W.choose(Result<W.Stop,Machine>,targets_request(heap,target),u => H.unsupported(Machine),u =>\n',
+        '  W.choose(Result<W.Stop,Machine>,U32.is_eq(fuel_of(meter),0),u => Fail{W.Exhausted{1,"fuel"}},u =>\n'
+        '  W.choose(Result<W.Stop,Machine>,targets_request(heap,target),u => H.unsupported(Machine),u =>\n'),
+        ('Machine{Enter{target,ops},stack,heap,charged(meter),out}))))\n', 'Machine{Enter{target,ops},stack,heap,charged(meter),out})))))\n')],
+     'an Enter tests fuel before it reads its target, a request'),
+    ('book-loop', 'machine', [('    case H.Stack{+act,Con{H.Top{3},+rest},+top}:\n',
+                               '    case H.Stack{+act,Con{H.Top{+phase},+rest},+top}:\n')],
+     "a Book's Top performs the request it is returned, as a Program's loop does"),
+    ('halt-message-unchecked', 'machine', [(
+        'H.bind(List<&2,U32>,Next,outgoing(code,heap,H.load_word(heap,w,5)),message =>',
+        'H.bind(List<&2,U32>,Next,H.bind(List<&2,U32>,List<&2,U32>,H.string_of(code,heap,H.load_word(heap,w,5)),line => Done{H.scalars_of(line,heap)}),message =>')],
+     "a Halt's message is not checked for D20"),
+    ('foreign-checked-at-build', 'machine', [(
+        '      u => requested(w,W.nth(ops,0),stack,heap,meter,out)),',
+        '      u => W.choose(Result<W.Stop,Machine>,Bool.not(U32.is_eq(H.load_word(heap,w,2),1)),u => Fail{W.Unsupported{"vm","foreign"}},\n'
+        '        u => requested(w,W.nth(ops,0),stack,heap,meter,out))),')],
+     'the Action applied to `k` checks its foreign id, as round 8 did'),
+    ('request-edges-lost', 'memory', [('W.or(U32.is_eq(class,3),U32.is_eq(class,5))', 'U32.is_eq(class,3)')],
+     "a Request's operands are not owning edges of the cell"),
+    ('effects-uncounted', 'model-cli', [('U32.show(M.effects(m))', '"0"')],
+     'the audit line reports no host call'),
+    # The coordinator's atomic-stops ruling on SPEC section 6: a refusal changes no state. Each mutant keeps
+    # the state of a step that had begun, as vm-lockstep's findings 1 and 2 describe the WAT machine doing.
+    ('top-drops-act-first', 'machine', [
+        ('# The Return transitions of SPEC §6, by the top frame.\n',
+         'def act_dropped(result: Result<W.Stop,Next>, +w: U32, +phase: U32, rest: List<&2,H.Frame>, +top: U32, heap: H.Heap) -> Result<W.Stop,Next>:\n'
+         '  match result:\n'
+         '    case Fail{stop}: Done{Next{Finished{Stopped{stop,Return{w}}},H.Stack{0,Con{H.Top{phase},rest},top},heap}}\n'
+         '    case Done{next}: Done{next}\n\n'
+         '# The Return transitions of SPEC §6, by the top frame.\n'),
+        ('heap => topped(code,phase,w,rest,top,heap))', '+heap => act_dropped(topped(code,phase,w,rest,top,heap),w,phase,rest,top,heap))')],
+     'Return to Top drops `act` before it refuses an ill-typed IO.OP'),
+    ('gather-popped-first', 'machine', [
+        ('# The Return transitions of SPEC §6, by the top frame.\n',
+         'def gather_popped(result: Result<W.Stop,Next>, +w: U32, +act: U32, rest: List<&2,H.Frame>, +top: U32, heap: H.Heap) -> Result<W.Stop,Next>:\n'
+         '  match result:\n'
+         '    case Fail{stop}: Done{Next{Finished{Stopped{stop,Return{w}}},H.Stack{act,rest,top},heap}}\n'
+         '    case Done{next}: Done{next}\n\n'
+         '# The Return transitions of SPEC §6, by the top frame.\n'),
+        ('        u => completed(code,node,List.reverse(&2,U32,have),H.Stack{act,rest,U32.sub(top,U32.add(need,3))},heap))',
+         '        u => gather_popped(completed(code,node,List.reverse(&2,U32,have),H.Stack{act,rest,U32.sub(top,U32.add(need,3))},heap),w,act,rest,U32.sub(top,U32.add(need,3)),heap))')],
+     "a Gather's operand check and NatRange test run after its frame is popped"),
 ]
 
 
-# Mutants whose PROOF.bend must also fail, at a law and not by a crash.
-LAW_MUTANTS = ('rc-under-count', 'tail-keeps-caller', 'arm-selection', 'nat-bound', 'remainder-by-zero',
-               'char-tag', 'key-bound', 'exact-key-and-default-type', 'chr-uninspected', 'display-scalars',
-               'display-succ-named', 'limit-as-malformed', 'limit-exclusive', 'arity-limit-before-record')
+# Mutants whose PROOF.bend must also fail, at the law named and not by a crash: the first law of the
+# file that the mutant refutes. The mutant's proof is cut to that law (`cut_proof`), so it costs one
+# law and not all of them; the unmutated model proves every law (`proof`).
+LAW_MUTANTS = {
+    'rc-under-count': 'closure_captures_runs', 'tail-keeps-caller': 'closure_captures_runs',
+    'arm-selection': 'recursion_map_runs', 'nat-bound': 'nat_sum_bound', 'remainder-by-zero': 'remainder_by_zero',
+    'char-tag': 'char_case_selects_chr', 'key-bound': 'key_max_selected',
+    'exact-key-and-default-type': 'arms_fit_their_case', 'chr-uninspected': 'chr_inspects_its_operand',
+    'display-scalars': 'text_size_counts_bytes', 'display-succ-named': 'nat_spells_its_names',
+    'limit-as-malformed': 'slots_past_limit', 'limit-exclusive': 'slots_at_limit',
+    'arity-limit-before-record': 'arity_beyond_record',
+    'eager-effect': 'dropped_request_writes_nothing', 'default-refused': 'case_takes_default_over_request',
+    'request-as-ill-typed': 'request_is_never_rendered',
+    'top-drops-act-first': 'refused_halt_keeps_its_activation', 'gather-popped-first': 'nat_range_keeps_its_gather',
+}
 
 
-def law_kill(tree: Path) -> str | None:
-    result = run([SEED, tree / 'vm' / 'PROOF.bend'], 1800)
-    found = re.search(r'Location: LAWS\.(\w+)', result['stdout'] + result['stderr'])
+def law_blocks(text: str) -> list:
+    """LAWS.bend as (law name or None, text) blocks: each `law` with its indented claim, and the code between."""
+    blocks, lines, name = [], [], None
+    for line in text.split('\n'):
+        law = re.match(r'law (\w+):', line)
+        if law or (name and line and not line.startswith(' ')):
+            blocks.append((name, '\n'.join(lines)))
+            lines, name = [], law.group(1) if law else None
+        lines.append(line)
+    return [*blocks, (name, '\n'.join(lines))]
+
+
+def cut_proof(tree: Path, law: str) -> Path:
+    """PROOF-cut.bend beside the tree's PROOF.bend: LAWS-cut.bend keeps the code and `law` alone, and
+    it proves that one law with the tree's own proof."""
+    laws = law_blocks((tree / 'vm' / 'LAWS.bend').read_text())
+    require(sum(name == law for name, _ in laws) == 1, f'LAWS.bend has no law {law}')
+    proof = [l for l in (tree / 'vm' / 'PROOF.bend').read_text().split('\n') if l.startswith(f'def L.{law}(')]
+    require(len(proof) == 1, f'PROOF.bend has no proof of {law}')
+    (tree / 'vm' / 'LAWS-cut.bend').write_text('\n'.join(text for name, text in laws if name in (None, law)))
+    (tree / 'vm' / 'PROOF-cut.bend').write_text('import Base\nimport ./LAWS-cut.bend as L\n\n' + proof[0] + '\n')
+    return tree / 'vm' / 'PROOF-cut.bend'
+
+
+def law_kill(tree: Path, law: str) -> str | None:
+    result = run([SEED, cut_proof(tree, law)], 1800)
+    found = re.search(r'Location: LAWS-cut\.(\w+)', result['stdout'] + result['stderr'])
     return found.group(1) if result['exit'] not in (0, None) and found else None
 
 
@@ -1063,7 +1173,7 @@ def kills(base: dict, mutant: dict) -> list:
     for check, rows in mutant.items():
         for name, row in rows.items():
             if not row['agrees'] and base[check][name]['agrees'] and (
-                    check == 'sweep' or well_formed(row['result'])) and f'{check}:{name}' not in faults:
+                    check == 'sweep' or well_formed(row)) and f'{check}:{name}' not in faults:
                 killed.append(f'{check}:{name}')
     return killed
 
@@ -1074,22 +1184,27 @@ def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
     def one(entry):
         name, section, mutation, meaning = entry
         tree = trees[name]
-        # vm/model-lanes.bend imports word.bend alone: only a word mutant can change it.
-        bins = built(tree, ('model', 'audit', 'lanes') if section == 'word' else ('model', 'audit'))
+        # The audit is built only when the model's own runs leave the mutant alive: most die by a golden
+        # or a control. vm/model-lanes.bend imports word.bend alone: only a word mutant can change it.
+        bins = built(tree, ('model', 'lanes') if section == 'word' else ('model',))
         observed = observations(bins, tree, expected, shared)
+        if not kills(base, observed):
+            bins = {**bins, **built(tree, ('audit',))}
+            observed = observations(bins, tree, expected, shared)
         crashes = [f'{c}:{n}' for c, rows in observed.items() for n, r in rows.items()
-                   if not r['agrees'] and not well_formed(r['result'])]
+                   if not r['agrees'] and not well_formed(r)]
         return kills(base, observed), crashes, harness_faults(observed)
     # PROOF.bend runs single-threaded for minutes, so the law kills run beside the
     # observations instead of after each one.
     with ThreadPoolExecutor(max_workers=3) as proofs, ThreadPoolExecutor(max_workers=3) as pool:
-        proving = {name: proofs.submit(law_kill, trees[name]) for name in LAW_MUTANTS}
+        proving = {name: proofs.submit(law_kill, trees[name], law) for name, law in LAW_MUTANTS.items()}
         observed = list(pool.map(one, MUTANTS))
         laws = {name: future.result() for name, future in proving.items()}
     out = []
     for (name, section, mutation, meaning), (killed, crashes, faults) in zip(MUTANTS, observed):
         require(not faults, f'mutant {name}: harness faults, not kills, at {faults[:8]}')
-        require(name not in LAW_MUTANTS or laws[name], f'mutant {name}: PROOF.bend did not fail at a law')
+        require(name not in LAW_MUTANTS or laws[name] == LAW_MUTANTS[name],
+                f'mutant {name}: PROOF.bend failed at {laws[name]}, not at the law {LAW_MUTANTS.get(name)}')
         out.append({'mutant': name, 'breaks': meaning, 'killed': bool(killed), 'by': killed[:8],
                     'kills': len(killed), 'law': laws.get(name), 'crashes': len(crashes), 'crashed': crashes[:8]})
     return out
