@@ -13,7 +13,7 @@ BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FN 
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FUEL -- [ARGS...]
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py --freeze         # rewrite core/seeded.json and core/lane.json from the seed
-BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 582 systematic mutants (about 20 minutes)
+BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --heavy  # the 582 systematic mutants (3,057 s at a load of 45)
 ```
 
 ## Build and pins
@@ -894,9 +894,9 @@ adopt them or record its own, so that lockstep compares like with like.
   row shows a wrong observation or outlives its deadline, then runs each survivor
   against the ten ceiling rows too, and writes `vm/receipts/study.json`.
 
-  *Result*, on `vm.wat` sha256 `f206e6e3…` (the scope-table fix; the study takes
-  18 minutes on 8 workers on a machine that is not busy, and took 51 at a load of
-  45): of the 582 mutants, **515 show a wrong observation** (3 of them only on a
+  *Result*, on `vm.wat` sha256 `f206e6e3…` (the scope-table fix; the study took
+  3,057 s on 8 workers at a load of about 45, where round 6's 567 took 1,092 s):
+  of the 582 mutants, **515 show a wrong observation** (3 of them only on a
   ceiling row, 3 first on the scope rows), **8 are killed only by a hang** (`$select`'s search and
   `$ctor`'s walk never end) and **18 only by a trap** (an out-of-bounds store or
   load, in `append`'s block, describe's worklist arithmetic, the two String
