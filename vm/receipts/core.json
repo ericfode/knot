@@ -1,13 +1,13 @@
 {
- "date": "2026-09-29T08:23:13.541536+00:00",
+ "date": "2026-09-29T12:38:25.230404+00:00",
  "status": "passed",
  "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
  "inputs": {
   "scripts/run-wasm-io.mjs": "4ee7b16d5ae02614a47087dd8498352a487b7efffad6fca8ea629a60eae0b3ec",
   "vm/SPEC.md": "66a6a69b70833beafc31ae0e8924e7f9394ab62e39ca9aa4bb5d7a78446711b5",
-  "vm/build.json": "ecf734564e13509a0cc204261b6f4ae148b1355231f339247ed6a043b36a56b6",
+  "vm/build.json": "d500029aad180843dafe40d67a33f7d29e0dfd634c5ad42ffa2d3d506db64e60",
   "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
-  "vm/check-core.py": "fc04190e8e3915467ce9654621c2361e8c855db9599d7c635e8c05670a98e1d5",
+  "vm/check-core.py": "ee88018a71eff68a9d1a1a7eb40ddabb4a3fac79c1fbfee54bd4c2b5259356b7",
   "vm/check-spec.py": "9eb0d4ae01df310d01c91b7b88410c18f149a22d6de2692d036ec5dee87d2e7c",
   "vm/core/action-cell.kimg": "780298db289ee6963858c3ed516afb1fcdf33279d0fea7c1ce2d5ac4abee2bd7",
   "vm/core/action-cell.plan.json": "d4bb0a437c5cc7e94e5cf7cdf5b08f2e5f7273c60ec0b8be68d19b29cf34d6ed",
@@ -47,7 +47,7 @@
   "vm/core/display-text.plan.json": "c2b0fd6dbf15d7fbadb334edac815b0c2597b21f853994a1fd9678998bf4bcea",
   "vm/core/display-visits.kimg": "bd9d4ad0f6fdec25eabadd30dc55d2c315dadfd19ba8aefbbe4d3fa39fa3cea9",
   "vm/core/display-visits.plan.json": "7cece90ecaaf46453c533ea58e65d478863f02ebb0a245afeabd1181f5436c60",
-  "vm/core/fixtures.json": "b3c033f96ae538667f1c84753e3fb62ce4c2789950653b4c311cf64cf113e3ce",
+  "vm/core/fixtures.json": "e1dd0dffa65e5853b6e46bfc32a2e6ff66f38fdca269fdf44f97f12e1587aa50",
   "vm/core/frames-400k.kimg": "6d6299ef33e368eb0e92c90b730b4b12406963e966ed68e438ac3af1e8e04dea",
   "vm/core/frames-400k.plan.json": "e5c8beb4e39fc394e7f2b18bf7402875de5a1fdd5b72b130b61821902cb73e93",
   "vm/core/ill-typed.kimg": "ab4119c7808fa5dde9d63194eeb639dee25aadff9ce5adb1c6df03ba0e145412",
@@ -75,10 +75,11 @@
   "vm/harness.mjs": "cdd0f68a39314e2cacd143dbf3cf6adf250b44b3eda8622be97e6801f525fbf1",
   "vm/lane.py": "c62c9e65dca3d4c49877a0bd3fbf81149b80afb8fd872652930cd714c95f9520",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
+  "vm/scope.py": "59f14c2a933a6b4e2bda1d1c046dca914c31b8769867abfe794c67461d048414",
   "vm/serializer.py": "f28aef2493968d3729388c75909037dc4a3a56fc63a9b1bca885a1ff825279db",
-  "vm/study.py": "9db1611b0cc81080dac5390cc2f3dd671da9eccff5b4afcce47152e47b34cfc4",
-  "vm/vm.wasm": "41ca972b2cb3795c25292714138a99e0ac39a54eb152b07c72cbad80d917cddc",
-  "vm/vm.wat": "cc1f376eea3f955cd586e83d94580f727b509299da24e0e412e3cd48ca2a5eda"
+  "vm/study.py": "58d7003eeb78517cf22f6704a3b92f86523d62907c42fed23655b0db3ac5a44f",
+  "vm/vm.wasm": "407cb8728e783f61968c2f447248455a94eccfdc1c84d47c004d2ef5a718a7a2",
+  "vm/vm.wat": "f206e6e35902ada0af284b81e649525720b92bc2202128cd800c48f0edb08453"
  },
  "stages": [
   {
@@ -99,15 +100,15 @@
   },
   {
    "stage": "memory end",
-   "elapsed_seconds": 1.6
+   "elapsed_seconds": 1.5
   },
   {
    "stage": "lane",
-   "elapsed_seconds": 76.8
+   "elapsed_seconds": 23.7
   },
   {
    "stage": "ceiling",
-   "elapsed_seconds": 31.9
+   "elapsed_seconds": 29.7
   },
   {
    "stage": "growth",
@@ -115,15 +116,19 @@
   },
   {
    "stage": "host stack",
-   "elapsed_seconds": 0.5
+   "elapsed_seconds": 0.4
   },
   {
    "stage": "controls",
-   "elapsed_seconds": 1.9
+   "elapsed_seconds": 1.6
+  },
+  {
+   "stage": "scope tables",
+   "elapsed_seconds": 6.5
   },
   {
    "stage": "fuzz and limit-word corpora",
-   "elapsed_seconds": 57.4
+   "elapsed_seconds": 50.3
   },
   {
    "stage": "admitted images through both",
@@ -131,7 +136,7 @@
   },
   {
    "stage": "baseline of the mutant groups",
-   "elapsed_seconds": 4.3
+   "elapsed_seconds": 4.7
   }
  ],
  "pins": {
@@ -140,17 +145,17 @@
   "flags": [],
   "source": {
    "path": "vm/vm.wat",
-   "sha256": "cc1f376eea3f955cd586e83d94580f727b509299da24e0e412e3cd48ca2a5eda"
+   "sha256": "f206e6e35902ada0af284b81e649525720b92bc2202128cd800c48f0edb08453"
   },
   "module": {
    "path": "vm/vm.wasm",
-   "sha256": "41ca972b2cb3795c25292714138a99e0ac39a54eb152b07c72cbad80d917cddc",
-   "bytes": 19581
+   "sha256": "407cb8728e783f61968c2f447248455a94eccfdc1c84d47c004d2ef5a718a7a2",
+   "bytes": 19697
   },
   "test_build": {
    "prefix": ";;TEST ",
-   "sha256": "0391b79d0a019a7405bfed2fcdf3d9083a1d41e2db6f9c430cb0977020d17ad1",
-   "bytes": 19970
+   "sha256": "08237386ae31c1fc666ca9bc215943a2dd9c97afbd8999826119b6ce9f0aa7f5",
+   "bytes": 20086
   }
  },
  "shape": {
@@ -177,7 +182,7 @@
    ],
    "start_section": false,
    "call_indirect": false,
-   "functions": 86,
+   "functions": 87,
    "reaches_itself": null
   },
   "test_build": {
@@ -207,7 +212,7 @@
    ],
    "start_section": false,
    "call_indirect": false,
-   "functions": 90,
+   "functions": 91,
    "reaches_itself": null
   }
  },
@@ -2127,6 +2132,223 @@
    "exit": 5
   }
  ],
+ "scope_tables": {
+  "rows": [
+   {
+    "name": "valid-nest-1000-60-60",
+    "words": 59536,
+    "need": 3600060,
+    "sha256": "b6168517793117e42520d67f6c8cfc665a27b5631e1ff50758cac6a07a4e8a8b",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "valid-nest-20000-3-200",
+    "words": 32496,
+    "need": 12000200,
+    "sha256": "e3592a8145cd752a04214b97c07432a2d28433e8676c296e55ed61381e20888f",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "falseaccept-100-60",
+    "words": 1194,
+    "need": 6001,
+    "sha256": "4c1eea0ce6b55a841b7c635bc479b53ac0f14a2be23199a2ea8ae2491b47d9d0",
+    "reference": "reference-type",
+    "exit": 5
+   },
+   {
+    "name": "control-100-60-target-5395",
+    "words": 1194,
+    "need": 6001,
+    "sha256": "f56e42dd6c66eeadced49369ce401ce73804a81be2a688d2c2d322e2a0115a2d",
+    "reference": "reference-type",
+    "exit": 5
+   },
+   {
+    "name": "edge-t0-below",
+    "words": 3002,
+    "need": 7201,
+    "sha256": "1c7ff704a9846fedc7961785fccaef7584b22956ae8be7ab1a989ec3cde8ff10",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t0-exact",
+    "words": 3001,
+    "need": 7201,
+    "sha256": "43f58dfb67a3c4ad78f8d3df0254a2f872f9ce6058a887457e6349e722f0b29f",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t0-past",
+    "words": 3000,
+    "need": 7201,
+    "sha256": "b6c560ad0da8cca30d26a8c50222b5eb0935cf11b3d0edfdc64346b06baa4afa",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t0-past-wrong",
+    "words": 3000,
+    "need": 7201,
+    "sha256": "913ceca981f2129657fb78c536b95876553539cfbdcd4d2bc234f2ef6588deee",
+    "reference": "reference-type",
+    "exit": 5
+   },
+   {
+    "name": "edge-t1-exact",
+    "words": 5801,
+    "need": 20002,
+    "sha256": "49f5ddab81fb10540329012a0989ab486b498929cc9c7f5b25a3274f8d5b4784",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t1-past",
+    "words": 5800,
+    "need": 20001,
+    "sha256": "c0182c487c125fc041c7f929ed5ba4ddf88ee19b6f82f8a8175c65b3d2209eef",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t1-past-wrong",
+    "words": 5800,
+    "need": 20001,
+    "sha256": "accb27d6a2922789c1c315443357366576fa4cd904a6f76a97751ddfa74d69c8",
+    "reference": "reference-type",
+    "exit": 5
+   },
+   {
+    "name": "edge-t2-exact",
+    "words": 11801,
+    "need": 64004,
+    "sha256": "8f57ee1ee70c0323449124037a1228445f3b337eb9aa49e56e1944ce60ba6c02",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t2-past",
+    "words": 11800,
+    "need": 64001,
+    "sha256": "98885886dfa4590736b3213d0e22ee4c55bc0e1d2f729e676ad47dfa0cc2bcf1",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t2-past-wrong",
+    "words": 11800,
+    "need": 64001,
+    "sha256": "819939fd6ab82fa920794c576237ad65a2de7180c1cecd57512f1146fc0a68a7",
+    "reference": "reference-type",
+    "exit": 5
+   },
+   {
+    "name": "edge-t3-exact",
+    "words": 3926,
+    "need": 65008,
+    "sha256": "0003e083a7452b1779e92ea79e5dfead715fa60421c6e81d696c5aa531900985",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t3-past",
+    "words": 3925,
+    "need": 65001,
+    "sha256": "6c4c1d523d987d18832f9c022bad6b077c24306f528fdb3591a13734072e9c61",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "edge-t3-past-wrong",
+    "words": 3925,
+    "need": 65001,
+    "sha256": "1542d20e38453da7f58174991d3cdfbfb8d7da28e46c3babb517012ee7cc6e6d",
+    "reference": "reference-type",
+    "exit": 5
+   },
+   {
+    "name": "nest-mark",
+    "words": 4802,
+    "need": 18002,
+    "sha256": "efb98ffc2d345e2e0102af9a7323a09d5dbcac14dd04f24807f7a337cccff8a9",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "nest-capture",
+    "words": 4801,
+    "need": 18002,
+    "sha256": "634a9db4b81b5da3283ac2e7adbf35e3175389d78e3932d8bfadd7f111f2fe03",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "nest-unused",
+    "words": 4802,
+    "need": 18003,
+    "sha256": "bb38ca5f5b84e9c0f1790ce5ad5244e0619ac7d37dcfc1a16d3a16a2a1547f31",
+    "reference": "capture-use",
+    "exit": 5
+   },
+   {
+    "name": "nest-32767-2-20",
+    "words": 33783,
+    "need": 1310700,
+    "sha256": "b851a46482220362b9a12c618834f5ad3eea43b92d5ea0d8dc6a45af8c1a131c",
+    "reference": "admitted",
+    "exit": 0
+   },
+   {
+    "name": "exhausted-32767-2-8000",
+    "words": 400863,
+    "need": 524280000,
+    "sha256": "c28884a20688790be0c387c8d5fee7b89a342816a07af03c40cda353f5e4297a",
+    "reference": "resource",
+    "exit": 4
+   },
+   {
+    "name": "excess-function",
+    "words": 119,
+    "need": 1,
+    "sha256": "db588a2036f1e15c003b838ae628e22bdfcebd3af668274032084e0046acece5",
+    "reference": "slot-depth",
+    "exit": 5
+   },
+   {
+    "name": "excess-closure",
+    "words": 132,
+    "need": 1,
+    "sha256": "a3552f9c69a3034e34c4e2fb28abd12894a3f48ca040213198efc693a9fad77f",
+    "reference": "slot-depth",
+    "exit": 5
+   }
+  ],
+  "corpus": {
+   "seed": 20260930,
+   "images": 300,
+   "changed": 212,
+   "grow_the_tables": 126,
+   "corpus_sha256": "9981bd9dc72cffe8624698f28858ac5fa81cbb7691618c2ef88f3d7f4dd97ca4",
+   "reasons": {
+    "admitted": 106,
+    "branch-binders": 42,
+    "capture-use": 31,
+    "case-scrutinee-type": 16,
+    "case-slot": 2,
+    "closure-slots": 5,
+    "function-slots": 36,
+    "reference-type": 40,
+    "slot-depth": 22
+   },
+   "refused": 194,
+   "limits": 0,
+   "accepted": 106
+  }
+ },
  "malformed": {
   "controls": [
    {
@@ -4056,6 +4278,100 @@
     "lane:ill-describe-at-count"
    ],
    "wrong_observations": 1,
+   "crashes": 0
+  },
+  {
+   "mutant": "scope-tables-fixed",
+   "breaks": "the scope tables keep their first size, W + 4200 indices, and a slot past them lands on the next table",
+   "group": "scope",
+   "killed_by": [
+    "scope:falseaccept-100-60",
+    "scope:nest-267-100-20-3",
+    "scope:nest-105-100-10-6",
+    "scope:nest-166-100-10-6",
+    "scope:edge-t0-past"
+   ],
+   "wrong_observations": 41,
+   "crashes": 1
+  },
+  {
+   "mutant": "scope-holds-one-short",
+   "breaks": "a write at index s holds s indices, not s + 1: the index at the tables' size lands on the next table",
+   "group": "scope",
+   "killed_by": [
+    "scope:edge-t0-past",
+    "scope:chain-232-40-320-0+2",
+    "scope:nest-capture",
+    "scope:edge-t1-past",
+    "scope:chain-128-500-80-2-1"
+   ],
+   "wrong_observations": 11,
+   "crashes": 0
+  },
+  {
+   "mutant": "scope-types-not-carried",
+   "breaks": "a doubling of the tables drops the types the old table held",
+   "group": "scope",
+   "killed_by": [
+    "scope:edge-t0-past",
+    "scope:chain-210-60-130-0+0",
+    "scope:chain-297-60-130-0-2",
+    "scope:chain-238-100-80-0+3",
+    "scope:chain-226-200-60-0+2"
+   ],
+   "wrong_observations": 20,
+   "crashes": 0
+  },
+  {
+   "mutant": "scope-types-carried-short",
+   "breaks": "a doubling carries a quarter of the types the old table held",
+   "group": "scope",
+   "killed_by": [
+    "scope:edge-t0-past",
+    "scope:edge-t1-past",
+    "scope:edge-t1-exact",
+    "scope:chain-002-500-120-3+2",
+    "scope:chain-240-500-120-3+2"
+   ],
+   "wrong_observations": 9,
+   "crashes": 0
+  },
+  {
+   "mutant": "scope-marks-not-carried",
+   "breaks": "a doubling of the tables drops the use marks the old table held",
+   "group": "scope",
+   "killed_by": [
+    "scope:nest-070-100-30-2",
+    "scope:nest-110-100-30-2",
+    "scope:nest-231-150-20-2",
+    "scope:nest-267-100-20-3",
+    "scope:nest-105-100-10-6"
+   ],
+   "wrong_observations": 34,
+   "crashes": 0
+  },
+  {
+   "mutant": "scope-no-doubling",
+   "breaks": "a table grows to the index that passed it, not to twice its size: each further slot moves it again",
+   "group": "scope-growth",
+   "killed_by": [
+    "scope:nest-mark",
+    "scope:edge-t1-past"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "scope-slots-refused-early",
+   "breaks": "a function body deeper than its `slots` is refused at that depth, not when the unit ends, so a later defect goes unreported",
+   "group": "scope",
+   "killed_by": [
+    "scope:excess-function",
+    "scope:excess-closure",
+    "scope:chain-003-100-20-0+0",
+    "scope:nest-147-40-20-3"
+   ],
+   "wrong_observations": 4,
    "crashes": 0
   }
  ]

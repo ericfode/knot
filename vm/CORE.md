@@ -709,7 +709,7 @@ adopt them or record its own, so that lockstep compares like with like.
   function's `slots`). Each is judged by the reference codec and by the VM, in the
   test build and in `vm.wasm`: 106 admitted and 194 refused with eight different first
   defects, 126 of them past the first size, and none differs. The unchanged VM
-  differed on 12 of the 22 first rows and 30 of the 300 (.local/vm-core/logs/r10-scope-prefix.log,
+  differed on 13 of the 24 rows and 30 of the 300 (.local/vm-core/logs/r10-scope-prefix.log,
   r10-corpus-prefix.log).
 - **Growth (choice 15).** Three rows on `core/loop-cells` (`loop() = call loop`,
   `main() = call loop`, review round 1's probe byte for byte), each stop derived
@@ -884,29 +884,32 @@ adopt them or record its own, so that lockstep compares like with like.
   it. Every mutant row has a deadline in the gate, so a hang in another group is
   a Timeout that never counts, and the mutant is reported as surviving that
   group, not left to stall the gate.
-- **Mutant study.** `vm/study.py` enumerates the 567 systematic single-token
-  mutants of the 21 semantic functions of `vm.wat` (a comparison or an arithmetic
-  or bitwise operator swapped, or a small `i32.const` moved by one) and reproduces
-  the reviewer's list name for name. `python3 vm/check-core.py --study --heavy`
+- **Mutant study.** `vm/study.py` enumerates the 582 systematic single-token
+  mutants of 23 functions of `vm.wat`: the 21 semantic ones, and `$setscope` and
+  `$holdscope`, which hold the validator's scope tables (a comparison or an
+  arithmetic or bitwise operator swapped, or a small `i32.const` moved by one). It
+  reproduces the reviewer's 567 name for name (on the lines they have now). `python3 vm/check-core.py --study --heavy`
   runs each against the gate's own rows (the same jobs and the same
   `observed_wrong`, so a kill there is a kill in the gate), group by group until a
   row shows a wrong observation or outlives its deadline, then runs each survivor
   against the ten ceiling rows too, and writes `vm/receipts/study.json`.
 
-  *Result*, on `vm.wat` sha256 `cc1f376e…` (the fixed VM; the study takes 17 minutes
-  on 8 workers): of the 567 mutants, **508 show a wrong observation** (3 of them
-  only on a ceiling row), **8 are killed only by a hang** (`$select`'s search and
+  *Result*, on `vm.wat` sha256 `f206e6e3…` (the scope-table fix; the study takes
+  18 minutes on 8 workers on a machine that is not busy, and took 51 at a load of
+  45): of the 582 mutants, **515 show a wrong observation** (3 of them only on a
+  ceiling row, 3 first on the scope rows), **8 are killed only by a hang** (`$select`'s search and
   `$ctor`'s walk never end) and **18 only by a trap** (an out-of-bounds store or
   load, in `append`'s block, describe's worklist arithmetic, the two String
   cells' immediate tests, and the three copies and reads past a cell's end that
-  only the memory-end rows reach), and **33 survive**, each explained in
+  only the memory-end rows reach), and **41 survive**, each explained in
   `study.EQUIVALENT`, which the study checks against its survivors both ways. The
   gate's rule for its own mutants counts a trap or a hang only in the groups whose
-  defect it is, but installed as `vm.wat` each of the 534 fails the gate: a frozen
+  defect it is, but installed as `vm.wat` each of the 541 fails the gate: a frozen
   run is never a trap, and a hang outlives the gate's own timeouts. So the gate
-  detects **534 of the 567 (94%)**: 508 by a wrong observation, 8 by a hang, 18 by a
-  trap. That reading is the study's, confirmed by installing five of them in a
-  scratch copy, re-pinned, and running the whole gate, which exits 1 on each: the
+  detects **541 of the 582 (93%)**: 515 by a wrong observation, 8 by a hang, 18 by a
+  trap. That reading is the study's, confirmed (in review round 6's closing session)
+  by installing five of them in a scratch copy, re-pinned, and running the whole gate,
+  which exits 1 on each: the
   three memory-end mutants (7 s, a trap on their row), one the study finds only by a
   trap (`$append:1985:i32.add->i32.sub@19`: golden `string-codes` traps, 2 s) and
   one only by a hang (`$select:2212:i32.ge_u->i32.gt_u@26`: a golden outlives the
@@ -914,18 +917,25 @@ adopt them or record its own, so that lockstep compares like with like.
   of the reviewer's mutants.
   The fix of `$scell` moved 9 of the 567 (the reviewer's
   list is reproduced name for name on the source of `2e0c9b1`; on this source
-  they are the same tokens on their new lines, and 9 in `$scell` are new ones).
+  they are the same tokens on their new lines, and 9 in `$scell` are new ones). The
+  scope-table fix added 21 lines above all of them, so every name moved by 21
+  (checked: each of the 567 old names is among the new source's mutants, each with
+  the result it had, but for the `$ctor` walk below), and added 15 mutants in
+  `$setscope` and `$holdscope`: 7 are killed (4 first by the keys rows, since a
+  `$setscope` that misplaces its writes breaks every validation, and 3 by the scope
+  rows: the write that holds `s` indices, a type table of 2 bytes an index, and a
+  doubling that copies half the types) and 8 survive, below.
   The reviewer's study of the same mutants on gate `2e0c9b1` found 426 that
   change a frozen row, 25 more only on its own corpora, 42 more only on its print,
   Halt, digit and Nat corpora, 12 hangs and 62 survivors. The groups run cheapest
   first, and `by_group` in the receipt counts each result by the group of its first
-  wrong observation, hang or trap. The 508 were first killed by: keys 181,
-  goldens 88, inspection 56, tags 51, display 47, writers 39, sweeps 20, limited 10,
-  runs 6, programs 5, ceiling 3, describe 2 (`$ctor:1886`'s `sub -> add` counts a
+  wrong observation, hang or trap. The 515 were first killed by: keys 186,
+  goldens 88, inspection 56, tags 50, display 47, writers 39, sweeps 20, limited 10,
+  runs 6, programs 5, ceiling 3, scope 3, describe 2 (`$ctor:1886`'s `sub -> add` counts a
   tag up, not down, so its walk ends only when the tag wraps, about 2^32 steps
   later: under heavy load that outlives a row's deadline and the group's later rows
-  are skipped, so its first group moved from inspection to tags between the last
-  two runs); the hangs by keys 7 and tags 1; the traps
+  are skipped, so its first group moved from inspection to tags, and now to keys,
+  between the last three runs, the one mutant of the 567 whose result moved); the hangs by keys 7 and tags 1; the traps
   by goldens 5, keys 4, display 3, memory-end 3, tags 2 and ceiling 1.
 
   An earlier reading filed three of the survivors as differing only at 4 GiB: an
@@ -937,7 +947,7 @@ adopt them or record its own, so that lockstep compares like with like.
   each of the three traps there and nowhere else, and the gate registers them
   (group `memory-end`).
 
-  The 33 survivors, by why no run tells them apart: 32 are argued equal on every
+  The 41 survivors, by why no run tells them apart: 40 are argued equal on every
   input or unobservable until vm-rc, and one is reachable by a layout no row builds.
   - *unobservable until vm-rc* (15): 13 change which operands a prim or a completion
     drops (`$drop` is empty, choice 1), and two change the reference count of an
@@ -955,6 +965,14 @@ adopt them or record its own, so that lockstep compares like with like.
   - *a guard another check makes redundant* (3): three class masks (`7 -> 6`), where
     a Closure passes the class test and the type test refuses it, since its word at
     offset 8 is a node's word offset and every node follows every type record;
+  - *the scope tables' size and copying are no observation* (8, `$setscope:1394`
+    and `$holdscope`): the tables grow one write early (a write holding one index
+    more than it needs, or a doubling when exactly full: 2); at a size equal to the
+    index that passed it either arm gives the same size (1); a type table of twice
+    the bytes it needs (1); a copy of as many bytes again, into the half of the new
+    type table that is written before it is read (1); and the guard on a table of
+    2^30 indices (3), which no image reaches: the earlier tables stay in scratch, so
+    `$take` stops the image before a table passes 2^29 (choice 16);
   - *reachable, but by no row* (1): a class mask (`7 -> 8`) that only an Action whose
     foreign id is the String type index and whose operand is the word 1 passes,
     after which it reads past the Action's 16-byte cell, so the words of the next
