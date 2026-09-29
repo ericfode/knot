@@ -1144,3 +1144,68 @@ and re-check with clean/broken/held-out controls; consider excluding
 Prevention for the next backlog review: run law-fill files with a reviewed
 noise filter, and give the coordinator a fixture list up front so parse
 rejections are planned rather than discovered.
+
+## 2026-09-28 — `bend-machine-arithmetic`: applicability sentence, concrete shapes, floor 0.70
+
+Date / scope / source revision: 2026-09-28, branch `perch/arithmetic-rule`
+(stacked on `perch/backlog-review`, base `a6367eb9`). Follows the user's
+instruction that Perch rules may be edited to do a better job; one rule changed,
+no adapter or built-in change. Trigger: 46 adjudicated false positives in the
+[backlog review](perch-execution/campaign-backlog-2026-09-28/README.md), plus the
+2026-09-26 constructor-only `mixed-types.main` false positive at 0.81 and the
+earlier arithmetic-free "release wrapper" scores of 0.70 to 0.76.
+
+Evidence links and usage receipt IDs: [controls, labels and scores](../tests/perch-arithmetic/README.md)
+(`results-2026-09-28.json`); local receipts under the worktree's ignored
+`.perch/usage/` from 2026-09-29T05:2xZ to 05:5xZ.
+
+Waste or missed behavior / measured effort: the old question scored declarations
+with no arithmetic at 0.43 to 0.76 (constructor-only, match-only, string/IO
+`main`, type declarations, `{==}` fills) and real unguarded overflow at 0.31 to
+0.48, so it ranked them inverted and its floor of 0.80 was crossed only by the
+former. Effort not separately timed.
+
+Rule + hash / requested and resolved model: `bend-machine-arithmetic`; old rule
+set `7879db5b57067b4f0237cd80da969cd1e79adbd61fda600351f6bfd6d45f0506`, edited
+question at the old floor `b5ed452ac6007f98d3bd46d93a3b2b2158b53b0826214498dadb19fbe182eaad`,
+final (floor 0.70) `ccbc155dbc8f228cc73ee97966f27f46600e752faaa58f7ea4787970bd352a4c`.
+Requested `jev-latest`, resolved `jev-1.13.0`.
+
+Judgment: confirmed noisy rule (a recurrence, not a one-off). The other Bend
+rules already end with an "if none, this rule holds" applicability sentence; this
+one alone did not, which explains why only it inverted.
+
+Change and why: (1) the question now states its applicability (arithmetic or
+Nat/U32 conversion producing a size, bound, index, count, offset or source
+position; otherwise the rule holds, listing constructors, matches, string/IO calls,
+type and law declarations and law fills), names three violation shapes (unordered
+subtraction as a count, a sum or product compared against a limit, a masked index
+as a bounds check) and exempts guarded arithmetic; (2) the floor moves from 0.80
+to 0.70 because the controls now separate, not to hide noise. Rule stays advisory.
+`perch.yaml` ignores `tests/perch-arithmetic/**` so scans skip the deliberately
+broken controls. One wording, not iterated after scoring.
+
+Clean / broken / held-out evidence and deterministic checks: 9 broken and 14
+clean declarations (6 clean with arithmetic, 8 without, including two `{==}`
+fills), all seed-valid; the held-out file was written before the edited question
+was scored and scored once. Old question: broken 0.31 to 0.48 (none flagged),
+clean 0.43 to 0.76. Edited: broken 0.61 to 0.81 (6 of 9 at or above 0.70; `slot`,
+`row_offset`, `align_up` at 0.63 to 0.65 are missed), clean 0.05 to 0.17 (none
+flagged), gap at least 0.44. On the 46 production false positives: 0.81 to 0.85
+before, 0.05 to 0.12 after. On 218 declarations of `wasm`, `scope`, `check`,
+`patterns`, `parse`, data-lifetime `model` and adaptive `frontier`: at most 0.57,
+none at or above 0.60; the top scores are the guarded `allocate`/`alloc`
+declarations adjudicated as guarded earlier. Offline gates: 168 tests and the
+eight-rule wiring check pass; `perch rules list` shows the edited text.
+
+Remaining uncertainty / next trigger: 23 controls are not an accuracy claim; three
+broken shapes stay below the floor. Re-check on the next backlog review and look
+at any production declaration at or above 0.70 as a candidate, not a verdict.
+Deferred, not done: the 74 built-in `does_not_do_what_it_claims`, `dead_code` and
+`docs` flags on `{==}` law fills. A deterministic skip for `bend_law_fill` units
+belongs in the installer's check flow (`unit.part && ...`), but the 2026-09-27
+paired-law repair deliberately made built-in proof requests carry the law and its
+tests assert those requests, so the change needs its own decision, controls and
+cache-identity note rather than a rule edit. Prevention: give every source rule an
+explicit applicability sentence and include a no-arithmetic control before
+accepting its floor.

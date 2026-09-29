@@ -266,6 +266,10 @@ held-out comparison; this is preliminary tuning, not a production accuracy claim
 Performance floors are 70% for prefix copying, 60% for invariant work and linked
 list indexing, and 80% for storage growth, selected from retained control
 comparisons. All have `gate: false`; small control sets do not justify promotion.
+`bend-machine-arithmetic` has a 70% floor since 2026-09-28: its question gained the
+applicability sentence and three concrete violation shapes, after it scored
+arithmetic-free declarations above real overflow. Controls and scores are in
+[tests/perch-arithmetic](../tests/perch-arithmetic/README.md).
 Built-in defect/security findings still gate a supported-language `scan`.
 
 Version 0.3.5 treats commands differently: `gate: false` affects **scan**;

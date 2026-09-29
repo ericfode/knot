@@ -20,20 +20,30 @@
 - name: bend-machine-arithmetic
   where: "**/*.bend"
   each: method
-  min: 80
+  min: 70
   gate: false
   ensure: >
     Judge the parsed target declaration, using supplied helpers to establish its
     behavior. Do not flag an unrelated declaration merely present in context.
-    Inspect arithmetic used for bounds, indices, sizes, and signed differences in
-    this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic.
-    Subtraction used as a nonnegative count needs an established ordering; a
-    difference that can be negative must retain its intended signed meaning.
-    A masked or wrapped storage index does not itself validate a source position.
-    Report a concrete path where wraparound or conversion violates the operation's
-    stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations,
-    or an explicit modular representation is allowed. Do not invent caller bounds
-    or declare a bug solely because supporting code is outside this file.
+    This rule concerns U32, Nat and F32 arithmetic (add, subtract, multiply,
+    shifts, masks) and Nat/U32 conversion that produces a size, bound, index,
+    count, offset or source position. If the declaration contains no such
+    arithmetic or conversion (constructors, matches, string or IO calls, type
+    and law declarations, law fills), this rule holds.
+    Otherwise inspect that arithmetic. U32 arithmetic is modulo 2^32, not
+    unbounded Nat arithmetic. A subtraction used as a nonnegative count or
+    offset needs an established ordering; a difference that can be negative
+    must retain its intended signed meaning. A sum or product that forms an
+    end position, byte size or offset and is then compared against a limit
+    breaks the rule when its operands are unbounded, because the wrapped
+    result can pass the check. A masked or wrapped storage index does not
+    itself validate a source position; index & (size - 1) is not a bounds
+    check. Report a concrete path where wraparound or conversion violates the
+    operation's stated domain. Intentional word arithmetic for hashing, PRNGs,
+    bit operations, or an explicit modular representation is allowed, as is
+    arithmetic guarded by an explicit comparison, clamp or ceiling. Do not
+    invent caller bounds or declare a bug solely because supporting code is
+    outside this file.
 
 - name: bend-borrow-lifetime
   where: "**/*.bend"
