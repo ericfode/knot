@@ -9,6 +9,7 @@ from .model import SEVERITIES, severity_rank
 from .runner import Outcome, all_conditions, summarize
 
 VERSION = 1
+LIST_LIMIT = 12          # conditions per rule printed in the terminal summary; JSON keeps them all
 
 
 def to_json(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major') -> dict:
@@ -74,7 +75,13 @@ def markdown(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major') -> s
                       key=lambda c: (-severity_rank(c.severity), c.id))
         if rows:
             out += ['', f'## {status.capitalize()} conditions', '']
+            shown: dict[str, int] = {}
             for c in rows:
+                shown[c.id] = shown.get(c.id, 0) + 1
+                if shown[c.id] == LIST_LIMIT + 1:
+                    out.append(f"- ... {sum(1 for x in rows if x.id == c.id) - LIST_LIMIT} more `{c.id}` conditions in report.json")
+                if shown[c.id] > LIST_LIMIT:
+                    continue
                 out.append(f"- **{c.severity}** `{c.id}` ({c.actor}) {c.line().split(': ', 1)[0].split('] ', 1)[-1]}: "
                            f"{c.observed or c.expected}")
                 if c.fix_hint:
@@ -101,11 +108,16 @@ def text(ctx: Context, outcomes: list[Outcome], fail_on: str = 'major', *, verbo
         if o.result.reason:
             head += f'  ({o.result.reason})'
         lines.append(head)
-        shown = 0
+        per_rule: dict[str, int] = {}
         for c in cs:
             if c.status == 'known' and not verbose:
                 continue
-            shown += 1
+            per_rule[c.id] = per_rule.get(c.id, 0) + 1
+            if per_rule[c.id] == LIST_LIMIT + 1:
+                lines.append(f"    ... {sum(1 for x in cs if x.id == c.id and (verbose or x.status != 'known')) - LIST_LIMIT} more {c.id} "
+                             'condition(s) in report.json')
+            if per_rule[c.id] > LIST_LIMIT:
+                continue
             lines.append(f"    {c.status[:3]:<3} {c.line()}")
         hidden = sum(c.status == 'known' for c in cs) if not verbose else 0
         if hidden:
