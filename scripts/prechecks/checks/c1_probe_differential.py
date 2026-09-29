@@ -282,6 +282,7 @@ def run(ctx) -> CheckResult:
     for digest, (family, key, text, _v) in sorted(corpus.items()):
         now = violations(text, verdicts[digest], {k: v for k, v in head_table.get(digest, {}).items()})
         before = violations(text, verdicts[digest], {k: v for k, v in base_table.get(digest, {}).items()}) if base_table else {}
+        clean_at_base = {lane for lane in ('parse', 'check', 'eval') if not any(l == lane for (l, _r) in before)}
         for (lane, rule), detail in sorted(now.items()):
             if (lane, rule) in before:
                 counts['known'] += 1
@@ -299,8 +300,9 @@ def run(ctx) -> CheckResult:
             if per_bucket[bucket] > MAX_CONDITIONS:
                 continue
             severity = SEVERITY[rule]
-            regressed = bool(base_table)                 # every program is judged at both trees: a new violation is a regression
-            if regressed and rule not in ('diagnostic-shape', 'premature-unsupported'):
+            # A regression is a verdict that was acceptable at base: the same program and lane had no violation there. A lane
+            # that was already wrong at base and is wrong in another way now is a change, not a regression.
+            if base_table and lane in clean_at_base:
                 severity = raised(severity)
             result.conditions.append(Condition(
                 ID, rule, severity, {'probe': digest[:16], 'lane': lane},

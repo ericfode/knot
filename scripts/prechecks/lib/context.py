@@ -25,6 +25,14 @@ def timeout_scale() -> float:
         return 4.0
 
 
+def tool_timeout_scale() -> float:
+    """Hang guards for tools the suite runs scale with KNOT_GATE_TIMEOUT_SCALE, as every gate's do (default 1)."""
+    try:
+        return max(float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1')), 1.0)
+    except ValueError:
+        return 1.0
+
+
 def tool_env(extra: dict | None = None) -> dict:
     """An allowlisted child environment: tool discovery only, no credentials, offline seed and Perch."""
     env = {k: os.environ[k] for k in TOOL_ENV_KEYS if k in os.environ}
@@ -121,7 +129,7 @@ class Context:
         """Run a tool with the allowlisted environment; returns (code, stdout, stderr) and never raises on timeout."""
         try:
             proc = subprocess.run([str(a) for a in argv], cwd=str(cwd) if cwd else None, env=tool_env(env), input=input,
-                                  capture_output=True, timeout=timeout)
+                                  capture_output=True, timeout=timeout * tool_timeout_scale())
             return proc.returncode, proc.stdout, proc.stderr
         except subprocess.TimeoutExpired:
             return None, b'', b'timeout'

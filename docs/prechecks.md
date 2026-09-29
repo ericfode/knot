@@ -52,12 +52,17 @@ npm run -s prechecks -- --list
   in both directions.
 - **Exit status.** 0: no new or changed *executor-actionable* condition at or above `--fail-on` (default `major`). 3: at least
   one. 1: a check crashed (never silent). 2: usage error. Conditions that only the coordinator or an upstream can resolve
-  never fail the run, and `unavailable` is never a pass.
+  never fail the run, and `unavailable` is never a pass. One consequence: the vm-core `a5e2ffa8` replay of C2 lists the
+  unconsumed `run_controls` but exits 0, because its actor is `upstream`; no flag turns coordinator or upstream conditions
+  into a failure, by design (an executor cannot merge or rebase).
 - **Output.** A terminal summary (twelve conditions per rule; the rest are in JSON), and in `.local/prechecks/<head8>/`:
   `report.json`, `report.md`, `facts.json` (the measured facts), `known.txt` (lines for the review harness's `known`
   argument). `--emit-ledger` prints ledger entries that would acknowledge every new condition.
-- **Time.** Measured on this host with four jobs: the whole suite against main takes about 30 s on a cold cache and about 10
-  to 15 s warm; the dominant check is C1, which caches base lanes by tree and seed verdicts by program hash.
+- **Time.** Measured on this host (Apple Silicon, four jobs, `python3 -B scripts/prechecks/run.py --no-write` on the prechecks
+  branch, working copy against main): 26 s on the first run after a source change (C1 builds the head lanes and runs the
+  corpus) and 10.9 s on the immediately repeated run (lanes, seed verdicts and base outcomes cached by tree and program
+  hash). Main against main (`--head 43a394a4 --base 43a394a4`) took 28 s on a cold cache, with C2 and C3 skipping as an
+  identity. The dominant check is C1; replays of historical increments took 4 to 32 s each.
 
 ### Conditions, fingerprints and the ledger
 
@@ -66,14 +71,15 @@ commit on the branch), `coordinator` (a merge, sign-off, ledger or manifest entr
 Executors never merge or rebase, so coordinator conditions go to `known.txt` and the merge list, never to the implementer.
 
 The fingerprint hashes the check, rule and a subject key without line numbers (a path and JSON pointer, a probe hash and
-lane, a commit), so it survives unrelated edits. `docs/compiler-campaign/known-conditions.json` (coordinator-owned) lists
-acknowledged fingerprints; it is read **from main**, never from the branch, so a branch cannot silence its own condition.
+lane, a commit), so it survives unrelated edits. `docs/compiler-campaign/known-conditions.json` lists acknowledged fingerprints. The coordinator creates and owns it
+(it does not exist yet, and the suite runs with an empty ledger); it is read **from main**, never from the branch, so a
+branch cannot silence its own condition.
 A matching fingerprint and value is `known`; a matching fingerprint with another value is `changed`; anything else is `new`.
 
 ### The increment manifest
 
-`docs/compiler-campaign/increments/<id>.json`, written by the coordinator at launch and read from main. Only `id` is
-required. Fields: `upstream`, `merge_before`, `owns`, `appends`, `frozen`, `receipts`, `impl`, `expectations`, `authorized`
+`docs/compiler-campaign/increments/<id>.json`, written by the coordinator at launch and read from main (none exists yet;
+`--manifest <file>` supplies one). Only `id` is required. Fields: `upstream`, `merge_before`, `owns`, `appends`, `frozen`, `receipts`, `impl`, `expectations`, `authorized`
 (the only source of authority: a commit message never authorizes), `consumes`, `d4_targets`, `limits`, `coverage`,
 `required_laws`, `charter`, `generators`, `executor`, `freeze_first`. A missing manifest yields defaults, and a rule that
 needs a declaration (C3's write scope, C7's limits) reports that instead of guessing.
@@ -86,7 +92,8 @@ Rules are listed with their severity and actor. "Motivated by" names findings fr
 
 Replays every reviewer probe as a permanent control. The corpus is the registry harvested from dev-round probes
 (`tests/prechecks/registry/lang.jsonl`, 117 programs with pinned-seed verdicts), tracked fixtures that carry seed
-observations, and up to 1,000 deterministically generated programs per run: grids (parameters, fields, tails after a
+observations, and deterministically generated programs, at most 1,000 in the whole corpus per fast run (500 on a cold base
+cache): grids (parameters, fields, tails after a
 constructor head, return types, annotations, binder spellings, empty datatypes, let marks, literal forms) and operators (gaps
 at token boundaries, literal substitutions, layout moves), weighted toward the families the changed sources are likely to
 disturb. The pinned seed judges each program (its own `parse_book` in process, `--check-only`, a run), cached by program hash;
@@ -102,8 +109,17 @@ Programs the seed itself cannot judge (timeout, crash) are never flagged.
 
 Motivated by: classify's eight verified majors and the follow-up increment they forced; classify-2's regressions from its own
 fix; the detached constructor brace, found by nest, again by generics and again by modules; the empty datatype, found three
-times; dotted binders; gapped Nat `+`. Replayed on classify `5e5b2201` with the increment's target families declared, it lists
-184 incomplete repairs (for example `Flag<Flag, Flag>` and `@x: Flag -> Flag` as return types, `let x.y.z`).
+times; dotted binders; gapped Nat `+`. Replays (`--head <rev> --base <rev>`, main-side base as reconstructed by the design):
+
+| Head (base) | Result |
+|---|---|
+| classify `5e5b2201` (`185b7d5f`) | exit 3, 58 failing: `Unsupported parse destructuring-binding` for `= \|x`, `= ~x`, `= x => x` and `template-binder` for `~~b:`, forms the seed's parser rejects later (the `==`/`=>` and `~` regressions) |
+| classify-2 `7b85b8aa` (`fa31fec0`) | exit 3, 5 major: `Flag<Flag>>`, `Flag<>` and `Flag<x>=` read as `type-application` before the seed's error offset (the `Name<` regression) |
+| nest `eb15da85` (`3c25d9be`) | exit 3, 4 blocking: a dotted binder accepted at parse and check lanes, an empty-typed binder turned Invalid, a moved type accepted |
+| classify `5e5b2201`, with a hand-written manifest declaring every grid family in `d4_targets` | 184 `incomplete-repair` majors, for example `Flag<Flag, Flag>` and `@x: Flag -> Flag` as return types and `let x.y.z` |
+
+Main against itself yields no condition; the 155 seed-accepted forms that Knot calls Invalid on main are reported as facts
+(`d4_gaps`), not conditions.
 
 ### C2 merge-forecast
 
@@ -260,8 +276,11 @@ These edits live in the campaign harness, outside the repository:
   set records two defects (vm-spec's section 6 and section 9 passages; vm-model's `inspection_runs`) that selection does not reach.
 - **Advisory Perch verdicts** are never findings until confirmed deterministically (AGENTS.md).
 - **Held-out discipline.** Rules were derived from dev-round instances. The design's held-out rounds (review started at or after
-  2026-09-28T12:00Z) were not read: their probes sit in `.local/prechecks/quarantine/` (untracked) until replay has measured
-  held-out recall, and the held-out calibration packets were built from the design's control table, not from any evidence.
+  2026-09-28T12:00Z) were not used for tuning: their probes sit in `.local/prechecks/quarantine/` (untracked, copied unread) until
+  replay has measured held-out recall, and the held-out calibration packets were built from the design's control table. Two
+  exposures, both recorded in the [controls README](../tests/prechecks/perch-controls/README.md): vm-spec `5517f263` moved to dev
+  when its passages were read to fix the P3 builder (DESIGN 1.4, rule 3), and one held-out literals finding was printed during
+  orientation (nothing was derived from it).
 
 ## Adding a check or a rule
 

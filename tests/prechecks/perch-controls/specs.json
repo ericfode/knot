@@ -1,5 +1,5 @@
 {
- "note": "Calibration controls for .perch/rules/prechecks.yaml. Sources: the design's control table (dev broken and clean; held-out from the afternoon rounds). No finding evidence from a held-out round was read to build them.",
+ "note": "Calibration controls for .perch/rules/prechecks.yaml. Sources: the design's control table (dev broken and clean; held-out from the afternoon rounds). No finding evidence from a held-out round was used to build them, with two disclosed exceptions recorded in README.md.",
  "controls": [
   {
    "id": "vm-spec-d2fe0f20-bench",
@@ -80,7 +80,7 @@
   {
    "id": "vm-spec-5517f263-inspection",
    "rule": "outcome-follows-d4",
-   "split": "held-out",
+   "split": "broken",
    "expected": "broken",
    "increment": "vm-spec",
    "head": "5517f263",
@@ -88,7 +88,7 @@
    "anchors": [
     "image-size"
    ],
-   "note": "Held-out (review started after 2026-09-28T12:00Z): SPEC section 4 says an oversize image is Exhausted image-size; check-spec.py:966-972 freezes it as HostFailure image (design table)."
+   "note": "Was the design table's held-out P3 instance. It became dev when its check-spec.py and SPEC lines were read to make the P3 builder attach the frozen expectation code that names the same cause (DESIGN 1.4, rule 3). SPEC section 4 says an oversize image is Exhausted image-size; check-spec.py:966-972 freezes it as HostFailure image."
   },
   {
    "id": "nest-57a0c01d-enum",
@@ -366,6 +366,11 @@
    "rule": "required-laws-met",
    "split": "clean",
    "reason": "The design lists none: no increment is known to have met every required law with a universal binder."
+  },
+  {
+   "rule": "outcome-follows-d4",
+   "split": "held-out",
+   "reason": "The design's only held-out P3 instance, vm-spec 5517f263, moved to dev when its passages were read to fix the builder; no other held-out P3 round exists."
   }
  ]
 }

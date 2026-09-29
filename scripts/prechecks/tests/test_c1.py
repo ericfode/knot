@@ -128,9 +128,10 @@ class EndToEndTests(RepoTest):
         result = self.run1()
         found = [c for c in result.conditions if c.rule == 'd4-invalid' and c.subject['lane'] == 'parse']
         self.assertTrue(found, [c.line() for c in result.conditions][:5])
-        self.assertEqual('blocking', found[0].severity)                    # major, raised one step: a regression
-        self.assertIn('parameter-type', found[0].evidence['knot'])
-        self.assertEqual('fixture', found[0].value['family'])
+        fixture = [c for c in found if c.value['family'] == 'fixture']     # the tracked classification fixture is among them
+        self.assertTrue(fixture, [c.value for c in found])
+        self.assertEqual({'blocking'}, {c.severity for c in found})       # major, raised one step: a regression
+        self.assertTrue(any('parameter-type' in c.evidence['knot'] for c in fixture))
         again = self.run1(base=self.fx.git('rev-parse', 'HEAD'))           # against itself: the same violation is known, not new
         self.assertEqual([], [c for c in again.conditions if c.rule == 'd4-invalid'])
 

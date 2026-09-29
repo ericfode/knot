@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
-from .context import tool_env
+from .context import tool_env, tool_timeout_scale
 
 CLIS = {'parse': 'src/parse-cli.bend', 'check': 'src/check-cli.bend', 'eval': 'src/eval-cli.bend'}
 EXIT_CLASS = {0: 'Checked', 2: 'Invalid', 3: 'Unsupported', 4: 'Exhausted', 5: 'HostFailure', 6: 'InternalFailure'}
@@ -76,7 +76,7 @@ class Lanes:
             if not entry.is_file():
                 return name, None, f'{CLIS[name]} does not exist in {self.label}'
             proc = subprocess.run(['bun', str(seed.resolve()), str(entry), '-o', str(out)], cwd=source, env=tool_env(),
-                                  capture_output=True, timeout=240)
+                                  capture_output=True, timeout=240 * tool_timeout_scale())
             if proc.returncode != 0 or not out.is_file():
                 return name, None, proc.stderr.decode('utf-8', 'replace').strip().splitlines()[-1][:160] if proc.stderr.strip() else 'build failed'
             return name, out, ''
@@ -89,6 +89,7 @@ class Lanes:
         return self.built
 
     def run(self, lane: str, program: Path, *args: str, timeout: float = 60) -> Outcome:
+        timeout *= tool_timeout_scale()
         binary = self.built.get(lane)
         if binary is None:
             return Outcome(None, 'timeout', 'lane unavailable', None)

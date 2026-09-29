@@ -10,7 +10,7 @@ import re
 import subprocess
 from pathlib import Path
 
-from .context import tool_env
+from .context import tool_env, tool_timeout_scale
 
 SEED_DIR = '.toolchain/bend-2.0.29-574b6d3/bend2'
 SEED_REVISION = '574b6d39a235b539eb19a5c532993a0abb3d11ad'
@@ -25,7 +25,7 @@ class Seed:
         self.bend_ts = self.dir / 'bend.ts'
         self.scratch = Path(scratch)
         self.scratch.mkdir(parents=True, exist_ok=True)
-        self.timeout = timeout
+        self.timeout = timeout * tool_timeout_scale()
 
     def available(self) -> bool:
         return self.main.is_file() and self.bend_ts.is_file()
