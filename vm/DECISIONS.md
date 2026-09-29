@@ -775,7 +775,7 @@ branch brings all of them.
    Char, immediate and Big), `list-head-match` and `nat-transitions`, each owing the
    seed's `Evaluated 0 1 True{}`. Their vm-expected.json rows carry `eval_unavailable`
    or `eval_bound` beside `basis` `seed`; harnesses that read rows by key are
-   unaffected. The counts are 96 goldens and 60 run controls (85 after round 10, below), which vm-core's gate reads
+   unaffected. The counts are 96 goldens and 60 run controls (85 after round 10, 99 and 102 goldens after round 11, below), which vm-core's gate reads
    from SPEC §12.
 
 ## What vm-model and vm-core must now follow (round 10)
@@ -856,8 +856,10 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
 6. **Counts (§12, GATES.md).** 102 goldens; 99 admitted run controls, which vm-core's `run_control_count`
    reads from §12; refusals unchanged at 87 (22 byte-level, 9 at the limits, 56 plan-level); mutants 86 codec, 4
    source, 91 evaluator and 10 rule.
-7. **Harness.** `stdout` and `effects` are compared as in round 10. The reference evaluation's `prints` and
-   `effects` count only the requests that the loop performs. vm-core's `expected_run` and vm-model's `agrees`
+7. **Harness.** `stdout` and `effects` are compared as in round 10, and `effects` is now frozen on Programs
+   too: 1 on `program-request-dropped-let`, `-argument` and `-ill-typed` (the one request the loop performs),
+   0 on `program-request-in-emit`, `program-case-request` and `inspect-request-print`. The reference
+   evaluation's `prints` and `effects` count only the requests that the loop performs. vm-core's `expected_run` and vm-model's `agrees`
    read `Unsupported vm effect` and the new calls without change; the seed's crash on a let-bound request
    (finding 13) is not something either VM should reproduce.
 
@@ -925,6 +927,12 @@ harness, and SPEC §5 to §8, §10 and §12 are the text. Entry 31 has the reaso
    `nat-transitions`). No row is `Invalid`, so the six stay six, every other count
    is unchanged, and both files agree across the two lanes. The merge condition
    stands, and no shared bootstrap receipt was refreshed.
+   Round 11's six goldens change it once more, as measured by the gate runner (all 21 gates passed) after
+   `c5d98d11` against the same receipt: 893 files and `Unsupported lex literal` 220 (six more: each of
+   `keep-swapped`, `keep-first`, `run2-flag`, `spine`, `keep-non-scalar` and `book-drop` exits 3, `Unsupported`, in
+   the main-line parser). No row is `Invalid`, so the six stay six (`Invalid parse expected-=` 6 and `Invalid parse
+   function-result` 10 are as before), every other count is unchanged, and both files agree across the two
+   lanes. The merge condition stands, and no shared bootstrap receipt was refreshed.
 6. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged

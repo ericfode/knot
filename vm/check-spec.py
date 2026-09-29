@@ -714,7 +714,8 @@ def output_expectation(case, plan, evaluator=None) -> dict:
         require(case['divergence'] == NON_SCALAR, f"{name}: divergence {case['divergence']!r} is not D20's")
         require(case.get('vm_stdout', '').encode() == vm['stdout'] and 'vm_stdout' in case,
                 f"{name}: VM output {case.get('vm_stdout')!r} is not {vm['stdout']!r}, what the earlier prints write")
-        # Section 7: the entry that applies the refused Action to k was debited, and the debit stands.
+        # Section 7: the entry that applies the Action to k builds the request that the loop then refuses;
+        # it was debited, and the debit stands.
         require(case.get('vm_calls') == vm['calls'],
                 f"{name}: literal review counts {case.get('vm_calls')} calls, the reference evaluation {vm['calls']}")
         return {'argv': argv, 'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': case['vm_stdout'],
@@ -1000,7 +1001,7 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, 
              {**cases['print-non-scalar'], 'seed': {**cases['print-non-scalar']['seed'], 'stdout_hex': 'efbfbd0a'}}, bounds, None),
             ('bun-beyond-vm', 'non-scalar-unprinted',
              {**unprinted, 'seed_bun': {**unprinted['seed_bun'], 'stdout': 'b\n'}}, bounds, None),
-            # Section 7: the debit of the entry that applies the refused Action to k stands, so the
+            # Section 7: the debit of the entry that builds the request that the loop refuses stands, so the
             # literal review counts it and must be frozen.
             ('d20-calls-refunded', 'print-non-scalar', {**cases['print-non-scalar'], 'vm_calls': 3}, bounds, None),
             ('d20-calls-unfrozen', 'print-non-scalar-second', without('print-non-scalar-second', 'vm_calls'), bounds, None),
@@ -1517,30 +1518,34 @@ def run_controls(plans: dict) -> list:
 
 
 def effect_controls(plans: dict) -> list:
-    """Effects, by literal review of sections 7, 8 and 10. An Action applied to its continuation
-    performs its effect only under a Program entry (D22). Under a Book entry that step stops
-    with `Unsupported vm effect` after its debit and before it reads an operand, so the refusal
-    precedes the whole-extent inspection and D20's scalar check. Building an Action, dropping
-    it and applying it to its erased R (the first application) perform nothing and stay free.
-    `got` returns what an IO.OP carries, and `printing(t)` is `IO.print(t)` applied to R and
-    then to a continuation: main, IO.print, R and the Action are 4 entries, where a Book stops,
-    5 when an `id` call builds the String first. Every Book control that stops at the Action
-    freezes `stdout` empty and `effects` 0: D22's step reads and converts no operand and calls
-    no host, so a run writes nothing before it stops, and a `print` that wrote and then refused
-    would differ by its `stdout`. `effects` counts the host calls the reference evaluation makes
-    (an Action's effect, after D22's guard and D20's check, just before its write), so it also
-    shows a call that writes nothing: `IO.args` under a Book, whose control froze only the cause,
-    which precedes the check of the foreign id.
-    - `IO.args` under a Book stops the same way: D22 precedes the check of the foreign id, whatever it is.
-    - D22 follows step 1: `book-print` completes its refusal with fuel 4, its debited entries, and at fuel
-      3 its Action meets fuel 0 and stops `Exhausted` kind 1 after 3, where the fuel test precedes it.
+    """Effects, by literal review of sections 6, 7, 8 and 10 (D23). An Action applied to its continuation
+    builds a request and performs nothing; only Top's loop performs the request that a run returns to it,
+    after which it enters `k`, and a request that any read of section 6 meets stops the run
+    `Unsupported vm effect`. Building an Action, dropping it, applying it to its erased R (the first
+    application) and dropping a request perform nothing. `got` returns what an IO.OP carries, and
+    `printing(t)` is `IO.print(t)` applied to R and then to a continuation: main, IO.print, R and the
+    Action, whose application builds the request, are 4 entries, 5 when an `id` call builds the String
+    first. A Book has no loop, so no operand is read, converted or checked for D20 and no host is called:
+    the first read of the request is `got`'s Case, one entry after it is built, so `book-print` stops after
+    5 entries and `book-print-ill-typed` after 6. Every Book control that stops at a request freezes
+    `stdout` empty and `effects` 0, and a `print` that wrote and then refused would differ by its
+    `stdout`. `effects` counts the host calls the reference evaluation makes (a request's effect, at
+    the loop after D20's check, just before its write), so it also shows a call that writes nothing:
+    `IO.args` under a Book, whose request is built and refused like any other whatever its foreign id.
+    - The debit is the application's: `book-print` completes its refusal with fuel 5, its debited
+      entries; at fuel 4 its `got` meets fuel 0 and stops `Exhausted` kind 1 after 4
+      (`fuel-book-request-short`); and at fuel 3 the Action's second application does, after 3.
+    - A request is dropped, and no effect follows, wherever it is held: a Book's let, an Emit's field, a
+      Program's let, an argument of a call (keep-swapped's plan) and a String that the loop never reads.
+      The Program that returns the other request performs it: `kept\n` or `live\n`, effects 1.
     - Under a Program the same Action prints, and where it meets `k` may lie in an argument of a
       call: `run(m) = λ@R. λk. id(m(R)(k))` passes the answer of `IO.print("x")(R)(k)` through
       `id`. The pinned seed writes `x` for that source on both lanes; main, IO.print, run, R,
       run's closure, the Action twice, the terminal continuation and id are 9 entries. The seed
       refuses the shape that a Case reads the answer of (`got(IO.print("x")(R)(k))`, its own
-      test request_out_of_band.bend), so nothing here claims the machine agrees with the seed
-      there, and no control freezes that shape (section 8).
+      test request_out_of_band.bend), and D23 refuses it as well: `program-case-request`, and the
+      reads that a request meets in a Book (`inspect-request-*`, `book-request-rendered`, `-field`
+      and `enter-request-target`), each `Unsupported vm effect` and never ill-typed.
     - A scalar String is written as canonical UTF-8 (section 10): `foreign-print`'s plan prints the four
       examples of each length (U+0024, U+00A2, U+20AC, U+10348) and the edges of every length
       (U+007F, U+0080, U+07FF, U+0800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF), after 5 entries.

@@ -745,7 +745,10 @@ pure `got(k(Unit{}))` evaluates after 3 entries, an Action built and dropped aft
 erased `R` after 3, and a request built and dropped after 4.
 
 **No host call and no write are frozen.** Every Book control that stops at a request freezes
-`stdout` empty and `effects` 0 beside its cause and `calls`. The reference evaluation reports
+`stdout` empty and `effects` 0 beside its cause and `calls`, and so does `book-request-dropped`,
+which builds one and ends. D23's Program controls freeze `effects` too: 1 where the loop performs the
+one request that a run returns (`program-request-dropped-let`, `-argument`, `-ill-typed`), 0 where it
+returns none (`program-request-in-emit`) or a refused one (`program-case-request`, `inspect-request-print`). The reference evaluation reports
 both on every Book outcome, a Halt included (§12): `stdout` is the bytes written, and `effects`
 the host calls made, counted where the call would be, at the loop after D20's check and just
 before the write. A VM's harness MUST compare both: `stdout` against what its host
