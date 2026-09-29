@@ -894,7 +894,7 @@ def lane_rows(cfg: dict) -> list:
     frozen = [*lane.seeded(), *lane.ill_typed()]
     for r in frozen:
         r['frozen'] = True
-    rows = [*frozen, *lane.sweep_items(), *lane.print_items(), *lane.digit_items(), *lane.display_items(),
+    rows = [*frozen, *lane.inspection_items(), *lane.sweep_items(), *lane.print_items(), *lane.digit_items(), *lane.display_items(),
             *(lane.random_keys(i, cfg['seed']) for i in range(cfg['keys'])),
             *(lane.program(i, cfg['seed']) for i in range(cfg['programs']))]
     names = [r['name'] for r in rows]
@@ -950,7 +950,7 @@ def check_lane(cfg: dict, seeded: dict, module: Path, test: Path, where: Path, r
         state = out['state']
         seen = tally.setdefault(r['family'], {'rows': 0, 'outcomes': {}})
         seen['rows'] += 1
-        key = state['outcome'] + (f":{state['cause']}" if state['cause'] else '')
+        key = (state['outcome'] or out['status']) + (f":{state['cause']}" if state['cause'] else '')  # a trap has no outcome
         seen['outcomes'][key] = seen['outcomes'].get(key, 0) + 1
     require(not failures, f'{len(failures)} lane rows disagree with the reference, first: {failures[:3]}')
 
@@ -1003,6 +1003,7 @@ def lane_groups(rows: list, where: Path) -> dict:
     return {'keys': [job(r) for r in fixed + [r for r in keys if not r.get('frozen')][:24]],
             'describe': [job(r) for r in rows if r['family'] == 'wide'],
             'display': [job(r) for r in rows if r['family'] == 'display'],
+            'inspection': [job(r) for r in rows if r['family'] == 'inspection'],
             'tags': [job(r) for r in rows if r['family'] in ('tags', 'ill-typed')],
             'sweeps': [job(r) for r in rows if r['family'] == 'sweep'],
             'writers': [job(r) for r in rows if r['family'] in ('print', 'halt', 'digits', 'nat')],
@@ -1011,14 +1012,14 @@ def lane_groups(rows: list, where: Path) -> dict:
 
 
 STUDY = HERE / 'receipts/study.json'
-STUDY_ORDER = ['keys', 'describe', 'tags', 'display', 'goldens', 'invocations', 'runs', 'reference', 'sweeps', 'writers',
+STUDY_ORDER = ['keys', 'describe', 'tags', 'display', 'inspection', 'goldens', 'invocations', 'runs', 'reference', 'sweeps', 'writers',
                'fuzz-admitted', 'programs', 'fixtures', 'dumps', 'limited', 'controls']  # cheap and telling first
 HEAVY = ['ceiling']  # about 4 GiB a row: only a study's survivors run them (`--heavy`)
 GUARD = {'fixtures': 120_000, 'limited': 120_000, 'programs': 120_000, 'ceiling': 600_000, 'full-heap': 600_000,
          'trap': 600_000, 'growth': 600_000, 'refused': 600_000}  # ms a row may take before it is stopped, else 30,000
 
 
-BASELINE = ['keys', 'describe', 'tags', 'display', 'sweeps', 'writers', 'programs', 'hang', 'fuzz-admitted', 'dumps']
+BASELINE = ['keys', 'describe', 'tags', 'display', 'inspection', 'sweeps', 'writers', 'programs', 'hang', 'fuzz-admitted', 'dumps']
 
 
 def deadline(job: dict, group: str) -> int:

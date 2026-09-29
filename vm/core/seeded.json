@@ -456,6 +456,44 @@
     "cause": "ill-typed",
     "calls": 3
    }
+  },
+  {
+   "name": "ill-string-scalar",
+   "family": "ill-typed",
+   "basis": "a String operand that is a large scalar's immediate word is ill-typed, not read as the address of a cell",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "2c0a0d212fbad584ad82dee9f021c3c15e8339143759372d46fdf3d4503afa36",
+   "seed": null,
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\timage\till-typed\n"
+   },
+   "dump": {
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 4
+   }
+  },
+  {
+   "name": "ill-string-action",
+   "family": "ill-typed",
+   "basis": "an Action laundered to a String, with String at type index 1 = its foreign id and the empty String's word 1 for its operand, is ill-typed by its class",
+   "source": null,
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "image_sha256": "9a523591e58375ca0a48d3aba3ed526fa1b6010d85d5426cdb4ab5b757beb4fc",
+   "seed": null,
+   "expect": {
+    "exit": 5,
+    "stdout": "",
+    "stderr": "HostFailure\timage\till-typed\n"
+   },
+   "dump": {
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 5
+   }
   }
  ]
 }

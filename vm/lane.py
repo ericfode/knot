@@ -1140,10 +1140,137 @@ def ill_describe_at_count() -> dict:
                 basis="a Book's result word is read at its type: Tri's C{} (tag 2) at Flag (2 constructors) is ill-typed, not the next record's name")
 
 
+def ill_string_scalar() -> dict:
+    """String.length(cast(id(1000000000))): a String operand that is a large scalar's immediate word (2000000001), read at
+    String. Section 6 inspects each cell of a String, and a word with its low bit set is no cell: ill-typed after main, id,
+    cast and length (4 entries). A test that took it for an address would read past the end of memory."""
+    types = [{'kind': 'data', 'name': 'Nat', 'constructors': [{'name': 'Zero', 'fields': []}, {'name': 'Succ', 'fields': [0]}]},
+             {'kind': 'data', 'name': 'Char', 'constructors': [{'name': 'Chr', 'fields': [2]}]}, {'kind': 'opaque', 'name': 'U32'},
+             {'kind': 'data', 'name': 'String', 'constructors': [{'name': 'SNil', 'fields': []}, {'name': 'SCon', 'fields': [1, 3]}]}]
+    functions = [{'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]},
+                 {'name': 'cast', 'parameters': [None], 'result': 3, 'slots': 1, 'body': ['ref', None, 0]},
+                 {'name': 'String.length', 'parameters': [3], 'result': 0, 'slots': 1,
+                  'body': ['prim', 0, PRIM['String.length']['id'], [['ref', 3, 0]]]},
+                 {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['call', 0, 2, [
+                     ['call', 3, 1, [['call', None, 0, [['lit', 2, 'U32', 1_000_000_000]]]]]]]}]
+    plan = {'entry': 'book', 'representation': {'Nat': 0, 'Char': 1, 'U32': 2, 'String': 3}, 'types': types, 'functions': functions}
+    return item('ill-string-scalar', 'ill-typed', plan, refusal={'outcome': 'HostFailure', 'cause': 'image ill-typed'}, calls=4,
+                basis='a String operand that is a large scalar\'s immediate word is ill-typed, not read as the address of a cell')
+
+
+def ill_string_action() -> dict:
+    """String.length(cast(id(IO.print("")))) with String at type index 1: the Action's cell holds the foreign id 1 where an
+    SCon cell holds its type, and the empty String's word 1 where it holds its tag. Its class (3) alone says it is no SCon
+    cell: ill-typed after main, print, id, cast and length (5 entries), where a class test that read only the payload's
+    parity would take the Action for a String cell."""
+    def data(name, *constructors):
+        return {'kind': 'data', 'name': name, 'constructors': [{'name': n, 'fields': f} for n, f in constructors]}
+    types = [data('Unit', ('Unit', [])), data('String', ('SNil', []), ('SCon', [2, 1])), data('Char', ('Chr', [3])),
+             {'kind': 'opaque', 'name': 'U32'}, data('IO.OP', ('Emit', [None]), ('Halt', [3, 1])),
+             {'kind': 'arrow', 'domain': 0, 'result': 4}, {'kind': 'arrow', 'domain': 5, 'result': 4},
+             {'kind': 'erased-arrow', 'domain': None, 'result': 6}, data('Nat', ('Zero', []), ('Succ', [8]))]
+    functions = [{'name': 'IO.print', 'parameters': [1], 'result': 7, 'slots': 1, 'body': ['foreign', 7, 1, [['ref', 1, 0]]]},
+                 {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]},
+                 {'name': 'cast', 'parameters': [None], 'result': 1, 'slots': 1, 'body': ['ref', None, 0]},
+                 {'name': 'String.length', 'parameters': [1], 'result': 8, 'slots': 1,
+                  'body': ['prim', 8, PRIM['String.length']['id'], [['ref', 1, 0]]]},
+                 {'name': 'main', 'parameters': [], 'result': 8, 'slots': 0, 'body': ['call', 8, 3, [
+                     ['call', 1, 2, [['call', None, 1, [['call', 7, 0, [['value', 1, 0]]]]]]]]]}]
+    plan = {'entry': 'book', 'representation': {'Unit': 0, 'String': 1, 'Char': 2, 'U32': 3, 'IO.OP': 4, 'Nat': 8},
+            'types': types, 'functions': functions}
+    return item('ill-string-action', 'ill-typed', plan, refusal={'outcome': 'HostFailure', 'cause': 'image ill-typed'}, calls=5,
+                basis="an Action laundered to a String, with String at type index 1 = its foreign id and the empty String's word 1 for its operand, is ill-typed by its class")
+
+
+def inspection_items() -> list:
+    """Every kind of word at every place section 6 inspects one: a Book whose `main` passes a producer's word through
+    `id: none -> none` to a consumer. The producers are scalars (small, the largest immediate, Big), nullary constructors,
+    an Object of another type, a Closure, an Action, the empty String, a String cell and a Nat. The consumers are a
+    scalar, Char and String prim operand, a Case by tag (Nat, a dense ADT and one with a Default) and by key, the
+    operand of Succ and of Chr, a result and the field of a result at describe, and an Invoke's target. Whether a
+    word is admitted is the reference evaluation's answer; the VM must give it and never trap on a word it refuses.
+    An Action is never an Invoke's target here: applying it would perform its effect in a Book (D22)."""
+    def data(name, *constructors):
+        return {'kind': 'data', 'name': name, 'constructors': [{'name': n, 'fields': f} for n, f in constructors]}
+    types = [data('Flag', ('Off', []), ('On', [])), data('Tri', ('A', []), ('B', []), ('C', [])), data('Box', ('Box', [0])),
+             {'kind': 'opaque', 'name': 'U32'}, data('Char', ('Chr', [3])), data('String', ('SNil', []), ('SCon', [4, 5])),
+             data('Nat', ('Zero', []), ('Succ', [6])), data('Unit', ('Unit', [])), data('IO.OP', ('Emit', [None]), ('Halt', [3, 5])),
+             {'kind': 'arrow', 'domain': 7, 'result': 8}, {'kind': 'arrow', 'domain': 9, 'result': 8},
+             {'kind': 'erased-arrow', 'domain': None, 'result': 10}, data('Bool', ('False', []), ('True', [])),
+             {'kind': 'arrow', 'domain': 0, 'result': 0}]
+    rep = {'Nat': 6, 'U32': 3, 'Char': 4, 'String': 5, 'Bool': 12, 'Unit': 7, 'IO.OP': 8}
+    prim = lambda name, out, *ins: {'name': name, 'parameters': list(ins), 'result': out, 'slots': len(ins),
+                                    'body': ['prim', out, PRIM[name]['id'], [['ref', t, i] for i, t in enumerate(ins)]]}
+    cast = lambda name, t: {'name': name, 'parameters': [None], 'result': t, 'slots': 1, 'body': ['ref', None, 0]}
+    row = lambda tag, first, fields, answer: ['branch', tag, first, fields, ['value', 0, answer]]
+    functions = [
+        {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]},  # 0
+        {'name': 'IO.print', 'parameters': [5], 'result': 11, 'slots': 1, 'body': ['foreign', 11, 1, [['ref', 5, 0]]]},  # 1
+        prim('U32.is_eq', 12, 3, 3), prim('Char.is_eq', 12, 4, 4), prim('String.length', 6, 5),  # 2, 3, 4
+        cast('flag', 0), cast('nat', 6), cast('arrow', 13),  # 5, 6, 7
+        {'name': 'natcase', 'parameters': [None], 'result': 0, 'slots': 2,  # 8
+         'body': ['case', 0, 0, 6, 'tags', [row(0, 1, 0, 0), row(1, 1, 1, 1)], None]},
+        {'name': 'flagcase', 'parameters': [None], 'result': 0, 'slots': 1,  # 9
+         'body': ['case', 0, 0, 0, 'tags', [row(0, 1, 0, 1), row(1, 1, 0, 0)], None]},
+        {'name': 'tricase', 'parameters': [None], 'result': 0, 'slots': 1,  # 10
+         'body': ['case', 0, 0, 1, 'tags', [row(0, 1, 0, 0), None, None], ['default', ['value', 0, 1]]]},
+        {'name': 'keycase', 'parameters': [None], 'result': 0, 'slots': 1,  # 11
+         'body': ['case', 0, 0, 3, 'keys', [['branch', 5, 1, 0, ['value', 0, 0]], ['branch', 1_000_000_000, 1, 0, ['value', 0, 1]]],
+                  ['default', ['value', 0, 0]]]},
+        prim('String.eq', 12, 5, 5), prim('String.append', 5, 5, 5),  # 12, 13
+        cast('io-op', 8), cast('string', 5)]  # 14, 15
+    chr0 = ['con', 4, 0, [['lit', 3, 'U32', 0]]]
+    launder = lambda word: ['call', None, 0, [word]]
+    consumers = {
+        'u32': (12, lambda w: ['call', 12, 2, [launder(w), ['lit', 3, 'U32', 0]]]),
+        'char': (12, lambda w: ['call', 12, 3, [launder(w), chr0]]),
+        'string': (6, lambda w: ['call', 6, 4, [launder(w)]]),
+        'string-tail': (6, lambda w: ['call', 6, 4, [['con', 5, 1, [['con', 4, 0, [['lit', 3, 'U32', 97]]], launder(w)]]]]),
+        'string-head': (6, lambda w: ['call', 6, 4, [['con', 5, 1, [launder(w), ['value', 5, 0]]]]]),
+        'string-eq': (12, lambda w: ['call', 12, 12, [['value', 5, 0], launder(w)]]),
+        'string-append': (6, lambda w: ['call', 6, 4, [['call', 5, 13, [['value', 5, 0], launder(w)]]]]),
+        'nat-case': (0, lambda w: ['call', 0, 8, [launder(w)]]),
+        'flag-case': (0, lambda w: ['call', 0, 9, [launder(w)]]),
+        'tri-case': (0, lambda w: ['call', 0, 10, [launder(w)]]),
+        'key-case': (0, lambda w: ['call', 0, 11, [launder(w)]]),
+        'succ': (6, lambda w: ['con', 6, 1, [launder(w)]]),
+        'chr': (12, lambda w: ['call', 12, 3, [['con', 4, 0, [launder(w)]], chr0]]),
+        'describe-flag': (0, lambda w: ['call', 0, 5, [launder(w)]]),
+        'describe-nat': (6, lambda w: ['call', 6, 6, [launder(w)]]),
+        'describe-field': (2, lambda w: ['con', 2, 0, [['call', 0, 5, [launder(w)]]]]),
+        'invoke': (0, lambda w: ['invoke', 0, ['call', 13, 7, [launder(w)]], [['value', 0, 1]]])}
+    producers = {
+        'small': ['lit', 3, 'U32', 5], 'large': ['lit', 3, 'U32', 1_000_000_000], 'immediate-max': ['lit', 3, 'U32', 2 ** 31 - 1],
+        'big': ['lit', 3, 'U32', 2 ** 31], 'big-max': ['lit', 3, 'U32', 2 ** 32 - 1], 'tri-1': ['value', 1, 1], 'tri-2': ['value', 1, 2],
+        'object': ['con', 2, 0, [['value', 0, 1]]], 'closure': ['closure', 13, 1, 1, [], ['ref', 0, 0]],
+        'action': ['call', 11, 1, [['value', 5, 0]]], 'snil': ['value', 5, 0],
+        'string': ['con', 5, 1, [['con', 4, 0, [['lit', 3, 'U32', 97]]], ['value', 5, 0]]], 'nat': ['lit', 6, 'Nat', 3]}
+    # a Program's ends: its final word, a Halt's code and message, and the String an IO.print performs
+    ends = {
+        'finish': lambda w: ['closure', 11, 0, 0, [], ['closure', 10, 1, 1, [], ['call', 8, 14, [launder(w)]]]],
+        'halt-code': lambda w: ['closure', 11, 0, 0, [], ['closure', 10, 1, 1, [], ['con', 8, 1, [launder(w), ['value', 5, 0]]]]],
+        'halt-message': lambda w: ['closure', 11, 0, 0, [], ['closure', 10, 1, 1, [], ['con', 8, 1, [['lit', 3, 'U32', 7], launder(w)]]]],
+        'print': lambda w: ['call', 11, 1, [['call', 5, 15, [launder(w)]]]]}
+    rows = []
+    for consumer, (result, build) in consumers.items():
+        for producer, word in producers.items():
+            if (producer, consumer) == ('action', 'invoke'):
+                continue
+            main = {'name': 'main', 'parameters': [], 'result': result, 'slots': 0, 'body': build(word)}
+            plan = {'entry': 'book', 'representation': rep, 'types': types, 'functions': [*functions, main]}
+            rows.append(item(f'inspect-{consumer}-{producer}', 'inspection', plan))
+    for end, build in ends.items():
+        for producer, word in producers.items():
+            main = {'name': 'main', 'parameters': [], 'result': 11, 'slots': 0, 'body': build(word)}
+            plan = {'entry': 'program', 'representation': rep, 'types': types, 'functions': [*functions, main]}
+            rows.append(item(f'inspect-program-{end}-{producer}', 'inspection', plan))
+    return rows
+
+
 def ill_typed() -> list:
     return [*(ill_typed_program(f'ill-{name}', name) for name in
               ('at-count', 'at-count-default', 'past-count', 'fielded-branch', 'fielded-default', 'nullary')),
-            ill_scalar_action(), ill_describe_at_count()]
+            ill_scalar_action(), ill_describe_at_count(), ill_string_scalar(), ill_string_action()]
 
 
 def display_bound(name: str, n: int) -> dict:
