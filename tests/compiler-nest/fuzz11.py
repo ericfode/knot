@@ -209,7 +209,23 @@ def nested(d, depth, scrutinee, flag, kinds, pad, dead):
     return f'{pad}  match {scrutinee}:\n' + ''.join(rows)
 
 
+def wide_program(d):
+    """A nested match of two scrutinee columns whose rows have one pattern too few, too many, or the right number."""
+    rows = []
+    for _ in range(d.pick([1, 2, 3])):
+        n = d.pick([1, 2, 2, 3])
+        rows.append('    ' * 2 + 'case ' + ' '.join(d.pick(['_', 'x', 'On{}', 'Off{}', '+y']) for _ in range(n)) + ': On{}\n')
+    live = d.chance(3)
+    inner = '      match a b:\n' + ''.join(rows) + ('' if d.chance(2) else '        case _ _: Off{}\n')
+    head = '    case _ _: Off{}\n    case On{} _:\n' if not live else '    case On{} _:\n'
+    tail = '    case _ _: Off{}\n' if live else ''
+    src = f'def f(a: Flag, b: Flag) -> Flag:\n  match a b:\n{head}{inner}{tail}\n' + main('On{}, Off{}')
+    return f'dead:{"wide-live" if live else "wide"}', PRELUDE + src, []
+
+
 def dead_program(d):
+    if d.chance(8):
+        return wide_program(d)
     shape = d.weighted([('single', 4), ('dup', 3), ('multi', 3), ('field', 4), ('let', 3), ('default', 2), ('live', 3)])
     depth = d.pick([1, 1, 2, 3])
     kinds = []
@@ -255,12 +271,15 @@ def wordlike(text):
 
 
 def join(d, tokens, rate):
-    """Adjacent tokens are joined by their usual separator, or, one time in `rate`, by a random gap."""
+    """Adjacent tokens are joined by their usual separator, or, one time in `rate`, by a random gap;
+    a rate of 0 puts exactly one random gap between one random pair."""
     out = [tokens[0]]
-    for prev, tok in zip(tokens, tokens[1:]):
+    only = d.rng.randrange(len(tokens) - 1) if rate == 0 and len(tokens) > 1 else None
+    for i, (prev, tok) in enumerate(zip(tokens, tokens[1:])):
         needs = wordlike(prev[-1]) and wordlike(tok)
         usual = ' ' if needs else ''
-        out.append(d.pick([gap for gap in GAP if gap or not needs]) if d.chance(rate) else usual)
+        gapped = i == only if rate == 0 else d.chance(rate)
+        out.append(d.pick([gap for gap in GAP if gap or not needs]) if gapped else usual)
         out.append(tok)
     return ''.join(out)
 
@@ -269,7 +288,7 @@ def gaps_program(d):
     types = [d.pick(['Flag', 'Nat', 'Opt', 'Flag', 'Nat']) for _ in range(d.pick([1, 2, 2, 3]))]
     names = [COLUMNS[t] + (str(i) if types[:i].count(t) else '') for i, t in enumerate(types)]
     params = ', '.join(f'{n}: {t}' for n, t in zip(names, types))
-    rate = d.pick([6, 10, 20])
+    rate = d.pick([0, 0, 6, 10, 20])
     literal = False
     rows = []
     for _ in range(d.pick([1, 2, 3])):

@@ -41,7 +41,7 @@ and their required outputs are present and readable. The runner's self-test
 requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
 this branch retains the main gates and appends `nest`, `nest-review`,
-`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8`, `nest-round9` and `nest-round10`. `nest-review` checks the round-2 reviewer
+`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8`, `nest-round9`, `nest-round10`, `nest-round11` and `nest-sweep11`. `nest-review` checks the round-2 reviewer
 repros, enum whitelist, semantic repair mutants and fixed-seed 3,000-program
 comparison, whose generator includes lets of matched binders; `nest-round3` checks the round-3 repros (binder grammar, ordered
 empty binders, line-broken headers), `nest-round4` the round-4 recursion
@@ -61,7 +61,12 @@ are read touching what follows: a spaced `+` between row columns, a spaced
 marker after a let and a split `->` are rejected, while a marker first in a body
 and a promotion that starts a row or follows a comma stay spaced) and the
 whitespace stopgaps (arguments separated by whitespace alone, `++y`, a let
-split across lines and an arm body at its `case` column are Unsupported), each in
+split across lines and an arm body at its `case` column are Unsupported), and
+`nest-round11` the round-11 audit (every row of every match is validated, in a
+discarded body too), the binder name rule (`+` names no earlier datatype), the
+hidden type name (a binder hides a datatype of its name from later types) and the
+layouts the parser answers Unsupported, with `nest-sweep11` running its parser
+mutants and `fuzz11.py`, 5,400 fixed-seed programs compared with the seed, each in
 both compiler lanes with its own semantic mutants. The nest gates scale their
 harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs

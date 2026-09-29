@@ -84,7 +84,15 @@ digits, underscores or dots. Keywords cannot be identifiers.
   the structural profile. The first matching row wins, including duplicate rows;
   every constructor combination must be covered. Empty datatypes admit zero
   rows. Bodies shadowed at the same leaf are discarded, but source patterns
-  still constrain their columns and undergo name/arity validation. Variable
+  still constrain their columns and undergo name/arity validation, in the
+  nested matches of a discarded body too: each row has one pattern per scrutinee
+  and valid patterns (a declared constructor and its field count, no constructor
+  as a bare binder, no call, no `+` before a datatype declared earlier in the
+  file, which is `Invalid check datatype-pattern-binder`), while a discarded body
+  is not type-, scope- or scrutinee-checked, as in the seed. A binder hides a
+  datatype of its name from the types written after it (an annotation, a later
+  parameter type, the result, a later field type): `Invalid check
+  type-shadowed`. Variable
   defaults remain checked even past the last constructor, with a live binding
   at the emptied type. A missing arm is accepted only as dead code: some live
   binder already in context, before the scrutinee in match order, has an empty
@@ -165,10 +173,15 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
 | A line break where call or constructor arguments expect an element, a separator or their closer | `parse` | `line-break` |
 | A second `case` arm on the line of an arm's body | `parse` | `same-line-arm` |
-| A line break in a let before its `=`, before its value or between its marker and name | `parse` | `line-break` |
+| A line break in a let before its `=` or `:`, before its value or between its marker and name | `parse` | `line-break` |
+| A statement on the line of a let's value | `parse` | `same-line-statement` |
+| A numeral opening a later column of a row (a Nat literal pattern) | `parse` | `term-form` |
+| A case at, left of, or at the margin of its match's column | `parse` | `pattern-or-indentation` |
+| A `def` or `type` at another column | `parse` | `top-level-indentation` |
+| A `def` or `type` on the line of a body's end | `parse` | `same-line-declaration` |
 | A name (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
 | A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
-| An arm body that starts with a name on the line after its `case`, at the case's column or below it | `parse` | `body-indentation` |
+| An arm body that starts with a name, `+`, `-` or `match` on the line after its `case`, at the case's column or below it; a later statement at another column | `parse` | `body-indentation` |
 
 The seed reads a line break inside call or constructor arguments and inside a let
 as whitespace, arguments separated by whitespace alone as arguments, and a second
@@ -176,9 +189,13 @@ arm on an arm's line as the next arm; Knot ends a term at a line break and takes
 a comma between arguments, so these forms are unsupported, never invalid. A def
 header's parameters and a type's fields have the same gap, which stays open (the
 selfhost suite's `layout` need), as do an unindented def body (the frontend gate
-pins it Invalid, though the seed accepts it) and an untyped let split before its
-`=`. An arm body that starts with a name and sits at or below its `case` column
-is `Unsupported parse body-indentation`; an empty arm stays invalid. Recognition stops at that prefix; it neither validates
+pins it Invalid, though the seed accepts it), a call with fewer arguments than
+parameters that the seed reads as an unused partial application (`Invalid check
+call-arity`), a global function used as a value (`Invalid check free-name`) and a
+Nat literal pattern as a let binder at another column. An arm body that starts
+with a name, `+`, `-` or `match` and sits at or below its `case` column, and a
+later statement at another column, are `Unsupported parse body-indentation`; an
+empty arm stays invalid. Recognition stops at that prefix; it neither validates
 the suffix nor loads a module. Malformed supported syntax still reports `Invalid`. The reviewed
 [classification fixtures](../tests/subsets/classification-cases.json) retain six
 seed-accepted programs (local and hash imports separately) and six nearby
