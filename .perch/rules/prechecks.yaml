@@ -47,13 +47,23 @@
   min: 80
   gate: false
   ensure: >
-    Compare the decision rows, the limit table, the outcome sentences and the frozen
-    expectation rows in this packet. Every refusal of a form Knot cannot handle yet is
-    reported Unsupported and never Invalid; every resource limit is Exhausted with its
-    stated cause; and every case where the seed succeeds but Knot refuses is a
-    documented lane bound. An outcome class that differs between two of these sources,
-    or a seed-succeeds and Knot-refuses row with no documented bound, breaks this rule.
-    Anything the packet does not show is missing evidence, not a pass.
+    This rule concerns the outcome class (Invalid, Unsupported, Exhausted, HostFailure, InternalFailure) that
+    the packet's sources assign to the same case: decision rows, limit tables, outcome sentences, frozen
+    expectation rows and the code that freezes them. For each case or limit that two or more sources mention,
+    take the class each assigns, reading a frozen expectation by the class it records (its leading outcome
+    word), not by words in its reason. The rule is broken when two sources give the same case different classes;
+    when a form the implementation cannot handle yet, and that the seed accepts, is refused as Invalid or
+    HostFailure instead of Unsupported; when a resource limit is refused as anything other than Exhausted with
+    that limit as its cause; or when the seed succeeds and the implementation refuses and the case is none of a
+    documented bound, an Unsupported capability gap, or a divergence that a decision row itself documents. A
+    documented bound is a resource limit and is itself Exhausted with its cause; a refusal of any other class
+    that is listed or frozen as a bound is not excused. HostFailure holds only for malformed input or a failure
+    outside the program's meaning: refusing a well-formed program or its result because the implementation
+    cannot handle it yet is a capability gap, even when the refusal is phrased as a host or invoke failure.
+    Invalid for a program the seed also rejects holds, and so does a passage that records another component's
+    observed deviation as a known defect without adopting it as this increment's outcome. Judge only the sources
+    shown; a case that only one of them mentions holds, and missing evidence is not a pass for a case whose
+    class the shown sources leave undecided.
 
 - name: clause-vs-delta
   where: ".local/prechecks/packets/**/clause-vs-delta/*.md"
@@ -117,9 +127,15 @@
   min: 80
   gate: false
   ensure: >
-    Each required law listed in this packet exists as a universally quantified law (its
-    binder count is above zero) or is recorded as an open proof obligation with its
-    evidence. A ground witness under a general law name does not satisfy a required
-    law. Compare the required-law list with the operation-to-law matrix and the recorded
-    obligations. A required law that is missing, ground-only, or silently narrowed
-    breaks this rule. Anything the packet does not show is missing evidence, not a pass.
+    This rule compares the required laws listed in the Claim with the operation-to-law matrix and the recorded
+    obligations in the Evidence. For each required law, find the law or laws whose statements establish it in
+    the generality it states (all, any, arbitrary, for every value), reading the for-binder count of each: a law
+    with 0 binders is one fixed instance (a ground witness) whatever its name, and a one-step or helper law does
+    not establish a whole theorem unless the requirement asks for it. The rule is broken when a required law is
+    established only by ground witnesses, only by laws narrower than it states (fewer cases, or a fixed size or
+    value where it says all or any), or by no law at all, and no recorded obligation names it as open with its
+    evidence. The rule holds when each required law maps to universally quantified laws (binders above zero)
+    that state it, or to a recorded open obligation. Ground witnesses and other laws that no requirement asks
+    for are not violations, and a clause of a requirement that states a limit or disclaimer rather than a
+    property needs no law. Missing evidence is not a pass: a required law whose deciding law is absent from the
+    matrix breaks the rule.
