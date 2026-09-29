@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "0b6378045ba82a982b40748642490ddb7bab813c932d65417932a79bc8f1b464",
+    "sha256": "e03766fa50460b9062b9480ee8218effe2f45e0b5a2209c7b03fc59d6362e2f6",
     "gates": [
       {
         "name": "frontend",
@@ -414,6 +414,19 @@
             "sha256": "5e690e3c5147cb2786633b1706ac09b6d143b342fc5048d84995bf8fdedacc00"
           }
         ]
+      },
+      {
+        "name": "literals-integ",
+        "argv": [
+          "python3",
+          "tests/compiler-literals-integ/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-literals-integ/check.py",
+            "sha256": "e32cbe9904acd4f4ed20467dda8dc45fcb36adee2587282e1d7cc24f5b9e9d9b"
+          }
+        ]
       }
     ]
   },
@@ -621,6 +634,24 @@
       "fixtures": 40
     },
     {
+      "suite": "tests/compiler-literals-integ",
+      "directory": "tests/compiler-literals-integ",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/compiler-literals-integ/expectations.json",
+          "sha256": "5cefef021285b9f1a5fc589730dabb8c7ec08cc1a5c4f6cc3a6eb66efed4f3f7"
+        }
+      ],
+      "gates": [
+        "literals-integ"
+      ],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
       "suite": "modules",
       "directory": "tests/compiler-modules",
       "status": "recognized",
@@ -821,6 +852,11 @@
     },
     {
       "directory": "tests/compiler-io-abi-2",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/compiler-literals-integ",
       "status": "unrecognized-suite",
       "detail": "No reviewed adapter for this suite path"
     },
