@@ -57,6 +57,49 @@ class PacketTests(RepoTest):
         head = (ctx.head_commit if ctx else self.fx.git('rev-parse', 'HEAD'))[:8]
         return (out / inc / head / rule / f'{n:04d}.md').read_text()
 
+    # ---- labelling and the shared cap ---------------------------------------------------
+    def spec_branch(self):
+        self.start({'vm/SPEC.md': SPEC.replace('and baselines unchanged', 'and baselines changed')})
+        self.fx.commit('gate and spec', {'vm/SPEC.md': SPEC, 'vm/check-spec.py': CHECK_GATE})
+
+    def test_a_working_copy_build_is_labelled_as_a_snapshot_never_as_the_head_commit(self):
+        """The default build reads the working copy: its text is not HEAD's, so it must not carry HEAD's name, header or directory."""
+        self.spec_branch()
+        head = self.fx.git('rev-parse', 'HEAD')
+        self.fx.write('vm/SPEC.md', SPEC.replace('the bench sources and baselines unchanged', 'the bench sources and baselines never change'))
+        ctx, report, out = self.built(['claim-holds-against-evidence'])          # dirty: a snapshot of the working copy
+        self.assertTrue(ctx.worktree)
+        label = C.head_label(ctx)
+        self.assertRegex(label, rf'^{head[:8]}\+worktree\.[0-9a-f]{{8}}$')
+        directory = out / 'x' / label / 'claim-holds-against-evidence'
+        self.assertTrue(directory.is_dir(), [p.name for p in (out / 'x').iterdir()])
+        self.assertFalse((out / 'x' / head[:8]).exists())                        # nothing is written under HEAD's own name
+        text = (directory / '0001.md').read_text()
+        self.assertIn(f'head={label};', text)
+        self.assertRegex(text, rf'vm/SPEC\.md@{re.escape(label)} sha256=[0-9a-f]{{64}}')
+        self.assertIn('never change', text)                                       # the uncommitted sentence, honestly labelled
+        self.assertEqual(report['claim-holds-against-evidence']['files'][0]['file'].split('/')[1], label)
+
+    def test_a_committed_build_keeps_the_plain_commit_label_and_rebuilds_byte_identically(self):
+        self.spec_branch()
+        head = self.fx.git('rev-parse', 'HEAD')
+        first = self.built(['claim-holds-against-evidence'], head=head)
+        second = self.built(['claim-holds-against-evidence'], head=head)
+        self.assertEqual(head, C.head_label(first[0]))
+        a = first[2] / 'x' / head[:8] / 'claim-holds-against-evidence' / '0001.md'
+        self.assertEqual(a.read_bytes(), (second[2] / 'x' / head[:8] / 'claim-holds-against-evidence' / '0001.md').read_bytes())
+        self.assertNotIn('worktree', a.read_text())
+        clean_worktree = self.built(['claim-holds-against-evidence'])[0]        # a clean checkout is its HEAD commit
+        self.assertEqual(head, C.head_label(clean_worktree))
+
+    def test_the_builders_limit_and_the_runners_cap_are_one_number(self):
+        limits = json.loads((Path(C.__file__).parent / 'limits.json').read_text())
+        self.assertEqual(limits['packets_per_rule_per_head'], C.PER_RULE_LIMIT)
+        runner = (Path(C.__file__).resolve().parents[3] / 'scripts/prechecks-perch-run.mjs').read_text()
+        self.assertIn("packets/limits.json", runner)                             # the runner reads the same file for its default cap
+        self.assertNotRegex(runner, r'cap\s*=\s*40\b')                          # and no second literal
+        self.assertEqual(C.PER_RULE_LIMIT, packets_build.C.PER_RULE_LIMIT)
+
     # ---- P1 -----------------------------------------------------------------------
     def test_p1_type_a_selects_the_declaration_that_decides_the_claim(self):
         self.start({'vm/SPEC.md': SPEC.replace('and baselines unchanged', 'and baselines changed')})

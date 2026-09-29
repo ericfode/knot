@@ -189,7 +189,7 @@ def grep_code(ctx, token: str, suffixes: tuple = ('.py', '.mjs', '.ts', '.js', '
 
 
 def source(ctx, path: str) -> Source:
-    return Source(path, ctx.head_commit or ctx.head.treeish, ctx.head.sha256(path) or '')
+    return Source(path, C.head_label(ctx), ctx.head.sha256(path) or '')
 
 
 def quote(text: str) -> str:

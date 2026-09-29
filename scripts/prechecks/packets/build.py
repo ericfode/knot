@@ -26,7 +26,7 @@ from packets.builders import BUILDERS  # noqa: E402
 def build(ctx, rules=None, out_dir: Path | None = None) -> dict:
     """{rule: {built, unavailable, files}}; writes packets below `out_dir` when given."""
     report = {}
-    head = ctx.head_commit or ctx.head.treeish
+    head = C.head_label(ctx)
     label = (ctx.inc or 'none')
     for rule, builder in BUILDERS.items():
         if rules and rule not in rules:
@@ -45,7 +45,7 @@ def build(ctx, rules=None, out_dir: Path | None = None) -> dict:
             rendered.append((packet.key, text))
         directory = None
         if out_dir is not None:
-            directory = Path(out_dir) / label / head[:8] / rule
+            directory = Path(out_dir) / label / C.short(head, 8) / rule
             assert directory.parent.parent.parent == Path(out_dir), directory
             if directory.exists():
                 for stale in directory.glob('*.md'):
@@ -55,7 +55,7 @@ def build(ctx, rules=None, out_dir: Path | None = None) -> dict:
             name = f'{number:04d}.md'
             if directory is not None:
                 (directory / name).write_text(text, encoding='utf-8')
-            files.append({'file': f'{label}/{head[:8]}/{rule}/{name}', 'key': key, 'bytes': len(text.encode('utf-8'))})
+            files.append({'file': f'{label}/{C.short(head, 8)}/{rule}/{name}', 'key': key, 'bytes': len(text.encode('utf-8'))})
         report[rule] = {'built': len(rendered), 'files': files,
                         'unavailable': [{'key': u.key, 'reason': u.reason} for u in missing]}
     return report
@@ -65,14 +65,15 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--repo', default='.', help='repository to read (a git checkout or worktree)')
     ap.add_argument('--out', help='output directory (default: <repo>/.local/prechecks/packets)')
-    ap.add_argument('--head', help='revision to build from (default: the working copy)')
+    ap.add_argument('--head', help='revision to build from (default: the working copy, labelled <HEAD>+worktree.<tree> throughout)')
     ap.add_argument('--base', help='base ref (default: merge-base with main, or the effective base)')
     ap.add_argument('--inc', help='increment id (default: from a campaign/<id> branch)')
     ap.add_argument('--main-ref')
     ap.add_argument('--manifest')
     ap.add_argument('--upstream', action='append', default=[])
     ap.add_argument('--rules', help='comma-separated rule names (default: all seven)')
-    ap.add_argument('--limit', type=int, default=40, help='packets per rule (default 40, the live-run cap per increment and round)')
+    ap.add_argument('--limit', type=int, default=C.PER_RULE_LIMIT,
+                    help=f'packets per rule (default {C.PER_RULE_LIMIT}: packets/limits.json, the same number as the live runner\'s --cap)')
     ap.add_argument('--json', action='store_true')
     args = ap.parse_args(argv)
     repo = Repo(args.repo)

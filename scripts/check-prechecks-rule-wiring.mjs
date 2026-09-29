@@ -2,14 +2,15 @@
 // Offline CLI integration check for .perch/rules/prechecks.yaml. Stub probabilities are never calibration data:
 // this proves selection and plumbing, not that any rule separates broken packets from clean ones.
 import assert from 'node:assert/strict';
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import YAML from '../node_modules/yaml/dist/index.js';
 import { main } from '../node_modules/@lakeday/perch/dist/cli.mjs';
-import { execute, plan, separation, stageControls } from './prechecks-perch-run.mjs';
+import { CAP, PACKET_ROOT, execute, inWhere, plan, readHeader, separation, stageControls, unstageControls } from './prechecks-perch-run.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const names = [
@@ -117,7 +118,7 @@ try {
   // request per packet, refuses a linked worktree, and reports whether the verdicts separate. The queued verdicts
   // below follow the labels, so this exercises the report logic only.
   const staging = '.local/prechecks/packets/controls';
-  const rows = await plan({ root: dir, packets: staging, controls: true, controlsRoot: root });
+  const { rows } = await plan({ root: dir, packets: staging, controls: true, controlsRoot: root });
   assert.equal(rows.length, cases.cases.length);
   assert.ok(rows.every(r => RULES_SET.has(r.rule) && r.expected && r.split));
   calls = []; verdict = 1;
@@ -140,6 +141,63 @@ try {
   assert.equal(gap.misclassified.length, cases.cases.filter(c => c.expected === 'broken').length);
   await assert.rejects(stageControls(dir, join(dir, 'docs')), /Refusing to stage/);
   await assert.rejects(stageControls(dir, resolve(dir, '..')), /Refusing to stage/);
+  await assert.rejects(unstageControls(dir, join(dir, 'docs')), /Refusing to stage/);
+
+  // The controls live beside the production packets while a calibration runs, and a production plan never asks them: it
+  // skips the staged controls, and the calibration run removes them when it is done.
+  const production = join(dir, PACKET_ROOT);
+  const header = (rule, increment, head) => `<!-- prechecks packet v1; rule=${rule}; increment=${increment}; head=${head}; base=b1b1b1b1b1b1; builder=scripts/prechecks/packets@test; sources: none -->\n# Claim\nx\n\n# Evidence\ny\n\n# Scope\nz\n`;
+  const put = async (relative, text) => { await mkdir(dirname(join(dir, relative)), { recursive: true }); await writeFile(join(dir, relative), text); };
+  const beforeControls = (await plan({ root: dir })).rows.length;
+  const withControls = await plan({ root: dir });
+  assert.equal(withControls.rows.length, beforeControls);
+  assert.ok(withControls.rows.every(r => !r.path.includes('/controls/')), 'production plans skip the staged controls');
+  await unstageControls(dir, join(dir, staging));
+  assert.equal((await plan({ root: dir })).rows.length, beforeControls);
+  assert.ok(!(await readdir(production)).includes('controls'), 'the staged controls are removed');
+
+  // The cap is per rule and per (increment, head) as each packet's header names them, not per directory depth: a default
+  // run over one build asks every rule, the builder's limit and the runner's cap are one number, and skips are counted.
+  assert.equal(CAP, JSON.parse(await readFile(join(root, 'scripts/prechecks/packets/limits.json'), 'utf8')).packets_per_rule_per_head);
+  const fresh = '.local/prechecks/cap-fixture';
+  await rm(join(dir, fresh), { recursive: true, force: true });
+  for (const rule of names) {
+    for (const [head, count] of [['d2fe0f20aaaa', 3], ['454bf305bbbb', 3]]) {
+      for (let n = 1; n <= count; n++) await put(`${fresh}/vm-spec/${head.slice(0, 8)}/${rule}/${String(n).padStart(4, '0')}.md`, header(rule, 'vm-spec', head));
+    }
+  }
+  const capped = await plan({ root: dir, packets: fresh, cap: 2 });
+  assert.equal(capped.rows.length, names.length * 2 * 2, 'two per rule and head, and every rule is asked');
+  assert.deepEqual(Object.fromEntries(names.map(name => [name, 2])), capped.skipped, 'the skipped packets are counted by rule');
+  assert.ok(names.every(name => capped.rows.filter(r => r.rule === name).length === 4));
+  assert.equal((await plan({ root: dir, packets: fresh })).rows.length, names.length * 6, 'the default cap asks the whole build');
+  const deep = await plan({ root: dir, packets: `${fresh}/vm-spec/d2fe0f20`, cap: 2 });   // a deeper --packets directory: the same groups
+  assert.equal(deep.rows.length, names.length * 2);
+  assert.deepEqual(await readHeader(join(dir, fresh, 'vm-spec/d2fe0f20', names[0], '0001.md')), { rule: names[0], increment: 'vm-spec', head: 'd2fe0f20aaaa' });
+  assert.equal(await readHeader(join(dir, 'docs/unrelated.md')), null);
+
+  // A packet directory built anywhere else is staged into the rules' glob before it is asked, and a dry run only says so.
+  const elsewhere = '.local/packets-vm-spec';
+  await rm(join(dir, elsewhere), { recursive: true, force: true });
+  await put(`${elsewhere}/vm-spec/d2fe0f20/claim-holds-against-evidence/0001.md`, header('claim-holds-against-evidence', 'vm-spec', 'd2fe0f20aaaa'));
+  await put(`${elsewhere}/vm-spec/d2fe0f20/passages-agree/0001.md`, header('passages-agree', 'vm-spec', 'd2fe0f20aaaa'));
+  const outside = await plan({ root: dir, packets: elsewhere });
+  assert.equal(outside.staged, 2);
+  assert.ok(outside.rows.every(r => r.source && inWhere(r.path, r.rule) && r.path.startsWith(`${PACKET_ROOT}/staged/vm-spec/d2fe0f20aaaa/`)), outside.rows);
+  assert.ok(!inWhere('.local/packets-vm-spec/x/passages-agree/0001.md', 'passages-agree'));
+  assert.ok(inWhere(`${PACKET_ROOT}/a/b/passages-agree/0001.md`, 'passages-agree'));
+  assert.ok(!inWhere(`${PACKET_ROOT}/a/b/passages-agree/0001.md`, 'clause-vs-delta'));
+  assert.ok(!inWhere(`${PACKET_ROOT}/../x/passages-agree/0001.md`, 'passages-agree'));
+  calls = []; verdict = 1;
+  await execute(outside.rows, { root: dir, live: false });
+  assert.ok(!existsSync(join(dir, outside.rows[0].path)), 'a dry run copies nothing');
+  const asked = await execute(outside.rows, { root: dir, env: { PERCH_API_KEY: 'offline-wiring-only' }, live: true, requireMain: false, run: runPerch });
+  assert.equal(calls.length, 2, 'each staged packet is asked once, from a path the rules select');
+  assert.ok(asked.results.every(r => r.checked === 1 && r.status === 'clean'), asked.results);
+  assert.ok(existsSync(join(dir, outside.rows[0].path)));
+  assert.equal((await plan({ root: dir })).rows.filter(r => r.path.includes('/staged/')).length, 0, 'a production plan does not ask the staged copies again');
+  await assert.rejects(execute([{ path: 'docs/unrelated.md', rule: 'passages-agree' }],
+    { root: dir, env: { PERCH_API_KEY: 'offline-wiring-only' }, live: true, requireMain: false, run: runPerch }), /Refusing docs\/unrelated\.md/);
 
   // The calibration set: every rule has a broken control, every rule and split is present or a documented gap,
   // labels follow the split, and every packet is self-contained, bounded and free of host paths.

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from lib.model import CheckResult
 from lib.runner import Check
+from packets import common as C
 from packets.build import build
 
 ID = 'C8'
@@ -32,7 +33,7 @@ def run(ctx) -> CheckResult:
             result.rules_unavailable[rule] = f"{len(row['unavailable'])} packet(s) unavailable: " + \
                 '; '.join(sorted({u['reason'] for u in row['unavailable']}))[:200]
     result.facts = {'packets': {rule: row['built'] for rule, row in report.items()}, 'total': total,
-                    'directory': f'.local/prechecks/packets/{ctx.inc or "none"}/{(ctx.head_commit or "tree")[:8]}'}
+                    'directory': f'.local/prechecks/packets/{ctx.inc or "none"}/{C.short(C.head_label(ctx), 8)}'}
     result.notes.append(f'{total} advisory packet(s) built; run them live from the main checkout '
                         '(node scripts/prechecks-perch-run.mjs --live), never from a linked worktree')
     if total == 0:

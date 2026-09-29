@@ -10,6 +10,7 @@ from __future__ import annotations
 import ast
 import functools
 import hashlib
+import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -17,8 +18,9 @@ from pathlib import Path
 VERSION = 1
 PACKET_LIMIT = 48 * 1024
 EVIDENCE_LIMIT = 12 * 1024
-PER_RULE_LIMIT = 40
 HERE = Path(__file__).resolve().parent
+# Packets per rule and per (increment, head): the builder's default `--limit` and the live runner's `--cap` are this one number.
+PER_RULE_LIMIT = json.loads((HERE / 'limits.json').read_text(encoding='utf-8'))['packets_per_rule_per_head']
 CODE_SUFFIXES = ('*.py', '*.mjs', '*.ts', '*.js', '*.bend')
 
 
@@ -74,9 +76,23 @@ def fence(text: str, lang: str = '') -> str:
     return f'{ticks}{lang}\n{text.rstrip(chr(10))}\n{ticks}'
 
 
+def head_label(ctx) -> str:
+    """What a packet build names its head. A committed head is its commit; a snapshot of the working copy (the default of
+    the command line and of C8) is `<HEAD commit>+worktree.<snapshot tree>`: its text is not that commit's, so it must not
+    carry that commit's name, header or directory (a rebuild with `--head <commit>` would otherwise write other bytes into
+    the same place)."""
+    commit = ctx.head_commit or ctx.head.treeish
+    return f'{commit[:8]}+worktree.{ctx.head.treeish[:8]}' if ctx.worktree else commit
+
+
+def short(rev: str, width: int) -> str:
+    """A revision cut to `width` characters, except a worktree label, whose marker must survive."""
+    return rev if '+worktree.' in rev else rev[:width]
+
+
 def render(packet: Packet, *, inc: str | None, head: str | None, base: str | None) -> str:
-    sources = '; '.join(f'{s.path}@{s.rev[:8]} sha256={s.sha256}' for s in sorted(packet.sources, key=lambda s: (s.path, s.rev)))
-    header = (f'<!-- prechecks packet v{VERSION}; rule={packet.rule}; increment={inc or "none"}; head={(head or "none")[:12]}; '
+    sources = '; '.join(f'{s.path}@{short(s.rev, 8)} sha256={s.sha256}' for s in sorted(packet.sources, key=lambda s: (s.path, s.rev)))
+    header = (f'<!-- prechecks packet v{VERSION}; rule={packet.rule}; increment={inc or "none"}; head={short(head or "none", 12)}; '
               f'base={(base or "none")[:12]}; builder=scripts/prechecks/packets@{builder_id()}; sources: {sources or "none"} -->')
     return '\n'.join([header, '# Claim', packet.claim.rstrip('\n'), '', '# Evidence', packet.evidence.rstrip('\n'), '',
                       '# Scope',
