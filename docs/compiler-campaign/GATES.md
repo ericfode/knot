@@ -22,7 +22,20 @@ On macOS the runner resolves the toolchain clang once (`xcrun --find clang`) and
 passes it to every gate as `CC`, unless the caller set `CC`. The seed probes
 `$CC` before `clang`. The `/usr/bin/clang` shim intermittently printed nothing
 under parallel load, which the seed reported as "found no clang". The resolved
-binary is the same compiler the shim forwards to.
+binary is the same compiler the shim forwards to. Some gate programs rebuild
+their own environment for seed and mutant builds, keeping `PATH` but dropping
+`CC` and `SDKROOT`, so the runner also puts a `clang` wrapper first on `PATH`.
+The wrapper runs the resolved compiler and supplies the SDK when it is missing,
+which keeps those paths off the shim. `test_runner` pins it with a trimmed
+environment.
+
+The same message also appears under heavy host load with the real compiler on
+PATH: the seed's `spawnSync` probe returns nothing. It is a host fault, not an
+assertion, so the runner reruns a gate once when the gate failed and its output
+contains `bend needs clang`. The result records the first attempt under
+`retried` (its logs keep the `.retry` suffix on the second attempt), and the
+normalized summary leaves `retried` out, so a retried pass normalizes like a
+clean one. A gate that fails twice stays failed. Other failures are never retried.
 
 Harness wall-clock guards inside the gate scripts (the seed-build and CLI
 `run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
@@ -68,18 +81,28 @@ The vm-spec increment adds gate `vm-spec` (`python3 vm/check-spec.py`), which
 freezes the `knot-image-1`/`knot-vm-1` contract of `vm/SPEC.md` before any VM
 exists. It builds the pinned literals and closures heads' `eval-cli` and
 `check-cli` from `vm/oracles/` with the seed's native lane, re-executes the seed
-and eval-cli on 93 golden sources, and requires the frozen observations byte for
+and eval-cli on 111 golden sources, and requires the frozen observations byte for
 byte. It checks each committed image against its hand-written plan, the
-reference codec and an independent reading of Knot's checked core display. It
-also checks the frozen VM expectation table; 71 refused image controls, nine of
-them on either side of the resource limits that are `Exhausted` kind 2; 20
-expectation, seven invocation, two seed-display and two bench controls; two excused
-eval-bound controls; six admitted plan controls, one admitted limit control, seven
-admitted code-list controls and 41 run controls with their frozen fuel and outcomes;
-nine describe-domain controls; 13 argument controls; the lowering of one hand-written
-display; 69 codec, 4 source, 39 evaluator and five rule mutants of `check-spec.py`
-itself; and the bench freeze: sources, guards, outputs and the seed-native
-measurements pinned by digest in `vm/bench/workloads.json`. It writes only
+reference codec and an independent reading of Knot's checked core display, save
+three Book goldens whose lane's head (the literals one) answers Unsupported and
+whose review declares the line. It also checks the frozen VM expectation table; 211 refused image controls (124 byte-level,
+78 plan-level, and nine on either side of the resource limits that are `Exhausted` kind 2); 27
+expectation, seven invocation, two seed-display, three display-lane and two bench
+controls; two excused eval-bound controls; eight admitted plan controls (two of them names in every length of UTF-8),
+one admitted limit control, seven admitted code-list controls and 111 run controls with their frozen
+fuel, calls and outcomes (among them D23's requests: built by the Action's second application,
+performed only by the Program's Top loop, dropped without effect and refused as
+`Unsupported vm effect` wherever a read meets one, except a Case, whose Default takes it (D24; nest's lowering of a source
+catch-all emits none, so its five compiled twins are refused, and two plans that test the slot again take the request as the native lane does), with the
+bytes and host calls a Book makes, which are none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar); nine describe-domain controls; 13 argument controls;
+the lowering of two hand-written displays; 15 seed witnesses (sources whose two seed lanes, and for
+three the literals head, it re-executes and compares with frozen bytes and a literal review, with three
+frozen refusals of that comparison); 137 codec, 4 source, 97 evaluator and twenty-three
+rule mutants of `check-spec.py` itself (ten of them delete one clause of the canonicality clauses that the gate holds
+against re-encoding on 5,797 images); the accounting of all 178 omissions of a refusal of the reference codec or of a clause of its test, each killed,
+held by a raise or unreached; and the bench freeze: sources, guards, outputs and the seed-native
+measurements pinned by digest in `vm/bench/workloads.json`. It asserts that its own peak
+memory stays under 4 GiB (it holds about 430 MB): no mutant sizes an allocation from a raw word of an image. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.
 
 The vm-model increment adds gate `vm-model` (`python3 vm/check-model.py`). It

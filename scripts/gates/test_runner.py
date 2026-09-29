@@ -5,6 +5,7 @@ import io
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import time
@@ -242,6 +243,48 @@ class ExecutionTests(unittest.TestCase):
                 'print("# pass 3\\nPASS: eight law rules;")')), root, root, env, 5)
             self.assertEqual('passed', good['status'])
             self.assertEqual({'tests': 3, 'law_rules': 8}, good['counts'])
+
+    def test_host_clang_flake_is_retried_once(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            env = dict(os.environ, BEND_NO_TELEMETRY='1')
+            marker = root / 'attempts'
+            flaky = ('import sys, pathlib; p = pathlib.Path(sys.argv[1]); n = int(p.read_text()) if p.exists() else 0; '
+                     'p.write_text(str(n + 1)); '
+                     '(print("# pass 3\\nPASS: eight law rules;"), sys.exit(0)) if n else '
+                     '(print("Error: bend needs clang 14 or newer to build binaries (found no clang)", file=sys.stderr), sys.exit(1))')
+            good = run.execute(run.Gate('lint', (sys.executable, '-c', flaky, str(marker))), root, root, env, 5)
+            self.assertEqual('passed', good['status'])
+            self.assertEqual(1, good['retried']['first_exit_code'])
+            self.assertEqual('2', marker.read_text())
+            # Twice flaky stays failed, with both attempts' evidence.
+            always = ('import sys; print("bend needs clang 14 (found no clang)", file=sys.stderr); sys.exit(1)')
+            bad = run.execute(run.Gate('always', (sys.executable, '-c', always)), root, root, env, 5)
+            self.assertEqual('failed', bad['status'])
+            self.assertIn('retried', bad)
+            # Any other failure is never retried.
+            other = run.execute(run.Gate('other', (sys.executable, '-c', 'raise SystemExit(3)')), root, root, env, 5)
+            self.assertEqual('failed', other['status'])
+            self.assertNotIn('retried', other)
+
+    def test_clang_on_path_survives_a_trimmed_environment(self):
+        # A gate program that rebuilds its environment keeps PATH but may drop CC
+        # and SDKROOT; `clang` must still be the resolved compiler with its SDK.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fake = root / 'real-clang'
+            fake.write_text('#!/bin/sh\necho "clang version 99 sdk=$SDKROOT"\n')
+            fake.chmod(0o755)
+            run_dir = root / 'run'
+            run_dir.mkdir()
+            with patch.object(run, 'host_cc', return_value=str(fake)), \
+                 patch.object(run, 'copy_cache', lambda *a, **k: None), \
+                 patch.dict(os.environ, {'SDKROOT': '/fake/sdk'}):
+                env, _ = run.environment(run_dir)
+            self.assertEqual(str(fake), env['CC'])
+            trimmed = {'PATH': env['PATH']}
+            out = subprocess.run(['clang', '--version'], env=trimmed, capture_output=True, text=True).stdout
+            self.assertEqual('clang version 99 sdk=/fake/sdk', out.strip())
 
     def test_dependency_order_parallelism_and_blocked_consumer(self):
         starts, ends = {}, {}

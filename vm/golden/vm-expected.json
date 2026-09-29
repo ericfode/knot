@@ -1023,6 +1023,7 @@
    "outcome": "HostFailure",
    "cause": "io abi",
    "stdout": "",
+   "calls": 4,
    "basis": "divergent-by-contract (non-scalar output)",
    "reason": "D20: print 1 holds Char 55296; the native lane exits 0",
    "eval_lane": "Invalid"
@@ -1036,6 +1037,7 @@
    "outcome": "HostFailure",
    "cause": "io abi",
    "stdout": "",
+   "calls": 4,
    "basis": "divergent-by-contract (non-scalar output)",
    "reason": "D20: print 1 holds Char 55296; the native lane exits 0",
    "eval_lane": "Invalid"
@@ -1073,6 +1075,7 @@
    "outcome": "HostFailure",
    "cause": "io abi",
    "stdout": "",
+   "calls": 4,
    "basis": "divergent-by-contract (non-scalar output)",
    "reason": "D20: print 1 holds Char 67237376; the native lane exits 0",
    "eval_lane": "Invalid"
@@ -1110,6 +1113,7 @@
    "outcome": "HostFailure",
    "cause": "io abi",
    "stdout": "a\n",
+   "calls": 13,
    "basis": "divergent-by-contract (non-scalar output)",
    "reason": "D20: print 2 holds Char 55296; the native lane exits 0",
    "eval_lane": "Invalid"
@@ -1171,6 +1175,235 @@
    "stderr": "",
    "basis": "eval-cli",
    "eval_lane": "agree"
+  },
+  "chr-pattern": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported",
+   "eval_unavailable": "Unsupported check char-constructor-pattern"
+  },
+  "list-head-match": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported",
+   "eval_unavailable": "Unsupported parse parameter-type"
+  },
+  "nat-transitions": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Exhausted",
+   "eval_bound": {
+    "cause": "Exhausted eval budget",
+    "bound": "transitions",
+    "budget": {
+     "transitions": 1048576
+    },
+    "reached": {
+     "transitions": 1048585
+    }
+   }
+  },
+  "keep-swapped": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "kept\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "keep-first": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "kept\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "run2-flag": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "first\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "spine": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "first\nsecond\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "keep-non-scalar": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "kept\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "book-drop": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t8\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported",
+   "eval_unavailable": "Unsupported parse parameter-type"
+  },
+  "let-dropped-request": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "live\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "let-live-request": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "live\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "field-request-returned": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "boxed-then-returned\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "field-request-dropped": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "live\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "emit-field-request-dropped": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "live\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "capture-request-dropped": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "live\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "case-request-emit-default-u32": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "2\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "case-request-halt-default-u32": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "4\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
+  },
+  "case-request-emit-default": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Unsupported"
   }
  },
  "invocations": {

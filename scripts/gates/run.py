@@ -196,6 +196,17 @@ def environment(run_dir: Path) -> tuple[dict, dict]:
                 sdk = ''
             if sdk:
                 env['SDKROOT'] = sdk
+        # Gate programs that rebuild their own environment keep PATH but may drop
+        # CC; the seed then probes the xcrun shim. A `clang` first on PATH that
+        # runs the resolved compiler (with the SDK the shim would supply) keeps
+        # every such path off the shim.
+        tools = run_dir / 'bin'
+        tools.mkdir()
+        wrapper = tools / 'clang'
+        sdk_line = f": \"${{SDKROOT:={env['SDKROOT']}}}\"; export SDKROOT\n" if 'SDKROOT' in env else ''
+        wrapper.write_text(f'#!/bin/sh\n{sdk_line}exec "{cc}" "$@"\n')
+        wrapper.chmod(0o755)
+        env['PATH'] = str(tools) + os.pathsep + env.get('PATH', '')
     library = run_dir / 'bend-lib'
     library.mkdir()
     cache = Path(os.environ.get('BEND_LIB', str(Path.home() / '.bend/lib'))).expanduser().resolve()
@@ -291,9 +302,29 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
     return result
 
 
+# The seed's native lane probes clang with spawnSync before every build. Under
+# heavy host load that spawn intermittently returns nothing and the seed stops with
+# "bend needs clang ... (found no clang)", failing an otherwise passing gate. It is
+# a host fault, not an assertion: rerun that gate once, and keep the first attempt's
+# evidence beside the result (outside the normalized summary).
+HOST_FLAKE = b'bend needs clang'
+
+
 def execute(gate: Gate, root: Path, logs: Path, env: dict, timeout: float) -> dict:
+    result = attempt(gate, root, logs, env, timeout, '')
+    if result['status'] == 'failed' and any(HOST_FLAKE in (logs / result[k]).read_bytes()
+                                            for k in ('stdout', 'stderr') if (logs / result[k]).exists()):
+        first = result
+        result = attempt(gate, root, logs, env, timeout, '.retry')
+        result['retried'] = {'reason': 'host clang discovery failed (found no clang)',
+                             'first_exit_code': first['exit_code'], 'first_stderr': first['stderr'],
+                             'first_seconds': first['seconds']}
+    return result
+
+
+def attempt(gate: Gate, root: Path, logs: Path, env: dict, timeout: float, suffix: str) -> dict:
     start = time.monotonic()
-    name = gate.name.replace(':', '-')
+    name = gate.name.replace(':', '-') + suffix
     stdout, stderr = logs / f'{name}.stdout', logs / f'{name}.stderr'
     result = {'name': gate.name, 'command': list(gate.argv), 'status': 'host-failure',
               'exit_code': None, 'counts': {}, 'stdout': stdout.name, 'stderr': stderr.name}
@@ -439,7 +470,7 @@ def main(argv=None) -> int:
         # Keep process evidence even if a malformed receipt cannot be normalized.
         summary['run']['gates'] = results
         summary['normalized']['gates'] = [
-            {k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr')}
+            {k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr', 'retried')}
             for row in results]
         after = {}
         for gate, result in zip(GATES, results):
@@ -453,7 +484,7 @@ def main(argv=None) -> int:
         summary['run']['gates'] = results
         summary['normalized'] = {'status': 'passed' if passed else 'failed',
             'snapshot_sha256': digest(json_bytes(snapshot)), 'dependencies_sha256': digest(json_bytes(dependencies)),
-            'gates': [{k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr')}
+            'gates': [{k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr', 'retried')}
                       for row in results], 'receipts': receipts,
             'receipt_counts': {kind: sum(r['classification'] == kind for r in receipts)
                                for kind in ('identical', 'volatile-only', 'semantic')}}
