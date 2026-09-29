@@ -14,6 +14,16 @@ consequences, each frozen here from the reviewer's probes:
   = ..`) continues that value, and the next statement would start at the `:` or
   `=`; a marker first in a body follows no value and may be spaced.
 - A return arrow is the literal `->`; `- >` is rejected.
+
+The seed also reads arguments separated by whitespace alone (`two(a b)`, `Pr{a b}`),
+a promotion of a promotion (`++y`, `+ +y`, `++u = x`) and a let split across lines
+(a marker, then its name, then `=`, then the value) as ordinary. Knot ends a term at
+a line break and reads one `+` promotion, so these seed-accepted programs are
+Unsupported, never Invalid (D4). Only a term can follow an argument as another one
+(a name, or a `+` marker in a pattern), so `two(a = b)` and `two(a + b)` stay Invalid.
+An untyped let split before its `=` and a body on the next line at the `case` column
+are seed-accepted programs that stay open D4 gaps (`top-level-indentation`,
+`body-indentation`, pinned Invalid by the frontend gate), so they are no fixtures.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -34,6 +44,14 @@ def invalid(code):
 
 
 COLON, MARKER, RESULT = invalid('expected-:'), invalid('detached-marker'), invalid('function-result')
+
+
+def unsupported(code):
+    return {'exit': 3, 'diagnostic': f'Unsupported\tparse\t{code}\t'}
+
+
+ARGUMENTS, PROMOTION, BREAK = (unsupported('argument-whitespace'), unsupported('repeated-promotion'),
+                               unsupported('line-break'))
 # What the seed says about each rejected group, so a fixture cannot be rejected for another reason.
 REASON = {'plus-row-gap': 'patterns (one per scrutinee)', 'marker-gap': '- expected : a term',
           'arrow-gap': "- expected : '->'"}
@@ -82,6 +100,32 @@ REVIEWED = {
         'arrow-empty-params', 'arrow-type-application')},
     'arrow-control': {name: ACCEPTED for name in (
         'arrow-glued', 'arrow-tight-before', 'arrow-tight-after', 'arrow-tight-both')},
+    # Seed-accepted, Unsupported here: arguments (a call's, a pattern's fields) separated
+    # by whitespace, in a flat match and a multi-scrutinee one.
+    'argument-whitespace': {name: ARGUMENTS for name in (
+        'argspace-call-flat', 'argspace-call-multi', 'argspace-fields-flat', 'argspace-fields-multi',
+        'argspace-repro-call', 'argspace-repro-fields', 'argspace-nested-call', 'argspace-promoted-fields')},
+    # Seed-rejected: what follows the argument is no term, or an operator; a promotion is no
+    # argument of a call.
+    'argument-control': {'argspace-equals-call': invalid('argument-separator'),
+                         'argspace-operator-call': invalid('argument-separator'),
+                         'argspace-operator-fields': invalid('argument-separator'),
+                         'argspace-promoted-call': invalid('argument-separator')},
+    'repeated-promotion': {name: PROMOTION for name in (
+        'plusplus-flat', 'plusplus-multi', 'plusplus-repro', 'plusplus-spaced-flat', 'plusplus-triple-flat',
+        'plusplus-let', 'plusplus-spaced-let')},
+    'let-break': {name: BREAK for name in (
+        'letsplit-before-eq-flat', 'letsplit-before-eq-multi', 'letsplit-before-eq-marker',
+        'letsplit-after-eq-flat', 'letsplit-after-eq-multi', 'letsplit-after-eq-untyped',
+        'letsplit-marker-flat', 'letsplit-marker-multi', 'letsplit-marker-arm', 'letsplit-erased-marker')},
+    # Seed-rejected: nothing that can continue the let follows the line break.
+    'let-break-control': {'letsplit-before-eq-junk': invalid('expected-='),
+                          'letsplit-after-eq-junk': invalid('expected-term')},
+    # Seed-accepted forms the parser already reports as unsupported, in a multi-scrutinee row.
+    'unsupported-control': {'oos-destructuring-let-flat': unsupported('destructuring-binding'),
+                            'oos-destructuring-let-multi': unsupported('destructuring-binding'),
+                            'oos-generic-param-multi': unsupported('generic-datatype'),
+                            'oos-tilde-header': unsupported('template-binder')},
 }
 
 
@@ -111,8 +155,9 @@ def main():
     with ThreadPoolExecutor(6) as pool:
         cases = list(pool.map(lambda p: observe(p, *table[p.stem]), files))
     result = {'basis': 'Reviewer probes verbatim (the row-token grid, the plus grid with its two- and '
-                       'three-column and fielded repros, the let-marker probes and the split-arrow repro) and '
-                       'their controls, frozen with the pinned seed before the repairs.',
+                       'three-column and fielded repros, the let-marker probes and the split-arrow repro, the '
+                       'whitespace-argument, repeated-promotion and split-let probes) and their controls, '
+                       'frozen with the pinned seed before the repairs.',
               'seed': oracle.environment()[0], 'fixtures': cases}
     if write:
         MANIFEST.write_text(json.dumps(result, indent=2) + '\n')
