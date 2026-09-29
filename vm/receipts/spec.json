@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T16:35:22.897020+00:00",
+ "date": "2026-09-29T22:25:32.736680+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "a99989dd2311fe8f8a7843607b655fc9bcac47d147d717f48452ab93c2a16fdb",
-  "vm/SPEC.md": "cf5adb1d99db33445f8373187582426e9f85b54fd51e1b1f56f7bd9dfc84c455",
+  "vm/DECISIONS.md": "0fd8d11d84a30f9d0adbd6079719de4b153223b7ef7368787e18e0a4e567a919",
+  "vm/SPEC.md": "16024f6b0b074c912f0e72d33d75784925c7c410a67a06161d7c01697eb119f2",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,7 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "73be90c8b69b574e8c6701d345dee29eeb50f9b8f4cf1ba4c74c9139dd4863d6",
+  "vm/check-spec.py": "0f96d0bad05e20f2f916fcfbae4b9886ffdc49a0e8ca2d71aea650b4dd663ae6",
   "vm/evaluate.py": "b573d19d8720d2f9b2b9ad4c1499e3338ffbb222e7430c08d53ccded164b241f",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
@@ -4837,6 +4837,18 @@
   "run:atomic-print-then-nat-range",
   "run:atomic-display-leaf-charged",
   "run:atomic-display-leaf-ill-typed",
+  "run:order-u32-add-closure-then-request",
+  "run:order-u32-add-request-then-closure",
+  "run:order-char-is-eq-closure-then-request",
+  "run:order-char-is-eq-request-then-closure",
+  "run:order-nat-add-closure-then-request",
+  "run:order-nat-add-request-then-closure",
+  "run:order-string-eq-closure-then-request",
+  "run:order-string-eq-request-then-closure",
+  "run:order-string-append-closure-then-request",
+  "run:order-string-append-request-then-closure",
+  "run:order-string-char-tail-closure-then-request",
+  "run:order-string-char-tail-request-then-closure",
   "codes:surrogate-pair",
   "codes:u1f600",
   "codes:lone-surrogate",
@@ -6550,6 +6562,162 @@
    "stdout": "",
    "effects": 0,
    "image_sha256": "269cd8848f6e02f77bafd0f4f4b3cc0f7d3444d90baed08275ba1b88b98133d1"
+  },
+  "order-u32-add-closure-then-request": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "1d3ad3bc4546a2d6f234315515faf63abbce0fd0655fb9809c9c5ad38a187fca"
+  },
+  "order-u32-add-request-then-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "54638e26d84c25adc759c9979777072c550351c60aa4228c9e862e52e6e07974"
+  },
+  "order-char-is-eq-closure-then-request": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "c6a9738e1aedd55a1ff3eff1bae231bedc0ef8578dab6be549db206641f89a7e"
+  },
+  "order-char-is-eq-request-then-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "f9a0988694c665ea21c595b7d1d7e857aafa69fafdea4ade92928cf1db989dae"
+  },
+  "order-nat-add-closure-then-request": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "e09c0377e435e3bcce3050aca3b27e631f05e5b6facdbdb8fa57affa2e4b0bab"
+  },
+  "order-nat-add-request-then-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "075fada85ff272989efc263c0ecb1f93c66ecae2eadfc37edd3fe709f6a892b5"
+  },
+  "order-string-eq-closure-then-request": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "ffe87c834aef4614d2b8872347a3195b460dff79200b17451142e9fea1c8c793"
+  },
+  "order-string-eq-request-then-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "8bc7002551884fffce85227560d6673083d247d2157c72edd1dc99c8db37a247"
+  },
+  "order-string-append-closure-then-request": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "366dcec6fb330183c7b09a1469c495ff702cda19f8ad31eb56ed29548ed9a3f8"
+  },
+  "order-string-append-request-then-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "732599a3867f82a705831bab8d6b2d67243e5c51f86e4f5e12f2644cf21faf2b"
+  },
+  "order-string-char-tail-closure-then-request": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "HostFailure",
+   "cause": "image ill-typed",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "040b4f63fc71017046be90ef1ca5671ac756ad5971edf6e06b07538bd350031e"
+  },
+  "order-string-char-tail-request-then-closure": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Unsupported",
+   "cause": "vm effect",
+   "stdout": "",
+   "effects": 0,
+   "calls": 7,
+   "image_sha256": "5535aebd1888cf716d2382ad6892e64961ba7f18bddb790ae924b8470e912335"
   }
  },
  "describe": {
@@ -8036,6 +8204,54 @@
    "atomic": "atomic-ill-typed-chr"
   },
   {
+   "mutant": "evaluator:prim-words-read-second-first",
+   "killed": true,
+   "by": "run control order-u32-add-closure-then-request: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 7}",
+   "order": "order-u32-add-closure-then-request"
+  },
+  {
+   "mutant": "evaluator:prim-nat-read-second-first",
+   "killed": true,
+   "by": "run control order-nat-add-closure-then-request: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 7}",
+   "order": "order-nat-add-closure-then-request"
+  },
+  {
+   "mutant": "evaluator:prim-string-read-second-first",
+   "killed": true,
+   "by": "run control order-string-eq-closure-then-request: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 7}",
+   "order": "order-string-eq-closure-then-request"
+  },
+  {
+   "mutant": "evaluator:prim-char-eq-read-second-first",
+   "killed": true,
+   "by": "run control order-char-is-eq-closure-then-request: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 7}",
+   "order": "order-char-is-eq-closure-then-request"
+  },
+  {
+   "mutant": "evaluator:prim-string-eq-read-second-first",
+   "killed": true,
+   "by": "run control order-string-eq-closure-then-request: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 7}",
+   "order": "order-string-eq-closure-then-request"
+  },
+  {
+   "mutant": "evaluator:prim-string-append-read-second-first",
+   "killed": true,
+   "by": "run control order-string-append-closure-then-request: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 7}",
+   "order": "order-string-append-closure-then-request"
+  },
+  {
+   "mutant": "evaluator:string-chars-after-cells",
+   "killed": true,
+   "by": "run control order-string-char-tail-closure-then-request: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 7}",
+   "order": "order-string-char-tail-closure-then-request"
+  },
+  {
+   "mutant": "evaluator:string-tail-cell-before-char",
+   "killed": true,
+   "by": "run control order-string-char-tail-closure-then-request: {'outcome': 'Unsupported', 'cause': 'vm effect', 'stdout': '', 'effects': 0, 'calls': 7}",
+   "order": "order-string-char-tail-closure-then-request"
+  },
+  {
    "mutant": "rule:rejected-limit-as-host-failure",
    "killed": true,
    "by": "control oversize: HostFailure image: exhausted image-size"
@@ -8152,9 +8368,9 @@
   }
  ],
  "canonical": {
-  "corpus": 5831,
+  "corpus": 5843,
   "noncanonical": 527,
-  "admitted": 568,
+  "admitted": 580,
   "controls_by_clause": {
    "main-word": [
     "main-index-none"
