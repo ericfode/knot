@@ -761,7 +761,10 @@ follows it (§5, §10, §11) without a new image header word.
    to accept a generic `type Box<-R: Type> is Type:` beside `type Flag is Data:`.
 
 33. **A Case over a request is refused whatever rows it has, and the seed's lanes disagree (round 12, review
-   finding 2).** Entry 27's round-11 correction and finding 11 said that the seed fail-stops in every lane on a
+   finding 2).** *Superseded in round 13: the coordinator chose option b, D24 (entry 35). A tags-mode Case with a
+   Default takes it; the three `program-case-request-*` controls below are runs now, and the witnesses that show the
+   native lane taking the catch-all are goldens. What stays true is the measurement, and the refusal of a Case without a
+   Default.* Entry 27's round-11 correction and finding 11 said that the seed fail-stops in every lane on a
    Case over an applied effect's answer, and SPEC §8 said that no golden agrees with the seed there "because the
    seed does not succeed". The review of round 11 measured otherwise (witnesses `case-request-*`; native / Bun):
 
@@ -803,6 +806,46 @@ follows it (§5, §10, §11) without a new image header word.
    holds it: section counts are checked against the words left, records against their lengths, closure and Case
    lengths before their arrays, and arities and `slots` against §4's limits. Measured: 0xFFFFFFFF in every
    data type record of four goldens refuses in under a millisecond at a 22 MB process peak.
+
+35. **D24: a request matches no constructor row, so a tags-mode Case takes its Default (round 13).** The coordinator
+   chose option b of finding 14 (main `51ca324b`): the seed's native lane takes the catch-all on every shape measured in
+   entry 33, and the pattern matrix of the nest increment now accepts catch-alls on algebraic types, so compiled programs
+   will reach these shapes; §11 owes the native lane's value wherever it succeeds. SPEC §6, §6.1 and §8 now say: a class-5
+   scrutinee of a tags-mode Case is not inspected; the Default takes it, unread, and a Case without a Default stops
+   `Unsupported vm effect`; a binder or a lone catch-all holds no Case and binds the request as a value. Three points of
+   the rule are the executor's reading, each pinned by a frozen control so that the coordinator can move it with one
+   sentence and one frozen value:
+
+   - **Tags mode only.** A key-mode Case compares a scalar's value, which reads the word, and a key row is no constructor
+     row, so `inspect-request-keys` keeps D23's refusal (`Unsupported vm effect` after 6). D24's text ("a Case over a
+     request takes its Default when it has one") read uniformly would send a key-mode Case to its Default too, since it
+     always has one, and turn that control into `Evaluated 8 0 Off{}` after 6. The seed has no observation of it: a
+     request reaches a U32 Case only through a `none` position that a hand-written plan hands a request, so no compiled
+     program is affected either way. The evaluator mutant `keys-case-takes-request-default` dies by that control alone.
+   - **Any scrutinee type.** The Case never reads the word beyond its class, so the Default is taken at IO.OP and at a
+     type that a plan names by mistake alike (`case-request-default-at-flag`, a Book whose Case names Flag: `Evaluated 8 0
+     Off{}` after 6 entries). `case-request-default-at-io-op-only` dies by it alone.
+   - **Without a Default, refused as before**: `Unsupported vm effect`, never ill-typed (`case-request-without-default-ill-typed`),
+     and no row is picked (`case-request-picks-arm`); the seven Book controls that hand `got` a request and
+     `program-case-request` freeze it.
+
+   Frozen first (D7, two red commits) and then implemented. Three goldens promote witnesses of entry 33: the native lane's
+   values by seed, the Bun lane recorded beside each (it fail-stops on all three): `case-request-emit-default-u32`
+   (`case Emit{v}: 1 / case _: 2`, printed: `2`), `case-request-halt-default-u32` (`4`) and `case-request-emit-default`
+   (`case Emit{v}: d / case _: d`: exit 0, no output). Their plans are hand-lowered (§1) and their entry counts were
+   walked by hand before an evaluator ran: 13, 13 and 9 entries, effects 1, 1 and 0 (the request that the Case receives
+   is dropped; the print that the two U32 goldens perform is `2\n` or `4\n`). The three `program-case-request-emit-default`,
+   `-halt-default` and `-default-only` controls stop being refusals: each ends exit 0 after the same 7 entries with nothing
+   written and `effects` 0, since the Default's Flag goes into an Emit's unread field (the goldens hold the Default's
+   value). The witnesses `case-request-emit-default`, `-emit-default-u32` and `-halt-default-u32` are retired, as the goldens carry them
+   (14 witnesses become 11; `witness_refusals` uses `case-request-both-arms`); `case-request-default-only` and `-binder`
+   stay, since a lone catch-all holds no Case. One control is new, `case-request-default-at-flag`. The evaluator
+   mutant `case-default-takes-request` is the rule now and is removed; five are new, and each dies by named controls
+   (SPEC §12): `case-request-refused-with-default` (D23's refusal: the three goldens, the three Default controls and
+   `case-request-default-at-flag`), `case-request-ignores-default` (picks the first present row: the `2` and `4`
+   goldens print 1 and 3), `case-request-without-default-ill-typed`, `case-request-default-at-io-op-only` and
+   `keys-case-takes-request-default`; `case-request-picks-arm` is re-anchored on the Case without a Default. Nothing
+   else moved: vm-expected.json gained exactly three rows.
 
 ## What vm-model and vm-core must now follow (round 9)
 
@@ -969,8 +1012,8 @@ worktrees; the checks below are what the harnesses read from `check-spec.py`, SP
    (debited) and never performed, and the loop performs the one request that a run returns. The goldens are 108.
 3. **Three run controls for a Case with a Default over a request (§6, §8, entry 33).**
    `program-case-request-emit-default`, `-halt-default` and `-default-only` stop `Unsupported vm effect` after 7
-   entries with nothing written and `effects` 0, as `program-case-request`. A VM MUST NOT select the Default of a
-   Case over a request, as the seed's native lane does (finding 14 is the coordinator's option b). The run
+   entries with nothing written and `effects` 0, as `program-case-request`. *(Superseded by D24: round 13's list
+   item 1 says the opposite. A VM takes the Default of a tags-mode Case over a request.)* The run
    controls are 103 (34 effect controls), which vm-core's `run_control_count` reads from §12.
 4. **Nothing else moves.** No frozen value changed: the 102 earlier goldens, the 100 earlier run controls and the 87
    earlier refusals hold as frozen, and the seed witnesses (`golden/witnesses.json`, 14, §8 and §12) are
@@ -1153,7 +1196,8 @@ worktrees; the checks below are what the harnesses read from `check-spec.py`, SP
      run(IO.print("dead"), IO.print("live"))
    ```
 14. **The seed's lanes disagree on a Case with a catch-all over a request; D23 refuses it (coordinator's choice).**
-   Recorded in entry 33, which has the measurements and the witnesses. D23 as decided is option a: every Case over
+   *Resolved in round 13: the coordinator chose option b as D24, and entry 35 has the rule and the controls. The text
+   below is the round-12 record.* Recorded in entry 33, which has the measurements and the witnesses. D23 as decided is option a: every Case over
    a request is `Unsupported vm effect`, and the shapes on which the native lane succeeds are a recorded capability
    gap that no compiled program reaches, because the pinned literals head refuses every catch-all on an algebraic
    type. Option b, from review finding 2: a request selects no tag row, so a Case with a Default takes the
