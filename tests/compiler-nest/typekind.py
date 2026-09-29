@@ -215,7 +215,7 @@ def promotes_type(source):
 def compare(seed, path, check, evaluate):
     source = gen(seed)
     path.write_text(source)
-    reference = fuzz.classify(gate.run([*gate.SEED, path], timeout=240), seed=True)
+    reference = fuzz.classify(gate.run([*gate.SEED, path], timeout=240*gate.TIMEOUT_SCALE), seed=True)
     actual = fuzz.classify(gate.run([*check, path]))
     record = {'seed': seed, 'sha256': hashlib.sha256(source.encode()).hexdigest(),
               'promotes_type': promotes_type(source), 'reference': reference, 'knot': actual}
@@ -231,7 +231,7 @@ def compare(seed, path, check, evaluate):
         wpath, text, call, prefix = oracle.wrapper(fixture, 'probe', list(arguments), 'Flag')
         (gate.ROOT / wpath).parent.mkdir(parents=True, exist_ok=True)
         (gate.ROOT / wpath).write_text(text)
-        observed = gate.run([*gate.SEED, gate.ROOT / wpath], timeout=240)
+        observed = gate.run([*gate.SEED, gate.ROOT / wpath], timeout=240*gate.TIMEOUT_SCALE)
         name = oracle.decode(observed['stdout'], prefix, enums['Flag'])
         gate.require(observed['exit'] == 0 and not observed['stderr'] and name is not None, observed)
         ordinals = [enums['Sel'].index(a) for a in arguments]

@@ -35,7 +35,7 @@ SEED = SEED_DIR + '/bend2/main.ts'
 SEED_SOURCES = ('bend2/main.ts', 'bend2/bend.ts', 'bend2/comp.ts')
 CALLS = '.local/compiler-nest/calls'
 ENV = {'BEND_NO_TELEMETRY': '1'}
-TIMEOUT = 60
+TIMEOUT = 60*float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # harness hang guard only; gates set it under load
 
 TYPE = re.compile(r'^type\s+(\w+)(<[^>]*>)?\s+is\s+(Type|Data)\s*:\s*$')
 CTOR = re.compile(r'^\s+(\w+)\{(.*)\}\s*$')

@@ -364,5 +364,18 @@ class SemanticMutantTests(unittest.TestCase):
         self.assertEqual('passed', broken[1]['status'])
 
 
+class HarnessTimeoutTests(unittest.TestCase):
+    def test_nest_guards_scale_with_the_runner_variable(self):
+        # The runner sets KNOT_GATE_TIMEOUT_SCALE for the hang guards inside gate
+        # scripts; a script that ignores it fails spuriously under campaign load.
+        code = ("import sys; sys.path.insert(0, 'tests/compiler-nest'); import check, regen; "
+                "print(check.run.__defaults__[0], regen.TIMEOUT)")
+        for scale, want in (('1', '120.0 60.0'), ('1000', '120000.0 60000.0')):
+            with self.subTest(scale=scale):
+                got = subprocess.run([sys.executable, '-B', '-c', code], cwd=HERE.parents[1], text=True,
+                                     capture_output=True, env={**os.environ, 'KNOT_GATE_TIMEOUT_SCALE': scale})
+                self.assertEqual((0, want), (got.returncode, got.stdout.strip()), got.stderr)
+
+
 if __name__ == '__main__':
     unittest.main()
