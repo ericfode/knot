@@ -24,3 +24,7 @@ def L.nearest_binding_wins(tail,level):
   {==}
 def L.no_checker_budget(node):
   {==}
+def L.weight_counts_every_node(token):
+  {==}
+def L.weight_stops_when_spent(token):
+  {==}

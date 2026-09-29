@@ -239,6 +239,36 @@ def empty_remainder(+tags: List<&2,S.Token>, +token: S.Token, +level: U32, types
           S.bind(C.Checked,C.Checked,E.reference(residual,token,scope),inspected =>
             case_result(C.Checked{C.Sequence{Nil{}},0,Nil{}},inspected,token,level,wanted))))
 
+# A default is checked once and shared by its remaining constructors, yet every consumer of the core
+# (display, evaluation, emission) reads each copy. A source match may not exceed the budget: one unit
+# per node of its core, every copy counted.
+def core_budget() -> U32:
+  65536
+
+def children(term: C.Term) -> List<&2,C.Term>:
+  match term:
+    case C.Construct{token,type_id,tag,fields,args}: args
+    case C.Application{token,index,type_id,args}: args
+    case C.Let{token,level,q,type_id,value,body}: [value,body]
+    case C.Case{token,level,type_id,arms}: arms
+    case C.Branch{tag,fields,body}: [body]
+    case C.Sequence{items}: items
+    case _: Nil{}
+
+def weight(fuel: Nat, todo: List<&2,C.Term>, +budget: U32) -> U32:
+  match fuel todo:
+    case _ Nil{}: budget
+    case 0n _: 0
+    case 1n+ +n Con{+term,+rest}:
+      S.choose(U32,U32.is_eq(budget,0),u => 0,u =>
+        weight(n,List.append(&2,C.Term,children(term),rest),U32.sub(budget,1)))
+
+def budgeted(+checked: C.Checked, +token: S.Token) -> Result<S.Error,C.Checked>:
+  match checked:
+    case C.Checked{+term,type_id,uses}:
+      S.choose(Result<S.Error,C.Checked>,U32.is_gt(weight(U32.to_nat(U32.add(core_budget(),2)),[term],U32.add(core_budget(),1)),0),u =>
+        Done{checked},u => C.exhausted(C.Checked,token))
+
 # A body that is not a match binds every binder left on the match frontier, as
 # in the seed: each leaf form first closes the frontier, judging `+` kinds.
 def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Scope) -> Result<S.Error,C.Checked>:
@@ -285,9 +315,10 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
             run(n,Arms{arms,token,level,wanted},catalog,current,scope))),u =>
         S.bind(S.Node,C.Checked,M.start(n,token,value,arms,types),node =>
           run(n,Expression{node,wanted},catalog,current,scope)))
-    case 1n+ +n Expression{S.Matrix{token,columns,rows,+work},+wanted} C.Catalog{types,sigs} _:
+    case 1n+ +n Expression{S.Matrix{+token,columns,rows,+work},+wanted} C.Catalog{types,sigs} _:
       S.bind(M.Expansion,C.Checked,M.expand(n,S.Matrix{token,columns,rows,work},types,scope,work),tree =>
-        run(n,Expression{M.expanded(tree),wanted},catalog,current,scope))
+        S.bind(C.Checked,C.Checked,run(n,Expression{M.expanded(tree),wanted},catalog,current,scope),checked =>
+          budgeted(checked,token)))
     case 1n+ +n Expression{S.Alias{token,level,mark,+body},+wanted} _ _:
       S.bind(E.Scope,C.Checked,M.alias(scope,token,level,mark),bound =>
         run(n,Expression{body,wanted},catalog,current,bound))

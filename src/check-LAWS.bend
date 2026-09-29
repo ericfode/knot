@@ -89,3 +89,16 @@ law nearest_binding_wins:
 law no_checker_budget:
   for node: S.Node
   {K.check(0n,node) == Fail{S.Exhausted{"check",S.At{0,0,0,0}}} : Result<S.Error,C.Book>}
+
+# The core budget is one unit per node, every copy of a shared default counted, and it stops when spent.
+law weight_counts_every_node:
+  for +token: S.Token
+  {K.weight(9n,[C.Case{token,0,0,[C.Branch{0,Nil{},C.Value{token,0,0}},C.Branch{1,Nil{},C.Value{token,0,0}}]}],9)
+   == 4
+   : U32}
+
+law weight_stops_when_spent:
+  for +token: S.Token
+  {K.weight(9n,[C.Case{token,0,0,[C.Branch{0,Nil{},C.Value{token,0,0}},C.Branch{1,Nil{},C.Value{token,0,0}}]}],4)
+   == 0
+   : U32}
