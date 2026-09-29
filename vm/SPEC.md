@@ -393,7 +393,7 @@ Cases on a `none` slot, among them `list-head-match`, three whose arms fit their
 Case, among them `first-code`, S's shapes, and two of names, a type named with each length of
 UTF-8 (U+0024, U+00A2, U+20AC, U+10348) and one named with every edge of a length (U+0080, U+07FF, U+0800, U+D7FF, U+E000,
 U+FFFF, U+10000, U+10FFFF)), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 111 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 133 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -1334,7 +1334,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 111 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 133 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1452,7 +1452,28 @@ lane and requires:
   both lanes. Three key controls (`key_controls`)
   freeze §3's key: `pick` answers `On{}` from a key Branch at 0xffffffff for the U32
   and the Char `4294967295` (`key-max`, `char-key-max`) and `Off{}` from its Default for
-  0xfffffffe (`key-max-miss`), each after 2 calls;
+  0xfffffffe (`key-max-miss`), each after 2 calls. Twenty-two **atomic controls** (`atomic_controls`) pin §6.3 where
+  the reference evaluation can see it: a stopped run reports what the run held before the refusing step, and the same run
+  given exactly the fuel that it has spent, `fuel = calls`, reaches the same stop, since a refused step pays nothing.
+  Sixteen are twins that stop before any effect, each the run of an existing control or golden frozen again at that fuel and
+  with the `stdout` and `effects` that its first freeze left out (a Book writes nothing and calls no host; a Program that
+  stops before its first request has done neither). A Chr, a Succ, a word prim, a Case and a rendered field read an
+  ill-typed word (`atomic-ill-typed-chr`, `-succ`, `-prim`, `-case` and `-render`, after 2, 2, 3, 3 and 2 entries). A Succ,
+  `Nat.add` and `Nat.mul` have a result above 2^32-1 (`atomic-nat-succ-range`, `-add-range` and `-mul-range`, the plans of the
+  goldens `nat-succ-range`, `nat-range` and `nat-mul-range`: `NatRange` after 2 entries, main and the callee, `Nat.is_gt` never
+  entered). Return to Top refuses a Halt whose code, or whose message, is ill-typed and an IO.OP that is a closure (`atomic-halt-code`,
+  `-halt-message` and `-io-op-closure`, `ill-typed` after 4), and a Halt whose message holds a surrogate (`atomic-halt-non-scalar`, `io abi`
+  after 3). The loop refuses a String with a surrogate (`atomic-print-non-scalar`, `print-non-scalar`'s plan, `io abi` after 4)
+  and one whose tail is ill-typed (`atomic-print-ill-typed`, after 5), each with no host call. A Case refuses a request
+  (`atomic-case-request`, after 7), and a display exceeds its bounds (`atomic-display-visits`, `display` after 1). Four stop after
+  an effect and freeze the bytes and the host call that it made: `atomic-print-then-non-scalar` (`print-non-scalar-second`'s plan:
+  `a\n`, 1 effect, `io abi` after 13), `atomic-print-then-ill-typed-continuation` (`inspect-continuation-target`'s plan: `x\n`, 1 effect,
+  an ill-typed `k` after 7), `atomic-print-then-io-op` (`x\n`, 1 effect, a closure that `k` answers through the identity as its
+  IO.OP, after 8) and `atomic-print-then-nat-range` (`x\n`, 1 effect, `Succ{4294967295}` in `k`, `NatRange` after 7). Two order a word's
+  inspection before its charge (§8): `Pair{n, w}` with the Nat word n = 1,048,574 has charged 1 + 1,048,575 visits, the whole
+  bound, when it reaches `w`, so a Flag there is the 1,048,577th visit (`atomic-display-leaf-charged`, `display` after 1) and a
+  closure that the identity hands there as a Flag is refused as `ill-typed` first (`atomic-display-leaf-ill-typed`, after 2), for a
+  word that is not inspected is no visit;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
