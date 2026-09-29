@@ -186,7 +186,11 @@ edits of frozen expectations.
   state cap. With the excerpts the three groups pass, at 47,243, 29,116 and 31,575 of the 48,000-byte composition
   cap. A seam split of a group cannot lower a unit's state: the manifest puts 328 units in several groups, and in
   each of the 320 unit-and-task pairs where those groups share a task, `state_bytes` is the same in every group,
-  whatever the group's files.
+  whatever the group's files. Reclaiming comment bytes, the finding's other lever, does not reach it either: in a
+  scratch export with every whole-line comment of `src/*.bend` removed (24,566 bytes in 47 files, more than any
+  edit would take) the three original-task preflights still stop at the same three units, while the excerpt-task
+  control of the same stripped tree passes (`checking` 45,816, `module-loading` 28,890 and `pattern-matrix-laws`
+  29,296 of 48,000).
 - Two facts a reader should hear here and not from the diff. Paragraph 3 of the fields SPEC was chosen partly for its
   size (paragraph 2 gave `run` 60,829, over the cap; paragraph 3 gives 59,941, a margin of 59 bytes). And the three
   excerpts change what the style judge is told to expect of groups that other owners own, which is why their
