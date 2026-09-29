@@ -77,7 +77,7 @@ MUTANTS = [
      "lambda text, parse, p, documented: {'seed_offset': 0, 'knot': p.line, 'at': 'a prefix'}",
      'tests.test_c1.RuleTests.test_a_valid_prefix_is_documented_policy_only_when_the_spec_lists_its_code'),
     ('c1-no-spec-table', 'checks.c1_probe_differential', 'prefix_codes', 'lambda tree: frozenset()',
-     'tests.test_c1.EndToEndTests.test_a_mutant_that_reports_the_seeds_error_token_as_unsupported_is_a_regression'),
+     'tests.test_c1.EndToEndTests.test_a_recognized_prefix_that_the_spec_lists_is_policy_not_a_condition'),
     ('c3-forbid-new-gate-branches', 'checks.c3_frozen_and_owned', 'run_py_problems',
      "lambda base, head, added: ['counts() gained a statement other than a branch for a new gate']",
      'tests.test_c3.C3Tests.test_a_new_gates_counts_branch_is_the_registration_that_gates_md_asks_for'),

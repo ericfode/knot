@@ -74,7 +74,9 @@ every unit test of `scripts/prechecks/tests` against synthetic clean and broken 
 checks with the unit tests that pin them, and runs the Perch rule wiring test for the seven advisory prechecks rules with a
 stubbed provider. It makes no provider request and needs no credential, and it writes only
 `tests/prechecks/receipts/prechecks.json`. The suite itself is not a gate: `npm run -s prechecks` reports conditions for the
-implementer and the reviewers and is not part of `npm run gates`.
+implementer and the reviewers and is not part of `npm run gates`. Its historical controls (accepted tips as clean controls, confirmed
+regressions as broken ones) run with `python3 scripts/prechecks/replay.py` in a checkout that has the campaign history, because the
+gate's export has none.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.

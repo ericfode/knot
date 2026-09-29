@@ -1089,3 +1089,31 @@ Remaining uncertainty / next trigger: the coordinator runs `node scripts/prechec
 checkout, records model, probabilities and hashes here, freezes the rule text if every broken packet is at or above 0.8 and every
 clean one below, then runs the held-out packets. A rule that does not separate is rewritten or narrowed, never floor-raised.
 Selection recall is bounded (two calibration defects are not reached by any builder); replay measures it.
+
+## 2026-09-29 — prechecks runner: the cap, the staging and the controls, found by the fix-round review
+
+Date / scope / source revision: 2026-09-29, `scripts/prechecks-perch-run.mjs` and the packet builder of the pre-review suite
+([docs/prechecks.md](prechecks.md)), branch `campaign/prechecks`; found offline by the speed-scope reviewer with dry runs (zero requests).
+
+Waste addressed: the runner had never run live, and its first live use would have spent the coordinator's calibration and production
+runs on packets chosen by path order. Over the replay's 7,949 packets for 71 heads a default plan dropped 5,135 (65%) and asked only
+`claim-holds-against-evidence` on 63 of 71 heads (`outcome-follows-d4` on 1 of 49), and 11 of the 33 packets labelled broken were never
+asked; staged calibration controls leaked into the next production run (22 extra requests each time); a packet directory built
+anywhere else (`--out <dir>`) was never asked; a working-copy build carried HEAD's name and a hash HEAD does not have. The calibration
+itself (`--controls`) is exempt from the cap and would never have shown the first defect.
+
+Rule + model: no rule changed (the seven advisory `gate: false` rules of `.perch/rules/prechecks.yaml`); no model was asked.
+
+Judgment: **blocked**, unchanged: live calibration needs the main checkout's credentials. No probability exists and none is claimed.
+
+Change and why: the cap is per rule and per (increment, head) as each packet's header names them, and it is one number shared with the
+builder (`scripts/prechecks/packets/limits.json`), with the skipped packets counted by rule; packets outside the rules' glob are staged
+into `.local/prechecks/packets/staged/` before they are asked (the dry run says so); staged controls are skipped by production plans
+and removed after a live calibration; snapshot builds are labelled `<HEAD>+worktree.<tree>`. The stubbed-provider wiring test asserts each
+of them (it proves plumbing, never calibration).
+
+Clean / broken / held-out evidence: unchanged (22 calibration packets under `tests/prechecks/perch-controls/`).
+
+Remaining uncertainty / next trigger: what would have prevented the waste is a dry run over one real built increment (the replay's
+packets) that counted asked and skipped packets per rule before the runner was trusted; the coordinator's first `--live` run should
+start with that dry run and read its per-rule counts.
