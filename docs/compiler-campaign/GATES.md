@@ -73,19 +73,20 @@ The vm-spec increment adds gate `vm-spec` (`python3 vm/check-spec.py`), which
 freezes the `knot-image-1`/`knot-vm-1` contract of `vm/SPEC.md` before any VM
 exists. It builds the pinned literals and closures heads' `eval-cli` and
 `check-cli` from `vm/oracles/` with the seed's native lane, re-executes the seed
-and eval-cli on 96 golden sources, and requires the frozen observations byte for
+and eval-cli on 102 golden sources, and requires the frozen observations byte for
 byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display, save
-two Book goldens whose lane's head (the literals one) answers Unsupported and
+three Book goldens whose lane's head (the literals one) answers Unsupported and
 whose review declares the line. It also checks the frozen VM expectation table; 87 refused image controls,
 nine of them on either side of the resource limits that are `Exhausted` kind 2; 27
 expectation, seven invocation, two seed-display, three display-lane and two bench
 controls; two excused eval-bound controls; six admitted plan controls, one admitted
-limit control, seven admitted code-list controls and 85 run controls with their frozen
-fuel, calls and outcomes (among them the D22 refusal of an effect under a Book entry
-and the bytes it writes, D20 on a Halt's message, the inspection points of section 6 and
-the UTF-8 of a scalar); nine describe-domain controls; 13 argument controls;
-the lowering of two hand-written displays; 86 codec, 4 source, 85 evaluator and ten
+limit control, seven admitted code-list controls and 99 run controls with their frozen
+fuel, calls and outcomes (among them D23's requests: built by the Action's second application,
+performed only by the Program's Top loop, dropped without effect and refused as
+`Unsupported vm effect` wherever a read meets one, with the bytes and host calls a Book makes, which are
+none; D20 on a Halt's message, the inspection points of section 6 and the UTF-8 of a scalar); nine describe-domain controls; 13 argument controls;
+the lowering of two hand-written displays; 86 codec, 4 source, 91 evaluator and ten
 rule mutants of `check-spec.py` itself; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.

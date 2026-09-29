@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 96 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 102 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden and frozen Book invocation, derived by the rules of §8 and §11 |
 | [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
@@ -300,7 +300,7 @@ a malformed record, and a `slots` of 65,536 that its body does not reach. vm-cor
 MUST refuse the same controls, and MUST admit its six admitted plan controls (three
 Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
 Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 85 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 99 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -326,12 +326,19 @@ is always a Big cell. Nat is a word (D15), never a unary chain.
 | 2 Big | `value` | none |
 | 3 Action | `foreign, operand…` | operands |
 | 4 Activation | `owner, depth, slot[capacity]` | occupied slots |
+| 5 Request | `foreign, operand…, k` | operands, then `k` |
 
 `owner` is the function's root offset or the Closure node's offset; `depth` is the
 live scope depth; `capacity` is the owner's `slots`; unused slots hold 0. Metadata
 words are never edges. Every cell class, including Activations and File-holding
 data, follows the same **uniform RC** rule; there is no Type/Data split, and no
 operation creates a cycle.
+
+A **Request** is what applying an Action to its continuation `k` builds (§7, D23): the
+Action's foreign word, its operands in order, then `k`. It has the type IO.OP but is
+neither an Emit nor a Halt, and it is inert: only Top's loop reads it (§8), and every other
+read of a word refuses it (§6). Its `foreign` word is metadata, so its owning edges are the
+operands and `k`, and releasing it releases them last to first like any cell's edges.
 
 `rc` is 1..`0xfffffffe`; `0xffffffff` is **immortal**. Overflow to the sentinel is
 `Exhausted` kind 2 (`RCOverflow`), never wraparound. `dup(w)` does nothing to an
@@ -389,7 +396,7 @@ on top and `top` one word past it; popping reads `head` and removes `n + 3` word
 
 | Kind | `node` | `aux` | Values |
 |---|---|---|---|
-| 0 Top | 0 | phase: 0 Book, 1 main's IO, 2 armed IO, 3 final | — |
+| 0 Top | 0 | phase: 0 Book, 1 main's IO, 2 armed IO, 3 the loop | — |
 | 1 Gather | the gathering node | operands filled | `n` operand slots, reserved as 0 at push |
 | 2 Bind | the Let | 0 | — |
 | 3 Scope | 0 | depth to restore | — |
@@ -458,6 +465,16 @@ tail, to SNil; and a byte List's (`File.write_bytes`, §10), each cell and its U
 element, head to tail, to its end. A mismatch halts with `HostFailure image` (`ill-typed`) before the
 step changes any state; no read leaves a cell.
 
+**A request is never inspected (D23).** At each of these points the machine reads the word's
+class first, and a request (class 5) stops the run with `Unsupported vm effect`: whatever type the word
+is read at, before the type test and before the step changes any state, and at an Enter's target before
+its operand count and its debit (§7). A request is a legal value that this VM does not consume as data,
+so D4 refuses it: it is not ill-typed, and it is never `Invalid`. The request's own operands and `k`
+are not words that any of these points reads. Nothing reads them until Top's loop performs the
+request (§8), and a Let, a Reference, a Construct, a Foreign, a Closure's captures and an Enter's
+operands move or share a request unread, so a request can be stored, captured, passed and dropped.
+Dropping one releases it (§5) and has no effect.
+
 ### 6.1 Case selection
 
 The scrutinee is borrowed from its slot and inspected (§6) against the Case's
@@ -504,18 +521,22 @@ the callee, so a tail loop reuses its cell. A non-tail entry pushes Call(`act`).
    step halts with `HostFailure image` (`ill-typed`) before anything else, at
    `fuel = 0` too: a `none`-typed value can hand an Invoke an arrow of the other
    kind, or `k` to an erased Invoke (§12's run controls). Program phases 1 and 2
-   (§8) enter through this same check. If `fuel = 0`, stop with `Exhausted`
-   kind 1; the pending `Enter` stays in the state and no effect happens.
+   (§8) enter through this same check. A request as the target stops the run
+   `Unsupported vm effect` instead (§6), at the same place: first of all, before the operand
+   count, at `fuel = 0` too and without a debit. If `fuel = 0`, stop with `Exhausted`
+   kind 1; the pending `Enter` stays in the state and nothing is built or performed.
    Otherwise `fuel -= 1`, `calls += 1`, `quantum += 1`.
 2. By target:
    - a function: enter its body with `ops` moved into slots `0..arity-1`;
    - a Closure: enter its body with the captures `dup`ed into slots `0..n-1` and
      the argument (if live) moved into slot `n`; then drop the Closure;
    - an Action with no argument (the erased `R` of `IO(A)`): Return the Action;
-   - an Action with continuation `k`: under a Program entry, perform its effect
-     (§10), build the Base result `r`, drop the Action, and continue with
-     `Enter(k, [r])`; under a Book entry, stop with `Unsupported vm effect`
-     without reading an operand (§8, D22);
+   - an Action with continuation `k` (D23): build a **request**. `dup` each of the
+     Action's operands in order, allocate a Request (§5) whose payload is the Action's
+     foreign word, those operands and `k`, whose reference moves in, drop the Action, and
+     Return the request. The step reads no operand, converts none, checks no foreign
+     id and calls no host: the effect belongs to Top's loop (§8), and happens only if
+     the run returns this request there, under a Program entry;
    - the terminal continuation with `x`: allocate `Emit{x}` of the pinned IO.OP
      type and Return it.
 3. "Enter a body" means: apply §6.2 (tail: pop Scopes, drop `act`; otherwise push
@@ -523,19 +544,21 @@ the callee, so a tail loop reuses its cell. A non-tail entry pushes Call(`act`).
    to the bound slot count, fill it as above, and Eval the body.
 
 **A stop keeps the debit.** Once step 1 has debited, the debit stands whatever
-step 2 or 3 does: when one stops the machine (a D20 or D22 refusal, `Exhausted` kind
-2 or 3, a `HostFailure`), `fuel` is not refunded and `calls` counts that entry. A
-refused print is therefore debited. `print-non-scalar` (and `-mid` and `-wide`)
-stops after 4 calls (main, IO.print, the erased `R` and the Action applied to
-`k`), `print-non-scalar-second` after 13, and a Book's refused Action after its fourth
-entry (§8). vm-expected.json freezes the four D20 counts, and §12's run controls the
-others.
+step 2 or 3 does: when one stops the machine (`Exhausted` kind 2 or 3, a
+`HostFailure`), `fuel` is not refunded and `calls` counts that entry. So does a
+refusal by the loop, which follows the debit of the entry that built the request
+(D23): the loop's step is no entry and pays nothing. A refused print is therefore
+debited. `print-non-scalar` (and `-mid` and `-wide`) stops after 4 calls (main,
+IO.print, the erased `R` and the Action applied to `k`, which built the request that
+the loop then refused), `print-non-scalar-second` after 13, and a Book's Case over a
+request after the entry of the function that holds it (5 in `book-print`, §8).
+vm-expected.json freezes the four D20 counts, and §12's run controls the others.
 
 **Fuel** counts entries: the requested Book function or Program `main`, every
 Application, every Invoke (erased ones included), both applications of an Action,
 and every continuation application, the terminal one included. Nothing else pays:
-operand evaluation, constructors, lets, cases, RC, prims, validation and rendering
-cost zero. Operands are evaluated before their call is debited. Fuel is a u32
+operand evaluation, constructors, lets, cases, RC, prims, validation, rendering and
+the loop's performing of a request (its host call and its Base result) cost zero. Operands are evaluated before their call is debited. Fuel is a u32
 independent of eval-cli's transition budget, so no claim compares equal numbers
 across the two. Goldens run with 1,000,000; benchmarks with the u32 maximum,
 4,294,967,295 (`deep-recursion` alone makes about 2 × 10^9 entries).
@@ -545,18 +568,24 @@ across the two. Goldens run with 1,000,000; benchmarks with the u32 maximum,
 `calls`; with one unit less, its last entry stops with `Exhausted` kind 1 after
 `calls - 1` debits, and at fuel 0 its first entry stops after none. The operand
 check precedes the fuel test, so an ill-typed Enter is `HostFailure image` at
-fuel 0 too. An Action applied to `k` is debited before its effect, and `k` is a
-separate entry: when the Action's second application meets fuel 0, nothing is
-written; when `k`'s entry does, the effect's output is already written. A Book's D22
-refusal follows the same debit, so at fuel 0 that entry is `Exhausted`, not refused (§8).
-Eleven fuel run controls freeze each side (§12), and two more the Book case.
+fuel 0 too. The Action's second application builds the request and is debited there
+(D23), and `k` is a separate entry that the loop enters after the effect: when the
+second application meets fuel 0, no request exists and nothing is written; when `k`'s
+entry does, the effect's output is already written; a request that is dropped has still
+paid for its entry. A Book has no loop and performs nothing, and the same debits apply:
+`book-print` makes 5 entries (main, IO.print, `R`, the Action applied to `k`, and `got`,
+whose Case refuses the request), at fuel 4 its fifth meets fuel 0, and at fuel 3 the
+Action's second application does (§8). Eleven fuel run controls freeze each side (§12),
+and three more the Book case.
 
 **Quantum.** When a debit makes `quantum` reach 65,536, the Enter step completes
-(the new body is ready to Eval, or the Action's continuation is pending) and
-dispatch returns to `knot_main` with the whole state committed. `knot_main` resets
-`quantum` to 0 and re-enters dispatch. The effect of a pending Action therefore
-runs exactly once. Re-entry never recurses, allocates a frame or restores fuel; it
-is a Wasm-to-Wasm return and call. Test dumps show a Yield event here.
+(the new body is ready to Eval, or the request that an Action's second application
+builds is ready to Return) and dispatch returns to `knot_main` with the whole state
+committed. `knot_main` resets `quantum` to 0 and re-enters dispatch. The loop performs
+a request in one Return-to-Top step, which ends with `Enter(k, [r])` pending and which
+no debit splits, so the effect of a request runs exactly once. Re-entry never recurses,
+allocates a frame or restores fuel; it is a Wasm-to-Wasm return and call. Test dumps
+show a Yield event here.
 
 ## 8. Books, Programs and Actions
 
@@ -612,8 +641,8 @@ ordinal 0 as the value 0, because its loader models U32 as one nullary construct
 `structured-argument`, while the image has no erased field (`erased-field`).
 Goldens `invoke-args` and `invoke-arrow` freeze each cause of steps 2–5, and
 `invoke-words` step 1's words (§12). The VM then
-pushes Top(phase 0) and starts with `Enter(FN, ordinals)`; no Action is performed under
-it (Actions, below). Return to Top(0) halts
+pushes Top(phase 0) and starts with `Enter(FN, ordinals)`; it has no loop, so no request
+is performed under it (Actions, below). Return to Top(0) halts
 with the result and prints
 
 ```
@@ -646,53 +675,84 @@ The VM pushes Top(phase 1) and starts with `Enter(main, [])`. Returns to Top:
 |---|---|
 | 1 | set phase 2; `Enter(w, [])` applies the erased `R` |
 | 2 | set phase 3; `Enter(w, [terminal])` |
-| 3 | `w` must be an IO.OP Object, and a Halt's code a U32 and its message a String over its whole extent (§6); else `HostFailure image` (`ill-typed`). Emit ends with exit 0, its field unread, after `w` is dropped. A Halt's message is an outgoing String (§10): the code and then the whole message are inspected, and a message holding a non-scalar Char is refused as `HostFailure io abi` before `die` (D20), with `w` still owned and nothing written. Otherwise the VM converts the message, drops `w` and calls the host's `die` with the code and the message. |
+| 3 | The loop. If `w` is a request (class 5), perform its effect and enter its continuation, in this order: inspect (§6) every operand over its whole extent, in operand order, before any is converted (§10); make D20's scalar check of every outgoing String or byte List, before the host call; convert the operands, call the host and build the Base result `r` (§10); then `dup` the request's `k`, drop `w` (which releases its operands and, with the `dup`, leaves `k` owned by the step), and continue with `Enter(k, [r])`. The phase stays 3, so the answer of that entry returns to Top and is read the same way, and the loop ends only at an Emit or a Halt. The step is no entry (§7); one effect at most. Otherwise `w` must be an IO.OP Object, and a Halt's code a U32 and its message a String over its whole extent (§6); else `HostFailure image` (`ill-typed`). Emit ends with exit 0, its field unread, after `w` is dropped. A Halt's message is an outgoing String (§10): the code and then the whole message are inspected, and a message holding a non-scalar Char is refused as `HostFailure io abi` before `die` (D20), with `w` still owned and nothing written. Otherwise the VM converts the message, drops `w` and calls the host's `die` with the code and the message. |
 
 `IO.pure`, `IO.bind` and `IO.die` are ordinary Base code; `IO.die` returns `Halt`
-directly. Emit is not an effect request. Program images require the Unit, String
-and IO.OP representations.
+directly. An Emit is a value that ends the loop, not a request, and a request is neither an Emit
+nor a Halt. Program images require the Unit, String and IO.OP representations.
 
-**Actions.** `Foreign` builds an Action and performs nothing; dropping it or leaving
-it in an unselected branch has no effect. Its first (erased) application returns
-the Action itself; its second, with `k`, performs exactly one effect under a Program
-entry, wherever that application occurs, in evaluation order. Run control
-`program-print-through-id` applies the Action to its continuation inside an argument of
-a call (`run(m) = λ@R. λk. id(m(R)(k))`, whose answer only passes through `id`) and writes
-`x` after 9 entries. The pinned seed writes `x` for that source on both of its lanes.
+**Actions and requests (D23).** `Foreign` builds an Action and performs nothing, and its first
+(erased) application returns the Action itself. Its second application, to a continuation `k`,
+builds a **request** and performs nothing either (§7). A request is an inert value of type IO.OP,
+held like any other: only Top's loop reads it, and it performs exactly one request each time a run
+returns one to it, the one the run answers in phase 3, and then enters that request's `k`. Every
+other request has no effect, wherever it is: one that a let, an argument, a field, a capture or an
+unselected branch drops is never performed, nor is one that an Emit holds, since an Emit's field is
+unread. This is the seed's own model: its `io_step` applies the continuation, and the pure evaluator
+answers a request that the loop then performs, while the seed builds every argument, so an unused
+request is built and dropped. Goldens `keep-swapped` (`keep(-R,x,y) = y`: the request of
+`m1(R, x => Halt{7,"unreached"})` is dropped, and the run prints `kept`), `keep-first`, `run2-flag`
+(`pick` over a user Flag) and `book-drop` (a Book) freeze that on both seed lanes, and `spine`
+(`R => k => m1(R, x => m2(R, k))`, IO.bind's shape) freezes the requests that do reach the
+loop. Run control `program-print-through-id` applies the Action to its continuation inside an argument
+of a call (`run(m) = λ@R. λk. id(m(R)(k))`, whose answer only passes through `id`) and writes `x`
+after 9 entries, and the pinned seed writes `x` for that source on both of its lanes.
 
-**Where the seed refuses (not frozen).** The seed does not run every shape that this
-machine can. A Case over the IO.OP that an applied effect answers, such as
-`got(IO.print("x")(R)(k))` with `got` matching `Emit` and `Halt`, fail-stops in every
-lane and never fires the effect: an applied effect answers a request that only the
-event loop decodes (the seed's own test, `tests/io/request_out_of_band.bend`). §11 binds
-a VM only where the seed succeeds, so that shape lies outside it. The transition rules of
-§6 and §7 apply to it unchanged (the effect is performed, then the Case reads what `k`
-returned), and no run control freezes it or claims that the seed agrees. Whether a VM
-should refuse it, as D22 refuses an effect under a Book, is the coordinator's decision
-(DECISIONS, finding 11).
+**Where a request is read and where its entry is paid.** A request holds its operands and `k`
+unread. Operand inspection (§6), D20's scalar check and the host call belong to the loop, when it
+performs the request, and the loop reads `k` when it enters it, after the effect. So a dropped
+request that holds an ill-typed String is no failure (`program-request-dropped-ill-typed`), and
+one that holds a non-scalar String is no `io abi` and writes nothing (the golden `keep-non-scalar`:
+native `kept`, where the Bun lane refuses the Char where it is built), while a request that is
+performed reads its operands as before. The debit is the application's: the Action's second
+application is an entry and pays where it builds the request, so a dropped request has paid for
+its entry (`book-request-dropped`, `program-request-dropped-let`), and performing it costs nothing
+(§7). Run controls freeze each: `effects` 1 and 12 entries for `keep-swapped`'s plan
+(`program-request-dropped-argument`), and `inspect-continuation-target` writes `x` before the
+loop reads a `k` that is an immediate.
 
-**A Book entry never performs an effect (D22).** Under a Book invocation the second
-application of any Action, `Enter(Action, [k])`, stops the run with `Unsupported vm
-effect` after its debit (§7) and before the step reads, inspects or converts an operand
-(§6, §10), checks the foreign id or calls the host. Nothing is written, and neither the
-whole-extent inspection nor D20's scalar check runs, so the print of an ill-typed or a
-non-scalar String is refused the same way, as `Unsupported`, never `HostFailure`. An
-Action built, dropped or applied to its erased `R` under a Book is no effect and runs as
-under a Program. The refusal is D4's: never `Invalid`, never an effect nobody requested.
-Run controls freeze it (§12). A print stops after 4 entries (main, IO.print, `R`, the
-Action), and so does `IO.args`; a print whose String an `id` call builds stops after 5.
-The pure `got(k(Unit{}))` evaluates after 3 entries, an Action built and dropped after 2
-and one applied to its erased `R` after 3.
+**Where the seed refuses, and the VM with it.** The seed's boundary is the loop, and it is not
+only a Case over the answer. An effect fires only where the pure evaluator answers its request to
+the loop, so a request that is dropped never fires, and one that reaches a read is refused. A Case
+over the IO.OP that an applied effect answers, such as `got(IO.print("x")(R)(k))` with `got` matching
+`Emit` and `Halt`, fail-stops in every lane (`bend: runtime fail-stop`, no output, exit 1) and never
+fires the effect: the request is one that only the event loop decodes (the seed's own test,
+`tests/io/request_out_of_band.bend`). D23 gives the VM that boundary, and D4 its refusal: a request
+that a Case inspects, that a Book renders or that any other read of §6 meets is `Unsupported vm
+effect` (§6), where the seed fail-stops or has no such value, and it is never performed. Run controls
+freeze the refusals, and no golden agrees with the seed there, because the seed does not succeed
+(`program-case-request` is that Case in a Program, `book-request-rendered` and `book-request-field`
+the render of a root and of a field, and `inspect-request-chr`, `inspect-request-prim`,
+`inspect-request-keys`, `inspect-request-print` and `enter-request-target` each other kind of read, §12).
+The seed also crashes on a request bound by a `let`, used or dropped, in both lanes (Bun `TypeError:
+s.fun is not a function`, native `memory fault`, exit 1), which no VM rule can agree with: a `let` moves a
+request unread, and `program-request-dropped-let` freezes that shape by literal review, with no claim of
+seed agreement.
 
-**No host call and no write are frozen.** Every Book control that stops at an Action freezes
+**A Book entry never reaches the loop (D22, D23).** A Book invocation has no loop: its Top frame is
+phase 0, which describes the result and halts. No request is performed under it, whatever it holds,
+so no operand is read, converted or checked for D20, no host is called and nothing is written. A Book
+may build, store and drop requests (`book-request-dropped`, and the golden `book-drop`, where the seed
+runs a Book that applies `IO.print` to a continuation and drops the request); one that reaches a read
+stops `Unsupported vm effect`, D4's refusal, never `Invalid` and never an effect nobody requested: a
+Case over a request after 5 entries (main, IO.print, `R`, the Action applied to `k` and `got`, in
+`book-print`, and the same for `IO.args`; 6 when an `id` call builds the String first), and a
+result that is or holds a request, when rendered, after 5. D22's ordering question, whether the refusal
+precedes the whole-extent inspection and D20's check, is settled by there being nothing to
+inspect: the print of an ill-typed or a non-scalar String is refused by the Case, as
+`Unsupported` and never `HostFailure` (`book-print-ill-typed`, `book-print-non-scalar`). The
+pure `got(k(Unit{}))` evaluates after 3 entries, an Action built and dropped after 2, one applied to its
+erased `R` after 3, and a request built and dropped after 4.
+
+**No host call and no write are frozen.** Every Book control that stops at a request freezes
 `stdout` empty and `effects` 0 beside its cause and `calls`. The reference evaluation reports
 both on every Book outcome, a Halt included (§12): `stdout` is the bytes written, and `effects`
-the host calls made, counted where the call would be, after D22's guard and after D20's check
-and just before the write. A VM's harness MUST compare both: `stdout` against what its host
+the host calls made, counted where the call would be, at the loop after D20's check and just
+before the write. A VM's harness MUST compare both: `stdout` against what its host
 wrote, and `effects` against the host calls that the run made (the `knot_io` calls of vm-core's
 host trace, the effects that vm-model's model performs), which is the only observable of a call
-that writes nothing (`IO.args`, whose control freezes no `stdout` that could differ). A stop
-that had written or called first is not D22's stop, whatever its cause.
+that writes nothing (`IO.args`, whose control freezes no `stdout` that could differ). A Book that
+wrote or called the host has performed a request, whatever its cause.
 
 ## 9. Primitives and numeric bounds (D15)
 
@@ -802,15 +862,14 @@ Foreign rows in `registry.json`: 0 `IO.args`, 1 `IO.print`, 2 `File.open`,
 3 `File.read`, 4 `File.write_bytes`, 5 `File.close`, 6 `File.read_bytes`,
 7 modules `inspect`. Each row's `output` names the representation `X` of its
 `IO(X)` result; the gate re-derives it from the Base declarations (`inspect`'s
-comes from its pinned declaration). An Action is applied to its continuation, and so
-performs its effect, only under a Program entry: under a Book entry that step stops
-with `Unsupported vm effect` before anything below (§8, D22). Under a Program, applying
-an Action inspects (§6) every
+comes from its pinned declaration). An Action applied to its continuation builds a request and
+reads nothing (§7). Top's loop performs the request (§8, D23), which only a Program entry has,
+and a Book never does (§8, D22). Performing it inspects (§6) every
 operand before it converts any, a String or a byte List over its whole extent,
 so an ill-typed cell anywhere in it halts as `ill-typed` even after a non-scalar
 Char or a byte above 255. Then it
 converts its operands, calls the host, builds the exact pinned Base Result, pair
-and handle view, and enters `k`. Outgoing Strings must be Unicode scalars and are encoded as
+and handle view, and the loop enters `k` with it. Outgoing Strings must be Unicode scalars and are encoded as
 canonical UTF-8, with no surrogate merging or replacement. An outgoing String that
 holds a non-scalar Char (a surrogate, or a code above U+10FFFF) halts with
 `HostFailure io abi` before the host call: none of it is encoded or written (D20,
@@ -828,7 +887,7 @@ copies low bytes and passes the flag; a nonzero flag is errno 22 before any writ
 Accepted, Invalid, Unsupported, Exhausted, HostFailure and InternalFailure are
 recorded separately. Malformed images, unknown ids and malformed invocations are
 HostFailure, and an image past a resource limit of §4 is Exhausted kind 2; source forms Knot does not handle are Unsupported, and so is a Book
-result that §8 cannot describe and an effect that a Book entry would perform (D22); a broken invariant is a defect. A timeout or
+result that §8 cannot describe and a request that is inspected, rendered or otherwise consumed as data (D23); a broken invariant is a defect. A timeout or
 crash never counts as a semantic mutant kill.
 
 The observation lanes are the seed, pinned Knot eval-cli, the Bend model on the
@@ -866,7 +925,8 @@ boundary reached.
 
 **The rule.** Wherever the seed succeeds inside the VM's declared domain and
 budgets, the VM MUST return the seed's value and effect trace, except the output
-D20 refuses (below). Another lane's
+D20 refuses (below). The effect trace is the requests that the loop performs, in order,
+and a request that a run does not return to the loop is no part of it (§8). Another lane's
 exhaustion never excuses the VM. A VM that exhausts early, corrupts a result or
 reports an engine trap as a budget fails. Unsupported, timeout, unknown failure
 and a missing lane are neither Exhausted nor agreement. An Unsupported outcome is
@@ -875,7 +935,8 @@ bound. Expected values are never regenerated from a candidate VM.
 
 **Non-scalar output (D20).** The program's own value decides it, never a seed
 lane. The reference evaluation of the plan ([evaluate.py](evaluate.py), §6–§10 on
-values) yields the Strings a Program passes to output effects, in order. It
+values) yields the Strings a Program passes to output effects, in order: those of the
+requests its loop performs, and never the String of one that is dropped. It
 implements `IO.print`, the only effect the goldens use; any other foreign or a
 Halt fails the gate and counts as neither agreement nor D20 (a Halt's message is
 refused like a print's, §8, but only a run control reaches it). When one String holds
@@ -895,7 +956,10 @@ ASCII source; native `ED A0 80 0A`), `print-non-scalar-mid` (`"a\u{D800}b"`; nat
 (`Chr{67237376}`; native `F0 9F 98 80 0A`) and `print-non-scalar-second` (`"a"`, then
 the lone surrogate; the VM writes `a\n`, the Bun lane nothing). `non-scalar-code`
 (`55296\n`) and `non-scalar-unprinted` (`a\nnonempty\n`, where the Bun lane writes
-`a\n` and refuses) build a surrogate without printing it and agree with the seed.
+`a\n` and refuses) build a surrogate without printing it and agree with the seed, and so does
+`keep-non-scalar`, whose print of a surrogate is a request that `keep` drops (native `kept\n`; the
+Bun lane refuses the Char where it is built and writes nothing): D20's check belongs to the loop,
+which never meets that request.
 The refused entry stays debited (§7), so each D20 row of vm-expected.json freezes its
 `calls`, by literal review of the entries: 4 for the first three goldens (main,
 IO.print, the erased `R` and the Action applied to `k`) and 13 for
@@ -920,13 +984,16 @@ describe domain (`result-u32`, `result-u32-field`, `result-char`,
 reports the `InternalFailure eval result-tag` defect recorded in DECISIONS.md
 each time), derived from the
 image's type table and never listed as a bound; the seed's stdout for the Programs
-`foreign-print`, `io-bind`, `non-scalar-code` and `non-scalar-unprinted`; and D20's
+`foreign-print`, `io-bind`, `non-scalar-code`, `non-scalar-unprinted`, and D23's `keep-swapped`, `keep-first`,
+`run2-flag`, `spine` and `keep-non-scalar` (§8); and D20's
 refusal for `print-non-scalar`, `print-non-scalar-mid` and `print-non-scalar-wide`,
-with no output, and for `print-non-scalar-second` after `a\n`. For those
-Programs the eval lane is not excused but unavailable: both literals `eval-cli`
+with no output, and for `print-non-scalar-second` after `a\n`. For the Programs before D23
+the eval lane is not excused but unavailable: both literals `eval-cli`
 and `check-cli` report `Invalid parse function-result` for
 `def main() -> IO(Unit)`, a program the seed runs. Under D4 that should be Unsupported; it is recorded as observed, not
-relabelled, and their plans follow §1 by hand. `io-bind`, `non-scalar-unprinted`
+relabelled, and their plans follow §1 by hand. The five of D23 declare helpers with an `IO(Unit)` or
+`IO.OP<R>` parameter, which both heads answer `Unsupported parse parameter-type` (D4's own answer), and
+follow §1 by hand as well. `io-bind`, `non-scalar-unprinted`
 and `print-non-scalar-second` keep Base's `IO.bind` (and `IO.pure`) unspecialized,
 so their `A`-typed nodes are `none`.
 
@@ -937,7 +1004,9 @@ the first tags-mode Case on Char (`case Chr{x}`, on an immediate Char and a Big 
 seed (`True{}` each). The golden's lane is the literals head, whose `check-cli` and
 `eval-cli` both exit 3 for them, with `Unsupported check char-constructor-pattern` and
 `Unsupported parse parameter-type`; the closures head answers otherwise (`Unsupported
-lex literal`, `Unsupported parse declaration-form`) and is not consulted. The golden's
+lex literal`, `Unsupported parse declaration-form`) and is not consulted. `book-drop`, a Book that
+applies `IO.print` to a continuation and drops the request (`On{}` on both seed lanes), is declared
+`Unsupported parse parameter-type` too, for its `IO(Unit)` parameter. The golden's
 literal review declares that exact line (`unavailable`, in plan.json before
 observation), and the gate requires the lane's two CLIs to print it: a CLI that prints a
 core, another line, no declaration, or another failure (an Invalid lane of a Book, an
@@ -959,7 +1028,7 @@ lane and requires:
 - each committed `.kimg` equal to its plan's encoding, decoding back to the plan,
   and passing validation;
 - each Book plan equal to an independent erasure and slot projection of that
-  head's `check-cli` core display (save the two whose lane's head answers Unsupported,
+  head's `check-cli` core display (save the three whose lane's head answers Unsupported,
   declared in plan.json, §11), and each Program `main = IO.print(e)`'s argument
   equal to that projection of `e` checked as a `String` Book;
 - the eval result's type index and constructor matching the image, and its tree
@@ -1017,7 +1086,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 85 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 99 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1073,25 +1142,39 @@ lane and requires:
   control, and not each instance: the prim ids that no control names (U32 `mul` … `shrn`
   but `shln`, and Nat `mul` … `is_ge`) are vm-prims' to witness, one control per id and
   operand (§9), and the byte List and the operands of every foreign but `IO.print` are
-  vm-io's. Sixteen effect controls (`effect_controls`) freeze
-  D22 (§8), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
-  carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`:
-  `book-print`, `book-print-continuation-call` (`k` a function) and
+  vm-io's. Thirty effect controls (`effect_controls`) freeze
+  D23 (§8), D20 on a Halt's message and the UTF-8 of a scalar. In a Book image, `got` returns what an IO.OP
+  carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`, which builds a
+  request that `got` receives: `book-print`, `book-print-continuation-call` (`k` a function) and
   `book-print-twice` (the reviewers' bookio-1, bk-print and bookio-2) stop
-  `Unsupported vm effect` after 4 calls, writing nothing (each of these Book controls freezes
-  `stdout` empty and `effects` 0, `fuel-book-effect-short` too); `book-print-non-scalar` (a
-  surrogate) too, so D22 precedes D20; `book-print-ill-typed` (`"a"` then `id(λ)`)
-  stops the same way after 5, so it precedes the inspection, and `book-args`
-  (`IO.args`, foreign 0, of type `IO(List)`) after 4, so it precedes the check of the
-  foreign id, and `book-print` at fuel 4 (`fuel-book-effect-exact`) is refused after its 4
-  debits while at 3 (`fuel-book-effect-short`) its Action meets fuel 0 and stops
-  `Exhausted` kind 1 after 3, so D22 follows §7's fuel test; the pure `got(k(Unit{}))` (`book-continuation-called`) evaluates
-  `Evaluated 8 1 On{}` after 3,
-  an Action built and dropped (`book-action-dropped`) after 2 and one applied to its
-  erased `R` (`book-action-erased`) after 3; the same Action prints under a Program
-  entry from inside an argument of a call (`program-print-through-id`, whose source the seed
-  prints `x` for on both lanes), `x\n` after 9; a Halt whose message is a lone surrogate (`halt-surrogate`) stops
-  `HostFailure io abi` before `die` after 3; and one whose message is scalar
+  `Unsupported vm effect` after 5 calls, when `got`'s Case inspects the request, writing nothing (each of
+  these Book controls freezes `stdout` empty and `effects` 0, `fuel-book-effect-short` too);
+  `book-print-non-scalar` (a surrogate) too, so a Book never checks a request's String for D20,
+  `book-print-ill-typed` (`"a"` then `id(λ)`) after 6, so it never inspects it either, and `book-args`
+  (`IO.args`, foreign 0, of type `IO(List)`) after 5, whatever the foreign id. `book-print` at fuel 5
+  (`fuel-book-effect-exact`) is refused after its 5 debits; at 4 (`fuel-book-request-short`) `got`'s entry
+  meets fuel 0 and stops `Exhausted` kind 1 after 4; and at 3 (`fuel-book-effect-short`) the Action's
+  second application does, after 3, so the debit is the application's (§7). The pure `got(k(Unit{}))`
+  (`book-continuation-called`) evaluates `Evaluated 8 1 On{}` after 3, an Action built and dropped
+  (`book-action-dropped`) after 2, one applied to its erased `R` (`book-action-erased`) after 3, and a
+  request built and dropped (`book-request-dropped`) after 4, with `effects` 0. A request is dropped, and
+  no effect follows, wherever it is held: by an Emit's field (`program-request-in-emit`, `Emit{request}`,
+  exit 0 after 6, nothing written); by a let, the live request that the Program returns then performing
+  alone (`program-request-dropped-let`, `live\n`, `effects` 1, after 10, the dead one's three entries
+  paid); by an argument of a call (`program-request-dropped-argument`, `keep-swapped`'s plan, `kept\n`,
+  `effects` 1, after 12); or holding an ill-typed String, which the loop never reads
+  (`program-request-dropped-ill-typed`, a closure tail, `kept\n`, `effects` 1, after 12). A request that
+  any read meets stops `Unsupported vm effect` (§6), whatever the type and before an ill-typed
+  test: a Case over the answer in a Program (`program-case-request`, `Emit{got(IO.print("x")(R)(k))}`,
+  after 7, nothing written); a Book's result and a field of it, rendered (`book-request-rendered`,
+  `book-request-field`, after 5); a request handed through `id` to a Chr operand (`inspect-request-chr`,
+  after 5), a prim operand (`inspect-request-prim`, `U32.add`, after 6), a key-mode Case
+  (`inspect-request-keys`, after 6) and an Enter's target (`enter-request-target`, after 5, the Enter
+  refused before it is debited); and a String whose tail is a request, which the loop reads whole when it
+  performs the print (`inspect-request-print`, after 10, nothing written). The same Action prints under a
+  Program entry from inside an argument of a call (`program-print-through-id`, whose source the seed
+  prints `x` for on both lanes), `x\n` after 9; a Halt whose message is a lone surrogate (`halt-surrogate`)
+  stops `HostFailure io abi` before `die` after 3; and one whose message is scalar
   (`halt-scalar`, `x` and U+1F600) ends with `halt` 1 and that `message` after 3, the
   reference evaluation's view of a `die` whose exit status and stderr are the host's
   (IO-ABI.md). A scalar String is written as canonical UTF-8 (§10): `print-utf8-lengths` prints
@@ -1108,7 +1191,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 86 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 85 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 91 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1135,9 +1218,11 @@ lane and requires:
   core that declared none.
   Four survive every golden and die by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, the fuel test before the operand check,
-  and a free terminal continuation. An Action's effect before its debit dies by the
-  D20 goldens' frozen `calls` (§7) and by the print inspection control, which counts
-  it after 4 calls. A
+  and a free terminal continuation. A request's debit paid by the loop after its effect, not
+  where the Action's second application builds it (`debit-at-perform`), dies by the D20 goldens'
+  frozen `calls` (§7), by `fuel-action-short` (its effect is written before the debit meets fuel 0),
+  by the print inspection control, which counts it after 5 calls, and by the controls that drop a
+  request. A
   predecessor narrowed to 31 bits dies only by `nat-case-big`. Eighteen read less
   than their inspection extent, and exactly as much on a well-typed word, so they
   survive every golden and each dies by the inspection controls of its own point and by
@@ -1147,7 +1232,7 @@ lane and requires:
   Char words unread; `is_empty` reading one cell; `eq` stopping at the first
   difference, or reading one list only one cell past the other's length (either
   way round); a Halt's code, or its message, unread; and a print that checks each
-  Char as it reads it. Twenty more of that kind, read less or read too early, were the points that
+  Char as it reads it. Twenty-one more of that kind, read less or read too early, were the points that
   no control reached before the review of round 9, and each dies by the controls of its own point and
   by no golden: a tag-mode Case that admits a closure for its scrutinee (at a Flag, a Nat or a
   Char), one that reads a Char scrutinee unread, an Object of another type, a Nat that is no word or
@@ -1155,29 +1240,36 @@ lane and requires:
   U32 or a Char, and at a Char alone); a U32 prim with its first operand unread, or its second (the
   shift's amount included), a Char prim with its first, `Char.is_eq` with its second, a Nat prim with
   its first, or its second, and `show` with its operand; a rendered closure admitted; an Enter that
-  takes an immediate for an Action, or an Object for its target; an Action's continuation read before
-  its effect, or left unread and taken for the terminal continuation; and a last word that is no
-  IO.OP taken for `Emit`. Four more, of §10's UTF-8 of a scalar (the one-byte edge, the two-byte
-  lead, and the edges of two and three bytes), die by the two print controls. Twenty-two more,
-  of D22, a Halt's message, keys and the debit, die
-  by the controls above: a Book that performs the effect and one that drops it silently
-  (by every `book-print*` control); one that writes and then refuses (by every `book-print*`
-  control's empty `stdout`) or writes as its Action meets fuel 0 (by `fuel-book-effect-short`
-  alone); one that calls the host and then refuses (by the `effects` 0 of the seven Book controls whose
-  Action is entered, `fuel-book-effect-short`'s meeting fuel 0 first) or does so for a foreign that
-  writes nothing (by `book-args` alone); one that refuses before the debit (by every Book
-  print control and both fuel controls) or when the fuel is 0 (by `fuel-book-effect-short`
-  alone); one that names the foreign it refuses, as vm-model
-  answered `Unsupported vm foreign 0` (by `book-args` alone); one that refuses only
-  after the whole-extent inspection (by `book-print-ill-typed` alone), after D20's scalar check (by
-  `book-print-non-scalar` and `-ill-typed`), when an Action is built (also
-  `book-action-dropped`) or when it meets its erased `R` (also `book-action-erased`); a
-  Program that refuses its effects (by the golden `foreign-print`); a Halt message
-  never checked (by `halt-surrogate` alone), refused whatever it holds or above ASCII (by
-  `halt-scalar` alone), checked as it is read (by
+  takes an immediate for an Action, or an Object for its target; a request's continuation read when the
+  request is built, or by the loop before its effect, or left unread and taken for the terminal
+  continuation; and a last word that is no IO.OP taken for `Emit`. Four more, of §10's UTF-8 of a scalar (the one-byte edge, the two-byte
+  lead, and the edges of two and three bytes), die by the two print controls. Twenty-seven more,
+  of D23, a Halt's message, keys and the debit, die
+  by the controls above: the eager rule of round 10, performing at the Action's application (by the goldens
+  `keep-swapped`, `keep-first`, `run2-flag`, `keep-non-scalar` and `book-drop`, and twenty run controls); a
+  request performed although it is dropped, by the function that received it (by those five goldens and
+  `program-request-dropped-argument`, `program-request-dropped-ill-typed` and `book-request-dropped`) or by the
+  let that bound it (by `program-request-dropped-let` and `book-request-dropped`); a loop that enters `k`
+  before it performs the effect (by `fuel-continuation-short`, `inspect-continuation-target`,
+  `inspect-print-after-surrogate`, `inspect-request-print` and the four D20 goldens' `calls`); a Case that
+  picks an arm of a request, and a request taken for an ill-typed word at a Case (each by the seven Book
+  controls that hand `got` a request, `program-case-request`, `book-request-rendered`, `book-request-field` and
+  `inspect-request-print`), at a scalar (by `inspect-request-chr`, `-prim` and `-keys` alone) or at an
+  Enter's target (by `enter-request-target` alone); a rendered field that admits a request (by
+  `book-request-field` alone); a request's operands read when it is built (by `book-print-ill-typed` and
+  `program-request-dropped-ill-typed`) and D20's check made then (also by `keep-non-scalar`, `book-print-non-scalar`
+  and `print-non-scalar-second`); a loop that refuses its request (by every Program golden that prints), performs
+  only the first (by `spine`, `io-bind`, `non-scalar-unprinted` and `print-non-scalar-second`) or performs the
+  request that an Emit holds (by `program-request-in-emit` alone); a Book that runs the loop (by
+  `book-request-rendered` alone), refuses where it builds the request, D22's rule of round 9 (by `book-drop`
+  and the Book controls that build one), enters `k` without the effect (by fourteen Book run controls that build a request, not by `book-drop` or
+  `fuel-book-request-short`),
+  or refuses where it builds the Action or applies it to its erased `R` (by `book-drop`, `book-action-dropped`
+  and `book-action-erased`); a Halt message never checked (by `halt-surrogate` alone), refused whatever it holds
+  or above ASCII (by `halt-scalar` alone), checked as it is read (by
   `inspect-halt-after-surrogate` alone) or before the code
   (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
-  and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused Action
+  and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused print
   whose debit is refunded (by the D20 goldens' `calls`);
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a

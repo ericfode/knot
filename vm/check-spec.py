@@ -2536,8 +2536,8 @@ EVALUATOR_MUTANTS = [
     ('request-operands-read-at-build', [("        return ('request', f[1], f[2], operands[0])",
                                          "        if f[1] == 1:\n            self.codes(f[2][0])\n        return ('request', f[1], f[2], operands[0])")]),
     ('request-scalar-check-at-build', [("        return ('request', f[1], f[2], operands[0])",
-                                        "        if f[1] == 1:\n            self.outgoing(self.codes(f[2][0]))\n"
-                                        "        return ('request', f[1], f[2], operands[0])")]),
+                                        "        if f[1] == 1:\n            codes = self.codes(f[2][0])\n            self.prints.append(codes)\n"
+                                        "            self.outgoing(codes)\n        return ('request', f[1], f[2], operands[0])")]),
     # The loop performs each request it is handed, one after another, and nothing that is not returned to it.
     ('loop-refuses-request', [(LOOP, '            raise Halt(UNSUPPORTED)')]),
     ('loop-performs-once', [("        while isinstance(w, tuple) and w[0] == 'request':\n",
