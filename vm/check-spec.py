@@ -2065,14 +2065,15 @@ def effect_controls(plans: dict) -> list:
       refuses the shape that a Case reads the answer of (`got(IO.print("x")(R)(k))`, its own
       test request_out_of_band.bend), and D23 refuses it as well: `program-case-request`, and the
       reads that a request meets in a Book (`inspect-request-*`, `book-request-rendered`, `-field`
-      and `enter-request-target`), each `Unsupported vm effect` and never ill-typed. A tags-mode Case with a
+      and `enter-request-target`), each `Unsupported vm effect` and never ill-typed. A Case with a
       Default takes it (D24), as the seed's native lane does: beside an Emit row, a Halt row or no row
       (`program-case-request-emit-default`, `-halt-default`, `-default-only`), each ends exit 0 after the same 7
       entries with nothing written and no effect, since the request is never read or performed; at any scrutinee
-      type (`case-request-default-at-flag`, a Book). The goldens `case-request-emit-default-u32` (`2`),
+      type (`case-request-default-at-flag`, a Book), and in either mode (`case-request-default-keys`, a Book: a keys
+      Case has a Default always). The goldens `case-request-emit-default-u32` (`2`),
       `case-request-halt-default-u32` (`4`) and `case-request-emit-default` freeze the seed's values. A Case
-      without a Default (`program-case-request`) and a key-mode Case (`inspect-request-keys`, a scalar read, not
-      a constructor row) still refuse the request.
+      without a Default, a tags Case whose every row names a constructor (`program-case-request`), still refuses
+      the request.
     - A scalar String is written as canonical UTF-8 (section 10): `foreign-print`'s plan prints the four
       examples of each length (U+0024, U+00A2, U+20AC, U+10348) and the edges of every length
       (U+007F, U+0080, U+07FF, U+0800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF), after 5 entries.
@@ -2221,9 +2222,9 @@ def effect_controls(plans: dict) -> list:
          entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, halt_default), {**quiet, 'calls': 7}),
         ('program-case-request-default-only',
          entered(['con', 4, 0, [['call', 8, 4, [printing(text('x'), k_ref)]]]], 1, default_only), {**quiet, 'calls': 7}),
-        # The Default is taken at any tags-mode scrutinee type: `pick_default` names Flag for the `none` word that
+        # The Default is taken at any scrutinee type: `pick_default` names Flag for the `none` word that
         # `id` hands it, a request, and answers Off{} from its Default (6 entries: main, IO.print, R, the Action, id,
-        # pick_default), where the key-mode Case of `inspect-request-keys` below still refuses.
+        # pick_default); the keys Case of `case-request-default-keys` below takes its Default too (a keys Case has one).
         ('case-request-default-at-flag', image('book', ['call', 8, 4, [through_id(request, None)]], 0, pick_default),
          {'exit': 0, 'stdout': 'Evaluated\t8\t0\tOff{}\n', 'effects': 0, 'calls': 6}),
         ('book-request-rendered', image('book', through_id(request, 8)), {**unsupported, 'calls': 5}),
@@ -2235,7 +2236,8 @@ def effect_controls(plans: dict) -> list:
         ('inspect-request-prim',
          image('book', ['let', 8, 0, ['call', 1, 4, [through_id(request, 1), ['lit', 1, 'U32', 1]]], ['value', 8, 1]], 1, add),
          {**unsupported, 'calls': 6}),
-        ('inspect-request-keys', image('book', ['call', 8, 4, [through_id(request, None)]], 0, pick), {**unsupported, 'calls': 6}),
+        ('case-request-default-keys', image('book', ['call', 8, 4, [through_id(request, None)]], 0, pick),
+         {'exit': 0, 'stdout': 'Evaluated\t8\t0\tOff{}\n', 'effects': 0, 'calls': 6}),
         ('inspect-request-print',
          entered(printing(['con', 3, 1, [['lit', 2, 'Char', 97], through_id(printing(text('y')), 3)]], k_ref)),
          {**unsupported, 'calls': 10}),
