@@ -994,3 +994,21 @@ exhausted an unchanged fields fixture at its fixed checker-depth boundary.
 Exact-arity calls now keep the original direct path. Preserve boundary witnesses
 when extending a fuelled machine; a high-budget differential pass does not
 establish the old resource contract.
+
+## 2026-09-29 — Closure refresh host build guards
+
+The old branch runner timed out seed-native builds in frontend, checker and
+structural gates before reaching their assertions. The stopped run's exact
+diagnostics and measured gate durations are retained in
+[refresh-host-failures.json](../tests/compiler-closures/receipts/refresh-host-failures.json).
+Current main already provides a fourfold process hang guard, a 1,800-second
+gate ceiling and resolved clang/SDK handling. This refresh ports those host
+controls without changing source budgets, frozen outcomes, laws or mutants.
+A single clang-discovery retry retains the first logs; assertion failures are
+not retried. Sixteen selected wrapper controls pass, including those boundaries
+and six existing executable wrapper mutants.
+
+Prevention: compare an old branch's host guards with the campaign runner before
+its full native build. A process timeout is unavailable host evidence. It must
+never become a source rejection, mutant kill or claimed compiler pass. This is
+deterministic workflow repair; no provider or live Perch judgment was involved.
