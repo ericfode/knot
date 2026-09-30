@@ -30,6 +30,33 @@ The registered gate writes current source hashes and all observations to
 `vm/receipts/model.json`. The full gate runner preserves its per-gate logs and
 normalized evidence under `.local/gates/run-*/`.
 
+## Completed gates
+
+Two consecutive `npm run -s gates` executions of the source at `95149e19`
+passed all 22 registered gates with exit 0. Their normalized summaries are
+identical, and all 90 normalized receipt files match byte for byte. The runs are
+`.local/gates/run-grme3s31` and `.local/gates/run-mjl8p267`.
+[The review receipt](receipts/review-r1.json) records the exact per-gate counts,
+source/dependency hashes, comparison hashes and finding dispositions.
+
+The model gate passed 111 goldens, 44 invocations, 108 fuel controls, 212 refusal
+controls, 13 argument controls, 165 admitted controls, 107 audited runs and 45
+installed-state controls. Its sweep covers 65,469 mutations of 111 images; all
+49 laws check, all 65 model mutants have execution kills, and the harness mutant
+is killed. The existing `enter-arity` mutant also crashes on two controls; those
+inherited observations are excluded from its three proper execution kills.
+The five mutants for this repair have zero recorded crashes.
+
+The adopted model receipt has the same normalized bytes in both runs, with
+SHA-256 `d1feba383a81142fae9c15cd3b8328fcd1a5f75a8f9c9b373e1a0759da0a10a2`.
+All 14 model source hashes and the boundary-expectations hash match this tree.
+Only the owned model receipt is refreshed; bootstrap and vm-spec receipt
+reconciliation belongs to the coordinator.
+
+The installed empty-datatype image runs in the model as
+`Evaluated\t1\t1\tHigh{}`. The source-lane refusal therefore remains a frontend
+dependency, with the reproduction retained in the review receipt.
+
 ## Review limits
 
 Offline preflight of the five changed Bend files reports 113 structural blockers:

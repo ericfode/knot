@@ -1,0 +1,632 @@
+{
+  "schema": 1,
+  "increment": "vm-model",
+  "review_round": 1,
+  "status": "passed",
+  "reviewed_commit": "4e4c476092d25d533a4408e804244929e88d70e7",
+  "tested_commit": "95149e191f2d736628c997338979ac533ceb07c8",
+  "frozen_control_commits": [
+    "94e54bb0905202cbb40913fcbfd069bd59d05286",
+    "6f988dff668c718c795a1d684baf5601c6fcff89"
+  ],
+  "runtime": {
+    "bun": "1.3.14",
+    "seed": "bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "BEND_NO_TELEMETRY": "1"
+  },
+  "command": "npm run -s gates",
+  "runs": [
+    {
+      "directory": ".local/gates/run-grme3s31",
+      "summary": ".local/vm-model/review-r1/gates-1.json",
+      "status": "passed",
+      "elapsed_seconds": 1062.186779
+    },
+    {
+      "directory": ".local/gates/run-mjl8p267",
+      "summary": ".local/vm-model/review-r1/gates-2.json",
+      "status": "passed",
+      "elapsed_seconds": 1148.926376
+    }
+  ],
+  "comparison": {
+    "status": "passed",
+    "gates_per_run": 22,
+    "summary_objects_identical": true,
+    "normalized_receipts_byte_identical": 90,
+    "normalized_summary_sha256": "68c8e0a431832f0a6724a1febd15feba6fcfd4b277a10b332037a757479a4701",
+    "source_snapshot_sha256": "d86ba0459b63e7417c1a3646c22d85b413ff31e1e6e3c5f390245cf0e6bbb285",
+    "dependencies_sha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
+    "runs": [
+      ".local/gates/run-grme3s31",
+      ".local/gates/run-mjl8p267"
+    ],
+    "model_receipt_sha256": "d1feba383a81142fae9c15cd3b8328fcd1a5f75a8f9c9b373e1a0759da0a10a2"
+  },
+  "gates": [
+    {
+      "name": "frontend",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      }
+    },
+    {
+      "name": "checker",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      }
+    },
+    {
+      "name": "structural",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      }
+    },
+    {
+      "name": "fields",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      }
+    },
+    {
+      "name": "wasm",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 64
+      }
+    },
+    {
+      "name": "wasm-trust",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      }
+    },
+    {
+      "name": "fields-trust",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      }
+    },
+    {
+      "name": "structural-trust",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      }
+    },
+    {
+      "name": "owned-store",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      }
+    },
+    {
+      "name": "flat-store",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      }
+    },
+    {
+      "name": "recursion",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      }
+    },
+    {
+      "name": "fields-wasm",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      }
+    },
+    {
+      "name": "census",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "classes": 41,
+        "declarations": 437,
+        "files": 30
+      }
+    },
+    {
+      "name": "perch-context",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "fixtures": 33,
+        "mutants": 8
+      }
+    },
+    {
+      "name": "lint:verify",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "law_rules": 8,
+        "tests": 168
+      }
+    },
+    {
+      "name": "bootstrap",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "corpus": 943,
+        "mutants": 54,
+        "reached": 2,
+        "stages": 8
+      }
+    },
+    {
+      "name": "classification",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "fixtures": 17,
+        "mutants": 6
+      }
+    },
+    {
+      "name": "io-host",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "cli_runs": 6,
+        "conformance_runs": 86,
+        "errno": [
+          2,
+          9,
+          20,
+          21,
+          22,
+          92
+        ],
+        "fixtures": 20,
+        "host_boundaries": 22,
+        "mutants": 6,
+        "review": {
+          "empty_write": 4,
+          "mutants": 3,
+          "oracle_controls": 14,
+          "secret_paths": 21,
+          "seed_runs": 12
+        },
+        "seed_fixtures": 40,
+        "seed_runs": 109,
+        "stress": {
+          "left_binds": 100000,
+          "right_binds": 100000
+        }
+      }
+    },
+    {
+      "name": "io-abi-2",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "case_mode": "insensitive",
+        "fixtures": 43,
+        "host_boundaries": 25,
+        "mutants": 5,
+        "mutants_killed": 5,
+        "parity": 153,
+        "read_observations": 21,
+        "reference_observations": 64,
+        "seed_exhausted": 2,
+        "seed_observations": 61
+      }
+    },
+    {
+      "name": "selfhost",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "blocked": 63,
+        "cases": 65,
+        "d4_gaps": 5,
+        "judge_mutants": 20,
+        "mutants": 3,
+        "passed": 2
+      }
+    },
+    {
+      "name": "vm-spec",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 255,
+        "fixtures": 111,
+        "mutants": 284
+      }
+    },
+    {
+      "name": "vm-model",
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 45,
+        "fixtures": 6,
+        "mutants": 65
+      }
+    }
+  ],
+  "model": {
+    "stdout": "vm-model passed: 111 goldens, 44 invocations, 108 fuel controls, 212 refusal controls, 13 argument controls, 165 admitted controls (8 plan, 1 limit, 7 codes, 138 run, 11 model), 107 audited runs, 45 installed-state controls, 65469 swept mutations of 111 images, 49 laws, 65 execution-killed mutants, 1 killed harness mutant; vm/receipts/model.json",
+    "receipt": "vm/receipts/model.json",
+    "receipt_sha256": "d1feba383a81142fae9c15cd3b8328fcd1a5f75a8f9c9b373e1a0759da0a10a2",
+    "source_hashes_match": true,
+    "boundary_expectations_sha256": "9214fef65e565a096b41af5c728915babd789c241e284d3eb39be0c0966e4546",
+    "boundary_controls": 45,
+    "proof": {
+      "laws": 49,
+      "stdout": "All terms check."
+    },
+    "execution_killed_mutants": 65,
+    "designated_law_refutations": 25,
+    "law_only_kills": 0,
+    "review_mutants": [
+      {
+        "breaks": "a target that stops the machine refunds its entry",
+        "by": [
+          "boundaries:entry-frame-debit"
+        ],
+        "crashed": [],
+        "crashes": 0,
+        "killed": true,
+        "kills": 1,
+        "law": "entry_past_region_keeps_its_debit",
+        "mutant": "debit-refunded"
+      },
+      {
+        "breaks": "the atomic audit compares heap metadata but discards stored words",
+        "by": [
+          "boundaries:atomic-input-change",
+          "boundaries:atomic-unrelated-word-change"
+        ],
+        "crashed": [],
+        "crashes": 0,
+        "killed": true,
+        "kills": 2,
+        "law": "atomic_rejects_changed_input",
+        "mutant": "audit-store-uncompared"
+      },
+      {
+        "breaks": "the atomic audit compares output line counts but discards their contents and order",
+        "by": [
+          "boundaries:atomic-output-change",
+          "boundaries:atomic-output-order",
+          "boundaries:atomic-output-line-boundary"
+        ],
+        "crashed": [],
+        "crashes": 0,
+        "killed": true,
+        "kills": 3,
+        "law": "atomic_rejects_changed_output",
+        "mutant": "audit-output-count-only"
+      },
+      {
+        "breaks": "the atomic audit discards the stopped pending control",
+        "by": [
+          "boundaries:atomic-pending-change"
+        ],
+        "crashed": [],
+        "crashes": 0,
+        "killed": true,
+        "kills": 1,
+        "law": "atomic_rejects_changed_pending",
+        "mutant": "audit-pending-uncompared"
+      },
+      {
+        "breaks": "a refused Book description replaces its pending Return with Finished(Answered)",
+        "by": [
+          "boundaries:atomic-description-stop"
+        ],
+        "crashed": [],
+        "crashes": 0,
+        "killed": true,
+        "kills": 1,
+        "law": "atomic_description_keeps_return",
+        "mutant": "describe-pending-replaced"
+      }
+    ],
+    "nonkill_crash_observations": [
+      {
+        "mutant": "enter-arity",
+        "crashes": 2,
+        "controls": [
+          "admitted:run:erased-closure-invoked-live",
+          "admitted:run:phase-two-erased"
+        ],
+        "execution_kills": [
+          "admitted:run:terminal-invoked-erased",
+          "admitted:run:fuel-zero-ill-typed-invoke",
+          "admitted:run:fuel-zero-ill-typed-phase"
+        ],
+        "disposition": "Inherited observations also present in the reviewed receipt; crashes do not count as kills."
+      }
+    ],
+    "semantic_receipt_fields_changed": [
+      "boundaries",
+      "boundary_expectations_sha256",
+      "connectives",
+      "mutants",
+      "proof",
+      "sources"
+    ]
+  },
+  "runner_verification": {
+    "command": "npm run -s gates:verify",
+    "status": "passed",
+    "tests": 22,
+    "log": ".local/vm-model/review-r1/gates-verify.log"
+  },
+  "offline_perch": {
+    "provider_requests": 0,
+    "rubric_version": 8,
+    "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+    "changed_files": {
+      "summary": {
+        "units": 311,
+        "files": 5,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 112,
+        "truncated_by_limit": {
+          "caller-or-byte-limit": 8,
+          "context-file-limit": 11,
+          "context-helper-limit": 93
+        },
+        "supporting_role_impossible": 112,
+        "role_gap_units_by_reason": {
+          "context-file-limit": 11,
+          "context-helper-limit": 93,
+          "truncated-context": 112
+        },
+        "max_state_bytes": 38576,
+        "composition_available": false,
+        "composition_reasons": [
+          "composition_byte_limit"
+        ]
+      },
+      "structural_blockers": 113,
+      "receipt": ".local/vm-model/review-r1/preflight-changed.json"
+    },
+    "bounded_manifest": {
+      "summary": {
+        "groups": 10,
+        "groups_completed": 10,
+        "units": 702,
+        "files": 14,
+        "truncated_units": 0,
+        "supporting_role_impossible": 0,
+        "compositions_available": 10
+      },
+      "structural_blockers": 0,
+      "receipt": ".local/vm-model/review-r1/preflight-manifest.json"
+    },
+    "ratings": {
+      "Compression": "unrated; live review belongs to the coordinator",
+      "Delight": "unrated; live review belongs to the coordinator",
+      "Memetic identity": "unrated; live review belongs to the coordinator",
+      "Anticipation": "unrated; live review belongs to the coordinator",
+      "Payoff": "unrated; live review belongs to the coordinator"
+    },
+    "automatic_style_pass": false
+  },
+  "findings": [
+    {
+      "title": "Atomic audit accepts altered stopped states",
+      "disposition": "confirmed, fixed",
+      "evidence": "Complete store, output sequence and pending-control comparisons; frozen native alteration controls and designated laws."
+    },
+    {
+      "title": "Law-only exception weakens the reviewed mutant assertion",
+      "disposition": "confirmed, fixed",
+      "evidence": "Execution-kill requirement restored. debit-refunded is killed by boundaries:entry-frame-debit; its original checked law is retained."
+    },
+    {
+      "title": "Seed-accepted empty datatype is classified Invalid",
+      "disposition": "confirmed, upstream dependency",
+      "owner": "frontend/modules reconciliation, per coordinator ruling"
+    },
+    {
+      "title": "Historical timestamp-only receipt commit",
+      "disposition": "retained history; current replacement normalized and semantically changed"
+    },
+    {
+      "title": "PATH selects Bun 1.3.11",
+      "disposition": "fixed",
+      "evidence": "Fail-fast version guard against the unchanged io-host Bun 1.3.14 pin; 22 runner tests pass."
+    },
+    {
+      "title": "Book description replaces pending Return",
+      "disposition": "newly exposed, fixed",
+      "evidence": "Separately frozen control and law preserve Return; describe-pending-replaced is execution-killed."
+    }
+  ],
+  "upstream_empty_datatype": {
+    "source": "type Void is Data:\ntype Flag is Data:\n  Low{}\n  High{}\ndef main() -> Flag:\n  High{}\n",
+    "frontend_reproduction": {
+      "catalog_blobs": [
+        "107ff05786337ef157f0449a41dcf19695796b8c",
+        "107ff05786337ef157f0449a41dcf19695796b8c"
+      ],
+      "observations": [
+        {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/vm-model/review-r1/unused-empty-datatype.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/vm-model/review-r1/unused-empty-datatype.bend"
+          ],
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            ".local/vm-model/review-r1/check-cli",
+            "--",
+            ".local/vm-model/review-r1/unused-empty-datatype.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tempty-datatype\t5:9:1:5\n"
+        },
+        {
+          "argv": [
+            ".local/vm-model/review-r1/eval-cli",
+            "--",
+            ".local/vm-model/review-r1/unused-empty-datatype.bend",
+            "main",
+            "1000000"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tempty-datatype\t5:9:1:5\n"
+        },
+        {
+          "argv": [
+            ".local/vm-model/review-r1/compile-cli",
+            "--",
+            ".local/vm-model/review-r1/unused-empty-datatype.bend",
+            ".local/vm-model/review-r1/unused-empty-datatype.wasm"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tempty-datatype\t5:9:1:5\n"
+        }
+      ],
+      "disposition": "Confirmed inherited frontend issue; coordinator assigns acceptance to the modules reconciliation round."
+    },
+    "model_reproduction": {
+      "plan": {
+        "entry": "book",
+        "types": [
+          {
+            "kind": "data",
+            "name": "Void",
+            "constructors": []
+          },
+          {
+            "kind": "data",
+            "name": "Flag",
+            "constructors": [
+              {
+                "name": "Low",
+                "fields": []
+              },
+              {
+                "name": "High",
+                "fields": []
+              }
+            ]
+          }
+        ],
+        "functions": [
+          {
+            "name": "main",
+            "parameters": [],
+            "result": 1,
+            "slots": 0,
+            "body": [
+              "value",
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "image_sha256": "b26ca348735eaa422e7e70758457545765f4d43066261475c005c66cc28e7af5",
+      "observation": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t1\tHigh{}\n",
+        "stderr": ""
+      }
+    }
+  },
+  "remaining": [
+    "Frontend/modules reconciliation: accept seed-valid empty datatypes where supported; otherwise report Unsupported check empty-datatype, never Invalid.",
+    "Coordinator: live Perch and style review, integration, and shared receipt refresh for bootstrap progress/reference and vm-spec."
+  ],
+  "limits": [
+    "Finite controls and checked machine-state laws do not establish universal validator soundness or compiler correctness.",
+    "The full-frame boundary is installed directly; the control does not allocate four million frame words.",
+    "Offline Perch preflight establishes context availability only; no live semantic or style pass is claimed."
+  ]
+}
