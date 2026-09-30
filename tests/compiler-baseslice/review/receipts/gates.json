@@ -1,0 +1,1985 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "command": [
+    "npm",
+    "run",
+    "-s",
+    "gates",
+    "--",
+    "--jobs=1"
+  ],
+  "source_head": "5ea3a877d5635f1786e17467c195e73e0fcdd554",
+  "jobs": 1,
+  "total_seconds": 717.820073,
+  "raw_summary_sha256": "83e40cd5ead1444e84ed072c8f8cee28b5d5be5c7a455cb391b2c10a9863aac3",
+  "seed": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884"
+  },
+  "host_toolchain": {
+    "clang": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+    "sha256": "7def90dd8829726686213a747fc5bff1583df933dae5edc55d755479e0bfe00a",
+    "version": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+    "selection": "PATH prepends the installed Xcode toolchain; SDKROOT is the installed SDK. Seed, compiler flags, scripts and budgets are unchanged."
+  },
+  "tested_input_hashes": {
+    "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
+    "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+    "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "25f0161c2ae01158e892063643b9588406f3b8aefc1c227dc9cb1cb3be76c367",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "0464b6fda11c033aa9dc4ea2e413c72cac716ff733295ba5f782784ab20825e0",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "c237976016b9c87cface4f60dede58f26e8960d93632bb5298a0c89350de6e7c",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "2e049d7dbe24bf58d8cb441b67c58d030201510b7fbd257a65bdd20b6b63752d",
+    "src/syntax.bend": "a3edfc73782471982eb0796607968643e427c70e53b65b97d7302563badfbd32",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "tests/compiler-baseslice/enum/LAWS.bend": "d6f5b2e83e90bf208cea77c0fbed92848f605ac6f6af3a54a7957787eaea48e1",
+    "tests/compiler-baseslice/enum/PROOF.bend": "e4eabe959e853761c3ad7052c305abb8338213c0eec0f32788281e5b9f1ac85f",
+    "tests/compiler-baseslice/enum/check.py": "2b0d7a2e964c8904b5cb183b9d64d880613edd7eb4f5339f01388b9f73f778e4",
+    "tests/compiler-baseslice/enum/expectations.json": "ddde6385ef9bc1cf9a2facce987ad7a9abaec9a6bd54830e040ba0fca70e6de5",
+    "tests/compiler-baseslice/enum/fixtures/affine-reuse.bend": "29bce53bbf591e16c90cd3d8ef16f87fd03379e1ddf3cd58330db3179530de4c",
+    "tests/compiler-baseslice/enum/fixtures/boolean.bend": "12656c270d2a6b884bcdd07a201d97e2d0a378c9380b728c60b79860a4022841",
+    "tests/compiler-baseslice/enum/fixtures/cmp-unit.bend": "f10913a0c00f76364e22b387366737b5de11a588876e8da978081deeccca6de4",
+    "tests/compiler-baseslice/enum/fixtures/import-base.bend": "8b76c74e64708e40e8bde7a2674d570469efb77fc29290f344f18586b21d6fdf",
+    "tests/compiler-baseslice/enum/fixtures/missing-arm.bend": "3ff95154a607c6acaced4d40967dd88a059b4cfcd1f5da69573eb69cc5190f31",
+    "tests/compiler-baseslice/enum/fixtures/wrong-arity.bend": "e08107ecce894223214416bf8196cdf39f1cc16577508da6cb5c48c4d78189b5",
+    "tests/compiler-baseslice/enum/fixtures/wrong-type.bend": "30174dc93803a58b97176abb1bf15824173581848e1e3cbfa1f7a8c14887f34d",
+    "tests/compiler-baseslice/enum/regen.py": "f1ad114e769115d77134ab079f9ded1372c9be0336539998ac7001b1933f5910",
+    "tests/compiler-baseslice/enum/trust.ts": "251c88be2e4e09556d71bb2b62f83ffeb2450ccc96835eb71fa73e34ed76b191",
+    "tests/compiler-baseslice/review/LAWS.bend": "111d29fa112fb36c8de69d76f8830645b4218a485304957a82872f8b1446aac3",
+    "tests/compiler-baseslice/review/PROOF.bend": "67699c1d21fcd4e2343b2b87496f14c88a559dd164233b6714953ed60a6174cc",
+    "tests/compiler-baseslice/review/bounds-oracle.py": "161985dd38b48a85abb8145136a1701883a30112c73b848a99fb3600570578bf",
+    "tests/compiler-baseslice/review/check.py": "ea3f1bb9a532cccdb7656d6fe2db4fe79df1e4867fdd15c38026037b2924199b",
+    "tests/compiler-baseslice/review/empty-datatype.json": "6c678c7a0ffc858371ed4954759112c32ebe223b738cae855f84be69cdb811d4",
+    "tests/compiler-baseslice/review/expectations.json": "4cd502cccc2e9a2314dbb051512a03f689a84e20d084fa05940794fbec2dc6fd",
+    "tests/compiler-baseslice/review/fixtures/control-erased.bend": "7d33720dd6351ddabf281f16f788ee5ab08b66e38220e08024953cb574605d1b",
+    "tests/compiler-baseslice/review/fixtures/control-field.bend": "e6e6a5de32b9442ac54ea6d5fcce4021b190bcd5742a677413d5ee8b87111286",
+    "tests/compiler-baseslice/review/fixtures/control-later.bend": "3fa41841e0e4d56769f582c47a8be42a79f4d0d33beb8acf5ec9b77e15e003c6",
+    "tests/compiler-baseslice/review/fixtures/control-let-erased.bend": "ec3caf7dfd5c33d19f4c2ec680061928e0df6f8de3a5a08ced9d02be1d9a8b28",
+    "tests/compiler-baseslice/review/fixtures/control-let-local.bend": "793c813e0b051d32c7cde92cd08dcf77c8ed7a2ca131ed8810c47ab1246e9ef4",
+    "tests/compiler-baseslice/review/fixtures/control-let-parameter.bend": "ce3e6d97c3db6d0655c2476d42c370ec8ad6991f267238a37741d41a63429287",
+    "tests/compiler-baseslice/review/fixtures/control-result.bend": "b409112188f66eefc798d4475cdb4b43807f1b940022b2d64db7ff7508e331ca",
+    "tests/compiler-baseslice/review/fixtures/dotted-affine.bend": "6be9cb41baaf84ef1932523cd65cfca73a9bdc1e29747e96c7ecad9c9aec85ce",
+    "tests/compiler-baseslice/review/fixtures/dotted-erased.bend": "190e68d953b7723f868523e385a21edf67932006904473a46445b80d5fc496cc",
+    "tests/compiler-baseslice/review/fixtures/dotted-reusable.bend": "e1b07709d12913df5d62e4651532789a90ce735eecc14562192506fcfa402960",
+    "tests/compiler-baseslice/review/fixtures/empty-datatype.bend": "59139014c318e68480e49007d2ae3fefa1261c0bf650a7731f87a558d883e41f",
+    "tests/compiler-baseslice/review/fixtures/free-name.bend": "9c249a2d943c690442d1a451564c1feda058b5419f50013f5100f1710cc7eb56",
+    "tests/compiler-baseslice/review/fixtures/function-direct.bend": "7a1988893ad23775d21c7350a4c52e2a4b95a5a97688fe212a3904fa39084465",
+    "tests/compiler-baseslice/review/fixtures/function-forward-erased.bend": "38f1c5deda8cb96eb2b02fd820fe6760cd006ad4cd74048518aed04ec6e5a13c",
+    "tests/compiler-baseslice/review/fixtures/function-local-shadow.bend": "05c6d0765fe75417b8743614ce438f9536ff5c0b8058a601cc842ff005ae1f2d",
+    "tests/compiler-baseslice/review/fixtures/function-value.bend": "9057a9612e0333ee1057489cfbc792558426de6aafb1673fc08f03e74a0c9afd",
+    "tests/compiler-baseslice/review/fixtures/own-annotation.bend": "c15340133214afa8189d99cf38cf345c0e56b09d6ed70e52197b011b84f54f4e",
+    "tests/compiler-baseslice/review/fixtures/shadow-erased.bend": "bb6726b9b5c77582cfc0a7bff2b1c5e7caffecf21071c66e9d6f012d202c65b4",
+    "tests/compiler-baseslice/review/fixtures/shadow-field.bend": "e9cdef43e2adf1b21f3c1e1a148051244a1eef9f7e5b97e43c3d243bc2d7dc51",
+    "tests/compiler-baseslice/review/fixtures/shadow-later.bend": "fd296165fbad12217574b50e1c9a28a140e9ff04628d8d2377a9ec548b5ec5e7",
+    "tests/compiler-baseslice/review/fixtures/shadow-let-erased.bend": "e4c355bc21c491ab6730fe9d5255d403fb16cfff60ba6757508519a6e2e8169f",
+    "tests/compiler-baseslice/review/fixtures/shadow-let-local.bend": "4c70517cd9239bf6312d6e308ce96dc05f74f4a3f27c0eabe0304b20fa04c1df",
+    "tests/compiler-baseslice/review/fixtures/shadow-let-parameter.bend": "002da28663618269e6521c806c05d00486f1fe10dfae773636dffdea9ff9e703",
+    "tests/compiler-baseslice/review/fixtures/shadow-result.bend": "d55e4d345c8867f09b1d25c81e10c7bff9bf888a1a7ea33a7ae79e612e9bed01",
+    "tests/compiler-baseslice/review/fixtures/simple-affine.bend": "f21164717322d889c27f740e1b911d4b95f69e7484d10f77bad5e81fa4c4584a",
+    "tests/compiler-baseslice/review/fixtures/simple-erased.bend": "864fd3e6892e26f90dcf315b73a356d7b4b0fa14fe775044217a9279e9342853",
+    "tests/compiler-baseslice/review/fixtures/simple-reusable.bend": "0f21dbb032f8970fec84f7f2652c2ca9a81c1e372371919ebc6af1b459cdee08",
+    "tests/compiler-baseslice/review/receipts/bounds-amendment.json": "402773c5a27bec35b8d80531c21b0597b66939ecee4ea9e96d956f1c25c074ce",
+    "tests/compiler-baseslice/review/regen.py": "c9d4f44899ecf80385ff9f2c2ba294875d78bdb3a45beba396bbe055528efe26",
+    "tests/compiler-baseslice/review/trust.ts": "5332bf9cf78b7fac4b64fe1312a97b45aa3a7083e04b1c7c7e3815294f15c397",
+    "tests/compiler-checker/bounds.bend": "d8a561f7a68e8546efd1c20039adff7bf400a181d4a4301840948e4561ed31e1",
+    "scripts/gates/run.py": "4eaa99e0d1496379e3032e13e278556bdbf41c9e8648bae2e97a343bc204fc35",
+    "scripts/gates/normalize.py": "02c2fa858d00dcd29277d54eaacbc0b52699d8f085da3811c29e3b05caac3656",
+    "tests/subsets/check_frontend.py": "b8953fcc58c8d58b67eac795754435140fab763f1be62bd61e137a7b1f46c2a9",
+    "tests/compiler-checker/check.py": "27ede49b2e14b5dcc8e9d1c18fd00852a80660db1b4851b6dc475695b5fcafda",
+    "tests/compiler-structural/check.py": "3d0d052ed2c79f8a60b7546f707c0403f6e9b621f26104d81da73318b5f18d28",
+    "tests/compiler-fields/check.py": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393",
+    "tests/compiler-wasm/check.py": "77c2197f98e827b97758138cc934ffab665b908f608dfefd32ef7d2ee138b28d",
+    "tests/compiler-recursion/check.py": "0c5a3355ed138e9c14bb6043777e19542e8beef9ca03becd137e3b0bd6438f30",
+    "tests/compiler-fields-wasm/check.py": "544de0f4486cc62c8ec3fe1150bf29561f0e9e3cf1570fecd07e314fe3066d74",
+    "research/flat-store/check.py": "f0a47f6418adabae03fb69bfe7c1a6ba90d41833edda3bae4d42d56c23563c69"
+  },
+  "frozen_integrity": [
+    {
+      "path": "tests/subsets/check_frontend.py",
+      "reference": "ff44b974",
+      "sha256": "b8953fcc58c8d58b67eac795754435140fab763f1be62bd61e137a7b1f46c2a9",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-checker/check.py",
+      "reference": "ff44b974",
+      "sha256": "27ede49b2e14b5dcc8e9d1c18fd00852a80660db1b4851b6dc475695b5fcafda",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-structural/check.py",
+      "reference": "ff44b974",
+      "sha256": "3d0d052ed2c79f8a60b7546f707c0403f6e9b621f26104d81da73318b5f18d28",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-fields/check.py",
+      "reference": "ff44b974",
+      "sha256": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-wasm/check.py",
+      "reference": "ff44b974",
+      "sha256": "77c2197f98e827b97758138cc934ffab665b908f608dfefd32ef7d2ee138b28d",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-recursion/check.py",
+      "reference": "ff44b974",
+      "sha256": "0c5a3355ed138e9c14bb6043777e19542e8beef9ca03becd137e3b0bd6438f30",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-fields-wasm/check.py",
+      "reference": "ff44b974",
+      "sha256": "544de0f4486cc62c8ec3fe1150bf29561f0e9e3cf1570fecd07e314fe3066d74",
+      "unchanged": true
+    },
+    {
+      "path": "research/flat-store/check.py",
+      "reference": "ff44b974",
+      "sha256": "f0a47f6418adabae03fb69bfe7c1a6ba90d41833edda3bae4d42d56c23563c69",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-checker/cases.json",
+      "reference": "a7817bf8",
+      "sha256": "bc7b249e2cb2a12e35dc52e08d2a94c025d6cb2bf7c7edefa665b325870e0456",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-baseslice/expectations.json",
+      "reference": "ff44b974",
+      "sha256": "fa13cf61a410354c6b94914121935fd9f2e5b5e9934ef57d49017f3b568b36d9",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-baseslice/enum/expectations.json",
+      "reference": "a7817bf8",
+      "sha256": "ddde6385ef9bc1cf9a2facce987ad7a9abaec9a6bd54830e040ba0fca70e6de5",
+      "unchanged": true
+    },
+    {
+      "path": "tests/compiler-baseslice/review/expectations.json",
+      "reference": "18a7bf2a",
+      "sha256": "4cd502cccc2e9a2314dbb051512a03f689a84e20d084fa05940794fbec2dc6fd",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/gates/run.py",
+      "reference": "a7817bf8",
+      "sha256": "4eaa99e0d1496379e3032e13e278556bdbf41c9e8648bae2e97a343bc204fc35",
+      "unchanged": true
+    }
+  ],
+  "normalized": {
+    "dependencies_sha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
+    "gates": [
+      {
+        "command": [
+          "python3",
+          "tests/subsets/check_frontend.py"
+        ],
+        "counts": {
+          "boundaries": 24,
+          "fixtures": 14,
+          "lane_observations": 28,
+          "mutants": 4
+        },
+        "exit_code": 0,
+        "name": "frontend",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-checker/check.py"
+        ],
+        "counts": {
+          "bound_observations": 16,
+          "bounds": 2,
+          "budgets": 10,
+          "fixtures": 49,
+          "lane_observations": 98,
+          "mutants": 7
+        },
+        "exit_code": 0,
+        "name": "checker",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-structural/check.py"
+        ],
+        "counts": {
+          "bounds": 4,
+          "fixtures": 16,
+          "lane_observations": 64,
+          "mutants": 7
+        },
+        "exit_code": 0,
+        "name": "structural",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-fields/check.py"
+        ],
+        "counts": {
+          "bound_observations": 12,
+          "bounds": 2,
+          "budgets": 36,
+          "fixtures": 40,
+          "host_boundaries": 6,
+          "lane_observations": 240,
+          "mutants": 9
+        },
+        "exit_code": 0,
+        "name": "fields",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-wasm/check.py"
+        ],
+        "counts": {
+          "boundaries": 44,
+          "execution_lanes": 2,
+          "fixtures": 25,
+          "mutants": 7,
+          "reference_calls": 90,
+          "rejects": 64
+        },
+        "exit_code": 0,
+        "name": "wasm",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "bun",
+          "tests/compiler-wasm/trust.ts"
+        ],
+        "counts": {
+          "entries": 3,
+          "proof_holes": 0
+        },
+        "exit_code": 0,
+        "name": "wasm-trust",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "bun",
+          "tests/compiler-fields/trust.ts"
+        ],
+        "counts": {
+          "entries": 4,
+          "proof_holes": 0
+        },
+        "exit_code": 0,
+        "name": "fields-trust",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "bun",
+          "tests/compiler-structural/trust.ts"
+        ],
+        "counts": {
+          "entries": 2,
+          "proof_holes": 0
+        },
+        "exit_code": 0,
+        "name": "structural-trust",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "research/owned-store/check.py"
+        ],
+        "counts": {
+          "cases": 3532,
+          "execution_lanes": 2,
+          "literal_witnesses": 15,
+          "mutants": 6
+        },
+        "exit_code": 0,
+        "name": "owned-store",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "research/flat-store/check.py"
+        ],
+        "counts": {
+          "bun": {
+            "installed_boundary_states": 2,
+            "instances": 3534,
+            "lifecycle_checks": 7,
+            "observations": 13621
+          },
+          "mutants": 9,
+          "native": {
+            "installed_boundary_states": 2,
+            "instances": 3534,
+            "lifecycle_checks": 7,
+            "observations": 13621
+          }
+        },
+        "exit_code": 0,
+        "name": "flat-store",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-recursion/check.py"
+        ],
+        "counts": {
+          "fixtures": 19,
+          "mutants": 3
+        },
+        "exit_code": 0,
+        "name": "recursion",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-fields-wasm/check.py"
+        ],
+        "counts": {
+          "boundaries": 30,
+          "fixtures": 8,
+          "mutants": 4
+        },
+        "exit_code": 0,
+        "name": "fields-wasm",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "node",
+          "tools/census/census.mjs",
+          "--check"
+        ],
+        "counts": {
+          "classes": 40,
+          "declarations": 432,
+          "files": 30
+        },
+        "exit_code": 0,
+        "name": "census",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "npm",
+          "run",
+          "-s",
+          "lint:verify"
+        ],
+        "counts": {
+          "law_rules": 8,
+          "tests": 127
+        },
+        "exit_code": 0,
+        "name": "lint:verify",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "-B",
+          "tests/compiler-baseslice/enum/check.py"
+        ],
+        "counts": {
+          "agreed_books": 2,
+          "byte_identical_modules": 2,
+          "declarations": 7,
+          "deferred_books": 1,
+          "evaluator_observations": 62,
+          "execution_lanes": 2,
+          "fixtures": 7,
+          "laws": 8,
+          "mutants": 5,
+          "output_preservation_checks": 10,
+          "proof_holes": 0,
+          "reference_calls": 31,
+          "rejected_books": 4,
+          "review_agreed_books": 13,
+          "review_amendment_seed_witnesses": 4,
+          "review_byte_identical_modules": 12,
+          "review_evaluator_observations": 26,
+          "review_fixtures": 27,
+          "review_lane_observations": 162,
+          "review_laws": 7,
+          "review_mutants": 3,
+          "review_output_preservation_checks": 30,
+          "review_proof_holes": 0,
+          "review_rejected_books": 10,
+          "review_unsupported_books": 4,
+          "review_wasm_observations": 24,
+          "seed_calls": 32,
+          "seed_lane_observations": 64,
+          "wasm_observations": 62
+        },
+        "exit_code": 0,
+        "name": "base-enum",
+        "status": "passed"
+      }
+    ],
+    "receipt_counts": {
+      "identical": 63,
+      "semantic": 11,
+      "volatile-only": 7
+    },
+    "receipts": [
+      {
+        "after_sha256": "62a142530382690b06354fadb0f7195454ca0b72551ce72f430128e5d746dae4",
+        "before_sha256": "13f42c984e81f85e135dca9510cdaf01d354a953887593c48f44ad1e804a4b35",
+        "changed_fields": [
+          "/entries/0/loaded_files/7/sha256",
+          "/entries/0/loaded_files/9/sha256",
+          "/entries/0/loaded_files/12/sha256",
+          "/entries/0/loaded_files/13/sha256",
+          "/entries/0/loaded_files/14/sha256",
+          "/entries/1/generated_js_sha256",
+          "/entries/1/loaded_files/2/sha256",
+          "/entries/1/loaded_files/4/sha256",
+          "/entries/1/loaded_files/7/sha256",
+          "/entries/1/loaded_files/8/sha256",
+          "/entries/1/loaded_files/9/sha256",
+          "/entries/2/generated_js_sha256",
+          "/entries/2/loaded_files/2/sha256",
+          "/entries/2/loaded_files/6/sha256",
+          "/entries/2/loaded_files/7/sha256",
+          "/entries/2/loaded_files/8/sha256",
+          "/entries/2/loaded_files/9/sha256",
+          "/entries/3/generated_js_sha256",
+          "/entries/3/loaded_files/2/sha256",
+          "/entries/3/loaded_files/6/sha256",
+          "/entries/3/loaded_files/7/sha256",
+          "/entries/3/loaded_files/8/sha256",
+          "/entries/3/loaded_files/9/sha256"
+        ],
+        "classification": "semantic",
+        "path": "research/compiler-fields/receipts/trust.json"
+      },
+      {
+        "after_sha256": "f7dfdec9f104195cb82aa117e77ed629b4c74fe800ee5531e35f7114868d4e3e",
+        "before_sha256": "f02e2530d251f933d811304125d745d99b30b1ec8351c0f20ba1e469795daa74",
+        "changed_fields": [
+          "/entries/0/loaded_files/6/sha256",
+          "/entries/0/loaded_files/8/sha256",
+          "/entries/0/loaded_files/11/sha256",
+          "/entries/0/loaded_files/12/sha256",
+          "/entries/0/loaded_files/13/sha256",
+          "/entries/1/loaded_files/2/sha256",
+          "/entries/1/loaded_files/4/sha256",
+          "/entries/1/loaded_files/5/sha256",
+          "/observer_generated_js_sha256"
+        ],
+        "classification": "semantic",
+        "path": "research/compiler-structural/receipts/trust.json"
+      },
+      {
+        "after_sha256": "4c74fee893702bbb2a53bdd50daa014740d34abce1da14d315a34eafc025df18",
+        "before_sha256": "ba47d15d9303c9b508ef615689ef331063770347cf95c23b6e5d664f2c00fcfd",
+        "changed_fields": [
+          "/entries/0/generated_js_sha256",
+          "/entries/0/loaded_files/2/sha256",
+          "/entries/0/loaded_files/6/sha256",
+          "/entries/0/loaded_files/7/sha256",
+          "/entries/0/loaded_files/8/sha256",
+          "/entries/0/loaded_files/9/sha256",
+          "/entries/1/generated_js_sha256",
+          "/entries/1/loaded_files/2/sha256",
+          "/entries/1/loaded_files/6/sha256",
+          "/entries/1/loaded_files/7/sha256",
+          "/entries/1/loaded_files/8/sha256",
+          "/entries/1/loaded_files/9/sha256",
+          "/entries/2/loaded_files/5/sha256",
+          "/entries/2/loaded_files/7/sha256",
+          "/entries/2/loaded_files/10/sha256",
+          "/entries/2/loaded_files/11/sha256",
+          "/entries/2/loaded_files/12/sha256"
+        ],
+        "classification": "semantic",
+        "path": "research/compiler-wasm/receipts/trust.json"
+      },
+      {
+        "after_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+        "before_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+        "classification": "volatile-only",
+        "path": "research/flat-store/receipts/bun-oracle.txt.gz"
+      },
+      {
+        "after_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+        "before_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/bun-wasm.json"
+      },
+      {
+        "after_sha256": "8bd1b0dd7a61bdb08d5d1d8c03bd5e22aedff63e8bc664093162a02174126928",
+        "before_sha256": "8bd1b0dd7a61bdb08d5d1d8c03bd5e22aedff63e8bc664093162a02174126928",
+        "classification": "volatile-only",
+        "path": "research/flat-store/receipts/gate.json"
+      },
+      {
+        "after_sha256": "0de6ba8b0cf838453ae7f83d91e93832242215561a490884be8069c4d783aef6",
+        "before_sha256": "0de6ba8b0cf838453ae7f83d91e93832242215561a490884be8069c4d783aef6",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-accept-padding.json"
+      },
+      {
+        "after_sha256": "4730ffa519456fcb71b513723147e76beecd8171ad1c6832eeba36c60927bb98",
+        "before_sha256": "4730ffa519456fcb71b513723147e76beecd8171ad1c6832eeba36c60927bb98",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-erase-allocated-payload.json"
+      },
+      {
+        "after_sha256": "43e2d4e57deefb3f8339f875a23d4b47d7ef16bb27401d227f88ae5f8f45f86e",
+        "before_sha256": "43e2d4e57deefb3f8339f875a23d4b47d7ef16bb27401d227f88ae5f8f45f86e",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-ignore-arena.json"
+      },
+      {
+        "after_sha256": "61fe39777e471cb1db41058d9687a143cb7669bfb04d997e8fe3bfabe55a3803",
+        "before_sha256": "61fe39777e471cb1db41058d9687a143cb7669bfb04d997e8fe3bfabe55a3803",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-lose-free-tail.json"
+      },
+      {
+        "after_sha256": "6439ddf4992b22ac0d951159f0ae70076cade8f41c3799acf3c0a815933ede4f",
+        "before_sha256": "6439ddf4992b22ac0d951159f0ae70076cade8f41c3799acf3c0a815933ede4f",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-overwrite-on-rejection.json"
+      },
+      {
+        "after_sha256": "92d205e20ab14f7c10da440f361f11064b8f921d0b280b725275a078931cd44a",
+        "before_sha256": "92d205e20ab14f7c10da440f361f11064b8f921d0b280b725275a078931cd44a",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-reuse-generation.json"
+      },
+      {
+        "after_sha256": "7307b6c85c933607d5971c31f294914076f231408ce5cbf96b2fc20fb332d8d5",
+        "before_sha256": "7307b6c85c933607d5971c31f294914076f231408ce5cbf96b2fc20fb332d8d5",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-wrap-at-ceiling.json"
+      },
+      {
+        "after_sha256": "894c35012fbcbf8727e8fd0865048c8198e1644a08068e4f3e4456546616fc78",
+        "before_sha256": "894c35012fbcbf8727e8fd0865048c8198e1644a08068e4f3e4456546616fc78",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-write-on-reinit.json"
+      },
+      {
+        "after_sha256": "0caecc46fed76662ea4a92b471a148c70420fda240b555db67ff7b0355b7b9bf",
+        "before_sha256": "0caecc46fed76662ea4a92b471a148c70420fda240b555db67ff7b0355b7b9bf",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-zero-sentinel.json"
+      },
+      {
+        "after_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+        "before_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+        "classification": "volatile-only",
+        "path": "research/flat-store/receipts/native-oracle.txt.gz"
+      },
+      {
+        "after_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+        "before_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/native-wasm.json"
+      },
+      {
+        "after_sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+        "before_sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/native.wasm"
+      },
+      {
+        "after_sha256": "8f7376fa388942d25885b1e39ff2d646bd938dbaddd20c55eec331de8f2db0b1",
+        "before_sha256": "8f7376fa388942d25885b1e39ff2d646bd938dbaddd20c55eec331de8f2db0b1",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/store.wat"
+      },
+      {
+        "after_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+        "before_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+        "classification": "volatile-only",
+        "path": "research/owned-store/receipts/bun.txt.gz"
+      },
+      {
+        "after_sha256": "c9873b6056d83d3262ce149cfac0ce7cf2c770d0e2f698c779639988359787fd",
+        "before_sha256": "c9873b6056d83d3262ce149cfac0ce7cf2c770d0e2f698c779639988359787fd",
+        "classification": "volatile-only",
+        "path": "research/owned-store/receipts/gate.json"
+      },
+      {
+        "after_sha256": "c7f628a75dec30af2ace7451e75848e8ad7bb253fc977c131dca3a2cf2897195",
+        "before_sha256": "c7f628a75dec30af2ace7451e75848e8ad7bb253fc977c131dca3a2cf2897195",
+        "classification": "volatile-only",
+        "path": "research/owned-store/receipts/inputs.json.gz"
+      },
+      {
+        "after_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+        "before_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+        "classification": "volatile-only",
+        "path": "research/owned-store/receipts/native.txt.gz"
+      },
+      {
+        "after_sha256": "6570a18e0819ef582a2fa1e9e623ac93c3ba06efd8c2d4cff407a5843292cc9c",
+        "before_sha256": "990ee41d0982e4bd12a2d99525c7a06a71613cac75a7c66a049912b3076c416d",
+        "changed_fields": [
+          "/counts/review_agreed_books",
+          "/counts/review_amendment_seed_witnesses",
+          "/counts/review_byte_identical_modules",
+          "/counts/review_evaluator_observations",
+          "/counts/review_fixtures",
+          "/counts/review_lane_observations",
+          "/counts/review_laws",
+          "/counts/review_mutants",
+          "/counts/review_output_preservation_checks",
+          "/counts/review_proof_holes",
+          "/counts/review_rejected_books",
+          "/counts/review_unsupported_books",
+          "/counts/review_wasm_observations",
+          "/inputs/src~1catalog.bend",
+          "/inputs/src~1check.bend",
+          "/inputs/src~1parse.bend",
+          "/inputs/src~1scope.bend",
+          "/inputs/src~1syntax.bend",
+          "/inputs/tests~1compiler-baseslice~1enum~1check.py",
+          "/inputs/tests~1compiler-baseslice~1review~1LAWS.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1PROOF.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1bounds-oracle.py",
+          "/inputs/tests~1compiler-baseslice~1review~1check.py",
+          "/inputs/tests~1compiler-baseslice~1review~1empty-datatype.json",
+          "/inputs/tests~1compiler-baseslice~1review~1expectations.json",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1control-erased.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1control-field.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1control-later.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1control-let-erased.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1control-let-local.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1control-let-parameter.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1control-result.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1dotted-affine.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1dotted-erased.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1dotted-reusable.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1empty-datatype.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1free-name.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1function-direct.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1function-forward-erased.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1function-local-shadow.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1function-value.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1own-annotation.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1shadow-erased.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1shadow-field.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1shadow-later.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1shadow-let-erased.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1shadow-let-local.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1shadow-let-parameter.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1shadow-result.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1simple-affine.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1simple-erased.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1fixtures~1simple-reusable.bend",
+          "/inputs/tests~1compiler-baseslice~1review~1receipts~1bounds-amendment.json",
+          "/inputs/tests~1compiler-baseslice~1review~1regen.py",
+          "/inputs/tests~1compiler-baseslice~1review~1trust.ts",
+          "/inputs/tests~1compiler-checker~1bounds.bend",
+          "/mutants/4/source_sha256",
+          "/review"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-baseslice/enum/receipts/enum.json"
+      },
+      {
+        "after_sha256": "8e295fe4890187a00ee5b498e9577991007a9728eb40c868cb09c0256f88bd6d",
+        "before_sha256": "f1287e8ef0e084f95e22c5ec7fb5aa4d796362f829e2afcd8422a1ab521ff0ce",
+        "changed_fields": [
+          "/bounds/0/sha256",
+          "/bounds/1/sha256",
+          "/generated/.local~1compiler-checker~1gate~1check-cli",
+          "/generated/.local~1compiler-checker~1gate~1check-cli.js",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1catalog.bend",
+          "/inputs/src~1check.bend",
+          "/inputs/src~1parse.bend",
+          "/inputs/src~1scope.bend",
+          "/inputs/src~1syntax.bend",
+          "/inputs/tests~1compiler-checker~1bounds.bend",
+          "/mutants/0/source_sha256",
+          "/mutants/1/source_sha256",
+          "/mutants/2/source_sha256",
+          "/mutants/3/source_sha256",
+          "/mutants/4/source_sha256",
+          "/mutants/5/source_sha256",
+          "/mutants/6/source_sha256"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-checker/receipts/checker.json"
+      },
+      {
+        "after_sha256": "08d3fdf399ed10dc5fff718e5a868aee4a97659a90be6dbde1419c80e32acea1",
+        "before_sha256": "79a4653796f22c66f5cf4d27e59c0c7847637a8f8eee6b49829f5c81696cf324",
+        "changed_fields": [
+          "/builds/0/sha256",
+          "/builds/1/sha256",
+          "/builds/2/sha256",
+          "/builds/3/sha256",
+          "/inputs/scripts~1run-wasm.mjs",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1catalog.bend",
+          "/inputs/src~1check.bend",
+          "/inputs/src~1parse.bend",
+          "/inputs/src~1scope.bend",
+          "/inputs/src~1syntax.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
+      },
+      {
+        "after_sha256": "b6b645b403256f6ed214d664f25666e8606be093e996e394118b182c6db70930",
+        "before_sha256": "d4b8ea5b69695eb23375c450f2a1ed9b90a969324b2d357aed4c5a1413859da7",
+        "changed_fields": [
+          "/builds/0/sha256",
+          "/builds/1/sha256",
+          "/builds/2/sha256",
+          "/builds/3/sha256",
+          "/builds/4/sha256",
+          "/builds/5/sha256",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1catalog.bend",
+          "/inputs/src~1check.bend",
+          "/inputs/src~1parse.bend",
+          "/inputs/src~1scope.bend",
+          "/inputs/src~1syntax.bend",
+          "/mutants/1/sha256",
+          "/mutants/2/sha256"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-fields/receipts/fields.json"
+      },
+      {
+        "after_sha256": "1feb77d8331fd440d0b9c9ab784db9eff44ab7d137353947e745dc04790da9fe",
+        "before_sha256": "48b82451cff86fee0c843adf9c1688be7fb38d25f8c1aeefda175bf6f4e72fbf",
+        "changed_fields": [
+          "/builds/0/sha256",
+          "/builds/1/sha256",
+          "/builds/2/sha256",
+          "/builds/3/sha256",
+          "/builds/4/sha256",
+          "/builds/5/sha256",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1catalog.bend",
+          "/inputs/src~1check.bend",
+          "/inputs/src~1parse.bend",
+          "/inputs/src~1scope.bend",
+          "/inputs/src~1syntax.bend",
+          "/mutants/0/sha256",
+          "/mutants/2/sha256"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-recursion/receipts/recursion.json"
+      },
+      {
+        "after_sha256": "44328ca4f3db2aa0a9c983eae03cb4a39b88ef1de01d698f470e44c8981f26bf",
+        "before_sha256": "95b9cbee2e97f20eeef689f3b6802259482abace8b9a287b89259ff7f44057ab",
+        "changed_fields": [
+          "/builds/0/sha256",
+          "/builds/1/sha256",
+          "/builds/2/sha256",
+          "/builds/3/sha256",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1catalog.bend",
+          "/inputs/src~1check.bend",
+          "/inputs/src~1parse.bend",
+          "/inputs/src~1scope.bend",
+          "/inputs/src~1syntax.bend",
+          "/mutants/0/source_sha256",
+          "/mutants/1/source_sha256",
+          "/mutants/2/source_sha256",
+          "/mutants/3/source_sha256",
+          "/mutants/4/source_sha256",
+          "/mutants/5/source_sha256",
+          "/mutants/6/source_sha256"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-structural/receipts/catalog.json"
+      },
+      {
+        "after_sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+        "before_sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/argument-order.wasm"
+      },
+      {
+        "after_sha256": "f37cbe2701400d9c18f9d6c68a01ea09b141f338356da7393068026b1e9a8a5f",
+        "before_sha256": "f37cbe2701400d9c18f9d6c68a01ea09b141f338356da7393068026b1e9a8a5f",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/argument-order.wat"
+      },
+      {
+        "after_sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+        "before_sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/branch-locals.wasm"
+      },
+      {
+        "after_sha256": "bb923ea26e63396f1ef4bebb4d2676e90af03973ca5237abb7eadd9af48e59bf",
+        "before_sha256": "bb923ea26e63396f1ef4bebb4d2676e90af03973ca5237abb7eadd9af48e59bf",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/branch-locals.wat"
+      },
+      {
+        "after_sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+        "before_sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/branch-maximum.wasm"
+      },
+      {
+        "after_sha256": "fba780290b6b5b23cc33e76f751ceaeb5bcc239c4d6ae5e4fbc022fd233a3d27",
+        "before_sha256": "fba780290b6b5b23cc33e76f751ceaeb5bcc239c4d6ae5e4fbc022fd233a3d27",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/branch-maximum.wat"
+      },
+      {
+        "after_sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+        "before_sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-argument.wasm"
+      },
+      {
+        "after_sha256": "ed75d9fe42c1d6bbab4e3a2e2a7bca580b9c402b7a5e4d2c0b48d09a1c364f18",
+        "before_sha256": "ed75d9fe42c1d6bbab4e3a2e2a7bca580b9c402b7a5e4d2c0b48d09a1c364f18",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-argument.wat"
+      },
+      {
+        "after_sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+        "before_sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-promote.wasm"
+      },
+      {
+        "after_sha256": "9f4d2dad526ec16960a22eda56c95aff89b5b56ab0e898e4c0c524f9f11ac602",
+        "before_sha256": "9f4d2dad526ec16960a22eda56c95aff89b5b56ab0e898e4c0c524f9f11ac602",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-promote.wat"
+      },
+      {
+        "after_sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+        "before_sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-reuse.wasm"
+      },
+      {
+        "after_sha256": "b0614c68d8d19f2bae6cf61161988a362cfe09050926200ecb92ac44ed26150e",
+        "before_sha256": "b0614c68d8d19f2bae6cf61161988a362cfe09050926200ecb92ac44ed26150e",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-reuse.wat"
+      },
+      {
+        "after_sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+        "before_sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/duplicate-parameters.wasm"
+      },
+      {
+        "after_sha256": "dcc379283c35854e1c33ecdcb84a0fdeaa30c7ec2d6e282d32bbb56d5089ee88",
+        "before_sha256": "dcc379283c35854e1c33ecdcb84a0fdeaa30c7ec2d6e282d32bbb56d5089ee88",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/duplicate-parameters.wat"
+      },
+      {
+        "after_sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+        "before_sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-affine-copy.wasm"
+      },
+      {
+        "after_sha256": "055a83f5f056c27e8e85fe7079234140853817cd0a4a6fde3e9ffdddab52aa6c",
+        "before_sha256": "055a83f5f056c27e8e85fe7079234140853817cd0a4a6fde3e9ffdddab52aa6c",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-affine-copy.wat"
+      },
+      {
+        "after_sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+        "before_sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-binding.wasm"
+      },
+      {
+        "after_sha256": "a558b16fe463395ffc8e0c069af06608af0890070624259ca9f8755bd275476d",
+        "before_sha256": "a558b16fe463395ffc8e0c069af06608af0890070624259ca9f8755bd275476d",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-binding.wat"
+      },
+      {
+        "after_sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+        "before_sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-cost.wasm"
+      },
+      {
+        "after_sha256": "ce35460d179426683ef0d4e71857cbfcb58acc51edf3abfe3f23cd912e041e11",
+        "before_sha256": "ce35460d179426683ef0d4e71857cbfcb58acc51edf3abfe3f23cd912e041e11",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-cost.wat"
+      },
+      {
+        "after_sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+        "before_sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-forward-call.wasm"
+      },
+      {
+        "after_sha256": "df456ef2da426ba381ab4d9782d80c09d43425855b4a16c93706827ed10992da",
+        "before_sha256": "df456ef2da426ba381ab4d9782d80c09d43425855b4a16c93706827ed10992da",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-forward-call.wat"
+      },
+      {
+        "after_sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+        "before_sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-forward.wasm"
+      },
+      {
+        "after_sha256": "801b2be5d507f6d7769431dfb5c2225fc6cb15a1c056f50c8656de1db2dea4b7",
+        "before_sha256": "801b2be5d507f6d7769431dfb5c2225fc6cb15a1c056f50c8656de1db2dea4b7",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-forward.wat"
+      },
+      {
+        "after_sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+        "before_sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/flag.wasm"
+      },
+      {
+        "after_sha256": "d89c671580c74c91c0770b588ff7e817ab138b5119c51c5ad93f731fa3f612b5",
+        "before_sha256": "d89c671580c74c91c0770b588ff7e817ab138b5119c51c5ad93f731fa3f612b5",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/flag.wat"
+      },
+      {
+        "after_sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+        "before_sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/forward-type.wasm"
+      },
+      {
+        "after_sha256": "9f7d13f0bccebd0d66a878c80e83ad49442af7a24856136079be0d8819df2f0c",
+        "before_sha256": "9f7d13f0bccebd0d66a878c80e83ad49442af7a24856136079be0d8819df2f0c",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/forward-type.wat"
+      },
+      {
+        "after_sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+        "before_sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-function-index.wasm"
+      },
+      {
+        "after_sha256": "1aa3bb5aca7304f4d4df965e8a0f9b7cdba42eb484e88fa1818d4e83f4c053f0",
+        "before_sha256": "1aa3bb5aca7304f4d4df965e8a0f9b7cdba42eb484e88fa1818d4e83f4c053f0",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-function-index.wat"
+      },
+      {
+        "after_sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+        "before_sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-local-index.wasm"
+      },
+      {
+        "after_sha256": "0a2deda6f68819e91c58fe28d63be626ab4e23200fb1d1f98a9073fc9b739d68",
+        "before_sha256": "0a2deda6f68819e91c58fe28d63be626ab4e23200fb1d1f98a9073fc9b739d68",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-local-index.wat"
+      },
+      {
+        "after_sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+        "before_sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-tags.wasm"
+      },
+      {
+        "after_sha256": "885c9fbaa6902d8ace1381242f42eb18d1a41c1424667d6afa4cfa63d74acf45",
+        "before_sha256": "885c9fbaa6902d8ace1381242f42eb18d1a41c1424667d6afa4cfa63d74acf45",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-tags.wat"
+      },
+      {
+        "after_sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+        "before_sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/matched-duplicate.wasm"
+      },
+      {
+        "after_sha256": "6abb33d24f0ee5d36ac5dcee8b12367814ffc3f6be9429afbcbcef5f3d199002",
+        "before_sha256": "6abb33d24f0ee5d36ac5dcee8b12367814ffc3f6be9429afbcbcef5f3d199002",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/matched-duplicate.wat"
+      },
+      {
+        "after_sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+        "before_sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/matched-return.wasm"
+      },
+      {
+        "after_sha256": "00e0dc95212b73916e9a86c1f27044efddd153cd361521905ab929552801ce58",
+        "before_sha256": "00e0dc95212b73916e9a86c1f27044efddd153cd361521905ab929552801ce58",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/matched-return.wat"
+      },
+      {
+        "after_sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+        "before_sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/mixed-types.wasm"
+      },
+      {
+        "after_sha256": "a3d78294553b4f77e1af29fae54dc4660c315d9f70ba3d06776dcb023e03f096",
+        "before_sha256": "a3d78294553b4f77e1af29fae54dc4660c315d9f70ba3d06776dcb023e03f096",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/mixed-types.wat"
+      },
+      {
+        "after_sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+        "before_sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/nested-match.wasm"
+      },
+      {
+        "after_sha256": "170708736dfd0613119da1cbb49eb859b5a49e24e9208990476da830e4f247c8",
+        "before_sha256": "170708736dfd0613119da1cbb49eb859b5a49e24e9208990476da830e4f247c8",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/nested-match.wat"
+      },
+      {
+        "after_sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+        "before_sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/renamed.wasm"
+      },
+      {
+        "after_sha256": "732c5e3fcf5f9c98ae91b1f8440745e46e6f973001dabc7fb1c32d8db4cc237d",
+        "before_sha256": "732c5e3fcf5f9c98ae91b1f8440745e46e6f973001dabc7fb1c32d8db4cc237d",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/renamed.wat"
+      },
+      {
+        "after_sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+        "before_sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/reordered-arms.wasm"
+      },
+      {
+        "after_sha256": "4e8644f95652b7b8a8fd323398a61b5ac1e9f20e366e603530c9641a27474fd1",
+        "before_sha256": "4e8644f95652b7b8a8fd323398a61b5ac1e9f20e366e603530c9641a27474fd1",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/reordered-arms.wat"
+      },
+      {
+        "after_sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+        "before_sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/shadowing.wasm"
+      },
+      {
+        "after_sha256": "9f4d66d630312e4f777df41b452c4a5d544bb45f0c2ba14ce96fb120032e819e",
+        "before_sha256": "9f4d66d630312e4f777df41b452c4a5d544bb45f0c2ba14ce96fb120032e819e",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/shadowing.wat"
+      },
+      {
+        "after_sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+        "before_sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/three-colors.wasm"
+      },
+      {
+        "after_sha256": "851bad13c2e5b0dc08aad26af8613daa667f30d885f9372353dbd17d30b37bda",
+        "before_sha256": "851bad13c2e5b0dc08aad26af8613daa667f30d885f9372353dbd17d30b37bda",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/three-colors.wat"
+      },
+      {
+        "after_sha256": "0d83903a32accc5dc8a26101d441434ecb80f6665758482b5c32a4006327742c",
+        "before_sha256": "91a6afad18b6335b1e4e9f927111bc7fd5033d777125f136c94ef6ca13350c49",
+        "changed_fields": [
+          "/builds/0/sha256",
+          "/builds/1/sha256",
+          "/builds/2/sha256",
+          "/builds/3/sha256",
+          "/inputs/scripts~1run-wasm.mjs",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1catalog.bend",
+          "/inputs/src~1check.bend",
+          "/inputs/src~1parse.bend",
+          "/inputs/src~1scope.bend",
+          "/inputs/src~1syntax.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-wasm/receipts/wasm.json"
+      },
+      {
+        "after_sha256": "8705891198f980aebde0e7d11b0b5843515f7ee5909a83bf71014be3e79c8235",
+        "before_sha256": "3d110d90f66eaf460054dbbe0144cf96602e8fd13625d8f69629401c56e63f10",
+        "changed_fields": [
+          "/classification/downstream_builds/0/sha256",
+          "/classification/downstream_builds/1/sha256",
+          "/classification/downstream_builds/2/sha256",
+          "/classification/downstream_builds/3/sha256",
+          "/classification/downstream_builds/4/sha256",
+          "/classification/downstream_builds/5/sha256",
+          "/classification/mutants/0/mutated_sha256",
+          "/classification/mutants/1/mutated_sha256",
+          "/classification/mutants/2/mutated_sha256",
+          "/classification/mutants/3/mutated_sha256",
+          "/classification/mutants/4/mutated_sha256",
+          "/classification/mutants/5/mutated_sha256",
+          "/classification/mutants/6/mutated_sha256",
+          "/generated/.local~1compiler-frontend~1parse-cli",
+          "/generated/.local~1compiler-frontend~1parse-cli.js",
+          "/inputs/src~1catalog.bend",
+          "/inputs/src~1check.bend",
+          "/inputs/src~1parse.bend",
+          "/inputs/src~1scope.bend",
+          "/inputs/src~1syntax.bend",
+          "/mutants/1/mutated_sha256",
+          "/mutants/2/mutated_sha256",
+          "/mutants/3/mutated_sha256"
+        ],
+        "classification": "semantic",
+        "path": "tests/subsets/receipts/frontend.json"
+      }
+    ],
+    "snapshot_sha256": "701153d9fa8176462d1f72c7df373186144f285f55b3ed537230ff472e02cd26",
+    "status": "passed"
+  },
+  "historical_failed_runs": [
+    {
+      "source_head": "6d2fab6e",
+      "raw_summary_sha256": "9dd8923582997c6c7d77d4d1d0e23f16a073e2bc1a814bdf241c37d3133e1890",
+      "total_seconds": 524.752313,
+      "status": "failed",
+      "gates": [
+        {
+          "command": [
+            "python3",
+            "tests/subsets/check_frontend.py"
+          ],
+          "counts": {
+            "boundaries": 24,
+            "fixtures": 14,
+            "lane_observations": 28,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "frontend",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-checker/check.py"
+          ],
+          "counts": {},
+          "exit_code": 1,
+          "name": "checker",
+          "status": "failed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-structural/check.py"
+          ],
+          "counts": {
+            "bounds": 4,
+            "fixtures": 16,
+            "lane_observations": 64,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "structural",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields/check.py"
+          ],
+          "counts": {
+            "bound_observations": 12,
+            "bounds": 2,
+            "budgets": 36,
+            "fixtures": 40,
+            "host_boundaries": 6,
+            "lane_observations": 240,
+            "mutants": 9
+          },
+          "exit_code": 0,
+          "name": "fields",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 44,
+            "execution_lanes": 2,
+            "fixtures": 25,
+            "mutants": 7,
+            "reference_calls": 90,
+            "rejects": 64
+          },
+          "exit_code": 0,
+          "name": "wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-wasm/trust.ts"
+          ],
+          "counts": {
+            "entries": 3,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "wasm-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-fields/trust.ts"
+          ],
+          "counts": {
+            "entries": 4,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "fields-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-structural/trust.ts"
+          ],
+          "counts": {
+            "entries": 2,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "structural-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/owned-store/check.py"
+          ],
+          "counts": {
+            "cases": 3532,
+            "execution_lanes": 2,
+            "literal_witnesses": 15,
+            "mutants": 6
+          },
+          "exit_code": 0,
+          "name": "owned-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/flat-store/check.py"
+          ],
+          "counts": {
+            "bun": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            },
+            "mutants": 9,
+            "native": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            }
+          },
+          "exit_code": 0,
+          "name": "flat-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-recursion/check.py"
+          ],
+          "counts": {
+            "fixtures": 19,
+            "mutants": 3
+          },
+          "exit_code": 0,
+          "name": "recursion",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 30,
+            "fixtures": 8,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "fields-wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "node",
+            "tools/census/census.mjs",
+            "--check"
+          ],
+          "counts": {
+            "classes": 40,
+            "declarations": 431,
+            "files": 30
+          },
+          "exit_code": 0,
+          "name": "census",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "-s",
+            "lint:verify"
+          ],
+          "counts": {
+            "law_rules": 8,
+            "tests": 127
+          },
+          "exit_code": 0,
+          "name": "lint:verify",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "-B",
+            "tests/compiler-baseslice/enum/check.py"
+          ],
+          "counts": {
+            "agreed_books": 2,
+            "byte_identical_modules": 2,
+            "declarations": 7,
+            "deferred_books": 1,
+            "evaluator_observations": 62,
+            "execution_lanes": 2,
+            "fixtures": 7,
+            "laws": 8,
+            "mutants": 5,
+            "output_preservation_checks": 10,
+            "proof_holes": 0,
+            "reference_calls": 31,
+            "rejected_books": 4,
+            "review_agreed_books": 13,
+            "review_byte_identical_modules": 12,
+            "review_evaluator_observations": 26,
+            "review_fixtures": 26,
+            "review_lane_observations": 156,
+            "review_laws": 6,
+            "review_mutants": 3,
+            "review_output_preservation_checks": 28,
+            "review_proof_holes": 0,
+            "review_rejected_books": 10,
+            "review_unsupported_books": 3,
+            "review_wasm_observations": 24,
+            "seed_calls": 32,
+            "seed_lane_observations": 64,
+            "wasm_observations": 62
+          },
+          "exit_code": 0,
+          "name": "base-enum",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "source_head": "5ea3a877",
+      "raw_summary_sha256": "906e1100eee0328cacd891bb2033a3681468000d412a6b0e45ade67b2f62820d",
+      "total_seconds": 520.55642,
+      "status": "failed",
+      "gates": [
+        {
+          "command": [
+            "python3",
+            "tests/subsets/check_frontend.py"
+          ],
+          "counts": {},
+          "exit_code": 1,
+          "name": "frontend",
+          "status": "failed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-checker/check.py"
+          ],
+          "counts": {
+            "bound_observations": 16,
+            "bounds": 2,
+            "budgets": 10,
+            "fixtures": 49,
+            "lane_observations": 98,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "checker",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-structural/check.py"
+          ],
+          "counts": {
+            "bounds": 4,
+            "fixtures": 16,
+            "lane_observations": 64,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "structural",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields/check.py"
+          ],
+          "counts": {
+            "bound_observations": 12,
+            "bounds": 2,
+            "budgets": 36,
+            "fixtures": 40,
+            "host_boundaries": 6,
+            "lane_observations": 240,
+            "mutants": 9
+          },
+          "exit_code": 0,
+          "name": "fields",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 44,
+            "execution_lanes": 2,
+            "fixtures": 25,
+            "mutants": 7,
+            "reference_calls": 90,
+            "rejects": 64
+          },
+          "exit_code": 0,
+          "name": "wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-wasm/trust.ts"
+          ],
+          "counts": {
+            "entries": 3,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "wasm-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-fields/trust.ts"
+          ],
+          "counts": {
+            "entries": 4,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "fields-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-structural/trust.ts"
+          ],
+          "counts": {
+            "entries": 2,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "structural-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/owned-store/check.py"
+          ],
+          "counts": {
+            "cases": 3532,
+            "execution_lanes": 2,
+            "literal_witnesses": 15,
+            "mutants": 6
+          },
+          "exit_code": 0,
+          "name": "owned-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/flat-store/check.py"
+          ],
+          "counts": {
+            "bun": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            },
+            "mutants": 9,
+            "native": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            }
+          },
+          "exit_code": 0,
+          "name": "flat-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-recursion/check.py"
+          ],
+          "counts": {
+            "fixtures": 19,
+            "mutants": 3
+          },
+          "exit_code": 0,
+          "name": "recursion",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 30,
+            "fixtures": 8,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "fields-wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "node",
+            "tools/census/census.mjs",
+            "--check"
+          ],
+          "counts": {
+            "classes": 40,
+            "declarations": 432,
+            "files": 30
+          },
+          "exit_code": 0,
+          "name": "census",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "-s",
+            "lint:verify"
+          ],
+          "counts": {
+            "law_rules": 8,
+            "tests": 127
+          },
+          "exit_code": 0,
+          "name": "lint:verify",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "-B",
+            "tests/compiler-baseslice/enum/check.py"
+          ],
+          "counts": {
+            "agreed_books": 2,
+            "byte_identical_modules": 2,
+            "declarations": 7,
+            "deferred_books": 1,
+            "evaluator_observations": 62,
+            "execution_lanes": 2,
+            "fixtures": 7,
+            "laws": 8,
+            "mutants": 5,
+            "output_preservation_checks": 10,
+            "proof_holes": 0,
+            "reference_calls": 31,
+            "rejected_books": 4,
+            "review_agreed_books": 13,
+            "review_amendment_seed_witnesses": 4,
+            "review_byte_identical_modules": 12,
+            "review_evaluator_observations": 26,
+            "review_fixtures": 27,
+            "review_lane_observations": 162,
+            "review_laws": 7,
+            "review_mutants": 3,
+            "review_output_preservation_checks": 30,
+            "review_proof_holes": 0,
+            "review_rejected_books": 10,
+            "review_unsupported_books": 4,
+            "review_wasm_observations": 24,
+            "seed_calls": 32,
+            "seed_lane_observations": 64,
+            "wasm_observations": 62
+          },
+          "exit_code": 0,
+          "name": "base-enum",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "source_head": "5ea3a877",
+      "raw_summary_sha256": "f74707a8f26bb27a4d6ef42fb3cb3dc0d2404d266b0023fb9830234528c0da20",
+      "total_seconds": 1148.40279,
+      "status": "failed",
+      "gates": [
+        {
+          "command": [
+            "python3",
+            "tests/subsets/check_frontend.py"
+          ],
+          "counts": {},
+          "exit_code": 1,
+          "name": "frontend",
+          "status": "failed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-checker/check.py"
+          ],
+          "counts": {
+            "bound_observations": 16,
+            "bounds": 2,
+            "budgets": 10,
+            "fixtures": 49,
+            "lane_observations": 98,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "checker",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-structural/check.py"
+          ],
+          "counts": {
+            "bounds": 4,
+            "fixtures": 16,
+            "lane_observations": 64,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "structural",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields/check.py"
+          ],
+          "counts": {
+            "bound_observations": 12,
+            "bounds": 2,
+            "budgets": 36,
+            "fixtures": 40,
+            "host_boundaries": 6,
+            "lane_observations": 240,
+            "mutants": 9
+          },
+          "exit_code": 0,
+          "name": "fields",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 44,
+            "execution_lanes": 2,
+            "fixtures": 25,
+            "mutants": 7,
+            "reference_calls": 90,
+            "rejects": 64
+          },
+          "exit_code": 0,
+          "name": "wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-wasm/trust.ts"
+          ],
+          "counts": {
+            "entries": 3,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "wasm-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-fields/trust.ts"
+          ],
+          "counts": {
+            "entries": 4,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "fields-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-structural/trust.ts"
+          ],
+          "counts": {
+            "entries": 2,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "structural-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/owned-store/check.py"
+          ],
+          "counts": {
+            "cases": 3532,
+            "execution_lanes": 2,
+            "literal_witnesses": 15,
+            "mutants": 6
+          },
+          "exit_code": 0,
+          "name": "owned-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/flat-store/check.py"
+          ],
+          "counts": {
+            "bun": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            },
+            "mutants": 9,
+            "native": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            }
+          },
+          "exit_code": 0,
+          "name": "flat-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-recursion/check.py"
+          ],
+          "counts": {
+            "fixtures": 19,
+            "mutants": 3
+          },
+          "exit_code": 0,
+          "name": "recursion",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 30,
+            "fixtures": 8,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "fields-wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "node",
+            "tools/census/census.mjs",
+            "--check"
+          ],
+          "counts": {
+            "classes": 40,
+            "declarations": 432,
+            "files": 30
+          },
+          "exit_code": 0,
+          "name": "census",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "-s",
+            "lint:verify"
+          ],
+          "counts": {
+            "law_rules": 8,
+            "tests": 127
+          },
+          "exit_code": 0,
+          "name": "lint:verify",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "-B",
+            "tests/compiler-baseslice/enum/check.py"
+          ],
+          "counts": {
+            "agreed_books": 2,
+            "byte_identical_modules": 2,
+            "declarations": 7,
+            "deferred_books": 1,
+            "evaluator_observations": 62,
+            "execution_lanes": 2,
+            "fixtures": 7,
+            "laws": 8,
+            "mutants": 5,
+            "output_preservation_checks": 10,
+            "proof_holes": 0,
+            "reference_calls": 31,
+            "rejected_books": 4,
+            "review_agreed_books": 13,
+            "review_amendment_seed_witnesses": 4,
+            "review_byte_identical_modules": 12,
+            "review_evaluator_observations": 26,
+            "review_fixtures": 27,
+            "review_lane_observations": 162,
+            "review_laws": 7,
+            "review_mutants": 3,
+            "review_output_preservation_checks": 30,
+            "review_proof_holes": 0,
+            "review_rejected_books": 10,
+            "review_unsupported_books": 4,
+            "review_wasm_observations": 24,
+            "seed_calls": 32,
+            "seed_lane_observations": 64,
+            "wasm_observations": 62
+          },
+          "exit_code": 0,
+          "name": "base-enum",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "limits": "One complete passing run; failed runs are not combined. Tested source identities match the final code. Later evidence-only commits do not change them. No shared execution receipt was refreshed and no live Perch qualification is claimed.",
+  "environment": {
+    "BEND_NO_TELEMETRY": "1",
+    "PATH_prepend": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "SDKROOT": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+  }
+}

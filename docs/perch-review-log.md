@@ -1027,3 +1027,35 @@ The fast pre-review metadata checks also compared a declared main snapshot to th
 branch head, treated executed census JSON as prose and missed a relative receipt
 link. The report records the exact snapshot-hash witnesses and producing/reading
 code. The audit remains partial; these notes do not constitute a full pass.
+
+## 2026-09-29 — baseslice review: inspect direct helper callers and witnesses
+
+The first repair checkpoint changed `catalog.parameters`' arity. The new CLI
+regressions and helper proofs passed, but the full checker gate builds a direct
+caller in `tests/compiler-checker/bounds.bend`, which still uses three arguments.
+The entry is restored, with lexical state carried by `parameters_in` internally.
+
+That restored caller exposed a second issue: its first synthetic binder `N0`
+shadows the type `N0` used in later annotations. The pinned seed rejects the same
+source shape. A [separate seed-derived amendment](../tests/compiler-baseslice/review/BOUNDS-AMENDMENT.md)
+renames only parameter binders; the 256/257 assertions, quantities and resource
+limits stay unchanged. Four frozen seed witnesses retain the rejected shape and
+accepted renamed controls in both execution lanes. The first failed full run
+is retained separately from final acceptance.
+
+Prevention: search direct callers across `src`, tests and research before changing
+a helper signature. When fixing resolution, inspect synthetic AST witnesses for
+newly visible namespace collisions before treating an early rejection as a
+resource-bound failure. Preserve the semantic repair; amend an invalid positive
+witness from seed evidence instead of weakening checking or changing an assertion.
+The [round report](../tests/compiler-baseslice/review/REPORT.md) records the results.
+No provider review or elapsed-effort estimate is claimed.
+
+Final acceptance is one 15/15 run with serial scheduling and the installed Xcode
+clang selected directly through PATH plus its installed SDKROOT. The intervening
+default-scheduling frontend build timeout and ordinary-PATH clang-discovery
+failure remain separate in [the portable receipt](../tests/compiler-baseslice/review/receipts/gates.json).
+Host selection leaves every frozen harness, compiler flag and program budget unchanged.
+The receipt records the clang version/hash and all 91 matching tested input
+identities. Host build failures remain host evidence; passing gates from different
+runs are never combined into acceptance.

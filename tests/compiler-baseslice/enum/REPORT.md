@@ -1,5 +1,10 @@
 # baseslice implementation report
 
+Current repair status is in [the review-round report](../review/REPORT.md).
+The body and stored receipts below retain the pre-review BS1 checkpoint at
+`a7817bf8`; they are historical evidence after the production repairs. The new
+round stores its own passing-suite receipt without refreshing shared receipts.
+
 The Base-slice plan and its first independent step, **BS1 enum-source
 qualification**, are complete. `npm run -s gates -- --jobs=1` passes **15/15**
 registered gates with the original frozen harnesses and limits. This is acceptance
