@@ -233,8 +233,12 @@
     "abi_expectations": "tests/compiler-generics/abi-expectations.json",
     "evidence": "tests/compiler-generics/receipts/generics.json",
     "proof_entries": [
+      "src/PROOF.bend",
       "src/types-PROOF.bend",
-      "src/type-erasure-PROOF.bend"
+      "src/type-erasure-PROOF.bend",
+      "src/catalog-PROOF.bend",
+      "src/generic-catalog-PROOF.bend",
+      "src/type-parse-PROOF.bend"
     ],
     "accepted": [
       "erased type parameters",
@@ -261,6 +265,7 @@
       "generic_family": "boxed cell for every instantiation; one erased representation witness also boxes nullary constructors",
       "monomorphic_enum": "constructor ordinal",
       "type_variable": "opaque word with representation fixed by checked instantiation",
+      "abstract_signature": "0xffffffff is not a catalog index; eval-cli refuses live abstract parameters/results as HostFailure invoke abstract-signature",
       "type_arguments": "checked, then erased; no live parameter, local, field slot or specialization",
       "function_bodies": "one per source function",
       "host_boundary": "closed monomorphic enum signatures only; other exports are internal calls"

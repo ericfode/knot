@@ -152,8 +152,10 @@ use, a function-typed parameter:
 - Knot reports `Unsupported parse parameter-type 52:53:5:17` at the `-` of
   `->` (byte 52, line 5, column 17), derived from the source bytes.
 
-The classification-mutant count stays at seven. The closures increment will
-need to supersede this witness when it accepts function-typed parameters.
+The classification-mutant count stays at seven. The generics increment merges after closures and owns this witness
+supersession at integration under D26. See
+[the merge plan](../compiler-generics/MERGE-WITH-CLOSURES.md); neither mutant
+may silently disappear when the function-typed parameter becomes accepted.
 
 Six classify-2 cases (`application-parameter`, `-return`, `-binding` and their
 `-after-prefix` twins), their three classification-gate mutants and the laws

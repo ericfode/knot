@@ -28,7 +28,8 @@ drops spaces, so the type parser checks source adjacency. A gap inside `&2`
 list or a header parameter type, is `Unsupported parse spacing`. The seed
 accepts a gap before the `>` of a single-argument list and rejects it
 elsewhere. Knot does not reproduce that position-dependent rule, so every
-closing gap is Unsupported. A bare header binder may still precede a spaced
+closing gap is Unsupported. Term arrows and constructor braces also require source adjacency (law
+`spaced_term_token`); declaration braces may be spaced. A bare header binder may still precede a spaced
 `>` (`type Seq<a >`).
 
 - `Name<..>` instantiates a family. A short application fills every omitted
@@ -49,7 +50,9 @@ fields and bodies. `generics.bend` checks every declaration, including unused
 ones, before returning a runtime book. A call checks every argument, erased
 ones included; an erased argument consumes no affine occurrence. A live
 self-call must pass, as its first live argument, a strict field descendant of
-the function's first live parameter.
+the function's first live parameter that has not itself been matched. Rebuilt
+matched descendants remain Unsupported check recursive-call, as in the
+monomorphic descent rule; this increment does not extend that rule.
 
 `check-dispatch.bend` is the one checking entry. A book with generic syntax (a
 generic datatype, a typed result, or a typed parameter) goes to the generic
@@ -83,7 +86,12 @@ function has one emitted body with its erased arguments removed.
 
 Compile generic books with the fields-profile driver. The default enum emitter
 reports `Unsupported check constructor-fields` for a boxed family. Host calls
-use closed monomorphic enum signatures only.
+use closed monomorphic enum signatures only. An erased abstract type has the
+reserved runtime-signature marker 0xffffffff rather than datatype zero. The
+evaluator CLI refuses a live abstract parameter or result as `HostFailure
+invoke abstract-signature`; internal generic calls still use checked values.
+The Wasm host adapter does not yet refuse cell-valued exports, so callers must
+retain the enum-only ABI precondition (adapter-owner follow-up).
 
 ## Boundaries
 
@@ -100,5 +108,5 @@ type sugar, function types and templates.
   and `empty_datatype`).
 
 Laws in `types-LAWS.bend`, `type-erasure-LAWS.bend`, `catalog-LAWS.bend`,
-`check-LAWS.bend` and `LAWS.bend` are proved; corpus agreement is finite differential evidence, not
+`generic-catalog-LAWS.bend`, `type-parse-LAWS.bend`, `check-LAWS.bend` and `LAWS.bend` are proved; corpus agreement is finite differential evidence, not
 a checker-soundness or compiler-correctness theorem.

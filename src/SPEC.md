@@ -349,3 +349,13 @@ checks and runtime agreement are distinct evidence. Do not claim a general
 compiler-correctness or checker-soundness theorem. Final receipts must identify
 source hashes, seed hashes, commands, generated modules, tool versions, Perch
 coverage/adjudications and remaining limitations.
+
+## Generic proof limits retained under D21
+
+The restated generic-header law is a bounded parser acceptance equation, not
+a general theorem for headers. The retired return/binding type-application
+Unsupported equations do not discharge general application-acceptance or
+parser-soundness obligations. Those obligations remain open, with the frozen
+application corpus and seed/evaluator/Wasm agreement as finite evidence
+([generic law review](../tests/compiler-generics/LAW_REVIEW.md)). Subject
+relocation preserves every moved statement and proof verbatim.

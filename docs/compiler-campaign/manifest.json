@@ -166,10 +166,19 @@
         "src/lex.bend",
         "src/parse.bend",
         "src/PROOF.bend",
-        "src/type-parse.bend"
+        "src/type-parse.bend",
+        "src/type-parse-LAWS.bend",
+        "src/type-parse-PROOF.bend"
       ],
-      "task": "src/SPEC.md",
-      "notes": "Frontend boundary laws and their complete proof entry."
+      "task": "research/compiler-generics/FRONTEND-LAWS-TASK.md",
+      "notes": "Frontend token/declaration boundaries; the type-parsing algebra is qualified in its separate law family.",
+      "selected_files": [
+        "src/syntax.bend",
+        "src/LAWS.bend",
+        "src/lex.bend",
+        "src/parse.bend",
+        "src/PROOF.bend"
+      ]
     },
     {
       "name": "checker-laws",
@@ -186,7 +195,9 @@
         "src/lex.bend",
         "src/parse.bend",
         "src/patterns.bend",
-        "src/type-parse.bend"
+        "src/type-parse.bend",
+        "src/type-parse-LAWS.bend",
+        "src/type-parse-PROOF.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -215,7 +226,9 @@
         "src/parse.bend",
         "src/patterns.bend",
         "src/scope.bend",
-        "src/type-parse.bend"
+        "src/type-parse.bend",
+        "src/type-parse-LAWS.bend",
+        "src/type-parse-PROOF.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -247,7 +260,9 @@
         "src/runtime-PROOF.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/type-parse.bend"
+        "src/type-parse.bend",
+        "src/type-parse-LAWS.bend",
+        "src/type-parse-PROOF.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -280,7 +295,9 @@
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
         "src/wasm-bytes.bend",
-        "src/type-parse.bend"
+        "src/type-parse.bend",
+        "src/type-parse-LAWS.bend",
+        "src/type-parse-PROOF.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -315,7 +332,9 @@
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
         "src/wasm-bytes.bend",
-        "src/type-parse.bend"
+        "src/type-parse.bend",
+        "src/type-parse-LAWS.bend",
+        "src/type-parse-PROOF.bend"
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -412,8 +431,7 @@
         "src/types-LAWS.bend",
         "src/catalog.bend",
         "src/scope.bend",
-        "src/patterns.bend",
-        "src/type-parse.bend"
+        "src/patterns.bend"
       ],
       "task": "research/compiler-generics/SPEC.md",
       "notes": "Universal evaluator erasure steps and representation laws; collaborators enter as interfaces.",
@@ -442,6 +460,38 @@
       "selected_files": [
         "src/check-dispatch.bend"
       ]
+    },
+    {
+      "name": "generic-catalog-laws",
+      "files": [
+        "src/generic-catalog-LAWS.bend",
+        "src/generic-catalog-PROOF.bend",
+        "src/generic-catalog.bend",
+        "src/types.bend",
+        "src/syntax.bend",
+        "src/core.bend"
+      ],
+      "selected_files": [
+        "src/generic-catalog-LAWS.bend",
+        "src/generic-catalog-PROOF.bend"
+      ],
+      "task": "research/compiler-generics/SPEC.md",
+      "notes": "Unchanged empty-family, type-level-definition and constructor-visibility laws with their proofs."
+    },
+    {
+      "name": "generic-type-parsing-laws",
+      "files": [
+        "src/type-parse-LAWS.bend",
+        "src/type-parse-PROOF.bend",
+        "src/type-parse.bend",
+        "src/syntax.bend"
+      ],
+      "selected_files": [
+        "src/type-parse-LAWS.bend",
+        "src/type-parse-PROOF.bend"
+      ],
+      "task": "research/compiler-generics/SPEC.md",
+      "notes": "Unchanged term-argument, marked-binder and quantity-adjacency laws with their proofs."
     }
   ],
   "context": "interfaces-v1"

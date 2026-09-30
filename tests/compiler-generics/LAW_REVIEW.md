@@ -30,13 +30,14 @@ nullary constructors, while preserving live signatures and field order.
 | Unsupported forms never bypass checking | Parser/catalog/term boundaries | Closure/template pins, live type values, type-variable application and constructor-local type fixtures |
 | A type name that names a definition is Unsupported, in any declaration order | `type_level_definition` (the definition scope below type variables) | Eight seed-valid type-level-names fixtures; type-level-definition-unknown mutant |
 | A marked bare binder is a parameter missing its type | `marked_binder` | Six seed-rejected marked-binders fixtures and three agreeing twins; marked-binder-quantity mutant |
-| A constructor pattern sees only the datatypes above it | `pattern_order` over the shared `visible` predicate | Five seed-rejected pattern-order fixtures (the binding variant rejects its local scrutinee) and three agreeing controls; pattern-order-forward mutant |
+| A constructor pattern sees only the datatypes above it | `pattern_order` over the shared `visible` predicate | Four seed-rejected pattern-order fixtures and one local-scrutinee control and three agreeing controls; pattern-order-forward mutant |
 | A gap inside a token the seed lexes as glued is Unsupported | `spaced_quantity`; the type parser's `glued`, `flush` and `apart` for `&2`, `<&>` and a closing `>` | Ten seed-rejected spacing fixtures, four seed-valid single-argument closings pinned Unsupported, four agreeing controls; quantity-gap-glued, meet-gap-glued and close-gap-glued mutants |
 
 `src/types-PROOF.bend` fills all 12 algebra laws. The substitution proof is an
 induction over expressions with a separate lookup/composition lemma; it is not
-limited to fixture instances. `src/type-erasure-PROOF.bend` fills all 21 erasure,
-catalog-boundary and spacing laws. Its evaluator equations quantify over environments, frames, arguments and
+limited to fixture instances. `src/type-erasure-PROOF.bend` fills 18 erasure laws. The three catalog
+boundary laws and three type-parsing laws have separate complete proof entries;
+their six statements and proofs moved verbatim (D21). Its evaluator equations quantify over environments, frames, arguments and
 books, with an explicit one-step fuel adjustment. They describe existing erased
 machine transitions; they do not prove whole-program source erasure or checker
 soundness. The complete frontend proof also fills the restated generic-header
@@ -67,3 +68,10 @@ lexical lookup fails (one shared `scope.bend` rule,
 `term_name`), and reject local type-level normalization as Unsupported.
 `check-dispatch.bend` chooses the path per book. Empty type-argument lists
 are seed-invalid.
+
+Review-round-5 rulings, boundary dispositions and the binding-control count are
+in [RULINGS.md](RULINGS.md). `spaced_term_token` proves the shared term-token
+refusal; nine newly frozen spacing fixtures preserve declaration-brace controls.
+`abstract_identity` reserves an abstract runtime-signature marker, with four
+literal evaluator host refusals and unchanged closed seed calls. General parser
+soundness and generic application acceptance remain open proof obligations.
