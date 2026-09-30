@@ -61,11 +61,17 @@ forty-book suite and its expectations remain unchanged.
   check, eval and compile in both compiler builds and creates no fresh artifact.
 
 [LAW_REVIEW.md](LAW_REVIEW.md) fixes the witnesses, mutation obligations, trust
-boundary and reading hypothesis. [receipts/enum.json](receipts/enum.json) records
-the original BS1 execution; all 44 input hashes still match. The full-suite run
-re-executed BS1 successfully from the same inputs.
+boundary and reading hypothesis. The original 44-input BS1 execution is retained
+at Git checkpoint `211b5034`. [receipts/enum.json](receipts/enum.json) now records
+BS1 plus the review regressions from the later complete precheck run; all 82
+current input hashes match. [The precheck report](../review/PRECHECK.md) records
+its source checkpoint and exact fresh results.
 
 ## Fresh gate results
+
+The table below describes the original BS1 checkpoint. That run is retained in
+the suite receipt's `historical_passed_runs`; current results are in the precheck
+report linked above.
 
 [receipts/gates.json](receipts/gates.json) retains every exact normalized count,
 source identities, receipt comparisons and the raw run's hash. The command was

@@ -2,6 +2,11 @@
 
 Starting head: `a7817bf89adbdbc819412af64f91d7265ad6ceb8`.
 
+This report describes the review checkpoint `264b9104`; its suite receipt now
+preserves that passing run under `historical_passed_runs`. The original base-enum
+receipt remains in that Git checkpoint. [PRECHECK.md](PRECHECK.md) records the
+later executor repairs, current input identities and fresh acceptance.
+
 All three confirmed major findings are fixed. One complete final suite passes
 15/15; its exact results and portable receipts are recorded below. No major
 finding is disputed.
