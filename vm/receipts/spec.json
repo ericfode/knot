@@ -1,5 +1,5 @@
 {
- "date": "2026-09-29T23:57:36.356657+00:00",
+ "date": "2026-09-30T01:13:06.556459+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "87b8c156458aab9d70cd3744e0dfe1e5b28ba6f1b7c9e385892615f1d77835d5",
-  "vm/SPEC.md": "0f49aa4e4af188a6bf8353b81f1015909333f5e341d56233e16e1af76001de22",
+  "vm/DECISIONS.md": "f4b14c0cf0a8d8a398aaa315d4080e833d79b17497cc72857ba06a259a4e7600",
+  "vm/SPEC.md": "20e56d5bd4ac9dc7373512c00a40125da1f0206d25da1dc48f98ab9ec13f012a",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,8 +20,8 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "0f96d0bad05e20f2f916fcfbae4b9886ffdc49a0e8ca2d71aea650b4dd663ae6",
-  "vm/evaluate.py": "b573d19d8720d2f9b2b9ad4c1499e3338ffbb222e7430c08d53ccded164b241f",
+  "vm/check-spec.py": "44a6b66cf613a608b58d5a871200b3f19071455ea0c1ddf538cd5e7e285b669e",
+  "vm/evaluate.py": "c51e9cfe67f5ea3825e8049642f3722f4722b3412aea1088b034fc310d13871e",
   "vm/golden/book-drop.bend": "7c9ebf4b65289c204631145a01e42fa053e95a11f26e1ee75c0446ace78fa226",
   "vm/golden/book-drop.kimg": "1ff7b73e26bb4734776bf8799081b69b5f2b4d433d720f8dde3abf60230bd66f",
   "vm/golden/book-drop.plan.json": "e945d79959aae7ebf6a786d5c6702d113c08e0ab6497d9cee5baaf762ec27e3e",
@@ -365,6 +365,13 @@
   "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
   "vm/oracles/manifest.json": "99d769399af7220e6fb6cc76b8bd15f8051716ded4694b371728bd4e096b15e8",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
+  "vm/review-r0/README.md": "c6d81d1a3de4f8db71054f52e1880e222bedf7ea44d792d29e84d52dbf0b2819",
+  "vm/review-r0/expectations.json": "083fdb2525ad4563c8e26df1c1969b1257356e2c99c13f24fb34e171180f2fed",
+  "vm/review-r0/io-sequence.bend": "66e4721aa9fa47f48e974319403dd09928cce282f454e73f6a0d59a568c6a46f",
+  "vm/review-r0/non-tail-4999.bend": "10f09801f5632b2970297f2ac9e383029c51de34b6d8a5f0a460e56fa6afcd2c",
+  "vm/review-r0/non-tail-4999.plan.json": "7acc546bc7991f939642be4edd7043a1b09ac5b4eec6039da860d75e159dad59",
+  "vm/review-r0/tail-5000.bend": "47d4d36f32cc43fb266deaa6b27321029ed68208385c3a63337af7c9b57a692a",
+  "vm/review-r0/tail-5000.plan.json": "5d34ecd5f3e16753a7dcb2f66b02cc4c5d77208db62172f5bae7e89b4ca8e349",
   "vm/serializer.py": "ee58068136241cb0662eb3a444becd65b9b4cc2cc7122478be4960e3185790d8"
  },
  "registry": {
@@ -380,6 +387,210 @@
    "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
    "vm/bench/parse-cli.json": "8dadd489f593485bbd1c97fd446757f52664a32719fd4c9b14f313d2ea782b17"
   }
+ },
+ "review_r0": {
+  "fixtures": {
+   "io-sequence": {
+    "seed_check": {
+     "exit": 0,
+     "stdout": "All terms check.\n",
+     "stderr": ""
+    },
+    "seed_bun": {
+     "exit": 0,
+     "stdout": "alpha\nbeta\n",
+     "stderr": ""
+    },
+    "seed_native": {
+     "exit": 0,
+     "stdout": "alpha\nbeta\n",
+     "stderr": ""
+    },
+    "snapshot": {
+     "check": {
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+     },
+     "eval": {
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+     }
+    },
+    "availability": {
+     "status": "unavailable",
+     "owner": "literals/io-check",
+     "reason": "inherited Invalid parse function-result on seed-accepted IO"
+    }
+   },
+   "tail-5000": {
+    "seed_check": {
+     "exit": 0,
+     "stdout": "All terms check.\n",
+     "stderr": ""
+    },
+    "seed_bun": {
+     "exit": 0,
+     "stdout": "True{}\n",
+     "stderr": ""
+    },
+    "seed_native": {
+     "exit": 0,
+     "stdout": "True{}\n",
+     "stderr": ""
+    },
+    "snapshot": {
+     "check": {
+      "exit": 0,
+      "stdout": "Checked\ndrain(1:1)->0=case $0 [0=>v0.1;1(1 $1:1;)=>call0($1:1)]\nmain()->0=call0(5000n)\n\n",
+      "stderr": ""
+     },
+     "eval": {
+      "exit": 0,
+      "stdout": "Evaluated\t0\t1\tTrue{}\n",
+      "stderr": ""
+     }
+    }
+   },
+   "non-tail-4999": {
+    "seed_check": {
+     "exit": 0,
+     "stdout": "All terms check.\n",
+     "stderr": ""
+    },
+    "seed_bun": {
+     "exit": 0,
+     "stdout": "False{}\n",
+     "stderr": ""
+    },
+    "seed_native": {
+     "exit": 0,
+     "stdout": "False{}\n",
+     "stderr": ""
+    },
+    "snapshot": {
+     "check": {
+      "exit": 0,
+      "stdout": "Checked\ninvert(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\ndrain(1:1)->0=case $0 [0=>v0.1;1(1 $1:1;)=>call0(call1($1:1))]\nmain()->0=call1(4999n)\n\n",
+      "stderr": ""
+     },
+     "eval": {
+      "exit": 0,
+      "stdout": "Evaluated\t0\t0\tFalse{}\n",
+      "stderr": ""
+     }
+    }
+   }
+  },
+  "oracle_controls": [
+   {
+    "control": "agreement",
+    "refused": "io-sequence: unknown unavailable Program verdict {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tUnit{}\\n', 'stderr': ''}"
+   },
+   {
+    "control": "other-invalid",
+    "refused": "io-sequence: unknown unavailable Program verdict {'exit': 2, 'stdout': '', 'stderr': 'Invalid\\tparse\\tother\\t13:14:3:11\\n'}"
+   },
+   {
+    "control": "host-failure",
+    "refused": "io-sequence: unknown unavailable Program verdict {'exit': 5, 'stdout': '', 'stderr': 'HostFailure\\tio\\tabi\\n'}"
+   },
+   {
+    "control": "checker-differs",
+    "refused": "io-sequence: unavailable Program's checker and evaluator differ"
+   }
+  ],
+  "oracle_mutants": [
+   {
+    "mutant": "false-invalid-is-agreement",
+    "killed": true,
+    "by": "review IO lane must remain unavailable, with its owner and precise inherited defect"
+   },
+   {
+    "mutant": "unknown-failure-is-unavailable",
+    "killed": true,
+    "by": "Program oracle control agreement was admitted"
+   }
+  ],
+  "stack_runs": {
+   "tail-5000/ample": {
+    "fuel": 1000000,
+    "host_recursionlimit": 256,
+    "exit": 0,
+    "stdout": "Evaluated\t4\t1\tTrue{}\n",
+    "effects": 0,
+    "calls": 5002,
+    "image_sha256": "988bfb8b517e834fb3d902fb5d3d0f2902ae15ea2ab19a2d30a9c3602ddd4cea",
+    "plan_matches": "checked-core"
+   },
+   "tail-5000/exact": {
+    "fuel": 5002,
+    "host_recursionlimit": 256,
+    "exit": 0,
+    "stdout": "Evaluated\t4\t1\tTrue{}\n",
+    "effects": 0,
+    "calls": 5002,
+    "image_sha256": "988bfb8b517e834fb3d902fb5d3d0f2902ae15ea2ab19a2d30a9c3602ddd4cea",
+    "plan_matches": "checked-core"
+   },
+   "tail-5000/short": {
+    "fuel": 5001,
+    "host_recursionlimit": 256,
+    "outcome": "Exhausted",
+    "kind": 1,
+    "cause": "fuel",
+    "stdout": "",
+    "effects": 0,
+    "calls": 5001,
+    "image_sha256": "988bfb8b517e834fb3d902fb5d3d0f2902ae15ea2ab19a2d30a9c3602ddd4cea",
+    "plan_matches": "checked-core"
+   },
+   "non-tail-4999/ample": {
+    "fuel": 1000000,
+    "host_recursionlimit": 256,
+    "exit": 0,
+    "stdout": "Evaluated\t4\t0\tFalse{}\n",
+    "effects": 0,
+    "calls": 10000,
+    "image_sha256": "b9bd8c011339cc4d6157bbad33e4cdb82979fd3060270aac99c8c2ac20fd50e0",
+    "plan_matches": "checked-core"
+   },
+   "non-tail-4999/exact": {
+    "fuel": 10000,
+    "host_recursionlimit": 256,
+    "exit": 0,
+    "stdout": "Evaluated\t4\t0\tFalse{}\n",
+    "effects": 0,
+    "calls": 10000,
+    "image_sha256": "b9bd8c011339cc4d6157bbad33e4cdb82979fd3060270aac99c8c2ac20fd50e0",
+    "plan_matches": "checked-core"
+   },
+   "non-tail-4999/short": {
+    "fuel": 9999,
+    "host_recursionlimit": 256,
+    "outcome": "Exhausted",
+    "kind": 1,
+    "cause": "fuel",
+    "stdout": "",
+    "effects": 0,
+    "calls": 9999,
+    "image_sha256": "b9bd8c011339cc4d6157bbad33e4cdb82979fd3060270aac99c8c2ac20fd50e0",
+    "plan_matches": "checked-core"
+   }
+  },
+  "stack_mutants": [
+   {
+    "mutant": "driver-discards-returned-value",
+    "killed": true,
+    "by": "review tail-5000/ample: {'exit': 0, 'stdout': 'Evaluated\\t4\\t0\\tFalse{}\\n', 'effects': 0, 'calls': 2}, frozen {'exit': 0, 'stdout': 'Evaluated\\t4\\t1\\tTrue{}\\n', 'effects': 0, 'calls': 5002}"
+   },
+   {
+    "mutant": "driver-skips-suspended-body",
+    "killed": true,
+    "by": "review tail-5000/ample: {'exit': 0, 'stdout': 'Evaluated\\t4\\t1\\tTrue{}\\n', 'effects': 0, 'calls': 2}, frozen {'exit': 0, 'stdout': 'Evaluated\\t4\\t1\\tTrue{}\\n', 'effects': 0, 'calls': 5002}"
+   }
+  ]
  },
  "fixtures": [
   {
@@ -1370,6 +1581,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Invalid"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "inherited Invalid parse function-result on seed-accepted IO"
    }
   },
   {
@@ -2457,6 +2673,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Invalid"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "inherited Invalid parse function-result on seed-accepted IO"
    }
   },
   {
@@ -2566,6 +2787,11 @@
     "basis": "divergent-by-contract (non-scalar output)",
     "reason": "D20: print 1 holds Char 55296; the native lane exits 0",
     "eval_lane": "Invalid"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "inherited Invalid parse function-result on seed-accepted IO"
    }
   },
   {
@@ -2595,6 +2821,11 @@
     "basis": "divergent-by-contract (non-scalar output)",
     "reason": "D20: print 1 holds Char 55296; the native lane exits 0",
     "eval_lane": "Invalid"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "inherited Invalid parse function-result on seed-accepted IO"
    }
   },
   {
@@ -2679,6 +2910,11 @@
     "basis": "divergent-by-contract (non-scalar output)",
     "reason": "D20: print 1 holds Char 67237376; the native lane exits 0",
     "eval_lane": "Invalid"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "inherited Invalid parse function-result on seed-accepted IO"
    }
   },
   {
@@ -2706,6 +2942,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Invalid"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "inherited Invalid parse function-result on seed-accepted IO"
    }
   },
   {
@@ -2735,6 +2976,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Invalid"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "inherited Invalid parse function-result on seed-accepted IO"
    }
   },
   {
@@ -2767,6 +3013,11 @@
     "basis": "divergent-by-contract (non-scalar output)",
     "reason": "D20: print 2 holds Char 55296; the native lane exits 0",
     "eval_lane": "Invalid"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "inherited Invalid parse function-result on seed-accepted IO"
    }
   },
   {
@@ -3014,6 +3265,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3043,6 +3299,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3074,6 +3335,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3102,6 +3368,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3132,6 +3403,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3193,6 +3469,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3223,6 +3504,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3255,6 +3541,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse generic-datatype"
    }
   },
   {
@@ -3286,6 +3577,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse generic-datatype"
    }
   },
   {
@@ -3317,6 +3613,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3347,6 +3648,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3379,6 +3685,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3411,6 +3722,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   },
   {
@@ -3443,6 +3759,11 @@
     "stderr": "",
     "basis": "seed",
     "eval_lane": "Unsupported"
+   },
+   "oracle_availability": {
+    "status": "unavailable",
+    "owner": "literals/io-check",
+    "reason": "Unsupported parse parameter-type"
    }
   }
  ],
