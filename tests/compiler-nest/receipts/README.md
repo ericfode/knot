@@ -8,6 +8,12 @@ the round-2 gate report; the original frozen expectations remain unchanged. Late
 receipts of the older gates record the hashes of the inputs they ran on, so the coordinator refreshes them after a
 merge (`npm run gates:refresh`).
 
+Historical JSON receipt paths are portable: `$ROOT`, `.toolchain`, `$BEND_LIB`
+and `$GATE_RUN` replace checkout and run locations. Regenerate that path-only
+normalization with `python3 -B tests/compiler-nest/portable.py`. It preserves
+observations, array order, measured numbers, seed results and source hashes;
+it does not refresh historical evidence or claim it describes the current tip.
+
 
 The remainder below is the historical first-round report; its counts describe that checkpoint. Current round-13
 verification is in [REVIEW-13](REVIEW-13.md), `round13.json`, `round13-gates.json` and `round13-budget-corpus.json`. Earlier receipts
