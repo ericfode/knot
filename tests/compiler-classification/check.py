@@ -67,7 +67,7 @@ def main():
         # Unsupported fallback, and the accepted applications witness the
         # routes into that grammar.
         mutations = [
-            ('nonleading-template', 'parse.bend', 'Bool.and(parameters,starts(t,"~"))', 'False{}',
+            ('nonleading-template', 'parse.bend', 'Bool.and(parameters,starts(S.skip_lines(t),"~"))', 'False{}',
              ['template-nonleading'], 'Unsupported\tparse\ttemplate-binder'),
             ('equality-as-binding', 'parse.bend', 'Bool.or(starts(tail,"="),starts(tail,">"))',
              'starts(tail,">")', ['destructure-equality'], 'Unsupported\tparse\tdestructuring-binding'),

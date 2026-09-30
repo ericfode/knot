@@ -56,3 +56,16 @@ Delight, memetic identity, Anticipation and Payoff each remain unreviewed.
 Full committed-head gate acceptance is recorded separately after execution.
 Closures reconciliation, assertion/pin rulings, shared receipt refresh, live
 review and integration retain their existing coordinator owners.
+
+## Existing mutation anchor
+
+The first full-suite run on `b09e0a99` found a stale textual anchor in the
+classification gate's existing `nonleading-template` mutant. The gate refused
+to run that mutant; this was not a semantic kill or a passing classification
+gate. Its anchor is updated to the same normalized guard and still replaced
+by `False{}`. The original `template-nonleading` witness, fixed seed output,
+expected Invalid diagnostic, wrong Unsupported diagnostic and all seven
+required mutants remain unchanged. Focused classification verification passes
+17 frozen seed outputs, 17 parse observations and seven type-correct mutants
+on nine witnesses. Its receipt stays in ignored `.local/generics/precheck-8/`.
+No shared receipt is refreshed by the focused invocation.

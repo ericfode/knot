@@ -1235,3 +1235,25 @@ The first full run then caught a diagnostic-span regression on the unchanged
 restores the original newline diagnostic. The frozen import control and all
 other assertions stay unchanged. Include unsupported declaration kinds in the
 layout exclusion matrix before running the full integration suite.
+
+## Non-leading template classification under layout (2026-09-29)
+
+The two exact C1 probes and nearby controls are frozen before repair in
+[`template-tail-expectations.json`](../tests/compiler-generics/prechecks/template-tail-expectations.json).
+The earlier layout matrix covered parameter starts and delimiter tails, but
+missed the classification guard after a comma. Testing the newline before a
+non-leading `~` reached the initial-template refusal. Normalizing that guard
+and its diagnostic preserves the existing leading/non-leading distinction.
+The added filled law and five-witness restoration mutant cover the missing
+boundary. [`PRECHECK-8.md`](../tests/compiler-generics/PRECHECK-8.md) records
+the baseline, repair and unchanged independent observations.
+
+The first full run then refused an existing classifier mutant because its
+textual anchor named the old guard. Re-anchoring the same `False{}` mutation
+retains its frozen inline witness, expected diagnostics and kill count.
+Focused classification passes all 17 cases and seven mutants on nine witnesses.
+Before changing a shared parser predicate, search all gate scripts for its
+mutation anchors and validate each remaining exact match. Include ordinary
+binders followed by layout and reserved binder markers in the boundary matrix.
+The failed integration run is retained; no live review or inferred elapsed
+time is claimed here.
