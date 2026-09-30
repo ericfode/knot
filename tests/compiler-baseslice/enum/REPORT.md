@@ -66,6 +66,7 @@ re-executed BS1 successfully from the same inputs.
 source identities, receipt comparisons and the raw run's hash. The command was
 `npm run -s gates -- --jobs=1`, exit 0, one worker. Every gate exited 0. The
 committed receipt retains the raw summary hash and omits its machine-local location.
+Its repository path is `tests/compiler-baseslice/enum/receipts/gates.json`.
 
 | Gate | Result / exit | Exact wrapper counts |
 |---|---|---|
@@ -125,6 +126,28 @@ differences. Both semantic differences contain only the earlier fail-closed
 host-adapter input identity; program observations are unchanged. Shared execution
 receipts were not refreshed. See the appended pre-review correction in
 [the review log](../../../docs/perch-review-log.md).
+
+## Fast pre-review limits and minor dispositions
+
+The committed-head C3/C4 audit exits 0 with no blocking or major executor finding;
+the seven frozen-edit conditions and the host-path condition are absent. This is
+a partial audit: ownership/generator metadata is unavailable, and the raw run's
+snapshot predates the three final evidence documents. All 54 executed input
+identities independently match committed HEAD. No full precheck pass is claimed.
+
+- The inventory's three reported stale hashes are snapshot evidence, not current
+  branch inputs. `source_ref` is `aef68c86`; the generator reads each source with
+  `git show` at that ref. The hashes of `src/LAWS.bend`, `src/PROOF.bend` and
+  `src/parse.bend` were rechecked against that Git object and match exactly.
+- The alleged documentation input, `docs/compiler-campaign/inventory/accepted.json`,
+  is executed census data. `tools/census/census.mjs` generates it in `build()`
+  and reads/compares its bytes in `--check`; its identity belongs in the gate run.
+- The original orphan note missed the relative Markdown link to the receipt in
+  this report. The full repository path is now also stated above.
+- The wrapper's count assertion changes from 14 to 15 because BS1 adds the
+  fifteenth gate; it remains strict and all 26 tests pass. The additive-shape
+  ruling stays with the coordinator. The trailer notes expect Claude by default;
+  this task explicitly requires GPT-6.1 Sol, which every new commit uses.
 
 ## Coordinator and later increments
 

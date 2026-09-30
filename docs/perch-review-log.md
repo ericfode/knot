@@ -1022,3 +1022,8 @@ record exact counts and distinguish current acceptance from historical runs.
 Prevention: inspect frozen ownership before changing a gate; use its scheduling
 control for host contention and submit any guard integration to the coordinator.
 Persist content identities rather than machine-local evidence locations.
+
+The fast pre-review metadata checks also compared a declared main snapshot to the
+branch head, treated executed census JSON as prose and missed a relative receipt
+link. The report records the exact snapshot-hash witnesses and producing/reading
+code. The audit remains partial; these notes do not constitute a full pass.
