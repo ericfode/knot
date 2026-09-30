@@ -166,12 +166,30 @@ gate retain the documented `HostFailure invoke function-result`, exit 5.
 
 ## Committed-head prechecks
 
-Pending immediately after committing the acceptance evidence. The unchanged
-precheck tool/registry is from main `b92b13595bcbc265b823cb3cfdc38918e35953c9`;
-its C1/C3/C4 implementations were compared byte for byte to the read-only current
-main during this round. No tool, registry, coordinator ledger or old commit is
-rewritten to suppress a condition. The final replay must report C1/C3 disputes
-explicitly and no remaining executor C4 integrity finding.
+[Committed-head reports](../../tests/compiler-closures/receipts/prechecks.json)
+check `b0c8e71db334414fbab969e8db3fa65a2bd3ed99` using the unchanged tool and
+registry from main `b92b13595bcbc265b823cb3cfdc38918e35953c9`, with
+`--head campaign/closures --only C1,C3,C4 --no-write --json --jobs 2` and the
+explicit tool main reference. Its C1/C3/C4 implementations were compared byte
+for byte to read-only main during this round. No rule, registry, coordinator
+ledger or historical commit is edited to suppress a condition.
+
+The combined command exits **3**, retaining exactly the three executor disputes
+above: two C1 conditions and one C3 condition. There are no other executor
+conditions. C4 reports **zero executor findings**. The local tool export initially
+lacked `scripts/gates/normalize.py`; that module was supplied byte-identically
+from the same pinned main reference, then C4 was rerun and exited **0**, still
+with zero executor findings. The raw reports, including coordinator conditions,
+are preserved rather than relabeled as passes.
+
+This is **not a complete precheck pass**. C1 helper-divergence and incomplete-repair
+rules have no declared helper lanes or `d4_targets`. C3 has no declared generators
+or ownership manifest. C4's gate-run rule notes that current receipt/report files
+were recorded after the accepted run's export. These are unavailable checks,
+not clean results. The independent acceptance recorder verifies all 172 executed
+closure inputs against that export and HEAD. No executed source, frozen control,
+shared gate script or source resource budget changed after the accepted run.
+Remaining predicted drift of other gates' shared receipts is coordinator-owned.
 
 ## Coordinator and other-increment remainder
 
