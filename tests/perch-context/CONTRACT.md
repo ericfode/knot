@@ -134,7 +134,9 @@ of failing. Shaping source to fit a tool cap is not a fix.
     hashes before and after are equal.
 14. **Failure.** Throw only if the required minimum exceeds the cap: complete
     primary and task, all context paths and qualified names, and mandatory cut
-    markers. Detailed audit/import metadata remains in provenance when it cannot
+    markers (the entries' `representation: "names-only"`). Optional notes/digests
+    cannot introduce a failure at this exact minimum; retain them in provenance
+    and record `minimum_context: true`. Detailed audit/import metadata remains in provenance when it cannot
     be supplied. The error names the case (`after names-only summaries`), states
     that this required minimum exceeds the cap, and reports the encoded bytes
     for primary, task, collaborator names, datatype/law names and markers.

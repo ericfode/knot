@@ -175,14 +175,15 @@ function tooLarge(prefix, { seen }, maxBytes) {
   const primary = encoded(prefix.source), task = encoded(prefix.cohort), names = encoded(seen.calls) + encoded(seen.called_by);
   return `Style context too large after names-only summaries: ${state} of ${maxBytes} bytes remain: primary source ${primary}, task ${task}, `
     + `collaborator list ${names} (${list.filter(item => item.representation === NAMES_ONLY).length} of ${list.length} entries names-only), `
-    + `retained datatypes, laws and notes ${state - primary - task - names}: ${prefix.path}::${prefix.name}`;
+    + `datatype/law names and cut markers ${state - primary - task - names}; required primary/task/names-only minimum exceeds the cap: ${prefix.path}::${prefix.name}`;
 }
 
 /**
  * Preserve the source cap and the independent encoded-state cap (task included). Two tiers,
  * each taking the largest saving first, then path, then name: a full body becomes an interface
- * summary, and an interface summary becomes its qualified name. The primary source, the task,
- * datatypes and laws are never shortened. The interface tier's tie-break is unchanged.
+ * summary, and an interface summary becomes its qualified name. The primary source and task
+ * are never shortened. Required contract omissions are explicit, truncated evidence, after
+ * trying metadata compaction. The interface tier's tie-break and earlier returns are unchanged.
  */
 export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 60000) {
   const size = () => Buffer.byteLength(JSON.stringify({ ...prefix, ...context.seen }));
@@ -206,7 +207,8 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
   // The interface tier is exhausted. A collaborator keeps only its path and qualified name, and so does
   // a body the interface tier kept because its interface was no smaller. Its one summary row changes
   // reason (a kept body gets its row now); the saving is the exact drop in encoded bytes.
-  const { summarized } = context.provenance, notes = context.seen.context_notes;
+  const { summarized } = context.provenance;
+  let notes = context.seen.context_notes;
   // Only newly enabled states reach this point. Erase the interface tier's locale-dependent
   // insertion order from their complete identity, while preserving both earlier returns.
   summarized.sort(byIdentity);
@@ -240,6 +242,87 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
     notes.names_only = { count: (notes.names_only?.count ?? 0) + 1, note: NAMES_ONLY_NOTE };
     if (size() <= maxBytes) return;
   }
+  // Locations and duplicate audit rows are not contract text. Keep their complete receipt and
+  // digest before considering any datatype/law omission; this solves metadata-heavy states.
+  const lists = ['calls', 'called_by', 'datatypes', 'laws'];
+  context.provenance.state_metadata = {
+    imports: structuredClone(context.seen.imports), context_notes: structuredClone(notes),
+    source_locations: lists.flatMap(list => context.seen[list].map(({ path, name, line, end_line }) => ({ list, path, name, line, end_line }))),
+  };
+  const metadataHash = hash(JSON.stringify(context.provenance.state_metadata));
+  for (const list of lists) for (const item of context.seen[list]) {
+    delete item.line; delete item.end_line;
+  }
+  notes = context.seen.context_notes = {
+    basis: notes.basis, profile: notes.profile, source_bytes: context.provenance.source_bytes,
+    truncated: context.provenance.truncated, unresolved_count: context.provenance.unresolved?.length ?? 0,
+    ...(notes.names_only ? { names_only: notes.names_only } : {}),
+    metadata_compacted: { sha256: metadataHash, note: 'Detailed audit rows and source locations retained in provenance; names-only entries mark omitted text.' },
+  };
+  if (size() <= maxBytes) return;
+
+  const recordName = item => {
+    const row = rowOf(item);
+    if (row) row.reason = NAMES_ONLY_REASON;
+    else summarized.push({ path: item.path, name: item.name, reason: NAMES_ONLY_REASON });
+    summarized.sort(byIdentity);
+    context.provenance.source_bytes -= Buffer.byteLength(item.source ?? '');
+    for (const key of Object.keys(item)) if (!['path', 'name'].includes(key)) delete item[key];
+    item.representation = NAMES_ONLY;
+    notes.source_bytes = context.provenance.source_bytes;
+    notes.names_only = { count: (notes.names_only?.count ?? 0) + 1, note: NAMES_ONLY_NOTE };
+  };
+  const recordContract = (list, item) => {
+    (context.provenance.omitted_contracts ??= []).push({ list, item: structuredClone(item) });
+    (context.provenance.unresolved ??= []).push({ path: item.path, name: item.name, reason: 'context-state-contract-limit' });
+    context.provenance.truncated = notes.truncated = true;
+    notes.unresolved_count = context.provenance.unresolved.length;
+    recordName(item);
+  };
+  // Preserve smaller contracts whenever possible. Measure complete candidate states because
+  // truncation, counters and the initial warning also contribute to these exceptional cuts.
+  while (true) {
+    const contracts = ['datatypes', 'laws'].flatMap(list => context.seen[list]
+      .filter(item => item.representation !== NAMES_ONLY).map(item => {
+        const projected = { ...context.seen,
+          [list]: context.seen[list].map(entry => entry === item ? { path: item.path, name: item.name, representation: NAMES_ONLY } : entry),
+          context_notes: { ...notes, truncated: true, unresolved_count: (context.provenance.unresolved?.length ?? 0) + 1,
+            source_bytes: context.provenance.source_bytes - Buffer.byteLength(item.source ?? ''),
+            names_only: { count: (notes.names_only?.count ?? 0) + 1, note: NAMES_ONLY_NOTE } } };
+        return { list, item, saving: size() - encoded({ ...prefix, ...projected }) };
+      }));
+    contracts.sort(largestSavingByCode);
+    if (!contracts.length || contracts[0].saving <= 0) break;
+    const { list, item } = contracts[0];
+    recordContract(list, item);
+    if (size() <= maxBytes) return;
+  }
+
+  // Reach the actual required minimum, even when audit/import metadata alone overflows.
+  // Every context name survives. Full audit, import and omitted-contract evidence remains
+  // in provenance, while the judge sees the omissions and cannot qualify missing contracts.
+  for (const list of lists) for (const item of context.seen[list]) {
+    if (item.representation === NAMES_ONLY) continue;
+    if (['datatypes', 'laws'].includes(list)) recordContract(list, item);
+    else recordName(item);
+  }
+  if (context.seen.imports.length) {
+    (context.provenance.unresolved ??= []).push({ path: prefix.path, name: 'imports', reason: 'context-state-import-limit' });
+    context.provenance.truncated = true;
+  }
+  context.seen = {
+    ...Object.fromEntries(lists.map(list => [list, context.seen[list]])),
+    context_notes: { source_bytes: context.provenance.source_bytes, truncated: context.provenance.truncated,
+      names_only: { count: lists.reduce((n, list) => n + context.seen[list].length, 0), note: NAMES_ONLY_NOTE },
+      metadata_sha256: hash(JSON.stringify({ metadata: context.provenance.state_metadata,
+        summarized, unresolved: context.provenance.unresolved })) },
+  };
+  if (size() <= maxBytes) return;
+  // Per-entry representation is itself the mandatory names-only marker. At the exact
+  // minimum, even the optional warning/audit digest must not introduce a new failure.
+  delete context.seen.context_notes;
+  context.provenance.minimum_context = true;
+  if (size() <= maxBytes) return;
   // No primary source or task is shortened to satisfy an encoded-state bound.
   throw new Error(tooLarge(prefix, context, maxBytes));
 }

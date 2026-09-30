@@ -254,6 +254,9 @@ line, and keeping only the first line saves 337 of 13,357 bytes, far too little.
   Throw `Style context too large after names-only summaries` only when complete
   primary, task, all context names and mandatory cut markers exceed the cap.
   The error reports that minimum and its encoded byte breakdown.
+  At the exact minimum each entry's `representation: "names-only"` is the cut
+  marker; optional `context_notes` are omitted and provenance records
+  `minimum_context: true`. Optional metadata cannot cause a fitting failure.
 - **Advisory.** Helper/caller cuts alone set neither `truncated` nor a role-context gap, so the ordinary tier is
   never a structural blocker and never changes the role exemption. How the judge
   rates a declaration whose collaborators are only names is not calibrated. Read a

@@ -264,3 +264,27 @@ independent completion record. Keep the compiler's Invalid, Unsupported,
 Exhausted, host and internal observations intact inside the retained evidence;
 wrapper process failures are a separate summary status, never a judgment of
 the source language.
+
+
+## perch-cap review round 1 (2026-09-29)
+
+The additive round-1 controls are frozen separately in
+`tests/perch-context/round1-expectations.json`; the earlier frozen JSON rows stay
+unchanged. The current `perch-context` gate runs 47 controls and 18 semantic
+mutants (65 tests), the complete seed signature control, and two byte-identical
+compiler-manifest preflights. Seven new controls cover complete state hashes
+across locales, exact recomputed savings, Unicode scalar ties, the seed-accepted
+400-datatype boundary, explicit contract omissions, the exact required names
+minimum and one byte below it, and oversized audit/import metadata. Five new
+mutants separately break summary order, counter savings, scalar comparison,
+minimum fitting and contract truncation. Existing mutants retain their witnesses
+at the repaired mutation sites. No compiler assertion or rubric changes.
+
+Use the frozen io-host observation's Bun **1.3.14**. On this host it is installed
+at `/Users/ericfode/.bun/bin/bun`; select that directory first on PATH and verify
+`bun --version` before the gate run. Bun 1.3.11 is a different frozen observation,
+not a reason to amend io-host's expectations. Scratch `lint:rules` also needs a
+committed HEAD; bind the archive's commit using a read-only object alternate,
+then `git update-ref HEAD <archived-commit>` inside the scratch export. Keep
+telemetry disabled and environment-file loading disabled for this offline
+catalog command. See the round-1 verification report for the execution recipe.

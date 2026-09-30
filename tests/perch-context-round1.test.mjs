@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createBendSourceSnapshot, bendDeclarationSource } from '../scripts/perch-bend-context.mjs';
-import { prepareStyleTargets, assessStyleRole, runStylePreflight } from '../scripts/perch-style.mjs';
+import { prepareStyleTargets, roleContextLimits, diagnoseStyle } from '../scripts/perch-style.mjs';
 
 const moduleURL = process.env.KNOT_CONTEXT_TEST_MODULE ?? new URL('../scripts/perch-context-interfaces.mjs', import.meta.url).href;
 const { createInterfaceReview, fitInterfaceContext } = await import(moduleURL);
@@ -121,4 +121,123 @@ test(expect.controls[2], async () => {
   const cap = Math.max(enc(stateOf(named(f, 0))), enc(stateOf(named(f, 1))));
   await assert.doesNotReject(fitInterfaceContext(f.context, noLoad, f.prefix, cap));
   assert.deepEqual(f.context.seen.calls.filter(e => e.representation === 'names-only').map(e => e.path), ['\ue000.bend']);
+});
+
+async function reviewed(root, name, cohort) {
+  const snapshot = await createBendSourceSnapshot(root, { contextPolicy: 'interfaces-v1' });
+  const file = await snapshot.load('main.bend');
+  const context = await (await createInterfaceReview({ root, path: 'main.bend', ...file, snapshot })).forUnit(name);
+  const decl = file.analysis.declarations.find(d => d.qualified_name === name);
+  return { context, snapshot, prefix: { cohort, name, path: 'main.bend', declaration_kind: decl.syntax_kind,
+    source: bendDeclarationSource(file.source, decl) } };
+}
+const names = entries => entries.map(({ path, name }) => ({ path, name, representation: 'names-only' }));
+const contracts = state => ['datatypes', 'laws'].map(list => state[list].map(({ path, name, source }) => ({ path, name, source })));
+const supplied = f => ['calls', 'called_by', 'datatypes', 'laws'].reduce((n, list) =>
+  n + f.context.seen[list].reduce((sum, e) => sum + Buffer.byteLength(e.source ?? ''), 0), Buffer.byteLength(f.prefix.source));
+test(expect.controls[3], async t => {
+  const source = 'import Base\n' + Array.from({ length: expect.seed_boundary_datatypes }, (_, i) => {
+    const name = `T${String(i).padStart(3, '0')}`;
+    return `type ${name} is Data:\n  ${name}{}\n`;
+  }).join('') + `# ${'c'.repeat(500)}\ndef helper(x: U32) -> U32: x\ndef main(x: U32) -> U32: helper(x)\n`;
+  const root = await fixture(t, source), cohort = 'a'.repeat(expect.seed_boundary_task_bytes);
+  seed(root);
+  const f = await reviewed(root, 'main', cohort), before = contracts(stateOf(f));
+  const prefix = JSON.stringify(f.prefix), files = structuredClone(f.context.provenance.files);
+  const lower = { ...f.prefix, calls: names(f.context.seen.calls), called_by: names(f.context.seen.called_by),
+    datatypes: names(f.context.seen.datatypes), laws: names(f.context.seen.laws) };
+  assert.ok(enc(lower) < expect.state_byte_limit, 'even every type and law name fits');
+  assert.ok(enc(stateOf(f)) > expect.state_byte_limit);
+  assert.equal(f.context.provenance.truncated, false);
+  await assert.doesNotReject(fitInterfaceContext(f.context, f.snapshot, f.prefix));
+  assert.ok(enc(stateOf(f)) <= expect.state_byte_limit);
+  assert.equal(JSON.stringify(f.prefix), prefix);
+  assert.deepEqual(contracts(stateOf(f)), before, 'all datatype and law text survives metadata compaction');
+  assert.deepEqual(f.context.provenance.files, files);
+  assert.equal(f.context.provenance.truncated, false);
+  assert.equal(f.context.provenance.source_bytes, supplied(f));
+  const [candidate] = await prepareStyleTargets(['main.bend::main'], cohort, config, root, f.snapshot);
+  assert.deepEqual(candidate.state, stateOf(f), 'production reaches the same fitted state');
+});
+test(expect.controls[4], async t => {
+  for (const typeBytes of [42000, 0]) {
+    const lawBytes = typeBytes ? 3000 : 45000;
+    const source = 'import Base\n' + (typeBytes ? `type Huge is Data:\n  # ${'t'.repeat(typeBytes)}\n  Huge{}\n` : '')
+      + `law identity:\n  for x: U32\n  # ${'l'.repeat(lawBytes)}\n  {x == x : U32}\ndef identity(x): {==}\n`;
+    const root = await fixture(t, source);
+    seed(root);
+    const f = await reviewed(root, 'identity', 'a'.repeat(16000));
+    assert.equal(f.context.provenance.truncated, false);
+    assert.ok(f.context.provenance.source_bytes < expect.composition_byte_limit);
+    const before = structuredClone(f.context.seen), prefix = JSON.stringify(f.prefix);
+    await assert.doesNotReject(fitInterfaceContext(f.context, f.snapshot, f.prefix));
+    assert.ok(enc(stateOf(f)) <= expect.state_byte_limit);
+    assert.equal(JSON.stringify(f.prefix), prefix);
+    assert.equal(f.context.provenance.truncated, true, 'missing type/law text cannot appear complete');
+    assert.equal(f.context.seen.context_notes.truncated, true);
+    const list = typeBytes ? 'datatypes' : 'laws';
+    const cut = f.context.seen[list].filter(e => e.representation === 'names-only');
+    assert.ok(cut.length > 0);
+    for (const entry of cut) {
+      assert.deepEqual(Object.keys(entry), ['path', 'name', 'representation']);
+      assert.ok(f.context.provenance.summarized.some(r => r.path === entry.path && r.name === entry.name && r.reason === 'context-state-names-only'));
+      assert.ok(f.context.provenance.unresolved.some(r => r.path === entry.path && r.name === entry.name && r.reason === 'context-state-contract-limit'));
+      assert.ok(f.context.provenance.omitted_contracts.some(r => r.list === list && r.item.source === before[list].find(e => e.name === entry.name).source));
+    }
+    if (typeBytes) assert.deepEqual(f.context.seen.laws.map(e => e.source), before.laws.map(e => e.source), 'smaller laws remain whole');
+    assert.equal(f.context.provenance.source_bytes, supplied(f));
+    assert.equal(roleContextLimits(f.context.provenance).limited, true);
+    assert.ok(diagnoseStyle([{ target: 'main.bend::identity', context: f.context.provenance }], config)
+      .every(r => r.status === 'unavailable' && r.reason === 'context_truncated'));
+  }
+});
+test(expect.controls[5], async () => {
+  const source = '# ' + 'λ'.repeat(1000) + '\ndef main() -> U32: 0';
+  const cohort = '"\\\n🌊'.repeat(5000);
+  const f = assembled([item('helper.bend', 'helper', 'h'.repeat(500))], source, cohort);
+  f.context.seen.laws.push({ path: 'contract.bend', name: 'law', source: 'l'.repeat(15000) });
+  f.context.provenance.source_bytes += 15000;
+  f.context.seen.context_notes.source_bytes += 15000;
+  const imports = Array.from({ length: 800 }, (_, i) => ({ module: `./${'m'.repeat(120)}${i}.bend`, alias: `M${i}` }));
+  f.context.seen.imports.push(...imports);
+  const minimum = { ...f.prefix, calls: names(f.context.seen.calls), called_by: [], datatypes: [], laws: names(f.context.seen.laws) };
+  const cap = enc(minimum) + 1000, before = JSON.stringify(f.prefix);
+  assert.ok(cap < expect.state_byte_limit);
+  assert.ok(enc(stateOf(f)) > cap);
+  const impossible = structuredClone(f);
+  await assert.doesNotReject(fitInterfaceContext(f.context, noLoad, f.prefix, cap));
+  assert.ok(enc(stateOf(f)) <= cap);
+  assert.equal(JSON.stringify(f.prefix), before, 'JSON escapes and UTF-8 do not permit shortening source/task');
+  assert.deepEqual(names(f.context.seen.laws), minimum.laws);
+  assert.deepEqual(f.context.provenance.state_metadata.imports, imports, 'minimum fitting retains complete omitted import metadata');
+  assert.ok(f.context.provenance.unresolved.some(r => r.reason === 'context-state-import-limit'));
+  assert.equal(f.context.seen.context_notes.truncated, true);
+  assert.match(f.context.seen.context_notes.metadata_sha256, /^[0-9a-f]{64}$/);
+  const exact = structuredClone(impossible), oneUnder = structuredClone(impossible);
+  await assert.doesNotReject(fitInterfaceContext(exact.context, noLoad, exact.prefix, enc(minimum)));
+  assert.equal(enc(stateOf(exact)), enc(minimum), 'optional metadata cannot move the literal minimum boundary');
+  assert.equal(JSON.stringify(exact.prefix), before);
+  assert.ok(['calls', 'called_by', 'datatypes', 'laws'].every(list => exact.context.seen[list].every(e => e.representation === 'names-only')));
+  assert.equal(exact.context.provenance.minimum_context, true);
+  assert.equal(exact.context.provenance.truncated, true);
+  await assert.rejects(fitInterfaceContext(oneUnder.context, noLoad, oneUnder.prefix, enc(minimum) - 1), /required .*minimum.*exceeds the cap/);
+  const belowEssential = enc({ source, cohort }) - 1;
+  await assert.rejects(fitInterfaceContext(impossible.context, noLoad, impossible.prefix, belowEssential),
+    /required .*minimum.*exceeds the cap/);
+  assert.equal(JSON.stringify(impossible.prefix), before);
+});
+test(expect.controls[6], async () => {
+  const f = assembled([item('helper.bend', 'helper', 'h'.repeat(500))]);
+  const audit = Array.from({ length: 800 }, (_, i) => ({ path: 'main.bend', name: `missing${i}_${'x'.repeat(120)}`, reason: 'unresolved-or-builtin' }));
+  f.context.provenance.unresolved.push(...audit);
+  assert.ok(enc(stateOf(f)) > expect.state_byte_limit);
+  const before = structuredClone(f.context.provenance.unresolved);
+  await assert.doesNotReject(fitInterfaceContext(f.context, noLoad, f.prefix));
+  assert.ok(enc(stateOf(f)) <= expect.state_byte_limit);
+  assert.deepEqual(f.context.provenance.unresolved, before, 'all original failure reasons are preserved');
+  assert.deepEqual(f.context.provenance.state_metadata.context_notes.unresolved, before);
+  assert.equal(f.context.seen.context_notes.unresolved_count, audit.length, 'audit compaction is visible');
+  assert.match(f.context.seen.context_notes.metadata_compacted.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(roleContextLimits(f.context.provenance).limited, true, 'hidden audit rows do not grant a role exemption');
+  assert.equal(f.context.provenance.source_bytes, supplied(f));
 });

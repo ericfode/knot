@@ -27,7 +27,8 @@ const mutants = [
     from: "resolve(root, explicitStore ?? process.env.BEND_LIB ?? resolve(homedir(), '.bend/lib'))",
     to: "resolve(root, explicitStore ?? 'no-default-store')" },
   { name: 'names-only-marker-dropped', witness: 'marks every cut',
-    from: 'notes.names_only = { count: (notes.names_only?.count ?? 0) + 1, note: NAMES_ONLY_NOTE };', to: 'void notes;' },
+    from: 'notes.names_only = { count: (notes.names_only?.count ?? 0) + 1, note: NAMES_ONLY_NOTE };\n    if (size() <= maxBytes) return;',
+    to: 'void notes;\n    if (size() <= maxBytes) return;' },
   { name: 'primary-source-shortened', witness: 'never shortens the primary source',
     from: 'throw new Error(tooLarge(prefix, context, maxBytes));', to: 'prefix.source = prefix.source.slice(0, maxBytes >> 1);' },
   { name: 'names-only-tier-skipped', witness: 'fits a state the interface tier cannot',
@@ -46,6 +47,12 @@ const mutants = [
   { name: 'names-only-tie-break-uses-utf16', witness: 'equal savings compare Unicode scalar', round1: true,
     from: 'const delta = left[i].codePointAt(0) - right[i].codePointAt(0);',
     to: 'const delta = left[i].charCodeAt(0) - right[i].charCodeAt(0);' },
+  { name: 'names-only-required-minimum-skipped', witness: 'seed-accepted datatype boundary', round1: true,
+    from: 'context.provenance.state_metadata = {',
+    to: "throw new Error('required minimum fitting skipped');\n  context.provenance.state_metadata = {" },
+  { name: 'names-only-contract-omission-unmarked', witness: 'unavoidable contract omissions', round1: true,
+    from: 'context.provenance.truncated = notes.truncated = true;',
+    to: 'context.provenance.truncated = notes.truncated = false;' },
 ];
 for (const mutant of mutants) test(`semantic mutant killed: ${mutant.name}`, async t => {
   assert.equal(original.split(mutant.from).length, 2, 'exactly one mutation site');
