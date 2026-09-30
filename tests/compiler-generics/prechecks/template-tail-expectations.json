@@ -1,0 +1,262 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "seed_files": {
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "basis": "D7: seed observations and literal parameter-tail rule fixed before skipping layout at the non-leading-template guard; existing expectations unchanged.",
+  "cases": [
+    {
+      "name": "reported-template-second",
+      "file": "fixtures/reported-template-second.bend",
+      "sha256": "4ce0f6cf470fb3922e9c7da0b96fd1731352503b0b1984f40ee891f6c0030ffc",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t98:99:9:2\n"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t98:99:9:2\n"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a plain binder (only leading binders take ~)",
+          "begin": 98
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n 8 | def f(a: List<Flag>,\n 9>|   ~b: Flag,\n   |   ^\n10 |   ~c:) -> Flag:\n"
+        }
+      }
+    },
+    {
+      "name": "reported-template-third",
+      "file": "fixtures/reported-template-third.bend",
+      "sha256": "4dc786a9c0d9bf308127a53d443fc548c0832f092e0be43ccb8bb6b403ed0a6b",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t110:111:10:2\n"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t110:111:10:2\n"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a plain binder (only leading binders take ~)",
+          "begin": 110
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n 9 |   +b: Flag,\n10>|   ~c: List<Flag>) -> Flag:\n   |   ^\n11 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "template-tail-layout",
+      "file": "fixtures/template-tail-layout.bend",
+      "sha256": "00177c32dffa1122daac5d651656c6e378534386219268cae334c4aca39bb080",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t52:53:6:2\n"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t52:53:6:2\n"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a plain binder (only leading binders take ~)",
+          "begin": 52
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n5 | def f(a: Flag,\n6>|   ~b: Flag) -> Flag:\n  |   ^\n7 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "template-tail-comments",
+      "file": "fixtures/template-tail-comments.bend",
+      "sha256": "2678c5ce8db0733e4e5f17c2249c4adadc45e6270c42e2bd2cf435f0f88df4cb",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t106:107:8:2\n"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t106:107:8:2\n"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a plain binder (only leading binders take ~)",
+          "begin": 106
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n7 |   # the next binder is not leading\n8>|   ~b: Flag) -> Flag:\n  |   ^\n9 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "template-tail-bare-quantity",
+      "file": "fixtures/template-tail-bare-quantity.bend",
+      "sha256": "cf9a2806a16d408b74e10771f6afd56bd77aa403ebe94a9bb2cd87dfd61ba048",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t46:47:6:2\n"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t46:47:6:2\n"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a plain binder (only leading binders take ~)",
+          "begin": 46
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n5 | def f(a,\n6>|   ~b: Flag) -> Flag:\n  |   ^\n7 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "template-tail-inline",
+      "file": "fixtures/template-tail-inline.bend",
+      "sha256": "a571a8c576de746f106b63998dc36562cf6b3dd814eaea6ea7567260eb470520",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t50:51:5:15\n"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tparameter\t50:51:5:15\n"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a plain binder (only leading binders take ~)",
+          "begin": 50
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def f(a: Flag, ~b: Flag) -> Flag:\n  |                ^\n6 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "template-leading-layout",
+      "file": "fixtures/template-leading-layout.bend",
+      "sha256": "38910883f9d8468473980effb59543dc29dd1102ab347b4cbf5475fb5d5b4e2a",
+      "expected": {
+        "parse": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\ttemplate-binder\t"
+        },
+        "check": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\ttemplate-binder\t"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "template-leading-prefix-malformed",
+      "file": "fixtures/template-leading-prefix-malformed.bend",
+      "sha256": "b1b86fbd8aca68c14fee303df3b60a07b78d5268cd263192a446599ce150ef8f",
+      "expected": {
+        "parse": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\ttemplate-binder\t"
+        },
+        "check": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\ttemplate-binder\t"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 59
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n6 |   ~b: Flag,\n7>|   ~c:) -> Flag:\n  |      ^\n8 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "ordinary-tail-layout",
+      "file": "fixtures/ordinary-tail-layout.bend",
+      "sha256": "80f38305d440f7ae3176b9c9e6bdaefb03f4e1a5f8160bc82493e3a9df6c73e9",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      },
+      "value": "On{}",
+      "tag": 1,
+      "abi": "enum"
+    }
+  ]
+}
