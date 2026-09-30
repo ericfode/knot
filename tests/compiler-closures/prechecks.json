@@ -1281,6 +1281,165 @@
           }
         }
       }
+    },
+    {
+      "name": "nonleading-template-unseparated",
+      "file": "prechecks/nonleading-template-unseparated.bend",
+      "source_sha256": "c3ba6c110ea3f81f0ef132bf89be1fe083890c042c9950a023c6bc48cd3b1fac",
+      "family": "params",
+      "basis": "params '-a: Flag ~b: Flag -c: Flag': seed_offset=90, knot=Unsupported\tparse\ttemplate-binder\t90:91:8:15, at=the seed's error token",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a plain binder (only leading binders take ~)",
+          "begin": 90
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/nonleading-template-unseparated.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n7 | \n8>| def f(-a: Flag ~b: Flag -c: Flag) -> Flag:\n  |                ^\n9 |   On{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/nonleading-template-unseparated.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/nonleading-template-unseparated"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n7 | \n8>| def f(-a: Flag ~b: Flag -c: Flag) -> Flag:\n  |                ^\n9 |   On{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/nonleading-template-unseparated.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/nonleading-template-unseparated.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n7 | \n8>| def f(-a: Flag ~b: Flag -c: Flag) -> Flag:\n  |                ^\n9 |   On{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "grouped-typed-comparison-result",
+      "file": "prechecks/grouped-typed-comparison-result.bend",
+      "source_sha256": "843baeec0086826431b1288627306276559387a9869620354a6337f749166c32",
+      "family": "paired-control",
+      "parse": "Unsupported",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/grouped-typed-comparison-result.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Nat.is_lt\nLocation: f\n4 | \n5>| def f() -> (Flag < Flag : Nat):\n  |                  ^\n6 |   On{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/grouped-typed-comparison-result.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/grouped-typed-comparison-result"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a defined name\n- observed : Nat.is_lt\nLocation: f\n4 | \n5>| def f() -> (Flag < Flag : Nat):\n  |                  ^\n6 |   On{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/grouped-typed-comparison-result.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/grouped-typed-comparison-result.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a defined name\n- observed : Nat.is_lt\nLocation: f\n4 | \n5>| def f() -> (Flag < Flag : Nat):\n  |                  ^\n6 |   On{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "grouped-typed-comparison-parameter",
+      "file": "prechecks/grouped-typed-comparison-parameter.bend",
+      "source_sha256": "02dfd4915f7d3ecf191e5357ae981aca979f32c6213f545e88c4e85abbc28a29",
+      "family": "paired-control",
+      "parse": "Unsupported",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/grouped-typed-comparison-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Nat.is_lt\nLocation: f\n4 | \n5>| def f(x: (Flag < Flag : Nat)) -> Flag:\n  |                ^\n6 |   On{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/grouped-typed-comparison-parameter.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/grouped-typed-comparison-parameter"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a defined name\n- observed : Nat.is_lt\nLocation: f\n4 | \n5>| def f(x: (Flag < Flag : Nat)) -> Flag:\n  |                ^\n6 |   On{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/grouped-typed-comparison-parameter.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/grouped-typed-comparison-parameter.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a defined name\n- observed : Nat.is_lt\nLocation: f\n4 | \n5>| def f(x: (Flag < Flag : Nat)) -> Flag:\n  |                ^\n6 |   On{}\n"
+          }
+        }
+      }
     }
   ],
   "conditions": [
@@ -1722,6 +1881,34 @@
       },
       "value": {
         "family": "d4-seed-differential-grid"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\ttemplate-binder\t90:91:8:15",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f(-a: Flag ~b: Flag -c: Flag) -> Flag:\n  On{}\n",
+        "seed_offset": 90,
+        "sha256": "c3ba6c110ea3f81f0ef132bf89be1fe083890c042c9950a023c6bc48cd3b1fac"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "f74331a573ccd15b4f26",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "params '-a: Flag ~b: Flag -c: Flag': seed_offset=90, knot=Unsupported\tparse\ttemplate-binder\t90:91:8:15, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "c3ba6c110ea3f81f"
+      },
+      "value": {
+        "family": "params"
       }
     }
   ],
