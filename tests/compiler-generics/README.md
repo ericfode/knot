@@ -19,6 +19,12 @@ generic path had checked. [Review round 4](#review-round-4) corrects the
 boundary corpora's provenance and records every changed gate assertion
 ([ASSERTION-CHANGES.md](ASSERTION-CHANGES.md)).
 
+The current [review-r0 repair](REVIEW-R1.md) covers reconstructed-parent
+inference and eleven seed-valid header layouts. Its additive controls and
+restoration mutants preserve required delimiters and glued-token boundaries.
+Use Bun 1.3.14, Node 22.22.3 and the pinned Bend seed together; io-host freezes
+that Bun version. The inherited PATH may select Bun 1.3.11 instead.
+
 The mechanism is a type-expression algebra with rigid binder indices. A single
 sequential substitution list instantiates later parameter domains and results.
 Literal quantity meets reduce; `&2` is identity and `&0` is an absorber for
@@ -82,6 +88,8 @@ from emitted code.
 
 ```sh
 export BEND_NO_TELEMETRY=1
+export PATH=/Users/ericfode/.bun/bin:$PATH
+export KNOT_GATE_TIMEOUT_SCALE=4
 python3 tests/compiler-generics/regen.py
 python3 tests/compiler-generics/check.py
 npm run -s gates

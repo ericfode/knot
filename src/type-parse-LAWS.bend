@@ -3,6 +3,13 @@ import ./syntax.bend as S
 import ./type-parse.bend as T
 import ./type-parse.bend as P
 
+law newline_is_not_glue:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  for +mark: S.Token
+  {P.flush(Con{S.Token{"\n",at},rest},mark)
+    == P.flush(rest,mark) : Bool}
+
 # After a type argument only `,` and `>` continue the list. Any other token
 # makes the argument a term (`Tag<On{}>`): Unsupported, never Invalid.
 law term_argument:

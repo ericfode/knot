@@ -54,6 +54,13 @@ the function's first live parameter that has not itself been matched. Rebuilt
 matched descendants remain Unsupported check recursive-call, as in the
 monomorphic descent rule; this increment does not extend that rule.
 
+A matched parent denotes its reconstructed constructor, as in the seed. It
+therefore requires an expected type: an unannotated initializer `y = parent`
+is `Invalid check annotation-required`, while `y: Family<A> = parent` is
+checked against that annotation. Ordinary variables and unmatched pattern
+fields remain inferable. The generic variable boundary laws state this
+distinction; they do not prove recursive reconstruction or checker soundness.
+
 `check-dispatch.bend` is the one checking entry. A book with generic syntax (a
 generic datatype, a typed result, or a typed parameter) goes to the generic
 checker; every other book keeps the monomorphic checker and its pinned

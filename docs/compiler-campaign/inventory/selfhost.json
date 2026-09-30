@@ -4016,8 +4016,8 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 532,
-        "compiler": 445,
+        "declarations": 534,
+        "compiler": 447,
         "packages": 14,
         "base": 73,
         "check": 0,
@@ -4031,15 +4031,15 @@
         "check": [
           {
             "feature": "types.base",
-            "declarations": 504
+            "declarations": 506
           },
           {
             "feature": "imports.base",
-            "declarations": 459
+            "declarations": 461
           },
           {
             "feature": "imports.local",
-            "declarations": 417
+            "declarations": 419
           },
           {
             "feature": "lambdas",
@@ -4051,7 +4051,7 @@
           },
           {
             "feature": "literals.string",
-            "declarations": 177
+            "declarations": 180
           },
           {
             "feature": "literals.u32",
@@ -4059,27 +4059,27 @@
           },
           {
             "feature": "patterns.nested",
-            "declarations": 124
+            "declarations": 125
           },
           {
             "feature": "patterns.wildcard",
-            "declarations": 99
+            "declarations": 100
           },
           {
             "feature": "matches.multi",
-            "declarations": 64
+            "declarations": 65
+          },
+          {
+            "feature": "higher-order",
+            "declarations": 56
           },
           {
             "feature": "imports.package",
             "declarations": 56
           },
           {
-            "feature": "higher-order",
-            "declarations": 54
-          },
-          {
             "feature": "calls.variable",
-            "declarations": 45
+            "declarations": 46
           },
           {
             "feature": "literals.list",
@@ -4125,15 +4125,15 @@
         "wasm": [
           {
             "feature": "types.base",
-            "declarations": 504
+            "declarations": 506
           },
           {
             "feature": "imports.base",
-            "declarations": 459
+            "declarations": 461
           },
           {
             "feature": "imports.local",
-            "declarations": 417
+            "declarations": 419
           },
           {
             "feature": "lambdas",
@@ -4145,7 +4145,7 @@
           },
           {
             "feature": "literals.string",
-            "declarations": 177
+            "declarations": 180
           },
           {
             "feature": "literals.u32",
@@ -4153,27 +4153,27 @@
           },
           {
             "feature": "patterns.nested",
-            "declarations": 124
+            "declarations": 125
           },
           {
             "feature": "patterns.wildcard",
-            "declarations": 99
+            "declarations": 100
           },
           {
             "feature": "matches.multi",
-            "declarations": 64
+            "declarations": 65
+          },
+          {
+            "feature": "higher-order",
+            "declarations": 56
           },
           {
             "feature": "imports.package",
             "declarations": 56
           },
           {
-            "feature": "higher-order",
-            "declarations": 54
-          },
-          {
             "feature": "calls.variable",
-            "declarations": 45
+            "declarations": 46
           },
           {
             "feature": "literals.list",
@@ -4221,7 +4221,7 @@
         "check": [
           {
             "feature": "imports.local",
-            "declarations": 417
+            "declarations": 419
           },
           {
             "feature": "imports.package",
@@ -4247,7 +4247,7 @@
         "wasm": [
           {
             "feature": "imports.local",
-            "declarations": 417
+            "declarations": 419
           },
           {
             "feature": "imports.package",
@@ -18756,6 +18756,61 @@
           }
         },
         {
+          "key": "src/generics.variable",
+          "file": "src/generics.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "literals.string",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "matches.multi",
+              "patterns.nested",
+              "patterns.wildcard",
+              "types.base"
+            ],
+            "wasm": [
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "matches.multi",
+              "patterns.nested",
+              "patterns.wildcard",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
           "key": "src/lex.Mode",
           "file": "src/lex.bend",
           "origin": "compiler",
@@ -19429,6 +19484,54 @@
               "types.base"
             ],
             "wasm": [
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/parse.layout_head",
+          "file": "src/parse.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "types.base"
+            ],
+            "wasm": [
+              "calls.variable",
+              "higher-order",
               "imports.base",
               "imports.local",
               "literals.string",
@@ -23577,6 +23680,7 @@
             "imports.base",
             "imports.local",
             "lambdas",
+            "literals.string",
             "matches",
             "patterns.variable",
             "quantities.affine",
@@ -23591,6 +23695,7 @@
               "imports.base",
               "imports.local",
               "lambdas",
+              "literals.string",
               "types.base"
             ],
             "wasm": [
@@ -23598,6 +23703,7 @@
               "imports.base",
               "imports.local",
               "lambdas",
+              "literals.string",
               "types.base"
             ]
           },
@@ -27537,8 +27643,8 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 119,
-        "compiler": 80,
+        "declarations": 120,
+        "compiler": 81,
         "packages": 0,
         "base": 39,
         "check": 0,
@@ -27552,19 +27658,19 @@
         "check": [
           {
             "feature": "types.base",
-            "declarations": 118
+            "declarations": 119
           },
           {
             "feature": "imports.base",
-            "declarations": 80
+            "declarations": 81
           },
           {
             "feature": "imports.local",
-            "declarations": 62
+            "declarations": 63
           },
           {
             "feature": "literals.string",
-            "declarations": 45
+            "declarations": 47
           },
           {
             "feature": "captures",
@@ -27592,11 +27698,11 @@
           },
           {
             "feature": "calls.variable",
-            "declarations": 7
+            "declarations": 8
           },
           {
             "feature": "higher-order",
-            "declarations": 7
+            "declarations": 8
           },
           {
             "feature": "literals.nat",
@@ -27622,19 +27728,19 @@
         "wasm": [
           {
             "feature": "types.base",
-            "declarations": 118
+            "declarations": 119
           },
           {
             "feature": "imports.base",
-            "declarations": 80
+            "declarations": 81
           },
           {
             "feature": "imports.local",
-            "declarations": 62
+            "declarations": 63
           },
           {
             "feature": "literals.string",
-            "declarations": 45
+            "declarations": 47
           },
           {
             "feature": "captures",
@@ -27662,11 +27768,11 @@
           },
           {
             "feature": "calls.variable",
-            "declarations": 7
+            "declarations": 8
           },
           {
             "feature": "higher-order",
-            "declarations": 7
+            "declarations": 8
           },
           {
             "feature": "literals.nat",
@@ -27694,7 +27800,7 @@
         "check": [
           {
             "feature": "imports.local",
-            "declarations": 62
+            "declarations": 63
           },
           {
             "feature": "laws",
@@ -27708,7 +27814,7 @@
         "wasm": [
           {
             "feature": "imports.local",
-            "declarations": 62
+            "declarations": 63
           },
           {
             "feature": "laws",
@@ -29478,6 +29584,54 @@
               "types.base"
             ],
             "wasm": [
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "types.base"
+            ]
+          },
+          "missing_requirements": {
+            "check": [
+              "imports.local"
+            ],
+            "wasm": [
+              "imports.local"
+            ]
+          }
+        },
+        {
+          "key": "src/parse.layout_head",
+          "file": "src/parse.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "imports.base",
+            "imports.local",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "calls.variable",
+              "higher-order",
+              "imports.base",
+              "imports.local",
+              "literals.string",
+              "types.base"
+            ],
+            "wasm": [
+              "calls.variable",
+              "higher-order",
               "imports.base",
               "imports.local",
               "literals.string",
@@ -31465,6 +31619,7 @@
             "imports.base",
             "imports.local",
             "lambdas",
+            "literals.string",
             "matches",
             "patterns.variable",
             "quantities.affine",
@@ -31479,6 +31634,7 @@
               "imports.base",
               "imports.local",
               "lambdas",
+              "literals.string",
               "types.base"
             ],
             "wasm": [
@@ -31486,6 +31642,7 @@
               "imports.base",
               "imports.local",
               "lambdas",
+              "literals.string",
               "types.base"
             ]
           },
@@ -32276,8 +32433,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "0322ea4ace52aed708b358bd16cfb3de8449104f807e5a19ffedf457dc0c9df9",
-    "docs/compiler-campaign/inventory/base-closure.json": "1a02de2705c8ff9fba77c42b346b5182a30830f1d08298f327cbad729163e5ab",
-    "docs/compiler-campaign/inventory/accepted.json": "b255b170929c0ee90c3963cbc8e06701e411adeab609486fbee2415c090d4cdf"
+    "docs/compiler-campaign/inventory/implementation.json": "d6db2bfe9c1b35bf2d8179d8434d5374cf92d637fa322a1d20f7189828ec3c04",
+    "docs/compiler-campaign/inventory/base-closure.json": "f92a09eb5b625d94ad1955c6906d1b2317bc3735753acac3e0953a3f77d9ba2d",
+    "docs/compiler-campaign/inventory/accepted.json": "656a04c3bef8b82f5377769b169f035600e1b4f3f3b5e0dc238371d8964fcd27"
   }
 }

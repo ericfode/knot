@@ -19,3 +19,15 @@ Line breaks before a result colon are layout. A `~` in a type argument and a
 second initializer `=` are malformed term starts. Existing authorized prefix
 refusals remain frozen, with the exact recognized prefix distinguished from the
 diagnostic token. No refused program is evaluated or produces a new artifact.
+
+Layout also separates declaration keywords/names, names/opening delimiters,
+generic headers/the required `is`, function parameters/separators, and a result
+arrow/its type. Applied-type lookahead sees a line break before `<`. Parameter
+list layout is distinct from expression argument layout. Source offsets still
+decide adjacency inside arrows, quantity/meet tokens and closing type lists.
+Missing delimiters retain their existing failures. Three additional universal
+boundary equations preserve parameter-start, parameter-tail and declaration-name
+layout, including refusal results. A fourth refuses a detached named-type header
+closer. Both named and structured parameter routes check the original source
+offsets before the parameter-list parser skips layout. These equations do not
+prove general parser soundness.

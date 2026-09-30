@@ -1201,3 +1201,30 @@ empty/singleton/longer partition proves the unchanged law. No theorem was narrow
 The diagnostic-alphabet and List-rendering findings are checked against actual
 TSV and raw-constructor observations, not answered by changing frozen protocol
 pins. No live Perch/provider call or elapsed-time claim is made here.
+
+## Generics review-r0 layout boundaries (2026-09-29)
+
+The confirmed witnesses are frozen in
+[`review-r0-expectations.json`](../tests/compiler-generics/prechecks/review-r0-expectations.json).
+The first focused replay passed all 48 then-configured controls; the executor
+stopped it after two new seed-rejected newline-closer controls exposed acceptance.
+The next focused replay and checker check still failed: `type-parse.flush`
+counted the newline token's end offset as source adjacency to the closer.
+A direct seed-built lexer/helper probe returned False for `apart("Data\n>")`,
+confirming that concrete cause. `flush` now excludes layout tokens; both
+`type-parse.parameter_parts` and `parse.parameter_end` check the closer's
+original source offsets before list layout is consumed. The negative
+controls are separately frozen in
+[`review-r0-layout-guards.json`](../tests/compiler-generics/prechecks/review-r0-layout-guards.json),
+and the nominal-type control in `review-r0-named-guard.json` covers the simple
+parameter route independently. Each route and the newline-glue rule have
+restoration mutants. The original type-parser `finish`
+continues returning unnormalized delimiter tails, preserving the existing
+generic-colon mutant and caller-owned layout. Raw stopped/failing focused logs
+remain under ignored `.local/generics/review-r1/`.
+
+Before a layout repair, enumerate simple and structured grammar routes, then
+freeze adjacent valid layouts and detached glued-token negatives on both routes.
+Run those controls before expensive module and mutation builds. No earlier
+expectation or law was weakened, and no live model call or elapsed-time estimate
+is claimed in this entry.

@@ -31,3 +31,37 @@ law result_arrow_layout:
       Con{S.Token{"(",at},Con{S.Token{")",at},Con{S.Token{"\n",at},rest}}})
     == P.run(3n+n,P.Header{S.Token{"def",at},name},
       Con{S.Token{"(",at},Con{S.Token{")",at},rest}}) : Result<S.Error,P.Parsed>}
+
+law parameters_layout:
+  for +n: Nat
+  for +close: String
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n+n,P.Parameters{close},Con{S.Token{"\n",at},rest})
+    == P.run(1n+n,P.Parameters{close},rest) : Result<S.Error,P.Parsed>}
+
+law parameter_tail_layout:
+  for +n: Nat
+  for +close: String
+  for +head: S.Node
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n+n,P.ListTail{close,head,True{},False{}},Con{S.Token{"\n",at},rest})
+    == P.run(1n+n,P.ListTail{close,head,True{},False{}},rest) : Result<S.Error,P.Parsed>}
+
+law declaration_name_layout:
+  for +n: Nat
+  for +at: S.At
+  for +name: S.Token
+  for +rest: List<&2,S.Token>
+  {P.run(1n+n,P.Declaration{},Con{S.Token{"def",at},Con{S.Token{"\n",at},Con{name,rest}}})
+    == P.run(1n+n,P.Declaration{},Con{S.Token{"def",at},Con{name,rest}}) : Result<S.Error,P.Parsed>}
+
+# A named type's header closer retains its source-adjacency requirement.
+law named_header_close_gap:
+  for +name: S.Token
+  for +q: U32
+  for +rest: List<&2,S.Token>
+  {P.parameter_end(name,q,S.Token{"T",S.At{0,1,1,0}},
+      Con{S.Token{"\n",S.At{1,2,1,1}},Con{S.Token{">",S.At{2,3,2,0}},rest}})
+    == P.unsupported(Con{S.Token{">",S.At{2,3,2,0}},rest},"spacing") : Result<S.Error,P.Parsed>}

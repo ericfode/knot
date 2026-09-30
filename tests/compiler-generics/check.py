@@ -54,7 +54,8 @@ SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-bo
            HERE / 'pattern-order', HERE / 'spacing', HERE / 'token-gaps', HERE / 'host-boundaries')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend', 'src/generic-catalog-PROOF.bend',
-          'src/type-parse-PROOF.bend', 'src/parse-order-PROOF.bend', 'src/parse-layout-PROOF.bend')
+          'src/type-parse-PROOF.bend', 'src/parse-order-PROOF.bend', 'src/parse-layout-PROOF.bend',
+          'src/generics-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
 # Harness hang guard only, as in the other gates; the runner scales it under load.
 TIMEOUT_SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))
@@ -183,6 +184,56 @@ MUTANTS = (
      'new': 'run(n,FunctionTail{name,params},rest)',
      'witness': 'named-arrow-layout', 'also_witnesses': ['applied-arrow-layout'], 'phase': 'check',
      'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\tfunction-result\t'}},
+    {'name': 'matched-parent-inferred', 'file': 'generics.bend',
+     'old': 'case Binding{name,level,q,typ,param,Some{term}} None{}: C.invalid(Checked,"annotation-required",token)',
+     'new': 'case Binding{name,level,q,typ,param,Some{term}} None{}: occurrence(binding,token,env,next)',
+     'witness': 'matched-parent-alias-untyped', 'also_witnesses': ['matched-enum-alias-untyped'],
+     'phase': 'check', 'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'declaration-name-layout-invalid', 'file': 'parse.bend',
+     'old': 'layout_head(S.skip_lines(Con{name,tail}),actual => after =>',
+     'new': 'layout_head(Con{name,tail},actual => after =>',
+     'witness': 'function-layout-46', 'also_witnesses': ['datatype-layout-37'], 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\tdeclaration-name\t'}},
+    {'name': 'function-open-layout-invalid', 'file': 'parse.bend',
+     'old': 'expect(S.skip_lines(tokens),"(")', 'new': 'expect(tokens,"(")',
+     'witness': 'function-layout-47', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-(\t'}},
+    {'name': 'generic-is-layout-invalid', 'file': 'parse.bend',
+     'old': 'expect(S.skip_lines(rest),"is")', 'new': 'expect(rest,"is")',
+     'witness': 'datatype-layout-39', 'also_witnesses': ['datatype-layout-44'], 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-is\t'}},
+    {'name': 'parameter-start-layout-invalid', 'file': 'parse.bend',
+     'old': 'layout_head(S.skip_lines(tokens),+h => +t =>',
+     'new': 'layout_head(tokens,+h => +t =>',
+     'witness': 'function-layout-49', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\tparameter\t'}},
+    {'name': 'parameter-tail-layout-invalid', 'file': 'parse.bend',
+     'old': 'layout_head(S.choose(List<&2,S.Token>,parameters,u => S.skip_lines(tokens),u => tokens),+h => +t =>',
+     'new': 'layout_head(tokens,+h => +t =>',
+     'witness': 'function-layout-50', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\targument-separator\t'}},
+    {'name': 'result-start-layout-invalid', 'file': 'parse.bend',
+     'old': 'Bool.or(S.matches(typ,"\\n"),Bool.or(T.unsupported_suffix(rest),',
+     'new': 'Bool.or(False{},Bool.or(T.unsupported_suffix(rest),',
+     'witness': 'result-layout-30', 'also_witnesses': ['function-layout-52'], 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\tfunction-result\t'}},
+    {'name': 'applied-type-layout-invalid', 'file': 'type-parse.bend',
+     'old': 'Bool.not(starts(S.skip_lines(rest),"<"))',
+     'new': 'Bool.not(starts(rest,"<"))',
+     'witness': 'type-delimiter-21', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\targument-separator\t'}},
+    {'name': 'newline-header-close-glued', 'file': 'type-parse.bend',
+     'old': 'apart(rest,S.skip_lines(end))', 'new': 'apart(rest,end)',
+     'witness': 'newline-kind-header-close', 'phase': 'check',
+     'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'newline-named-header-close-glued', 'file': 'parse.bend',
+     'old': 'T.apart(Con{typ,Nil{}},S.skip_lines(rest))', 'new': 'False{}',
+     'witness': 'newline-named-header-close', 'phase': 'parse',
+     'actual': {'exit': 0, 'contains': 'Parsed\t'}},
+    {'name': 'newline-is-glue', 'file': 'type-parse.bend',
+     'old': 'Bool.and(Bool.not(S.matches(h,"\\n")),glued(h,mark))', 'new': 'glued(h,mark)',
+     'witness': 'newline-header-close', 'also_witnesses': ['newline-kind-header-close'], 'phase': 'check',
+     'actual': {'exit': 0, 'contains': 'Checked\n'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
@@ -192,7 +243,12 @@ MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'term-token-gap-glued', 'abstract-type-zero', 'late-pattern-parsed',
                 'tilde-type-unsupported', 'double-equals-unsupported', 'multiline-result-invalid',
                 'constructor-event-unordered', 'datatype-colon-layout-invalid',
-                'generic-colon-layout-invalid', 'result-arrow-layout-invalid'}
+                'generic-colon-layout-invalid', 'result-arrow-layout-invalid',
+                'matched-parent-inferred', 'declaration-name-layout-invalid',
+                'function-open-layout-invalid', 'generic-is-layout-invalid',
+                'parameter-start-layout-invalid', 'parameter-tail-layout-invalid',
+                'result-start-layout-invalid', 'applied-type-layout-invalid',
+                'newline-header-close-glued', 'newline-named-header-close-glued', 'newline-is-glue'}
 
 
 def require(condition, detail):
@@ -610,7 +666,8 @@ def main():
             inputs += [directory / 'expectations.json', directory / 'regen.py',
                        *sorted((directory / 'fixtures').glob('*.bend'))]
         inputs += [HERE / 'prechecks' / name for name in
-                   ('expectations.json', 'reported-expectations.json', 'seed-parse.ts', 'seed-value.ts',
+                   ('expectations.json', 'reported-expectations.json', 'review-r0-expectations.json',
+                    'review-r0-layout-guards.json', 'review-r0-named-guard.json', 'seed-parse.ts', 'seed-value.ts',
                     'check.py', 'README.md', 'SPEC.md', 'REPORTED.md')]
         inputs += sorted((HERE / 'prechecks/fixtures').glob('*.bend'))
         record['inputs'] = {str(path.relative_to(ROOT)): digest(path) for path in inputs}

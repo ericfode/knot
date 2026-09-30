@@ -8,10 +8,12 @@ HERE = Path(__file__).resolve().parent
 
 def rows(gate):
     document = json.loads((HERE / 'expectations.json').read_text())
-    reported = json.loads((HERE / 'reported-expectations.json').read_text())
-    gate.require(all(document[key] == reported[key] for key in ('seed_revision', 'seed_files')),
-                 'reported probes use the same pinned seed')
-    document['cases'] += reported['cases']
+    for name in ('reported-expectations.json', 'review-r0-expectations.json',
+                 'review-r0-layout-guards.json', 'review-r0-named-guard.json'):
+        reported = json.loads((HERE / name).read_text())
+        gate.require(all(document[key] == reported[key] for key in ('seed_revision', 'seed_files')),
+                     (name, 'reported probes use the same pinned seed'))
+        document['cases'] += reported['cases']
     result = []
     for case in document['cases']:
         source = HERE / case['file']

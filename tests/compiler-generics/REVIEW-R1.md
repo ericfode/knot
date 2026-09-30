@@ -39,3 +39,45 @@ their fills, `generics.variable` and `parse.layout_head`. No new feature class,
 dependency profile, package edit or promoted semantic evidence is authorized by
 this inventory amendment. The inventory's old recursion-Wasm disposition stays
 subject to the coordinator ruling in `RULINGS.md`.
+
+## Repair and bounded verification
+
+Both confirmed major findings are repaired, with no dispute. All eleven
+reported seed-valid layouts now check. Both unannotated reconstructed-parent
+controls are refused as `Invalid check annotation-required`; the annotated
+control, ordinary alias and pattern-field alias check. Monomorphic functions
+inside generic books use the same repaired variable boundary. The coordinator's
+queued repair of the pure monomorphic checker must enforce the same expected-type
+requirement for both nullary and fielded reconstructions before calling its
+recursive `Rebuild` path. This worktree does not take that queued increment.
+
+Layout uses `syntax.skip_lines` at grammar boundaries, with lookahead before
+applied types and separate handling of parameter lists. `type-parse.flush`
+excludes newline tokens from source adjacency. Named and structured parameter
+routes inspect the original closer offsets before skipping list layout. Three
+additional seed-frozen closer negatives retain Unsupported and preserve
+compile artifacts. All original expectations, values, laws and 25 mutants stay
+unchanged. Eleven new type-correct restoration mutants cover the two findings
+and these adjacency controls.
+
+Eight new universal equations have complete proofs: three variable boundaries,
+four layout/closer boundaries and newline exclusion from glue. All nine complete
+proof entries pass. They establish these exact helper/boundary observations,
+not general parser/checker soundness, recursive reconstruction correctness or
+the D21 general obligations, which remain required. The new law domains include
+boxed and nullary parents, ordinary and pattern-field aliases, actual declaration
+layouts and three rejected closer controls.
+
+Fresh Bun verification passes all 51 frozen checker controls and kills all
+eleven new mutants, including five additional witnesses. Raw proof, checker and
+mutation evidence stays in ignored `.local/generics/review-r1/`. The full native
+and Bun phase/Wasm/mutation qualification follows in the registered gate.
+The earlier focused attempts are retained, including the stopped first run and
+the newline-glue failures; `docs/perch-review-log.md` records their cause and
+the procedure that would have caught it before expensive builds.
+
+The reading hypothesis is an explicit expected-type boundary for reconstruction,
+paired with one existing layout primitive and exact boundary laws. Compression,
+Delight, memetic identity, Anticipation and Payoff are all unreviewed by the
+no-live-review instruction. Offline context coverage does not establish any
+numeric style rating or automatic semantic/style pass.

@@ -14,3 +14,15 @@ def L.generic_colon_layout(n,name,params,at,body):
 
 def L.result_arrow_layout(n,name,at,rest):
   {==}
+
+def L.parameters_layout(n,close,at,rest):
+  {==}
+
+def L.parameter_tail_layout(n,close,head,at,rest):
+  {==}
+
+def L.declaration_name_layout(n,at,name,rest):
+  {==}
+
+def L.named_header_close_gap(name,q,rest):
+  {==}

@@ -101,6 +101,13 @@ def occurrence(binding: Binding, +token: S.Token, env: Environment, next: C.Term
       S.choose(Result<S.Error,Checked>,Bool.and(live,U32.is_eq(q,0)),u => C.invalid(Checked,"erased-live",token),u =>
         Done{Checked{C.Reference{token,level,R.type_id(typ)},typ,S.choose(List<&2,U32>,Bool.and(live,U32.is_eq(q,1)),u => [level],u => Nil{})}})
 
+# A matched parent denotes its reconstructed constructor, which cannot infer.
+def variable(+binding: Binding, +token: S.Token, wanted: Maybe<&2,T.Expr>, +env: Environment,
+  next: C.Term -> T.Expr -> Result<S.Error,Checked>) -> Result<S.Error,Checked>:
+  match binding wanted:
+    case Binding{name,level,q,typ,param,Some{term}} None{}: C.invalid(Checked,"annotation-required",token)
+    case _ _: occurrence(binding,token,env,next)
+
 def prepend_argument(head: Checked, tail: Checked, +token: S.Token) -> Result<S.Error,Checked>:
   match head tail:
     case Checked{+term,typ,uses} Checked{C.Sequence{+items},+result,rest}:
@@ -335,7 +342,7 @@ def run(fuel: Nat, mode: Mode, +catalog: G.Catalog, +current: U32, +env: Environ
     case 1n+ +n Expression{S.Variable{+token},+wanted} G.Catalog{families,sigs} _:
       S.bind(Binding,Checked,E.term_name(Binding,G.Named,G.FunctionRef,lookup(env,token),token,
         name => G.family_named(families,name,0),name => G.function_named(sigs,name,0)),binding =>
-        S.bind(Checked,Checked,occurrence(binding,token,env,term => typ => run(n,Rebuild{term,typ},catalog,current,env)),value => expected(token,wanted,value)))
+        S.bind(Checked,Checked,variable(binding,token,wanted,env,term => typ => run(n,Rebuild{term,typ},catalog,current,env)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} G.Catalog{+families,sigs} _:
       S.bind(G.ConstructorRef,Checked,G.constructor_named(families,token,0),+reference =>
         constructor_type(wanted,reference,token,+typ => +tag => +params =>

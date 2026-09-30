@@ -123,11 +123,19 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
         Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
 
+# Layout is consumed by the caller at a grammar boundary, never inside a token.
+def layout_head(tokens: List<&2,S.Token>, next: S.Token -> List<&2,S.Token> -> Result<S.Error,Parsed>) -> Result<S.Error,Parsed>:
+  match tokens:
+    case Con{head,tail}: next(head,tail)
+    case Nil{}: invalid(tokens,"unexpected-end")
+
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match rest:
     case Con{h,t}:
+      S.choose(Result<S.Error,Parsed>,T.apart(Con{typ,Nil{}},S.skip_lines(rest)),u =>
+        unsupported(S.skip_lines(rest),"spacing"),u =>
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"<"),T.unsupported_suffix(rest)),u =>
-        unsupported(rest,"parameter-type"),u => Done{Parsed{S.Parameter{name,quantity,typ},rest}})
+        unsupported(rest,"parameter-type"),u => Done{Parsed{S.Parameter{name,quantity,typ},rest}}))
     case Nil{}: invalid(rest,"parameter")
 
 def parameter_parts(+quantity: U32, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -155,9 +163,9 @@ def generic_parameter(+fuel: Nat, +bare: Bool, +tokens: List<&2,S.Token>) -> Res
 def typed_result(tokens: List<&2,S.Token>) -> Bool:
   match tokens:
     case Con{dash,Con{arrow,Con{+typ,+rest}}}:
-      Bool.or(T.unsupported_suffix(rest),Bool.or(starts(rest,"<"),Bool.or(S.matches(typ,"("),
+      Bool.or(S.matches(typ,"\n"),Bool.or(T.unsupported_suffix(rest),Bool.or(starts(S.skip_lines(rest),"<"),Bool.or(S.matches(typ,"("),
         Bool.or(S.matches(typ,"+"),Bool.or(S.matches(typ,"Type"),Bool.or(S.matches(typ,"Data"),
-        Bool.or(S.matches(typ,"Kind"),S.matches(typ,"Quant"))))))))
+        Bool.or(S.matches(typ,"Kind"),S.matches(typ,"Quant")))))))))
     case _: False{}
 
 def template_parameter(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -207,7 +215,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(head,"<eof>"),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,U32.is_eq(S.column(head),0),u =>
-            then(run(n,Header{head,name},tail),value => rest =>
+            then(layout_head(S.skip_lines(Con{name,tail}),actual => after => run(n,Header{head,actual},after)),value => rest =>
               then(run(n,Book{},rest),more => end => prepend(value,more,end))),u =>
             invalid(tokens,"top-level-indentation")))
         case Con{+head,Nil{}}:
@@ -229,14 +237,12 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"constructor-fields-or-indentation")))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Parameters{+close}:
-      match tokens:
-        case Con{+h,+t}:
+      layout_head(S.skip_lines(tokens),+h => +t =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Nil{}},t}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(String.eq(close,")"),S.matches(h,"~")),u =>
-            template_parameter(tokens),u =>
-            then(generic_parameter(n,Bool.not(String.eq(close,"}")),tokens),p => rest => run(n,ListTail{close,p,True{},False{}},rest))))
-        case _: invalid(tokens,"unexpected-end")
+            template_parameter(Con{h,t}),u =>
+            then(generic_parameter(n,Bool.not(String.eq(close,"}")),Con{h,t}),p => rest => run(n,ListTail{close,p,True{},False{}},rest)))))
     case 1n+ +n Arguments{+close,+pattern}:
       match tokens:
         case Con{+h,+t}:
@@ -245,8 +251,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             then(run(n,Term{pattern},tokens),arg => rest => run(n,ListTail{close,arg,False{},pattern},rest)))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n ListTail{+close,+head,+parameters,+pattern}:
-      match tokens:
-        case Con{+h,+t}:
+      layout_head(S.choose(List<&2,S.Token>,parameters,u => S.skip_lines(tokens),u => tokens),+h => +t =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
@@ -254,8 +259,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(t,"~")),u =>
               invalid(t,"parameter"),u =>
               then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
-            invalid(tokens,"argument-separator")))
-        case _: invalid(tokens,"unexpected-end")
+            invalid(Con{h,t},"argument-separator"))))
     case 1n+ +n Term{+pattern}:
       match tokens:
         case Con{+name,Con{+open,+tail}}:
@@ -301,15 +305,15 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         unsupported(Con{name,tokens},"import"),u =>
       S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(keyword,"type"),u =>
-      S.choose(Result<S.Error,Parsed>,starts(tokens,"<"),u =>
-        S.bind(List<&2,S.Token>,Parsed,expect(tokens,"<"),args =>
+      S.choose(Result<S.Error,Parsed>,starts(S.skip_lines(tokens),"<"),u =>
+        S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(tokens),"<"),args =>
           then(run(n,Parameters{">"},args),params => rest =>
-            S.bind(List<&2,S.Token>,Parsed,expect(rest,"is"),kind =>
-              run(n,GenericKind{name,params},kind)))),u =>
-        S.bind(List<&2,S.Token>,Parsed,expect(tokens,"is"),kind =>
-          run(n,TypeKind{name},kind))),u =>
+            S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(rest),"is"),kind =>
+              run(n,GenericKind{name,params},S.skip_lines(kind))))),u =>
+        S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(tokens),"is"),kind =>
+          run(n,TypeKind{name},S.skip_lines(kind)))),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(keyword,"def"),u =>
-        S.bind(List<&2,S.Token>,Parsed,expect(tokens,"("),args =>
+        S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(tokens),"("),args =>
           then(run(n,Parameters{")"},args),params => rest => run(n,FunctionTail{name,params},S.skip_lines(rest)))),u =>
         unsupported(Con{keyword,tokens},"declaration-form"))),u => invalid(tokens,"declaration-name")))
     case 1n+ +n TypeKind{+name}:
@@ -344,7 +348,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+dash,Con{+arrow,+tail}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),S.matches(arrow,">")),u =>
-            adjacent(dash,arrow,u => type_then(T.expression(n,tail),typ => rest =>
+            adjacent(dash,arrow,u => type_then(T.expression(n,S.skip_lines(tail)),typ => rest =>
               S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(rest),":"),body =>
                 then(run(n,Body{0},body),value => end => wrap_typed_function(name,params,typ,value,end))))),u =>
             invalid(tokens,"function-result"))

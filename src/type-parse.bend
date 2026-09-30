@@ -43,11 +43,11 @@ def glued(+a: S.Token, +b: S.Token) -> Bool:
 def spaced(ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   Fail{S.Unsupported{"parse","spacing",S.here(ts)}}
 
-# Only the token just before `mark` can end where it begins.
+# Only a source token, not a layout token, can be glued to `mark`.
 def flush(+ts: List<&2,S.Token>, +mark: S.Token) -> Bool:
   match ts:
     case Nil{}: False{}
-    case Con{+h,+t}: S.choose(Bool,glued(h,mark),u => True{},u => flush(t,mark))
+    case Con{+h,+t}: S.choose(Bool,Bool.and(Bool.not(S.matches(h,"\n")),glued(h,mark)),u => True{},u => flush(t,mark))
 
 # `rest` closes, after a gap, the list whose item began at `from`.
 def apart(+from: List<&2,S.Token>, +rest: List<&2,S.Token>) -> Bool:
@@ -120,8 +120,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
                 S.bind(List<&2,S.Token>,Parsed,expect(rest,")"),end =>
                   run(n,Tail{S.TypeKind{h,q}},end)))),u =>
           S.choose(Result<S.Error,Parsed>,S.identifier(h),u =>
-          S.choose(Result<S.Error,Parsed>,Bool.and(starts(t,"<"),Bool.not(meet_prefix(t))),u =>
-            S.bind(List<&2,S.Token>,Parsed,expect(t,"<"),body =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(starts(S.skip_lines(t),"<"),Bool.not(meet_prefix(S.skip_lines(t)))),u =>
+            S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(t),"<"),body =>
               then(run(n,Items{},body),args => rest =>
                 then(apply(h,quantity,args,rest),value => end => run(n,Tail{value},end)))),u =>
             run(n,Tail{S.Variable{h}},t)),u =>
@@ -155,7 +155,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case _: invalid(tokens,"type-arguments")
 
 def expression(fuel: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
-  run(fuel,Expression{1},tokens)
+  run(fuel,Expression{1},S.skip_lines(tokens))
 
 def parameter_node(+bare: Bool, +name: S.Token, +quantity: U32, +typ: S.Node,
   +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -176,7 +176,7 @@ def parameter_parts(+fuel: Nat, +bare: Bool, +quantity: U32,
       S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(colon,":"),u =>
         then(expression(fuel,rest),typ => +end =>
-          S.choose(Result<S.Error,Parsed>,apart(rest,end),u => spaced(end),u => parameter_node(bare,name,quantity,typ,end))),u =>
+          S.choose(Result<S.Error,Parsed>,apart(rest,S.skip_lines(end)),u => spaced(S.skip_lines(end)),u => parameter_node(bare,name,quantity,typ,end))),u =>
       S.choose(Result<S.Error,Parsed>,Bool.and(bare,Bool.or(S.matches(colon,","),Bool.or(S.matches(colon,")"),S.matches(colon,">")))),u =>
         S.choose(Result<S.Error,Parsed>,U32.is_eq(quantity,1),u =>
           Done{Parsed{S.TypedParameter{name,0,S.QuantType{name}},Con{colon,rest}}},u =>
@@ -195,7 +195,7 @@ def parameter(+fuel: Nat, +bare: Bool, +tokens: List<&2,S.Token>) -> Result<S.Er
 def simple_parts(tokens: List<&2,S.Token>) -> Bool:
   match tokens:
     case Con{name,Con{colon,Con{typ,rest}}}:
-      Bool.and(S.matches(colon,":"),Bool.and(S.identifier(typ),Bool.not(starts(rest,"<"))))
+      Bool.and(S.matches(colon,":"),Bool.and(S.identifier(typ),Bool.not(starts(S.skip_lines(rest),"<"))))
     case _: False{}
 
 def simple(+tokens: List<&2,S.Token>) -> Bool:

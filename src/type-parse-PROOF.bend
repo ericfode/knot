@@ -4,6 +4,9 @@ import ./type-parse.bend as T
 import ./type-parse.bend as P
 import ./type-parse-LAWS.bend as L
 
+def L.newline_is_not_glue(at,rest,mark):
+  {==}
+
 def L.term_argument(n,head,token,rest,close,comma):
   %Equal.sym(Bool,S.matches(token,">"),False{},close) :
     {S.choose(Result<S.Error,T.Parsed>,_,

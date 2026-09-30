@@ -160,8 +160,19 @@ its existing check-phase diagnostics. This does not repair the inherited
 monomorphic checker residual described above. Result arrows and datatype/result
 colons may follow line breaks and comments, as in the seed. Layout does not
 replace the required delimiter or glue the arrow's two symbols. Three filled
-header-layout laws preserve parsing at those boundaries, including refusals;
+original header-layout laws and four additional parameter/declaration-layout
+laws preserve parsing at those boundaries and refuse detached header closers;
 they do not establish general parser soundness.
+
+Header keywords/names, opening delimiters, generic headers/`is`, parameter-list
+boundaries and result arrows/types also permit line breaks. Applied-type
+lookahead recognizes `<` after layout. Parameter-list layout does not extend
+expression-argument layout. The generic checker requires an expected type for
+a reconstructed matched-parent occurrence; an unannotated local alias is
+Invalid `annotation-required`, while ordinary variables and pattern fields
+remain inferable. Three filled variable-boundary laws record this distinction.
+The queued monomorphic reconstruction analogue remains with its coordinator
+owner; this repair covers monomorphic functions within generic books as well.
 
 ## Binding and quantity semantics
 

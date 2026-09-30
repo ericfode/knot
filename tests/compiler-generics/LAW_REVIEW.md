@@ -1,5 +1,29 @@
 # Generic checking and erasure review
 
+## Review-r0 repairs
+
+The independently reported unannotated matched-parent alias is seed-rejected.
+At the public expression boundary, `generics.variable` refuses a refined
+binding without an expected type; recursive field reconstruction retains its
+existing occurrence path. `generics-LAWS.bend` states three universal equations
+for this refusal, unrefined inference and annotated occurrences, all filled in
+`generics-PROOF.bend`. The boxed parent and nullary enum witnesses are paired
+with annotated-parent, ordinary-alias and pattern-field controls. The
+`matched-parent-inferred` mutant restores the original acceptance in both
+representations. This is boundary proof and differential evidence, not general
+checker soundness. The pure monomorphic checker analogue remains coordinator-owned.
+
+The eleven seed-valid header layouts, including two inherited ones, are
+additively frozen before repair. Both parameter routes retain source-adjacency
+checks before header layout is consumed. Two separately frozen newline-closer
+negatives, a nominal-type parse control and three restoration mutants cover
+named/structured parameter routes and newline tokens that must not glue.
+Four new filled layout laws cover parameter starts/tails, declaration names
+and a named-type closer refusal. Existing colon/arrow laws and all original
+mutants remain required. No original law is restated or weakened; the D21
+general obligations below remain open. `REVIEW-R1.md` records verification and
+the explicit review disposition.
+
 The fixed task is the seed-derived generic/quantity corpus in `expectations.json`
 plus the two supplements committed before implementation. Accept generic headers,
 instantiate parameter domains and results, check erased arguments, preserve
