@@ -1,0 +1,776 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "basis": "Refresh D7 seed controls: 28 new edge programs plus six unchanged nest round-4 D26 sources. Knot expectations are literal pins; seed lanes add only import Base when building.",
+  "fixtures": [
+    {
+      "name": "fourth-column",
+      "file": "tests/compiler-descent/refresh-fixtures/fourth-column.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "erased-between-equal-columns",
+      "file": "tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "earlier-shrink-later-opaque",
+      "file": "tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "equal-prefix-opaque-column",
+      "file": "tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      }
+    },
+    {
+      "name": "alias-scrutinee",
+      "file": "tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a parameter or field scrutinee"
+      }
+    },
+    {
+      "name": "alias-before-parent-refinement",
+      "file": "tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a match on a parameter or field"
+      }
+    },
+    {
+      "name": "alias-then-nested-refinement",
+      "file": "tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a parameter or field scrutinee"
+      }
+    },
+    {
+      "name": "refined-alias-parent-equal",
+      "file": "tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a parameter or field scrutinee"
+      }
+    },
+    {
+      "name": "alias-chain-scrutinee",
+      "file": "tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a parameter or field scrutinee"
+      }
+    },
+    {
+      "name": "alias-shadow-equal-prefix",
+      "file": "tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "alias-shadow-smaller-column",
+      "file": "tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "rebuild-two-level-shrink",
+      "file": "tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "product-third-shrink",
+      "file": "tests/compiler-descent/refresh-fixtures/product-third-shrink.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "product-middle-shrink",
+      "file": "tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "product-last-growth",
+      "file": "tests/compiler-descent/refresh-fixtures/product-last-growth.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      }
+    },
+    {
+      "name": "product-first-growth",
+      "file": "tests/compiler-descent/refresh-fixtures/product-first-growth.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      }
+    },
+    {
+      "name": "product-equal-alias",
+      "file": "tests/compiler-descent/refresh-fixtures/product-equal-alias.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      }
+    },
+    {
+      "name": "product-smaller-alias",
+      "file": "tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "fallback-left-subtree",
+      "file": "tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "fallback-right-subtree",
+      "file": "tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "fallback-two-refined-fields",
+      "file": "tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "fallback-alias-subtree",
+      "file": "tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "erased-last-column-growth",
+      "file": "tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "only-erased-middle-shrinks",
+      "file": "tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-scrutinee\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-scrutinee\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-scrutinee\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a live scrutinee"
+      }
+    },
+    {
+      "name": "zero-argument-self-call",
+      "file": "tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      }
+    },
+    {
+      "name": "dead-call-rebuilt-growth",
+      "file": "tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend",
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "affine-alias-reuse",
+      "file": "tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "consumed more than once"
+      }
+    },
+    {
+      "name": "d26-rebuilt-partial",
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "upstream": {
+        "ref": "campaign/nest",
+        "file": "tests/compiler-nest/round4-fixtures/rebuilt-partial.bend",
+        "pin": "Unsupported check recursive-call"
+      }
+    },
+    {
+      "name": "d26-rebuilt-retyped-constant",
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "upstream": {
+        "ref": "campaign/nest",
+        "file": "tests/compiler-nest/round4-fixtures/rebuilt-retyped-constant.bend",
+        "pin": "Unsupported check recursive-call"
+      }
+    },
+    {
+      "name": "d26-rebuilt-root-source",
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "upstream": {
+        "ref": "campaign/nest",
+        "file": "tests/compiler-nest/round4-fixtures/rebuilt-root-source.bend",
+        "pin": "Unsupported check recursive-call"
+      }
+    },
+    {
+      "name": "d26-rebuilt-root",
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "upstream": {
+        "ref": "campaign/nest",
+        "file": "tests/compiler-nest/round4-fixtures/rebuilt-root.bend",
+        "pin": "Unsupported check recursive-call"
+      }
+    },
+    {
+      "name": "d26-rebuilt-swapped-fields",
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "upstream": {
+        "ref": "campaign/nest",
+        "file": "tests/compiler-nest/round4-fixtures/rebuilt-swapped-fields.bend",
+        "pin": "Unsupported check recursive-call"
+      }
+    },
+    {
+      "name": "d26-rebuilt-unrefined-constant",
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "upstream": {
+        "ref": "campaign/nest",
+        "file": "tests/compiler-nest/round4-fixtures/rebuilt-unrefined-constant.bend",
+        "pin": "Unsupported check recursive-call"
+      }
+    },
+    {
+      "name": "partial-coverage-control",
+      "file": "tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend",
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "seed": {
+        "exit": 1,
+        "diagnostic": "cases for Leaf"
+      }
+    }
+  ]
+}
