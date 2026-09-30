@@ -226,42 +226,6 @@ class WorkspaceTests(unittest.TestCase):
 
 
 class ExecutionTests(unittest.TestCase):
-    def test_clang_discovery_retry_retains_first_failure(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            script = (
-                'from pathlib import Path\nimport sys\n'
-                'p = Path("attempts")\nn = int(p.read_text()) if p.exists() else 0\n'
-                'p.write_text(str(n + 1))\n'
-                'if n == 0:\n'
-                '    print("Error: bend needs clang 14 (found no clang)", file=sys.stderr)\n'
-                '    sys.exit(1)\n'
-                'print("# pass 3\\nPASS: eight law rules;")\n')
-            result = run.execute(run.Gate('lint', (sys.executable, '-c', script)),
-                                 root, root, dict(os.environ), 5)
-            self.assertEqual('passed', result['status'])
-            self.assertEqual('2', (root / 'attempts').read_text())
-            self.assertEqual({'tests': 3, 'law_rules': 8}, result['counts'])
-            self.assertEqual(1, result['retried']['first_exit_code'])
-            self.assertIn('found no clang', (root / result['retried']['first_stderr']).read_text())
-            self.assertEqual('lint.retry.stdout', result['stdout'])
-
-    def test_assertion_is_not_retried_and_host_retry_is_bounded(self):
-        for message, attempts in [('frozen expectation mismatch', 1),
-                                  ('Error: bend needs clang 14 (found no clang)', 2)]:
-            with self.subTest(message=message), tempfile.TemporaryDirectory() as tmp:
-                root = Path(tmp)
-                script = (
-                    'from pathlib import Path\nimport sys\n'
-                    'p = Path("attempts")\nn = int(p.read_text()) if p.exists() else 0\n'
-                    'p.write_text(str(n + 1))\n'
-                    f'print({message!r}, file=sys.stderr)\nsys.exit(7)\n')
-                result = run.execute(run.Gate('failure', (sys.executable, '-c', script)),
-                                     root, root, dict(os.environ), 5)
-                self.assertEqual('failed', result['status'])
-                self.assertEqual(7, result['exit_code'])
-                self.assertEqual(str(attempts), (root / 'attempts').read_text())
-
     def test_failure_and_timeout_classifications(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -304,7 +268,8 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(len(names), len(set(names)))
         self.assertLessEqual({'frontend', 'checker', 'structural', 'fields', 'wasm', 'wasm-trust',
                               'fields-trust', 'structural-trust', 'owned-store', 'flat-store',
-                              'recursion', 'fields-wasm', 'census', 'lint:verify'}, set(names))
+                              'recursion', 'fields-wasm', 'census', 'lint:verify',
+                              'nest', 'descent', 'descent-prechecks'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})

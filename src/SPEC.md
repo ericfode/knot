@@ -97,6 +97,7 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | `~name:` in a function parameter list | `parse` | `template-binder` |
 | Parsed constructor pattern followed by `=` in a body | `parse` | `destructuring-binding` |
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
+| Dotted variable pattern needing the modules scope rule | `parse` | `dotted-binder` |
 
 Recognition stops at that prefix; it neither validates the suffix nor loads a
 module. Malformed supported syntax still reports `Invalid`. The reviewed
@@ -115,6 +116,22 @@ now follows declaration checking. Selecting the default enum emission profile
 still reports `Unsupported check constructor-fields` for a checked fielded book.
 Known invalid declarations or bodies can report Invalid first. Declaration
 inspection itself does not imply execution or a structured host ABI.
+
+The parse CLI also validates constructor-pattern declaration events and arity,
+including patterns in unreachable rows. The checked pipeline retains its frozen
+check-phase diagnostics for those restrictions. Detached constructor braces in
+patterns are `Invalid parse detached-brace`; constructor expressions may still
+precede their declarations. `_` never denotes a source value.
+
+Until the later pattern-matrix and Default-core increments are integrated,
+an empty variable column reports `Unsupported check empty-datatype`. A
+constructor-expanded default that repeats or inspects its residual affine
+identity reports `Unsupported check residual-alias`. The bounded guard follows
+source names through lexical shadowing and uses maximum usage across alternatives;
+single uses and explicit reusable promotion keep their accepted behavior. This is
+a conservative refusal, not a full implementation of the seed's residual region.
+Unlocated helper exhaustion escaping from a function receives that function's
+source boundary; helper algebra laws retain their location-free outcomes.
 
 ## Binding and quantity semantics
 

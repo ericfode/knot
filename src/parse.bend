@@ -41,6 +41,20 @@ def scrutinee(ts: List<&2,S.Token>) -> Bool:
     case Nil{}: False{}
     case Con{head,tail}: S.identifier(head)
 
+def dotted(text: String) -> Bool:
+  match text:
+    case SNil{}: False{}
+    case SCon{char,tail}: Bool.or(U32.is_eq(Char.to_u32(char),46),dotted(tail))
+
+def touching(left: S.Token, right: S.Token) -> Bool:
+  match left right:
+    case S.Token{text,S.At{lo,hi,line,col}} S.Token{name,S.At{begin,end,row,column}}: U32.is_eq(hi,begin)
+
+# Dotted pattern names need the modules scope rule; do not bind them as locals.
+def pattern_name(+token: S.Token, +rest: List<&2,S.Token>, +promotion: Bool) -> Result<S.Error,Parsed>:
+  S.choose(Result<S.Error,Parsed>,dotted(S.text(token)),u => unsupported(Con{token,rest},"dotted-binder"),u =>
+    Done{Parsed{S.choose(S.Node,promotion,u => S.Promotion{token},u => S.Variable{token}),rest}})
+
 def then(result: Result<S.Error,Parsed>,
   next: S.Node -> List<&2,S.Token> -> Result<S.Error,Parsed>) -> Result<S.Error,Parsed>:
   match result:
@@ -209,13 +223,15 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+name,Con{+open,+tail}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(pattern,S.matches(name,"+")),u =>
-            S.choose(Result<S.Error,Parsed>,S.identifier(open),u => Done{Parsed{S.Promotion{open},tail}},u => invalid(tokens,"pattern-binder")),u =>
+            S.choose(Result<S.Error,Parsed>,S.identifier(open),u => pattern_name(open,tail,True{}),u => invalid(tokens,"pattern-binder")),u =>
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
             then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
-            then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
-            Done{Parsed{S.Variable{name},Con{open,tail}}})),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.and(pattern,Bool.not(touching(name,open))),u => invalid(Con{open,tail},"detached-brace"),u =>
+              then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest))),u =>
+            S.choose(Result<S.Error,Parsed>,pattern,u => pattern_name(name,Con{open,tail},False{}),u =>
+              Done{Parsed{S.Variable{name},Con{open,tail}}}))),u =>
             term_failure(tokens)))
         case _: invalid(tokens,"term")
     case 1n+ +n Body{+parent}:

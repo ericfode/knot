@@ -396,7 +396,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 89,
+          "declarations": 92,
           "base": 40,
           "base_intrinsics": 9,
           "foreign": 0
@@ -427,7 +427,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -843,6 +843,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.dotted",
+            "file": "src/parse.bend",
+            "via": "src/parse.pattern_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.expect",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -1004,6 +1021,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.pattern_name",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.dotted",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -1053,6 +1093,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -1073,6 +1114,7 @@
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
+              "src/parse.pattern_name",
               "src/parse.prepend",
               "src/parse.reply",
               "src/parse.scrutinee",
@@ -1080,6 +1122,7 @@
               "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
+              "src/parse.touching",
               "src/parse.unsupported",
               "src/parse.wrap_call",
               "src/parse.wrap_function",
@@ -1193,6 +1236,21 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/parse.touching",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/parse.unsupported",
@@ -1840,7 +1898,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 89,
+          "declarations": 92,
           "base": 40,
           "base_intrinsics": 8,
           "foreign": 0
@@ -1871,7 +1929,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2287,6 +2345,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.dotted",
+            "file": "src/parse.bend",
+            "via": "src/parse.pattern_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.expect",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -2448,6 +2523,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.pattern_name",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.dotted",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -2497,6 +2595,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -2517,6 +2616,7 @@
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
+              "src/parse.pattern_name",
               "src/parse.prepend",
               "src/parse.reply",
               "src/parse.scrutinee",
@@ -2524,6 +2624,7 @@
               "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
+              "src/parse.touching",
               "src/parse.unsupported",
               "src/parse.wrap_call",
               "src/parse.wrap_function",
@@ -2637,6 +2738,21 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/parse.touching",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/parse.unsupported",
@@ -3284,7 +3400,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 69,
+          "declarations": 72,
           "base": 28,
           "base_intrinsics": 9,
           "foreign": 0
@@ -3303,7 +3419,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3525,6 +3641,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.dotted",
+            "file": "src/parse.bend",
+            "via": "src/parse.pattern_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "Char.to_u32",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.expect",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -3615,6 +3745,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.pattern_name",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse.dotted",
+              "src/parse.unsupported",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -3648,6 +3793,7 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "String.eq",
@@ -3660,6 +3806,7 @@
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
+              "src/parse.pattern_name",
               "src/parse.prepend",
               "src/parse.reply",
               "src/parse.scrutinee",
@@ -3667,6 +3814,7 @@
               "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
+              "src/parse.touching",
               "src/parse.unsupported",
               "src/parse.wrap_call",
               "src/parse.wrap_function",
@@ -3751,6 +3899,18 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/parse.touching",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/parse.unsupported",
@@ -4185,7 +4345,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 103,
+          "declarations": 106,
           "base": 54,
           "base_intrinsics": 9,
           "foreign": 0
@@ -4243,7 +4403,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4705,6 +4865,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.dotted",
+            "file": "src/parse.bend",
+            "via": "src/parse.pattern_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.expect",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -4862,6 +5038,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.pattern_name",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "src/parse.Parsed",
+              "src/parse.dotted",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -4909,6 +5107,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -4928,6 +5127,7 @@
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
+              "src/parse.pattern_name",
               "src/parse.prepend",
               "src/parse.reply",
               "src/parse.scrutinee",
@@ -4935,6 +5135,7 @@
               "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
+              "src/parse.touching",
               "src/parse.unsupported",
               "src/parse.wrap_call",
               "src/parse.wrap_function",
@@ -5046,6 +5247,21 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/parse.touching",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/parse.unsupported",
@@ -5823,8 +6039,8 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 385,
-          "base": 73,
+          "declarations": 409,
+          "base": 78,
           "base_intrinsics": 20,
           "foreign": 6
         },
@@ -6076,7 +6292,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -7691,6 +7907,7 @@
               "U32",
               "src/check.Mode",
               "src/check.checked_function",
+              "src/check.located",
               "src/check.run",
               "src/core.Catalog",
               "src/core.Function",
@@ -7749,6 +7966,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.located",
+            "file": "src/check.bend",
+            "via": "src/check.function_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "U32",
+              "Word.Con",
+              "Word.Nil",
+              "src/core.Checked",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.match_body",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -7793,6 +8031,23 @@
               "src/core.Term",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/check.mode_at",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/check.Mode",
+              "src/core.Term",
+              "src/syntax.At",
+              "src/syntax.Node",
+              "src/syntax.at"
             ],
             "dynamic_calls": []
           },
@@ -8009,6 +8264,7 @@
               "src/check.expected",
               "src/check.let_result",
               "src/check.match_body",
+              "src/check.mode_at",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -8026,12 +8282,12 @@
               "src/matrix.start",
               "src/matrix.step",
               "src/patterns.branch",
+              "src/residual.guard",
               "src/scope.Scope",
               "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.scrutinee",
-              "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind",
@@ -9362,7 +9618,7 @@
           {
             "key": "src/matrix.alias_column",
             "file": "src/matrix.bend",
-            "via": "src/matrix.variable_step",
+            "via": "src/matrix.variable_bound",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9866,6 +10122,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/matrix.variable_bound",
+            "file": "src/matrix.bend",
+            "via": "src/matrix.variable_step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/catalog.type_at",
+              "src/core.Binding",
+              "src/core.Datatype",
+              "src/matrix.alias_column",
+              "src/matrix.variable_type",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/matrix.variable_column",
             "file": "src/matrix.bend",
             "via": "src/matrix.variable_step",
@@ -9899,8 +10178,9 @@
               "Result",
               "String",
               "U32",
+              "src/core.Datatype",
               "src/core.internal",
-              "src/matrix.alias_column",
+              "src/matrix.variable_bound",
               "src/matrix.variable_column",
               "src/scope.Scope",
               "src/scope.lookup",
@@ -9911,6 +10191,28 @@
               "src/syntax.bind"
             ],
             "dynamic_calls": []
+          },
+          {
+            "key": "src/matrix.variable_type",
+            "file": "src/matrix.bend",
+            "via": "src/matrix.variable_bound",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "Unit",
+              "src/core.Datatype",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
           },
           {
             "key": "src/parse.body_end",
@@ -9945,6 +10247,23 @@
               "List",
               "List.append",
               "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.dotted",
+            "file": "src/parse.bend",
+            "via": "src/parse.pattern_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -10110,6 +10429,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.pattern_name",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.dotted",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -10159,6 +10501,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -10179,6 +10522,7 @@
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
+              "src/parse.pattern_name",
               "src/parse.prepend",
               "src/parse.reply",
               "src/parse.scrutinee",
@@ -10186,6 +10530,7 @@
               "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
+              "src/parse.touching",
               "src/parse.unsupported",
               "src/parse.wrap_call",
               "src/parse.wrap_function",
@@ -10299,6 +10644,21 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/parse.touching",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/parse.unsupported",
@@ -10611,6 +10971,237 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/residual.admit",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "Result",
+              "String",
+              "U32",
+              "U32.is_ge",
+              "src/core.unsupported",
+              "src/residual.Usage",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.contains",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String.eq",
+              "src/syntax.Token",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.guard",
+            "file": "src/residual.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "Result",
+              "U32",
+              "src/residual.guarded",
+              "src/scope.Scope",
+              "src/scope.find_level",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.guarded",
+            "file": "src/residual.bend",
+            "via": "src/residual.guard",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Maybe",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/residual.Mode",
+              "src/residual.admit",
+              "src/residual.measure",
+              "src/residual.visible",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.hide",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "String.eq",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.inspected",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "U32",
+              "U32.is_ne",
+              "src/residual.Usage"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.join",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "U32",
+              "U32.add",
+              "U32.max",
+              "U32.min",
+              "src/residual.Usage",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.measure",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.exhausted",
+              "src/residual.Mode",
+              "src/residual.Usage",
+              "src/residual.contains",
+              "src/residual.hide",
+              "src/residual.inspected",
+              "src/residual.join",
+              "src/residual.shadow",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.Mode",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.shadow",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/residual.hide",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.Usage",
+            "file": "src/residual.bend",
+            "via": "src/residual.admit",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.visible",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/residual.contains",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.after",
             "file": "src/scope.bend",
             "via": "src/scope.branch",
@@ -10771,11 +11362,15 @@
             "unsafe": false,
             "dependencies": [
               "Result",
+              "String",
               "src/core.Binding",
+              "src/core.invalid",
               "src/scope.Scope",
               "src/scope.find",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -12733,6 +13328,34 @@
             "dynamic_calls": []
           },
           {
+            "key": "U32.max",
+            "file": "Base",
+            "via": "src/residual.join",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "U32.min",
+            "file": "Base",
+            "via": "src/residual.join",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "U32.mod",
             "file": "Base",
             "via": "U32.show.fin",
@@ -12923,6 +13546,44 @@
             "unsafe": false,
             "dependencies": [],
             "dynamic_calls": []
+          },
+          {
+            "key": "Word",
+            "file": "Base",
+            "via": "Word.Con",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "Word.Con",
+              "Word.Nil"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Word.Con",
+            "file": "Base",
+            "via": "src/check.located",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Nat",
+              "Word"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Word.Nil",
+            "file": "Base",
+            "via": "src/check.located",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
           }
         ],
         "unresolved": []
@@ -12934,8 +13595,8 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 385,
-          "base": 73,
+          "declarations": 409,
+          "base": 78,
           "base_intrinsics": 19,
           "foreign": 6
         },
@@ -13187,7 +13848,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14802,6 +15463,7 @@
               "U32",
               "src/check.Mode",
               "src/check.checked_function",
+              "src/check.located",
               "src/check.run",
               "src/core.Catalog",
               "src/core.Function",
@@ -14860,6 +15522,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.located",
+            "file": "src/check.bend",
+            "via": "src/check.function_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "U32",
+              "Word.Con",
+              "Word.Nil",
+              "src/core.Checked",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.match_body",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -14904,6 +15587,23 @@
               "src/core.Term",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/check.mode_at",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "src/check.Mode",
+              "src/core.Term",
+              "src/syntax.At",
+              "src/syntax.Node",
+              "src/syntax.at"
             ],
             "dynamic_calls": []
           },
@@ -15120,6 +15820,7 @@
               "src/check.expected",
               "src/check.let_result",
               "src/check.match_body",
+              "src/check.mode_at",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -15137,12 +15838,12 @@
               "src/matrix.start",
               "src/matrix.step",
               "src/patterns.branch",
+              "src/residual.guard",
               "src/scope.Scope",
               "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.scrutinee",
-              "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind",
@@ -16473,7 +17174,7 @@
           {
             "key": "src/matrix.alias_column",
             "file": "src/matrix.bend",
-            "via": "src/matrix.variable_step",
+            "via": "src/matrix.variable_bound",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16977,6 +17678,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/matrix.variable_bound",
+            "file": "src/matrix.bend",
+            "via": "src/matrix.variable_step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/catalog.type_at",
+              "src/core.Binding",
+              "src/core.Datatype",
+              "src/matrix.alias_column",
+              "src/matrix.variable_type",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/matrix.variable_column",
             "file": "src/matrix.bend",
             "via": "src/matrix.variable_step",
@@ -17010,8 +17734,9 @@
               "Result",
               "String",
               "U32",
+              "src/core.Datatype",
               "src/core.internal",
-              "src/matrix.alias_column",
+              "src/matrix.variable_bound",
               "src/matrix.variable_column",
               "src/scope.Scope",
               "src/scope.lookup",
@@ -17022,6 +17747,28 @@
               "src/syntax.bind"
             ],
             "dynamic_calls": []
+          },
+          {
+            "key": "src/matrix.variable_type",
+            "file": "src/matrix.bend",
+            "via": "src/matrix.variable_bound",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "Unit",
+              "src/core.Datatype",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
           },
           {
             "key": "src/parse.body_end",
@@ -17056,6 +17803,23 @@
               "List",
               "List.append",
               "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.dotted",
+            "file": "src/parse.bend",
+            "via": "src/parse.pattern_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -17221,6 +17985,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.pattern_name",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.dotted",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -17270,6 +18057,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -17290,6 +18078,7 @@
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
+              "src/parse.pattern_name",
               "src/parse.prepend",
               "src/parse.reply",
               "src/parse.scrutinee",
@@ -17297,6 +18086,7 @@
               "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
+              "src/parse.touching",
               "src/parse.unsupported",
               "src/parse.wrap_call",
               "src/parse.wrap_function",
@@ -17410,6 +18200,21 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/parse.touching",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/parse.unsupported",
@@ -17722,6 +18527,237 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/residual.admit",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "Result",
+              "String",
+              "U32",
+              "U32.is_ge",
+              "src/core.unsupported",
+              "src/residual.Usage",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.contains",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String.eq",
+              "src/syntax.Token",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.guard",
+            "file": "src/residual.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "Result",
+              "U32",
+              "src/residual.guarded",
+              "src/scope.Scope",
+              "src/scope.find_level",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.guarded",
+            "file": "src/residual.bend",
+            "via": "src/residual.guard",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Maybe",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/residual.Mode",
+              "src/residual.admit",
+              "src/residual.measure",
+              "src/residual.visible",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.hide",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "String.eq",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.inspected",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "U32",
+              "U32.is_ne",
+              "src/residual.Usage"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.join",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "U32",
+              "U32.add",
+              "U32.max",
+              "U32.min",
+              "src/residual.Usage",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.measure",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.exhausted",
+              "src/residual.Mode",
+              "src/residual.Usage",
+              "src/residual.contains",
+              "src/residual.hide",
+              "src/residual.inspected",
+              "src/residual.join",
+              "src/residual.shadow",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.Mode",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.shadow",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/residual.hide",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.Usage",
+            "file": "src/residual.bend",
+            "via": "src/residual.admit",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.visible",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/residual.contains",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.after",
             "file": "src/scope.bend",
             "via": "src/scope.branch",
@@ -17882,11 +18918,15 @@
             "unsafe": false,
             "dependencies": [
               "Result",
+              "String",
               "src/core.Binding",
+              "src/core.invalid",
               "src/scope.Scope",
               "src/scope.find",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -19844,6 +20884,34 @@
             "dynamic_calls": []
           },
           {
+            "key": "U32.max",
+            "file": "Base",
+            "via": "src/residual.join",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "U32.min",
+            "file": "Base",
+            "via": "src/residual.join",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "U32.mod",
             "file": "Base",
             "via": "U32.show.fin",
@@ -20034,6 +21102,44 @@
             "unsafe": false,
             "dependencies": [],
             "dynamic_calls": []
+          },
+          {
+            "key": "Word",
+            "file": "Base",
+            "via": "Word.Con",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "Word.Con",
+              "Word.Nil"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Word.Con",
+            "file": "Base",
+            "via": "src/check.located",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Nat",
+              "Word"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Word.Nil",
+            "file": "Base",
+            "via": "src/check.located",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
           }
         ],
         "unresolved": []
@@ -20045,8 +21151,8 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 331,
-          "base": 59,
+          "declarations": 350,
+          "base": 61,
           "base_intrinsics": 20,
           "foreign": 6
         },
@@ -20200,7 +21306,7 @@
           {
             "key": "Bool.not",
             "file": "Base",
-            "via": "src/syntax.identifier_text",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21207,6 +22313,7 @@
             "unsafe": false,
             "dependencies": [
               "src/check.checked_function",
+              "src/check.located",
               "src/check.run",
               "src/scope.parameters",
               "src/syntax.bind"
@@ -21243,6 +22350,18 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.located",
+            "file": "src/check.bend",
+            "via": "src/check.function_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.at"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.match_body",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -21259,6 +22378,18 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/check.mode_at",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.at"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/check.pattern",
@@ -21402,6 +22533,7 @@
               "src/check.expected",
               "src/check.let_result",
               "src/check.match_body",
+              "src/check.mode_at",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -21415,6 +22547,7 @@
               "src/matrix.start",
               "src/matrix.step",
               "src/patterns.branch",
+              "src/residual.guard",
               "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
@@ -22149,7 +23282,7 @@
           {
             "key": "src/matrix.alias_column",
             "file": "src/matrix.bend",
-            "via": "src/matrix.variable_step",
+            "via": "src/matrix.variable_bound",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -22518,6 +23651,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/matrix.variable_bound",
+            "file": "src/matrix.bend",
+            "via": "src/matrix.variable_step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/catalog.type_at",
+              "src/matrix.alias_column",
+              "src/matrix.variable_type",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/matrix.variable_column",
             "file": "src/matrix.bend",
             "via": "src/matrix.variable_step",
@@ -22541,13 +23689,27 @@
             "unsafe": false,
             "dependencies": [
               "src/core.internal",
-              "src/matrix.alias_column",
+              "src/matrix.variable_bound",
               "src/matrix.variable_column",
               "src/scope.lookup",
               "src/scope.scrutinee",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
+          },
+          {
+            "key": "src/matrix.variable_type",
+            "file": "src/matrix.bend",
+            "via": "src/matrix.variable_bound",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.unsupported"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
           },
           {
             "key": "src/parse.body_end",
@@ -22573,6 +23735,20 @@
             "unsafe": false,
             "dependencies": [
               "List.append"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.dotted",
+            "file": "src/parse.bend",
+            "via": "src/parse.pattern_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "Char.to_u32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -22667,6 +23843,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.pattern_name",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse.dotted",
+              "src/parse.unsupported",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -22700,6 +23891,7 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "String.eq",
@@ -22712,6 +23904,7 @@
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
+              "src/parse.pattern_name",
               "src/parse.prepend",
               "src/parse.reply",
               "src/parse.scrutinee",
@@ -22719,6 +23912,7 @@
               "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
+              "src/parse.touching",
               "src/parse.unsupported",
               "src/parse.wrap_call",
               "src/parse.wrap_function",
@@ -22803,6 +23997,18 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/parse.touching",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/parse.unsupported",
@@ -22993,6 +24199,158 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/residual.admit",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "U32.is_ge",
+              "src/core.unsupported",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.contains",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "String.eq",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.guard",
+            "file": "src/residual.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/residual.guarded",
+              "src/scope.find_level",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.guarded",
+            "file": "src/residual.bend",
+            "via": "src/residual.guard",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "U32.is_eq",
+              "src/residual.admit",
+              "src/residual.measure",
+              "src/residual.visible",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.hide",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "String.eq",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.inspected",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "U32.is_ne"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.join",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "U32.add",
+              "U32.max",
+              "U32.min",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.measure",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq",
+              "src/core.exhausted",
+              "src/residual.contains",
+              "src/residual.hide",
+              "src/residual.inspected",
+              "src/residual.join",
+              "src/residual.shadow",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.shadow",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/residual.hide"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.visible",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "U32.is_eq",
+              "src/residual.contains",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.after",
             "file": "src/scope.bend",
             "via": "src/scope.branch",
@@ -23116,7 +24474,10 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/scope.find"
+              "src/core.invalid",
+              "src/scope.find",
+              "src/syntax.choose",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -24468,6 +25829,32 @@
             "dynamic_calls": []
           },
           {
+            "key": "U32.max",
+            "file": "Base",
+            "via": "src/residual.join",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "U32.min",
+            "file": "Base",
+            "via": "src/residual.join",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "U32.mod",
             "file": "Base",
             "via": "U32.show.fin",
@@ -24621,8 +26008,8 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 423,
-          "base": 111,
+          "declarations": 444,
+          "base": 113,
           "base_intrinsics": 23,
           "foreign": 6
         },
@@ -26562,6 +27949,7 @@
               "U32",
               "src/check.Mode",
               "src/check.checked_function",
+              "src/check.located",
               "src/check.run",
               "src/core.Catalog",
               "src/core.Checked",
@@ -26620,6 +28008,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.located",
+            "file": "src/check.bend",
+            "via": "src/check.function_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "U32",
+              "Word.Con",
+              "Word.Nil",
+              "src/core.Checked",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.match_body",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -26664,6 +28073,22 @@
               "src/core.Term",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/check.mode_at",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/check.Mode",
+              "src/core.Term",
+              "src/syntax.At",
+              "src/syntax.Node",
+              "src/syntax.at"
             ],
             "dynamic_calls": []
           },
@@ -26876,6 +28301,7 @@
               "src/check.expected",
               "src/check.let_result",
               "src/check.match_body",
+              "src/check.mode_at",
               "src/check.pattern",
               "src/check.prepend_argument",
               "src/check.prepend_arm",
@@ -26895,12 +28321,12 @@
               "src/matrix.step",
               "src/patterns.Fields",
               "src/patterns.branch",
+              "src/residual.guard",
               "src/scope.Scope",
               "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.scrutinee",
-              "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind",
@@ -28228,7 +29654,7 @@
           {
             "key": "src/matrix.alias_column",
             "file": "src/matrix.bend",
-            "via": "src/matrix.variable_step",
+            "via": "src/matrix.variable_bound",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28730,6 +30156,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/matrix.variable_bound",
+            "file": "src/matrix.bend",
+            "via": "src/matrix.variable_step",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/catalog.type_at",
+              "src/core.Binding",
+              "src/core.Datatype",
+              "src/matrix.alias_column",
+              "src/matrix.variable_type",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/matrix.variable_column",
             "file": "src/matrix.bend",
             "via": "src/matrix.variable_step",
@@ -28762,8 +30211,9 @@
               "Result",
               "U32",
               "src/core.Binding",
+              "src/core.Datatype",
               "src/core.internal",
-              "src/matrix.alias_column",
+              "src/matrix.variable_bound",
               "src/matrix.variable_column",
               "src/scope.Scope",
               "src/scope.lookup",
@@ -28774,6 +30224,27 @@
               "src/syntax.bind"
             ],
             "dynamic_calls": []
+          },
+          {
+            "key": "src/matrix.variable_type",
+            "file": "src/matrix.bend",
+            "via": "src/matrix.variable_bound",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "Unit",
+              "src/core.Datatype",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
           },
           {
             "key": "src/parse.body_end",
@@ -28807,6 +30278,22 @@
               "List",
               "List.append",
               "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.dotted",
+            "file": "src/parse.bend",
+            "via": "src/parse.pattern_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -28968,6 +30455,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.pattern_name",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Result",
+              "src/parse.Parsed",
+              "src/parse.dotted",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -29015,6 +30524,7 @@
             "dependencies": [
               "Bool",
               "Bool.and",
+              "Bool.not",
               "Bool.or",
               "Bool.pick",
               "List",
@@ -29034,6 +30544,7 @@
               "src/parse.expect",
               "src/parse.invalid",
               "src/parse.parameter",
+              "src/parse.pattern_name",
               "src/parse.prepend",
               "src/parse.reply",
               "src/parse.scrutinee",
@@ -29041,6 +30552,7 @@
               "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
+              "src/parse.touching",
               "src/parse.unsupported",
               "src/parse.wrap_call",
               "src/parse.wrap_function",
@@ -29152,6 +30664,21 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/parse.touching",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/parse.unsupported",
@@ -29460,6 +30987,236 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/residual.admit",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "Result",
+              "U32.is_ge",
+              "src/core.unsupported",
+              "src/residual.Usage",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.contains",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String.eq",
+              "src/syntax.Token",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.guard",
+            "file": "src/residual.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "Result",
+              "U32",
+              "src/core.Binding",
+              "src/residual.guarded",
+              "src/scope.Scope",
+              "src/scope.find_level",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.guarded",
+            "file": "src/residual.bend",
+            "via": "src/residual.guard",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Maybe",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/residual.Mode",
+              "src/residual.Usage",
+              "src/residual.admit",
+              "src/residual.measure",
+              "src/residual.visible",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.hide",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "String.eq",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.inspected",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "U32.is_ne",
+              "src/residual.Usage"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.join",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "U32",
+              "U32.add",
+              "U32.max",
+              "U32.min",
+              "src/residual.Usage",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.measure",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.exhausted",
+              "src/residual.Mode",
+              "src/residual.Usage",
+              "src/residual.contains",
+              "src/residual.hide",
+              "src/residual.inspected",
+              "src/residual.join",
+              "src/residual.shadow",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.Mode",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.shadow",
+            "file": "src/residual.bend",
+            "via": "src/residual.measure",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/residual.hide",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.Usage",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.visible",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "U32",
+              "U32.is_eq",
+              "src/core.Binding",
+              "src/residual.contains",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/scope.after",
             "file": "src/scope.bend",
             "via": "src/scope.branch",
@@ -29619,10 +31376,13 @@
             "dependencies": [
               "Result",
               "src/core.Binding",
+              "src/core.invalid",
               "src/scope.Scope",
               "src/scope.find",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -31710,6 +33470,34 @@
               "Bool",
               "U32",
               "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "U32.max",
+            "file": "Base",
+            "via": "src/residual.join",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32",
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "U32.min",
+            "file": "Base",
+            "via": "src/residual.join",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32",
+              "U32.is_lt"
             ],
             "dynamic_calls": []
           },

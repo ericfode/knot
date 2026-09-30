@@ -968,3 +968,26 @@ review or provider request was made.
 Evidence: [refresh report](compiler-campaign/DESCENT-2-REFRESH.md),
 [D26 controls](../tests/compiler-descent/receipts/refresh-reference.json) and
 [offline coverage](../tests/compiler-descent/receipts/refresh-style-preflight.json).
+## 2026-09-29: descent-2 executor precheck repairs
+
+The independent C1 probes exposed pattern-matrix identity errors that the
+existing descent comparisons and first-match fixtures did not exercise:
+wildcards became values, a default alias inherited a fresh constructor, empty
+variable columns lost impossible-domain coverage, and source-free helper
+exhaustion escaped into CLI diagnostics. `tests/compiler-descent/receipts/precheck-reference.json`
+freezes nine exact probe hashes and 14 adjacent controls before production edits.
+`prechecks.json` records 184 phase observations and seven type-correct mutants /
+14 semantic kills. Future matrix changes should freeze a source binder's use and
+rematching behavior in the residual region separately from constructor rebuilding.
+
+Initial seed syntax/type checks of the new helpers caught lambda-scrutinee and
+quantity mistakes; separating computed scrutinees into named helpers and marking
+values captured by both thunks would have prevented these retries. The new proof
+entry has eight filled laws. No source expectation was changed to accommodate a
+diagnostic.
+
+The first offline style task exceeded the 16 KB task cap. A bounded task and the
+51 changed/new declarations reduce structural truncations to six; composition
+remains unavailable. Use the increment's fixed bounded contract from the first
+preflight. Compression, Delight, Memetic identity, Anticipation and Payoff remain
+unrated, with no distributions or pass claim. No provider or live Perch call ran.

@@ -201,3 +201,12 @@ independent completion record. Keep the compiler's Invalid, Unsupported,
 Exhausted, host and internal observations intact inside the retained evidence;
 wrapper process failures are a separate summary status, never a judgment of
 the source language.
+
+The descent-2 executor repair adds `descent-prechecks`, running
+`tests/compiler-descent/check-prechecks.py`. It emits
+`tests/compiler-descent/receipts/prechecks.json`, replays 23 independently frozen
+controls in parse/check/eval/fields-Wasm lanes, checks eight filled helper laws,
+and kills seven type-correct mutants in both compiler lanes. Refusals preserve
+the pre-existing output artifact; accepted values and module pairs are compared
+independently. Its count extraction uses that receipt's completed `counts`.
+This is an additive gate; every earlier gate remains required.

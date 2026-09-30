@@ -6,6 +6,7 @@ import ./catalog.bend as G
 import ./scope.bend as E
 import ./patterns.bend as P
 import ./matrix.bend as M
+import ./residual.bend as R
 
 type Mode is Data:
   Rebuild{term: C.Term}
@@ -178,9 +179,26 @@ def rebuilt(value: C.Checked, token: S.Token, +type_id: U32, tag: U32, params: L
     case C.Checked{C.Sequence{args},ignored,uses}: Done{C.Checked{P.value(token,type_id,tag,params,args),type_id,uses}}
     case _: C.internal(C.Checked,"refined-arguments")
 
+def mode_at(mode: Mode) -> S.At:
+  match mode:
+    case Rebuild{C.Value{token,type_id,tag}}: S.at(token)
+    case Rebuild{C.Reference{token,level,type_id}}: S.at(token)
+    case Rebuild{C.Construct{token,type_id,tag,params,args}}: S.at(token)
+    case RebuildArguments{terms,params,token}: S.at(token)
+    case Arguments{nodes,params,token}: S.at(token)
+    case Arms{nodes,token,level,wanted}: S.at(token)
+    case Expression{S.Variable{token},wanted}: S.at(token)
+    case Expression{S.Constructor{token,args},wanted}: S.at(token)
+    case Expression{S.Call{token,args},wanted}: S.at(token)
+    case Expression{S.Binding{token,q,ann,value,body},wanted}: S.at(token)
+    case Expression{S.Match{token,value,arms},wanted}: S.at(token)
+    case Expression{S.Matrix{token,columns,rows,work},wanted}: S.at(token)
+    case Expression{S.Alias{token,level,mark,body},wanted}: S.at(token)
+    case _: S.At{0,0,0,0}
+
 def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Scope) -> Result<S.Error,C.Checked>:
   match fuel mode catalog scope:
-    case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
+    case 0n _ _ _: Fail{S.Exhausted{"check",mode_at(mode)}}
     case 1n+ +n Expression{S.Variable{+token},+wanted} _ _:
       S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>
         S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value)))
@@ -208,9 +226,10 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Expression{S.Matrix{token,columns,rows,work},+wanted} C.Catalog{types,sigs} _:
       S.bind(S.Node,C.Checked,M.step(token,columns,rows,work,types,scope),node =>
         run(n,Expression{node,wanted},catalog,current,scope))
-    case 1n+ +n Expression{S.Alias{token,level,mark,+body},+wanted} C.Catalog{types,sigs} _:
+    case 1n+ +n Expression{S.Alias{+token,+level,mark,+body},+wanted} C.Catalog{types,sigs} _:
       S.bind(E.Scope,C.Checked,M.alias(scope,token,level,mark,types),bound =>
-        run(n,Expression{body,wanted},catalog,current,bound))
+        S.bind(E.Scope,C.Checked,R.guard(n,bound,token,level,body),ready =>
+          run(n,Expression{body,wanted},catalog,current,ready)))
     case 1n+ +n Expression{node,wanted} _ _: C.internal(C.Checked,"expression-node")
     case 1n+ +n Arguments{Nil{},Nil{},token} _ _:
       Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
@@ -247,10 +266,17 @@ def checked_function(signature: C.Signature, checked: C.Checked) -> C.Function:
   match checked:
     case C.Checked{term,type_id,uses}: C.Function{signature,term}
 
+# Pure helper budgets have no source location. Their caller supplies the
+# function boundary when such an exhaustion escapes into a source diagnostic.
+def located(result: Result<S.Error,C.Checked>, token: S.Token) -> Result<S.Error,C.Checked>:
+  match result:
+    case Fail{S.Exhausted{phase,S.At{0,0,0,0}}}: Fail{S.Exhausted{phase,S.at(token)}}
+    case _: result
+
 def function_body(+signature: C.Signature, body: S.Node, +catalog: C.Catalog, index: U32, depth: Nat) -> Result<S.Error,C.Function>:
   match signature:
-    case C.Signature{name,params,result}:
-      S.bind(C.Checked,C.Function,run(depth,Expression{body,Some{result}},catalog,index,E.parameters(params,0,Nil{})),checked => Done{checked_function(signature,checked)})
+    case C.Signature{+name,params,result}:
+      S.bind(C.Checked,C.Function,located(run(depth,Expression{body,Some{result}},catalog,index,E.parameters(params,0,Nil{})),name),checked => Done{checked_function(signature,checked)})
 
 def functions(nodes: List<&2,S.Node>, +sigs: List<&2,C.Signature>, +catalog: C.Catalog, +index: U32, +depth: Nat) -> Result<S.Error,List<&2,C.Function>>:
   match nodes:

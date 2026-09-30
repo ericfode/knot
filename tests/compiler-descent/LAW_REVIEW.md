@@ -49,3 +49,42 @@ The refresh changes no production Bend declaration or accepted expectation.
 Live semantic/style review is coordinator-only. Conceptual compression,
 Delight, Memetic identity, Anticipation and Payoff have no new model ratings or
 distributions here; offline coverage cannot establish an automatic style pass.
+## Executor precheck repairs (2026-09-29)
+
+`precheck-SPEC.md` restates the fixed C1/C3 task. Commit `9b33f2cb` independently
+freezes the nine exact reported source hashes and 14 adjacent controls in the
+pinned seed's parse, book, native and Bun lanes: 15 accepted and eight rejected.
+No earlier expectation, law or mutant changes in this repair.
+
+`check-prechecks.py` passes 23 fixtures / 184 phase observations, 11 accepted
+books / 22 evaluator values / 22 actual Wasm values, 11 equal module pairs and
+24 preserved refusal artifacts. Seven type-correct semantic mutants are killed
+in both lanes (14 kills). They restore each observed failure: wildcard as value,
+empty-column false Invalid, residual alias duplication, detached pattern brace,
+dotted local binding, missing declaration-event validation, and lost source
+position. The unlocated deep match now reports the function boundary
+`Exhausted check budget 73:74:7:4` in all three downstream phases.
+
+`precheck-LAWS.bend` has eight filled laws in `precheck-PROOF.bend`. Wildcard lookup
+and empty-variable refusal quantify over their helper inputs; the other six are
+ground equations for the usage algebra, lexical shadowing, pattern events and
+source location. No general parser/checker soundness, residual-region lowering
+or matrix law is claimed. The required general matrix laws above remain open
+under D21. The residual guard is conservative; Default-core integration remains
+required for complete support.
+
+The bounded offline style preflight prepares all 51 changed/new declarations in
+nine files with zero provider calls. Its fixed task is available (2,208 bytes).
+Six contexts truncate, and the composition exceeds 48 KB with one unavailable
+collaborator. Conceptual compression, Delight, Memetic identity, Anticipation and
+Payoff have no live scores or distributions. Each axis is unavailable against its
+applicable target; no automatic style pass is claimed. The initial broader
+preflight's 165 units / 24 truncations and oversize task remain in ignored evidence.
+
+The shared runner now differs from its effective base only by additive gate/count
+rows, and its required-name test only by added names. Six affected legacy gate
+drivers are byte-identical to the effective base. The earlier classification and
+recursion assertion/mutant migrations retain their independent freezes and
+original witnesses; the coordinator must reconcile those D26 changes at merge.
+The full registered suite and committed-head precheck replay are pending at this
+implementation checkpoint. The complete results belong in the repair report.

@@ -2,6 +2,7 @@ import Base
 import ./syntax.bend as S
 import ./lex.bend as L
 import ./parse.bend as P
+import ./parse-patterns.bend as V
 import ./diagnostic.bend as D
 
 def show_tree(result: Result<S.Error,String>) -> IO(Unit):
@@ -12,7 +13,8 @@ def show_tree(result: Result<S.Error,String>) -> IO(Unit):
 def show_parse(result: Result<S.Error,P.Parsed>) -> IO(Unit):
   match result:
     case Fail{+e}: IO.die(Unit,D.status(e),D.error(e))
-    case Done{P.Parsed{value,rest}}: show_tree(D.tree(4096n,value))
+    case Done{P.Parsed{+value,rest}}:
+      show_tree(S.bind(Unit,String,V.validate(4096n,value),u => D.tree(4096n,value)))
 
 def source(characters: Nat, +depth: Nat, text: String) -> IO(Unit):
   show_parse(S.bind(List<&2,S.Token>,P.Parsed,L.tokenize(characters,text),tokens => P.parse(depth,tokens)))

@@ -39,9 +39,10 @@ def find(bindings: List<&2,C.Binding>, +name: S.Token) -> Result<S.Error,C.Bindi
         case C.Binding{token,level,q,type_id,param,known}:
           S.choose(Result<S.Error,C.Binding>,String.eq(S.text(token),S.text(name)),u => Done{head},u => find(tail,name))
 
-def lookup(scope: Scope, name: S.Token) -> Result<S.Error,C.Binding>:
+def lookup(scope: Scope, +name: S.Token) -> Result<S.Error,C.Binding>:
   match scope:
-    case Scope{bindings,level,from,live,aliases}: find(bindings,name)
+    case Scope{bindings,level,from,live,aliases}:
+      S.choose(Result<S.Error,C.Binding>,S.matches(name,"_"),u => C.invalid(C.Binding,"free-name",name),u => find(bindings,name))
 
 def occurrence(known: Maybe<&2,C.Term>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
   match known:

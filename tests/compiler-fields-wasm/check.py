@@ -10,7 +10,6 @@ import re
 import shutil
 import subprocess
 
-TIMEOUT_SCALE = float(__import__('os').environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # harness hang guard only
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 BUILD = ROOT / '.local/compiler-fields-wasm/gate'
@@ -30,7 +29,7 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def run(argv, timeout=60*TIMEOUT_SCALE):
+def run(argv, timeout=60):
     try:
         result = subprocess.run([str(x) for x in argv], cwd=ROOT, text=True,
                                 capture_output=True, timeout=timeout)

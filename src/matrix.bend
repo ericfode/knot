@@ -184,12 +184,23 @@ def alias_column(+binding: C.Binding, +token: S.Token, columns: List<&2,S.Node>,
     case C.Binding{name,level,q,type_id,param,known}:
       promote(name,level,mark(rows),S.Matrix{token,columns,default_rows(rows,level),work})
 
-def variable_step(+column: S.Node, +token: S.Token, +columns: List<&2,S.Node>, +rows: List<&2,S.Node>, +scope: E.Scope, +work: U32) -> Result<S.Error,S.Node>:
+def variable_type(definition: C.Datatype, +token: S.Token, next: Unit -> Result<S.Error,S.Node>) -> Result<S.Error,S.Node>:
+  match definition:
+    case C.Datatype{name,data,Nil{}}: C.unsupported(S.Node,"empty-datatype",token)
+    case _: next(Unit{})
+
+def variable_bound(+bound: C.Binding, +name: S.Token, +token: S.Token, +columns: List<&2,S.Node>, +rows: List<&2,S.Node>, +work: U32, types: List<&2,C.Datatype>) -> Result<S.Error,S.Node>:
+  match bound:
+    case C.Binding{origin,level,q,type_id,param,known}:
+      S.bind(C.Datatype,S.Node,G.type_at(types,type_id),definition =>
+        variable_type(definition,name,u => Done{alias_column(bound,token,columns,rows,work)}))
+
+def variable_step(+column: S.Node, +token: S.Token, +columns: List<&2,S.Node>, +rows: List<&2,S.Node>, +scope: E.Scope, +work: U32, +types: List<&2,C.Datatype>) -> Result<S.Error,S.Node>:
   match column:
     case S.Variable{+name}:
       S.bind(C.Binding,S.Node,E.lookup(scope,name),binding =>
         S.bind(C.Binding,S.Node,variable_column(binding,scope,name),bound =>
-          Done{alias_column(bound,token,columns,rows,work)}))
+          variable_bound(bound,name,token,columns,rows,work,types)))
     case _: S.bind(C.Binding,S.Node,E.scrutinee(column,scope),binding => C.internal(S.Node,"matrix-variable"))
 
 def column_step(+token: S.Token, columns: List<&2,S.Node>, +rows: List<&2,S.Node>, +work: U32, +types: List<&2,C.Datatype>, +scope: E.Scope) -> Result<S.Error,S.Node>:
@@ -199,7 +210,7 @@ def column_step(+token: S.Token, columns: List<&2,S.Node>, +rows: List<&2,S.Node
     case Con{+column,+tail} _:
       S.choose(Result<S.Error,S.Node>,Bool.not(List.is_empty(&2,S.Node,rows)),u =>
         S.choose(Result<S.Error,S.Node>,List.is_empty(&2,S.Token,constructors(rows,Nil{})),u =>
-          variable_step(column,token,tail,rows,scope,work),u =>
+          variable_step(column,token,tail,rows,scope,work,types),u =>
           S.bind(C.Binding,S.Node,E.scrutinee(column,scope),binding => split(binding,token,column,tail,rows,scope,types,work))),u =>
         Done{S.Match{token,column,Nil{}}})
     case _ _: C.internal(S.Node,"matrix-leaf")

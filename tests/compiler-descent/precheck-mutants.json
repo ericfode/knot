@@ -1,0 +1,83 @@
+{
+  "mutants": [
+    {
+      "name": "wildcard-as-value",
+      "file": "scope.bend",
+      "old": "S.matches(name,\"_\"),u => C.invalid",
+      "new": "False{},u => C.invalid",
+      "witness": "wildcard-value",
+      "phase": "check",
+      "wrong": {
+        "exit": 0
+      }
+    },
+    {
+      "name": "skip-empty-column-refusal",
+      "file": "matrix.bend",
+      "old": "case C.Datatype{name,data,Nil{}}: C.unsupported(S.Node,\"empty-datatype\",token)",
+      "new": "case C.Datatype{name,data,Nil{}}: next(Unit{})",
+      "witness": "empty-multi",
+      "phase": "check",
+      "wrong": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      }
+    },
+    {
+      "name": "copy-affine-residual",
+      "file": "residual.bend",
+      "old": "Bool.or(U32.is_ge(uses,2),inspects),u => C.unsupported",
+      "new": "False{},u => C.unsupported",
+      "witness": "default-alias-reuse",
+      "phase": "check",
+      "wrong": {
+        "exit": 0
+      }
+    },
+    {
+      "name": "allow-detached-pattern",
+      "file": "parse.bend",
+      "old": "Bool.and(pattern,Bool.not(touching(name,open))),u => invalid",
+      "new": "False{},u => invalid",
+      "witness": "detached-pattern",
+      "phase": "parse",
+      "wrong": {
+        "exit": 0
+      }
+    },
+    {
+      "name": "bind-dotted-locals",
+      "file": "parse.bend",
+      "old": "dotted(S.text(token)),u => unsupported",
+      "new": "False{},u => unsupported",
+      "witness": "dotted-binder",
+      "phase": "check",
+      "wrong": {
+        "exit": 0
+      }
+    },
+    {
+      "name": "skip-pattern-events",
+      "file": "parse-cli.bend",
+      "old": "V.validate(4096n,value)",
+      "new": "Done{Unit{}}",
+      "witness": "forward-pattern",
+      "phase": "parse",
+      "wrong": {
+        "exit": 0
+      }
+    },
+    {
+      "name": "lose-source-boundary",
+      "file": "check.bend",
+      "old": "case Fail{S.Exhausted{phase,S.At{0,0,0,0}}}: Fail{S.Exhausted{phase,S.at(token)}}",
+      "new": "case Fail{S.Exhausted{phase,S.At{0,0,0,0}}}: Fail{S.Exhausted{phase,S.At{0,0,0,0}}}",
+      "witness": "deep-match",
+      "phase": "check",
+      "wrong": {
+        "exit": 4,
+        "diagnostic": "Exhausted\tcheck\tbudget\t0:0:0:0"
+      }
+    }
+  ]
+}
