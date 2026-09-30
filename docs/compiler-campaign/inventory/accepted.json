@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "fc876186412d75e32523b8fb9286e97393fb64f2d5ee1cea3096f5770faec873",
+    "sha256": "bb9616cf999f3bb36517d3a761d55268fb108015dca17f77dc66ec0d23f0ef13",
     "gates": [
       {
         "name": "frontend",
@@ -191,7 +191,7 @@
         "programs": [
           {
             "file": "tests/perch-context/check.py",
-            "sha256": "a788d5bf698648afffb3c8c6f3faea8682a536fe9ef061e87a43026930abf984"
+            "sha256": "9c2199dd7dbce69e792bb4ce52ebc6e19a34325cca4a0755e85b87ff9759ed2d"
           }
         ]
       },
@@ -269,6 +269,20 @@
           {
             "file": "tests/compiler-selfhost/check.py",
             "sha256": "902de6e3e354b328ec2d9e31814ae9b1cf62035e7b2d273a63e80ce6d1c7a08b"
+          }
+        ]
+      },
+      {
+        "name": "perch-cap",
+        "argv": [
+          "python3",
+          "-B",
+          "tests/perch-context/check-round1.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/perch-context/check-round1.py",
+            "sha256": "99cb42fa9eb09000ae33ca1378e5d7201d31312f0bcc16c48b423b0f61d7bf93"
           }
         ]
       }
@@ -591,7 +605,8 @@
         }
       ],
       "gates": [
-        "perch-context"
+        "perch-context",
+        "perch-cap"
       ],
       "fixtures": 0,
       "detail": "No reviewed adapter for this suite path"

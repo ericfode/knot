@@ -296,3 +296,20 @@ Review the generated input hashes in `inventory/accepted.json` and the dependent
 hash in `inventory/selfhost.json`; this refresh changes no census policy or
 compiler expectations. Refresh only the owned context receipt after fresh
 execution, and leave unrelated gate receipts for the coordinator.
+
+## perch-cap frozen-runner correction (2026-09-29)
+
+Pre-review C3 requires `tests/perch-context/check.py` to remain byte-identical
+to the campaign base `88f02bf1`. The added review-round-1 coverage now runs in
+the separate `perch-cap` gate, appended to the registry and required-name set.
+Its entry is `python3 -B tests/perch-context/check-round1.py`; its owned output
+is `tests/perch-context/receipts/round1.json`. Generic receipt counting reads
+the fixture and mutant arrays without changing any existing gate branch.
+
+The restored `perch-context` gate retains 40 controls, 13 mutants, the seed
+signature check and two identical manifest preflights. The additive gate holds
+the unchanged round-1 expectations: seven controls and five assertion-killed
+mutants, 12 tests. The combined coverage remains 47 controls and 18 mutants.
+Both test families also run under `lint:verify`; no mutation witness or frozen
+expectation is removed. The registry now contains 21 gates. The earlier
+20-gate executions above remain historical evidence of their recorded revisions.

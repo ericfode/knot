@@ -13,9 +13,8 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 EXPECT = json.loads((HERE / 'expectations.json').read_text())
 REVIEW = json.loads((HERE / 'review-expectations.json').read_text())
-ROUND1 = json.loads((HERE / 'round1-expectations.json').read_text())
 TESTS = ('tests/perch-context.test.mjs', 'tests/perch-context-integration.test.mjs',
-         'tests/perch-context-mutants.test.mjs', 'tests/perch-context-round1.test.mjs')
+         'tests/perch-context-mutants.test.mjs')
 
 
 def digest(path):
@@ -40,11 +39,8 @@ def main():
     mutants = [name.removeprefix('semantic mutant killed: ') for name in names
                if name.startswith('semantic mutant killed: ')]
     fixtures = [name for name in names if not name.startswith('semantic mutant killed: ')]
-    # Preserve the frozen original count/list and hold additive review controls separately.
-    round1 = [name for name in fixtures if name.startswith('review round 1: ')]
-    assert round1 == ROUND1['controls'], round1
-    assert mutants == EXPECT['mutants'] + ROUND1['mutants'], mutants
-    assert len(fixtures) - len(round1) == EXPECT['controls'], fixtures
+    assert mutants == EXPECT['mutants'], mutants
+    assert len(fixtures) == EXPECT['controls'], fixtures
     assert re.search(r'^# fail 0$', output, re.M), output
     assert re.search(rf"^# pass {len(names)}$", output, re.M), output
     scratch = ROOT / '.local/perch-context'
@@ -89,7 +85,6 @@ console.log(JSON.stringify(expected.sort()));
     assert actual == EXPECT['compiler_preflight'], actual
     inputs = (*TESTS, 'tests/perch-context/CONTRACT.md', 'tests/perch-context/expectations.json',
               'tests/perch-context/review-expectations.json', 'tests/perch-context/fixtures/signatures.bend',
-              'tests/perch-context/round1-expectations.json',
               'tests/perch-context/check.py', 'scripts/perch-style.mjs', 'scripts/perch-bend-context.mjs',
               'scripts/perch-context-interfaces.mjs', 'scripts/perch-bend.mjs', 'vendor/bend-parser/bend.mts',
               'docs/compiler-campaign/manifest.json', 'perch-style.json')

@@ -1651,3 +1651,14 @@ Judgment: both major and all four minor r0 findings fixed; none disputed.
 Change and why: complete-state canonicalization, exact recomputed savings/scalar ties, original minimum boundary with honest contract limits, and reproducible Bun/scratch-HEAD selection.
 Clean / broken / held-out evidence and deterministic checks: 20/20 registered gates exit 0; context 47 controls/18 mutants; lint 192 tests/8 law rules; wrapper verification 20 tests; catalog 57 rules. All 974 main manifest hashes and the complete preflight receipt are byte-identical. Final receipt classes are 65 identical, 21 volatile-only and 2 bootstrap semantic; only the owned context receipt is refreshed.
 Remaining uncertainty / next trigger: coordinator integration, shared bootstrap receipt refresh, motivating-branch reconciliation and live calibration. Contract omissions withhold qualification; ordinary names-only contexts remain advisory.
+
+
+### 2026-09-29 / perch-cap pre-review C3 / prior head 591d451d
+
+- Evidence links and usage receipt IDs: executor condition `24d9a4ea7e06181d0715`; `tests/perch-context/check.py` differed from base `88f02bf1`; the previous coverage is in `compiler-campaign/perch-cap-review-round1.md`.
+- Waste or missed behavior / measured effort: unknown. Additive tests were wired through a frozen runner without coordinator authorization. A commit message cannot authorize that edit.
+- Rule + hash / requested and resolved model: deterministic `C3.frozen-edit`; no provider or live Perch call.
+- Judgment: confirmed. Restore the frozen runner byte-for-byte instead of seeking an exception.
+- Change and why: isolate the unchanged seven round-1 controls and five mutants in the additive `perch-cap` gate and its own receipt. Keep the original context gate, expectations and all regression witnesses binding; generic receipt counting needs no existing-branch edit.
+- Clean / broken / held-out evidence and deterministic checks: the restored context gate passes 40 controls and 13 assertion-killed mutants; the additive gate passes seven controls and five assertion-killed mutants. Both remain selected by `lint:verify`. Full gates pass 21/21, exit 0 (430.961106 seconds); gates:verify passes 20 tests, lint:verify passes 192 tests and eight law-rule controls, and the guarded rule catalog lists 57 rules. Exact per-gate counts are in compiler-campaign/perch-cap-precheck-fix.md.
+- Remaining uncertainty / next trigger: names-only judge calibration remains unmeasured and advisory. Future review additions use a new gate entry and receipt rather than editing a frozen runner; any necessary nonadditive change remains a coordinator decision.

@@ -38,21 +38,6 @@ const mutants = [
   { name: 'names-only-row-not-recorded', witness: 'also cuts a body the interface tier kept',
     from: 'if (row) row.reason = NAMES_ONLY_REASON; else summarized.push({ path: item.path, name: item.name, reason: NAMES_ONLY_REASON });',
     to: 'void row;' },
-  { name: 'names-only-summary-order-locale-dependent', witness: 'complete states and hashes agree', round1: true,
-    from: 'const byIdentity = (a, b) => byCode(a.path, b.path) || byCode(a.name, b.name);',
-    to: 'const byIdentity = (a, b) => a.path.localeCompare(b.path) || a.name.localeCompare(b.name);' },
-  { name: 'names-only-saving-ignores-counters', witness: 'savings include byte counters', round1: true,
-    from: 'const counterSaving = encoded(notes.source_bytes) - encoded(context.provenance.source_bytes - Buffer.byteLength(item.source));',
-    to: 'const counterSaving = 0;' },
-  { name: 'names-only-tie-break-uses-utf16', witness: 'equal savings compare Unicode scalar', round1: true,
-    from: 'const delta = left[i].codePointAt(0) - right[i].codePointAt(0);',
-    to: 'const delta = left[i].charCodeAt(0) - right[i].charCodeAt(0);' },
-  { name: 'names-only-required-minimum-skipped', witness: 'seed-accepted datatype boundary', round1: true,
-    from: 'context.provenance.state_metadata = {',
-    to: "throw new Error('required minimum fitting skipped');\n  context.provenance.state_metadata = {" },
-  { name: 'names-only-contract-omission-unmarked', witness: 'unavoidable contract omissions', round1: true,
-    from: 'context.provenance.truncated = notes.truncated = true;',
-    to: 'context.provenance.truncated = notes.truncated = false;' },
 ];
 for (const mutant of mutants) test(`semantic mutant killed: ${mutant.name}`, async t => {
   assert.equal(original.split(mutant.from).length, 2, 'exactly one mutation site');
@@ -64,7 +49,7 @@ for (const mutant of mutants) test(`semantic mutant killed: ${mutant.name}`, asy
   const env = { ...process.env, BEND_NO_TELEMETRY: '1', KNOT_CONTEXT_TEST_MODULE: pathToFileURL(path).href };
   delete env.NODE_TEST_CONTEXT;
   const result = spawnSync(process.execPath, ['--test', `--test-name-pattern=${mutant.witness}`,
-    fileURLToPath(new URL(mutant.round1 ? './perch-context-round1.test.mjs' : './perch-context.test.mjs', import.meta.url))],
+    fileURLToPath(new URL('./perch-context.test.mjs', import.meta.url))],
     { env, encoding: 'utf8', timeout: 30000 });
   assert.equal(result.error, undefined);
   assert.equal(result.status, 1, result.stdout + result.stderr);
