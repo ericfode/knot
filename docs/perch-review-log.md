@@ -1929,3 +1929,31 @@ The original round-6 shifted predicate still fails at the return arrow; the new 
 Census approval records every declaration separately. The corpus-budget driver reports Unsupported `src` files
 separately, rather than treating a lexer/parser stop as proof that a compiler-sized core fits. Per-file style preflight
 blockers remain distinct from the complete manifest groups; no style axis is rated by an offline preflight.
+
+## 2026-09-29 — nest prechecks: source events and mutation isolation
+
+[REVIEW-14](../tests/compiler-nest/receipts/REVIEW-14.md) fixes the public parser's
+constructor-pattern declaration-order false acceptance with the catalog's event
+rule. Constructor expressions retain forward references. Ten sources were frozen
+from the seed before the repair; the new gate checks both lanes, all five phases,
+artifact preservation and three type-correct semantic mutants. This is bounded
+regression evidence; the two general D21 lowering obligations remain open.
+
+Check every mutation anchor before building any lane. The first new-gate attempt
+reached mutation setup after fixture replay, then found a shared substring in both
+constructor and datatype event rules. The gate now validates all unique anchors
+up front and names the full constructor-event call.
+
+Adding an earlier validation layer can mask an existing semantic mutant. The first
+full run rejected the audit-skips-bodies witness in parse.events before the mutated
+matrix audit ran. The repair retains the standalone parse audit; checked execution
+uses the syntax state machine then the comprehensive checker. The immutable witness,
+expectation, diagnostic and mutant remain. Three affected checker mutants type-check
+and produce six semantic kills in the native and Bun lanes. Choose each CLI's
+validation authority before duplicating a rule across phases.
+
+Imported full bodies also exceeded the bounded manifest's composition cap. Import
+interfaces and each collaborator's existing full-body group retain complete bounded
+coverage without changing the cap or targets. File preflight still reports its
+truncation, composition and task limits. Offline structural coverage is neither a
+style rating nor semantic acceptance. No live Perch calls occurred.
